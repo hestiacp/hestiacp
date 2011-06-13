@@ -1,0 +1,96 @@
+#!/bin/bash
+# info: changing domain ip
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain="$2"
+ip="$3"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+source $V_FUNC/ip_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '3' "$#" 'user domain ip'
+
+# Checking argument format
+format_validation 'user' 'domain' 'ip'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web_domains'
+
+# Checking ip
+is_ip_avalable
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get tpl
+tpl_name=$(get_web_domain_value '$TPL')
+tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+
+conf="$V_HOME/$user/conf/httpd.conf"
+old_ip=$(get_web_domain_value '$IP')
+
+# Changing ip
+change_domain_ip "$conf" "$domain" "$ip" "$old_ip" "$tpl_file"
+
+# Checking ssl
+ssl=$(get_web_domain_value '$SSL')
+if [ "$ssl" = 'yes' ]; then
+
+    # Get tpl
+    tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+    conf="$V_HOME/$user/conf/shttpd.conf"
+
+    # Adding elog
+    change_domain_ip "$conf" "$domain" "$ip" "$old_ip" "$tpl_file"
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Increasing ip value
+increase_ip_value
+
+# Decreasing old ip value
+decrease_ip_value "$old_ip"
+
+# Adding ip in config
+update_web_domain_value '$IP' "$ip"
+
+# Adding task to the vesta pipe
+restart_schedule 'web'
+
+# Logging
+log_history "$V_EVENT" "$V_SCRIPT $user $domain $old_ip"
+log_event 'system' "$V_EVENT"
+
+exit $OK

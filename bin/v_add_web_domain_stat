@@ -1,0 +1,89 @@
+#!/bin/bash
+# info: adding stats for domain
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+type="$3"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '3' "$#" 'user domain type'
+
+# Checking argument format
+format_validation 'user' 'domain'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+check_func_result $?
+
+# Checking user
+is_user_valid "$user"
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web_domains'
+
+# Checking statistic type
+is_type_valid 'stat' "$type"
+
+# Check statistic is not added
+is_web_domain_key_empty '$STATS'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Adding statistic config
+cat $V_WEBTPL/$type.tpl |\
+    sed -e "s/%ip%/$ip/g" | \
+    sed -e "s/%port%/$port/g" | \
+    sed -e "s/%domain_idn%/$domain_idn/g" | \
+    sed -e "s/%domain%/$domain/g" | \
+    sed -e "s/%user%/$user/g" | \
+    sed -e "s/%home%/${V_HOME////\/}/g" | \
+    sed -e "s/%alias%/$domain_aliases/g" \
+>$V_HOME/$user/conf/$type.$domain.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Switching on command string for pipe
+case $type in 
+    webalizer) command="webalizer -c $V_HOME/$user/conf/$type.$domain.conf";;
+    awstats )  command="" # FIXME awstats command;;
+esac
+
+# Adding command to pipe
+echo "$command" >> $V_QUEUE/stats.pipe
+
+# Adding stats in config
+update_web_domain_value '$STATS' "$type"
+
+# Logging
+log_history "$V_EVENT" "v_del_web_domain_stat $user $domain"
+log_event 'system' "$V_EVENT"
+
+exit  $OK

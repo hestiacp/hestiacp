@@ -1,0 +1,107 @@
+#!/bin/bash
+# info: unsuspening web domain (with ssl)
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'user'
+
+# Checking argument format
+format_validation 'user'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf="$V_USERS/$user/web_domains.conf"
+
+# Defining fileds to select
+field='$DOMAIN'
+
+# Defining search string
+search_string="SUSPEND='yes'"
+
+# Parsing suspeneded domains
+domains=$(dom_clear_search)
+
+# Starting unsuspend loop
+for domain in $domains; do
+
+    # Get template name
+    tpl_name=$(get_web_domain_value '$TPL')
+    tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+
+    # Defining config
+    conf="$V_HOME/$user/conf/httpd.conf"
+
+    # Defining search phrase
+    search_phrase='Redirect / '
+
+    # Defining replace string
+    str_repl="    DocumentRoot $V_HOME/$user/domains/$domain/public_html"
+
+    # Unsuspending vhost
+    httpd_change_config
+
+    # Check ssl vhost
+    ssl=$(get_web_domain_value '$SSL')
+    if [ "$ssl" = 'yes' ]; then
+        # Defining teplate name and ssl documentroot option
+        tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+        tpl_opt=$(get_web_domain_value '$SSL_HOME')
+
+        # Defining config
+        conf="$V_HOME/$user/conf/shttpd.conf"
+
+        # Switching on option
+        case $tpl_opt in
+            single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
+            *) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+        esac
+
+        # Defining replace string
+        str_repl="    DocumentRoot $docroot"
+
+        # Unsuspending vhost
+        httpd_change_config
+    fi
+
+    # Adding unsuspend in config
+    update_web_domain_value '$SUSPEND' 'no'
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding task to the vesta pipe
+restart_schedule 'web'
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

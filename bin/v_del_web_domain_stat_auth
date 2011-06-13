@@ -1,0 +1,105 @@
+#!/bin/bash
+# info: adding web domain
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain=$(idn -t --quiet -u "$2" )
+auth_user="$3"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '2' "$#" 'user domain [auth_user]'
+
+# Checking argument format
+format_validation 'user' 'domain'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web_domains'
+
+# Checking stats auth enabled
+is_web_domain_value_exist '$STATS_AUTH'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Definining statistic dir
+stat_dir="$V_HOME/$user/domains/$domain/stats"
+
+# Checking auth_user
+if [ ! -z "$auth_user" ]; then
+
+    # Checking argument format
+    format_validation 'auth_user'
+
+    htpasswd -D $stat_dir/.htpasswd "$auth_user" >/dev/null 2>&1
+fi
+
+# Checking htpasswd current users
+lines=$(wc -l $stat_dir/.htpasswd |cut -f 1 -d ' ')
+if [ -z "$auth_user" ] || [ "$lines" -eq '0' ]; then
+    rm -f $stat_dir/.htpasswd
+    rm -f $stat_dir/.htaccess
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Checking auth_user
+if [ ! -z "$auth_user" ]; then
+    # Get current value
+    curr_val=$(get_web_domain_value '$STATS_AUTH')
+
+    # Deleteting auth_user
+    new_val=$(echo "$curr_val" |\
+        sed -e "s/,/\n/g"|\
+        sed -e "s/^$auth_user$//g"|\
+        sed -e "/^$/d"|\
+        sed -e ':a;N;$!ba;s/\n/,/g')
+
+    # Checking it was last user
+    if [ -z "$new_val" ]; then
+        new_val=''
+    fi
+
+else
+    # User empty, deleting all
+    new_val=''
+fi
+
+# Deleting stats auth_user
+update_web_domain_value '$STATS_AUTH' "$new_val"
+
+# Logging
+log_history "$V_EVENT"
+log_event 'system' "$V_EVENT"
+
+exit  $OK

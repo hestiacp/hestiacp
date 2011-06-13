@@ -1,0 +1,51 @@
+#!/bin/bash
+# info: listing system users
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format="${1-shell}"
+limit="${2-1000}"
+offset="${3-1}"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/ip_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking argument format
+format_validation 'limit' 'offset'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining fileds to select
+fields='$IP $OWNER $STATUS $NAME $U_SYS_USERS $U_WEB_DOMAINS
+ $INTERFACE $NETMASK $DATE'
+
+# Listing domains
+case $format in 
+    json) ip_json_list ;;
+    shell) fields='$IP $NETMASK $OWNER $STATUS $U_WEB_DOMAINS';
+        ip_shell_list | column -t ;;
+    *) check_args '1' '0' '[format] [limit] [offset]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit  $OK

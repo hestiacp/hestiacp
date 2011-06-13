@@ -1,0 +1,24 @@
+#!/bin/bash
+# Internal vesta function
+# cron system restart
+
+# Importing variables
+source $VESTA/conf/vars.conf
+
+crond() {
+    /etc/init.d/crond 'reload' >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        #$V_FUNC/report_issue 'sys' 'cron'
+        echo "$E_RESTART_FAILED $V_EVENT"
+    fi
+}
+
+# Parsing config / or just source config
+cron_system=$(grep 'CRON_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
+
+if [ "$cron_system" = 'crond' ]; then
+    crond
+fi
+
+# Logging
+exit  $OK

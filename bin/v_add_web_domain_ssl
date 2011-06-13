@@ -1,0 +1,120 @@
+#!/bin/bash
+# info: adding ssl for domain
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+cert="$3"
+tpl_option="${4-single}"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '3' "$#" 'user domain certificate [sslhome]'
+
+# Checking argument format
+format_validation 'user' 'domain' 'certificate'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web_domains'
+
+# Checking package
+is_package_full 'web_ssl'
+
+# Check ssl is not added
+is_web_domain_key_empty '$SSL'
+
+# Checking ssl certificate
+is_web_domain_cert_valid
+
+# Checking template
+templates=$(get_user_value '$TEMPLATES')
+template=$(get_web_domain_value '$TPL')
+is_template_valid 'web'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining variables for template replace
+port=$(get_web_port_ssl)
+ip=$(get_web_domain_value '$IP')
+aliases=$(get_web_domain_value '$ALIAS')
+aliases_idn=$(idn -t --quiet -a "$aliases")
+email="$user@$domain"
+ssl_cert="$V_HOME/$user/conf/$cert.crt"
+ssl_key="$V_HOME/$user/conf/$cert.key"
+case $tpl_option in
+    single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
+    same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+    *) check_args '3' "$#" 'user domain certificate [sslhome]'
+esac
+group="$user"
+conf="$V_HOME/$user/conf/shttpd.conf"
+tpl_file="$V_WEBTPL/apache_$template.stpl"
+
+# Adding domain to the httpd.conf
+httpd_add_config
+
+# Adding certificate to user dir
+if [ ! -e "$ssl_cert" ]; then
+    cp -f $V_USERS/$user/cert/$cert.crt $ssl_cert
+    cp -f $V_USERS/$user/cert/$cert.key $ssl_key
+fi
+
+# Running template post setup file
+if [ -e $V_WEBTPL/apache_$template.sh ]; then
+    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
+fi
+
+# Checking main vesta httpd config
+main_conf='/etc/httpd/conf.d/vesta.conf'
+main_conf_check=$(grep "$conf" $main_conf )
+if [ -z "$main_conf_check" ]; then
+    echo "Include $conf" >>$main_conf
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Increasing domain value
+increase_user_value "$user" '$U_WEB_SSL'
+
+# Adding ssl values
+update_web_domain_value '$SSL' 'yes'
+update_web_domain_value '$SSL_HOME' "$tpl_option"
+update_web_domain_value '$SSL_CERT' "$cert"
+
+# Logging
+log_history "$V_EVENT" "v_del_web_domain_ssl $user $domain"
+log_event 'system' "$V_EVENT"
+
+exit $OK

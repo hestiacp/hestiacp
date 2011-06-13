@@ -1,0 +1,191 @@
+#!/bin/bash
+# info: adding system user
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+password="$2"
+email="$3"
+role="$4"
+owner="${5-vesta}"
+package="${6-default}"
+ns1=$7
+ns2=$8
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '5' "$#" 'user password email role owner [package] [ns1] [ns2]'
+
+# Checking argument format
+format_validation 'user' 'password' 'email' 'role' 'owner' 'package'
+format_validation 'ns1' 'ns2'
+
+# Checking user
+is_user_free "$user"
+
+# Checking 'vesta' user creation
+if [ "$user" != 'vesta' ]; then
+    # Checking owner
+    is_user_valid "$owner"
+
+    # Checking owner role
+    is_user_privileged "$owner"
+
+    # Checking owner permission
+    is_user_privileged "$owner" "$role"
+
+    # Checking package
+    is_package_valid "$package"
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Importing main config
+source $V_CONF/vesta.conf
+
+# Parsing package data
+package_data=$(cat $V_PKG/$package.pkg)
+
+# Checking shell
+shell_conf=$(echo "$package_data"|grep 'SHELL'|cut -f 2 -d \')
+case $shell_conf in
+    nologin) shell='/sbin/nologin' ;;
+    bash) shell='/bin/bash' ;;
+    *) shell='/sbin/nologin' ;;
+esac
+
+# Adding user
+/usr/sbin/adduser "$user" -s "$shell" -c "$email" -m -d "$V_HOME/$user"
+
+# Adding password
+echo "$password" | /usr/bin/passwd "$user" --stdin >/dev/null 2>&1
+
+# Building directory tree
+if [ ! -z "$BACKUP_SYSTEM" ] && [ "$BACKUP_SYSTEM" != 'no' ]; then
+    mkdir $V_HOME/$user/backup
+    chmod 751 $V_HOME/$user/backup
+fi
+
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    mkdir $V_HOME/$user/conf
+    mkdir $V_HOME/$user/domains
+    mkdir $V_HOME/$user/tmp
+    chmod 751 $V_HOME/$user/conf
+    chmod 751 $V_HOME/$user/domains
+    chmod 777 $V_HOME/$user/tmp
+    chown $user:$user $V_HOME/$user/domains
+fi
+
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    mkdir $V_HOME/$user/mail
+    chmod 751 $V_HOME/$user/mail
+fi 
+
+# Set permissions
+chmod -R a+x $V_HOME/$user
+
+# Checking quota
+if [ ! -z "$DISK_QUOTA" ] && [ "$DISK_QUOTA" != 'off' ]; then
+    DISK_QUOTA=$(echo "$package_data"|grep 'DISK_QUOTA' | cut -f 2 -d \')
+    set_quota "$user" "$DISK_QUOTA"
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding user dir
+mkdir $V_USERS/$user
+
+# Creating configuration files and pipes
+touch $V_USERS/$user/user.conf
+echo "v_upd_sys_user_disk $user" >> $V_QUEUE/disk.pipe
+
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    mkdir $V_USERS/$user/cert
+    touch $V_USERS/$user/web_domains.conf
+    echo "v_upd_web_domains_traff $user" >> $V_QUEUE/traffic.pipe
+    echo "v_upd_web_domains_disk $user" >> $V_QUEUE/disk.pipe
+fi
+
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    touch $V_USERS/$user/dns.conf
+    mkdir $V_USERS/$user/zones
+fi
+
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    touch $V_USERS/$user/mail_domains.conf
+    touch $V_USERS/$user/mail_boxes.conf
+    echo "v_upd_mail_domains_disk $user" >> $V_QUEUE/disk.pipe
+fi
+
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    touch $V_USERS/$user/db.conf
+    echo "v_upd_db_bases_disk $user" >> $V_QUEUE/disk.pipe
+fi
+
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    touch $V_USERS/$user/crontab.conf
+fi
+
+if [ ! -z "$BACKUP_SYSTEM" ] && [ "$BACKUP_SYSTEM" != 'no' ]; then
+    echo "v_backup_sys_user $user" >> $V_QUEUE/backup.pipe
+fi
+
+# Rewriting nameservers
+if [ ! -z "$ns1" ]; then
+    package_data=$(echo "$package_data" | sed -e "s/NS1=.*$/NS1='$ns1'/g")
+fi
+if [ ! -z "$ns2" ]; then
+    package_data=$(echo "$package_data" | sed -e "s/NS2=.*$/NS2='$ns2'/g")
+fi
+
+
+# Filling user config
+echo "PACKAGE='$package'
+$package_data
+SUSPENDED='no'
+OWNER='$owner'
+ROLE='$role'
+CONTACT='$email'
+REPORTS='yes'
+IP_OWNED='0'
+U_CHILDS='0'
+U_DISK='0'
+U_BANDWIDTH='0'
+U_WEB_DOMAINS='0'
+U_WEB_SSL='0'
+U_DNS_DOMAINS='0'
+U_DATABASES='0'
+U_MAIL_DOMAINS='0'
+DATE='$V_DATE'" > $V_USERS/$user/user.conf
+
+# Filling owner config
+ROLE=$(echo "$role" | tr "[:lower:]" "[:upper:]")
+if [ "$user" != 'vesta' ]; then
+    echo "$ROLE='$user'" >> $V_USERS/$owner/reseller.conf
+    increase_user_value "$owner" 'U_CHILDS'
+fi
+
+# Hiding password
+V_EVENT=$(echo $V_EVENT | sed -e "s/$password/xxxxxx/g")
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

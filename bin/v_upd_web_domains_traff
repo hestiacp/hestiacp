@@ -1,0 +1,95 @@
+#!/bin/bash
+# info: updating traffic usage for domains
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'user'
+
+# Checking argument format
+format_validation 'user'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf="$V_USERS/$user/web_domains.conf"
+
+# Defining fileds to select
+field='$DOMAIN'
+
+# Defining search string
+search_string="SUSPEND='no'"
+
+# Parsing unsuspeneded domains
+domains=$(dom_clear_search)
+
+# Starting suspend loop
+for domain in $domains; do
+
+    # Defining log file
+    log_file="/var/log/httpd/domains/$domain.bytes"
+
+    # Defining bytes
+    bytes=0
+
+    # Parsing log
+    while read line; do
+        if [[ '-' != "$line" ]] && [[ 0 -lt "$line" ]]; then
+            bytes=$(($bytes + $line))
+        fi
+    done < $log_file
+
+    # Converting to Mb
+    mb=$(echo "$bytes / 1024 / 1024"|bc)
+
+    # Nulling log
+    echo > $log_file
+
+    # Parsing old value
+    old_val=$(get_web_domain_value '$U_BANDWIDTH')
+
+    # Defining new value
+    bandwidth=$((old_val + mb))
+
+    # Updating bandwidth value in config
+    update_web_domain_value '$U_BANDWIDTH' "$bandwidth"
+
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Recalculating user bandwidth
+traff_size=$(get_usr_traff)
+update_user_value "$user" '$U_BANDWIDTH' "$traff_size"
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

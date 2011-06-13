@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: adding data base server
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+type="$1"
+host="$2"
+port="$3"
+db_user="$4"
+db_password="$5"
+max_usr="${6-300}"
+max_db="${7-300}"
+template="${8-template1}"
+
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/db_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+args_usage='type host port db_user db_password [max_usr] [max_db] [tpl]'
+check_args '5' "$#" "$args_usage"
+
+# Checking argument format
+format_validation 'host' 'port' 'db_user' 'db_password' 'max_usr' 'max_db'
+format_validation 'template'
+
+# Checking db system is enabled
+is_system_enabled 'db'
+
+# Checking db type
+is_type_valid 'db' "$type"
+
+# Checking host existance
+is_db_host_new
+
+# Checking host connection
+case $type in
+    mysql) is_mysql_host_alive ;;
+    pgsql) is_pgsql_host_alive ;;
+esac
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Concatentating db host string
+case $type in
+    mysql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
+            new_str="$new_str PORT='$port' MAX_USERS='$max_usr'";
+            new_str="$new_str MAX_DB='$max_db' U_SYS_USERS=''";
+            new_str="$new_str U_DB_BASES='0'  ACTIVE='yes' DATE='$V_DATE'";;
+    pgsql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
+            new_str="$new_str PORT='$port' TPL='$tpl'";
+            new_str="$new_str MAX_USERS='$max_usr' MAX_DB='$max_db'";
+            new_str="$new_str U_SYS_USERS=''";
+            new_str="$new_str U_DB_BASES='0' ACTIVE='yes' DATE='$V_DATE'";;
+esac
+
+# Adding host to conf
+echo "$new_str" >> $V_DB/$type.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Hidding db pass
+V_EVENT=$(echo $V_EVENT | sed -e "s/$db_password/xxxxxx/g")
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

@@ -1,0 +1,147 @@
+#!/bin/bash
+# info: updating montly billing user report
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+
+# Importing system enviroment  as we run this script 
+#       mostly by cron wich not read it by itself
+source /etc/profile.d/vesta.sh
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '0' "$#" 'user'
+
+# If user specified
+if [ ! -z "$user" ]; then
+    # Checking argument format
+    format_validation 'user'
+
+    # Checking user
+    is_user_valid
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Importing main config
+source $V_CONF/vesta.conf
+
+# Creating user_list
+if [ -z "$user" ]; then
+    user_list=$(ls $V_USERS/)
+else
+    user_list="$user"
+fi
+
+# Updating user billing
+for user in $user_list; do 
+
+    # Checking web system
+    if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+        # Cleaning value
+        U_DISK_WEB_DOMAINS=''
+
+        # Defining config
+        conf="$V_USERS/$user/web_domains.conf"
+
+        # Defining fileds to select
+        field='$DOMAIN'
+
+        # Defining search string
+        search_string="DOMAIN='"
+
+        # Receiving user domain list
+        domains=$(dom_clear_search)
+
+        # Starting domain loop
+        i='1'; for domain in $domains; do
+
+            # Assigning domain values
+            u_disk=$(get_web_domain_value '$U_DISK')
+            u_band=$(get_web_domain_value '$U_BANDWIDTH')
+            disk="$domain:$u_disk"
+            band="$domain:$u_band"
+
+            if [ "$i" -eq '1' ]; then
+                U_DISK_WEB_DOMAINS="$disk"
+                U_BANDWIDTH_WEB_DOMAINS="$band"
+            else
+                U_DISK_WEB_DOMAINS="$U_DISK_WEB_DOMAINS,$disk"
+                U_BANDWIDTH_WEB_DOMAINS="$U_BANDWIDTH_WEB_DOMAINS,$band"
+            fi
+
+            # Itterating
+            i=$((i + 1))
+        done
+
+    fi
+
+    # Checking mail system
+    if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+        #FIXME
+        ok='ok'
+    fi
+
+    # Checking db system
+    if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+        #FIXME
+        ok='ok'
+    fi
+
+    # Importing user values
+    source $V_USERS/$user/user.conf
+
+    # Redefining date
+    DATE=$(date -d "$(date +'%m/01') -1day" +%m-%d-%y)
+
+    # Compiling report string
+    v_str="DATE='$DATE' PACKAGE='$PACKAGE' U_CHILDS='$U_CHILDS'" 
+    v_str="$v_str U_DISK='$U_DISK' U_BANDWIDTH='$U_BANDWIDTH'"
+    v_str="$v_str U_WEB_DOMAINS='$U_WEB_DOMAINS' U_WEB_SSL='$U_WEB_SSL'"
+    v_str="$v_str U_DNS_DOMAINS='$U_DNS_DOMAINS' U_DATABASES='$U_DATABASES'"
+    v_str="$v_str U_MAIL_DOMAINS='$U_MAIL_DOMAINS' IP_OWNED='$IP_OWNED'"
+    v_str="$v_str U_DISK_WEB_DOMAINS='$U_DISK_WEB_DOMAINS'"
+    v_str="$v_str U_BANDWIDTH_WEB_DOMAINS='$U_BANDWIDTH_WEB_DOMAINS'"
+
+    # Updating user billing log
+    billing="$V_USERS/$user/billing.log"
+    if [ -e "$billing" ]; then
+        # Checking dublicates
+        check_month=$(grep -n "DATE='$DATE'" $billing|cut -f 1 -d :)
+        if [ -z "$check_month" ]; then
+            # Updating as there no dublicates
+            echo "$v_str" >>$billing
+        else
+            # Replacing string with new data
+            sed -i "$check_month s/.*/$v_str/" $billing
+        fi
+    else
+        # Creating billing log
+        echo "$v_str" >$billing
+    fi
+done
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

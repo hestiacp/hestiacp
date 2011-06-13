@@ -1,0 +1,90 @@
+#!/bin/bash
+# info: adding data base
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+database="$user"_"$2"
+db_user="$user"_"$3"
+db_password="$4"
+type="$5"
+host=$6
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/db_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '5' "$#" 'user db db_user db_password type [host]'
+
+# Checking argument format
+format_validation 'user' 'database' 'db_user' 'db_password'
+
+# Checking db system is enabled
+is_system_enabled 'db'
+
+# Checking db type
+is_type_valid 'db' "$type"
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking db existance
+is_db_new
+
+# Checking db host
+if [ -z "$host" ]; then
+    host=$(get_next_db_host)
+fi
+is_db_host_valid
+
+# Checking package
+is_package_full 'db_base'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Switching on db type
+case $type in
+    mysql) create_db_mysql ;;
+    pgsql) create_db_pgsql ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Increasing db value
+increase_db_value
+
+# Increasing domain value
+increase_user_value "$user" '$U_DATABASES'
+
+# Adding db to db conf
+v_str="DB='$database' USER='$db_user' HOST='$host' TYPE='$type'"
+v_str="$v_str U_DISK='0' SUSPEND='no' DATE='$V_DATE'"
+echo "$v_str">>$V_USERS/$user/db.conf
+
+# Hiding password
+V_EVENT=$(echo $V_EVENT | sed -e "s/$db_password/xxxxxx/g")
+
+# Logging
+log_history "$V_EVENT" "v_del_db_base $user $database"
+log_event 'system' "$V_EVENT"
+
+exit $OK

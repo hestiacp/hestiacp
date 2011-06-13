@@ -1,0 +1,39 @@
+#!/bin/bash
+# Internal vesta function
+# web system restart
+
+# Importing variables
+source $VESTA/conf/vars.conf
+
+# Restart functions
+apache() {
+    /etc/init.d/httpd 'graceful' >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        #$V_FUNC/report_issue 'web' 'apache'
+        echo "$E_RESTART_FAILED $V_EVENT"
+    fi
+}
+
+nginx() {
+    /etc/init.d/nginx 'restart' >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        #$V_FUNC/report_issue 'web' 'nginx'
+        echo "$E_RESTART_FAILED $V_EVENT"
+    fi
+}
+
+# Parsing config
+web_system=$(grep 'WEB_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
+proxy_system=$(grep 'PROXY_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
+
+# Checking values
+if [ "$web_system" = 'apache' ]; then
+    apache
+fi
+
+if [ "$proxy_system" = 'nginx' ]; then
+    nginx
+fi
+
+# Logging
+exit $OK

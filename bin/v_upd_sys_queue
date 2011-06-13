@@ -1,0 +1,79 @@
+#!/bin/bash
+# info: updating system queue
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+# Argument defenition
+pipe="$1"
+
+# Importing system enviroment  as we run this script
+#     mostly by cron wich not read it by itself
+source /etc/profile.d/vesta.sh
+
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+
+# Another workaround for cron enviroment
+PATH="$PATH:$V_BIN"
+export PATH
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'pipe'
+
+# Checking argument format
+format_validation 'pipe'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining pipe functions
+restart_pipe() {
+    for service in $(cat $V_QUEUE/restart.pipe |sort |uniq); do
+        $V_FUNC/restart_$service
+    done
+    echo >$V_QUEUE/restart.pipe
+}
+
+stats_pipe() {
+    bash $V_QUEUE/stats.pipe
+}
+
+backup_pipe() {
+    bash $V_QUEUE/backup.pipe
+}
+
+disk_pipe() {
+    bash $V_QUEUE/disk.pipe
+}
+
+traff_pipe() {
+    bash $V_QUEUE/traffic.pipe
+}
+
+case $pipe in
+    restart) restart_pipe ;;
+    stats) stats_pipe ;;
+    backup) backup_pipe ;;
+    disk) disk_pipe ;;
+    traffic) traff_pipe ;;
+    *) check_args '1' '0' 'pipe'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

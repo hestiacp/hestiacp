@@ -1,0 +1,90 @@
+#!/bin/bash
+# info: adding dns domain record
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+record=$(idn -t --quiet -u "$3" )
+rtype=$(echo "$4"| tr '[:lower:]' '[:upper:]')
+value=$(idn -t --quiet -u "$5" )
+id="$6"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '5' "$#" 'user domain record type value [id]'
+
+# Checking argument format
+format_validation 'user' 'domain' 'record' 'rtype'
+
+# Checking web system is enabled
+is_system_enabled 'dns'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_dns_domain_valid
+
+# Checking domain is active
+is_domain_suspended 'dns'
+
+# Defining if emtpy
+if [ -z "$id"] ; then
+    id=$(get_next_dns_record)
+fi
+
+# Checking id format
+format_validation 'id'
+
+# Checking id
+is_dns_record_free
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining zone path
+zone="$V_USERS/$user/zones/$domain"
+
+# Adding record
+dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' VALUE='$value'"
+dns_rec="$dns_rec SUSPEND='no' DATE='$V_DATE'"
+echo "$dns_rec" >> $zone 
+
+# Sorting records
+sort_dns_records 
+
+# Updating zone
+update_domain_zone
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding task to the vesta pipe
+restart_schedule 'dns'
+
+# Logging
+log_history "$V_EVENT" "v_del_dns_domain_record $user $domain $id"
+log_event 'system' "$V_EVENT"
+
+exit $OK

@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: listing data base servers
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+type="$1"
+host="$2"
+format="${3-shell}"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/db_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '2' "$#" 'type host [format]'
+
+# Checking argument format
+format_validation 'host'
+
+# Checking db type
+is_type_valid 'db' "$type"
+
+# Checking db host
+is_db_host_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config type
+conf="$V_DB/$type.conf"
+
+# Defining fileds to select
+fields='$HOST $PORT $MAX_USERS $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'
+
+# Listing database
+case $format in 
+    json) dbhost_json_single_list ;;
+    shell) dbhost_shell_single_list | column -t;;
+    *) check_args '2' "0" 'type host [format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit  $OK

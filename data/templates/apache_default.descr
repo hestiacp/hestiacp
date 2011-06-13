@@ -1,0 +1,3 @@
+# Default template with basic php module restrictions.
+# This is recomended config for basic sites.
+PHP='module' CGI='yes' ELOG='no'

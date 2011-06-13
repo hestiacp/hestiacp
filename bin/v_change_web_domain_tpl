@@ -1,0 +1,137 @@
+#!/bin/bash
+# info: changing domain template
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain="$2"
+template="$3"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '3' "$#" 'user domain template'
+
+# Checking argument format
+format_validation 'user' 'domain' 'template'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web_domains'
+
+# Checking template
+templates=$(get_user_value '$TEMPLATES')
+is_template_valid "web"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get template name
+tpl_name=$(get_web_domain_value '$TPL')
+tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+conf="$V_HOME/$user/conf/httpd.conf"
+
+# Deleting domain
+httpd_del_config
+
+# Checking ssl
+ssl=$(get_web_domain_value '$SSL')
+if [ "$ssl" = 'yes' ]; then
+
+    # Get tpl
+    tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+    conf="$V_HOME/$user/conf/shttpd.conf"
+
+    # Deleting domain
+    httpd_del_config
+fi
+
+# Defining variables for template replace
+ip=$(get_web_domain_value '$IP')
+aliases=$(get_web_domain_value '$ALIAS')
+port=$(get_web_port)
+email="$user@$domain"
+docroot="$V_HOME/$user/domains/$domain/public_html"
+conf="$V_HOME/$user/conf/httpd.conf"
+tpl_file="$V_WEBTPL/apache_$template.tpl"
+group="$user"
+
+# Adding domain to the httpd.conf
+httpd_add_config
+
+# Running template post setup file
+if [ -e $V_WEBTPL/apache_$template.sh ]; then
+    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
+fi
+
+# Checking ssl
+if [ "$ssl" = 'yes' ]; then
+    # Defining variables for ssl template replace
+    port=$(get_web_port_ssl)
+    tpl_option=$(get_web_domain_value '$SSL_HOME')
+    cert=$(get_web_domain_value '$SSL_CERT')
+    ssl_cert="$V_HOME/$user/conf/$cert.crt"
+    ssl_key="$V_HOME/$user/conf/$cert.key"
+    case $tpl_option in
+        single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
+        *) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+    esac
+    conf="$V_HOME/$user/conf/shttpd.conf"
+    tpl_file="$V_WEBTPL/apache_$template.stpl"
+
+    # Adding domain to the httpd.conf
+    httpd_add_config
+
+    # Running template post setup file
+    if [ -e $V_WEBTPL/apache_$template.sh ]; then
+        $V_WEBTPL/apache_$template.sh \
+            "$user" "$domain" "$ip" "$V_HOME" "$docroot" "$port"
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Changing tpl in config
+update_web_domain_value '$TPL' "$template"
+
+# Updating db keys
+for keys in $(cat $V_WEBTPL/apache_$template.descr|grep -v '#'); do
+    key=$(echo "$keys"| cut -f 1 -d '=' |sed -e "s/^/\$/g")
+    value=$(echo "$keys" |cut -f 2 -d \')
+    update_web_domain_value "$key" "$value"
+done
+
+# Adding task to the vesta pipe
+restart_schedule 'web'
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

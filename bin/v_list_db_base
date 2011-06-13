@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: listing data base
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+database="$2"
+format="${3-shell}"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/db_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '2' "$#" 'user db_name [format]'
+
+# Checking argument format
+format_validation 'user' 'database'
+
+# Checking user
+is_user_valid
+
+# Checking database exist
+is_db_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf="$V_USERS/$user/db.conf"
+
+# Defining fileds to select
+fields='$DB $USER $HOST $TYPE $U_DISK $SUSPEND $DATE'
+
+# Listing database
+case $format in 
+    json) db_json_single_list ;;
+    shell) db_shell_single_list | column -t ;;
+    *) check_args '2' "0" 'user database [format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit  $OK

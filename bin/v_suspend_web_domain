@@ -1,0 +1,94 @@
+#!/bin/bash
+# info: suspening web domain (with ssl)
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain="$2"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+# Defining url
+url="${3-$V_SUSPEND_URL}"
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '2' "$#" 'user domain [suspend_url]'
+
+# Checking argument format
+format_validation 'user' 'domain' 'url'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web_domains'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get template name
+tpl_name=$(get_web_domain_value '$TPL')
+tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+
+# Defining config
+conf="$V_HOME/$user/conf/httpd.conf"
+
+# Defining search phrase
+search_phrase='DocumentRoot '
+
+# Defining replace string
+str_repl="    Redirect / http://$url/"
+
+# Suspending vhost
+httpd_change_config
+
+# Check ssl vhost
+ssl=$(get_web_domain_value '$SSL')
+if [ "$ssl" = 'yes' ]; then
+    # Defining teplate name
+    tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+
+    # Defining config
+    conf="$V_HOME/$user/conf/shttpd.conf"
+
+    # Reefining replace string - old str_repl contains escaped chars
+    str_repl="    Redirect / http://$url/"
+
+    # Suspending vhost
+    httpd_change_config
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding suspend in config
+update_web_domain_value '$SUSPEND' 'yes'
+
+# Adding task to the vesta pipe
+restart_schedule 'web'
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

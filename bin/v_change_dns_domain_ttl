@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: changing dns domain ttl
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+ttl="$3"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '3' "$#" 'user domain ttl'
+
+# Checking argument format
+format_validation 'user' 'domain' 'ttl'
+
+# Checking web system is enabled
+is_system_enabled 'dns'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_dns_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'dns'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get old ttl
+old_ttl=$(get_dns_domain_value '$TTL')
+
+# Changing ttl
+update_dns_domain_value '$TTL' "$ttl"
+
+# Updating zone
+update_domain_zone
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding task to the vesta pipe
+restart_schedule 'dns'
+
+# Logging
+log_history "$V_EVENT" "$V_SCRIPT $user $domain $old_ttl"
+log_event 'system' "$V_EVENT"
+
+exit $OK

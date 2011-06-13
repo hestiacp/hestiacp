@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: listing web domains
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+format="${2-shell}"
+limit="${3-1000}"
+offset="${4-1}"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '1' "$#" 'user [format] [limit] [offset]'
+
+# Checking argument format
+format_validation 'user' 'limit' 'offset'
+
+# Checking user
+is_user_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf="$V_USERS/$user/web_domains.conf"
+
+# Defining fileds to select
+fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG $STATS
+ $STATS_AUTH $SSL $SSL_HOME $SSL_CERT $NGINX $NGINX_EXT $SUSPEND $DATE'
+
+
+# Listing domains
+case $format in 
+    json) v_json_list ;;
+    shell) fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $DATE';
+        v_shell_list | column -t ;;
+    *) check_args '1' "0" 'user [format] [limit] [offset]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

@@ -1,0 +1,78 @@
+#!/bin/bash
+# info: deliting dns domain
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain=$(idn -t --quiet -u "$2" )
+named_conf=/etc/named.conf
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '2' "$#" 'user domain'
+
+# Checking argument format
+format_validation 'user' 'domain'
+
+# Checking web system is enabled
+is_system_enabled 'dns'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_dns_domain_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get template name
+tpl_name=$(get_dns_domain_value '$TPL')
+old_ip=$(get_dns_domain_value '$IP')
+
+# Deleting domain in named.conf
+rm_string=$(grep -n /etc/namedb/$domain.db $named_conf|cut -d : -f 1)
+if [ ! -z "$rm_string" ]; then
+    sed -i "$rm_string d" $named_conf
+fi
+
+if [ -e "/etc/namedb/$domain.db" ]; then
+    rm -f /etc/namedb/$domain.db
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Decreasing domain value
+decrease_user_value "$user" '$U_DNS_DOMAINS'
+
+# Deleting domain
+del_dns_domain
+
+# Adding task to the vesta pipe
+restart_schedule 'dns'
+
+# Logging
+log_history "$V_EVENT"
+log_event 'system' "$V_EVENT"
+
+exit $OK

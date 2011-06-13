@@ -1,0 +1,65 @@
+#!/bin/bash
+# info: unsuspening dns domain
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain="$2"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '2' "$#" 'user domain'
+
+# Checking argument format
+format_validation 'user' 'domain'
+
+# Checking web system is enabled
+is_system_enabled 'dns'
+
+# Checking user
+is_user_valid
+
+# Checking domain exist
+is_dns_domain_valid
+
+# Check domain is suspened
+is_domain_unsuspended 'dns'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf="/etc/named.conf"
+
+# Adding zone in named.conf
+nmd_rec="zone \"$domain\" { type master; file \"/etc/namedb/$domain.db\"; };"
+echo "$nmd_rec" >> $conf
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Unsuspending domain in config
+update_dns_domain_value '$SUSPEND' 'no'
+
+# Adding task to the vesta pipe
+restart_schedule 'dns'
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

@@ -1,0 +1,52 @@
+#!/bin/bash
+# info: listing ssl certificates
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+format="${2-shell}"
+limit="${3-1000}"
+offset="${4-1}"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/cert_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '1' "$#" 'user [format] [limit] [offset]'
+
+# Checking argument format
+format_validation 'user' 'limit' 'offset'
+
+# Checking user
+is_user_valid
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Listing domains
+case $format in 
+    json) cert_json_list  ;;
+    shell) cert_shell_list | column -t ;;
+    *) check_args '1' "0" 'user [format] [limit] [offset]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit  $OK

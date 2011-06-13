@@ -1,0 +1,47 @@
+#!/bin/bash
+# info: changing ip name
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+ip="$1"
+ip_name="$2"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/ip_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '2' "$#" 'ip ip_name'
+
+# Checking argument format
+format_validation 'ip' 'ip_name'
+
+# Checking system ip
+is_sys_ip_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Changing ip name
+update_sys_ip_value '$NAME' "$ip_name"
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

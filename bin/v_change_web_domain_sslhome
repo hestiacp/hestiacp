@@ -1,0 +1,109 @@
+#!/bin/bash
+# info: changing domain ssl home
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain="$2"
+tpl_option="$3"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '3' "$#" 'user domain sslhome'
+
+# Checking argument format
+format_validation 'user' 'domain'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web_domains'
+
+# Check SSL is added
+is_web_domain_value_exist '$SSL'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get template name
+tpl_name=$(get_web_domain_value '$TPL')
+tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+
+# Defininig config
+conf="$V_HOME/$user/conf/shttpd.conf"
+
+# Defining search phrase
+search_phrase='DocumentRoot'
+
+# Parsing tpl_option
+case $tpl_option in
+    single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
+    same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+    *) check_args '3' "2" 'user domain sslhome'
+esac
+
+# Defining replace string
+str_repl="    DocumentRoot $docroot"
+
+# Changing sslhome
+httpd_change_config
+
+# Get old sslhome value
+ssl_home=$(get_web_domain_value '$SSL_HOME')
+
+# Parsing old sslhome
+case $ssl_home in
+    single) dirroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
+    same) dirroot="$V_HOME/$user/domains/$domain/public_html" ;;
+    *) check_args '3' "2" 'user domain sslhome'
+esac
+
+# Defining search phrase
+search_phrase="<Directory $dirroot>"
+
+# Defining replace string
+str_repl="    <Directory $docroot>"
+
+# Changing sslhome directory tag
+httpd_change_config
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding sslhome in config
+update_web_domain_value '$SSL_HOME' "$tpl_option"
+
+# Adding task to the vesta pipe
+restart_schedule 'web'
+
+# Logging
+log_history "$V_EVENT" "$V_SCRIPT $user $domain $ssl_home"
+log_event 'system' "$V_EVENT"
+
+exit $OK

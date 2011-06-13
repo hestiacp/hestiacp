@@ -1,0 +1,187 @@
+#!/bin/bash
+# info: adding web domain
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+ip="$3"
+template=${4-default}
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+source $V_FUNC/ip_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '3' "$#" 'user domain ip [template]'
+
+# Checking argument format
+format_validation 'user' 'domain' 'ip' 'template'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain
+is_domain_new 'quiet'
+if [ $? -ne $OK ]; then
+
+    # Checking domain owner
+    is_domain_owner
+
+    # Checking domain service
+    is_web_domain_free
+
+fi
+
+# Checking ip
+is_ip_avalable
+
+# Checking package
+is_package_full 'web_domain'
+
+# Checking template
+templates=$(get_user_value '$TEMPLATES')
+is_template_valid "web"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining domain aliases
+ip_name=$(get_ip_name)
+ip_name_idn=$(idn -t --quiet -a "$ip_name")
+domain_alias="www.$domain"
+domain_alias_idn="www.$domain_idn"
+if [ ! -z "$ip_name" ]; then
+    domain_alias_dash="${domain//./-}.$ip_name"
+    domain_alias_dash_idn="${domain_idn//./-}.$ip_name_idn"
+    aliases="$domain_alias,$domain_alias_dash"
+    aliases_idn="$domain_alias_idn,$domain_alias_dash_idn"
+else
+    aliases="$domain_alias"
+    aliases_idn="$domain_alias_idn"
+fi
+
+# Defining vars for httpd_add_config function
+port=$(get_web_port)
+group="$user"
+email="$user@$domain"
+docroot="$V_HOME/$user/domains/$domain/public_html"
+conf="$V_HOME/$user/conf/httpd.conf"
+tpl_file="$V_WEBTPL/apache_$template.tpl"
+
+# Adding domain to the httpd.conf
+httpd_add_config
+
+# Building directory tree
+mkdir $V_HOME/$user/domains/$domain \
+      $V_HOME/$user/domains/$domain/public_html \
+      $V_HOME/$user/domains/$domain/public_shtml \
+      $V_HOME/$user/domains/$domain/document_errors \
+      $V_HOME/$user/domains/$domain/cgi-bin \
+      $V_HOME/$user/domains/$domain/private \
+      $V_HOME/$user/domains/$domain/stats \
+      $V_HOME/$user/domains/$domain/logs
+
+# Adding domain logs
+touch /var/log/httpd/domains/$domain.bytes \
+      /var/log/httpd/domains/$domain.log \
+      /var/log/httpd/domains/$domain.error_log
+
+# Adding symlink for logs
+ln -s /var/log/httpd/domains/$domain.*log $V_HOME/$user/domains/$domain/logs/
+
+# Adding domain skeleton
+cp -r $V_WEBTPL/skel/public_html/ $V_HOME/$user/domains/$domain/
+cp -r $V_WEBTPL/skel/public_shtml/ $V_HOME/$user/domains/$domain/
+cp -r $V_WEBTPL/skel/document_errors/ $V_HOME/$user/domains/$domain/
+cp -r $V_WEBTPL/skel/cgi-bin/ $V_HOME/$user/domains/$domain/
+
+# Changing tpl values
+for file in $(find "$V_HOME/$user/domains/$domain/" -type f); do
+    sed -i "s/%domain%/$domain/g" $file
+done
+
+# Changing file owner
+chown -R $user:$user $V_HOME/$user/domains/$domain
+chown root:$user /var/log/httpd/domains/$domain.*
+
+# Changing file permissions
+chmod 551 $V_HOME/$user/domains/$domain
+chmod 751 $V_HOME/$user/domains/$domain/private
+chmod 751 $V_HOME/$user/domains/$domain/cgi-bin
+chmod 751 $V_HOME/$user/domains/$domain/public_html
+chmod 751 $V_HOME/$user/domains/$domain/public_shtml
+chmod 751 $V_HOME/$user/domains/$domain/document_errors
+chmod -f -R 775 $V_HOME/$user/domains/$domain/cgi-bin/*
+chmod -f -R 775 $V_HOME/$user/domains/$domain/public_html/*
+chmod -f -R 775 $V_HOME/$user/domains/$domain/document_errors/*
+chmod 551 $V_HOME/$user/domains/$domain/stats
+chmod 551 $V_HOME/$user/domains/$domain/logs
+chmod 640 /var/log/httpd/domains/$domain.*
+
+# Running template post setup file
+if [ -e $V_WEBTPL/apache_$template.sh ]; then
+    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
+fi
+
+# Checking main vesta httpd config
+main_conf='/etc/httpd/conf.d/vesta.conf'
+main_conf_check=$(grep "$conf" $main_conf )
+if [ -z "$main_conf_check" ]; then
+    echo "Include $conf" >>$main_conf
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Increasing ip value
+increase_ip_value
+
+# Increasing domain value
+increase_user_value "$user" '$U_WEB_DOMAINS'
+
+# Defining domain variables
+template_data=$(cat $V_WEBTPL/apache_$template.descr|grep -v '#')
+v_str="DOMAIN='$domain'"
+v_str="$v_str IP='$ip'"
+v_str="$v_str U_DISK='0'"
+v_str="$v_str U_BANDWIDTH='0'"
+v_str="$v_str TPL='$template'"
+v_str="$v_str ALIAS='$aliases'"
+v_str="$v_str $template_data"    # Inserting PHP,CGI and ELOG keys
+v_str="$v_str STATS='' STATS_AUTH=''"
+v_str="$v_str SSL='no' SSL_HOME='' SSL_CERT=''"
+v_str="$v_str NGINX='' NGINX_EXT='' SUSPEND='no' DATE='$V_DATE'"
+
+# Registering domain
+echo "$v_str" >>$V_USERS/$user/web_domains.conf
+
+# Adding task to the vesta pipe
+restart_schedule 'web'
+
+# Logging
+log_history "$V_EVENT" "v_del_web_domain $user $domain"
+log_event 'system' "$V_EVENT"
+
+exit  $OK

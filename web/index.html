@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+
+    <head>
+        <title>Vesta | IP</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="imagetoolbar" content="false" />
+
+        <link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/main.css" />
+
+        <!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/1750887/projects/vesta2/css/ie.css" />
+        <![endif]-->
+                
+        <style>
+            .black_overlay{
+                position: absolute;
+                top: 0%;
+                left: 0%;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                z-index:1001;
+                -moz-opacity: 0.8;
+                opacity:.80;
+                filter: alpha(opacity=80);
+            }
+
+            .popup_content {
+                position: absolute;
+                top: 25%;
+                left: 25%;
+                width: 50%;
+                height: 50%;
+                padding: 16px;
+                border: 16px solid orange;
+                background-color: white;
+                z-index:1002;
+                overflow: auto;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <div id="page">
+            <div class="outer">
+                <div id="header">
+                    <div class="logo-box">
+                        <h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
+                    </div>            
+                    <ul class="settings">
+
+                        <li><a href="#">settings</a></li>
+                        <li><a href="#">exit</a></li>
+                    </ul>            
+                </div>
+                <div id="primary-nav-box">
+                    <ul class="primary-nav cc">
+                        <li class="section"  id="USER">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">Users</span> 
+                                                <i class="add-entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def">0 users</span>
+                                                <span class="def">0 blocked</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                        </li>
+                        
+
+                        <li class="section"  id="WEBDOMAIN">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">Web Domain</span> 
+                                                <i class="add-entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def">0 users</span>
+                                                <span class="def">0 blocked</span>
+                                                <span class="def">3 waiting</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                        </li>
+                        <li class="section"  id="MAIL">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">Mail</span> 
+                                                <i class="add-entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def">0 users</span>
+                                                <span class="def">0 blocked</span>
+                                                <span class="def">3 waiting</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                        </li>
+                        <li class="section"  id="DB">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">DB</span> 
+                                                <i class="add-entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def">0 users</span>
+                                                <span class="def">0 blocked</span>
+                                                <span class="def">3 waiting</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                        </li>
+                        <li class="section active"  id="DNS">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">DNS</span> 
+                                                <i class="add-entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def total_dns_records">0 total records</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                        </li>
+                        <li class="section"  id="IP">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">IP</span> 
+                                                <i class="add-entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def">0 users</span>
+                                                <span class="def">0 blocked</span>
+                                                <span class="def">3 waiting</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                        </li>
+                        <li class="section last-section" id="CRON">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">Cron</span> 
+                                                <i class="add-entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def">0 users</span>
+                                                <span class="def">0 blocked</span>
+                                                <span class="def">3 waiting</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="console">
+                    <div class="b-console">
+
+                        <div class="b-console-wrap">
+                            <form class="b-console-form cc" action="#" method="post">
+                                <fieldset>
+                                    <input class="b-console-field" type="text" value="/"/>
+                                    <input class="b-console-btn" type="submit" value="Go" />
+                                </fieldset>
+                            </form>
+                            <div class="b-console-statuses hidden">
+                                <div class="b-console-status cc">
+
+                                    <p class="b-console-status-message">domain <b>google.com</b> have been added <br />
+                                        
+                                    </p>
+                                    <span class="b-console-status-action">cancel</span>
+                                    <i class="b-console-status-arrow">&nbsp;</i>							
+                                </div>
+                            </div>                            
+                        </div>
+
+                        <div class="b-console-results"></div>
+                    </div>
+                </div>
+                <div id="actions-toolbar" class="cc"><a class="add-domain do_action_new_entry" href="javascript:void(0)"><i class="icon do_action_new_entry">&nbsp;</i>add new domain</a></div>
+
+                <div id="content">
+                    
+                     <!--  -->
+        
+        <!-- -->
+                    
+                </div>        
+            </div>
+        </div>
+        
+       
+
+        <!-- script type="text/javascript" src="js/lib/jquery-1.4.4.min.js"></script -->
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.js"></script>
+        <script type="text/javascript" src="js/date_format.js"></script>
+        <script type="text/javascript" src="js/lib/custom-form-elements.js"></script>
+        <script type="text/javascript" src="js/lib/browser.js"></script>
+        <script type="text/javascript" src="js/lib/popup.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/tech.js"></script>
+        <script type="text/javascript" src="js/_settings.js"></script>
+        <script type="text/javascript" src="js/actions.js"></script>
+        <script type="text/javascript" src="js/helpers.js"></script>
+        <script type="text/javascript" src="js/templates.js"></script>
+        <script type="text/javascript" src="js/html.js"></script>
+        <script type="text/javascript" src="js/view.js"></script>
+        <script type="text/javascript" src="js/ref.js"></script>
+        <script type="text/javascript" src="js/pages.js"></script>
+        <script type="text/javascript" src="js/model.js"></script>
+        <script type="text/javascript" src="js/core.js"></script>
+        <script type="text/javascript" src="js/validators.js"></script>
+        
+        <script type="text/javascript" src="js/__init__.js"></script>
+    </body>
+
+</html>

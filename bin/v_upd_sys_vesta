@@ -1,0 +1,111 @@
+#!/bin/bash
+# info: updating vesta after rpm update
+
+# warn: please note that this scritp should be runned
+#    by yum or rpm only
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+version="$1"
+updates=''
+
+# Importing system enviroment
+source /etc/profile.d/vesta.sh
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_CONF/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'version'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Compare versions
+if [ "$version" != "$VERSION" ]; then
+    # Downloading version tree
+    upd_host="yum.vestacp.com"
+    wget -O "/tmp/versions" http://$V_UPD_HOST/upd_scripts/version_tree.txt \
+        >/dev/null 2>&1
+
+    # Checking download result
+    if [ "$?" -ne "0" ]; then
+        echo "Error: version tree update failed"
+        log_event 'debug' "$E_UPD_FAILED $V_EVENT"
+        exit $E_UPD_FAILED
+    fi
+
+    # Deviding version
+    v1=$(echo "$version" |cut -f 1 -d '.')
+    v2=$(echo "$version" |cut -f 2 -d '.')
+    v3=$(echo "$version" |cut -f 3 -d '.')
+    V1=$(echo "$VERSION" |cut -f 1 -d '.')
+    V2=$(echo "$VERSION" |cut -f 2 -d '.')
+    V3=$(echo "$VERSION" |cut -f 3 -d '.')
+
+
+    # Checking difference between versions
+    # Too nested tests, sory about complexity
+    if [ "$V1" -lt "$v1" ]; then
+        for ver in $(seq $V1 $v1); do
+            updates="$updates $(grep "^$ver." /tmp/versions|grep ":1$"|\
+                cut -f 1 -d :)"
+        done
+    else
+        if [ "$V2" -lt "$v2" ]; then
+            for ver in $(seq $V2 $v2); do
+                updates="$updates $(grep "^$v1.$ver." /tmp/versions |\
+                    grep ":1$"|cut -f 1 -d :)"
+            done
+        else
+            for ver in $(seq $V3 $v3); do
+                updates="$updates $(grep "^$v1.$v2.$ver" /tmp/versions |\
+                    grep ":1$"|cut -f 1 -d :)"
+            done
+        fi
+    fi
+
+    # Executing update scripts
+    if [ ! -z "$updates" ]; then
+        mkdir $V_BIN/updates >/dev/null 2>&1
+
+        for update in $updates; do
+            wget -O $V_BIN/updates/$update.sh \
+                http://$V_UPD_HOST/upd_scripts/$update.sh >/dev/null 2>&1
+
+            # Checking download result
+            if [ "$?" -ne "0" ]; then
+                echo "Error: version tree update failed"
+                log_event 'debug' "$E_UPD_FAILED $V_EVENT"
+                exit $E_UPD_FAILED
+            fi
+            bash  $V_BIN/updates/$update.sh
+        done
+        rm -rf $V_BIN/updates
+    fi
+
+    # Updating config version
+    sed -i "s/VERSION='$VERSION'/VERSION='$version'/g" $V_CONF/vesta.conf
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

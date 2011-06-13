@@ -1,0 +1,90 @@
+#!/bin/bash
+# info: deleting system ip
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+ip="$1"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/ip_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'ip'
+
+# Checking argument format
+format_validation 'ip'
+
+# Checking system ip
+is_sys_ip_valid "$ip"
+
+# Checking webdomains on ip
+is_ip_key_empty '$U_WEB_DOMAINS'
+
+# Checking users on ip
+is_ip_key_empty '$U_SYS_USERS'
+
+# We do not check ownership if 
+# no one actualy use this ip
+
+# Checking interface
+interface=$(get_current_interface)
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config paths
+conf='/etc/httpd/conf.d/vesta.conf'
+nconf='/etc/nginx/conf.d/vesta_ip.conf'
+iconf='/etc/sysconfig/network-scripts/ifcfg'
+rconf='/etc/httpd/conf.d/rpaf.conf'
+
+# Get ip owner
+user="$(get_sys_ip_value '$OWNER')"
+
+# Deleting interface
+ifconfig "$interface" down
+
+# Deleting startup script
+rm -f $iconf-$interface
+
+# Deleting vesta ip
+rm -f $V_IPS/$ip
+
+# Importing main config
+source $V_CONF/vesta.conf
+
+# Deleting namehosting support
+namehost_ip_disable
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Updating user conf
+if [ ! -z "$user" ]; then
+    decrease_user_value "$user" '$IP_OWNED'
+fi
+
+# Adding task to the vesta pipe
+if [ "$web_restart" = 'yes' ]; then
+    restart_schedule 'web'
+fi
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit  $OK

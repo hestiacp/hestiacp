@@ -1,0 +1,112 @@
+#!/bin/bash
+# info: adding web domain nginx integration
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain="$2"
+template="${3-default}"
+default_extentions="jpg jpeg gif png ico css zip tgz gz rar bz2 doc xls exe\
+ pdf ppt txt tar wav bmp rtf js mp3 avi mpeg"
+extentions="${4-$default_extentions}"
+extentions=${extentions// /|}     # replacing spaces with pipe char
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '2' "$#" 'user domain [template] [extentions] [conn]'
+
+# Checking argument format
+format_validation 'user' 'domain' 'template' 'extentions'
+
+# Checking web system is enabled
+is_system_enabled 'proxy'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web_domains'
+
+# Check nginx is not added
+is_web_domain_key_empty '$NGINX'
+
+# Checking template
+is_template_valid "proxy"
+
+
+exit
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get template name
+tpl_name=$(get_web_domain_value '$TPL')
+tpl_file="$V_WEBTPL/$package-$tpl_name.tpl"
+
+# Defining config
+conf="$V_HOME/$user/conf/httpd.conf"
+
+# Defining search phrase
+search_phrase='ServerAlias'
+
+# Defining new alias string
+curr_alias=$(get_web_domain_value '$ALIAS')
+if [ -z "$curr_alias" ]; then
+    new_alias="$dom_alias"
+else
+    new_alias="$curr_alias,$dom_alias"
+fi
+
+# Defining replace string
+str_repl="    ServerAlias ${new_alias//,/ }"
+
+# Adding alias
+httpd_change_config
+
+# Checking ssl domain
+ssl=$(get_web_domain_value '$SSL')
+if [ "$ssl" = 'yes' ]; then
+
+    # Defining ssl template
+    tpl_file="$V_WEBTPL/$package-$tpl_name.ssl.tpl"
+
+    # Defining ssl config
+    conf="$V_HOME/$user/conf/shttpd.conf"
+
+    # Adding alias
+    httpd_change_config
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding new alias
+update_web_domain_value '$ALIAS' "$new_alias"
+
+# Adding task to the vesta pipe
+restart_schedule 'web'
+
+log_history "$V_EVENT" "v_del_web_domain_alias $user $domain $dom_alias"
+log_event 'system' "$V_EVENT"
+
+exit $OK

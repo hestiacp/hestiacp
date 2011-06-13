@@ -1,0 +1,450 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+
+<head>
+	<title>Vesta | DNS</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="imagetoolbar" content="false" />
+
+	<link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="css/vesta.css" />
+
+	<!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="css/ie.css" />
+    <![endif]-->
+
+	<script type="text/javascript" src="js/custom-form-elements.js"></script>
+</head>
+
+<body>
+<div id="page">
+	<div class="outer">
+		<div id="header">
+			<div class="logo-box">
+				<h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
+			</div>
+			<ul class="settings">
+				<li><a href="#">settings</a></li>
+				<li><a href="#">exit</a></li>
+			</ul>
+		</div>
+		<div id="primary-nav-box">
+			<ul class="primary-nav cc">
+				<li class="section">
+					<div class="section-inner">
+						<dl class="users-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Users</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">386 users</span>
+								<span class="def">7 blocked</span>
+							</dd>
+						</dl>
+					</div>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="domains-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Web Domain</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">580 domains</span>
+								<span class="def">22 out of mem</span>
+								<span class="def">3 waiting</span>
+							</dd>
+						</dl>
+					</div>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="mail-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Mail</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">320 domains</span>
+								<span class="def">1209 mailboxes</span>
+								<span class="def">25 full</span>
+							</dd>
+						</dl>
+					</div>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="db-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">DB</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 db</span>
+							</dd>
+						</dl>
+					</div>
+				</li>
+				<li class="section active">
+					<div class="section-inner">
+						<dl class="dns-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Dns</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">289 records</span>
+							</dd>
+						</dl>
+					</div>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="dnstpl-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">IP</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 templates</span>
+							</dd>
+						</dl>
+					</div>
+				</li>
+				<li class="section last-section">
+					<div class="section-inner">
+						<dl class="cron-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Cron</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">15 records</span>
+							</dd>
+						</dl>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="console">
+			<div class="b-console">
+				<div class="b-console-wrap">
+					<form class="b-console-form cc" action="#" method="post">
+						<fieldset>
+							<input class="b-console-field" type="text" value="/"/>
+							<input class="b-console-btn" type="submit" value="Go" />
+						</fieldset>
+					</form>
+					<!-- div class="b-console-statuses">
+						<div class="b-console-status cc">
+							<p class="b-console-status-message">domain <b>google.com</b> have been added <br />
+Cтиль менеджмента, на первый взгляд, методически оправдывает культурный побочный PR-эффект, осознавая социальную ответственность бизнеса. Исходя из структуры пирамиды Маслоу, рекламное сообщество экономит product placement, невзирая на действия конкурентов. Узнавание бренда слабо транслирует имидж, оптимизируя бюджеты.
+							</p>
+							<span class="b-console-status-action">cancel</span>
+							<i class="b-console-status-arrow">&nbsp;</i>							
+						</div>
+					</div -->
+				</div>
+				<div class="b-console-results"></div>
+			</div>
+		</div>
+		<!-- actions toolbar -->
+		<div id="actions-toolbar" class="cc">
+			<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>add dns</a>
+			<span class="select-all">select all</span>
+			<span class="clear-selected">Delete selected</span>
+		</div><!-- // actions toolbar -->
+		<div id="content">
+			<!-- additional info block -->
+			<div class="b-ext-info-wrap b-ext-info-wrap_collapsed">
+				<div class="b-ext-info">
+<p>Механическая природа пододвигается под устойчивый силовой трёхосный гироскопический стабилизатор, что увязывается со структурно-тектонической обстановкой, гидродинамическими условиями и литолого-минералогическим составом пород. Фосфоритообразование методически опускает уходящий огненный пояс, исходя из суммы моментов. Инерциальная навигация, в соответствии с основным законом динамики, представляет собой тальк, пользуясь последними системами уравнений. Имея такие данные, можно сделать существенный вывод о том, что маховик неустойчив.</p>
+				</div>
+				<div class="b-ext-info-btn"></div>
+			</div><!-- // additional info block -->
+			<div class="content-inner">
+				<div class="dns-list">
+					<!-- row 1 -->
+					<div class="row first-row dns-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="names">
+									<strong class="domain-name primary">naumov-socolov.co.uk</strong>
+								</div>
+								<div class="show-records">Show records</div>
+							</div>
+							<div class="props-additional">
+								<div class="ip-adr-box">
+									<span class="ip-adr">192<span class="dot">.</span>52<span class="dot">.</span>107<span class="dot">.</span>26</span>
+									<span class="prop-box template-box">
+										<span class="prop-title">template:</span>
+										<span class="prop-value">default</span>
+									</span>
+								</div>
+							</div>
+							<div class="props-ext">
+								<span class="prop-box ttl-box">
+									<span class="prop-title">ttl:</span>
+									<span class="prop-value">7200</span>
+								</span>
+								<span class="prop-box soa-box">
+									<span class="prop-title">soa:</span>
+									<span class="prop-value">n1.readwriteweb.com</span>
+								</span>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 1 -->
+
+					<!-- row 2 -->
+					<div class="row dns-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="names">
+									<strong class="domain-name primary">naumov-socolov.co.uk</strong>
+								</div>
+								<div class="show-records">Show records</div>
+							</div>
+							<div class="props-additional">
+								<div class="ip-adr-box">
+									<span class="ip-adr">192<span class="dot">.</span>52<span class="dot">.</span>107<span class="dot">.</span>26</span>
+									<span class="prop-box template-box">
+										<span class="prop-title">template:</span>
+										<span class="prop-value">default</span>
+									</span>
+								</div>
+							</div>
+							<div class="props-ext">
+								<span class="prop-box ttl-box">
+									<span class="prop-title">ttl:</span>
+									<span class="prop-value">7200</span>
+								</span>
+								<span class="prop-box soa-box">
+									<span class="prop-title">soa:</span>
+									<span class="prop-value">n1.readwriteweb.com</span>
+								</span>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 2 -->
+
+					<!-- row 3 -->
+					<div class="row dns-details-row checked-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="names">
+									<strong class="domain-name primary">naumov-socolov.co.uk</strong>
+								</div>
+								<div class="show-records">Show records</div>
+							</div>
+							<div class="props-additional">
+								<div class="ip-adr-box">
+									<span class="ip-adr">192<span class="dot">.</span>52<span class="dot">.</span>107<span class="dot">.</span>26</span>
+									<span class="prop-box template-box">
+										<span class="prop-title">template:</span>
+										<span class="prop-value">default</span>
+									</span>
+								</div>
+							</div>
+							<div class="props-ext">
+								<span class="prop-box ttl-box">
+									<span class="prop-title">ttl:</span>
+									<span class="prop-value">7200</span>
+								</span>
+								<span class="prop-box soa-box">
+									<span class="prop-title">soa:</span>
+									<span class="prop-value">n1.readwriteweb.com</span>
+								</span>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 3 -->
+
+					<!-- row 4 -->
+					<div class="row dns-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="names">
+									<strong class="domain-name primary">naumov-socolov.co.uk</strong>
+								</div>
+								<div class="show-records hidden">Show records</div>
+							</div>
+							<div class="props-additional">
+								<div class="ip-adr-box">
+									<span class="ip-adr">192<span class="dot">.</span>52<span class="dot">.</span>107<span class="dot">.</span>26</span>
+									<span class="prop-box template-box">
+										<span class="prop-title">template:</span>
+										<span class="prop-value">default</span>
+									</span>
+								</div>
+							</div>
+							<div class="props-ext">
+								<span class="prop-box ttl-box">
+									<span class="prop-title">ttl:</span>
+									<span class="prop-value">7200</span>
+								</span>
+								<span class="prop-box soa-box">
+									<span class="prop-title">soa:</span>
+									<span class="prop-value">n1.readwriteweb.com</span>
+								</span>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 4 -->
+
+					<!-- show/edit dns records contextual form -->
+					<div class="b-new-entry b-records-list">
+						<div class="entry-header">
+							<div class="hide-records">Hide records</div>
+						</div>
+						<div class="form-error">
+							<div class="error-box">
+								<span class="error-message">Wrong record format. Need some <a class="help-tip-url" href="#">Help</a> ?</span>
+							</div>
+						</div>
+						<div class="form-row add-box cc">
+							<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>add dns record</a>
+						</div>
+
+						<div class="form-row form-row-line cc">
+							<div class="field-box dns-record-box">
+								<label class="field-label" for="#">record:</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+									<div class="field-devider">in</div>
+								</div>
+							</div>
+
+							<div class="field-box dns-type-box">
+								<label class="field-label" for="#">type:</label>
+								<select class="styled" name="dns-type-1">
+									<option value="1" selected="selected">A</option>
+									<option value="2">B</option>
+									<option value="3">C</option>
+								</select>
+							</div>
+							<div class="field-box dns-value-box">
+								<label class="field-label" for="#">value:</label>
+								<input class="text-field" type="text" value="" />
+							</div>
+							<div class="delete-record"></div>
+						</div>				
+
+						<div class="form-row form-row-line cc">
+							<div class="field-box dns-record-box">
+								<input class="text-field" type="text" value="" />
+							</div>
+							<div class="field-devider">in</div>
+							<div class="field-box dns-type-box">
+								<select class="styled" name="dns-type-2">
+									<option value="1" selected="selected">A</option>
+									<option value="2">B</option>
+									<option value="3">C</option>
+								</select>
+							</div>
+							<div class="field-box dns-value-box">
+								<input class="text-field" type="text" value="" />
+							</div>
+							<div class="delete-record"></div>
+						</div>				
+
+						<div class="form-row form-row-line cc">
+							<div class="field-box dns-record-box">
+								<input class="text-field" type="text" value="" />
+							</div>
+							<div class="field-devider">in</div>
+							<div class="field-box dns-type-box">
+								<select class="styled" name="dns-type-3">
+									<option value="1" selected="selected">A</option>
+									<option value="2">B</option>
+									<option value="3">C</option>
+								</select>
+							</div>
+							<div class="field-box dns-value-box">
+								<input class="text-field" type="text" value="" />
+							</div>
+							<div class="delete-record"></div>
+						</div>				
+
+						<div class="form-row buttons-row cc">
+							<input class="add-entry-btn" type="submit" value="save" />
+							<span class="cancel-btn">Cancel</span>
+							<span class="help-btn">Help</span>
+						</div>
+					</div><!-- // form -->
+
+					<!-- form -->
+					<div class="b-new-entry b-new-entry_dns" style="margin-top:25px;">
+						<div class="entry-header">New dns</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">domain:</label>
+							<input class="text-field" type="text" value="www.digital-photography-school.com" />
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">ip address:</label>
+							<div class="autocomplete-box">
+								<input class="text-field" type="text" value="192.168.64.19" />
+								<i class="arrow">&nbsp;</i>
+							</div>
+						</div>
+						<div class="form-row dns-template-box cc">
+							<label class="field-label" for="#">template:</label>
+							<select class="styled" name="template">
+								<option value="1" selected="selected">default</option>
+								<option value="2">custom</option>
+								<option value="3">advanced</option>
+							</select>
+							<span class="context-settings">View template settings</span>
+						</div>
+						
+						<div class="form-row buttons-row cc">
+							<input class="add-entry-btn" type="submit" value="add" />
+							<span class="cancel-btn">Cancel</span>
+							<span class="help-btn">Help</span>
+						</div>
+					</div><!-- // form -->
+				</div><!-- // .domain-list -->
+			</div>
+		</div><!-- // #content -->
+	</div>
+</div>
+</body>
+</html>

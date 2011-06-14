@@ -24,11 +24,11 @@
         php_admin_value session.save_path %home%/%user%/tmp
         php_admin_value sendmail_path '/usr/sbin/sendmail -t -i -f %email%'
     </Directory>
-
     <Directory %home%/%user%/domains/%domain%/stats>
         AllowOverride All
     </Directory>
     php_admin_value open_basedir none
+    Include %home%/%user%/conf/%domain%.httpd.*
 
 </VirtualHost>
 

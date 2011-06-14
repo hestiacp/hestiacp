@@ -21,10 +21,10 @@
         AddHandler phpcgi-script .php
 
     </Directory>
-
     <Directory %home%/%user%/domains/%domain%/stats>
         AllowOverride All
     </Directory>
+    Include %home%/%user%/conf/%domain%.httpd.*
 
 </VirtualHost>
 

@@ -138,7 +138,7 @@ chmod 551 $V_HOME/$user/domains/$domain/stats
 chmod 551 $V_HOME/$user/domains/$domain/logs
 chmod 640 /var/log/httpd/domains/$domain.*
 
-# Running template post setup file
+# Running template trigger
 if [ -e $V_WEBTPL/apache_$template.sh ]; then
     $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
 fi

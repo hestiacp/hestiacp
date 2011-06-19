@@ -83,6 +83,15 @@ fi
 # Decreasing domain value
 decrease_user_value "$user" '$U_WEB_SSL'
 
+# Checking cert parents
+conf="$V_USERS/$user/web_domains.conf"
+field='$DOMAIN'
+search_string="SSL_CERT='$cert'"
+cert_parents=$(dom_clear_search)
+if [ -z "$cert_parents" ]; then
+    rm -f $V_HOME/$user/conf/$cert.crt $V_HOME/$user/conf/$cert.key
+fi
+
 # Adding task to the vesta pipe
 restart_schedule 'web'
 

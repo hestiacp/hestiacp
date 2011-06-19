@@ -42,8 +42,8 @@ is_cert_valid "$V_TMP"
 #----------------------------------------------------------#
 
 # Adding certificate to user dir
-cp $V_TMP/$cert.crt $V_USERS/$user/cert/
-cp $V_TMP/$cert.key $V_USERS/$user/cert/
+mv $V_TMP/$cert.crt $V_USERS/$user/cert/
+mv $V_TMP/$cert.key $V_USERS/$user/cert/
 
 
 #----------------------------------------------------------#

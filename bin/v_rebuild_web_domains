@@ -1,0 +1,109 @@
+#!/bin/bash
+# info: rebuilding web domains
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+source $V_FUNC/ip_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'user'
+
+# Checking argument format
+format_validation 'user'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf="$V_USERS/$user/web_domains.conf"
+
+# Defining search string
+search_string="DOMAIN"
+
+# Defining fileds to select
+field='$DOMAIN'
+
+# Parsing unsuspeneded domains
+domains=$(dom_clear_search)
+
+# Starting update disk loop
+for domain in $domains; do
+
+    # Defining domain parameters
+    template=$(get_web_domain_value '$TPL')
+    tpl_file="$V_WEBTPL/apache_$template.tpl"
+    ip=$(get_web_domain_value '$IP')
+    port=$(get_web_port)
+    domain=$(get_web_domain_value '$DOMAIN')
+    domain_idn=$(idn -t --quiet -a "$domain")
+    group="$user"
+    docroot="$V_HOME/$user/domains/$domain/public_html"
+    email="$user@$domain"
+    aliases=$(get_web_domain_value '$ALIAS')
+    aliases_idn=$(idn -t --quiet -a "$aliases")
+
+    #ssl_cert=$()
+    #ssl_key=$()
+
+    # Adding domain to the tmp_httpd.conf
+    conf="$V_HOME/$user/conf/tmp_httpd.conf"
+    httpd_add_config
+
+    # Running template trigger
+    if [ -e $V_WEBTPL/apache_$template.sh ]; then
+        $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
+    fi
+
+done
+
+# Renaming tmp config
+tmp_conf="$conf"
+conf="$V_HOME/$user/conf/httpd.conf"
+mv $tmp_conf $conf
+
+# Checking include in main httpd.conf
+main_conf='/etc/httpd/conf.d/vesta.conf'
+main_conf_check=$(grep "$conf" $main_conf )
+if [ -z "$main_conf_check" ]; then
+    echo "Include $conf" >>$main_conf
+fi
+
+exit
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding task to the vesta pipe
+restart_schedule 'web'
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

@@ -16,6 +16,7 @@ tpl_option="${4-single}"
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
 source $V_FUNC/domain_func.sh
+source $V_FUNC/ip_func.sh
 
 
 #----------------------------------------------------------#
@@ -46,6 +47,10 @@ is_domain_suspended 'web_domains'
 # Checking package
 is_package_full 'web_ssl'
 
+# Checking ip ownership
+ip=$(get_web_domain_value '$IP')
+is_sys_ip_owner
+
 # Check ssl is not added
 is_web_domain_key_empty '$SSL'
 
@@ -64,7 +69,6 @@ is_template_valid 'web'
 
 # Defining variables for template replace
 port=$(get_web_port_ssl)
-ip=$(get_web_domain_value '$IP')
 aliases=$(get_web_domain_value '$ALIAS')
 aliases_idn=$(idn -t --quiet -a "$aliases")
 email="$user@$domain"
@@ -88,7 +92,7 @@ if [ ! -e "$ssl_cert" ]; then
     cp -f $V_USERS/$user/cert/$cert.key $ssl_key
 fi
 
-# Running template post setup file
+# Running template trigger
 if [ -e $V_WEBTPL/apache_$template.sh ]; then
     $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
 fi

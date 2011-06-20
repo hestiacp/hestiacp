@@ -7,8 +7,9 @@
  * - system error occured
  * - unpredictable scenarios
  *
+ * @author Malishev Dima <dima.malishev@gmail.com>
  * @author vesta, http://vestacp.com/
- * @copyright vesta 2010
+ * @copyright vesta 2010-2011
  */
 class SystemException extends Exception {
     const CODE_GENERAL = 0;

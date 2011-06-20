@@ -13,8 +13,9 @@ require_once V_ROOT_DIR . 'api/AjaxHandler.php';
 /**
  * App execution 
  * 
+ * @author Malishev Dima <dima.malishev@gmail.com>
  * @author vesta, http://vestacp.com/
- * @copyright vesta 2010
+ * @copyright vesta 2010-2011
  */
 try {
     // Execution

@@ -5,10 +5,12 @@
  *
  * Holds parameters, decorating them and providing easy access
  *
+ * @author Malishev Dima <dima.malishev@gmail.com>
  * @author vesta, http://vestacp.com/
- * @copyright vesta 2010
+ * @copyright vesta 2010-2011
  */
-class Request {
+class Request 
+{
 
     protected $server = array();
     protected $post = array();
@@ -20,7 +22,8 @@ class Request {
     /**
      *
      */
-    public function __construct() {
+    public function __construct() 
+    {
         $this->post = $_POST;
         $this->get = $_GET;
         $this->server = $_SERVER;
@@ -31,29 +34,47 @@ class Request {
     /**
      * Merge holders into single holder
      */
-    function mergeContainers() {
-        $this->_merged = array_merge($this->server, $this->post, $this->get, $this->global);
-	$this->_spell = json_decode($this->_merged['spell'], true);
+    public function mergeContainers() 
+    {
+        $this->_merged = array_merge($this->server, 
+									 $this->post, 
+									 $this->get, 
+									 $this->global);
+		$this->_spell = json_decode($this->_merged['spell'], true);
     }
 
     /**
      * Get parameter
      *
-     * @param <string> $key
-     * @param <mixed> $default
-     * @return <mixed>
-     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
      */
-    function getParameter($key, $default=false) {
-      return isset($this->_merged[$key]) ? $this->_merged[$key] : $default;
-      //        return isset($this->_spell[$key]) ? $this->_spell[$key] : $default;
+    public function getParameter($key, $default=false) 
+    {
+      return isset($this->_merged[$key]) ? $this->_merged[$key] : $default;      
     }
 
-    function getSpell() {
+	/**
+     * Get spell variable from parameters
+     *     
+     * @return array
+     */
+    public function getSpell() 
+    {
       return $this->_spell;
     }
 
-    function hasParameter($key, $default=false) {
+	/**
+     * Check if parameter is set
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     * 
+     */
+    public function hasParameter($key, $default=false) 
+    {
         return isset($this->_merged[$key]);
     }
 
@@ -62,20 +83,32 @@ class Request {
      * 
      * TODO: write the method
      *
-     * @return <boolean>
+     * @return boolean
      */
-    function isPost() {
+    public function isPost() 
+    {
         return true;
     }
 
-    static function parseAjaxMethod($request) {
-        if (!$request->hasParameter('jedi_method')) {
+	/**
+     * Dissassemble ajax method
+     * Breaks ajax requested method param into "ENTITY"."ACTION"
+     * for instance DNS.getList into "namespase" => DNS, "function" => "getList" 
+     * for triggering ($DNS->getListExecuty();)
+     * 
+     * TODO: write the method
+     *
+     * @return array
+     */
+    static public function parseAjaxMethod($request) 
+    {
+        if (!$request->hasParameter('jedi_method')) 
+        {
             throw new ProtectionException(Message::INVALID_METHOD);
         }
-
         $method = explode('.', $request->getParameter('jedi_method'));
-
-        if (count($method) != 2) {
+        if (count($method) != 2) 
+        {
             throw new ProtectionException(Message::INVALID_METHOD);
         }
 

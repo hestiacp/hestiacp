@@ -1,7 +1,7 @@
 <VirtualHost %ip%:%port%>
 
     ServerName %domain_idn%
-    ServerAlias %alias_ind%
+    ServerAlias %alias_idn%
     ServerAdmin %email%
     DocumentRoot %docroot%
     ScriptAlias /cgi-bin/ %home%/%user%/domains/%domain%/cgi-bin/

@@ -6,7 +6,7 @@
  * Holds parameters, decorating them and providing easy access
  *
  * @author Malishev Dima <dima.malishev@gmail.com>
- * @author vesta, http://vestacp.com/
+ * @author vesta, http://vestacp.com
  * @copyright vesta 2010-2011
  */
 class Request 
@@ -37,10 +37,10 @@ class Request
     public function mergeContainers() 
     {
         $this->_merged = array_merge($this->server, 
-									 $this->post, 
-									 $this->get, 
-									 $this->global);
-		$this->_spell = json_decode($this->_merged['spell'], true);
+                                     $this->post, 
+                                     $this->get, 
+                                     $this->global);
+        $this->_spell = json_decode($this->_merged['spell'], true);
     }
 
     /**
@@ -55,7 +55,7 @@ class Request
       return isset($this->_merged[$key]) ? $this->_merged[$key] : $default;      
     }
 
-	/**
+    /**
      * Get spell variable from parameters
      *     
      * @return array
@@ -65,7 +65,7 @@ class Request
       return $this->_spell;
     }
 
-	/**
+    /**
      * Check if parameter is set
      *
      * @param string $key
@@ -90,7 +90,7 @@ class Request
         return true;
     }
 
-	/**
+    /**
      * Dissassemble ajax method
      * Breaks ajax requested method param into "ENTITY"."ACTION"
      * for instance DNS.getList into "namespase" => DNS, "function" => "getList" 

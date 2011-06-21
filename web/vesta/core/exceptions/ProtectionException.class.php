@@ -13,17 +13,17 @@ class ProtectionException extends Exception
 {
     const CODE_GENERAL = 0;
 
-	/**
-	 * Protection exception
-	 */
+    /**
+     * Protection exception
+     */
     public function __construct($message, $code=self::CODE_GENERAL, $previous=null) 
     {
         parent::__construct($message, $code, $previous);
     }
 
-	/**
-	 * Renders error message
-	 */
+    /**
+     * Renders error message
+     */
     public function __toString() 
     {
         print $this->message;

@@ -10,56 +10,56 @@
  */
 class WEB_DOMAIN extends AjaxHandler 
 {
-	
-	/**
-	 * Get list
-	 * 
-	 * @param Request $request
-	 * @return
-	 */    
+    
+    /**
+     * Get list
+     * 
+     * @param Request $request
+     * @return
+     */    
     public function getListExecute($request) 
     {
-		$_user = 'vesta';
-		$reply = array();
+        $_user = 'vesta';
+        $reply = array();
 
-		$result = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS, array($_user, Config::get('response_type')));
-		foreach ($result['data'] as $web_domain => $data)
-		{
-			$reply[$web_domain] = array(
-					  'IP' => $record['IP'],
-					  'U_DISK' => $record['U_DISK'],
-					  'U_BANDWIDTH' => $record['U_BANDWIDTH'],
-					  'TPL' => $record['TPL'],
-					  'ALIAS' => $record['ALIAS'],
-					  'PHP' => $record['PHP'],
-					  'CGI' => $record['CGI'],
-					  'ELOG' => $record['ELOG'],
-					  'STATS' => $record['STATS'],
-					  'STATS_AUTH' => $record['STATS_AUTH'],
-					  'SSL' => $record['SSL'],
-					  'SSL_HOME' => $record['SSL_HOME'],
-					  'SSL_CERT' => $record['SSL_CERT'],
-					  'NGINX' => $record['NGINX'],
-					  'NGINX_EXT' => $record['NGINX_EXT'],
-					  'SUSPEND' => $record['SUSPEND'],
-					  'DATE' => date(Config::get('ui_date_format', strtotime($record['DATE'])))
-			);
-		}
+        $result = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS, array($_user, Config::get('response_type')));
+        foreach ($result['data'] as $web_domain => $data)
+        {
+            $reply[$web_domain] = array(
+                      'IP' => $record['IP'],
+                      'U_DISK' => $record['U_DISK'],
+                      'U_BANDWIDTH' => $record['U_BANDWIDTH'],
+                      'TPL' => $record['TPL'],
+                      'ALIAS' => $record['ALIAS'],
+                      'PHP' => $record['PHP'],
+                      'CGI' => $record['CGI'],
+                      'ELOG' => $record['ELOG'],
+                      'STATS' => $record['STATS'],
+                      'STATS_AUTH' => $record['STATS_AUTH'],
+                      'SSL' => $record['SSL'],
+                      'SSL_HOME' => $record['SSL_HOME'],
+                      'SSL_CERT' => $record['SSL_CERT'],
+                      'NGINX' => $record['NGINX'],
+                      'NGINX_EXT' => $record['NGINX_EXT'],
+                      'SUSPEND' => $record['SUSPEND'],
+                      'DATE' => date(Config::get('ui_date_format', strtotime($record['DATE'])))
+            );
+        }
 
-		if (!$result['status'])
-		{
-			$this->errors[] = array($result['error_code'] => $result['error_message']);
-		}
+        if (!$result['status'])
+        {
+            $this->errors[] = array($result['error_code'] => $result['error_message']);
+        }
 
-		return $this->reply($result['status'], $reply);
+        return $this->reply($result['status'], $reply);
     }
         
     /**
-	 * Add entry
-	 * 
-	 * @param Request $request
-	 * @return
-	 */    
+     * Add entry
+     * 
+     * @param Request $request
+     * @return
+     */    
     public function addExecute($request)
     {
         $r     = new Request();
@@ -92,7 +92,7 @@ class WEB_DOMAIN extends AjaxHandler
             $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_TPL, $params);
             
             if (!$result['status'])
-			{
+            {
                 $this->errors['CHANGE_TPL'] = array(
                     $result['error_code'] => $result['error_message']
                 );
@@ -115,7 +115,7 @@ class WEB_DOMAIN extends AjaxHandler
                 $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ALIAS, $params);
                 
                 if (!$result['status'])
-				{
+                {
                     $this->errors['ALIAS'] = array(
                         $result['error_code'] => $result['error_message']
                     );
@@ -134,7 +134,7 @@ class WEB_DOMAIN extends AjaxHandler
             $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_STAT, $params);
             
             if (!$result['status'])
-			{
+            {
                 $this->errors['STATS'] = array(
                     $result['error_code'] => $result['error_message']
                 );
@@ -153,7 +153,7 @@ class WEB_DOMAIN extends AjaxHandler
             $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_STAT_AUTH, $params);
             
             if (!$result['status'])
-			{
+            {
                 $this->errors['STAT_AUTH'] = array(
                     $result['error_code'] => $result['error_message']
                 );
@@ -161,34 +161,34 @@ class WEB_DOMAIN extends AjaxHandler
         }
         
         
-		if ($_s['SSL']) 
-		{
-			$params = array(
-				'USER' => $_user,
-				'DOMAIN' => $_s['DOMAIN'],
-				'SSL_CERT' => $_s['SSL_CERT']
-			);
-			
-			if ($_s['SSL_HOME'])
-			{
-				$params['SSL_HOME'] = $_s['SSL_HOME'];
-			}
-			
-			if ($_s['SSL_TEXT']) 
-			{
-				// TODO: write it up
-			}
-								
-			$result = 0;
-			$result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
-			
-			if (!$result['status'])
-			{
-				$this->errors['SSL'] = array(
-					$result['error_code'] => $result['error_message']
-				);
-			}
-		}
+        if ($_s['SSL']) 
+        {
+            $params = array(
+                'USER' => $_user,
+                'DOMAIN' => $_s['DOMAIN'],
+                'SSL_CERT' => $_s['SSL_CERT']
+            );
+            
+            if ($_s['SSL_HOME'])
+            {
+                $params['SSL_HOME'] = $_s['SSL_HOME'];
+            }
+            
+            if ($_s['SSL_TEXT']) 
+            {
+                // TODO: write it up
+            }
+                                
+            $result = 0;
+            $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
+            
+            if (!$result['status'])
+            {
+                $this->errors['SSL'] = array(
+                    $result['error_code'] => $result['error_message']
+                );
+            }
+        }
                 
         if ($_s['CREATE_DNS_DOMAIN']) 
         {
@@ -211,36 +211,36 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
                 
-		if ($_s['CREATE_MAIL_DOMAIN']) 
-		{
-			$params = array(
-				'USER' => $_user,
-				'MAIL_DOMAIN' => $_s['DOMAIN'],
-				'IP' => $_s['IP']
-			);
-						
-			require_once V_ROOT_DIR . 'api/MAIL.class.php';
-			
-			$mail   = new MAIL();
-			$result = 0;
-			$result = $mail->addExecute($params);
-			if (!$result['status'])
-			{
-				$this->errors['MAIL_DOMAIN'] = array(
-					$result['error_code'] => $result['error_message']
-				);
-			}
-		}
+        if ($_s['CREATE_MAIL_DOMAIN']) 
+        {
+            $params = array(
+                'USER' => $_user,
+                'MAIL_DOMAIN' => $_s['DOMAIN'],
+                'IP' => $_s['IP']
+            );
+                        
+            require_once V_ROOT_DIR . 'api/MAIL.class.php';
+            
+            $mail   = new MAIL();
+            $result = 0;
+            $result = $mail->addExecute($params);
+            if (!$result['status'])
+            {
+                $this->errors['MAIL_DOMAIN'] = array(
+                    $result['error_code'] => $result['error_message']
+                );
+            }
+        }
         
         return $this->reply($result['status'], $result['data']);
     }
     
     /**
-	 * Delete entry
-	 * 
-	 * @param Request $request
-	 * @return
-	 */    
+     * Delete entry
+     * 
+     * @param Request $request
+     * @return
+     */    
     public function delExecute($request)
     {
         $r     = new Request();
@@ -270,7 +270,7 @@ class WEB_DOMAIN extends AjaxHandler
         
         if (!$result['status'] && $result['error_code'] != 31) // domain not found
         {
-			$this->errors['DNS'] = array(
+            $this->errors['DNS'] = array(
                 $result['error_code'] => $result['error_message']
             );
         }
@@ -286,11 +286,11 @@ class WEB_DOMAIN extends AjaxHandler
     }
           
     /**
-	 * Change entry
-	 * 
-	 * @param Request $request
-	 * @return
-	 */          
+     * Change entry
+     * 
+     * @param Request $request
+     * @return
+     */          
     public function changeExecute($request)
     {
         $r    = new Request();
@@ -428,55 +428,55 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
 
-		if ($_old['SSL'] != $_new['SSL']) 
-		{
-			if ($_new['SSL'] == true) 
-			{
-				// TODO: write it
-			}
-			if ($_new['SSL'] == false) 
-			{
-				// TODO: write it
-			}
-		} 
-		else 
-		{
-			if ($_old['SSL_CERT'] != $_new['SSL_CERT']) 
-			{
-				$result    = array();
-				$_SSL_CERT = $_new['SSL_CERT'];
-				// or read uploaded tmp file
-				
-				$result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_CERT, array(
-					'USER' => $_user,
-					'DOMAIN' => $_DOMAIN,
-					'SSL_CERT' => $_SSL_CERT
-				));
-				if (!$result['status']) 
-				{
-					$this->status             = FALSE;
-					$this->errors['SSL_CERT'] = array(
-						$result['error_code'] => $result['error_message']
-					);
-				}
-			}
-			if ($_old['SSL_HOME'] != $_new['SSL_HOME']) 
-			{
-				$result = array();
-				$result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_SSLHOME, array(
-					'USER' => $_user,
-					'DOMAIN' => $_DOMAIN,
-					'SSL_HOME' => $_new['SSL_HOME']
-				));
-				if (!$result['status']) 
-				{
-					$this->status             = FALSE;
-					$this->errors['SSL_HOME'] = array(
-						$result['error_code'] => $result['error_message']
-					);
-				}
-			}
-		}
+        if ($_old['SSL'] != $_new['SSL']) 
+        {
+            if ($_new['SSL'] == true) 
+            {
+                // TODO: write it
+            }
+            if ($_new['SSL'] == false) 
+            {
+                // TODO: write it
+            }
+        } 
+        else 
+        {
+            if ($_old['SSL_CERT'] != $_new['SSL_CERT']) 
+            {
+                $result    = array();
+                $_SSL_CERT = $_new['SSL_CERT'];
+                // or read uploaded tmp file
+                
+                $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_CERT, array(
+                    'USER' => $_user,
+                    'DOMAIN' => $_DOMAIN,
+                    'SSL_CERT' => $_SSL_CERT
+                ));
+                if (!$result['status']) 
+                {
+                    $this->status             = FALSE;
+                    $this->errors['SSL_CERT'] = array(
+                        $result['error_code'] => $result['error_message']
+                    );
+                }
+            }
+            if ($_old['SSL_HOME'] != $_new['SSL_HOME']) 
+            {
+                $result = array();
+                $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_SSLHOME, array(
+                    'USER' => $_user,
+                    'DOMAIN' => $_DOMAIN,
+                    'SSL_HOME' => $_new['SSL_HOME']
+                ));
+                if (!$result['status']) 
+                {
+                    $this->status             = FALSE;
+                    $this->errors['SSL_HOME'] = array(
+                        $result['error_code'] => $result['error_message']
+                    );
+                }
+            }
+        }
         
         if ($_old['CGI'] != $_new['CGI']) 
         {
@@ -551,11 +551,11 @@ class WEB_DOMAIN extends AjaxHandler
     }
     
     /**
-	 * Suspend entry
-	 * 
-	 * @param Request $request
-	 * @return
-	 */    
+     * Suspend entry
+     * 
+     * @param Request $request
+     * @return
+     */    
     public function suspendExecute($request)
     {
         $r  = new Request();
@@ -571,7 +571,7 @@ class WEB_DOMAIN extends AjaxHandler
         $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, $params);
         
         if (!$result['status'])
-		{
+        {
             $this->errors[] = array(
                 $result['error_code'] => $result['error_message']
             );
@@ -581,11 +581,11 @@ class WEB_DOMAIN extends AjaxHandler
     }
     
     /**
-	 * Unsuspend entry
-	 * 
-	 * @param Request $request
-	 * @return
-	 */    
+     * Unsuspend entry
+     * 
+     * @param Request $request
+     * @return
+     */    
     public function unsuspendExecute($request)
     {
         $r  = new Request();
@@ -601,7 +601,7 @@ class WEB_DOMAIN extends AjaxHandler
         $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, $params);
         
         if (!$result['status'])
-		{
+        {
             $this->errors[] = array(
                 $result['error_code'] => $result['error_message']
             );
@@ -611,11 +611,11 @@ class WEB_DOMAIN extends AjaxHandler
     }
     
     /**
-	 * Batch suspend entries
-	 * 
-	 * @param Request $request
-	 * @return
-	 */    
+     * Batch suspend entries
+     * 
+     * @param Request $request
+     * @return
+     */    
     public function suspendAllExecute($request)
     {
         $r  = new Request();
@@ -640,11 +640,11 @@ class WEB_DOMAIN extends AjaxHandler
     }
     
     /**
-	 * Batch unsuspend entry
-	 * 
-	 * @param Request $request
-	 * @return
-	 */    
+     * Batch unsuspend entry
+     * 
+     * @param Request $request
+     * @return
+     */    
     public function unsuspendAllExecute($request)
     {
         $r  = new Request();

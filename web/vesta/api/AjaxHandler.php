@@ -52,28 +52,28 @@ class AjaxHandler
         return $space->$method($request);
     }
 
-	/**
-	 * Prepare the result of method execution into ajax-readable format
-	 * 
-	 * @param boolean $result - result of method execution
-	 * @param array $data - data to be replied
-	 * @param string $message - replied message
-	 * @param array $extra - extra data 
-	 */
+    /**
+     * Prepare the result of method execution into ajax-readable format
+     * 
+     * @param boolean $result - result of method execution
+     * @param array $data - data to be replied
+     * @param string $message - replied message
+     * @param array $extra - extra data 
+     */
     function reply($result, $data, $message = '', $extra = array()) 
     {
       return json_encode(array('result' => $result,
-			       'data' => $data,
-			       'message' => $message,
-			       'extra' => $extra,
-			       'errors' => $this->errors
-			       ));
+                   'data' => $data,
+                   'message' => $message,
+                   'extra' => $extra,
+                   'errors' => $this->errors
+                   ));
     }
 
-	/**
-	 * TODO: delete this method
-	 * @deprecated	 
-	 */
+    /**
+     * TODO: delete this method
+     * @deprecated     
+     */
     static function makeReply($reply) 
     {
         print $reply;
@@ -92,7 +92,7 @@ class AjaxHandler
         self::renderGlobalError(Message::ERROR, Message::GENERAL_ERROR, $error);
     }
 
-	/**
+    /**
      * Generate protection error
      * @param Exception $error
      */
@@ -101,7 +101,7 @@ class AjaxHandler
         self::renderGlobalError(Message::ERROR, Message::PROTECTION_ERROR, $error);
     }
 
-	/**
+    /**
      * Generate system error
      * @param Exception $error
      */
@@ -110,7 +110,7 @@ class AjaxHandler
         self::renderGlobalError(Message::ERROR, Message::SYSTEM_ERROR, $error);
     }
 
-	/**
+    /**
      * Prepare and render the error
      * @param Exception $error
      */

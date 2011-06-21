@@ -14,28 +14,28 @@ function error_dumper($errno, $errstr, $errfile, $errline)
         $o.= "  Fatal error on line $errline in file $errfile";
         $o.= ", PHP " . PHP_VERSION . " (" . PHP_OS . ")\n";
         $o.= "Aborting...\n";
-		fwrite($log, $o);
-		fclose($log);
-		exit(1);
+        fwrite($log, $o);
+        fclose($log);
+        exit(1);
         break;
 
     case E_USER_WARNING:
         $o = "WARNING: [$errno] $errstr\n";
         fwrite($log, $o);
-		fclose($log);
-	break;
+        fclose($log);
+    break;
 
     case E_USER_NOTICE:
         $o =  "NOTICE: [$errno] $errstr\n";
         fwrite($log, $o);
-		fclose($log);
-	break;
+        fclose($log);
+    break;
 
     default:
         $o = "Unknown error type: [$errno] $errstr\n";
         fwrite($log, $o);
-		fclose($log);
-	break;
+        fclose($log);
+    break;
     }
 
     /* Don't execute PHP internal error handler */

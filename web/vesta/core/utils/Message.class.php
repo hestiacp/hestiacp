@@ -11,15 +11,15 @@
  */
 class Message 
 {
-	
-	const ERROR 				= 'error';
-    const REQUEST_INVALID 		= 'Malformed request';
-    const REQUEST_IS_NOT_POST 	= 'Request is not POST';
-    const GENERAL_ERROR 		= 'General protection fault';    
-    const METHOD_NOT_EXIST 		= 'Message not exist';
-    const INVALID_METHOD 		= 'Method Invalid';
-    const SYSTEM_ERROR 			= 'System Error';
-    const PROTECTION_ERROR 		= 'Protection error';
+    
+    const ERROR                 = 'error';
+    const REQUEST_INVALID         = 'Malformed request';
+    const REQUEST_IS_NOT_POST     = 'Request is not POST';
+    const GENERAL_ERROR         = 'General protection fault';    
+    const METHOD_NOT_EXIST         = 'Message not exist';
+    const INVALID_METHOD         = 'Method Invalid';
+    const SYSTEM_ERROR             = 'System Error';
+    const PROTECTION_ERROR         = 'Protection error';
     
 }
 

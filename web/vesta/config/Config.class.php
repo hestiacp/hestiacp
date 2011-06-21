@@ -16,20 +16,20 @@ class Config
     static public $instance = null;
     
     /**
-	 * Config constructor
-	 * 
-	 */
+     * Config constructor
+     * 
+     */
     public function __construct() 
     {
         $this->_config = parse_ini_file(V_ROOT_DIR.'config'.DIRECTORY_SEPARATOR.'vesta_config.ini');
     }
 
-	/**
-	 * get config parameter
-	 * 
-	 * @param string $key
-	 * @return mixed
-	 */
+    /**
+     * get config parameter
+     * 
+     * @param string $key
+     * @return mixed
+     */
     public function getParameter($key)
     {
         return isset($this->_config[$key]) ? $this->_config[$key] : false;

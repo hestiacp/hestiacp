@@ -67,22 +67,43 @@ for domain in $domains; do
     aliases=$(get_web_domain_value '$ALIAS')
     aliases_idn=$(idn -t --quiet -a "$aliases")
 
-    #ssl_cert=$()
-    #ssl_key=$()
-
     # Adding domain to the tmp_httpd.conf
     conf="$V_HOME/$user/conf/tmp_httpd.conf"
     httpd_add_config
 
     # Running template trigger
-    if [ -e $V_WEBTPL/apache_$template.sh ]; then
+    if [ -x $V_WEBTPL/apache_$template.sh ]; then
         $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
     fi
 
+    # Checking ssl
+    ssl=$(get_web_domain_value '$SSL')
+    if [ "$ssl" = 'yes' ]; then
+        # Parsing certificate params
+        cert=$(get_web_domain_value '$SSL_CERT')
+        ssl_cert="$V_HOME/$user/conf/$cert.crt"
+        ssl_key="$V_HOME/$user/conf/$cert.key"
+        tpl_option=$(get_web_domain_value '$SSL_HOME')
+        case $tpl_option in
+            single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
+            same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+            *) check_args '3' "$#" 'user domain certificate [sslhome]'
+        esac
+
+        # Adding domain to the httpd.conf
+        conf="$V_HOME/$user/conf/tmp_shttpd.conf"
+        tpl_file="$V_WEBTPL/apache_$template.stpl"
+        httpd_add_config
+
+        if [ -x $V_WEBTPL/apache_$template.sh ]; then
+            $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME \
+                $docroot $port
+        fi
+    fi
 done
 
 # Renaming tmp config
-tmp_conf="$conf"
+tmp_conf="$V_HOME/$user/conf/tmp_httpd.conf"
 conf="$V_HOME/$user/conf/httpd.conf"
 mv $tmp_conf $conf
 
@@ -93,7 +114,18 @@ if [ -z "$main_conf_check" ]; then
     echo "Include $conf" >>$main_conf
 fi
 
-exit
+# Checking ssl 
+if [ ! -z "$ssl_cert" ]; then
+    tmp_conf="$V_HOME/$user/conf/tmp_shttpd.conf"
+    conf="$V_HOME/$user/conf/shttpd.conf"
+    mv $tmp_conf $conf
+
+    # Checking include in main httpd.conf
+    main_conf_check=$(grep "$conf" $main_conf )
+    if [ -z "$main_conf_check" ]; then
+        echo "Include $conf" >>$main_conf
+    fi
+fi
 
 
 #----------------------------------------------------------#

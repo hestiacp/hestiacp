@@ -105,12 +105,14 @@ done
 # Renaming tmp config
 tmp_conf="$V_HOME/$user/conf/tmp_httpd.conf"
 conf="$V_HOME/$user/conf/httpd.conf"
-mv $tmp_conf $conf
+if [ -e "$tmp_conf" ]; then
+    mv $tmp_conf $conf
+fi
 
 # Checking include in main httpd.conf
 main_conf='/etc/httpd/conf.d/vesta.conf'
 main_conf_check=$(grep "$conf" $main_conf )
-if [ -z "$main_conf_check" ]; then
+if [ ! -z "$domains" ] && [ -z "$main_conf_check" ]; then
     echo "Include $conf" >>$main_conf
 fi
 

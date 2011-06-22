@@ -1,5 +1,5 @@
 server {
-    listen      %ip%:80;
+    listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias%;
     server_name_in_redirect off;
     #error_log  /var/log/httpd/domains/%domain%.error.log error;
@@ -17,7 +17,7 @@ server {
     }
 
     location = /error/ {
-        root    %error_docroot%;
+        root    %home%/%user%/domains/%domain%/document_errors/;
         try_files      $uri @fallback;
     }
 
@@ -27,4 +27,6 @@ server {
 
     location ~ /\.ht   {deny all;}
     location ~ /.svn/  {deny all;}
+
+    Include %home%/%user%/conf/%domain%.nginx.*
 }

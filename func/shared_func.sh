@@ -590,9 +590,9 @@ is_template_valid() {
     }
 
     proxy_template() {
-        tpl="$V_WEBTPL/ngingx_vhost-$template.tpl"
-        descr="$V_WEBTPL/ngingx_vhost-$template.descr"
-        ssl="$V_WEBTPL/ngingx_vhost-$template.ssl.tpl"
+        tpl="$V_WEBTPL/ngingx_vhost_$template.tpl"
+        descr="$V_WEBTPL/ngingx_vhost_$template.descr"
+        ssl="$V_WEBTPL/ngingx_vhost_$template.ssl.tpl"
 
         if [ ! -e $tpl ] || [ ! -e $descr ] || [ ! -e $ssl ]; then
             echo "Error: template not found"

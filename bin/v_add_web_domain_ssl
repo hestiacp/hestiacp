@@ -68,7 +68,7 @@ is_template_valid 'web'
 #----------------------------------------------------------#
 
 # Defining variables for template replace
-port=$(get_web_port_ssl)
+port=$(get_config_value '$WEB_SSL_PORT')
 aliases=$(get_web_domain_value '$ALIAS')
 aliases_idn=$(idn -t --quiet -a "$aliases")
 email="$user@$domain"

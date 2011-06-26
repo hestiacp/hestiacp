@@ -219,37 +219,6 @@ sort_dns_records() {
     mv -f $conf.tmp $conf
 }
 
-get_web_port() {
-    proxy_disabled='80'
-    proxy_enabled='8080'
-
-    # Parsing conf
-    proxy=$(grep 'PROXY_SYSTEM=' $V_CONF/vesta.conf|cut -f 2 -d \')
-
-    # Checking result
-    if [ -z "$proxy" ] || [ "$proxy" = 'off' ]; then
-        echo "$proxy_disabled"
-    else
-        echo "$proxy_enabled"
-    fi
-}
-
-get_web_port_ssl() {
-    proxy_disabled='443'
-    proxy_enabled='8443'
-
-    # Parsing conf
-    proxy=$(grep 'PROXY_SYSTEM=' $V_CONF/vesta.conf|cut -f 2 -d \')
-
-    # Checking result
-    if [ -z "$proxy" ] || [ "$proxy" = 'off' ]; then
-        echo "$proxy_disabled"
-    else
-        echo "$proxy_enabled"
-    fi
-}
-
-
 httpd_add_config() {
     # Adding template to config
     cat $tpl_file | \
@@ -266,6 +235,7 @@ httpd_add_config() {
             -e "s/%alias%/${aliases//,/ }/g" \
             -e "s/%ssl_cert%/${ssl_cert////\/}/g" \
             -e "s/%ssl_key%/${ssl_key////\/}/g" \
+            -e "s/%extentions%/$extentions/g" \
     >> $conf
 }
 

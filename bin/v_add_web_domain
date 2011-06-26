@@ -81,7 +81,7 @@ else
 fi
 
 # Defining vars for httpd_add_config function
-port=$(get_web_port)
+port=$(get_config_value '$WEB_PORT')
 group="$user"
 email="$user@$domain"
 docroot="$V_HOME/$user/domains/$domain/public_html"

@@ -73,7 +73,7 @@ fi
 # Defining variables for template replace
 ip=$(get_web_domain_value '$IP')
 aliases=$(get_web_domain_value '$ALIAS')
-port=$(get_web_port)
+port=$(get_config_value '$WEB_PORT')
 email="$user@$domain"
 docroot="$V_HOME/$user/domains/$domain/public_html"
 conf="$V_HOME/$user/conf/httpd.conf"
@@ -91,7 +91,7 @@ fi
 # Checking ssl
 if [ "$ssl" = 'yes' ]; then
     # Defining variables for ssl template replace
-    port=$(get_web_port_ssl)
+    port=$(get_config_value '$WEB_SSL_PORT')
     tpl_option=$(get_web_domain_value '$SSL_HOME')
     cert=$(get_web_domain_value '$SSL_CERT')
     ssl_cert="$V_HOME/$user/conf/$cert.crt"

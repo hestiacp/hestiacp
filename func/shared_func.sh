@@ -592,7 +592,7 @@ is_template_valid() {
     proxy_template() {
         tpl="$V_WEBTPL/ngingx_vhost_$template.tpl"
         descr="$V_WEBTPL/ngingx_vhost_$template.descr"
-        ssl="$V_WEBTPL/ngingx_vhost_$template.ssl.tpl"
+        ssl="$V_WEBTPL/ngingx_vhost_$template.stpl"
 
         if [ ! -e $tpl ] || [ ! -e $descr ] || [ ! -e $ssl ]; then
             echo "Error: template not found"
@@ -1333,4 +1333,21 @@ pkg_shell_list() {
 	fi
         i=$(($i + 1))
     done
+}
+
+get_config_value() {
+    key="$1"
+    # Parsing config
+    string=$(cat $V_CONF/vesta.conf)
+
+    # Parsing key=value
+    for keys in $string; do
+        eval ${keys%%=*}=${keys#*=}
+    done
+
+    # Self reference
+    eval value="$key"
+
+    # Print value
+    echo "$value"
 }

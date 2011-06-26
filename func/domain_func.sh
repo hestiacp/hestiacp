@@ -223,7 +223,10 @@ httpd_add_config() {
     # Adding template to config
     cat $tpl_file | \
         sed -e "s/%ip%/$ip/g" \
-            -e "s/%port%/$port/g" \
+            -e "s/%web_port%/$web_port/g" \
+            -e "s/%web_ssl_port%/$web_ssl_port/g" \
+            -e "s/%proxy_port%/$proxy_port/g" \
+            -e "s/%proxy_ssl_port%/$proxy_ssl_port/g" \
             -e "s/%domain_idn%/$domain_idn/g" \
             -e "s/%domain%/$domain/g" \
             -e "s/%user%/$user/g" \

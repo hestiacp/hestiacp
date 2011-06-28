@@ -49,9 +49,14 @@ type=$(get_db_value '$TYPE')
 
 # Switching on db type
 case $type in
-    mysql) disk_usage=$(get_disk_db_mysql) ;;
-    pgsql) disk_usage=$(get_disk_db_pgsql) ;;
+    mysql) disk_usage=$(get_disk_db_mysql); ret_val="$?" ;;
+    pgsql) disk_usage=$(get_disk_db_pgsql); ret_val="$?" ;;
 esac
+
+# Checking ret_val
+if [ "$ret_val" -ne '0' ]; then
+    exit $ret_val
+fi
 
 
 #----------------------------------------------------------#

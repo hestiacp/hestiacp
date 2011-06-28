@@ -55,12 +55,14 @@ for database in $databases; do
 
     # Switching on db type
     case $type in
-        mysql) disk_usage=$(get_disk_db_mysql) ;;
-        pgsql) disk_usage=$(get_disk_db_pgsql) ;;
+        mysql) disk_usage=$(get_disk_db_mysql); ret_val="$?" ;;
+        pgsql) disk_usage=$(get_disk_db_pgsql); ret_val="$?" ;;
     esac
 
     # Updating disk value in config
-    update_db_base_value '$U_DISK' "$disk_usage"
+    if [ "$ret_val" -eq '0' ]; then 
+        update_db_base_value '$U_DISK' "$disk_usage"
+    fi
 done
 
 

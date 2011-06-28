@@ -117,7 +117,7 @@ mkdir $V_HOME/$user/domains/$domain \
 # Adding domain logs
 touch /var/log/httpd/domains/$domain.bytes \
       /var/log/httpd/domains/$domain.log \
-      /var/log/httpd/domains/$domain.error_log
+      /var/log/httpd/domains/$domain.error.log
 
 # Adding symlink for logs
 ln -s /var/log/httpd/domains/$domain.*log $V_HOME/$user/domains/$domain/logs/

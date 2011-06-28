@@ -81,12 +81,25 @@ else
 fi
 
 # Defining vars for httpd_add_config function
-port=$(get_config_value '$WEB_PORT')
+web_port=$(get_config_value '$WEB_PORT')
 group="$user"
 email="$user@$domain"
 docroot="$V_HOME/$user/domains/$domain/public_html"
 conf="$V_HOME/$user/conf/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
+
+# Parsing template keys
+template_data=$(cat $V_WEBTPL/apache_$template.descr|grep -v '#')
+for keys in $template_data; do
+    eval ${keys%%=*}=${keys#*=}
+done
+
+# Checking error log status
+if [ "$ELOG" = 'no' ]; then
+    elog=' #'
+else
+    elog=' '
+fi
 
 # Adding domain to the httpd.conf
 httpd_add_config
@@ -139,8 +152,8 @@ chmod 551 $V_HOME/$user/domains/$domain/logs
 chmod 640 /var/log/httpd/domains/$domain.*
 
 # Running template trigger
-if [ -e $V_WEBTPL/apache_$template.sh ]; then
-    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
+if [ -x $V_WEBTPL/apache_$template.sh ]; then
+    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
 fi
 
 # Checking main vesta httpd config
@@ -162,7 +175,6 @@ increase_ip_value
 increase_user_value "$user" '$U_WEB_DOMAINS'
 
 # Defining domain variables
-template_data=$(cat $V_WEBTPL/apache_$template.descr|grep -v '#')
 v_str="DOMAIN='$domain'"
 v_str="$v_str IP='$ip'"
 v_str="$v_str U_DISK='0'"

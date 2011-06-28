@@ -68,7 +68,7 @@ is_template_valid 'web'
 #----------------------------------------------------------#
 
 # Defining variables for template replace
-port=$(get_config_value '$WEB_SSL_PORT')
+web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
 aliases=$(get_web_domain_value '$ALIAS')
 aliases_idn=$(idn -t --quiet -a "$aliases")
 email="$user@$domain"
@@ -83,6 +83,14 @@ group="$user"
 conf="$V_HOME/$user/conf/shttpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.stpl"
 
+# Checking error log status
+elog=$(get_web_domain_value '$ELOG')
+if [ "$elog" = 'no' ]; then
+    elog=' #'
+else
+    elog=' '
+fi
+
 # Adding domain to the httpd.conf
 httpd_add_config
 
@@ -93,8 +101,8 @@ if [ ! -e "$ssl_cert" ]; then
 fi
 
 # Running template trigger
-if [ -e $V_WEBTPL/apache_$template.sh ]; then
-    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
+if [ -x $V_WEBTPL/apache_$template.sh ]; then
+    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
 fi
 
 # Checking main vesta httpd config

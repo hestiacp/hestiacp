@@ -58,7 +58,7 @@ for domain in $domains; do
     template=$(get_web_domain_value '$TPL')
     tpl_file="$V_WEBTPL/apache_$template.tpl"
     ip=$(get_web_domain_value '$IP')
-    port=$(get_config_value '$WEB_PORT')
+    web_port=$(get_config_value '$WEB_PORT')
     domain=$(get_web_domain_value '$DOMAIN')
     domain_idn=$(idn -t --quiet -a "$domain")
     group="$user"
@@ -67,13 +67,21 @@ for domain in $domains; do
     aliases=$(get_web_domain_value '$ALIAS')
     aliases_idn=$(idn -t --quiet -a "$aliases")
 
+    # Checking error log status
+    elog=$(get_web_domain_value '$ELOG')
+    if [ "$elog" = 'no' ]; then
+        elog=' #'
+    else
+        elog=' '
+    fi
+
     # Adding domain to the tmp_httpd.conf
     conf="$V_HOME/$user/conf/tmp_httpd.conf"
     httpd_add_config
 
     # Running template trigger
     if [ -x $V_WEBTPL/apache_$template.sh ]; then
-        $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
+        $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
     fi
 
     # Checking ssl
@@ -89,16 +97,16 @@ for domain in $domains; do
             same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
             *) check_args '3' "$#" 'user domain certificate [sslhome]'
         esac
-        port=$(get_config_value '$WEB_SSL_PORT')
+        web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
 
         # Adding domain to the httpd.conf
         conf="$V_HOME/$user/conf/tmp_shttpd.conf"
         tpl_file="$V_WEBTPL/apache_$template.stpl"
         httpd_add_config
 
+        # Running template trigger
         if [ -x $V_WEBTPL/apache_$template.sh ]; then
-            $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME \
-                $docroot $port
+            $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
         fi
     fi
 done

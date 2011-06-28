@@ -7,7 +7,8 @@
 
 # Argument defenition
 user="$1"
-domain="$2"
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
 template="$3"
 
 # Importing variables
@@ -73,25 +74,39 @@ fi
 # Defining variables for template replace
 ip=$(get_web_domain_value '$IP')
 aliases=$(get_web_domain_value '$ALIAS')
-port=$(get_config_value '$WEB_PORT')
+aliases_idn=$(idn -t --quiet -a "$aliases")
+web_port=$(get_config_value '$WEB_PORT')
 email="$user@$domain"
 docroot="$V_HOME/$user/domains/$domain/public_html"
 conf="$V_HOME/$user/conf/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
 group="$user"
 
+# Parsing template keys
+template_data=$(cat $V_WEBTPL/apache_$template.descr|grep -v '#')
+for keys in $template_data; do
+    eval ${keys%%=*}=${keys#*=}
+done
+
+# Checking error log status
+if [ "$ELOG" = 'no' ]; then
+    elog=' #'
+else
+    elog=' '
+fi
+
 # Adding domain to the httpd.conf
 httpd_add_config
 
-# Running template post setup file
-if [ -e $V_WEBTPL/apache_$template.sh ]; then
-    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot $port
+# Running template trigger
+if [ -x $V_WEBTPL/apache_$template.sh ]; then
+    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
 fi
 
 # Checking ssl
 if [ "$ssl" = 'yes' ]; then
     # Defining variables for ssl template replace
-    port=$(get_config_value '$WEB_SSL_PORT')
+    web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
     tpl_option=$(get_web_domain_value '$SSL_HOME')
     cert=$(get_web_domain_value '$SSL_CERT')
     ssl_cert="$V_HOME/$user/conf/$cert.crt"
@@ -106,10 +121,10 @@ if [ "$ssl" = 'yes' ]; then
     # Adding domain to the httpd.conf
     httpd_add_config
 
-    # Running template post setup file
-    if [ -e $V_WEBTPL/apache_$template.sh ]; then
+    # Running template trigger
+    if [ -x $V_WEBTPL/apache_$template.sh ]; then
         $V_WEBTPL/apache_$template.sh \
-            "$user" "$domain" "$ip" "$V_HOME" "$docroot" "$port"
+            "$user" "$domain" "$ip" "$V_HOME" "$docroot"
     fi
 fi
 

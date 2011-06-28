@@ -16,9 +16,8 @@ server {
         }
     }
 
-    location = /error/ {
-        root    %home%/%user%/domains/%domain%/document_errors/;
-        try_files      $uri @fallback;
+    location /error/ {
+        alias   %home%/%user%/domains/%domain%/document_errors/;
     }
 
     location @fallback {

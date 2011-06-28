@@ -10,7 +10,7 @@
     SuexecUserGroup %user% %group%
     CustomLog /var/log/httpd/domains/%domain%.bytes bytes
     CustomLog /var/log/httpd/domains/%domain%.log combined
-    ErrorLog /var/log/httpd/domains/%domain%.error.log
+   %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes +ExecCGI

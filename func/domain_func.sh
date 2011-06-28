@@ -238,7 +238,8 @@ httpd_add_config() {
             -e "s/%alias%/${aliases//,/ }/g" \
             -e "s/%ssl_cert%/${ssl_cert////\/}/g" \
             -e "s/%ssl_key%/${ssl_key////\/}/g" \
-            -e "s/%extentions%/$extentions/g" \
+            -e "s/%extentions%/${extentions//,/|}/g" \
+            -e "s/%elog%/$elog/g" \
     >> $conf
 }
 

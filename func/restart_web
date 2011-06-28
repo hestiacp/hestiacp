@@ -15,7 +15,7 @@ apache() {
 }
 
 nginx() {
-    /etc/init.d/nginx 'restart' >/dev/null 2>&1
+    /etc/init.d/nginx 'reload' >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         #$V_FUNC/report_issue 'web' 'nginx'
         echo "$E_RESTART_FAILED $V_EVENT"

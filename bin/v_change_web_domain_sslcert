@@ -7,7 +7,8 @@
 
 # Argument defenition
 user="$1"
-domain="$2"
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
 certificate="$3"
 
 # Importing variables
@@ -42,7 +43,7 @@ is_web_domain_valid
 is_domain_suspended 'web_domains'
 
 # Check SSL is added
-is_web_domain_value_exist '$SSL'
+is_web_domain_value_exist '$SSL_CERT'
 
 # Checking ssl certificate
 is_web_domain_cert_valid

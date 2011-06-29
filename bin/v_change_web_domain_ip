@@ -61,8 +61,8 @@ old_ip=$(get_web_domain_value '$IP')
 change_domain_ip "$conf" "$domain" "$ip" "$old_ip" "$tpl_file"
 
 # Checking ssl
-ssl=$(get_web_domain_value '$SSL')
-if [ "$ssl" = 'yes' ]; then
+cert=$(get_web_domain_value '$SSL_CERT')
+if [ ! -z "$cert" ]; then
 
     # Get tpl
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"

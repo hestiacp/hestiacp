@@ -70,8 +70,8 @@ for domain in $domains; do
     httpd_change_config
 
     # Check ssl vhost
-    ssl=$(get_web_domain_value '$SSL')
-    if [ "$ssl" = 'yes' ]; then
+    cert=$(get_web_domain_value '$SSL_CERT')
+    if [ ! -z "$cert" ]; then
         # Defining teplate name
         tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
 

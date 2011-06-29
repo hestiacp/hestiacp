@@ -89,8 +89,8 @@ str_repl="    ServerAlias ${new_alias_idn//,/ }"
 httpd_change_config
 
 # Checking ssl domain
-ssl=$(get_web_domain_value '$SSL')
-if [ "$ssl" = 'yes' ]; then
+cert=$(get_web_domain_value '$SSL_CERT')
+if [ ! -z "$cert" ]; then
 
     # Defining ssl template
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"

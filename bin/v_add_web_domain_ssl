@@ -52,7 +52,7 @@ ip=$(get_web_domain_value '$IP')
 is_sys_ip_owner
 
 # Check ssl is not added
-is_web_domain_key_empty '$SSL'
+is_web_domain_key_empty '$SSL_CERT'
 
 # Checking ssl certificate
 is_web_domain_cert_valid
@@ -121,7 +121,6 @@ fi
 increase_user_value "$user" '$U_WEB_SSL'
 
 # Adding ssl values
-update_web_domain_value '$SSL' 'yes'
 update_web_domain_value '$SSL_HOME' "$tpl_option"
 update_web_domain_value '$SSL_CERT' "$cert"
 

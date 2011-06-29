@@ -59,8 +59,8 @@ str_repl="    DocumentRoot $V_HOME/$user/domains/$domain/public_html"
 httpd_change_config
 
 # Check ssl vhost
-ssl=$(get_web_domain_value '$SSL')
-if [ "$ssl" = 'yes' ]; then
+cert=$(get_web_domain_value '$SSL_CERT')
+if [ ! -z "$cert" ]; then
     # Defining teplate name and ssl documentroot option
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
     tpl_option=$(get_web_domain_value '$SSL_HOME')

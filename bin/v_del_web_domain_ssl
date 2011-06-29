@@ -42,7 +42,7 @@ is_web_domain_valid
 is_domain_suspended 'web_domains'
 
 # Checking ssl is added
-is_web_domain_value_exist '$SSL'
+is_web_domain_value_exist '$SSL_CERT'
 
 
 #----------------------------------------------------------#
@@ -67,7 +67,6 @@ cert=$(get_web_domain_value '$SSL_CERT' )
 tpl_option=$(get_web_domain_value '$SSL_HOME' )
 
 # Deleting ssl in config
-update_web_domain_value '$SSL' 'no'
 update_web_domain_value '$SSL_HOME' ''
 update_web_domain_value '$SSL_CERT' ''
 

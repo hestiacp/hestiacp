@@ -66,8 +66,8 @@ str_repl="    ErrorLog /var/log/httpd/domains/$domain.error.log"
 httpd_change_config
 
 # Checking ssl
-ssl=$(get_web_domain_value '$SSL')
-if [ "$ssl" = 'yes' ]; then
+cert=$(get_web_domain_value '$SSL_CERT')
+if [ ! -z "$cert" ]; then
 
     # Get ssl template name
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"

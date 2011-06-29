@@ -60,8 +60,8 @@ conf="$V_HOME/$user/conf/httpd.conf"
 httpd_del_config
 
 # Checking ssl
-ssl=$(get_web_domain_value '$SSL')
-if [ "$ssl" = 'yes' ]; then
+cert=$(get_web_domain_value '$SSL_CERT')
+if [ ! -z "$cert" ]; then
 
     # Get tpl
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
@@ -104,11 +104,10 @@ if [ -x $V_WEBTPL/apache_$template.sh ]; then
 fi
 
 # Checking ssl
-if [ "$ssl" = 'yes' ]; then
+if [ ! -z "$cert" = 'yes' ]; then
     # Defining variables for ssl template replace
     web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
     tpl_option=$(get_web_domain_value '$SSL_HOME')
-    cert=$(get_web_domain_value '$SSL_CERT')
     ssl_cert="$V_HOME/$user/conf/$cert.crt"
     ssl_key="$V_HOME/$user/conf/$cert.key"
     case $tpl_option in

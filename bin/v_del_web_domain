@@ -87,6 +87,11 @@ fi
 # Deleting directory
 rm -rf $V_HOME/$user/domains/$domain
 
+# Deleting logs
+rm -rf /var/log/httpd/domains/$domain.log*
+rm -rf /var/log/httpd/domains/$domain.bytes
+rm -rf /var/log/httpd/domains/$domain.error*
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

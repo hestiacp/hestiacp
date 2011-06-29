@@ -59,7 +59,6 @@ is_template_valid "proxy"
 ip=$(get_web_domain_value '$IP')
 web_port=$(get_config_value '$WEB_PORT')
 proxy_port=$(get_config_value '$PROXY_PORT')
-domain=$(get_web_domain_value '$DOMAIN')
 domain_idn=$(idn -t --quiet -a "$domain")
 group="$user"
 docroot="$V_HOME/$user/domains/$domain/public_html"
@@ -85,6 +84,34 @@ main_conf='/etc/nginx/conf.d/vesta_users.conf'
 main_conf_check=$(grep "$conf" $main_conf )
 if [ -z "$main_conf_check" ]; then
     echo "include $conf;" >>$main_conf
+fi
+
+# Checking ssl
+cert=$(get_web_domain_value '$SSL_CERT')
+if [ ! -z "$cert" ]; then
+    # Defining certificate params
+    ssl_cert="$V_HOME/$user/conf/$cert.crt"
+    ssl_key="$V_HOME/$user/conf/$cert.key"
+    tpl_option=$(get_web_domain_value '$SSL_HOME')
+    case $tpl_option in
+        single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
+        same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+        *) check_args '3' "$#" 'user domain certificate [sslhome]'
+    esac
+    web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
+    proxy_ssl_port=$(get_config_value '$PROXY_SSL_PORT')
+
+    # Adding domain to the snginx.conf
+    conf="$V_HOME/$user/conf/snginx.conf"
+    tpl_file="$V_WEBTPL/ngingx_vhost_$template.stpl"
+    httpd_add_config
+
+    # Checking vesta nginx config
+    main_conf='/etc/nginx/conf.d/vesta_users.conf'
+    main_conf_check=$(grep "$conf" $main_conf )
+    if [ -z "$main_conf_check" ]; then
+        echo "include $conf;" >>$main_conf
+    fi
 fi
 
 

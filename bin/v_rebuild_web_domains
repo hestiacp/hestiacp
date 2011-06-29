@@ -51,7 +51,7 @@ field='$DOMAIN'
 # Parsing unsuspeneded domains
 domains=$(dom_clear_search)
 
-# Starting update disk loop
+# Starting loop
 for domain in $domains; do
 
     # Defining domain parameters
@@ -85,10 +85,9 @@ for domain in $domains; do
     fi
 
     # Checking ssl
-    ssl=$(get_web_domain_value '$SSL')
-    if [ "$ssl" = 'yes' ]; then
-        # Parsing certificate params
-        cert=$(get_web_domain_value '$SSL_CERT')
+    cert=$(get_web_domain_value '$SSL_CERT')
+    if [ ! -z "$cert" ]; then
+        # Defining certificate params
         ssl_cert="$V_HOME/$user/conf/$cert.crt"
         ssl_key="$V_HOME/$user/conf/$cert.key"
         tpl_option=$(get_web_domain_value '$SSL_HOME')
@@ -99,7 +98,7 @@ for domain in $domains; do
         esac
         web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
 
-        # Adding domain to the httpd.conf
+        # Adding domain to the shttpd.conf
         conf="$V_HOME/$user/conf/tmp_shttpd.conf"
         tpl_file="$V_WEBTPL/apache_$template.stpl"
         httpd_add_config

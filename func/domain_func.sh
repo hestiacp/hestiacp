@@ -816,6 +816,7 @@ dom_clear_list() {
 namehost_ip_support() {
     #Checking web system
     if [ "$WEB_SYSTEM" = 'apache' ]; then
+
         # Checking httpd config for NameHost string number
         conf_line=$(grep -n "NameVirtual" $conf|tail -n 1|cut -f 1 -d ':')
         if [ ! -z "$conf_line" ]; then
@@ -826,16 +827,18 @@ namehost_ip_support() {
 
         # Checking ssl support
         if [ "$WEB_SSL" = 'mod_ssl' ]; then
-            ssl_port=$(get_web_port_ssl)        # calling internal function
-            sed -i "$conf_ins i NameVirtualHost $ip:$ssl_port" $conf
+            web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
+            sed -i "$conf_ins i NameVirtualHost $ip:$web_ssl_port" $conf
         fi
-        port=$(get_web_port)    # calling internal function
-        sed -i "$conf_ins i NameVirtualHost $ip:$port" $conf
+
+        web_port=$(get_config_value '$WEB_PORT')
+        sed -i "$conf_ins i NameVirtualHost $ip:$web_port" $conf
 
         # Checking proxy support
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
+            proxy_port=$(get_config_value '$PROXY_PORT')
             cat $V_WEBTPL/ngingx_ip.tpl | sed -e "s/%ip%/$ip/g" \
-             -e "s/%web_port%/$port/g" -e "s/%proxy_port%/80/g" >>$nconf
+             -e "s/%web_port%/$web_port/g" -e "s/%proxy_port%/$proxy_port/g" >>$nconf
 
             # Adding to rpaf ip pool as well
             ips=$(grep 'RPAFproxy_ips' $rconf)

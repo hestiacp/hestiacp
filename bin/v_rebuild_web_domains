@@ -108,6 +108,24 @@ for domain in $domains; do
             $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
         fi
     fi
+
+    # Checking nginx
+    nginx=$(get_web_domain_value '$NGINX')
+    if [ ! -z "$nginx" ]; then
+        proxy_port=$(get_config_value '$PROXY_PORT')
+	ext=$(get_web_domain_value '$NGINX_EXT')
+        tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+        conf="$V_HOME/$user/conf/tmp_nginx.conf"
+        add_web_config
+
+        if [ ! -z "$cert" ]; then
+            proxy_ssl_port=$(get_config_value '$PROXY_SSL_PORT')
+            tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
+            conf="$V_HOME/$user/conf/tmp_snginx.conf"
+            add_web_config
+        fi
+    fi
+
 done
 
 # Renaming tmp config
@@ -137,6 +155,29 @@ if [ ! -z "$ssl_cert" ]; then
     fi
 fi
 
+# Checking nginx
+if [ ! -z "$nginx" ]; then
+    nginx_conf='/etc/nginx/conf.d/vesta_users.conf'
+    tmp_conf="$V_HOME/$user/conf/tmp_nginx.conf"
+    conf="$V_HOME/$user/conf/nginx.conf"
+    mv $tmp_conf $conf
+
+    nginx_conf_check=$(grep "$conf" $nginx_conf )
+    if [ -z "$nginx_conf_check" ]; then
+        echo "include $conf;" >>$nginx_conf
+    fi
+
+    # Checking ssl for nginx
+    if [ ! -z "$ssl_cert" ]; then
+        tmp_conf="$V_HOME/$user/conf/tmp_snginx.conf"
+        conf="$V_HOME/$user/conf/snginx.conf"
+        mv $tmp_conf $conf
+        nginx_conf_check=$(grep "$conf" $nginx_conf )
+        if [ -z "$nginx_conf_check" ]; then
+            echo "include $conf;" >>$nginx_conf
+        fi
+    fi
+fi
 
 #----------------------------------------------------------#
 #                       Vesta                              #

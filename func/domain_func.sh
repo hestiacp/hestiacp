@@ -219,7 +219,7 @@ sort_dns_records() {
     mv -f $conf.tmp $conf
 }
 
-httpd_add_config() {
+add_web_config() {
     # Adding template to config
     cat $tpl_file | \
         sed -e "s/%ip%/$ip/g" \

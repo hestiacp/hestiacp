@@ -78,7 +78,7 @@ fi
 # Adding domain to the nginx.conf
 tpl_file="$V_WEBTPL/ngingx_vhost_$template.tpl"
 conf="$V_HOME/$user/conf/nginx.conf"
-httpd_add_config
+add_web_config
 
 # Checking vesta nginx config
 main_conf='/etc/nginx/conf.d/vesta_users.conf'
@@ -105,7 +105,7 @@ if [ ! -z "$cert" ]; then
     # Adding domain to the snginx.conf
     conf="$V_HOME/$user/conf/snginx.conf"
     tpl_file="$V_WEBTPL/ngingx_vhost_$template.stpl"
-    httpd_add_config
+    add_web_config
 
     # Checking vesta nginx config
     main_conf='/etc/nginx/conf.d/vesta_users.conf'

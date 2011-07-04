@@ -77,7 +77,7 @@ for domain in $domains; do
 
     # Adding domain to the tmp_httpd.conf
     conf="$V_HOME/$user/conf/tmp_httpd.conf"
-    httpd_add_config
+    add_web_config
 
     # Running template trigger
     if [ -x $V_WEBTPL/apache_$template.sh ]; then
@@ -101,7 +101,7 @@ for domain in $domains; do
         # Adding domain to the shttpd.conf
         conf="$V_HOME/$user/conf/tmp_shttpd.conf"
         tpl_file="$V_WEBTPL/apache_$template.stpl"
-        httpd_add_config
+        add_web_config
 
         # Running template trigger
         if [ -x $V_WEBTPL/apache_$template.sh ]; then

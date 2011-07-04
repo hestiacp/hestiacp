@@ -80,7 +80,7 @@ else
     aliases_idn="$domain_alias_idn"
 fi
 
-# Defining vars for httpd_add_config function
+# Defining vars for add_config function
 web_port=$(get_config_value '$WEB_PORT')
 group="$user"
 email="$user@$domain"
@@ -102,7 +102,7 @@ else
 fi
 
 # Adding domain to the httpd.conf
-httpd_add_config
+add_web_config
 
 # Building directory tree
 mkdir $V_HOME/$user/domains/$domain \

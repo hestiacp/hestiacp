@@ -96,7 +96,7 @@ else
 fi
 
 # Adding domain to the httpd.conf
-httpd_add_config
+add_web_config
 
 # Running template trigger
 if [ -x $V_WEBTPL/apache_$template.sh ]; then
@@ -118,7 +118,7 @@ if [ ! -z "$cert" = 'yes' ]; then
     tpl_file="$V_WEBTPL/apache_$template.stpl"
 
     # Adding domain to the httpd.conf
-    httpd_add_config
+    add_web_config
 
     # Running template trigger
     if [ -x $V_WEBTPL/apache_$template.sh ]; then

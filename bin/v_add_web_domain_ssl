@@ -92,7 +92,7 @@ else
 fi
 
 # Adding domain to the httpd.conf
-httpd_add_config
+add_web_config
 
 # Adding certificate to user dir
 if [ ! -e "$ssl_cert" ]; then

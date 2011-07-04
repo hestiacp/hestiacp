@@ -54,8 +54,8 @@ tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
 conf="$V_HOME/$user/conf/httpd.conf"
 
 # Deleting domain
-httpd_del_config
-
+del_web_config
+exit
 # Checking ssl
 cert=$(get_web_domain_value '$SSL_CERT')
 if [ ! -z "$cert" ]; then
@@ -65,7 +65,7 @@ if [ ! -z "$cert" ]; then
     conf="$V_HOME/$user/conf/shttpd.conf"
 
     # Deleting domain
-    httpd_del_config
+    del_web_config
 fi
 
 # Checking stats

@@ -459,30 +459,26 @@ is_dns_domain_value_exist() {
 }
 
 
-httpd_del_config() {
-    # Get ServerName line
-    serv_line=$(grep -n 'ServerName %domain_idn%' "$tpl_file" |cut -f 1 -d :)
+del_web_config() {
+    # Get servername line in template
+    serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
 
-    # Get tpl_file last line
+    # Get last template line
     last_line=$(wc -l $tpl_file|cut -f 1 -d ' ')
 
-    # Get before line
-    bfr_line=$((serv_line - 1))
-
-    # Parsing httpd.conf
-    str=$(grep -B $bfr_line -n "ServerName $domain_idn" $conf |\
-            grep '<VirtualHost')
+    # Parsing config
+    str=$(grep -ni "Name $domain_idn" $conf | cut -f 1 -d :)
 
     # Checking result
-    if [ -z "$str" ] || [ -z "$serv_line" ] || [ -z "$bfr_line" ]; then
+    if [ -z "$str" ] || [ -z "$serv_line" ]; then
         echo "Error: httpd parsing error"
         log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
         exit $E_PARSE_ERROR
     fi
 
-    # String number
-    top_line=$(echo $str | sed -e "s/-/+/" | cut -f 1 -d '+')
-    bottom_line=$((top_line + last_line - 1))
+    # Deleting lines from config
+    top_line=$((str - serv_line + 1))
+    bottom_line=$((top_line + last_line -1))
     sed -i "$top_line,$bottom_line d" $conf
 }
 

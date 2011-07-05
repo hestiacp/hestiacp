@@ -84,6 +84,21 @@ for domain in $domains; do
         $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
     fi
 
+    # Checking cgi
+    cgi=$(get_web_domain_value '$CGI')
+    if [ "$cgi" != 'yes' ]; then
+        # Defining params for ScriptAlias
+        search_phrase='ScriptAlias '
+        str_repl="    #ScriptAlias /cgi-bin/"
+        str_repl="$str_repl $V_HOME/$user/domains/$domain/cgi-bin/"
+        change_web_config
+
+        # Defining params for Options
+        search_phrase='Options '
+        str_repl='        Options +Includes -Indexes -ExecCGI'
+        change_web_config
+    fi
+
     # Checking ssl
     cert=$(get_web_domain_value '$SSL_CERT')
     if [ ! -z "$cert" ]; then
@@ -106,6 +121,20 @@ for domain in $domains; do
         # Running template trigger
         if [ -x $V_WEBTPL/apache_$template.sh ]; then
             $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
+        fi
+
+        # Checking cgi
+        if [ "$cgi" != 'yes' ]; then
+            # Defining params for ScriptAlias
+            search_phrase='ScriptAlias '
+            str_repl="    #ScriptAlias /cgi-bin/"
+            str_repl="$str_repl $V_HOME/$user/domains/$domain/cgi-bin/"
+            change_web_config
+    
+            # Defining params for Options
+            search_phrase='Options '
+            str_repl='        Options +Includes -Indexes -ExecCGI'
+            change_web_config
         fi
     fi
 

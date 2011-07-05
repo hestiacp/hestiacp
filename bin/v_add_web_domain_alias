@@ -62,14 +62,10 @@ is_package_full 'web_alias'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get template name
+# Defining params for change function
 tpl_name=$(get_web_domain_value '$TPL')
 tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
-
-# Defining config
 conf="$V_HOME/$user/conf/httpd.conf"
-
-# Defining search phrase
 search_phrase='ServerAlias'
 
 # Defining new alias string
@@ -86,20 +82,16 @@ fi
 str_repl="    ServerAlias ${new_alias_idn//,/ }"
 
 # Adding alias
-httpd_change_config
+change_web_config
 
 # Checking ssl domain
 cert=$(get_web_domain_value '$SSL_CERT')
 if [ ! -z "$cert" ]; then
 
-    # Defining ssl template
+    # Defining params for change function
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
-
-    # Defining ssl config
     conf="$V_HOME/$user/conf/shttpd.conf"
-
-    # Adding alias
-    httpd_change_config
+    change_web_config
 fi
 
 

@@ -243,28 +243,20 @@ add_web_config() {
     >> $conf
 }
 
-httpd_change_config() {
-    # Get ServerName line
-    serv_line=$(grep -n 'ServerName %domain_idn%' "$tpl_file" | cut -f 1 -d :)
-
-    # Get tpl_file last line
+change_web_config() {
+    # Defining template borders
+    serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
     last_line=$(wc -l $tpl_file | cut -f 1 -d ' ')
-
-    # Get before line
     bfr_line=$((serv_line - 1))
-
-    # Get after line
     aftr_line=$((last_line - serv_line - 1))
 
-    # Parsing httpd.conf
-    vhost=$(grep -A $aftr_line -B $bfr_line -n "ServerName $domain_idn" $conf)
-
-    # Searching prhase
+    # Parsing config
+    vhost=$(grep -A $aftr_line -B $bfr_line -ni "Name $domain_idn" $conf)
     str=$(echo "$vhost" | grep -F "$search_phrase" | head -n 1)
 
     # Checking parsing result
     if [ -z "$str" ] || [ -z "$serv_line" ] || [ -z "$aftr_line" ]; then
-        echo "Error: httpd parsing error"
+        echo "Error: config parsing error"
         log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
         exit $E_PARSE_ERROR
     fi

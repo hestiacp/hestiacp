@@ -64,7 +64,7 @@ for domain in $domains; do
     str_repl="    DocumentRoot $V_HOME/$user/domains/$domain/public_html"
 
     # Unsuspending vhost
-    httpd_change_config
+    change_web_config
 
     # Check ssl vhost
     cert=$(get_web_domain_value '$SSL_CERT')
@@ -86,7 +86,7 @@ for domain in $domains; do
         str_repl="    DocumentRoot $docroot"
 
         # Unsuspending vhost
-        httpd_change_config
+        change_web_config
     fi
 
     # Adding unsuspend in config

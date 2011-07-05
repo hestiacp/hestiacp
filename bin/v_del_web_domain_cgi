@@ -53,55 +53,32 @@ is_web_domain_value_exist '$CGI'
 tpl_name=$(get_web_domain_value '$TPL')
 tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
 
-# Defining config
+# Defining params for ScriptAlias
 conf="$V_HOME/$user/conf/httpd.conf"
-
-# Defining search phrase
 search_phrase='ScriptAlias '
-
-# Defining replace string
 str_repl="    #ScriptAlias /cgi-bin/ $V_HOME/$user/domains/$domain/cgi-bin"
+change_web_config
 
-# Deleting cgi-bin support
-httpd_change_config
-
-# Defining search phrase
+# Defining params for Options
 search_phrase='Options '
-
-# Defining replace string
 str_repl='        Options +Includes -Indexes -ExecCGI'
-
-# Deleting execscgi support
-httpd_change_config
+change_web_config
 
 # Checking ssl
 cert=$(get_web_domain_value '$SSL_CERT')
 if [ ! -z "$cert" ]; then
 
-    # Get ssl template name
+    # Defining params for ScriptAlias
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
-
-    # Defining ssl config
     conf="$V_HOME/$user/conf/shttpd.conf"
-
-    # Defining search phrase
     search_phrase='ScriptAlias '
-
-    # Defining replace string
     str_repl="    #ScriptAlias /cgi-bin/ $V_HOME/$user/domains/$domain/cgi-bin"
+    change_web_config
 
-    # Deleting cgi-bin support
-    httpd_change_config
-
-    # Defining search phrase
+    # Defining params for Options
     search_phrase='Options '
-
-    # Defining replace string
     str_repl='        Options +Includes -Indexes -ExecCGI'
-
-    # Deleting execscgi support
-    httpd_change_config
-
+    change_web_config
 fi
 
 

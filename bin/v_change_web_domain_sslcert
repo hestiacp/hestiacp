@@ -71,7 +71,7 @@ search_phrase='SSLCertificateFile'
 str_repl="    SSLCertificateFile $ssl_cert"
 
 # Changing sslhome
-httpd_change_config
+change_web_config
 
 # Defining search phrase
 search_phrase='SSLCertificateKeyFile'
@@ -80,7 +80,7 @@ search_phrase='SSLCertificateKeyFile'
 str_repl="    SSLCertificateKeyFile $ssl_key"
 
 # Changing sslhome
-httpd_change_config
+change_web_config
 
 # Adding certificate to user dir
 if [ ! -e "$ssl_cert" ]; then

@@ -71,7 +71,7 @@ esac
 str_repl="    DocumentRoot $docroot"
 
 # Changing sslhome
-httpd_change_config
+change_web_config
 
 # Get old sslhome value
 ssl_home=$(get_web_domain_value '$SSL_HOME')
@@ -90,7 +90,7 @@ search_phrase="<Directory $dirroot>"
 str_repl="    <Directory $docroot>"
 
 # Changing sslhome directory tag
-httpd_change_config
+change_web_config
 
 
 #----------------------------------------------------------#

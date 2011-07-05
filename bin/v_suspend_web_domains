@@ -67,7 +67,7 @@ for domain in $domains; do
     str_repl="    Redirect / http://$url/"
 
     # Suspending vhost
-    httpd_change_config
+    change_web_config
 
     # Check ssl vhost
     cert=$(get_web_domain_value '$SSL_CERT')
@@ -82,7 +82,7 @@ for domain in $domains; do
         str_repl="    Redirect / http://$url/"
 
         # Suspending vhost
-        httpd_change_config
+        change_web_config
     fi
 
     # Adding suspend in config

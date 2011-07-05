@@ -58,45 +58,34 @@ fi
 
 # Defining new alias string
 new_alias=$(echo "$cur_alias" |\
-        sed -e "s/,/\n/g"|\
-        sed -e "s/^$dom_alias$//g"|\
-        sed -e "/^$/d"|\
-        sed -e ':a;N;$!ba;s/\n/,/g')
+    sed -e "s/,/\n/g"|\
+    sed -e "s/^$dom_alias$//g"|\
+    sed -e "/^$/d"|\
+    sed -e ':a;N;$!ba;s/\n/,/g')
 
 new_alias_idn=$(idn -t --quiet -a "$cur_alias" |\
-        sed -e "s/,/\n/g"|\
-        sed -e "s/^$dom_alias$//g"|\
-        sed -e "/^$/d"|\
-        sed -e ':a;N;$!ba;s/\n/,/g')
+    sed -e "s/,/\n/g"|\
+    sed -e "s/^$dom_alias$//g"|\
+    sed -e "/^$/d"|\
+    sed -e ':a;N;$!ba;s/\n/,/g')
 
-# Get template name
 tpl_name=$(get_web_domain_value '$TPL')
 tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
-
-# Defining config
 conf="$V_HOME/$user/conf/httpd.conf"
-
-# Defining search phrase
 search_phrase='ServerAlias'
-
-# Defining replace string
 str_repl="    ServerAlias ${new_alias_idn//,/ }"
 
 # Deleting alias
-httpd_change_config
+change_web_config
 
-# Checking ssl domain
+# Checking ssl
 cert=$(get_web_domain_value '$SSL_CERT')
 if [ ! -z "$cert" ]; then
 
-    # Defining ssl template
+    # Defining ssl options
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
-
-    # Defining ssl config
     conf="$V_HOME/$user/conf/shttpd.conf"
-
-    # Deleting ssl alias
-    httpd_change_config
+    change_web_config
 fi
 
 

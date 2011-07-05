@@ -63,7 +63,7 @@ search_phrase='ErrorLog '
 str_repl="    #ErrorLog /var/log/httpd/domains/$domain.error.log"
 
 # Deleting errolog support
-httpd_change_config
+change_web_config
 
 # Checking ssl
 cert=$(get_web_domain_value '$SSL_CERT')
@@ -76,7 +76,7 @@ if [ ! -z "$cert" ]; then
     conf="$V_HOME/$user/conf/shttpd.conf"
 
     # Deleting errolog support
-    httpd_change_config
+    change_web_config
 
 fi
 

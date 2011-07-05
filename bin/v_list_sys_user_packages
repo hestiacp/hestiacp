@@ -30,7 +30,7 @@ format_validation 'limit' 'offset'
 # Defining fields
 fields='$PACKAGE $WEB_DOMAINS $WEB_SSL $WEB_ALIASES $DATABASES $MAIL_DOMAINS
     $MAIL_BOXES $MAIL_FORWARDERS $DNS_DOMAINS $DISK_QUOTA $BANDWIDTH $NS1 $NS2
-    $SHELL $BACKUPS $TEMPLATES $MAX_CHILDS'
+    $SHELL $BACKUPS $WEB_TPL $MAX_CHILDS'
 
 # Listing domains
 case $format in

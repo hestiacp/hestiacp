@@ -36,7 +36,7 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Get user package package
-templates=$(get_user_value '$TEMPLATES')
+templates=$(get_user_value '$WEB_TPL')
 
 # Listing domains
 case $format in

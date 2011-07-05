@@ -57,7 +57,7 @@ is_ip_avalable
 is_package_full 'web_domain'
 
 # Checking template
-templates=$(get_user_value '$TEMPLATES')
+templates=$(get_user_value '$WEB_TPL')
 is_template_valid "web"
 
 

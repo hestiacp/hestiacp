@@ -43,7 +43,7 @@ is_web_domain_valid
 is_domain_suspended 'web_domains'
 
 # Checking template
-templates=$(get_user_value '$TEMPLATES')
+templates=$(get_user_value '$WEB_TPL')
 is_template_valid "web"
 
 

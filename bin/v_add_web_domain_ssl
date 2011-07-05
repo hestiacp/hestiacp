@@ -58,7 +58,7 @@ is_web_domain_key_empty '$SSL_CERT'
 is_web_domain_cert_valid
 
 # Checking template
-templates=$(get_user_value '$TEMPLATES')
+templates=$(get_user_value '$WEB_TPL')
 template=$(get_web_domain_value '$TPL')
 is_template_valid 'web'
 

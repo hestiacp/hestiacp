@@ -104,7 +104,7 @@ if [ -x $V_WEBTPL/apache_$template.sh ]; then
 fi
 
 # Checking ssl
-if [ ! -z "$cert" = 'yes' ]; then
+if [ ! -z "$cert" ]; then
     # Defining variables for ssl template replace
     web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
     tpl_option=$(get_web_domain_value '$SSL_HOME')

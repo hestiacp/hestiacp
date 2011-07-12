@@ -70,7 +70,8 @@ if [ "$version" != "$VERSION" ]; then
                     grep ":1$"|cut -f 1 -d :)"
             done
         else
-            for ver in $(seq $V3 $v3); do
+            V4=$((V3 + 1))
+            for ver in $(seq $V4 $v3); do
                 updates="$updates $(grep "^$v1.$v2.$ver" /tmp/versions |\
                     grep ":1$"|cut -f 1 -d :)"
             done

@@ -46,6 +46,7 @@ App.Helpers.beforeAjax = function(jedi_method)
             App.Helpers.showLoading();
             break;
         default:
+            App.Helpers.showLoading();
             break;
     }
 }
@@ -189,4 +190,23 @@ App.Helpers.liveValidate = function()
         var elm = $(evt.target);
         fb.log(elm.attr('TAGNAME'));
     });
+}
+
+App.Helpers.generatePassword = function()
+{   
+   var length = 12; 
+   var chars = "abcdefghijklmn.-%$#&-opqrstuvwxyz.-%$#&-ABCDEFGHIJKLMNOPQRSTUV.-%$#&-WXYZ1234567890.-%$#&-";
+   var pass = "";
+
+   for (x=0;x<length;x++) {
+      var i = Math.floor(Math.random() * 62);
+      pass += chars.charAt(i);
+   }
+
+   return pass;
+}
+
+App.Helpers.Warn = function(msg)
+{
+    alert(msg);
 }

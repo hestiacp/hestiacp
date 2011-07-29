@@ -61,7 +61,7 @@ for domain in $domains; do
     search_phrase='Redirect / '
 
     # Defining replace string
-    str_repl="    DocumentRoot $V_HOME/$user/domains/$domain/public_html"
+    str_repl="    DocumentRoot $V_HOME/$user/web/$domain/public_html"
 
     # Unsuspending vhost
     change_web_config
@@ -78,8 +78,8 @@ for domain in $domains; do
 
         # Switching on option
         case $tpl_opt in
-            single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
-            *) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+            single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
+            *) docroot="$V_HOME/$user/web/$domain/public_html" ;;
         esac
 
         # Defining replace string

@@ -75,8 +75,8 @@ email="$user@$domain"
 ssl_cert="$V_HOME/$user/conf/$cert.crt"
 ssl_key="$V_HOME/$user/conf/$cert.key"
 case $tpl_option in
-    single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
-    same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+    single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
+    same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
     *) check_args '3' "$#" 'user domain certificate [sslhome]'
 esac
 group="$user"

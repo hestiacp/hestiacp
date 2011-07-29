@@ -44,7 +44,7 @@ is_domain_suspended 'web_domains'
 #----------------------------------------------------------#
 
 # Defining home directory
-home_dir="$V_HOME/$user/domains/$domain/"
+home_dir="$V_HOME/$user/web/$domain/"
 
 # Checking home directory exist
 if [ -e "$home_dir" ]; then

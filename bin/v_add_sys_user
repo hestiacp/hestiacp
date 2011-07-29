@@ -82,12 +82,12 @@ fi
 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     mkdir $V_HOME/$user/conf
-    mkdir $V_HOME/$user/domains
+    mkdir $V_HOME/$user/web
     mkdir $V_HOME/$user/tmp
     chmod 751 $V_HOME/$user/conf
-    chmod 751 $V_HOME/$user/domains
+    chmod 751 $V_HOME/$user/web
     chmod 777 $V_HOME/$user/tmp
-    chown $user:$user $V_HOME/$user/domains
+    chown $user:$user $V_HOME/$user/web
 fi
 
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then

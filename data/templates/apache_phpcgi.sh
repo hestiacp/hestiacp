@@ -7,7 +7,7 @@ home_dir="$4"
 docroot="$5"
 
 wrapper_script='#!/usr/bin/php-cgi -cphp5-cgi.ini'
-wrapper_file="$home_dir/$user/domains/$domain/cgi-bin/php"
+wrapper_file="$home_dir/$user/web/$domain/cgi-bin/php"
 
 echo "$wrapper_script" > $wrapper_file
 chown $user:$user $wrapper_file

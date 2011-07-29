@@ -17,7 +17,7 @@ server {
     }
 
     location /error/ {
-        alias   %home%/%user%/domains/%domain%/document_errors/;
+        alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
     location @fallback {

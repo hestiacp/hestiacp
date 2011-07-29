@@ -4,9 +4,9 @@
     ServerAlias %alias_idn%
     ServerAdmin %email%
     DocumentRoot %docroot%
-    ScriptAlias /cgi-bin/ %home%/%user%/domains/%domain%/cgi-bin/
-    Alias /vstats/ %home%/%user%/domains/%domain%/stats/
-    Alias /error/ %home%/%user%/domains/%domain%/document_errors/
+    ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
+    Alias /vstats/ %home%/%user%/web/%domain%/stats/
+    Alias /error/ %home%/%user%/web/%domain%/document_errors/
     SuexecUserGroup %user% %group%
     CustomLog /var/log/httpd/domains/%domain%.bytes bytes
     CustomLog /var/log/httpd/domains/%domain%.log combined
@@ -24,10 +24,10 @@
         php_admin_value session.save_path %home%/%user%/tmp
         php_admin_value sendmail_path '/usr/sbin/sendmail -t -i -f %email%'
     </Directory>
-    <Directory %home%/%user%/domains/%domain%/stats>
+    <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    php_admin_value open_basedir %home%/%user%/domains:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp
+    php_admin_value open_basedir %home%/%user%/web:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp
     Include %home%/%user%/conf/%domain%.httpd.*
 
 </VirtualHost>

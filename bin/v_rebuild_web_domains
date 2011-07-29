@@ -62,7 +62,7 @@ for domain in $domains; do
     domain=$(get_web_domain_value '$DOMAIN')
     domain_idn=$(idn -t --quiet -a "$domain")
     group="$user"
-    docroot="$V_HOME/$user/domains/$domain/public_html"
+    docroot="$V_HOME/$user/web/$domain/public_html"
     email="$user@$domain"
     aliases=$(get_web_domain_value '$ALIAS')
     aliases_idn=$(idn -t --quiet -a "$aliases")
@@ -90,7 +90,7 @@ for domain in $domains; do
         # Defining params for ScriptAlias
         search_phrase='ScriptAlias '
         str_repl="    #ScriptAlias /cgi-bin/"
-        str_repl="$str_repl $V_HOME/$user/domains/$domain/cgi-bin/"
+        str_repl="$str_repl $V_HOME/$user/web/$domain/cgi-bin/"
         change_web_config
 
         # Defining params for Options
@@ -107,8 +107,8 @@ for domain in $domains; do
         ssl_key="$V_HOME/$user/conf/$cert.key"
         tpl_option=$(get_web_domain_value '$SSL_HOME')
         case $tpl_option in
-            single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
-            same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+            single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
+            same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
             *) check_args '3' "$#" 'user domain certificate [sslhome]'
         esac
         web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
@@ -128,7 +128,7 @@ for domain in $domains; do
             # Defining params for ScriptAlias
             search_phrase='ScriptAlias '
             str_repl="    #ScriptAlias /cgi-bin/"
-            str_repl="$str_repl $V_HOME/$user/domains/$domain/cgi-bin/"
+            str_repl="$str_repl $V_HOME/$user/web/$domain/cgi-bin/"
             change_web_config
     
             # Defining params for Options

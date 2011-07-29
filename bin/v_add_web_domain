@@ -84,7 +84,7 @@ fi
 web_port=$(get_config_value '$WEB_PORT')
 group="$user"
 email="$user@$domain"
-docroot="$V_HOME/$user/domains/$domain/public_html"
+docroot="$V_HOME/$user/web/$domain/public_html"
 conf="$V_HOME/$user/conf/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
 
@@ -105,14 +105,14 @@ fi
 add_web_config
 
 # Building directory tree
-mkdir $V_HOME/$user/domains/$domain \
-      $V_HOME/$user/domains/$domain/public_html \
-      $V_HOME/$user/domains/$domain/public_shtml \
-      $V_HOME/$user/domains/$domain/document_errors \
-      $V_HOME/$user/domains/$domain/cgi-bin \
-      $V_HOME/$user/domains/$domain/private \
-      $V_HOME/$user/domains/$domain/stats \
-      $V_HOME/$user/domains/$domain/logs
+mkdir $V_HOME/$user/web/$domain \
+      $V_HOME/$user/web/$domain/public_html \
+      $V_HOME/$user/web/$domain/public_shtml \
+      $V_HOME/$user/web/$domain/document_errors \
+      $V_HOME/$user/web/$domain/cgi-bin \
+      $V_HOME/$user/web/$domain/private \
+      $V_HOME/$user/web/$domain/stats \
+      $V_HOME/$user/web/$domain/logs
 
 # Adding domain logs
 touch /var/log/httpd/domains/$domain.bytes \
@@ -120,35 +120,35 @@ touch /var/log/httpd/domains/$domain.bytes \
       /var/log/httpd/domains/$domain.error.log
 
 # Adding symlink for logs
-ln -s /var/log/httpd/domains/$domain.*log $V_HOME/$user/domains/$domain/logs/
+ln -s /var/log/httpd/domains/$domain.*log $V_HOME/$user/web/$domain/logs/
 
 # Adding domain skeleton
-cp -r $V_WEBTPL/skel/public_html/ $V_HOME/$user/domains/$domain/
-cp -r $V_WEBTPL/skel/public_shtml/ $V_HOME/$user/domains/$domain/
-cp -r $V_WEBTPL/skel/document_errors/ $V_HOME/$user/domains/$domain/
-cp -r $V_WEBTPL/skel/cgi-bin/ $V_HOME/$user/domains/$domain/
+cp -r $V_WEBTPL/skel/public_html/ $V_HOME/$user/web/$domain/
+cp -r $V_WEBTPL/skel/public_shtml/ $V_HOME/$user/web/$domain/
+cp -r $V_WEBTPL/skel/document_errors/ $V_HOME/$user/web/$domain/
+cp -r $V_WEBTPL/skel/cgi-bin/ $V_HOME/$user/web/$domain/
 
 # Changing tpl values
-for file in $(find "$V_HOME/$user/domains/$domain/" -type f); do
+for file in $(find "$V_HOME/$user/web/$domain/" -type f); do
     sed -i "s/%domain%/$domain/g" $file
 done
 
 # Changing file owner
-chown -R $user:$user $V_HOME/$user/domains/$domain
+chown -R $user:$user $V_HOME/$user/web/$domain
 chown root:$user /var/log/httpd/domains/$domain.*
 
 # Changing file permissions
-chmod 551 $V_HOME/$user/domains/$domain
-chmod 751 $V_HOME/$user/domains/$domain/private
-chmod 751 $V_HOME/$user/domains/$domain/cgi-bin
-chmod 751 $V_HOME/$user/domains/$domain/public_html
-chmod 751 $V_HOME/$user/domains/$domain/public_shtml
-chmod 751 $V_HOME/$user/domains/$domain/document_errors
-chmod -f -R 775 $V_HOME/$user/domains/$domain/cgi-bin/*
-chmod -f -R 775 $V_HOME/$user/domains/$domain/public_html/*
-chmod -f -R 775 $V_HOME/$user/domains/$domain/document_errors/*
-chmod 551 $V_HOME/$user/domains/$domain/stats
-chmod 551 $V_HOME/$user/domains/$domain/logs
+chmod 551 $V_HOME/$user/web/$domain
+chmod 751 $V_HOME/$user/web/$domain/private
+chmod 751 $V_HOME/$user/web/$domain/cgi-bin
+chmod 751 $V_HOME/$user/web/$domain/public_html
+chmod 751 $V_HOME/$user/web/$domain/public_shtml
+chmod 751 $V_HOME/$user/web/$domain/document_errors
+chmod -f -R 775 $V_HOME/$user/web/$domain/cgi-bin/*
+chmod -f -R 775 $V_HOME/$user/web/$domain/public_html/*
+chmod -f -R 775 $V_HOME/$user/web/$domain/document_errors/*
+chmod 551 $V_HOME/$user/web/$domain/stats
+chmod 551 $V_HOME/$user/web/$domain/logs
 chmod 640 /var/log/httpd/domains/$domain.*
 
 # Running template trigger

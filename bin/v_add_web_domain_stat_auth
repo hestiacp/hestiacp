@@ -48,7 +48,7 @@ is_domain_suspended 'web_domains'
 #----------------------------------------------------------#
 
 # Definining statistic dir
-stat_dir="$V_HOME/$user/domains/$domain/stats"
+stat_dir="$V_HOME/$user/web/$domain/stats"
 
 # Adding htaccess file
 if [ ! -e "$stat_dir/.htaccess" ]; then

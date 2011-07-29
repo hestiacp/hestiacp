@@ -56,7 +56,7 @@ tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
 # Defining params for ScriptAlias
 conf="$V_HOME/$user/conf/httpd.conf"
 search_phrase='ScriptAlias '
-str_repl="    #ScriptAlias /cgi-bin/ $V_HOME/$user/domains/$domain/cgi-bin"
+str_repl="    #ScriptAlias /cgi-bin/ $V_HOME/$user/web/$domain/cgi-bin"
 change_web_config
 
 # Defining params for Options
@@ -72,7 +72,7 @@ if [ ! -z "$cert" ]; then
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
     search_phrase='ScriptAlias '
-    str_repl="    #ScriptAlias /cgi-bin/ $V_HOME/$user/domains/$domain/cgi-bin"
+    str_repl="    #ScriptAlias /cgi-bin/ $V_HOME/$user/web/$domain/cgi-bin"
     change_web_config
 
     # Defining params for Options

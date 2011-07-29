@@ -531,6 +531,8 @@ change_db_mysql_password() {
     # Changing user password
     $sql "GRANT ALL ON $database.* TO '$db_user'@'%' \
              IDENTIFIED BY '$db_password'"
+    $sql "GRANT ALL ON $database.* TO '$db_user'@'localhost' \
+             IDENTIFIED BY '$db_password'"
     #$sql "SET PASSWORD FOR '$db_user'@'%' = PASSWORD('$db_password');"
     $sql "FLUSH PRIVILEGES"
 }

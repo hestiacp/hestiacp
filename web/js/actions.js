@@ -1,6 +1,13 @@
-/*App.Actions.cancel_ip_form = function(){
-    alert(1);
-}*/
+App.Actions.delete_entry = function(evt) 
+{
+    var confirmed = confirm(App.i18n.getMessage('confirm'));
+    if (!confirmed) {
+        return;
+    }
+    var elm = $(evt.target);
+    var elm = elm.hasClass('row') ? elm : elm.parents('.row');    
+    App.Model.remove(App.Env.world, elm);
+}
 
 App.Actions.show_subform = function(evt)
 {
@@ -81,32 +88,47 @@ App.Actions.save_form = function(evt) {
     var elm_id = App.Env.world + '_FORM_ID';
     var build_method = App.Env.getWorldName() + '_entry';
     
+    if (!App.Validate.form(App.Env.world, elm)) {
+        return App.Validate.displayFormErrors(App.Env.world, elm);
+    }
+    
     if (elm.attr('id') == App.Constants[elm_id]) { // NEW ITEM
         var values = App.Helpers.getFormValues(elm);
         if(App.Validate.form(values, $('#'+elm_id))) {
             App.Model.add(values, source);
-            var tpl = App.HTML.Build[build_method](values, 'new');
-            $('#' + App.Constants[elm_id]).replaceWith(tpl);
+            var form_id = App.Constants[App.Env.world + '_FORM_ID'];
+            $('#'+form_id).remove();
         }
     }
     else { // OLD ITEM, UPDATING IT
         var source = $(elm).find('.source').val();
         var values = App.Helpers.getFormValues(elm);
         if(App.Validate.form(values, $('#'+elm_id))) {
-            App.Model.update(values, source);
-            var tpl = App.HTML.Build[build_method](values);
-            elm.replaceWith(tpl);
+            App.Model.add(values, source);
+            //var form_id = App.Constants[App.Env.world + '_FORM_ID'];
+            //$('#'+form_id).remove();
+            App.Model.update(values, source, elm);         
         }
-    }
-    App.Helpers.updateScreen();
+        /*if(App.Validate.form(values, $('#'+elm_id))) {
+            App.Model.update(values, source);           
+        }*/
+    }    
 }
 
 // do_action_edit
 App.Actions.edit = function(evt) {
     var elm = $(evt.target);
     elm = elm.hasClass('row') ? elm : elm.parents('.row');
-    App.Pages[App.Env.world].edit(elm);
-    App.Helpers.updateScreen();
+    
+    var options = elm.find('.source').val();
+    fb.warn(elm);
+    fb.warn(options);
+    var build_method = App.Env.getWorldName() + '_form';    
+    var tpl = App.HTML.Build[build_method](options);
+    elm.replaceWith(tpl);
+    
+    //App.Pages[App.Env.world].edit(elm);
+    //App.Helpers.updateScreen();
 }
 
 // do_cancel_form
@@ -160,4 +182,9 @@ App.Actions.save_dns_subrecords = function(evt)
     });
     
     fb.warn($.toJSON(records));
+}
+
+App.Actions.generate_pass = function()
+{
+    $('.password').val(App.Helpers.generatePassword());
 }

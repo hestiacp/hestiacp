@@ -10,8 +10,9 @@ App.i18n.getMessage = function(key)
 
 
 // Constants
-App.Constants.IP_FORM_ID = 'ip-form';
-App.Constants.DNS_FORM_ID = 'dns-form';
+App.Constants.IP_FORM_ID    = 'ip-form';
+App.Constants.DNS_FORM_ID   = 'dns-form';
+App.Constants.USER_FORM_ID  = 'user-form';
 
 App.Settings.ajax_url = 1;
 App.Settings.uri = location.href.replace('index.html', '');

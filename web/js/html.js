@@ -1,6 +1,30 @@
-App.HTML.makeDatabases = function(databases){
+App.HTML.setTplKeys = function(tpl, o, empty)
+{
+    var empty = empty || '-';
+    fb.log(empty);
+    tpl.set(':source', $.toJSON(o))
+    $(o).each(function(i, object)
+    {              
+        $.each(o, function(key)
+        {  
+            var val = o[key];     
+            if (empty == true) {       
+                tpl.set(':' + key, val || '');
+            }
+            else {
+                tpl.set(':' + key, val || '-');
+            }
+        });
+    });    
+    
+    return tpl;
+}
+
+App.HTML.makeDatabases = function(databases)
+{
     var acc = [];
-    $(databases).each(function(i, o){
+    $(databases).each(function(i, o)
+    {
         var tpl = App.Templates.get('database', 'database');
         tpl.set(':name', o.Database);
         tpl.set(':db_name', o.Database);
@@ -10,9 +34,11 @@ App.HTML.makeDatabases = function(databases){
     return acc.done();
 }
 
-App.HTML.makeDbTableList = function(data){
+App.HTML.makeDbTableList = function(data)
+{
     var acc = [];
-    $(data).each(function(i, o){
+    $(data).each(function(i, o)
+    {
         var name = App.Helpers.getFirstValue(o);
         var tpl = App.Templates.get('database_table', 'database');
         tpl.set(':name', name);
@@ -23,9 +49,11 @@ App.HTML.makeDbTableList = function(data){
     return acc.done();
 }
 
-App.HTML.makeDbFieldsList = function(data){
+App.HTML.makeDbFieldsList = function(data)
+{
     var acc = [];
-    $(data).each(function(i, o){
+    $(data).each(function(i, o)
+    {
         var details = [o['Type'], o['Null'], o['Key'], o['Default'], o['Extra']].join(' ');
         var tpl = App.Templates.get('database_field', 'database');
         tpl.set(':name', o.Field);
@@ -36,7 +64,8 @@ App.HTML.makeDbFieldsList = function(data){
     return acc.done();
 }
 
-App.HTML.Build.dns_form = function(options, id) {
+App.HTML.Build.dns_form = function(options, id) 
+{
     if('undefined' == typeof App.Env.initialParams) {
         return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
@@ -65,7 +94,8 @@ App.HTML.Build.dns_form = function(options, id) {
     return tpl.finalize();
 }
 
-App.HTML.Build.ip_form = function(options, id) {
+App.HTML.Build.ip_form = function(options, id) 
+{
     if('undefined' == typeof App.Env.initialParams) {
         return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
@@ -92,7 +122,8 @@ App.HTML.Build.ip_form = function(options, id) {
     return tpl.finalize();
 }
 
-App.HTML.Build.ip_selects = function(tpl, options) {
+App.HTML.Build.ip_selects = function(tpl, options) 
+{
     // OWNER
     var opts = App.HTML.Build.options(App.Env.initialParams.IP.SYS_USERS, options.OWNER);
     tpl.set(':owner_options', opts);
@@ -108,8 +139,9 @@ App.HTML.Build.ip_selects = function(tpl, options) {
     return tpl;
 }
 
-App.HTML.Build.dns_selects = function(tpl, options) {    
-    try{
+App.HTML.Build.dns_selects = function(tpl, options) 
+{    
+    try {
         // TPL
         var obj = App.Env.initialParams.DNS.TPL;
         var opts = App.HTML.Build.options(obj, options.TPL);
@@ -123,7 +155,8 @@ App.HTML.Build.dns_selects = function(tpl, options) {
     return tpl;
 }
 
-App.HTML.Build.options = function(initial, default_value) {
+App.HTML.Build.options = function(initial, default_value) 
+{
     var opts = [];
     $.each(initial, function(key){
        var selected = key == default_value ? 'selected="selected"' : ''; 
@@ -132,21 +165,11 @@ App.HTML.Build.options = function(initial, default_value) {
     return opts.join('');
 }
 
-App.HTML.Build.ip_entry = function(o){
+App.HTML.Build.ip_entry = function(o)
+{
     var tpl = App.Templates.get('ENTRY', 'ip');
-    tpl.set(':source',$.toJSON(o));
-    tpl.set(':NETMASK', o.NETMASK);
-    tpl.set(':IP_ADDRESS', o.IP_ADDRESS);
-    tpl.set(':SYS_USERS', o.U_SYS_USERS);
-    tpl.set(':WEB_DOMAINS', o.U_WEB_DOMAINS);
-    tpl.set(':DATE', o.DATE);
-    tpl.set(':INTERFACE', o.INTERFACE);
-    tpl.set(':NAME', o.NAME);
-    tpl.set(':OWNER', o.OWNER);
-    tpl.set(':STATUS', o.STATUS);
-    tpl.set(':U_SYS_USERS', o.U_SYS_USERS);
-    tpl.set(':U_WEB_DOMAINS', o.U_WEB_DOMAINS);
-    
+    tpl = App.HTML.setTplKeys(tpl, o);      
+       
     if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'ip');
     }
@@ -159,34 +182,19 @@ App.HTML.Build.ip_entry = function(o){
     return tpl.finalize();
 }
 
-App.HTML.Build.dns_entry = function(o, is_new){
+App.HTML.Build.dns_entry = function(o, is_new)
+{
     var tpl = App.Templates.get('ENTRY', 'dns');
-    tpl.set(':source', App.Helpers.toJSON(o));
-    tpl.set(':DNS_DOMAIN', o.DNS_DOMAIN);
+    tpl = App.HTML.setTplKeys(tpl, o);      
+    
     var ip = o.IP.split('.');
-    tpl.set(':IP', ip.join('<span class="dot">.</span>'));
-    tpl.set(':TTL', o.TTL);
-    tpl.set(':TPL', o.TPL);
-    tpl.set(':SOA', o.SOA);
-    tpl.set(':TTL', o.TTL);
-    tpl.set(':DATE', o.DATE);
+    tpl.set(':IP', ip.join('<span class="dot">.</span>'));    
     tpl.set(':CHECKED', '');
     if (is_new) {
         var now = new Date();
         tpl.set(':DATE', now.format("d.mm.yyyy"));
     }
-    /*tpl.set(':NETMASK', o.NETMASK);
-    tpl.set(':IP_ADDRESS', o.IP_ADDRESS);
-    tpl.set(':SYS_USERS', o.U_SYS_USERS);
-    tpl.set(':WEB_DOMAINS', o.U_WEB_DOMAINS);
-    tpl.set(':DATE', o.DATE);
-    tpl.set(':INTERFACE', o.INTERFACE);
-    tpl.set(':NAME', o.NAME);
-    tpl.set(':OWNER', o.OWNER);
-    tpl.set(':STATUS', o.STATUS);
-    tpl.set(':U_SYS_USERS', o.U_SYS_USERS);
-    tpl.set(':U_WEB_DOMAINS', o.U_WEB_DOMAINS);
-    */
+    
     if (App.Constants.SUSPENDED_YES == o.SUSPEND) {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'dns');
     }
@@ -199,6 +207,118 @@ App.HTML.Build.dns_entry = function(o, is_new){
     return tpl.finalize();
 }
 
+App.HTML.Build.user_entry = function(o, key)
+{
+    var processed_data = {
+        'NICKNAME': key,
+        'BANDWIDTH_PERCENTS': 90,
+        'U_DISK_PERCENTS': 80
+    };
+    var o = $.extend(o, processed_data);
+    var tpl = App.Templates.get('ENTRY', 'user');  
+    tpl = App.HTML.setTplKeys(tpl, o);
+       
+    if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'ip');
+    }
+    else {
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_DISABLED', 'ip');
+    }
+    tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
+    
+    return tpl.finalize();
+}
+
+
+App.HTML.Build.user_form = function(options, id) 
+{
+    if('undefined' == typeof App.Env.initialParams) {
+        return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
+    }
+    var tpl = App.Templates.get('FORM', 'user');
+    tpl.set(':source', options);
+    tpl.set(':id', id || '');
+    options = App.Helpers.evalJSON(options) || {};
+    if (App.Helpers.isEmpty(options)) {
+       tpl.set(':title', 'New user'); 
+       tpl.set(':save_button', 'ADD'); 
+    }
+    else {
+        tpl.set(':title', 'Edit user'); 
+        tpl.set(':save_button', 'SAVE'); 
+    }
+    
+    options = !App.Helpers.isEmpty(options) ? options : {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','NS':''};
+    
+    tpl = App.HTML.setTplKeys(tpl, options, true);        
+    tpl = App.HTML.Build.user_selects(tpl, options);
+    
+    return tpl.finalize();
+}
+
+App.HTML.Build.web_domain_entry = function(o, key)
+{    
+    // TODO:
+    /*<span class="domain-name">~!:ALIAS~!,</span>\
+								<span class="domain-name">naumov-socolov.org.md,</span>\
+								<span class="domain-name">naumov-socolov.to</span>\*/
+    var processed_data = {
+        DOMAIN: key
+    };
+    var o = $.extend(o, processed_data);
+    //fb.info(o);
+    var tpl = App.Templates.get('ENTRY', 'web_domain');
+    tpl = App.HTML.setTplKeys(tpl, o);      
+    
+    /*if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'ip');
+    }
+    else {
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_DISABLED', 'ip');
+    }
+    
+    tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
+    */
+    return tpl.finalize();
+}
+
+App.HTML.Build.mail_entry = function(o, key)
+{        
+    var processed_data = {
+        DOMAIN: key
+    };
+    var o = $.extend(o, processed_data);
+    var tpl = App.Templates.get('ENTRY', 'mail');
+    tpl = App.HTML.setTplKeys(tpl, o);      
+    
+    return tpl.finalize();
+}
+
+App.HTML.Build.db_entry = function(o, key)
+{        
+    var processed_data = {
+        DOMAIN: key
+    };
+    var o = $.extend(o, processed_data);
+    var tpl = App.Templates.get('ENTRY', 'db');
+    tpl = App.HTML.setTplKeys(tpl, o);      
+    
+    return tpl.finalize();
+}
+
+App.HTML.Build.cron_entry = function(o, key)
+{        
+    var processed_data = {
+        DOMAIN: key
+    };
+    var o = $.extend(o, processed_data);    
+    var tpl = App.Templates.get('ENTRY', 'cron');
+    tpl = App.HTML.setTplKeys(tpl, o);      
+    
+    return tpl.finalize();
+}
+    
+
 App.HTML.Build.dns_records = function(records)
 {
     var acc = [];
@@ -206,7 +326,7 @@ App.HTML.Build.dns_records = function(records)
     {
         var record = records[i];
         var tpl = App.HTML.Build.dns_subrecord(record);
-        acc[acc.length] = tpl.finalize();
+        acc[acc.length++] = tpl.finalize();
     });
     
     return acc.done();
@@ -220,6 +340,45 @@ App.HTML.Build.dns_subrecord = function(record)
     tpl.set(':RECORD_ID', record.RECORD_ID || '');
     //tpl.set(':RECORD_TYPE_VALUE', '');
     tpl.set(':RECORD_TYPE', App.HTML.Build.options(App.Env.initialParams.DNS.record.RECORD_TYPE, (record.RECORD_TYPE || -1)));
+    
+    return tpl;
+}
+
+App.HTML.Build.user_selects = function(tpl, options)
+{
+    var acc = [];
+    // PACKAGE
+    var pkg = App.Env.initialParams.USERS.PACKAGE;
+    $.each(pkg, function(val)
+    {
+        var tpl = App.Templates.get('select_option', 'general');
+        tpl.set(':VALUE', val);
+        tpl.set(':TEXT', pkg[val]);
+        acc[acc.length++] = tpl.finalize();
+    });
+    tpl.set(':PACKAGE_OPTIONS', acc.done());
+    // ROLE
+    acc = [];
+    var roles = App.Env.initialParams.USERS.ROLE;
+    $.each(roles, function(val)
+    {
+        var tpl = App.Templates.get('select_option', 'general');
+        tpl.set(':VALUE', val);
+        tpl.set(':TEXT', roles[val]);
+        acc[acc.length++] = tpl.finalize();
+    });
+    tpl.set(':ROLE_OPTIONS', acc.done());
+    // SHELL
+    acc = [];
+    var shell = App.Env.initialParams.USERS.SHELL;
+    $.each(shell, function(val)
+    {
+        var tpl = App.Templates.get('select_option', 'general');
+        tpl.set(':VALUE', val);
+        tpl.set(':TEXT', shell[val]);
+        acc[acc.length++] = tpl.finalize();
+    });
+    tpl.set(':SHELL_OPTIONS', acc.done());
     
     return tpl;
 }

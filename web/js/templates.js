@@ -16,13 +16,23 @@ App.Templates.html = {
             "Well," the farmer said, "I didn\'t have anymore rope, so I took off my belt and tied her tail to the rafter. In that moment, my pants fell down and my wife walked in ... Some things you just can\'t explain."']
     },
     general: {
-        loading: ['<div id="loading" style="top: 0;font-size:19px;font-weight: bol;position:absolute;width: 150px; background-color:yellow;z-index: 9999; padding: 8px;left: 50%;margin-left:-75px;">\
+        loading: ['<div id="loading" style="top: 0;font-size:19px;font-weight: bol;position:fixed;width: 150px; background-color:yellow;z-index: 9999; padding: 8px;left: 50%;margin-left:-75px;">\
                 <center>Loading...</center>\
                 </div>'],
         popup: ['<div class="black_overlay" id="popup-bg"></div>\
                 <div class="popup_content" id="popup"><button class="do_action_close_popup">close</button>~!:content~!</div>'],
+        inner_popup: ['<div id="inner-popup" style="left:~!:LEFT~!px;top:~!:TOP~!px;z-index:1000;display:block;" class="d-popup d-popup-ns-list">\
+            <div class="d-popup-inner">\
+                <span class="close do_action_close_inner_popup">×</span>\
+                <div class="d-popup-content">\
+                    ~!:CONTENT~!\
+                </div>\
+            </div>\
+        </div>'],
         select_option: ['<option ~!:SELECTED~! value="~!:VALUE~!">~!:TEXT~!</option>'],
-        error_elm: ['<div class="error-box">~!:ERROR~!</div>']     
+        error_elm: ['<div class="error-box">~!:ERROR~!</div>'],
+        SUSPENDED_TPL_NOT_SUSPENDED : ['<span class="ip-status-info ip-enabled-status do_action_suspend"><span class="ip-status-text do_action_suspend">enabled</span></span>'],
+        SUSPENDED_TPL_SUSPENDED : ['<span class="ip-status-info ip-enabled-status do_action_unsuspend"><span class="ip-status-text do_action_unsuspend">disabled</span></span>']
     },
     popup: {
         error: ['<div class="error"><center><h1 style="color: red;">Important: An Error Has Occured.</h1><hr></center>&nbsp;&nbsp;&nbsp;&nbsp;Something went wrong and some of your actions can be not saved in system. Mostly, it happens when you have network connection errors.<br>,&nbsp;&nbsp;&nbsp;&nbsp;However, please notify us about the situation. It would be helpfull if you will write us approximate time the error occured and last actions you were performing. You send your petition on <a href="mail_to">this email: BLABLA</a>,<br><br><center><span style="color: rgb(92, 92, 92);">Sorry for inconvinience. (We recommend you to reload the page)</span></center></div>']
@@ -70,13 +80,10 @@ App.Templates.html = {
                     <div class="form-row buttons-row cc">\
                             <input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form" name="save">\
                             <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                            <span class="help-btn do_action_form_help">Help</span>\
+                            <a class="help-btn" href="http://vestacp.com/docs/dns/" target="_blank">Help</a>\
                     </div>\
             </div>'
-        ],
-        SUSPENDED_TPL_ENABLED : ['<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>\
-                                <span class="delete-entry"><span class="delete-entry-text do_action_delete_ip">delete</span></span>'],
-        SUSPENDED_TPL_DISABLED : ['<span class="ip-status-info ip-suspended-status do_action_delete_dns"><span class="ip-status-text">suspended</span></span>'],
+        ],        
         ENTRIES_WRAPPER: ['<div class="dns-list items-list">~!:content~!</div>'],
         ENTRY: ['<div class="row dns-details-row ~!:CHECKED~!">\
                             <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
@@ -162,35 +169,35 @@ App.Templates.html = {
         FORM: ['\
             <div class="b-new-entry b-new-entry_ip" id="~!:id~!">\
                 <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
+                <input type="hidden" name="target" class="target" value=\'~!:target~!\'>\
                 <div class="entry-header">~!:title~!</div>\
-                <div class="errors">\
-		</div>\
+                <div class="form-error">\
+						</div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">ip address:</label>\
                         <input type="text" value="~!:IP_ADDRESS~!" name="IP_ADDRESS" class="text-field">\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">owner:</label>\
-                        <span class="select" id="select2">vesta</span>\
-                        <select name="OWNER" class="styled OWNER">\
+                        <select name="OWNER" class="not-styled OWNER">\
                                 ~!:owner_options~!\
                         </select>\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">status:</label>\
-                        <span class="select" id="select">shared</span>\
-                        <select class="styled status" name="STATUS">\
+                        <!-- span class="select" id="select">shared</span -->\
+                        <select class="not-styled status" name="STATUS">\
                                 ~!:status_options~!\
                         </select>\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">name:</label>\
-                        <input type="text" name="NAME" value="" class="text-field">\
+                        <input type="text" name="NAME" value="~!:NAME~!" class="text-field">\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">interface:</label>\
-                        <span class="select" id="select">eth1</span>\
-                        <select class="styled interface" name="INTERFACE">\
+                        <!-- span class="select" id="select">eth1</span -->\
+                        <select class="not-styled interface" name="INTERFACE">\
                                 ~!:interface_options~!\
                         </select>\
                 </div>\
@@ -203,7 +210,7 @@ App.Templates.html = {
                 <div class="form-row buttons-row cc">\
                         <input type="submit" value="~!:save_button~!" name="save" class="add-entry-btn do_action_save_form">\
                         <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                        <span class="help-btn">Help</span>\
+                        <a class="help-btn" href="http://vestacp.com/docs/ip/" target="_blank">Help</a>\
                 </div>\
         </div>\
          '],
@@ -216,6 +223,7 @@ App.Templates.html = {
                         <div class="check-this"></div>\
                         <div class="row-operations">\
                         ~!:SUSPENDED_TPL~!\
+                        <span class="delete-entry do_action_delete_entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
                         </div>\
                 </div>\
                 <div class="row-meta">\
@@ -224,7 +232,7 @@ App.Templates.html = {
                 <div class="row-details cc">\
                         <div class="ip-props-main">\
                                 <div class="ip-adr-box">\
-                                        <span class="ip-adr">~!:IP_ADDRESS~!</span>\
+                                        <span class="ip-adr  do_action_edit">~!:IP_ADDRESS~!</span>\
                                 </div>\
                                 <span class="prop-box">\
                                         <span class="prop-title">netmask:</span>\
@@ -273,7 +281,7 @@ App.Templates.html = {
                         <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
 						<div class="entry-header">~!:title~!</div>\
-						<div class="form-error hidden">\
+						<div class="form-error">\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">username:</label>\
@@ -393,7 +401,7 @@ App.Templates.html = {
 										<div class="value-box">\
 											<span class="value">~!:U_BANDWIDTH~!</span>\
 											<div class="graph low">\
-												<span style="width:30%;" class="bar"></span>\
+												<span style="width:~!:U_BANDWIDTH_PERCENTAGE~!%;" class="bar"></span>\
 											</div>\
 										</div>\
 										<div class="max-size">~!:BANDWIDTH~!<span class="units">~!:BANDWIDTH_MEASURE~!</span></div>\
@@ -462,13 +470,118 @@ App.Templates.html = {
 					</div>']
     },
     web_domain: {
+        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_domain">\
+                        <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
+                        <input type="hidden" class="target" name="target" value="" />\
+						<div class="entry-header">~!:title~!</div>\
+						<div class="form-error">\
+						</div>\
+                        <div class="form-row cc">\
+							<label for="#" class="field-label">domain:</label>\
+							<input type="text" name="DOMAIN" class="text-field" value="~!:DOMAIN~!">\
+						</div>\
+						<div class="form-row cc">\
+							<label for="#" class="field-label">ip:</label>\
+							<div class="">\
+								<select name="IP">\
+                                ~!:IP_OPTIONS~!\
+                                </select>\
+							</div>\
+						</div>\
+						<!-- advanced options -->\
+						<div class="form-options-group">\
+							<div class="group-header cc collapsed">\
+								<span class="group-title-outer do_action_toggle_section">\
+									<span class="group-title do_action_toggle_section">Advanced options</span>\
+								</span>									\
+							</div>\
+                            <div class="sub_section hidden">\
+							<div class="form-row cc adv_opts">\
+								<label for="#" class="field-label">template:</label>\
+								<select class="not-styled" name="TPL">\
+								~!:TPL_OPTIONS~!\
+								</select>\
+							</div>\
+							<div class="form-row cc">\
+								<label for="#" class="field-label">alias list:</label>\
+								<textarea name="ALIAS" class="textarea">~!:ALIAS~!</textarea>\
+							</div>\
+\
+							<div class="form-row cc">\
+								<label for="#" class="field-label">statistics:</label>\
+								<input type="checkbox" name="STATS" ~!:stats_checked~!="" value="~!:STATS~!" class="styled">\
+							</div>\
+							<div class="stats-settings">\
+								<div class="form-row cc">\
+									<label for="#" class="field-label">stats auth:</label>\
+									<input type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="styled">\
+								</div>\
+								<div class="form-row cc">\
+									<label for="#" class="field-label">login:</label>\
+									<input type="text" class="text-field" name="STATS_LOGIN" value="~!:STATS_LOGIN~!">\
+								</div>\
+								<div class="form-row pwd-box cc">\
+									<label for="#" class="field-label">password:</label>\
+									<input type="text" value="~!:STATS_PASSWORD~!" name="STATS_PASSWORD" class="text-field password">\
+									<span class="generate-pwd do_action_generate_pass">Generate</span>\
+								</div>\
+							</div><!-- // stats settings -->\
+							<div class="form-row cc">\
+								<label for="#" class="field-label">ssl:</label>\
+								<input type="checkbox" class="styled" ~!:ssl_checked~!="" value="~!SSL~!">\
+							</div>\
+							<div class="form-row cc">\
+								<label for="#" class="field-label">ssl home:</label>\
+								<input type="text" name="SSL_HOME" class="text-field" value="~!:SSL_HOME~!">\
+							</div>\
+							<div class="form-row ssl-crtfct-box cc">\
+								<label for="#" class="field-label">ssl certificate: <span class="remark">(upload file or insert text)</span></label>\
+								<input type="file" value="" size="43" class="file-upload">\
+								<textarea name="SSL_CERT" class="textarea">~!:SSL_CERT~!</textarea>\
+							</div>\
+						</div><!-- // advanced options -->\
+						</div>\
+                        <div class="form-options-group">\
+							<div class="group-header cc collapsed">\
+								<span class="group-title-outer do_action_toggle_section">\
+									<span class="group-title do_action_toggle_section">DNS options</span>\
+								</span>									\
+							</div>\
+							<div class="sub_section hidden">\
+                            <div class="form-row cc">\
+								<label for="#" class="field-label">create dns domain:</label>\
+								<input type="checkbox" value="" class="not-styled">\
+							</div>\
+						</div><!-- DNS options -->\
+						<div class="form-options-group">\
+							<div class="group-header cc collapsed">\
+								<span class="group-title-outer do_action_toggle_section">\
+									<span class="group-title do_action_toggle_section">Mail options</span>\
+								</span>									\
+							</div>\
+							<div class="sub_section hidden">\
+                                <div class="form-row cc">\
+                                    <label for="#" class="field-label">create mail domain:</label>\
+                                    <input type="checkbox" value="" class="not-styled">\
+                                </div>\
+                            </div>\
+                        </div>\
+                        </div><!-- Mail options -->\
+						<div class="form-row buttons-row cc">\
+							<input type="submit" value="~!:save_button~!" class="add-entry-btn">\
+							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
+							<a target="_blank" href="http://vestacp.com/docs/web/" class="help-btn">Help</a>\
+						</div>\
+					</div>'],
         ENTRIES_WRAPPER: ['<div class="domains-list items-list">~!:content~!</div>'],
         ENTRY: ['<div class="row first-row domain-details-row">\
+                        <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
+                        <input type="hidden" class="target" name="target" value="" />\
 						<div class="row-actions-box cc">\
 							<div class="check-this check-control"></div>\
 							<div class="row-operations">\
-								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>\
-								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>\
+								~!:SUSPENDED_TPL~!\
+								<span class="delete-entry do_action_delete_entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
 							</div>\
 						</div>\
 						<div class="row-meta">\
@@ -476,7 +589,7 @@ App.Templates.html = {
 						</div>\
 						<div class="row-details cc">\
 							<div class="names">\
-								<strong class="domain-name primary">~!:DOMAIN~!</strong>\
+								<strong class="domain-name primary do_action_edit">~!:DOMAIN~!</strong>\
 								<span class="alias-title">Alias:</span>\
 								~!:ALIAS~!\
 							</div>\
@@ -551,9 +664,58 @@ App.Templates.html = {
 					</div>']
     },
     db: {
+        USER_ITEMS_WRAPPER: ['<div class="db-user-box cc">~!:CONTENT~!</div>'],
+        USER_ITEM: ['<span class="db-user-wrap">\
+                        <span class="db-user">~!:NAME~!</span>\
+                    </span>\
+                    <span class="change-pwd do_action_change_db_user_password">change password</span>'],
+        DIVIDER: ['<div class="db-devider">\
+						<span class="db-devider-title">\
+							<span class="db-devider-outer">\
+								<span class="db-devider-inner">~!:TYPE~!</span>\
+							</span>\
+						</span>\
+					</div>'],
         ENTRIES_WRAPPER: ['<div class="db-list">~!:content~!</div>'],
-        ENTRY: ['<div class="row first-row db-details-row">\
-						<div class="row-actions-box cc">\
+        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_db">\
+						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
+                        <input type="hidden" name="target" class="target" value=\'\'>\
+                        <div class="entry-header">~!:title~!</div>\
+						<div class="form-error">\
+						</div>\
+						<div class="form-row cc">\
+							<label for="#" class="field-label">db type:</label>\
+							<select name="TYPE" class="not-styled">~!:TYPE_OPTIONS~!</select>\
+						</div>\
+						<div class="form-row cc">\
+							<label for="#" class="field-label">db name:</label>\
+							<input type="text" class="text-field" name="DB" value="~!:DB~!">\
+						</div>\
+						<div class="db-credentials ">\
+							<div class="form-row cc user">\
+								<label for="#" class="field-label">username</label>\
+								<input type="text" name="USER" class="text-field" value="~!:USER~!">\
+							</div>\
+							<div class="form-row pwd-box cc psw">\
+								<label for="#" class="field-label">password:</label>\
+								<input type="text" name="PASSWORD" class="text-field password" value="~!:PASSWORD~!">\
+								<span class="generate-pwd do_action_generate_pass">Generate</span>\
+							</div>\
+						</div>\
+						<div class="form-row cc">\
+							<label for="#" class="field-label">db host:</label>\
+							<select name="HOST">~!:HOST_OPTIONS~!</select>\
+						</div>\
+						<div class="form-row buttons-row cc">\
+							<input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form">\
+							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
+							<a target="_blank" href="http://vestacp.com/docs/db/" class="help-btn">Help</a>\
+						</div>\
+					</div>'],
+        ENTRY: ['<div class="row ~!:FIRST_ROW_CLASS~! db-details-row">\
+						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
+                        <input type="hidden" name="target" class="target" value=\'\'>\
+                        <div class="row-actions-box cc">\
 							<div class="check-this check-control"></div>\
 							<div class="row-operations">\
 								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>\
@@ -562,7 +724,7 @@ App.Templates.html = {
 						<div class="row-meta">\
 							<div class="ownership">\
 								<span class="prop-box">\
-									<span class="prop-value">Javier Henneman</span>\
+									<span class="prop-value">~!:OWNER~!</span>\
 								</span>\
 							</div>\
 							<div class="entry-created">~!:DATE~!</div>\
@@ -570,36 +732,30 @@ App.Templates.html = {
 						<div class="row-details cc">\
 							<div class="props-main">\
 								<div class="db-name-box">\
-									<span class="db-name">~!:DB_NAME~!</span>\
+									<span class="db-name do_action_edit">~!:DB~!</span>\
 								</div>\
 							</div>\
 							<div class="props-additional">\
 								<div class="db-user-box cc">\
-									<span class="db-user-wrap">\
-										<span class="db-user">~!:USER~!</span>\
-									</span>\
-									<span class="change-pwd">change password</span>										\
+									<span class="db-user-wrap backup-db do_action_open_inner_popup">\
+										Users: ~!:USERS~!\
+                                    </span>\
+									<textarea class="inner-popup-html hidden">~!:USER_LIST~!</textarea>\
 								</div>\
-								<div class="db-user-box cc">\
-									<span class="db-user-wrap">\
-										<span class="db-user">socialmediaexaminer (read only)</span>\
-									</span>\
-									<span class="change-pwd">change password</span>										\
-								</div>\
-								<span class="add-db-user">Add user</span>\
+								<span class="add-db-user do_action_add_db_user">Add user</span>\
 							</div>\
 							<div class="props-ext">\
-								<span class="backup-db">backup</span>\
+								<span class="backup-db do_action_backup_db">backup</span>\
 								<!-- disk usage block -->\
 								<div class="b-usage-box disk-usage cc">\
 									<div class="usage-box">\
 										<div class="value-box">\
-											<span class="value">~!:U_DISK~!</span>\
+											<span class="value">~!:U_DISK~! Mb</span>\
 											<div class="graph middle">\
-												<span style="width:55%;" class="bar"></span>\
+												<span style="width:~!:U_DISK_PERCENTAGE~!%;" class="bar"></span>\
 											</div>\
 										</div>\
-										<div class="max-size">~!:DISK~! <span class="units">Mb</span></div>\
+										<div class="max-size">~!:DISK~! <span class="units">~!:DISK_MEASURE~!</span></div>\
 									</div>\
 								</div><!-- // disk usage block -->\
 							</div>\
@@ -612,8 +768,8 @@ App.Templates.html = {
 						<div class="row-actions-box cc">\
 							<div class="check-this check-control"></div>\
 							<div class="row-operations">\
-								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>\
-								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>\
+								~!:SUSPENDED_TPL~!\
+                        <span class="delete-entry do_action_delete_entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
 							</div>\
 						</div>\
 						<div class="row-meta">\
@@ -643,7 +799,7 @@ App.Templates.html = {
 								</span>\
 							</div>\
 							<div class="cron-command-box">\
-								<strong class="cron-command-line">~!:CMD~!</strong>\
+								<strong class="cron-command-line do_action_edit">~!:CMD~!</strong>\
 							</div>\
 							<div class="cron-reported-to">\
 								<span class="prop-box cron-report-box">\

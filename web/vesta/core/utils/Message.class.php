@@ -5,8 +5,8 @@
  *
  * Contains messages, that are used in the code.
  * 
- * @author Malishev Dima <dima.malishev@gmail.com> 
  * @author vesta, http://vestacp.com/
+ * @author Dmitry Malishev <dima.malishev@gmail.com>
  * @copyright vesta 2010-2011
  */
 class Message 

@@ -62,8 +62,8 @@ search_phrase='DocumentRoot'
 
 # Parsing tpl_option
 case $tpl_option in
-    single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
-    same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+    single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
+    same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
     *) check_args '3' "2" 'user domain sslhome'
 esac
 
@@ -78,8 +78,8 @@ ssl_home=$(get_web_domain_value '$SSL_HOME')
 
 # Parsing old sslhome
 case $ssl_home in
-    single) dirroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
-    same) dirroot="$V_HOME/$user/domains/$domain/public_html" ;;
+    single) dirroot="$V_HOME/$user/web/$domain/public_shtml" ;;
+    same) dirroot="$V_HOME/$user/web/$domain/public_html" ;;
     *) check_args '3' "2" 'user domain sslhome'
 esac
 

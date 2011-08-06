@@ -62,7 +62,7 @@ web_port=$(get_config_value '$WEB_PORT')
 proxy_port=$(get_config_value '$PROXY_PORT')
 domain_idn=$(idn -t --quiet -a "$domain")
 group="$user"
-docroot="$V_HOME/$user/domains/$domain/public_html"
+docroot="$V_HOME/$user/web/$domain/public_html"
 email="$user@$domain"
 aliases=$(get_web_domain_value '$ALIAS')
 aliases_idn=$(idn -t --quiet -a "$aliases")
@@ -95,8 +95,8 @@ if [ ! -z "$cert" ]; then
     ssl_key="$V_HOME/$user/conf/$cert.key"
     tpl_option=$(get_web_domain_value '$SSL_HOME')
     case $tpl_option in
-        single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
-        same) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+        single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
+        same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
         *) check_args '3' "$#" 'user domain certificate [sslhome]'
     esac
     web_ssl_port=$(get_config_value '$WEB_SSL_PORT')

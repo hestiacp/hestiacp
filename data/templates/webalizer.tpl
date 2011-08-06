@@ -1,7 +1,7 @@
 HostName         %domain_idn%
 LogFile          /var/log/httpd/domains/%domain%.log
-OutputDir        %home%/%user%/domains/%domain%/stats
-HistoryName      %home%/%user%/domains/%domain%/stats/%domain%.hist
+OutputDir        %home%/%user%/web/%domain%/stats
+HistoryName      %home%/%user%/web/%domain%/stats/%domain%.hist
 Incremental      yes
 IncrementalName  %home%/%user%/domains/%domain%/stats/%domain%.current
 PageType         htm*

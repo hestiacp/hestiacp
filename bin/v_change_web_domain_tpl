@@ -77,7 +77,7 @@ aliases=$(get_web_domain_value '$ALIAS')
 aliases_idn=$(idn -t --quiet -a "$aliases")
 web_port=$(get_config_value '$WEB_PORT')
 email="$user@$domain"
-docroot="$V_HOME/$user/domains/$domain/public_html"
+docroot="$V_HOME/$user/web/$domain/public_html"
 conf="$V_HOME/$user/conf/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
 group="$user"
@@ -111,8 +111,8 @@ if [ ! -z "$cert" ]; then
     ssl_cert="$V_HOME/$user/conf/$cert.crt"
     ssl_key="$V_HOME/$user/conf/$cert.key"
     case $tpl_option in
-        single) docroot="$V_HOME/$user/domains/$domain/public_shtml" ;;
-        *) docroot="$V_HOME/$user/domains/$domain/public_html" ;;
+        single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
+        *) docroot="$V_HOME/$user/web/$domain/public_html" ;;
     esac
     conf="$V_HOME/$user/conf/shttpd.conf"
     tpl_file="$V_WEBTPL/apache_$template.stpl"

@@ -55,7 +55,7 @@ conf="$V_HOME/$user/conf/httpd.conf"
 
 # Deleting domain
 del_web_config
-exit
+
 # Checking ssl
 cert=$(get_web_domain_value '$SSL_CERT')
 if [ ! -z "$cert" ]; then
@@ -85,7 +85,7 @@ if [ ! -z "$stats_type" ] && [ "$stats_type" != 'no' ]; then
 fi
 
 # Deleting directory
-rm -rf $V_HOME/$user/domains/$domain
+rm -rf $V_HOME/$user/web/$domain
 
 # Deleting logs
 rm -rf /var/log/httpd/domains/$domain.log*

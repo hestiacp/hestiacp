@@ -52,7 +52,7 @@ is_web_domain_value_exist '$STATS'
 type=$(get_web_domain_value '$STATS')
 
 # Defining statistic dir
-stat_dir="$V_HOME/$user/domains/$domain/stats"
+stat_dir="$V_HOME/$user/web/$domain/stats"
 
 # Deleting dir content
 rm -rf $stat_dir/*

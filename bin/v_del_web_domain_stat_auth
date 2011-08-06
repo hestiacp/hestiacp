@@ -50,7 +50,7 @@ is_web_domain_value_exist '$STATS_AUTH'
 #----------------------------------------------------------#
 
 # Definining statistic dir
-stat_dir="$V_HOME/$user/domains/$domain/stats"
+stat_dir="$V_HOME/$user/web/$domain/stats"
 
 # Checking auth_user
 if [ ! -z "$auth_user" ]; then

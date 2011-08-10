@@ -243,23 +243,32 @@ add_web_config() {
     >> $conf
 }
 
-change_web_config() {
+get_web_config_brds() {
     # Defining template borders
     serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
-    last_line=$(wc -l $tpl_file | cut -f 1 -d ' ')
+    if [ -z "$serv_line" ]; then
+        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+        return $E_PARSE_ERROR
+    fi
+
+    # Template lines
+    last_line=$(wc -l $tpl_file|cut -f 1 -d ' ')
     bfr_line=$((serv_line - 1))
     aftr_line=$((last_line - serv_line - 1))
+
+    # Config lines
+    str=$(grep -ni "Name $domain_idn" $conf | cut -f 1 -d :)
+    top_line=$((str - serv_line + 1))
+    bottom_line=$((top_line + last_line -1))
+}
+
+change_web_config() {
+    # Get config borders
+    get_web_config_brds || exit $?
 
     # Parsing config
     vhost=$(grep -A $aftr_line -B $bfr_line -ni "Name $domain_idn" $conf)
     str=$(echo "$vhost" | grep -F "$search_phrase" | head -n 1)
-
-    # Checking parsing result
-    if [ -z "$str" ] || [ -z "$serv_line" ] || [ -z "$aftr_line" ]; then
-        echo "Error: config parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
-    fi
 
     # Parsing string position and content
     str_numb=$(echo "$str" | sed -e "s/-/=/" | cut -f 1 -d '=')
@@ -452,25 +461,10 @@ is_dns_domain_value_exist() {
 
 
 del_web_config() {
-    # Get servername line in template
-    serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
-
-    # Get last template line
-    last_line=$(wc -l $tpl_file|cut -f 1 -d ' ')
-
-    # Parsing config
-    str=$(grep -ni "Name $domain_idn" $conf | cut -f 1 -d :)
-
-    # Checking result
-    if [ -z "$str" ] || [ -z "$serv_line" ]; then
-        echo "Error: httpd parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
-    fi
+    # Get config borders
+    get_web_config_brds || exit $?
 
     # Deleting lines from config
-    top_line=$((str - serv_line + 1))
-    bottom_line=$((top_line + last_line -1))
     sed -i "$top_line,$bottom_line d" $conf
 }
 

@@ -1,0 +1,97 @@
+#!/bin/bash
+# info: backup system user with all its objects
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+source $V_FUNC/db_func.sh
+source $V_CONF/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'user'
+
+# Checking argument format
+format_validation 'user'
+
+# Checking user
+is_user_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Creating temporary random directory
+tmpdir=$(mktemp -p $V_TMP -d)
+echo "TMPDIR is $tmpdir"
+# Web domains
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    mkdir $tmpdir/web/
+
+    # Parsing unsuspeneded domains
+    conf="$V_USERS/$user/web_domains.conf"
+    field='$DOMAIN'
+    search_string='DOMAIN='
+    domains=$(dom_clear_search)
+
+    for domain in $domains; do
+        echo $domain
+
+	# backup_domain
+        mkdir -p $tmpdir/web/$domain/conf $tmpdir/web/$domain/cert
+
+        # Packing data folders
+        cd $V_HOME/$user/web/$domain
+        tar -cf $tmpdir/web/$domain/$domain.tar \
+            public_html public_shtml private document_errors cgi-bin stats
+
+        # Creating config folder
+        cd $tmpdir/web/$domain/
+        grep "DOMAIN='$domain'" $conf > conf/web_domains.conf
+
+        # Parsing httpd.conf
+        tpl_name=$(get_web_domain_value '$TPL')
+        tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+        conf="$V_HOME/$user/conf/httpd.conf"
+
+
+        # Parsing nginx.conf
+
+    done
+fi
+
+exit
+
+# DNS domains
+
+# Mail domains
+
+# DatbaBases
+
+# Cron jobs
+
+# Vesta
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

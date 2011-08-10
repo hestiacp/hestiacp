@@ -2,21 +2,21 @@ App.HTML.setTplKeys = function(tpl, o, empty)
 {
     var empty = empty || '-';
     fb.log(empty);
-    tpl.set(':source', $.toJSON(o))
+    tpl.set(':source', $.toJSON(o).replace(/'/gi, "\\'"))
     $(o).each(function(i, object)
-    {              
+    {
         $.each(o, function(key)
-        {  
-            var val = o[key];     
-            if (empty == true) {       
+        {
+            var val = o[key];
+            if (empty == true) {
                 tpl.set(':' + key, val || '');
             }
             else {
                 tpl.set(':' + key, val || '-');
             }
         });
-    });    
-    
+    });
+
     return tpl;
 }
 
@@ -30,7 +30,7 @@ App.HTML.makeDatabases = function(databases)
         tpl.set(':db_name', o.Database);
         acc[acc.length++] = tpl.finalize();
     });
-    
+
     return acc.done();
 }
 
@@ -45,7 +45,7 @@ App.HTML.makeDbTableList = function(data)
         tpl.set(':table_name', name);
         acc[acc.length++] = tpl.finalize();
     });
-    
+
     return acc.done();
 }
 
@@ -60,7 +60,7 @@ App.HTML.makeDbFieldsList = function(data)
         tpl.set(':details', details);
         acc[acc.length++] = tpl.finalize();
     });
-    
+
     return acc.done();
 }
 
@@ -71,7 +71,7 @@ App.HTML.Build.dns_form = function(options, id)
     }
     var tpl = App.Templates.get('FORM', 'dns');
     tpl.set(':source', options);
-    
+
     options = App.Helpers.evalJSON(options) || {};
     if (App.Helpers.isEmpty(options)) {
        tpl.set(':title', 'New dns record'); 
@@ -81,27 +81,27 @@ App.HTML.Build.dns_form = function(options, id)
         tpl.set(':title', 'Edit dns record'); 
         tpl.set(':save_button', 'SAVE'); 
     }
-    
+
     tpl.set(':id', id || ''); 
     tpl.set(':DNS_DOMAIN', options.DNS_DOMAIN || '');
     tpl.set(':IP', options.IP || '');
     tpl.set(':TTL', options.TTL || '');
     tpl.set(':SOA', options.SOA || '');
     tpl.set(':DATE', options.DATE || '');
-    
+
     tpl = App.HTML.Build.dns_selects(tpl, options);
-    
+
     return tpl.finalize();
 }
 
 App.HTML.Build.ip_form = function(options, id) 
-{
+{try{
     if('undefined' == typeof App.Env.initialParams) {
         return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
     var tpl = App.Templates.get('FORM', 'ip');
     tpl.set(':source', options);
-    
+
     options = App.Helpers.evalJSON(options) || {};
     if (App.Helpers.isEmpty(options)) {
        tpl.set(':title', 'New ip address'); 
@@ -111,49 +111,17 @@ App.HTML.Build.ip_form = function(options, id)
         tpl.set(':title', 'Edit ip address'); 
         tpl.set(':save_button', 'SAVE'); 
     }
-    
+
     tpl.set(':id', id || ''); 
     tpl.set(':IP_ADDRESS', options.IP_ADDRESS || '');
     tpl.set(':NETMASK', options.NETMASK || '');
     tpl.set(':NAME', options.NAME || '');
     
     tpl = App.HTML.Build.ip_selects(tpl, options);
-    
+}catch(e){fb.error(e);}
     return tpl.finalize();
 }
 
-App.HTML.Build.ip_selects = function(tpl, options) 
-{
-    // OWNER
-    var opts = App.HTML.Build.options(App.Env.initialParams.IP.SYS_USERS, options.OWNER);
-    tpl.set(':owner_options', opts);
-    
-    // STATUS
-    var opts = App.HTML.Build.options(App.Env.initialParams.IP.STATUSES, options.STATUS);
-    tpl.set(':status_options', opts);
-    
-    // INTERFACE
-    var opts = App.HTML.Build.options(App.Env.initialParams.IP.INTERFACES, options.INTERFACE);
-    tpl.set(':interface_options', opts);
-    
-    return tpl;
-}
-
-App.HTML.Build.dns_selects = function(tpl, options) 
-{    
-    try {
-        // TPL
-        var obj = App.Env.initialParams.DNS.TPL;
-        var opts = App.HTML.Build.options(obj, options.TPL);
-        tpl.set(':TPL', opts);
-        tpl.set(':TPL_DEFAULT_VALUE', options.TPL || App.Helpers.getFirstKey(obj));
-    }
-    catch (e) {        
-        return '';
-    }
-    
-    return tpl;
-}
 
 App.HTML.Build.options = function(initial, default_value) 
 {
@@ -168,17 +136,17 @@ App.HTML.Build.options = function(initial, default_value)
 App.HTML.Build.ip_entry = function(o)
 {
     var tpl = App.Templates.get('ENTRY', 'ip');
-    tpl = App.HTML.setTplKeys(tpl, o);      
-       
+    tpl = App.HTML.setTplKeys(tpl, o);
+
     if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'ip');
     }
     else {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_DISABLED', 'ip');
     }
-    
+
     tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
-    
+
     return tpl.finalize();
 }
 
@@ -186,7 +154,7 @@ App.HTML.Build.dns_entry = function(o, is_new)
 {
     var tpl = App.Templates.get('ENTRY', 'dns');
     tpl = App.HTML.setTplKeys(tpl, o);      
-    
+
     var ip = o.IP.split('.');
     tpl.set(':IP', ip.join('<span class="dot">.</span>'));    
     tpl.set(':CHECKED', '');
@@ -194,35 +162,39 @@ App.HTML.Build.dns_entry = function(o, is_new)
         var now = new Date();
         tpl.set(':DATE', now.format("d.mm.yyyy"));
     }
-    
+
     if (App.Constants.SUSPENDED_YES == o.SUSPEND) {
-        var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'dns');
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
     }
     else {
-        var sub_tpl = App.Templates.get('SUSPENDED_TPL_DISABLED', 'dns');
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
     }
-    
+
     tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
-    
+
     return tpl.finalize();
 }
 
 App.HTML.Build.user_entry = function(o, key)
 {
     var processed_data = {
-        'NICKNAME': key,
-        'BANDWIDTH_PERCENTS': 90,
-        'U_DISK_PERCENTS': 80
+        'NICKNAME'              : key, 
+        'U_DISK_PERCENTAGE'     : o.U_DISK > 0 ? o.U_DISK / o.DISK_QUOTA * 100 : 0.01,
+        'U_BANDWIDTH_PERCENTAGE': o.U_BANDWIDTH > 0 ? o.U_BANDWIDTH / o.BANDWIDTH * 100 : 0.01,
+        'DISK_QUOTA_MEASURE'    : App.Helpers.getMbHumanMeasure(o.DISK_QUOTA),
+        'BANDWIDTH_MEASURE'     : App.Helpers.getMbHumanMeasure(o.BANDWIDTH),
+        'BANDWIDTH'             : App.Helpers.getMbHuman(o.BANDWIDTH),
+        'DISK_QUOTA'            : App.Helpers.getMbHuman(o.DISK_QUOTA)
     };
     var o = $.extend(o, processed_data);
     var tpl = App.Templates.get('ENTRY', 'user');  
     tpl = App.HTML.setTplKeys(tpl, o);
        
     if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
-        var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'ip');
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
     }
     else {
-        var sub_tpl = App.Templates.get('SUSPENDED_TPL_DISABLED', 'ip');
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
     }
     tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
     
@@ -258,27 +230,47 @@ App.HTML.Build.user_form = function(options, id)
 
 App.HTML.Build.web_domain_entry = function(o, key)
 {    
-    // TODO:
-    /*<span class="domain-name">~!:ALIAS~!,</span>\
-								<span class="domain-name">naumov-socolov.org.md,</span>\
-								<span class="domain-name">naumov-socolov.to</span>\*/
     var processed_data = {
         DOMAIN: key
     };
     var o = $.extend(o, processed_data);
-    //fb.info(o);
     var tpl = App.Templates.get('ENTRY', 'web_domain');
     tpl = App.HTML.setTplKeys(tpl, o);      
     
-    /*if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
-        var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'ip');
+    if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
     }
     else {
-        var sub_tpl = App.Templates.get('SUSPENDED_TPL_DISABLED', 'ip');
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
+    }    
+    tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
+    
+    return tpl.finalize();
+}
+
+App.HTML.Build.web_domain_form = function(options, id) 
+{
+    if('undefined' == typeof App.Env.initialParams) {
+        return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
+    }
+    var tpl = App.Templates.get('FORM', 'web_domain');
+    tpl.set(':source', options);
+    tpl.set(':id', id || '');
+    options = App.Helpers.evalJSON(options) || {};
+    if (App.Helpers.isEmpty(options)) {
+       tpl.set(':title', 'New user'); 
+       tpl.set(':save_button', 'ADD'); 
+    }
+    else {
+        tpl.set(':title', 'Edit user'); 
+        tpl.set(':save_button', 'SAVE'); 
     }
     
-    tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
-    */
+    options = !App.Helpers.isEmpty(options) ? options : {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','NS':''};
+    
+    tpl = App.HTML.setTplKeys(tpl, options, true);        
+    tpl = App.HTML.Build.user_selects(tpl, options);
+    
     return tpl.finalize();
 }
 
@@ -295,13 +287,53 @@ App.HTML.Build.mail_entry = function(o, key)
 }
 
 App.HTML.Build.db_entry = function(o, key)
-{        
+{
+    var user_list_html = [];    
+    $(o['USERS']).each(function(i, o)
+    {
+        var tpl = App.Templates.get('USER_ITEM', 'db');
+        tpl.set(':NAME', o);
+        user_list_html.push(tpl.finalize());
+    });   
+    var wrapper = App.Templates.get('USER_ITEMS_WRAPPER', 'db');
+    wrapper.set(':CONTENT', user_list_html.done());
     var processed_data = {
-        DOMAIN: key
+        'USER_LIST': wrapper.finalize(),
+        'USERS': o['USERS'].length || 0,
+        'U_DISK_PERCENTAGE'     : o.U_DISK > 0 ? o.U_DISK / o.DISK * 100 : 0.01,
+        'DISK_MEASURE': App.Helpers.getMbHumanMeasure(o.DISK),
+        'DISK': App.Helpers.getMbHuman(o.DISK)
     };
     var o = $.extend(o, processed_data);
+    
     var tpl = App.Templates.get('ENTRY', 'db');
     tpl = App.HTML.setTplKeys(tpl, o);      
+    
+    return tpl.finalize();
+}
+
+App.HTML.Build.db_form = function(options, id) 
+{
+    if('undefined' == typeof App.Env.initialParams) {
+        return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
+    }
+    var tpl = App.Templates.get('FORM', 'db');
+    tpl.set(':source', options);
+    tpl.set(':id', id || '');
+    options = App.Helpers.evalJSON(options) || {};
+    if (App.Helpers.isEmpty(options)) {
+       tpl.set(':title', 'New database'); 
+       tpl.set(':save_button', 'ADD'); 
+    }
+    else {
+        tpl.set(':title', 'Edit database "'+options.DB+'"'); 
+        tpl.set(':save_button', 'SAVE'); 
+    }
+    
+    options = !App.Helpers.isEmpty(options) ? options : {'DB':'', 'USER':'','FORM':'', 'PASSWORD': ''};
+    
+    tpl = App.HTML.setTplKeys(tpl, options, true);        
+    tpl = App.HTML.Build.db_selects(tpl, options);   
     
     return tpl.finalize();
 }
@@ -313,7 +345,15 @@ App.HTML.Build.cron_entry = function(o, key)
     };
     var o = $.extend(o, processed_data);    
     var tpl = App.Templates.get('ENTRY', 'cron');
-    tpl = App.HTML.setTplKeys(tpl, o);      
+    tpl = App.HTML.setTplKeys(tpl, o);     
+    
+    if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
+    }
+    else {
+        var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
+    }    
+    tpl.set(':SUSPENDED_TPL', sub_tpl.finalize()); 
     
     return tpl.finalize();
 }
@@ -354,6 +394,7 @@ App.HTML.Build.user_selects = function(tpl, options)
         var tpl = App.Templates.get('select_option', 'general');
         tpl.set(':VALUE', val);
         tpl.set(':TEXT', pkg[val]);
+        tpl.set(':SELECTED', val == options.PACKAGE ? 'selected="selected"' : '');
         acc[acc.length++] = tpl.finalize();
     });
     tpl.set(':PACKAGE_OPTIONS', acc.done());
@@ -365,6 +406,7 @@ App.HTML.Build.user_selects = function(tpl, options)
         var tpl = App.Templates.get('select_option', 'general');
         tpl.set(':VALUE', val);
         tpl.set(':TEXT', roles[val]);
+        tpl.set(':SELECTED', val == options.ROLE ? 'selected="selected"' : '');
         acc[acc.length++] = tpl.finalize();
     });
     tpl.set(':ROLE_OPTIONS', acc.done());
@@ -376,10 +418,78 @@ App.HTML.Build.user_selects = function(tpl, options)
         var tpl = App.Templates.get('select_option', 'general');
         tpl.set(':VALUE', val);
         tpl.set(':TEXT', shell[val]);
+        tpl.set(':SELECTED', val == options.SHELL ? 'selected="selected"' : '');
         acc[acc.length++] = tpl.finalize();
     });
     tpl.set(':SHELL_OPTIONS', acc.done());
     
     return tpl;
 }
+
+App.HTML.Build.db_selects = function(tpl, options)
+{
+    var acc = [];
+    // PACKAGE
+    var items = App.Env.initialParams.DB.TYPE;
+    $.each(items, function(val)
+    {
+        var tpl = App.Templates.get('select_option', 'general');
+        tpl.set(':VALUE', val);
+        tpl.set(':TEXT', items[val]);
+        tpl.set(':SELECTED', val == options.TYPE ? 'selected="selected"' : '');
+        acc[acc.length++] = tpl.finalize();
+    });
+    tpl.set(':TYPE_OPTIONS', acc.done());
+    // ROLE
+    acc = [];
+    var items = App.Env.initialParams.DB.HOST;
+    $.each(items, function(val)
+    {
+        var tpl = App.Templates.get('select_option', 'general');
+        tpl.set(':VALUE', val);
+        tpl.set(':TEXT', items[val]);
+        tpl.set(':SELECTED', val == options.HOST ? 'selected="selected"' : '');
+        acc[acc.length++] = tpl.finalize();
+    });
+    tpl.set(':HOST_OPTIONS', acc.done());
+        
+    return tpl;
+}
+
+App.HTML.Build.ip_selects = function(tpl, options) 
+{
+    // OWNER
+    var users = App.Env.initialParams.IP.SYS_USERS || ['Skid'];
+    var opts = App.HTML.Build.options(users, options.OWNER);
+    tpl.set(':owner_options', opts);
+    
+    // STATUS
+    var opts = App.HTML.Build.options(App.Env.initialParams.IP.STATUSES, options.STATUS);
+    tpl.set(':status_options', opts);
+    
+    // INTERFACE
+    var opts = App.HTML.Build.options(App.Env.initialParams.IP.INTERFACES, options.INTERFACE);
+    tpl.set(':interface_options', opts);
+    
+    return tpl;
+}
+
+App.HTML.Build.dns_selects = function(tpl, options) 
+{    
+    try {
+        // TPL
+        var obj = App.Env.initialParams.DNS.TPL;
+        var opts = App.HTML.Build.options(obj, options.TPL);
+        tpl.set(':TPL', opts);
+        tpl.set(':TPL_DEFAULT_VALUE', options.TPL || App.Helpers.getFirstKey(obj));
+    }
+    catch (e) {        
+        return '';
+    }
+    
+    return tpl;
+}
+
+
+
 

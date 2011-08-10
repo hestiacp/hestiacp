@@ -5,8 +5,8 @@
  *
  * Thrown if unexpected action or behaviour detected
  *
- * @author Malishev Dima <dima.malishev@gmail.com> 
  * @author vesta, http://vestacp.com/
+ * @author Dmitry Malishev <dima.malishev@gmail.com>
  * @copyright vesta 2010-2011
  */
 class ProtectionException extends Exception 

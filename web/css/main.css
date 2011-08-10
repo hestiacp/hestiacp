@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : March 14, 2011
+last updated : July 10, 2011
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -23,12 +23,8 @@ body{
 	border:1px solid red;
 	border:solid #a9aa98;
 	border-width:0 2px;
-/*	padding:0 0 0 10px;
-	background:url(../images/bg-left.gif) repeat-y;*/
 }
 .outer{
-/*	padding:0 10px 0 0;
-	background:url(../images/bg-right.gif) repeat-y 100% 0;*/
 	padding-bottom:58px;
 	background:#fff url(../images/footer-bg.gif) repeat-x 0 100%;
 }
@@ -1076,6 +1072,11 @@ input::-moz-focus-inner{
 				font-size:12px;
 				color:#777;
 			}
+			.prop-value-collapsed-childs{
+				padding-right:15px;
+				background:url(../images/group-values-collapsed.png) no-repeat 100% 5px;
+				cursor:pointer;
+			}
 			.show-records{
 				display:inline-block;
 				padding-right:15px;
@@ -1094,6 +1095,36 @@ input::-moz-focus-inner{
 				line-height:13px;
 				cursor:pointer;				
 			}
+
+			.prop-box_group-values{
+				display:block;
+				}
+				.prop-box_group-values .prop-title{
+					float: left;
+					margin:2px 0 0;
+				}
+				.prop-box_group-values .group-values{
+					float:left;
+					margin-left:3px;
+				}
+				.group-values .prop-value{
+					display:block;
+				}
+				.group-values__bullet .prop-value{
+					padding-left:15px;
+					background:url(../images/group-value-bullet.png) no-repeat 5px 8px;
+				}
+				.group-values .group-switcher{
+					padding-right:15px;
+					background:url(../images/group-values-collapsed.png) no-repeat 100% 4px;
+				}
+				.group-values .group-values-count{
+					font-size:12px;
+					font-style:italic;
+					color:#cdcdcd;
+					border-bottom:1px solid #c9cac4;
+					cursor:pointer;
+				}
 			
 		.props-additional .owner-box{
 			padding-left:45px;
@@ -1257,7 +1288,10 @@ input::-moz-focus-inner{
 		margin:0 20px 0 0;		
 		width:230px;
 		cursor:pointer;
-	}	
+	}
+	.b-new-entry_dns .ttl-field{
+		width:75px;
+	}
 	.generate-pwd,
 	.context-settings{
 		position:relative;
@@ -1600,11 +1634,7 @@ input::-moz-focus-inner{
 		.domains-list .ip-adr-box .prop-box{
 			margin-left:20px;
 			}
-/*			.domains-list .ip-adr-box .prop-value{
-				padding:0;
-				cursor:pointer;
-				border-bottom:1px solid #cbcbbf;
-			}		*/
+
 	.domains-list .props-additional{
 		width:230px;
 		padding-top:0;
@@ -1676,6 +1706,107 @@ input::-moz-focus-inner{
 			background-color:#9fec00;
 		}
 
+/* New graphs */
+.stats-box{
+	position:relative;
+	margin-left:-25px;
+	padding-left:25px;
+	background:url(../images/stats-brace.png) no-repeat 0 50%;
+	}
+	.stats-box-title{
+		position:absolute;
+		top:50%;
+		left:-65px;
+		margin-top:-10px;
+		padding-right:25px;		
+		text-transform:uppercase;
+		font-size:9px;
+		line-height:12px;
+		background:url(../images/stats-curve.png) no-repeat 100% 50%;
+		color:#acacac;
+		border-bottom:1px solid #acacac;
+	}
+.b-usage-box2{
+	display:block;
+	margin:0 0 22px;
+	position:relative;
+	}
+	.b-usage-box2 .prop-title{
+		float:left;
+		margin:2px 15px 0 0;
+	}
+	.b-usage-box2 .usage-box{
+		float:left;
+	}
+	.b-usage-box2 .value-box{
+		padding-top:11px;
+		float:left;
+		width:85px;
+	}
+	.b-usage-box2 .max-size{
+		position:relative;
+		top:11px;
+		float:right;
+		padding:7px 0 0 3px;
+		border-left:1px solid #B7B7B9;
+		font-size:10px;
+		line-height:1;
+		color:#acacac;
+	}
+	.b-usage-box2 .max-size .units{
+		font-size:10px;
+		color:#acacac;
+	}
+	.b-usage-box2 .graph{
+		position:relative;
+		border:solid #b7b7b9;
+		border-width:1px 0 1px 1px;
+		font-size:0;
+		line-height:0;
+		}
+		.b-usage-box2 .value{
+			position:absolute;
+			top:-15px;
+			left:0;
+			z-index:10;
+			display:block;
+			white-space:nowrap;
+			padding:0 0 7px 3px;
+			font-size:11px;
+			line-height:1;
+			background:url(../images/bar-value-mark.png) no-repeat 0 100%;
+			color:#797979;
+			}
+			.b-usage-box2 .value-size{
+				padding-left:3px;			
+			}		
+		.b-usage-box2 .graph .bar{
+			position:relative;
+			display:block;
+			height:2px;
+			background-color:#9fec00;
+		}
+
+	/* Overdraft */
+	.b-usage-box2 .overdraft{}
+		
+		.b-usage-box2 .overdraft .value{
+			margin-left:-1px;
+			color:#F00;
+		}
+		
+		.b-usage-box2 .bar_overdraft{
+			position:absolute;
+			top:-1px;
+			z-index:5;
+			display:block;
+			height:2px;
+			border:solid #b7b7b9;
+			border-width:1px 0;
+			background:#ff9934 url(../images/overrun-border.png) no-repeat 100% 0; 	
+		}		
+
+	
 .domains-list .disk-usage{
 	margin:0 0 6px;
 }
@@ -1829,7 +1960,7 @@ input::-moz-focus-inner{
 			padding:0 3px 0 0;
 		}
 		
-/* Cron list
+/* Users list
 - - - - - - - - - - - - - - - - - - - */		
 .users-list{}
 
@@ -1841,9 +1972,11 @@ input::-moz-focus-inner{
 	}
 	.users-list .props-main{
 		width:345px;
+		width:330px;
 		}
 		.users-list .username-box{
 			padding-top:6px;
+			margin:0 0 15px;
 		}
 		.users-list .username-box .user{
 			position:relative;
@@ -1866,6 +1999,7 @@ input::-moz-focus-inner{
 
 	.users-list .props-additional{
 		width:200px;
+		width:225px;
 		}
 		.users-list .props-additional .prop-box,
 		.users-list .props-ext .prop-box{
@@ -1875,23 +2009,34 @@ input::-moz-focus-inner{
 		.users-list .props-additional .ns2-box{
 			padding-left:27px;
 		}
+/*		.users-list .ns-list-box{
+			padding-left:40px;
+		}*/
+		.users-list .ns-list-box .group-switcher{
+			padding-left:15px;
+		}
 		.users-list .props-additional .ns1-box .prop-title,
 		.users-list .props-additional .ns2-box .prop-title{
 			display: inline;
 			float: left;
-			margin: 2px 0 0 -27px;		
-		}		
+			margin: 2px 0 0 -27px;
+		}
 		.users-list .props-additional .ns1-box .prop-value,
 		.users-list .props-additional .ns2-box .prop-value{
 			padding:0;
 		}
 		
 	.users-list .props-ext{
-		width:200px;
+		width:190px;
 	}
+	
+	.users-list .db-box,
+	.users-list .dnsdomains-box{
+		margin-top:35px;
+	}
+
 	.username-box .prop-box{
 		position:relative;
-/*		top:6px;*/
 		margin:0;
 	}
 	.user-details{
@@ -1903,6 +2048,14 @@ input::-moz-focus-inner{
 		}
 		.user-details .user-reports{
 			color:#9c9c9c;
+		}
+		.user-details-box .prop-box{
+			margin:0 0 5px;
+		}
+		.user-details-box .user-name .prop-value,
+		.user-details-box .user-email{
+			font-style:italic;
+			color:#706f6b;
 		}
 	
 /* DB list
@@ -2262,3 +2415,16 @@ input::-moz-focus-inner{
 .users-list .suspended-row .user-backups-box .prop-title:active{
 	color:#ccc;
 }	
+
+
+select{
+    background-color: white;
+    width:265px;
+    margin:0;
+    padding:6px 7px;
+    border:2px solid #b8c2c3;
+    color:#555;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:14px;
+    font-weight:bold;
+}

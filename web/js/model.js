@@ -20,12 +20,40 @@ App.Model.WEB_DOMAIN.loadList = function()
 
 App.Model.MAIL.loadList = function()
 {
-    App.Ajax.request('MAIL.getList', {}, App.View.listItems);
+    //App.Ajax.request('MAIL.getList', {}, App.View.listItems);
+    App.Ref.CONTENT.html('<center><h1 style="padding-top: 20px;font-size: 28px;">Under maintanance</h1></center>');
 }
 
 App.Model.DB.loadList = function()
 {
-    App.Ajax.request('DB.getList', {}, App.View.listItems);
+    App.Ajax.request('DB.getList', {}, function(reply)
+    {
+        var acc = [];
+        var build_method = App.Env.getWorldName() + '_entry';
+        var data = reply.data;   
+        // TODO: fix it data.data
+        $.each(data, function(key) 
+        {
+            var db_list = data[key];
+            fb.warn('KEY: %o', key);
+            fb.warn('DATA: %o', data[key]);
+            var tpl_divider = App.Templates.get('DIVIDER', 'db');
+            tpl_divider.set(':TYPE', key);
+            acc[acc.length++] = tpl_divider.finalize();
+            $(db_list).each(function(i, o)
+            {
+                acc[acc.length++] = App.HTML.Build[build_method](o, key);
+            });
+            
+            /*var o = data[key];
+            fb.warn(key);
+            acc[acc.length++] = App.HTML.Build[build_method](o, key);*/
+        });
+        
+        var html = acc.done().wrapperize('ENTRIES_WRAPPER', App.Env.getWorldName());
+        App.Ref.CONTENT.html(html);
+        App.Helpers.updateScreen();
+    });
 }
 
 App.Model.CRON.loadList = function()
@@ -71,7 +99,7 @@ App.Model.remove = function(world, elm)
 }
 
 App.Model.update = function(values, source_json, elm) 
-{    alert(source_json);
+{    
     var method = App.Settings.getMethodName('update');
     var build_method = App.Env.getWorldName() + '_entry';
     App.Ajax.request(method, {

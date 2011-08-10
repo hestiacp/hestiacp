@@ -1,3 +1,44 @@
+
+
+App.Helpers.getMbHumanMeasure = function(val)
+{  
+    return App.Helpers.getMbHuman(val, true);
+}
+
+/**
+ * Currently no bytes are used, minimal value is in MB
+ * uncomment in case we will use bytes instead
+ */
+App.Helpers.getMbHuman = function(val, only_measure)
+{
+    var bytes     = val * 1024 * 1024;
+    var kilobyte  = 1024;
+    var megabyte  = kilobyte * 1024;
+    var gigabyte  = megabyte * 1024;
+    var terabyte  = gigabyte * 1024;
+    var precision = 0;
+   
+    /*if ((bytes >= 0) && (bytes < kilobyte)) {
+        return bytes + ' B';
+ 
+    } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
+        return (bytes / kilobyte).toFixed(precision) + ' KB';
+ 
+    } else */
+    if ((bytes >= megabyte) && (bytes < gigabyte)) {
+        return only_measure ? 'MB' : (bytes / megabyte).toFixed(precision);
+ 
+    } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
+        return only_measure ? 'GB' :  (bytes / gigabyte).toFixed(precision);
+ 
+    } else if (bytes >= terabyte) {
+        return only_measure ? 'TB' : (bytes / terabyte).toFixed(precision);
+ 
+    } else {
+        return only_measure ? 'MB' : bytes;
+    }
+}
+
 App.Helpers.getFirst = function(obj)
 {
     try{ // TODO: remove try / catch
@@ -101,22 +142,6 @@ App.Helpers.showConsoleHint = function()
     // TODO:
 }
 
-
-// UTILS
-App.Utils.generatePasswordHash = function(length)
-{
-    var length = length || 11;
-    var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!~.";
-    var pass = "";
-    for(var x=0;x<length;x++)
-    {
-        var i = Math.floor(Math.random() * 62);
-        pass += chars.charAt(i);
-    }
-
-    return pass;
-}
-
 App.Helpers.markBrowserDetails = function()
 {
     var b = App.Env.BROWSER;
@@ -194,12 +219,12 @@ App.Helpers.liveValidate = function()
 
 App.Helpers.generatePassword = function()
 {   
-   var length = 12; 
-   var chars = "abcdefghijklmn.-%$#&-opqrstuvwxyz.-%$#&-ABCDEFGHIJKLMNOPQRSTUV.-%$#&-WXYZ1234567890.-%$#&-";
+   var length = 8; 
+   var chars = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
    var pass = "";
 
    for (x=0;x<length;x++) {
-      var i = Math.floor(Math.random() * 62);
+      var i = Math.floor(Math.random() * chars.length);
       pass += chars.charAt(i);
    }
 
@@ -209,4 +234,22 @@ App.Helpers.generatePassword = function()
 App.Helpers.Warn = function(msg)
 {
     alert(msg);
+}
+
+App.Helpers.openInnerPopup = function(elm, html)
+{
+    App.Helpers.closeInnerPopup();
+    
+    var offset = $(elm).offset();
+    var tpl = App.Templates.get('inner_popup', 'general');
+    tpl.set(':CONTENT', html);
+    tpl.set(':LEFT', offset.left);
+    tpl.set(':TOP', offset.top);
+    
+    $(document.body).append(tpl.finalize());
+}
+
+App.Helpers.closeInnerPopup = function(evt)
+{
+    $('#inner-popup').remove();
 }

@@ -1,12 +1,14 @@
 <?php
+
 /**
  * Ajax Handler
  * 
  * @author vesta, http://vestacp.com/
+ * @author Dmitry Malishev <dima.malishev@gmail.com>
+ * @author Dmitry Naumov-Socolov <naumov.socolov@gmail.com>
  * @copyright vesta 2010-2011
  */
-class AjaxHandler 
-{
+class AjaxHandler {
 
     static public $instance = null;
 
@@ -28,14 +30,12 @@ class AjaxHandler
      * return $this->reply($result, $data, $msg, $extra);
      * 
      * @param Request $request
-     * @return mixed 
+     * @return string 
      */
-    function dispatch($request) 
-    {
+    function dispatch($request) {
         $method = Request::parseAjaxMethod($request);
         $inc_file = V_ROOT_DIR . 'api' . DIRECTORY_SEPARATOR . $method['namespace'] . '.class.php';
-        if (!is_readable($inc_file)) 
-        {
+        if (!is_readable($inc_file)) {
             throw new SystemException(Message::INVALID_METHOD);
         }
 
@@ -44,8 +44,7 @@ class AjaxHandler
         $space = new $method['namespace'];
         $method = $method['function'] . 'Execute';
 
-        if (!method_exists($space, $method)) 
-        {
+        if (!method_exists($space, $method)) {
             throw new SystemException(Message::INVALID_METHOD);
         }
 
@@ -53,15 +52,9 @@ class AjaxHandler
     }
 
     /**
-     * Prepare the result of method execution into ajax-readable format
-     * 
-     * @param boolean $result - result of method execution
-     * @param array $data - data to be replied
-     * @param string $message - replied message
-     * @param array $extra - extra data 
+     * Prepare response for ajax
      */
-    function reply($result, $data, $message = '', $extra = array()) 
-    {
+    function reply($result, $data, $message = '', $extra = array()) {
       return json_encode(array('result' => $result,
                    'data' => $data,
                    'message' => $message,
@@ -70,12 +63,7 @@ class AjaxHandler
                    ));
     }
 
-    /**
-     * TODO: delete this method
-     * @deprecated     
-     */
-    static function makeReply($reply) 
-    {
+    static function makeReply($reply) {
         print $reply;
     }
 
@@ -83,43 +71,24 @@ class AjaxHandler
     // Error handlers
     //
     
-    /**
-     * Generate general error
-     * @param Exception $error
-     */
-    static function generalError($error) 
-    {
+    static function generalError($error) {
         self::renderGlobalError(Message::ERROR, Message::GENERAL_ERROR, $error);
     }
 
-    /**
-     * Generate protection error
-     * @param Exception $error
-     */
-    static function protectionError($error) 
-    {
+    static function protectionError($error) {
         self::renderGlobalError(Message::ERROR, Message::PROTECTION_ERROR, $error);
     }
 
-    /**
-     * Generate system error
-     * @param Exception $error
-     */
-    static function systemError($error) 
-    {
+    static function systemError($error) {
         self::renderGlobalError(Message::ERROR, Message::SYSTEM_ERROR, $error);
     }
 
-    /**
-     * Prepare and render the error
-     * @param Exception $error
-     */
-    static function renderGlobalError($type, $message, $error) 
-    {
-        $trace = $error->getTrace();
+    static function renderGlobalError($type, $message, $error) {
+        /*$trace = $error->getTrace();
         AjaxHandler::makeReply(
-             AjaxHandler::getInstance()->reply(false, $type, $message . ': ' . $error->getMessage(), $trace[0]['file'] . ' / ' . $trace[0]['line'])
-        );
+                        AjaxHandler::getInstance()->reply(false, $type, $message . ': ' . $error->getMessage(), $trace[0]['file'] . ' / ' . $trace[0]['line'])
+        );*/
+    print $message;
     }
 
 }

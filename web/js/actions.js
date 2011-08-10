@@ -104,14 +104,9 @@ App.Actions.save_form = function(evt) {
         var source = $(elm).find('.source').val();
         var values = App.Helpers.getFormValues(elm);
         if(App.Validate.form(values, $('#'+elm_id))) {
-            App.Model.add(values, source);
-            //var form_id = App.Constants[App.Env.world + '_FORM_ID'];
-            //$('#'+form_id).remove();
+            App.Model.add(values, source);         
             App.Model.update(values, source, elm);         
-        }
-        /*if(App.Validate.form(values, $('#'+elm_id))) {
-            App.Model.update(values, source);           
-        }*/
+        }       
     }    
 }
 
@@ -146,6 +141,16 @@ App.Actions.cancel_form = function(evt, params) {
         elm.replaceWith(tpl);
     }
     App.Helpers.updateScreen();
+}
+
+App.Actions.suspend = function(evt)
+{
+    alert('Suspend?');
+}
+
+App.Actions.unsuspend = function(evt)
+{
+    alert('Unsuspend?');
 }
 
 // do_action_form_help
@@ -187,4 +192,40 @@ App.Actions.save_dns_subrecords = function(evt)
 App.Actions.generate_pass = function()
 {
     $('.password').val(App.Helpers.generatePassword());
+}
+
+App.Actions.toggle_section = function(evt)
+{
+    var elm = $(evt.target);    
+    var ref = $(elm).parents('.form-options-group:first');
+    fb.log(ref);
+    if ($('.sub_section:first', ref).hasClass('hidden')) {
+        $('.sub_section:first', ref).removeClass('hidden');
+        $('.group-header:first', ref).removeClass('collapsed').addClass('expanded');
+    }
+    else {
+        $('.sub_section:first', ref).addClass('hidden');
+        $('.group-header:first', ref).removeClass('expanded').addClass('collapsed');
+    }
+}
+
+App.Actions.close_inner_popup = function(evt)
+{
+    App.Helpers.closeInnerPopup();
+}
+
+App.Actions.open_inner_popup = function(evt)
+{
+    var elm = $(evt.target);  
+    App.Helpers.openInnerPopup(elm, $(elm).next('.inner-popup-html').val());
+}
+
+App.Actions.add_db_user = function(evt)
+{
+    alert('TODO');
+}
+
+App.Actions.backup_db = function(evt)
+{
+    alert('TODO');
 }

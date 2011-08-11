@@ -7,6 +7,7 @@
 
 # Argument defenition
 user="$1"
+output="$2"
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -21,7 +22,7 @@ source $V_CONF/vesta.conf
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'user [output]'
 
 # Checking argument format
 format_validation 'user'
@@ -36,9 +37,18 @@ is_user_valid
 
 # Creating temporary random directory
 tmpdir=$(mktemp -p $V_TMP -d)
-echo "TMPDIR is $tmpdir"
-# Web domains
+
+# Prinitng status
+if [ -z "$output" ]; then
+    echo "$(date +%m-%d-%y" "%H:%m:%S) System backup for user $user"
+    echo "TMPDIR is $tmpdir"
+fi
+
+# WEB domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    if [ -z "$output" ]; then
+        echo "-- WEB --"
+    fi
     mkdir $tmpdir/web/
 
     # Parsing unsuspeneded domains
@@ -48,9 +58,17 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     domains=$(dom_clear_search)
 
     for domain in $domains; do
-        echo $domain
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $domain"
+        fi
 
-	# backup_domain
+        # Defining domain variables
+        domain_idn=$(idn -t --quiet -a "$domain")
+        tpl_name=$(get_web_domain_value '$TPL')
+        ssl_cert=$(get_web_domain_value '$SSL_CERT')
+        nginx=$(get_web_domain_value '$NGINX')
+
+	# Building directory tree
         mkdir -p $tmpdir/web/$domain/conf $tmpdir/web/$domain/cert
 
         # Packing data folders
@@ -58,24 +76,73 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
         tar -cf $tmpdir/web/$domain/$domain.tar \
             public_html public_shtml private document_errors cgi-bin stats
 
-        # Creating config folder
+        # Creating web_domains config
         cd $tmpdir/web/$domain/
+        conf="$V_USERS/$user/web_domains.conf"
         grep "DOMAIN='$domain'" $conf > conf/web_domains.conf
 
-        # Parsing httpd.conf
-        tpl_name=$(get_web_domain_value '$TPL')
-        tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
-        conf="$V_HOME/$user/conf/httpd.conf"
+        # Apache config
+        if [ "$WEB_SYSTEM" = 'apache' ]; then
+            # Parsing httpd.conf
+            tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+            conf="$V_HOME/$user/conf/httpd.conf"
+            get_web_config_brds
+            sed -n "$top_line,$bottom_line p" $conf > conf/httpd.conf
 
+            # SSL check
+            if [ ! -z "$ssl_cert" ]; then
+                tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+                conf="$V_HOME/$user/conf/shttpd.conf"
+                get_web_config_brds
+                sed -n "$top_line,$bottom_line p" $conf > conf/shttpd.conf
+            fi
+        fi
 
-        # Parsing nginx.conf
+        # Nginx config
+        if [ ! -z "$nginx" ] ; then
+            tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+            conf="$V_HOME/$user/conf/nginx.conf"
+            get_web_config_brds
+            sed -n "$top_line,$bottom_line p" $conf > conf/nginx.conf
+
+            # SSL check
+            if [ ! -z "$ssl_cert" ] ; then
+                tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
+                conf="$V_HOME/$user/conf/snginx.conf"
+                get_web_config_brds
+                sed -n "$top_line,$bottom_line p" $conf > conf/snginx.conf
+            fi
+        fi
+
+        # Suplemental configs
+        for sconfig in $(ls $V_HOME/$user/conf/|grep ".$domain.conf"); do
+            cp $V_HOME/$user/conf/$sconfig conf/
+        done
+
+        # SSL Certificates
+        if [ ! -z "$ssl_cert" ] ; then
+            cp $V_HOME/$user/conf/$ssl_cert.* cert/
+        fi
+
+        tar -rf $tmpdir/web/$domain/$domain.tar conf cert
+        mv $tmpdir/web/$domain/$domain.tar $tmpdir/web/
+        rm -rf $tmpdir/web/$domain
+        gzip -$V_BACKUP_GZIP $tmpdir/web/$domain.tar
 
     done
+    if [ -z "$output" ]; then
+        echo
+    fi
+
 fi
 
-exit
-
 # DNS domains
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    if [ -z "$output" ]; then
+        echo "-- DNS --"
+    fi
+    mkdir $tmpdir/dns/
+
 
 # Mail domains
 
@@ -85,6 +152,7 @@ exit
 
 # Vesta
 
+exit
 
 #----------------------------------------------------------#
 #                       Vesta                              #

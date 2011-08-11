@@ -183,7 +183,7 @@ v_str="$v_str TPL='$template'"
 v_str="$v_str ALIAS='$aliases'"
 v_str="$v_str $template_data"    # Inserting PHP,CGI and ELOG keys
 v_str="$v_str STATS='' STATS_AUTH=''"
-v_str="$v_str SSL='no' SSL_HOME='' SSL_CERT=''"
+v_str="$v_str SSL_HOME='' SSL_CERT=''"
 v_str="$v_str NGINX='' NGINX_EXT='' SUSPEND='no' DATE='$V_DATE'"
 
 # Registering domain

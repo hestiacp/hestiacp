@@ -27,6 +27,6 @@ server {
     location ~ /\.ht   {deny all;}
     location ~ /.svn/  {deny all;}
 
-    include %home%/%user%/conf/%domain%.nginx.*;
+    include %home%/%user%/conf/nginx.%domain%.conf*;
 }
 

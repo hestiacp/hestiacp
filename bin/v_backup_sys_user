@@ -53,8 +53,8 @@ if [ -z "$output" ]; then
 fi
 
 # Addding vesta version
-echo "1.0" >$tmpdir/version
-echo "$VERSION" > $tmpdir/vesta
+echo "1.0" >$tmpdir/backup_version
+echo "$VERSION" > $tmpdir/vesta_version
 
 # WEB domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
@@ -178,6 +178,10 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
         cp $V_USERS/$user/zones/$domain $domain
         cp /etc/namedb/$domain.db $domain.db
     done
+
+    if [ -z "$output" ]; then
+        echo
+    fi
 fi
 
 
@@ -185,7 +189,29 @@ fi
 # TBD
 
 # DatbaBases
-# TDB
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    if [ -z "$output" ]; then
+        echo "-- DB --"
+    fi
+    mkdir $tmpdir/db/
+
+    # Parsing unsuspeneded domains
+    conf="$V_USERS/$user/db.conf"
+    field='$DB'
+    search_string='DB='
+    dbs=$(dom_clear_search)
+
+    for db in $dbs; do
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $db"
+        fi
+    done
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+
+fi
 
 # Cron jobs
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
@@ -195,7 +221,14 @@ if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
     mkdir $tmpdir/cron/
 
     # Backingup cron recods
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) cron.conf"
+    fi
     cp $V_USERS/$user/cron.conf $tmpdir/cron/
+
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) system cron"
+    fi
     cp /var/spool/cron/$user $tmpdir/cron/
 
     if [ -z "$output" ]; then
@@ -209,9 +242,15 @@ if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ]; then
     if [ -z "$output" ]; then
         echo "-- CERTIFICATES --"
     fi
+    mkdir $tmpdir/cert
 
     # Backingup ssl certificates
-    cp -r $V_USERS/$user/cert $tmpdir/
+    for cert in $(ls $V_USERS/$user/cert/); do
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $cert"
+        fi
+        cp $V_USERS/$user/cert/$cert $tmpdir/cert/
+    done
 
     if [ -z "$output" ]; then
         echo
@@ -220,8 +259,44 @@ if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ]; then
 fi
 
 # Vesta
+if [ -z "$output" ]; then
+    echo "-- VESTA --"
+fi
+mkdir $tmpdir/vesta
 
-exit
+# Backingup vesta configs
+if [ -z "$output" ]; then
+    echo -e "\t$(date +%H:%m:%S) user.conf"
+fi
+cp -r $V_USERS/$user/user.conf $tmpdir/vesta/
+
+if [ -e "$V_USERS/$user/billing.log" ]; then
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) billing.log"
+    fi
+    cp -r $V_USERS/$user/billing.log $tmpdir/vesta/
+fi
+
+if [ -e "$V_USERS/$user/reseller.conf" ]; then
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) reseller.conf"
+    fi
+
+    cp -r $V_USERS/$user/reseller.conf $tmpdir/vesta/
+fi
+
+if [ -e "$V_USERS/$user/history.log" ]; then
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) history.log"
+    fi
+
+    cp -r $V_USERS/$user/history.log $tmpdir/vesta/
+fi
+
+if [ -z "$output" ]; then
+    echo
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

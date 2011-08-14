@@ -52,7 +52,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     mkdir $tmpdir/web/
 
     # Parsing unsuspeneded domains
-    conf="$V_USERS/$user/web_domains.conf"
+    conf="$V_USERS/$user/web.conf"
     field='$DOMAIN'
     search_string='DOMAIN='
     domains=$(dom_clear_search)
@@ -76,10 +76,10 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
         tar -cf $tmpdir/web/$domain/$domain.tar \
             public_html public_shtml private document_errors cgi-bin stats
 
-        # Creating web_domains config
+        # Creating web.config
         cd $tmpdir/web/$domain/
-        conf="$V_USERS/$user/web_domains.conf"
-        grep "DOMAIN='$domain'" $conf > conf/web_domains.conf
+        conf="$V_USERS/$user/web.conf"
+        grep "DOMAIN='$domain'" $conf > conf/web.conf
 
         # Apache config
         if [ "$WEB_SYSTEM" = 'apache' ]; then
@@ -142,6 +142,32 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
         echo "-- DNS --"
     fi
     mkdir $tmpdir/dns/
+
+    # Parsing unsuspeneded domains
+    conf="$V_USERS/$user/dns.conf"
+    field='$DOMAIN'
+    search_string='DOMAIN='
+    domains=$(dom_clear_search)
+
+    for domain in $domains; do
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $domain"
+        fi
+
+        # Building directory tree
+        mkdir $tmpdir/dns/$domain
+
+        # Creating dns_domains config
+        cd $tmpdir/dns/$domain/
+        conf="$V_USERS/$user/dns.conf"
+        grep "DOMAIN='$domain'" $conf > dns.conf
+
+        # Backingup dns recods
+        cp $V_USERS/$user/zones/$domain $domain
+	cp /etc/namedb/$domain.db $domain.db
+    done
+fi
+
 
 
 # Mail domains

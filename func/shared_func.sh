@@ -7,7 +7,7 @@ log_event() {
     # Checking logging system
     log_system=$(grep 'LOG_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
 
-    if [ "$log_system" = 'on' ]; then
+    if [ "$log_system" = 'yes' ]; then
         # Checking logging level
         log=$(grep 'LOG_LEVEL=' $V_CONF/vesta.conf|\
             cut -f 2 -d \'|grep -w "$level" )
@@ -342,7 +342,7 @@ is_system_enabled() {
         web_system=$(grep "WEB_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
 
         # Checking result
-        if [ -z "$web_system" ] || [ "$web_system" = "off" ]; then
+        if [ -z "$web_system" ] || [ "$web_system" = "no" ]; then
             echo "Error: web hosting support disabled"
             log_event 'debug' "$E_WEB_DISABLED $V_EVENT"
             exit $E_WEB_DISABLED
@@ -366,7 +366,7 @@ is_system_enabled() {
         dns_system=$(grep "DNS_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
 
         # Checking result
-        if [ -z "$dns_system" ] || [ "$cron_system" = "off" ]; then
+        if [ -z "$dns_system" ] || [ "$cron_system" = "no" ]; then
             echo "Error: dns support disabled"
             log_event 'debug' "$E_DNS_DISABLED $V_EVENT"
             exit $E_DNS_DISABLED
@@ -378,7 +378,7 @@ is_system_enabled() {
         cron_system=$(grep "CRON_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
 
         # Checking result
-        if [ -z "$cron_system" ] || [ "$cron_system" = "off" ]; then
+        if [ -z "$cron_system" ] || [ "$cron_system" = "no" ]; then
             echo "Error: crond support disabled"
             log_event 'debug' "$E_CRON_DISABLED $V_EVENT"
             exit $E_CRON_DISABLED
@@ -390,10 +390,22 @@ is_system_enabled() {
         db_system=$(grep "DB_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
 
         # Checking result
-        if [ -z "$db_system" ] || [ "$db_system" = "off" ]; then
+        if [ -z "$db_system" ] || [ "$db_system" = "no" ]; then
             echo "Error: db support disabled"
             log_event 'debug' "$E_DB_DISABLED $V_EVENT"
             exit $E_DB_DISABLED
+        fi
+    }
+
+    backup_function() {
+        # Parsing config
+        bck_system=$(grep "BACKUP_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
+
+        # Checking result
+        if [ -z "$bck_system" ] || [ "$bck_system" = "no" ]; then
+            echo "Error: backup support disabled"
+            log_event 'debug' "$E_BACKUP_DISABLED $V_EVENT"
+            exit $E_BACKUP_DISABLED
         fi
     }
 
@@ -403,6 +415,7 @@ is_system_enabled() {
         dns) dns_function ;;
         cron) cron_function ;;
         db) db_function ;;
+        backup) backup_function ;;
         *) check_args '1' '0' 'system'
     esac
 }

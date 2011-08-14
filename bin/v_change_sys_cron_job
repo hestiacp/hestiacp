@@ -59,7 +59,7 @@ v_str="$v_str MONTH='$month' DAY='$day' CMD='$command' SUSPEND='no'"
 del_cron_job
 
 # Adding to crontab
-echo "$v_str">>$V_USERS/$user/crontab.conf
+echo "$v_str">>$V_USERS/$user/cron.conf
 
 # Sorting jobs by id
 sort_cron_jobs

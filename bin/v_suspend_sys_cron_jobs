@@ -33,7 +33,7 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Searching jobs
-conf="$V_USERS/$user/crontab.conf"
+conf="$V_USERS/$user/cron.conf"
 field='$JOB'
 search_string="SUSPEND='no'"
 jobs=$(cron_clear_search)

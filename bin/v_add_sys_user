@@ -140,7 +140,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
 fi
 
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    touch $V_USERS/$user/crontab.conf
+    touch $V_USERS/$user/cron.conf
 fi
 
 if [ ! -z "$BACKUP_SYSTEM" ] && [ "$BACKUP_SYSTEM" != 'no' ]; then

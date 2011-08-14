@@ -59,7 +59,7 @@ v_str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month"
 v_str="$v_str' WDAY='$wday' CMD='$command' SUSPEND='no' DATE='$V_DATE'"
 
 # Adding to crontab
-echo "$v_str">>$V_USERS/$user/crontab.conf
+echo "$v_str">>$V_USERS/$user/cron.conf
 
 # Sorting jobs by id
 sort_cron_jobs

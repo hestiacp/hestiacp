@@ -1,6 +1,6 @@
 get_next_cron_string() {
     # Parsing config
-    curr_str=$(grep "JOB=" $V_USERS/$user/crontab.conf|cut -f 2 -d \'|\
+    curr_str=$(grep "JOB=" $V_USERS/$user/cron.conf|cut -f 2 -d \'|\
              sort -n|tail -n1)
 
     # Print result
@@ -9,7 +9,7 @@ get_next_cron_string() {
 
 is_cron_job_free() {
     # Checking record id
-    check_job=$(grep "JOB='$job'" $V_USERS/$user/crontab.conf)
+    check_job=$(grep "JOB='$job'" $V_USERS/$user/cron.conf)
 
     if [ ! -z "$check_job" ]; then
         echo "Error: job exist"
@@ -20,7 +20,7 @@ is_cron_job_free() {
 
 sort_cron_jobs() {
     # Defining conf
-    conf="$V_USERS/$user/crontab.conf"
+    conf="$V_USERS/$user/cron.conf"
     cat $conf |sort -n -k 2 -t \' >$conf.tmp
     mv -f $conf.tmp $conf
 }
@@ -38,7 +38,7 @@ sync_cron_jobs() {
         echo "MAILTO=$email" >$conf
     fi
 
-    # Reading user crontab.conf
+    # Reading user cron.conf
     while read line ; do
         # Defining new delimeter
         IFS=$'\n'
@@ -53,12 +53,12 @@ sync_cron_jobs() {
             echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" |\
             sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" >> $conf
         fi
-    done <$V_USERS/$user/crontab.conf
+    done <$V_USERS/$user/cron.conf
 }
 
 
 is_job_valid() {
-    result=$(grep "JOB='$job'" $V_USERS/$user/crontab.conf)
+    result=$(grep "JOB='$job'" $V_USERS/$user/cron.conf)
 
     if [ -z "$result" ]; then
         echo "Error: job not exists"
@@ -68,8 +68,8 @@ is_job_valid() {
 }
 
 del_cron_job() {
-    str=$(grep -n "JOB='$job'" $V_USERS/$user/crontab.conf|cut -f 1 -d :)
-    sed -i "$str d" $V_USERS/$user/crontab.conf
+    str=$(grep -n "JOB='$job'" $V_USERS/$user/cron.conf|cut -f 1 -d :)
+    sed -i "$str d" $V_USERS/$user/cron.conf
 }
 
 crn_json_list() {
@@ -163,7 +163,7 @@ crn_shell_list() {
 
 is_job_suspended() {
     # Parsing jobs
-    str=$(grep "JOB='$job'" $V_USERS/$user/crontab.conf|grep "SUSPEND='yes'" )
+    str=$(grep "JOB='$job'" $V_USERS/$user/cron.conf|grep "SUSPEND='yes'" )
 
     # Checkng key
     if [ ! -z "$str" ]; then
@@ -175,7 +175,7 @@ is_job_suspended() {
 
 is_job_unsuspended() {
     # Parsing jobs
-    str=$(grep "JOB='$job'" $V_USERS/$user/crontab.conf|grep "SUSPEND='no'" )
+    str=$(grep "JOB='$job'" $V_USERS/$user/cron.conf|grep "SUSPEND='no'" )
 
     # Checkng key
     if [ ! -z "$str" ]; then
@@ -190,7 +190,7 @@ update_cron_job_value() {
     value="$2"
 
     # Defining conf
-    conf="$V_USERS/$user/crontab.conf"
+    conf="$V_USERS/$user/cron.conf"
 
     # Parsing conf
     job_str=$(grep -n "JOB='$job'" $conf)

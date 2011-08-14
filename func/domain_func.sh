@@ -5,11 +5,11 @@ is_domain_new() {
 
     # Parsing domain values
     check_domain=$(grep -F "DOMAIN='$search_dom'" $V_USERS/*/*.conf| \
-        grep -v crontab.conf)
+        grep -v cron.conf)
 
     # Parsing alias values
     check_alias=$(grep -F 'ALIAS=' $V_USERS/*/*.conf | \
-        grep -v crontab.conf | \
+        grep -v cron.conf | \
         awk -F "ALIAS=" '{print $2}' | \
         cut -f 2 -d \' | \
         sed -e "s/,/\n/g" | \

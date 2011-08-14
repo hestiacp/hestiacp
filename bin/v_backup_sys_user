@@ -27,8 +27,12 @@ check_args '1' "$#" 'user [output]'
 # Checking argument format
 format_validation 'user'
 
+# Checking web system is enabled
+is_system_enabled 'backup'
+
 # Checking user
 is_user_valid
+
 
 
 #----------------------------------------------------------#
@@ -41,8 +45,16 @@ tmpdir=$(mktemp -p $V_TMP -d)
 # Prinitng status
 if [ -z "$output" ]; then
     echo "$(date +%m-%d-%y" "%H:%m:%S) System backup for user $user"
+    echo
+    echo "VESTA VERSION $VERSION"
+    echo "BACKUP VERSION 1.0"
     echo "TMPDIR is $tmpdir"
+    echo
 fi
+
+# Addding vesta version
+echo "1.0" >$tmpdir/version
+echo "$VERSION" > $tmpdir/vesta
 
 # WEB domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
@@ -164,17 +176,48 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
 
         # Backingup dns recods
         cp $V_USERS/$user/zones/$domain $domain
-	cp /etc/namedb/$domain.db $domain.db
+        cp /etc/namedb/$domain.db $domain.db
     done
 fi
 
 
-
 # Mail domains
+# TBD
 
 # DatbaBases
+# TDB
 
 # Cron jobs
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    if [ -z "$output" ]; then
+        echo "-- CRON --"
+    fi
+    mkdir $tmpdir/cron/
+
+    # Backingup cron recods
+    cp $V_USERS/$user/cron.conf $tmpdir/cron/
+    cp /var/spool/cron/$user $tmpdir/cron/
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+
+fi
+
+# SSL CERTIFICATES
+if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ]; then
+    if [ -z "$output" ]; then
+        echo "-- CERTIFICATES --"
+    fi
+
+    # Backingup ssl certificates
+    cp -r $V_USERS/$user/cert $tmpdir/
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+
+fi
 
 # Vesta
 

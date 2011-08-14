@@ -71,7 +71,7 @@ update_web_domain_value '$SSL_HOME' ''
 update_web_domain_value '$SSL_CERT' ''
 
 # Checking last ssl domain
-ssl_dom=$(grep -v "SSL_CERT=''" $V_USERS/$user/web_domains.conf)
+ssl_dom=$(grep -v "SSL_CERT=''" $V_USERS/$user/web.conf)
 main_conf='/etc/httpd/conf.d/vesta.conf'
 conf="$V_HOME/$user/conf/shttpd.conf"
 if [ -z "$ssl_dom" ]; then
@@ -83,7 +83,7 @@ fi
 decrease_user_value "$user" '$U_WEB_SSL'
 
 # Checking cert parents
-conf="$V_USERS/$user/web_domains.conf"
+conf="$V_USERS/$user/web.conf"
 field='$DOMAIN'
 search_string="SSL_CERT='$cert'"
 cert_parents=$(dom_clear_search)

@@ -40,7 +40,7 @@ is_user_suspended
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/web_domains.conf"
+conf="$V_USERS/$user/web.conf"
 
 # Defining search string
 search_string="DOMAIN"

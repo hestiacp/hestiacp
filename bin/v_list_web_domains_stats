@@ -35,7 +35,7 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/web_domains.conf"
+conf="$V_USERS/$user/web.conf"
 
 # Defining fileds to select
 fields='$DOMAIN $STATS $STATS_AUTH'

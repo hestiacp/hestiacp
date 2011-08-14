@@ -101,13 +101,13 @@ rm -rf /var/log/httpd/domains/$domain.error*
 del_web_domain
 
 # Checking last ssl domain
-ssl_dom=$(grep -v "SSL_CERT=''" $V_USERS/$user/web_domains.conf | wc -l)
+ssl_dom=$(grep -v "SSL_CERT=''" $V_USERS/$user/web.conf | wc -l)
 if [ "$ssl_dom" -eq '0' ]; then
     sed -i "s/ Include /#Include /"  $V_HOME/$user/conf/httpd.conf
 fi
 
 # Checking last domain
-domains=$(wc -l $V_USERS/$user/web_domains.conf|cut -f 1 -d ' ')
+domains=$(wc -l $V_USERS/$user/web.conf|cut -f 1 -d ' ')
 if [ "$domains" -eq '0' ]; then
     conf='/etc/httpd/conf.d/vesta.conf'
     line=$(grep -n "$V_HOME/$user/conf/httpd.conf" $conf | cut -f 1 -d : )

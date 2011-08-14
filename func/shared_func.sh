@@ -440,7 +440,7 @@ is_package_full() {
 
     web_domain() {
         # Checking zero domains
-        domain_number=$(wc -l $V_USERS/$user/web_domains.conf|cut -f 1 -d ' ')
+        domain_number=$(wc -l $V_USERS/$user/web.conf|cut -f 1 -d ' ')
 
         # Comparing current val with conf
         val=$(grep '^WEB_DOMAINS=' $V_USERS/$user/user.conf|cut -f 2 -d \' )
@@ -453,7 +453,7 @@ is_package_full() {
 
     web_alias() {
         # Parsing aliases
-        alias_nmb=$(grep "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf|\
+        alias_nmb=$(grep "DOMAIN='$domain'" $V_USERS/$user/web.conf|\
             awk -F "ALIAS=" '{print $2}' | cut -f 2 -d \' |\
             sed -e "s/,/\n/g" | wc -l )
 
@@ -476,7 +476,7 @@ is_package_full() {
         fi
 
         # Checking domains
-        domain_nmb=$(grep "SSL='yes'" $V_USERS/$user/web_domains.conf | wc -l)
+        domain_nmb=$(grep "SSL='yes'" $V_USERS/$user/web.conf | wc -l)
         # Comparing current val with conf
         if [ "$domain_nmb" -ge "$val" ]; then
             echo "Error: Upgrade package"
@@ -1198,9 +1198,9 @@ get_usr_disk() {
     size=$((size + dir_usage))
 
     # Checking web
-    if [ -f "$V_USERS/$user/web_domains.conf" ]; then
+    if [ -f "$V_USERS/$user/web.conf" ]; then
 	# Using tricky way to parse configs
-	disk_usage=$(grep 'U_DISK=' $V_USERS/$user/web_domains.conf |\
+	disk_usage=$(grep 'U_DISK=' $V_USERS/$user/web.conf |\
 	    awk -F "U_DISK='" '{print $2}'|cut -f 1 -d "'")
 	for disk in $disk_usage; do 
 	    size=$((size + disk))
@@ -1232,7 +1232,7 @@ get_usr_disk() {
 
 get_usr_traff() {
     size='0'
-    conf='web_domains.conf'
+    conf='web.conf'
 
     # Checking web
     if [ -f "$V_USERS/$user/$conf" ]; then

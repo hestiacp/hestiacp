@@ -63,10 +63,10 @@ is_dns_domain_free() {
 is_web_domain_free() {
     search_dom=${1-$domain}
     # Parsing domain values
-    check_domain=$(grep -F "IN='$search_dom'" $V_USERS/$user/web_domains.conf)
+    check_domain=$(grep -F "IN='$search_dom'" $V_USERS/$user/web.conf)
 
     # Parsing alias values
-    check_alias=$(grep -F 'ALIAS=' $V_USERS/$user/web_domains.conf | \
+    check_alias=$(grep -F 'ALIAS=' $V_USERS/$user/web.conf | \
         awk -F "ALIAS=" '{print $2}' | \
         cut -f 2 -d \' | \
         sed -e "s/,/\n/g" | \
@@ -94,7 +94,7 @@ is_dns_domain_valid() {
 
 is_web_domain_valid() {
     # Parsing domain values
-    check_domain=$(grep -F "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf)
+    check_domain=$(grep -F "DOMAIN='$domain'" $V_USERS/$user/web.conf)
 
     # Checking result
     if [ -z "$check_domain" ]; then
@@ -288,7 +288,7 @@ get_web_domain_value() {
     key="$1"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
     for keys in $string; do
@@ -325,7 +325,7 @@ update_web_domain_value() {
     value="$2"
 
     # Defining conf
-    conf="$V_USERS/$user/web_domains.conf"
+    conf="$V_USERS/$user/web.conf"
 
     # Parsing conf
     domain_str=$(grep -n "DOMAIN='$domain'" $conf)
@@ -386,7 +386,7 @@ is_web_domain_key_empty() {
     key="$1"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
     for keys in $string; do
@@ -419,7 +419,7 @@ is_web_domain_value_exist() {
     key="$1"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
     for keys in $string; do
@@ -483,7 +483,7 @@ del_dns_domain() {
 }
 
 del_web_domain() {
-    conf="$V_USERS/$user/web_domains.conf"
+    conf="$V_USERS/$user/web.conf"
 
     # Parsing domains
     string=$( grep -n "DOMAIN='$domain'" $conf | cut -f 1 -d : )

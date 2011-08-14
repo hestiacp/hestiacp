@@ -187,7 +187,7 @@ v_str="$v_str SSL_HOME='' SSL_CERT=''"
 v_str="$v_str NGINX='' NGINX_EXT='' SUSPEND='no' DATE='$V_DATE'"
 
 # Registering domain
-echo "$v_str" >>$V_USERS/$user/web_domains.conf
+echo "$v_str" >>$V_USERS/$user/web.conf
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

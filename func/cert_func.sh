@@ -65,7 +65,7 @@ is_cert_valid() {
 
 is_cert_used() {
     # Parsing config
-    check_cert=$(grep "SSL_CERT='$cert'" $V_USERS/$user/web_domains.conf)
+    check_cert=$(grep "SSL_CERT='$cert'" $V_USERS/$user/web.conf)
 
     # Checking result
     if [ ! -z "$check_cert" ]; then

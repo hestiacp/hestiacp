@@ -1364,3 +1364,12 @@ get_config_value() {
     # Print value
     echo "$value"
 }
+
+is_backup_enabled() {
+    backups=$(grep "BACKUPS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
+    if [ -z "$backups" ] || [[ "$backups" -le '0' ]]; then
+        echo "Error: User backups are disabled"
+        log_event 'debug' "$E_BACKUP_DISABLED $V_EVENT"
+        exit $E_BACKUP_DISABLED
+    fi
+}

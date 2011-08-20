@@ -27,12 +27,14 @@ check_args '1' "$#" 'user [output]'
 # Checking argument format
 format_validation 'user'
 
-# Checking web system is enabled
+# Checking backup system is enabled
 is_system_enabled 'backup'
 
 # Checking user
 is_user_valid
 
+# Checking user backups
+is_backup_enabled
 
 
 #----------------------------------------------------------#
@@ -56,8 +58,31 @@ fi
 echo "1.0" >$tmpdir/backup_version
 echo "$VERSION" > $tmpdir/vesta_version
 
+# Checking excludes
+OLD_IFS="$IFS"
+IFS=$'\n'
+if [ -e "$V_USERS/$user/backup.excludes" ]; then
+    if [ -z "$output" ]; then
+        echo "-- Excludes --"
+    fi
+
+    for exclude in $(cat $V_USERS/$user/backup.excludes); do
+        if [ -z "$output" ]; then
+            echo -e "\t $exclude"
+        fi
+        # Indirect variable references (a bit of black magic)
+        eval ${exclude%%=*}=${exclude#*=}
+    done
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+fi
+IFS="$OLD_IFS"
+
 # WEB domains
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ] && [ "$WEB" != '*' ]
+then
     if [ -z "$output" ]; then
         echo "-- WEB --"
     fi
@@ -68,8 +93,17 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     field='$DOMAIN'
     search_string='DOMAIN='
     domains=$(dom_clear_search)
+    domain_list=''
 
+    # Cleaning excludes
     for domain in $domains; do
+	check_exl=$(echo "$WEB"|grep -w $domain)
+        if [ -z "$check_exl" ]; then
+            web_list="$web_list $domain"
+        fi
+    done
+
+    for domain in $web_list; do
         if [ -z "$output" ]; then
             echo -e "\t$(date +%H:%m:%S) $domain"
         fi
@@ -139,7 +173,10 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
         tar -rf $tmpdir/web/$domain/$domain.tar conf cert
         mv $tmpdir/web/$domain/$domain.tar $tmpdir/web/
         rm -rf $tmpdir/web/$domain
-        gzip -$V_BACKUP_GZIP $tmpdir/web/$domain.tar
+
+        if [ ! -z "$V_BACKUP_GZIP" ]; then 
+            gzip -$V_BACKUP_GZIP $tmpdir/web/$domain.tar
+        fi
 
     done
     if [ -z "$output" ]; then
@@ -149,7 +186,8 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
 fi
 
 # DNS domains
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ] && [ "$DNS" != '*' ]
+then
     if [ -z "$output" ]; then
         echo "-- DNS --"
     fi
@@ -161,7 +199,15 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
     search_string='DOMAIN='
     domains=$(dom_clear_search)
 
+    # Cleaning excludes
     for domain in $domains; do
+	check_exl=$(echo "$DNS"|grep -w $domain)
+        if [ -z "$check_exl" ]; then
+            dns_list="$dns_list $domain"
+        fi
+    done
+
+    for domain in $dns_list; do
         if [ -z "$output" ]; then
             echo -e "\t$(date +%H:%m:%S) $domain"
         fi
@@ -189,7 +235,7 @@ fi
 # TBD
 
 # DatbaBases
-if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
     if [ -z "$output" ]; then
         echo "-- DB --"
     fi
@@ -201,10 +247,34 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     search_string='DB='
     dbs=$(dom_clear_search)
 
-    for db in $dbs; do
-        if [ -z "$output" ]; then
-            echo -e "\t$(date +%H:%m:%S) $db"
+    # Cleaning excludes
+    for database in $dbs; do
+	check_exl=$(echo "$DB"|grep -w $database)
+        if [ -z "$check_exl" ]; then
+            db_list="$db_list $database"
         fi
+    done
+
+    for database in $db_list; do
+        type=$(get_db_value '$TYPE')
+        host=$(get_db_value '$HOST')
+        db_user=$(get_db_value '$USER')
+        dump="$tmpdir/db/$database.$type.sql"
+        grants="$tmpdir/db/$database.$type.$db_user"
+
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $database $type"
+        fi
+
+        case $type in
+            mysql) dump_db_mysql ;;
+            pgsql) dump_db_pgsql ;;
+        esac
+
+        if [ ! -z "$V_BACKUP_GZIP" ]; then 
+            gzip -$V_BACKUP_GZIP $dump
+        fi
+
     done
 
     if [ -z "$output" ]; then
@@ -214,7 +284,8 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
 fi
 
 # Cron jobs
-if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ] && [ "$CRON" != '*' ]
+then
     if [ -z "$output" ]; then
         echo "-- CRON --"
     fi
@@ -238,7 +309,7 @@ if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
 fi
 
 # SSL CERTIFICATES
-if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ]; then
+if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ] && [ "$SSL" != '*' ]; then
     if [ -z "$output" ]; then
         echo "-- CERTIFICATES --"
     fi
@@ -292,6 +363,33 @@ if [ -e "$V_USERS/$user/history.log" ]; then
 
     cp -r $V_USERS/$user/history.log $tmpdir/vesta/
 fi
+
+if [ -e "$V_USERS/$user/backup.excludes" ]; then
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) backup.excludes"
+    fi
+    cp -r $V_USERS/$user/backup.excludes $tmpdir/vesta/
+fi
+
+if [ -z "$output" ]; then
+    echo
+fi
+
+# Move tmp backup to local storage
+if [ "$BACKUP_SYSTEM" = 'local' ]; then
+    if [ -z "$output" ]; then
+        echo "ARCHIVE $V_BACKUP/$user.$V_DATE.tar"
+    fi
+
+    # Checking retention
+    check_ret=$()
+
+    cd $tmpdir
+    tar -cf $V_BACKUP/$user.$V_DATE.tar .
+fi
+
+cd /
+rm -rf $tmpdir
 
 if [ -z "$output" ]; then
     echo

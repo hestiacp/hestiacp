@@ -60,7 +60,7 @@ case $type in
             new_str="$new_str MAX_DB='$max_db' U_SYS_USERS=''";
             new_str="$new_str U_DB_BASES='0'  ACTIVE='yes' DATE='$V_DATE'";;
     pgsql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
-            new_str="$new_str PORT='$port' TPL='$tpl'";
+            new_str="$new_str PORT='$port' TPL='$template'";
             new_str="$new_str MAX_USERS='$max_usr' MAX_DB='$max_db'";
             new_str="$new_str U_SYS_USERS=''";
             new_str="$new_str U_DB_BASES='0' ACTIVE='yes' DATE='$V_DATE'";;

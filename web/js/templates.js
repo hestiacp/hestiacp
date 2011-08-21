@@ -763,7 +763,7 @@ App.Templates.html = {
 					</div>']
     },
     cron: {
-        FORM: ['<div class="b-new-entry b-new-entry_cron">\
+        FORM: ['<div class="b-new-entry b-new-entry_cron" id="~!:id~!" >\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="entry-header">~!:title~!</div>\
@@ -810,10 +810,10 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">report to: <span class="remark">(devide by comma ",")</span></label>\
-							<textarea class="textarea"></textarea>\
+							<textarea class="textarea" name="REPORT_TO"></textarea>\
 						</div>\
 						<div class="form-row buttons-row cc">\
-							<input type="submit" value="~!:save_button~!" class="add-entry-btn">\
+							<input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form">\
 							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
 							<a target="_blank" href="http://vestacp.com/docs/cron/" class="help-btn">Help</a>\
 						</div>\

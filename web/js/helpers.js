@@ -70,13 +70,21 @@ App.Helpers.getFirstKey = function(obj)
 App.Helpers.updateInitial = function()
 {
     // TODO: need api method
-    $.each(App.Env.initialParams, function(key) {
-        var item = App.Env.initialParams[key];
-        $.each(item, function (i, o) {
-            if (i.indexOf('total_') != -1) {
-                App.View.updateInitialInfo(i, o);
+    $.each(App.Env.initialParams.totals, function(key) {
+        var item = App.Env.initialParams.totals[key];
+        var expr_id = '#'+key;
+        if ('undefined' != typeof item.total) {
+            var ref = $(expr_id).find('.num-total');
+            if (ref.length > 0) {
+                $(ref).html(item.total);
             }
-        });
+        }
+        if ('undefined' != typeof item.blocked) {            
+            var ref = $(expr_id).find('.num-blocked');
+            if (ref.length > 0) {
+                $(ref).html(item.blocked);
+            }
+        }        
     });
 }
 

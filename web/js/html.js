@@ -366,7 +366,7 @@ App.HTML.Build.cron_form = function(options, id)
     }
     var tpl = App.Templates.get('FORM', 'cron');
     tpl.set(':source', options);
-
+    tpl.set(':id', id || '');
     options = App.Helpers.evalJSON(options) || {};
     if (App.Helpers.isEmpty(options)) {
        tpl.set(':title', 'New cron entry'); 

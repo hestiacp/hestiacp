@@ -1,0 +1,407 @@
+#!/bin/bash
+# info: backup system user with all its objects
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+output="$2"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+source $V_FUNC/db_func.sh
+source $V_CONF/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'user [output]'
+
+# Checking argument format
+format_validation 'user'
+
+# Checking backup system is enabled
+is_system_enabled 'backup'
+
+# Checking user
+is_user_valid
+
+# Checking user backups
+is_backup_enabled
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Creating temporary random directory
+tmpdir=$(mktemp -p $V_TMP -d)
+
+# Prinitng status
+if [ -z "$output" ]; then
+    echo "$(date +%m-%d-%y" "%H:%m:%S) System backup for user $user"
+    echo
+    echo "VESTA VERSION $VERSION"
+    echo "BACKUP VERSION 1.0"
+    echo "TMPDIR is $tmpdir"
+    echo
+fi
+
+# Addding vesta version
+echo "1.0" >$tmpdir/backup_version
+echo "$VERSION" > $tmpdir/vesta_version
+
+# Checking excludes
+OLD_IFS="$IFS"
+IFS=$'\n'
+if [ -e "$V_USERS/$user/backup.excludes" ]; then
+    if [ -z "$output" ]; then
+        echo "-- Excludes --"
+    fi
+
+    for exclude in $(cat $V_USERS/$user/backup.excludes); do
+        if [ -z "$output" ]; then
+            echo -e "\t $exclude"
+        fi
+        # Indirect variable references (a bit of black magic)
+        eval ${exclude%%=*}=${exclude#*=}
+    done
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+fi
+IFS="$OLD_IFS"
+
+# WEB domains
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ] && [ "$WEB" != '*' ]
+then
+    if [ -z "$output" ]; then
+        echo "-- WEB --"
+    fi
+    mkdir $tmpdir/web/
+
+    # Parsing unsuspeneded domains
+    conf="$V_USERS/$user/web.conf"
+    field='$DOMAIN'
+    search_string='DOMAIN='
+    domains=$(dom_clear_search)
+    domain_list=''
+
+    # Cleaning excludes
+    for domain in $domains; do
+	check_exl=$(echo "$WEB"|grep -w $domain)
+        if [ -z "$check_exl" ]; then
+            web_list="$web_list $domain"
+        fi
+    done
+
+    for domain in $web_list; do
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $domain"
+        fi
+
+        # Defining domain variables
+        domain_idn=$(idn -t --quiet -a "$domain")
+        tpl_name=$(get_web_domain_value '$TPL')
+        ssl_cert=$(get_web_domain_value '$SSL_CERT')
+        nginx=$(get_web_domain_value '$NGINX')
+
+	# Building directory tree
+        mkdir -p $tmpdir/web/$domain/conf $tmpdir/web/$domain/cert
+
+        # Packing data folders
+        cd $V_HOME/$user/web/$domain
+        tar -cf $tmpdir/web/$domain/$domain.tar \
+            public_html public_shtml private document_errors cgi-bin stats
+
+        # Creating web.config
+        cd $tmpdir/web/$domain/
+        conf="$V_USERS/$user/web.conf"
+        grep "DOMAIN='$domain'" $conf > conf/web.conf
+
+        # Apache config
+        if [ "$WEB_SYSTEM" = 'apache' ]; then
+            # Parsing httpd.conf
+            tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+            conf="$V_HOME/$user/conf/httpd.conf"
+            get_web_config_brds
+            sed -n "$top_line,$bottom_line p" $conf > conf/httpd.conf
+
+            # SSL check
+            if [ ! -z "$ssl_cert" ]; then
+                tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+                conf="$V_HOME/$user/conf/shttpd.conf"
+                get_web_config_brds
+                sed -n "$top_line,$bottom_line p" $conf > conf/shttpd.conf
+            fi
+        fi
+
+        # Nginx config
+        if [ ! -z "$nginx" ] ; then
+            tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+            conf="$V_HOME/$user/conf/nginx.conf"
+            get_web_config_brds
+            sed -n "$top_line,$bottom_line p" $conf > conf/nginx.conf
+
+            # SSL check
+            if [ ! -z "$ssl_cert" ] ; then
+                tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
+                conf="$V_HOME/$user/conf/snginx.conf"
+                get_web_config_brds
+                sed -n "$top_line,$bottom_line p" $conf > conf/snginx.conf
+            fi
+        fi
+
+        # Suplemental configs
+        for sconfig in $(ls $V_HOME/$user/conf/|grep ".$domain.conf"); do
+            cp $V_HOME/$user/conf/$sconfig conf/
+        done
+
+        # SSL Certificates
+        if [ ! -z "$ssl_cert" ] ; then
+            cp $V_HOME/$user/conf/$ssl_cert.* cert/
+        fi
+
+        tar -rf $tmpdir/web/$domain/$domain.tar conf cert
+        mv $tmpdir/web/$domain/$domain.tar $tmpdir/web/
+        rm -rf $tmpdir/web/$domain
+
+        if [ ! -z "$V_BACKUP_GZIP" ]; then 
+            gzip -$V_BACKUP_GZIP $tmpdir/web/$domain.tar
+        fi
+
+    done
+    if [ -z "$output" ]; then
+        echo
+    fi
+
+fi
+
+# DNS domains
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ] && [ "$DNS" != '*' ]
+then
+    if [ -z "$output" ]; then
+        echo "-- DNS --"
+    fi
+    mkdir $tmpdir/dns/
+
+    # Parsing unsuspeneded domains
+    conf="$V_USERS/$user/dns.conf"
+    field='$DOMAIN'
+    search_string='DOMAIN='
+    domains=$(dom_clear_search)
+
+    # Cleaning excludes
+    for domain in $domains; do
+	check_exl=$(echo "$DNS"|grep -w $domain)
+        if [ -z "$check_exl" ]; then
+            dns_list="$dns_list $domain"
+        fi
+    done
+
+    for domain in $dns_list; do
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $domain"
+        fi
+
+        # Building directory tree
+        mkdir $tmpdir/dns/$domain
+
+        # Creating dns_domains config
+        cd $tmpdir/dns/$domain/
+        conf="$V_USERS/$user/dns.conf"
+        grep "DOMAIN='$domain'" $conf > dns.conf
+
+        # Backingup dns recods
+        cp $V_USERS/$user/zones/$domain $domain
+        cp /etc/namedb/$domain.db $domain.db
+    done
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+fi
+
+
+# Mail domains
+# TBD
+
+# DatbaBases
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
+    if [ -z "$output" ]; then
+        echo "-- DB --"
+    fi
+    mkdir $tmpdir/db/
+
+    # Parsing unsuspeneded domains
+    conf="$V_USERS/$user/db.conf"
+    field='$DB'
+    search_string='DB='
+    dbs=$(dom_clear_search)
+
+    # Cleaning excludes
+    for database in $dbs; do
+	check_exl=$(echo "$DB"|grep -w $database)
+        if [ -z "$check_exl" ]; then
+            db_list="$db_list $database"
+        fi
+    done
+
+    for database in $db_list; do
+        type=$(get_db_value '$TYPE')
+        host=$(get_db_value '$HOST')
+        db_user=$(get_db_value '$USER')
+        dump="$tmpdir/db/$database.$type.sql"
+        grants="$tmpdir/db/$database.$type.$db_user"
+
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $database $type"
+        fi
+
+        case $type in
+            mysql) dump_db_mysql ;;
+            pgsql) dump_db_pgsql ;;
+        esac
+
+        if [ ! -z "$V_BACKUP_GZIP" ]; then 
+            gzip -$V_BACKUP_GZIP $dump
+        fi
+
+    done
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+
+fi
+
+# Cron jobs
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ] && [ "$CRON" != '*' ]
+then
+    if [ -z "$output" ]; then
+        echo "-- CRON --"
+    fi
+    mkdir $tmpdir/cron/
+
+    # Backingup cron recods
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) cron.conf"
+    fi
+    cp $V_USERS/$user/cron.conf $tmpdir/cron/
+
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) system cron"
+    fi
+    cp /var/spool/cron/$user $tmpdir/cron/
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+
+fi
+
+# SSL CERTIFICATES
+if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ] && [ "$SSL" != '*' ]; then
+    if [ -z "$output" ]; then
+        echo "-- CERTIFICATES --"
+    fi
+    mkdir $tmpdir/cert
+
+    # Backingup ssl certificates
+    for cert in $(ls $V_USERS/$user/cert/); do
+        if [ -z "$output" ]; then
+            echo -e "\t$(date +%H:%m:%S) $cert"
+        fi
+        cp $V_USERS/$user/cert/$cert $tmpdir/cert/
+    done
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+
+fi
+
+# Vesta
+if [ -z "$output" ]; then
+    echo "-- VESTA --"
+fi
+mkdir $tmpdir/vesta
+
+# Backingup vesta configs
+if [ -z "$output" ]; then
+    echo -e "\t$(date +%H:%m:%S) user.conf"
+fi
+cp -r $V_USERS/$user/user.conf $tmpdir/vesta/
+
+if [ -e "$V_USERS/$user/billing.log" ]; then
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) billing.log"
+    fi
+    cp -r $V_USERS/$user/billing.log $tmpdir/vesta/
+fi
+
+if [ -e "$V_USERS/$user/reseller.conf" ]; then
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) reseller.conf"
+    fi
+
+    cp -r $V_USERS/$user/reseller.conf $tmpdir/vesta/
+fi
+
+if [ -e "$V_USERS/$user/history.log" ]; then
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) history.log"
+    fi
+
+    cp -r $V_USERS/$user/history.log $tmpdir/vesta/
+fi
+
+if [ -e "$V_USERS/$user/backup.excludes" ]; then
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) backup.excludes"
+    fi
+    cp -r $V_USERS/$user/backup.excludes $tmpdir/vesta/
+fi
+
+if [ -z "$output" ]; then
+    echo
+fi
+
+# Move tmp backup to local storage
+if [ "$BACKUP_SYSTEM" = 'local' ]; then
+    if [ -z "$output" ]; then
+        echo "ARCHIVE $V_BACKUP/$user.$V_DATE.tar"
+    fi
+
+    # Checking retention
+    check_ret=$()
+
+    cd $tmpdir
+    tar -cf $V_BACKUP/$user.$V_DATE.tar .
+fi
+
+cd /
+rm -rf $tmpdir
+
+if [ -z "$output" ]; then
+    echo
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

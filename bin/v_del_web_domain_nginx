@@ -77,7 +77,7 @@ update_web_domain_value '$NGINX_EXT' ''
 
 # Checking last nginx domain
 conf='/etc/nginx/conf.d/vesta_users.conf'
-last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web_domains.conf)
+last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web.conf)
 last_snginx=$(echo "$last_nginx" | grep -v "SSL_CERT=''")
 if [  -z "$last_snginx" ]; then
     sline=$(grep -n "$V_HOME/$user/conf/snginx.conf" $conf | cut -f 1 -d : )

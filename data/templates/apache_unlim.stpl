@@ -34,7 +34,7 @@
     SSLCertificateFile %ssl_cert%
     SSLCertificateKeyFile %ssl_key%
 
-    Include %home%/%user%/conf/%domain%.shttpd.*
+    Include %home%/%user%/conf/shttpd.%domain%.conf*
 
 </VirtualHost>
 

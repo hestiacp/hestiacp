@@ -5,11 +5,11 @@ is_domain_new() {
 
     # Parsing domain values
     check_domain=$(grep -F "DOMAIN='$search_dom'" $V_USERS/*/*.conf| \
-        grep -v crontab.conf)
+        grep -v cron.conf)
 
     # Parsing alias values
     check_alias=$(grep -F 'ALIAS=' $V_USERS/*/*.conf | \
-        grep -v crontab.conf | \
+        grep -v cron.conf | \
         awk -F "ALIAS=" '{print $2}' | \
         cut -f 2 -d \' | \
         sed -e "s/,/\n/g" | \
@@ -63,10 +63,10 @@ is_dns_domain_free() {
 is_web_domain_free() {
     search_dom=${1-$domain}
     # Parsing domain values
-    check_domain=$(grep -F "IN='$search_dom'" $V_USERS/$user/web_domains.conf)
+    check_domain=$(grep -F "IN='$search_dom'" $V_USERS/$user/web.conf)
 
     # Parsing alias values
-    check_alias=$(grep -F 'ALIAS=' $V_USERS/$user/web_domains.conf | \
+    check_alias=$(grep -F 'ALIAS=' $V_USERS/$user/web.conf | \
         awk -F "ALIAS=" '{print $2}' | \
         cut -f 2 -d \' | \
         sed -e "s/,/\n/g" | \
@@ -94,7 +94,7 @@ is_dns_domain_valid() {
 
 is_web_domain_valid() {
     # Parsing domain values
-    check_domain=$(grep -F "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf)
+    check_domain=$(grep -F "DOMAIN='$domain'" $V_USERS/$user/web.conf)
 
     # Checking result
     if [ -z "$check_domain" ]; then
@@ -243,23 +243,32 @@ add_web_config() {
     >> $conf
 }
 
-change_web_config() {
+get_web_config_brds() {
     # Defining template borders
     serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
-    last_line=$(wc -l $tpl_file | cut -f 1 -d ' ')
+    if [ -z "$serv_line" ]; then
+        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+        return $E_PARSE_ERROR
+    fi
+
+    # Template lines
+    last_line=$(wc -l $tpl_file|cut -f 1 -d ' ')
     bfr_line=$((serv_line - 1))
     aftr_line=$((last_line - serv_line - 1))
+
+    # Config lines
+    str=$(grep -ni "Name $domain_idn" $conf | cut -f 1 -d :)
+    top_line=$((str - serv_line + 1))
+    bottom_line=$((top_line + last_line -1))
+}
+
+change_web_config() {
+    # Get config borders
+    get_web_config_brds || exit $?
 
     # Parsing config
     vhost=$(grep -A $aftr_line -B $bfr_line -ni "Name $domain_idn" $conf)
     str=$(echo "$vhost" | grep -F "$search_phrase" | head -n 1)
-
-    # Checking parsing result
-    if [ -z "$str" ] || [ -z "$serv_line" ] || [ -z "$aftr_line" ]; then
-        echo "Error: config parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
-    fi
 
     # Parsing string position and content
     str_numb=$(echo "$str" | sed -e "s/-/=/" | cut -f 1 -d '=')
@@ -279,7 +288,7 @@ get_web_domain_value() {
     key="$1"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
     for keys in $string; do
@@ -316,7 +325,7 @@ update_web_domain_value() {
     value="$2"
 
     # Defining conf
-    conf="$V_USERS/$user/web_domains.conf"
+    conf="$V_USERS/$user/web.conf"
 
     # Parsing conf
     domain_str=$(grep -n "DOMAIN='$domain'" $conf)
@@ -377,7 +386,7 @@ is_web_domain_key_empty() {
     key="$1"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
     for keys in $string; do
@@ -410,7 +419,7 @@ is_web_domain_value_exist() {
     key="$1"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
     for keys in $string; do
@@ -452,25 +461,10 @@ is_dns_domain_value_exist() {
 
 
 del_web_config() {
-    # Get servername line in template
-    serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
-
-    # Get last template line
-    last_line=$(wc -l $tpl_file|cut -f 1 -d ' ')
-
-    # Parsing config
-    str=$(grep -ni "Name $domain_idn" $conf | cut -f 1 -d :)
-
-    # Checking result
-    if [ -z "$str" ] || [ -z "$serv_line" ]; then
-        echo "Error: httpd parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
-    fi
+    # Get config borders
+    get_web_config_brds || exit $?
 
     # Deleting lines from config
-    top_line=$((str - serv_line + 1))
-    bottom_line=$((top_line + last_line -1))
     sed -i "$top_line,$bottom_line d" $conf
 }
 
@@ -489,7 +483,7 @@ del_dns_domain() {
 }
 
 del_web_domain() {
-    conf="$V_USERS/$user/web_domains.conf"
+    conf="$V_USERS/$user/web.conf"
 
     # Parsing domains
     string=$( grep -n "DOMAIN='$domain'" $conf | cut -f 1 -d : )

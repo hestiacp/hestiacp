@@ -36,7 +36,7 @@ is_web_domain_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/web_domains.conf"
+conf="$V_USERS/$user/web.conf"
 
 # Defining fileds to select
 fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG $STATS

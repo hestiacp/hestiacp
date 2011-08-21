@@ -8,6 +8,7 @@
 # Argument defenition
 user="$1"
 domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain" )
 dom_alias=$(idn -t --quiet -u "$3" )
 dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 
@@ -44,13 +45,12 @@ is_domain_suspended 'web_domains'
 
 # Checking alias is added
 cur_alias=$(get_web_domain_value '$ALIAS')
-check_alias=$(echo $cur_alias|grep -w "$dom_alias")
+check_alias=$(echo ${cur_alias//,/ }|grep -w "$dom_alias")
 if [ -z "$check_alias" ]; then
     echo "Error: alias not exist"
     log_event 'debug' "$E_DOM_NOTEXIST $V_EVENT"
     exit $E_DOM_NOTEXIST
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -7,7 +7,7 @@ log_event() {
     # Checking logging system
     log_system=$(grep 'LOG_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
 
-    if [ "$log_system" = 'on' ]; then
+    if [ "$log_system" = 'yes' ]; then
         # Checking logging level
         log=$(grep 'LOG_LEVEL=' $V_CONF/vesta.conf|\
             cut -f 2 -d \'|grep -w "$level" )
@@ -342,7 +342,7 @@ is_system_enabled() {
         web_system=$(grep "WEB_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
 
         # Checking result
-        if [ -z "$web_system" ] || [ "$web_system" = "off" ]; then
+        if [ -z "$web_system" ] || [ "$web_system" = "no" ]; then
             echo "Error: web hosting support disabled"
             log_event 'debug' "$E_WEB_DISABLED $V_EVENT"
             exit $E_WEB_DISABLED
@@ -366,7 +366,7 @@ is_system_enabled() {
         dns_system=$(grep "DNS_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
 
         # Checking result
-        if [ -z "$dns_system" ] || [ "$cron_system" = "off" ]; then
+        if [ -z "$dns_system" ] || [ "$cron_system" = "no" ]; then
             echo "Error: dns support disabled"
             log_event 'debug' "$E_DNS_DISABLED $V_EVENT"
             exit $E_DNS_DISABLED
@@ -378,7 +378,7 @@ is_system_enabled() {
         cron_system=$(grep "CRON_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
 
         # Checking result
-        if [ -z "$cron_system" ] || [ "$cron_system" = "off" ]; then
+        if [ -z "$cron_system" ] || [ "$cron_system" = "no" ]; then
             echo "Error: crond support disabled"
             log_event 'debug' "$E_CRON_DISABLED $V_EVENT"
             exit $E_CRON_DISABLED
@@ -390,10 +390,22 @@ is_system_enabled() {
         db_system=$(grep "DB_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
 
         # Checking result
-        if [ -z "$db_system" ] || [ "$db_system" = "off" ]; then
+        if [ -z "$db_system" ] || [ "$db_system" = "no" ]; then
             echo "Error: db support disabled"
             log_event 'debug' "$E_DB_DISABLED $V_EVENT"
             exit $E_DB_DISABLED
+        fi
+    }
+
+    backup_function() {
+        # Parsing config
+        bck_system=$(grep "BACKUP_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
+
+        # Checking result
+        if [ -z "$bck_system" ] || [ "$bck_system" = "no" ]; then
+            echo "Error: backup support disabled"
+            log_event 'debug' "$E_BACKUP_DISABLED $V_EVENT"
+            exit $E_BACKUP_DISABLED
         fi
     }
 
@@ -403,6 +415,7 @@ is_system_enabled() {
         dns) dns_function ;;
         cron) cron_function ;;
         db) db_function ;;
+        backup) backup_function ;;
         *) check_args '1' '0' 'system'
     esac
 }
@@ -440,7 +453,7 @@ is_package_full() {
 
     web_domain() {
         # Checking zero domains
-        domain_number=$(wc -l $V_USERS/$user/web_domains.conf|cut -f 1 -d ' ')
+        domain_number=$(wc -l $V_USERS/$user/web.conf|cut -f 1 -d ' ')
 
         # Comparing current val with conf
         val=$(grep '^WEB_DOMAINS=' $V_USERS/$user/user.conf|cut -f 2 -d \' )
@@ -453,7 +466,7 @@ is_package_full() {
 
     web_alias() {
         # Parsing aliases
-        alias_nmb=$(grep "DOMAIN='$domain'" $V_USERS/$user/web_domains.conf|\
+        alias_nmb=$(grep "DOMAIN='$domain'" $V_USERS/$user/web.conf|\
             awk -F "ALIAS=" '{print $2}' | cut -f 2 -d \' |\
             sed -e "s/,/\n/g" | wc -l )
 
@@ -476,7 +489,7 @@ is_package_full() {
         fi
 
         # Checking domains
-        domain_nmb=$(grep "SSL='yes'" $V_USERS/$user/web_domains.conf | wc -l)
+        domain_nmb=$(grep "SSL='yes'" $V_USERS/$user/web.conf | wc -l)
         # Comparing current val with conf
         if [ "$domain_nmb" -ge "$val" ]; then
             echo "Error: Upgrade package"
@@ -1198,9 +1211,9 @@ get_usr_disk() {
     size=$((size + dir_usage))
 
     # Checking web
-    if [ -f "$V_USERS/$user/web_domains.conf" ]; then
+    if [ -f "$V_USERS/$user/web.conf" ]; then
 	# Using tricky way to parse configs
-	disk_usage=$(grep 'U_DISK=' $V_USERS/$user/web_domains.conf |\
+	disk_usage=$(grep 'U_DISK=' $V_USERS/$user/web.conf |\
 	    awk -F "U_DISK='" '{print $2}'|cut -f 1 -d "'")
 	for disk in $disk_usage; do 
 	    size=$((size + disk))
@@ -1232,7 +1245,7 @@ get_usr_disk() {
 
 get_usr_traff() {
     size='0'
-    conf='web_domains.conf'
+    conf='web.conf'
 
     # Checking web
     if [ -f "$V_USERS/$user/$conf" ]; then
@@ -1350,4 +1363,13 @@ get_config_value() {
 
     # Print value
     echo "$value"
+}
+
+is_backup_enabled() {
+    backups=$(grep "BACKUPS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
+    if [ -z "$backups" ] || [[ "$backups" -le '0' ]]; then
+        echo "Error: User backups are disabled"
+        log_event 'debug' "$E_BACKUP_DISABLED $V_EVENT"
+        exit $E_BACKUP_DISABLED
+    fi
 }

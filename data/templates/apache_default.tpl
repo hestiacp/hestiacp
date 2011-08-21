@@ -28,7 +28,7 @@
         AllowOverride All
     </Directory>
     php_admin_value open_basedir %home%/%user%/web:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp
-    Include %home%/%user%/conf/%domain%.httpd.*
+    Include %home%/%user%/conf/httpd.%domain%.conf*
 
 </VirtualHost>
 

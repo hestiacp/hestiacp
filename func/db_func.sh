@@ -432,7 +432,7 @@ create_db_pgsql() {
 
     $sql "CREATE ROLE $db_user WITH LOGIN PASSWORD '$db_password'"
     $sql "GRANT ALL PRIVILEGES ON DATABASE $database TO $db_user"
-    export PGPASSWORD='pgsqk'
+    export PGPASSWORD='pgsql'
 }
 
 is_db_host_new() {
@@ -563,7 +563,7 @@ change_db_pgsql_password() {
     fi
 
     $sql "ALTER ROLE $db_user WITH LOGIN PASSWORD '$db_password'" >/dev/null
-    export PGPASSWORD='pgsqk'
+    export PGPASSWORD='pgsql'
 }
 
 get_db_value() {
@@ -670,7 +670,7 @@ del_db_pgsql() {
     else
         $sql "REVOKE ALL PRIVILEGES ON $database FROM $db_user">/dev/null
     fi
-    export PGPASSWORD='pgsqk'
+    export PGPASSWORD='pgsql'
 }
 
 
@@ -686,6 +686,77 @@ del_db_vesta() {
     fi
     sed -i "$string d" $conf
 }
+
+dump_db_mysql() {
+    # Defining vars
+    host_str=$(grep "HOST='$host'" $V_DB/mysql.conf)
+    for key in $host_str; do
+        eval ${key%%=*}=${key#*=}
+    done
+    sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
+    dumper="mysqldump -h $HOST -u $USER -p$PASSWORD -P$PORT -r"
+
+    # Checking empty vars
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+        echo "Error: config is broken"
+        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+        exit $E_PARSE_ERROR
+    fi
+
+    # Checking connection
+    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
+    if [ '0' -ne "$code" ]; then
+        echo "Error: Connect failed"
+        log_event 'debug' "$E_DBHOST_UNAVAILABLE $V_EVENT"
+        exit $E_DBHOST_UNAVAILABLE
+    fi
+
+    # Dumping database
+    $dumper $dump $database
+
+    # Dumping user grants
+    $sql "SHOW GRANTS FOR $db_user@localhost" | grep -v "Grants for" > $grants
+    $sql "SHOW GRANTS FOR $db_user@'%'" | grep -v "Grants for" >> $grants
+}
+
+dump_db_pgsql() {
+    # Defining vars
+    host_str=$(grep "HOST='$host'" $V_DB/pgsql.conf)
+    for key in $host_str; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    export PGPASSWORD="$PASSWORD"
+    sql="psql -h $HOST -U $USER -d $TPL -p $PORT -c"
+    dumper="pg_dump -h $HOST -U $USER -p $PORT -c -d -O -x -i -f"
+    # Checking empty vars
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
+        echo "Error: config is broken"
+        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+        exit $E_PARSE_ERROR
+    fi
+
+    # Checking connection
+    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
+    if [ '0' -ne "$code" ];  then
+        echo "Error: Connect failed"
+        log_event 'debug' "$E_DBHOST_UNAVAILABLE $V_EVENT"
+        exit $E_DBHOST_UNAVAILABLE
+    fi
+
+    # Dumping database
+    $dumper $dump $database
+
+    # Dumping user grants
+    md5=$($sql "SELECT rolpassword FROM pg_authid WHERE rolname='$db_user';")
+    md5=$(echo "$md5" | head -n 1 | cut -f 2 -d ' ')
+    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$db_user';"
+    gr_str="GRANT ALL PRIVILEGES ON DATABASE $database to '$db_user'"
+    echo -e "$pw_str\n$gr_str" >> $grants
+    export PGPASSWORD='pgsql'
+}
+
+
 
 is_db_host_free() {
     # Defining vars
@@ -801,7 +872,7 @@ suspend_db_pgsql() {
 
     # Suspending user
     $sql "REVOKE ALL PRIVILEGES ON $database FROM $db_user">/dev/null
-    export PGPASSWORD='pgsqk'
+    export PGPASSWORD='pgsql'
 }
 
 unsuspend_db_mysql() {
@@ -859,7 +930,7 @@ unsuspend_db_pgsql() {
 
     # Unsuspending user
     $sql "GRANT ALL PRIVILEGES ON DATABASE $database TO $db_user" >/dev/null
-    export PGPASSWORD='pgsqk'
+    export PGPASSWORD='pgsql'
 }
 
 db_clear_search() {
@@ -946,9 +1017,10 @@ get_disk_db_pgsql() {
     fi
 
     # Raw query
+
     raq_query=$($sql "SELECT pg_database_size('$database');")
-    raw_size=$(echo raq_query | grep -v "-" | grep -v 'row' | sed -e "/^$/d"|\
-        awk '{print $1}')
+    raw_size=$(echo "$raq_query" | grep -v "-" | grep -v 'row' |\
+        sed -e "/^$/d" |grep -v "pg_database_size" | awk '{print $1}')
 
     # Checking null output (this means error btw)
     if [ -z "$raw_size" ]; then
@@ -956,7 +1028,7 @@ get_disk_db_pgsql() {
     fi
 
     # Converting to MB
-    size=$(expr $raw_size \ 1048576)
+    size=$(expr $raw_size / 1048576)
 
     # Rounding zero size
     if [ "$size" -eq '0' ]; then

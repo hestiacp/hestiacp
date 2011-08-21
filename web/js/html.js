@@ -357,6 +357,38 @@ App.HTML.Build.cron_entry = function(o, key)
     
     return tpl.finalize();
 }
+     
+
+App.HTML.Build.cron_form = function(options, id) 
+{try{
+    if('undefined' == typeof App.Env.initialParams) {
+        return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
+    }
+    var tpl = App.Templates.get('FORM', 'cron');
+    tpl.set(':source', options);
+
+    options = App.Helpers.evalJSON(options) || {};
+    if (App.Helpers.isEmpty(options)) {
+       tpl.set(':title', 'New cron entry'); 
+       tpl.set(':save_button', 'ADD'); 
+    }
+    else {
+        tpl.set(':title', 'Edit cron entry'); 
+        tpl.set(':save_button', 'SAVE'); 
+    }
+    
+    options = !App.Helpers.isEmpty(options) ? options : {DAY:'', MONTH: '', WDAY:'',HOUR:'',CMD:'',MIN:''};    
+    tpl = App.HTML.setTplKeys(tpl, options);  
+
+    /*tpl.set(':id', id || ''); 
+    tpl.set(':IP_ADDRESS', options.IP_ADDRESS || '');
+    tpl.set(':NETMASK', options.NETMASK || '');
+    tpl.set(':NAME', options.NAME || '');*/
+    
+    //tpl = App.HTML.Build.ip_selects(tpl, options);
+}catch(e){fb.error(e);}
+    return tpl.finalize();
+}
     
 
 App.HTML.Build.dns_records = function(records)

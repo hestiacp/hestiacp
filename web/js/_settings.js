@@ -15,6 +15,7 @@ App.Constants.DNS_FORM_ID         = 'dns-form';
 App.Constants.USER_FORM_ID        = 'user-form';
 App.Constants.WEB_DOMAIN_FORM_ID  = 'web_domain-form';
 App.Constants.DB_FORM_ID          = 'db-form';
+App.Constants.CRON_FORM_ID        = 'cron-form';
 
 App.Settings.ajax_url = 1;
 App.Settings.uri = location.href.replace('index.html', '');

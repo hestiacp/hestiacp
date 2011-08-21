@@ -123,14 +123,17 @@ App.Helpers.getFirstValue = function(obj)
     return first;
 }
 
-App.Helpers.evalJSON = function(string) 
+App.Helpers.evalJSON = function(str) 
 {
-    return $.parseJSON(string);
+    /*str = str.replace(/\\'/gi, '');
+    str = str.replace(/\'/gi, '');
+    fb.warn(str);*/
+    return $.parseJSON(str);
 }
 
 App.Helpers.toJSON = function(object) 
-{
-    return ($.toJSON(object).replace(/'/gi, ''));
+{    
+    return ($.toJSON(object).replace(/\\'/gi, ''));
 }
 
 

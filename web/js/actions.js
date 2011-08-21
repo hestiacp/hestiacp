@@ -135,6 +135,7 @@ App.Actions.cancel_form = function(evt, params) {
         $('#' + form_id).remove();
     }
     else {
+        fb.warn(elm.find('.source').val());
         var options = App.Helpers.evalJSON(elm.find('.source').val());
         var entry_name = App.Env.world.toLowerCase() + '_entry';
         var tpl = App.HTML.Build[entry_name](options);

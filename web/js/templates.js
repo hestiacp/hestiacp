@@ -44,7 +44,7 @@ App.Templates.html = {
     dns: {
         FORM: [
             '<div style="margin-top: 25px;" class="b-new-entry b-new-entry_dns" id="~!:id~!">\
-                <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
+                <input type="hidden" name="source" class="source" value=~!:source~!>\
                     <input type="hidden" name="target" class="target" value=\'\'>\
                     <div class="entry-header">~!:title~!</div>\
                     <div class="errors">\
@@ -86,8 +86,8 @@ App.Templates.html = {
         ],        
         ENTRIES_WRAPPER: ['<div class="dns-list items-list">~!:content~!</div>'],
         ENTRY: ['<div class="row dns-details-row ~!:CHECKED~!">\
-                            <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
-                            <input type="hidden" class="target" name="target" value="" />\
+                            <input type="hidden" name="source" class="source" value=~!:source~! />\
+                            <input type="hidden" class="target" name="target" value=\'\' />\
                             <div class="row-actions-box cc">\
                                         <div class="check-this check-control"></div>\
                                         <div class="row-operations">\
@@ -763,9 +763,66 @@ App.Templates.html = {
 					</div>']
     },
     cron: {
+        FORM: ['<div class="b-new-entry b-new-entry_cron">\
+						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
+                        <input type="hidden" name="target" class="target" value=\'\'>\
+                        <div class="entry-header">~!:title~!</div>\
+						<div class="form-error">\
+							<div class="error-box">\
+							</div>\
+						</div>\
+						<div class="form-row form-row-line run-at-box cc">\
+							<span class="row-header">run at:</span>\
+							<div class="field-box cron-minute-box">\
+								<label for="#" class="field-label">minute:<br>(0&mdash;59)</label>\
+								<div class="field-box-inner cc">\
+									<input type="text" value="~!:MIN~!" name="MIN" class="text-field">\
+								</div>\
+							</div>\
+							<div class="field-box cron-hour-box">\
+								<label for="#" class="field-label">hour:<br>(0&mdash;23)</label>\
+								<div class="field-box-inner cc">\
+									<input type="text" value="~!:HOUR~!" name="HOUR" class="text-field">\
+								</div>\
+							</div>\
+							<div class="field-box cron-day-box">\
+								<label for="#" class="field-label">day of Month:<br>(1&mdash;31)</label>\
+								<div class="field-box-inner cc">\
+									<input type="text" value="~!:DAY~!" name="DAY" class="text-field">\
+								</div>\
+							</div>\
+							<div class="field-box cron-month-box">\
+								<label for="#" class="field-label">Month:<br>(1&mdash;12)(Jan&mdash;Dec)</label>\
+								<div class="field-box-inner cc">\
+									<input type="text" value="~!:MONTH~!" name="MONTH" class="text-field">\
+								</div>\
+							</div>\
+							<div class="field-box cron-week-box">\
+								<label for="#" class="field-label">day of Week:<br>(1&mdash;7)(Sun&mdash;Sat)</label>\
+								<div class="field-box-inner cc">\
+									<input type="text" value="~!:WDAY~!" name="WDAY" class="text-field">\
+								</div>\
+							</div>\
+						</div>\
+						<div class="form-row cc">\
+							<label for="#" class="field-label">command:</label>\
+							<textarea class="textarea" name="CMD">~!:CMD~!</textarea>\
+						</div>\
+						<div class="form-row cc">\
+							<label for="#" class="field-label">report to: <span class="remark">(devide by comma ",")</span></label>\
+							<textarea class="textarea"></textarea>\
+						</div>\
+						<div class="form-row buttons-row cc">\
+							<input type="submit" value="~!:save_button~!" class="add-entry-btn">\
+							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
+							<a target="_blank" href="http://vestacp.com/docs/cron/" class="help-btn">Help</a>\
+						</div>\
+					</div>'],
         ENTRIES_WRAPPER: ['<div class="db-list">~!:content~!</div>'],
         ENTRY: ['<div class="row first-row cron-details-row">\
-						<div class="row-actions-box cc">\
+						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
+                        <input type="hidden" name="target" class="target" value=\'\'>\
+                        <div class="row-actions-box cc">\
 							<div class="check-this check-control"></div>\
 							<div class="row-operations">\
 								~!:SUSPENDED_TPL~!\

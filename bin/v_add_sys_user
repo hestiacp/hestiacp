@@ -12,8 +12,8 @@ email="$3"
 role="$4"
 owner="${5-vesta}"
 package="${6-default}"
-ns1=$7
-ns2=$8
+fname=$7
+lname=$8
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -25,11 +25,11 @@ source $V_FUNC/shared_func.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '5' "$#" 'user password email role owner [package] [ns1] [ns2]'
+check_args '5' "$#" 'user password email role owner [package] [fname] [lname]'
 
 # Checking argument format
-format_validation 'user' 'password' 'email' 'role' 'owner' 'package'
-format_validation 'ns1' 'ns2'
+format_validation 'user' 'password' 'email' 'role' 'owner' 'package' 
+format_validation 'fname' 'lname'
 
 # Checking user
 is_user_free "$user"
@@ -147,17 +147,10 @@ if [ ! -z "$BACKUP_SYSTEM" ] && [ "$BACKUP_SYSTEM" != 'no' ]; then
     echo "v_backup_sys_user $user" >> $V_QUEUE/backup.pipe
 fi
 
-# Rewriting nameservers
-if [ ! -z "$ns1" ]; then
-    package_data=$(echo "$package_data" | sed -e "s/NS1=.*$/NS1='$ns1'/g")
-fi
-if [ ! -z "$ns2" ]; then
-    package_data=$(echo "$package_data" | sed -e "s/NS2=.*$/NS2='$ns2'/g")
-fi
-
-
 # Filling user config
-echo "PACKAGE='$package'
+echo "FNAME='$fname'
+LNAME='$lname'
+PACKAGE='$package'
 $package_data
 SUSPENDED='no'
 OWNER='$owner'

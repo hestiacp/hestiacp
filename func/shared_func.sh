@@ -25,7 +25,7 @@ log_history() {
 
     # Checking logging system
     log_history=$(grep 'LOG_HISTORY=' $V_CONF/vesta.conf | cut -f 2 -d \' )
-    if [ "$log_history" = 'on' ]; then
+    if [ "$log_history" = 'yes' ]; then
         echo "$event [$undo]" >> $V_USERS/$user/history.log
     fi
 }
@@ -302,8 +302,16 @@ format_validation() {
             domain)             format_dom "$v" ;;
             database)           format_db  "$v" ;;
             db_user)            format_dbu "$v" ;;
+            fname)              format_usr "$v" ;;
+            ns)                 format_dom "$v" ;;
             ns1)                format_dom "$v" ;;
             ns2)                format_dom "$v" ;;
+            ns3)                format_dom "$v" ;;
+            ns4)                format_dom "$v" ;;
+            ns5)                format_dom "$v" ;;
+            ns6)                format_dom "$v" ;;
+            ns7)                format_dom "$v" ;;
+            ns8)                format_dom "$v" ;;
             email)              format_eml "$v" ;;
             extentions)         format_ext "$v" ;;
             host)               format_usr "$v" ;;
@@ -316,6 +324,7 @@ format_validation() {
             max_usr)            format_int "$v" ;;
             max_db)             format_int "$v" ;;
             limit)              format_int "$v" ;;
+            lname)              format_usr "$v" ;;
             offset)             format_int "$v" ;;
             owner)              format_usr "$v" ;;
             package)            format_usr "$v" ;;

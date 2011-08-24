@@ -1,0 +1,36 @@
+#!/bin/bash
+# info: updating montly billing user report
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+
+# Importing system enviroment  as we run this script 
+#               mostly by cron wich not read it by itself
+source /etc/profile.d/vesta.sh
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+user_list=$(ls $V_USERS/)
+
+# Updating user billing
+for user in $user_list; do 
+    $V_BIN/v_backup_sys_user $user >> $V_LOG/backup.log 2>> $V_LOG/backup.log
+done
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

@@ -8,6 +8,7 @@
 
         <link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
         <link rel="stylesheet" media="all" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/popup.css" />
 
         <!--[if lt IE 8]>
 		<link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/1750887/projects/vesta2/css/ie.css" />
@@ -52,7 +53,6 @@
                         <h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
                     </div>            
                     <ul class="settings">
-
                         <li><a href="#">settings</a></li>
                         <li><a href="#">exit</a></li>
                     </ul>            
@@ -64,11 +64,11 @@
                                     <dl class="users-nav-item">
                                         <dt class="section-title cc">
                                                 <span class="to-section">Users</span> 
-                                                <i class="add-entry">&nbsp;</i>
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                                <span class="def">0 users</span>
-                                                <span class="def">0 blocked</span>
+                                                <span class="def"><span class="num-total">0</span> users</span>
+                                                <span class="def"><span class="num-blocked">0</span> blocked</span>
                                         </dd>
                                     </dl>
                             </div>
@@ -80,12 +80,11 @@
                                     <dl class="users-nav-item">
                                         <dt class="section-title cc">
                                                 <span class="to-section">Web Domain</span> 
-                                                <i class="add-entry">&nbsp;</i>
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                                <span class="def">0 users</span>
-                                                <span class="def">0 blocked</span>
-                                                <span class="def">3 waiting</span>
+                                               <span class="def"><span class="num-total">0</span> web domains</span>
+                                               <span class="def"><span class="num-blocked">0</span> blocked</span>
                                         </dd>
                                     </dl>
                             </div>
@@ -95,12 +94,10 @@
                                     <dl class="users-nav-item">
                                         <dt class="section-title cc">
                                                 <span class="to-section">Mail</span> 
-                                                <i class="add-entry">&nbsp;</i>
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                                <span class="def">0 users</span>
-                                                <span class="def">0 blocked</span>
-                                                <span class="def">3 waiting</span>
+                                               <span class="def"><span class="num-total">0</span> mails</span>                                               
                                         </dd>
                                     </dl>
                             </div>
@@ -110,12 +107,11 @@
                                     <dl class="users-nav-item">
                                         <dt class="section-title cc">
                                                 <span class="to-section">DB</span> 
-                                                <i class="add-entry">&nbsp;</i>
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                                <span class="def">0 users</span>
-                                                <span class="def">0 blocked</span>
-                                                <span class="def">3 waiting</span>
+                                               <span class="def"><span class="num-total">0</span> databases</span>
+                                               <span class="def"><span class="num-blocked">0</span> blocked</span>
                                         </dd>
                                     </dl>
                             </div>
@@ -125,7 +121,7 @@
                                     <dl class="users-nav-item">
                                         <dt class="section-title cc">
                                                 <span class="to-section">DNS</span> 
-                                                <i class="add-entry">&nbsp;</i>
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
                                                 <span class="def total_dns_records">0 total records</span>
@@ -138,12 +134,11 @@
                                     <dl class="users-nav-item">
                                         <dt class="section-title cc">
                                                 <span class="to-section">IP</span> 
-                                                <i class="add-entry">&nbsp;</i>
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                                <span class="def">0 users</span>
-                                                <span class="def">0 blocked</span>
-                                                <span class="def">3 waiting</span>
+                                               <span class="def"><span class="num-total">0</span> ip entries</span>
+                                               <span class="def"><span class="num-blocked">0</span> blocked</span>
                                         </dd>
                                     </dl>
                             </div>
@@ -153,12 +148,11 @@
                                     <dl class="users-nav-item">
                                         <dt class="section-title cc">
                                                 <span class="to-section">Cron</span> 
-                                                <i class="add-entry">&nbsp;</i>
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                                <span class="def">0 users</span>
-                                                <span class="def">0 blocked</span>
-                                                <span class="def">3 waiting</span>
+                                               <span class="def"><span class="num-total">0</span> cron records</span>
+                                               <span class="def"><span class="num-blocked">0</span> blocked</span>
                                         </dd>
                                     </dl>
                             </div>
@@ -190,7 +184,12 @@
                         <div class="b-console-results"></div>
                     </div>
                 </div>
-                <div id="actions-toolbar" class="cc"><a class="add-domain do_action_new_entry" href="javascript:void(0)"><i class="icon do_action_new_entry">&nbsp;</i>add new domain</a></div>
+                <div id="actions-toolbar" class="cc">
+                    <a class="add-domain do_action_new_entry" href="javascript:void(0)">
+                        <i class="icon do_action_new_entry">&nbsp;</i>
+                        add new entry
+                    </a>
+                </div>
 
                 <div id="content">
                     

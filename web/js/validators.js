@@ -26,7 +26,7 @@ App.Validate.form = function(world, elm)
         }
         else {
         
-            if ($(field).val().trim() == '') {
+            if ($(field).val().trim() == '' || $(field).val().trim() == '-') {
                 App.Env.FormError.push($(field).attr('name') + ' is required');
                 form_valid = false;
             }

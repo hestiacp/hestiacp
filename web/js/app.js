@@ -189,13 +189,15 @@ App.Ajax.request = function(jedi_method, data, callback)
         type: data.request_method || "POST",
         data: $.extend(data, {'jedi_method': jedi_method}),
         dataType: "text",
-        async:true,
+        async: true,
         success: function(reply)
         {                
-            timer.start();        
+            reply = reply.replace(/\\'/gi, '');
+            reply = reply.replace(/\'/gi, '');
+            //timer.start();        
             callback && callback(jsonParse(reply));
             App.Helpers.afterAjax();
-            timer.stop(jedi_method);            
+            //timer.stop(jedi_method);            
         },
         error: function() 
         {

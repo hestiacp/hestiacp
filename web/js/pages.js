@@ -1,7 +1,7 @@
 App.Pages.init = function(){
     App.Ajax.request('MAIN.getInitial', {}, function(reply){
         App.Env.initialParams = reply.data;
-        //App.Helpers.updateInitial();
+        App.Helpers.updateInitial();
     });
         
     App.Pages.prepareHTML();

@@ -71,7 +71,8 @@ class MAIN extends AjaxHandler
                     'IP'         => $this->getIpParams($data_ip),
                     'DNS'        => $this->getDnsParams(),
                     'DB'         => $this->getDbParams($data_db),
-                    'USERS'      => $this->getUsersParams($data_users)
+                    'USERS'      => $this->getUsersParams($data_users),
+                    'totals'     => $this->getTotals()
                 );
 
         return $this->reply(true, $reply);
@@ -80,6 +81,19 @@ class MAIN extends AjaxHandler
     // 
     //
     //
+    
+    public function getTotals($data = array())
+    {
+        return array(
+                'USER'       => array('total' => 7, 'blocked' => 0),
+                'WEB_DOMAIN' => array('total' => 4, 'blocked' => 0),
+                'MAIL'       => array('total' => 0),
+                'DB'         => array('total' => 4, 'blocked' => 0),
+                'DNS'        => array('total' => 4, 'blocked' => 0),
+                'IP'         => array('total' => 2, 'blocked' => 0),
+                'CRON'       => array('total' => 5, 'blocked' => 0)                
+            );
+    }
     
     /**
      * WEB DOMAIN initial params

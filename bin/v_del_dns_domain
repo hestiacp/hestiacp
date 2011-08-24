@@ -72,7 +72,7 @@ del_dns_domain
 restart_schedule 'dns'
 
 # Logging
-log_history "$V_EVENT"
+log_history "$V_EVENT" "v_add_dns_domain $user $domain $old_ip $tpl_name"
 log_event 'system' "$V_EVENT"
 
 exit $OK

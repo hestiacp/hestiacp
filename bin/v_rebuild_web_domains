@@ -8,22 +8,24 @@
 # Argument defenition
 user="$1"
 
+
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
 source $V_FUNC/domain_func.sh
 source $V_FUNC/ip_func.sh
 
+url="${2-$V_SUSPEND_URL}"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'user [suspend_url]'
 
 # Checking argument format
-format_validation 'user'
+format_validation 'user' 'url'
 
 # Checking web system is enabled
 is_system_enabled 'web'
@@ -48,7 +50,7 @@ search_string="DOMAIN"
 # Defining fileds to select
 field='$DOMAIN'
 
-# Parsing unsuspeneded domains
+# Parsing all domains
 domains=$(dom_clear_search)
 
 # Starting loop
@@ -59,13 +61,13 @@ for domain in $domains; do
     tpl_file="$V_WEBTPL/apache_$template.tpl"
     ip=$(get_web_domain_value '$IP')
     web_port=$(get_config_value '$WEB_PORT')
-    domain=$(get_web_domain_value '$DOMAIN')
     domain_idn=$(idn -t --quiet -a "$domain")
     group="$user"
     docroot="$V_HOME/$user/web/$domain/public_html"
     email="$user@$domain"
     aliases=$(get_web_domain_value '$ALIAS')
     aliases_idn=$(idn -t --quiet -a "$aliases")
+    suspend=$(get_web_domain_value '$SUSPEND')
 
     # Checking error log status
     elog=$(get_web_domain_value '$ELOG')
@@ -96,6 +98,18 @@ for domain in $domains; do
         # Defining params for Options
         search_phrase='Options '
         str_repl='        Options +Includes -Indexes -ExecCGI'
+        change_web_config
+    fi
+
+    # Checking suspend
+    if [ "$suspend" = 'yes' ]; then
+        # Defining search phrase
+        search_phrase='DocumentRoot '
+
+        # Defining replace string
+        str_repl="    Redirect / http://$url"
+
+        # Suspending vhost
         change_web_config
     fi
 
@@ -136,23 +150,50 @@ for domain in $domains; do
             str_repl='        Options +Includes -Indexes -ExecCGI'
             change_web_config
         fi
+
+        # Checking suspend
+        if [ "$suspend" = 'yes' ]; then
+            # Defining search phrase
+            search_phrase='DocumentRoot '
+
+            # Defining replace string
+            str_repl="    Redirect / http://$url"
+
+            # Suspending vhost
+            change_web_config
+        fi
     fi
 
     # Checking nginx
     nginx=$(get_web_domain_value '$NGINX')
     if [ ! -z "$nginx" ]; then
         proxy_port=$(get_config_value '$PROXY_PORT')
-	ext=$(get_web_domain_value '$NGINX_EXT')
+	extentions=$(get_web_domain_value '$NGINX_EXT')
         tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
         conf="$V_HOME/$user/conf/tmp_nginx.conf"
         add_web_config
 
+        if [ "$suspend" = 'yes' ]; then
+            search_phrase='proxy_pass'
+            str_repl="        rewrite ^(.*)\$ http://$url;"
+            change_web_config
+        fi
+
         if [ ! -z "$cert" ]; then
-            proxy_ssl_port=$(get_config_value '$PROXY_SSL_PORT')
             tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
             conf="$V_HOME/$user/conf/tmp_snginx.conf"
             add_web_config
+
+            if [ "$suspend" = 'yes' ]; then
+                search_phrase='proxy_pass'
+                str_repl="        rewrite ^(.*)\$ http://$url;"
+                change_web_config
+            fi
+
         fi
+
+
+	ngix_change='yes'
     fi
 
 done
@@ -185,11 +226,12 @@ if [ ! -z "$ssl_cert" ]; then
 fi
 
 # Checking nginx
-if [ ! -z "$nginx" ]; then
+if [ "$ngix_change" = 'yes' ]; then
     nginx_conf='/etc/nginx/conf.d/vesta_users.conf'
     tmp_conf="$V_HOME/$user/conf/tmp_nginx.conf"
     conf="$V_HOME/$user/conf/nginx.conf"
     mv $tmp_conf $conf
+
 
     nginx_conf_check=$(grep "$conf" $nginx_conf )
     if [ -z "$nginx_conf_check" ]; then

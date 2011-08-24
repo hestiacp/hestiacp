@@ -50,6 +50,8 @@ domains=$(dom_clear_search)
 # Starting unsuspend loop
 for domain in $domains; do
 
+    domain_idn=$(idn -t --quiet -a "$domain")
+
     # Get template name
     tpl_name=$(get_web_domain_value '$TPL')
     tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
@@ -86,6 +88,26 @@ for domain in $domains; do
         str_repl="    DocumentRoot $docroot"
 
         # Unsuspending vhost
+        change_web_config
+    fi
+
+    # Check nginx vhost
+    nginx=$(get_web_domain_value '$NGINX')
+    if [ ! -z "$nginx" ]; then
+        ip=$(get_web_domain_value '$IP')
+        web_port=$(get_config_value '$WEB_PORT')
+        tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+        conf="$V_HOME/$user/conf/nginx.conf"
+        search_phrase='rewrite ^(.*)$'
+        str_repl="        proxy_pass     http://$ip:$web_port;"
+        change_web_config
+    fi
+
+    if [ ! -z "$nginx" ] && [ ! -z "$cert" ]; then
+        web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
+        tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
+        conf="$V_HOME/$user/conf/snginx.conf"
+        str_repl="        proxy_pass     https://$ip:$web_ssl_port;"
         change_web_config
     fi
 

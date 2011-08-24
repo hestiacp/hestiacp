@@ -281,7 +281,9 @@ change_web_config() {
         -e 's/\//\\\//g')
 
     # Changing config
-    sed -i  "$str_numb s/.*/$str_repl/" $conf
+    if [ ! -z "$str" ]; then
+        sed -i  "$str_numb s/.*/$str_repl/" $conf
+    fi
 }
 
 get_web_domain_value() {

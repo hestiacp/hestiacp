@@ -11,7 +11,7 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 template="${3-default}"
 default_extentions="jpg,jpeg,gif,png,ico,css,zip,tgz,gz,rar,bz2,doc,xls,exe,\
-pdf,ppt,txt,tar,wav,bmp,rtf,js,mp3,avi,mpeg"
+pdf,ppt,txt,tar,wav,bmp,rtf,js,mp3,avi,mpeg,html,htm"
 extentions="${4-$default_extentions}"
 
 # Importing variables
@@ -43,7 +43,7 @@ is_user_suspended
 is_web_domain_valid
 
 # Checking domain is not suspened
-is_domain_suspended 'web_domains'
+is_domain_suspended 'web'
 
 # Check nginx is not added
 is_web_domain_key_empty '$NGINX'

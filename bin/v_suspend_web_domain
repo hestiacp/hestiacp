@@ -39,7 +39,7 @@ is_user_valid
 is_web_domain_valid
 
 # Checking domain is not suspened
-is_domain_suspended 'web_domains'
+is_domain_suspended 'web'
 
 
 #----------------------------------------------------------#
@@ -57,7 +57,7 @@ conf="$V_HOME/$user/conf/httpd.conf"
 search_phrase='DocumentRoot '
 
 # Defining replace string
-str_repl="    Redirect / http://$url/"
+str_repl="    Redirect / http://$url"
 
 # Suspending vhost
 change_web_config
@@ -65,16 +65,27 @@ change_web_config
 # Check ssl vhost
 cert=$(get_web_domain_value '$SSL_CERT')
 if [ ! -z "$cert" ]; then
-    # Defining teplate name
     tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
-
-    # Defining config
     conf="$V_HOME/$user/conf/shttpd.conf"
+    str_repl="    Redirect / http://$url"
+    change_web_config
+fi
 
-    # Reefining replace string - old str_repl contains escaped chars
-    str_repl="    Redirect / http://$url/"
+# Check nginx vhost
+nginx=$(get_web_domain_value '$NGINX')
+if [ ! -z "$nginx" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+    conf="$V_HOME/$user/conf/nginx.conf"
+    search_phrase='proxy_pass'
+    str_repl="        rewrite ^(.*)\$ http://$url;"
+    change_web_config
+fi
 
-    # Suspending vhost
+if [ ! -z "$nginx" ] && [ ! -z "$cert" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
+    conf="$V_HOME/$user/conf/snginx.conf"
+    search_phrase='proxy_pass'
+    str_repl="        rewrite ^(.*)\$ http://$url;"
     change_web_config
 fi
 

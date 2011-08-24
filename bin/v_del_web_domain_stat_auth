@@ -39,7 +39,7 @@ is_user_suspended
 is_web_domain_valid
 
 # Checking domain is not suspened
-is_domain_suspended 'web_domains'
+is_domain_suspended 'web'
 
 # Checking stats auth enabled
 is_web_domain_value_exist '$STATS_AUTH'

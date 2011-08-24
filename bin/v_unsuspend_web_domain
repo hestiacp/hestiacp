@@ -36,7 +36,7 @@ is_user_valid
 is_web_domain_valid
 
 # Check domain is suspened
-is_domain_unsuspended 'web_domains'
+is_domain_unsuspended 'web'
 
 
 #----------------------------------------------------------#
@@ -82,6 +82,25 @@ if [ ! -z "$cert" ]; then
     change_web_config
 fi
 
+# Check nginx vhost
+nginx=$(get_web_domain_value '$NGINX')
+if [ ! -z "$nginx" ]; then
+    ip=$(get_web_domain_value '$IP')
+    web_port=$(get_config_value '$WEB_PORT')
+    tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+    conf="$V_HOME/$user/conf/nginx.conf"
+    search_phrase='rewrite ^(.*)$'
+    str_repl="        proxy_pass     http://$ip:$web_port;"
+    change_web_config
+fi
+
+if [ ! -z "$nginx" ] && [ ! -z "$cert" ]; then
+    web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
+    tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
+    conf="$V_HOME/$user/conf/snginx.conf"
+    str_repl="        proxy_pass     https://$ip:$web_ssl_port;"
+    change_web_config
+fi
 
 #----------------------------------------------------------#
 #                       Vesta                              #

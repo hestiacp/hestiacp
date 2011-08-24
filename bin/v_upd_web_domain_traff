@@ -36,7 +36,7 @@ is_user_valid
 is_web_domain_valid
 
 # Checking domain is not suspened
-is_domain_suspended 'web_domains'
+is_domain_suspended 'web'
 
 
 #----------------------------------------------------------#

@@ -47,9 +47,6 @@ tmpdir=$(mktemp -p $V_TMP -d)
 # Prinitng status
 if [ -z "$output" ]; then
     echo "$(date +%m-%d-%y" "%H:%m:%S) System backup for user $user"
-    echo
-    echo "VESTA VERSION $VERSION"
-    echo "BACKUP VERSION 1.0"
     echo "TMPDIR is $tmpdir"
     echo
 fi
@@ -300,7 +297,10 @@ then
     if [ -z "$output" ]; then
         echo -e "\t$(date +%H:%m:%S) system cron"
     fi
-    cp /var/spool/cron/$user $tmpdir/cron/
+
+    if [ -e "/var/spool/cron/$user" ]; then
+        cp /var/spool/cron/$user $tmpdir/cron/
+    fi
 
     if [ -z "$output" ]; then
         echo
@@ -375,23 +375,134 @@ if [ -z "$output" ]; then
     echo
 fi
 
-# Move tmp backup to local storage
-if [ "$BACKUP_SYSTEM" = 'local' ]; then
+# Defining local storage function
+local_backup(){
     if [ -z "$output" ]; then
-        echo "ARCHIVE $V_BACKUP/$user.$V_DATE.tar"
+        echo "-- STORAGE --"
+        echo -e "\t$(date +%H:%m:%S) ARCHIVE $V_BACKUP/$user.$V_DATE.tar"
     fi
 
     # Checking retention
-    check_ret=$()
+    archives=$(ls -lrt $V_BACKUP/ |awk '{print $9}' |grep "^$user.")
+    archives_q=$(echo "$archives" |wc -l)
+    if [ "$archives_q" -ge "$backups" ]; then
+        archives_r=$((archives_q - backups))
+        for archive in $(echo "$archives" | head -n $archives_r); do
+            # Removing old archives
+            if [ -z "$output" ]; then
+                echo -e "\tRemoving old $archive"
+            fi
+            rm -f $V_BACKUP/$archive
+        done
+    fi
 
+    # Creating final tarball
     cd $tmpdir
     tar -cf $V_BACKUP/$user.$V_DATE.tar .
-fi
+    localbackup='yes'
 
+    if [ -z "$output" ]; then
+        echo
+    fi
+}
+
+
+# Defining ftp command function
+ftpc() {
+    ftp -n $HOST $PORT <<EOF
+    quote USER $USER
+    quote PASS $PASSWORD
+    binary
+    cd $BPATH
+    $1
+    quit
+EOF
+}
+
+# Defining ftp storage function
+ftp_backup(){
+    if [ -z "$output" ]; then
+        echo "-- FTP --"
+    fi
+
+    # Checking config
+    if [ -e "$V_CONF/backup.conf" ]; then
+	ftphost_str=$(grep "TYPE='FTP'" $V_CONF/backup.conf |head -n 1)
+    fi
+
+    # Parsing config values
+    if [ ! -z "$ftphost_str" ]; then
+        for key in $ftphost_str; do
+            eval ${key%%=*}=${key#*=}
+        done
+    else
+        echo "Error: Parsing error"
+        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+        exit $E_PARSE_ERROR
+    fi
+
+    # Debug info
+    if [ -z "$output" ]; then
+        echo -e "\t$(date +%H:%m:%S) ftp://$USER@$HOST$BPATH/$user.$V_DATE.tar"
+    fi
+
+    # Checking ftp permission
+    ftmpdir=$(mktemp -u -p $BPATH)
+    command="mkdir $ftmpdir
+             ls $ftmpdir
+             rm $ftmpdir"
+    if [ ! -z "$(ftpc "$command")" ] ; then
+        echo "Error: FTP error"
+        log_event 'debug' "$E_FTP_ERROR $V_EVENT"
+        exit $E_FTP_ERROR
+    fi
+
+    # Checking retention
+    archives=$(ftpc "ls" |awk '{print $9}' |grep "^$user.")
+    archives_q=$(echo "$archives" | wc -l)
+    if [ "$archives_q" -ge "$backups" ]; then
+        # Removing old backups
+        archives_r=$((archives_q - backups))
+        for archive in $(echo "$archives" | tail -n $archives_r); do 
+            if [ -z "$output" ]; then
+                echo -e "\tRemoving old $archive"
+            fi
+            ftpc "delete $archive"
+        done
+    fi
+
+    # Uploading backup archive
+    if [ "$localbackup" = 'yes' ]; then
+        cd $V_BACKUP
+	ftpc "put $user.$V_DATE.tar"
+    else
+	cd $tmpdir
+        tar -cf $V_TMP/$user.$V_DATE.tar .
+        cd $V_TMP/
+	ftpc "put $user.$V_DATE.tar"
+        rm -f $user.$V_DATE.tar
+    fi
+
+    if [ -z "$output" ]; then
+        echo
+    fi
+}
+
+# Switching on backup system types
+for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\n}"); do
+    case $backup_type in
+        local) local_backup ;;
+        ftp)   ftp_backup ;;
+    esac
+done
+
+# Removing tmpdir
 cd /
 rm -rf $tmpdir
 
 if [ -z "$output" ]; then
+    echo "$(date +'%m-%d-%y %H:%m:%S')"
+    echo
     echo
 fi
 

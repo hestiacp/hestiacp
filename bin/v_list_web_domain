@@ -40,7 +40,7 @@ conf="$V_USERS/$user/web.conf"
 
 # Defining fileds to select
 fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG $STATS
- $STATS_AUTH $SSL $SSL_HOME $SSL_CERT $NGINX $NGINX_EXT $SUSPEND $DATE'
+ $STATS_AUTH $SSL_HOME $SSL_CERT $NGINX $NGINX_EXT $SUSPEND $DATE'
 
 # Listing domains
 case $format in 

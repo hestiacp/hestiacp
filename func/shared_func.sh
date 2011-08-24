@@ -303,6 +303,7 @@ format_validation() {
             database)           format_db  "$v" ;;
             db_user)            format_dbu "$v" ;;
             fname)              format_usr "$v" ;;
+            job)                format_int "$v" ;;
             ns)                 format_dom "$v" ;;
             ns1)                format_dom "$v" ;;
             ns2)                format_dom "$v" ;;

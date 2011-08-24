@@ -64,8 +64,13 @@ is_template_valid 'dns'
 #----------------------------------------------------------#
 
 # Defining variables
-ns1=$(get_user_value '$NS1')
-ns2=$(get_user_value '$NS2')
+i=1
+ns=$(get_user_value '$NS')
+for nameserver in ${ns//,/ };do
+    eval ns$i=$nameserver
+    i=$((i + 1))
+done
+
 if [ -z "$soa" ]; then
     soa="$ns1"
 fi
@@ -77,6 +82,12 @@ cat $V_DNSTPL/$template.tpl |\
         -e "s/%domain%/$domain/g" \
         -e "s/%ns1%/$ns1/g" \
         -e "s/%ns2%/$ns2/g" \
+        -e "s/%ns3%/$ns3/g" \
+        -e "s/%ns4%/$ns4/g" \
+        -e "s/%ns5%/$ns5/g" \
+        -e "s/%ns6%/$ns6/g" \
+        -e "s/%ns7%/$ns7/g" \
+        -e "s/%ns8%/$ns8/g" \
         -e "s/%date%/$V_DATE/g" > $V_USERS/$user/zones/$domain
 
 # Adding dns.conf record

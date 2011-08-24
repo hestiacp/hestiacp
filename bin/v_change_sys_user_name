@@ -1,0 +1,56 @@
+#!/bin/bash
+# info: changing user nameservers
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+fname="$2"
+lname="$3"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '3' "$#" 'user fname lname'
+
+# Checking argument format
+format_validation 'user' 'fname' 'lname'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get old values
+old_fname=$(get_user_value '$FNAME')
+old_lname=$(get_user_value '$LNAME')
+
+# Changing ns values
+update_user_value "$user" '$FNAME' "$fname"
+update_user_value "$user" '$LNAME' "$lname"
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_history "$V_EVENT" "$V_SCRIPT $user $old_fname $old_lname"
+log_event 'system' "$V_EVENT"
+
+exit  $OK

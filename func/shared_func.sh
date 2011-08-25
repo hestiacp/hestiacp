@@ -266,6 +266,11 @@ format_validation() {
             MX) known='yes';;
             TXT) known='yes';;
             SRV) known='yes';;
+            DNSKEY) known='yes';;
+            KEY) known='yes';;
+            IPSECKEY) known='yes';;
+            PTR) known='yes';;
+            SPF) known='yes';;
             *)  known='no';;
         esac
 
@@ -288,6 +293,31 @@ format_validation() {
         fi
     }
 
+    # Defining format_dvl function
+    format_dvl() {
+        val="$1"
+
+        # Checking spaces
+	check_spaces="$(echo "$val"|grep ' ')"
+	check_rtype="$(echo "A AAAA NS CNAME" | grep -i -w "$rtype")"
+        if [ ! -z "$check_spaces" ] && [ ! -z "$check_rtype" ]; then
+            echo "Error: $var is out of range"
+            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
+            exit $E_OUTOFRANGE
+        fi
+
+        # Checking ip
+        if [ "$rtype" = 'A' ]; then
+            format_ip "$val"
+        fi
+
+        # Checking domain
+        if [ "$rtype" = 'NS' ]; then
+            format_dom "$val"
+        fi
+
+    }
+
     # Lopp on all variables
     for var in $*; do
         # Parsing reference
@@ -302,6 +332,7 @@ format_validation() {
             domain)             format_dom "$v" ;;
             database)           format_db  "$v" ;;
             db_user)            format_dbu "$v" ;;
+            dvalue)             format_dvl "$v" ;;
             fname)              format_usr "$v" ;;
             job)                format_int "$v" ;;
             ns)                 format_dom "$v" ;;

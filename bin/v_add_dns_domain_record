@@ -11,7 +11,7 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 record=$(idn -t --quiet -u "$3" )
 rtype=$(echo "$4"| tr '[:lower:]' '[:upper:]')
-value=$(idn -t --quiet -u "$5" )
+dvalue=$(idn -t --quiet -u "$5" )
 id="$6"
 
 # Importing variables
@@ -28,7 +28,7 @@ source $V_FUNC/domain_func.sh
 check_args '5' "$#" 'user domain record type value [id]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'record' 'rtype'
+format_validation 'user' 'domain' 'record' 'rtype' 'dvalue'
 
 # Checking web system is enabled
 is_system_enabled 'dns'
@@ -65,7 +65,7 @@ is_dns_record_free
 zone="$V_USERS/$user/zones/$domain"
 
 # Adding record
-dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' VALUE='$value'"
+dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' VALUE='$dvalue'"
 dns_rec="$dns_rec SUSPEND='no' DATE='$V_DATE'"
 echo "$dns_rec" >> $zone 
 

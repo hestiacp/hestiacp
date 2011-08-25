@@ -47,10 +47,6 @@ stats_pipe() {
     bash $V_QUEUE/stats.pipe
 }
 
-backup_pipe() {
-    bash $V_QUEUE/backup.pipe
-}
-
 disk_pipe() {
     bash $V_QUEUE/disk.pipe
 }

@@ -143,10 +143,6 @@ if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
     touch $V_USERS/$user/cron.conf
 fi
 
-if [ ! -z "$BACKUP_SYSTEM" ] && [ "$BACKUP_SYSTEM" != 'no' ]; then
-    echo "v_backup_sys_user $user" >> $V_QUEUE/backup.pipe
-fi
-
 # Filling user config
 echo "FNAME='$fname'
 LNAME='$lname'
@@ -172,7 +168,7 @@ DATE='$V_DATE'" > $V_USERS/$user/user.conf
 # Filling owner config
 ROLE=$(echo "$role" | tr "[:lower:]" "[:upper:]")
 if [ "$user" != 'vesta' ]; then
-    echo "$ROLE='$user'" >> $V_USERS/$owner/reseller.conf
+    echo "$ROLE='$user'" >> $V_USERS/$owner/child.conf
     increase_user_value "$owner" 'U_CHILDS'
 fi
 

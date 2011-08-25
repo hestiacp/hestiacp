@@ -973,6 +973,21 @@ decrease_user_value() {
     fi
 }
 
+is_user_parent() {
+    childs="$(grep "U_CHILDS=" $V_USERS/$user/user.conf |cut -f 2 -d \')"
+    if [ -z "$childs" ]; then
+        echo "Error: Parsing error"
+        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+        exit $E_PARSE_ERROR
+    fi
+
+    if [ "$childs" -gt '0' ]; then
+        echo "Error: user have childs"
+        log_event 'debug' "$E_CHILD_EXIST $V_EVENT"
+        exit $E_CHILD_EXIST
+    fi
+}
+
 # Json listing function
 v_json_list() {
     # Definigng variables

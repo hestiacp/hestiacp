@@ -7,7 +7,6 @@
 
 # Argument defenition
 user="$1"
-ip="$2"
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -20,10 +19,10 @@ source $V_FUNC/ip_func.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '2' "$#" 'user ip'
+check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user' 'ip'
+format_validation 'user'
 
 # Checking user
 is_user_valid
@@ -31,33 +30,26 @@ is_user_valid
 # Checking user is active
 is_user_suspended
 
-# Checking user ip
-is_sys_ip_valid
-
-# Checking ownership
-is_sys_ip_owner
-
-# Checking webdomains on ip
-is_ip_key_empty '$U_WEB_DOMAINS'
-
-# Checking users on ip
-is_ip_key_empty '$U_SYS_USERS'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting owner
-update_sys_ip_value '$OWNER' ''
+# Starting delete loop
+for ip in $(ip_owner_search); do
+    $V_BIN/v_del_sys_user_ip "$user" "$ip"
+    rv="$?"
+    if [ "$rv" -ne '0' ]; then
+        log_event 'debug' "$rv $V_EVENT"
+        exit $rv
+    fi
+
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Updating user conf
-decrease_user_value $user '$IP_OWNED'
 
 # Logging
 log_event 'system' "$V_EVENT"

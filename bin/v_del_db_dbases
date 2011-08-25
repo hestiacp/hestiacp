@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: deleting user ip
+# info: deleteing all user databases
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -7,12 +7,11 @@
 
 # Argument defenition
 user="$1"
-ip="$2"
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
-source $V_FUNC/ip_func.sh
+source $V_FUNC/db_func.sh
 
 
 #----------------------------------------------------------#
@@ -20,44 +19,48 @@ source $V_FUNC/ip_func.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '2' "$#" 'user ip'
+check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user' 'ip'
+format_validation 'user'
+
+# Checking web system is enabled
+is_system_enabled 'db'
 
 # Checking user
 is_user_valid
-
-# Checking user is active
-is_user_suspended
-
-# Checking user ip
-is_sys_ip_valid
-
-# Checking ownership
-is_sys_ip_owner
-
-# Checking webdomains on ip
-is_ip_key_empty '$U_WEB_DOMAINS'
-
-# Checking users on ip
-is_ip_key_empty '$U_SYS_USERS'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting owner
-update_sys_ip_value '$OWNER' ''
+# Defining config
+conf="$V_USERS/$user/db.conf"
+
+# Defining fileds to select
+field='$DB'
+
+# Defining search string
+search_string="SUSPEND='no'"
+
+# Parsing unsuspeneded domains
+databases=$(db_clear_search)
+
+# Starting delete loop
+for database in $databases; do
+    $V_BIN/v_del_db_base "$user" "$database"
+    rv="$?"
+    if [ "$rv" -ne '0' ]; then
+        log_event 'debug' "$rv $V_EVENT"
+        exit $rv
+    fi
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Updating user conf
-decrease_user_value $user '$IP_OWNED'
 
 # Logging
 log_event 'system' "$V_EVENT"

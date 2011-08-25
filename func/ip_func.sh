@@ -591,3 +591,12 @@ ipint_shell_list() {
         echo "$interface"
     done
 }
+
+ip_owner_search(){
+    for ip in $(ls $V_IPS/); do
+        check_owner=$(grep "OWNER='$user'" $V_IPS/$ip)
+        if [ ! -z "$check_owner" ]; then
+            echo "$ip"
+        fi
+    done
+}

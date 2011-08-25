@@ -99,7 +99,7 @@ fi
 chmod -R a+x $V_HOME/$user
 
 # Checking quota
-if [ ! -z "$DISK_QUOTA" ] && [ "$DISK_QUOTA" != 'off' ]; then
+if [ ! -z "$DISK_QUOTA" ] && [ "$DISK_QUOTA" != 'no' ]; then
     DISK_QUOTA=$(echo "$package_data"|grep 'DISK_QUOTA' | cut -f 2 -d \')
     set_quota "$user" "$DISK_QUOTA"
 fi

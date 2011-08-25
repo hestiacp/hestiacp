@@ -36,6 +36,26 @@ is_user_valid
 # Checking user backups
 is_backup_enabled
 
+# Checking load averages
+la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')
+i=0
+while [ "$la" -ge "$V_BACKUP_LA_LIMIT" ]; do
+    if [ -z "$output" ]; then
+        echo "$(date +%m-%d-%y" "%H:%m:%S) Load Average $la"
+        echo
+    fi
+
+    sleep 60
+
+    if [ "$i" -ge "15" ]; then
+        echo "Error: LA is too high"
+        log_event 'debug' "$E_LOAD_AVERAGE $V_EVENT"
+        exit $E_LOAD_AVERAGE
+    fi
+
+    i=$((i + 1))
+done
+
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -383,7 +403,7 @@ local_backup(){
     fi
 
     # Checking retention
-    archives=$(ls -lrt $V_BACKUP/ |awk '{print $9}' |grep "^$user.")
+    archives=$(ls -lrt $V_BACKUP/ |awk '{print $9}' |grep "^$user\.")
     archives_q=$(echo "$archives" |wc -l)
     if [ "$archives_q" -ge "$backups" ]; then
         archives_r=$((archives_q - backups))
@@ -396,9 +416,20 @@ local_backup(){
         done
     fi
 
+    # Checking disk space
+    disk_usage=$(df $V_BACKUP | awk '{print $5}'|tail -n1|cut -f 1 -d '%')
+    if [ "$disk_usage" -ge "$V_BACKUP_DISK_LIMIT" ]; then
+        echo "Error: Not enough disk space"
+        log_event 'debug' "$E_DISK_SPACE $V_EVENT"
+        exit $E_DISK_SPACE
+    fi
+
     # Creating final tarball
     cd $tmpdir
     tar -cf $V_BACKUP/$user.$V_DATE.tar .
+    chmod 640 $V_BACKUP/$user.$V_DATE.tar
+    chown root:$user $V_BACKUP/$user.$V_DATE.tar
+
     localbackup='yes'
 
     if [ -z "$output" ]; then
@@ -458,7 +489,7 @@ ftp_backup(){
     fi
 
     # Checking retention
-    archives=$(ftpc "ls" |awk '{print $9}' |grep "^$user.")
+    archives=$(ftpc "ls" |awk '{print $9}' |grep "^$user\.")
     archives_q=$(echo "$archives" | wc -l)
     if [ "$archives_q" -ge "$backups" ]; then
         # Removing old backups

@@ -41,6 +41,12 @@ is_user_suspended
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Defining port configuration
+proxy_port=$(get_config_value '$PROXY_PORT')
+proxy_ssl_port=$(get_config_value '$PROXY_SSL_PORT')
+web_port=$(get_config_value '$WEB_PORT')
+web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
+
 # Defining config
 conf="$V_USERS/$user/web.conf"
 
@@ -60,7 +66,6 @@ for domain in $domains; do
     template=$(get_web_domain_value '$TPL')
     tpl_file="$V_WEBTPL/apache_$template.tpl"
     ip=$(get_web_domain_value '$IP')
-    web_port=$(get_config_value '$WEB_PORT')
     domain_idn=$(idn -t --quiet -a "$domain")
     group="$user"
     docroot="$V_HOME/$user/web/$domain/public_html"
@@ -125,7 +130,7 @@ for domain in $domains; do
             same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
             *) check_args '3' "$#" 'user domain certificate [sslhome]'
         esac
-        web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
+
 
         # Adding domain to the shttpd.conf
         conf="$V_HOME/$user/conf/tmp_shttpd.conf"

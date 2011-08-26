@@ -1235,13 +1235,14 @@ usr_shell_list() {
 }
 
 usrns_json_list() {
-    ns=$(grep "NS[1|2]=" $V_USERS/$user/user.conf |cut -f 2 -d \')
+    ns=$(grep "^NS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
     # Print top bracket
     echo '['
     i=1
+    nslistc=$(echo -e "${ns//,/\n}"|wc -l)
     # Listing servers
-    for nameserver in $ns;do
-        if [ "$i" -eq 1 ]; then
+    for nameserver in ${ns//,/ };do
+        if [ "$i" -ne "$nslistc" ]; then
             echo -e  "\t\"$nameserver\","
         else
             echo -e  "\t\"$nameserver\""
@@ -1253,13 +1254,42 @@ usrns_json_list() {
 }
 
 usrns_shell_list() {
-    ns=$(grep "NS[1|2]=" $V_USERS/$user/user.conf |cut -f 2 -d \')
+    ns=$(grep "^NS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
     # Print result
     echo "NAMESERVER"
     echo "----------"
-    for nameserver in $ns;do
+    for nameserver in ${ns//,/ };do
         echo "$nameserver"
     done
+}
+
+childs_json_list() {
+    # Print result
+    echo '['
+    if [ -e "$V_USERS/$user/child.conf" ]; then
+        i=1
+        childlistc=$(wc -l $V_USERS/$user/child.conf |cut -f -1 -d ' ')
+        for child in $(cat $V_USERS/$user/child.conf|cut -f 2 -d \');do
+            if [ "$i" -ne "$childlistc" ]; then
+                echo -e "\t\"$child\","
+            else
+                echo -e "\t\"$child\""
+            fi
+            i=$((i + 1))
+        done
+    fi
+    echo ']'
+}
+
+childs_shell_list() {
+    # Print result
+    echo "CHILDS"
+    echo "----------"
+    if [ -e "$V_USERS/$user/child.conf" ]; then
+        for child in $(cat $V_USERS/$user/child.conf|cut -f 2 -d \');do
+            echo "$child"
+        done
+    fi
 }
 
 get_usr_disk() {

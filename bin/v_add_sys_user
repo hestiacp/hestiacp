@@ -166,9 +166,8 @@ U_MAIL_DOMAINS='0'
 DATE='$V_DATE'" > $V_USERS/$user/user.conf
 
 # Filling owner config
-ROLE=$(echo "$role" | tr "[:lower:]" "[:upper:]")
 if [ "$user" != 'vesta' ]; then
-    echo "$ROLE='$user'" >> $V_USERS/$owner/child.conf
+    echo "USER='$user'" >> $V_USERS/$owner/child.conf
     increase_user_value "$owner" 'U_CHILDS'
 fi
 

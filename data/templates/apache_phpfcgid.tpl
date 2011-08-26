@@ -1,4 +1,4 @@
-<VirtualHost %ip%:%web_ssl_port%>
+<VirtualHost %ip%:%web_port%>
 
     ServerName %domain_idn%
     ServerAlias %alias_idn%
@@ -13,22 +13,15 @@
    %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %docroot%>
         AllowOverride AuthConfig FileInfo Indexes Limit
-        SSLRequireSSL
         Options +Includes -Indexes +ExecCGI
         php_admin_flag engine off
-        Action phpcgi-script /cgi-bin/php
-        AddHandler phpcgi-script .php
+        AddHandler fcgid-script .php
+        FCGIWrapper %home%/%user%/web/%domain%/cgi-bin/fcgi-starter .php
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    php_admin_value open_basedir %home%/%user%/web:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp
-    SSLEngine on
-    SSLVerifyClient none
-    SSLCertificateFile %ssl_cert%
-    SSLCertificateKeyFile %ssl_key%
-
-    Include %home%/%user%/conf/shttpd.%domain%.conf*
+    Include %home%/%user%/conf/httpd.%domain%.conf*
 
 </VirtualHost>
 

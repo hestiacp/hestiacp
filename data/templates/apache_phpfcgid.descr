@@ -1,0 +1,3 @@
+# Template with php as FastCGI for best performance and security.
+# (it uses post instal script)
+PHP='fcgid' CGI='yes' ELOG='no'

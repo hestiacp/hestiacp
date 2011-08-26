@@ -1,7 +1,7 @@
 WEB_DOMAINS='10'
 WEB_SSL='10'
 WEB_ALIASES='10'
-WEB_TPL='default,phpcgi,unlim'
+WEB_TPL='default,phpcgi,unlim,phpfcgid'
 DATABASES='10'
 MAIL_DOMAINS='10'
 MAIL_BOXES='30'

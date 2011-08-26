@@ -16,8 +16,8 @@
         SSLRequireSSL
         Options +Includes -Indexes +ExecCGI
         php_admin_flag engine off
-        Action phpcgi-script /cgi-bin/php
-        AddHandler phpcgi-script .php
+        AddHandler fcgid-script .php
+        FCGIWrapper %home%/%user%/web/%domain%/cgi-bin/fcgi-starter .php
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All

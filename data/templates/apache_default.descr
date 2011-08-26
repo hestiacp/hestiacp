@@ -1,3 +1,3 @@
 # Default template with basic php module restrictions.
-# This is recomended config for basic sites.
+# Best performance. Not recomended for shared hosting.
 PHP='module' CGI='yes' ELOG='no'

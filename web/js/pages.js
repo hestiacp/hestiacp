@@ -8,6 +8,10 @@ App.Pages.init = function(){
     
     $('.section.active').removeClass('active');
     $('#'+App.Env.world).addClass('active');
+    
+    if (cookieEnabled()) {
+        setCookie('tab', App.Env.world);
+    }
 }
 
 App.Pages.prepareHTML = function()

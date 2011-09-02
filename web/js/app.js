@@ -78,7 +78,9 @@ var App = {
     Core: {},
     Bash: {},
     Console: {},
-    Constants: {},
+    Constants: {
+        TABS: ['USER','WEB_DOMAIN','MAIL','DB','DNS','IP','CRON']
+    },
     Actions: {},
     Helpers: {},
     Filters: {},
@@ -175,16 +177,7 @@ App.Ajax.request = function(jedi_method, data, callback)
 {   
     App.Helpers.beforeAjax(jedi_method);
     $.ajax({
-        url: function() {
-            var url_parts = location.href.replace('#', '').split('/');
-            if (url_parts[url_parts.length -1] == 'index.html') {
-                url_parts[url_parts.length -1] = 'dispatch.php';
-            }
-            else {
-                url_parts.push('dispatch.php');
-            }
-            return url_parts.join('/');
-        }(),
+        url: App.Helpers.getBackendUrl(),
         global: false,
         type: data.request_method || "POST",
         data: $.extend(data, {'jedi_method': jedi_method}),

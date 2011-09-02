@@ -17,7 +17,7 @@ class USER extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function getListExecute($request) 
+    public function getListExecute(Request $request) 
     {
         $reply  = array();
         $result = Vesta::execute(Vesta::V_LIST_SYS_USERS, array(Config::get('response_type')));
@@ -34,40 +34,40 @@ class USER extends AjaxHandler
             $reply[$user] = array(
                                 "LOGIN_NAME"            => $user,
                                 "FULLNAME"              => $fullname,                                     // TODO skid
-                                    "PACKAGE"               => $details['PACKAGE'],
-                                    "WEB_DOMAINS"           => $details['WEB_DOMAINS'],
-                                    "WEB_SSL"               => $details['WEB_SSL'],
-                                    "WEB_ALIASES"           => $details['WEB_ALIASES'],
-                                    "DATABASES"             => $details['DATABASES'],
-                                    "MAIL_DOMAINS"          => $details['MAIL_DOMAINS'],
-                                    "MAIL_BOXES"            => $details['MAIL_BOXES'],
-                                    "MAIL_FORWARDERS"       => $details['MAIL_FORWARDERS'],
-                                    "DNS_DOMAINS"           => $details['DNS_DOMAINS'],
-                                    "DISK_QUOTA"            => $details['DISK_QUOTA'],//$disk_quota,
-                                    "BANDWIDTH"             => $details['BANDWIDTH'],//$bandwidth,                                   
-                                    "NS_LIST"               => array($details['NS1'], $details['NS2']),      // TODO skid
-                                    "SHELL"                 => $details['"SHELL'],
-                                    "BACKUPS"               => $details['BACKUPS'],
-                                    "WEB_TPL"               => $details['WEB_TPL'],
-                                    "MAX_CHILDS"            => $details['MAX_CHILDS'],
-                                    "SUSPENDED"             => $details['SUSPENDED'],
-                                    "OWNER"                 => $details['OWNER'],
-                                    "ROLE"                  => $details['ROLE'],
-                                    "IP_OWNED"              => $details['IP_OWNED'],
-                                    "U_CHILDS"              => $details['U_CHILDS'],
-                                    "U_DISK"                => $details['U_DISK'],//$u_disk,
-                                    "U_BANDWIDTH"           => $details['U_BANDWIDTH'],//$u_bandwidth, 
-                                    "U_WEB_DOMAINS"         => $details['U_WEB_DOMAINS'],
-                                    "U_WEB_SSL"             => $details['U_WEB_SSL'],
-                                    "U_DNS_DOMAINS"         => $details['U_DNS_DOMAINS'],
-                                    "U_DATABASES"           => $details['U_DATABASES'],
-                                    "U_MAIL_DOMAINS"        => $details['U_MAIL_DOMAINS'],
-                                    "CONTACT"               => $details['CONTACT'],
-                                    "DATE"                  => $details['DATE'],
+                                "PACKAGE"               => $details['PACKAGE'],
+                                "WEB_DOMAINS"           => $details['WEB_DOMAINS'],
+                                "WEB_SSL"               => $details['WEB_SSL'],
+                                "WEB_ALIASES"           => $details['WEB_ALIASES'],
+                                "DATABASES"             => $details['DATABASES'],
+                                "MAIL_DOMAINS"          => $details['MAIL_DOMAINS'],
+                                "MAIL_BOXES"            => $details['MAIL_BOXES'],
+                                "MAIL_FORWARDERS"       => $details['MAIL_FORWARDERS'],
+                                "DNS_DOMAINS"           => $details['DNS_DOMAINS'],
+                                "DISK_QUOTA"            => $details['DISK_QUOTA'],//$disk_quota,
+                                "BANDWIDTH"             => $details['BANDWIDTH'],//$bandwidth,                                   
+                                "NS_LIST"               => array($details['NS1'], $details['NS2']),      // TODO skid
+                                "SHELL"                 => $details['"SHELL'],
+                                "BACKUPS"               => $details['BACKUPS'],
+                                "WEB_TPL"               => $details['WEB_TPL'],
+                                "MAX_CHILDS"            => $details['MAX_CHILDS'],
+                                "SUSPENDED"             => $details['SUSPENDED'],
+                                "OWNER"                 => $details['OWNER'],
+                                "ROLE"                  => $details['ROLE'],
+                                "IP_OWNED"              => $details['IP_OWNED'],
+                                "U_CHILDS"              => $details['U_CHILDS'],
+                                "U_DISK"                => $details['U_DISK'],//$u_disk,
+                                "U_BANDWIDTH"           => $details['U_BANDWIDTH'],//$u_bandwidth, 
+                                "U_WEB_DOMAINS"         => $details['U_WEB_DOMAINS'],
+                                "U_WEB_SSL"             => $details['U_WEB_SSL'],
+                                "U_DNS_DOMAINS"         => $details['U_DNS_DOMAINS'],
+                                "U_DATABASES"           => $details['U_DATABASES'],
+                                "U_MAIL_DOMAINS"        => $details['U_MAIL_DOMAINS'],
+                                "CONTACT"               => $details['CONTACT'],
+                                "DATE"                  => $details['DATE'],
 
-                                    "U_MAIL_BOXES"          => rand(1, 10),  // TODO: skid
-                                    "U_MAIL_FORWARDERS"     => rand(1, 10),  // TODO: skid
-                                    "REPORTS_ENABLED"       => 'enabled'     // TODO: skid
+                                "U_MAIL_BOXES"          => rand(1, 10),  // TODO: skid
+                                "U_MAIL_FORWARDERS"     => rand(1, 10),  // TODO: skid
+                                "REPORTS_ENABLED"       => 'enabled'     // TODO: skid
                             );
             }
 
@@ -80,26 +80,19 @@ class USER extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function addExecute($_spell = FALSE) 
+    public function addExecute(Request $request) 
     {
-        $r = new Request();
-        if ($_spell) {
-            $_s = $_spell;
-        }
-        else {
-            $_s = $r->getSpell();
-        }
-
-        $_user = 'vesta';        
+        $spell  = $request->getParameter('spell');
+        $user   = $this->getLoggedUser(); 
         $params = array(
-                    'USER'     => $_s['USER'],
-                    'PASSWORD' => $_s['PASSWORD'],
-                    'EMAIL'    => $_s['EMAIL'],
-                    'ROLE'     => $_s['ROLE'],
-                    'OWNER'    => $_user,
-                    'PACKAGE'  => $_s['PACKAGE'],
-                    'NS1'      => $_s['NS1'],
-                    'NS2'      => $_s['NS2']
+                    'USER'     => $spell['USER'],
+                    'PASSWORD' => $spell['PASSWORD'],
+                    'EMAIL'    => $spell['EMAIL'],
+                    'ROLE'     => $spell['ROLE'],
+                    'OWNER'    => $user['uid'],
+                    'PACKAGE'  => $spell['PACKAGE'],
+                    'NS1'      => $spell['NS1'],
+                    'NS2'      => $spell['NS2']
                   );
     
         $result = Vesta::execute(Vesta::V_ADD_SYS_USER, $params);

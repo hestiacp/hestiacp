@@ -24,6 +24,11 @@ class AjaxHandler {
     {
         return null == self::$instance ? self::$instance = new self() : self::$instance;
     }
+    
+    public function getLoggedUser()
+    {
+        return VestaSession::getInstance()->getUser();
+    }
 
     /**
      * Called functions should reply in the following way

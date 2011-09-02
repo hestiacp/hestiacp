@@ -285,11 +285,11 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">username:</label>\
-							<input type="text" class="text-field" value="~!:LOGIN_NAME~!" name="LOGIN_NAME">\
+							<input type="text" class="text-field rule-abc rule-required" value="~!:LOGIN_NAME~!" name="LOGIN_NAME">\
 						</div>\
 						<div class="form-row pwd-box cc">\
 							<label for="#" class="field-label">password:</label>\
-							<input type="text" class="text-field password" name="PASSWORD" value="~!:PASSWORD~!">\
+							<input type="text" class="text-field password rule-required" name="PASSWORD" value="~!:PASSWORD~!">\
 							<span class="generate-pwd do_action_generate_pass">Generate</span>\
 						</div>\
 						<div class="form-row cc">\
@@ -298,7 +298,7 @@ App.Templates.html = {
 								~!:PACKAGE_OPTIONS~!\
 							</select>\
 						</div>\
-                        <div class="form-row cc">\
+                        <div class="form-row cc hidden">\
 							<label for="#" class="field-label">shell:</label>\
 							<select class="not-styled" name="SHELL">\
 								~!:SHELL_OPTIONS~!\
@@ -312,13 +312,21 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">contact email:</label>\
-							<input type="text" name="CONTACT" class="text-field" value="~!:CONTACT~!">\
+							<input type="text" name="CONTACT" class="text-field rule-email rule-required" value="~!:CONTACT~!">\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">reports:</label>\
 							<input type="checkbox" name="REPORTS_ENABLED" class="not-styled" value="~!:REPORTS_ENABLED~!">\
 						</div>\
+                        <div class="form-row cc">\
+							<label for="#" class="field-label">Firstname:</label>\
+							<input type="text" name="FNAME" class="not-styled rule-abc  rule-required" value="~!:FNAME~!">\
+						</div>\
 						<div class="form-row cc">\
+							<label for="#" class="field-label">Lastname:</label>\
+							<input type="text" name="LNAME" class="not-styled rule-abc rule-required" value="~!:LNAME~!">\
+						</div>\
+                        <div class="form-row cc hidden">\
 							<label for="#" class="field-label">ns1:</label>\
 							<input type="text" name="NS" class="text-field" value="~!:NS~!">\
 						</div>\
@@ -357,6 +365,7 @@ App.Templates.html = {
 									<div class="username-box">\
 										<span class="user">\
 											<span class="nickname do_action_edit">~!:LOGIN_NAME~!</span>\
+                                            <span class="role">~!:FNAME~! ~!:LNAME~!</span>\
 											<span class="role">(~!:ROLE~!)</span>\
 										</span>\
 										<span class="prop-box template-box">\

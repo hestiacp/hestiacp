@@ -72,10 +72,11 @@ App.Model.add = function(values, source_json)
             App.Helpers.Warn('Changes were not applied');
         }
         else {
-            var build_method = App.Env.getWorldName() + '_entry';
+            /*var build_method = App.Env.getWorldName() + '_entry';
             var tpl = App.HTML.Build[build_method](values, 'new');
-            App.Ref.CONTENT..replaceWith(tpl);
+            App.Ref.CONTENT..replaceWith(tpl);*/
             // todo: reply.data;
+            App.Pages.prepareHTML();
         }
     });
 }

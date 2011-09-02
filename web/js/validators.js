@@ -13,6 +13,39 @@ App.Validate.Is = {
     }
 };
 
+App.Validate.getFieldName = function(elm)
+{
+    fb.log(elm);
+    fb.warn($(elm).prev('label').text());
+    return ['<strong>', $(elm).prev('label').text(), '</strong>'].join('');
+}
+
+App.Validate.Rule = {
+    'required' : function(elm) {
+        if ($(elm).val().trim() == '') {
+            return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is required'};
+        }
+        return {VALID: true};
+    },
+    'no-spaces': function(elm) {
+        if ($(elm).val().search(/\s/) != -1) {
+            return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' cannot contain spaces'};
+        }
+        return {VALID: true};
+    },
+    'abc':      function(elm) {
+        if ($(elm).val().search(/[^a-zA-Z]+/) != -1) {
+            return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' must contain only letters'};
+        }
+        return {VALID: true};
+    },
+    'email':      function(elm) {
+        if ($(elm).val().search(/^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/) == -1) {
+            return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' not a valid email'};
+        }
+        return {VALID: true};
+    }
+}
 
 
 App.Validate.form = function(world, elm)
@@ -25,11 +58,23 @@ App.Validate.form = function(world, elm)
             //return; // pass            
         }
         else {
-        
-            if ($(field).val().trim() == '' || $(field).val().trim() == '-') {
+            var rules = App.Validate.getRules(field);
+            $(rules).each(function(i, rule)
+            {
+                fb.log('Validate with %o %o', rule, field);
+                if (App.Validate.Rule[rule]) {
+                    var result = App.Validate.Rule[rule](field);
+                    fb.log(result);
+                    if (result.VALID == false) {
+                        App.Env.FormError.push(result.ERROR); //$(field).attr('name') + ' is required');
+                        form_valid = false;
+                    }
+                }
+            })
+            /*if ($(field).val().trim() == '' || $(field).val().trim() == '-') {
                 App.Env.FormError.push($(field).attr('name') + ' is required');
                 form_valid = false;
-            }
+            }*/
         }
     });
     return form_valid;
@@ -47,6 +92,21 @@ App.Validate.displayFormErrors = function(world, elm)
     var ref = $('.form-error', elm);
     ref.removeClass('hidden');
     ref.html(errors_tpl);
+}
+
+App.Validate.getRules = function(elm)
+{
+    var rules_string = $(elm).attr('class');
+    var rules = [];
+    $(rules_string.split(/\s/)).each(function(i, str)
+    {        
+        var rule = str.split('rule-');
+        if (rule.length > 1) {
+            rules[rules.length++] = rule[1];
+        }
+    });
+    
+    return rules;
 }
 
 

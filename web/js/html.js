@@ -220,7 +220,7 @@ App.HTML.Build.user_form = function(options, id)
         tpl.set(':save_button', 'SAVE'); 
     }
     
-    options = !App.Helpers.isEmpty(options) ? options : {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','NS':''};
+    options = !App.Helpers.isEmpty(options) ? options : {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','LNAME':'', 'FNAME':''};
     
     tpl = App.HTML.setTplKeys(tpl, options, true);        
     tpl = App.HTML.Build.user_selects(tpl, options);

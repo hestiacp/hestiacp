@@ -47,16 +47,16 @@ class MAIN extends AjaxHandler
         require_once V_ROOT_DIR . 'api/USER.class.php';
         // IP
         $ip_obj          = new IP();
-        $user_ips        = json_decode($ip_obj->getListUserIpsExecute(), TRUE);
+        $user_ips        = json_decode($ip_obj->getListUserIpsExecute($request), TRUE);
         foreach ($user_ips['data'] as $ip) {
             $ips[$ip['IP_ADDRESS']] = $ip['IP_ADDRESS'];
         }
         // USER
         $user_obj        = new USER();
-        $users           = json_decode($user_obj->getListExecute(), TRUE);
-        $user_names      = array_keys($users['data']['data']);
+        $users           = json_decode($user_obj->getListExecute($request), TRUE);
+        $user_names      = array_keys($users['data']);
         $db_types        = array('mysql' => 'mysql', 'postgress' => 'postgress');
-        $interfaces_arr  = json_decode($ip_obj->getSysInterfacesExecute(), TRUE);
+        $interfaces_arr  = json_decode($ip_obj->getSysInterfacesExecute($request), TRUE);
         $interfaces      = $interfaces_arr['data'];
 
         $data_web_domain = array('ips' => $ips);
@@ -133,8 +133,12 @@ class MAIN extends AjaxHandler
      */
     public function getIpParams($data = array())
     {
+	$users = array();
+	foreach ((array)$data['user_names'] as $user) {
+	    $users[$user] = $user;
+	}
         return array(
-                'SYS_USERS' => $data['user_names'],
+                'SYS_USERS' => $users,
                 'STATUSES' => array(
                                 'shared' => 'shared',
                                 'exclusive' => 'exclusive'
@@ -163,7 +167,7 @@ class MAIN extends AjaxHandler
     public function getDnsParams($data = array())
     {
         return  array(
-                'IP' => $data['ips'],
+                'IP' => @$data['ips'],
                 'TPL' => array('default' => 'default'),
                 'EXP' => array(),
                 'SOA' => array(),

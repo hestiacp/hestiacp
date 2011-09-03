@@ -32,7 +32,7 @@ App.Templates.html = {
         select_option: ['<option ~!:SELECTED~! value="~!:VALUE~!">~!:TEXT~!</option>'],
         error_elm: ['<div class="error-box">~!:ERROR~!</div>'],
         SUSPENDED_TPL_NOT_SUSPENDED : ['<span class="ip-status-info ip-enabled-status do_action_suspend"><span class="ip-status-text do_action_suspend">enabled</span></span>'],
-        SUSPENDED_TPL_SUSPENDED : ['<span class="ip-status-info ip-enabled-status do_action_unsuspend"><span class="ip-status-text do_action_unsuspend">disabled</span></span>']
+        SUSPENDED_TPL_SUSPENDED : ['<span class="ip-status-info ip-suspended-status do_action_unsuspend"><span class="ip-status-text do_action_unsuspend">suspended</span></span>']        
     },
     popup: {
         error: ['<div class="error"><center><h1 style="color: red;">Important: An Error Has Occured.</h1><hr></center>&nbsp;&nbsp;&nbsp;&nbsp;Something went wrong and some of your actions can be not saved in system. Mostly, it happens when you have network connection errors.<br>,&nbsp;&nbsp;&nbsp;&nbsp;However, please notify us about the situation. It would be helpfull if you will write us approximate time the error occured and last actions you were performing. You send your petition on <a href="mail_to">this email: BLABLA</a>,<br><br><center><span style="color: rgb(92, 92, 92);">Sorry for inconvinience. (We recommend you to reload the page)</span></center></div>']
@@ -47,17 +47,17 @@ App.Templates.html = {
                 <input type="hidden" name="source" class="source" value=~!:source~!>\
                     <input type="hidden" name="target" class="target" value=\'\'>\
                     <div class="entry-header">~!:title~!</div>\
-                    <div class="errors">\
+                    <div class="form-error hidden">\
                     </div>\
                     <div class="form-row cc">\
                             <input type="hidden" value="~!:DATE~!" name="DATE">\
                             <label for="#" class="field-label">domain:</label>\
-                            <input type="text" name="DNS_DOMAIN" value="~!:DNS_DOMAIN~!" class="text-field DNS_DOMAIN">\
+                            <input type="text" name="DNS_DOMAIN" value="~!:DNS_DOMAIN~!" class="text-field rule-required rule-domain">\
                     </div>\
                     <div class="form-row cc">\
                             <label for="#" class="field-label">ip address:</label>\
                             <div class="autocomplete-box">\
-                                    <input type="text" name="IP" value="~!:IP~!" class="text-field IP">\
+                                    <input type="text" name="IP" value="~!:IP~!" class="text-field rule-required rule-ip">\
                                     <i class="arrow">&nbsp;</i>\
                             </div>\
                     </div>\
@@ -71,11 +71,11 @@ App.Templates.html = {
                     </div>\
                     <div class="form-row cc">\
                             <label for="#" class="field-label">ttl:</label>\
-                            <input type="text" value="~!:TTL~!" name="TTL" class="text-field ttl-field">\
+                            <input type="text" value="~!:TTL~!" name="TTL" class="text-field ttl-field rule-required rule-numeric">\
                     </div>\
                     <div class="form-row cc">\
                             <label for="#" class="field-label">soa:</label>\
-                            <input type="text" value="~!:SOA~!" name="SOA" class="text-field">\
+                            <input type="text" value="~!:SOA~!" name="SOA" class="text-field rule-required rule-numeric">\
                     </div>\
                     <div class="form-row buttons-row cc">\
                             <input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form" name="save">\
@@ -171,11 +171,11 @@ App.Templates.html = {
                 <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                 <input type="hidden" name="target" class="target" value=\'~!:target~!\'>\
                 <div class="entry-header">~!:title~!</div>\
-                <div class="form-error">\
+                <div class="form-error hidden">\
 						</div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">ip address:</label>\
-                        <input type="text" value="~!:IP_ADDRESS~!" name="IP_ADDRESS" class="text-field">\
+                        <input type="text" value="~!:IP_ADDRESS~!" name="IP_ADDRESS" class="text-field rule-required rule-ip">\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">owner:</label>\
@@ -192,7 +192,7 @@ App.Templates.html = {
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">name:</label>\
-                        <input type="text" name="NAME" value="~!:NAME~!" class="text-field">\
+                        <input type="text" name="NAME" value="~!:NAME~!" class="text-field rule-abc">\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">interface:</label>\
@@ -276,20 +276,32 @@ App.Templates.html = {
         SUSPENDED_TPL_DISABLED : ['<span class="ip-status-info ip-suspended-status do_action_delete_ip"><span class="ip-status-text">suspended</span></span>']
     },
     user: {
+        NS_MINIMIZED: ['~!:NS_MINI~!\
+                        <span class="group-switcher">\
+                            <span class="group-values-count do_action_view_full_ns_list">~!:MORE_NUMBER~! more</span>\
+                        </span><span class="hidden ns-full-list"><span class="group-values group-values__bullet">~!:NS_FULL~!</span></span>'],
+        /*NS_RECORD_POPUP_WRAP: ['<ul class="d-popup-items">~!:CONTENT~!</ul>'],
+        NS_RECORD_POPUP: ['<li class="item">~!:NAME~!</li>'],*/
+        NS_RECORD: ['<span class="prop-value">~!:NAME~!</span>'],
+        NS_INPUT: ['<div class="form-row ns-entry cc"><label for="#" class="field-label">~!:NS_LABEL~!:</label>\
+                        <input type="text" value="~!:NAME~!" name="" class="text-field ns-input rule-required rule-ns">\
+                        <button class="do_action_delete_ns">Delete</button>\
+                    </div>'],
+        PLUS_ONE_NS: ['<button class="additional-ns-add do_action_add_form_ns">Add additional NS</button>'],
         ENTRIES_WRAPPER: ['<div class="users-list items-list">~!:content~!</div>'],
-        FORM:  ['<div id="~!:id~!" class="b-new-entry b-new-entry_user">\
+        FORM:  ['<div id="~!:id~!" class="b-new-entry b-new-entry_user form">\
                         <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
 						<div class="entry-header">~!:title~!</div>\
-						<div class="form-error">\
+						<div class="form-error hidden">\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">username:</label>\
-							<input type="text" class="text-field" value="~!:LOGIN_NAME~!" name="LOGIN_NAME">\
+							<input type="text" class="text-field rule-abc rule-required" value="~!:LOGIN_NAME~!" name="LOGIN_NAME">\
 						</div>\
 						<div class="form-row pwd-box cc">\
 							<label for="#" class="field-label">password:</label>\
-							<input type="text" class="text-field password" name="PASSWORD" value="~!:PASSWORD~!">\
+							<input type="text" class="text-field password rule-required" name="PASSWORD" value="~!:PASSWORD~!">\
 							<span class="generate-pwd do_action_generate_pass">Generate</span>\
 						</div>\
 						<div class="form-row cc">\
@@ -298,7 +310,7 @@ App.Templates.html = {
 								~!:PACKAGE_OPTIONS~!\
 							</select>\
 						</div>\
-                        <div class="form-row cc">\
+                        <div class="form-row cc hidden">\
 							<label for="#" class="field-label">shell:</label>\
 							<select class="not-styled" name="SHELL">\
 								~!:SHELL_OPTIONS~!\
@@ -312,20 +324,29 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">contact email:</label>\
-							<input type="text" name="CONTACT" class="text-field" value="~!:CONTACT~!">\
+							<input type="text" name="CONTACT" class="text-field rule-email rule-required" value="~!:CONTACT~!">\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">reports:</label>\
 							<input type="checkbox" name="REPORTS_ENABLED" class="not-styled" value="~!:REPORTS_ENABLED~!">\
 						</div>\
-						<div class="form-row cc">\
-							<label for="#" class="field-label">ns1:</label>\
-							<input type="text" name="NS" class="text-field" value="~!:NS~!">\
+                        <div class="form-row cc">\
+							<label for="#" class="field-label">Firstname:</label>\
+							<input type="text" name="FNAME" class="not-styled text-field rule-abc  rule-required" value="~!:FNAME~!">\
 						</div>\
-						<!-- div class="form-row cc">\
-							<label for="#" class="field-label">ns2:</label>\
-							<input type="text" value="custom-edge-cdn2.digital-photography-school.com" class="text-field">\
-						</div -->\
+						<div class="form-row cc">\
+							<label for="#" class="field-label">Lastname:</label>\
+							<input type="text" name="LNAME" class="not-styled text-field rule-abc rule-required" value="~!:LNAME~!">\
+						</div>\
+                        <div class="form-row ns-entry cc">\
+							<label for="#" class="field-label">NS #1:</label>\
+							<input type="text" value="~!:NS1~!" name="NS1" class="text-field rule-required rule-ns">\
+						</div>\
+                        <div class="form-row ns-entry cc">\
+							<label for="#" class="field-label">NS #2:</label>\
+							<input type="text" value="~!:NS2~!" name="NS2" class="text-field rule-required rule-ns">\
+						</div>\
+                        ~!:NS~!\
                         <div class="form-row buttons-row cc">\
 							<input type="submit" value="~!:save_button~!" name="save" class="add-entry-btn do_action_save_form">\
 							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
@@ -357,6 +378,7 @@ App.Templates.html = {
 									<div class="username-box">\
 										<span class="user">\
 											<span class="nickname do_action_edit">~!:LOGIN_NAME~!</span>\
+                                            <span class="role"></span>\
 											<span class="role">(~!:ROLE~!)</span>\
 										</span>\
 										<span class="prop-box template-box">\
@@ -463,7 +485,8 @@ App.Templates.html = {
 								</span>\
 								<span class="prop-box prop-box_group-values cc ns-list-box">\
 									<span class="prop-title">ns list:</span>\
-									<span class="group-values group-values__bullet">~!:NS~!</span>\
+									<span class="group-values group-values__bullet">\
+									~!:NS~!</span>\
 								</span>\
 							</div>\
 						</div><!-- // .row-details -->\
@@ -767,48 +790,48 @@ App.Templates.html = {
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="entry-header">~!:title~!</div>\
-						<div class="form-error">\
+						<div class="form-error hidden">\
 							<div class="error-box">\
 							</div>\
 						</div>\
 						<div class="form-row form-row-line run-at-box cc">\
 							<span class="row-header">run at:</span>\
 							<div class="field-box cron-minute-box">\
-								<label for="#" class="field-label">minute:<br>(0&mdash;59)</label>\
+								<label for="#" class="field-label ">minute:<br>(0&mdash;59)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:MIN~!" name="MIN" class="text-field">\
+									<input type="text" value="~!:MIN~!" name="MIN" class="text-field rule-required rule-minute">\
 								</div>\
 							</div>\
 							<div class="field-box cron-hour-box">\
 								<label for="#" class="field-label">hour:<br>(0&mdash;23)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:HOUR~!" name="HOUR" class="text-field">\
+									<input type="text" value="~!:HOUR~!" name="HOUR" class="text-field rule-required rule-hour">\
 								</div>\
 							</div>\
 							<div class="field-box cron-day-box">\
 								<label for="#" class="field-label">day of Month:<br>(1&mdash;31)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:DAY~!" name="DAY" class="text-field">\
+									<input type="text" value="~!:DAY~!" name="DAY" class="text-field rule-required rule-day">\
 								</div>\
 							</div>\
 							<div class="field-box cron-month-box">\
 								<label for="#" class="field-label">Month:<br>(1&mdash;12)(Jan&mdash;Dec)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:MONTH~!" name="MONTH" class="text-field">\
+									<input type="text" value="~!:MONTH~!" name="MONTH" class="text-field rule-required rule-month">\
 								</div>\
 							</div>\
 							<div class="field-box cron-week-box">\
 								<label for="#" class="field-label">day of Week:<br>(1&mdash;7)(Sun&mdash;Sat)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:WDAY~!" name="WDAY" class="text-field">\
+									<input type="text" value="~!:WDAY~!" name="WDAY" class="text-field rule-required rule-wday">\
 								</div>\
 							</div>\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">command:</label>\
-							<textarea class="textarea" name="CMD">~!:CMD~!</textarea>\
+							<textarea class="textarea rule-required" name="CMD">~!:CMD~!</textarea>\
 						</div>\
-						<div class="form-row cc">\
+						<div class="form-row cc hidden">\
 							<label for="#" class="field-label">report to: <span class="remark">(devide by comma ",")</span></label>\
 							<textarea class="textarea" name="REPORT_TO"></textarea>\
 						</div>\
@@ -858,7 +881,7 @@ App.Templates.html = {
 							<div class="cron-command-box">\
 								<strong class="cron-command-line do_action_edit">~!:CMD~!</strong>\
 							</div>\
-							<div class="cron-reported-to">\
+							<div class="cron-reported-to hidden">\
 								<span class="prop-box cron-report-box">\
 									<span class="prop-title">reported to:</span>\
 									<span class="prop-value">naumov.socolov@gmail.com,</span>\

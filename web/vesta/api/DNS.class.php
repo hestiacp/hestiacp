@@ -22,9 +22,9 @@ class DNS extends AjaxHandler
      */
     public function getListExecute($request) 
     {
-        $_user = 'vesta';
+	$user = $this->getLoggedUser();
         $reply = array();
-        $result = Vesta::execute(Vesta::V_LIST_DNS_DOMAINS, array($_user, Config::get('response_type')));
+        $result = Vesta::execute(Vesta::V_LIST_DNS_DOMAINS, array($user['uid'], Config::get('response_type')));
         foreach ($result['data'] as $dns_domain => $details) {
             $reply[] = array(
                          'DNS_DOMAIN'   => $dns_domain,
@@ -53,12 +53,11 @@ class DNS extends AjaxHandler
      */
     public function getListRecordsExecute($request) 
     {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
+        $_s     = $request->getParameter('spell');
+        $user   = $this->getLoggedUser();
         $reply  = array();
        
-        $result = Vesta::execute(Vesta::V_LIST_DNS_DOMAIN_RECORDS, array($_user, $_s['DNS_DOMAIN'], Config::get('response_type')));
+        $result = Vesta::execute(Vesta::V_LIST_DNS_DOMAIN_RECORDS, array($user['uid'], $_s['DNS_DOMAIN'], Config::get('response_type')));
         foreach ($result['data'] as $record_id => $details) {
             $reply[$record_id] = array(
                                      'RECORD_ID' => $record_id,
@@ -78,7 +77,7 @@ class DNS extends AjaxHandler
     }
 
     /**
-     * Add DB entry
+     * Add DNS entry
      * 
      * v_add_dns_domain user domain ip [template] [exp] [soa] [ttl]
      * http://95.163.16.160:8083/dispatch.php?jedi_method=DNS.add&USER=vesta&DOMAIN=dev.vestacp.com&IP_ADDRESS=95.163.16.160&TEMPLATE=default&EXP=01-01-12&SOA=ns1.vestacp.com&TTL=3600
@@ -86,21 +85,14 @@ class DNS extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function addExecute($_spell = false) 
+    public function addExecute($request) 
     {
-        $r = new Request();
-        if ($_spell) {
-            $_s = $_spell;
-        }
-        else {
-            $_s = $r->getSpell();
-        }
-
-        $_user = 'vesta';
-	    $params = array(
-                    'USER' => $_user,  /// OWNER ???
+	$user = $this->getLoggedUser();
+	$_s   = $request->getParameter('spell');
+        $params = array(
+	            'USER' 	 => $user['uid'],  /// OWNER ???
                     'DNS_DOMAIN' => $_s['DNS_DOMAIN'],
-                    'IP' => $_s['IP']
+                    'IP' 	 => $_s['IP']
                   );
         // TODO: rewrite this block. Get away from if/if/if/if
         if ($_s['TPL']) {
@@ -135,12 +127,11 @@ class DNS extends AjaxHandler
      */
      public function addRecordExecute($request) 
      {
-        $r = new Request();
-        $_s = $r->getSpell();
-        $_user = 'vesta';
-
+	$user = $this->getLoggedUser();
+	$_s = $request->getParameter('spell');	
+	
         $params = array(
-                    'USER' => $_s['USER'],  /// OWNER ???
+                    'USER' => $user['uid'],  /// OWNER ???
                     'DOMAIN' => $_s['DOMAIN'],
                     'RECORD' => $_s['RECORD'],
                     'RECORD_TYPE' => $_s['TYPE'],
@@ -166,19 +157,12 @@ class DNS extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function delExecute($_spell = false) 
+    public function deleteExecute($request) 
     {
-        $r = new Request();
-        if ($_spell) {
-            $_s = $_spell;
-        }
-        else {
-            $_s = $r->getSpell();
-        }
-      
-        $_user = 'vesta';
+	$user = $this->getLoggedUser();
+	$_s = $request->getParameter('spell');        
 	    $params = array(
-                    'USER' => $_user,  /// OWNER ???
+                    'USER' => $user['uid'],  /// OWNER ???
                     'DOMAIN' => $_s['DNS_DOMAIN'],
                   );
 	
@@ -202,12 +186,11 @@ class DNS extends AjaxHandler
      */
     public function delRecordExecute($request) 
     {
-        $r = new Request();
-        $_s = $r->getSpell();
-        $_user = 'vesta';
+        $_s = $request->getParameter('spell');
+        $user = $this->getLoggedUser();
 	
         $params = array(
-                    'USER'      => $_user,  // TODO: OWNER ???
+                    'USER'      => $user['uid'],  // TODO: OWNER ???
                     'DOMAIN'    => $_s['DOMAIN'],
                     'RECORD_ID' => $_s['RECORD_ID']
                   );
@@ -232,19 +215,17 @@ class DNS extends AjaxHandler
      * @return string - Ajax Reply
      */
     public function changeExecute($request)
-    {
-        $r           = new Request();
-        $_s          = $r->getSpell();
-        $_old        = $_s['old'];
-        $_new        = $_s['new'];
-        $_user       = 'vesta';
-        $_DNS_DOMAIN = $_new['DNS_DOMAIN'];
+    {	
+        $_old        = $request->getParameter('old');
+        $_new        = $request->getParameter('new');
+        $user       = $this->getLoggedUser();
+        $_DNS_DOMAIN = $_old['DNS_DOMAIN'];
 
 	 
         if ($_old['IP'] != $_new['IP']) {
             $result = array();
             
-            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_IP, array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_new['IP']));
+            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_IP, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_new['IP']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['IP_ADDRESS'] = array($result['error_code'] => $result['error_message']);
@@ -253,7 +234,7 @@ class DNS extends AjaxHandler
 	
         if ($_old['TPL'] != $_new['TPL']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TPL, array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_new['TPL']));
+            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TPL, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_new['TPL']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['TPL'] = array($result['error_code'] => $result['error_message']);
@@ -262,7 +243,7 @@ class DNS extends AjaxHandler
 	
         if ($_old['TTL'] != $_new['TTL']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TTL, array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_new['TTL']));
+            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TTL, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_new['TTL']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['TTL'] = array($result['error_code'] => $result['error_message']);
@@ -271,7 +252,7 @@ class DNS extends AjaxHandler
 
         if ($_old['EXP'] != $_new['EXP']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_EXP, array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_new['EXP']));
+            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_EXP, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_new['EXP']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['EXP'] = array($result['error_code'] => $result['error_message']);
@@ -280,7 +261,7 @@ class DNS extends AjaxHandler
 	
         if ($_old['SOA'] != $_new['SOA']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_SOA, array('USER' => $_user, 'DNS_DOMAIN' => $_new['DNS_DOMAIN'], 'IP' => $_new['SOA']));
+            $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_SOA, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_new['DNS_DOMAIN'], 'IP' => $_new['SOA']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['SOA'] = array($result['error_code'] => $result['error_message']);
@@ -288,11 +269,11 @@ class DNS extends AjaxHandler
         }
 
 	    if (!$this->status) {
-            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_IP,  array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['IP']));
-            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TPL, array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['TPL']));
-            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TTL, array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['TTL']));
-            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_EXP, array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['EXP']));
-            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_SOA, array('USER' => $_user, 'DNS_DOMAIN' => $_new['DNS_DOMAIN'], 'IP' => $_old['SOA']));
+            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_IP,  array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['IP']));
+            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TPL, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['TPL']));
+            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TTL, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['TTL']));
+            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_EXP, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['EXP']));
+            Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_SOA, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_new['DNS_DOMAIN'], 'IP' => $_old['SOA']));
         }
 
         return $this->reply($this->status, '');
@@ -306,11 +287,9 @@ class DNS extends AjaxHandler
      */ 
     public function changeRecordsExecute($request)
     {
-        $r           = new Request();
-        $_s          = $r->getSpell();
-        $_old        = $_s['old'];
-        $_new        = $_s['new'];
-        $_user       = 'vesta';
+        $_old        = $request->getParameter('old');
+        $_new        = $request->getParameter('new');
+        $user       = $this->getLoggedUser();
         $_DNS_DOMAIN = $_s['DNS_DOMAIN'];
 
         foreach ($_new as $record_id => $record_data) {
@@ -318,7 +297,7 @@ class DNS extends AjaxHandler
             if (is_array($_old[$record_id])) {
                 $result = Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_RECORD, 
                                          array(
-                                            'USER'       => $_user, 
+                                            'USER'       => $user['uid'], 
                                             'DNS_DOMAIN' => $_DNS_DOMAIN, 
                                             'ID'         => $record_id, 
                                             'RECORD'     => $record_data['RECORD'], 
@@ -331,7 +310,7 @@ class DNS extends AjaxHandler
                 }
             }
             else {
-                $result = Vesta::execute(Vesta::V_ADD_DNS_DOMAIN_RECORD, array('USER' => $_user, 'DNS_DOMAIN' => $_DNS_DOMAIN, 'RECORD' => $record_data['RECORD'], 'TYPE' => $record_data['RECORD_TYPE'], 'VALUE' => $record_data['RECORD_VALUE'], 'ID' => $record_id));
+                $result = Vesta::execute(Vesta::V_ADD_DNS_DOMAIN_RECORD, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'RECORD' => $record_data['RECORD'], 'TYPE' => $record_data['RECORD_TYPE'], 'VALUE' => $record_data['RECORD_VALUE'], 'ID' => $record_id));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors[$record_id] = array($result['error_code'] => $result['error_message']);

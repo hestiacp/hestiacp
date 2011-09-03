@@ -82,7 +82,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
 fi
 
 # Checking ip
-v_del_sys_user_ips "$user"
+$V_BIN/v_del_sys_user_ips "$user"
 rv="$?"
 if [ "$rv" -ne '0' ]; then
     exit $rv

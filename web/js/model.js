@@ -77,6 +77,7 @@ App.Model.add = function(values, source_json)
             App.Ref.CONTENT..replaceWith(tpl);*/
             // todo: reply.data;
             App.Pages.prepareHTML();
+            App.Helpers.updateScreen();
         }
     });
 }
@@ -114,8 +115,11 @@ App.Model.update = function(values, source_json, elm)
             App.Helpers.Warn('Changes were not applied');            
         }
         else {
-            var tpl = App.HTML.Build[build_method](reply.data);
+            /*var tpl = App.HTML.Build[build_method](reply.data);
             $(elm).replaceWith(tpl);
+            App.Helpers.updateScreen();*/
+            // todo: reply.data;
+            App.Pages.prepareHTML();
             App.Helpers.updateScreen();
         }
         // TODO: !

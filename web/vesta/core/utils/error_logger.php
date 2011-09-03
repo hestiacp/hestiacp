@@ -10,7 +10,7 @@ function error_dumper($errno, $errstr, $errfile, $errline)
     
     switch ($errno) {
     case E_USER_ERROR:
-        $o = "ERROR: [$errno] $errstr\n";
+        $o = date('Y-m-d H:i:s')."ERROR: $errstr [$errfile $errline]\n";
         $o.= "  Fatal error on line $errline in file $errfile";
         $o.= ", PHP " . PHP_VERSION . " (" . PHP_OS . ")\n";
         $o.= "Aborting...\n";
@@ -20,19 +20,19 @@ function error_dumper($errno, $errstr, $errfile, $errline)
         break;
 
     case E_USER_WARNING:
-        $o = "WARNING: [$errno] $errstr\n";
+        $o = date('Y-m-d H:i:s')."WARNING: $errstr [$errfile $errline]\n";
         fwrite($log, $o);
         fclose($log);
     break;
 
     case E_USER_NOTICE:
-        $o =  "NOTICE: [$errno] $errstr\n";
+        $o =  date('Y-m-d H:i:s')."NOTICE: $errstr [$errfile $errline]\n";
         fwrite($log, $o);
         fclose($log);
     break;
 
     default:
-        $o = "Unknown error type: [$errno] $errstr\n";
+        $o = date('Y-m-d H:i:s')."Unknown error type: $errstr [$errfile $errline]\n";
         fwrite($log, $o);
         fclose($log);
     break;

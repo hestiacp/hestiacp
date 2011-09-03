@@ -103,8 +103,7 @@ App.Actions.save_form = function(evt) {
     else { // OLD ITEM, UPDATING IT
         var source = $(elm).find('.source').val();
         var values = App.Helpers.getFormValues(elm);
-        if(App.Validate.form(values, $('#'+elm_id))) {
-            App.Model.add(values, source);         
+        if(App.Validate.form(values, $('#'+elm_id))) {            
             App.Model.update(values, source, elm);         
         }       
     }    
@@ -146,12 +145,49 @@ App.Actions.cancel_form = function(evt, params) {
 
 App.Actions.suspend = function(evt)
 {
-    alert('Suspend?');
+    var confirmed = confirm('Suspend?');
+    if (!confirmed) {
+        return ;
+    }
+    var elm = $(evt.target);    
+    var row = elm.parents('.row');
+    
+    var options = row.find('.source').val();    
+    App.Ajax.request(App.Env.world+'.suspend', {spell: options}, function(reply) {
+        if (reply.result) {
+            //var tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
+            //$(elm).replaceWith(tpl.finalize());
+            App.Pages.prepareHTML();
+            App.Helpers.updateScreen();
+        }
+        else {
+            return App.Helpers.alert('Failed to suspend');
+        }
+    });    
 }
 
 App.Actions.unsuspend = function(evt)
 {
-    alert('Unsuspend?');
+    var confirmed = confirm('Unsuspend?');
+    if (!confirmed) {
+        return ;
+    }
+    
+    var elm = $(evt.target);    
+    var row = elm.parents('.row');
+    
+    var options = row.find('.source').val();    
+    App.Ajax.request(App.Env.world+'.unsuspend', {spell: options}, function(reply) {
+        if (reply.result) {
+            //var tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
+            //$(elm).replaceWith(tpl.finalize());
+            App.Pages.prepareHTML();
+            App.Helpers.updateScreen();
+        }
+        else {
+            return App.Helpers.alert('Failed to suspend');
+        }
+    });    
 }
 
 // do_action_form_help
@@ -229,4 +265,57 @@ App.Actions.add_db_user = function(evt)
 App.Actions.backup_db = function(evt)
 {
     alert('TODO');
+}
+
+App.Actions.add_form_ns = function(evt)
+{
+    var elm = $(evt.target);
+    
+    form = elm.parents('.form:first');
+    var total_nses = $(form).find('.ns-entry').length;
+    if (total_nses == App.Settings.NS_MAX) {
+        return App.Helpers.alert('Maximum number of NS cannot be more than ' + App.Settings.NS_MAX);
+    }
+    
+    var tpl = App.Templates.get('NS_INPUT', 'user');
+    tpl.set(':NAME', '');
+    tpl.set(':NS_LABEL', 'NS');
+    elm.before(tpl.finalize());
+    
+    if ((total_nses + 1) == App.Settings.NS_MAX ) { // added last NS
+        $('.additional-ns-add', form).addClass('hidden');
+    }
+    
+    $(form).find('.ns-entry').each(function(i, o)
+    {
+        $(o).find('label').text('NS #' + (i + 1));
+        $(o).find('input').attr('name', 'NS' + (i + 1));
+    });
+}
+
+App.Actions.delete_ns = function(evt)
+{
+    var elm = $(evt.target);
+    
+    form = elm.parents('.form:first');
+    var total_nses = $(form).find('.ns-entry').length;
+    if (total_nses == App.Settings.NS_MIN) {
+        return App.Helpers.alert('Minimum number of NS is ' + App.Settings.NS_MIN);
+    }
+    
+    var form = elm.parents('.form:first');
+    $(elm).parents('.form:first').find('.additional-ns-add').removeClass('hidden');    
+    $(elm).parents('.ns-entry').remove();   
+    
+    $(form).find('.ns-entry').each(function(i, o)
+    {
+        $(o).find('label').text('NS #' + (i + 1));
+        $(o).find('input').attr('name', 'NS' + (i + 1));
+    });
+}
+
+App.Actions.view_full_ns_list = function(evt)
+{
+    var elm = $(evt.target);
+    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html());    
 }

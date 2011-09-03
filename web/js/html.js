@@ -1,6 +1,6 @@
 App.HTML.setTplKeys = function(tpl, o, empty)
 {
-    var empty = empty || '-';
+    var empty = empty || '';
     fb.log(empty);
     tpl.set(':source', $.toJSON(o).replace(/'/gi, "\\'"))
     $(o).each(function(i, object)
@@ -12,7 +12,7 @@ App.HTML.setTplKeys = function(tpl, o, empty)
                 tpl.set(':' + key, val || '');
             }
             else {
-                tpl.set(':' + key, val || '-');
+                tpl.set(':' + key, val || '');
             }
         });
     });
@@ -138,14 +138,14 @@ App.HTML.Build.ip_entry = function(o)
     var tpl = App.Templates.get('ENTRY', 'ip');
     tpl = App.HTML.setTplKeys(tpl, o);
 
-    if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
+    /*if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_ENABLED', 'ip');
     }
     else {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_DISABLED', 'ip');
-    }
+    }*/
 
-    tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
+    tpl.set(':SUSPENDED_TPL', '');
 
     return tpl.finalize();
 }
@@ -163,14 +163,14 @@ App.HTML.Build.dns_entry = function(o, is_new)
         tpl.set(':DATE', now.format("d.mm.yyyy"));
     }
 
-    if (App.Constants.SUSPENDED_YES == o.SUSPEND) {
+    /*if (App.Constants.SUSPENDED_YES == o.SUSPEND) {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
     }
     else {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
-    }
+    }*/
 
-    tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
+    tpl.set(':SUSPENDED_TPL', '');
 
     return tpl.finalize();
 }
@@ -190,13 +190,41 @@ App.HTML.Build.user_entry = function(o, key)
     var tpl = App.Templates.get('ENTRY', 'user');  
     tpl = App.HTML.setTplKeys(tpl, o);
        
-    if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
+    /*if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
     }
     else {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
+    }*/
+    tpl.set(':SUSPENDED_TPL', '');//sub_tpl.finalize());
+    
+    var ns      = [];
+    var ns_full = [];
+    fb.info(o);
+    $([1,2,3,4,5,6,7,8]).each(function(i, index)
+    {
+        if (o['NS'+index].trim() != '') {
+            var tpl_ns = App.Templates.get('NS_RECORD', 'user');
+            tpl_ns.set(':NAME', o['NS'+index]);
+            var tpl_finalized = tpl_ns.finalize();
+            ns_full[ns_full.length++] = tpl_finalized;
+            if (i < App.Settings.USER_VISIBLE_NS) {
+                ns[ns.length++] = tpl_finalized;
+            }
+        }                      
+    });
+        
+    if (ns_full.length <= App.Settings.USER_VISIBLE_NS) {
+        tpl.set(':NS', ns.done());
     }
-    tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
+    else {
+        var ns_custom = App.Templates.get('NS_MINIMIZED', 'user');
+        ns_custom.set(':NS_MINI', ns.done());
+        ns_custom.set(':NS_FULL', ns_full.done());
+        ns_custom.set(':MORE_NUMBER', Math.abs(App.Settings.USER_VISIBLE_NS - ns_full.length));
+        tpl.set(':NS', ns_custom.finalize());
+    }
+    
     
     return tpl.finalize();
 }
@@ -220,7 +248,22 @@ App.HTML.Build.user_form = function(options, id)
         tpl.set(':save_button', 'SAVE'); 
     }
     
-    options = !App.Helpers.isEmpty(options) ? options : {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','LNAME':'', 'FNAME':''};
+    options = !App.Helpers.isEmpty(options) ? options : App.Empty.USER;
+    
+    // NS
+    var ns = [];
+    $([3,4,5,6,7,8]).each(function(i, index)
+    {fb.warn(options);
+        if (options['NS'+index].trim() != '') {
+            var tpl_ns = App.Templates.get('NS_INPUT', 'user');
+            tpl_ns.set(':NS_LABEL', 'NS #' + (index));
+            tpl_ns.set(':NAME', options['NS'+index]);
+            ns[ns.length++] = tpl_ns.finalize();
+        }
+    });
+    ns[ns.length++] = App.Templates.get('PLUS_ONE_NS', 'user').finalize();
+    
+    tpl.set(':NS', ns.done());
     
     tpl = App.HTML.setTplKeys(tpl, options, true);        
     tpl = App.HTML.Build.user_selects(tpl, options);
@@ -491,7 +534,7 @@ App.HTML.Build.db_selects = function(tpl, options)
 App.HTML.Build.ip_selects = function(tpl, options) 
 {
     // OWNER
-    var users = App.Env.initialParams.IP.SYS_USERS || ['Skid'];
+    var users = App.Env.initialParams.IP.SYS_USERS;
     var opts = App.HTML.Build.options(users, options.OWNER);
     tpl.set(':owner_options', opts);
     

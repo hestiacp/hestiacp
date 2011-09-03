@@ -18,9 +18,9 @@ class CRON extends AjaxHandler
      */
     public function getListExecute($request) 
     {
-        $_user = 'vesta';
+        $user = $this->getLoggedUser();
         $reply = array();
-        $result = Vesta::execute(Vesta::V_LIST_CRON_JOBS, array($_user, Config::get('response_type')));
+        $result = Vesta::execute(Vesta::V_LIST_CRON_JOBS, array($user['uid'], Config::get('response_type')));
       
         foreach ($result['data'] as $id => $record) {
             $reply[$id] = array(
@@ -30,8 +30,9 @@ class CRON extends AjaxHandler
                             'DAY'       => $record['DAY'],
                             'MONTH'     => $record['MONTH'],
                             'WDAY'      => $record['WDAY'],
-                            'SUSPEND'   => $record['SUSPEND'],
-                            'DATE'      => date(Config::get('ui_date_format', strtotime($record['DATE'])))
+                            'SUSPENDED' => $record['SUSPEND'],
+                            'DATE'      => date(Config::get('ui_date_format', strtotime($record['DATE']))),
+			    'JOB'	=> $id
                           );
         }
     
@@ -48,26 +49,25 @@ class CRON extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function addExecute($request) 
+    public function addExecute(Request $request) 
     {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
+	$user   = $this->getLoggedUser();
+	$spell  = $request->getParameter('spell');
         $params = array(
-                    'USER'      => $_user,
-                    'MIN'       => $_s['MIN'],
-                    'HOUR'      => $_s['HOUR'],
-                    'DAY'       => $_s['DAY'],
-                    'MONTH'     => $_s['MONTH'],
-                    'WDAY'      => $_s['WDAY'],
-                    'CMD'       => $_s['CMD']
+                    'USER'      => $user['uid'],
+                    'MIN'       => $spell['MIN'],
+                    'HOUR'      => $spell['HOUR'],
+                    'DAY'       => $spell['DAY'],
+                    'MONTH'     => $spell['MONTH'],
+                    'WDAY'      => $spell['WDAY'],
+                    'CMD'       => $spell['CMD']
                   );
     
         $result = Vesta::execute(Vesta::V_ADD_CRON_JOB, $params);
 
-        if ($_s['REPORTS']) {
+        if ($spell['REPORTS']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $_user));
+            $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $user['uid']));
             if (!$result['status']) {
                 $this->status            = FALSE;
                 $this->errors['REPORTS'] = array($result['error_code'] => $result['error_message']);
@@ -87,15 +87,13 @@ class CRON extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function delExecute($request) 
+    public function deleteExecute(Request $request) 
     {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-        
+	$user   = $this->getLoggedUser();
+	$spell  = $request->getParameter('spell'); 
         $params = array(
-                    'USER' => $_user,
-                    'JOB'  => $_s['JOB']
+                    'USER' => $user['uid'],
+                    'JOB'  => $spell['JOB']
                   );
     
         $result = Vesta::execute(Vesta::V_DEL_CRON_JOB, $params);
@@ -113,18 +111,15 @@ class CRON extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function changeExecute($request)
+    public function changeExecute(Request $request)
     {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_old   = $_s['old'];
-        $_new   = $_s['new'];
-        $_user  = 'vesta';
-        $_JOB   = $_new['JOB'];
+	$user = $this->getLoggedUser();
+        $_old   = $request->getParameter('old');
+        $_new   = $request->getParameter('new');
         $result = array();
         $params = array(
-                    'USER' => $_user,
-                    'JOB' => $_JOB,
+                    'USER' => $user['uid'],
+                    'JOB' => $_old['JOB'],
                     'MIN' => $_new['MIN'],
                     'HOUR' => $_new['HOUR'],
                     'DAY' => $_new['DAY'],
@@ -149,15 +144,13 @@ class CRON extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function suspendExecute($request)
+    public function suspendExecute(Request $request)
     {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-        $_JOB   = $_s['JOB'];
+        $user   = $this->getLoggedUser();
+	$spell  = $request->getParameter('spell');
         $params = array(
-                    'USER' => $_user,
-                    'JOB'  => $_JOB
+                    'USER' => $user['uid'],
+                    'JOB'  => $spell['JOB']
                   );
     
         $result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOB, $params);
@@ -176,16 +169,14 @@ class CRON extends AjaxHandler
      * @return string - Ajax Reply
      */
     public function unsuspendExecute($request)
-    {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-        $_JOB   = $_s['JOB'];
+    {        
+	$user   = $this->getLoggedUser();
+	$spell  = $request->getParameter('spell');
         $params = array(
-                    'USER' => $_user,
-                    'JOB'  => $_JOB
+                    'USER' => $user['uid'],
+                    'JOB'  => $spell['JOB']
                   );
-    
+
         $result = Vesta::execute(Vesta::V_UNSUSPEND_CRON_JOB, $params);
     
         if (!$result['status']) {
@@ -202,7 +193,7 @@ class CRON extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function suspendAllExecute($request)
+    /*public function suspendAllExecute($request)
     {
         $r = new Request();
         $_s = $r->getSpell();
@@ -219,7 +210,7 @@ class CRON extends AjaxHandler
         }
     
         return $this->reply($result['status'], $result['data']);
-    }
+    }*/
 
     /**
      * Batch unsuspend CRON entries
@@ -227,7 +218,7 @@ class CRON extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function unsuspendAllExecute($request)
+    /*public function unsuspendAllExecute($request)
     {
         $r      = new Request();
         $_s     = $r->getSpell();
@@ -243,6 +234,6 @@ class CRON extends AjaxHandler
         }
     
         return $this->reply($result['status'], $result['data']);
-    }
+    }*/
    
 }

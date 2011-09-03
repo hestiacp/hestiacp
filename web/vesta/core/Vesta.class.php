@@ -55,6 +55,7 @@ class Vesta
     const V_CHANGE_SYS_USER_SHELL           = 'v_change_sys_user_shell';
     const V_CHANGE_SYS_USER_ROLE            = 'v_change_sys_user_role';
     const V_DEL_SYS_USER                    = 'v_del_sys_user';
+    const V_CHANGE_SYS_USER_NAME	    = 'v_change_sys_user_name';
     // WEB_DOMAIN
     const V_LIST_WEB_DOMAINS                = 'v_list_web_domains';
     const V_LIST_WEB_DOMAINS_ALIAS          = 'v_list_web_domains_alias';
@@ -124,12 +125,16 @@ class Vesta
         $params = array(
                     'sudo'       => Config::get('sudo_path'),
                     'functions'  => Config::get('vesta_functions_path'),
-                    'parameters' => implode("' '", $parameters),          
+                    'parameters' => implode("' '", $parameters),
                   );
     
+	if (!isset($params['reply'])) {
+	    $params['reply'] = '';
+	}
+
         // e.g.: /usr/bin/sudo /usr/local/vesta/bin/v_list_sys_users vesta json 
         $cmd = "{$params['sudo']} {$params['functions']}{$cmd_command} '{$params['parameters']}' {$params['reply']}";
-    
+//	print $cmd;//die();
         exec($cmd, $output, $return);
 
         $result = 0;

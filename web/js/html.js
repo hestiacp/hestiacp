@@ -83,7 +83,7 @@ App.HTML.Build.dns_form = function(options, id)
     }
 
     tpl.set(':id', id || ''); 
-    tpl.set(':DNS_DOMAIN', options.DNS_DOMAIN || '');
+    tpl.set(':DNS_DOMAIN', options.DNS_DOMAIN || '');    
     tpl.set(':IP', options.IP || '');
     tpl.set(':TTL', options.TTL || '');
     tpl.set(':SOA', options.SOA || '');
@@ -309,7 +309,7 @@ App.HTML.Build.web_domain_form = function(options, id)
         tpl.set(':save_button', 'SAVE'); 
     }
     
-    options = !App.Helpers.isEmpty(options) ? options : {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','NS':''};
+    options = !App.Helpers.isEmpty(options) ? options : App.Empty.WEB_DOMAIN;
     
     tpl = App.HTML.setTplKeys(tpl, options, true);        
     tpl = App.HTML.Build.user_selects(tpl, options);
@@ -373,10 +373,11 @@ App.HTML.Build.db_form = function(options, id)
         tpl.set(':save_button', 'SAVE'); 
     }
     
-    options = !App.Helpers.isEmpty(options) ? options : {'DB':'', 'USER':'','FORM':'', 'PASSWORD': ''};
-    
+    options = !App.Helpers.isEmpty(options) ? options : {'DB':'', 'USER':'','FORM':'', 'PASSWORD': ''};    
     tpl = App.HTML.setTplKeys(tpl, options, true);        
     tpl = App.HTML.Build.db_selects(tpl, options);   
+    
+    tpl.set(':PASSWORD', '');
     
     return tpl.finalize();
 }

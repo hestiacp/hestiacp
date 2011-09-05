@@ -40,6 +40,7 @@ App.Messages.get = function(key, plural) {
 // Empty
 App.Empty = {};
 App.Empty.USER = {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','LNAME':'', 'FNAME':'','NS1':'','NS2':'','NS3':'','NS4':'','NS5':'','NS6':'','NS7':'','NS8':''};
+App.Empty.WEB_DOMAIN = {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','NS':'', 'DOMAIN':'','SSL_CERT':'','SSL_HOME':'','STATS_PASSWORD':'','STATS_LOGIN':'','ALIAS':''};
 
 App.Settings.getMethodName = function(action)
 {

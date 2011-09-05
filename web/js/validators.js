@@ -25,6 +25,12 @@ App.Validate.getFieldName = function(elm)
 }
 
 App.Validate.Rule = {
+    'username' : function(elm) {   
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
+            return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is required'};
+        }
+        return {VALID: true};
+    },
     'required' : function(elm) {
         if ($(elm).val().trim() == '') {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is required'};

@@ -24,17 +24,6 @@ App.Actions.show_subform = function(evt)
     // TODO: probably general way to embed subforms
 }
 
-App.Actions.close_subform = function(evt) 
-{
-    var elm = $(evt.target);
-    var ref = elm.hasClass('subform') ? elm : elm.parents('.subform');
-    var parent_ref = ref.prev('.row');
-    if (parent_ref.length > 0) {
-        parent_ref.find('.show-records').removeClass('hidden');
-    }
-    ref.remove();
-}
-
 App.Actions.view_template_settings = function(evt) 
 {
     alert('TODO');
@@ -49,17 +38,6 @@ App.Actions.add_subrecord_dns = function(evt)
         ref.find('.add-box').after(tpl.finalize());
         App.Helpers.updateScreen();
     }
-}
-
-App.Actions.delete_subentry = function(evt)
-{
-    var sure = confirm(App.i18n.getMessage('confirm'));
-    if (!sure) {
-        return;
-    }
-    var elm = $(evt.target);
-    var ref = elm.hasClass('subrow') ? elm : elm.parents('.subrow');
-    ref.effect('puff', {}, 300, function(){ref.remove();})    
 }
 
 /**
@@ -213,17 +191,56 @@ App.Actions.close_popup = function()
     App.View.closePopup();
 }
 
+
+App.Actions.close_subform = function(evt, elm) 
+{
+    var elm = elm || $(evt.target);
+    var ref = elm.hasClass('subform') ? elm : elm.parents('.subform');
+    var parent_ref = ref.prev('.row');
+    if (parent_ref.length > 0) {
+        parent_ref.find('.show-records').removeClass('hidden');
+    }
+    ref.remove();
+}
+
 App.Actions.save_dns_subrecords = function(evt)
 {
     var elm = $(evt.target);
     var ref = elm.hasClass('subform') ? elm : elm.parents('.subform');
     
-    var records = [];
-    ref.find('.subrow').each(function(i, o){
-        records[records.length++] = App.Helpers.getFormValuesFromElement(o);
+    var data = [];
+    $('.subform').find('.subrow').each(function(i, o)
+    {
+        data[data.length++] = App.Helpers.getFormValues(o);
     });
     
-    fb.warn($.toJSON(records));
+    var parent_row = $(elm).parents('.subform').prev('.dns-details-row');
+    var dns_json = $(parent_row).find('.source').val();
+    
+    App.Ajax.request('DNS.changeRecords', {spell: App.Helpers.toJSON(data), dns: dns_json}, function(reply)
+    {
+        if (reply.result) {
+            var emphasize = $('.show-records', parent_row);
+            App.Actions.close_subform(null, elm);
+            $(emphasize).effect("highlight", {'color':'#B0D635'}, 3000);
+            
+        }
+        else {
+            App.Helpers.alert('Changes were not applied');
+        }
+    });
+}
+
+App.Actions.delete_subentry = function(evt)
+{
+    var sure = confirm(App.i18n.getMessage('confirm'));
+    if (!sure) {
+        return;
+    }
+    
+    var elm = $(evt.target);
+    var ref = elm.hasClass('subrow') ? elm : elm.parents('.subrow');
+    $(ref).remove();    
 }
 
 App.Actions.generate_pass = function()

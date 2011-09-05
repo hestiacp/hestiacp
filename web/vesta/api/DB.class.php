@@ -18,21 +18,21 @@ class DB extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function getListExecute($request) 
+    public function getListExecute(Request $request) 
     {
-        $_user  = 'vesta';
+        $user  = $this->getLoggedUser();
         $reply  = array();
-        $result = Vesta::execute(Vesta::V_LIST_DB_BASES, array($_user, Config::get('response_type')));
+        $result = Vesta::execute(Vesta::V_LIST_DB_BASES, array($user['uid'], Config::get('response_type')));
     
         foreach ($result['data'] as $db => $record) {
             $type = $record['TYPE'];
             if (!isset($reply[$type])) {
                 $reply[$type] = array();
             }
-
             $reply[$type][] = array(
                                 'DB'        => $db,
-                                'OWNER'     => 'John Travlolta',
+                                'OWNER'     => $record['USER'],
+                                'USER'      => $record['USER'],
                                 'USERS'     => (array)$record['USER'],
                                 'HOST'      => $record['HOST'],
                                 'TYPE'      => $record['TYPE'],
@@ -47,17 +47,6 @@ class DB extends AjaxHandler
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
 
-        $reply['postgre'][] = array(
-                                'DB'        => 'x',
-                                'OWNER'     => 'John Travlolta',
-                                'USERS'     => array('E'),
-                                'HOST'      => 'xxx',
-                                'TYPE'      => '34',
-                                'U_DISK'    => '0',
-                                'SUSPEND'   => 'false',
-                                'DATE'      => '2011-01-01'
-                              );
-    
         return $this->reply($result['status'], $reply);
     }
 
@@ -67,23 +56,21 @@ class DB extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function addExecute($request) 
+    public function addExecute(Request $request) 
     {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-    
+        $user   = $this->getLoggedUser();
+        $_s     = $request->getParameter('spell'); 
         $params = array(
-                    'USER'          => $_user,
+                    'USER'          => $user['uid'],
                     'DB'            => $_s['DB'],
-                    'DB_USER'       => $_s['DB_USER'],
-                    'DB_PASSWORD'   => $_s['DB_PASSWORD'],
+                    'DB_USER'       => $_s['USER'],
+                    'DB_PASSWORD'   => $_s['PASSWORD'],
                     'TYPE'          => $_s['TYPE']
                   );
-                  
-        if ($_s['HOST']) {
+        // TODO: do not user it. Will be used in later releases         
+        /*if ($_s['HOST']) {
             $params['HOST'] = $_s['HOST'];
-        }    
+        }*/   
             
         $result = Vesta::execute(Vesta::V_ADD_DB_BASE, $params);
         
@@ -100,14 +87,13 @@ class DB extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function delExecute($request) 
+    public function deleteExecute(Request $request) 
     {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
+        $_s    = $request->getParameter('spell');
+        $user  = $this->getLoggedUser();
         $params = array(
-                    'USER'  => $_user,
-                    'DB'    => $_user.'_'.$_s['DB']
+                    'USER'  => $user['uid'],
+                    'DB'    => $_s['DB']
                   );
     
         $result = Vesta::execute(Vesta::V_DEL_DB_BASE, $params);
@@ -125,16 +111,15 @@ class DB extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function changePasswordExecute($request)
+    public function changeExecute(Request $request)
     {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
+        $_s     = $request->getParameter('new');
+        $user  = $this->getLoggedUser();
         $result = array();
         $params = array(
-                    'USER'      => $_user,
-                    'DB'        => $_user.'_'.$_s['DB'],
-                    'PASSWORD'  => $_s['DB_PASSWORD']
+                    'USER'      => $user['uid'],
+                    'DB'        => $_s['DB'],
+                    'PASSWORD'  => $_s['PASSWORD']
                   );
 
         $result = Vesta::execute(Vesta::V_CHANGE_DB_PASSWORD, $params);
@@ -145,103 +130,5 @@ class DB extends AjaxHandler
     
         return $this->reply($result['status'], $result['data']);
     }
-
-    /**
-     * Suspend DB entry
-     * 
-     * @param Request $request
-     * @return string - Ajax Reply
-     */
-    public function suspendExecute($request)
-    {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-        $params = array(
-                    'USER'  => $_user,
-                    'DB'    => $_user.'_'.$_s['DB']
-                  );
-    
-        $result = Vesta::execute(Vesta::V_SUSPEND_DB_BASE, $params);
-    
-        if (!$result['status']) {
-            $this->errors[] = array($result['error_code'] => $result['error_message']);
-        }
-    
-        return $this->reply($result['status'], $result['data']);
-    }
-
-    /**
-     * Unsuspend DB entry
-     * 
-     * @param Request $request
-     * @return string - Ajax Reply
-     */
-    public function unsuspendExecute($request)
-    {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-        $params = array(
-                    'USER'  => $_user,
-                    'DB'    => $_user.'_'.$_s['DB']
-                  );
-        $result = Vesta::execute(Vesta::V_UNSUSPEND_DB_BASE, $params);
-    
-        if (!$result['status']) {
-            $this->errors[] = array($result['error_code'] => $result['error_message']);
-        }
-    
-        return $this->reply($result['status'], $result['data']);
-    }
-
-    /**
-     * Batch Suspend DB entries
-     * 
-     * @param Request $request
-     * @return string - Ajax Reply
-     */
-    public function suspendAllExecute($request)
-    {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-        $_JOB   = $_s['JOB'];
-    
-        $params = array(
-                    'USER' => $_user
-                  );
-    
-        $result = Vesta::execute(Vesta::V_SUSPEND_DB_BASES, $params);
-    
-        if (!$result['status']) {
-            $this->errors[] = array($result['error_code'] => $result['error_message']);
-        }
-    
-        return $this->reply($result['status'], $result['data']);
-    }
-
-    /**
-     * Batch unsuspend DB entries
-     * 
-     * @param Request $request
-     * @return string - Ajax Reply
-     */
-    public function unsuspendAllExecute($request)
-    {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-        $params = array(
-                    'USER' => $_user
-                  );
-        $result = Vesta::execute(Vesta::V_UNSUSPEND_DB_BASES, $params);
-    
-        if (!$result['status']) {
-            $this->errors[] = array($result['error_code'] => $result['error_message']);
-        }
-    
-        return $this->reply($result['status'], $result['data']);
-    }
-    
+       
 }

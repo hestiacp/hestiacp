@@ -16,7 +16,7 @@ class CRON extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function getListExecute($request) 
+    public function getListExecute(Request $request) 
     {
         $user = $this->getLoggedUser();
         $reply = array();
@@ -32,7 +32,7 @@ class CRON extends AjaxHandler
                             'WDAY'      => $record['WDAY'],
                             'SUSPENDED' => $record['SUSPEND'],
                             'DATE'      => date(Config::get('ui_date_format', strtotime($record['DATE']))),
-			    'JOB'	=> $id
+                            'JOB'    => $id
                           );
         }
     
@@ -51,8 +51,8 @@ class CRON extends AjaxHandler
      */
     public function addExecute(Request $request) 
     {
-	$user   = $this->getLoggedUser();
-	$spell  = $request->getParameter('spell');
+    $user   = $this->getLoggedUser();
+    $spell  = $request->getParameter('spell');
         $params = array(
                     'USER'      => $user['uid'],
                     'MIN'       => $spell['MIN'],
@@ -89,8 +89,8 @@ class CRON extends AjaxHandler
      */
     public function deleteExecute(Request $request) 
     {
-	$user   = $this->getLoggedUser();
-	$spell  = $request->getParameter('spell'); 
+    $user   = $this->getLoggedUser();
+    $spell  = $request->getParameter('spell'); 
         $params = array(
                     'USER' => $user['uid'],
                     'JOB'  => $spell['JOB']
@@ -113,7 +113,7 @@ class CRON extends AjaxHandler
      */
     public function changeExecute(Request $request)
     {
-	$user = $this->getLoggedUser();
+    $user = $this->getLoggedUser();
         $_old   = $request->getParameter('old');
         $_new   = $request->getParameter('new');
         $result = array();
@@ -147,7 +147,7 @@ class CRON extends AjaxHandler
     public function suspendExecute(Request $request)
     {
         $user   = $this->getLoggedUser();
-	$spell  = $request->getParameter('spell');
+    $spell  = $request->getParameter('spell');
         $params = array(
                     'USER' => $user['uid'],
                     'JOB'  => $spell['JOB']
@@ -168,10 +168,10 @@ class CRON extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */
-    public function unsuspendExecute($request)
+    public function unsuspendExecute(Request $request)
     {        
-	$user   = $this->getLoggedUser();
-	$spell  = $request->getParameter('spell');
+    $user   = $this->getLoggedUser();
+    $spell  = $request->getParameter('spell');
         $params = array(
                     'USER' => $user['uid'],
                     'JOB'  => $spell['JOB']
@@ -185,55 +185,5 @@ class CRON extends AjaxHandler
     
         return $this->reply($result['status'], $result['data']);
     }
-
-
-    /**
-     * Batch suspend CRON entries
-     * 
-     * @param Request $request
-     * @return string - Ajax Reply
-     */
-    /*public function suspendAllExecute($request)
-    {
-        $r = new Request();
-        $_s = $r->getSpell();
-        $_user = 'vesta';
-        $_JOB = $_s['JOB'];
-        $params = array(
-                    'USER' => $_user
-                  );
-    
-        $result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOBS, $params);
-    
-        if (!$result['status']) {
-            $this->errors[] = array($result['error_code'] => $result['error_message']);
-        }
-    
-        return $this->reply($result['status'], $result['data']);
-    }*/
-
-    /**
-     * Batch unsuspend CRON entries
-     * 
-     * @param Request $request
-     * @return string - Ajax Reply
-     */
-    /*public function unsuspendAllExecute($request)
-    {
-        $r      = new Request();
-        $_s     = $r->getSpell();
-        $_user  = 'vesta';
-        $params = array(
-                    'USER' => $_user
-                  );
-    
-        $result = Vesta::execute(Vesta::V_UNSUSPEND_CRON_JOBS, $params);
-    
-        if (!$result['status']) {
-            $this->errors[] = array($result['error_code'] => $result['error_message']);
-        }
-    
-        return $this->reply($result['status'], $result['data']);
-    }*/
    
 }

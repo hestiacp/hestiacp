@@ -9,11 +9,12 @@
  * @copyright vesta 2010-2011
  */
 class AjaxHandler {
-
+    
     static public $instance = null;
 
-    public $errors = array();
-    public $status = TRUE;
+    const JSON      = 'json';
+    public $errors  = array();
+    public $status  = TRUE;
 
     /**
      * Grab current instance or create it
@@ -37,7 +38,8 @@ class AjaxHandler {
      * @param Request $request
      * @return string 
      */
-    function dispatch($request) {
+    public function dispatch(Request $request) 
+    {
         $method = Request::parseAjaxMethod($request);
         $inc_file = V_ROOT_DIR . 'api' . DIRECTORY_SEPARATOR . $method['namespace'] . '.class.php';
         if (!is_readable($inc_file)) {
@@ -59,7 +61,8 @@ class AjaxHandler {
     /**
      * Prepare response for ajax
      */
-    function reply($result, $data, $message = '', $extra = array()) {
+    public function reply($result, $data, $message = '', $extra = array()) 
+    {
       return json_encode(array('result' => $result,
                    'data' => $data,
                    'message' => $message,
@@ -68,7 +71,8 @@ class AjaxHandler {
                    ));
     }
 
-    static function makeReply($reply) {
+    static function makeReply($reply) 
+    {
         print $reply;
     }
 
@@ -93,7 +97,7 @@ class AjaxHandler {
         AjaxHandler::makeReply(
                         AjaxHandler::getInstance()->reply(false, $type, $message . ': ' . $error->getMessage(), $trace[0]['file'] . ' / ' . $trace[0]['line'])
         );*/
-    print $message;
+        print $message;
     }
 
 }

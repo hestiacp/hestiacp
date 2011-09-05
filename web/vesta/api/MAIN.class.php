@@ -61,7 +61,7 @@ class MAIN extends AjaxHandler
         $data_web_domain = array('ips' => $ips);
         $data_ip         = array('user_names' => $user_names, 'interfaces' => $interfaces);
         $data_dns        = array('ips' => $ips);
-        $data_db         = array('db_types' => $db_types);
+        $data_db         = array('db_types' => $this->getDBTypes());
         $data_users      = array('user_names' => $user_names);
     
         $reply = array(
@@ -187,11 +187,16 @@ class MAIN extends AjaxHandler
      */
     public function getDbParams($data = array())
     {
-        $db_types = array('mysql' => 'mysql', 'postgre' => 'postgre');
+        $db_types = $this->getDBTypes();
         return array(
                     'TYPE' => $db_types,
                     'HOST' => array('vestacp.com' => 'vestacp.com', 'askcow.org' => 'askcow.org')
                 );
+    }
+    
+    public function getDBTypes()
+    {
+        return array('mysql' => 'mysql', 'postgre' => 'postgre');
     }
     
     /**

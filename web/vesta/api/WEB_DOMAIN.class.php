@@ -134,19 +134,20 @@ class WEB_DOMAIN extends AjaxHandler
                             'SSL_CERT' => $_s['SSL_CERT']
                           );
 
-            if ($_s['SSL_HOME']) {
-                $params['SSL_HOME'] = $_s['SSL_HOME'];
-            }
+                if ($_s['SSL_HOME']) {
+                    $params['SSL_HOME'] = $_s['SSL_HOME'];
+                }
 
-            if ($_s['SSL_TEXT']) {
-                // TODO: implement
-            }
+                if ($_s['SSL_TEXT']) {
+                    // TODO: implement
+                }
 
-            $result = 0;
-            $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
+                $result = 0;
+                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
 
-            if (!$result['status']) {
-                $this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
+                if (!$result['status']) {
+                    $this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
+                }
             }
         }
       
@@ -164,7 +165,7 @@ class WEB_DOMAIN extends AjaxHandler
             $result = $dns->addExecute($params);
             if (!$result['status']) {
                 $this->errors['DNS_DOMAIN'] = array($result['error_code'] => $result['error_message']);
-            }
+            }            
         }
       
         /*

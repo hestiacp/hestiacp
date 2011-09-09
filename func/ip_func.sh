@@ -475,6 +475,12 @@ ip_user_json_list() {
             # Print data
             for field in $fields; do
                 eval value=$field
+
+                # There is outpup
+                if [ ! -z "$value" ]; then
+                    tpt='yes'
+                fi
+
                 # Checking parrent key
                 if [ "$j" -eq 1 ]; then
                     echo -e "\t\"$value\": {"
@@ -492,7 +498,7 @@ ip_user_json_list() {
     done
 
     # If there was any output
-    if [ -n "$value" ]; then
+    if [ -n "$tpt" ]; then
         echo -e "\t}"
     fi
 

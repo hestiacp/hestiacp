@@ -383,7 +383,7 @@ App.Templates.html = {
 										</span>\
 										<span class="prop-box template-box">\
 											<span class="prop-title">package:</span>\
-											<span class="prop-value">~!:PACKAGE~!</span>\
+											<span class="prop-value do_action_view_template_info">~!:PACKAGE~!</span>\
 										</span>\
 									</div>\
 									<div class="user-details-box">\

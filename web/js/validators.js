@@ -30,7 +30,7 @@ App.Validate.Rule = {
             if ($(elm).val().trim() == '' || $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
             }
-            if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+            if ($(elm).val().trim() != '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
             }
         }
@@ -41,7 +41,7 @@ App.Validate.Rule = {
             if ($(elm).val().trim() == '') {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is required'};
             }
-            if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+            if ($(elm).val().trim() != '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
             }
         }
@@ -51,7 +51,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+        if ($(elm).val().trim() != '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
         }
         return {VALID: true};
@@ -78,7 +78,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' must contain only letters without spaces or other symbols'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+        if ($(elm).val().trim() != '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
         }
         return {VALID: true};

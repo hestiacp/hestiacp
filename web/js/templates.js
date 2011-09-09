@@ -110,7 +110,7 @@ App.Templates.html = {
                                                         <span class="ip-adr">~!:IP~!</span>\
                                                         <span class="prop-box template-box">\
                                                                 <span class="prop-title">template:</span>\
-                                                                <span class="prop-value">~!:TPL~!</span>\
+                                                                <span class="prop-value do_action_view_template_info">~!:TPL~!</span>\
                                                         </span>\
                                                 </div>\
                                         </div>\
@@ -126,7 +126,7 @@ App.Templates.html = {
                                         </div>\
                                 </div><!-- // .row-details -->\
                         </div>'],
-        SUBFORM: ['<div class="b-new-entry b-records-list subform">\
+        SUBFORM: ['<div class="b-new-entry b-records-list subform" style="margin-top: -20px;">\
                     <div class="entry-header">\
                             <div class="hide-records do_action_close_subform">Hide records</div>\
                     </div>\
@@ -153,8 +153,8 @@ App.Templates.html = {
                             </div>\
                             <div class="field-box dns-type-box">\
                                     <label for="#" class="field-label">type:</label>\
-                                    <span class="select RECORD_TYPE" id="selectRECORD_TYPE">~!:RECORD_TYPE_VALUE~!</span>\
-                                    <select name="RECORD_TYPE" class="styled">\
+                                    <!-- span class="select RECORD_TYPE" id="selectRECORD_TYPE">~!:RECORD_TYPE_VALUE~!</span -->\
+                                    <select name="RECORD_TYPE" class="not-styled" style="width:70px">\
                                         ~!:RECORD_TYPE~!\
                                     </select>\
                             </div>\
@@ -203,7 +203,7 @@ App.Templates.html = {
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">netmask:</label>\
-                        <div class="autocomplete-box">\
+                        <div class="_autocomplete-box">\
                                 <input type="text" value="~!:NETMASK~!" name="NETMASK" class="text-field">\
                         </div>\
                 </div>\
@@ -297,7 +297,7 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">username:</label>\
-							<input type="text" class="text-field rule-abc rule-required" value="~!:LOGIN_NAME~!" name="LOGIN_NAME">\
+							<input type="text" class="text-field rule-required rule-username" value="~!:LOGIN_NAME~!" name="LOGIN_NAME">\
 						</div>\
 						<div class="form-row pwd-box cc">\
 							<label for="#" class="field-label">password:</label>\
@@ -419,7 +419,7 @@ App.Templates.html = {
 								<!-- bandwidth usage block -->\
 								<div style="margin-bottom:25px;" class="b-usage-box bandwidth-box cc">\
 									<span class="prop-title">bandwidth:</span>\
-									<div class="usage-box">\
+									<div class="usage-box" style="margin-left: -1px">\
 										<div class="value-box">\
 											<span class="value">~!:U_BANDWIDTH~!</span>\
 											<div class="graph low">\
@@ -435,10 +435,6 @@ App.Templates.html = {
 								 <!-- // bandwidth usage block -->\
                                  </div>\
 							<div class="props-additional">\
-								<span class="prop-box webdomains-box">\
-									<span class="prop-title">web domains:</span>\
-									<span class="prop-value">~!:U_DNS_DOMAINS~! (~!:WEB_DOMAINS~!)</span>\
-								</span>\
 								<span class="prop-box websl-box">\
 									<span class="prop-title">web ssl:</span>\
 									<span class="prop-value">~!:U_WEB_SSL~! (~!:WEB_SSL~!)</span>\
@@ -479,7 +475,11 @@ App.Templates.html = {
 									<span class="prop-title">mail domains:</span>\
 									<span class="prop-value">~!:U_MAIL_DOMAINS~! (~!:MAIL_DOMAINS~!)</span>\
 								</span>\
-								<span class="prop-box dnsdomains-box">\
+								<span class="prop-box webdomains-box">\
+									<span class="prop-title">web domains:</span>\
+									<span class="prop-value">~!:U_WEB_DOMAINS~! (~!:WEB_DOMAINS~!)</span>\
+								</span>\
+                                <span class="prop-box dnsdomains-box">\
 									<span class="prop-title">dns domains:</span>\
 									<span class="prop-value">~!:U_DNS_DOMAINS~! (~!:DNS_DOMAINS~!)</span>\
 								</span>\

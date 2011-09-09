@@ -22,6 +22,7 @@ App.Pages.prepareHTML = function()
     else {        
         App.Model[App.Env.world].loadList();
     }
+    $('#new-entry-keyword').text(App.Env.world.toLowerCase().replace('_', ' '));
 }
 
 App.Pages.DNS.showSubform = function(ref) 
@@ -49,3 +50,13 @@ App.Pages.DNS.edit = function(elm) {
     elm.replaceWith(tpl);
 }
 
+App.Pages.USER.new_entry = function(evt)
+{ 
+    var form_id = App.Constants[App.Env.world + '_FORM_ID'];
+    $('#'+form_id).remove();
+    var build_method = App.Env.getWorldName() + '_form';
+    var tpl = App.HTML.Build[build_method]({}, form_id);
+    App.Ref.CONTENT.prepend(tpl);
+    App.Helpers.updateScreen(); 
+    $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden');
+}

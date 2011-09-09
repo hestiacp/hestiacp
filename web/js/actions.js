@@ -89,16 +89,20 @@ App.Actions.save_form = function(evt) {
 
 // do_action_edit
 App.Actions.edit = function(evt) {
-    var elm = $(evt.target);
-    elm = elm.hasClass('row') ? elm : elm.parents('.row');
-    
-    var options = elm.find('.source').val();    
-    var build_method = App.Env.getWorldName() + '_form';    
-    var tpl = App.HTML.Build[build_method](options);
-    elm.replaceWith(tpl);
-    
-    App.Helpers.disbleNotEditable();
-    //App.Helpers.updateScreen();
+    if ('undefined' != typeof App.Pages[App.Env.world].edit) {
+        App.Pages[App.Env.world].edit(evt);
+    } else {
+        var elm = $(evt.target);
+        elm = elm.hasClass('row') ? elm : elm.parents('.row');
+        
+        var options = elm.find('.source').val();    
+        var build_method = App.Env.getWorldName() + '_form';    
+        var tpl = App.HTML.Build[build_method](options);
+        elm.replaceWith(tpl);
+        
+        App.Helpers.disbleNotEditable();
+        //App.Helpers.updateScreen();
+    }
 }
 
 // do_cancel_form
@@ -333,4 +337,17 @@ App.Actions.view_full_ns_list = function(evt)
 {
     var elm = $(evt.target);
     App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html());    
+}
+
+App.Actions.view_template_info = function(evt)
+{
+    var elm = $(evt.target);
+    ref = elm.hasClass('row') ? elm : elm.parents('.row');
+    
+    var options = ref.find('.source').val(); 
+    App.Ajax.request('DNS.getTemplateInfo', {spell: options}, function(reply) {
+        if (reply.result) {
+            App.Helpers.openInnerPopup(elm, reply.data);
+        }        
+    });
 }

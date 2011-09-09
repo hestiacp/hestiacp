@@ -79,52 +79,44 @@ App.Validate.Rule = {
         }
         return {VALID: true};
     },
-    'minute':         function(elm) { 
-        if ($(elm).val() == '*') {
-            return {VALID: true};
-        }       
-        var minute = parseInt($(elm).val(), 10);
-        if (minute > 60 || minute < 0) {
+    'cronminute':         function(elm) { 
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^0-9\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong minute value'};
         }
         return {VALID: true};
     },
-    'hour':         function(elm) {   
+    'cronhour':         function(elm) {   
         if ($(elm).val() == '*') {
             return {VALID: true};
         }     
-        var hour = parseInt($(elm).val(), 10);
-        if (hour > 60 || hour < 0) {
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^0-9\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong hour value'};
         }
         return {VALID: true};
     },
-    'wday':         function(elm) {  
+    'cronwday':         function(elm) {  
         if ($(elm).val() == '*') {
             return {VALID: true};
         }      
-        var wday = parseInt($(elm).val(), 10);
-        if (wday > 7 || wday < 1) {
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^123456\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong week day value'};
         }
         return {VALID: true};
     },
-    'month':         function(elm) { 
+    'cronmonth':         function(elm) { 
         if ($(elm).val() == '*') {
             return {VALID: true};
-        }       
-        var month = parseInt($(elm).val(), 10);
-        if (month > 1 || month < 12) {
+        }               
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^0-9\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong month value'};
         }
         return {VALID: true};
     },
-    'day':         function(elm) {  
+    'cronday':         function(elm) {  
         if ($(elm).val() == '*') {
             return {VALID: true};
         }
-        var day = parseInt($(elm).val(), 10);
-        if (day > 31 || day < 1) {
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^0-9\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong day value'};
         }
         return {VALID: true};

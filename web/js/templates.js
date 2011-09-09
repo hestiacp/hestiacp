@@ -43,7 +43,7 @@ App.Templates.html = {
     },
     dns: {
         FORM: [
-            '<div style="margin-top: 25px;" class="b-new-entry b-new-entry_dns" id="~!:id~!">\
+            '<div style="margin-top: 25px;" class="b-new-entry b-new-entry_dns form" id="~!:id~!">\
                 <input type="hidden" name="source" class="source" value=~!:source~!>\
                     <input type="hidden" name="target" class="target" value=\'\'>\
                     <div class="entry-header">~!:title~!</div>\
@@ -167,7 +167,7 @@ App.Templates.html = {
     },
     ip: {
         FORM: ['\
-            <div class="b-new-entry b-new-entry_ip" id="~!:id~!">\
+            <div class="b-new-entry b-new-entry_ip form" id="~!:id~!">\
                 <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                 <input type="hidden" name="target" class="target" value=\'~!:target~!\'>\
                 <div class="entry-header">~!:title~!</div>\
@@ -328,7 +328,7 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">reports:</label>\
-							<input type="checkbox" name="REPORTS_ENABLED" class="not-styled" value="~!:REPORTS_ENABLED~!">\
+							<input type="checkbox" name="REPORTS_ENABLED" ~!:CHECKED~! class="not-styled" value="~!:REPORTS_ENABLED~!">\
 						</div>\
                         <div class="form-row cc">\
 							<label for="#" class="field-label">Firstname:</label>\
@@ -493,7 +493,7 @@ App.Templates.html = {
 					</div>']
     },
     web_domain: {
-        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_domain">\
+        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_domain form">\
                         <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                         <input type="hidden" class="target" name="target" value="" />\
 						<div class="entry-header">~!:title~!</div>\
@@ -699,11 +699,11 @@ App.Templates.html = {
 						</span>\
 					</div>'],
         ENTRIES_WRAPPER: ['<div class="db-list">~!:content~!</div>'],
-        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_db">\
+        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_db form">\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="entry-header">~!:title~!</div>\
-						<div class="form-error">\
+						<div class="form-error hidden">\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">db type:</label>\
@@ -785,7 +785,7 @@ App.Templates.html = {
 					</div>']
     },
     cron: {
-        FORM: ['<div class="b-new-entry b-new-entry_cron" id="~!:id~!" >\
+        FORM: ['<div class="b-new-entry b-new-entry_cron form" id="~!:id~!" >\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="entry-header">~!:title~!</div>\
@@ -798,31 +798,31 @@ App.Templates.html = {
 							<div class="field-box cron-minute-box">\
 								<label for="#" class="field-label ">minute:<br>(0&mdash;59)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:MIN~!" name="MIN" class="text-field rule-required rule-minute">\
+									<input type="text" value="~!:MIN~!" name="MIN" class="text-field rule-required rule-cronminute">\
 								</div>\
 							</div>\
 							<div class="field-box cron-hour-box">\
 								<label for="#" class="field-label">hour:<br>(0&mdash;23)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:HOUR~!" name="HOUR" class="text-field rule-required rule-hour">\
+									<input type="text" value="~!:HOUR~!" name="HOUR" class="text-field rule-required rule-cronhour">\
 								</div>\
 							</div>\
 							<div class="field-box cron-day-box">\
 								<label for="#" class="field-label">day of Month:<br>(1&mdash;31)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:DAY~!" name="DAY" class="text-field rule-required rule-day">\
+									<input type="text" value="~!:DAY~!" name="DAY" class="text-field rule-required rule-cronday">\
 								</div>\
 							</div>\
 							<div class="field-box cron-month-box">\
 								<label for="#" class="field-label">Month:<br>(1&mdash;12)(Jan&mdash;Dec)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:MONTH~!" name="MONTH" class="text-field rule-required rule-month">\
+									<input type="text" value="~!:MONTH~!" name="MONTH" class="text-field rule-required rule-cronmonth">\
 								</div>\
 							</div>\
 							<div class="field-box cron-week-box">\
 								<label for="#" class="field-label">day of Week:<br>(1&mdash;7)(Sun&mdash;Sat)</label>\
 								<div class="field-box-inner cc">\
-									<input type="text" value="~!:WDAY~!" name="WDAY" class="text-field rule-required rule-wday">\
+									<input type="text" value="~!:WDAY~!" name="WDAY" class="text-field rule-required rule-cronwday">\
 								</div>\
 							</div>\
 						</div>\

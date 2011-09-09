@@ -84,7 +84,7 @@ App.Actions.save_form = function(evt) {
         if(App.Validate.form(values, $('#'+elm_id))) {            
             App.Model.update(values, source, elm);         
         }       
-    }    
+    }        
 }
 
 // do_action_edit
@@ -92,14 +92,12 @@ App.Actions.edit = function(evt) {
     var elm = $(evt.target);
     elm = elm.hasClass('row') ? elm : elm.parents('.row');
     
-    var options = elm.find('.source').val();
-    fb.warn(elm);
-    fb.warn(options);
+    var options = elm.find('.source').val();    
     var build_method = App.Env.getWorldName() + '_form';    
     var tpl = App.HTML.Build[build_method](options);
     elm.replaceWith(tpl);
     
-    //App.Pages[App.Env.world].edit(elm);
+    App.Helpers.disbleNotEditable();
     //App.Helpers.updateScreen();
 }
 

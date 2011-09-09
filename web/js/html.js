@@ -197,10 +197,10 @@ App.HTML.Build.user_entry = function(o, key)
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
     }*/
     tpl.set(':SUSPENDED_TPL', '');//sub_tpl.finalize());
-    
+   
     var ns      = [];
     var ns_full = [];
-    fb.info(o);
+    
     $([1,2,3,4,5,6,7,8]).each(function(i, index)
     {
         if (o['NS'+index].trim() != '') {
@@ -233,7 +233,7 @@ App.HTML.Build.user_entry = function(o, key)
 App.HTML.Build.user_form = function(options, id) 
 {
     if('undefined' == typeof App.Env.initialParams) {
-        return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
+        return alert('Please wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
     var tpl = App.Templates.get('FORM', 'user');
     tpl.set(':source', options);
@@ -268,6 +268,13 @@ App.HTML.Build.user_form = function(options, id)
     tpl = App.HTML.setTplKeys(tpl, options, true);        
     tpl = App.HTML.Build.user_selects(tpl, options);
     
+    if (options.REPORTS_ENABLED == 'yes') {
+        tpl.set(':CHECKED', 'checked="checked"');
+    }
+    else {
+        tpl.set(':CHECKED', '');
+    }
+    
     return tpl.finalize();
 }
 
@@ -301,18 +308,18 @@ App.HTML.Build.web_domain_form = function(options, id)
     tpl.set(':id', id || '');
     options = App.Helpers.evalJSON(options) || {};
     if (App.Helpers.isEmpty(options)) {
-       tpl.set(':title', 'New user'); 
+       tpl.set(':title', 'New WEB domain'); 
        tpl.set(':save_button', 'ADD'); 
     }
     else {
-        tpl.set(':title', 'Edit user'); 
+        tpl.set(':title', 'Edit WEB domain'); 
         tpl.set(':save_button', 'SAVE'); 
     }
     
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.WEB_DOMAIN;
     
     tpl = App.HTML.setTplKeys(tpl, options, true);        
-    tpl = App.HTML.Build.user_selects(tpl, options);
+    tpl = App.HTML.Build.web_domain_selects(tpl, options);
     
     return tpl.finalize();
 }
@@ -560,7 +567,27 @@ App.HTML.Build.dns_selects = function(tpl, options)
         tpl.set(':TPL_DEFAULT_VALUE', options.TPL || App.Helpers.getFirstKey(obj));
     }
     catch (e) {        
-        return '';
+        return tpl;
+    }
+    
+    return tpl;
+}
+
+App.HTML.Build.web_domain_selects = function(tpl, options) 
+{    
+    try {
+        // IP
+        var obj = App.Env.initialParams.WEB_DOMAIN.IP;
+        var opts = App.HTML.Build.options(obj, options.IP);
+        tpl.set(':IP_OPTIONS', opts);        
+        
+        // TPL
+        var obj = App.Env.initialParams.WEB_DOMAIN.TPL;
+        var opts = App.HTML.Build.options(obj, options.TPL);
+        tpl.set(':TPL_OPTIONS', opts);        
+    }
+    catch (e) {        
+        return tpl;
     }
     
     return tpl;

@@ -48,3 +48,4 @@ App.Pages.DNS.edit = function(elm) {
     var tpl = App.HTML.Build.dns_form(options);
     elm.replaceWith(tpl);
 }
+

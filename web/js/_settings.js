@@ -21,6 +21,12 @@ App.Constants.SUSPENDED_YES         = 'yes';
 App.Constants.DNS_TEMPLATES         = {'default': 'Default'};
 
 // Settings
+App.Settings.FIELD_MAX_LEN      = 32;
+App.Settings.DAY_MAX_LEN        = 2;
+App.Settings.MONTH_MAX_LEN      = 2;
+App.Settings.WDAY_MAX_LEN       = 2;
+App.Settings.HOURS_MAX_LEN      = 2;
+App.Settings.MINUTE_MAX_LEN     = 2;
 App.Settings.USER_VISIBLE_NS    = 2;
 App.Settings.NS_MIN             = 2;
 App.Settings.NS_MAX             = 8;

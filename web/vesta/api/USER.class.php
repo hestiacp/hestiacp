@@ -21,20 +21,23 @@ class USER extends AjaxHandler
     {
         $reply  = array();
         $result = Vesta::execute(Vesta::V_LIST_SYS_USERS, array(Config::get('response_type')));
-        $users = array('Han Solo', 'Darth Vader', 'Jabba the Hutt', 'Boba Fett', 'Jango Fett', ' Aurra Sing', 'Padme', 
-                       'Tusken Raider', 'General Grievous', 'Wedge Antilles', 'Padme Amidala', 'Bib Fortuna',   'Kyle Katarn', 
-                       'Quinlan Vos', 'Princess Leia', 'Obi-Wan Kenobi', 'Han Solo', 'Hondo Ohnaka', 'Noa Briqualon', 'C3P0', 
-                       'R2-D2', 'Quinlan Vos', 'Mara Jade' , 'Luke Skywalker', 'Luke Skywalker' , 'Luke Skywalker'
-                 );
 
         foreach ($result['data'] as $user => $details) {
+	    // get reports attribute
+	    $result_report = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $user, 'VALUE' => 'reports'), self::TEXT);
+	    if ($result_report['status'] != true) {
+		$report = null;
+	    } 
+	    else {
+		$report = $result_report['data'];
+	    }
             $fullname_id = rand(0, count($users)-1);
             $fullname    = implode('', array($details['FNAME'], ' ', $details['LNAME']));
         
             $nses = $this->getNS($user, $details);
             $user_details = array(
-                                "FNAME"                    => $details['FNAME'],
-                                "LNAME"                    => $details['LNAME'],
+                                "FNAME"                 => $details['FNAME'],
+                                "LNAME"                 => $details['LNAME'],
                                 "LOGIN_NAME"            => $user,
                                 "FULLNAME"              => $fullname,                               
                                 "PACKAGE"               => $details['PACKAGE'],
@@ -68,7 +71,7 @@ class USER extends AjaxHandler
                                 "DATE"                  => $details['DATE'],
                                 "U_MAIL_BOXES"          => rand(1, 10),  // TODO: skid
                                 "U_MAIL_FORWARDERS"     => rand(1, 10),  // TODO: skid
-                                "REPORTS_ENABLED"       => 'enabled'     // TODO: skid
+                                "REPORTS_ENABLED"       => $report 
                             );
             $reply[$user] = array_merge($user_details, $nses);
         }
@@ -103,7 +106,9 @@ class USER extends AjaxHandler
         $reports_result = $this->setUserReports($spell['LOGIN_NAME'], $spell['REPORTS_ENABLED']);
         // NS
         $ns_result = $this->setNSentries($spell['LOGIN_NAME'], $spell);
-    
+	// Set SHELL
+	$this->setShell($spell['LOGIN_NAME'], $spell['SHELL']);
+
         if (!$result['status']) {
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
@@ -147,7 +152,7 @@ class USER extends AjaxHandler
 
         $_USER = $_old['LOGIN_NAME'];
 
-        if ($_old['PASSWORD'] != $_new['PASSWORD']) {
+        if (!empty($_new['PASSWORD']) && $_new['PASSWORD'] != Vesta::SAME_PASSWORD) {
             $result = array();
             $result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_PASSWORD, array('USER' => $_USER, 'PASSWORD' => $_new['PASSWORD']));
             if (!$result['status']) {
@@ -174,14 +179,17 @@ class USER extends AjaxHandler
             }
         }
 
+	// Set SHELL
+	$this->setShell($_USER, $_new['SHELL']);
+
         $this->setNSentries($_USER, $_new);
 
         $names = array(
                 'USER'  => $_USER,
-                'NAME'  => $_new['LOGIN_NAME'],
                 'FNAME' => $_new['FNAME'],
                 'LNAME' => $_new['LNAME']
              );
+ 
         $result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_NAME, $names);
         if (!$result['status']) {
             $this->status = FALSE;
@@ -251,4 +259,11 @@ class USER extends AjaxHandler
         return $result;
     }
 
+    /**
+     * TODO: handle result set errors
+     */
+    protected function setShell($user, $shell)
+    {
+	$result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_SHELL, array('USER' => $user, 'SHELL' => $shell));
+    }
 }

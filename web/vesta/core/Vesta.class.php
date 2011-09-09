@@ -11,6 +11,8 @@
  */
 class Vesta 
 {
+    const SAME_PASSWORD			    = '********'; 
+
     // IP
     const V_LIST_SYS_IPS                    = 'v_list_sys_ips';
     const V_ADD_SYS_IP                      = 'v_add_sys_ip';
@@ -46,6 +48,7 @@ class Vesta
     const V_DEL_CRON_JOB                    = 'v_del_sys_cron';
     const V_DEL_SYS_USER_REPORTS            = 'v_del_sys_user_reports';
     // USER
+    const V_GET_SYS_USER_VALUE		    = 'v_get_sys_user_value';
     const V_LIST_SYS_USERS                  = 'v_list_sys_users';
     const V_ADD_SYS_USER                    = 'v_add_sys_user';
     const V_CHANGE_SYS_USER_CONTACT         = 'v_change_sys_user_contact';
@@ -57,6 +60,7 @@ class Vesta
     const V_DEL_SYS_USER                    = 'v_del_sys_user';
     const V_CHANGE_SYS_USER_NAME	    = 'v_change_sys_user_name';
     // WEB_DOMAIN
+    const V_LIST_SYS_USER_IPS 		    = 'v_list_sys_user_ips';
     const V_LIST_WEB_DOMAINS                = 'v_list_web_domains';
     const V_LIST_WEB_DOMAINS_ALIAS          = 'v_list_web_domains_alias';
     const V_LIST_WEB_DOMAINS_ELOG           = 'v_list_web_domains_elog';
@@ -93,6 +97,7 @@ class Vesta
     // DB    
     const V_LIST_DB_BASES                   = 'v_list_db_bases';
     const V_LIST_DB_HOSTS                   = 'v_list_db_hosts';
+    const V_LIST_WEB_DOMAIN_ALIAS	    = 'v_list_web_domain_alias';
     const V_ADD_DB_BASE                     = 'v_add_db_base';
     const V_ADD_DB_HOST                     = 'v_add_db_host';
     const V_SUSPEND_DB_BASE                 = 'v_suspend_db_base';
@@ -113,7 +118,7 @@ class Vesta
      * @param array $parameters
      * @return string
      */
-    static function execute($cmd_command, $parameters=array()) 
+    static function execute($cmd_command, $parameters=array(), $reply = '') 
     {
         $r = new Request();
         $_DEBUG = $r->getParameter("debug", FALSE);
@@ -125,16 +130,12 @@ class Vesta
         $params = array(
                     'sudo'       => Config::get('sudo_path'),
                     'functions'  => Config::get('vesta_functions_path'),
-                    'parameters' => implode("' '", $parameters),
+                    'parameters' => is_array($parameters) ? "'".implode("' '", $parameters)."'" : $parameters,
+		    'reply'      => $reply
                   );
     
-	if (!isset($params['reply'])) {
-	    $params['reply'] = '';
-	}
-
         // e.g.: /usr/bin/sudo /usr/local/vesta/bin/v_list_sys_users vesta json 
-        $cmd = "{$params['sudo']} {$params['functions']}{$cmd_command} '{$params['parameters']}' {$params['reply']}";
-//	print $cmd;//die();
+        $cmd = "{$params['sudo']} {$params['functions']}{$cmd_command} {$params['parameters']} {$params['reply']}";
         exec($cmd, $output, $return);
 
         $result = 0;
@@ -152,7 +153,7 @@ class Vesta
                      "output" => $output,
                      "return" => $return
                  );
-            if ($debug == 2) {
+            if ($_DEBUG == 2) {
                 echo '<p>'.$cmd;
                 echo '<br> output: '; print_r($output);
                 echo '<br> return: '.$return;
@@ -164,8 +165,14 @@ class Vesta
             $result['status'] = FALSE;
             $result['error_code'] = (int)$return;
             $result['error_message'] = implode('', $output);
+
+	    return $result;
         }
-        else {
+        
+	if ($reply == 'text') {
+	    $result['data'] = implode('', $output);
+	} 
+	else {
             $result['data'] = json_decode(implode('', $output), true);
         }
     

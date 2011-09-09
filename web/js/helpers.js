@@ -1,4 +1,17 @@
-
+App.Helpers.scrollTo = function(elm)
+{
+    fb.log(elm);
+    var scroll_to = $(elm).offset().top;
+    if (scroll_to > 1000) {
+        var scroll_time = 300;
+    }
+    else {
+        var scroll_time = 550;
+    }
+    $('html, body').animate({
+        'scrollTop': scroll_to
+    }, scroll_time);
+}
 
 App.Helpers.getMbHumanMeasure = function(val)
 {  
@@ -201,7 +214,7 @@ App.Helpers.getFormValuesFromElement = function(ref)
 
 App.Helpers.updateScreen = function()
 {
-    Custom.init();
+    //Custom.init();
     App.Ajax.request('MAIN.getInitial', {}, function(reply){
         App.Env.initialParams = reply.data;
         App.Helpers.updateInitial();

@@ -28,6 +28,7 @@ App.Settings.ajax_url           = 1;
 App.Settings.uri                = location.href.replace('index.html', '');
 App.Settings.popup_conf         = { 'centered' : true, 'bgcolor' : '#FF0000', 'lightboxSpeed' : 'fast', 'destroyOnClose': true };
 
+App.Settings.PASSWORD_IMMUTE    = '********';
 
 // Messages
 App.Messages.total_dns_records = {single: 'total record', plural: 'total records'};
@@ -42,12 +43,14 @@ App.Settings.Imutable       = {};
 App.Settings.Imutable.USER  = ['LOGIN_NAME'];
 App.Settings.Imutable.DB    = ['DB', 'TYPE', 'USER'];
 App.Settings.Imutable.DNS   = ['DNS_DOMAIN'];
+App.Settings.Imutable.IP    = ['INTERFACE'];
 
 
 // Empty
 App.Empty = {};
-App.Empty.USER = {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','LNAME':'', 'FNAME':'','NS1':'','NS2':'','NS3':'','NS4':'','NS5':'','NS6':'','NS7':'','NS8':''};
+App.Empty.USER       = {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','LNAME':'', 'FNAME':'','NS1':'','NS2':'','NS3':'','NS4':'','NS5':'','NS6':'','NS7':'','NS8':''};
 App.Empty.WEB_DOMAIN = {'CONTACT':'', 'PASSWORD':'','LOGIN_NAME':'','NS':'', 'DOMAIN':'','SSL_CERT':'','SSL_HOME':'','STATS_PASSWORD':'','STATS_LOGIN':'','ALIAS':''};
+App.Empty.DB         = {'DB':'', 'USER':'','FORM':'', 'PASSWORD': ''};
 
 App.Settings.getMethodName = function(action)
 {

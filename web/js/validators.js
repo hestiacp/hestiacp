@@ -25,9 +25,25 @@ App.Validate.getFieldName = function(elm)
 }
 
 App.Validate.Rule = {
+    'statslogin' : function(elm) {   
+        if (!!$('#stats-auth-enable').attr('checked') == true) {
+            if ($(elm).val().trim() == '' || $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
+                return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
+            }
+        }
+        return {VALID: true};
+    },
+    'statspassword': function(elm) {   
+        if (!!$('#stats-auth-enable').attr('checked') == true) {
+            if ($(elm).val().trim() == '') {
+                return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is required'};
+            }
+        }
+        return {VALID: true};
+    },
     'username' : function(elm) {   
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
-            return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is required'};
+            return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
         }
         return {VALID: true};
     },
@@ -173,6 +189,7 @@ App.Validate.displayFormErrors = function(world, elm)
     var ref = $('.form-error', elm);
     ref.removeClass('hidden');
     ref.html(errors_tpl);
+    App.Helpers.scrollTo(ref);
 }
 
 App.Validate.getRules = function(elm)
@@ -180,7 +197,8 @@ App.Validate.getRules = function(elm)
     try {
         var rules_string = $(elm).attr('class');
         var rules = [];
-        $(rules_string.split(/\s/)).each(function(i, str)
+        var rules_splitted = rules_string.split(/\s/);
+        $(rules_splitted).each(function(i, str)
         {        
             var rule = str.split('rule-');
             if (rule.length > 1) {

@@ -13,6 +13,7 @@ class AjaxHandler {
     static public $instance = null;
 
     const JSON      = 'json';
+    const TEXT	    = 'text';
     public $errors  = array();
     public $status  = TRUE;
 

@@ -310,7 +310,7 @@ App.Templates.html = {
 								~!:PACKAGE_OPTIONS~!\
 							</select>\
 						</div>\
-                        <div class="form-row cc hidden">\
+                        <div class="form-row cc">\
 							<label for="#" class="field-label">shell:</label>\
 							<select class="not-styled" name="SHELL">\
 								~!:SHELL_OPTIONS~!\
@@ -511,7 +511,15 @@ App.Templates.html = {
                                 </select>\
 							</div>\
 						</div>\
-						<!-- advanced options -->\
+						<div class="form-row cc">\
+								<label for="#" class="field-label">CGI:</label>\
+								<input type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="not-styled">\
+							</div>\
+                        <div class="form-row cc">\
+								<label for="#" class="field-label">ELOG:</label>\
+								<input type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="not-styled">\
+							</div>\
+                        <!-- advanced options -->\
 						<div class="form-options-group">\
 							<div class="group-header cc collapsed">\
 								<span class="group-title-outer do_action_toggle_section">\
@@ -531,26 +539,26 @@ App.Templates.html = {
 							</div>\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">statistics:</label>\
-								<input type="checkbox" name="STATS" ~!:stats_checked~!="" value="~!:STATS~!" class="styled">\
+								<input type="checkbox" name="STATS" ~!:stats_checked~!="" value="~!:STATS~!" class="not-styled">\
 							</div>\
 							<div class="stats-settings">\
 								<div class="form-row cc">\
 									<label for="#" class="field-label">stats auth:</label>\
-									<input type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="styled">\
+									<input id="stats-auth-enable" type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="not-styled">\
 								</div>\
 								<div class="form-row cc">\
-									<label for="#" class="field-label">login:</label>\
-									<input type="text" class="text-field rule-username" name="STATS_LOGIN" value="~!:STATS_LOGIN~!">\
+									<label for="#" class="field-label">stats login:</label>\
+									<input type="text" class="text-field rule-statslogin" name="STATS_LOGIN" value="~!:STATS_LOGIN~!">\
 								</div>\
 								<div class="form-row pwd-box cc">\
 									<label for="#" class="field-label">password:</label>\
-									<input type="text" value="~!:STATS_PASSWORD~!" name="STATS_PASSWORD" class="text-field rule-password">\
+									<input type="text" value="~!:STATS_PASSWORD~!" name="STATS_PASSWORD" class="text-field rule-statspassword password">\
 									<span class="generate-pwd do_action_generate_pass">Generate</span>\
 								</div>\
 							</div><!-- // stats settings -->\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">ssl:</label>\
-								<input type="checkbox" class="styled" ~!:ssl_checked~!="" value="~!SSL~!">\
+								<input type="checkbox" name="SSL" class="styled" ~!:ssl_checked~!="" value="~!SSL~!">\
 							</div>\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">ssl home:</label>\
@@ -572,7 +580,7 @@ App.Templates.html = {
 							<div class="sub_section hidden">\
                             <div class="form-row cc">\
 								<label for="#" class="field-label">create dns domain:</label>\
-								<input type="checkbox" value="" class="not-styled">\
+								<input type="checkbox" value="~!:DNS~!" ~!:CHECKED_DNS~! name="DNS" class="not-styled">\
 							</div>\
 						</div><!-- DNS options -->\
 						<div class="form-options-group">\
@@ -584,7 +592,7 @@ App.Templates.html = {
 							<div class="sub_section hidden">\
                                 <div class="form-row cc">\
                                     <label for="#" class="field-label">create mail domain:</label>\
-                                    <input type="checkbox" value="" class="not-styled">\
+                                    <input type="checkbox" value="~!:MAIL~!" ~!:CHECKED_MAIL~! name="MAIL" class="not-styled">\
                                 </div>\
                             </div>\
                         </div>\

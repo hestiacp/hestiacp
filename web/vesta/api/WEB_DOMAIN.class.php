@@ -15,10 +15,11 @@ class WEB_DOMAIN extends AjaxHandler
         $user = $this->getLoggedUser();
         $reply = array();
 
-        $result = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS, array($user['uid'], Config::get('response_type')));
+        $result = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS, array('USER' => $user['uid']), self::JSON);
 
-        foreach($result['data'] as $web_domain => $data)
+        foreach($result['data'] as $web_domain => $record)
         {
+//print '<pre>';var_dump($record);die();
             $reply[$web_domain] = array(
                                       'IP'          => $record['IP'],
                                       'U_DISK'      => $record['U_DISK'],
@@ -66,7 +67,7 @@ class WEB_DOMAIN extends AjaxHandler
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
 
-        if ($_s['TPL']) {
+        if (!empty($_s['TPL'])) {
             $params = array(
                         'USER'   => $user['uid'],
                         'DOMAIN' => $_s['DOMAIN'],
@@ -80,8 +81,9 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
       
-        if ($_s['ALIAS']) {
-            $alias_arr = explode(',', $_s['ALIAS']);
+        if (!empty($_s['ALIAS'])) {
+            $alias = str_replace("\n", "", $_s['ALIAS']);
+	    $alias = str_replace("\n", "", $alias);
 
             foreach ($alias_arr as $alias) {
                 $params = array(
@@ -99,11 +101,11 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
             
-        if ($_s['STAT']) {
+        if (!empty($_s['STATS'])) {
             $params = array(
                         'USER'   => $user['uid'],
                         'DOMAIN' => $_s['DOMAIN'],
-                        'STAT'   => $_s['STAT']);
+                        'STAT'   => $_s['STATS'] == 'off' ? false : true);
             $result = 0;
             $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_STAT, $params);
 
@@ -112,7 +114,7 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
            
-        if ($_s['STAT_AUTH']) {
+        if (!empty($_s['STAT_AUTH'])) {
             $params = array(
                         'USER'          => $user['uid'],
                         'DOMAIN'        => $_s['DOMAIN'],
@@ -126,8 +128,7 @@ class WEB_DOMAIN extends AjaxHandler
                 $this->errors['STAT_AUTH'] = array($result['error_code'] => $result['error_message']);
             }
 
-        if (0) {
-            if ($_s['SSL']) {
+        /*    if ($_s['SSL']) {
                 $params = array(
                             'USER'     => $user[''],
                             'DOMAIN'   => $_s['DOMAIN'],
@@ -149,9 +150,9 @@ class WEB_DOMAIN extends AjaxHandler
                     $this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
                 }
             }
-        }
+        */
       
-        if ($_s['CREATE_DNS_DOMAIN']) {
+        /*if (!empty($_s['DNS'])) {
             $params = array(
                         'USER'       => $user['uid'],
                         'DNS_DOMAIN' => $_s['DOMAIN'],
@@ -166,10 +167,10 @@ class WEB_DOMAIN extends AjaxHandler
             if (!$result['status']) {
                 $this->errors['DNS_DOMAIN'] = array($result['error_code'] => $result['error_message']);
             }            
-        }
+        }*/
       
-        /*
-        if ($_s['CREATE_MAIL_DOMAIN']) {
+        
+        /*if (!empty($_s['MAIL'])) {
             $params = array(
                         'USER'        => $_user,
                         'MAIL_DOMAIN' => $_s['DOMAIN'],
@@ -184,8 +185,8 @@ class WEB_DOMAIN extends AjaxHandler
         $result = $mail->addExecute($params);
         if (!$result['status']) 
           $this->errors['MAIL_DOMAIN'] = array($result['error_code'] => $result['error_message']);
-        }
-        */
+        }*/
+        
       
         return $this->reply($result['status'], $result['data']);
     }
@@ -211,21 +212,6 @@ class WEB_DOMAIN extends AjaxHandler
                     'DNS_DOMAIN' => $_s['DOMAIN']
                   );
    
-        require_once V_ROOT_DIR . 'api/DNS.class.php';
-        $dns = new DNS();
-        $result = $dns->delExecute($params);
-    
-        if (!$result['status'] && $result['error_code'] != 31) { // domain not found
-            $this->errors['DNS'] = array($result['error_code'] => $result['error_message']);
-        }
-   
-        require_once V_ROOT_DIR . 'api/DNS.class.php';
-
-        $params = array(
-                    'USER'        => $user['uid'],
-                    'MAIL_DOMAIN' => $_s['DOMAIN']
-                  );
-
         return $this->reply($result['status'], $result['data']);
     }
   
@@ -240,7 +226,7 @@ class WEB_DOMAIN extends AjaxHandler
     
         if ($_old['IP'] != $_new['IP']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_IP, array('USER' => $_user, 'DOMAIN' => $_DOMAIN, 'IP' => $_new['IP']));
+            $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_IP, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'IP' => $_new['IP']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['IP_ADDRESS'] = array($result['error_code'] => $result['error_message']);
@@ -249,7 +235,7 @@ class WEB_DOMAIN extends AjaxHandler
 
         if ($_old['TPL'] != $_new['TPL']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_TPL, array('USER' => $_user, 'DOMAIN' => $_DOMAIN, 'TPL' => $_new['TPL']));
+            $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_TPL, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'TPL' => $_new['TPL']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['TPL'] = array($result['error_code'] => $result['error_message']);
@@ -266,7 +252,7 @@ class WEB_DOMAIN extends AjaxHandler
             $deleted = array_diff($old_arr, $new_arr);
 
             foreach ($added as $alias) {
-                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ALIAS, array('USER' => $_user, 'DOMAIN' => $_DOMAIN, 'ALIAS' => $alias));
+                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ALIAS, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'ALIAS' => $alias));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['ADD_ALIAS'] = array($result['error_code'] => $result['error_message']);
@@ -274,7 +260,7 @@ class WEB_DOMAIN extends AjaxHandler
             }
         
             foreach ($deleted as $alias) {
-                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_ALIAS, array('USER' => $_user, 'DOMAIN' => $_DOMAIN, 'ALIAS' => $alias));
+                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_ALIAS, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'ALIAS' => $alias));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['DEL_ALIAS'] = array($result['error_code'] => $result['error_message']);
@@ -283,26 +269,26 @@ class WEB_DOMAIN extends AjaxHandler
         }
 
 
-        if ($_old['STAT'] != $_new['STAT']) {
+        if (!empty($_new['STAT'])) {
             if ($_new['STAT'] == true) {
                 $result = array();
-                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_STAT, array('USER' => $_user, 'DOMAIN' => $_DOMAIN, 'STAT' => $_new['STAT']));
+                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_STAT, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'STAT' => ($_new['STAT'] == 'off' ? false : true)));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['ADD_STAT'] = array($result['error_code'] => $result['error_message']);
                 }
             }
 
-            if ($_new['STAT'] == false) {
+            if ($_new['STAT'] == 'off') {
                 $result = array();
-                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_STAT, array('USER' => $_user, 'DOMAIN' => $_DOMAIN));
+                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_STAT, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['DEL_STAT'] = array($result['error_code'] => $result['error_message']);
                 }
                 $result = array();
 
-                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_STAT_AUTH, array('USER' => $_user, 'DOMAIN' => $_DOMAIN, 'STAT_USER' => $_new['STAT_USER']));
+                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_STAT_AUTH, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'STAT_USER' => $_new['STAT_USER']));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['DEL_STAT_AUTH'] = array($result['error_code'] => $result['error_message']);
@@ -313,7 +299,7 @@ class WEB_DOMAIN extends AjaxHandler
         if ($_old['CGI'] != $_new['CGI']) {
             if ($_new['CGI'] == true) {
                 $result = array();
-                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_CGI, array('USER' => $_user, 'DOMAIN' => $_DOMAIN));
+                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_CGI, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['ADD_CGI'] = array($result['error_code'] => $result['error_message']);
@@ -322,7 +308,7 @@ class WEB_DOMAIN extends AjaxHandler
             
             if ($_new['CGI'] == false) {
                 $result = array();
-                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_CGI, array('USER' => $_user, 'DOMAIN' => $_DOMAIN));
+                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_CGI, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['DEL_CGI'] = array($result['error_code'] => $result['error_message']);
@@ -333,7 +319,7 @@ class WEB_DOMAIN extends AjaxHandler
         if ($_old['ELOG'] != $_new['ELOG']) {
             if ($_new['ELOG'] == true) {
                 $result = array();
-                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ELOG, array('USER' => $_user, 'DOMAIN' => $_DOMAIN));
+                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ELOG, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['ADD_ELOG'] = array($result['error_code'] => $result['error_message']);
@@ -342,7 +328,7 @@ class WEB_DOMAIN extends AjaxHandler
         
             if ($_new['ELOG'] == false) {
                 $result = array();
-                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_ELOG, array('USER' => $_user, 'DOMAIN' => $_DOMAIN));
+                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_ELOG, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['DEL_ELOG'] = array($result['error_code'] => $result['error_message']);
@@ -361,7 +347,7 @@ class WEB_DOMAIN extends AjaxHandler
         $user = $this->getLoggedUser();
 
         $params = array(
-                    'USER' => $_user['uid'],
+                    'USER' => $user['uid'],
                     'DOMAIN' => $_s['DOMAIN']
                   );
 

@@ -190,12 +190,6 @@ App.HTML.Build.user_entry = function(o, key)
     var tpl = App.Templates.get('ENTRY', 'user');  
     tpl = App.HTML.setTplKeys(tpl, o);
        
-    /*if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
-        var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
-    }
-    else {
-        var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
-    }*/
     tpl.set(':SUSPENDED_TPL', '');//sub_tpl.finalize());
    
     var ns      = [];
@@ -225,13 +219,18 @@ App.HTML.Build.user_entry = function(o, key)
         tpl.set(':NS', ns_custom.finalize());
     }
     
-    
+    tpl.set(':REPORTS_ENABLED', o.REPORTS_ENABLED == 'yes' ? 'enabled' : 'DISABLED');    
+        
     return tpl.finalize();
 }
 
 
 App.HTML.Build.user_form = function(options, id) 
 {
+    var in_edit = false;
+    if (!App.Helpers.isEmpty(options)) {
+        in_edit = true;
+    }
     if('undefined' == typeof App.Env.initialParams) {
         return alert('Please wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
@@ -253,7 +252,7 @@ App.HTML.Build.user_form = function(options, id)
     // NS
     var ns = [];
     $([3,4,5,6,7,8]).each(function(i, index)
-    {fb.warn(options);
+    {
         if (options['NS'+index].trim() != '') {
             var tpl_ns = App.Templates.get('NS_INPUT', 'user');
             tpl_ns.set(':NS_LABEL', 'NS #' + (index));
@@ -264,7 +263,9 @@ App.HTML.Build.user_form = function(options, id)
     ns[ns.length++] = App.Templates.get('PLUS_ONE_NS', 'user').finalize();
     
     tpl.set(':NS', ns.done());
-    
+    if (in_edit == true) {
+        options.PASSWORD = App.Settings.PASSWORD_IMMUTE;
+    }  
     tpl = App.HTML.setTplKeys(tpl, options, true);        
     tpl = App.HTML.Build.user_selects(tpl, options);
     
@@ -287,7 +288,7 @@ App.HTML.Build.web_domain_entry = function(o, key)
     var tpl = App.Templates.get('ENTRY', 'web_domain');
     tpl = App.HTML.setTplKeys(tpl, o);      
     
-    if (App.Constants.SUSPENDED_YES == o.SUSPENDED) {
+    if (App.Constants.SUSPENDED_YES == o.SUSPEND) {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
     }
     else {
@@ -364,6 +365,10 @@ App.HTML.Build.db_entry = function(o, key)
 
 App.HTML.Build.db_form = function(options, id) 
 {
+    var in_edit = false;
+    if (!App.Helpers.isEmpty(options)) {
+        in_edit = true;
+    }
     if('undefined' == typeof App.Env.initialParams) {
         return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
@@ -380,11 +385,12 @@ App.HTML.Build.db_form = function(options, id)
         tpl.set(':save_button', 'SAVE'); 
     }
     
-    options = !App.Helpers.isEmpty(options) ? options : {'DB':'', 'USER':'','FORM':'', 'PASSWORD': ''};    
+    options = !App.Helpers.isEmpty(options) ? options : App.Empty.DB;  
+    if (in_edit == true) {
+        options.PASSWORD = App.Settings.PASSWORD_IMMUTE;
+    }  
     tpl = App.HTML.setTplKeys(tpl, options, true);        
-    tpl = App.HTML.Build.db_selects(tpl, options);   
-    
-    tpl.set(':PASSWORD', '');
+    tpl = App.HTML.Build.db_selects(tpl, options);       
     
     return tpl.finalize();
 }
@@ -542,7 +548,7 @@ App.HTML.Build.db_selects = function(tpl, options)
 App.HTML.Build.ip_selects = function(tpl, options) 
 {
     // OWNER
-    var users = App.Env.initialParams.IP.SYS_USERS;
+    var users = App.Env.initialParams.IP.OWNER;
     var opts = App.HTML.Build.options(users, options.OWNER);
     tpl.set(':owner_options', opts);
     

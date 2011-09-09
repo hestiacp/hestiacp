@@ -23,7 +23,7 @@ class MAIN extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */ 
-    public function versionExecute($request) 
+    public function versionExecute(Request $request) 
     {
         $result = array(
                     'version' => '1.0',
@@ -41,7 +41,7 @@ class MAIN extends AjaxHandler
      * @param Request $request
      * @return string - Ajax Reply
      */ 
-    public function getInitialExecute($request) 
+    public function getInitialExecute(Request $request) 
     {
         require_once V_ROOT_DIR . 'api/IP.class.php';
         require_once V_ROOT_DIR . 'api/USER.class.php';
@@ -55,14 +55,13 @@ class MAIN extends AjaxHandler
         $user_obj        = new USER();
         $users           = json_decode($user_obj->getListExecute($request), TRUE);
         $user_names      = array_keys($users['data']);
-        $db_types        = array('mysql' => 'mysql', 'postgress' => 'postgress');
         $interfaces_arr  = json_decode($ip_obj->getSysInterfacesExecute($request), TRUE);
         $interfaces      = $interfaces_arr['data'];
 
         $data_web_domain = array('ips' => $ips);
         $data_ip         = array('user_names' => $user_names, 'interfaces' => $interfaces);
         $data_dns        = array('ips' => $ips);
-        $data_db         = array('db_types' => $db_types);
+        $data_db         = array('db_types' => $this->getDBTypes());
         $data_users      = array('user_names' => $user_names);
     
         $reply = array(
@@ -133,10 +132,10 @@ class MAIN extends AjaxHandler
      */
     public function getIpParams($data = array())
     {
-	$users = array();
-	foreach ((array)$data['user_names'] as $user) {
-	    $users[$user] = $user;
-	}
+        $users = array();
+        foreach ((array)$data['user_names'] as $user) {
+            $users[$user] = $user;
+        }
         return array(
                 'SYS_USERS' => $users,
                 'STATUSES' => array(
@@ -174,7 +173,7 @@ class MAIN extends AjaxHandler
                 'TTL' => array(),
                 'record' => array(
                                 'RECORD' => array(),
-                                'RECORD_TYPE' => array('a' => 'a', 'reverse' => 'reverse'),
+                                'RECORD_TYPE' => array('A' => 'A', 'NS' => 'NS', 'MX' => 'MX', 'TXT' => 'TXT'),
                                 'RECORD_VALUE' => array()
                             )
             );
@@ -188,10 +187,16 @@ class MAIN extends AjaxHandler
      */
     public function getDbParams($data = array())
     {
+        $db_types = $this->getDBTypes();
         return array(
-                    'TYPE' => $data['db_types'],
+                    'TYPE' => $db_types,
                     'HOST' => array('vestacp.com' => 'vestacp.com', 'askcow.org' => 'askcow.org')
                 );
+    }
+    
+    public function getDBTypes()
+    {
+        return array('mysql' => 'mysql', 'postgre' => 'postgre');
     }
     
     /**

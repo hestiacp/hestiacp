@@ -202,10 +202,14 @@ App.Helpers.getFormValuesFromElement = function(ref)
 App.Helpers.updateScreen = function()
 {
     Custom.init();
+    App.Ajax.request('MAIN.getInitial', {}, function(reply){
+        App.Env.initialParams = reply.data;
+        App.Helpers.updateInitial();
+    });
     //$(document.body).find('select').each(function(i, o){
     //   $(o).selectbox(); 
     //});
-    }
+}
 
 App.Helpers.alert = function(msg) 
 {
@@ -286,4 +290,22 @@ App.Helpers.getBackendUrl = function()
     }
 
     return url_parts.join('/');
+}
+
+App.Helpers.disbleNotEditable = function()
+{
+    if ('undefined' == typeof App.Settings.Imutable[App.Env.world]) {
+        return false;
+    }
+    
+    $('.form').each(function(i, form)
+    {
+        if ($(form).attr('id') == '') {
+            $('input, select, textarea', form).each(function(i, elm) {
+                if ($.inArray($(elm).attr('name'), App.Settings.Imutable[App.Env.world]) != -1) {
+                    $(elm).attr('disabled', true);
+                }
+            });       
+        }
+    });
 }

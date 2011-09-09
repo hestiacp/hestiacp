@@ -69,7 +69,7 @@ App.Model.add = function(values, source_json)
         spell: $.toJSON(values)
     }, function(reply){
         if(!reply.result) {
-            App.Helpers.Warn('Changes were not applied');
+            App.Helpers.Warn('Changes were not applied ' + App.Helpers.toJSON(reply.errors) );
         }
         else {
             /*var build_method = App.Env.getWorldName() + '_entry';

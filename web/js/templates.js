@@ -35,7 +35,8 @@ App.Templates.html = {
         SUSPENDED_TPL_SUSPENDED : ['<span class="ip-status-info ip-suspended-status do_action_unsuspend"><span class="ip-status-text do_action_unsuspend">suspended</span></span>']        
     },
     popup: {
-        error: ['<div class="error"><center><h1 style="color: red;">Important: An Error Has Occured.</h1><hr></center>&nbsp;&nbsp;&nbsp;&nbsp;Something went wrong and some of your actions can be not saved in system. Mostly, it happens when you have network connection errors.<br>,&nbsp;&nbsp;&nbsp;&nbsp;However, please notify us about the situation. It would be helpfull if you will write us approximate time the error occured and last actions you were performing. You send your petition on <a href="mail_to">this email: BLABLA</a>,<br><br><center><span style="color: rgb(92, 92, 92);">Sorry for inconvinience. (We recommend you to reload the page)</span></center></div>']
+        error: ['<div class="error"><center><h1 style="color: red;">Important: An Error Has Occured.</h1><hr></center>&nbsp;&nbsp;&nbsp;&nbsp;Something went wrong and some of your actions can be not saved in system. Mostly, it happens when you have network connection errors.<br>,&nbsp;&nbsp;&nbsp;&nbsp;However, please notify us about the situation. It would be helpfull if you will write us approximate time the error occured and last actions you were performing. You send your petition on <a href="mail_to">this email: BLABLA</a>,<br><br><center><span style="color: rgb(92, 92, 92);">Sorry for inconvinience. (We recommend you to reload the page)</span></center></div>'],
+        login: ['<div class="error" id="authorize-form"><center><h1 style="color: red;">Please authorize.</h1><hr><div id="auth-error" style="color:red"></div>Login: <input type="text" id="authorize-login" / ><br/>Password: <input type="password" id="authorize-password"/><br /><button class="do_action_do_authorize">Log in</button></center></center></div>']
     },
     dates: {
         'lock_plan_date' : ['<button class="do.savePlanDate(~!:task_id~!)">Lock plan dates</button><button class="do.lockPlanDate(~!:task_id~!)">Lock plan dates</button>'],
@@ -511,13 +512,11 @@ App.Templates.html = {
                                 </select>\
 							</div>\
 						</div>\
-						<div class="form-row cc">\
-								<label for="#" class="field-label">CGI:</label>\
-								<input type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="not-styled">\
-							</div>\
-                        <div class="form-row cc">\
-								<label for="#" class="field-label">ELOG:</label>\
-								<input type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="not-styled">\
+						<div class="form-row cc adv_opts">\
+								<label for="#" class="field-label">template:</label>\
+								<select class="not-styled" name="TPL">\
+								~!:TPL_OPTIONS~!\
+								</select>\
 							</div>\
                         <!-- advanced options -->\
 						<div class="form-options-group">\
@@ -527,30 +526,32 @@ App.Templates.html = {
 								</span>									\
 							</div>\
                             <div class="sub_section hidden">\
-							<div class="form-row cc adv_opts">\
-								<label for="#" class="field-label">template:</label>\
-								<select class="not-styled" name="TPL">\
-								~!:TPL_OPTIONS~!\
-								</select>\
-							</div>\
 							<div class="form-row cc">\
+								<label for="#" class="field-label">CGI:</label>\
+								<input type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="not-styled">\
+							</div>\
+                        <div class="form-row cc">\
+								<label for="#" class="field-label">ELOG:</label>\
+								<input type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="not-styled">\
+							</div>\
+                            <div class="form-row cc">\
 								<label for="#" class="field-label">alias list:</label>\
 								<textarea name="ALIAS" class="textarea">~!:ALIAS~!</textarea>\
 							</div>\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">statistics:</label>\
-								<input type="checkbox" name="STATS" ~!:stats_checked~!="" value="~!:STATS~!" class="not-styled">\
+								<select name="STAT">~!:STAT_OPTIONS~!</select>\
 							</div>\
 							<div class="stats-settings">\
 								<div class="form-row cc">\
 									<label for="#" class="field-label">stats auth:</label>\
-									<input id="stats-auth-enable" type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="not-styled">\
+									<input id="stats-auth-enable" type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="not-styled do_action_toggle_stats_block">\
 								</div>\
-								<div class="form-row cc">\
+								<div class="form-row stats-block ~!:ACTIVE_LOGIN~! cc">\
 									<label for="#" class="field-label">stats login:</label>\
 									<input type="text" class="text-field rule-statslogin" name="STATS_LOGIN" value="~!:STATS_LOGIN~!">\
 								</div>\
-								<div class="form-row pwd-box cc">\
+								<div class="form-row pwd-box ~!:ACTIVE_PASSWORD~! stats-block cc">\
 									<label for="#" class="field-label">password:</label>\
 									<input type="text" value="~!:STATS_PASSWORD~!" name="STATS_PASSWORD" class="text-field rule-statspassword password">\
 									<span class="generate-pwd do_action_generate_pass">Generate</span>\
@@ -576,7 +577,7 @@ App.Templates.html = {
 							</div>\
 						</div><!-- // advanced options -->\
 						</div>\
-                        <div class="form-options-group">\
+                        <div class="form-options-group hidden">\
 							<div class="group-header cc collapsed">\
 								<span class="group-title-outer do_action_toggle_section">\
 									<span class="group-title do_action_toggle_section">DNS options</span>\
@@ -588,7 +589,7 @@ App.Templates.html = {
 								<input type="checkbox" value="~!:DNS~!" ~!:CHECKED_DNS~! name="DNS" class="not-styled">\
 							</div>\
 						</div><!-- DNS options -->\
-						<div class="form-options-group">\
+						<div class="form-options-group hidden">\
 							<div class="group-header cc collapsed">\
 								<span class="group-title-outer do_action_toggle_section">\
 									<span class="group-title do_action_toggle_section">Mail options</span>\
@@ -678,7 +679,7 @@ App.Templates.html = {
 								</span>\
 								<span class="prop-box stats-box">\
 									<span class="prop-title">stats:</span>\
-									<span class="prop-value">~!:STATS~!</span>\
+									<span class="prop-value">~!:STAT~!</span>\
 									<span class="stats-auth stats-auth-on">\
 										<span class="stats-auth-text">~!:STATS_AUTH~!</span>\
 									</span>\

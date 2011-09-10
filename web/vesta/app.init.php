@@ -12,6 +12,8 @@ require_once V_ROOT_DIR . 'core/utils/Message.class.php';
 require_once V_ROOT_DIR . 'core/Request.class.php';
 require_once V_ROOT_DIR . 'api/AjaxHandler.php';
 
+VestaSession::start();
+
 /**
  * App execution 
  * 

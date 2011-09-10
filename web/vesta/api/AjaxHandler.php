@@ -42,13 +42,14 @@ class AjaxHandler {
     public function dispatch(Request $request) 
     {
         $method = Request::parseAjaxMethod($request);
+	if (!in_array($method['namespace'].'.'.$method['function'], array('MAIN.signin', 'MAIN.logout'))) {
+	    $user = $this->getLoggedUser();
+	}
+
         $inc_file = V_ROOT_DIR . 'api' . DIRECTORY_SEPARATOR . $method['namespace'] . '.class.php';
         if (!is_readable($inc_file)) {
             throw new SystemException(Message::INVALID_METHOD);
         }
-
-//	return $this->reply('NOT_AUTHORISED');
-
         require $inc_file;
 
         $space = new $method['namespace'];

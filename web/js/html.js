@@ -296,6 +296,13 @@ App.HTML.Build.web_domain_entry = function(o, key)
     }    
     tpl.set(':SUSPENDED_TPL', sub_tpl.finalize());
     
+    if (o.STATS_LOGIN.trim() != '') {
+        tpl.set(':STATS_AUTH', '+auth');
+    }
+    else {
+        tpl.set(':STATS_AUTH', '');
+    }
+    
     return tpl.finalize();
 }
 
@@ -304,6 +311,12 @@ App.HTML.Build.web_domain_form = function(options, id)
     if('undefined' == typeof App.Env.initialParams) {
         return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
+    
+    var in_edit = false;
+    if (!App.Helpers.isEmpty(options)) {
+        in_edit = true;
+    }
+    
     var tpl = App.Templates.get('FORM', 'web_domain');
     tpl.set(':source', options);
     tpl.set(':id', id || '');
@@ -318,9 +331,31 @@ App.HTML.Build.web_domain_form = function(options, id)
     }
     
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.WEB_DOMAIN;
-    
+    if (in_edit == true) {
+        options.STATS_PASSWORD = options.STATS_LOGIN.trim() != '' ? App.Settings.PASSWORD_IMMUTE : '';
+    }  
     tpl = App.HTML.setTplKeys(tpl, options, true);        
     tpl = App.HTML.Build.web_domain_selects(tpl, options);
+    
+    if (options.CGI == 'yes') {
+        tpl.set(':CHECKED_CGI', 'checked="checked"');
+    }
+    
+    if (options.ELOG == 'yes') {
+        tpl.set(':CHECKED_ELOG', 'checked="checked"');
+    }
+    
+    if (options.STATS_LOGIN.trim() != '') {
+        tpl.set(':STAT_AUTH', 'checked="checked"');
+        tpl.set(':ACTIVE_LOGIN', '');
+        tpl.set(':ACTIVE_PASSWORD', '');
+        tpl.set(':stats_auth_checked', 'checked="checked"');
+    }
+    else {
+        tpl.set(':ACTIVE_LOGIN', 'hidden');
+        tpl.set(':ACTIVE_PASSWORD', 'hidden');
+        tpl.set(':stats_auth_checked', '');
+    }
     
     return tpl.finalize();
 }
@@ -601,6 +636,14 @@ App.HTML.Build.web_domain_selects = function(tpl, options)
         var obj = App.Env.initialParams.WEB_DOMAIN.TPL;
         var opts = App.HTML.Build.options(obj, options.TPL);
         tpl.set(':TPL_OPTIONS', opts);        
+        
+        // TPL
+        var obj = App.Env.initialParams.WEB_DOMAIN.STAT;
+        var opts = App.HTML.Build.options(obj, options.STAT);
+        tpl.set(':STAT_OPTIONS', opts);        
+        
+        
+        //<input type="checkbox" name="STATS" ~!:stats_checked~!="" value="~!:STATS~!" class="not-styled">\
     }
     catch (e) {        
         return tpl;

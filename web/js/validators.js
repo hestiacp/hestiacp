@@ -30,7 +30,7 @@ App.Validate.Rule = {
             if ($(elm).val().trim() == '' || $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
             }
-            if ($(elm).val().trim() != '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+            if ($(elm).val().trim() != '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
             }
         }
@@ -41,7 +41,7 @@ App.Validate.Rule = {
             if ($(elm).val().trim() == '') {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is required'};
             }
-            if ($(elm).val().trim() != '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+            if ($(elm).val().trim() != '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
             }
         }
@@ -51,7 +51,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
         }
-        if ($(elm).val().trim() != '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+        if ($(elm).val().trim() != '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
         }
         return {VALID: true};
@@ -78,7 +78,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' must contain only letters without spaces or other symbols'};
         }
-        if ($(elm).val().trim() != '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+        if ($(elm).val().trim() != '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
         }
         return {VALID: true};
@@ -87,7 +87,7 @@ App.Validate.Rule = {
         if ($(elm).val().search(/^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/) == -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' not a valid email'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+        if ($(elm).val().trim() == '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
         }
         return {VALID: true};
@@ -109,7 +109,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && (/^([a-z0-9\.])*[a-z0-9][a-z0-9\-]+[a-z0-9](\.[a-z]{2,4})+$/).test($(elm).val()) == false) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' not a valid NS name'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+        if ($(elm).val().trim() == '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
         }
         return {VALID: true};
@@ -118,7 +118,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^0-9\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong minute value'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.MINUTE_MAX_LEN) {
+        if ($(elm).val().trim() == '' && $(elm).val().length > App.Settings.MINUTE_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' invalid'};
         }
         return {VALID: true};
@@ -130,7 +130,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^0-9\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong hour value'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.HOURS_MAX_LEN) {
+        if ($(elm).val().trim() == '' && $(elm).val().length > App.Settings.HOURS_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' invalid'};
         }
         return {VALID: true};
@@ -142,7 +142,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^123456\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong week day value'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.WDAY_MAX_LEN) {
+        if ($(elm).val().trim() == '' && $(elm).val().length > App.Settings.WDAY_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' invalid'};
         }
         return {VALID: true};
@@ -154,7 +154,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^0-9\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong month value'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.MONTH_MAX_LEN) {
+        if ($(elm).val().trim() == '' && $(elm).val().length > App.Settings.MONTH_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' invalid'};
         }
         return {VALID: true};
@@ -166,7 +166,7 @@ App.Validate.Rule = {
         if ($(elm).val().trim() != '' && $(elm).val().search(/[^0-9\/\*-,]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' wrong day value'};
         }
-        if ($(elm).val().trim() == '' || $(elm).val().length > App.Settings.DAY_MAX_LEN) {
+        if ($(elm).val().trim() == '' && $(elm).val().length > App.Settings.DAY_MAX_LEN) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' invalid'};
         }
         return {VALID: true};

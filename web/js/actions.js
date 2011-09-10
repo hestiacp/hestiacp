@@ -1,3 +1,26 @@
+App.Actions.authorize = function()
+{
+    if ($('#authorize-form').length > 0) {
+        return;
+    }
+    
+    App.View.popup('login');
+}
+
+App.Actions.do_authorise = function()
+{
+    $('#authorize-error').text('');
+    App.Ajax.request('MAIN.signin', {'login':$('#authorize-login').val(), 'password':$('#authorize-login'.val())}, function(reply)
+    {
+        if (reply.result) {
+            location.href = '';
+        }
+        else {
+            $('#authorize-error').text(reply.message);
+        }
+    });
+}
+
 App.Actions.delete_entry = function(evt) 
 {
     var confirmed = confirm(App.i18n.getMessage('confirm'));
@@ -350,4 +373,15 @@ App.Actions.view_template_info = function(evt)
             App.Helpers.openInnerPopup(elm, reply.data);
         }        
     });
+}
+
+App.Actions.toggle_stats_block = function(evt)
+{
+    var elm = $(evt.target);
+    if (!!elm.attr('checked')) {
+        elm.parents('.stats-settings').find('.stats-block').removeClass('hidden');
+    }
+    else {
+        elm.parents('.stats-settings').find('.stats-block').addClass('hidden');
+    }
 }

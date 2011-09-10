@@ -191,8 +191,9 @@ App.Ajax.request = function(jedi_method, data, callback)
             reply = jsonParse(reply);
             
             if (reply.result == 'NOT_AUTHORISED') {
-                
-                return alert('NOT AUTH');
+                $('#content').html('<center><h1 style="font-size: 18px;color:red;">Not Authorized</h1></center>');
+                App.Helpers.afterAjax();
+                return App.Actions.authorize();                
             }
             
             //timer.start();        

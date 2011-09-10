@@ -17,6 +17,8 @@
 class MAIN extends AjaxHandler 
 {
 
+    protected $templates = null;
+
     /**
      * Get Version
      * 
@@ -34,6 +36,20 @@ class MAIN extends AjaxHandler
         return $this->reply(true, $result);
     }
 
+    public function signinExecute($request)
+    {
+	$login = $request->getParameter('login');
+	$password = $request->getParameter('password');
+
+	$result = Vesta::execute('v_check_sys_user_password', array('USER' => $login, 'PASSWORD' => $password));
+	if ($result['status'] == true) {
+	    return $this->reply(VestaSession::authorize($login));
+	}
+	else {
+	    return $this->reply(false, 'Incorrect login / password');
+	}
+    }
+
     /**
      * Get Initial params.
      * Global constants / variables / configs
@@ -43,26 +59,6 @@ class MAIN extends AjaxHandler
      */ 
     public function getInitialExecute(Request $request) 
     {
-        /*require_once V_ROOT_DIR . 'api/IP.class.php';
-        require_once V_ROOT_DIR . 'api/USER.class.php';
-        // IP
-        $ip_obj          = new IP();
-        $user_ips        = json_decode($ip_obj->getListUserIpsExecute($request), TRUE);
-        foreach ($user_ips['data'] as $ip) {
-            $ips[$ip['IP_ADDRESS']] = $ip['IP_ADDRESS'];
-        }
-        // USER
-        $user_obj        = new USER();
-        $users           = json_decode($user_obj->getListExecute($request), TRUE);
-        $user_names      = array_keys($users['data']);
-        $interfaces_arr  = json_decode($ip_obj->getSysInterfacesExecute($request), TRUE);
-        $interfaces      = $interfaces_arr['data'];
-
-        $data_web_domain = array('ips' => $ips);
-        $data_ip         = array('user_names' => $user_names, 'interfaces' => $interfaces);
-        $data_dns        = array('ips' => $ips);
-        $data_db         = array('db_types' => $this->getDBTypes());
-        $data_users      = array('user_names' => $user_names);*/
 	$user = VestaSession::getInstance()->getUser();
 	$global_data = array();
 	$totals = array(
@@ -135,6 +131,25 @@ class MAIN extends AjaxHandler
 
         return $this->reply(true, $reply);
     }
+
+    protected function getTemplates()
+    {
+	if (null != $this->templates) {
+	    return $this->templates;
+	}
+	else {
+	    $user = $this->getLoggedUser();
+	    $this->templates = array();
+	    //v_list_web_templates vesta json
+	    $result = Vesta::execute('v_list_web_templates', array('USER' => $user['uid']), self::JSON);
+	    // TODO: handle errors!
+	    foreach ($result['data'] as $tpl => $description) {
+		$this->templates[$tpl] = $tpl;
+	    }
+
+	    return $this->templates;
+	}
+    }
     
     /**
      * WEB DOMAIN initial params
@@ -146,7 +161,6 @@ class MAIN extends AjaxHandler
     {
 	$user = $this->getLoggedUser();
 	$ips = array();
-	//v_list_sys_user_ips vesta
         $result	= Vesta::execute(Vesta::V_LIST_SYS_USER_IPS, array('USER' => $user['uid']), self::JSON);
 	foreach ($result['data'] as $sys_ip => $ip_data) {
 	    $ips[$sys_ip] = $sys_ip;
@@ -157,11 +171,12 @@ class MAIN extends AjaxHandler
 	}
 
         return array(
-                'TPL' => array('default' => 'default'),
+                'TPL' => $this->getTemplates(),
                 'ALIAS' => array(),
                 'STAT' => array(
+			    'none'      => 'none',
                             'webalizer' => 'webalizer',
-                            'awstats' => 'awstats'
+                            'awstats'   => 'awstats'
                           ),
                 'IP' => $ips
            );
@@ -224,7 +239,7 @@ class MAIN extends AjaxHandler
     {
         return  array(
                 'IP' => @$data['ips'],
-                'TPL' => array('default' => 'default'),
+                'TPL' => $this->getTemplates(),
                 'EXP' => array(),
                 'SOA' => array(),
                 'TTL' => array(),

@@ -5,9 +5,9 @@ class VestaSession
     
     static public $instance = null;
     
-    public function __construct()
+    static function start()
     {
-	//session_start();
+	session_start();
     }
     
     /**
@@ -20,10 +20,21 @@ class VestaSession
         return null == self::$instance ? self::$instance = new self() : self::$instance;
     }
      
+    static function authorize($username)
+    {
+	$_SESSION['user'] = $username;
+	return true;
+    }
+
     public function getUser()
     {
 	//var_dump($_SESSION);die();
-        return array('uid' => 'vesta');
+	if (isset($_SESSION['user'])) {
+	    return array('uid' => $_SESSION['user']);
+	}
+
+	print '{"result": "NOT_AUTHORISED"}';
+	exit;
     }
     
 }

@@ -1,5 +1,17 @@
 <?php
 
+$url = "http://dev.vestacp.com:8083/dispatch.php";  
+$useragent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";  
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_URL,$url);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_POST));
+$result= curl_exec ($ch);
+curl_close ($ch);
+die();
+
+
 define('V_ROOT_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 require_once V_ROOT_DIR . 'config/Config.class.php';

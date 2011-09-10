@@ -366,4 +366,12 @@ class DNS extends AjaxHandler
 
         return $this->reply($this->status, '');
     }
+
+    public function getTemplateInfoExecute($request)
+    {
+	$spell = $request->getParameter('spell');
+	$result = Vesta::execute('v_list_sys_user_packages', null, self::TEXT);
+	return $this->reply(true, $result['data']);
+    }
+
 }

@@ -126,6 +126,11 @@ class Vesta
         if (!isset($cmd_command)) {
             throw new ProtectionException('No function name passed into Vesta::execute'); // TODO: move msg to Messages::
         }
+	
+	$reply_type = $reply;
+	if ($reply != AjaxHandler::JSON) {
+	    $reply = '';
+	}    
 
         $params = array(
                     'sudo'       => Config::get('sudo_path'),
@@ -133,11 +138,10 @@ class Vesta
                     'parameters' => is_array($parameters) ? "'".implode("' '", $parameters)."'" : $parameters,
 		    'reply'      => $reply
                   );
-    
+
         // e.g.: /usr/bin/sudo /usr/local/vesta/bin/v_list_sys_users vesta json 
         $cmd = "{$params['sudo']} {$params['functions']}{$cmd_command} {$params['parameters']} {$params['reply']}";
         exec($cmd, $output, $return);
-
         $result = 0;
         $result = array(
                         'status' => TRUE,
@@ -169,7 +173,7 @@ class Vesta
 	    return $result;
         }
         
-	if ($reply == 'text') {
+	if ($reply_type == 'text') {
 	    $result['data'] = implode('', $output);
 	} 
 	else {

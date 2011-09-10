@@ -152,6 +152,10 @@ class MAIN extends AjaxHandler
 	    $ips[$sys_ip] = $sys_ip;
 	}
 
+	if (empty($ips)) {
+	    $ips['No available IP'] = 'No available IP';
+	}
+
         return array(
                 'TPL' => array('default' => 'default'),
                 'ALIAS' => array(),
@@ -260,10 +264,16 @@ class MAIN extends AjaxHandler
      */
     public function getUsersParams($data = array())
     {
+	$pckg = array();
+	// json
+	$result = Vesta::execute('v_list_sys_user_packages', null, self::JSON);
+	foreach ($result['data'] as $pckg_name => $pckg_data) {
+	    $pckg[$pckg_name] = $pckg_name;
+	}
         return array(
                 'ROLE'      => array('user' => 'user'),
                 'OWNER'     => $data['user_names'],
-                'PACKAGE'   => array('default' => 'default'),
+                'PACKAGE'   => $pckg,
                 'SHELL'     => array(
                                 'sh'       => 'sh',
                                 'bash'     => 'bash',

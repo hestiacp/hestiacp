@@ -71,7 +71,8 @@ class USER extends AjaxHandler
                                 "DATE"                  => $details['DATE'],
                                 "U_MAIL_BOXES"          => rand(1, 10),  // TODO: skid
                                 "U_MAIL_FORWARDERS"     => rand(1, 10),  // TODO: skid
-                                "REPORTS_ENABLED"       => $report 
+                                "REPORTS_ENABLED"       => $report,
+				"U_WEB_DOMAINS"		=> $details['U_WEB_DOMAINS']
                             );
             $reply[$user] = array_merge($user_details, $nses);
         }
@@ -105,7 +106,7 @@ class USER extends AjaxHandler
         $enable_reports = Utils::getCheckboxBooleanValue($spell['REPORTS_ENABLED']);
         $reports_result = $this->setUserReports($spell['LOGIN_NAME'], $spell['REPORTS_ENABLED']);
         // NS
-        $ns_result = $this->setNSentries($spell['LOGIN_NAME'], $spell);
+        //$ns_result = $this->setNSentries($spell['LOGIN_NAME'], $spell);
 	// Set SHELL
 	$this->setShell($spell['LOGIN_NAME'], $spell['SHELL']);
 

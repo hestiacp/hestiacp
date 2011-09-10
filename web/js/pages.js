@@ -71,10 +71,14 @@ App.Pages.WEB_DOMAIN.new_entry = function(evt)
     App.Helpers.updateScreen(); 
     $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden');   
     var ssl_key_upload = App.HTML.Build.ssl_key_file();
+    var ssl_cert_upload = App.HTML.Build.ssl_cert_file();
     $('#'+form_id).find('.ssl-key-input-dummy:first').replaceWith(ssl_key_upload);
+    $('#'+form_id).find('.ssl-cert-input-dummy:first').replaceWith(ssl_cert_upload);
 }
 
-App.Pages.WEB_DOMAIN.setSSL = function(content, type)
+App.Pages.WEB_DOMAIN.setSSL = function(type, frame)
 {
-    fb.warn(content);
+    var txt = App.Helpers.evalJSON(content);
+    var ref = frame.frameElement;
+    $(ref).next('textarea').val(frame.document.getElementById('result').value);
 }

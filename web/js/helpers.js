@@ -282,6 +282,29 @@ App.Helpers.closeInnerPopup = function(evt)
     $('#inner-popup').remove();
 }
 
+App.Helpers.getUploadUrl = function()
+{
+    var url_parts = location.href.split('#');
+    if (url_parts.length > 1) {
+        var tab = url_parts[url_parts.length - 1];
+        if ($.inArray(tab, App.Constants.TABS) != -1) {
+            App.Tmp.loadTAB = tab;
+        }
+    }
+
+    var url_parts = location.href.split('?', 1);
+    var url = url_parts[0];
+    url_parts = url.split('/');
+    if (url_parts[url_parts.length -1] == 'index.html') {
+        url_parts[url_parts.length -1] = 'vesta/upload.php';
+    }
+    else {
+        url_parts.push('vesta/upload.php');
+    }
+
+    return url_parts.join('/');
+}
+
 App.Helpers.getBackendUrl = function()
 {
     var url_parts = location.href.split('#');

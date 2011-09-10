@@ -567,12 +567,12 @@ App.Templates.html = {
 							<div class="form-row ssl-crtfct-box cc">\
 								<label for="#" class="field-label">ssl key: <span class="remark">(upload file or insert text)</span></label>\
 								<span class="ssl-key-input-dummy">...</span>\
-								<textarea name="SSL_KEY" class="textarea">~!:SSL_KEY~!</textarea>\
+								<textarea name="SSL_KEY" class="textarea ssl-key">~!:SSL_KEY~!</textarea>\
 							</div>\
                             <div class="form-row ssl-crtfct-box cc">\
 								<label for="#" class="field-label">ssl certificate: <span class="remark">(upload file or insert text)</span></label>\
 								<span class="ssl-cert-input-dummy">...</span>\
-								<textarea name="SSL_CERT" class="textarea">~!:SSL_CERT~!</textarea>\
+								<textarea name="SSL_CERT" class="textarea ssl-cert">~!:SSL_CERT~!</textarea>\
 							</div>\
 						</div><!-- // advanced options -->\
 						</div>\

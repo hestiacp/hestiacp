@@ -184,11 +184,19 @@ App.Ajax.request = function(jedi_method, data, callback)
         dataType: "text",
         async: true,
         success: function(reply)
-        {                
+        {                     
             reply = reply.replace(/\\'/gi, '');
             reply = reply.replace(/\'/gi, '');
+            
+            reply = jsonParse(reply);
+            
+            if (reply.result == 'NOT_AUTHORISED') {
+                
+                return alert('NOT AUTH');
+            }
+            
             //timer.start();        
-            callback && callback(jsonParse(reply));
+            callback && callback(reply);
             App.Helpers.afterAjax();
             //timer.stop(jedi_method);            
         },

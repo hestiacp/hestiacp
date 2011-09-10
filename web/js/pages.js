@@ -58,5 +58,23 @@ App.Pages.USER.new_entry = function(evt)
     var tpl = App.HTML.Build[build_method]({}, form_id);
     App.Ref.CONTENT.prepend(tpl);
     App.Helpers.updateScreen(); 
-    $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden');
+    $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden');   
+}
+
+App.Pages.WEB_DOMAIN.new_entry = function(evt)
+{ 
+    var form_id = App.Constants[App.Env.world + '_FORM_ID'];
+    $('#'+form_id).remove();
+    var build_method = App.Env.getWorldName() + '_form';
+    var tpl = App.HTML.Build[build_method]({}, form_id);
+    App.Ref.CONTENT.prepend(tpl);
+    App.Helpers.updateScreen(); 
+    $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden');   
+    var ssl_key_upload = App.HTML.Build.ssl_key_file();
+    $('#'+form_id).find('.ssl-key-input-dummy:first').replaceWith(ssl_key_upload);
+}
+
+App.Pages.WEB_DOMAIN.setSSL = function(content, type)
+{
+    fb.warn(content);
 }

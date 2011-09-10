@@ -47,6 +47,8 @@ class AjaxHandler {
             throw new SystemException(Message::INVALID_METHOD);
         }
 
+//	return $this->reply('NOT_AUTHORISED');
+
         require $inc_file;
 
         $space = new $method['namespace'];

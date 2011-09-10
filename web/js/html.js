@@ -473,6 +473,12 @@ App.HTML.Build.dns_subrecord = function(record)
     return tpl;
 }
 
+App.HTML.Build.ssl_key_file = function()
+{
+    return '<iframe src="http://dev.vestacp.com:8083/vesta/upload.php?action=show&type=key" width="500px;" height="50px;" framevorder="0" scroll="no">..</iframe>';
+}
+
+
 App.HTML.Build.user_selects = function(tpl, options)
 {
     var acc = [];

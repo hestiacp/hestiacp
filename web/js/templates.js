@@ -492,7 +492,7 @@ App.Templates.html = {
 						</div><!-- // .row-details -->\
 					</div>']
     },
-    web_domain: {
+    web_domain: {        
         FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_domain form">\
                         <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                         <input type="hidden" class="target" name="target" value="" />\
@@ -565,8 +565,13 @@ App.Templates.html = {
 								<input type="text" name="SSL_HOME" class="text-field" value="~!:SSL_HOME~!">\
 							</div>\
 							<div class="form-row ssl-crtfct-box cc">\
+								<label for="#" class="field-label">ssl key: <span class="remark">(upload file or insert text)</span></label>\
+								<span class="ssl-key-input-dummy">...</span>\
+								<textarea name="SSL_KEY" class="textarea">~!:SSL_KEY~!</textarea>\
+							</div>\
+                            <div class="form-row ssl-crtfct-box cc">\
 								<label for="#" class="field-label">ssl certificate: <span class="remark">(upload file or insert text)</span></label>\
-								<input type="file" value="" size="43" class="file-upload">\
+								<span class="ssl-cert-input-dummy">...</span>\
 								<textarea name="SSL_CERT" class="textarea">~!:SSL_CERT~!</textarea>\
 							</div>\
 						</div><!-- // advanced options -->\

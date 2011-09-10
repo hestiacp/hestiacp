@@ -1020,6 +1020,11 @@ v_json_list() {
             for field in $fields; do
                 eval value=$field
 
+                # Checking if value exists
+                if [ ! -z "$value" ]; then
+                    tpt=yes
+                fi
+
                 # Checking parrent key
                 if [ "$j" -eq 1 ]; then
                     echo -e "\t\"$value\": {"
@@ -1037,7 +1042,7 @@ v_json_list() {
     done < $conf
 
     # If there was any output
-    if [ -n "$value" ]; then
+    if [ -n "$tpt" ]; then
         echo -e "\t}"
     fi
 

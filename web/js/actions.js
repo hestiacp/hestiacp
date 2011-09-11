@@ -7,7 +7,7 @@ App.Actions.authorize = function()
     App.View.popup('login');
 }
 
-App.Actions.do_authorise = function()
+App.Actions.do_authorize = function()
 {
     $('#authorize-error').text('');
     App.Ajax.request('MAIN.signin', {'login':$('#authorize-login').val(), 'password':$('#authorize-login'.val())}, function(reply)

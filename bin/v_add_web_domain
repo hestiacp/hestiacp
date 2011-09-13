@@ -123,10 +123,18 @@ touch /var/log/httpd/domains/$domain.bytes \
 ln -s /var/log/httpd/domains/$domain.*log $V_HOME/$user/web/$domain/logs/
 
 # Adding domain skeleton
-cp -r $V_WEBTPL/skel/public_html/ $V_HOME/$user/web/$domain/
-cp -r $V_WEBTPL/skel/public_shtml/ $V_HOME/$user/web/$domain/
-cp -r $V_WEBTPL/skel/document_errors/ $V_HOME/$user/web/$domain/
-cp -r $V_WEBTPL/skel/cgi-bin/ $V_HOME/$user/web/$domain/
+if [ -e "$V_WEBTPL/skel/public_html/" ]; then
+    cp -r $V_WEBTPL/skel/public_html/ $V_HOME/$user/web/$domain/
+fi
+if [ -e "$V_WEBTPL/skel/public_shtml/" ]; then
+    cp -r $V_WEBTPL/skel/public_shtml/ $V_HOME/$user/web/$domain/
+fi
+if [ -e "$V_WEBTPL/skel/document_errors/" ]; then
+    cp -r $V_WEBTPL/skel/document_errors/ $V_HOME/$user/web/$domain/
+fi
+if [ -e "$V_WEBTPL/skel/cgi-bin/" ]; then
+    cp -r $V_WEBTPL/skel/cgi-bin/ $V_HOME/$user/web/$domain/
+fi
 
 # Changing tpl values
 for file in $(find "$V_HOME/$user/web/$domain/" -type f); do

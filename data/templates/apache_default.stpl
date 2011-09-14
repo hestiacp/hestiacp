@@ -33,6 +33,11 @@
     SSLVerifyClient none
     SSLCertificateFile %ssl_cert%
     SSLCertificateKeyFile %ssl_key%
+    <IfModule mod_ruid2.c>
+        RMode config
+        RUidGid %user% %group%
+        RGroups apache
+    </IfModule>
 
     Include %home%/%user%/conf/shttpd.%domain%.conf*
 

@@ -28,6 +28,13 @@
         AllowOverride All
     </Directory>
     php_admin_value open_basedir none
+
+    <IfModule mod_ruid2.c>
+        RMode config
+        RUidGid %user% %group%
+        RGroups apache
+    </IfModule>
+
     Include %home%/%user%/conf/httpd.%domain%.conf*
 
 </VirtualHost>

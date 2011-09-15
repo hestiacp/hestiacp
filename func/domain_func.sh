@@ -813,10 +813,12 @@ namehost_ip_support() {
         if [ "$WEB_SSL" = 'mod_ssl' ]; then
             web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
             sed -i "$conf_ins i NameVirtualHost $ip:$web_ssl_port" $conf
+            sed -i "$conf_ins i Listen $ip:$web_ssl_port" $conf
         fi
 
         web_port=$(get_config_value '$WEB_PORT')
         sed -i "$conf_ins i NameVirtualHost $ip:$web_port" $conf
+        sed -i "$conf_ins i Listen $ip:$web_port" $conf
 
         # Checking proxy support
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
@@ -838,6 +840,7 @@ namehost_ip_disable() {
     #Checking web system
     if [ "$WEB_SYSTEM" = 'apache' ]; then
         sed -i "/NameVirtualHost $ip:/d" $conf
+        sed -i "/Listen $ip:/d" $conf
 
         # Checking proxy support
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then

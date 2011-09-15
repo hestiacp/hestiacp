@@ -65,8 +65,8 @@ for ip in $ip_list; do
     if [ -z "$check_ip" ]; then
 
         # Parsing additional params
-        iface=$(/sbin/ifconfig|grep -B1 -w "$ip"|head -n 1|cut -f 1 -d ' '|\
-            cut -f 1 -d :)
+        iface=$(/sbin/ifconfig|grep -B1 -w "$ip"|head -n 1|cut -f 1 -d ' ')
+        interface=$(echo "$iface" | cut -f 1 -d :)
         mask=$(/sbin/ifconfig |grep -w "$ip"|awk -F "Mask:" '{print $2}')
 
         # Adding vesta ip

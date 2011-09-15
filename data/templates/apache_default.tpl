@@ -33,6 +33,9 @@
         RUidGid %user% %group%
         RGroups apache
     </IfModule>
+    <IfModule itk.c>
+        AssignUserID %user% %group%
+    </IfModule>
 
     Include %home%/%user%/conf/httpd.%domain%.conf*
 

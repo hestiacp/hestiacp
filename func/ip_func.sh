@@ -231,7 +231,7 @@ change_domain_ip() {
     tpl_file="$5"
 
     # Get ServerName line
-    serv_line=$(grep -n 'ServerName %domain%' "$tpl_file" |cut -f 1 -d :)
+    serv_line=$(grep -n 'ServerName %domain_idn%' "$tpl_file" |cut -f 1 -d :)
 
     # Get tpl_file last line
     last_line=$(wc -l $tpl_file|cut -f 1 -d ' ')

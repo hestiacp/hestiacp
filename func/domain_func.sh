@@ -63,14 +63,14 @@ is_dns_domain_free() {
 is_web_domain_free() {
     search_dom=${1-$domain}
     # Parsing domain values
-    check_domain=$(grep -F "IN='$search_dom'" $V_USERS/$user/web.conf)
+    check_domain=$(grep -F "DOMAIN='$search_dom'" $V_USERS/$user/web.conf)
 
     # Parsing alias values
     check_alias=$(grep -F 'ALIAS=' $V_USERS/$user/web.conf | \
         awk -F "ALIAS=" '{print $2}' | \
         cut -f 2 -d \' | \
         sed -e "s/,/\n/g" | \
-        grep "^$check_domain$" )
+        grep "^$search_dom$" )
 
     # Checking result
     if [ ! -z "$check_domain" ] || [ ! -z "$check_alias" ]; then

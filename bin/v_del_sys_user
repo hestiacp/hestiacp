@@ -112,10 +112,14 @@ if [ ! -z "$statp" ]; then
 fi
 
 # Deleteing user from parent
-childc=$(grep -n "USER='$user'" $V_USERS/child.conf |cut -d : -f 1|sort -n -r)
+owner=$(get_user_value '$OWNER')
+if [ -e "$V_USERS/$owner/child.conf" ]; then 
+    childc=$(grep -n "USER='$user'" $V_USERS/$owner/child.conf |\
+        cut -d : -f 1 | sort -n -r)
+fi
 if [ ! -z "$childc" ]; then
     for str in $childc; do
-        sed -i "$str d" $V_USERS/child.conf
+        sed -i "$str d" $V_USERS/$owner/child.conf
     done
 fi
 

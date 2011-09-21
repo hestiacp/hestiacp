@@ -27,8 +27,11 @@ server {
         proxy_pass      https://%ip%:%web_ssl_port%;
     }
 
-    location ~ /\.ht   {deny all;}
-    location ~ /.svn/  {deny all;}
+    location ~ /\.ht    {return 404;}
+    location ~ /\.svn/  {return 404;}
+    location ~ /\.git/  {return 404;}
+    location ~ /\.hg/   {return 404;}
+    location ~ /\.bzr/  {return 404;}
 
     include %home%/%user%/conf/snginx.%domain%.conf*;
 }

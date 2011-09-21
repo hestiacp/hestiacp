@@ -79,7 +79,7 @@ update_web_domain_value '$NGINX_EXT' ''
 conf='/etc/nginx/conf.d/vesta_users.conf'
 last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web.conf)
 last_snginx=$(echo "$last_nginx" | grep -v "SSL_CERT=''")
-if [  -z "$last_snginx" ]; then
+if [ -z "$last_snginx" ]; then
     sline=$(grep -n "$V_HOME/$user/conf/snginx.conf" $conf | cut -f 1 -d : )
     if [ ! -z "$sline" ]; then
         sed -i "$sline d" $conf
@@ -87,7 +87,7 @@ if [  -z "$last_snginx" ]; then
     rm -f $V_HOME/$user/conf/snginx.conf
 fi
 
-if [  -z "$last_nginx" ]; then
+if [ -z "$last_nginx" ]; then
     line=$(grep -n "$V_HOME/$user/conf/nginx.conf" $conf | cut -f 1 -d : )
     if [ ! -z "$line" ]; then
         sed -i "$line d" $conf

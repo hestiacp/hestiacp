@@ -3,7 +3,7 @@ LogFile          /var/log/httpd/domains/%domain%.log
 OutputDir        %home%/%user%/web/%domain%/stats
 HistoryName      %home%/%user%/web/%domain%/stats/%domain%.hist
 Incremental      yes
-IncrementalName  %home%/%user%/domains/%domain%/stats/%domain%.current
+IncrementalName  %home%/%user%/web/%domain%/stats/%domain%.current
 PageType         htm*
 PageType         cgi
 PageType         php

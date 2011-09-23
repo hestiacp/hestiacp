@@ -1,0 +1,131 @@
+#!/bin/bash
+# info: updating domain web statistics
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user="$1"
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared_func.sh
+source $V_FUNC/domain_func.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '2' "$#" 'user domain'
+
+# Checking argument format
+format_validation 'user' 'domain'
+
+# Checking web system is enabled
+is_system_enabled 'web'
+
+# Checking user
+is_user_valid
+
+# Checking domain exist
+is_web_domain_valid
+
+# Checking domain is not suspened
+is_domain_suspended 'web'
+
+# Checking stats enabled
+is_web_domain_value_exist '$STATS'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+stats=$(get_web_domain_value '$STATS')
+
+# Checking config
+config="$V_HOME/$user/conf/$stats.$domain.conf"
+if [ ! -e "$config" ]; then
+    echo "Error: Parsing error"
+    log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+    exit $E_PARSE_ERROR
+fi
+
+# Checking statistics directory
+dir="$V_HOME/$user/web/$domain/stats"
+if [ ! -e "$dir" ]; then
+    mkdir -p $dir
+fi
+
+# Defining functions
+build_webalizer() {
+    /usr/bin/webalizer -c $config
+}
+
+build_awstats() {
+    awstats="/var/www/awstats"
+    awstats_options="-config=$config -staticlinks -update -output"
+    month=$(date "+%Y-%m")
+    output='alldomains allhosts lasthosts unknownip allrobots lastrobots
+            session urldetail urlentry urlexit osdetail unknownos
+            browserdetail unknownbrowser refererse refererpages keyphrases
+            keywords errors404'
+
+    # Checking statistics directory
+    if [ ! -e "$dir/$month" ]; then
+        mkdir -p $dir/$month
+    fi
+
+    # Icon directory check
+    if [ ! -e "$dir/icon" ]; then
+        cp -r $awstats/icon $dir/
+    fi
+
+    # Creating main awstats page
+    $awstats/awstats.pl $awstats_options |\
+        sed -e "s%awstats.$config.%%g"  > $dir/$month/index.html
+
+    # Creating suplemental awstats pages
+    for format in $output; do
+        $awstats/awstats.pl $awstats_options=$format |\
+            sed -e "s%awstats.$config.%%g" > $dir/$month/$format.html
+    done
+
+    # Creating index page
+    cat  $V_WEBTPL/awstats_index.tpl | sed -e "s/%month%/$month/g" \
+         > $dir/index.html
+
+    # Creating navigation page
+    months=$(find $dir -type d | sed -e "s%$dir/%%g" -e "s%$dir%%g" |\
+            grep -v icon | sort -r )
+    for link in $months; do
+        select_m="$select_m\t    <option value=\"$link\">$link<\/option>\n"
+    done
+    cat $V_WEBTPL/awstats_nav.tpl | sed -e "s/%select_month%/$select_m/" \
+         > $dir/nav.html
+
+}
+
+# Switching on statistics type
+case $stats in
+    webalizer) build_webalizer ;;
+    awstats) build_awstats ;;
+esac
+
+# Chown
+chown -R $user:$(groups $user| cut -f 3 -d ' ') $dir
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit $OK

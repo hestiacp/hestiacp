@@ -54,30 +54,29 @@ is_web_domain_key_empty '$STATS'
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Parse aliases
+aliases=$(get_web_domain_value '$ALIAS')
+aliases_idn=$(idn -t --quiet -a "$aliases")
+
 # Adding statistic config
 cat $V_WEBTPL/$type.tpl |\
-    sed -e "s/%ip%/$ip/g" | \
-    sed -e "s/%port%/$port/g" | \
-    sed -e "s/%domain_idn%/$domain_idn/g" | \
-    sed -e "s/%domain%/$domain/g" | \
-    sed -e "s/%user%/$user/g" | \
-    sed -e "s/%home%/${V_HOME////\/}/g" | \
-    sed -e "s/%alias%/$domain_aliases/g" \
->$V_HOME/$user/conf/$type.$domain.conf
+    sed -e "s/%ip%/$ip/g" \
+        -e "s/%port%/$port/g" \
+        -e "s/%domain_idn%/$domain_idn/g" \
+        -e "s/%domain%/$domain/g" \
+        -e "s/%user%/$user/g" \
+        -e "s/%home%/${V_HOME////\/}/g" \
+        -e "s/%alias%/${aliases//,/ }/g" \
+        -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
+    > $V_HOME/$user/conf/$type.$domain.conf
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Switching on command string for pipe
-case $type in 
-    webalizer) command="webalizer -c $V_HOME/$user/conf/$type.$domain.conf";;
-    awstats )  command="" # FIXME awstats command;;
-esac
-
 # Adding command to pipe
-echo "$command" >> $V_QUEUE/stats.pipe
+echo "$V_BIN/v_upd_web_domain_stat $user $domain" >> $V_QUEUE/stats.pipe
 
 # Adding stats in config
 update_web_domain_value '$STATS' "$type"

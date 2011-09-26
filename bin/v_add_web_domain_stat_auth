@@ -90,7 +90,7 @@ fi
 update_web_domain_value '$STATS_AUTH' "$a_users"
 
 # Hiding password
-V_EVENT=$(echo $V_EVENT | sed -e "s/$auth_pass/xxxxxx/g")
+V_EVENT="$(date +%m-%d-%y" "%H:%m:%S) $V_SCRIPT $user $domain $auth_user *****"
 
 # Logging
 log_history "$V_EVENT" "v_del_web_domain_stat_auth $user $domain $auth_user"

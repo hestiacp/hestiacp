@@ -172,7 +172,8 @@ if [ "$user" != 'vesta' ]; then
 fi
 
 # Hiding password
-V_EVENT=$(echo $V_EVENT | sed -e "s/$password/xxxxxx/g")
+dt="$(date +%m-%d-%y" "%H:%m:%S)"
+V_EVENT="$dt $V_SCRIPT $user ***** $email $role $owner $package $fname $lname"
 
 # Logging
 log_event 'system' "$V_EVENT"

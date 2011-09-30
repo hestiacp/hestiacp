@@ -68,6 +68,7 @@ esac
 
 # Adding host to conf
 echo "$new_str" >> $V_DB/$type.conf
+chmod 650 $V_DB/$type.conf
 
 
 #----------------------------------------------------------#

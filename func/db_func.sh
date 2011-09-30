@@ -376,7 +376,8 @@ create_db_mysql() {
     fi
 
     # Adding database & checking result
-    $sql "CREATE DATABASE $database" >/dev/null 2>&1;code="$?"
+    $sql "CREATE DATABASE $database CHARACTER SET $encoding" > /dev/null 2>&1
+    code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
         log_event 'debug' "$E_DBHOST_UNAVAILABLE $V_EVENT"
@@ -405,7 +406,7 @@ create_db_pgsql() {
     done
 
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -d $TPL -p $PORT -c"
+    sql="psql -h $HOST -U $USER -p $PORT -c"
 
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
@@ -422,16 +423,27 @@ create_db_pgsql() {
         exit $E_DBHOST_UNAVAILABLE
     fi
 
-    # Adding database & checking result
-    $sql "CREATE DATABASE $database" >/dev/null 2>&1;code="$?"
+    # Adding new role
+    $sql "CREATE ROLE $db_user WITH LOGIN PASSWORD '$db_password'" >/dev/null
+    code=$?
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
         log_event 'debug' "$E_DBHOST_UNAVAILABLE $V_EVENT"
         exit $E_DBHOST_UNAVAILABLE
     fi
 
-    $sql "CREATE ROLE $db_user WITH LOGIN PASSWORD '$db_password'"
-    $sql "GRANT ALL PRIVILEGES ON DATABASE $database TO $db_user"
+    # Adding database & checking result
+    sql_q="CREATE DATABASE $database  OWNER $db_user" > /dev/null
+    if [ "$TPL" = 'template0' ]; then
+        sql_q="$sql_q ENCODING '$encoding' TEMPLATE $TPL" > /dev/null
+    else
+        sql_q="$sql_q TEMPLATE $TPL" > /dev/null
+    fi
+    $sql "$sql_q" >/dev/null
+
+
+    $sql "GRANT ALL PRIVILEGES ON DATABASE $database TO $db_user" > /dev/null
+    $sql "GRANT CONNECT ON DATABASE template1 to $db_user" > /dev/null
     export PGPASSWORD='pgsql'
 }
 
@@ -460,7 +472,7 @@ is_mysql_host_alive() {
 is_pgsql_host_alive() {
     # Checking connection
     export PGPASSWORD="$db_password"
-    sql="psql -h $host -U $db_user -d $template -p $port -c"
+    sql="psql -h $host -U $db_user -p $port -c "
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
@@ -545,7 +557,7 @@ change_db_pgsql_password() {
     done
 
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -d $TPL -p $PORT -c"
+    sql="psql -h $HOST -U $USER -p $PORT -c"
 
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
@@ -638,7 +650,7 @@ del_db_pgsql() {
     done
 
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -d $TPL -p $PORT -c"
+    sql="psql -h $HOST -U $USER -p $PORT -c"
 
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
@@ -656,6 +668,7 @@ del_db_pgsql() {
     fi
 
     # Deleting database & checking result
+    $sql "REVOKE ALL PRIVILEGES ON DATABASE $database FROM $db_user">/dev/null
     $sql "DROP DATABASE $database" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
@@ -666,10 +679,10 @@ del_db_pgsql() {
     # Deleting user
     check_users=$(grep "USER='$db_user'" $V_USERS/$user/db.conf |wc -l)
     if [ 1 -ge "$check_users" ]; then
-        $sql "DROP ROLE $db_user" >/dev/null 2>&1
-    else
-        $sql "REVOKE ALL PRIVILEGES ON $database FROM $db_user">/dev/null
+        $sql "REVOKE CONNECT ON DATABASE template1 FROM $db_user" >/dev/null
+        $sql "DROP ROLE $db_user" >/dev/null
     fi
+
     export PGPASSWORD='pgsql'
 }
 
@@ -727,7 +740,7 @@ dump_db_pgsql() {
     done
 
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -d $TPL -p $PORT -c"
+    sql="psql -h $HOST -U $USER -p $PORT -c"
     dumper="pg_dump -h $HOST -U $USER -p $PORT -c -d -O -x -i -f"
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
@@ -853,7 +866,7 @@ suspend_db_pgsql() {
     done
 
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -d $TPL -p $PORT -c"
+    sql="psql -h $HOST -U $USER -p $PORT -c"
 
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
@@ -911,7 +924,7 @@ unsuspend_db_pgsql() {
     done
 
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -d $TPL -p $PORT -c"
+    sql="psql -h $HOST -U $USER -p $PORT -c"
 
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
@@ -999,7 +1012,7 @@ get_disk_db_pgsql() {
     done
 
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -d $TPL -p $PORT -c"
+    sql="psql -h $HOST -U $USER -p $PORT -c"
 
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then

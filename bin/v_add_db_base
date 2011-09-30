@@ -12,6 +12,7 @@ db_user="$user"_"$3"
 db_password="$4"
 type="$5"
 host=$6
+encoding="${7-UTF8}"
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -24,10 +25,10 @@ source $V_FUNC/db_func.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '5' "$#" 'user db db_user db_password type [host]'
+check_args '5' "$#" 'user db db_user db_password type [host] [encoding]'
 
 # Checking argument format
-format_validation 'user' 'database' 'db_user' 'db_password'
+format_validation 'user' 'database' 'db_user' 'db_password' 'encoding'
 
 # Checking db system is enabled
 is_system_enabled 'db'

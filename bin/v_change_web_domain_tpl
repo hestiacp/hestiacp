@@ -74,7 +74,16 @@ fi
 # Defining variables for template replace
 ip=$(get_web_domain_value '$IP')
 aliases=$(get_web_domain_value '$ALIAS')
-aliases_idn=$(idn -t --quiet -a "$aliases")
+i=1
+for dom_alias in ${aliases//,/ }; do
+    dom_alias=$(idn -t --quiet -a $dom_alias)
+    if [ "$i" -eq 1 ]; then
+        aliases_idn="$dom_alias"
+    else
+        aliases_idn="$aliases_idn,$dom_alias"
+    fi
+    i=$((i + 1))
+done
 web_port=$(get_config_value '$WEB_PORT')
 email="$user@$domain"
 docroot="$V_HOME/$user/web/$domain/public_html"

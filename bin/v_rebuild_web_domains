@@ -71,7 +71,16 @@ for domain in $domains; do
     docroot="$V_HOME/$user/web/$domain/public_html"
     email="$user@$domain"
     aliases=$(get_web_domain_value '$ALIAS')
-    aliases_idn=$(idn -t --quiet -a "$aliases")
+    i=1
+    for dom_alias in ${aliases//,/ }; do
+        dom_alias=$(idn -t --quiet -a $dom_alias)
+        if [ "$i" -eq 1 ]; then
+            aliases_idn="$dom_alias"
+        else
+            aliases_idn="$aliases_idn,$dom_alias"
+        fi
+        i=$((i + 1))
+    done
     suspend=$(get_web_domain_value '$SUSPEND')
 
     # Checking error log status

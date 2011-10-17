@@ -1,0 +1,78 @@
+#!/bin/bash
+# info: updating ftp rrd
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking directory
+if [ ! -d "$V_RRD/ftp" ]; then
+    mkdir $V_RRD/ftp
+fi
+
+# Checking database
+if [ ! -e "$V_RRD/ftp/ftp.rrd" ]; then
+    # Adding database
+    rrdtool create $V_RRD/ftp/ftp.rrd --step $V_RRD_STEP \
+        DS:A:GAUGE:600:U:U \
+        RRA:AVERAGE:0.5:1:600 \
+        RRA:AVERAGE:0.5:6:700 \
+        RRA:AVERAGE:0.5:24:775 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MAX:0.5:1:600 \
+        RRA:MAX:0.5:6:700 \
+        RRA:MAX:0.5:24:775 \
+        RRA:MAX:0.5:288:797
+fi
+
+# Parsing data
+a=0
+a=$(ps aux |grep $FTP_SYSTEM |grep -v grep| grep -v nobody| grep -v root|wc -l)
+
+# Updating rrd database
+rrdtool update $V_RRD/ftp/ftp.rrd N:$a
+
+# Updating daily graph
+rrdtool graph $V_RRD/ftp/ftp.png \
+    --imgformat PNG \
+    --height="120" \
+    --width="440" \
+    --start -1d \
+    --end now \
+    --title "$(echo $FTP_SYSTEM|tr '[a-z]' '[A-Z]') Usage" \
+    --vertical-label "Connections" \
+    --x-grid MINUTE:30:HOUR:1:HOUR:4:0:%H:%M\
+    -c "BACK#484439" \
+    -c "SHADEA#484439" \
+    -c "SHADEB#484439" \
+    -c "FONT#DDDDDD" \
+    -c "CANVAS#202020" \
+    -c "GRID#666666" \
+    -c "MGRID#AAAAAA" \
+    -c "FRAME#202020" \
+    -c "ARROW#FFFFFF" \
+    DEF:a=$V_RRD/ftp/ftp.rrd:A:AVERAGE \
+    COMMENT:'\r' \
+    LINE1:a#fefda0:"Users " \
+    GPRINT:a:'LAST:Current\:''%8.0lf' \
+    GPRINT:a:'MIN:Min\:''%8.0lf' \
+    GPRINT:a:'MAX:Max\:''%8.0lf\j' > /dev/null
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# No Logging
+#log_event 'system' "$V_EVENT"
+
+exit $OK

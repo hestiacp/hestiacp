@@ -1079,6 +1079,22 @@ v_shell_list() {
     done < $conf
 }
 
+# Clear listing function
+v_clear_list() {
+    # Reading file line by line
+    while read line ; do
+
+        # Parsing key=value
+        for key in $line; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Print result line
+        eval echo "$fields"
+
+    done < $conf
+}
+
 usr_json_single_list() {
     # Definigng variables
     USER="$user"        # user

@@ -1,0 +1,96 @@
+#!/bin/bash
+# info: updating network rrd
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing variables
+source $VESTA/conf/vars.conf
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking directory
+if [ ! -d "$V_RRD/net" ]; then
+    mkdir $V_RRD/net
+fi
+
+# Parsing network interfaces
+ifaces=$(cat /proc/net/dev |grep : |cut -f 1 -d : |sed -e "s/ //g")
+
+# Parsing excludes
+for exclude in $(echo ${V_RRD_IFACE_EXCLUDE//,/ }); do
+    ifaces=$(echo "$ifaces" |grep -vw "$exclude" )
+done
+
+for iface in $ifaces; do
+    # Checking database
+    if [ ! -e "$V_RRD/net/$iface.rrd" ]; then
+        # Adding database
+        rrdtool create $V_RRD/net/$iface.rrd --step $V_RRD_STEP \
+            DS:RX:COUNTER:600:U:U \
+            DS:TX:COUNTER:600:U:U \
+            RRA:AVERAGE:0.5:1:600 \
+            RRA:AVERAGE:0.5:6:700 \
+            RRA:AVERAGE:0.5:24:775 \
+            RRA:AVERAGE:0.5:288:797 \
+            RRA:MAX:0.5:1:600 \
+            RRA:MAX:0.5:6:700 \
+            RRA:MAX:0.5:24:775 \
+            RRA:MAX:0.5:288:797
+    fi
+
+    # Parsing device stats
+    raw_iface=$(grep "$iface:" /proc/net/dev |sed -e "s/:/ /")
+    rx=$(echo "$raw_iface" |awk '{print $2}')
+    tx=$(echo "$raw_iface" |awk '{print $10}')
+
+    # Updating rrd database
+    rrdtool update $V_RRD/net/$iface.rrd N:$rx:$tx
+
+    # Updating daily graph
+    rrdtool graph $V_RRD/net/$iface.png \
+        --imgformat PNG \
+        --height="120" \
+        --width="440" \
+        --start -1d \
+        --end now \
+        --title "Bandwidth Usage $iface" \
+        --vertical-label "KBytes" \
+        --x-grid MINUTE:30:HOUR:1:HOUR:4:0:%H:%M\
+        -c "BACK#484439" \
+        -c "SHADEA#484439" \
+        -c "SHADEB#484439" \
+        -c "FONT#DDDDDD" \
+        -c "CANVAS#202020" \
+        -c "GRID#666666" \
+        -c "MGRID#AAAAAA" \
+        -c "FRAME#202020" \
+        -c "ARROW#FFFFFF" \
+        DEF:inoctets=$V_RRD/net/$iface.rrd:RX:AVERAGE \
+        DEF:outoctets=$V_RRD/net/$iface.rrd:TX:AVERAGE \
+        "CDEF:in=inoctets,8,*" \
+        "CDEF:out=outoctets,8,*" \
+        COMMENT:'\r' \
+        AREA:in#9fec00:"Input (rx) "\
+        GPRINT:in:'LAST: Current\:''%8.0lf'  \
+        GPRINT:in:'MIN: Min\:''%8.0lf'  \
+        GPRINT:in:'MAX: Max\:''%8.0lf\j'  \
+        LINE1:out#1c74cd:"Output (tx)" \
+        GPRINT:out:'LAST:Current\:''%8.0lf' \
+        GPRINT:out:'MIN:Min\:''%8.0lf' \
+        GPRINT:out:'MAX:Max\:''%8.0lf\j'  > /dev/null
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# No Logging
+#log_event 'system' "$V_EVENT"
+
+exit $OK

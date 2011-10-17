@@ -1,0 +1,84 @@
+#!/bin/bash
+# info: updating memory rrd
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing variables
+source $VESTA/conf/vars.conf
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking directory
+if [ ! -d "$V_RRD/mem" ]; then
+    mkdir $V_RRD/mem
+fi
+
+# Checking database
+if [ ! -e "$V_RRD/mem/mem.rrd" ]; then
+    # Adding database
+    rrdtool create $V_RRD/mem/mem.rrd --step $V_RRD_STEP \
+        DS:RAM:GAUGE:600:U:U \
+        DS:SWAP:GAUGE:600:U:U \
+        RRA:AVERAGE:0.5:1:600 \
+        RRA:AVERAGE:0.5:6:700 \
+        RRA:AVERAGE:0.5:24:775 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MAX:0.5:1:600 \
+        RRA:MAX:0.5:6:700 \
+        RRA:MAX:0.5:24:775 \
+        RRA:MAX:0.5:288:797
+fi
+
+# Parsing data
+mem=$(free -m)
+ram=$(echo "$mem" |awk '{print $3}'|head -n2 |tail -n1)
+swap=$(echo "$mem" |awk '{print $3}'|tail -n1)
+
+# Updating rrd
+rrdtool update $V_RRD/mem/mem.rrd N:$ram:$swap
+
+# Updating daily graph
+rrdtool graph  $V_RRD/mem/mem.png \
+    --imgformat PNG \
+    --height="120" \
+    --width="440" \
+    --start -1d \
+    --end now \
+    --title "Memory Usage" \
+    --vertical-label "Mbytes" \
+    --x-grid MINUTE:30:HOUR:1:HOUR:4:0:%H:%M\
+    -c "BACK#484439" \
+    -c "SHADEA#484439" \
+    -c "SHADEB#484439" \
+    -c "FONT#DDDDDD" \
+    -c "CANVAS#202020" \
+    -c "GRID#666666" \
+    -c "MGRID#AAAAAA" \
+    -c "FRAME#202020" \
+    -c "ARROW#FFFFFF" \
+    DEF:ram=$V_RRD/mem/mem.rrd:RAM:AVERAGE \
+    DEF:swap=$V_RRD/mem/mem.rrd:SWAP:AVERAGE \
+    COMMENT:'\r' \
+    AREA:ram#867995:"RAM "\
+    GPRINT:ram:'LAST: Current\:''%8.0lf'  \
+    GPRINT:ram:'MIN: Min\:''%8.0lf'  \
+    GPRINT:ram:'MAX: Max\:''%8.0lf\j'  \
+    LINE1:swap#f57900:"SWAP" \
+    GPRINT:swap:'LAST:Current\:''%8.0lf' \
+    GPRINT:swap:'MIN:Min\:''%8.0lf' \
+    GPRINT:swap:'MAX:Max\:''%8.0lf\j' > /dev/null
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# No Logging
+#log_event 'system' "$V_EVENT"
+
+exit $OK

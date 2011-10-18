@@ -5,6 +5,11 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Argument defenition
+rrd_start="${1--1d}"
+rrd_end="${2-now}"
+rrd_grid="${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}"
+
 # Importing variables
 source $VESTA/conf/vars.conf
 
@@ -34,21 +39,23 @@ if [ ! -e "$V_RRD/web/nginx.rrd" ]; then
 fi
 
 # Parsing data
-a=$(wget -qO-  http://localhost:8084/|head -n1|cut -f 3 -d ' ')
+if [ -z "$1" ]; then
+    a=$(wget -qO-  http://localhost:8084/|head -n1|cut -f 3 -d ' ')
 
-# Updating rrd database
-rrdtool update $V_RRD/web/nginx.rrd N:$a
+    # Updating rrd database
+    rrdtool update $V_RRD/web/nginx.rrd N:$a
+fi
 
-# Updating daily graph
+# Updating rrd graph
 rrdtool graph $V_RRD/web/nginx.png \
     --imgformat PNG \
     --height="120" \
     --width="440" \
-    --start -1d \
-    --end now \
+    --start "$rrd_start" \
+    --end "$rrd_end" \
     --title "NGINX Usage" \
     --vertical-label "Connections" \
-    --x-grid MINUTE:30:HOUR:1:HOUR:4:0:%H:%M\
+    --x-grid "$rrd_grid" \
     -c "BACK#484439" \
     -c "SHADEA#484439" \
     -c "SHADEB#484439" \
@@ -63,14 +70,15 @@ rrdtool graph $V_RRD/web/nginx.png \
     LINE1:a#fefda0:"Connections " \
     GPRINT:a:'LAST:Current\:''%8.0lf' \
     GPRINT:a:'MIN:Min\:''%8.0lf' \
-    GPRINT:a:'MAX:Max\:''%8.0lf\j' > /dev/null
+    GPRINT:a:'MAX:Max\:''%8.0lf\j'  >/dev/null 2>/dev/null; result=$?
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# No Logging
-#log_event 'system' "$V_EVENT"
+if [ "$result" -ne 0 ]; then
+    exit $E_RRD_FAILED
+fi
 
 exit $OK

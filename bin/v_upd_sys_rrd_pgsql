@@ -5,6 +5,11 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Argument defenition
+rrd_start="${1--1d}"
+rrd_end="${2-now}"
+rrd_grid="${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}"
+
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
@@ -51,48 +56,52 @@ for host in $hosts; do
             RRA:MAX:0.5:288:797
     fi
 
-    # Defining host credentials
-    host_str=$(grep "HOST='$host'" $conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
+    if [ -z "$1" ]; then
+        # Defining host credentials
+        host_str=$(grep "HOST='$host'" $conf)
+        for key in $host_str; do
+            eval ${key%%=*}=${key#*=}
+        done
 
-    export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -p $PORT -c"
+        export PGPASSWORD="$PASSWORD"
+        sql="psql -h $HOST -U $USER -p $PORT -c"
 
-    # Checking empty vars
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
+        # Checking empty vars
+        if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]
+        then
+            echo "Error: config is broken"
+            log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+            exit $E_PARSE_ERROR
+        fi
+
+
+        # Parsing data
+        q='SELECT SUM(xact_commit + xact_rollback), SUM(numbackends)
+                FROM pg_stat_database;'
+        status=$($sql plsql -d postgres -c "$q" 2>/dev/null); code="$?"
+        if [ '0' -ne "$code" ]; then
+            active=0
+            slow=0
+        else
+            active=$(echo "$status"|head -n 3|tail -n 1|awk '{print $3}')
+            trans=$(echo "$status"|head -n 3 |tail -n 1|awk '{print $1}')
+        fi
+
+        # Updating rrd
+        export PGPASSWORD='pgsql'
+        rrdtool update $V_RRD/db/pgsql_$host.rrd N:$active:$trans
     fi
 
-
-    # Parsing data
-    q='select sum(xact_commit + xact_rollback), sum(numbackends) from pg_stat_database;'
-    status=$($sql plsql -d postgres -c "$q" 2>/dev/null); code="$?"
-    if [ '0' -ne "$code" ]; then
-        active=0
-        slow=0
-    else
-        active=$(echo "$status"|head -n 3|tail -n 1|awk '{print $3}')
-        trans=$(echo "$status"|head -n 3 |tail -n 1|awk '{print $1}')
-    fi
-
-    # Updating rrd
-    export PGPASSWORD='pgsql'
-    rrdtool update $V_RRD/db/pgsql_$host.rrd N:$active:$trans
-
-    # Updating daily graph
+    # Updating rrd graph
     rrdtool graph  $V_RRD/db/pgsql_$host.png \
         --imgformat PNG \
         --height="120" \
         --width="440" \
-        --start -1d \
-        --end now \
+        --start "$rrd_start" \
+        --end "$rrd_end" \
         --title "PostgreSQL Usage on $host" \
         --vertical-label "Queries" \
-        --x-grid MINUTE:30:HOUR:1:HOUR:4:0:%H:%M\
+        --x-grid "$rrd_grid" \
         -c "BACK#484439" \
         -c "SHADEA#484439" \
         -c "SHADEB#484439" \
@@ -106,21 +115,23 @@ for host in $hosts; do
         DEF:t=$V_RRD/db/pgsql_$host.rrd:T:AVERAGE \
         COMMENT:'\r' \
         LINE1:a#fefda0:"Queries     "\
-        GPRINT:a:'LAST: Current conn\:''%8.0lf'  \
+        GPRINT:a:'LAST: Current\:''%8.0lf'  \
         GPRINT:a:'MIN: Min\:''%8.0lf'  \
         GPRINT:a:'MAX: Max\:''%8.0lf\j'  \
         LINE2:t#f57900:"Transactions" \
-        GPRINT:t:'LAST:Transactions\:''%8.0lf' \
+        GPRINT:t:'LAST:Current\:''%8.0lf' \
         GPRINT:t:'MIN:Min\:''%8.0lf' \
-        GPRINT:t:'MAX:Max\:''%8.0lf\j' > /dev/null
+        GPRINT:t:'MAX:Max\:''%8.0lf\j'  >/dev/null 2>/dev/null; result=$?
+
+    if [ "$result" -ne 0 ]; then
+        exit $E_RRD_FAILED
+    fi
 
 done
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# No Logging
-#log_event 'system' "$V_EVENT"
 
 exit $OK

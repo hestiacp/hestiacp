@@ -5,6 +5,11 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Argument defenition
+rrd_start="${1--1d}"
+rrd_end="${2-now}"
+rrd_grid="${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}"
+
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
@@ -35,22 +40,24 @@ if [ ! -e "$V_RRD/ssh/ssh.rrd" ]; then
 fi
 
 # Parsing data
-a=0
-a=$(ps auxf|grep sshd |grep -v grep |grep -v '/usr/sbin/'| wc -l)
+if [ -z "$1" ]; then
+    a=0
+    a=$(ps auxf|grep sshd |grep -v grep |grep -v '/usr/sbin/'| wc -l)
 
-# Updating rrd database
-rrdtool update $V_RRD/ssh/ssh.rrd N:$a
+    # Updating rrd database
+    rrdtool update $V_RRD/ssh/ssh.rrd N:$a
+fi
 
 # Updating daily graph
 rrdtool graph $V_RRD/ssh/ssh.png \
     --imgformat PNG \
     --height="120" \
     --width="440" \
-    --start -1d \
-    --end now \
+    --start "$rrd_start" \
+    --end "$rrd_end" \
     --title "SSH Usage" \
     --vertical-label "Connections" \
-    --x-grid MINUTE:30:HOUR:1:HOUR:4:0:%H:%M\
+    --x-grid "$rrd_grid" \
     -c "BACK#484439" \
     -c "SHADEA#484439" \
     -c "SHADEB#484439" \
@@ -65,14 +72,15 @@ rrdtool graph $V_RRD/ssh/ssh.png \
     LINE1:a#fefda0:"Users " \
     GPRINT:a:'LAST:Current\:''%8.0lf' \
     GPRINT:a:'MIN:Min\:''%8.0lf' \
-    GPRINT:a:'MAX:Max\:''%8.0lf\j' > /dev/null
+    GPRINT:a:'MAX:Max\:''%8.0lf\j'  >/dev/null 2>/dev/null; result=$?
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# No Logging
-#log_event 'system' "$V_EVENT"
+if [ "$result" -ne 0 ]; then
+    exit $E_RRD_FAILED
+fi
 
 exit $OK

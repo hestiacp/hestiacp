@@ -9,7 +9,7 @@
 ip="$1"
 mask="$2"
 interface="${3-eth0}"
-owner="${4-vesta}"
+user="${4-vesta}"
 ip_status="${5-shared}"
 ip_name="$6"
 
@@ -24,19 +24,16 @@ source $V_FUNC/domain_func.sh    # for namehosting
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '2' "$#" 'ip mask [interface] [owner] [ip_status] [ip_name]'
+check_args '2' "$#" 'ip mask [interface] [user] [ip_status] [ip_name]'
 
 # Checking argument format
-format_validation 'ip' 'mask' 'interface'
+format_validation 'ip' 'mask' 'interface' 'user'
 
 # Checking system ip
 is_sys_ip_free
 
-# Checking owner
-if [ ! -z "$owner" ]; then
-    format_validation 'user'
-    is_user_valid "$owner"
-fi
+# Checking user
+is_user_valid "$user"
 
 # Checking ip_status
 if [ ! -z "$ip_status" ]; then
@@ -84,10 +81,7 @@ namehost_ip_support
 #----------------------------------------------------------#
 
 # Updating user conf
-if [ ! -z "$owner" ]; then
-    user="$owner"
-    increase_user_value "$user" '$IP_OWNED'
-fi
+increase_user_value "$user" '$IP_OWNED'
 
 # Adding task to the vesta pipe
 if [ "$web_restart" = 'yes' ]; then

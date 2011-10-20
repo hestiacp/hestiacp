@@ -45,20 +45,13 @@ is_ip_key_empty '$U_SYS_USERS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get ip and user owner
-ip_owner=$(get_sys_ip_value '$OWNER')
-user_owner=$(get_user_value '$OWNER')
-owner_role=$(get_user_value '$ROLE')
-
-# Checking permissions
-if [ "$owner_role" != 'admin' ] || [ "$ip_owner" != "$user_owner" ]; then
-        echo "Error: ip owner is not admin"
-        log_event 'debug' "$E_PERMS_REQUEIURED $V_EVENT"
-        exit $E_PERMS_REQUEIURED
-fi
-
 # Changing ip owner
-update_sys_ip_value '$OWNER' "$user"
+ip_owner=$(get_sys_ip_value '$OWNER')
+if [ "$ip_owner" != "$user" ]; then
+    update_sys_ip_value '$OWNER' "$user"
+    decrease_user_value "$ip_owner" '$IP_OWNED'
+    increase_user_value "$user" '$IP_OWNED'
+fi
 
 
 #----------------------------------------------------------#

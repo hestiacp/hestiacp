@@ -368,14 +368,6 @@ if [ -e "$V_USERS/$user/billing.log" ]; then
     cp -r $V_USERS/$user/billing.log $tmpdir/vesta/
 fi
 
-if [ -e "$V_USERS/$user/child.conf" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%m:%S) child.conf"
-    fi
-
-    cp -r $V_USERS/$user/child.conf $tmpdir/vesta/
-fi
-
 if [ -e "$V_USERS/$user/history.log" ]; then
     if [ -z "$output" ]; then
         echo -e "\t$(date +%H:%m:%S) history.log"

@@ -602,7 +602,6 @@ is_package_avalable() {
     DNS_DOMAINS='0'
     DISK_QUOTA='0'
     BANDWIDTH='0'
-    MAX_CHILDS='0'
 
     # Parsing package
     pkg_data=$(cat $V_PKG/$package.pkg)
@@ -617,8 +616,7 @@ is_package_avalable() {
        [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ] ||\
        [ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ] ||\
        [ "$DISK_QUOTA" -lt "$U_DISK" ] ||\
-       [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ] ||\
-       [ "$MAX_CHILDS" -lt "$U_CHILDS" ]; then
+       [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]; then
         echo "Error: Upgrade package"
         log_event 'debug' "$E_PKG_UPGRADE $v_log"
         exit $E_PKG_UPGRADE
@@ -719,37 +717,6 @@ is_user_free() {
         echo "Error: user $user exist"
         log_event 'debug' "$E_USER_EXIST $V_EVENT"
         exit $E_USER_EXIST
-    fi
-}
-
-is_user_privileged() {
-    search_user="${1-$user}"
-
-    # Parsing domain values
-    user_role=$(grep 'ROLE=' $V_USERS/$search_user/user.conf|cut -f 2 -d \' )
-
-    # Checking role
-    if [ "$user_role" != 'reseller' ] && [ "$user_role" != 'admin' ]; then
-        echo "Error: user role is $user_role"
-        log_event 'debug' "$E_PERMS_REQUEIURED $V_EVENT"
-        exit $E_PERMS_REQUEIURED
-    fi
-
-    # Checking role permissions
-    if [ -n "$role" ]; then
-        case "$user_role" in
-            admin) rights='reseller, user' ;;
-            reseller) rights='user' ;;
-            *) rights='no_create' ;;
-        esac
-
-        # Comparing rights with role
-        check_perms=$(echo "$rights"|grep -w "$role")
-        if [ -z  "$check_perms" ]; then
-            echo "Error: user rights are '$rights'"
-            log_event 'debug' "$E_PERMS_REQUEIURED $V_EVENT"
-            exit  $E_PERMS_REQUEIURED
-        fi
     fi
 }
 
@@ -902,14 +869,10 @@ NS='$NS'
 SHELL='$SHELL'
 BACKUPS='$BACKUPS'
 WEB_TPL='$WEB_TPL'
-MAX_CHILDS='$MAX_CHILDS'
 SUSPENDED='$SUSPENDED'
-OWNER='$OWNER'
-ROLE='$ROLE'
 CONTACT='$CONTACT'
 REPORTS='$REPORTS'
 IP_OWNED='$IP_OWNED'
-U_CHILDS='$U_CHILDS'
 U_DIR_DISK='$U_DIR_DISK'
 U_DISK='$U_DISK'
 U_BANDWIDTH='$U_BANDWIDTH'
@@ -970,21 +933,6 @@ decrease_user_value() {
         new_value=$(expr $current_value - 1 )
         # Changing config
         sed -i "s/$key='$current_value'/$key='$new_value'/g" $conf
-    fi
-}
-
-is_user_parent() {
-    childs="$(grep "U_CHILDS=" $V_USERS/$user/user.conf |cut -f 2 -d \')"
-    if [ -z "$childs" ]; then
-        echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
-    fi
-
-    if [ "$childs" -gt '0' ]; then
-        echo "Error: user have childs"
-        log_event 'debug' "$E_CHILD_EXIST $V_EVENT"
-        exit $E_CHILD_EXIST
     fi
 }
 
@@ -1282,35 +1230,6 @@ usrns_shell_list() {
     for nameserver in ${ns//,/ };do
         echo "$nameserver"
     done
-}
-
-childs_json_list() {
-    # Print result
-    echo '['
-    if [ -e "$V_USERS/$user/child.conf" ]; then
-        i=1
-        childlistc=$(wc -l $V_USERS/$user/child.conf |cut -f -1 -d ' ')
-        for child in $(cat $V_USERS/$user/child.conf|cut -f 2 -d \');do
-            if [ "$i" -ne "$childlistc" ]; then
-                echo -e "\t\"$child\","
-            else
-                echo -e "\t\"$child\""
-            fi
-            i=$((i + 1))
-        done
-    fi
-    echo ']'
-}
-
-childs_shell_list() {
-    # Print result
-    echo "CHILDS"
-    echo "----------"
-    if [ -e "$V_USERS/$user/child.conf" ]; then
-        for child in $(cat $V_USERS/$user/child.conf|cut -f 2 -d \');do
-            echo "$child"
-        done
-    fi
 }
 
 get_usr_disk() {

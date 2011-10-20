@@ -34,9 +34,6 @@ is_user_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get user owner
-owner=$(get_user_value '$OWNER')
-
 # Defining fileds to select
 fields='$IP $OWNER $STATUS $NAME'
 

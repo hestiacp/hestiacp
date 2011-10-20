@@ -441,7 +441,7 @@ ip_user_json_list() {
     i='1'   # iterator
     end=$(($limit + $offset))   # last string
     user_ip=$(grep -l "OWNER='$user'" $V_IPS/*)
-    owner_ip=$(grep -l -A2 "OWNER='$owner'" $V_IPS/*|grep "STATUS='shared'"|\
+    owner_ip=$(grep -l -A2 "OWNER='vesta'" $V_IPS/*|grep "STATUS='shared'"|\
                 cut -f 1 -d -)
 
     # Definining ip list
@@ -510,7 +510,7 @@ ip_user_shell_list() {
     i='1'			# iterator
     end=$(($limit + $offset))	# last string
     user_ip=$(grep -l "OWNER='$user'" $V_IPS/*)
-    owner_ip=$(grep -A2 "OWNER='$owner'" $V_IPS/* |grep "STATUS='shared'" |\
+    owner_ip=$(grep -A2 "OWNER='vesta'" $V_IPS/* |grep "STATUS='shared'" |\
                 cut -f 1 -d -)
 
     # Definining ip list
@@ -545,7 +545,7 @@ ip_user_shell_list() {
 
 ip_add_vesta() {
     # Filling ip values
-    ip_data="OWNER='$owner'"
+    ip_data="OWNER='$user'"
     ip_data="$ip_data\nSTATUS='$ip_status'"
     ip_data="$ip_data\nNAME='$ip_name'"
     ip_data="$ip_data\nU_SYS_USERS=''"

@@ -9,11 +9,9 @@
 user="$1"
 password="$2"
 email="$3"
-role="$4"
-owner="${5-vesta}"
-package="${6-default}"
-fname=$7
-lname=$8
+package="${4-default}"
+fname=$5
+lname=$6
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -25,29 +23,16 @@ source $V_FUNC/shared_func.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '5' "$#" 'user password email role owner [package] [fname] [lname]'
+check_args '3' "$#" 'user password email [package] [fname] [lname]'
 
 # Checking argument format
-format_validation 'user' 'password' 'email' 'role' 'owner' 'package' 
-format_validation 'fname' 'lname'
+format_validation 'user' 'password' 'email' 'package' 'fname' 'lname'
 
 # Checking user
 is_user_free "$user"
 
-# Checking 'vesta' user creation
-if [ "$user" != 'vesta' ]; then
-    # Checking owner
-    is_user_valid "$owner"
-
-    # Checking owner role
-    is_user_privileged "$owner"
-
-    # Checking owner permission
-    is_user_privileged "$owner" "$role"
-
-    # Checking package
-    is_package_valid "$package"
-fi
+# Checking package
+is_package_valid "$package"
 
 
 #----------------------------------------------------------#
@@ -149,12 +134,9 @@ LNAME='$lname'
 PACKAGE='$package'
 $package_data
 SUSPENDED='no'
-OWNER='$owner'
-ROLE='$role'
 CONTACT='$email'
 REPORTS='yes'
 IP_OWNED='0'
-U_CHILDS='0'
 U_DIR_DISK='0'
 U_DISK='0'
 U_BANDWIDTH='0'
@@ -165,15 +147,9 @@ U_DATABASES='0'
 U_MAIL_DOMAINS='0'
 DATE='$V_DATE'" > $V_USERS/$user/user.conf
 
-# Filling owner config
-if [ "$user" != 'vesta' ]; then
-    echo "USER='$user'" >> $V_USERS/$owner/child.conf
-    increase_user_value "$owner" 'U_CHILDS'
-fi
-
 # Hiding password
 dt="$(date +%m-%d-%y" "%H:%m:%S)"
-V_EVENT="$dt $V_SCRIPT $user ***** $email $role $owner $package $fname $lname"
+V_EVENT="$dt $V_SCRIPT $user ***** $email $package $fname $lname"
 
 # Logging
 log_event 'system' "$V_EVENT"

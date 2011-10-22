@@ -102,8 +102,7 @@ is_ip_avalable() {
     ip_status=$(echo "$ip_data" | grep 'STATUS=' | cut -f 2 -d \' )
 
     # Parsing user data
-    user_owner=$(grep 'OWNER=' $V_USERS/$user/user.conf | cut -f 2 -d \')
-    if [ "$user_owner" = "$ip_owner" ] && [ "$ip_status" = 'shared' ]; then
+    if [ 'vesta' = "$ip_owner" ] && [ "$ip_status" = 'shared' ]; then
         ip_shared='yes'
     else
         ip_shared='no'

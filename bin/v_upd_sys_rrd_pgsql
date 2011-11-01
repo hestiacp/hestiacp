@@ -12,8 +12,8 @@ rrd_grid=${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}
 
 # Importing variables
 source $VESTA/conf/vars.conf
-source $V_FUNC/shared_func.sh
-source $V_FUNC/db_func.sh
+source $V_FUNC/shared.func
+source $V_FUNC/db.func
 
 
 #----------------------------------------------------------#

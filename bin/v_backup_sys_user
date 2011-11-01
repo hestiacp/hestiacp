@@ -6,8 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-output="$2"
+user=$1
+output=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -538,4 +538,4 @@ fi
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

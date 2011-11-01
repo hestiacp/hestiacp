@@ -33,4 +33,4 @@ done
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

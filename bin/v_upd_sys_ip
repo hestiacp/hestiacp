@@ -6,10 +6,10 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-owner="$1"
-ip_status="$2"
-owner="${3-vesta}"
-ip_status="${4-shared}"
+owner=$1
+ip_status=$2
+owner=${3-vesta}
+ip_status=${4-shared}
 
 # Importing variables
 source $VESTA/conf/vars.conf    # include for internal func
@@ -103,4 +103,4 @@ fi
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

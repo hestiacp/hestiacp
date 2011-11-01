@@ -6,9 +6,9 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-rrd_start="${1--1d}"
-rrd_end="${2-now}"
-rrd_grid="${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}"
+rrd_start=${1--1d}
+rrd_end=${2-now}
+rrd_grid=${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -92,4 +92,4 @@ if [ "$result" -ne 0 ]; then
     exit $E_RRD_FAILED
 fi
 
-exit $OK
+exit

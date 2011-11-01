@@ -6,10 +6,10 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-password="$2"
-email="$3"
-package="${4-default}"
+user=$1
+password=$2
+email=$3
+package=${4-default}
 fname=$5
 lname=$6
 
@@ -154,4 +154,4 @@ V_EVENT="$dt $V_SCRIPT $user ***** $email $package $fname $lname"
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

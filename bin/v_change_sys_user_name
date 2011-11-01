@@ -6,9 +6,9 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-fname="$2"
-lname="$3"
+user=$1
+fname=$2
+lname=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -53,4 +53,4 @@ update_user_value "$user" '$LNAME' "$lname"
 log_history "$V_EVENT" "$V_SCRIPT $user $old_fname $old_lname"
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

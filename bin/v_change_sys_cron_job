@@ -6,14 +6,14 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-job="$2"
-min="$3"
-hour="$4"
-day="$5"
-month="$6"
-wday="$7"
-command="$8"
+user=$1
+job=$2
+min=$3
+hour=$4
+day=$5
+month=$6
+wday=$7
+command=$8
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -79,4 +79,4 @@ restart_schedule 'cron'
 log_history "$V_EVENT"
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

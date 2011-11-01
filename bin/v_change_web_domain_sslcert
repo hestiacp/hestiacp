@@ -6,10 +6,10 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-certificate="$3"
+certificate=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -106,4 +106,4 @@ restart_schedule 'web'
 log_history "$V_EVENT" "$V_SCRIPT $user $domain $old_ssl_cert"
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

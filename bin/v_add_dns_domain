@@ -6,15 +6,15 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-ip="$3"
-template="${4-default}"
+ip=$3
+template=${4-default}
 next_year=$(date +%m-%d-%y -d "+ 1 year")
-exp="${5-$next_year}"
-soa="$6"
-ttl="${7-14400}"
+exp=${5-$next_year}
+soa=$6
+ttl=${7-14400}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -117,4 +117,4 @@ restart_schedule 'dns'
 log_history "$V_EVENT" "v_del_dns_domain $user $domain"
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

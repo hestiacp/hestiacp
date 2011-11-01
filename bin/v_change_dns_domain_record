@@ -6,10 +6,10 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-id="$3"
+id=$3
 record=$(idn -t --quiet -u "$4" )
 rtype=$(echo "$5"| tr '[:lower:]' '[:upper:]')
 value=$(idn -t --quiet -u "$6" )
@@ -84,4 +84,4 @@ restart_schedule 'dns'
 log_history "$V_EVENT"
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

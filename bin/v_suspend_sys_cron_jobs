@@ -6,7 +6,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -57,4 +57,4 @@ restart_schedule 'cron'
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

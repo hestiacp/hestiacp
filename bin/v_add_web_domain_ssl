@@ -6,11 +6,11 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-cert="$3"
-tpl_option="${4-single}"
+cert=$3
+tpl_option=${4-single}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -128,4 +128,4 @@ update_web_domain_value '$SSL_CERT' "$cert"
 log_history "$V_EVENT" "v_del_web_domain_ssl $user $domain"
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

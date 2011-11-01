@@ -6,8 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-package="$2"
+user=$1
+package=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -55,4 +55,4 @@ change_user_package
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

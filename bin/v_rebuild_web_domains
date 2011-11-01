@@ -6,8 +6,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-
+user=$1
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -15,7 +14,7 @@ source $V_FUNC/shared_func.sh
 source $V_FUNC/domain_func.sh
 source $V_FUNC/ip_func.sh
 
-url="${2-$V_SUSPEND_URL}"
+url=${2-$V_SUSPEND_URL}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -274,4 +273,4 @@ restart_schedule 'web'
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

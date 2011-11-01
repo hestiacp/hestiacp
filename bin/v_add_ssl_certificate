@@ -6,8 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-cert="$2"
+user=$1
+cert=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -54,4 +54,4 @@ mv $V_TMP/$cert.key $V_USERS/$user/cert/
 log_history "$V_EVENT" "v_del_ssl_certificate $user $cert"
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

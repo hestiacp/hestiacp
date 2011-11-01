@@ -6,12 +6,12 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-ip="$1"
-mask="$2"
+ip=$1
+mask=$2
 interface="${3-eth0}"
 user="${4-vesta}"
 ip_status="${5-shared}"
-ip_name="$6"
+ip_name=$6
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -91,4 +91,4 @@ fi
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

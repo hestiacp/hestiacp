@@ -6,8 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-database="$2"
+user=$1
+database=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -73,4 +73,4 @@ del_db_vesta
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

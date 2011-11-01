@@ -6,7 +6,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 domain=$(idn -t --quiet -u "$2" )
 named_conf=/etc/named.conf
 
@@ -75,4 +75,4 @@ restart_schedule 'dns'
 log_history "$V_EVENT" "v_add_dns_domain $user $domain $old_ip $tpl_name"
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

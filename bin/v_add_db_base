@@ -6,13 +6,13 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 database="$user"_"$2"
 db_user="$user"_"$3"
-db_password="$4"
-type="$5"
+db_password=$4
+type=$5
 host=$6
-encoding="${7-UTF8}"
+encoding=${7-UTF8}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -89,4 +89,4 @@ V_EVENT="$dt $V_SCRIPT $user $database $db_user ***** $type $host"
 log_history "$V_EVENT" "v_del_db_base $user $database"
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

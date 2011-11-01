@@ -6,7 +6,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-ip="$1"
+ip=$1
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -87,4 +87,4 @@ fi
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

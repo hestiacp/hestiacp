@@ -9,7 +9,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-version="$1"
+version=$1
 updates=''
 
 # Importing system enviroment
@@ -109,4 +109,4 @@ fi
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

@@ -6,7 +6,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -92,4 +92,4 @@ update_user_value "$user" '$U_BANDWIDTH' "$traff_size"
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

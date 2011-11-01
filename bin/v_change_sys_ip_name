@@ -6,8 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-ip="$1"
-ip_name="$2"
+ip=$1
+ip_name=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -44,4 +44,4 @@ update_sys_ip_value '$NAME' "$ip_name"
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

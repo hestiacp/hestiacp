@@ -6,7 +6,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
+user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 key=$(echo "$3"| tr '[:lower:]' '[:upper:]'|sed -e "s/^/$/")
@@ -55,4 +55,4 @@ echo "$value"
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit 

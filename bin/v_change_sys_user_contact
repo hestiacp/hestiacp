@@ -6,8 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-email="$2"
+user=$1
+email=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -54,4 +54,4 @@ sed -i "$str s/$old_email/$email/g" /etc/passwd
 log_history "$V_EVENT" "$V_SCRIPT $user $old_email"
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

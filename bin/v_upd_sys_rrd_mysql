@@ -6,9 +6,9 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-rrd_start="${1--1d}"
-rrd_end="${2-now}"
-rrd_grid="${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}"
+rrd_start=${1--1d}
+rrd_end=${2-now}
+rrd_grid=${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -29,7 +29,7 @@ fi
 conf="$V_DB/mysql.conf"
 fields='$HOST'
 nohead=1
-hosts=$(shel_list)
+hosts=$(shell_list)
 check_row=$(echo "$hosts" |wc -l)
 if [ 0 -eq "$check_row" ]; then
     exit
@@ -129,4 +129,4 @@ done
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-exit $OK
+exit

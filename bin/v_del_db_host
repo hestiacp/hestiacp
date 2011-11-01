@@ -6,8 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-type="$1"
-host="$2"
+type=$1
+host=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -53,4 +53,4 @@ del_dbhost_vesta
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

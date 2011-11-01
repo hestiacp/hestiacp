@@ -6,15 +6,15 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-ns1="$2"
-ns2="$3"
-ns3="$4"
-ns4="$5"
-ns5="$6"
-ns6="$7"
-ns7="$8"
-ns8="$9"
+user=$1
+ns1=$2
+ns2=$3
+ns3=$4
+ns4=$5
+ns5=$6
+ns6=$7
+ns7=$8
+ns8=$9
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -84,4 +84,4 @@ update_user_value "$user" '$NS' "$ns"
 log_history "$V_EVENT" "$V_SCRIPT $user ${old_ns//,/ }"
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

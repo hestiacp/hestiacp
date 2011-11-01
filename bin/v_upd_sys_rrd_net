@@ -82,7 +82,7 @@ for iface in $ifaces; do
         "CDEF:in=inoctets,8,*" \
         "CDEF:out=outoctets,8,*" \
         COMMENT:'\r' \
-        AREA:in#9fec00:"Input (rx) "\
+        AREA:in#C8EA2E:"Input (rx) "\
         GPRINT:in:'LAST: Current\:''%8.0lf'  \
         GPRINT:in:'MIN: Min\:''%8.0lf'  \
         GPRINT:in:'MAX: Max\:''%8.0lf\j'  \

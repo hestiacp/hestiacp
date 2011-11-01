@@ -71,7 +71,7 @@ rrdtool graph $V_RRD/la/la.png \
     DEF:la=$V_RRD/la/la.rrd:LA:AVERAGE \
     DEF:pr=$V_RRD/la/la.rrd:PR:AVERAGE \
     COMMENT:'\r' \
-    AREA:la#9fec00:"LA * 100"\
+    AREA:la#C8EA2E:"LA * 100"\
     GPRINT:la:'LAST: Current\:''%8.0lf'  \
     GPRINT:la:'MIN: Min\:''%8.0lf'  \
     GPRINT:la:'MAX: Max\:''%8.0lf\j'  \

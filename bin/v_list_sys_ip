@@ -6,13 +6,69 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-ip="$1"
-format="${2-shell}"
+ip=$1
+IP=$ip
+format=${2-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
 source $V_FUNC/ip_func.sh
+
+# Json function
+json_list_ip() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    ip_data=$(cat $V_IPS/$IP)
+
+    # Print top bracket
+    echo '{'
+
+    # Assign key=value
+    for key in $ip_data; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    for field in $fields; do
+        eval value=$field
+
+        # Checking first field
+        if [ $i -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ $fileds_count -eq $i ]; then
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+            fi
+        fi
+    (( ++i))
+    done
+
+    # If there was any output
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom json bracket
+    echo -e '}'
+}
+
+# Shell function
+shell_list_ip() {
+    line=$(cat $V_IPS/$IP)
+
+    # Assing key=value
+    for key in $line; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Print result line
+    for field in $fields; do
+        eval key="$field"
+        echo "${field//$/}: $key "
+    done
+}
 
 
 #----------------------------------------------------------#
@@ -31,16 +87,18 @@ is_sys_ip_valid
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+conf=$V_IPS/$IP
 
 # Defining fileds to select
 fields='$IP $OWNER $STATUS $NAME $U_SYS_USERS $U_WEB_DOMAINS
- $INTERFACE $NETMASK $DATE'
+    $INTERFACE $NETMASK $DATE'
 
 # Listing ip
 case $format in 
-    json) ip_json_single_list ;;
-    shell) ip_shell_single_list | column -t ;;
-    *) check_args '1' "0" 'ip [format]'
+    json)   json_list_ip ;;
+    plain)  shell_list_ip ;;
+    shell)  shell_list_ip | column -t ;;
+    *)      check_args '1' '0' 'ip [format]'
 esac
 
 
@@ -51,4 +109,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

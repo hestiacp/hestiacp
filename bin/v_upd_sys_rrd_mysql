@@ -28,7 +28,8 @@ fi
 # Parsing db hosts
 conf="$V_DB/mysql.conf"
 fields='$HOST'
-hosts=$(v_clear_list)
+nohead=1
+hosts=$(shel_list)
 check_row=$(echo "$hosts" |wc -l)
 if [ 0 -eq "$check_row" ]; then
     exit

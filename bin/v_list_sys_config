@@ -1,37 +1,23 @@
 #!/bin/bash
-# info: listing system ip
+# info: listing system config
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
 # Argument defenition
-format="${1-shell}"
+format=${1-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
-source $V_FUNC/shared_func.sh
 
-
-#----------------------------------------------------------#
-#                       Action                             #
-#----------------------------------------------------------#
-
-# Defining functions
-conf_shell_list() {
-    for str in $(cat $V_CONF/vesta.conf);do 
-        key=${str%%=*}
-        value=${str#*=}
-        echo "$key ${value//\'/}"
-    done
-}
-
-conf_json_list() {
-    lines=$(wc -l $V_CONF/vesta.conf|cut -f 1 -d ' ')
+# Json function
+json_list_conf() {
+    lines=$(wc -l $V_CONF/vesta.conf | cut -f 1 -d ' ')
     i='0'
     echo -e "{\n\t\"config\": {"
     for str in $(cat $V_CONF/vesta.conf); do
-        i=$((i + 1))
+        (( ++i))
         key=${str%%=*}
         value=${str#*=}
 
@@ -44,12 +30,26 @@ conf_json_list() {
     echo -e "\t}\n}"
 }
 
+# Shell function
+shell_list_conf() {
+    for str in $(cat $V_CONF/vesta.conf); do
+        key=${str%%=*}
+        value=${str#*=}
+        echo "$key: ${value//\'/}"
+    done
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
 
 # Listing system config
 case $format in 
-    json) conf_json_list ;;
-    shell) conf_shell_list | column -t ;;
-    *) check_args '1' "0" '[format]'
+    json)   json_list_conf ;;
+    plain)  shell_list_conf ;;
+    shell)  shell_list_conf | column -t ;;
+    *)      check_args '1' '0' '[format]'
 esac
 
 
@@ -57,7 +57,4 @@ esac
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Logging
-log_event 'system' "$V_EVENT"
-
-exit  $OK
+exit

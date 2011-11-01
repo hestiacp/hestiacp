@@ -6,22 +6,43 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-format="${1-shell}"
-limit="${2-1000}"
-offset="${3-1}"
+format=${1-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
-source $V_FUNC/ip_func.sh
 
+# Json function
+json_list_iface() {
+    interfaces=$(cat /proc/net/dev | grep : | cut -f 1 -d : | tr -d ' ')
+    int_counter=$(echo "$interfaces" | wc -l)
+    i=1
+    echo '['
 
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
+    # Listing ifaces
+    for interface in $interfaces; do
+        if [ "$i" -lt "$int_counter" ]; then
+            echo -e  "\t\"$interface\","
+        else
+            echo -e  "\t\"$interface\""
+        fi
+        (( ++i))
+    done
+    echo "]"
+}
 
-# Checking argument format
-format_validation 'limit' 'offset'
+# Shell function
+shell_list_iface() {
+    interfaces=$(cat /proc/net/dev | grep : | cut -f 1 -d : | tr -d ' ')
+    if [ -z "$nohead" ]; then
+        echo "INTERFACES"
+        echo "----------"
+    fi
+
+    for interface in $interfaces; do
+        echo "$interface"
+    done
+}
 
 
 #----------------------------------------------------------#
@@ -30,9 +51,10 @@ format_validation 'limit' 'offset'
 
 # Listing domains
 case $format in 
-    json) ipint_json_list ;;
-    shell) ipint_shell_list ;;
-    *) check_args '1' '0' '[format] [limit] [offset]'
+    json)   json_list_iface ;;
+    plain)  nohead=1; shell_list_iface ;;
+    shell)  shell_list_iface ;;
+    *)      check_args '1' '0' '[format]' ;;
 esac
 
 
@@ -43,4 +65,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

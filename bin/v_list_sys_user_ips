@@ -6,25 +6,112 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-format="${2-shell}"
-limit="${3-1000}"
-offset="${4-1}"
+user=$1
+format=${2-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
-source $V_FUNC/ip_func.sh
+
+# Json function
+json_list_user_ips() {
+    # Print top bracket
+    echo '{'
+
+    owned_ips=$(grep -l "OWNER='$user'" $V_IPS/*)
+    shared_ips=$(grep -A5 "OWNER='vesta'" $V_IPS/* |\
+                    grep "STATUS='shared'"|\
+                    cut -f 1 -d - )
+
+    ip_list="$owned_ips $shared_ips"
+    fileds_count=$(echo "$fields" | wc -w)
+
+    # Starting main loop
+    for IP in $ip_list; do
+        IP=$(basename $IP)
+        ip_data=$(cat $V_IPS/$IP)
+
+        # Assing key=value
+        for key in $ip_data; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Closing bracket if there already was output
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        for field in $fields; do
+            eval value=$field
+
+            if [ $i -eq 1 ]; then
+                # Printing parrent
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                # Printing child
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done
+
+    # Closing bracket if there was output
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom bracket
+    echo -e '}'
+}
+
+# Shell function
+shell_list_user_ips() {
+    owned_ips=$(grep -l "OWNER='$user'" $V_IPS/*)
+    shared_ips=$(grep -A5 "OWNER='vesta'" $V_IPS/* |\
+                    grep "STATUS='shared'"|\
+                    cut -f 1 -d - )
+
+    ip_list="$owned_ips $shared_ips"
+    if [ -z "$nohead" ]; then
+        # Print brief info
+        echo "${fields//$/}"
+        for a in $fields; do
+            echo -e "--------- \c"
+        done
+        echo
+    fi
+
+    # Starting main loop
+    for IP in $ip_list; do
+        IP=$(basename $IP)
+        ip_data=$(cat $V_IPS/$IP)
+
+        # Assign key/value config
+        for key in $ip_data; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Print result line
+        eval echo "$fields"
+    done
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'user [format] [limit] [offset]'
+check_args '1' "$#" 'user [format]'
 
 # Checking argument format
-format_validation 'user' 'limit' 'offset'
+format_validation 'user'
 
 # Checking user
 is_user_valid
@@ -37,11 +124,12 @@ is_user_valid
 # Defining fileds to select
 fields='$IP $OWNER $STATUS $NAME'
 
-# Listing domains
+# Listing ips
 case $format in 
-    json) ip_user_json_list ;;
-    shell) ip_user_shell_list | column -t ;;
-    *) check_args '1' '0' 'user [format] [limit] [offset]'
+    json)   json_list_user_ips ;;
+    plain)  nohead=1; shell_list_user_ips ;;
+    shell)  shell_list_user_ips | column -t ;;
+    *)      check_args '1' '0' 'user [format]' ;;
 esac
 
 
@@ -52,4 +140,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

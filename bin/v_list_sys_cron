@@ -6,15 +6,92 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-format="${2-shell}"
-limit="${3-1000}"
-offset="${4-1}"
+user=$1
+format=${2-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
-source $V_FUNC/cron_func.sh
+
+# Json function
+json_list_cron() {
+    # Print top bracket
+    echo '{'
+
+    # Count fields
+    fileds_count=$(echo $fields| wc -w )
+
+    # Reading file line by line
+    while read line; do
+        # New delimeter
+        IFS=$'\n'
+
+        # Assing key=value pair
+        for key in $line; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Closing bracket if there already was output
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        IFS=' '
+        for field in $fields; do
+            eval value=\"$field\"
+            value=$(echo "$value"|sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+
+            if [ $i -eq 1 ]; then
+                # Printing parrent
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                # Printing child
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done < $conf
+
+    # Closing bracket if there was output
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom bracket
+    echo -e '}'
+}
+
+# Shell function
+shell_list_cron() {
+
+    if [ -z "$nohead" ] ; then
+        # Print brief info
+        echo "${fields//$/}"
+        for a in $fields; do
+            echo -e "------ \c"
+        done
+        echo
+    fi
+
+    # Reading file line by line
+    while read line ; do
+        # New delimeter
+        IFS=$'\n'
+        # Assing key=value pair
+        for key in $line; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Print result
+        eval echo "$fields" | sed -e "s/%quote%/'/g"
+    done < $conf
+}
 
 
 #----------------------------------------------------------#
@@ -22,10 +99,10 @@ source $V_FUNC/cron_func.sh
 #----------------------------------------------------------#
 
 # Checking args
-check_args '1' "$#" 'user [format] [limit] [offset]'
+check_args '1' "$#" 'user [format]'
 
 # Checking argument format
-format_validation 'user' 'limit' 'offset'
+format_validation 'user'
 
 # Checking user
 is_user_valid
@@ -36,18 +113,21 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/cron.conf"
+conf=$V_USERS/$user/cron.conf
 
 # Defining fileds to select
 fields='$JOB $MIN $HOUR $DAY $MONTH $WDAY $CMD $SUSPEND $DATE'
 
-
 # Listing domains
 case $format in 
-    json) crn_json_list ;;
-    shell) fields='$JOB~$SUSPEND~$MIN~$HOUR~$DAY~$MONTH~$WDAY~$CMD';
-        crn_shell_list |column -t -s '~';;
-    *) check_args '1' '0' 'user [format] [limit] [offset]' ;;
+    json)   json_list_cron ;;
+    plain)  nohead=1;
+            fields="\"\$JOB\" \"\$SUSPEND\" \"\$MIN\" \"\$HOUR\" \"\$DAY\""
+            fields="$fields \"\$MONTH\" \"\$WDAY\" \"\$CMD\"";
+            shell_list_cron ;;
+    shell)  fields='$JOB~$SUSPEND~$MIN~$HOUR~$DAY~$MONTH~$WDAY~$CMD';
+            shell_list_cron |column -t -s '~';;
+    *)      check_args '1' '0' 'user [format]' ;;
 esac
 
 
@@ -58,4 +138,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

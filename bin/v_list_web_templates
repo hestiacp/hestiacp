@@ -6,15 +6,12 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-format="${2-shell}"
-limit="${3-1000}"
-offset="${4-1}"
+user=$1
+format=${2-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
-source $V_FUNC/domain_func.sh
 
 
 #----------------------------------------------------------#
@@ -25,10 +22,50 @@ source $V_FUNC/domain_func.sh
 check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user' 'limit' 'offset'
+format_validation 'user'
 
 # Checking user
 is_user_valid
+
+# Json function
+json_list_wtpl() {
+    i='1'       # iterator
+    echo '{'
+
+    # Listing files by mask
+    for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
+        descr=$(cat $V_WEBTPL/apache_$template.descr | grep '#'|\
+            sed -e ':a;N;$!ba;s/\n/ /g')
+        # Checking !first line to print bracket
+        if [ $i -ne 1 ]; then
+            echo -e "\t},"
+        fi
+        # Print result
+        echo -e  "\t\"$template\": {"
+        echo -e "\t\t\"DESCR\": \"${descr//# /}\""
+        (( ++i))
+    done
+
+    # If there was any output
+    if [ -n "$template" ]; then
+        echo -e "\t}"
+    fi
+    echo '}'
+}
+
+# Shell function
+shell_list_wtpl() {
+    for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
+        tpl_descr=$(cat $V_WEBTPL/apache_$template.descr |grep '#')
+
+        if [ -z "$nohead" ]; then
+            echo "----------"
+        fi
+
+        echo "TEMPLATE: $template"
+        echo "DESCRIPTION: ${tpl_descr//# /}"
+    done
+}
 
 
 #----------------------------------------------------------#
@@ -40,9 +77,10 @@ templates=$(get_user_value '$WEB_TPL')
 
 # Listing domains
 case $format in
-    json) webtpl_json_list ;;
-    shell) webtpl_shell_list ;;
-    *) check_args '1' "0" '[format] [limit] [offset]'
+    json)   json_list_wtpl ;;
+    plain)  nohead=1; shell_list_wtpl ;;
+    shell)  shell_list_wtpl ;;
+    *)      check_args '1' '0' '[format]'
 esac
 
 
@@ -53,4 +91,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

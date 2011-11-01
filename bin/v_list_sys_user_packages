@@ -6,21 +6,86 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-format="${1-shell}"
-limit="${2-1000}"
-offset="${3-1}"
+format=${1-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
 
+# Json function
+json_list_pkgs() {
+    # Print top bracket
+    echo '{'
 
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
+    fileds_count=$(echo "$fields" | wc -w)
 
-# Checking argument format
-format_validation 'limit' 'offset'
+    # Starting main loop
+    for package in $(ls $V_DATA/packages); do
+        PACKAGE=${package/.pkg/}
+        # Assing key=value
+        pkg_data=$(cat $V_DATA/packages/$package)
+        for key in $pkg_data; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Closing bracket if there already was output
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        for field in $fields; do
+            eval value=$field
+
+            if [ $i -eq 1 ]; then
+                # Printing parrent
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                # Printing child
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done
+
+    # Closing bracket if there was output
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom bracket
+    echo -e '}'
+}
+
+# Shell fnction
+shell_list_pkgs() {
+    # Listing pkg files
+    for package in $(ls $V_DATA/packages); do
+        PACKAGE=${package/.pkg/}
+        # Assign key=value
+        pkg_descr=$(cat $V_DATA/packages/$package)
+        for key in $pkg_descr; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+
+        if [ -z "$nohead" ]; then
+            echo '----------'
+        fi
+
+        for field in $fields; do
+            eval value=$field
+            echo -e "${field//$/}: $value"
+        done
+
+    done
+}
+
 
 
 #----------------------------------------------------------#
@@ -29,14 +94,15 @@ format_validation 'limit' 'offset'
 
 # Defining fields
 fields='$PACKAGE $WEB_DOMAINS $WEB_SSL $WEB_ALIASES $DATABASES $MAIL_DOMAINS
-    $MAIL_BOXES $MAIL_FORWARDERS $DNS_DOMAINS $DISK_QUOTA $BANDWIDTH $NS1 $NS2
+    $MAIL_BOXES $MAIL_FORWARDERS $DNS_DOMAINS $DISK_QUOTA $BANDWIDTH $NS
     $SHELL $BACKUPS $WEB_TPL'
 
 # Listing domains
 case $format in
-    json) pkg_json_list ;;
-    shell) pkg_shell_list | column -t ;;
-    *) check_args '1' "0" '[format] [limit] [offset]'
+    json)   json_list_pkgs ;;
+    plain)  nohead=1; shell_list_pkgs ;;
+    shell)  shell_list_pkgs | column -t ;;
+    *)      check_args '1' '0' '[format]'
 esac
 
 
@@ -47,4 +113,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

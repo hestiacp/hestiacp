@@ -6,10 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-type="$1"
-format="${2-shell}"
-limit="${3-1000}"
-offset="${4-1}"
+type=$1
+format=${2-shell}
 
 
 # Importing variables
@@ -36,17 +34,18 @@ is_type_valid 'db' "$type"
 #----------------------------------------------------------#
 
 # Defining config type
-conf="$V_DB/$type.conf"
+conf=$V_DB/$type.conf
 
 # Defining fileds to select
 fields='$HOST $PORT $MAX_USERS $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'
 
 # Listing database
 case $format in 
-    json) v_json_list ;;
-    shell) fields='$HOST $PORT $MAX_USERS $MAX_DB $U_DB_BASES $ACTIVE $DATE';
-        v_shell_list | column -t ;;
-    *) check_args '2' "0" 'type [format] [limit] [offset]'
+    json)   json_list ;;
+    plain)  nohead=1; shell_list;;
+    shell)  fields='$HOST $PORT $MAX_USERS $MAX_DB $U_DB_BASES $ACTIVE $DATE';
+            shell_list | column -t ;;
+    *)      check_args '2' '0' 'type [format]'
 esac
 
 
@@ -57,4 +56,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

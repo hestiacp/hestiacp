@@ -6,12 +6,70 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-format="${2-shell}"
+user=$1
+USER="$user"
+format=${2-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
+
+# Json function
+json_list_user() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    line=$(cat $V_USERS/$USER/user.conf)
+
+    # Print top bracket
+    echo '{'
+
+    # Assing key=value
+    for key in $line; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Starting output loop
+    for field in $fields; do
+        # Parsing key=value
+        eval value=$field
+
+        # Checking first field
+        if [ "$i" -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ "$fileds_count" -eq "$i" ]; then
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+            fi
+        fi
+        # Updating iterator
+        (( ++i))
+    done
+
+    # If there was any output
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+    # Printing bottom json bracket
+    echo -e "}"
+}
+
+# Shell function
+shell_list_user() {
+    line=$(cat $V_USERS/$USER/user.conf)
+
+    # Parsing key=value
+    for key in $line; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Print result line
+    for field in $fields; do
+        eval key="$field"
+        echo "${field//$/}: $key "
+    done
+}
 
 
 #----------------------------------------------------------#
@@ -33,7 +91,7 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/user.conf"
+conf=$V_USERS/$user/user.conf
 
 # Defining fileds to select
 fields='$USER $FNAME $LNAME $PACKAGE $WEB_DOMAINS $WEB_SSL $WEB_ALIASES
@@ -44,9 +102,10 @@ fields='$USER $FNAME $LNAME $PACKAGE $WEB_DOMAINS $WEB_SSL $WEB_ALIASES
 
 # Listing user
 case $format in 
-    json) usr_json_single_list ;;
-    shell) usr_shell_single_list | column -t ;;
-    *) check_args '1' "0" 'user [format]'
+    json)   json_list_user ;;
+    plain)  nohead=1; shell_list_user ;;
+    shell)  shell_list_user | column -t ;;
+    *)      check_args '1' '0' 'user [format]' ;;
 esac
 
 
@@ -57,4 +116,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

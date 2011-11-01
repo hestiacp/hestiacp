@@ -355,9 +355,7 @@ format_validation() {
             mask)               format_ip  "$v" ;;
             max_usr)            format_int "$v" ;;
             max_db)             format_int "$v" ;;
-            limit)              format_int "$v" ;;
             lname)              format_usr "$v" ;;
-            offset)             format_int "$v" ;;
             owner)              format_usr "$v" ;;
             package)            format_usr "$v" ;;
             password)           format_pwd "$v" ;;
@@ -375,7 +373,6 @@ format_validation() {
 
 # Sub system checker
 is_system_enabled() {
-
     stype="$1"
 
     web_function() {
@@ -936,301 +933,82 @@ decrease_user_value() {
     fi
 }
 
-# Json listing function
-v_json_list() {
-    # Definigng variables
-    i='1'       # iterator
-    end=$(($limit + $offset))   # last string
-    value=''    # clean start value
 
+# Json listing function
+json_list() {
     # Print top bracket
     echo '{'
 
-    # Reading file line by line
-    while read line ; do
-        # Checking offset and limit
-        if [ "$i" -ge "$offset" ] && [ "$i" -lt "$end" ] && [ "$offset" -gt 0 ]
-        then
-            # Parsing key=value
-            for key in $line; do
-                eval ${key%%=*}=${key#*=}
-            done
-
-            # Checking !first line to print bracket
-            if [ "$i" -ne "$offset" ]; then
-                echo -e "\t},"
-            fi
-
-            j=1                 # local loop iterator
-            last_word=$(echo "$fields" | wc -w)
-
-            # Print data
-            for field in $fields; do
-                eval value=$field
-
-                # Checking if value exists
-                if [ ! -z "$value" ]; then
-                    tpt=yes
-                fi
-
-                # Checking parrent key
-                if [ "$j" -eq 1 ]; then
-                    echo -e "\t\"$value\": {"
-                else
-                    if [ "$j" -eq "$last_word" ]; then
-                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    else
-                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                    fi
-                fi
-                j=$(($j + 1))
-            done
-        fi
-        i=$(($i + 1))
-    done < $conf
-
-    # If there was any output
-    if [ -n "$tpt" ]; then
-        echo -e "\t}"
-    fi
-
-    # Printing bottom json bracket
-    echo -e "}"
-}
-
-# Shell listing function
-v_shell_list() {
-
-    # Definigng variables
-    i='1'                       # iterator
-    end=$(($limit + $offset))   # last string
-    # Print brief info
-    echo "${fields//$/}"
-    for a in $fields; do
-        echo -e "------ \c"
-    done
-    echo                        # new line
+    # Count fields
+    fileds_count=$(echo $fields| wc -w )
 
     # Reading file line by line
-    while read line ; do
-        # Checking offset and limit
-        if [ "$i" -ge "$offset" ] && [ "$i" -lt "$end" ] && [ "$offset" -gt 0 ]
-        then
-            # Parsing key=value
-            for key in $line; do
-                eval ${key%%=*}=${key#*=}
-            done
-            # Print result line
-            eval echo "$fields"
-        fi
-        i=$(($i + 1))
-    done < $conf
-}
+    while read line; do
 
-# Clear listing function
-v_clear_list() {
-    # Reading file line by line
-    while read line ; do
-
-        # Parsing key=value
+        # Assing key=value pair
         for key in $line; do
             eval ${key%%=*}=${key#*=}
         done
 
-        # Print result line
-        eval echo "$fields"
+        # Closing bracket if there already was output
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        for field in $fields; do
+            eval value=$field
 
+            if [ $i -eq 1 ]; then
+                # Printing parrent
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                # Printing child
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done < $conf
+
+    # Closing bracket if there was output
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom bracket
+    echo -e '}'
+}
+
+
+# Shell listing function
+shell_list() {
+
+    if [ -z "$nohead" ] ; then
+        # Print brief info
+        echo "${fields//$/}"
+        for a in $fields; do
+            echo -e "------ \c"
+        done
+        echo
+    fi
+
+    # Reading file line by line
+    while read line ; do
+        # Assing key=value pair
+        for key in $line; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Print result
+        eval echo "$fields"
     done < $conf
 }
 
-usr_json_single_list() {
-    # Definigng variables
-    USER="$user"        # user
-    i=1	        # iterator
-
-    # Define words number
-    last_word=$(echo "$fields" | wc -w)
-
-    # Reading file line by line
-    line=$(cat $V_USERS/$USER/user.conf)
-
-    # Print top bracket
-    echo '{'
-
-    # Parsing key=value
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
-
-    # Starting output loop
-    for field in $fields; do
-        # Parsing key=value
-        eval value=$field
-
-        # Checking first field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$last_word" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-            fi
-        fi
-        # Updating iterator
-        i=$(( i + 1))
-    done
-
-    # If there was any output
-    if [ -n "$value" ]; then
-        echo -e "\t}"
-    fi
-    # Printing bottom json bracket
-    echo -e "}"
-}
-
-usr_shell_single_list() {
-    # Definigng variables
-    USER="$user"		# user
-
-    # Reading file line by line
-    line=$(cat $V_USERS/$USER/user.conf)
-
-    # Parsing key=value
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
-
-    # Print result line
-    for field in $fields; do 
-        eval key="$field"
-	echo "${field//$/}: $key "
-    done
-}
-
-usr_json_list() {
-    i='1'			# iterator
-    end=$(($limit + $offset))	# last string
-
-    # Definining user list
-    #user_list=$(find $V_USERS/ -maxdepth 1 -mindepth 1 -type d -printf %P\\n )
-    user_list=$(ls $V_USERS/)
-
-    # Print top bracket
-    echo '{'
-
-    # Starting main loop
-    for USER in $user_list; do
-        # Checking offset and limit
-        if [ "$i" -ge "$offset" ] && [ "$i" -lt "$end" ] && [ "$offset" -gt 0 ]
-        then
-            # Reading user data
-            user_data=$(cat $V_USERS/$USER/user.conf)
-
-            # Parsing key/value config
-            for key in $user_data; do
-                eval ${key%%=*}=${key#*=}
-            done
-
-            # Checking !first line to print bracket with coma
-            if [ "$i" -ne "$offset" ]; then
-                echo -e "\t},"
-            fi
-
-            # Defining local iterator and words count
-            j='1'
-            last_word=$(echo "$fields" | wc -w)
-
-            # Print data
-            for field in $fields; do
-                eval value=$field
-                # Checking parrent key
-                if [ "$j" -eq 1 ]; then
-                    echo -e "\t\"$value\": {"
-                else
-                    if [ "$j" -eq "$last_word" ]; then
-                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    else
-                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                    fi
-                fi
-                j=$(($j + 1))
-            done
-        fi
-        i=$(($i + 1))
-    done
-
-    # If there was any output
-    if [ -n "$value" ]; then
-        echo -e "\t}"
-    fi
-
-    # Printing bottom json bracket
-    echo '}'
-}
-
-usr_shell_list() {
-    i='1'			# iterator
-    end=$(($limit + $offset))	# last string
-
-    # Definining user list
-    #user_list=$(find $V_USERS/ -maxdepth 1 -mindepth 1 -type d -printf %P\\n )
-    user_list=$(ls $V_USERS/)
-
-    # Print brief info
-    echo "${fields//$/}"
-    for a in $fields; do
-        echo -e "--------- \c"
-    done
-    echo			# new line
-
-    # Starting main loop
-    for USER in $user_list; do
-        # Checking offset and limit
-        if [ "$i" -ge "$offset" ] && [ "$i" -lt "$end" ] && [ "$offset" -gt 0 ]
-        then
-            # Reading user data
-            user_data=$(cat $V_USERS/$USER/user.conf)
-
-            # Parsing key/value config
-            for key in $user_data; do
-                eval ${key%%=*}=${key#*=}
-            done
-            # Print result line
-            eval echo "$fields"
-        fi
-        i=$(($i + 1))
-    done
-}
-
-usrns_json_list() {
-    ns=$(grep "^NS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
-    # Print top bracket
-    echo '['
-    i=1
-    nslistc=$(echo -e "${ns//,/\n}"|wc -l)
-    # Listing servers
-    for nameserver in ${ns//,/ };do
-        if [ "$i" -ne "$nslistc" ]; then
-            echo -e  "\t\"$nameserver\","
-        else
-            echo -e  "\t\"$nameserver\""
-        fi
-        i=$((i + 1))
-    done
-
-    echo "]"
-}
-
-usrns_shell_list() {
-    ns=$(grep "^NS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
-    # Print result
-    echo "NAMESERVER"
-    echo "----------"
-    for nameserver in ${ns//,/ };do
-        echo "$nameserver"
-    done
-}
 
 get_usr_disk() {
     size='0'
@@ -1288,94 +1066,6 @@ get_usr_traff() {
     fi
 
     echo "$size"
-}
-
-pkg_json_list() {
-    i='1'                       # iterator
-    end=$(($limit + $offset))   # last string
-
-    # Print top bracket
-    echo '{'
-
-    # Starting main loop
-    for package in $(ls $V_DATA/packages); do
-	PACKAGE=${package/.pkg/}
-
-        # Checking offset and limit
-        if [ "$i" -ge "$offset" ] && [ "$i" -lt "$end" ] && [ "$offset" -gt 0 ]
-        then
-            # Parsing key/value config
-            pkg_descr=$(cat $V_DATA/packages/$package)
-            for key in $pkg_descr; do
-                eval ${key%%=*}=${key#*=}
-            done
-
-            # Checking !first line to print bracket with coma
-            if [ "$i" -ne "$offset" ]; then
-                echo -e "\t},"
-            fi
-
-            # Defining local iterator and words count
-            j='1'
-            last_word=$(echo "$fields" | wc -w)
-
-            # Print data
-            for field in $fields; do
-                eval value=$field
-                # Checking parrent key
-                if [ "$j" -eq 1 ]; then
-                    echo -e "\t\"$value\": {"
-                else
-                    if [ "$j" -eq "$last_word" ]; then
-                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    else
-                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                    fi
-                fi
-                j=$(($j + 1))
-            done
-        fi
-        i=$(($i + 1))
-    done
-
-    # If there was any output
-    if [ -n "$value" ]; then
-        echo -e "\t}"
-    fi
-
-    # Printing bottom json bracket
-    echo '}'
-}
-
-pkg_shell_list() {
-    i='1'                       # iterator
-    end=$(($limit + $offset))   # last string
-
-    # Listing pkg files
-    for package in $(ls $V_DATA/packages); do
-	PACKAGE=${package/.pkg/}
-
-        # Checking offset and limit
-        if [ "$i" -ge "$offset" ] && [ "$i" -lt "$end" ] && [ "$offset" -gt 0 ]
-        then
-	    # Parsing key=value
-            pkg_descr=$(cat $V_DATA/packages/$package)
-	    for key in $pkg_descr; do
-	        eval ${key%%=*}=${key#*=}
-	    done
-
-            echo "----------"
-
-	    # Starting output loop
-	    for field in $fields; do
-                # Parsing key=value
-                eval value=$field
-                # Checking first field
-                echo -e "${field//$/}: $value"
-	    done
-	fi
-        i=$(($i + 1))
-    done
 }
 
 get_config_value() {

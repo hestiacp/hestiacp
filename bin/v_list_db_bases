@@ -6,10 +6,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-format="${2-shell}"
-limit="${3-1000}"
-offset="${4-1}"
+user=$1
+format=${2-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -21,10 +19,10 @@ source $V_FUNC/shared_func.sh
 #----------------------------------------------------------#
 
 # Checking args
-check_args '1' "$#" 'user [format] [limit] [offset]'
+check_args '1' "$#" 'user [format]'
 
 # Checking argument format
-format_validation 'user' 'limit' 'offset'
+format_validation 'user'
 
 # Checking user
 is_user_valid
@@ -35,16 +33,17 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/db.conf"
+conf=$V_USERS/$user/db.conf
 
 # Defining fileds to select
 fields='$DB $USER $HOST $TYPE $U_DISK $SUSPEND $DATE'
 
 # Listing databases
 case $format in 
-    json) v_json_list ;;
-    shell) v_shell_list| column -t ;;
-    *) check_args '1' "0" 'user [format] [limit] [offset]'
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  shell_list | column -t ;;
+    *)      check_args '1' '0' 'user [format]'
 esac
 
 
@@ -55,4 +54,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

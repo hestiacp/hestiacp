@@ -6,15 +6,71 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
-format="${3-shell}"
+user=$1
+domain=$2
+format=${3-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
 source $V_FUNC/domain_func.sh
+
+# Json function
+json_list_domain() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    line=$(grep "DOMAIN='$domain'" $conf)
+
+    # Print top bracket
+    echo '{'
+
+    # Assing key=value
+    for key in $line; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Starting output loop
+    for field in $fields; do
+        # Parsing key=value
+        eval value=$field
+
+        # Checking first field
+        if [ "$i" -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ "$fileds_count" -eq "$i" ]; then
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+            fi
+        fi
+        # Updating iterator
+        (( ++i))
+    done
+
+    # If there was any output
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+    # Printing bottom json bracket
+    echo -e "}"
+}
+
+# Shell function
+shell_list_domain() {
+    line=$(cat $V_USERS/$user/web.conf)
+
+    # Parsing key=value
+    for key in $line; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Print result line
+    for field in $fields; do
+        eval key="$field"
+        echo "${field//$/}: $key "
+    done
+}
 
 
 #----------------------------------------------------------#
@@ -36,7 +92,7 @@ is_web_domain_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/web.conf"
+conf=$V_USERS/$user/web.conf
 
 # Defining fileds to select
 fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG $STATS
@@ -44,9 +100,10 @@ fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG $STATS
 
 # Listing domains
 case $format in 
-    json) dom_json_single_list ;;
-    shell) dom_shell_single_list | column -t ;;
-    *) check_args '2' "0" 'user domain [format]'
+    json)   json_list_domain ;;
+    plain)  nohead=1; shell_list_domain ;;
+    shell)  shell_list_domain | column -t ;;
+    *)      check_args '2' '0' 'user domain [format]'
 esac
 
 
@@ -57,4 +114,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

@@ -6,17 +6,94 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
-format="${3-shell}"
-limit="${4-1000}"
-offset="${5-1}"
+user=$1
+domain=$2
+format=${3-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
 source $V_FUNC/domain_func.sh
+
+# Json func
+json_list_dns() {
+    # Print top bracket
+    echo '{'
+
+    # Count fields
+    fileds_count=$(echo $fields| wc -w )
+
+    # Reading file line by line
+    while read line; do
+        # New delimeter
+        IFS=$'\n'
+
+        # Assing key=value pair
+        for key in $line; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Closing bracket if there already was output
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        IFS=' '
+        for field in $fields; do
+            eval value=\"$field\"
+            value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+
+            if [ $i -eq 1 ]; then
+                # Printing parrent
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                # Printing child
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done < $conf
+
+    # Closing bracket if there was output
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom bracket
+    echo -e '}'
+}
+
+# Shell function
+shell_list_dns() {
+
+    if [ -z "$nohead" ] ; then
+        # Print brief info
+        echo "${fields//$/}"
+        for a in $fields; do
+            echo -e "------ \c"
+        done
+        echo
+    fi
+
+    # Reading file line by line
+    while read line ; do
+        # New delimeter
+        IFS=$'\n'
+        # Assing key=value pair
+        for key in $line; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Print result
+        eval echo "$fields" | sed -e "s/%quote%/'/g"
+    done < $conf
+}
 
 
 #----------------------------------------------------------#
@@ -27,7 +104,7 @@ source $V_FUNC/domain_func.sh
 check_args '2' "$#" 'user domain [format]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'limit' 'offset'
+format_validation 'user' 'domain'
 
 # Checking user
 is_user_valid
@@ -41,17 +118,18 @@ is_dns_domain_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/zones/$domain"
+conf=$V_USERS/$user/zones/$domain
 
 # Defining fileds to select
 fields='$ID $RECORD $TYPE $VALUE $SUSPEND $DATE'
 
 # Listing domains
 case $format in 
-    json) dns_json_list ;;
-    shell) fields='$ID $RECORD $TYPE $VALUE';
-        dns_shell_list | column -t ;;
-    *) check_args '2' "0" 'user domain [format]'
+    json)   json_list_dns ;;
+    plain)  nohead=1; shell_list_dns ;;
+    shell)  fields='$ID $RECORD $TYPE $VALUE';
+            shell_list_dns | column -t ;;
+    *)      check_args '2' '0' 'user domain [format]'
 esac
 
 
@@ -62,4 +140,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

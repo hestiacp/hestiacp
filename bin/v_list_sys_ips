@@ -1,43 +1,114 @@
 #!/bin/bash
-# info: listing system users
+# info: listing system ips
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
 # Argument defenition
-format="${1-shell}"
-limit="${2-1000}"
-offset="${3-1}"
+format=${1-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
-source $V_FUNC/ip_func.sh
 
+# Json function
+json_list_ips() {
+    # Print top bracket
+    echo '{'
 
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
+    # Definining ip list
+    ip_list=$(ls $V_IPS/)
 
-# Checking argument format
-format_validation 'limit' 'offset'
+    fileds_count=$(echo "$fields" | wc -w)
+
+    # Starting main loop
+    for IP in $ip_list; do
+        # Assing key=value
+        ip_data=$(cat $V_IPS/$IP)
+        for key in $ip_data; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Closing bracket if there already was output
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        for field in $fields; do
+            eval value=$field
+
+            if [ $i -eq 1 ]; then
+                # Printing parrent
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                # Printing child
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done
+
+    # Closing bracket if there was output
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom bracket
+    echo -e '}'
+}
+
+# Shell function
+shell_list_ips() {
+    ip_list=$(ls $V_IPS/)
+
+    if [ -z "$nohead" ]; then
+        # Print brief info
+        echo "${fields//$/}"
+        for a in $fields; do
+            echo -e "--------- \c"
+        done
+        echo
+    fi
+
+    # Starting main loop
+    for IP in $ip_list; do
+        # Reading user data
+        ip_data=$(cat $V_IPS/$IP)
+
+        # Assign key/value config
+        for key in $ip_data; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Print result line
+        eval echo "$fields"
+    done
+}
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+conf=$V_IPS/*
 
 # Defining fileds to select
-fields='$IP $OWNER $STATUS $NAME $U_SYS_USERS $U_WEB_DOMAINS
- $INTERFACE $NETMASK $DATE'
+fields="\$IP \$OWNER \$STATUS \$NAME \$U_SYS_USERS \$U_WEB_DOMAINS"
+field=s"$fields \$INTERFACE \$NETMASK \$DATE"
 
 # Listing domains
 case $format in 
-    json) ip_json_list ;;
-    shell) fields='$IP $NETMASK $OWNER $STATUS $U_WEB_DOMAINS';
-        ip_shell_list | column -t ;;
-    *) check_args '1' '0' '[format] [limit] [offset]'
+    json)   json_list_ips ;;
+    plain)  nohead=1; shell_list_ips ;;
+    shell)  fields='$IP $NETMASK $OWNER $STATUS $U_WEB_DOMAINS';
+            shell_list_ips | column -t ;;
+    *)      check_args '1' '0' '[format]'
 esac
 
 
@@ -48,4 +119,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

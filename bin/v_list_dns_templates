@@ -6,21 +6,59 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-format="${1-shell}"
-limit="${2-1000}"
-offset="${3-1}"
+format=${1-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
-source $V_FUNC/domain_func.sh
 
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
+# Json function
+json_list_dnstpl() {
+    # Print top bracket
+    echo '{'
 
-# Checking argument format
-format_validation 'limit' 'offset'
+    # Count fields
+    for template in $(ls $V_DNSTPL/| grep '.descr'); do
+        # Closing bracket if there already was output
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+
+        tpl_descr=$(cat $V_DNSTPL/$template |grep '#'|tr -d '\n')
+        tpl_name="${template//.descr/}"
+        echo -e  "\t\"$tpl_name\": {"
+        echo -e "\t\t\"DESCR\": \"${tpl_descr//# /}\""
+
+        data=1
+    done
+
+    # Closing bracket if there was output
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom bracket
+    echo -e '}'
+}
+
+# Shell function
+shell_list_dnstpl() {
+    for template in $(ls $V_DNSTPL/| grep '.descr'); do
+        tpl_name="${template//.descr/}"
+        tpl_descr=$(cat $V_DNSTPL/$template |grep '#')
+
+        # Print result
+        if [ -z "$nohead" ] ; then
+            echo "----------"
+        fi
+        echo "TEMPLATE: $tpl_name"
+        echo "DESCRIPTION: ${tpl_descr//# /}"
+        if [ -z "$nohead" ] ; then
+            echo
+        fi
+    done
+}
+
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -28,9 +66,10 @@ format_validation 'limit' 'offset'
 
 # Listing domains
 case $format in 
-    json) dnstpl_json_list ;;
-    shell) dnstpl_shell_list ;;
-    *) check_args '1' "0" '[format] [limit] [offset]'
+    json)   json_list_dnstpl;;
+    plain)  nohead=1; shell_list_dnstpl ;;
+    shell)  shell_list_dnstpl ;;
+    *)      check_args '1' '0' '[format] [limit] [offset]';;
 esac
 
 
@@ -41,4 +80,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

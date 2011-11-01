@@ -6,14 +6,78 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-type="$1"
-host="$2"
-format="${3-shell}"
+type=$1
+host=$2
+format=${3-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
 source $V_FUNC/db_func.sh
+
+# Json function
+json_list_dbhost() {
+    # Definigng variables
+    i=1
+
+    # Define words number
+    fields_count=$(echo "$fields" | wc -w)
+
+    # Reading file line by line
+    line=$(grep "HOST='$host'" $conf)
+
+    # Print top bracket
+    echo '{'
+
+    # Assign key=value
+    for key in $line; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Starting output loop
+    for field in $fields; do
+
+        # Parsing key=value
+        eval value=$field
+
+        # Checking first field
+        if [ "$i" -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ "$fields_count" -eq "$i" ]; then
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+            fi
+        fi
+        (( ++i))
+    done
+    # If there was any output
+    if [ -n "$value" ]; then
+        echo -e "\t}"
+    fi
+
+    # Printing bottom json bracket
+    echo -e "}"
+}
+
+# Shell function
+shell_list_dbhost() {
+
+    # Reading file line by line
+    line=$(grep "HOST='$host'" $conf)
+
+    # Parsing key=value
+    for key in $line; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Print result line
+    for field in $fields; do
+        eval key="$field"
+        echo "${field//$/}: $key"
+    done
+}
 
 
 #----------------------------------------------------------#
@@ -38,16 +102,17 @@ is_db_host_valid
 #----------------------------------------------------------#
 
 # Defining config type
-conf="$V_DB/$type.conf"
+conf=$V_DB/$type.conf
 
 # Defining fileds to select
 fields='$HOST $PORT $MAX_USERS $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'
 
 # Listing database
 case $format in 
-    json) dbhost_json_single_list ;;
-    shell) dbhost_shell_single_list | column -t;;
-    *) check_args '2' "0" 'type host [format]'
+    json)   json_list_dbhost ;;
+    plain)  nohead=1; shell_list_dbhost ;;
+    shell)  shell_list_dbhost | column -t;;
+    *)      check_args '2' '0' 'type host [format]'
 esac
 
 
@@ -58,4 +123,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

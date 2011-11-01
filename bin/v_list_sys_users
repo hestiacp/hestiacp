@@ -6,39 +6,104 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-format="${1-shell}"
-limit="${2-1000}"
-offset="${3-1}"
+format=${1-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
 
+# Json function
+json_list_users() {
+    echo '{'
+    fileds_count=$(echo "$fields" | wc -w)
 
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
+    # Starting main loop
+    for USER in $(ls $V_USERS/); do
+        # Reading user data
+        user_data=$(cat $V_USERS/$USER/user.conf)
 
-# Checking argument format
-format_validation 'limit' 'offset'
+        # Assign key/value config
+        for key in $user_data; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        # Closing bracket if there already was output
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        for field in $fields; do
+            eval value=$field
+
+            if [ $i -eq 1 ]; then
+                # Printing parrent
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                # Printing child
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done
+    # Closing bracket if there was output
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+
+    # Printing bottom bracket
+    echo -e '}'
+}
+
+# Shell function
+shell_list_users() {
+    if [  -z "$nohead" ]; then
+        # Print brief info
+        echo "${fields//$/}"
+        for a in $fields; do
+            echo -e "--------- \c"
+        done
+        echo                        # new line
+    fi
+
+    # Starting main loop
+    for USER in $(ls $V_USERS/); do
+        user_data=$(cat $V_USERS/$USER/user.conf)
+
+        # Assign key/value config
+        for key in $user_data; do
+            eval ${key%%=*}=${key#*=}
+        done
+
+        eval echo "$fields"
+    done
+}
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Defining fileds to select
-fields='$USER $FNAME $LNAME $PACKAGE $WEB_DOMAINS $WEB_SSL $WEB_ALIASES
-    $DATABASES $MAIL_DOMAINS $MAIL_BOXES $MAIL_FORWARDERS $DNS_DOMAINS
-    $DISK_QUOTA $BANDWIDTH $NS $SHELL $BACKUPS $WEB_TPL $SUSPENDED $IP_OWNED
-    $U_DISK $U_BANDWIDTH $U_WEB_DOMAINS $U_WEB_SSL $U_DNS_DOMAINS $U_DATABASES
-    $U_MAIL_DOMAINS $CONTACT $DATE'
+fields="\$USER \$FNAME \$LNAME \$PACKAGE \$WEB_DOMAINS \$WEB_SSL \$WEB_ALIASES"
+fields="$fields \$DATABASES \$MAIL_DOMAINS \$MAIL_BOXES \$MAIL_FORWARDERS"
+fields="$fields \$DNS_DOMAINS \$DISK_QUOTA \$BANDWIDTH \$NS \$SHELL \$BACKUPS"
+fields="$fields \$WEB_TPL \$SUSPENDED \$IP_OWNED \$U_DISK \$U_BANDWIDTH"
+fields="$fields \$U_WEB_DOMAINS \$U_WEB_SSL \$U_DNS_DOMAINS \$U_DATABASES"
+fields="$fields \$U_MAIL_DOMAINS \$CONTACT \$DATE"
 
 # Listing domains
 case $format in 
-    json) usr_json_list ;;
-    shell) fields='$USER $PACKAGE $U_DISK $U_BANDWIDTH $SUSPENDED $DATE';
-        usr_shell_list | column -t ;;
-    *) check_args '1' '0' '[format] [limit] [offset]'
+    json)   json_list_users ;;
+    plain)  nohead=1; shell_list_users ;;
+    shell)  fields='$USER $PACKAGE $U_DISK $U_BANDWIDTH $SUSPENDED $DATE';
+            shell_list_users | column -t ;;
+    *)      check_args '1' '0' '[format]' ;;
 esac
 
 
@@ -49,4 +114,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit $OK
+exit

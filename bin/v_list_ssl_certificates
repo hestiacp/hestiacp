@@ -6,15 +6,51 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user="$1"
-format="${2-shell}"
-limit="${3-1000}"
-offset="${4-1}"
+user=$1
+format=${2-shell}
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_FUNC/shared_func.sh
-source $V_FUNC/cert_func.sh
+
+# Json function
+json_list_cert() {
+    # Print top bracket
+    echo '['
+
+    # Checking certificates number
+    certificates=$(ls $V_USERS/$user/cert/ |grep '.crt' )
+    certificates_count=$(echo "$certificates" | wc -l)
+    i=1
+
+    # Listing files by mask
+    for cert in $certificates; do
+        if [ $i -eq $certificates_count ]; then
+             echo -e "\t\"${cert//.crt/}\""
+        else
+             echo -e "\t\"${cert//.crt/}\","
+        fi
+        (( ++i))
+    done
+
+    # Printing bottom bracket
+    echo -e "]"
+}
+
+# Shell function
+shell_list_cert() {
+    if [ -z "$nohead" ] ; then
+        # Print brief info
+        echo "Certificate"
+        echo "----------"
+    fi
+
+    # Listing files by mask
+    for cert in $(ls $V_USERS/$user/cert/ | grep '.crt'); do
+        # Print result
+        echo "${cert//.crt/}"
+    done
+}
 
 
 #----------------------------------------------------------#
@@ -25,7 +61,7 @@ source $V_FUNC/cert_func.sh
 check_args '1' "$#" 'user [format] [limit] [offset]'
 
 # Checking argument format
-format_validation 'user' 'limit' 'offset'
+format_validation 'user'
 
 # Checking user
 is_user_valid
@@ -36,9 +72,10 @@ is_user_valid
 
 # Listing domains
 case $format in 
-    json) cert_json_list  ;;
-    shell) cert_shell_list | column -t ;;
-    *) check_args '1' "0" 'user [format] [limit] [offset]'
+    json)   json_list_cert  ;;
+    plain)  nohead=1; shell_list_cert ;;
+    shell)  shell_list_cert | column -t ;;
+    *)      check_args '1' '0' 'user [format]' ;;
 esac
 
 
@@ -49,4 +86,4 @@ esac
 # Logging
 log_event 'system' "$V_EVENT"
 
-exit  $OK
+exit

@@ -20,7 +20,7 @@ json_list_conf() {
         (( ++i))
         key=${str%%=*}
         value=${str#*=}
-
+        value=${value//%spc%/ }
         if [ "$i" -lt "$lines" ]; then
             echo -e "\t\t\"$key\": \"${value//\'/}\","
         else
@@ -35,6 +35,7 @@ shell_list_conf() {
     for str in $(cat $V_CONF/vesta.conf); do
         key=${str%%=*}
         value=${str#*=}
+        value=${value//%spc%/ }
         echo "$key: ${value//\'/}"
     done
 }

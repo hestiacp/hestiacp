@@ -104,7 +104,7 @@ echo "v_upd_sys_user_disk $user" >> $V_QUEUE/disk.pipe
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     mkdir $V_USERS/$user/cert
     touch $V_USERS/$user/web.conf
-    echo "v_upd_web_domains_traff $user" >> $V_QUEUE/traffic.pipe
+    echo "$V_BIN/v_upd_web_domains_traff $user" >> $V_QUEUE/traffic.pipe
     echo "v_upd_web_domains_disk $user" >> $V_QUEUE/disk.pipe
 fi
 

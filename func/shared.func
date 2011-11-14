@@ -957,7 +957,6 @@ json_list() {
         i=1
         for field in $fields; do
             eval value=$field
-
             if [ $i -eq 1 ]; then
                 # Printing parrent
                 (( ++i))
@@ -1086,8 +1085,8 @@ get_config_value() {
 }
 
 is_backup_enabled() {
-    backups=$(grep "BACKUPS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
-    if [ -z "$backups" ] || [[ "$backups" -le '0' ]]; then
+    BACKUPS=$(grep "BACKUPS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
+    if [ -z "$BACKUPS" ] || [[ "$BACKUPS" -le '0' ]]; then
         echo "Error: User backups are disabled"
         log_event 'debug' "$E_BACKUP_DISABLED $V_EVENT"
         exit $E_BACKUP_DISABLED

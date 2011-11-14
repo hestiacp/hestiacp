@@ -1,0 +1,51 @@
+#!/bin/bash
+# info: changing sysconfig value
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+key=$(echo "$1" | tr '[:lower:]' '[:upper:]' )
+value=${2// /%spc%}
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared.func
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '2' "$#" 'key value'
+
+# Checking argument format
+format_validation 'key'
+
+# Checking key existance
+check_ckey=$(grep "^$key='" $V_CONF/vesta.conf)
+if [ -z "$check_ckey" ]; then
+    echo "Error: key not found"
+    log_event 'debug' "$E_KEY_INVALID $V_EVENT"
+    exit $E_KEY_INVALID
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Updating conf
+sed -i "s/$key=.*/$key='$value'/g" /tmp/vesta.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit

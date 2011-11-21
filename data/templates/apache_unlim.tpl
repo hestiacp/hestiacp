@@ -1,19 +1,19 @@
 <VirtualHost %ip%:%web_port%>
 
     ServerName %domain_idn%
-    ServerAlias %alias_idn%
+    %alias_string%
     ServerAdmin %email%
-    DocumentRoot %docroot%
-    ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
+    %docroot_string%
+    %cgi%ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
     Alias /vstats/ %home%/%user%/web/%domain%/stats/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/
     SuexecUserGroup %user% %group%
     CustomLog /var/log/httpd/domains/%domain%.bytes bytes
     CustomLog /var/log/httpd/domains/%domain%.log combined
-   %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
+    %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %docroot%>
         AllowOverride All
-        Options +Includes -Indexes +ExecCGI
+        Options +Includes -Indexes %cgi_option%
         php_admin_value upload_tmp_dir %home%/%user%/tmp
         php_admin_value upload_max_filesize 60M
         php_admin_value max_execution_time 60

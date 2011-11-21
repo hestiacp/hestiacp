@@ -13,6 +13,7 @@ ip=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 

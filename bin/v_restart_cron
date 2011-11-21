@@ -4,6 +4,7 @@
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 
 crond() {
     /etc/init.d/crond 'reload' >/dev/null 2>&1

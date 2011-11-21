@@ -6,6 +6,7 @@
 source /etc/profile.d/vesta.sh
 source $VESTA/conf/vesta.conf
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 
 bind() {
     /etc/init.d/named reload >/dev/null 2>&1

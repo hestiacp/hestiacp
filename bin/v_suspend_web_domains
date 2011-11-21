@@ -10,6 +10,7 @@ user=$1
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -43,80 +44,18 @@ conf="$V_USERS/$user/web.conf"
 
 # Defining fileds to select
 field='$DOMAIN'
-
-# Defining search string
 search_string="SUSPEND='no'"
-
-# Parsing unsuspeneded domains
 domains=$(dom_clear_search)
 
 # Starting suspend loop
 for domain in $domains; do
-
-    domain_idn=$(idn -t --quiet -a "$domain")
-
-    # Get template name
-    tpl_name=$(get_web_domain_value '$TPL')
-    tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
-
-    # Defining config
-    conf="$V_HOME/$user/conf/httpd.conf"
-
-    # Defining search phrase
-    search_phrase='DocumentRoot '
-
-    # Defining replace string
-    str_repl="    Redirect / http://$url/"
-
-    # Suspending vhost
-    change_web_config
-
-    # Check ssl vhost
-    cert=$(get_web_domain_value '$SSL_CERT')
-    if [ ! -z "$cert" ]; then
-        # Defining teplate name
-        tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
-
-        # Defining config
-        conf="$V_HOME/$user/conf/shttpd.conf"
-
-        # Reefining replace string - old str_repl contains escaped chars
-        str_repl="    Redirect / http://$url/"
-
-        # Suspending vhost
-        change_web_config
-    fi
-
-    # Check nginx vhost
-    nginx=$(get_web_domain_value '$NGINX')
-    if [ ! -z "$nginx" ]; then
-        tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
-        conf="$V_HOME/$user/conf/nginx.conf"
-        search_phrase='proxy_pass'
-        str_repl="        rewrite ^(.*)\$ http://$url;"
-        change_web_config
-    fi
-
-    if [ ! -z "$nginx" ] && [ ! -z "$cert" ]; then
-        tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
-        conf="$V_HOME/$user/conf/snginx.conf"
-        search_phrase='proxy_pass'
-        str_repl="        rewrite ^(.*)\$ http://$url;"
-        change_web_config
-    fi
-
-    # Adding suspend in config
-    update_web_domain_value '$SUSPEND' 'yes'
-
+    $V_BIN/v_suspend_web_domain "$user" "$domain" "$url"
 done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Adding task to the vesta pipe
-restart_schedule 'web'
 
 # Logging
 log_event 'system' "$V_EVENT"

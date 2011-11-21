@@ -12,6 +12,7 @@ domain_idn=$(idn -t --quiet -a "$domain")
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -49,22 +50,33 @@ is_web_domain_value_exist '$SSL_CERT'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get template name
-tpl_name=$(get_web_domain_value '$TPL')
-tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+# Parsing domain values
+get_web_domain_values
 conf="$V_HOME/$user/conf/shttpd.conf"
+tpl_file="$V_WEBTPL/apache_$TPL.stpl"
+old_ssl="$SSL_CERT"
 
 # Deleting domain
 del_web_config
+
+# Checking nginx
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
+    conf="$V_HOME/$user/conf/snginx.conf"
+    del_web_config
+fi
+
+# Deleting old certificate
+check_cert=$(grep "SSL_CERT='$old_ssl'" $V_USERS/$user/web.conf |wc -l)
+if [ "$check_cert"  -lt 2 ]; then
+    rm -f $V_HOME/$user/conf/$old_ssl.crt
+    rm -f $V_HOME/$user/conf/$old_ssl.key
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Get old values
-cert=$(get_web_domain_value '$SSL_CERT' )
-tpl_option=$(get_web_domain_value '$SSL_HOME' )
 
 # Deleting ssl in config
 update_web_domain_value '$SSL_HOME' ''
@@ -79,23 +91,26 @@ if [ -z "$ssl_dom" ]; then
     rm -f $conf
 fi
 
+# Checking last nginx domain
+conf='/etc/nginx/conf.d/vesta_users.conf'
+last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web.conf)
+last_snginx=$(echo "$last_nginx" | grep -v "SSL_CERT=''")
+if [ -z "$last_snginx" ]; then
+    sline=$(grep -n "$V_HOME/$user/conf/snginx.conf" $conf | cut -f 1 -d : )
+    if [ ! -z "$sline" ]; then
+        sed -i "$sline d" $conf
+    fi
+    rm -f $V_HOME/$user/conf/snginx.conf
+fi
+
 # Decreasing domain value
 decrease_user_value "$user" '$U_WEB_SSL'
-
-# Checking cert parents
-conf="$V_USERS/$user/web.conf"
-field='$DOMAIN'
-search_string="SSL_CERT='$cert'"
-cert_parents=$(dom_clear_search)
-if [ -z "$cert_parents" ]; then
-    rm -f $V_HOME/$user/conf/$cert.crt $V_HOME/$user/conf/$cert.key
-fi
 
 # Adding task to the vesta pipe
 restart_schedule 'web'
 
 # Logging
-log_history "$V_EVENT" "v_add_web_domain_ssl $user $domain $cert $tpl_option"
+log_history "$V_EVENT" "v_add_web_domain_ssl $user $domain $SSL_CERT $SSL_HOME"
 log_event 'system' "$V_EVENT"
 
 exit

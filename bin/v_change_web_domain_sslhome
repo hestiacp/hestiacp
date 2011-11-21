@@ -9,10 +9,11 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-tpl_option=$3
+ssl_home=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -50,47 +51,31 @@ is_web_domain_value_exist '$SSL_CERT'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get template name
-tpl_name=$(get_web_domain_value '$TPL')
-tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
-
-# Defininig config
+# Get domain values
+get_web_domain_values
+old_ssl_home=$SSL_HOME
+SSL_HOME=$ssl_home
+tpl_file="$V_WEBTPL/apache_$TPL.stpl"
 conf="$V_HOME/$user/conf/shttpd.conf"
 
-# Defining search phrase
-search_phrase='DocumentRoot'
-
 # Parsing tpl_option
-case $tpl_option in
-    single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
-    same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
-    *) check_args '3' "2" 'user domain sslhome'
+case $SSL_HOME in
+    single) new="$V_HOME/$user/web/$domain/public_shtml" ;
+            old="$V_HOME/$user/web/$domain/public_html" ;;
+    same)   new="$V_HOME/$user/web/$domain/public_html" ;
+            old="$V_HOME/$user/web/$domain/public_shtml" ;;
+    *)      check_args '3' "2" 'user domain sslhome'
 esac
 
-# Defining replace string
-str_repl="    DocumentRoot $docroot"
+# Changing sslhome directory
+replace_web_config
 
-# Changing sslhome
-change_web_config
-
-# Get old sslhome value
-ssl_home=$(get_web_domain_value '$SSL_HOME')
-
-# Parsing old sslhome
-case $ssl_home in
-    single) dirroot="$V_HOME/$user/web/$domain/public_shtml" ;;
-    same) dirroot="$V_HOME/$user/web/$domain/public_html" ;;
-    *) check_args '3' "2" 'user domain sslhome'
-esac
-
-# Defining search phrase
-search_phrase="<Directory $dirroot>"
-
-# Defining replace string
-str_repl="    <Directory $docroot>"
-
-# Changing sslhome directory tag
-change_web_config
+# Checking nginx config
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
+    conf="$V_HOME/$user/conf/snginx.conf"
+    replace_web_config
+fi
 
 
 #----------------------------------------------------------#
@@ -98,13 +83,13 @@ change_web_config
 #----------------------------------------------------------#
 
 # Adding sslhome in config
-update_web_domain_value '$SSL_HOME' "$tpl_option"
+update_web_domain_value '$SSL_HOME' "$SSL_HOME"
 
 # Adding task to the vesta pipe
 restart_schedule 'web'
 
 # Logging
-log_history "$V_EVENT" "$V_SCRIPT $user $domain $ssl_home"
+log_history "$V_EVENT" "$V_SCRIPT $user $domain $old_ssl_home"
 log_event 'system' "$V_EVENT"
 
 exit

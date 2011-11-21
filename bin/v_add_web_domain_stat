@@ -13,6 +13,7 @@ type=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -55,13 +56,18 @@ is_web_domain_key_empty '$STATS'
 #----------------------------------------------------------#
 
 # Parse aliases
-aliases=$(get_web_domain_value '$ALIAS')
-aliases_idn=$(idn -t --quiet -a "$aliases")
+get_web_domain_values
+
+# Preparing domain values for the template substitution
+upd_web_domain_values
 
 # Adding statistic config
 cat $V_WEBTPL/$type.tpl |\
     sed -e "s/%ip%/$ip/g" \
-        -e "s/%port%/$port/g" \
+        -e "s/%web_port%/$WEB_PORT/g" \
+        -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
+        -e "s/%proxy_port%/$PROXY_PORT/g" \
+        -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
         -e "s/%domain%/$domain/g" \
         -e "s/%user%/$user/g" \

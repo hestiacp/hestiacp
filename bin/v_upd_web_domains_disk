@@ -10,6 +10,7 @@ user=$1
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -40,11 +41,7 @@ conf="$V_USERS/$user/web.conf"
 
 # Defining fileds to select
 field='$DOMAIN'
-
-# Defining search string
 search_string="SUSPEND='no'"
-
-# Parsing unsuspeneded domains
 domains=$(dom_clear_search)
 
 # Starting update disk loop

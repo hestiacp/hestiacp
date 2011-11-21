@@ -10,6 +10,7 @@ user=$1
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 source $V_FUNC/ip.func
@@ -40,175 +41,68 @@ is_user_suspended
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining port configuration
-proxy_port=$(get_config_value '$PROXY_PORT')
-proxy_ssl_port=$(get_config_value '$PROXY_SSL_PORT')
-web_port=$(get_config_value '$WEB_PORT')
-web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
+# Clean up old config
+rm -f $V_HOME/$user/conf/tmp_*.conf
 
 # Defining config
-conf="$V_USERS/$user/web.conf"
-
-# Defining search string
-search_string="DOMAIN"
-
-# Defining fileds to select
-field='$DOMAIN'
-
-# Parsing all domains
-domains=$(dom_clear_search)
+conf=$V_USERS/$user/web.conf
+fields='$DOMAIN'
+nohead=1
 
 # Starting loop
-for domain in $domains; do
-
-    # Defining domain parameters
-    template=$(get_web_domain_value '$TPL')
-    tpl_file="$V_WEBTPL/apache_$template.tpl"
-    ip=$(get_web_domain_value '$IP')
+for domain in $(shell_list) ; do
     domain_idn=$(idn -t --quiet -a "$domain")
-    group="$user"
-    docroot="$V_HOME/$user/web/$domain/public_html"
-    email="$user@$domain"
-    aliases=$(get_web_domain_value '$ALIAS')
-    i=1
-    for dom_alias in ${aliases//,/ }; do
-        dom_alias=$(idn -t --quiet -a $dom_alias)
-        if [ "$i" -eq 1 ]; then
-            aliases_idn="$dom_alias"
-        else
-            aliases_idn="$aliases_idn,$dom_alias"
-        fi
-        i=$((i + 1))
-    done
-    suspend=$(get_web_domain_value '$SUSPEND')
 
-    # Checking error log status
-    elog=$(get_web_domain_value '$ELOG')
-    if [ "$elog" = 'no' ]; then
-        elog=' #'
-    else
-        elog=' '
-    fi
+    # Parsing domain values
+    get_web_domain_values
+
+    # Preparing domain values for the template substitution
+    upd_web_domain_values
 
     # Adding domain to the tmp_httpd.conf
+    tpl_file="$V_WEBTPL/apache_$TPL.tpl"
     conf="$V_HOME/$user/conf/tmp_httpd.conf"
     add_web_config
 
     # Running template trigger
-    if [ -x $V_WEBTPL/apache_$template.sh ]; then
-        $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
-    fi
-
-    # Checking cgi
-    cgi=$(get_web_domain_value '$CGI')
-    if [ "$cgi" != 'yes' ]; then
-        # Defining params for ScriptAlias
-        search_phrase='ScriptAlias '
-        str_repl="    #ScriptAlias /cgi-bin/"
-        str_repl="$str_repl $V_HOME/$user/web/$domain/cgi-bin/"
-        change_web_config
-
-        # Defining params for Options
-        search_phrase='Options '
-        str_repl='        Options +Includes -Indexes -ExecCGI'
-        change_web_config
-    fi
-
-    # Checking suspend
-    if [ "$suspend" = 'yes' ]; then
-        # Defining search phrase
-        search_phrase='DocumentRoot '
-
-        # Defining replace string
-        str_repl="    Redirect / http://$url"
-
-        # Suspending vhost
-        change_web_config
+    if [ -x $V_WEBTPL/apache_$TPL.sh ]; then
+        $V_WEBTPL/apache_$TPL.sh $user $domain $ip $V_HOME $docroot
     fi
 
     # Checking ssl
-    cert=$(get_web_domain_value '$SSL_CERT')
-    if [ ! -z "$cert" ]; then
-        # Defining certificate params
-        ssl_cert="$V_HOME/$user/conf/$cert.crt"
-        ssl_key="$V_HOME/$user/conf/$cert.key"
-        tpl_option=$(get_web_domain_value '$SSL_HOME')
-        case $tpl_option in
-            single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
-            same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
-            *) check_args '3' "$#" 'user domain certificate [sslhome]'
-        esac
-
-
+    if [ ! -z "$SSL_CERT" ]; then
         # Adding domain to the shttpd.conf
         conf="$V_HOME/$user/conf/tmp_shttpd.conf"
-        tpl_file="$V_WEBTPL/apache_$template.stpl"
+        tpl_file="$V_WEBTPL/apache_$TPL.stpl"
         add_web_config
 
         # Running template trigger
-        if [ -x $V_WEBTPL/apache_$template.sh ]; then
-            $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
+        if [ -x $V_WEBTPL/apache_$TPL.sh ]; then
+            $V_WEBTPL/apache_$TPL.sh $user $domain $ip $V_HOME $docroot
         fi
 
-        # Checking cgi
-        if [ "$cgi" != 'yes' ]; then
-            # Defining params for ScriptAlias
-            search_phrase='ScriptAlias '
-            str_repl="    #ScriptAlias /cgi-bin/"
-            str_repl="$str_repl $V_HOME/$user/web/$domain/cgi-bin/"
-            change_web_config
-    
-            # Defining params for Options
-            search_phrase='Options '
-            str_repl='        Options +Includes -Indexes -ExecCGI'
-            change_web_config
-        fi
-
-        # Checking suspend
-        if [ "$suspend" = 'yes' ]; then
-            # Defining search phrase
-            search_phrase='DocumentRoot '
-
-            # Defining replace string
-            str_repl="    Redirect / http://$url"
-
-            # Suspending vhost
-            change_web_config
-        fi
+        ssl_change='yes'
     fi
 
     # Checking nginx
-    nginx=$(get_web_domain_value '$NGINX')
-    if [ ! -z "$nginx" ]; then
-        proxy_port=$(get_config_value '$PROXY_PORT')
-	extentions=$(get_web_domain_value '$NGINX_EXT')
-        tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+    if [ ! -z "$NGINX" ]; then
+        tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
         conf="$V_HOME/$user/conf/tmp_nginx.conf"
         add_web_config
 
-        if [ "$suspend" = 'yes' ]; then
-            search_phrase='proxy_pass'
-            str_repl="        rewrite ^(.*)\$ http://$url;"
-            change_web_config
-        fi
-
-        if [ ! -z "$cert" ]; then
-            tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
+        if [ ! -z "$SSL_CERT" ]; then
+            if [ "$SUSPEND" = 'yes' ]; then
+                proxy_string="rewrite ^(.*)\$ http://$url;"
+            else
+                proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
+            fi
+    
+            tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
             conf="$V_HOME/$user/conf/tmp_snginx.conf"
             add_web_config
-
-            if [ "$suspend" = 'yes' ]; then
-                search_phrase='proxy_pass'
-                str_repl="        rewrite ^(.*)\$ http://$url;"
-                change_web_config
-            fi
-
         fi
-
-
 	ngix_change='yes'
     fi
-
 done
 
 # Renaming tmp config
@@ -226,7 +120,7 @@ if [ ! -z "$domains" ] && [ -z "$main_conf_check" ]; then
 fi
 
 # Checking ssl 
-if [ ! -z "$ssl_cert" ]; then
+if [ "$ssl_change" = 'yes' ]; then
     tmp_conf="$V_HOME/$user/conf/tmp_shttpd.conf"
     conf="$V_HOME/$user/conf/shttpd.conf"
     mv $tmp_conf $conf
@@ -252,7 +146,7 @@ if [ "$ngix_change" = 'yes' ]; then
     fi
 
     # Checking ssl for nginx
-    if [ ! -z "$ssl_cert" ]; then
+    if [ "$ssl_change" = 'yes' ]; then
         tmp_conf="$V_HOME/$user/conf/tmp_snginx.conf"
         conf="$V_HOME/$user/conf/snginx.conf"
         mv $tmp_conf $conf

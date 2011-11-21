@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: deliting web domain nginx config
+# info: deleting web domain nginx config
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,6 +12,7 @@ domain_idn=$(idn -t --quiet -a "$domain")
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -49,19 +50,15 @@ is_web_domain_value_exist '$NGINX'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get domain values
-tpl_name=$(get_web_domain_value '$NGINX')
-tpl_file="$V_WEBTPL/ngingx_vhost_$tpl_name.tpl"
+# Defining domain parameters
+get_web_domain_values
+tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
 conf="$V_HOME/$user/conf/nginx.conf"
-ext=$(get_web_domain_value '$NGINX_EXT' )
-
-# Deleting domain
 del_web_config
 
 # Checking ssl
-cert=$(get_web_domain_value '$SSL_CERT')
-if [ ! -z "$cert" ]; then
-    tpl_file="$V_WEBTPL/ngingx_vhost_$tpl_name.stpl"
+if [ ! -z "$SSL_CERT" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
     conf="$V_HOME/$user/conf/snginx.conf"
     del_web_config
 fi
@@ -99,7 +96,7 @@ fi
 restart_schedule 'web'
 
 # Logging
-log_history "$V_EVENT" "v_add_web_domain_nginx $user $domain $tpl_name $ext"
+log_history "$V_EVENT" "v_add_web_domain_nginx $user $domain $NGINX $NGINX_EXT"
 log_event 'system' "$V_EVENT"
 
 exit

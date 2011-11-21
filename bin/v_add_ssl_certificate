@@ -7,7 +7,7 @@
 
 # Argument defenition
 user=$1
-cert=$2
+ssl=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -19,10 +19,10 @@ source $V_FUNC/cert.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '2' "$#" 'user certificate'
+check_args '2' "$#" 'user ssl_certificate'
 
 # Checking argument format
-format_validation 'user' 'certificate'
+format_validation 'user' 'ssl'
 
 # Checking user
 is_user_valid
@@ -42,8 +42,8 @@ is_cert_valid "$V_TMP"
 #----------------------------------------------------------#
 
 # Adding certificate to user dir
-mv $V_TMP/$cert.crt $V_USERS/$user/cert/
-mv $V_TMP/$cert.key $V_USERS/$user/cert/
+mv $V_TMP/$ssl.crt $V_USERS/$user/cert/
+mv $V_TMP/$ssl.key $V_USERS/$user/cert/
 
 
 #----------------------------------------------------------#
@@ -51,7 +51,7 @@ mv $V_TMP/$cert.key $V_USERS/$user/cert/
 #----------------------------------------------------------#
 
 # Logging
-log_history "$V_EVENT" "v_del_ssl_certificate $user $cert"
+log_history "$V_EVENT" "v_del_ssl_certificate $user $ssl"
 log_event 'system' "$V_EVENT"
 
 exit

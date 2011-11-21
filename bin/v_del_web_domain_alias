@@ -14,6 +14,7 @@ dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -44,8 +45,8 @@ is_web_domain_valid
 is_domain_suspended 'web'
 
 # Checking alias is added
-cur_alias=$(get_web_domain_value '$ALIAS')
-check_alias=$(echo ${cur_alias//,/ }|grep -w "$dom_alias")
+get_web_domain_values
+check_alias=$(echo ${ALIAS//,/ }|grep -w "$dom_alias")
 if [ -z "$check_alias" ]; then
     echo "Error: alias not exist"
     log_event 'debug' "$E_DOM_NOTEXIST $V_EVENT"
@@ -57,35 +58,42 @@ fi
 #----------------------------------------------------------#
 
 # Defining new alias string
-new_alias=$(echo "$cur_alias" |\
+ALIAS=$(echo "$ALIAS" |\
     sed -e "s/,/\n/g"|\
     sed -e "s/^$dom_alias$//g"|\
     sed -e "/^$/d"|\
     sed -e ':a;N;$!ba;s/\n/,/g')
-
-new_alias_idn=$(idn -t --quiet -a "$cur_alias" |\
-    sed -e "s/,/\n/g"|\
-    sed -e "s/^$dom_alias$//g"|\
-    sed -e "/^$/d"|\
-    sed -e ':a;N;$!ba;s/\n/,/g')
-
-tpl_name=$(get_web_domain_value '$TPL')
-tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 conf="$V_HOME/$user/conf/httpd.conf"
-search_phrase='ServerAlias'
-str_repl="    ServerAlias ${new_alias_idn//,/ }"
 
-# Deleting alias
-change_web_config
+# Preparing domain values for the template substitution
+upd_web_domain_values
 
-# Checking ssl
-cert=$(get_web_domain_value '$SSL_CERT')
-if [ ! -z "$cert" ]; then
+# Recreating vhost
+del_web_config
+add_web_config
 
-    # Defining ssl options
-    tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+if [ ! -z "$SSL_CERT" ]; then
+    tpl_file="$V_WEBTPL/apache_$TPL.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
-    change_web_config
+    del_web_config
+    add_web_config
+fi
+
+# Checking nginx
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
+    conf="$V_HOME/$user/conf/nginx.conf"
+    del_web_config
+    add_web_config
+
+    if [ ! -z "$SSL_CERT" ]; then
+        proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
+        tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
+        conf="$V_HOME/$user/conf/snginx.conf"
+        del_web_config
+        add_web_config
+    fi
 fi
 
 
@@ -94,7 +102,7 @@ fi
 #----------------------------------------------------------#
 
 # Deleting alias
-update_web_domain_value '$ALIAS' "$new_alias"
+update_web_domain_value '$ALIAS' "$ALIAS"
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

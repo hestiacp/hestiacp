@@ -14,14 +14,14 @@ is_cert_valid() {
     path="$1"
 
     # Checking file existance
-    if [ ! -e "$path/$cert.crt" ] || [ ! -e "$path/$cert.key" ]; then
+    if [ ! -e "$path/$ssl.crt" ] || [ ! -e "$path/$ssl.key" ]; then
         echo "Error: certificate not exist"
         log_event 'debug' "$E_CERT_NOTEXIST $V_EVENT"
         exit $E_CERT_NOTEXIST
     fi
 
     # Checking crt file
-    crt=$(openssl verify "$path/$cert.crt" 2>/dev/null|tail -n 1|grep -w 'OK')
+    crt=$(openssl verify "$path/$ssl.crt" 2>/dev/null|tail -n 1|grep -w 'OK')
     if [ -z "$crt" ]; then
         echo "Error: certificate invalid"
         log_event 'debug' "$E_CERT_INVALID $V_EVENT"
@@ -29,7 +29,7 @@ is_cert_valid() {
     fi
 
     # Checking key file
-    key=$(openssl rsa -in "$path/$cert.key" -check 2>/dev/null|\
+    key=$(openssl rsa -in "$path/$ssl.key" -check 2>/dev/null|\
         head -n1|grep -w 'ok')
     if [ -z "$key" ]; then
         echo "Error: key invalid"
@@ -39,7 +39,7 @@ is_cert_valid() {
 
     # FIXME we should run server on free port
     # Checking server
-    cmd="openssl s_server -quiet -cert $path/$cert.crt -key $path/$cert.key"
+    cmd="openssl s_server -quiet -cert $path/$ssl.crt -key $path/$ssl.key"
     $cmd &
 
     # Defining pid
@@ -65,7 +65,7 @@ is_cert_valid() {
 
 is_cert_used() {
     # Parsing config
-    check_cert=$(grep "SSL_CERT='$cert'" $V_USERS/$user/web.conf)
+    check_cert=$(grep "SSL_CERT='$ssl'" $V_USERS/$user/web.conf)
 
     # Checking result
     if [ ! -z "$check_cert" ]; then

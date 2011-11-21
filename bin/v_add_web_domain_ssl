@@ -9,11 +9,12 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-cert=$3
-tpl_option=${4-single}
+ssl=$3
+ssl_home=${4-single}
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 source $V_FUNC/ip.func
@@ -27,7 +28,7 @@ source $V_FUNC/ip.func
 check_args '3' "$#" 'user domain certificate [sslhome]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'certificate'
+format_validation 'user' 'domain' 'ssl'
 
 # Checking web system is enabled
 is_system_enabled 'web'
@@ -47,58 +48,36 @@ is_domain_suspended 'web'
 # Checking package
 is_package_full 'web_ssl'
 
-# Checking ip ownership
-ip=$(get_web_domain_value '$IP')
-is_sys_ip_owner
-
 # Check ssl is not added
 is_web_domain_key_empty '$SSL_CERT'
 
 # Checking ssl certificate
 is_web_domain_cert_valid
 
-# Checking template
-templates=$(get_user_value '$WEB_TPL')
-template=$(get_web_domain_value '$TPL')
-is_template_valid 'web'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining variables for template replace
-web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
-aliases=$(get_web_domain_value '$ALIAS')
-aliases_idn=$(idn -t --quiet -a "$aliases")
-email="$user@$domain"
-ssl_cert="$V_HOME/$user/conf/$cert.crt"
-ssl_key="$V_HOME/$user/conf/$cert.key"
-case $tpl_option in
-    single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
-    same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
-    *) check_args '3' "$#" 'user domain certificate [sslhome]'
-esac
-group="$user"
+# Parsing domain values
+get_web_domain_values
 conf="$V_HOME/$user/conf/shttpd.conf"
-tpl_file="$V_WEBTPL/apache_$template.stpl"
+tpl_file="$V_WEBTPL/apache_$TPL.stpl"
+SSL_CERT=$ssl
+SSL_HOME=$ssl_home
 
-# Checking error log status
-elog=$(get_web_domain_value '$ELOG')
-if [ "$elog" = 'no' ]; then
-    elog=' #'
-else
-    elog=' '
-fi
+# Checking ip ownership
+is_sys_ip_owner
 
-# Adding domain to the httpd.conf
+# Preparing domain values for the template substitution
+upd_web_domain_values
+
+# Adding domain to the shttpd.conf
 add_web_config
 
 # Adding certificate to user dir
-if [ ! -e "$ssl_cert" ]; then
-    cp -f $V_USERS/$user/cert/$cert.crt $ssl_cert
-    cp -f $V_USERS/$user/cert/$cert.key $ssl_key
-fi
+cp -f $V_USERS/$user/cert/$SSL_CERT.crt $ssl_cert
+cp -f $V_USERS/$user/cert/$SSL_CERT.key $ssl_key
 
 # Running template trigger
 if [ -x $V_WEBTPL/apache_$template.sh ]; then
@@ -109,7 +88,22 @@ fi
 main_conf='/etc/httpd/conf.d/vesta.conf'
 main_conf_check=$(grep "$conf" $main_conf )
 if [ -z "$main_conf_check" ]; then
-    echo "Include $conf" >>$main_conf
+    echo "Include $conf" >> $main_conf
+fi
+
+# Checking  nginx
+if [ ! -z "$NGINX" ]; then
+    # Adding domain to the snginx.conf
+    conf="$V_HOME/$user/conf/snginx.conf"
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
+    add_web_config
+
+    # Checking vesta nginx config
+    main_conf='/etc/nginx/conf.d/vesta_users.conf'
+    main_conf_check=$(grep "$conf" $main_conf )
+    if [ -z "$main_conf_check" ]; then
+        echo "include $conf;" >>$main_conf
+    fi
 fi
 
 
@@ -121,8 +115,8 @@ fi
 increase_user_value "$user" '$U_WEB_SSL'
 
 # Adding ssl values
-update_web_domain_value '$SSL_HOME' "$tpl_option"
-update_web_domain_value '$SSL_CERT' "$cert"
+update_web_domain_value '$SSL_CERT' "$SSL_CERT"
+update_web_domain_value '$SSL_HOME' "$SSL_HOME"
 
 # Logging
 log_history "$V_EVENT" "v_del_web_domain_ssl $user $domain"

@@ -13,6 +13,7 @@ template=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -51,57 +52,82 @@ is_template_valid "web"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get template name
-tpl_name=$(get_web_domain_value '$TPL')
-tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
-conf="$V_HOME/$user/conf/httpd.conf"
+# Parsing domain values
+get_web_domain_values
 
 # Deleting domain
+tpl_file="$V_WEBTPL/apache_$TPL.tpl"
+old_tpl=$TPL
+conf="$V_HOME/$user/conf/httpd.conf"
 del_web_config
 
-# Checking ssl
-cert=$(get_web_domain_value '$SSL_CERT')
-if [ ! -z "$cert" ]; then
-
-    # Get tpl
-    tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+# Deleting ssl vhost
+if [ ! -z "$SSL_CERT" ]; then
+    tpl_file="$V_WEBTPL/apache_$TPL.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
-
-    # Deleting domain
     del_web_config
 fi
 
-# Defining variables for template replace
-ip=$(get_web_domain_value '$IP')
-aliases=$(get_web_domain_value '$ALIAS')
-i=1
-for dom_alias in ${aliases//,/ }; do
-    dom_alias=$(idn -t --quiet -a $dom_alias)
-    if [ "$i" -eq 1 ]; then
-        aliases_idn="$dom_alias"
-    else
-        aliases_idn="$aliases_idn,$dom_alias"
-    fi
-    i=$((i + 1))
-done
-web_port=$(get_config_value '$WEB_PORT')
+# Defining variables for new vhost config
+ip=$IP
 email="$user@$domain"
+group="$user"
 docroot="$V_HOME/$user/web/$domain/public_html"
 conf="$V_HOME/$user/conf/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
-group="$user"
 
-# Parsing template keys
-template_data=$(cat $V_WEBTPL/apache_$template.descr|grep -v '#')
+
+# Parsing domain aliases
+i=1
+j=1
+OLD_IFS="$IFS"
+IFS=','
+for dom_alias in $ALIAS; do
+    dom_alias=$(idn -t --quiet -a $dom_alias)
+
+    # Spliting ServerAlias lines
+    check_8k="$server_alias $dom_alias"
+    if [ "${#check_8k}" -ge '8100' ]; then
+        if [ "$j" -eq 1 ]; then
+            alias_string="ServerAlias $server_alias"
+        else
+            alias_string="$alias_string\n    ServerAlias $server_alias"
+        fi
+        (( ++j))
+        server_alias=''
+    fi
+
+    if [ "$i" -eq 1 ]; then
+        aliases_idn="$dom_alias"
+        server_alias="$dom_alias"
+        alias_string="ServerAlias $server_alias"
+    else
+        aliases_idn="$aliases_idn,$dom_alias"
+        server_alias="$server_alias $dom_alias"
+    fi
+    (( ++i))
+done
+if [ -z "$alias_string" ]; then
+    alias_string="ServerAlias $server_alias"
+else
+     if [ ! -z "$server_alias" ]; then
+        alias_string="$alias_string\n    ServerAlias $server_alias"
+    fi
+fi
+IFS=$OLD_IFS
+
+
+# Parsing new template
+template_data=$(cat $V_WEBTPL/apache_$template.descr | grep -v '#')
 for keys in $template_data; do
     eval ${keys%%=*}=${keys#*=}
 done
 
-# Checking error log status
+# Checking error log
 if [ "$ELOG" = 'no' ]; then
-    elog=' #'
+    elog='#'
 else
-    elog=' '
+    elog=''
 fi
 
 # Adding domain to the httpd.conf
@@ -113,15 +139,13 @@ if [ -x $V_WEBTPL/apache_$template.sh ]; then
 fi
 
 # Checking ssl
-if [ ! -z "$cert" ]; then
+if [ ! -z "$SSL_CERT" ]; then
     # Defining variables for ssl template replace
-    web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
-    tpl_option=$(get_web_domain_value '$SSL_HOME')
-    ssl_cert="$V_HOME/$user/conf/$cert.crt"
-    ssl_key="$V_HOME/$user/conf/$cert.key"
-    case $tpl_option in
+    ssl_cert="$V_HOME/$user/conf/$SSL_CERT.crt"
+    ssl_key="$V_HOME/$user/conf/$SSL_CERT.key"
+    case $SSL_HOME in
         single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
-        *) docroot="$V_HOME/$user/web/$domain/public_html" ;;
+        same)   docroot="$V_HOME/$user/web/$domain/public_html" ;;
     esac
     conf="$V_HOME/$user/conf/shttpd.conf"
     tpl_file="$V_WEBTPL/apache_$template.stpl"
@@ -155,6 +179,7 @@ done
 restart_schedule 'web'
 
 # Logging
+log_history "$V_EVENT" "v_change_web_domain_tpl $user $domain $old_tpl"
 log_event 'system' "$V_EVENT"
 
 exit

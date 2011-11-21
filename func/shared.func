@@ -5,17 +5,13 @@ log_event() {
     event="$2"
 
     # Checking logging system
-    log_system=$(grep 'LOG_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
-
-    if [ "$log_system" = 'yes' ]; then
+    if [ "$LOG_SYSTEM" = 'yes' ]; then
         # Checking logging level
-        log=$(grep 'LOG_LEVEL=' $V_CONF/vesta.conf|\
-            cut -f 2 -d \'|grep -w "$level" )
+        log=$(echo "$LOG_LEVEL" | cut -f 2 -d \' | grep -w "$level" )
         if [ ! -z "$log" ]; then
             echo "$event" >> $V_LOG/$level.log
         fi
     fi
-
 }
 
 # Log user history
@@ -24,8 +20,7 @@ log_history() {
     undo="$2"
 
     # Checking logging system
-    log_history=$(grep 'LOG_HISTORY=' $V_CONF/vesta.conf | cut -f 2 -d \' )
-    if [ "$log_history" = 'yes' ]; then
+    if [ "$LOG_HISTORY" = 'yes' ]; then
         echo "$event [$undo]" >> $V_USERS/$user/history.log
     fi
 }
@@ -328,7 +323,7 @@ format_validation() {
             dom_alias)          format_dom "$v" ;;
             auth_pass)          format_pwd "$v" ;;
             auth_user)          format_usr "$v" ;;
-            certificate)        format_usr "$v" ;;
+            ssl)                format_usr "$v" ;;
             domain)             format_dom "$v" ;;
             database)           format_db  "$v" ;;
             db_user)            format_dbu "$v" ;;
@@ -376,11 +371,7 @@ is_system_enabled() {
     stype="$1"
 
     web_function() {
-        # Parsing config
-        web_system=$(grep "WEB_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
-
-        # Checking result
-        if [ -z "$web_system" ] || [ "$web_system" = "no" ]; then
+        if [ -z "$WEB_SYSTEM" ] || [ "$WEB_SYSTEM" = "no" ]; then
             echo "Error: web hosting support disabled"
             log_event 'debug' "$E_WEB_DISABLED $V_EVENT"
             exit $E_WEB_DISABLED
@@ -388,11 +379,7 @@ is_system_enabled() {
     }
 
     proxy_function() {
-        # Parsing config
-        proxy_system=$(grep "PROXY_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
-
-        # Checking result
-        if [ "$proxy_system" != 'nginx' ]; then			# only nginx
+        if [ "$PROXY_SYSTEM" != 'nginx' ]; then			# only nginx
             echo "Error: proxy hosting support disabled"	# support for
             log_event 'debug' "$E_PROXY_DISABLED $V_EVENT"	# now
             exit $E_PROXY_DISABLED
@@ -400,11 +387,7 @@ is_system_enabled() {
     }
 
     dns_function() {
-        # Parsing config
-        dns_system=$(grep "DNS_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
-
-        # Checking result
-        if [ -z "$dns_system" ] || [ "$cron_system" = "no" ]; then
+        if [ -z "$DNS_SYSTEM" ] || [ "$DNS_SYSTEM" = "no" ]; then
             echo "Error: dns support disabled"
             log_event 'debug' "$E_DNS_DISABLED $V_EVENT"
             exit $E_DNS_DISABLED
@@ -412,11 +395,7 @@ is_system_enabled() {
     }
 
     cron_function() {
-        # Parsing config
-        cron_system=$(grep "CRON_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
-
-        # Checking result
-        if [ -z "$cron_system" ] || [ "$cron_system" = "no" ]; then
+        if [ -z "$CRON_SYSTEM" ] || [ "$CRON_SYSTEM" = "no" ]; then
             echo "Error: crond support disabled"
             log_event 'debug' "$E_CRON_DISABLED $V_EVENT"
             exit $E_CRON_DISABLED
@@ -424,11 +403,7 @@ is_system_enabled() {
     }
 
     db_function() {
-        # Parsing config
-        db_system=$(grep "DB_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
-
-        # Checking result
-        if [ -z "$db_system" ] || [ "$db_system" = "no" ]; then
+        if [ -z "$DB_SYSTEM" ] || [ "$DB_SYSTEM" = "no" ]; then
             echo "Error: db support disabled"
             log_event 'debug' "$E_DB_DISABLED $V_EVENT"
             exit $E_DB_DISABLED
@@ -436,11 +411,7 @@ is_system_enabled() {
     }
 
     backup_function() {
-        # Parsing config
-        bck_system=$(grep "BACKUP_SYSTEM=" $V_CONF/vesta.conf|cut -f 2 -d \' )
-
-        # Checking result
-        if [ -z "$bck_system" ] || [ "$bck_system" = "no" ]; then
+        if [ -z "$BACKUP_SYSTEM" ] || [ "$BACKUP_SYSTEM" = "no" ]; then
             echo "Error: backup support disabled"
             log_event 'debug' "$E_BACKUP_DISABLED $V_EVENT"
             exit $E_BACKUP_DISABLED
@@ -803,16 +774,6 @@ increase_user_value() {
     sed -i "s/$key='$current_value'/$key='$new_value'/g" $conf
 }
 
-is_web_domain_cert_valid() {
-    # Checking file existance
-    path="$V_USERS/$user/cert"
-    if [ ! -e "$path/$cert.crt" ] || [ ! -e "$path/$cert.key" ]; then
-        echo "Error: certificate not exist"
-        log_event 'debug' "$E_CERT_NOTEXIST $V_EVENT"
-        exit $E_CERT_NOTEXIST
-    fi
-}
-
 is_type_valid() {
     # Argument defenition
     sys="$1"
@@ -965,9 +926,9 @@ json_list() {
                 # Printing child
                 if [ $i -lt $fileds_count ]; then
                     (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                    echo -e "\t\t\"${field//$/}\": \"$value\","
                 else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    echo -e "\t\t\"${field//$/}\": \"$value\""
                     data=1
                 fi
             fi

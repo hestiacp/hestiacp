@@ -14,6 +14,7 @@ dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -62,36 +63,46 @@ is_package_full 'web_alias'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining params for change function
-tpl_name=$(get_web_domain_value '$TPL')
-tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+# Parsing domain values
+get_web_domain_values
+tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 conf="$V_HOME/$user/conf/httpd.conf"
-search_phrase='ServerAlias'
 
-# Defining new alias string
-curr_alias=$(get_web_domain_value '$ALIAS')
-if [ -z "$curr_alias" ]; then
-    new_alias="$dom_alias"
-    new_alias_idn="$dom_alias_idn"
+# Parsing domain aliases
+if [ -z "$ALIAS" ]; then
+    ALIAS="$dom_alias"
 else
-    new_alias="$curr_alias,$dom_alias"
-    new_alias_idn=$(idn -t --quiet -a "$curr_alias,$dom_alias")
+    ALIAS="$ALIAS,$dom_alias"
 fi
 
-# Defining replace string
-str_repl="    ServerAlias ${new_alias_idn//,/ }"
+# Preparing domain values for the template substitution
+upd_web_domain_values
 
-# Adding alias
-change_web_config
+# Recreating vhost
+del_web_config
+add_web_config
 
-# Checking ssl domain
-cert=$(get_web_domain_value '$SSL_CERT')
-if [ ! -z "$cert" ]; then
-
-    # Defining params for change function
-    tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+if [ ! -z "$SSL_CERT" ]; then
+    tpl_file="$V_WEBTPL/apache_$TPL.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
-    change_web_config
+    del_web_config
+    add_web_config
+fi
+
+# Checking nginx
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
+    conf="$V_HOME/$user/conf/nginx.conf"
+    del_web_config
+    add_web_config
+
+    if [ ! -z "$SSL_CERT" ]; then
+        proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
+        tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
+        conf="$V_HOME/$user/conf/snginx.conf"
+        del_web_config
+        add_web_config
+    fi
 fi
 
 
@@ -100,7 +111,7 @@ fi
 #----------------------------------------------------------#
 
 # Adding new alias
-update_web_domain_value '$ALIAS' "$new_alias"
+update_web_domain_value '$ALIAS' "$ALIAS"
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

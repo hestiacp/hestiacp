@@ -12,6 +12,7 @@ domain_idn=$(idn -t --quiet -a "$domain")
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -46,47 +47,41 @@ is_domain_suspended 'web'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get template name
-tpl_name=$(get_web_domain_value '$TPL')
-tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
-
-# Defining config
+# Parsing domain values
+get_web_domain_values
+tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 conf="$V_HOME/$user/conf/httpd.conf"
+SUSPEND='yes'
 
-# Defining search phrase
-search_phrase='DocumentRoot '
+# Preparing domain values for the template substitution
+upd_web_domain_values
 
-# Defining replace string
-str_repl="    Redirect / http://$url"
+# Recreating vhost
+del_web_config
+add_web_config
 
-# Suspending vhost
-change_web_config
-
-# Check ssl vhost
-cert=$(get_web_domain_value '$SSL_CERT')
-if [ ! -z "$cert" ]; then
-    tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+# Check ssl
+if [ ! -z "$SSL_CERT" ]; then
+    tpl_file="$V_WEBTPL/apache_$TPL.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
-    str_repl="    Redirect / http://$url"
-    change_web_config
+    del_web_config
+    add_web_config
 fi
 
-# Check nginx vhost
-nginx=$(get_web_domain_value '$NGINX')
-if [ ! -z "$nginx" ]; then
-    tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+# Checking nginx
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
     conf="$V_HOME/$user/conf/nginx.conf"
-    search_phrase='proxy_pass'
-    str_repl="        rewrite ^(.*)\$ http://$url;"
-    change_web_config
-fi
+    del_web_config
+    add_web_config
 
-if [ ! -z "$nginx" ] && [ ! -z "$cert" ]; then
-    tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
-    conf="$V_HOME/$user/conf/snginx.conf"
-    search_phrase='proxy_pass'
-    str_repl="        rewrite ^(.*)\$ http://$url;"
-    change_web_config
+    if [ ! -z "$SSL_CERT" ]; then
+        proxy_string="rewrite ^(.*)\$ http://$url;"
+        tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
+        conf="$V_HOME/$user/conf/snginx.conf"
+        del_web_config
+        add_web_config
+    fi
 fi
 
 

@@ -14,6 +14,7 @@ template=${4-default}
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 source $V_FUNC/ip.func
@@ -66,6 +67,7 @@ is_template_valid "web"
 #----------------------------------------------------------#
 
 # Defining domain aliases
+IP=$ip
 ip_name=$(get_ip_name)
 ip_name_idn=$(idn -t --quiet -a "$ip_name")
 domain_alias="www.$domain"
@@ -75,16 +77,19 @@ if [ ! -z "$ip_name" ]; then
     domain_alias_dash_idn="${domain_idn//./-}.$ip_name_idn"
     aliases="$domain_alias,$domain_alias_dash"
     aliases_idn="$domain_alias_idn,$domain_alias_dash_idn"
+    alias_string="ServerAlias $domain_alias_idn $domain_alias_dash_idn"
 else
     aliases="$domain_alias"
     aliases_idn="$domain_alias_idn"
+    alias_string="ServerAlias $domain_alias_idn"
 fi
 
 # Defining vars for add_config function
-web_port=$(get_config_value '$WEB_PORT')
 group="$user"
 email="$user@$domain"
 docroot="$V_HOME/$user/web/$domain/public_html"
+docroot_string="DocumentRoot $docroot"
+
 conf="$V_HOME/$user/conf/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
 
@@ -96,9 +101,18 @@ done
 
 # Checking error log status
 if [ "$ELOG" = 'no' ]; then
-    elog=' #'
+    elog='#'
 else
-    elog=' '
+    elog=''
+fi
+
+# Checking cgi
+if [ "$CGI" != 'yes' ]; then
+    cgi='#'
+    cgi_option='-ExecCGI'
+else
+    cgi=''
+    cgi_option='+ExecCGI'
 fi
 
 # Adding domain to the httpd.conf
@@ -177,7 +191,7 @@ fi
 #----------------------------------------------------------#
 
 # Increasing ip value
-increase_ip_value
+increase_ip_value "$ip"
 
 # Increasing domain value
 increase_user_value "$user" '$U_WEB_DOMAINS'
@@ -189,7 +203,7 @@ v_str="$v_str U_DISK='0'"
 v_str="$v_str U_BANDWIDTH='0'"
 v_str="$v_str TPL='$template'"
 v_str="$v_str ALIAS='$aliases'"
-v_str="$v_str $template_data"    # Inserting PHP,CGI and ELOG keys
+v_str="$v_str $template_data"    # Inserting PHP, CGI and ELOG keys
 v_str="$v_str STATS='' STATS_AUTH=''"
 v_str="$v_str SSL_HOME='' SSL_CERT=''"
 v_str="$v_str NGINX='' NGINX_EXT='' SUSPEND='no' DATE='$V_DATE'"

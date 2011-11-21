@@ -117,6 +117,7 @@ is_ip_avalable() {
 
 is_sys_ip_owner() {
     # Parsing ip
+    ip="$IP"
     ip_owner=$(grep 'OWNER=' $V_IPS/$ip|cut -f 2 -d \')
     if [ "$ip_owner" != "$user" ]; then
         echo "Error: IP not owned"
@@ -131,13 +132,14 @@ get_ip_name() {
 }
 
 increase_ip_value() {
+    sip=${1-ip}
     USER=$user
     web_key='U_WEB_DOMAINS'
     usr_key='U_SYS_USERS'
 
     # Parsing values
-    current_web=$(grep "$web_key=" $V_IPS/$ip |cut -f 2 -d \')
-    current_usr=$(grep "$usr_key=" $V_IPS/$ip |cut -f 2 -d \')
+    current_web=$(grep "$web_key=" $V_IPS/$sip |cut -f 2 -d \')
+    current_usr=$(grep "$usr_key=" $V_IPS/$sip |cut -f 2 -d \')
 
     # Checking result
     if [ -z "$current_web" ]; then
@@ -219,40 +221,6 @@ get_sys_ip_value() {
 
     # Print value
     echo "$value"
-}
-
-change_domain_ip() {
-    # Defining vars
-    conf="$1"
-    domain="$2"
-    ip="$3"
-    old_ip="$4"
-    tpl_file="$5"
-
-    # Get ServerName line
-    serv_line=$(grep -n 'ServerName %domain_idn%' "$tpl_file" |cut -f 1 -d :)
-
-    # Get tpl_file last line
-    last_line=$(wc -l $tpl_file|cut -f 1 -d ' ')
-
-    # Get before line
-    bfr_line=$((serv_line - 1))
-
-    # Parsing httpd.conf
-    str=$(grep -B $bfr_line -n "ServerName $domain" $conf|grep '<VirtualHost')
-
-    # Checking integrity
-    if [ -z "$str" ] || [ -z "$serv_line" ] || [ -z "$bfr_line" ]; then
-        echo "Error: httpd parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
-    fi
-
-    # String number
-    str_number=$(echo $str | sed -e "s/-/+/" | cut -f 1 -d '+')
-
-    # Changing elog in config
-    sed -i "$str_number s/$old_ip/$ip/g" $conf
 }
 
 get_current_interface() {

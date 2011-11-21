@@ -4,6 +4,7 @@
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 
 # Restart functions
 apache() {
@@ -22,16 +23,12 @@ nginx() {
     fi
 }
 
-# Parsing config
-web_system=$(grep 'WEB_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
-proxy_system=$(grep 'PROXY_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
-
-# Checking values
-if [ "$web_system" = 'apache' ]; then
+# Checking system
+if [ "$WEB_SYSTEM" = 'apache' ]; then
     apache
 fi
 
-if [ "$proxy_system" = 'nginx' ]; then
+if [ "$PROXY_SYSTEM" = 'nginx' ]; then
     nginx
 fi
 

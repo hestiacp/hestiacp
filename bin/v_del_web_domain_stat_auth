@@ -12,6 +12,7 @@ auth_user=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -54,10 +55,7 @@ stat_dir="$V_HOME/$user/web/$domain/stats"
 
 # Checking auth_user
 if [ ! -z "$auth_user" ]; then
-
-    # Checking argument format
     format_validation 'auth_user'
-
     htpasswd -D $stat_dir/.htpasswd "$auth_user" >/dev/null 2>&1
 fi
 

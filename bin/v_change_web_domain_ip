@@ -13,6 +13,7 @@ ip=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 source $V_FUNC/ip.func
@@ -51,26 +52,33 @@ is_ip_avalable
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get tpl
-tpl_name=$(get_web_domain_value '$TPL')
-tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
-
+# Define variable for replace
+get_web_domain_values
+tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 conf="$V_HOME/$user/conf/httpd.conf"
-old_ip=$(get_web_domain_value '$IP')
-
-# Changing ip
-change_domain_ip "$conf" "$domain" "$ip" "$old_ip" "$tpl_file"
+old=$IP
+new=$ip
+replace_web_config
 
 # Checking ssl
-cert=$(get_web_domain_value '$SSL_CERT')
-if [ ! -z "$cert" ]; then
-
-    # Get tpl
-    tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+if [ ! -z "$SSL_CERT" ]; then
+    tpl_file="$V_WEBTPL/apache_$TPL.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
+    replace_web_config
+fi
 
-    # Adding elog
-    change_domain_ip "$conf" "$domain" "$ip" "$old_ip" "$tpl_file"
+# Checking nginx
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
+    conf="$V_HOME/$user/conf/nginx.conf"
+    replace_web_config
+fi
+
+# Checking nginx
+if [ ! -z "$SSL_CERT" ] && [ ! -z "$NGINX" ]; then 
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
+    conf="$V_HOME/$user/conf/snginx.conf"
+    replace_web_config
 fi
 
 
@@ -79,13 +87,13 @@ fi
 #----------------------------------------------------------#
 
 # Increasing ip value
-increase_ip_value
+increase_ip_value "$new"
 
 # Decreasing old ip value
-decrease_ip_value "$old_ip"
+decrease_ip_value "$old"
 
 # Adding ip in config
-update_web_domain_value '$IP' "$ip"
+update_web_domain_value '$IP' "$new"
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

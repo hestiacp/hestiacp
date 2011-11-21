@@ -223,23 +223,28 @@ add_web_config() {
     # Adding template to config
     cat $tpl_file | \
         sed -e "s/%ip%/$ip/g" \
-            -e "s/%web_port%/$web_port/g" \
-            -e "s/%web_ssl_port%/$web_ssl_port/g" \
-            -e "s/%proxy_port%/$proxy_port/g" \
-            -e "s/%proxy_ssl_port%/$proxy_ssl_port/g" \
+            -e "s/%web_port%/$WEB_PORT/g" \
+            -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
+            -e "s/%proxy_string%/${proxy_string////\/}/g" \
+            -e "s/%proxy_port%/$PROXY_PORT/g" \
+            -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
             -e "s/%domain_idn%/$domain_idn/g" \
             -e "s/%domain%/$domain/g" \
             -e "s/%user%/$user/g" \
             -e "s/%group%/$group/g" \
             -e "s/%home%/${V_HOME////\/}/g" \
             -e "s/%docroot%/${docroot////\/}/g" \
+            -e "s/%docroot_string%/${docroot_string////\/}/g" \
             -e "s/%email%/$email/g" \
+            -e "s/%alias_string%/$alias_string/g" \
             -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
             -e "s/%alias%/${aliases//,/ }/g" \
             -e "s/%ssl_cert%/${ssl_cert////\/}/g" \
             -e "s/%ssl_key%/${ssl_key////\/}/g" \
-            -e "s/%extentions%/${extentions//,/|}/g" \
+            -e "s/%nginx_extentions%/${NGINX_EXT//,/|}/g" \
             -e "s/%elog%/$elog/g" \
+            -e "s/%cgi%/$cgi/g" \
+            -e "s/%cgi_option%/$cgi_option/g" \
     >> $conf
 }
 
@@ -260,6 +265,13 @@ get_web_config_brds() {
     str=$(grep -ni "Name $domain_idn" $conf | cut -f 1 -d :)
     top_line=$((str - serv_line + 1))
     bottom_line=$((top_line + last_line -1))
+
+    # Check for multialias (8k alias issue)
+    multi=$(sed -n "$top_line,$bottom_line p" $conf |grep ServerAlias |wc -l)
+    if [ "$multi" -ge 2 ]; then
+        bottom_line=$((bottom_line + multi -1))
+    fi
+
 }
 
 change_web_config() {
@@ -286,6 +298,25 @@ change_web_config() {
     fi
 }
 
+replace_web_config() {
+    # Get config borders
+    get_web_config_brds || exit $?
+
+    # Escaping chars
+    clean_new=$(echo "$new" | sed \
+        -e 's/\\/\\\\/g' \
+        -e 's/&/\\&/g' \
+        -e 's/\//\\\//g')
+
+    clean_old=$(echo "$old" | sed \
+        -e 's/\\/\\\\/g' \
+        -e 's/&/\\&/g' \
+        -e 's/\//\\\//g')
+
+    # Replacing string in config
+    sed -i  "$top_line,$bottom_line s/$clean_old/$clean_new/" $conf
+}
+
 get_web_domain_value() {
     key="$1"
 
@@ -302,6 +333,16 @@ get_web_domain_value() {
 
     # Print value
     echo "$value"
+}
+
+get_web_domain_values() {
+    # Defining domain parameters
+    for line in $(grep "DOMAIN='$domain'" $V_USERS/$user/web.conf); do
+        # Assing key=value
+        for key in $line; do
+            eval ${key%%=*}=${key#*=}
+        done
+    done
 }
 
 get_dns_domain_value() {
@@ -405,6 +446,17 @@ is_web_domain_key_empty() {
         exit $E_VALUE_EXIST
     fi
 }
+
+is_web_domain_cert_valid() {
+    # Checking file existance
+    path="$V_USERS/$user/cert"
+    if [ ! -e "$path/$ssl.crt" ] || [ ! -e "$path/$ssl.key" ]; then
+        echo "Error: certificate not exist"
+        log_event 'debug' "$E_CERT_NOTEXIST $V_EVENT"
+        exit $E_CERT_NOTEXIST
+    fi
+}
+
 
 is_dns_record_valid() {
     # Checking record id
@@ -610,3 +662,82 @@ namehost_ip_disable() {
         web_restart='yes'
     fi
 }
+
+upd_web_domain_values() {
+    ip=$IP
+    group="$user"
+    email="$user@$domain"
+    docroot="$V_HOME/$user/web/$domain/public_html"
+    docroot_string="DocumentRoot $docroot"
+    proxy_string="proxy_pass     http://$ip:$WEB_PORT;"
+
+    # Parsing domain aliases
+    i=1
+    j=1
+    OLD_IFS="$IFS"
+    IFS=','
+    server_alias=''
+    alias_string=''
+    for dalias in $ALIAS; do
+        dalias=$(idn -t --quiet -a $dalias)
+        # Spliting ServerAlias lines
+        check_8k="$server_alias $dalias"
+        if [ "${#check_8k}" -ge '8100' ]; then
+            if [ "$j" -eq 1 ]; then
+                alias_string="ServerAlias $server_alias"
+            else
+                alias_string="$alias_string\n    ServerAlias $server_alias"
+            fi
+            (( ++j))
+            server_alias=''
+        fi
+        if [ "$i" -eq 1 ]; then
+            aliases_idn="$dalias"
+            server_alias="$dalias"
+            alias_string="ServerAlias $server_alias"
+        else
+            aliases_idn="$aliases_idn,$dalias"
+            server_alias="$server_alias $dalias"
+        fi
+        (( ++i))
+    done
+
+    if [ "$j" -gt 1 ]; then
+        alias_string="$alias_string\n    ServerAlias $server_alias"
+    else
+        alias_string="ServerAlias $server_alias"
+    fi
+
+    IFS=$OLD_IFS
+
+    # Checking error log status
+    if [ "$ELOG" = 'no' ]; then
+        elog='#'
+    else
+        elog=''
+    fi
+
+    # Checking cgi
+    if [ "$CGI" != 'yes' ]; then
+        cgi='#'
+        cgi_option='-ExecCGI'
+    else
+        cgi=''
+        cgi_option='+ExecCGI'
+    fi
+
+    # Checking suspend
+    if [ "$SUSPEND" = 'yes' ]; then
+        docroot_string="Redirect / http://$url"
+        proxy_string="rewrite ^(.*)\$ http://$url;"
+    fi
+
+    # Defining SSL vars
+    ssl_cert="$V_HOME/$user/conf/$SSL_CERT.crt"
+    ssl_key="$V_HOME/$user/conf/$SSL_CERT.key"
+    case $SSL_HOME in
+        single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
+        same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
+    esac
+}
+

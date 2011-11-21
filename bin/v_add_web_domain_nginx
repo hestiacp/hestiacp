@@ -16,6 +16,7 @@ extentions=${4-$default_extentions}
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -57,71 +58,32 @@ is_template_valid "proxy"
 #----------------------------------------------------------#
 
 # Defining domain parameters
-ip=$(get_web_domain_value '$IP')
-web_port=$(get_config_value '$WEB_PORT')
-proxy_port=$(get_config_value '$PROXY_PORT')
-domain_idn=$(idn -t --quiet -a "$domain")
-group="$user"
-docroot="$V_HOME/$user/web/$domain/public_html"
-email="$user@$domain"
-aliases=$(get_web_domain_value '$ALIAS')
-aliases_idn=$(idn -t --quiet -a "$aliases")
-
-# Checking error log status
-elog=$(get_web_domain_value '$ELOG')
-if [ "$elog" = 'no' ]; then
-    elog=' #'
-else
-    elog=' '
-fi
-
-# Adding domain to the nginx.conf
-tpl_file="$V_WEBTPL/ngingx_vhost_$template.tpl"
+get_web_domain_values
+NGINX="$template"
+NGINX_EXT="$extentions"
+tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
 conf="$V_HOME/$user/conf/nginx.conf"
+
+# Preparing domain values for the template substitution
+upd_web_domain_values
 add_web_config
 
-# Checking vesta nginx config
-main_conf='/etc/nginx/conf.d/vesta_users.conf'
-main_conf_check=$(grep "$conf" $main_conf )
-if [ -z "$main_conf_check" ]; then
-    echo "include $conf;" >>$main_conf
-fi
-
-# Checking ssl
-cert=$(get_web_domain_value '$SSL_CERT')
-if [ ! -z "$cert" ]; then
-    # Defining certificate params
-    ssl_cert="$V_HOME/$user/conf/$cert.crt"
-    ssl_key="$V_HOME/$user/conf/$cert.key"
-    tpl_option=$(get_web_domain_value '$SSL_HOME')
-    case $tpl_option in
-        single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
-        same) docroot="$V_HOME/$user/web/$domain/public_html" ;;
-        *) check_args '3' "$#" 'user domain certificate [sslhome]'
-    esac
-    web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
-    proxy_ssl_port=$(get_config_value '$PROXY_SSL_PORT')
-
-    # Adding domain to the snginx.conf
+if [ ! -z "$SSL_CERT" ]; then
+    proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
+    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
     conf="$V_HOME/$user/conf/snginx.conf"
-    tpl_file="$V_WEBTPL/ngingx_vhost_$template.stpl"
     add_web_config
-
-    # Checking vesta nginx config
-    main_conf='/etc/nginx/conf.d/vesta_users.conf'
-    main_conf_check=$(grep "$conf" $main_conf )
-    if [ -z "$main_conf_check" ]; then
-        echo "include $conf;" >>$main_conf
-    fi
 fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+echo "NGINX=$NGINX"
+echo "NGINX_EXT=$NGINX_EXT"
 
 # Adding nginx params to config
-update_web_domain_value '$NGINX' "$template"
+update_web_domain_value '$NGINX' "$NGINX"
 update_web_domain_value '$NGINX_EXT' "$extentions"
 
 # Adding task to the vesta pipe

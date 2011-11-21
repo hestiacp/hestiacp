@@ -13,6 +13,7 @@ key=$(echo "$3"| tr '[:lower:]' '[:upper:]'|sed -e "s/^/$/")
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -44,18 +45,12 @@ is_domain_suspended 'web'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking key
 value=$(get_web_domain_value "$key")
-
-# Printing value
 echo "$value"
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Logging
-log_event 'system' "$V_EVENT"
 
 exit

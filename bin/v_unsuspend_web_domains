@@ -10,6 +10,7 @@ user=$1
 
 # Importing variables
 source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 
@@ -35,93 +36,21 @@ is_user_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="$V_USERS/$user/web.conf"
-
 # Defining fileds to select
+conf="$V_USERS/$user/web.conf"
 field='$DOMAIN'
-
-# Defining search string
 search_string="SUSPEND='yes'"
-
-# Parsing suspeneded domains
 domains=$(dom_clear_search)
 
 # Starting unsuspend loop
 for domain in $domains; do
-
-    domain_idn=$(idn -t --quiet -a "$domain")
-
-    # Get template name
-    tpl_name=$(get_web_domain_value '$TPL')
-    tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
-
-    # Defining config
-    conf="$V_HOME/$user/conf/httpd.conf"
-
-    # Defining search phrase
-    search_phrase='Redirect / '
-
-    # Defining replace string
-    str_repl="    DocumentRoot $V_HOME/$user/web/$domain/public_html"
-
-    # Unsuspending vhost
-    change_web_config
-
-    # Check ssl vhost
-    cert=$(get_web_domain_value '$SSL_CERT')
-    if [ ! -z "$cert" ]; then
-        # Defining teplate name and ssl documentroot option
-        tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
-        tpl_opt=$(get_web_domain_value '$SSL_HOME')
-
-        # Defining config
-        conf="$V_HOME/$user/conf/shttpd.conf"
-
-        # Switching on option
-        case $tpl_opt in
-            single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
-            *) docroot="$V_HOME/$user/web/$domain/public_html" ;;
-        esac
-
-        # Defining replace string
-        str_repl="    DocumentRoot $docroot"
-
-        # Unsuspending vhost
-        change_web_config
-    fi
-
-    # Check nginx vhost
-    nginx=$(get_web_domain_value '$NGINX')
-    if [ ! -z "$nginx" ]; then
-        ip=$(get_web_domain_value '$IP')
-        web_port=$(get_config_value '$WEB_PORT')
-        tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
-        conf="$V_HOME/$user/conf/nginx.conf"
-        search_phrase='rewrite ^(.*)$'
-        str_repl="        proxy_pass     http://$ip:$web_port;"
-        change_web_config
-    fi
-
-    if [ ! -z "$nginx" ] && [ ! -z "$cert" ]; then
-        web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
-        tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
-        conf="$V_HOME/$user/conf/snginx.conf"
-        str_repl="        proxy_pass     https://$ip:$web_ssl_port;"
-        change_web_config
-    fi
-
-    # Adding unsuspend in config
-    update_web_domain_value '$SUSPEND' 'no'
+    $V_BIN/v_unsuspend_web_domain "$user" "$domain"
 done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Adding task to the vesta pipe
-restart_schedule 'web'
 
 # Logging
 log_event 'system' "$V_EVENT"

@@ -7,7 +7,7 @@
 
 # Argument defenition
 user=$1
-cert=$2
+ssl=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -31,9 +31,6 @@ is_user_valid
 # Checking user is active
 is_user_suspended
 
-# Checking ssl ceritificate
-is_cert_valid "$V_USERS/$user/cert"
-
 # Checking certificate 
 is_cert_used
 
@@ -43,7 +40,7 @@ is_cert_used
 #----------------------------------------------------------#
 
 # Deleting certificate
-rm -f $V_USERS/$user/cert/$cert.*
+rm -f $V_USERS/$user/cert/$ssl.*
 
 
 #----------------------------------------------------------#

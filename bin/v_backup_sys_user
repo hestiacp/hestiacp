@@ -63,7 +63,6 @@ done
 
 # Get current time
 start_time=$(date '+%s')
-sleep 131
 
 # Creating temporary random directory
 tmpdir=$(mktemp -p $V_TMP -d)
@@ -618,7 +617,10 @@ fi
 
 # Deleting old backup records
 for backup_record in $deprecated; do
-    sed -i "/DATE='$backup_record/d" $V_USERS/$user/backup.conf
+    if [ -e "$V_USERS/$user/backup.conf" ]; then
+        echo "sed -i /DATE='$backup_record/d $V_USERS/$user/backup.conf"
+        sed -i "/DATE='$backup_record/d" $V_USERS/$user/backup.conf
+    fi
 done
 
 # Concatenating string

@@ -58,7 +58,7 @@ json_list_domain() {
 
 # Shell function
 shell_list_domain() {
-    line=$(cat $V_USERS/$user/web.conf)
+    line=$(grep "DOMAIN='$domain'" $conf)
 
     # Parsing key=value
     for key in $line; do
@@ -110,8 +110,5 @@ esac
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Logging
-log_event 'system' "$V_EVENT"
 
 exit

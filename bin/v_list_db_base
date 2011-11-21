@@ -122,7 +122,4 @@ esac
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Logging
-log_event 'system' "$V_EVENT"
-
 exit

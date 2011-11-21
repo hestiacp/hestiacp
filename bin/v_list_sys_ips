@@ -100,7 +100,7 @@ conf=$V_IPS/*
 
 # Defining fileds to select
 fields="\$IP \$OWNER \$STATUS \$NAME \$U_SYS_USERS \$U_WEB_DOMAINS"
-field=s"$fields \$INTERFACE \$NETMASK \$DATE"
+fields="$fields \$INTERFACE \$NETMASK \$DATE"
 
 # Listing domains
 case $format in 
@@ -115,8 +115,5 @@ esac
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Logging
-log_event 'system' "$V_EVENT"
 
 exit

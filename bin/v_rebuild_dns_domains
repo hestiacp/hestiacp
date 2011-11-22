@@ -40,10 +40,10 @@ is_user_suspended
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking zones folder
-if [ ! -d "$V_USERS/$user/zones" ]; then
-    rm -f $V_USERS/$user/zones
-    mkdir $V_USERS/$user/zones
+# Checking dns folder
+if [ ! -d "$V_USERS/$user/dns" ]; then
+    rm -f $V_USERS/$user/dns
+    mkdir $V_USERS/$user/dns
 fi
 
 # Defining config
@@ -79,7 +79,7 @@ for domain in $domains; do
     suspend="$(get_dns_domain_value '$SUSPEND')"
 
     # Checking zone file
-    if [ ! -e "$V_USERS/$user/zones/$domain" ]; then
+    if [ ! -e "$V_USERS/$user/dns/$domain" ]; then
         cat $V_DNSTPL/$template.tpl |\
             sed -e "s/%ip%/$ip/g" \
                 -e "s/%domain_idn%/$domain_idn/g" \
@@ -92,7 +92,7 @@ for domain in $domains; do
                 -e "s/%ns6%/$ns6/g" \
                 -e "s/%ns7%/$ns7/g" \
                 -e "s/%ns8%/$ns8/g" \
-                -e "s/%date%/$V_DATE/g" > $V_USERS/$user/zones/$domain
+                -e "s/%date%/$V_DATE/g" > $V_USERS/$user/dns/$domain
     fi
 
     # Sorting records

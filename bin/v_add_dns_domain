@@ -76,7 +76,7 @@ if [ -z "$soa" ]; then
     soa="$ns1"
 fi
 
-# Adding zone to zones dir
+# Adding zone to dns dir
 cat $V_DNSTPL/$template.tpl |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
@@ -89,7 +89,7 @@ cat $V_DNSTPL/$template.tpl |\
         -e "s/%ns6%/$ns6/g" \
         -e "s/%ns7%/$ns7/g" \
         -e "s/%ns8%/$ns8/g" \
-        -e "s/%date%/$V_DATE/g" > $V_USERS/$user/zones/$domain
+        -e "s/%date%/$V_DATE/g" > $V_USERS/$user/dns/$domain
 
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"

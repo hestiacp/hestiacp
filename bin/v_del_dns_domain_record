@@ -49,7 +49,7 @@ is_dns_record_valid
 #----------------------------------------------------------#
 
 # Deleting record
-conf="$V_USERS/$user/zones/$domain"
+conf="$V_USERS/$user/dns/$domain"
 rm_string=$(grep -n "^ID='$id'" $conf|cut -d : -f 1)
 if [ ! -z "$rm_string" ]; then
     sed -i "$rm_string d" $conf

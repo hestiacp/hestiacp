@@ -65,7 +65,7 @@ cat $V_DNSTPL/$template.tpl |\
         -e "s/%domain_idn%/$domain_idn/g" \
         -e "s/%domain%/$domain/g" \
         -e "s/%ns1%/$ns1/g" \
-        -e "s/%ns2%/$ns2/g" > $V_USERS/$user/zones/$domain
+        -e "s/%ns2%/$ns2/g" > $V_USERS/$user/dns/$domain
 
 # Updating zone
 update_domain_zone

@@ -111,7 +111,7 @@ fi
 
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
     touch $V_USERS/$user/dns.conf
-    mkdir $V_USERS/$user/zones
+    mkdir $V_USERS/$user/dns
 fi
 
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then

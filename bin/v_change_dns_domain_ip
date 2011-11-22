@@ -54,7 +54,7 @@ old_ip=$(get_dns_domain_value '$IP')
 update_dns_domain_value '$IP' "$ip"
 
 # Changing records
-sed -i "s/$old_ip/$ip/g" $V_USERS/$user/zones/$domain
+sed -i "s/$old_ip/$ip/g" $V_USERS/$user/dns/$domain
 
 # Updating zone
 update_domain_zone

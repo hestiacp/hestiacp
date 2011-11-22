@@ -54,7 +54,7 @@ is_dns_record_valid
 #----------------------------------------------------------#
 
 # Defining zone path
-zone="$V_USERS/$user/zones/$domain"
+zone="$V_USERS/$user/dns/$domain"
 
 # Deleting old record
 rm_string=$(grep -n "^ID='$id'" $zone|cut -d : -f 1)

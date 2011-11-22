@@ -63,7 +63,7 @@ is_dns_record_free
 #----------------------------------------------------------#
 
 # Defining zone path
-zone="$V_USERS/$user/zones/$domain"
+zone="$V_USERS/$user/dns/$domain"
 
 # Adding record
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' VALUE='$dvalue'"

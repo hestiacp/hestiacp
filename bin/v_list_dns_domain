@@ -118,7 +118,7 @@ is_dns_domain_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf=$V_USERS/$user/zones/$domain
+conf=$V_USERS/$user/dns/$domain
 
 # Defining fileds to select
 fields='$ID $RECORD $TYPE $VALUE $SUSPEND $DATE'

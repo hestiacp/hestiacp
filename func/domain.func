@@ -188,13 +188,13 @@ update_domain_zone() {
         RECORD=$(idn --quiet -a -t "$RECORD")
         VALUE=$(idn --quiet -a -t "$VALUE")
         eval echo -e "\"$fields\""|sed -e "s/%quote%/'/g" >> $conf
-    done < $V_USERS/$user/zones/$domain
+    done < $V_USERS/$user/dns/$domain
 
 }
 
 get_next_dns_record() {
     # Parsing config
-    curr_str=$(grep "ID=" $V_USERS/$user/zones/$domain|cut -f 2 -d \'|\
+    curr_str=$(grep "ID=" $V_USERS/$user/dns/$domain|cut -f 2 -d \'|\
         sort -n|tail -n1)
 
     # Print result
@@ -203,7 +203,7 @@ get_next_dns_record() {
 
 is_dns_record_free() {
     # Checking record id
-    check_id=$(grep "ID='$id'" $V_USERS/$user/zones/$domain)
+    check_id=$(grep "ID='$id'" $V_USERS/$user/dns/$domain)
 
     if [ ! -z "$check_id" ]; then
         echo "Error: ID exist"
@@ -214,7 +214,7 @@ is_dns_record_free() {
 
 sort_dns_records() {
     # Defining conf
-    conf="$V_USERS/$user/zones/$domain"
+    conf="$V_USERS/$user/dns/$domain"
     cat $conf |sort -n -k 2 -t \' >$conf.tmp
     mv -f $conf.tmp $conf
 }
@@ -460,7 +460,7 @@ is_web_domain_cert_valid() {
 
 is_dns_record_valid() {
     # Checking record id
-    check_id=$(grep "^ID='$id'" $V_USERS/$user/zones/$domain)
+    check_id=$(grep "^ID='$id'" $V_USERS/$user/dns/$domain)
 
     if [ -z "$check_id" ]; then
         echo "Error: ID not exist"
@@ -533,7 +533,7 @@ del_dns_domain() {
         exit $E_PARSE_ERROR
     fi
     sed -i "$string d" $conf
-    rm -f $V_USERS/$user/zones/$domain
+    rm -f $V_USERS/$user/dns/$domain
 }
 
 del_web_domain() {

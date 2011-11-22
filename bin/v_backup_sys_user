@@ -450,8 +450,8 @@ local_backup(){
     fi
 
     # Removing dublicate for this day
-    deprecated="$V_DATE"
     if [ -e "$V_BACKUP/$user.$V_DATE.tar" ]; then
+        deprecated="$V_DATE"
         echo -e "\tDeleting old backup for $V_DATE"
         rm -f $V_BACKUP/$user.$V_DATE.tar
     fi
@@ -555,7 +555,7 @@ ftp_backup(){
         backups_rm_number=$((backups_count - BACKUPS))
         for backup in $(echo "$backup_list" | tail -n $backups_rm_number); do 
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
-            deprecated="$deprecated $backup_date"
+            deprecated="$deprecated $backup"
             if [ -z "$output" ]; then
                 echo -e "\tDeleteing old backup for $backup_date"
             fi
@@ -619,7 +619,6 @@ fi
 # Deleting old backup records
 for backup_record in $deprecated; do
     if [ -e "$V_USERS/$user/backup.conf" ]; then
-        echo "sed -i /DATE='$backup_record/d $V_USERS/$user/backup.conf"
         sed -i "/DATE='$backup_record/d" $V_USERS/$user/backup.conf
     fi
 done

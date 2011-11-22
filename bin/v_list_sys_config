@@ -50,7 +50,6 @@ case $format in
     json)   json_list_conf ;;
     plain)  shell_list_conf ;;
     shell)  shell_list_conf | column -t ;;
-    *)      check_args '1' '0' '[format]'
 esac
 
 

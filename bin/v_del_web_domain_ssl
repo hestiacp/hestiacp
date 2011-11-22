@@ -43,7 +43,7 @@ is_web_domain_valid
 is_domain_suspended 'web'
 
 # Checking ssl is added
-is_web_domain_value_exist '$SSL_CERT'
+is_web_domain_value_exist '$SSL'
 
 
 #----------------------------------------------------------#
@@ -54,7 +54,7 @@ is_web_domain_value_exist '$SSL_CERT'
 get_web_domain_values
 conf="$V_HOME/$user/conf/shttpd.conf"
 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-old_ssl="$SSL_CERT"
+old_ssl="$SSL"
 
 # Deleting domain
 del_web_config
@@ -67,7 +67,7 @@ if [ ! -z "$NGINX" ]; then
 fi
 
 # Deleting old certificate
-check_cert=$(grep "SSL_CERT='$old_ssl'" $V_USERS/$user/web.conf |wc -l)
+check_cert=$(grep "SSL='$old_ssl'" $V_USERS/$user/web.conf |wc -l)
 if [ "$check_cert"  -lt 2 ]; then
     rm -f $V_HOME/$user/conf/$old_ssl.crt
     rm -f $V_HOME/$user/conf/$old_ssl.key
@@ -79,11 +79,11 @@ fi
 #----------------------------------------------------------#
 
 # Deleting ssl in config
+update_web_domain_value '$SSL' ''
 update_web_domain_value '$SSL_HOME' ''
-update_web_domain_value '$SSL_CERT' ''
 
 # Checking last ssl domain
-ssl_dom=$(grep -v "SSL_CERT=''" $V_USERS/$user/web.conf)
+ssl_dom=$(grep -v "SSL=''" $V_USERS/$user/web.conf)
 main_conf='/etc/httpd/conf.d/vesta.conf'
 conf="$V_HOME/$user/conf/shttpd.conf"
 if [ -z "$ssl_dom" ]; then
@@ -94,7 +94,7 @@ fi
 # Checking last nginx domain
 conf='/etc/nginx/conf.d/vesta_users.conf'
 last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web.conf)
-last_snginx=$(echo "$last_nginx" | grep -v "SSL_CERT=''")
+last_snginx=$(echo "$last_nginx" | grep -v "SSL=''")
 if [ -z "$last_snginx" ]; then
     sline=$(grep -n "$V_HOME/$user/conf/snginx.conf" $conf | cut -f 1 -d : )
     if [ ! -z "$sline" ]; then
@@ -110,7 +110,7 @@ decrease_user_value "$user" '$U_WEB_SSL'
 restart_schedule 'web'
 
 # Logging
-log_history "$V_EVENT" "v_add_web_domain_ssl $user $domain $SSL_CERT $SSL_HOME"
+log_history "$V_EVENT" "v_add_web_domain_ssl $user $domain $SSL $SSL_HOME"
 log_event 'system' "$V_EVENT"
 
 exit

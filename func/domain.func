@@ -688,7 +688,7 @@ upd_web_domain_values() {
             else
                 alias_string="$alias_string\n    ServerAlias $server_alias"
             fi
-            (( ++j))
+            j=2
             server_alias=''
         fi
         if [ "$i" -eq 1 ]; then
@@ -699,10 +699,10 @@ upd_web_domain_values() {
             aliases_idn="$aliases_idn,$dalias"
             server_alias="$server_alias $dalias"
         fi
-        (( ++i))
+        i=2
     done
 
-    if [ "$j" -gt 1 ]; then
+    if [ $j -gt 1 ]; then
         alias_string="$alias_string\n    ServerAlias $server_alias"
     else
         alias_string="ServerAlias $server_alias"
@@ -733,8 +733,8 @@ upd_web_domain_values() {
     fi
 
     # Defining SSL vars
-    ssl_cert="$V_HOME/$user/conf/$SSL_CERT.crt"
-    ssl_key="$V_HOME/$user/conf/$SSL_CERT.key"
+    ssl_cert="$V_HOME/$user/conf/$SSL.crt"
+    ssl_key="$V_HOME/$user/conf/$SSL.key"
     case $SSL_HOME in
         single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
         same) docroot="$V_HOME/$user/web/$domain/public_html" ;;

@@ -44,7 +44,7 @@ is_web_domain_valid
 is_domain_suspended 'web'
 
 # Check SSL is added
-is_web_domain_value_exist '$SSL_CERT'
+is_web_domain_value_exist '$SSL'
 
 # Checking ssl certificate
 is_web_domain_cert_valid
@@ -58,8 +58,8 @@ is_web_domain_cert_valid
 get_web_domain_values
 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
 conf="$V_HOME/$user/conf/shttpd.conf"
-old_ssl="$SSL_CERT"
-SSL_CERT="$ssl"
+old_ssl="$SSL"
+SSL="$ssl"
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
@@ -78,11 +78,11 @@ if [ ! -z "$NGINX" ]; then
 fi
 
 # Adding new certificate to user dir
-cp -f $V_USERS/$user/cert/$SSL_CERT.crt $ssl_cert
-cp -f $V_USERS/$user/cert/$SSL_CERT.key $ssl_key
+cp -f $V_USERS/$user/cert/$SSL.crt $ssl_cert
+cp -f $V_USERS/$user/cert/$SSL.key $ssl_key
 
 # Deleting old certificate
-check_cert=$(grep "SSL_CERT='$old_ssl'" $V_USERS/$user/web.conf |wc -l)
+check_cert=$(grep "SSL='$old_ssl'" $V_USERS/$user/web.conf |wc -l)
 if [ "$check_cert"  -lt 2 ]; then
     rm -f $V_HOME/$user/conf/$old_ssl.crt
     rm -f $V_HOME/$user/conf/$old_ssl.key
@@ -94,7 +94,7 @@ fi
 #----------------------------------------------------------#
 
 # Adding sslcert in config
-update_web_domain_value '$SSL_CERT' "$SSL_CERT"
+update_web_domain_value '$SSL' "$SSL"
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

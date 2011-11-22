@@ -57,16 +57,16 @@ conf="$V_HOME/$user/conf/httpd.conf"
 del_web_config
 
 # Checking ssl
-if [ ! -z "$SSL_CERT" ]; then
+if [ ! -z "$SSL" ]; then
     tpl_file="$V_WEBTPL/apache_$TPL.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
     del_web_config
 
     # Deleting old certificate
-    check_cert=$(grep "SSL_CERT='$SSL_CERT'" $V_USERS/$user/web.conf |wc -l)
+    check_cert=$(grep "SSL='$SSL'" $V_USERS/$user/web.conf |wc -l)
     if [ "$check_cert" -lt 2 ]; then
-        rm -f $V_HOME/$user/conf/$SSL_CERT.crt
-        rm -f $V_HOME/$user/conf/$SSL_CERT.key
+        rm -f $V_HOME/$user/conf/$SSL.crt
+        rm -f $V_HOME/$user/conf/$SSL.key
     fi
 
 fi
@@ -77,7 +77,7 @@ if [ ! -z "$NGINX" ]; then
     conf="$V_HOME/$user/conf/nginx.conf"
     del_web_config
 
-    if [ ! -z "$SSL_CERT" ]; then
+    if [ ! -z "$SSL" ]; then
         proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
         tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
         conf="$V_HOME/$user/conf/snginx.conf"
@@ -117,7 +117,7 @@ rm -rf /var/log/httpd/domains/$domain.error*
 del_web_domain
 
 # Checking last ssl domain
-ssl_dom=$(grep -v "SSL_CERT=''" $V_USERS/$user/web.conf | wc -l)
+ssl_dom=$(grep -v "SSL=''" $V_USERS/$user/web.conf | wc -l)
 if [ "$ssl_dom" -eq '0' ]; then
     sed -i "s/ Include /#Include /"  $V_HOME/$user/conf/httpd.conf
 fi
@@ -135,7 +135,7 @@ fi
 # Checking last nginx domain
 conf='/etc/nginx/conf.d/vesta_users.conf'
 last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web.conf)
-last_snginx=$(echo "$last_nginx" | grep -v "SSL_CERT=''")
+last_snginx=$(echo "$last_nginx" | grep -v "SSL=''")
 if [ -z "$last_snginx" ]; then
     sline=$(grep -n "$V_HOME/$user/conf/snginx.conf" $conf | cut -f 1 -d : )
     if [ ! -z "$sline" ]; then

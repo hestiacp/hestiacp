@@ -49,7 +49,7 @@ is_domain_suspended 'web'
 is_package_full 'web_ssl'
 
 # Check ssl is not added
-is_web_domain_key_empty '$SSL_CERT'
+is_web_domain_key_empty '$SSL'
 
 # Checking ssl certificate
 is_web_domain_cert_valid
@@ -63,7 +63,7 @@ is_web_domain_cert_valid
 get_web_domain_values
 conf="$V_HOME/$user/conf/shttpd.conf"
 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-SSL_CERT=$ssl
+SSL=$ssl
 SSL_HOME=$ssl_home
 
 # Checking ip ownership
@@ -76,8 +76,8 @@ upd_web_domain_values
 add_web_config
 
 # Adding certificate to user dir
-cp -f $V_USERS/$user/cert/$SSL_CERT.crt $ssl_cert
-cp -f $V_USERS/$user/cert/$SSL_CERT.key $ssl_key
+cp -f $V_USERS/$user/cert/$SSL.crt $ssl_cert
+cp -f $V_USERS/$user/cert/$SSL.key $ssl_key
 
 # Running template trigger
 if [ -x $V_WEBTPL/apache_$template.sh ]; then
@@ -115,7 +115,7 @@ fi
 increase_user_value "$user" '$U_WEB_SSL'
 
 # Adding ssl values
-update_web_domain_value '$SSL_CERT' "$SSL_CERT"
+update_web_domain_value '$SSL' "$SSL"
 update_web_domain_value '$SSL_HOME' "$SSL_HOME"
 
 # Logging

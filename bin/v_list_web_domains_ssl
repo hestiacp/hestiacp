@@ -36,7 +36,7 @@ is_user_valid
 conf="$V_USERS/$user/web.conf"
 
 # Defining fileds to select
-fields="\$DOMAIN \$SSL_HOME \$SSL_CERT"
+fields="\$DOMAIN \$SSL \$SSL_HOME"
 
 # Listing domains
 case $format in 

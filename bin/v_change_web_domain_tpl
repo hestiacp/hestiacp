@@ -62,7 +62,7 @@ conf="$V_HOME/$user/conf/httpd.conf"
 del_web_config
 
 # Deleting ssl vhost
-if [ ! -z "$SSL_CERT" ]; then
+if [ ! -z "$SSL" ]; then
     tpl_file="$V_WEBTPL/apache_$TPL.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
     del_web_config
@@ -139,10 +139,10 @@ if [ -x $V_WEBTPL/apache_$template.sh ]; then
 fi
 
 # Checking ssl
-if [ ! -z "$SSL_CERT" ]; then
+if [ ! -z "$SSL" ]; then
     # Defining variables for ssl template replace
-    ssl_cert="$V_HOME/$user/conf/$SSL_CERT.crt"
-    ssl_key="$V_HOME/$user/conf/$SSL_CERT.key"
+    ssl_cert="$V_HOME/$user/conf/$SSL.crt"
+    ssl_key="$V_HOME/$user/conf/$SSL.key"
     case $SSL_HOME in
         single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
         same)   docroot="$V_HOME/$user/web/$domain/public_html" ;;

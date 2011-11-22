@@ -44,7 +44,7 @@ is_web_domain_valid
 is_domain_suspended 'web'
 
 # Check SSL is added
-is_web_domain_value_exist '$SSL_CERT'
+is_web_domain_value_exist '$SSL'
 
 
 #----------------------------------------------------------#

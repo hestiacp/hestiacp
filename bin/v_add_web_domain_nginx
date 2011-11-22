@@ -68,7 +68,7 @@ conf="$V_HOME/$user/conf/nginx.conf"
 upd_web_domain_values
 add_web_config
 
-if [ ! -z "$SSL_CERT" ]; then
+if [ ! -z "$SSL" ]; then
     proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
     tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
     conf="$V_HOME/$user/conf/snginx.conf"

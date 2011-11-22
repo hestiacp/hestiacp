@@ -449,7 +449,7 @@ is_web_domain_key_empty() {
 
 is_web_domain_cert_valid() {
     # Checking file existance
-    path="$V_USERS/$user/cert"
+    path="$V_USERS/$user/ssl"
     if [ ! -e "$path/$ssl.crt" ] || [ ! -e "$path/$ssl.key" ]; then
         echo "Error: certificate not exist"
         log_event 'debug' "$E_CERT_NOTEXIST $V_EVENT"

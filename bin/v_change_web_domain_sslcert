@@ -78,8 +78,8 @@ if [ ! -z "$NGINX" ]; then
 fi
 
 # Adding new certificate to user dir
-cp -f $V_USERS/$user/cert/$SSL.crt $ssl_cert
-cp -f $V_USERS/$user/cert/$SSL.key $ssl_key
+cp -f $V_USERS/$user/ssl/$SSL.crt $ssl_cert
+cp -f $V_USERS/$user/ssl/$SSL.key $ssl_key
 
 # Deleting old certificate
 check_cert=$(grep "SSL='$old_ssl'" $V_USERS/$user/web.conf |wc -l)

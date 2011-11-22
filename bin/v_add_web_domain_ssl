@@ -25,7 +25,7 @@ source $V_FUNC/ip.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '3' "$#" 'user domain certificate [sslhome]'
+check_args '3' "$#" 'user domain ssl [sslhome]'
 
 # Checking argument format
 format_validation 'user' 'domain' 'ssl'
@@ -76,8 +76,8 @@ upd_web_domain_values
 add_web_config
 
 # Adding certificate to user dir
-cp -f $V_USERS/$user/cert/$SSL.crt $ssl_cert
-cp -f $V_USERS/$user/cert/$SSL.key $ssl_key
+cp -f $V_USERS/$user/ssl/$SSL.crt $ssl_cert
+cp -f $V_USERS/$user/ssl/$SSL.key $ssl_key
 
 # Running template trigger
 if [ -x $V_WEBTPL/apache_$template.sh ]; then

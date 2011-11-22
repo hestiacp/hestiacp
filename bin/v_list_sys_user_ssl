@@ -19,7 +19,7 @@ json_list_cert() {
     echo '['
 
     # Checking certificates number
-    certificates=$(ls $V_USERS/$user/cert/ |grep '.crt' )
+    certificates=$(ls $V_USERS/$user/ssl/ |grep '.crt' )
     certificates_count=$(echo "$certificates" | wc -l)
     i=1
 
@@ -46,7 +46,7 @@ shell_list_cert() {
     fi
 
     # Listing files by mask
-    for cert in $(ls $V_USERS/$user/cert/ | grep '.crt'); do
+    for cert in $(ls $V_USERS/$user/ssl/ | grep '.crt'); do
         # Print result
         echo "${cert//.crt/}"
     done

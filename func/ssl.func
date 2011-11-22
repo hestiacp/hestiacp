@@ -1,6 +1,6 @@
 is_cert_free() {
     # Defining path
-    user_cert="$V_USERS/$user/cert/$cert"
+    user_cert="$V_USERS/$user/ssl/$cert"
 
     # Checking file existance
     if [ -e "$user_cert.crt" ] || [ -e "$user_cert.key" ]; then

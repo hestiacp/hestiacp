@@ -30,20 +30,22 @@ is_user_valid
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Checking config
 conf=$V_USERS/$user/backup.conf
 if [ ! -e "$conf" ]; then
     touch $conf
 fi
 
 # Defining fileds to select
-fields="\$DATE \$TIME \$RUNTIME \$TYPE \$SIZE \$WEB \$DNS \$DB \$MAIL"
+fields="\$DATE \$TIME \$RUNTIME \$TYPE \$SIZE \$VESTA \$WEB \$DNS \$DB \$MAIL"
 fields="$fields \$CERTIFICATES \$CRON"
 
 # Listing domains
 case $format in 
     json)   json_list ;;
     plain)  nohead=1; shell_list ;;
-    shell)  fields='$DATE $TIME $RUNTIME $TYPE $SIZE';shell_list |column -t ;;
+    shell)  fields='$DATE $TIME $RUNTIME $TYPE $SIZE'; shell_list |column -t;;
     *)      check_args '1' '0' '[format]' ;;
 esac
 

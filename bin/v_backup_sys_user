@@ -78,6 +78,7 @@ fi
 # Addding backup and vesta version
 echo "1.0" > $tmpdir/backup_version
 echo "$VERSION" > $tmpdir/vesta_version
+vst='yes'
 
 # Vesta
 if [ -z "$output" ]; then
@@ -205,14 +206,14 @@ then
             echo -e "\t$(date +%H:%M:%S) $domain"
         fi
 
+	# Building directory tree
+        mkdir -p $tmpdir/web/$domain/conf
+        mkdir -p $tmpdir/web/$domain/ssl
+
         # Defining domain variables
         domain_idn=$(idn -t --quiet -a "$domain")
-        tpl_name=$(get_web_domain_value '$TPL')
-        ssl_cert=$(get_web_domain_value '$SSL_CERT')
-        nginx=$(get_web_domain_value '$NGINX')
+        get_web_domain_values
 
-	# Building directory tree
-        mkdir -p $tmpdir/web/$domain/conf $tmpdir/web/$domain/cert
 
         # Packing data folders
         cd $V_HOME/$user/web/$domain
@@ -227,14 +228,14 @@ then
         # Apache config
         if [ "$WEB_SYSTEM" = 'apache' ]; then
             # Parsing httpd.conf
-            tpl_file="$V_WEBTPL/apache_$tpl_name.tpl"
+            tpl_file="$V_WEBTPL/apache_$TPL.tpl"
             conf="$V_HOME/$user/conf/httpd.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/httpd.conf
 
             # SSL check
-            if [ ! -z "$ssl_cert" ]; then
-                tpl_file="$V_WEBTPL/apache_$tpl_name.stpl"
+            if [ ! -z "$SSL" ]; then
+                tpl_file="$V_WEBTPL/apache_$TPL.stpl"
                 conf="$V_HOME/$user/conf/shttpd.conf"
                 get_web_config_brds
                 sed -n "$top_line,$bottom_line p" $conf > conf/shttpd.conf
@@ -242,15 +243,15 @@ then
         fi
 
         # Nginx config
-        if [ ! -z "$nginx" ] ; then
-            tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.tpl"
+        if [ ! -z "$NGINX" ] ; then
+            tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
             conf="$V_HOME/$user/conf/nginx.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/nginx.conf
 
             # SSL check
-            if [ ! -z "$ssl_cert" ] ; then
-                tpl_file="$V_WEBTPL/ngingx_vhost_$nginx.stpl"
+            if [ ! -z "$SSL" ] ; then
+                tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
                 conf="$V_HOME/$user/conf/snginx.conf"
                 get_web_config_brds
                 sed -n "$top_line,$bottom_line p" $conf > conf/snginx.conf
@@ -263,11 +264,11 @@ then
         done
 
         # SSL Certificates
-        if [ ! -z "$ssl_cert" ] ; then
-            cp $V_HOME/$user/conf/$ssl_cert.* cert/
+        if [ ! -z "$SSL" ] ; then
+            cp $V_HOME/$user/conf/$SSL.* ssl/
         fi
 
-        tar -rf $tmpdir/web/$domain/$domain.tar conf cert
+        tar -rf $tmpdir/web/$domain/$domain.tar conf ssl
         mv $tmpdir/web/$domain/$domain.tar $tmpdir/web/
         rm -rf $tmpdir/web/$domain
 
@@ -319,7 +320,7 @@ then
         grep "DOMAIN='$domain'" $conf > dns.conf
 
         # Backingup dns recods
-        cp $V_USERS/$user/zones/$domain $domain
+        cp $V_USERS/$user/dns/$domain $domain
         cp /etc/namedb/$domain.db $domain.db
     done
 
@@ -379,7 +380,6 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
     if [ -z "$output" ]; then
         echo
     fi
-
 fi
 
 # Cron jobs
@@ -414,12 +414,12 @@ fi
 # SSL CERTIFICATES
 if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ] && [ "$SSL" != '*' ]; then
     if [ -z "$output" ]; then
-        echo "-- CERTIFICATES --"
+        echo "-- SSL --"
     fi
-    mkdir $tmpdir/cert
+    mkdir $tmpdir/ssl
 
     # Backingup ssl certificates
-    cert_list=$(ls $V_USERS/$user/cert/ | grep ".crt" |\
+    cert_list=$(ls $V_USERS/$user/ssl/ | grep ".crt" |\
                 sed -e "s/\.crt$//" |\
                 tr '\n' ' ' |\
                 sed -e 's/ $//' )
@@ -427,7 +427,7 @@ if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ] && [ "$SSL" != '*' ]; then
         if [ -z "$output" ]; then
             echo -e "\t$(date +%H:%M:%S) $cert"
         fi
-        cp $V_USERS/$user/cert/$cert.* $tmpdir/cert/
+        cp $V_USERS/$user/ssl/$cert.* $tmpdir/ssl/
     done
 
     if [ -z "$output" ]; then
@@ -500,7 +500,7 @@ local_backup(){
 # Defining ftp command function
 ftpc() {
     ftp -n $HOST $PORT <<EOF
-    quote USER $USER
+    quote USER $USERNAME
     quote PASS $PASSWORD
     binary
     cd $BPATH
@@ -516,16 +516,9 @@ ftp_backup(){
     fi
 
     # Checking config
-    if [ -e "$V_CONF/backup.conf" ]; then
-	ftphost_str=$(grep "TYPE='FTP'" $V_CONF/backup.conf |head -n 1)
-    fi
-
-    # Parsing config values
-    if [ ! -z "$ftphost_str" ]; then
-        for key in $ftphost_str; do
-            eval ${key%%=*}=${key#*=}
-        done
-    else
+    source $V_CONF/ftp.backup.conf
+    if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
+        [ -z "$BPATH" ]; then
         echo "Error: Parsing error"
         log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
         exit $E_PARSE_ERROR
@@ -533,7 +526,8 @@ ftp_backup(){
 
     # Debug info
     if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) ftp://$USER@$HOST$BPATH/$user.$V_DATE.tar"
+        echo -ne "\t$(date +%H:%M:%S) "
+        echo -e "ftp://$USERNAME@$HOST$BPATH/$user.$V_DATE.tar"
     fi
 
     # Checking ftp permission
@@ -592,7 +586,7 @@ done
 cd /
 rm -rf $tmpdir
 
-# Calcilation run time
+# Calculation run time
 run_time=$((end_time - start_time))
 run_time=$((run_time / 60))
 current_time=$(date +'%H:%M:%S')
@@ -626,11 +620,12 @@ done
 # Concatenating string
 backup_str="DATE='$V_DATE' TIME='$current_time' RUNTIME='$run_time'"
 backup_str="$backup_str TYPE='$BACKUP_SYSTEM' SIZE='$size'"
+backup_str="$backup_str VESTA='$vst'"
 backup_str="$backup_str WEB='${web_list// /,}'"
 backup_str="$backup_str DNS='${dns_list// /,}'"
 backup_str="$backup_str MAIL='${mail_list// /,}'"
 backup_str="$backup_str DB='${db_list// /,}'"
-backup_str="$backup_str CERTIFICATES='${cert_list// /,}'"
+backup_str="$backup_str SSL='${cert_list// /,}'"
 backup_str="$backup_str CRON='$cron_list'"
 echo "$backup_str" >> $V_USERS/$user/backup.conf
 

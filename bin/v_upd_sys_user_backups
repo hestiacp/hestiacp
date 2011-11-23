@@ -1,0 +1,286 @@
+#!/bin/bash
+# info: updating current backups for
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
+source $V_FUNC/shared.func
+
+# Argument defenition
+user=$1
+type="${2-$BACKUP_SYSTEM}"
+
+# Defining tar parser function 
+get_backup_info() {
+    backup=$1           # full path to backup
+    backup_type="$2"    # backup type
+
+    backup_name=$(basename $backup )
+    backup_date=$(echo $backup_name |cut -f 2 -d '.' )
+    backup_time=$(stat --printf=%y $backup |cut -f 2 -d ' ' |cut -f 1 -d '.')
+    backup_size=$(du -sm $backup |cut -f 1 )
+    backup_data=$(tar -tf  $backup)
+
+    # Checking system data
+    vst_data=$(echo "$backup_data" |grep "^./vesta/" |grep -v "^./vesta/$")
+    if [ -z "$vst_data" ]; then
+        vst=''
+    else
+        vst='yes'
+    fi
+
+    # Checking web data
+    web_data=$(echo "$backup_data" |grep "^./web/" |grep -v "^./web/$" |sort)
+    if [ -z "$web_data" ]; then
+        web=''
+    else
+        i=1
+        for domain in $web_data; do
+            domain="$(basename $domain|sed -e 's/.tar.gz$//')"
+            if [ "$i" -eq 1 ]; then
+                web="$domain"
+                i=2
+            else
+                web="$web,$domain"
+            fi
+        done
+    fi
+
+    # Checking dns data
+    dns_data=$(echo "$backup_data" |grep "^./dns/" |grep ".db$" |sort)
+    if [ -z "$dns_data" ]; then
+        dns=''
+    else
+        i=1
+        for domain in $dns_data; do
+            domain="$(basename $domain|sed -e 's/.db$//')"
+            if [ "$i" -eq 1 ]; then
+                dns="$domain"
+                i=2
+            else
+                dns="$dns,$domain"
+            fi
+        done
+    fi
+
+    # Checking mail
+    mail_data=$(echo "$backup_data"|grep "^./mail/"|grep -v "^./mail/$"|sort)
+    if [ -z "$mail_data" ]; then
+        ml=''
+    else
+        i=1
+        for domain in $mail_data; do
+            domain="$(basename $domain|sed -e 's/.tar.gz$//')"
+            if [ "$i" -eq 1 ]; then
+                ml="$domain"
+                i=2
+            else
+                ml="$ml,$domain"
+            fi
+        done
+    fi
+
+    # Checking databases
+    db_data=$(echo "$backup_data"|grep "^./db/"|grep ".sql.gz$"|sort)
+    if [ -z "$db_data" ]; then
+        db=''
+    else
+        i=1
+        for dbase in $db_data; do
+            dbase=$(basename $dbase|sed -e "s/.\(my\|pg\)sql.sql.gz$//")
+            if [ "$i" -eq 1 ]; then
+                db="$dbase"
+                i=2
+            else
+                db="$db,$dbase"
+            fi
+        done
+    fi
+
+    # Checking certificates
+    ssl_data=$(echo "$backup_data"|grep "^./ssl/"|grep ".crt$"|sort)
+    if [ -z "$ssl_data" ]; then
+        ssl=''
+    else
+        i=1
+        for certificate in $ssl_data; do
+            certificate="$(basename $certificate|sed -e "s/.crt$//")"
+            if [ "$i" -eq 1 ]; then
+                ssl="$certificate"
+                i=2
+            else
+                ssl="$ssl,$certificate"
+            fi
+        done
+    fi
+
+
+    # Checking cron data
+    cron_data=$(echo "$backup_data" |grep "^./cron/" |grep -v "^./cron/$")
+    if [ -z "$cron_data" ]; then
+        cron=''
+    else
+        cron='yes'
+    fi
+
+    str="DATE='$backup_date' TIME='$backup_time' RUNTIME='0'"
+    str="$str SIZE='$backup_size' TYPE='$backup_type' VESTA='$vst' WEB='$web'"
+    str="$str DNS='$dns' MAIL='$ml' DB='$db' SSL='$ssl' CRON='$cron'"
+
+    echo "$str"
+}
+
+# Defining ftp command function
+ftpc() {
+    ftp -n $HOST $PORT <<EOF
+    quote USER $USERNAME
+    quote PASS $PASSWORD
+    binary
+    cd $BPATH
+    $1
+    quit
+EOF
+}
+
+init_ftp_variables() {
+    # Checking config
+    source $V_CONF/ftp.backup.conf
+    if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
+        [ -z "$BPATH" ]; then
+        echo "Error: Parsing error"
+        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
+        exit $E_PARSE_ERROR
+    fi
+}
+
+check_ftp_connection(){
+    # Checking ftp permission
+    ftmpdir=$(mktemp -u -p $BPATH)
+    command="mkdir $ftmpdir
+             ls $ftmpdir
+             rm $ftmpdir"
+    if [ ! -z "$(ftpc "$command")" ] ; then
+        echo "Error: FTP error"
+        log_event 'debug' "$E_FTP_ERROR $V_EVENT"
+        exit $E_FTP_ERROR
+    fi
+}
+
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'user'
+
+# Checking backup system is enabled
+is_system_enabled 'backup'
+
+# Checking argument format
+format_validation 'user'
+
+# Checking user
+is_user_valid
+
+# Checking load averages
+la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')
+if [ "$la" -ge "$V_BACKUP_LA_LIMIT" ]; then
+    log_event 'debug' "$E_LOAD_AVERAGE $V_EVENT"
+    exit $E_LOAD_AVERAGE
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking tmp file
+tmp_file="$V_USERS/$user/backup.conf_tmp"
+if [ -e "$tmp_file" ]; then
+    rm -f $tmp_file
+fi
+
+# Checking local
+if [ "$type" == 'local' ]; then
+    backups=$(ls $V_BACKUP |grep "^$user."|sort)
+    for backup in $backups; do
+        get_backup_info $V_BACKUP/$backup $type >> $tmp_file
+    done
+fi
+
+# Checking ftp
+if [ "$type" == 'ftp' ]; then
+    tmpdir=$(mktemp -p $V_TMP -d)
+    ftmpdir=$(basename $tmpdir)
+    init_ftp_variables
+    check_ftp_connection
+    backups=$(ftpc ls|awk '{print $9}'|grep "^$user.")
+
+    for backup in $backups; do
+        cd $tmpdir
+        if [ ! -z "$(ftpc "get $backup")" ]; then
+            echo "Error: FTP transfer error"
+            log_event 'debug' "$E_FTP_ERROR $V_EVENT"
+            exit $E_FTP_ERROR
+        fi
+        get_backup_info $tmpdir/$backup $type >> $tmp_file
+        rm -f $tmpdir/$backup
+    done
+    rm -rf $tmpdir
+fi
+
+# Checking both local and ftp
+if [ "$type" == 'ftp,local' ] || [ "$type" == 'local,ftp' ]; then
+
+    tmpdir=$(mktemp -p $V_TMP -d)
+    ftmpdir=$(basename $tmpdir)
+    init_ftp_variables
+    check_ftp_connection
+    ftp_backups=$(ftpc ls|awk '{print $9}'|grep "^$user.")
+    local_backups=$(ls $V_BACKUP/ |grep "^$user." |sort)
+    backups=$(echo -e "$local_backups\n$ftp_backups" |\
+                sort |uniq -c | awk '{print $1" "$2}')
+
+    for backup in $(echo "$backups"|grep "^1 "|cut -f 2 -d ' '); do
+        check_ftp=$(echo $ftp_backups|grep -w $backup)
+        if [ ! -z "$check_ftp" ]; then
+            cd $tmpdir
+            if [ ! -z "$(ftpc "get $backup")" ]; then
+                echo "Error: FTP transfer error"
+                log_event 'debug' "$E_FTP_ERROR $V_EVENT"
+                exit $E_FTP_ERROR
+            fi
+            get_backup_info $tmpdir/$backup ftp >> $tmp_file
+            rm -f $tmpdir/$backup
+        else
+            get_backup_info $V_BACKUP/$backup local >> $tmp_file
+	fi
+    done
+
+    for backup in $(echo "$backups"|grep "^2 "|cut -f 2 -d ' '); do
+        get_backup_info $V_BACKUP/$backup $type >> $tmp_file
+    done
+    rm -rf $tmpdir
+fi
+
+# Checking if there was any output
+if [ -e "$tmp_file" ]; then
+    cat $tmp_file | sort > $V_USERS/$user/backup.conf
+    rm $tmp_file
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit

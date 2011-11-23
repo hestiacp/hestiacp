@@ -36,6 +36,14 @@ traff_pipe() {
     bash $V_QUEUE/traffic.pipe
 }
 
+backup_pipe() {
+    for user in $(cat $V_QUEUE/backup.pipe |sort |uniq ); do
+        sed -i "/^$user$/d" $V_QUEUE/backup.pipe
+        bash $V_BIN/v_backup_sys_user $user
+        # Send notification to user
+    done
+}
+
 
 
 #----------------------------------------------------------#

@@ -33,6 +33,14 @@ get_backup_info() {
         vst='yes'
     fi
 
+    # Checking pam
+    pam_data=$(echo "$backup_data" |grep "^./pam/" |grep -v "^./pam/$")
+    if [ -z "$pam_data" ]; then
+        pam=''
+    else
+        pam='yes'
+    fi
+
     # Checking web data
     web_data=$(echo "$backup_data" |grep "^./web/" |grep -v "^./web/$" |sort)
     if [ -z "$web_data" ]; then
@@ -127,11 +135,9 @@ get_backup_info() {
         cron='yes'
     fi
 
-    str="DATE='$backup_date' TIME='$backup_time' RUNTIME='0'"
-    str="$str SIZE='$backup_size' TYPE='$backup_type' VESTA='$vst' WEB='$web'"
-    str="$str DNS='$dns' MAIL='$ml' DB='$db' SSL='$ssl' CRON='$cron'"
-
-    echo "$str"
+    echo -n "DATE='$backup_date' TIME='$backup_time' RUNTIME='0'"
+    echo -n " SIZE='$backup_size' TYPE='$backup_type' VESTA='$vst' PAM='$pam'"
+    echo " WEB='$web' DNS='$dns' MAIL='$ml' DB='$db' SSL='$ssl' CRON='$cron'"
 }
 
 # Defining ftp command function

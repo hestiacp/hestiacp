@@ -15,7 +15,6 @@ source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 source $V_FUNC/domain.func
 source $V_FUNC/db.func
-source $V_CONF/vesta.conf
 
 
 #----------------------------------------------------------#
@@ -78,12 +77,14 @@ fi
 # Addding backup and vesta version
 echo "1.0" > $tmpdir/backup_version
 echo "$VERSION" > $tmpdir/vesta_version
-vst='yes'
+
+
 
 # Vesta
 if [ -z "$output" ]; then
     echo "-- VESTA --"
 fi
+vst='yes'
 mkdir $tmpdir/vesta
 
 # Backingup vesta configs
@@ -150,6 +151,24 @@ if [ -e "$V_USERS/$user/web.conf" ]; then
     cp -r $V_USERS/$user/web.conf $tmpdir/vesta/
 fi
 
+
+if [ -z "$output" ]; then
+    echo
+fi
+
+# PAM
+if [ -z "$output" ]; then
+    echo "-- PAM --"
+fi
+pam='yes'
+mkdir $tmpdir/pam
+if [ -z "$output" ]; then
+    echo -e "\t$(date +%H:%M:%S) passwd / shadow /group"
+fi
+
+grep "^$user:" /etc/passwd > $tmpdir/pam/passwd
+grep "^$user:" /etc/shadow > $tmpdir/pam/shadow
+grep "^$user:" /etc/group > $tmpdir/pam/group
 
 if [ -z "$output" ]; then
     echo
@@ -545,8 +564,7 @@ ftp_backup(){
     backup_list=$(ftpc "ls" |awk '{print $9}' |grep "^$user\.")
     backups_count=$(echo "$backup_list" | wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
-        # Removing old backups
-        backups_rm_number=$((backups_count - BACKUPS))
+        backups_rm_number=$((backups_count - BACKUPS + 1))
         for backup in $(echo "$backup_list" | tail -n $backups_rm_number); do 
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
             deprecated="$deprecated $backup"
@@ -621,6 +639,7 @@ done
 backup_str="DATE='$V_DATE' TIME='$current_time' RUNTIME='$run_time'"
 backup_str="$backup_str TYPE='$BACKUP_SYSTEM' SIZE='$size'"
 backup_str="$backup_str VESTA='$vst'"
+backup_str="$backup_str PAM='$pam'"
 backup_str="$backup_str WEB='${web_list// /,}'"
 backup_str="$backup_str DNS='${dns_list// /,}'"
 backup_str="$backup_str MAIL='${mail_list// /,}'"

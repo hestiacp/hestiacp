@@ -40,9 +40,6 @@ is_package_valid "$package"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Importing main config
-source $V_CONF/vesta.conf
-
 # Parsing package data
 package_data=$(cat $V_PKG/$package.pkg)
 

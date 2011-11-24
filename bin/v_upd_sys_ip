@@ -49,9 +49,6 @@ ip_list=$(/sbin/ifconfig |grep 'inet addr:'|cut -f 2 -d :|\
 # Get vesta registered ip list
 vesta_ip_list=$(ls $V_IPS/)
 
-# Importing main config
-source $V_CONF/vesta.conf
-
 # Defining config paths
 conf='/etc/httpd/conf.d/vesta.conf'
 nconf='/etc/nginx/conf.d/vesta_ip.conf'

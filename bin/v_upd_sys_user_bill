@@ -40,9 +40,6 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Importing main config
-source $V_CONF/vesta.conf
-
 # Creating user_list
 if [ -z "$user" ]; then
     user_list=$(ls $V_USERS/)

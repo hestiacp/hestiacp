@@ -15,9 +15,7 @@ crond() {
 }
 
 # Parsing config / or just source config
-cron_system=$(grep 'CRON_SYSTEM=' $V_CONF/vesta.conf | cut -f 2 -d \' )
-
-if [ "$cron_system" = 'crond' ]; then
+if [ "$CRON_SYSTEM" = 'crond' ]; then
     crond
 fi
 

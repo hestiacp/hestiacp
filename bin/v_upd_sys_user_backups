@@ -222,7 +222,7 @@ fi
 
 # Checking ftp
 if [ "$type" == 'ftp' ]; then
-    tmpdir=$(mktemp -p $V_TMP -d)
+    tmpdir=$(mktemp -p $V_BACKUP -d)
     ftmpdir=$(basename $tmpdir)
     init_ftp_variables
     check_ftp_connection
@@ -244,7 +244,7 @@ fi
 # Checking both local and ftp
 if [ "$type" == 'ftp,local' ] || [ "$type" == 'local,ftp' ]; then
 
-    tmpdir=$(mktemp -p $V_TMP -d)
+    tmpdir=$(mktemp -p $V_BACKUP -d)
     ftmpdir=$(basename $tmpdir)
     init_ftp_variables
     check_ftp_connection
@@ -279,6 +279,9 @@ fi
 if [ -e "$tmp_file" ]; then
     cat $tmp_file | sort > $V_USERS/$user/backup.conf
     rm $tmp_file
+else
+    rm $V_USERS/$user/backup.conf
+    touch $V_USERS/$user/backup.conf
 fi
 
 

@@ -106,7 +106,7 @@ for user in $user_list; do
     source $V_USERS/$user/user.conf
 
     # Redefining date
-    DATE=$(date -d "$(date +'%m/01') -1day" +%m-%d-%y)
+    DATE=$(date -d "$(date +'%m/01') -1day" +%F)
 
     # Compiling report string
     v_str="DATE='$DATE' PACKAGE='$PACKAGE'" 

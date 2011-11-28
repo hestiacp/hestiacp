@@ -41,7 +41,7 @@ int main (int argc, char** argv) {
     time_t lt = time(NULL);
     struct tm* ptr = localtime(&lt);
     char str[280];
-    strftime(str, 100, "%m-%d-%y %H:%m:%S ", ptr);
+    strftime(str, 100, "%Y-%m-%d %H:%M:%S ", ptr);
 
     // openning log file
     FILE* pFile = fopen ("/usr/local/vesta/log/auth.log","a+");

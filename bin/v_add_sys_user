@@ -146,8 +146,7 @@ U_MAIL_DOMAINS='0'
 DATE='$V_DATE'" > $V_USERS/$user/user.conf
 
 # Hiding password
-dt="$(date +%m-%d-%y" "%H:%M:%S)"
-V_EVENT="$dt $V_SCRIPT $user ***** $email $package $fname $lname"
+V_EVENT="$V_DATE $V_SCRIPT $user ***** $email $package $fname $lname"
 
 # Logging
 log_event 'system' "$V_EVENT"

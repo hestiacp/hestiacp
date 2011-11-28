@@ -7,7 +7,6 @@
 
 # Argument defenition
 user=$1
-output=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -22,7 +21,7 @@ source $V_FUNC/db.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'user [output]'
+check_args '1' "$#" 'user'
 
 # Checking argument format
 format_validation 'user'
@@ -40,10 +39,8 @@ is_backup_enabled
 la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')
 i=0
 while [ "$la" -ge "$V_BACKUP_LA_LIMIT" ]; do
-    if [ -z "$output" ]; then
-        echo "$(date +%m-%d-%y" "%H:%M:%S) Load Average $la"
-        echo
-    fi
+    echo "$(date "+%F %T") Load Average $la"
+    echo
 
     sleep 60
 
@@ -65,14 +62,12 @@ done
 start_time=$(date '+%s')
 
 # Creating temporary random directory
-tmpdir=$(mktemp -p $V_TMP -d)
+tmpdir=$(mktemp -p $V_BACKUP -d)
 
 # Prinitng status
-if [ -z "$output" ]; then
-    echo "$(date +%m-%d-%y" "%H:%M:%S) System backup for user $user"
-    echo "TMPDIR is $tmpdir"
-    echo
-fi
+echo "$(date "+%F %T") System backup for user $user"
+echo "TMPDIR is $tmpdir"
+echo
 
 # Addding backup and vesta version
 echo "1.0" > $tmpdir/backup_version
@@ -81,127 +76,87 @@ echo "$VERSION" > $tmpdir/vesta_version
 
 
 # Vesta
-if [ -z "$output" ]; then
-    echo "-- VESTA --"
-fi
+echo "-- VESTA --"
 vst='yes'
 mkdir $tmpdir/vesta
 
 # Backingup vesta configs
-if [ -z "$output" ]; then
-    echo -e "\t$(date +%H:%M:%S) user.conf"
-fi
+echo -e "$(date "+%F %T") user.conf"
+
 cp -r $V_USERS/$user/user.conf $tmpdir/vesta/
 
 if [ -e "$V_USERS/$user/billing.log" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) billing.log"
-    fi
+    echo -e "$(date "+%F %T") billing.log"
     cp -r $V_USERS/$user/billing.log $tmpdir/vesta/
 fi
 
 if [ -e "$V_USERS/$user/history.log" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) history.log"
-    fi
-
+    echo -e "$(date "+%F %T") history.log"
     cp -r $V_USERS/$user/history.log $tmpdir/vesta/
 fi
 
 if [ -e "$V_USERS/$user/backup.excludes" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) backup.excludes"
-    fi
+    echo -e "$(date "+%F %T") backup.excludes"
     cp -r $V_USERS/$user/backup.excludes $tmpdir/vesta/
 fi
 
 if [ -e "$V_USERS/$user/cron.conf" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) cron.conf"
-    fi
+    echo -e "$(date "+%F %T") cron.conf"
     cp -r $V_USERS/$user/cron.conf $tmpdir/vesta/
 fi
 
 if [ -e "$V_USERS/$user/db.conf" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) db.conf"
-    fi
+    echo -e "$(date "+%F %T") db.conf"
     cp -r $V_USERS/$user/db.conf $tmpdir/vesta/
 fi
 
 if [ -e "$V_USERS/$user/dns.conf" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) dns.conf"
-    fi
+    echo -e "$(date "+%F %T") dns.conf"
     cp -r $V_USERS/$user/dns.conf $tmpdir/vesta/
 fi
 
 if [ -e "$V_USERS/$user/mail.conf" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) mail.conf"
-    fi
+    echo -e "$(date "+%F %T") mail.conf"
     cp -r $V_USERS/$user/mail.conf $tmpdir/vesta/
 fi
 
 
 if [ -e "$V_USERS/$user/web.conf" ]; then
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) web.conf"
-    fi
+    echo -e "$(date "+%F %T") web.conf"
     cp -r $V_USERS/$user/web.conf $tmpdir/vesta/
 fi
 
-
-if [ -z "$output" ]; then
-    echo
-fi
+echo
 
 # PAM
-if [ -z "$output" ]; then
-    echo "-- PAM --"
-fi
+echo "-- PAM --"
 pam='yes'
 mkdir $tmpdir/pam
-if [ -z "$output" ]; then
-    echo -e "\t$(date +%H:%M:%S) passwd / shadow /group"
-fi
-
+echo -e "$(date "+%F %T") passwd / shadow /group"
 grep "^$user:" /etc/passwd > $tmpdir/pam/passwd
 grep "^$user:" /etc/shadow > $tmpdir/pam/shadow
 grep "^$user:" /etc/group > $tmpdir/pam/group
-
-if [ -z "$output" ]; then
-    echo
-fi
+echo
 
 # Checking excludes
 OLD_IFS="$IFS"
 IFS=$'\n'
 if [ -e "$V_USERS/$user/backup.excludes" ]; then
-    if [ -z "$output" ]; then
-        echo "-- Excludes --"
-    fi
+    echo "-- Excludes --"
 
     for exclude in $(cat $V_USERS/$user/backup.excludes); do
-        if [ -z "$output" ]; then
-            echo -e "\t$exclude"
-        fi
+        echo -e "$exclude"
         # Indirect variable references (a bit of black magic)
         eval ${exclude%%=*}=${exclude#*=}
     done
-
-    if [ -z "$output" ]; then
-        echo
-    fi
+    echo
 fi
 IFS="$OLD_IFS"
 
 # WEB domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ] && [ "$WEB" != '*' ]
 then
-    if [ -z "$output" ]; then
-        echo "-- WEB --"
-    fi
+    echo "-- WEB --"
     mkdir $tmpdir/web/
 
     # Parsing unsuspeneded domains
@@ -221,10 +176,7 @@ then
     web_list=$(echo "$web_list" | sed -e "s/  */\ /g" -e "s/^ //")
 
     for domain in $web_list; do
-        if [ -z "$output" ]; then
-            echo -e "\t$(date +%H:%M:%S) $domain"
-        fi
-
+        echo -e "$(date "+%F %T") $domain"
 	# Building directory tree
         mkdir -p $tmpdir/web/$domain/conf
         mkdir -p $tmpdir/web/$domain/ssl
@@ -296,18 +248,13 @@ then
         fi
 
     done
-    if [ -z "$output" ]; then
-        echo
-    fi
-
+    echo
 fi
 
 # DNS domains
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ] && [ "$DNS" != '*' ]
 then
-    if [ -z "$output" ]; then
-        echo "-- DNS --"
-    fi
+    echo "-- DNS --"
     mkdir $tmpdir/dns/
 
     # Parsing unsuspeneded domains
@@ -326,10 +273,7 @@ then
     dns_list=$(echo "$dns_list" | sed -e "s/  */\ /g" -e "s/^ //")
 
     for domain in $dns_list; do
-        if [ -z "$output" ]; then
-            echo -e "\t$(date +%H:%M:%S) $domain"
-        fi
-
+        echo -e "$(date "+%F %T") $domain"
         # Building directory tree
         mkdir $tmpdir/dns/$domain
 
@@ -342,10 +286,7 @@ then
         cp $V_USERS/$user/dns/$domain $domain
         cp /etc/namedb/$domain.db $domain.db
     done
-
-    if [ -z "$output" ]; then
-        echo
-    fi
+    echo
 fi
 
 
@@ -354,9 +295,7 @@ fi
 
 # DatbaBases
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
-    if [ -z "$output" ]; then
-        echo "-- DB --"
-    fi
+    echo "-- DB --"
     mkdir $tmpdir/db/
 
     # Parsing unsuspeneded domains
@@ -381,9 +320,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
         dump="$tmpdir/db/$database.$type.sql"
         grants="$tmpdir/db/$database.$type.$db_user"
 
-        if [ -z "$output" ]; then
-            echo -e "\t$(date +%H:%M:%S) $database $type"
-        fi
+        echo -e "$(date "+%F %T") $database $type"
 
         case $type in
             mysql) dump_db_mysql ;;
@@ -395,46 +332,30 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
         fi
 
     done
-
-    if [ -z "$output" ]; then
-        echo
-    fi
+    echo
 fi
 
 # Cron jobs
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ] && [ "$CRON" != '*' ]
 then
-    if [ -z "$output" ]; then
-        echo "-- CRON --"
-    fi
+    echo "-- CRON --"
     mkdir $tmpdir/cron/
 
     # Backingup cron recods
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) cron.conf"
-    fi
+    echo -e "$(date "+%F %T") cron.conf"
     cp $V_USERS/$user/cron.conf $tmpdir/cron/
-
-    if [ -z "$output" ]; then
-        echo -e "\t$(date +%H:%M:%S) system cron"
-    fi
+    echo -e "$(date "+%F %T") system cron"
 
     if [ -e "/var/spool/cron/$user" ]; then
         cron_list='yes'
         cp /var/spool/cron/$user $tmpdir/cron/
     fi
-
-    if [ -z "$output" ]; then
-        echo
-    fi
-
+    echo
 fi
 
 # SSL CERTIFICATES
 if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ] && [ "$SSL" != '*' ]; then
-    if [ -z "$output" ]; then
-        echo "-- SSL --"
-    fi
+    echo "-- SSL --"
     mkdir $tmpdir/ssl
 
     # Backingup ssl certificates
@@ -443,16 +364,10 @@ if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ] && [ "$SSL" != '*' ]; then
                 tr '\n' ' ' |\
                 sed -e 's/ $//' )
     for cert in $cert_list; do
-        if [ -z "$output" ]; then
-            echo -e "\t$(date +%H:%M:%S) $cert"
-        fi
+        echo -e "$(date "+%F %T") $cert"
         cp $V_USERS/$user/ssl/$cert.* $tmpdir/ssl/
     done
-
-    if [ -z "$output" ]; then
-        echo
-    fi
-
+    echo
 fi
 
 # Get backup size
@@ -463,15 +378,13 @@ end_time=$(date '+%s')
 
 # Defining local storage function
 local_backup(){
-    if [ -z "$output" ]; then
-        echo "-- STORAGE --"
-        echo -e "\t$(date +%H:%M:%S) ARCHIVE $V_BACKUP/$user.$V_DATE.tar"
-    fi
+    echo "-- STORAGE --"
+    echo -e "$(date "+%F %T") ARCHIVE $V_BACKUP/$user.$V_DATE.tar"
 
     # Removing dublicate for this day
     if [ -e "$V_BACKUP/$user.$V_DATE.tar" ]; then
         deprecated="$V_DATE"
-        echo -e "\tDeleting old backup for $V_DATE"
+        echo -e "Deleting old backup for $V_DATE"
         rm -f $V_BACKUP/$user.$V_DATE.tar
     fi
 
@@ -487,9 +400,7 @@ local_backup(){
             # Removing old backup
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
             deprecated="$deprecated $backup_date"
-            if [ -z "$output" ]; then
-                echo -e "\tDeleteing old backup for $backup_date"
-            fi
+            echo -e "\tDeleteing old backup for $backup_date"
             rm -f $V_BACKUP/$backup
         done
     fi
@@ -507,12 +418,8 @@ local_backup(){
     tar -cf $V_BACKUP/$user.$V_DATE.tar .
     chmod 640 $V_BACKUP/$user.$V_DATE.tar
     chown root:$user $V_BACKUP/$user.$V_DATE.tar
-
     localbackup='yes'
-
-    if [ -z "$output" ]; then
-        echo
-    fi
+    echo
 }
 
 
@@ -530,9 +437,7 @@ EOF
 
 # Defining ftp storage function
 ftp_backup(){
-    if [ -z "$output" ]; then
-        echo "-- FTP --"
-    fi
+    echo "-- FTP --"
 
     # Checking config
     source $V_CONF/ftp.backup.conf
@@ -544,10 +449,8 @@ ftp_backup(){
     fi
 
     # Debug info
-    if [ -z "$output" ]; then
-        echo -ne "\t$(date +%H:%M:%S) "
-        echo -e "ftp://$USERNAME@$HOST$BPATH/$user.$V_DATE.tar"
-    fi
+    echo -ne "$(date "+%F %T") "
+    echo -e "ftp://$USERNAME@$HOST$BPATH/$user.$V_DATE.tar"
 
     # Checking ftp permission
     ftmpdir=$(mktemp -u -p $BPATH)
@@ -565,12 +468,10 @@ ftp_backup(){
     backups_count=$(echo "$backup_list" | wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS + 1))
-        for backup in $(echo "$backup_list" | tail -n $backups_rm_number); do 
+        for backup in $(echo "$backup_list" | head -n $backups_rm_number); do 
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
             deprecated="$deprecated $backup"
-            if [ -z "$output" ]; then
-                echo -e "\tDeleteing old backup for $backup_date"
-            fi
+            echo -e "\tDeleteing old backup for $backup_date"
             ftpc "delete $backup"
         done
     fi
@@ -581,15 +482,12 @@ ftp_backup(){
 	ftpc "put $user.$V_DATE.tar"
     else
 	cd $tmpdir
-        tar -cf $V_TMP/$user.$V_DATE.tar .
-        cd $V_TMP/
+        tar -cf $V_BACKUP/$user.$V_DATE.tar .
+        cd $V_BACKUP/
 	ftpc "put $user.$V_DATE.tar"
         rm -f $user.$V_DATE.tar
     fi
-
-    if [ -z "$output" ]; then
-        echo
-    fi
+    echo
 }
 
 # Switching on backup system types
@@ -607,21 +505,18 @@ rm -rf $tmpdir
 # Calculation run time
 run_time=$((end_time - start_time))
 run_time=$((run_time / 60))
-current_time=$(date +'%H:%M:%S')
+current_time=$(date "+%T")
 if [ "$run_time" -lt 1 ]; then
     run_time=1
 fi
 
-if [ -z "$output" ]; then
-    min=miutes
-    if [ "$run_time" -eq 1 ]; then
-        min=minute
-    fi
-    echo "$(date +'%m-%d-%y %H:%M:%S') Backup took $run_time $min"
-    echo
-    echo
+min=miutes
+if [ "$run_time" -eq 1 ]; then
+    min=minute
 fi
-
+echo "$(date "+%F %T") Backup took $run_time $min"
+echo
+echo
 
 
 #----------------------------------------------------------#

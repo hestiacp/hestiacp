@@ -39,7 +39,7 @@ fi
 
 # Defining fileds to select
 fields="\$DATE \$TIME \$RUNTIME \$TYPE \$SIZE \$VESTA \$PAM \$WEB \$DNS \$DB"
-fields="$fields \$MAIL \$CERTIFICATES \$CRON"
+fields="$fields \$MAIL \$SSL \$CRON"
 
 # Listing domains
 case $format in 

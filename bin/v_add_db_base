@@ -83,8 +83,7 @@ v_str="$v_str U_DISK='0' SUSPEND='no' DATE='$V_DATE'"
 echo "$v_str">>$V_USERS/$user/db.conf
 
 # Hiding password
-dt="$(date +%m-%d-%y" "%H:%M:%S)"
-V_EVENT="$dt $V_SCRIPT $user $database $db_user ***** $type $host"
+V_EVENT="$V_DATE $V_SCRIPT $user $database $db_user ***** $type $host"
 
 # Logging
 log_history "$V_EVENT" "v_del_db_base $user $database"

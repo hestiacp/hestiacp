@@ -3,7 +3,7 @@ server {
     server_name %domain_idn% %alias_idn%;
     server_name_in_redirect off;
     ssl         on;
-    ssl_certificate      %ssl_cert%;
+    ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
     %elog%error_log  /var/log/httpd/domains/%domain%.error.log error;
 

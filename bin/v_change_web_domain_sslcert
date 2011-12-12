@@ -9,7 +9,7 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-ssl=$3
+ssl_dir=$3
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -54,38 +54,27 @@ is_web_domain_cert_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing domain values
-get_web_domain_values
-tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-conf="$V_HOME/$user/conf/shttpd.conf"
-old_ssl="$SSL"
-SSL="$ssl"
+# Deleting old certificate
+tmpdir=$(mktemp -p $V_HOME/$user/web/$domain/private -d)
+rm -f $V_HOME/$user/conf/ssl.$domain.*
+mv $V_USERS/$user/ssl/$domain.* $tmpdir
+chown -R $user:$user $tmpdir
 
-# Preparing domain values for the template substitution
-upd_web_domain_values
-
-# Recreating vhost
-del_web_config
-add_web_config
-
-# Checking nginx
-if [ ! -z "$NGINX" ]; then
-    proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
-    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-    conf="$V_HOME/$user/conf/snginx.conf"
-    del_web_config
-    add_web_config
+# Adding new certificate to user data directory
+cp -f $ssl_dir/$domain.crt $V_USERS/$user/ssl/$domain.crt
+cp -f $ssl_dir/$domain.key $V_USERS/$user/ssl/$domain.key
+cp -f $ssl_dir/$domain.crt $V_USERS/$user/ssl/$domain.pem
+if [ -e "$ssl_dir/$domain.ca" ]; then
+    cp -f $ssl_dir/$domain.ca $V_USERS/$user/ssl/$domain.ca
+    cat $V_USERS/$user/ssl/$domain.ca >> $V_USERS/$user/ssl/$domain.pem
 fi
 
 # Adding new certificate to user dir
-cp -f $V_USERS/$user/ssl/$SSL.crt $ssl_cert
-cp -f $V_USERS/$user/ssl/$SSL.key $ssl_key
-
-# Deleting old certificate
-check_cert=$(grep "SSL='$old_ssl'" $V_USERS/$user/web.conf |wc -l)
-if [ "$check_cert"  -lt 2 ]; then
-    rm -f $V_HOME/$user/conf/$old_ssl.crt
-    rm -f $V_HOME/$user/conf/$old_ssl.key
+cp -f $V_USERS/$user/ssl/$domain.crt $V_HOME/$user/conf/ssl.$domain.crt
+cp -f $V_USERS/$user/ssl/$domain.key $V_HOME/$user/conf/ssl.$domain.key
+cp -f $V_USERS/$user/ssl/$domain.pem $V_HOME/$user/conf/ssl.$domain.pem
+if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
+    cp -f $V_USERS/$user/ssl/$domain.ca $V_HOME/$user/conf/ssl.$domain.ca
 fi
 
 
@@ -93,14 +82,11 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding sslcert in config
-update_web_domain_value '$SSL' "$SSL"
-
 # Adding task to the vesta pipe
 restart_schedule 'web'
 
 # Logging
-log_history "$V_EVENT" "$V_SCRIPT $user $domain $old_ssl"
+log_history "$V_EVENT" "$V_SCRIPT $user $domain $tmpdir"
 log_event 'system' "$V_EVENT"
 
 exit

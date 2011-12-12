@@ -198,14 +198,14 @@ increase_user_value "$user" '$U_WEB_DOMAINS'
 
 # Defining domain variables
 v_str="DOMAIN='$domain'"
-v_str="$v_str IP='$ip'"
+v_str="$v_str IP='$ip' IP6=''"
 v_str="$v_str U_DISK='0'"
 v_str="$v_str U_BANDWIDTH='0'"
 v_str="$v_str TPL='$template'"
 v_str="$v_str ALIAS='$aliases'"
 v_str="$v_str $template_data"    # Inserting PHP, CGI and ELOG keys
 v_str="$v_str STATS='' STATS_AUTH=''"
-v_str="$v_str SSL='' SSL_HOME=''"
+v_str="$v_str SSL='no' SSL_HOME='single'"
 v_str="$v_str NGINX='' NGINX_EXT='' SUSPEND='no' DATE='$V_DATE'"
 
 # Registering domain

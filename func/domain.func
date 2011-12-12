@@ -239,8 +239,10 @@ add_web_config() {
             -e "s/%alias_string%/$alias_string/g" \
             -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
             -e "s/%alias%/${aliases//,/ }/g" \
-            -e "s/%ssl_cert%/${ssl_cert////\/}/g" \
+            -e "s/%ssl_crt%/${ssl_crt////\/}/g" \
             -e "s/%ssl_key%/${ssl_key////\/}/g" \
+            -e "s/%ssl_pem%/${ssl_pem////\/}/g" \
+            -e "s/%ssl_ca_str%/${ssl_ca_str////\/}/g" \
             -e "s/%nginx_extentions%/${NGINX_EXT//,/|}/g" \
             -e "s/%elog%/$elog/g" \
             -e "s/%cgi%/$cgi/g" \
@@ -448,12 +450,52 @@ is_web_domain_key_empty() {
 }
 
 is_web_domain_cert_valid() {
+
     # Checking file existance
-    path="$V_USERS/$user/ssl"
-    if [ ! -e "$path/$ssl.crt" ] || [ ! -e "$path/$ssl.key" ]; then
+    if [ ! -e "$ssl_dir/$domain.crt" ] || [ ! -e "$ssl_dir/$domain.key" ]; then
         echo "Error: certificate not exist"
         log_event 'debug' "$E_CERT_NOTEXIST $V_EVENT"
         exit $E_CERT_NOTEXIST
+    fi
+
+    # Checking certificate
+    crt=$(openssl verify $ssl_dir/$domain.crt 2>/dev/null |grep '/C=')
+    if [ -z "$crt" ]; then
+        echo "Error: certificate invalid"
+        log_event 'debug' "$E_CERT_INVALID $V_EVENT"
+        exit $E_CERT_INVALID
+    fi
+
+    # Checking certificate key
+    openssl rsa -in "$ssl_dir/$domain.key" -check >/dev/null 2>/dev/null
+    if [ "$?" -ne 0 ]; then
+        echo "Error: key invalid"
+        log_event 'debug' "$E_KEY_INVALID $V_EVENT"
+        exit $E_KEY_INVALID
+    fi
+
+    # Checking certificate authority
+    if [ -e "$ssl_dir/$domain.ca" ]; then
+        ca=$(openssl verify $ssl_dir/$domain.ca 2>/dev/null |grep '/C=')
+        if [ -z "$ca" ]; then
+            echo "Error: certificate invalid"
+            log_event 'debug' "$E_CERT_INVALID $V_EVENT"
+            exit $E_CERT_INVALID
+        fi
+    fi
+
+    # Checking server
+    openssl s_server -quiet \
+        -cert $ssl_dir/$domain.crt -key $ssl_dir/$domain.key &
+    pid=$!
+    sleep 1
+    disown > /dev/null 2>&1
+    kill $pid > /dev/null 2>&1
+    result=$?
+    if [ "$result" -ne '0' ]; then
+        echo "Error: certificate key pair invalid"
+        log_event 'debug' "$E_CERTKEY_INVALID $V_EVENT"
+        exit $E_CERTKEY_INVALID
     fi
 }
 
@@ -733,8 +775,14 @@ upd_web_domain_values() {
     fi
 
     # Defining SSL vars
-    ssl_cert="$V_HOME/$user/conf/$SSL.crt"
-    ssl_key="$V_HOME/$user/conf/$SSL.key"
+    ssl_crt="$V_HOME/$user/conf/ssl.$domain.crt"
+    ssl_key="$V_HOME/$user/conf/ssl.$domain.key"
+    ssl_pem="$V_HOME/$user/conf/ssl.$domain.pem"
+    ssl_ca="$V_HOME/$user/conf/ssl.$domain.ca"
+    if [ ! -e "$V_USERS/$user/ssl/$domain.ca" ]; then
+        ssl_ca_str='#'
+    fi
+
     case $SSL_HOME in
         single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
         same) docroot="$V_HOME/$user/web/$domain/public_html" ;;

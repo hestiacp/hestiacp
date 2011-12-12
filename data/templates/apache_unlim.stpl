@@ -31,8 +31,9 @@
     php_admin_value open_basedir none
     SSLEngine on
     SSLVerifyClient none
-    SSLCertificateFile %ssl_cert%
+    SSLCertificateFile %ssl_crt%
     SSLCertificateKeyFile %ssl_key%
+    %ssl_ca_str%SSLCertificateChainFile %ssl_ca%
 
     <IfModule mod_ruid2.c>
         RMode config

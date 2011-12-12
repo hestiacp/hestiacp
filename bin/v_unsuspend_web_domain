@@ -58,7 +58,7 @@ del_web_config
 add_web_config
 
 # Check ssl
-if [ ! -z "$SSL" ]; then
+if [ "$SSL" = 'yes' ]; then
     tpl_file="$V_WEBTPL/apache_$TPL.stpl"
     conf="$V_HOME/$user/conf/shttpd.conf"
     del_web_config
@@ -72,7 +72,7 @@ if [ ! -z "$NGINX" ]; then
     del_web_config
     add_web_config
 
-    if [ ! -z "$SSL" ]; then
+    if [ "$SSL" = 'yes' ]; then
         proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
         tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
         conf="$V_HOME/$user/conf/snginx.conf"

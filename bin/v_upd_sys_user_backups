@@ -213,7 +213,7 @@ if [ -e "$tmp_file" ]; then
 fi
 
 # Checking local
-if [ "$type" == 'local' ]; then
+if [ "$type" = 'local' ]; then
     backups=$(ls $V_BACKUP |grep "^$user."|sort)
     for backup in $backups; do
         get_backup_info $V_BACKUP/$backup $type >> $tmp_file
@@ -221,7 +221,7 @@ if [ "$type" == 'local' ]; then
 fi
 
 # Checking ftp
-if [ "$type" == 'ftp' ]; then
+if [ "$type" = 'ftp' ]; then
     tmpdir=$(mktemp -p $V_BACKUP -d)
     ftmpdir=$(basename $tmpdir)
     init_ftp_variables
@@ -242,7 +242,7 @@ if [ "$type" == 'ftp' ]; then
 fi
 
 # Checking both local and ftp
-if [ "$type" == 'ftp,local' ] || [ "$type" == 'local,ftp' ]; then
+if [ "$type" = 'ftp,local' ] || [ "$type" = 'local,ftp' ]; then
 
     tmpdir=$(mktemp -p $V_BACKUP -d)
     ftmpdir=$(basename $tmpdir)

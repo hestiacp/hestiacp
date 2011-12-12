@@ -70,7 +70,7 @@ for domain in $(shell_list) ; do
     fi
 
     # Checking ssl
-    if [ ! -z "$SSL" ]; then
+    if [ "$SSL" = 'yes' ]; then
         # Adding domain to the shttpd.conf
         conf="$V_HOME/$user/conf/tmp_shttpd.conf"
         tpl_file="$V_WEBTPL/apache_$TPL.stpl"
@@ -90,7 +90,7 @@ for domain in $(shell_list) ; do
         conf="$V_HOME/$user/conf/tmp_nginx.conf"
         add_web_config
 
-        if [ ! -z "$SSL" ]; then
+        if [ "$SSL" = 'yes' ]; then
             if [ "$SUSPEND" = 'yes' ]; then
                 proxy_string="rewrite ^(.*)\$ http://$url;"
             else

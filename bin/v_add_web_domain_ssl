@@ -9,7 +9,7 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-ssl=$3
+ssl_dir=$3
 ssl_home=${4-single}
 
 # Importing variables
@@ -25,10 +25,10 @@ source $V_FUNC/ip.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '3' "$#" 'user domain ssl [sslhome]'
+check_args '3' "$#" 'user domain ssl_dir [ssl_home]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'ssl'
+format_validation 'user' 'domain' 'ssl_dir'
 
 # Checking web system is enabled
 is_system_enabled 'web'
@@ -59,12 +59,20 @@ is_web_domain_cert_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Adding certificate to user data directory
+cp -f $ssl_dir/$domain.crt $V_USERS/$user/ssl/$domain.crt
+cp -f $ssl_dir/$domain.key $V_USERS/$user/ssl/$domain.key
+cp -f $ssl_dir/$domain.crt $V_USERS/$user/ssl/$domain.pem
+if [ -e "$ssl_dir/$domain.ca" ]; then
+    cp -f $ssl_dir/$domain.ca $V_USERS/$user/ssl/$domain.ca
+    cat $V_USERS/$user/ssl/$domain.ca >> $V_USERS/$user/ssl/$domain.pem
+fi
+
 # Parsing domain values
 get_web_domain_values
 conf="$V_HOME/$user/conf/shttpd.conf"
 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-SSL=$ssl
-SSL_HOME=$ssl_home
+SSL_HOME="$ssl_home"
 
 # Checking ip ownership
 is_sys_ip_owner
@@ -76,8 +84,12 @@ upd_web_domain_values
 add_web_config
 
 # Adding certificate to user dir
-cp -f $V_USERS/$user/ssl/$SSL.crt $ssl_cert
-cp -f $V_USERS/$user/ssl/$SSL.key $ssl_key
+cp -f $V_USERS/$user/ssl/$domain.crt $V_HOME/$user/conf/ssl.$domain.crt
+cp -f $V_USERS/$user/ssl/$domain.key $V_HOME/$user/conf/ssl.$domain.key
+cp -f $V_USERS/$user/ssl/$domain.pem $V_HOME/$user/conf/ssl.$domain.pem
+if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
+    cp -f $V_USERS/$user/ssl/$domain.ca $V_HOME/$user/conf/ssl.$domain.ca
+fi
 
 # Running template trigger
 if [ -x $V_WEBTPL/apache_$template.sh ]; then
@@ -115,8 +127,8 @@ fi
 increase_user_value "$user" '$U_WEB_SSL'
 
 # Adding ssl values
-update_web_domain_value '$SSL' "$SSL"
 update_web_domain_value '$SSL_HOME' "$SSL_HOME"
+update_web_domain_value '$SSL' 'yes'
 
 # Logging
 log_history "$V_EVENT" "v_del_web_domain_ssl $user $domain"

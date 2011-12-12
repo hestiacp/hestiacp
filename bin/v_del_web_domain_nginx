@@ -57,7 +57,7 @@ conf="$V_HOME/$user/conf/nginx.conf"
 del_web_config
 
 # Checking ssl
-if [ ! -z "$SSL" ]; then
+if [ "$SSL" = 'yes' ]; then
     tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
     conf="$V_HOME/$user/conf/snginx.conf"
     del_web_config
@@ -75,7 +75,7 @@ update_web_domain_value '$NGINX_EXT' ''
 # Checking last nginx domain
 conf='/etc/nginx/conf.d/vesta_users.conf'
 last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web.conf)
-last_snginx=$(echo "$last_nginx" | grep -v "SSL=''")
+last_snginx=$(echo "$last_nginx" | grep "SSL='yes'")
 if [ -z "$last_snginx" ]; then
     sline=$(grep -n "$V_HOME/$user/conf/snginx.conf" $conf | cut -f 1 -d : )
     if [ ! -z "$sline" ]; then

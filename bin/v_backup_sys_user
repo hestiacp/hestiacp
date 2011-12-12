@@ -100,31 +100,6 @@ if [ -e "$V_USERS/$user/backup.excludes" ]; then
     cp -r $V_USERS/$user/backup.excludes $tmpdir/vesta/
 fi
 
-if [ -e "$V_USERS/$user/cron.conf" ]; then
-    echo -e "$(date "+%F %T") cron.conf"
-    cp -r $V_USERS/$user/cron.conf $tmpdir/vesta/
-fi
-
-if [ -e "$V_USERS/$user/db.conf" ]; then
-    echo -e "$(date "+%F %T") db.conf"
-    cp -r $V_USERS/$user/db.conf $tmpdir/vesta/
-fi
-
-if [ -e "$V_USERS/$user/dns.conf" ]; then
-    echo -e "$(date "+%F %T") dns.conf"
-    cp -r $V_USERS/$user/dns.conf $tmpdir/vesta/
-fi
-
-if [ -e "$V_USERS/$user/mail.conf" ]; then
-    echo -e "$(date "+%F %T") mail.conf"
-    cp -r $V_USERS/$user/mail.conf $tmpdir/vesta/
-fi
-
-
-if [ -e "$V_USERS/$user/web.conf" ]; then
-    echo -e "$(date "+%F %T") web.conf"
-    cp -r $V_USERS/$user/web.conf $tmpdir/vesta/
-fi
 
 echo
 
@@ -205,7 +180,7 @@ then
             sed -n "$top_line,$bottom_line p" $conf > conf/httpd.conf
 
             # SSL check
-            if [ ! -z "$SSL" ]; then
+            if [ "$SSL" = 'yes' ]; then
                 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
                 conf="$V_HOME/$user/conf/shttpd.conf"
                 get_web_config_brds
@@ -221,7 +196,7 @@ then
             sed -n "$top_line,$bottom_line p" $conf > conf/nginx.conf
 
             # SSL check
-            if [ ! -z "$SSL" ] ; then
+            if [ "$SSL" = 'yes' ] ; then
                 tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
                 conf="$V_HOME/$user/conf/snginx.conf"
                 get_web_config_brds
@@ -235,8 +210,8 @@ then
         done
 
         # SSL Certificates
-        if [ ! -z "$SSL" ] ; then
-            cp $V_HOME/$user/conf/$SSL.* ssl/
+        if [ "$SSL" = 'yes' ] ; then
+            cp $V_HOME/$user/conf/ssl.$domain.* ssl/
         fi
 
         tar -rf $tmpdir/web/$domain/$domain.tar conf ssl
@@ -350,23 +325,6 @@ then
         cron_list='yes'
         cp /var/spool/cron/$user $tmpdir/cron/
     fi
-    echo
-fi
-
-# SSL CERTIFICATES
-if [ ! -z "$WEB_SSL" ] && [ "$WEB_SSL" != 'no' ] && [ "$SSL" != '*' ]; then
-    echo "-- SSL --"
-    mkdir $tmpdir/ssl
-
-    # Backingup ssl certificates
-    cert_list=$(ls $V_USERS/$user/ssl/ | grep ".crt" |\
-                sed -e "s/\.crt$//" |\
-                tr '\n' ' ' |\
-                sed -e 's/ $//' )
-    for cert in $cert_list; do
-        echo -e "$(date "+%F %T") $cert"
-        cp $V_USERS/$user/ssl/$cert.* $tmpdir/ssl/
-    done
     echo
 fi
 
@@ -539,7 +497,6 @@ backup_str="$backup_str WEB='${web_list// /,}'"
 backup_str="$backup_str DNS='${dns_list// /,}'"
 backup_str="$backup_str MAIL='${mail_list// /,}'"
 backup_str="$backup_str DB='${db_list// /,}'"
-backup_str="$backup_str SSL='${cert_list// /,}'"
 backup_str="$backup_str CRON='$cron_list'"
 echo "$backup_str" >> $V_USERS/$user/backup.conf
 

@@ -102,7 +102,7 @@ fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG $STATS
 case $format in 
     json)   json_list_domain ;;
     plain)  nohead=1; shell_list_domain ;;
-    shell)  shell_list_domain | column -t ;;
+    shell)  shell_list_domain |column -t ;;
     *)      check_args '2' '0' 'user domain [format]'
 esac
 

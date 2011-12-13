@@ -134,6 +134,7 @@ $package_data
 SUSPENDED='no'
 CONTACT='$email'
 REPORTS='yes'
+RKEY='$(gen_password)'
 IP_OWNED='0'
 U_DIR_DISK='0'
 U_DISK='0'

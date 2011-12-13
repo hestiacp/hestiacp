@@ -95,7 +95,7 @@ App.HTML.Build.dns_form = function(options, id)
 }
 
 App.HTML.Build.ip_form = function(options, id) 
-{try{
+{
     if('undefined' == typeof App.Env.initialParams) {
         return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
@@ -118,7 +118,7 @@ App.HTML.Build.ip_form = function(options, id)
     tpl.set(':NAME', options.NAME || '');
     
     tpl = App.HTML.Build.ip_selects(tpl, options);
-}catch(e){fb.error(e);}
+
     return tpl.finalize();
 }
 
@@ -162,31 +162,39 @@ App.HTML.Build.dns_entry = function(o, is_new)
         var now = new Date();
         tpl.set(':DATE', now.format("d.mm.yyyy"));
     }
-
+    tpl.set(':TPL_VAL', o.TPL);
     /*if (App.Constants.SUSPENDED_YES == o.SUSPEND) {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
     }
     else {
         var sub_tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
     }*/
-
+    
     tpl.set(':SUSPENDED_TPL', '');
 
     return tpl.finalize();
 }
 
 App.HTML.Build.user_entry = function(o, key)
-{
+{   
     var processed_data = {
         'NICKNAME'              : key, 
-        'U_DISK_PERCENTAGE'     : o.U_DISK > 0 ? o.U_DISK / o.DISK_QUOTA * 100 : 0.01,
-        'U_BANDWIDTH_PERCENTAGE': o.U_BANDWIDTH > 0 ? o.U_BANDWIDTH / o.BANDWIDTH * 100 : 0.01,
+        'U_DISK_PERCENTAGE'     : o.U_DISK > 0 ? o.U_DISK / o.DISK_QUOTA * 100 : 1,
+        'U_BANDWIDTH_PERCENTAGE': o.U_BANDWIDTH > 0 ? o.U_BANDWIDTH / o.BANDWIDTH * 100 : 1,
+        'U_DISK'                : o.U_DISK == 0 ? 1 : App.Helpers.formatNumber(o.U_DISK),
+        'U_BANDWIDTH'           : o.U_BANDWIDTH == 0 ? 1 : App.Helpers.formatNumber(o.U_BANDWIDTH),
         'DISK_QUOTA_MEASURE'    : App.Helpers.getMbHumanMeasure(o.DISK_QUOTA),
         'BANDWIDTH_MEASURE'     : App.Helpers.getMbHumanMeasure(o.BANDWIDTH),
         'BANDWIDTH'             : App.Helpers.getMbHuman(o.BANDWIDTH),
         'DISK_QUOTA'            : App.Helpers.getMbHuman(o.DISK_QUOTA)
     };
     var o = $.extend(o, processed_data);
+    o.U_DISK_PERCENTAGE_2 = o.U_DISK_PERCENTAGE;
+    o.U_DISK_PERCENTAGE_3 = o.U_DISK_PERCENTAGE;
+    o.BANDWIDTH_MEASURE_2 = o.BANDWIDTH_MEASURE;
+    o.DISK_QUOTA_MEASURE_2 = o.DISK_QUOTA_MEASURE;
+    o.U_BANDWIDTH_PERCENTAGE_2 = o.U_BANDWIDTH_PERCENTAGE;
+    o.U_BANDWIDTH_PERCENTAGE_3 = o.U_BANDWIDTH_PERCENTAGE;
     var tpl = App.Templates.get('ENTRY', 'user');  
     tpl = App.HTML.setTplKeys(tpl, o);
        
@@ -197,15 +205,18 @@ App.HTML.Build.user_entry = function(o, key)
     
     $([1,2,3,4,5,6,7,8]).each(function(i, index)
     {
-        if (o['NS'+index].trim() != '') {
-            var tpl_ns = App.Templates.get('NS_RECORD', 'user');
-            tpl_ns.set(':NAME', o['NS'+index]);
-            var tpl_finalized = tpl_ns.finalize();
-            ns_full[ns_full.length++] = tpl_finalized;
-            if (i < App.Settings.USER_VISIBLE_NS) {
-                ns[ns.length++] = tpl_finalized;
+        var key = 'NS'+index;
+        if ('undefined' != typeof o[key]) {
+            if (o[key].trim() != '') {
+                var tpl_ns = App.Templates.get('NS_RECORD', 'user');
+                tpl_ns.set(':NAME', o[key]);
+                var tpl_finalized = tpl_ns.finalize();
+                ns_full[ns_full.length++] = tpl_finalized;
+                if (i < App.Settings.USER_VISIBLE_NS) {
+                    ns[ns.length++] = tpl_finalized;
+                }
             }
-        }                      
+        }        
     });
         
     if (ns_full.length <= App.Settings.USER_VISIBLE_NS) {
@@ -219,7 +230,36 @@ App.HTML.Build.user_entry = function(o, key)
         tpl.set(':NS', ns_custom.finalize());
     }
     
+    tpl = App.HTML.Build.user_web_tpl(tpl, o);
     tpl.set(':REPORTS_ENABLED', o.REPORTS_ENABLED == 'yes' ? 'enabled' : 'DISABLED');    
+    if (o.U_DISK_PERCENTAGE > 100) {
+        var tpl_over = App.Templates.get('over_bar', 'general');
+        var difference = parseInt(o.U_DISK_PERCENTAGE, 10) - 100;             
+        tpl_over.set(':OVER_PERCENTS', difference);
+        tpl_over.set(':OVER_PERCENTS_2', difference);
+        tpl.set(':OVER_BAR', tpl_over.finalize());
+        tpl.set(':U_DISK_PERCENTAGE_3', 100);
+        tpl.set(':OVER_DRAFT_VALUE', 'overdraft');
+    }
+    else {
+        tpl.set(':OVER_BAR', '');
+        tpl.set(':OVER_DRAFT_VALUE', '');
+    }
+    // OVER BANDWIDTH
+    if (o.U_BANDWIDTH_PERCENTAGE > 100) {
+        var tpl_over = App.Templates.get('over_bar', 'general');
+        var difference = parseInt(o.U_BANDWIDTH_PERCENTAGE, 10) - 100;       
+        tpl_over.set(':OVER_PERCENTS', difference);
+        tpl_over.set(':OVER_PERCENTS_2', difference);
+        tpl.set(':OVER_BAR_2', tpl_over.finalize());
+        tpl.set(':U_BANDWIDTH_PERCENTAGE_3', 100);
+        tpl.set(':OVER_DRAFT_VALUE_2', 'overdraft');
+    }
+    else {
+        tpl.set(':OVER_BAR_2', '');
+        tpl.set(':OVER_DRAFT_VALUE_2', '');
+    }
+    
         
     return tpl.finalize();
 }
@@ -249,23 +289,28 @@ App.HTML.Build.user_form = function(options, id)
     
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.USER;
     
-    // NS
-    var ns = [];
-    $([3,4,5,6,7,8]).each(function(i, index)
-    {
-        if (options['NS'+index].trim() != '') {
-            var tpl_ns = App.Templates.get('NS_INPUT', 'user');
-            tpl_ns.set(':NS_LABEL', 'NS #' + (index));
-            tpl_ns.set(':NAME', options['NS'+index]);
-            ns[ns.length++] = tpl_ns.finalize();
-        }
-    });
-    ns[ns.length++] = App.Templates.get('PLUS_ONE_NS', 'user').finalize();
     
-    tpl.set(':NS', ns.done());
+    
     if (in_edit == true) {
         options.PASSWORD = App.Settings.PASSWORD_IMMUTE;
-    }  
+        // NS
+        var ns = [];
+        $([3,4,5,6,7,8]).each(function(i, index)
+        {
+            if (options['NS'+index].trim() != '') {
+                var tpl_ns = App.Templates.get('NS_INPUT', 'user');
+                tpl_ns.set(':NS_LABEL', 'NS #' + (index));
+                tpl_ns.set(':NAME', options['NS'+index]);
+                ns[ns.length++] = tpl_ns.finalize();
+            }
+        });
+        ns[ns.length++] = App.Templates.get('PLUS_ONE_NS', 'user').finalize();
+        
+        tpl.set(':NS', ns.done());
+    }
+    else {
+        tpl.set(':NS', '');
+    }
     tpl = App.HTML.setTplKeys(tpl, options, true);        
     tpl = App.HTML.Build.user_selects(tpl, options);
     
@@ -274,6 +319,10 @@ App.HTML.Build.user_form = function(options, id)
     }
     else {
         tpl.set(':CHECKED', '');
+    }
+    
+    if (!in_edit) {
+        tpl.set(':REPORTS_ENABLED_EDITABLE', 'hidden');
     }
     
     return tpl.finalize();
@@ -302,6 +351,9 @@ App.HTML.Build.web_domain_entry = function(o, key)
     else {
         tpl.set(':STATS_AUTH', '');
     }
+    
+    tpl.set(':DISK',      App.Env.initialParams.PROFILE.BANDWIDTH);
+    tpl.set(':BANDWIDTH', App.Env.initialParams.PROFILE.DISK);
     
     return tpl.finalize();
 }
@@ -452,7 +504,7 @@ App.HTML.Build.cron_entry = function(o, key)
      
 
 App.HTML.Build.cron_form = function(options, id) 
-{try{
+{
     if('undefined' == typeof App.Env.initialParams) {
         return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
@@ -470,15 +522,8 @@ App.HTML.Build.cron_form = function(options, id)
     }
     
     options = !App.Helpers.isEmpty(options) ? options : {DAY:'', MONTH: '', WDAY:'',HOUR:'',CMD:'',MIN:''};    
-    tpl = App.HTML.setTplKeys(tpl, options);  
+    tpl = App.HTML.setTplKeys(tpl, options);     
 
-    /*tpl.set(':id', id || ''); 
-    tpl.set(':IP_ADDRESS', options.IP_ADDRESS || '');
-    tpl.set(':NETMASK', options.NETMASK || '');
-    tpl.set(':NAME', options.NAME || '');*/
-    
-    //tpl = App.HTML.Build.ip_selects(tpl, options);
-}catch(e){fb.error(e);}
     return tpl.finalize();
 }
     
@@ -502,7 +547,6 @@ App.HTML.Build.dns_subrecord = function(record)
     tpl.set(':RECORD', record.RECORD || '');
     tpl.set(':RECORD_VALUE', record.RECORD_VALUE || '');
     tpl.set(':RECORD_ID', record.RECORD_ID || '');
-    //tpl.set(':RECORD_TYPE_VALUE', '');
     tpl.set(':RECORD_TYPE', App.HTML.Build.options(App.Env.initialParams.DNS.record.RECORD_TYPE, (record.RECORD_TYPE || -1)));
     
     return tpl;
@@ -612,8 +656,11 @@ App.HTML.Build.dns_selects = function(tpl, options)
 {    
     try {
         // TPL
-        var obj = App.Env.initialParams.DNS.TPL;
-        var opts = App.HTML.Build.options(obj, options.TPL);
+        var obj = {};
+        $.each(App.Env.initialParams.DNS.TPL, function(key) {
+            obj[key] = key;
+        });        
+        var opts = App.HTML.Build.options(obj, options.PACKAGE);
         tpl.set(':TPL', opts);
         tpl.set(':TPL_DEFAULT_VALUE', options.TPL || App.Helpers.getFirstKey(obj));
     }
@@ -632,18 +679,19 @@ App.HTML.Build.web_domain_selects = function(tpl, options)
         var opts = App.HTML.Build.options(obj, options.IP);
         tpl.set(':IP_OPTIONS', opts);        
         
-        // TPL
-        var obj = App.Env.initialParams.WEB_DOMAIN.TPL;
+        // TPL        
+        var obj = {};
+        $.each(App.Env.initialParams.WEB_DOMAIN.TPL, function(key) {
+            obj[key] = key;
+        });   
+        //var obj = App.Env.initialParams.WEB_DOMAIN.TPL;
         var opts = App.HTML.Build.options(obj, options.TPL);
         tpl.set(':TPL_OPTIONS', opts);        
         
-        // TPL
+        // STAT
         var obj = App.Env.initialParams.WEB_DOMAIN.STAT;
         var opts = App.HTML.Build.options(obj, options.STAT);
-        tpl.set(':STAT_OPTIONS', opts);        
-        
-        
-        //<input type="checkbox" name="STATS" ~!:stats_checked~!="" value="~!:STATS~!" class="not-styled">\
+        tpl.set(':STAT_OPTIONS', opts);                
     }
     catch (e) {        
         return tpl;
@@ -652,6 +700,38 @@ App.HTML.Build.web_domain_selects = function(tpl, options)
     return tpl;
 }
 
-
+App.HTML.Build.user_web_tpl = function(tpl, o)
+{
+    var wt = [];
+    var wt_full = [];
+    var templates = o.WEB_TPL;
+    templates = templates.split(',');
+    if (templates.length == 0) {
+        templates = templates.split(' ');
+    }
+    
+    $(templates).each(function(i, web_tpl) {
+        var tpl_wt = App.Templates.get('WEB_TPL', 'user');
+        tpl_wt.set(':NAME', web_tpl);
+        var tpl_finalized = tpl_wt.finalize();
+        wt_full[wt_full.length++] = tpl_finalized;
+        if (i < App.Settings.USER_VISIBLE_WEB_TPL) {
+            wt[wt.length++] = tpl_finalized;
+        }
+    });
+    
+    if (templates.length <= App.Settings.USER_VISIBLE_NS) {
+        tpl.set(':WEB_TPL', wt.done());
+    }
+    else {
+        var wt_custom = App.Templates.get('WEB_TPL_MINIMIZED', 'user');
+        wt_custom.set(':WEB_TPL_MINI', wt.done());
+        wt_custom.set(':WEB_TPL_FULL', wt_full.done());
+        wt_custom.set(':MORE_NUMBER', Math.abs(App.Settings.USER_VISIBLE_NS - wt_full.length));
+        tpl.set(':WEB_TPL', wt_custom.finalize());
+    }
+    
+    return tpl;
+}
 
 

@@ -1,51 +1,40 @@
-/*App.Core.action_reflector = {
-    'new_entry': App.Actions.newForm,
-    'cancel_form': App.Actions.cancelForm,
-    'save_form': App.Actions.saveForm,//App.Pages.IP.saveIpForm,
-    'remove': App.Actions.remove,//App.Pages.IP.deleteIp,
-           
-    'cancel_dns_form': App.Pages.DNS.closeForm,
-    'save_dns_form': App.Pages.DNS.saveForm,
-    
-    'edit': App.Actions.edit,
-    'embed_subform': App.Actions.embedSubform,
-    
-    'form_help': App.Actions.showFormHelp,
-    'entry_help': App.Actions.showEntryHelp,
-    
-    'close_popup': App.View.closePopup
-};*/
 //
 //  CORE
 //
-App.Core.listen = function(){
+App.Core.listen = function() 
+{    
     fb.log('start listening');
-    $(document).bind('click', function(evt){
-        //App.Pages.IP.customListen && App.Pages.IP.customListen(evt);
-        var elm = $(evt.target);        
+    $(document).bind('click', function(evt) { 
+        App.Helpers.handleItemsRegisteredInBackground(evt);  
+        var elm    = $(evt.target);        
         var action = $(elm).attr('class');
         if (!action) {
-            return fb.log(':)');
+            return fb.log('No action passed');
         } 
         action = action.split('do_action_');
-        if(action.length < 2){
+        if (action.length < 2) {
             if (elm.hasClass('check-this')) {
                 var ref = $(elm).parents('.row');
                 ref.hasClass('checked-row') ? ref.removeClass('checked-row') : ref.addClass('checked-row');
             }    
             return; // no action found attached to the dom object
         }
-        try{
-            // retrieve the action itself
-            action_with_params = action[1].split(' ');
-            action = action_with_params[0];
-            params = elm.find('.prm-'+action).value || null;        
-            // TODO: filter params here
-            // Call the action
-            App.Core.__CALL__(evt, action, params);
-        }catch(e){
-            fb.error(e)
-        }  
+        try {            
+            action_with_params = action[1].split(' ');// retrieve the action itself
+            action = action_with_params[0];            
+            App.Core.__CALL__(evt, action);// Call the action
+        }
+        catch(e) {
+            fb.error(e);
+        }
+    });
+    
+    $(document).bind('keyup', function(evt) {
+        fb.log(evt.keyCode);
+        if ('undefined' != typeof App.Constants.KEY.CODED_NAME[evt.keyCode]) {
+            var method_name = 'keyboard_' + App.Constants.KEY.CODED_NAME[evt.keyCode];
+            App.Helpers[method_name] && App.Helpers[method_name](evt);
+        }
     });
 }
 
@@ -53,22 +42,25 @@ App.Core.listen = function(){
  * Action caller
  * if no action registered, execution will stop
  */
-App.Core.__CALL__ = function(evt, action, params){
-    if('undefined' == typeof App.Actions[action]){
-        return fb.warn('No action registered for: "'+action+'". Stop propagation');
-    }else{
-        return App.Actions[action](evt, params);
+App.Core.__CALL__ = function(evt, action)
+{
+    if ('undefined' == typeof App.Actions[action]) {
+        return alert('No action registered for: "'+action+'". Stop propagation');
+    }
+    else{
+        return App.Actions[action](evt);
     }
 
     
 }
 
-App.Core.initMenu = function(){
-    $('.section').bind('click', function(evt){
+App.Core.initMenu = function()
+{
+    $('.section').bind('click', function(evt) {
         var elm = $(evt.target);
         !elm.hasClass('section') ? elm = elm.parents('.section') : -1;
-        if(App.Env.world != elm.attr('id')){
-            App.Env.world = elm.attr('id');            
+        if (App.Env.world != elm.attr('id')) {
+            App.Env.world  = elm.attr('id');            
             App.Pages.init();            
             fb.warn('Switch page to: ' + App.Env.world);
         }

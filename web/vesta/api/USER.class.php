@@ -23,14 +23,14 @@ class USER extends AjaxHandler
         $result = Vesta::execute(Vesta::V_LIST_SYS_USERS, array(Config::get('response_type')));
 
         foreach ($result['data'] as $user => $details) {
-	    // get reports attribute
-	    $result_report = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $user, 'VALUE' => 'reports'), self::TEXT);
-	    if ($result_report['status'] != true) {
-		$report = null;
-	    } 
-	    else {
-		$report = $result_report['data'];
-	    }
+            // get reports attribute
+            $result_report = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $user, 'VALUE' => 'reports'), self::TEXT);
+            if ($result_report['status'] != true) {
+            $report = null;
+        } 
+        else {
+            $report = $result_report['data'];
+        }
             $fullname_id = rand(0, count($users)-1);
             $fullname    = implode('', array($details['FNAME'], ' ', $details['LNAME']));
         
@@ -72,7 +72,7 @@ class USER extends AjaxHandler
                                 "U_MAIL_BOXES"          => rand(1, 10),  // TODO: skid
                                 "U_MAIL_FORWARDERS"     => rand(1, 10),  // TODO: skid
                                 "REPORTS_ENABLED"       => $report,
-				"U_WEB_DOMAINS"		=> $details['U_WEB_DOMAINS']
+                                "U_WEB_DOMAINS"         => $details['U_WEB_DOMAINS']
                             );
             $reply[$user] = array_merge($user_details, $nses);
         }
@@ -104,11 +104,9 @@ class USER extends AjaxHandler
         $result = Vesta::execute(Vesta::V_ADD_SYS_USER, $params);      
         // Reports
         $enable_reports = Utils::getCheckboxBooleanValue($spell['REPORTS_ENABLED']);
-        $reports_result = $this->setUserReports($spell['LOGIN_NAME'], $spell['REPORTS_ENABLED']);
-        // NS
-        //$ns_result = $this->setNSentries($spell['LOGIN_NAME'], $spell);
-	// Set SHELL
-	$this->setShell($spell['LOGIN_NAME'], $spell['SHELL']);
+        $reports_result = $this->setUserReports($spell['LOGIN_NAME'], $spell['REPORTS_ENABLED']);              
+        // Set SHELL
+        $this->setShell($spell['LOGIN_NAME'], $spell['SHELL']);
 
         if (!$result['status']) {
             $this->errors[] = array($result['error_code'] => $result['error_message']);
@@ -180,8 +178,8 @@ class USER extends AjaxHandler
             }
         }
 
-	// Set SHELL
-	$this->setShell($_USER, $_new['SHELL']);
+        // Set SHELL
+        $this->setShell($_USER, $_new['SHELL']);
 
         $this->setNSentries($_USER, $_new);
 
@@ -195,16 +193,7 @@ class USER extends AjaxHandler
         if (!$result['status']) {
             $this->status = FALSE;
             $this->errors['NAMES'] = array($result['error_code'] => $result['error_message']);
-        }
-
-        /*if ($_old['SHELL'] != $_new['SHELL']) {
-            $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_SHELL, array('USER' => $_USER, 'SHELL' => $_new['SHELL']));
-            if (!$result['status']) {
-                $this->status = FALSE;
-                $this->errors['SHELL'] = array($result['error_code'] => $result['error_message']);
-            }
-        }*/
+        }        
 
         if (!$this->status) {
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_PASSWORD, array('USER' => $_USER, 'PASSWORD' => $_old['PASSWORD']));
@@ -233,14 +222,14 @@ class USER extends AjaxHandler
     {
         $ns = array();
         $ns['USER'] = $user;
-        $ns['NS1'] = $data['NS1'];
-        $ns['NS2'] = $data['NS2'];
-        $ns['NS3'] = isset($data['NS3']) ? $data['NS3'] : '';
-        $ns['NS4'] = isset($data['NS4']) ? $data['NS4'] : '';
-        $ns['NS5'] = isset($data['NS5']) ? $data['NS5'] : '';
-        $ns['NS6'] = isset($data['NS6']) ? $data['NS6'] : '';
-        $ns['NS7'] = isset($data['NS7']) ? $data['NS7'] : '';
-        $ns['NS8'] = isset($data['NS8']) ? $data['NS8'] : '';
+        $ns['NS1']  = $data['NS1'];
+        $ns['NS2']  = $data['NS2'];
+        $ns['NS3']  = isset($data['NS3']) ? $data['NS3'] : '';
+        $ns['NS4']  = isset($data['NS4']) ? $data['NS4'] : '';
+        $ns['NS5']  = isset($data['NS5']) ? $data['NS5'] : '';
+        $ns['NS6']  = isset($data['NS6']) ? $data['NS6'] : '';
+        $ns['NS7']  = isset($data['NS7']) ? $data['NS7'] : '';
+        $ns['NS8']  = isset($data['NS8']) ? $data['NS8'] : '';
 
         $result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_NS, $ns);
 
@@ -265,6 +254,6 @@ class USER extends AjaxHandler
      */
     protected function setShell($user, $shell)
     {
-	$result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_SHELL, array('USER' => $user, 'SHELL' => $shell));
+        $result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_SHELL, array('USER' => $user, 'SHELL' => $shell));
     }
 }

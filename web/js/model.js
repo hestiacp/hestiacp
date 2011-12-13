@@ -21,7 +21,7 @@ App.Model.WEB_DOMAIN.loadList = function()
 App.Model.MAIL.loadList = function()
 {
     //App.Ajax.request('MAIL.getList', {}, App.View.listItems);
-    App.Ref.CONTENT.html('<center><h1 style="padding-top: 20px; font-size: 28px; position: absolute; margin-left: 351px; color: white; text-shadow: 2px 1px 1px rgb(65, 124, 213);">Under maintanance</h1><img width="900px" src="http://dev.vestacp.com:8083/images/Asteroid_Vesta.jpg"></center>');
+    App.Ref.CONTENT.html('<center><h1 style="padding-top: 20px; font-size: 28px; position: absolute; margin-left: 351px; color: white; text-shadow: 2px 1px 1px rgb(65, 124, 213);">Under maintanance</h1><img width="900px" src="'+App.Helpers.generateUrl('images/Asteroid_Vesta.jpg')+'"></center>');
 }
 
 App.Model.DB.loadList = function()

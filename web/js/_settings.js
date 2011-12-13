@@ -20,21 +20,34 @@ App.Constants.DNS                   = 'DNS';
 App.Constants.SUSPENDED_YES         = 'yes';
 App.Constants.DNS_TEMPLATES         = {'default': 'Default'};
 
-// Settings
-App.Settings.FIELD_MAX_LEN      = 32;
-App.Settings.DAY_MAX_LEN        = 2;
-App.Settings.MONTH_MAX_LEN      = 2;
-App.Settings.WDAY_MAX_LEN       = 2;
-App.Settings.HOURS_MAX_LEN      = 2;
-App.Settings.MINUTE_MAX_LEN     = 2;
-App.Settings.USER_VISIBLE_NS    = 2;
-App.Settings.NS_MIN             = 2;
-App.Settings.NS_MAX             = 8;
-App.Settings.ajax_url           = 1;
-App.Settings.uri                = location.href.replace('index.html', '');
-App.Settings.popup_conf         = { 'centered' : true, 'bgcolor' : '#FF0000', 'lightboxSpeed' : 'fast', 'destroyOnClose': true };
+App.Constants.KEY                   = {};
+App.Constants.KEY.ESC               = 27;
+App.Constants.KEY.ENTER             = 13;
+App.Constants.KEY.SPACE             = 32;
+App.Constants.KEY.BACKSPACE         = 8;
+App.Constants.KEY.UP                = 38;
+App.Constants.KEY.DOWN              = 40;
+App.Constants.KEY.CODED_NAME        = {'27':'ESC', '13':'ENTER','32':'SPACE','8':'BACKSPACE','38':'UP','40':'DOWN'};
 
-App.Settings.PASSWORD_IMMUTE    = '********';
+// Settings
+App.Settings.PSW_MIN_LEN            = 6;
+App.Settings.FIELD_MAX_LEN          = 32;
+App.Settings.DAY_MAX_LEN            = 2;
+App.Settings.MONTH_MAX_LEN          = 2;
+App.Settings.WDAY_MAX_LEN           = 2;
+App.Settings.HOURS_MAX_LEN          = 2;
+App.Settings.MINUTE_MAX_LEN         = 2;
+App.Settings.USER_VISIBLE_NS        = 2;
+App.Settings.USER_VISIBLE_WEB_TPL   = 2;
+App.Settings.NS_MIN                 = 2;
+App.Settings.NS_MAX                 = 8;
+App.Settings.ajax_url               = 1;
+App.Settings.uri                    = location.href.replace('index.html', '');
+App.Settings.popup_conf             = { 'centered' : true, 'bgcolor' : '#FF0000', 'lightboxSpeed' : 'fast', 'destroyOnClose': true };
+
+App.Settings.PASSWORD_IMMUTE        = '********';
+
+App.Settings.AJAX_SYNCRONOUS = ['MAIN.getInitial'];
 
 // Messages
 App.Messages.total_dns_records = {single: 'total record', plural: 'total records'};

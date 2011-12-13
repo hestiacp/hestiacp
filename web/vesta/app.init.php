@@ -1,5 +1,6 @@
 <?php
 
+define('VESTA_DIR',  dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
 define('V_ROOT_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 require_once V_ROOT_DIR . 'config/Config.class.php';
@@ -11,8 +12,6 @@ require_once V_ROOT_DIR . 'core/exceptions/ProtectionException.class.php';
 require_once V_ROOT_DIR . 'core/utils/Message.class.php';
 require_once V_ROOT_DIR . 'core/Request.class.php';
 require_once V_ROOT_DIR . 'api/AjaxHandler.php';
-
-VestaSession::start();
 
 /**
  * App execution 

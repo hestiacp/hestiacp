@@ -1,11 +1,10 @@
-App.Pages.init = function(){
-    App.Ajax.request('MAIN.getInitial', {}, function(reply){
+App.Pages.init = function()
+{
+    App.Ajax.request('MAIN.getInitial', {}, function(reply) {
         App.Env.initialParams = reply.data;
         App.Helpers.updateInitial();
-    });
-        
-    App.Pages.prepareHTML();
-    
+    });    
+    App.Pages.prepareHTML();    
     $('.section.active').removeClass('active');
     $('#'+App.Env.world).addClass('active');
     
@@ -22,7 +21,8 @@ App.Pages.prepareHTML = function()
     else {        
         App.Model[App.Env.world].loadList();
     }
-    $('#new-entry-keyword').text(App.Env.world.toLowerCase().replace('_', ' '));
+    $('#new-entry-keyword').text(App.Helpers.getHumanTabName());
+    document.title = 'Vesta | ' + App.Helpers.getHumanTabName();
 }
 
 App.Pages.DNS.showSubform = function(ref) 
@@ -40,14 +40,6 @@ App.Pages.DNS.showSubform = function(ref)
         $(ref).after(tpl.finalize());
         App.Helpers.updateScreen();
     });
-}
-
-App.Pages.DNS.edit = function(elm) {
-    var options = elm.find('.source').val();
-    fb.warn(elm);
-    fb.warn(options);
-    var tpl = App.HTML.Build.dns_form(options);
-    elm.replaceWith(tpl);
 }
 
 App.Pages.USER.new_entry = function(evt)
@@ -70,10 +62,29 @@ App.Pages.WEB_DOMAIN.new_entry = function(evt)
     App.Ref.CONTENT.prepend(tpl);
     App.Helpers.updateScreen(); 
     $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden');   
-    var ssl_key_upload = App.HTML.Build.ssl_key_file();
+    var ssl_key_upload  = App.HTML.Build.ssl_key_file();
     var ssl_cert_upload = App.HTML.Build.ssl_cert_file();
     $('#'+form_id).find('.ssl-key-input-dummy:first').replaceWith(ssl_key_upload);
     $('#'+form_id).find('.ssl-cert-input-dummy:first').replaceWith(ssl_cert_upload);
+}
+
+App.Pages.WEB_DOMAIN.edit = function(evt) 
+{      
+    var elm = $(evt.target);
+    elm = elm.hasClass('row') ? elm : elm.parents('.row');
+    
+    var options = elm.find('.source').val();    
+    var build_method = App.Env.getWorldName() + '_form';    
+    var tpl = App.HTML.Build[build_method](options);
+    // ssls uploads
+    var ssl_key_upload  = App.HTML.Build.ssl_key_file();
+    var ssl_cert_upload = App.HTML.Build.ssl_cert_file();
+    tpl = tpl.replace('<span class="ssl-key-input-dummy">...</span>', ssl_key_upload);
+    tpl = tpl.replace('<span class="ssl-cert-input-dummy">...</span>', ssl_cert_upload);
+    elm.replaceWith(tpl);
+    
+    App.Helpers.disableNotEditable();
+    App.Helpers.updateScreen();
 }
 
 App.Pages.WEB_DOMAIN.setSSL = function(type, frame)

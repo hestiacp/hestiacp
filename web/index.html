@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
 
     <head>
-        <title>Vesta | IP</title>
+        <title>Vesta Control Panel</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="imagetoolbar" content="false" />
+        
+        <link rel="shortcut icon" href="images/fav.ico" type="image/x-icon">
 
         <link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
-        <link rel="stylesheet" media="all" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/main.css" />        
         <link rel="stylesheet" media="all" type="text/css" href="css/popup.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/vesta-login-form.css" />
 
         <!--[if lt IE 8]>
 		<link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/1750887/projects/vesta2/css/ie.css" />
@@ -46,17 +49,30 @@
     </head>
 
     <body>
-        <div id="page">
+        <div id="page" class="hidden">
             <div class="outer">
                 <div id="header">
                     <div class="logo-box">
                         <h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
                     </div>            
                     <ul class="settings">
-                        <li><a href="#">settings</a></li>
-                        <li><a href="#">exit</a></li>
-                    </ul>            
+                        <li class="settings-item"><a href="#" class="item-title logged-as" id="user-name">...</a></li>
+                        <li class="settings-item"><a href="#" class="item-title">profile</a></li>
+                        <li class="settings-item"><a href="#" class="item-title do_action_view_profile_settings">settings</a></li>
+                        <li class="settings-item"><a href="#" class="item-title do_action_profile_exit">exit</a></li>
+                    </ul>       
+                    <ul class="extra-services">
+						<li class="service-item service-item_backups">
+							<span class="item-title">Backups</span>
+							<i class="item-devider"></i>
+						</li>
+						<li class="service-item">
+							<span class="item-title">Stats</span>
+							<i class="item-devider"></i>
+						</li>
+				    </ul> 
                 </div>
+                
                 <div id="primary-nav-box">
                     <ul class="primary-nav cc">
                         <li class="section"  id="USER">
@@ -68,26 +84,27 @@
                                         </dt>
                                         <dd class="section-contains">
                                                 <span class="def"><span class="num-total">0</span> users</span>
-                                                <span class="def"><span class="num-blocked">0</span> blocked</span>
+                                                <span class="def"><span class="num-blocked">0</span> suspended</span>
                                         </dd>
                                     </dl>
                             </div>
-                        </li>
-                        
-
+                            
+                            <i class="section-devider"></i>
+                        </li>                        
                         <li class="section"  id="WEB_DOMAIN">
                             <div class="section-inner">
                                     <dl class="users-nav-item">
                                         <dt class="section-title cc">
-                                                <span class="to-section">Web Domain</span> 
+                                                <span class="to-section">Web</span> 
                                                 <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
                                                <span class="def"><span class="num-total">0</span> web domains</span>
-                                               <span class="def"><span class="num-blocked">0</span> blocked</span>
+                                               <span class="def"><span class="num-blocked">0</span> suspended</span>
                                         </dd>
                                     </dl>
                             </div>
+                            <i class="section-devider"></i>
                         </li>
                         <li class="section"  id="MAIL">
                             <div class="section-inner">
@@ -97,10 +114,11 @@
                                                 <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                               <span class="def"><span class="num-total">0</span> mails</span>                                               
+                                               <span class="def"><span class="num-total">0</span> mail domain(s)</span>                                               
                                         </dd>
                                     </dl>
                             </div>
+                            <i class="section-devider"></i>
                         </li>
                         <li class="section"  id="DB">
                             <div class="section-inner">
@@ -111,10 +129,11 @@
                                         </dt>
                                         <dd class="section-contains">
                                                <span class="def"><span class="num-total">0</span> databases</span>
-                                               <span class="def"><span class="num-blocked">0</span> blocked</span>
+                                               <span class="def"><span class="num-blocked">0</span> suspended</span>
                                         </dd>
                                     </dl>
                             </div>
+                            <i class="section-devider"></i>
                         </li>
                         <li class="section active"  id="DNS">
                             <div class="section-inner">
@@ -124,10 +143,11 @@
                                                 <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                                <span class="def"><span class="num-total">0</span> total records</span>
+                                                <span class="def"><span class="num-total">0</span> dns domain(s)</span>
                                         </dd>
                                     </dl>
                             </div>
+                            <i class="section-devider"></i>
                         </li>
                         <li class="section"  id="IP">
                             <div class="section-inner">
@@ -137,11 +157,12 @@
                                                 <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                               <span class="def"><span class="num-total">0</span> ip entries</span>
-                                               <span class="def"><span class="num-blocked">0</span> blocked</span>
+                                               <span class="def"><span class="num-total">0</span> ip address(es)</span>
+                                               <span class="def"><span class="num-blocked">0</span> suspended</span>
                                         </dd>
                                     </dl>
                             </div>
+                            <i class="section-devider"></i>
                         </li>
                         <li class="section last-section" id="CRON">
                             <div class="section-inner">
@@ -151,11 +172,12 @@
                                                 <i class="add-entry do_action_new_entry">&nbsp;</i>
                                         </dt>
                                         <dd class="section-contains">
-                                               <span class="def"><span class="num-total">0</span> cron records</span>
-                                               <span class="def"><span class="num-blocked">0</span> blocked</span>
+                                               <span class="def"><span class="num-total">0</span> cron job(s)</span>
+                                               <span class="def"><span class="num-blocked">0</span> suspended</span>
                                         </dd>
                                     </dl>
                             </div>
+                            <i class="section-devider"></i>
                         </li>
                     </ul>
                 </div>
@@ -163,16 +185,16 @@
                     <div class="b-console">
 
                         <div class="b-console-wrap">
-                            <form class="b-console-form cc" action="#" method="post">
+                            <form class="b-console-form cc" action="" method="post">
                                 <fieldset>
                                     <input class="b-console-field" type="text" value="/"/>
-                                    <input class="b-console-btn" type="submit" value="Go" />
+                                    <input class="b-console-btn do_action_exec_v_console" type="submit" value="Go"/>
                                 </fieldset>
                             </form>
                             <div class="b-console-statuses hidden">
                                 <div class="b-console-status cc">
 
-                                    <p class="b-console-status-message">domain <b>google.com</b> have been added <br />
+                                    <p class="b-console-status-message">domain <b>test.com</b> have been added <br />
                                         
                                     </p>
                                     <span class="b-console-status-action">cancel</span>
@@ -189,30 +211,53 @@
                         <i class="icon do_action_new_entry">&nbsp;</i>
                         add new <span id="new-entry-keyword" class="do_action_new_entry">entry</span>
                     </a>
+                    <div class="row-filters cc">
+						<div class="b-row-selector">
+							<div class="checkbox-selector cc">
+								<input class="styled" type="checkbox" value="" />
+								<span class="selector-title">385 Selected</span>
+							</div>
+							<div class="context-actions c-s-box">
+								<div class="b-cust-sel complex-select c-s-opt">
+									<input type="hidden" name="" value="" class="c-s-value-ref">
+									<span class="title c-s-opt c-s-title do_action_toggle_custom_select">Action</span>
+									<div class="cust-sel-arrow do_action_toggle_custom_select c-s-opt"><i>&nbsp;</i></div>
+									<div class="cust-sel-options complex-select-content c-s-opt hidden">
+										<div class="cust-sel-option ico_gray c-s-opt do_action_update_cs_value">
+											<input type="hidden" class="c-s-value" value="Suspend">
+											Suspend
+										</div>
+										<div class="cust-sel-option ico_green c-s-opt do_action_update_cs_value">
+											<input type="hidden" class="c-s-value" value="Unsuspended">
+											Unsuspend
+										</div>
+										<div class="cust-sel-option ico_red c-s-opt do_action_update_cs_value">
+											<input type="hidden" class="c-s-value" value="Delete">
+											Delete
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
 
-                <div id="content">
-                    
-                     <!--  -->
-        
-        <!-- -->
-                    
-                </div>        
+               <div id="content">
+                <div class="content-inner">
+                
+                </div>
             </div>
-        </div>
-        
-       
-        
+            </div>
+        </div>                            
         <script type="text/javascript" src="js/lib/cookie.js"></script>
         <script type="text/javascript" src="js/lib/jquery-1.6.1.js"></script>
         <script type="text/javascript" src="js/lib/jquery-ui-1.8.13.custom.min.js"></script>
+        <script type="text/javascript" src="js/lib/auth.js"></script>
         <script type="text/javascript" src="js/date_format.js"></script>
         <script type="text/javascript" src="js/lib/custom-form-elements.js"></script>
         <script type="text/javascript" src="js/lib/browser.js"></script>
-        <script type="text/javascript" src="js/lib/popup.js"></script>
-        <script type="text/javascript" src="js/tech.js"></script>
-        <script type="text/javascript" src="js/app.js"></script>
-        <script type="text/javascript" src="js/tech.js"></script>
+        <script type="text/javascript" src="js/lib/popup.js"></script>        
+        <script type="text/javascript" src="js/app.js"></script>        
         <script type="text/javascript" src="js/_settings.js"></script>
         <script type="text/javascript" src="js/actions.js"></script>
         <script type="text/javascript" src="js/helpers.js"></script>
@@ -223,9 +268,7 @@
         <script type="text/javascript" src="js/pages.js"></script>
         <script type="text/javascript" src="js/model.js"></script>
         <script type="text/javascript" src="js/core.js"></script>
-        <script type="text/javascript" src="js/validators.js"></script>
-        
+        <script type="text/javascript" src="js/validators.js"></script>        
         <script type="text/javascript" src="js/__init__.js"></script>
     </body>
-
 </html>

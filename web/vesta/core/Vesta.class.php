@@ -11,8 +11,9 @@
  */
 class Vesta 
 {
-    const SAME_PASSWORD			    = '********'; 
+    const SAME_PASSWORD			            = '********'; 
 
+    const V_LIST_SYS_CONFIG                 = 'v_list_sys_config';
     // IP
     const V_LIST_SYS_IPS                    = 'v_list_sys_ips';
     const V_ADD_SYS_IP                      = 'v_add_sys_ip';
@@ -26,6 +27,7 @@ class Vesta
     // DNS
     const V_LIST_DNS_DOMAINS                = 'v_list_dns_domains';
     const V_LIST_DNS_DOMAIN_RECORDS         = 'v_list_dns_domain';
+    const V_LIST_DNS_TEMPLATES              = 'v_list_dns_templates';
     const V_ADD_DNS_DOMAIN                  = 'v_add_dns_domain';
     const V_ADD_DNS_DOMAIN_RECORD           = 'v_add_dns_domain_record';
     const V_CHANGE_DNS_DOMAIN_IP            = 'v_change_dns_domain_ip';
@@ -48,7 +50,7 @@ class Vesta
     const V_DEL_CRON_JOB                    = 'v_del_sys_cron';
     const V_DEL_SYS_USER_REPORTS            = 'v_del_sys_user_reports';
     // USER
-    const V_GET_SYS_USER_VALUE		    = 'v_get_sys_user_value';
+    const V_GET_SYS_USER_VALUE		        = 'v_get_sys_user_value';
     const V_LIST_SYS_USERS                  = 'v_list_sys_users';
     const V_ADD_SYS_USER                    = 'v_add_sys_user';
     const V_CHANGE_SYS_USER_CONTACT         = 'v_change_sys_user_contact';
@@ -58,9 +60,9 @@ class Vesta
     const V_CHANGE_SYS_USER_SHELL           = 'v_change_sys_user_shell';
     const V_CHANGE_SYS_USER_ROLE            = 'v_change_sys_user_role';
     const V_DEL_SYS_USER                    = 'v_del_sys_user';
-    const V_CHANGE_SYS_USER_NAME	    = 'v_change_sys_user_name';
+    const V_CHANGE_SYS_USER_NAME	        = 'v_change_sys_user_name';
     // WEB_DOMAIN
-    const V_LIST_SYS_USER_IPS 		    = 'v_list_sys_user_ips';
+    const V_LIST_SYS_USER_IPS 		        = 'v_list_sys_user_ips';
     const V_LIST_WEB_DOMAINS                = 'v_list_web_domains';
     const V_LIST_WEB_DOMAINS_ALIAS          = 'v_list_web_domains_alias';
     const V_LIST_WEB_DOMAINS_ELOG           = 'v_list_web_domains_elog';

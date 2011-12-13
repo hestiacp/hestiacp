@@ -1,6 +1,48 @@
-App.Helpers.scrollTo = function(elm)
+App.Helpers.formatNumber = function(number, no_commas){
+    no_commas = no_commas || false;
+    number = number.toString().replace(/,/g, '');
+       
+    var nStr = parseFloat(number).toFixed(2);
+    fb.info(nStr);
+    nStr = nStr.toString();
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    if(!no_commas){
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+    }
+    return x1 + x2;
+}
+
+App.Helpers.getHumanTabName = function()
 {
-    fb.log(elm);
+    if (App.Env.world == 'WEB_DOMAIN') {
+        return 'WEB DOMAIN';
+    }
+    if (App.Env.world == 'MAIL') {
+        return 'MAIL DOMAIN';
+    }
+    if (App.Env.world == 'DNS') {
+        return 'DNS DOMAIN';
+    }
+    if (App.Env.world == 'IP') {
+        return 'IP ADDRESS';
+    }
+    if (App.Env.world == 'CRON') {
+        return 'CRON JOB';
+    }
+    if (App.Env.world == 'DB') {
+        return 'DATABASE';
+    }
+    return App.Env.world;
+}
+
+App.Helpers.scrollTo = function(elm)
+{    
     var scroll_to = $(elm).offset().top;
     if (scroll_to > 1000) {
         var scroll_time = 300;
@@ -8,9 +50,7 @@ App.Helpers.scrollTo = function(elm)
     else {
         var scroll_time = 550;
     }
-    $('html, body').animate({
-        'scrollTop': scroll_to
-    }, scroll_time);
+    $('html, body').animate({ 'scrollTop': scroll_to }, scroll_time);
 }
 
 App.Helpers.getMbHumanMeasure = function(val)
@@ -31,6 +71,8 @@ App.Helpers.getMbHuman = function(val, only_measure)
     var terabyte  = gigabyte * 1024;
     var precision = 0;
    
+   
+    return only_measure ? 'MB' : (bytes / megabyte).toFixed(precision);
     /*if ((bytes >= 0) && (bytes < kilobyte)) {
         return bytes + ' B';
  
@@ -53,36 +95,21 @@ App.Helpers.getMbHuman = function(val, only_measure)
 }
 
 App.Helpers.getFirst = function(obj)
-{
-    try{ // TODO: remove try / catch
-        var first = {};
-        var key = App.Helpers.getFirstKey(obj);
-        first[key] = obj[key];
-        return first;
-    }
-    catch(e){
-        fb.error(e);
-    }
-    
-    return false;
+{    
+    var first = {};
+    var key = App.Helpers.getFirstKey(obj);
+    first[key] = obj[key];
+    return first;
 }
 
 App.Helpers.getFirstKey = function(obj)
-{
-    try{ // TODO: remove try / catch
-        for (key in obj) break;
-        return key;       
-    }
-    catch(e){
-        fb.error(e);
-    }
-    
-    return false;
+{ 
+    for (key in obj) break;
+    return key;       
 }
 
 App.Helpers.updateInitial = function()
-{
-    // TODO: need api method
+{    
     $.each(App.Env.initialParams.totals, function(key) {
         var item = App.Env.initialParams.totals[key];
         var expr_id = '#'+key;
@@ -99,6 +126,8 @@ App.Helpers.updateInitial = function()
             }
         }        
     });
+    $('#user-name').html(App.Env.initialParams.PROFILE.uid);
+    $('#page').removeClass('hidden');
 }
 
 App.Helpers.beforeAjax = function(jedi_method) 
@@ -137,7 +166,7 @@ App.Helpers.showLoading = function()
 App.Helpers.getFirstValue = function(obj)
 {
     var first = '';
-    $.each(obj, function(key, i){
+    $.each(obj, function(key, i) {
         return first = obj[key];
     });
     
@@ -145,15 +174,12 @@ App.Helpers.getFirstValue = function(obj)
 }
 
 App.Helpers.evalJSON = function(str) 
-{
-    /*str = str.replace(/\\'/gi, '');
-    str = str.replace(/\'/gi, '');
-    fb.warn(str);*/
+{       
     return $.parseJSON(str);
 }
 
 App.Helpers.toJSON = function(object) 
-{    
+{        
     return ($.toJSON(object).replace(/\\'/gi, ''));
 }
 
@@ -170,10 +196,10 @@ App.Helpers.markBrowserDetails = function()
 {
     var b = App.Env.BROWSER;
     var classes = [
-    b.type.toLowerCase(),
-    b.type.toLowerCase() + b.version,
-    b.os.toLowerCase()
-    ];
+            b.type.toLowerCase(),
+            b.type.toLowerCase() + b.version,
+            b.os.toLowerCase()
+        ];
     $(document.body).addClass(classes.join(' '));
 }
 
@@ -214,14 +240,13 @@ App.Helpers.getFormValuesFromElement = function(ref)
 
 App.Helpers.updateScreen = function()
 {
-    //Custom.init();
+    
     App.Ajax.request('MAIN.getInitial', {}, function(reply){
         App.Env.initialParams = reply.data;
         App.Helpers.updateInitial();
     });
-    //$(document.body).find('select').each(function(i, o){
-    //   $(o).selectbox(); 
-    //});
+    $('.row:first').addClass('first-row');    
+    Custom.init();
 }
 
 App.Helpers.alert = function(msg) 
@@ -231,18 +256,12 @@ App.Helpers.alert = function(msg)
 
 App.Helpers.isEmpty = function(o) 
 {
-    return '({})' == o.toSource() || '[]' == o.toSource();
+    return jQuery.isEmptyObject(o);
 }
 
 App.Helpers.liveValidate = function()
-{
-    //return;
-    $('input').live('blur', function(evt)
-    {
-        fb.log('BLUR');
-        var elm = $(evt.target);
-        fb.log(elm.attr('TAGNAME'));
-    });
+{    
+    
 }
 
 App.Helpers.generatePassword = function()
@@ -284,28 +303,15 @@ App.Helpers.closeInnerPopup = function(evt)
 
 App.Helpers.getUploadUrl = function()
 {
-    var url_parts = location.href.split('#');
-    if (url_parts.length > 1) {
-        var tab = url_parts[url_parts.length - 1];
-        if ($.inArray(tab, App.Constants.TABS) != -1) {
-            App.Tmp.loadTAB = tab;
-        }
-    }
-
-    var url_parts = location.href.split('?', 1);
-    var url = url_parts[0];
-    url_parts = url.split('/');
-    if (url_parts[url_parts.length -1] == 'index.html') {
-        url_parts[url_parts.length -1] = 'vesta/upload.php';
-    }
-    else {
-        url_parts.push('vesta/upload.php');
-    }
-
-    return url_parts.join('/');
+    return App.Helpers.generateUrl('vesta/upload.php');
 }
 
 App.Helpers.getBackendUrl = function()
+{
+    return App.Helpers.generateUrl('dispatch.php');
+}
+
+App.Helpers.generateUrl = function(to_file)
 {
     var url_parts = location.href.split('#');
     if (url_parts.length > 1) {
@@ -319,16 +325,16 @@ App.Helpers.getBackendUrl = function()
     var url = url_parts[0];
     url_parts = url.split('/');
     if (url_parts[url_parts.length -1] == 'index.html') {
-        url_parts[url_parts.length -1] = 'dispatch.php';
+        url_parts[url_parts.length -1] = to_file;
     }
     else {
-        url_parts.push('dispatch.php');
+        url_parts.push(to_file);
     }
 
-    return url_parts.join('/');
+    return url_parts.join('/').replace('#', '');
 }
 
-App.Helpers.disbleNotEditable = function()
+App.Helpers.disableNotEditable = function()
 {
     if ('undefined' == typeof App.Settings.Imutable[App.Env.world]) {
         return false;
@@ -345,3 +351,77 @@ App.Helpers.disbleNotEditable = function()
         }
     });
 }
+
+App.Helpers.handleItemsRegisteredInBackground = function(evt)
+{
+    // complex selects
+    if (!$(evt.target).hasClass('c-s-opt')) { // complex select option
+        $('.complex-select-content').addClass('hidden');
+    }
+}
+
+//
+//      HELPERS
+//
+App.Helpers.keyboard_ESC = function()
+{
+    $('.complex-select-content').addClass('hidden');
+    App.Tmp.focusedComplexSelect = null;
+}
+
+App.Helpers.keyboard_ENTER = function()
+{
+    if (null != App.Tmp.focusedComplexSelectInput) {
+        var val = App.Tmp.focusedComplexSelectInput.find('.c-s-value').val();
+        App.Tmp.focusedComplexSelect.find('.c-s-title').text(val);
+        App.Tmp.focusedComplexSelect.find('.c-s-value-ref').val(val);
+        $('.complex-select-content').addClass('hidden');
+    }
+}
+
+App.Helpers.keyboard_DOWN = function(evt)
+{
+    if (null != App.Tmp.focusedComplexSelect) {
+        App.Tmp.focusedComplexSelect.find('.complex-select-content').removeClass('hidden');
+        $('.s-c-highlighted').removeClass('s-c-highlighted');
+        if (null == App.Tmp.focusedComplexSelectInput) {
+            App.Tmp.focusedComplexSelectInput = App.Tmp.focusedComplexSelect.find('.cust-sel-option:first');
+            App.Tmp.focusedComplexSelectInput.addClass('s-c-highlighted');
+        }
+        else {
+            var ref = App.Tmp.focusedComplexSelectInput.next();
+            App.Tmp.focusedComplexSelectInput = ref;
+            if (ref.length == 1) {
+                ref.addClass('s-c-highlighted');
+            }
+            else {
+                App.Tmp.focusedComplexSelectInput = App.Tmp.focusedComplexSelect.find('.cust-sel-option:first');
+                App.Tmp.focusedComplexSelectInput.addClass('s-c-highlighted');
+            }
+        }
+    }
+}
+
+App.Helpers.keyboard_UP = function(evt)
+{
+    if (null != App.Tmp.focusedComplexSelect) {
+        App.Tmp.focusedComplexSelect.find('.complex-select-content').removeClass('hidden');
+        $('.s-c-highlighted').removeClass('s-c-highlighted');
+        if (null == App.Tmp.focusedComplexSelectInput) {
+            App.Tmp.focusedComplexSelectInput = App.Tmp.focusedComplexSelect.find('.cust-sel-option:last');
+            App.Tmp.focusedComplexSelectInput.addClass('s-c-highlighted');
+        }
+        else {
+            var ref = App.Tmp.focusedComplexSelectInput.prev();
+            App.Tmp.focusedComplexSelectInput = ref;
+            if (ref.length == 1) {
+                ref.addClass('s-c-highlighted');
+            }
+            else {
+                App.Tmp.focusedComplexSelectInput = App.Tmp.focusedComplexSelect.find('.cust-sel-option:last');
+                App.Tmp.focusedComplexSelectInput.addClass('s-c-highlighted');
+            }
+        }
+    }
+}
+

@@ -62,7 +62,7 @@ iconf='/etc/sysconfig/network-scripts/ifcfg'
 rconf='/etc/httpd/conf.d/rpaf.conf'
 
 # Adding ip
-ifconfig "$iface" "$ip" netmask "$mask"
+/sbin/ifconfig "$iface" "$ip" netmask "$mask"
 
 # Adding startup script
 ip_add_startup

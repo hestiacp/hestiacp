@@ -6,8 +6,9 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user=$1
-ip=$2
+ip=$1
+user=$2
+
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -21,10 +22,10 @@ source $V_FUNC/ip.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '2' "$#" 'user ip'
+check_args '2' "$#" 'ip user'
 
 # Checking argument format
-format_validation 'user' 'ip'
+format_validation 'ip' 'user'
 
 # Checking user
 is_user_valid

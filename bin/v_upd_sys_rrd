@@ -19,29 +19,32 @@ source $V_FUNC/shared.func
 PATH="$PATH:$V_BIN"
 export PATH
 
+# Argument defenition
+period=$1
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Updateing system stats
-$V_BIN/v_upd_sys_rrd_la
-$V_BIN/v_upd_sys_rrd_net
-$V_BIN/v_upd_sys_rrd_mem
-$V_BIN/v_upd_sys_rrd_ssh
+$V_BIN/v_upd_sys_rrd_la $period
+$V_BIN/v_upd_sys_rrd_net $period
+$V_BIN/v_upd_sys_rrd_mem $period
+$V_BIN/v_upd_sys_rrd_ssh $period
 
 # Updating web stats
 if [ "$WEB_SYSTEM" = 'apache' ]; then
-    $V_BIN/v_upd_sys_rrd_httpd
+    $V_BIN/v_upd_sys_rrd_httpd $period
 fi
 
 if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    $V_BIN/v_upd_sys_rrd_nginx
+    $V_BIN/v_upd_sys_rrd_nginx $period
 fi
 
 # Updating ftp stats
 if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
-    $V_BIN/v_upd_sys_rrd_ftp
+    $V_BIN/v_upd_sys_rrd_ftp $period
 fi
 
 # Updating db stats
@@ -49,8 +52,8 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     for type in ${DB_SYSTEM//,/ }; do
         # Switching on db type
         case $type in
-            mysql) $V_BIN/v_upd_sys_rrd_mysql ;;
-            pgsql) $V_BIN/v_upd_sys_rrd_pgsql ;;
+            mysql) $V_BIN/v_upd_sys_rrd_mysql $period ;;
+            pgsql) $V_BIN/v_upd_sys_rrd_pgsql $period ;;
         esac
     done
 fi

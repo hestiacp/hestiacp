@@ -12,7 +12,7 @@
 class Config 
 {
     
-    protected $_config = array();   
+    protected $_config      = array();   
     static public $instance = null;
     
     /**

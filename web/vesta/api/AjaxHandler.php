@@ -41,10 +41,19 @@ class AjaxHandler {
      */
     public function dispatch(Request $request) 
     {
+        VestaSession::start();
+        
+        $allowed_actions = array(
+                                'MAIN.signin', 
+                                'MAIN.logout', 
+                                'MAIN.requestpassword',
+                                'MAIN.resetpassword',
+                                'MAIN.about');
         $method = Request::parseAjaxMethod($request);
-	if (!in_array($method['namespace'].'.'.$method['function'], array('MAIN.signin', 'MAIN.logout'))) {
-	    $user = $this->getLoggedUser();
-	}
+        
+        if (!in_array($method['namespace'].'.'.$method['function'], $allowed_actions)) {
+            $user = $this->getLoggedUser();
+        }
 
         $inc_file = V_ROOT_DIR . 'api' . DIRECTORY_SEPARATOR . $method['namespace'] . '.class.php';
         if (!is_readable($inc_file)) {
@@ -67,7 +76,7 @@ class AjaxHandler {
      */
     public function reply($result, $data, $message = '', $extra = array()) 
     {
-      return json_encode(array('result' => $result,
+        return json_encode(array('result' => $result,
                    'data' => $data,
                    'message' => $message,
                    'extra' => $extra,
@@ -84,19 +93,23 @@ class AjaxHandler {
     // Error handlers
     //
     
-    static function generalError($error) {
+    static function generalError($error) 
+    {
         self::renderGlobalError(Message::ERROR, Message::GENERAL_ERROR, $error);
     }
 
-    static function protectionError($error) {
+    static function protectionError($error) 
+    {
         self::renderGlobalError(Message::ERROR, Message::PROTECTION_ERROR, $error);
     }
 
-    static function systemError($error) {
+    static function systemError($error) 
+    {
         self::renderGlobalError(Message::ERROR, Message::SYSTEM_ERROR, $error);
     }
 
-    static function renderGlobalError($type, $message, $error) {
+    static function renderGlobalError($type, $message, $error) 
+    {
         /*$trace = $error->getTrace();
         AjaxHandler::makeReply(
                         AjaxHandler::getInstance()->reply(false, $type, $message . ': ' . $error->getMessage(), $trace[0]['file'] . ' / ' . $trace[0]['line'])

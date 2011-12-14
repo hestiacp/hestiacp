@@ -1,22 +1,152 @@
-App.Actions.authorize = function()
+App.Actions.toggle_custom_select = function(evt)
 {
-    if ($('#authorize-form').length > 0) {
-        return;
+    var elm = $(evt.target);
+    elm     = elm.hasClass('complex-select') ? elm : elm.parents('.complex-select');
+    var ref = elm.find('.complex-select-content');
+    $('.s-c-highlighted').removeClass('s-c-highlighted');
+    if (ref.hasClass('hidden')) {
+        ref.removeClass('hidden');
+        App.Tmp.focusedComplexSelect = elm;
     }
-    
-    App.View.popup('login');
+    else {
+        ref.addClass('hidden');
+    }
 }
 
+App.Actions.update_cs_value = function(evt)
+{
+    var elm = $(evt.target);
+    elm = elm.hasClass('cust-sel-option') ? elm : elm.parents('.cust-sel-option');
+
+    var val = elm.find('.c-s-value').val();fb.log(val);
+    elm.parents('.c-s-box').find('.c-s-title').text(val);
+    elm.parents('.c-s-box').find('.c-s-value-ref').val(val);
+    $('.complex-select-content').addClass('hidden');
+}
+
+App.Actions.do_change_password = function()
+{
+    
+    var params = {
+        email: $('#change-email').val(),
+        captcha: $('#captcha').val()
+    }
+    
+    App.Ajax.request('MAIN.requestPassword', params, function(reply){
+        $('#captcha-img').attr('src', App.Helpers.generateUrl('captcha.php?')+Math.floor(Math.random() * 9999));
+        $('#captcha').val('');
+        if (reply.result) {
+            $('#change-psw-error').html('');           
+            $('#change-psw-error').addClass('hidden');
+            $('#change-psw-success').html('Reset link was sent to email box provided by you.'
+            + ' You will need to provide <strong>"'+reply.data.key_code+'"</strong> code to for resetting the password. Please copy it.'); 
+            $('#change-psw-success').removeClass('hidden');
+            $('.form-row').remove();            
+        }
+        else {
+            $('#change-psw-error').html(reply.message);           
+            $('#change-psw-error').removeClass('hidden');
+        }
+    }); 
+}
+
+App.Actions.back_to_login = function()
+{    
+    $('body').addClass('page-auth');
+    var tpl = App.Templates.get('login', 'popup');
+    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo.png'));
+    tpl.set(':YEAR', new Date().getFullYear());
+    tpl.set(':EMAIL_REAL', App.Settings.VestaAbout.company_email);
+    tpl.set(':EMAIL', App.Settings.VestaAbout.company_name);
+    tpl.set(':VERSION', App.Settings.VestaAbout.version_name + ' ' + App.Settings.VestaAbout.version);
+    $('body').prepend(tpl.finalize());
+    $('#change-psw-block').remove();    
+    $('.remember-me').checkBox();
+}
+
+App.Actions.change_password = function(evt)
+{
+    evt.preventDefault();
+    
+    if ($('#change-psw-block').length > 0) {
+        return $('#change-psw-block').show();
+    }  
+    
+    var tpl = App.Templates.get('change_psw', 'popup');
+    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo.png'));
+    tpl.set(':YEAR', new Date().getFullYear());
+    tpl.set(':CAPTCHA_URL', App.Helpers.generateUrl('captcha.php?')+Math.floor(Math.random() * 9999));
+    tpl.set(':CAPTCHA_URL_2', App.Helpers.generateUrl('captcha.php'));  
+    tpl.set(':EMAIL_REAL', App.Settings.VestaAbout.company_email);
+    tpl.set(':EMAIL', App.Settings.VestaAbout.company_name);
+    tpl.set(':VERSION', App.Settings.VestaAbout.version_name + ' ' + App.Settings.VestaAbout.version);  
+    $('#auth-block').remove();
+    $('body').prepend(tpl.finalize()); 
+    $('#change-psw-error').html('');           
+    $('#change-psw-error').addClass('hidden');       
+}
+
+App.Actions.profile_exit = function(evt)
+{
+    evt.preventDefault();
+    App.Ajax.request('MAIN.logoff', {}, function(reply) {
+        location.href = '';
+    });
+}
+
+// show auth form
+App.Actions.authorize = function()
+{
+    $('#change-psw-block').remove();
+    if ($('#auth-block').length > 0) {
+        return;
+    }    
+    $('#page').addClass('hidden');
+    $('body').addClass('page-auth');
+    var tpl = App.Templates.get('login', 'popup');
+    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo.png'));
+    tpl.set(':YEAR', new Date().getFullYear());
+    tpl.set(':EMAIL_REAL', App.Settings.VestaAbout.company_email);
+    tpl.set(':EMAIL', App.Settings.VestaAbout.company_name);
+    tpl.set(':VERSION', App.Settings.VestaAbout.version_name + ' ' + App.Settings.VestaAbout.version);
+    $('body').prepend(tpl.finalize());
+    $(document).ready(function(){
+        $('.remember-me').checkBox();
+    });
+}
+
+/**
+* Embeds new item form
+* if exits custom method (App.Pages[ENVIRONMENT_NAME].newForm)
+* custom method will be executes instead of default one
+*/
+App.Actions.new_entry = function() {
+    if ('undefined' != typeof App.Pages[App.Env.world].new_entry) {fb.log(1);
+        App.Pages[App.Env.world].new_entry();
+    } else {fb.log(2);
+        var form_id = App.Constants[App.Env.world + '_FORM_ID'];
+        $('#'+form_id).remove();
+        var build_method = App.Env.getWorldName() + '_form';
+        var tpl = App.HTML.Build[build_method]({}, form_id);
+        App.Ref.CONTENT.prepend(tpl);
+        App.Helpers.updateScreen();
+    }
+}
+
+// execute authorisation
 App.Actions.do_authorize = function()
 {
-    $('#authorize-error').text('');
-    App.Ajax.request('MAIN.signin', {'login':$('#authorize-login').val(), 'password':$('#authorize-login'.val())}, function(reply)
+    $('#auth-error').text('');
+    $('#auth-form-content').hide();
+    App.Ajax.request('MAIN.signin', {'login':$('#authorize-login').val(), 'password':$('#authorize-password').val()}, function(reply)
     {
-        if (reply.result) {
+        if (reply.result == true) {
             location.href = '';
         }
         else {
-            $('#authorize-error').text(reply.message);
+            $('#auth-error').text(reply.data.error_msg);
+            $('#auth-form-content').show();
+            $('#auth-error').removeClass('hidden');
         }
     });
 }
@@ -49,7 +179,20 @@ App.Actions.show_subform = function(evt)
 
 App.Actions.view_template_settings = function(evt) 
 {
-    alert('TODO');
+    var elm = $(evt.target);    
+    var ref = elm.hasClass('tpl-item') ? elm : elm.prev('.tpl-item');
+    var tpl_name = $(ref).val() || $(ref).text();    
+    fb.log(tpl_name);
+    App.Helpers.openInnerPopup(elm, App.Env.initialParams.WEB_DOMAIN.TPL[tpl_name].DESCR || tpl_name);
+}
+
+App.Actions.view_dns_template_settings = function(evt) 
+{
+    var elm = $(evt.target);    
+    var ref = elm.prev('.tpl-item');        
+    var tpl_name = $(ref).val() || $(ref).text();    
+    fb.log(tpl_name);
+    App.Helpers.openInnerPopup(elm, App.Env.initialParams.DNS.TPL[tpl_name].DESCR || tpl_name);
 }
 
 App.Actions.add_subrecord_dns = function(evt)
@@ -59,24 +202,6 @@ App.Actions.add_subrecord_dns = function(evt)
     if (ref.length > 0) {
         var tpl = App.HTML.Build.dns_subrecord({});
         ref.find('.add-box').after(tpl.finalize());
-        App.Helpers.updateScreen();
-    }
-}
-
-/**
- * Embeds new item form
- * if exits custom method (App.Pages[ENVIRONMENT_NAME].newForm) 
- * custom method will be executes instead of default one
- */
-App.Actions.new_entry = function() {
-    if ('undefined' != typeof App.Pages[App.Env.world].new_entry) {
-        App.Pages[App.Env.world].new_entry();
-    } else {
-        var form_id = App.Constants[App.Env.world + '_FORM_ID'];
-        $('#'+form_id).remove();
-        var build_method = App.Env.getWorldName() + '_form';
-        var tpl = App.HTML.Build[build_method]({}, form_id);
-        App.Ref.CONTENT.prepend(tpl);
         App.Helpers.updateScreen();
     }
 }
@@ -111,10 +236,13 @@ App.Actions.save_form = function(evt) {
 }
 
 // do_action_edit
-App.Actions.edit = function(evt) {
-    if ('undefined' != typeof App.Pages[App.Env.world].edit) {
+App.Actions.edit = function(evt) 
+{
+
+    if ('undefined' != typeof App.Pages[App.Env.world].edit) {        
         App.Pages[App.Env.world].edit(evt);
-    } else {
+    } 
+    else {
         var elm = $(evt.target);
         elm = elm.hasClass('row') ? elm : elm.parents('.row');
         
@@ -123,8 +251,8 @@ App.Actions.edit = function(evt) {
         var tpl = App.HTML.Build[build_method](options);
         elm.replaceWith(tpl);
         
-        App.Helpers.disbleNotEditable();
-        //App.Helpers.updateScreen();
+        App.Helpers.disableNotEditable();
+        App.Helpers.updateScreen();
     }
 }
 
@@ -157,9 +285,7 @@ App.Actions.suspend = function(evt)
     
     var options = row.find('.source').val();    
     App.Ajax.request(App.Env.world+'.suspend', {spell: options}, function(reply) {
-        if (reply.result) {
-            //var tpl = App.Templates.get('SUSPENDED_TPL_SUSPENDED', 'general');
-            //$(elm).replaceWith(tpl.finalize());
+        if (reply.result) {           
             App.Pages.prepareHTML();
             App.Helpers.updateScreen();
         }
@@ -181,9 +307,7 @@ App.Actions.unsuspend = function(evt)
     
     var options = row.find('.source').val();    
     App.Ajax.request(App.Env.world+'.unsuspend', {spell: options}, function(reply) {
-        if (reply.result) {
-            //var tpl = App.Templates.get('SUSPENDED_TPL_NOT_SUSPENDED', 'general');
-            //$(elm).replaceWith(tpl.finalize());
+        if (reply.result) {           
             App.Pages.prepareHTML();
             App.Helpers.updateScreen();
         }
@@ -322,7 +446,8 @@ App.Actions.add_form_ns = function(evt)
     var tpl = App.Templates.get('NS_INPUT', 'user');
     tpl.set(':NAME', '');
     tpl.set(':NS_LABEL', 'NS');
-    elm.before(tpl.finalize());
+    var ref = $(elm).hasClass('form-row') ? elm : $(elm).parents('.form-row');
+    $(ref).before(tpl.finalize());
     
     if ((total_nses + 1) == App.Settings.NS_MAX ) { // added last NS
         $('.additional-ns-add', form).addClass('hidden');
@@ -337,6 +462,10 @@ App.Actions.add_form_ns = function(evt)
 
 App.Actions.delete_ns = function(evt)
 {
+    var sure = confirm(App.i18n.getMessage('confirm'));
+    if (!sure) {
+        return;
+    }
     var elm = $(evt.target);
     
     form = elm.parents('.form:first');
@@ -370,7 +499,11 @@ App.Actions.view_template_info = function(evt)
     var options = ref.find('.source').val(); 
     App.Ajax.request('DNS.getTemplateInfo', {spell: options}, function(reply) {
         if (reply.result) {
-            App.Helpers.openInnerPopup(elm, reply.data);
+            var html = '';
+            $.each(reply.data, function(key) {
+                html += '<li><strong>'+key+':</strong> '+reply.data[key]+'</li>';
+            });
+            App.Helpers.openInnerPopup(elm, '<ul>'+html+'</ul>');
         }        
     });
 }
@@ -384,4 +517,40 @@ App.Actions.toggle_stats_block = function(evt)
     else {
         elm.parents('.stats-settings').find('.stats-block').addClass('hidden');
     }
+}
+
+App.Actions.exec_v_console = function(evt)
+{
+    evt.preventDefault();
+    App.Helpers.openInnerPopup(evt.target, 'This functionality will be available in next releases');
+}
+
+App.Actions.view_profile_settings = function(evt)
+{
+    evt.preventDefault();
+    App.Helpers.openInnerPopup(evt.target, 'This functionality will be available in next releases');
+}
+
+App.Actions.select_all = function(evt) 
+{
+    $('.row').addClass('checked-row')
+}
+
+App.Actions.deselect_all = function(evt) 
+{
+    $('.row').removeClass('checked-row')
+}
+
+App.Actions.delete_selected = function(evt)
+{
+    var selected = $('.checked-row');
+    if (selected.length == 0) {
+        return App.Helpers.alert('No entry selected. Please select at least one.');
+    }
+    var confirmed = confirm('You are about to delete ' + selected.length + ' entrie(s). Are you sure?');
+    if (!confirmed) {
+        return;
+    }
+    
+    
 }

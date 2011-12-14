@@ -26,24 +26,24 @@ class WEB_DOMAIN extends AjaxHandler
         foreach($result['data'] as $web_domain => $record)
         {
             $web_details = array(
-                                      'IP'          => $record['IP'],
-                                      'U_DISK'      => $record['U_DISK'],
-                                      'U_BANDWIDTH' => $record['U_BANDWIDTH'],
-                                      'TPL'         => $record['TPL'],
-                                      'ALIAS'       => $record['ALIAS'],
-                                      'PHP'         => $record['PHP'],
-                                      'CGI'         => $record['CGI'],
-                                      'ELOG'        => $record['ELOG'],
-                                      'STAT'        => $record['STATS'],
-                                      'STATS_LOGIN' => $record['STATS_AUTH'],
-                                      'SSL'         => $record['SSL'],
-                                      'SSL_HOME'    => $record['SSL_HOME'],
-                                      'SSL_CERT'    => $record['SSL_CERT'],
-                                      'NGINX'       => $record['NGINX'],
-                                      'NGINX_EXT'   => $record['NGINX_EXT'],
-                                      'SUSPEND'     => $record['SUSPEND'],
-                                      'DATE'        => date(Config::get('ui_date_format', strtotime($record['DATE'])))
-                                  );
+                              'IP'          => $record['IP'],
+                              'U_DISK'      => $record['U_DISK'],
+                              'U_BANDWIDTH' => $record['U_BANDWIDTH'],
+                              'TPL'         => $record['TPL'],
+                              'ALIAS'       => $record['ALIAS'],
+                              'PHP'         => $record['PHP'],
+                              'CGI'         => $record['CGI'],
+                              'ELOG'        => $record['ELOG'],
+                              'STAT'        => $record['STATS'],
+                              'STATS_LOGIN' => $record['STATS_AUTH'],
+                              'SSL'         => $record['SSL'],
+                              'SSL_HOME'    => $record['SSL_HOME'],
+                              'SSL_CERT'    => $record['SSL_CERT'],
+                              'NGINX'       => $record['NGINX'],
+                              'NGINX_EXT'   => $record['NGINX_EXT'],
+                              'SUSPEND'     => $record['SUSPEND'],
+                              'DATE'        => date(Config::get('ui_date_format', strtotime($record['DATE'])))
+                          );
 	    $web_details['STAT'] == '' ? $web_details['STAT'] = 'none' : true;
 	    $reply[$web_domain] = $web_details;
         }
@@ -135,7 +135,7 @@ class WEB_DOMAIN extends AjaxHandler
                 $this->errors['STAT_AUTH'] = array($result['error_code'] => $result['error_message']);
             }
 
-	if (!empty($_new['CGI'])) {
+        if (!empty($_new['CGI'])) {
             if (Utils::getCheckboxBooleanValue($_new['CGI'])) {
                 $result = array();
                 $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_CGI, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
@@ -248,10 +248,10 @@ class WEB_DOMAIN extends AjaxHandler
         $_old = $request->getParameter('old');
         $_new = $request->getParameter('new');
 
-	$_old['ELOG'] = $_old['ELOG'] == 'yes' ? 'on' : 'off';
-	$_old['CGI']  = $_old['CGI']  == 'yes' ? 'on' : 'off';
-	$_old['AUTH']  = $_old['AUTH']  == 'yes' ? 'on' : 'off';
-	$_old['SSL']  = $_old['SSL']  == 'yes' ? 'on' : 'off';
+        $_old['ELOG'] = $_old['ELOG'] == 'yes' ? 'on' : 'off';
+        $_old['CGI']  = $_old['CGI']  == 'yes' ? 'on' : 'off';
+        $_old['AUTH']  = $_old['AUTH']  == 'yes' ? 'on' : 'off';
+        $_old['SSL']  = $_old['SSL']  == 'yes' ? 'on' : 'off';
 
         $user = $this->getLoggedUser();
         $_DOMAIN = $_new['DOMAIN'];
@@ -301,7 +301,7 @@ class WEB_DOMAIN extends AjaxHandler
         }
 
 
-	if (($_old['STATH_AUTH'] != $_new['STAT_AUTH']) && !empty($_s['STAT_AUTH']) && @Utils::getCheckboxBooleanValue($_s['STATS_AUTH'])) {
+        if (($_old['STATH_AUTH'] != $_new['STAT_AUTH']) && !empty($_s['STAT_AUTH']) && @Utils::getCheckboxBooleanValue($_s['STATS_AUTH'])) {
             $params = array(
                         'USER'          => $user['uid'],
                         'DOMAIN'        => $_DOMAIN,
@@ -314,7 +314,7 @@ class WEB_DOMAIN extends AjaxHandler
             if(!$result['status']) {
                 $this->errors['STAT_AUTH'] = array($result['error_code'] => $result['error_message']);
             }
-	}
+        }
 
         if (($_old['STAT'] != $_new['STAT'])) {
             if ($_new['STAT'] != 'none') {

@@ -16,8 +16,9 @@ App.Templates.html = {
             "Well," the farmer said, "I didn\'t have anymore rope, so I took off my belt and tied her tail to the rafter. In that moment, my pants fell down and my wife walked in ... Some things you just can\'t explain."']
     },
     general: {
-        loading: ['<div id="loading" style="top: 0;font-size:19px;font-weight: bol;position:fixed;width: 150px; background-color:yellow;z-index: 9999; padding: 8px;left: 50%;margin-left:-75px;">\
-                <center>Loading...</center>\
+	over_bar: ['<span style="width:~!:OVER_PERCENTS~!%;right:-~!:OVER_PERCENTS_2~!%;" class="bar_overdraft"></span>'],
+        loading: ['<div id="loading" style="border-radius: 0 0 6px 6px;top: 0;font-size:19px;font-weight: bol;position:fixed;width: 150px; background-color:#6E6E62;z-index: 9999; padding: 8px;left: 50%;margin-left:-75px;">\
+                <center><div style="width: 105px; height:30px;background-image: url(\'../images/loading.png\');"></center>\
                 </div>'],
         popup: ['<div class="black_overlay" id="popup-bg"></div>\
                 <div class="popup_content" id="popup"><button class="do_action_close_popup">close</button>~!:content~!</div>'],
@@ -36,7 +37,74 @@ App.Templates.html = {
     },
     popup: {
         error: ['<div class="error"><center><h1 style="color: red;">Important: An Error Has Occured.</h1><hr></center>&nbsp;&nbsp;&nbsp;&nbsp;Something went wrong and some of your actions can be not saved in system. Mostly, it happens when you have network connection errors.<br>,&nbsp;&nbsp;&nbsp;&nbsp;However, please notify us about the situation. It would be helpfull if you will write us approximate time the error occured and last actions you were performing. You send your petition on <a href="mail_to">this email: BLABLA</a>,<br><br><center><span style="color: rgb(92, 92, 92);">Sorry for inconvinience. (We recommend you to reload the page)</span></center></div>'],
-        login: ['<div class="error" id="authorize-form"><center><h1 style="color: red;">Please authorize.</h1><hr><div id="auth-error" style="color:red"></div>Login: <input type="text" id="authorize-login" / ><br/>Password: <input type="password" id="authorize-password"/><br /><button class="do_action_do_authorize">Log in</button></center></center></div>']
+        change_psw: [
+            '<div id="change-psw-block" class="page2">\
+                <div class="b-auth-form">\
+                    <div class="b-auth-form-wrap">\
+                        <img width="72" height="24" alt="" src="~!:LOGO_URL~!" class="vesta-logo">\
+                        <div class="b-client-title">\
+                            <span class="client-title-wrap">~!:VERSION~!<i class="planets">&nbsp;</i></span>\
+                        </div>\
+                        <form id="change_psw-form" method="post" action="#" class="auth">\
+                            <div class="form-row cc">\
+                                <label for="change-email" class="field-label">Email</label>\
+                                <input type="text" tabindex="1" id="change-email" class="field-text">\
+                            </div>\
+                            <div class="form-row cc">\
+                                <label class="field-label"><img id="captcha-img" width="127px;" src="~!:CAPTCHA_URL~!"  style="cursor: pointer" onClick="this.src = \'~!:CAPTCHA_URL_2~!?\'+Math.floor(Math.random() * 9999)"/></label>\
+                                <input type="text" id="captcha" class="field-text" style="margin-left: 50px; width: 240px;">\
+                            </div>\
+                            <div id="change-psw-success" class="success-box hidden"></div>\
+                            <div id="change-psw-error" class="error-box hidden"></div>\
+                            <div class="form-row cc" style="width: 438px">\
+                                <div class="b-remember">\
+                                    <span class="remember-me">&nbsp;</span>\
+                                </div>\
+                                <input type="submit" tabindex="4" value="Send confirmation" class="sumbit-btn do_action_do_change_password">\
+                            </div>\
+                        </form>\
+                        <p class="forgot-pwd"><a href="#" class="forgot-pwd-url do_action_back_to_login">Back to login?</a></p>\
+                        <div class="footnotes cc">\
+                            <p class="additional-info">For questions please contact <a href="mailto:~!:EMAIL_REAL~!" class="questions-url">~!:EMAIL~!</a></p>\
+                            <address class="imprint">&copy; ~!:YEAR~! Vesta Control Panel</address>\
+                        </div>\
+                    </div>\
+                 </div>\
+            </div>'
+        ],
+        login: ['<div id="auth-block" class="page2">\
+        <div class="b-auth-form">\
+            <div class="b-auth-form-wrap">\
+                <img width="72" height="24" alt="" src="~!:LOGO_URL~!" class="vesta-logo">\
+                <div class="b-client-title">\
+                    <span class="client-title-wrap">~!:VERSION~!<i class="planets">&nbsp;</i></span>\
+                </div>\
+                <form id="login-form" method="post" action="#" class="auth">\
+                    <div class="form-row cc">\
+                        <label for="email" class="field-label">Email</label>\
+                        <input type="text" tabindex="1" id="authorize-login" class="field-text">\
+                    </div>\
+                    <div class="form-row cc">\
+                        <label for="password" class="field-label">Password</label>\
+                        <input type="password" tabindex="2" id="authorize-password" class="field-text">\
+                    </div>\
+                    <div id="auth-error" class="error-box hidden"></div>\
+                    <div class="form-row last-row cc">\
+                        <div class="b-remember">\
+                            <input type="checkbox" tabindex="3" value="1" name="remember_me" id="remember-me" class="remember-me ui-helper-hidden-accessible">\
+                            <label for="remember-me" class="remember-label ui-checkbox">remember me</label>\
+                        </div>\
+                        <input type="submit" tabindex="4" value="enter" class="sumbit-btn do_action_do_authorize">\
+                    </div>\
+                </form>\
+                <p class="forgot-pwd"><a href="#" class="forgot-pwd-url do_action_change_password">forgot password?</a></p>\
+                <div class="footnotes cc">\
+                    <p class="additional-info">For questions please contact <a href="mailto:~!:EMAIL_REAL~!" class="questions-url">~!:EMAIL~!</a></p>\
+                    <address class="imprint">&copy; ~!:YEAR~! Vesta Control Panel</address>\
+                </div>\
+            </div>\
+        </div>\
+    </div>']
     },
     dates: {
         'lock_plan_date' : ['<button class="do.savePlanDate(~!:task_id~!)">Lock plan dates</button><button class="do.lockPlanDate(~!:task_id~!)">Lock plan dates</button>'],
@@ -65,7 +133,7 @@ App.Templates.html = {
                     <div class="form-row dns-template-box cc">\
                             <label for="#" class="field-label">template:</label>\
                             <span class="select" id="selecttemplate">~!:TPL_DEFAULT_VALUE~!</span>\
-                                <select name="TPL" class="styled">\
+                                <select name="TPL" class="styled tpl-item">\
                                        ~!:TPL~!\
                                 </select>\
                             <span class="context-settings do_action_view_template_settings">View template settings</span>\
@@ -111,7 +179,8 @@ App.Templates.html = {
                                                         <span class="ip-adr">~!:IP~!</span>\
                                                         <span class="prop-box template-box">\
                                                                 <span class="prop-title">template:</span>\
-                                                                <span class="prop-value do_action_view_template_info">~!:TPL~!</span>\
+                                                                <input type="hidden" class="tpl-item" value="~!:TPL_VAL~!"/>\
+                                                                <span class="prop-value do_action_view_dns_template_settings">~!:TPL~!</span>\
                                                         </span>\
                                                 </div>\
                                         </div>\
@@ -155,7 +224,7 @@ App.Templates.html = {
                             <div class="field-box dns-type-box">\
                                     <label for="#" class="field-label">type:</label>\
                                     <!-- span class="select RECORD_TYPE" id="selectRECORD_TYPE">~!:RECORD_TYPE_VALUE~!</span -->\
-                                    <select name="RECORD_TYPE" class="not-styled" style="width:70px">\
+                                    <select name="RECORD_TYPE" class="styled">\
                                         ~!:RECORD_TYPE~!\
                                     </select>\
                             </div>\
@@ -180,14 +249,14 @@ App.Templates.html = {
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">owner:</label>\
-                        <select name="OWNER" class="not-styled OWNER">\
+                        <select name="OWNER" class="styled OWNER">\
                                 ~!:owner_options~!\
                         </select>\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">status:</label>\
                         <!-- span class="select" id="select">shared</span -->\
-                        <select class="not-styled status" name="STATUS">\
+                        <select class="styled status" name="STATUS">\
                                 ~!:status_options~!\
                         </select>\
                 </div>\
@@ -198,7 +267,7 @@ App.Templates.html = {
                 <div class="form-row cc">\
                         <label for="#" class="field-label">interface:</label>\
                         <!-- span class="select" id="select">eth1</span -->\
-                        <select class="not-styled interface" name="INTERFACE">\
+                        <select class="styled interface" name="INTERFACE">\
                                 ~!:interface_options~!\
                         </select>\
                 </div>\
@@ -217,7 +286,7 @@ App.Templates.html = {
          '],
         DOT: ['<span class="dot">.</span>'],
         ENTRY: ['\
-            <div class="row first-row ip-details-row">\
+            <div class="row ip-details-row">\
                 <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                 <input type="hidden" class="target" name="target" value="" />\
                 <div class="row-actions-box cc">\
@@ -228,7 +297,7 @@ App.Templates.html = {
                         </div>\
                 </div>\
                 <div class="row-meta">\
-                        <div class="ip-created">~!:DATE~!</div>\
+                        <div class="entry-created">~!:DATE~!</div>\
                 </div>\
                 <div class="row-details cc">\
                         <div class="ip-props-main">\
@@ -277,18 +346,27 @@ App.Templates.html = {
         SUSPENDED_TPL_DISABLED : ['<span class="ip-status-info ip-suspended-status do_action_delete_ip"><span class="ip-status-text">suspended</span></span>']
     },
     user: {
+        WEB_TPL_MINIMIZED: ['~!:WEB_TPL_MINI~!\
+                        <span class="group-switcher">\
+                            <span class="group-values-count do_action_view_full_ns_list">~!:MORE_NUMBER~! more</span>\
+                        </span><span class="hidden ns-full-list"><span class="group-values group-values__bullet">~!:WEB_TPL_FULL~!</span></span>'],
+        WEB_TPL: ['<span class="prop-value">~!:NAME~!</span>'],
         NS_MINIMIZED: ['~!:NS_MINI~!\
                         <span class="group-switcher">\
                             <span class="group-values-count do_action_view_full_ns_list">~!:MORE_NUMBER~! more</span>\
-                        </span><span class="hidden ns-full-list"><span class="group-values group-values__bullet">~!:NS_FULL~!</span></span>'],
-        /*NS_RECORD_POPUP_WRAP: ['<ul class="d-popup-items">~!:CONTENT~!</ul>'],
-        NS_RECORD_POPUP: ['<li class="item">~!:NAME~!</li>'],*/
+                        </span><span class="hidden ns-full-list"><span class="group-values group-values__bullet">~!:NS_FULL~!</span></span>'],        
         NS_RECORD: ['<span class="prop-value">~!:NAME~!</span>'],
-        NS_INPUT: ['<div class="form-row ns-entry cc"><label for="#" class="field-label">~!:NS_LABEL~!:</label>\
-                        <input type="text" value="~!:NAME~!" name="" class="text-field ns-input rule-required rule-ns">\
-                        <button class="do_action_delete_ns">Delete</button>\
-                    </div>'],
-        PLUS_ONE_NS: ['<button class="additional-ns-add do_action_add_form_ns">Add additional NS</button>'],
+        NS_INPUT: ['<div class="form-row ns-entry cc">\
+							<label for="#" class="field-label">~!:NS_LABEL~!:</label>\
+							<input type="text" value="~!:NAME~!" name="" class="text-field ns-input rule-required rule-ns">\
+							<b class="do_action_delete_ns delete-record"></b>\
+						</div>'],
+        PLUS_ONE_NS: ['<div class="form-row cc do_action_add_form_ns additional-ns-add">\
+							<a href="javascript:void(0);" class="add-ns do_action_add_form_ns">\
+								<i class="icon do_action_add_form_ns">&nbsp;</i>\
+								<span class="btn-title do_action_add_form_ns">Add additional NS</span>\
+							</a>\
+						</div>'],
         ENTRIES_WRAPPER: ['<div class="users-list items-list">~!:content~!</div>'],
         FORM:  ['<div id="~!:id~!" class="b-new-entry b-new-entry_user form">\
                         <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
@@ -307,19 +385,19 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">package:</label>\
-							<select name="PACKAGE" class="not-styled">\
+							<select name="PACKAGE" class="styled">\
 								~!:PACKAGE_OPTIONS~!\
 							</select>\
 						</div>\
                         <div class="form-row cc">\
 							<label for="#" class="field-label">shell:</label>\
-							<select class="not-styled" name="SHELL">\
+							<select class="styled" name="SHELL">\
 								~!:SHELL_OPTIONS~!\
 							</select>\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">role:</label>\
-							<select class="not-styled" name="ROLE">\
+							<select class="styled" name="ROLE">\
 								~!:ROLE_OPTIONS~!\
 							</select>\
 						</div>\
@@ -327,19 +405,19 @@ App.Templates.html = {
 							<label for="#" class="field-label">contact email:</label>\
 							<input type="text" name="CONTACT" class="text-field rule-email rule-required" value="~!:CONTACT~!">\
 						</div>\
-						<div class="form-row cc">\
+						<div class="form-row ~!:REPORTS_ENABLED_EDITABLE~! cc">\
 							<label for="#" class="field-label">reports:</label>\
-							<input type="checkbox" name="REPORTS_ENABLED" ~!:CHECKED~! class="not-styled" value="~!:REPORTS_ENABLED~!">\
+							<input type="checkbox" name="REPORTS_ENABLED" ~!:CHECKED~! class="styled" value="~!:REPORTS_ENABLED~!">\
 						</div>\
-                        <div class="form-row cc">\
+                    		<div class="form-row cc">\
 							<label for="#" class="field-label">Firstname:</label>\
-							<input type="text" name="FNAME" class="not-styled text-field rule-abc  rule-required" value="~!:FNAME~!">\
+							<input type="text" name="FNAME" class="text-field rule-abc  rule-required" value="~!:FNAME~!">\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">Lastname:</label>\
-							<input type="text" name="LNAME" class="not-styled text-field rule-abc rule-required" value="~!:LNAME~!">\
+							<input type="text" name="LNAME" class="text-field rule-abc rule-required" value="~!:LNAME~!">\
 						</div>\
-                        <div class="form-row ns-entry cc">\
+                        <!-- div class="form-row ns-entry cc">\
 							<label for="#" class="field-label">NS #1:</label>\
 							<input type="text" value="~!:NS1~!" name="NS1" class="text-field rule-required rule-ns">\
 						</div>\
@@ -347,14 +425,14 @@ App.Templates.html = {
 							<label for="#" class="field-label">NS #2:</label>\
 							<input type="text" value="~!:NS2~!" name="NS2" class="text-field rule-required rule-ns">\
 						</div>\
-                        ~!:NS~!\
+                        ~!:NS~!\ -->\
                         <div class="form-row buttons-row cc">\
 							<input type="submit" value="~!:save_button~!" name="save" class="add-entry-btn do_action_save_form">\
 							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
 							<a class="help-btn" href="http://vestacp.com/docs/user/" target="_blank">Help</a>\
 						</div>\
 					</div>'],
-        ENTRY: ['<div class="row first-row user-details-row">\
+        ENTRY: ['<div class="row user-details-row">\
                     <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                     <input type="hidden" class="target" name="target" value="" />\
 						<div class="row-actions-box cc">\
@@ -405,36 +483,39 @@ App.Templates.html = {
 									</div>\
 								</div>\
 								<!-- disk usage block -->\
-								<div class="b-usage-box disk-usage cc">\
-									<span class="prop-title">disk usage:</span>\
-									<div class="usage-box">\
-										<div class="value-box">\
-											<span class="value">~!:U_DISK~!</span>\
-											<div class="graph low">\
-												<span style="width:~!:U_DISK_PERCENTAGE~!%;" class="bar"></span>\
-											</div>\
-										</div>\
-										<div class="max-size">~!:DISK_QUOTA~!<span class="units">~!:DISK_QUOTA_MEASURE~!</span></div>\
-									</div>\
-								</div><!-- // disk usage block -->\
-								<!-- bandwidth usage block -->\
-								<div style="margin-bottom:25px;" class="b-usage-box bandwidth-box cc">\
-									<span class="prop-title">bandwidth:</span>\
-									<div class="usage-box" style="margin-left: -1px">\
-										<div class="value-box">\
-											<span class="value">~!:U_BANDWIDTH~!</span>\
-											<div class="graph low">\
-												<span style="width:~!:U_BANDWIDTH_PERCENTAGE~!%;" class="bar"></span>\
-											</div>\
-										</div>\
-										<div class="max-size">~!:BANDWIDTH~!<span class="units">~!:BANDWIDTH_MEASURE~!</span></div>\
-									</div>\
-								</div><!-- // bandwidth usage block -->\
-								<!-- disk usage block -->\
-								 <!-- // disk usage block -->\
-								<!-- bandwidth usage block -->\
-								 <!-- // bandwidth usage block -->\
-                                 </div>\
+                                \
+                                <div class="b-stats-box">\
+									<div class="stats-box-title">stats</div>	\
+                                    <!-- disk usage block -->\
+                                    <div class="b-usage-box2 disk-usage cc">\
+                                        <span class="prop-title">disk usage:</span>\
+                                        <div class="usage-box ~!:OVER_DRAFT_VALUE~!">\
+                                            <div class="value-box">\
+                                                <div class="graph">\
+                                                    <span style="left:~!:U_DISK_PERCENTAGE_2~!%;" class="value">~!:U_DISK_PERCENTAGE~!% <span class="value-size">(~!:U_DISK~! ~!:DISK_QUOTA_MEASURE~!)</span></span>\
+                                                    <span style="width:~!:U_DISK_PERCENTAGE_3~!%;" class="bar"></span>\
+                                                    ~!:OVER_BAR~!\
+                                                </div>\
+                                            </div>\
+                                            <div class="max-size">~!:DISK_QUOTA~! <span class="units">~!:DISK_QUOTA_MEASURE_2~!</span></div>\
+                                        </div>\
+                                    </div><!-- // disk usage block -->\
+								</div>\
+                                \
+                                <div class="b-usage-box2 bandwidth-box cc">\
+                                        <span class="prop-title">bandwidth:</span>\
+                                        <div class="usage-box">\
+                                            <div class="value-box ~!:OVER_DRAFT_VALUE_2~!">\
+                                                <div class="graph">\
+                                                    <span style="left:~!:U_BANDWIDTH_PERCENTAGE_2~!%;" class="value">~!:U_BANDWIDTH_PERCENTAGE~!% <span class="value-size">(~!:U_BANDWIDTH~! ~!:BANDWIDTH_MEASURE~!)</span></span>\
+                                                    <span style="width:~!:U_BANDWIDTH_PERCENTAGE_3~!%;" class="bar"></span>\
+                                                    ~!:OVER_BAR_2~!\
+                                                </div>\
+                                            </div>\
+                                            <div class="max-size">~!:BANDWIDTH~! <span class="units">~!:BANDWIDTH_MEASURE_2~!</span></div>\
+                                        </div>\
+                                    </div>\
+                            </div>\
 							<div class="props-additional">\
 								<span class="prop-box websl-box">\
 									<span class="prop-title">web ssl:</span>\
@@ -507,14 +588,14 @@ App.Templates.html = {
 						<div class="form-row cc">\
 							<label for="#" class="field-label">ip:</label>\
 							<div class="">\
-								<select name="IP">\
+								<select name="IP" class="styled">\
                                 ~!:IP_OPTIONS~!\
                                 </select>\
 							</div>\
 						</div>\
 						<div class="form-row cc adv_opts">\
 								<label for="#" class="field-label">template:</label>\
-								<select class="not-styled" name="TPL">\
+								<select class="styled" name="TPL">\
 								~!:TPL_OPTIONS~!\
 								</select>\
 							</div>\
@@ -528,24 +609,24 @@ App.Templates.html = {
                             <div class="sub_section hidden">\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">CGI:</label>\
-								<input type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="not-styled">\
+								<input type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="styled">\
 							</div>\
                         <div class="form-row cc">\
 								<label for="#" class="field-label">ELOG:</label>\
-								<input type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="not-styled">\
+								<input type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="styled">\
 							</div>\
                             <div class="form-row cc">\
 								<label for="#" class="field-label">alias list:</label>\
-								<textarea name="ALIAS" class="textarea">~!:ALIAS~!</textarea>\
+								<textarea name="ALIAS" class="textarea rule-alias">~!:ALIAS~!</textarea>\
 							</div>\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">statistics:</label>\
-								<select name="STAT">~!:STAT_OPTIONS~!</select>\
+								<select name="STAT" class="styled">~!:STAT_OPTIONS~!</select>\
 							</div>\
 							<div class="stats-settings">\
 								<div class="form-row cc">\
 									<label for="#" class="field-label">stats auth:</label>\
-									<input id="stats-auth-enable" type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="not-styled do_action_toggle_stats_block">\
+									<input id="stats-auth-enable" type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="styled do_action_toggle_stats_block">\
 								</div>\
 								<div class="form-row stats-block ~!:ACTIVE_LOGIN~! cc">\
 									<label for="#" class="field-label">stats login:</label>\
@@ -586,7 +667,7 @@ App.Templates.html = {
 							<div class="sub_section hidden">\
                             <div class="form-row cc">\
 								<label for="#" class="field-label">create dns domain:</label>\
-								<input type="checkbox" value="~!:DNS~!" ~!:CHECKED_DNS~! name="DNS" class="not-styled">\
+								<input type="checkbox" value="~!:DNS~!" ~!:CHECKED_DNS~! name="DNS" class="styled">\
 							</div>\
 						</div><!-- DNS options -->\
 						<div class="form-options-group hidden">\
@@ -598,7 +679,7 @@ App.Templates.html = {
 							<div class="sub_section hidden">\
                                 <div class="form-row cc">\
                                     <label for="#" class="field-label">create mail domain:</label>\
-                                    <input type="checkbox" value="~!:MAIL~!" ~!:CHECKED_MAIL~! name="MAIL" class="not-styled">\
+                                    <input type="checkbox" value="~!:MAIL~!" ~!:CHECKED_MAIL~! name="MAIL" class="styled">\
                                 </div>\
                             </div>\
                         </div>\
@@ -610,7 +691,7 @@ App.Templates.html = {
 						</div>\
 					</div>'],
         ENTRIES_WRAPPER: ['<div class="domains-list items-list">~!:content~!</div>'],
-        ENTRY: ['<div class="row first-row domain-details-row">\
+        ENTRY: ['<div class="row domain-details-row">\
                         <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                         <input type="hidden" class="target" name="target" value="" />\
 						<div class="row-actions-box cc">\
@@ -634,7 +715,7 @@ App.Templates.html = {
 									<span class="ip-adr">~!:IP~!</span>\
 									<span class="prop-box template-box">\
 										<span class="prop-title">template:</span>\
-										<span class="prop-value">~!:TPL~!</span>\
+										<span class="prop-value tpl-item do_action_view_template_settings">~!:TPL~!</span>\
 									</span>\
 								</div>\
 								<!-- disk usage block -->\
@@ -721,7 +802,7 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">db type:</label>\
-							<select name="TYPE" class="not-styled">~!:TYPE_OPTIONS~!</select>\
+							<select name="TYPE" class="styled">~!:TYPE_OPTIONS~!</select>\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">db name:</label>\
@@ -740,7 +821,7 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row hidden cc">\
 							<label for="#" class="field-label">db host:</label>\
-							<select name="HOST">~!:HOST_OPTIONS~!</select>\
+							<select name="HOST" class="styled">~!:HOST_OPTIONS~!</select>\
 						</div>\
 						<div class="form-row buttons-row cc">\
 							<input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form">\
@@ -748,7 +829,7 @@ App.Templates.html = {
 							<a target="_blank" href="http://vestacp.com/docs/db/" class="help-btn">Help</a>\
 						</div>\
 					</div>'],
-        ENTRY: ['<div class="row ~!:FIRST_ROW_CLASS~! db-details-row">\
+        ENTRY: ['<div class="row db-details-row">\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="row-actions-box cc">\
@@ -854,8 +935,8 @@ App.Templates.html = {
 							<a target="_blank" href="http://vestacp.com/docs/cron/" class="help-btn">Help</a>\
 						</div>\
 					</div>'],
-        ENTRIES_WRAPPER: ['<div class="db-list">~!:content~!</div>'],
-        ENTRY: ['<div class="row first-row cron-details-row">\
+        ENTRIES_WRAPPER: ['<div class="cron-list">~!:content~!</div>'],
+        ENTRY: ['<div class="row cron-details-row">\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="row-actions-box cc">\
@@ -898,9 +979,7 @@ App.Templates.html = {
 								<span class="prop-box cron-report-box">\
 									<span class="prop-title">reported to:</span>\
 									<span class="prop-value">naumov.socolov@gmail.com,</span>\
-									<span class="prop-value">vasysualiy.pupkin@gmail.com,</span>\
-									<span class="prop-value">na-derevniu-dedushke@dachniy-poselok-za-mkadom.com,</span>\
-									<span class="prop-value">vasysualiy.pupkin@gmail.com</span>\
+                                    <span class="prop-value">naumov.socolov@gmail.com,</span>\
 								</span>\
 							</div>\
 						</div><!-- // .row-details -->\
@@ -912,23 +991,23 @@ App.Templates.html = {
 
 // Internals
 var Tpl = App.Templates;
-
-var Templator = function(){
-    var init = function(){
+var Templator = function()
+{
+    var init = function() {
         fb.info('Templator work');
         Templator.splitThemAll();
         Templator.freezeTplIndexes();        
     };
 
-
     /**
      * Split the tpl strings into arrays
      */
-    Templator.splitThemAll = function(){
+    Templator.splitThemAll = function()
+    {
         fb.info('splitting tpls');
-        $.each(App.Templates.html, function(o){
+        $.each(App.Templates.html, function(o) {
             var tpls = App.Templates.html[o];
-            $.each(tpls, function(t){
+            $.each(tpls, function(t) {
                 tpls[t] = tpls[t][0].split('~!');
             });
         });
@@ -937,7 +1016,8 @@ var Templator = function(){
     /**
      * Iterates tpls
      */
-    Templator.freezeTplIndexes = function(){
+    Templator.freezeTplIndexes = function()
+    {
         fb.info('freezing tpl keys');
         $.each(App.Templates.html, Templator.cacheTplIndexes);
     },
@@ -945,10 +1025,10 @@ var Templator = function(){
     /**
      * Grab the tpl group key and process it
      */
-    Templator.cacheTplIndexes = function(key){
+    Templator.cacheTplIndexes = function(key)
+    {
         var tpls = App.Templates.html[key];
-
-        $.each(tpls, function(o){
+        $.each(tpls, function(o) {
             var tpl = tpls[o];
             Templator.catchIndex(key, o, tpl);
         });
@@ -957,11 +1037,11 @@ var Templator = function(){
     /**
      * Set the indexes
      */
-    Templator.catchIndex = function(key, ref_key, tpl){
-        'undefined' == typeof App.Templates._indexes[key] ? App.Templates._indexes[key] = {} : false;
+    Templator.catchIndex = function(key, ref_key, tpl)
+    {
+        'undefined' == typeof App.Templates._indexes[key]          ? App.Templates._indexes[key]          = {} : false;
         'undefined' == typeof App.Templates._indexes[key][ref_key] ? App.Templates._indexes[key][ref_key] = {} : false;
-
-        $(tpl).each(function(index, o){
+        $(tpl).each(function(index, o) {
             if(':' == o.charAt(0)){
                 App.Templates._indexes[key][ref_key][o.toString()] = index;
             }
@@ -974,15 +1054,16 @@ var Templator = function(){
     init();
     return Templator;
 };
-Templator.getTemplate = function(ns, key){
+Templator.getTemplate = function(ns, key)
+{
     return [
-    App.Templates._indexes[ns][key],
-    App.Templates.html[ns][key].slice(0)
+        App.Templates._indexes[ns][key],
+        App.Templates.html[ns][key].slice(0)
     ];
 }
 // init templator
 Tpl.Templator = Templator();
-
-Tpl.get = function(key, group){
+Tpl.get = function(key, group)
+{
     return Tpl.Templator.getTemplate(group, key);
 }

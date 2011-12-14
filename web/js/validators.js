@@ -1,21 +1,5 @@
-/*App.Validate.form = function(values){
-    if(values.IP_ADDRESS == '') {
-        return alert('Not correct ip');
-    }
-    
-    return true;
-}*/
-
-App.Validate.Is = {
-    ip: function(object) {
-        var ip_regexp = new RegExp(/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/);
-        return ip_regexp.test() ? false : App.i18n.getMessage('incorrect_ip');
-    }
-};
-
 App.Validate.getFieldName = function(elm)
 {
-    fb.log(elm);
     var txt_label = $(elm).prev('label').text();
     if (txt_label.trim() == '') {
         txt_label = $(elm).parents('.field-box').select('label:first').text();
@@ -25,9 +9,20 @@ App.Validate.getFieldName = function(elm)
 }
 
 App.Validate.Rule = {
+    'alias' : function(elm) {   
+        if (!!$('#stats-auth-enable').attr('checked') == true) {
+            if ($(elm).val().trim() == '' || $(elm).val().search(/[^a-zA-Z\.\-\*\,\ ]+/) != -1) {
+                return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
+            }
+            if ($(elm).val().trim() != '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
+                return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
+            }
+        }
+        return {VALID: true};
+    },
     'statslogin' : function(elm) {   
         if (!!$('#stats-auth-enable').attr('checked') == true) {
-            if ($(elm).val().trim() == '' || $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
+            if ($(elm).val().trim() == '' || $(elm).val().search(/[^a-zA-Z_0-9]+/) != -1) {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
             }
             if ($(elm).val().trim() != '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
@@ -44,11 +39,14 @@ App.Validate.Rule = {
             if ($(elm).val().trim() != '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
                 return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too long'};
             }
+            if ($(elm).val().trim() != '' && $(elm).val().length < App.Settings.PSW_MIN_LEN) {
+                return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' too short'};
+            }
         }
         return {VALID: true};
     },
     'username' : function(elm) {   
-        if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z_]+/) != -1) {
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z_0-9\.\-]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' is invalid'};
         }
         if ($(elm).val().trim() != '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {
@@ -100,13 +98,13 @@ App.Validate.Rule = {
         return {VALID: true};
     },
     'domain':         function(elm) {        
-        if ($(elm).val().trim() != '' && (/^([a-z0-9\.])*[a-z0-9][a-z0-9\-]+[a-z0-9](\.[a-z]{2,4})+$/).test($(elm).val()) == false) {
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z0-9\.\-\*]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' not a valid domain name'};
         }
         return {VALID: true};
     },
     'ns':         function(elm) {        
-        if ($(elm).val().trim() != '' && (/^([a-z0-9\.])*[a-z0-9][a-z0-9\-]+[a-z0-9](\.[a-z]{2,4})+$/).test($(elm).val()) == false) {
+        if ($(elm).val().trim() != '' && $(elm).val().search(/[^a-zA-Z0-9\.\-\*]+/) != -1) {
             return {VALID: false, ERROR: App.Validate.getFieldName(elm) + ' not a valid NS name'};
         }
         if ($(elm).val().trim() == '' && $(elm).val().length > App.Settings.FIELD_MAX_LEN) {

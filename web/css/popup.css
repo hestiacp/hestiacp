@@ -15,6 +15,7 @@
 }
 .d-popup-inner{
 	padding:20px;
+	color:#fff;	
 }
 .d-popup .close{
 	position:absolute;
@@ -26,6 +27,9 @@
 	height:13px;
 	background:url(../images/info-popup-sprite.png) no-repeat;
 	cursor:pointer;
+	font-size:0;
+	line-height:0;
+	text-indent:-9999px;
 	}
 	.d-popup span.close:hover{
 		background-position:0 -13px;

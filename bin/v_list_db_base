@@ -29,9 +29,7 @@ json_list_db() {
     echo '{'
 
     # Parsing key=value
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $line
 
     # Starting output loop
     for field in $fields; do
@@ -70,9 +68,7 @@ shell_list_db() {
     line=$(grep "DB='$database'" $conf)
 
     # Parsing key=value
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $line
 
     # Print result line
     for field in $fields; do

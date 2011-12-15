@@ -24,9 +24,7 @@ json_list_pkgs() {
         PACKAGE=${package/.pkg/}
         # Assing key=value
         pkg_data=$(cat $V_DATA/packages/$package)
-        for key in $pkg_data; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $pkg_data
 
         # Closing bracket if there already was output
         if [ -n "$data" ]; then
@@ -69,9 +67,7 @@ shell_list_pkgs() {
         PACKAGE=${package/.pkg/}
         # Assign key=value
         pkg_descr=$(cat $V_DATA/packages/$package)
-        for key in $pkg_descr; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $pkg_descr
 
 
         if [ -z "$nohead" ]; then

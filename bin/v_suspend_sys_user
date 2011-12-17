@@ -1,0 +1,85 @@
+#!/bin/bash
+# info: Suspending sys user
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
+source $V_FUNC/shared.func
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'user'
+
+# Checking argument format
+format_validation 'user'
+
+# Checking user
+is_user_valid
+
+# Checking user status
+is_user_suspended
+
+# Checking user vesta
+if [ "$user" = 'vesta' ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Adding '!' in front of the password
+/usr/sbin/usermod --lock $user
+
+# Suspending web domains
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    $V_BIN/v_suspend_web_domains $user
+fi
+
+# Suspending dns domains
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    $V_BIN/v_suspend_dns_domains $user
+fi
+
+# Suspending mail domains
+# TBD
+
+# Suspending datbabases
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    $V_BIN/v_suspend_db_bases $user
+fi
+
+# Suspending cron jobs
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    $V_BIN/v_suspend_sys_cron_jobs $user
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding task to the vesta pipe
+restart_schedule 'cron'
+restart_schedule 'web'
+restart_schedule 'dns'
+
+# Changing suspend value
+update_user_value "$user" '$SUSPEND' 'yes'
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit

@@ -77,7 +77,7 @@ restart_schedule 'web'
 restart_schedule 'dns'
 
 # Changing suspend value
-update_user_value "$user" '$SUSPEND' 'yes'
+update_user_value "$user" '$SUSPENDED' 'yes'
 
 # Logging
 log_event 'system' "$V_EVENT"

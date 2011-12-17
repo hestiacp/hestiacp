@@ -30,7 +30,6 @@ format_validation 'user' 'domain'
 
 # Checking web system is enabled
 is_system_enabled 'web'
-check_func_result $?
 
 # Checking user
 is_user_valid "$user"

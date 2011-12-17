@@ -31,9 +31,6 @@ is_user_valid
 # Checking user is active
 is_user_suspended
 
-# Checking reports existance
-is_user_key_empty '$REPORTS'
-
 
 #----------------------------------------------------------#
 #                       Action                             #

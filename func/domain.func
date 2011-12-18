@@ -19,10 +19,10 @@ is_domain_new() {
     if [ ! -z "$check_domain" ] || [ ! -z "$check_alias" ]; then
         if [ "$output_mode" != 'quiet' ]; then
             echo "Error: domain exist"
-            log_event 'debug' "$E_DOM_EXIST $V_EVENT"
-            exit $E_DOM_EXIST
+            log_event 'debug' "$E_EXISTS $V_EVENT"
+            exit $E_EXISTS
         fi
-        return $E_DOM_EXIST
+        return $E_EXISTS
     fi
 
 }
@@ -43,8 +43,8 @@ is_domain_owner() {
     # Checking result
     if [ -z "$check_domain" ] && [ -z "$check_alias" ]; then
         echo "Error: domain not owned"
-        log_event 'debug' "$E_DOM_NOTOWNED $V_EVENT"
-        exit $E_DOM_NOTOWNED
+        log_event 'debug' "$E_FORBIDEN $V_EVENT"
+        exit $E_FORBIDEN
     fi
 }
 
@@ -55,8 +55,8 @@ is_dns_domain_free() {
     # Checking result
     if [ ! -z "$check_domain" ]; then
         echo "Error: domain exist"
-        log_event 'debug' "$E_DOM_EXIST $V_EVENT"
-        exit $E_DOM_EXIST
+        log_event 'debug' "$E_EXISTS $V_EVENT"
+        exit $E_EXISTS
     fi
 }
 
@@ -75,8 +75,8 @@ is_web_domain_free() {
     # Checking result
     if [ ! -z "$check_domain" ] || [ ! -z "$check_alias" ]; then
         echo "Error: domain exist"
-        log_event 'debug' "$E_DOM_EXIST $V_EVENT"
-        exit $E_DOM_EXIST
+        log_event 'debug' "$E_EXISTS $V_EVENT"
+        exit $E_EXISTS
     fi
 }
 
@@ -87,8 +87,8 @@ is_dns_domain_valid() {
     # Checking result
     if [ -z "$check_domain" ]; then
         echo "Error: domain not exist"
-        log_event 'debug' "$E_DOM_NOTEXIST $V_EVENT"
-        exit $E_DOM_NOTEXIST
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
@@ -99,8 +99,8 @@ is_web_domain_valid() {
     # Checking result
     if [ -z "$check_domain" ]; then
         echo "Error: domain not exist"
-        log_event 'debug' "$E_DOM_NOTEXIST $V_EVENT"
-        exit $E_DOM_NOTEXIST
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
@@ -113,8 +113,8 @@ is_domain_suspended() {
     # Checking result
     if [ ! -z "$check_domain" ]; then
         echo "Error: domain suspended"
-        log_event 'debug' "$E_DOM_SUSPENDED $V_EVENT"
-        exit $E_DOM_SUSPENDED
+        log_event 'debug' "$E_SUSPENDED $V_EVENT"
+        exit $E_SUSPENDED
     fi
 }
 
@@ -127,8 +127,8 @@ is_domain_unsuspended() {
     # Checking result
     if [ ! -z "$check_domain" ]; then
         echo "Error: domain unsuspended"
-        log_event 'debug' "$E_DOM_UNSUSPENDED $V_EVENT"
-        exit $E_DOM_UNSUSPENDED
+        log_event 'debug' "$E_UNSUSPENDED $V_EVENT"
+        exit $E_UNSUSPENDED
     fi
 }
 
@@ -207,8 +207,8 @@ is_dns_record_free() {
 
     if [ ! -z "$check_id" ]; then
         echo "Error: ID exist"
-        log_event 'debug' "$E_ID_EXIST $V_EVENT"
-        exit  $E_ID_EXIST
+        log_event 'debug' "$E_EXISTS $V_EVENT"
+        exit  $E_EXISTS
     fi
 }
 
@@ -254,8 +254,8 @@ get_web_config_brds() {
     # Defining template borders
     serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
     if [ -z "$serv_line" ]; then
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        return $E_PARSE_ERROR
+        log_event 'debug' "$E_PARSING $V_EVENT"
+        return $E_PARSING
     fi
 
     # Template lines
@@ -444,8 +444,8 @@ is_web_domain_key_empty() {
     # Checkng key
     if [ ! -z "$value" ] && [ "$value" != 'no' ]; then
         echo "Error: value is not empty = $value"
-        log_event 'debug' "$E_VALUE_EXIST $V_EVENT"
-        exit $E_VALUE_EXIST
+        log_event 'debug' "$E_EXISTS $V_EVENT"
+        exit $E_EXISTS
     fi
 }
 
@@ -453,34 +453,34 @@ is_web_domain_cert_valid() {
 
     # Checking file existance
     if [ ! -e "$ssl_dir/$domain.crt" ] || [ ! -e "$ssl_dir/$domain.key" ]; then
-        echo "Error: certificate not exist"
-        log_event 'debug' "$E_CERT_NOTEXIST $V_EVENT"
-        exit $E_CERT_NOTEXIST
+        echo "Error: ssl certificate not exist"
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 
     # Checking certificate
     crt=$(openssl verify $ssl_dir/$domain.crt 2>/dev/null |grep '/C=')
     if [ -z "$crt" ]; then
-        echo "Error: certificate invalid"
-        log_event 'debug' "$E_CERT_INVALID $V_EVENT"
-        exit $E_CERT_INVALID
+        echo "Error: ssl certificate invalid"
+        log_event 'debug' "$E_INVALID $V_EVENT"
+        exit $E_INVALID
     fi
 
     # Checking certificate key
     openssl rsa -in "$ssl_dir/$domain.key" -check >/dev/null 2>/dev/null
     if [ "$?" -ne 0 ]; then
-        echo "Error: key invalid"
-        log_event 'debug' "$E_KEY_INVALID $V_EVENT"
-        exit $E_KEY_INVALID
+        echo "Error: ssl key invalid"
+        log_event 'debug' "$E_INVALID $V_EVENT"
+        exit $E_INVALID
     fi
 
     # Checking certificate authority
     if [ -e "$ssl_dir/$domain.ca" ]; then
         ca=$(openssl verify $ssl_dir/$domain.ca 2>/dev/null |grep '/C=')
         if [ -z "$ca" ]; then
-            echo "Error: certificate invalid"
-            log_event 'debug' "$E_CERT_INVALID $V_EVENT"
-            exit $E_CERT_INVALID
+            echo "Error: ssl certificate invalid"
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     fi
 
@@ -493,9 +493,9 @@ is_web_domain_cert_valid() {
     kill $pid > /dev/null 2>&1
     result=$?
     if [ "$result" -ne '0' ]; then
-        echo "Error: certificate key pair invalid"
-        log_event 'debug' "$E_CERTKEY_INVALID $V_EVENT"
-        exit $E_CERTKEY_INVALID
+        echo "Error: ssl certificate key pair invalid"
+        log_event 'debug' "$E_INVALID $V_EVENT"
+        exit $E_INVALID
     fi
 }
 
@@ -506,8 +506,8 @@ is_dns_record_valid() {
 
     if [ -z "$check_id" ]; then
         echo "Error: ID not exist"
-        log_event 'debug' "$E_ID_NOTEXIST $V_EVENT"
-        exit $E_ID_NOTEXIST
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
@@ -528,8 +528,8 @@ is_web_domain_value_exist() {
     # Checking result
     if [ -z "$value" ] || [ "$value" = 'no' ]; then
         echo "Error: ${key//$/} is empty"
-        log_event 'debug' "$E_VALUE_EMPTY $V_EVENT"
-        exit $E_VALUE_EMPTY
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
@@ -550,8 +550,8 @@ is_dns_domain_value_exist() {
     # Checking result
     if [ -z "$value" ] || [ "$value" = 'no' ]; then
         echo "Error: ${key//$/} is empty"
-        log_event 'debug' "$E_VALUE_EMPTY $V_EVENT"
-        exit $E_VALUE_EXIST
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_EXISTS
     fi
 }
 
@@ -571,8 +571,8 @@ del_dns_domain() {
     string=$( grep -n "DOMAIN='$domain'" $conf | cut -f 1 -d : )
     if [ -z "$string" ]; then
         echo "Error: parse error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
+        log_event 'debug' "$E_PARSING $V_EVENT"
+        exit $E_PARSING
     fi
     sed -i "$string d" $conf
     rm -f $V_USERS/$user/dns/$domain
@@ -585,8 +585,8 @@ del_web_domain() {
     string=$( grep -n "DOMAIN='$domain'" $conf | cut -f 1 -d : )
     if [ -z "$string" ]; then
         echo "Error: parse error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
+        log_event 'debug' "$E_PARSING $V_EVENT"
+        exit $E_PARSING
     fi
     sed -i "$string d" $conf
 }
@@ -678,8 +678,8 @@ namehost_ip_disable() {
             if [ -z "$tpl_ln" ] || [ -z "$ip_line" ] || [ -z "$conf_line" ]
             then
                 echo "Error: nginx config paring error"
-                log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-                exit $E_PARSE_ERROR
+                log_event 'debug' "$E_PARSING $V_EVENT"
+                exit $E_PARSING
             fi
 
             up_line=$((ip_line - 1))
@@ -689,8 +689,8 @@ namehost_ip_disable() {
             # Checking parsed lines
             if [ -z "$first_line" ] || [ -z "$last_line" ]; then
                 echo "Error: nginx config paring error"
-                log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-                exit $E_PARSE_ERROR
+                log_event 'debug' "$E_PARSING $V_EVENT"
+                exit $E_PARSING
             fi
             sed -i "$first_line,$last_line d" $nconf
 

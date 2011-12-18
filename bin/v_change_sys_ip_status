@@ -33,8 +33,8 @@ is_sys_ip_valid
 current_status=$(get_sys_ip_value '$STATUS')
 if [ "$ip_status" = "$current_status" ]; then
     echo "Error: status is already set"
-    log_event 'debug' "$E_VALUE_EXIST $V_EVENT"
-    exit $E_VALUE_EXIST
+    log_event 'debug' "$E_EXISTS $V_EVENT"
+    exit $E_EXISTS
 fi
 
 # Parsing current ip usage
@@ -45,8 +45,8 @@ ip_owner=$(get_sys_ip_value '$OWNER')
 # Checking condition
 if [ "$web_domains" -ne '0' ] && [ "$sys_user" != "$ip_owner" ]; then
     echo "Error: ip is used"
-    log_event 'debug' "$E_IP_USED $V_EVENT"
-    exit $E_IP_USED
+    log_event 'debug' "$E_INUSE $V_EVENT"
+    exit $E_INUSE
 fi
 
 

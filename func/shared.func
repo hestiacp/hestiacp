@@ -35,8 +35,8 @@ check_args() {
     if [ "$user_args" -lt "$sys_args" ]; then
         echo "Error: bad args"
         echo "Usage: $V_SCRIPT $usage"
-        log_event 'debug' "$E_BAD_ARGS $V_EVENT"
-        exit $E_BAD_ARGS
+        log_event 'debug' "$E_ARGS $V_EVENT"
+        exit $E_ARGS
     fi
 }
 
@@ -51,9 +51,9 @@ format_validation() {
         check_http=$( echo "$val" |grep "^https://" )
         needed_chars=$(echo "$val" | cut -s -f 2 -d '.')
         if [ -z "$check_http" ] || [ -z "$needed_chars" ]; then
-            echo "Error: shell not found"
-            log_event 'debug' "$E_SHELL_INVALID $V_EVENT"
-            exit $E_SHELL_INVALID
+            echo "Error: invalid url"
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -65,8 +65,8 @@ format_validation() {
         check_shell=$(/usr/bin/chsh --list-shells | grep -w "$val" )
         if [ -z "$check_shell" ]; then
             echo "Error: shell not found"
-            log_event 'debug' "$E_SHELL_INVALID $V_EVENT"
-            exit $E_SHELL_INVALID
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -77,8 +77,8 @@ format_validation() {
         # Checking password lenght
         if [ "${#val}" -lt '6' ]; then
             echo "Error: password is shorter than 6 chars"
-            log_event 'debug' "$E_PASSWORD_SHORT $V_EVENT"
-            exit $E_PASSWORD_SHORT
+            log_event 'debug' "$E_PASSWORD $V_EVENT"
+            exit $E_PASSWORD
         fi
     }
 
@@ -92,23 +92,23 @@ format_validation() {
 
         if [[ 0 -ne "$special_chars" ]]; then
             echo "Error: $var out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
 
         # Checking letters
         letters=$(echo "$val" | grep -c "[a-Z]")
         if [ 0 -ne "$letters" ]; then
             echo "Error: $var out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
 
         # Checking -zero
         if [[ 0 -ne "$val" ]] && [[ 0 -gt "$val" ]]; then
             echo "Error: $var out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -125,8 +125,8 @@ format_validation() {
         if [ -z "$oc1" ] || [ -z "$oc2" ] || [ -z "$oc3" ] || [ -z "$oc4" ]
         then
             echo "Error: $var out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -139,8 +139,8 @@ format_validation() {
         # Checking status
         if [ -z "$check_status" ]; then
             echo "Error: $var out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -157,8 +157,8 @@ format_validation() {
            [ "${#check_dt}" -lt 2 ] &&\
            [ "$val" != 'vesta@localhost' ]; then
             echo "Error: email format is wrong"
-            log_event 'debug' "$E_EMAIL_INVALID $V_EVENT"
-            exit $E_EMAIL_INVALID
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -172,8 +172,8 @@ format_validation() {
 
         if [ "$return_val" -ne 0 ]; then
             echo "Error: intreface not exist"
-            log_event 'debug' "$E_INTERFACE_NOTEXIST"
-            exit $E_INTERFACE_NOTEXIST
+            log_event 'debug' "$E_NOTEXIST"
+            exit $E_NOTEXIST
         fi
     }
 
@@ -188,8 +188,8 @@ format_validation() {
         # Checking result
         if [[ 0 -ne "$special_chars" ]]; then
             echo "Error: $var is out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -205,8 +205,8 @@ format_validation() {
         # Checking result
         if [[ 0 -ne "$special_chars" ]] || [ -z "$needed_chars" ]; then
             echo "Error: $var is out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -221,8 +221,8 @@ format_validation() {
         # Checking result
         if [[ 0 -ne "$special_chars" ]] || [ 17 -le ${#val} ]; then
             echo "Error: $var is out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -233,8 +233,8 @@ format_validation() {
         # Checking result
         if [ 17 -le ${#val} ]; then
             echo "Error: $var is out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -260,8 +260,8 @@ format_validation() {
 
         if [[ "$known" != 'yes' ]]; then
             echo "Error: $var is out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -272,8 +272,8 @@ format_validation() {
         # Checking result
         if [ 200 -le ${#val} ]; then
             echo "Error: $var is out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
     }
 
@@ -286,8 +286,8 @@ format_validation() {
 	check_rtype="$(echo "A AAAA NS CNAME" | grep -i -w "$rtype")"
         if [ ! -z "$check_spaces" ] && [ ! -z "$check_rtype" ]; then
             echo "Error: $var is out of range"
-            log_event 'debug' "$E_OUTOFRANGE $V_EVENT"
-            exit $E_OUTOFRANGE
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
         fi
 
         # Checking ip
@@ -362,48 +362,48 @@ is_system_enabled() {
     web_function() {
         if [ -z "$WEB_SYSTEM" ] || [ "$WEB_SYSTEM" = "no" ]; then
             echo "Error: web hosting support disabled"
-            log_event 'debug' "$E_WEB_DISABLED $V_EVENT"
-            exit $E_WEB_DISABLED
+            log_event 'debug' "$E_DISABLED $V_EVENT"
+            exit $E_DISABLED
         fi
     }
 
     proxy_function() {
         if [ "$PROXY_SYSTEM" != 'nginx' ]; then			# only nginx
             echo "Error: proxy hosting support disabled"	# support for
-            log_event 'debug' "$E_PROXY_DISABLED $V_EVENT"	# now
-            exit $E_PROXY_DISABLED
+            log_event 'debug' "$E_DISABLED $V_EVENT"	# now
+            exit $E_DISABLED
         fi
     }
 
     dns_function() {
         if [ -z "$DNS_SYSTEM" ] || [ "$DNS_SYSTEM" = "no" ]; then
             echo "Error: dns support disabled"
-            log_event 'debug' "$E_DNS_DISABLED $V_EVENT"
-            exit $E_DNS_DISABLED
+            log_event 'debug' "$E_DISABLED $V_EVENT"
+            exit $E_DISABLED
         fi
     }
 
     cron_function() {
         if [ -z "$CRON_SYSTEM" ] || [ "$CRON_SYSTEM" = "no" ]; then
             echo "Error: crond support disabled"
-            log_event 'debug' "$E_CRON_DISABLED $V_EVENT"
-            exit $E_CRON_DISABLED
+            log_event 'debug' "$E_DISABLED $V_EVENT"
+            exit $E_DISABLED
         fi
     }
 
     db_function() {
         if [ -z "$DB_SYSTEM" ] || [ "$DB_SYSTEM" = "no" ]; then
             echo "Error: db support disabled"
-            log_event 'debug' "$E_DB_DISABLED $V_EVENT"
-            exit $E_DB_DISABLED
+            log_event 'debug' "$E_DISABLED $V_EVENT"
+            exit $E_DISABLED
         fi
     }
 
     backup_function() {
         if [ -z "$BACKUP_SYSTEM" ] || [ "$BACKUP_SYSTEM" = "no" ]; then
             echo "Error: backup support disabled"
-            log_event 'debug' "$E_BACKUP_DISABLED $V_EVENT"
-            exit $E_BACKUP_DISABLED
+            log_event 'debug' "$E_DISABLED $V_EVENT"
+            exit $E_DISABLED
         fi
     }
 
@@ -424,14 +424,14 @@ is_user_valid() {
     check_user=$(grep -w "$search_user" /etc/passwd )
     if [ -z "$check_user" ]; then
         echo "Error: user not found"
-        log_event 'debug' "$E_USER_NOTEXIST $V_EVENT"
-        exit $E_USER_NOTEXIST
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 
     if [ ! -d "$V_USERS/$search_user" ]; then
         echo "Error: unknown user"
-        log_event 'debug' "$E_USER_UNKNOWN $V_EVENT"
-        exit $E_USER_UNKNOWN
+        log_event 'debug' "$E_USER_NOTEXIST $V_EVENT"
+        exit $E_USER_NOTEXIST
     fi
 }
 
@@ -440,8 +440,8 @@ is_user_suspended() {
     check_suspend=$(grep "SUSPENDED='yes'" $V_USERS/$user/user.conf)
     if [ ! -z "$check_suspend" ]; then
         echo "Error: User is suspended"
-        log_event 'debug' "$E_USER_SUSPENDED $V_EVENT"
-        exit $E_USER_SUSPENDED
+        log_event 'debug' "$E_SUSPENDED $V_EVENT"
+        exit $E_SUSPENDED
     fi
 }
 
@@ -457,8 +457,8 @@ is_package_full() {
         val=$(grep '^WEB_DOMAINS=' $V_USERS/$user/user.conf|cut -f 2 -d \' )
         if [ "$domain_number" -ge "$val" ]; then
             echo "Error: Upgrade package"
-            log_event 'debug' "$E_PKG_UPGRADE $v_log"
-            exit $E_PKG_UPGRADE
+            log_event 'debug' "$E_LIMIT $v_log"
+            exit $E_LIMIT
         fi
     }
 
@@ -472,8 +472,8 @@ is_package_full() {
         val=$(grep 'WEB_ALIASES=' $V_USERS/$user/user.conf | cut -f 2 -d \' )
         if [ "$alias_nmb" -ge "$val" ]; then
             echo "Error: Upgrade package"
-            log_event 'debug' "$E_PKG_UPGRADE $v_log"
-            exit $E_PKG_UPGRADE
+            log_event 'debug' "$E_LIMIT $v_log"
+            exit $E_LIMIT
         fi
     }
 
@@ -482,8 +482,8 @@ is_package_full() {
         val=$(grep '^WEB_SSL=' $V_USERS/$user/user.conf | cut -f 2 -d \' )
         if [ "$val" -eq '0' ]; then
             echo "Error: Upgrade package"
-            log_event 'debug' "$E_PKG_UPGRADE $v_log"
-            exit $E_PKG_UPGRADE
+            log_event 'debug' "$E_LIMIT $v_log"
+            exit $E_LIMIT
         fi
 
         # Checking domains
@@ -491,8 +491,8 @@ is_package_full() {
         # Comparing current val with conf
         if [ "$domain_nmb" -ge "$val" ]; then
             echo "Error: Upgrade package"
-            log_event 'debug' "$E_PKG_UPGRADE $v_log"
-            exit $E_PKG_UPGRADE
+            log_event 'debug' "$E_LIMIT $v_log"
+            exit $E_LIMIT
         fi
     }
 
@@ -504,8 +504,8 @@ is_package_full() {
         val=$(grep '^DNS_DOMAINS=' $V_USERS/$user/user.conf | cut -f 2 -d \' )
         if [ "$domain_number" -ge "$val" ]; then
             echo "Error: Upgrade package"
-            log_event 'debug' "$E_PKG_UPGRADE $v_log"
-            exit $E_PKG_UPGRADE
+            log_event 'debug' "$E_LIMIT $v_log"
+            exit $E_LIMIT
         fi
     }
 
@@ -517,8 +517,8 @@ is_package_full() {
         val=$(grep '^DATABASES=' $V_USERS/$user/user.conf | cut -f 2 -d \' )
         if [ "$db_number" -ge "$val" ]; then
             echo "Error: Upgrade package"
-            log_event 'debug' "$E_PKG_UPGRADE $v_log"
-            exit $E_PKG_UPGRADE
+            log_event 'debug' "$E_LIMIT $v_log"
+            exit $E_LIMIT
         fi
     }
 
@@ -536,8 +536,8 @@ is_package_full() {
         mail_forwarder) mail_forwarder "$user" "$domain";;
         *)
             echo "Error: bad type"
-            log_event 'debug' "$E_BAD_TYPE $V_EVENT"
-            exit $E_BAD_TYPE 
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID 
             ;;
     esac
 }
@@ -555,8 +555,8 @@ is_template_valid() {
         if [ -z "$check_tpl" ] || [ ! -e $tpl ] || \
            [ ! -e $descr ] || [ ! -e $ssl ]; then
             echo "Error: template not found"
-            log_event 'debug' "$E_TPL_NOTEXIST"
-            exit $E_TPL_NOTEXIST
+            log_event 'debug' "$E_NOTEXIST"
+            exit $E_NOTEXIST
         fi
     }
 
@@ -567,8 +567,8 @@ is_template_valid() {
 
         if [ ! -e $tpl ] || [ ! -e $descr ] || [ ! -e $ssl ]; then
             echo "Error: template not found"
-            log_event 'debug' "$E_TPL_NOTEXIST"
-            exit $E_TPL_NOTEXIST
+            log_event 'debug' "$E_NOTEXIST"
+            exit $E_NOTEXIST
         fi
     }
 
@@ -578,8 +578,8 @@ is_template_valid() {
 
         if [ ! -e $tpl ] || [ ! -e $descr ]; then
             echo "Error: template not found"
-            log_event 'debug' "$E_TPL_NOTEXIST"
-            exit $E_TPL_NOTEXIST
+            log_event 'debug' "$E_NOTEXIST"
+            exit $E_NOTEXIST
         fi
     }
 
@@ -630,8 +630,8 @@ restart_schedule() {
 is_package_valid() {
     if [ ! -e "$V_PKG/$package.pkg" ]; then
         echo "Error: package is not exist"
-        log_event 'debug' "$E_PKG_NOTEXIST $v_log"
-        exit $E_PKG_NOTEXIST
+        log_event 'debug' "$E_NOTEXIST $v_log"
+        exit $E_NOTEXIST
     fi
 }
 
@@ -680,8 +680,8 @@ increase_user_value() {
     # Checking result
     if [ -z "$current_value" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
+        log_event 'debug' "$E_PARSING $V_EVENT"
+        exit $E_PARSING
     fi
 
     # Plus one
@@ -709,8 +709,8 @@ is_type_valid() {
     # Checking result
     if [ -z "$check_type" ]; then
         echo "Error: unknown type"
-        log_event 'debug' "$E_BAD_TYPE $V_EVENT"
-        exit $E_BAD_TYPE
+        log_event 'debug' "$E_INVALID $V_EVENT"
+        exit $E_INVALID
     fi
 }
 
@@ -728,8 +728,8 @@ decrease_user_value() {
     # Checking result
     if [ -z "$current_value" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
+        log_event 'debug' "$E_PARSING $V_EVENT"
+        exit $E_PARSING
     fi
 
     # Checking zero val
@@ -875,8 +875,8 @@ is_backup_enabled() {
     BACKUPS=$(grep "BACKUPS='" $V_USERS/$user/user.conf |cut -f 2 -d \')
     if [ -z "$BACKUPS" ] || [[ "$BACKUPS" -le '0' ]]; then
         echo "Error: User backups are disabled"
-        log_event 'debug' "$E_BACKUP_DISABLED $V_EVENT"
-        exit $E_BACKUP_DISABLED
+        log_event 'debug' "$E_DISABLED $V_EVENT"
+        exit $E_DISABLED
     fi
 }
 

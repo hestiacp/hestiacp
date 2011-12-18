@@ -24,7 +24,7 @@ case $period in
     weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
     monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
     yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit $E_RRD_FAILED ;;
+    *) exit $E_RRD ;;
 esac
 
 # Checking directory
@@ -76,8 +76,8 @@ for host in $hosts; do
         if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]
         then
             echo "Error: config is broken"
-            log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-            exit $E_PARSE_ERROR
+            log_event 'debug' "$E_PARSING $V_EVENT"
+            exit $E_PARSING
         fi
 
         # Parsing data
@@ -126,7 +126,7 @@ for host in $hosts; do
         GPRINT:s:'MAX:Max\:''%8.0lf\j'  >/dev/null 2>/dev/null; result=$?
 
     if [ "$result" -ne 0 ]; then
-        exit $E_RRD_FAILED
+        exit $E_RRD
     fi
 
 done

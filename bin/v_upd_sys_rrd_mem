@@ -23,7 +23,7 @@ case $period in
     weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
     monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
     yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit $E_RRD_FAILED ;;
+    *) exit $E_RRD ;;
 esac
 
 # Checking directory
@@ -94,7 +94,7 @@ rrdtool graph  $V_RRD/mem/$period-mem.png \
 #----------------------------------------------------------#
 
 if [ "$result" -ne 0 ]; then
-    exit $E_RRD_FAILED
+    exit $E_RRD
 fi
 
 exit

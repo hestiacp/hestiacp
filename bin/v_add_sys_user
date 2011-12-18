@@ -25,8 +25,8 @@ is_user_free() {
     # Checking result
     if [ ! -z "$check_sysuser" ] || [ -e "$V_USERS/$user" ]; then
         echo "Error: user $user exist"
-        log_event 'debug' "$E_USER_EXIST $V_EVENT"
-        exit $E_USER_EXIST
+        log_event 'debug' "$E_EXISTS $V_EVENT"
+        exit $E_EXISTS
     fi
 }
 

@@ -43,8 +43,8 @@ if [ "$version" != "$VERSION" ]; then
     # Checking download result
     if [ "$?" -ne "0" ]; then
         echo "Error: version tree update failed"
-        log_event 'debug' "$E_UPD_FAILED $V_EVENT"
-        exit $E_UPD_FAILED
+        log_event 'debug' "$E_UPDATE $V_EVENT"
+        exit $E_UPDATE
     fi
 
     # Deviding version
@@ -89,8 +89,8 @@ if [ "$version" != "$VERSION" ]; then
             # Checking download result
             if [ "$?" -ne "0" ]; then
                 echo "Error: version tree update failed"
-                log_event 'debug' "$E_UPD_FAILED $V_EVENT"
-                exit $E_UPD_FAILED
+                log_event 'debug' "$E_UPDATE $V_EVENT"
+                exit $E_UPDATE
             fi
             bash  $V_BIN/updates/$update.sh
         done

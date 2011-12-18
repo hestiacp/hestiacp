@@ -28,7 +28,7 @@ int main (int argc, char** argv) {
     if (3 > argc) {
         printf("Error: bad args\n",argv[0]);
         printf("Usage: %s user password [ip]\n",argv[0]);
-        exit(3);
+        exit(1);
     };
 
     // checking ip
@@ -47,7 +47,7 @@ int main (int argc, char** argv) {
     FILE* pFile = fopen ("/usr/local/vesta/log/auth.log","a+");
     if (NULL == pFile) {
         printf("Error: can not open file %s \n", argv[0]);
-        exit(7);
+        exit(12);
     }
 
     // parsing user argument
@@ -74,12 +74,12 @@ int main (int argc, char** argv) {
                 strcat(str, " failed to login \n");
                 fputs (str,pFile);      // writing
                 fclose (pFile);         // closing
-                exit(24);               // exiting
+                exit(9);               // exiting
             };
         }
     } else {
         printf("Error: no such user\n",argv[1]);
-        exit(21);
+        exit(3);
     };
 
     return EXIT_SUCCESS;

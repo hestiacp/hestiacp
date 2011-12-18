@@ -47,8 +47,8 @@ is_package_avalable() {
        [ "$DISK_QUOTA" -lt "$U_DISK" ] ||\
        [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]; then
         echo "Error: Upgrade package"
-        log_event 'debug' "$E_PKG_UPGRADE $v_log"
-        exit $E_PKG_UPGRADE
+        log_event 'debug' "$E_LIMIT $v_log"
+        exit $E_LIMIT
     fi
 }
 

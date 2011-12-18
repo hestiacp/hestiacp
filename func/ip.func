@@ -6,8 +6,8 @@ is_sys_ip_free() {
     ip_check=$(echo "$ip_list"|grep -w "$ip")
     if [ -n "$ip_check" ] || [ -e "$V_IPS/$ip" ]; then
         echo "Error: IP exist"
-        log_event 'debug' "$E_IP_EXIST $V_EVENT"
-        exit  $E_IP_EXIST
+        log_event 'debug' "$E_EXISTS $V_EVENT"
+        exit  $E_EXISTS
     fi
 }
 
@@ -32,8 +32,8 @@ is_sys_ip_valid() {
     # Checking ip existance
     if [ ! -e "$V_IPS/$ip" ] || [ -z "$check_ifc" ]; then
         echo "Error: IP not exist"
-        log_event 'debug' "$E_IP_NOTEXIST $V_EVENT"
-        exit $E_IP_NOTEXIST
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
@@ -54,8 +54,8 @@ is_ip_key_empty() {
     # Checkng key
     if [ ! -z "$value" ] && [ "$value" != '0' ]; then
         echo "Error: value is not empty = $value "
-        log_event 'debug' "$E_VALUE_EXIST $V_EVENT"
-        exit $E_VALUE_EXIST
+        log_event 'debug' "$E_EXISTS $V_EVENT"
+        exit $E_EXISTS
     fi
 }
 
@@ -92,8 +92,8 @@ is_ip_avalable() {
     # Checking ip existance
     if [ ! -e "$V_IPS/$ip" ]; then
         echo "Error: IP not exist"
-        log_event 'debug' "$E_IP_NOTEXIST $V_EVENT"
-        exit $E_IP_NOTEXIST
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 
     # Parsing ip data
@@ -110,8 +110,8 @@ is_ip_avalable() {
 
     if [ "$ip_owner" != "$user" ] && [ "$ip_shared" != 'yes' ]; then
         echo "Error: ip not owned by user"
-        log_event 'debug' "$E_IP_NOTOWNED $V_EVENT"
-        exit $E_IP_NOTOWNED
+        log_event 'debug' "$E_FORBIDEN $V_EVENT"
+        exit $E_FORBIDEN
     fi
 }
 
@@ -121,8 +121,8 @@ is_sys_ip_owner() {
     ip_owner=$(grep 'OWNER=' $V_IPS/$ip|cut -f 2 -d \')
     if [ "$ip_owner" != "$user" ]; then
         echo "Error: IP not owned"
-        log_event 'debug' "$E_IP_NOTOWNED $V_EVENT"
-        exit $E_IP_NOTOWNED
+        log_event 'debug' "$E_FORBIDEN $V_EVENT"
+        exit $E_FORBIDEN
     fi
 }
 
@@ -144,8 +144,8 @@ increase_ip_value() {
     # Checking result
     if [ -z "$current_web" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
+        log_event 'debug' "$E_PARSING $V_EVENT"
+        exit $E_PARSING
     fi
 
     # +1 webdomain
@@ -181,8 +181,8 @@ decrease_ip_value() {
     # Checking result
     if [ -z "$current_web" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
+        log_event 'debug' "$E_PARSING $V_EVENT"
+        exit $E_PARSING
     fi
 
     # -1 webdomain
@@ -230,16 +230,16 @@ get_current_interface() {
     # Checking result
     if [ -z "$i" ]; then
         echo "Error: IP not exist"
-        log_event 'debug' "$E_IP_NOTEXIST $V_EVENT"
-        exit $E_IP_NOTEXIST
+        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        exit $E_NOTEXIST
     fi
 
     # Checking ip is alias
     check_alias=$(echo $i| cut -s -f 2 -d :)
     if [ -z "$check_alias" ]; then
-        echo "Error: IP is first on interface"
-        log_event 'debug' "$E_IP_FIRST $V_EVENT"
-        exit $E_IP_FIRST
+        echo "Error: Main IP on interface"
+        log_event 'debug' "$E_FORBIDEN $V_EVENT"
+        exit $E_FORBIDEN
     fi
     echo "$i"
 }

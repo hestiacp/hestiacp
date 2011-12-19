@@ -40,7 +40,7 @@ is_user_suspended
 update_user_value "$user" '$SHELL' "$shell"
 
 # Get shell full path
-shell_path=$(get_shell_path)
+shell_path=$(/usr/bin/chsh --list-shells | grep -w "$shell" )
 
 # Changing passwd file
 /usr/bin/chsh -s "$shell_path" "$user" >/dev/null 2>&1

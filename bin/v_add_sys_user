@@ -18,6 +18,18 @@ source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 
+is_user_free() {
+    # Parsing domain values
+    check_sysuser=$(cut -f 1 -d : /etc/passwd | grep -w "$user" )
+
+    # Checking result
+    if [ ! -z "$check_sysuser" ] || [ -e "$V_USERS/$user" ]; then
+        echo "Error: user $user exist"
+        log_event 'debug' "$E_EXISTS $V_EVENT"
+        exit $E_EXISTS
+    fi
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

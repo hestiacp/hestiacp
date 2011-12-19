@@ -53,8 +53,8 @@ stats=$(get_web_domain_value '$STATS')
 config="$V_HOME/$user/conf/$stats.$domain.conf"
 if [ ! -e "$config" ]; then
     echo "Error: Parsing error"
-    log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-    exit $E_PARSE_ERROR
+    log_event 'debug' "$E_PARSING $V_EVENT"
+    exit $E_PARSING
 fi
 
 # Checking statistics directory

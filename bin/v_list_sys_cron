@@ -27,9 +27,7 @@ json_list_cron() {
         IFS=$'\n'
 
         # Assing key=value pair
-        for key in $line; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $line
 
         # Closing bracket if there already was output
         if [ -n "$data" ]; then
@@ -81,12 +79,8 @@ shell_list_cron() {
 
     # Reading file line by line
     while read line ; do
-        # New delimeter
-        IFS=$'\n'
         # Assing key=value pair
-        for key in $line; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $line
 
         # Print result
         eval echo "$fields" | sed -e "s/%quote%/'/g"

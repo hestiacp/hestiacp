@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: adding user reports
+# info: deliting system user ips
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,7 +12,7 @@ user=$1
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
-source $V_FUNC/cron.func
+source $V_FUNC/ip.func
 
 
 #----------------------------------------------------------#
@@ -31,27 +31,37 @@ is_user_valid
 # Checking user is active
 is_user_suspended
 
+# Checking user vesta
+if [ "$user" = 'vesta' ]; then
+    exit
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing user report value
-update_user_value "$user" '$REPORTS' 'yes'
+# Parsing user ips
+ip_list=$(grep -H "OWNER='$user'" $V_IPS/* | cut -f 1 -d:)
 
-# Sync system cron with user
-sync_cron_jobs
+for ip in $ip_list; do 
+    ip=$(basename $ip)
+
+    # Checking webdomains and users
+    is_ip_key_empty '$U_WEB_DOMAINS'
+    is_ip_key_empty '$U_SYS_USERS'
+
+    # Assig ip to main account
+    update_sys_ip_value '$OWNER' 'vesta'
+    update_sys_ip_value '$STATUS' 'exclusive'
+
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding task to the vesta pipe
-restart_schedule 'cron'
-
 # Logging
-log_history "$V_EVENT" "v_del_sys_user_reports $user"
 log_event 'system' "$V_EVENT"
 
 exit

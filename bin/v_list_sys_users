@@ -23,9 +23,7 @@ json_list_users() {
         user_data=$(cat $V_USERS/$USER/user.conf)
 
         # Assign key/value config
-        for key in $user_data; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $user_data
 
         # Closing bracket if there already was output
         if [ -n "$data" ]; then
@@ -76,9 +74,7 @@ shell_list_users() {
         user_data=$(cat $V_USERS/$USER/user.conf)
 
         # Assign key/value config
-        for key in $user_data; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $user_data
 
         eval echo "$fields"
     done

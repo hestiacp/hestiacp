@@ -30,9 +30,7 @@ json_list_dbhost() {
     echo '{'
 
     # Assign key=value
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $line
 
     # Starting output loop
     for field in $fields; do
@@ -68,9 +66,7 @@ shell_list_dbhost() {
     line=$(grep "HOST='$host'" $conf)
 
     # Parsing key=value
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $line
 
     # Print result line
     for field in $fields; do

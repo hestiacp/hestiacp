@@ -46,8 +46,8 @@ while [ "$la" -ge "$V_BACKUP_LA_LIMIT" ]; do
 
     if [ "$i" -ge "15" ]; then
         echo "Error: LA is too high"
-        log_event 'debug' "$E_LOAD_AVERAGE $V_EVENT"
-        exit $E_LOAD_AVERAGE
+        log_event 'debug' "$E_LA $V_EVENT"
+        exit $E_LA
     fi
 
     (( ++i))
@@ -367,8 +367,8 @@ local_backup(){
     disk_usage=$(df $V_BACKUP | awk '{print $5}'|tail -n1|cut -f 1 -d '%')
     if [ "$disk_usage" -ge "$V_BACKUP_DISK_LIMIT" ]; then
         echo "Error: Not enough disk space"
-        log_event 'debug' "$E_DISK_SPACE $V_EVENT"
-        exit $E_DISK_SPACE
+        log_event 'debug' "$E_DISK $V_EVENT"
+        exit $E_DISK
     fi
 
     # Creating final tarball
@@ -402,8 +402,8 @@ ftp_backup(){
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
         [ -z "$BPATH" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSE_ERROR $V_EVENT"
-        exit $E_PARSE_ERROR
+        log_event 'debug' "$E_PARSING $V_EVENT"
+        exit $E_PARSING
     fi
 
     # Debug info
@@ -417,8 +417,8 @@ ftp_backup(){
              rm $ftmpdir"
     if [ ! -z "$(ftpc "$command")" ] ; then
         echo "Error: FTP error"
-        log_event 'debug' "$E_FTP_ERROR $V_EVENT"
-        exit $E_FTP_ERROR
+        log_event 'debug' "$E_FTP $V_EVENT"
+        exit $E_FTP
     fi
 
     # Checking retention

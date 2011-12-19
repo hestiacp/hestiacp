@@ -24,9 +24,7 @@ json_list_user() {
     echo '{'
 
     # Assing key=value
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $line
 
     # Starting output loop
     for field in $fields; do
@@ -60,9 +58,7 @@ shell_list_user() {
     line=$(cat $V_USERS/$USER/user.conf)
 
     # Parsing key=value
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $line
 
     # Print result line
     for field in $fields; do

@@ -49,8 +49,8 @@ get_web_domain_values
 check_alias=$(echo ${ALIAS//,/ }|grep -w "$dom_alias")
 if [ -z "$check_alias" ]; then
     echo "Error: alias not exist"
-    log_event 'debug' "$E_DOM_NOTEXIST $V_EVENT"
-    exit $E_DOM_NOTEXIST
+    log_event 'debug' "$E_NOTEXIST $V_EVENT"
+    exit $E_NOTEXIST
 fi
 
 #----------------------------------------------------------#

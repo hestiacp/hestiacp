@@ -42,9 +42,7 @@ json_list_dns() {
         IFS=$'\n'
 
         # Assing key=value pair
-        for key in $line; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $line
 
         # Closing bracket if there already was output
         if [ -n "$data" ]; then
@@ -96,12 +94,8 @@ shell_list_dns() {
 
     # Reading file line by line
     while read line ; do
-        # New delimeter
-        IFS=$'\n'
         # Assing key=value pair
-        for key in $line; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $line
 
         # Print result
         eval echo "$fields" | sed -e "s/%quote%/'/g"

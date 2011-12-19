@@ -14,6 +14,89 @@ source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
 
+is_package_avalable() {
+    # Parsing user data
+    usr_data=$(cat $V_USERS/$user/user.conf)
+    for key in $usr_data; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Clearing vars
+    WEB_DOMAINS='0'
+    WEB_SSL='0'
+    DATABASES='0'
+    MAIL_DOMAINS='0'
+    MAIL_BOXES='0'
+    MAIL_FORWARDERS='0'
+    DNS_DOMAINS='0'
+    DISK_QUOTA='0'
+    BANDWIDTH='0'
+
+    # Parsing package
+    pkg_data=$(cat $V_PKG/$package.pkg)
+    for key in $pkg_data; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Comparing user data with package
+    if [ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ] ||\
+       [ "$WEB_SSL" -lt "$U_WEB_SSL" ] ||\
+       [ "$DATABASES" -lt "$U_DATABASES" ] ||\
+       [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ] ||\
+       [ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ] ||\
+       [ "$DISK_QUOTA" -lt "$U_DISK" ] ||\
+       [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]; then
+        echo "Error: Upgrade package"
+        log_event 'debug' "$E_LIMIT $v_log"
+        exit $E_LIMIT
+    fi
+}
+
+change_user_package() {
+    # Parsing user data
+    usr_data=$(cat $V_USERS/$user/user.conf)
+    for key in $usr_data; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    # Parsing package
+    pkg_data=$(cat $V_PKG/$package.pkg)
+    for key in $pkg_data; do
+        eval ${key%%=*}=${key#*=}
+    done
+
+    echo "FNAME='$FNAME'
+LNAME='$LNAME'
+PACKAGE='$package'
+WEB_DOMAINS='$WEB_DOMAINS'
+WEB_SSL='$WEB_SSL'
+WEB_ALIASES='$WEB_ALIASES'
+DATABASES='$DATABASES'
+MAIL_DOMAINS='$MAIL_DOMAINS'
+MAIL_BOXES='$MAIL_BOXES'
+MAIL_FORWARDERS='$MAIL_FORWARDERS'
+DNS_DOMAINS='$DNS_DOMAINS'
+DISK_QUOTA='$DISK_QUOTA'
+BANDWIDTH='$BANDWIDTH'
+NS='$NS'
+SHELL='$SHELL'
+BACKUPS='$BACKUPS'
+WEB_TPL='$WEB_TPL'
+SUSPENDED='$SUSPENDED'
+CONTACT='$CONTACT'
+REPORTS='$REPORTS'
+IP_OWNED='$IP_OWNED'
+U_DIR_DISK='$U_DIR_DISK'
+U_DISK='$U_DISK'
+U_BANDWIDTH='$U_BANDWIDTH'
+U_WEB_DOMAINS='$U_WEB_DOMAINS'
+U_WEB_SSL='$U_WEB_SSL'
+U_DNS_DOMAINS='$U_DNS_DOMAINS'
+U_DATABASES='$U_DATABASES'
+U_MAIL_DOMAINS='$U_MAIL_DOMAINS'
+DATE='$DATE'" > $V_USERS/$user/user.conf
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

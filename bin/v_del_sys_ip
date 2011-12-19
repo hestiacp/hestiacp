@@ -56,7 +56,7 @@ rconf='/etc/httpd/conf.d/rpaf.conf'
 user="$(get_sys_ip_value '$OWNER')"
 
 # Deleting interface
-ifconfig "$interface" down
+/sbin/ifconfig "$interface" down
 
 # Deleting startup script
 rm -f $iconf-$interface

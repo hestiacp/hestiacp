@@ -6,18 +6,25 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-rrd_start=${1--1d}
-rrd_end=${2-now}
-rrd_grid=${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}
+update=$1
+period=${1-daily}
 
 # Importing variables
 source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Switching on time period
+case $period in
+    daily)   start='-1d'; end='now'; grid='MINUTE:30:HOUR:1:HOUR:4:0:%H:%M';;
+    weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
+    monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
+    yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
+    *) exit $E_RRD ;;
+esac
 
 # Checking directory
 if [ ! -d "$V_RRD/net" ]; then
@@ -50,7 +57,7 @@ for iface in $ifaces; do
     fi
 
     # Parsing device stats
-    if [ -z "$1" ]; then
+    if [ -z "$update" ]; then
         raw_iface=$(grep "$iface:" /proc/net/dev |sed -e "s/:/ /")
         rx=$(echo "$raw_iface" |awk '{print $2}')
         tx=$(echo "$raw_iface" |awk '{print $10}')
@@ -60,15 +67,15 @@ for iface in $ifaces; do
     fi
 
     # Updating rrd graph
-    rrdtool graph $V_RRD/net/$iface.png \
+    rrdtool graph $V_RRD/net/$period-$iface.png \
         --imgformat PNG \
         --height="120" \
         --width="440" \
-        --start "$rrd_start" \
-        --end "$rrd_end" \
-        --title "Bandwidth Usage $iface" \
+        --start "$start" \
+        --end "$end" \
+        --title "Bandwidth Usage $iface ($period)" \
         --vertical-label "KBytes" \
-        --x-grid "$rrd_grid" \
+        --x-grid "$grid" \
         -c "BACK#484439" \
         -c "SHADEA#484439" \
         -c "SHADEB#484439" \
@@ -93,7 +100,7 @@ for iface in $ifaces; do
         GPRINT:out:'MAX:Max\:''%8.0lf\j'  >/dev/null 2>/dev/null; result=$?
 
     if [ "$result" -ne 0 ]; then
-        exit $E_RRD_FAILED
+        exit $E_RRD
     fi
 
 done

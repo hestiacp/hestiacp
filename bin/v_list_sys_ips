@@ -26,9 +26,7 @@ json_list_ips() {
     for IP in $ip_list; do
         # Assing key=value
         ip_data=$(cat $V_IPS/$IP)
-        for key in $ip_data; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $ip_data
 
         # Closing bracket if there already was output
         if [ -n "$data" ]; then
@@ -83,9 +81,7 @@ shell_list_ips() {
         ip_data=$(cat $V_IPS/$IP)
 
         # Assign key/value config
-        for key in $ip_data; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $ip_data
 
         # Print result line
         eval echo "$fields"

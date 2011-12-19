@@ -6,18 +6,25 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-rrd_start=${1--1d}
-rrd_end=${2-now}
-rrd_grid=${3-MINUTE:30:HOUR:1:HOUR:4:0:%H:%M}
+update=$1
+period=${1-daily}
 
 # Importing variables
 source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Switching on time period
+case $period in
+    daily)   start='-1d'; end='now'; grid='MINUTE:30:HOUR:1:HOUR:4:0:%H:%M';;
+    weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
+    monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
+    yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
+    *) exit $E_RRD ;;
+esac
 
 # Checking directory
 if [ ! -d "$V_RRD/ssh" ]; then
@@ -40,7 +47,7 @@ if [ ! -e "$V_RRD/ssh/ssh.rrd" ]; then
 fi
 
 # Parsing data
-if [ -z "$1" ]; then
+if [ -z "$update" ]; then
     a=0
     a=$(ps auxf|grep sshd |grep -v grep |grep -v '/usr/sbin/'| wc -l)
 
@@ -49,15 +56,15 @@ if [ -z "$1" ]; then
 fi
 
 # Updating daily graph
-rrdtool graph $V_RRD/ssh/ssh.png \
+rrdtool graph $V_RRD/ssh/$period-ssh.png \
     --imgformat PNG \
     --height="120" \
     --width="440" \
-    --start "$rrd_start" \
-    --end "$rrd_end" \
+    --start "$start" \
+    --end "$end" \
     --title "SSH Usage" \
-    --vertical-label "Connections" \
-    --x-grid "$rrd_grid" \
+    --vertical-label "Connections ($period)" \
+    --x-grid "$grid" \
     -c "BACK#484439" \
     -c "SHADEA#484439" \
     -c "SHADEB#484439" \
@@ -80,7 +87,7 @@ rrdtool graph $V_RRD/ssh/ssh.png \
 #----------------------------------------------------------#
 
 if [ "$result" -ne 0 ]; then
-    exit $E_RRD_FAILED
+    exit $E_RRD
 fi
 
 exit

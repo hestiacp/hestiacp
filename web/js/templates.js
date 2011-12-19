@@ -25,6 +25,7 @@ App.Templates.html = {
         inner_popup: ['<div id="inner-popup" style="left:~!:LEFT~!px;top:~!:TOP~!px;z-index:1000;display:block;" class="d-popup d-popup-ns-list">\
             <div class="d-popup-inner">\
                 <span class="close do_action_close_inner_popup">×</span>\
+                <div class="d-popup-title">~!:POPUP_TITLE~!</div>\
                 <div class="d-popup-content">\
                     ~!:CONTENT~!\
                 </div>\
@@ -32,8 +33,8 @@ App.Templates.html = {
         </div>'],
         select_option: ['<option ~!:SELECTED~! value="~!:VALUE~!">~!:TEXT~!</option>'],
         error_elm: ['<div class="error-box">~!:ERROR~!</div>'],
-        SUSPENDED_TPL_NOT_SUSPENDED : ['<span class="ip-status-info ip-enabled-status do_action_suspend"><span class="ip-status-text do_action_suspend">enabled</span></span>'],
-        SUSPENDED_TPL_SUSPENDED : ['<span class="ip-status-info ip-suspended-status do_action_unsuspend"><span class="ip-status-text do_action_unsuspend">suspended</span></span>']        
+        SUSPENDED_TPL_NOT_SUSPENDED : ['<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>'],
+        SUSPENDED_TPL_SUSPENDED : ['<span class="ip-status-info ip-suspended-status"><span class="ip-status-text">suspended</span></span>']        
     },
     popup: {
         error: ['<div class="error"><center><h1 style="color: red;">Important: An Error Has Occured.</h1><hr></center>&nbsp;&nbsp;&nbsp;&nbsp;Something went wrong and some of your actions can be not saved in system. Mostly, it happens when you have network connection errors.<br>,&nbsp;&nbsp;&nbsp;&nbsp;However, please notify us about the situation. It would be helpfull if you will write us approximate time the error occured and last actions you were performing. You send your petition on <a href="mail_to">this email: BLABLA</a>,<br><br><center><span style="color: rgb(92, 92, 92);">Sorry for inconvinience. (We recommend you to reload the page)</span></center></div>'],
@@ -42,8 +43,9 @@ App.Templates.html = {
                 <div class="b-auth-form">\
                     <div class="b-auth-form-wrap">\
                         <img width="72" height="24" alt="" src="~!:LOGO_URL~!" class="vesta-logo">\
+                        <span style="color: #5E696B; float: right; margin-top: -48px;">~!:VERSION~!</span>\
                         <div class="b-client-title">\
-                            <span class="client-title-wrap">~!:VERSION~!<i class="planets">&nbsp;</i></span>\
+                            <span class="client-title-wrap">~!:PRODUCT_NAME~!<i class="planets">&nbsp;</i></span>\
                         </div>\
                         <form id="change_psw-form" method="post" action="#" class="auth">\
                             <div class="form-row cc">\
@@ -76,8 +78,9 @@ App.Templates.html = {
         <div class="b-auth-form">\
             <div class="b-auth-form-wrap">\
                 <img width="72" height="24" alt="" src="~!:LOGO_URL~!" class="vesta-logo">\
+                <span style="color: #5E696B; float: right; margin-top: -48px;">~!:VERSION~!</span>\
                 <div class="b-client-title">\
-                    <span class="client-title-wrap">~!:VERSION~!<i class="planets">&nbsp;</i></span>\
+                    <span class="client-title-wrap">~!:PRODUCT_NAME~!<i class="planets">&nbsp;</i></span>\
                 </div>\
                 <form id="login-form" method="post" action="#" class="auth">\
                     <div class="form-row cc">\
@@ -112,7 +115,7 @@ App.Templates.html = {
     },
     dns: {
         FORM: [
-            '<div style="margin-top: 25px;" class="b-new-entry b-new-entry_dns form" id="~!:id~!">\
+            '<div style="margin-top: 25px;" class="b-new-entry b-new-entry_dns form ~!:FORM_SUSPENDED~!" id="~!:id~!">\
                 <input type="hidden" name="source" class="source" value=~!:source~!>\
                     <input type="hidden" name="target" class="target" value=\'\'>\
                     <div class="entry-header">~!:title~!</div>\
@@ -136,7 +139,7 @@ App.Templates.html = {
                                 <select name="TPL" class="styled tpl-item">\
                                        ~!:TPL~!\
                                 </select>\
-                            <span class="context-settings do_action_view_template_settings">View template settings</span>\
+                            <span class="context-settings do_action_view_dns_template_settings">View template settings</span>\
                     </div>\
                     <div class="form-row cc">\
                             <label for="#" class="field-label">ttl:</label>\
@@ -146,22 +149,25 @@ App.Templates.html = {
                             <label for="#" class="field-label">soa:</label>\
                             <input type="text" value="~!:SOA~!" name="SOA" class="text-field rule-required rule-ns">\
                     </div>\
+                    <div class="form-row suspended cc">\
+							<label for="#" class="field-label">suspended:</label>\
+							<input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
+					</div>\
                     <div class="form-row buttons-row cc">\
-                            <input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form" name="save">\
-                            <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                            <a class="help-btn" href="http://vestacp.com/docs/dns/" target="_blank">Help</a>\
+                       <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
+                       <span class="cancel-btn do_action_cancel_form">Cancel</span>\
+                       <span class="delete-btn do_action_delete_entry">Delete</span>\
                     </div>\
             </div>'
         ],        
         ENTRIES_WRAPPER: ['<div class="dns-list items-list">~!:content~!</div>'],
-        ENTRY: ['<div class="row dns-details-row ~!:CHECKED~!">\
+        ENTRY: ['<div class="row dns-details-row ~!:CHECKED~! ~!:SUSPENDED_CLASS~!">\
                             <input type="hidden" name="source" class="source" value=~!:source~! />\
                             <input type="hidden" class="target" name="target" value=\'\' />\
                             <div class="row-actions-box cc">\
                                         <div class="check-this check-control"></div>\
                                         <div class="row-operations">\
                                                 ~!:SUSPENDED_TPL~!\
-                                                <span class="delete-entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
                                         </div>\
                                 </div>\
                                 <div class="row-meta">\
@@ -237,7 +243,7 @@ App.Templates.html = {
     },
     ip: {
         FORM: ['\
-            <div class="b-new-entry b-new-entry_ip form" id="~!:id~!">\
+            <div class="b-new-entry b-new-entry_ip form ~!:FORM_SUSPENDED~!" id="~!:id~!">\
                 <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                 <input type="hidden" name="target" class="target" value=\'~!:target~!\'>\
                 <div class="entry-header">~!:title~!</div>\
@@ -262,7 +268,7 @@ App.Templates.html = {
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">name:</label>\
-                        <input type="text" name="NAME" value="~!:NAME~!" class="text-field rule-abc">\
+                        <input type="text" name="NAME" value="~!:NAME~!" class="text-field rule-domain">\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">interface:</label>\
@@ -277,23 +283,26 @@ App.Templates.html = {
                                 <input type="text" value="~!:NETMASK~!" name="NETMASK" class="text-field">\
                         </div>\
                 </div>\
-                <div class="form-row buttons-row cc">\
-                        <input type="submit" value="~!:save_button~!" name="save" class="add-entry-btn do_action_save_form">\
-                        <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                        <a class="help-btn" href="http://vestacp.com/docs/ip/" target="_blank">Help</a>\
+                <div class="form-row suspended cc">\
+							<label for="#" class="field-label">suspended:</label>\
+							<input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
+					</div>\
+				<div class="form-row buttons-row cc">\
+                   <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
+                   <span class="cancel-btn do_action_cancel_form">Cancel</span>\
+                   <span class="delete-btn do_action_delete_entry">Delete</span>\
                 </div>\
         </div>\
          '],
         DOT: ['<span class="dot">.</span>'],
         ENTRY: ['\
-            <div class="row ip-details-row">\
+            <div class="row ip-details-row ~!:SUSPENDED_CLASS~!">\
                 <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                 <input type="hidden" class="target" name="target" value="" />\
                 <div class="row-actions-box cc">\
                         <div class="check-this"></div>\
                         <div class="row-operations">\
-                        ~!:SUSPENDED_TPL~!\
-                        <span class="delete-entry do_action_delete_entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
+                            ~!:SUSPENDED_TPL~!\
                         </div>\
                 </div>\
                 <div class="row-meta">\
@@ -349,12 +358,12 @@ App.Templates.html = {
         WEB_TPL_MINIMIZED: ['~!:WEB_TPL_MINI~!\
                         <span class="group-switcher">\
                             <span class="group-values-count do_action_view_full_ns_list">~!:MORE_NUMBER~! more</span>\
-                        </span><span class="hidden ns-full-list"><span class="group-values group-values__bullet">~!:WEB_TPL_FULL~!</span></span>'],
+                        </span><span class="hidden ns-full-list"><span class="group-values">~!:WEB_TPL_FULL~!</span></span>'],
         WEB_TPL: ['<span class="prop-value">~!:NAME~!</span>'],
         NS_MINIMIZED: ['~!:NS_MINI~!\
                         <span class="group-switcher">\
                             <span class="group-values-count do_action_view_full_ns_list">~!:MORE_NUMBER~! more</span>\
-                        </span><span class="hidden ns-full-list"><span class="group-values group-values__bullet">~!:NS_FULL~!</span></span>'],        
+                        </span><span class="hidden ns-full-list"><span class="group-values">~!:NS_FULL~!</span></span>'],        
         NS_RECORD: ['<span class="prop-value">~!:NAME~!</span>'],
         NS_INPUT: ['<div class="form-row ns-entry cc">\
 							<label for="#" class="field-label">~!:NS_LABEL~!:</label>\
@@ -367,8 +376,8 @@ App.Templates.html = {
 								<span class="btn-title do_action_add_form_ns">Add additional NS</span>\
 							</a>\
 						</div>'],
-        ENTRIES_WRAPPER: ['<div class="users-list items-list">~!:content~!</div>'],
-        FORM:  ['<div id="~!:id~!" class="b-new-entry b-new-entry_user form">\
+        ENTRIES_WRAPPER: ['<div class="users-list items-list">~!:content~!</div>'], 
+        FORM:  ['<div id="~!:id~!" class="b-new-entry b-new-entry_user form ~!:FORM_SUSPENDED~!">\
                         <input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
 						<div class="entry-header">~!:title~!</div>\
@@ -395,12 +404,12 @@ App.Templates.html = {
 								~!:SHELL_OPTIONS~!\
 							</select>\
 						</div>\
-						<div class="form-row cc">\
+						<!-- div class="form-row cc">\
 							<label for="#" class="field-label">role:</label>\
 							<select class="styled" name="ROLE">\
 								~!:ROLE_OPTIONS~!\
 							</select>\
-						</div>\
+						</div -->\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">contact email:</label>\
 							<input type="text" name="CONTACT" class="text-field rule-email rule-required" value="~!:CONTACT~!">\
@@ -417,7 +426,7 @@ App.Templates.html = {
 							<label for="#" class="field-label">Lastname:</label>\
 							<input type="text" name="LNAME" class="text-field rule-abc rule-required" value="~!:LNAME~!">\
 						</div>\
-                        <!-- div class="form-row ns-entry cc">\
+                        <div class="form-row ns-entry cc">\
 							<label for="#" class="field-label">NS #1:</label>\
 							<input type="text" value="~!:NS1~!" name="NS1" class="text-field rule-required rule-ns">\
 						</div>\
@@ -425,31 +434,28 @@ App.Templates.html = {
 							<label for="#" class="field-label">NS #2:</label>\
 							<input type="text" value="~!:NS2~!" name="NS2" class="text-field rule-required rule-ns">\
 						</div>\
-                        ~!:NS~!\ -->\
+                        ~!:NS~!\
+                        <div class="form-row suspended cc">\
+                            <label for="#" class="field-label">suspended:</label>\
+                            <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
+                        </div>\
                         <div class="form-row buttons-row cc">\
-							<input type="submit" value="~!:save_button~!" name="save" class="add-entry-btn do_action_save_form">\
-							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
-							<a class="help-btn" href="http://vestacp.com/docs/user/" target="_blank">Help</a>\
-						</div>\
+                           <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
+                           <span class="cancel-btn do_action_cancel_form">Cancel</span>\
+                           <span class="delete-btn do_action_delete_entry">Delete</span>\
+                        </div>\
 					</div>'],
-        ENTRY: ['<div class="row user-details-row">\
+        ENTRY: ['<div class="row user-details-row ~!:SUSPENDED_CLASS~!">\
                     <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                     <input type="hidden" class="target" name="target" value="" />\
 						<div class="row-actions-box cc">\
 							<div class="check-this check-control"></div>\
 							<div class="row-operations">\
 								~!:SUSPENDED_TPL~!\
-								<span class="delete-entry do_action_delete_entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
 							</div>\
 						</div>\
 						<div class="row-meta">\
 							<div class="entry-created">~!:DATE~!</div>\
-							<div class="ownership">\
-								<span class="prop-box">\
-									<span class="prop-title">owner:</span>\
-									<span class="prop-value">~!:OWNER~!</span>\
-								</span>\
-							</div>\
 						</div>\
 						<div class="row-details cc">\
 							<div class="props-main">\
@@ -457,8 +463,7 @@ App.Templates.html = {
 									<div class="username-box">\
 										<span class="user">\
 											<span class="nickname do_action_edit">~!:LOGIN_NAME~!</span>\
-                                            <span class="role"></span>\
-											<span class="role">(~!:ROLE~!)</span>\
+                                            <!-- span class="role">(~!:ROLE~!)</span -->\
 										</span>\
 										<span class="prop-box template-box">\
 											<span class="prop-title">package:</span>\
@@ -477,9 +482,6 @@ App.Templates.html = {
                                                 <span class="prop-value user-reports">(reports ~!:REPORTS_ENABLED~!)</span>\
                                                 </span>\
                                         </span>\
-                                        <span class="prop-box childs-box">\
-                                        <span class="prop-title">childs:</span>\
-                                            <span class="prop-value prop-value-collapsed-childs">~!:U_CHILDS~! (~!:MAX_CHILDS~!)</span>\                                        </span>\
 									</div>\
 								</div>\
 								<!-- disk usage block -->\
@@ -523,11 +525,11 @@ App.Templates.html = {
 								</span>\
 								<span class="prop-box webalias-box">\
 									<span class="prop-title">web alias:</span>\
-									<span class="prop-value prop-value-collapsed-childs">(~!:WEB_ALIASES~!) per domain</span>\
+									<span class="prop-value">~!:WEB_ALIASES~! per domain</span>\
 								</span>\
 								<span class="prop-box prop-box_group-values cc webtpl-box">\
 									<span class="prop-title">web templates:</span>\
-									<span class="group-values group-values__bullet">\
+									<span class="group-values">\
 										~!:WEB_TPL~!\
 									</span>\
 								</span>\
@@ -567,7 +569,7 @@ App.Templates.html = {
 								</span>\
 								<span class="prop-box prop-box_group-values cc ns-list-box">\
 									<span class="prop-title">ns list:</span>\
-									<span class="group-values group-values__bullet">\
+									<span class="group-values">\
 									~!:NS~!</span>\
 								</span>\
 							</div>\
@@ -575,7 +577,7 @@ App.Templates.html = {
 					</div>']
     },
     web_domain: {        
-        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_domain form">\
+        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_domain form ~!:FORM_SUSPENDED~!">\
                         <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                         <input type="hidden" class="target" name="target" value="" />\
 						<div class="entry-header">~!:title~!</div>\
@@ -599,6 +601,10 @@ App.Templates.html = {
 								~!:TPL_OPTIONS~!\
 								</select>\
 							</div>\
+                        <div class="form-row suspended cc">\
+                            <label for="#" class="field-label">suspended:</label>\
+                            <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
+                        </div>\
                         <!-- advanced options -->\
 						<div class="form-options-group">\
 							<div class="group-header cc collapsed">\
@@ -611,7 +617,7 @@ App.Templates.html = {
 								<label for="#" class="field-label">CGI:</label>\
 								<input type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="styled">\
 							</div>\
-                        <div class="form-row cc">\
+                            <div class="form-row cc">\
 								<label for="#" class="field-label">ELOG:</label>\
 								<input type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="styled">\
 							</div>\
@@ -638,10 +644,10 @@ App.Templates.html = {
 									<span class="generate-pwd do_action_generate_pass">Generate</span>\
 								</div>\
 							</div><!-- // stats settings -->\
-							<div class="form-row cc">\
+							<!-- div class="form-row cc">\
 								<label for="#" class="field-label">ssl:</label>\
 								<input type="checkbox" name="SSL" class="styled" ~!:ssl_checked~!="" value="~!SSL~!">\
-							</div>\
+							</div -->\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">ssl home:</label>\
 								<input type="text" name="SSL_HOME" class="text-field" value="~!:SSL_HOME~!">\
@@ -685,20 +691,19 @@ App.Templates.html = {
                         </div>\
                         </div><!-- Mail options -->\
 						<div class="form-row buttons-row cc">\
-							<input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form">\
-							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
-							<a target="_blank" href="http://vestacp.com/docs/web/" class="help-btn">Help</a>\
-						</div>\
+                           <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
+                           <span class="cancel-btn do_action_cancel_form">Cancel</span>\
+                           <span class="delete-btn do_action_delete_entry">Delete</span>\
+                        </div>\
 					</div>'],
         ENTRIES_WRAPPER: ['<div class="domains-list items-list">~!:content~!</div>'],
-        ENTRY: ['<div class="row domain-details-row">\
+        ENTRY: ['<div class="row domain-details-row ~!:SUSPENDED_CLASS~!">\
                         <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                         <input type="hidden" class="target" name="target" value="" />\
 						<div class="row-actions-box cc">\
 							<div class="check-this check-control"></div>\
 							<div class="row-operations">\
 								~!:SUSPENDED_TPL~!\
-								<span class="delete-entry do_action_delete_entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
 							</div>\
 						</div>\
 						<div class="row-meta">\
@@ -794,7 +799,7 @@ App.Templates.html = {
 						</span>\
 					</div>'],
         ENTRIES_WRAPPER: ['<div class="db-list">~!:content~!</div>'],
-        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_db form">\
+        FORM: ['<div id="~!:id~!"  class="b-new-entry b-new-entry_db form ~!:FORM_SUSPENDED~!">\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="entry-header">~!:title~!</div>\
@@ -823,19 +828,23 @@ App.Templates.html = {
 							<label for="#" class="field-label">db host:</label>\
 							<select name="HOST" class="styled">~!:HOST_OPTIONS~!</select>\
 						</div>\
-						<div class="form-row buttons-row cc">\
-							<input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form">\
-							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
-							<a target="_blank" href="http://vestacp.com/docs/db/" class="help-btn">Help</a>\
-						</div>\
+						<div class="form-row suspended cc">\
+                            <label for="#" class="field-label">suspended:</label>\
+                            <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
+                        </div>\
+                        <div class="form-row buttons-row cc">\
+                           <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
+                           <span class="cancel-btn do_action_cancel_form">Cancel</span>\
+                           <span class="delete-btn do_action_delete_entry">Delete</span>\
+                        </div>\
 					</div>'],
-        ENTRY: ['<div class="row db-details-row">\
+        ENTRY: ['<div class="row db-details-row ~!:SUSPENDED_CLASS~!">\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="row-actions-box cc">\
 							<div class="check-this check-control"></div>\
 							<div class="row-operations">\
-								<span class="delete-entry do_action_delete_entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
+								~!:SUSPENDED_TPL~!\
 							</div>\
 						</div>\
 						<div class="row-meta">\
@@ -880,7 +889,7 @@ App.Templates.html = {
 					</div>']
     },
     cron: {
-        FORM: ['<div class="b-new-entry b-new-entry_cron form" id="~!:id~!" >\
+        FORM: ['<div class="b-new-entry b-new-entry_cron form ~!:FORM_SUSPENDED~!" id="~!:id~!" >\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="entry-header">~!:title~!</div>\
@@ -929,21 +938,24 @@ App.Templates.html = {
 							<label for="#" class="field-label">report to: <span class="remark">(devide by comma ",")</span></label>\
 							<textarea class="textarea" name="REPORT_TO"></textarea>\
 						</div>\
-						<div class="form-row buttons-row cc">\
-							<input type="submit" value="~!:save_button~!" class="add-entry-btn do_action_save_form">\
-							<span class="cancel-btn do_action_cancel_form">Cancel</span>\
-							<a target="_blank" href="http://vestacp.com/docs/cron/" class="help-btn">Help</a>\
-						</div>\
+						<div class="form-row suspended cc">\
+                            <label for="#" class="field-label">suspended:</label>\
+                            <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
+                        </div>\
+                        <div class="form-row buttons-row cc">\
+                           <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
+                           <span class="cancel-btn do_action_cancel_form">Cancel</span>\
+                           <span class="delete-btn do_action_delete_entry">Delete</span>\
+                        </div>\
 					</div>'],
         ENTRIES_WRAPPER: ['<div class="cron-list">~!:content~!</div>'],
-        ENTRY: ['<div class="row cron-details-row">\
+        ENTRY: ['<div class="row cron-details-row ~!:SUSPENDED_CLASS~!">\
 						<input type="hidden" name="source" class="source" value=\'~!:source~!\'>\
                         <input type="hidden" name="target" class="target" value=\'\'>\
                         <div class="row-actions-box cc">\
 							<div class="check-this check-control"></div>\
 							<div class="row-operations">\
 								~!:SUSPENDED_TPL~!\
-                        <span class="delete-entry do_action_delete_entry"><span class="delete-entry-text do_action_delete_entry">delete</span></span>\
 							</div>\
 						</div>\
 						<div class="row-meta">\
@@ -984,9 +996,53 @@ App.Templates.html = {
 							</div>\
 						</div><!-- // .row-details -->\
 					</div>']
-    }
+    },
+    backup: {
+		WRAPPER: ['<div class="backups-list">~!:CONTENT~!</div>'],
+		ENTRY:   ['<div class="backups-list">\
+					<!-- row 1 -->\
+					<div class="row first-row backup-details-row">\
+						<div class="row-meta">\
+							<div class="ownership">\
+								<span class="prop-box">\
+									<span class="prop-title">owner:</span>\
+									<span class="prop-value">~!:OWNER~!</span>\
+								</span>\
+							</div>\
+						</div>\
+						<div class="row-details cc">\
+							<div class="props-main">\
+								<span class="prop-box entry-created">\
+									<span class="backup-date">\
+										<span class="backup-day">~!:CREATED_AT~!</span>\
+										<span class="backup-time">~!:CREATED_AT_TIME~!</span>\
+									</span>\
+									<span class="backup-weekday">~!:CREATED_AT_WDAY~!</span>\
+								</span>\
+								<span class="prop-box generation-time">\
+									<span class="prop-title">Generation time:</span>\
+									<span class="prop-value">~!:GENERATION_TIME~!</span>\
+								</span>\
+							</div>\
+							<div class="props-additional">\
+								<span class="backup-size">\
+									<span class="backup-size-inner">~!:SIZE~!</span>\
+								</span>\
+								<a class="backup-url" href="return alert(\'Not available at the time\');">download</a>\
+							</div>\
+							<div class="props-ext">\
+								<div class="backup-actions">\
+									<a class="backup-actions-url restore-url" href="return alert(\'Not available at the time\');">restore</a>\
+									<a class="backup-actions-url detailed-restore-url" href="return alert(\'Not available at the time\');">\
+										<span class="detailed-restore-title">detailed</span>\
+										<span class="detailed-restore-ext">restore</span>\
+									</a>\
+								</div>\
+							</div>							\
+						</div><!-- // .row-details -->\
+					</div><!-- // .row 1 -->']
+	}
 }
-
 
 
 // Internals

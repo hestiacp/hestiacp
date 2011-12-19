@@ -93,7 +93,9 @@ var App = {
             DB: {},
             DNS: {},
             IP: {},
-            CRON: {}
+            CRON: {},
+            BACKUPS: {},
+            STATS: {}
         }
     },
     Messages: {},
@@ -116,7 +118,9 @@ var App = {
         DB: {},
         DNS: {},
         IP: {},
-        CRON: {}
+        CRON: {},
+		BACKUPS: {},
+		STATS: {}
     },
     Ref: {},
     Tmp: { AJAX_SYNCRONOUS:{} },

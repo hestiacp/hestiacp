@@ -1,3 +1,21 @@
+App.Actions.toggle_suspend = function(evt)
+{
+	var elm = $(evt.target);
+	var ref = elm.parents('.form');
+	ref.removeClass('form-suspended');
+	fb.warn(ref);
+	var ref_checkbox = ref.find('input[name="SUSPEND"]');
+	ref_checkbox.val() == 'on' ? ref_checkbox.val('off') : ref_checkbox.val('on'); //  switch state
+	if (ref_checkbox.val() == 'on') { // set class on new state
+		ref.addClass('form-suspended');
+		fb.warn('SUSP');
+	}
+	else {
+		ref.removeClass('form-suspended');		
+		fb.warn('UNSUSP');
+	}
+}
+
 App.Actions.toggle_custom_select = function(evt)
 {
     var elm = $(evt.target);
@@ -54,10 +72,11 @@ App.Actions.back_to_login = function()
 {    
     $('body').addClass('page-auth');
     var tpl = App.Templates.get('login', 'popup');
-    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo.png'));
+    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo-2011-12-14.png'));
     tpl.set(':YEAR', new Date().getFullYear());
     tpl.set(':EMAIL_REAL', App.Settings.VestaAbout.company_email);
-    tpl.set(':EMAIL', App.Settings.VestaAbout.company_name);
+    tpl.set(':EMAIL', App.Settings.VestaAbout.company_email);
+    tpl.set(':PRODUCT_NAME', App.Settings.VestaAbout.company_name);
     tpl.set(':VERSION', App.Settings.VestaAbout.version_name + ' ' + App.Settings.VestaAbout.version);
     $('body').prepend(tpl.finalize());
     $('#change-psw-block').remove();    
@@ -73,12 +92,13 @@ App.Actions.change_password = function(evt)
     }  
     
     var tpl = App.Templates.get('change_psw', 'popup');
-    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo.png'));
+    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo-2011-12-14.png'));
     tpl.set(':YEAR', new Date().getFullYear());
     tpl.set(':CAPTCHA_URL', App.Helpers.generateUrl('captcha.php?')+Math.floor(Math.random() * 9999));
     tpl.set(':CAPTCHA_URL_2', App.Helpers.generateUrl('captcha.php'));  
     tpl.set(':EMAIL_REAL', App.Settings.VestaAbout.company_email);
-    tpl.set(':EMAIL', App.Settings.VestaAbout.company_name);
+    tpl.set(':EMAIL', App.Settings.VestaAbout.company_email);
+    tpl.set(':PRODUCT_NAME', App.Settings.VestaAbout.company_name);
     tpl.set(':VERSION', App.Settings.VestaAbout.version_name + ' ' + App.Settings.VestaAbout.version);  
     $('#auth-block').remove();
     $('body').prepend(tpl.finalize()); 
@@ -104,10 +124,11 @@ App.Actions.authorize = function()
     $('#page').addClass('hidden');
     $('body').addClass('page-auth');
     var tpl = App.Templates.get('login', 'popup');
-    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo.png'));
+    tpl.set(':LOGO_URL', App.Helpers.generateUrl('images/vesta-logo-2011-12-14.png'));
     tpl.set(':YEAR', new Date().getFullYear());
     tpl.set(':EMAIL_REAL', App.Settings.VestaAbout.company_email);
-    tpl.set(':EMAIL', App.Settings.VestaAbout.company_name);
+    tpl.set(':EMAIL', App.Settings.VestaAbout.company_email);
+    tpl.set(':PRODUCT_NAME', App.Settings.VestaAbout.company_name);
     tpl.set(':VERSION', App.Settings.VestaAbout.version_name + ' ' + App.Settings.VestaAbout.version);
     $('body').prepend(tpl.finalize());
     $(document).ready(function(){
@@ -123,12 +144,15 @@ App.Actions.authorize = function()
 App.Actions.new_entry = function() {
     if ('undefined' != typeof App.Pages[App.Env.world].new_entry) {fb.log(1);
         App.Pages[App.Env.world].new_entry();
-    } else {fb.log(2);
+    } else {
         var form_id = App.Constants[App.Env.world + '_FORM_ID'];
         $('#'+form_id).remove();
         var build_method = App.Env.getWorldName() + '_form';
         var tpl = App.HTML.Build[build_method]({}, form_id);
-        App.Ref.CONTENT.prepend(tpl);
+        var box = $('<div>').html(tpl);
+        $(box).find('.suspended').addClass('hidden');
+        App.Ref.CONTENT.prepend($(box).html());
+        
         App.Helpers.updateScreen();
     }
 }
@@ -158,7 +182,7 @@ App.Actions.delete_entry = function(evt)
         return;
     }
     var elm = $(evt.target);
-    var elm = elm.hasClass('row') ? elm : elm.parents('.row');    
+    var elm = elm.hasClass('form') ? elm : elm.parents('.form');
     App.Model.remove(App.Env.world, elm);
 }
 
@@ -182,18 +206,25 @@ App.Actions.view_template_settings = function(evt)
     var elm = $(evt.target);    
     var ref = elm.hasClass('tpl-item') ? elm : elm.prev('.tpl-item');
     var tpl_name = $(ref).val() || $(ref).text();    
-    fb.log(tpl_name);
-    App.Helpers.openInnerPopup(elm, App.Env.initialParams.WEB_DOMAIN.TPL[tpl_name].DESCR || tpl_name);
+    App.Helpers.openInnerPopup(elm, App.Env.initialParams.WEB_DOMAIN.TPL[tpl_name].DESCR || tpl_name, 'Template Settings');
 }
 
 App.Actions.view_dns_template_settings = function(evt) 
 {
     var elm = $(evt.target);    
+    var ref = elm.hasClass('tpl-item') ? elm : elm.prev('.tpl-item');
+    var tpl_name = $(ref).val() || $(ref).text();    
+    App.Helpers.openInnerPopup(elm, App.Env.initialParams.DNS.TPL[tpl_name].DESCR || tpl_name, 'Template Settings');
+}
+
+/*App.Actions.view_dns_template_settings = function(evt) 
+{
+    var elm = $(evt.target);    
     var ref = elm.prev('.tpl-item');        
     var tpl_name = $(ref).val() || $(ref).text();    
-    fb.log(tpl_name);
-    App.Helpers.openInnerPopup(elm, App.Env.initialParams.DNS.TPL[tpl_name].DESCR || tpl_name);
-}
+
+    App.Helpers.openInnerPopup(elm, App.Env.initialParams.DNS.TPL[tpl_name].DESCR || tpl_name, '');
+}*/
 
 App.Actions.add_subrecord_dns = function(evt)
 {
@@ -392,14 +423,16 @@ App.Actions.delete_subentry = function(evt)
     $(ref).remove();    
 }
 
-App.Actions.generate_pass = function()
+App.Actions.generate_pass = function(evt)
 {
-    $('.password').val(App.Helpers.generatePassword());
+    var elm = $(evt.target);
+    var ref = elm.parents('.form-row');
+    $('.password', ref).val(App.Helpers.generatePassword());
 }
 
 App.Actions.toggle_section = function(evt)
 {
-    var elm = $(evt.target);    
+    var elm = $(evt.target);
     var ref = $(elm).parents('.form-options-group:first');
     fb.log(ref);
     if ($('.sub_section:first', ref).hasClass('hidden')) {
@@ -420,7 +453,7 @@ App.Actions.close_inner_popup = function(evt)
 App.Actions.open_inner_popup = function(evt)
 {
     var elm = $(evt.target);  
-    App.Helpers.openInnerPopup(elm, $(elm).next('.inner-popup-html').val());
+    App.Helpers.openInnerPopup(elm, $(elm).next('.inner-popup-html').val(), 'Details');
 }
 
 App.Actions.add_db_user = function(evt)
@@ -488,7 +521,7 @@ App.Actions.delete_ns = function(evt)
 App.Actions.view_full_ns_list = function(evt)
 {
     var elm = $(evt.target);
-    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html());    
+    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'NS list');    
 }
 
 App.Actions.view_template_info = function(evt)
@@ -503,7 +536,7 @@ App.Actions.view_template_info = function(evt)
             $.each(reply.data, function(key) {
                 html += '<li><strong>'+key+':</strong> '+reply.data[key]+'</li>';
             });
-            App.Helpers.openInnerPopup(elm, '<ul>'+html+'</ul>');
+            App.Helpers.openInnerPopup(elm, '<ul>'+html+'</ul>', 'Template Info');
         }        
     });
 }
@@ -522,13 +555,13 @@ App.Actions.toggle_stats_block = function(evt)
 App.Actions.exec_v_console = function(evt)
 {
     evt.preventDefault();
-    App.Helpers.openInnerPopup(evt.target, 'This functionality will be available in next releases');
+    App.Helpers.openInnerPopup(evt.target, 'This functionality will be available in next releases', 'Details');
 }
 
 App.Actions.view_profile_settings = function(evt)
 {
     evt.preventDefault();
-    App.Helpers.openInnerPopup(evt.target, 'This functionality will be available in next releases');
+    App.Helpers.openInnerPopup(evt.target, 'This functionality will be available in next releases', 'Details');
 }
 
 App.Actions.select_all = function(evt) 

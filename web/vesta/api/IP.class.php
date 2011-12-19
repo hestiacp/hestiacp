@@ -73,12 +73,16 @@ class IP extends AjaxHandler
         $spell  = $request->getParameter('spell');      
         $params = array(
                       'IP_ADDRESS' => $spell['IP_ADDRESS'],
-                      'MASK'        => $spell['NETMASK'],
+                      'MASK'       => $spell['NETMASK'],
                       'INTERFACE'  => $spell['INTERFACE'],
                       'OWNER'      => $spell['OWNER'],
-                      'IP_STATUS'  => $spell['STATUS']                      
+                      'STATUS'     => $spell['STATUS']                      
                   );
-      
+		if ($spell['NAME']) {
+			$params['NAME'] = $spell['NAME'];
+		}
+		
+     
         $result = Vesta::execute(Vesta::V_ADD_SYS_IP, $params);
       
         if (!$result['status']) {
@@ -128,7 +132,7 @@ class IP extends AjaxHandler
 
         if ($_old['OWNER'] != $_new['OWNER']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_SYS_IP_OWNER, array('OWNER' => $_new['OWNER'], 'IP' => $_new['IP_ADDRESS']));
+            $result = Vesta::execute(Vesta::V_CHANGE_SYS_IP_OWNER, array('IP' => $_new['IP_ADDRESS'], 'OWNER' => $_new['OWNER']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['OWNER'] = array($result['error_code'] => $result['error_message']);
@@ -136,21 +140,21 @@ class IP extends AjaxHandler
         }
 
         // TODO: Handle NAME parameter
-        /*if ($_old['NAME'] != $_new['NAME']) {
+        if ($_old['NAME'] != $_new['NAME']) {
             $result = array();
             $result = Vesta::execute(Vesta::V_CHANGE_SYS_IP_NAME, array('IP' => $_new['IP_ADDRESS'], 'NAME' => $_new['NAME']));
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['NAME'] = array($result['error_code'] => $result['error_message']);
             }
-        }*/
+        }
 
-        if ($_old['IP_STATUS'] != $_new['IP_STATUS']) {
+        if ($_old['STATUS'] != $_new['STATUS']) {
             $result = array();
-            $result = Vesta::execute(Vesta::V_CHANGE_SYS_IP_STATUS, array('IP' => $_new['IP_ADDRESS'], 'IP_STATUS' => $_new['IP_STATUS']));
+            $result = Vesta::execute(Vesta::V_CHANGE_SYS_IP_STATUS, array('IP' => $_new['IP_ADDRESS'], 'STATUS' => $_new['STATUS']));
             if (!$result['status']) {
                 $this->status = FALSE;
-                $this->errors['IP_STATUS'] = array($result['error_code'] => $result['error_message']);
+                $this->errors['STATUS'] = array($result['error_code'] => $result['error_message']);
             }
         }
 

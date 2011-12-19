@@ -67,16 +67,25 @@ class DB extends AjaxHandler
                     'DB_PASSWORD'   => $_s['PASSWORD'],
                     'TYPE'          => $_s['TYPE']
                   );
-        // TODO: do not user it. Will be used in later releases         
-        /*if ($_s['HOST']) {
-            $params['HOST'] = $_s['HOST'];
-        }*/   
-            
+
         $result = Vesta::execute(Vesta::V_ADD_DB_BASE, $params);
         
         if (!$result['status']) {
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
+
+        if ($_s['SUSPEND'] == 'on') {
+            if($result['status']){
+                $result = array();
+
+                $result = Vesta::execute(Vesta::V_SUSPEND_DB_BASE, array('USER' => $user['uid'], 'JOB' => $_s['DB']));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+                }   
+            }
+        }
+
     
         return $this->reply($result['status'], $result['data']);
     }
@@ -113,20 +122,37 @@ class DB extends AjaxHandler
      */
     public function changeExecute(Request $request)
     {
-        $_s     = $request->getParameter('new');
+        $_s = $request->getParameter('spell');
+        $_old = $request->getParameter('old');
+        $_new = $request->getParameter('new');
+
         $user  = $this->getLoggedUser();
         $result = array();
-        $params = array(
-                    'USER'      => $user['uid'],
-                    'DB'        => $_s['DB'],
-                    'PASSWORD'  => $_s['PASSWORD']
-                  );
+		if($_new['SUSPEND'] == 'on'){
+			$result = Vesta::execute(Vesta::V_SUSPEND_DB_BASE, array('USER' => $user['uid'], 'DB' => $_new['DB']));
+		}
+		else{
+			$result = Vesta::execute(Vesta::V_UNSUSPEND_DB_BASE, array('USER' => $user['uid'], 'DB' => $_new['DB']));
+		}
 
-        $result = Vesta::execute(Vesta::V_CHANGE_DB_PASSWORD, $params);
+		if (!$result['status']) {
+			$this->status = FALSE;
+			$this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+		}
+
+        if ($_new['PASSWORD'] != Vesta::SAME_PASSWORD && $_new['PASSWORD'] != $_old['PASSWORD']) {
+			$params = array(
+						'USER'      => $user['uid'],
+						'DB'        => $_new['DB'],
+						'PASSWORD'  => $_new['PASSWORD']
+					  );
+
+			$result = Vesta::execute(Vesta::V_CHANGE_DB_PASSWORD, $params);
     
-        if (!$result['status']) {
-            $this->errors[] = array($result['error_code'] => $result['error_message']);
-        }
+			if (!$result['status']) {
+				$this->errors[] = array($result['error_code'] => $result['error_message']);
+			}
+		}
     
         return $this->reply($result['status'], $result['data']);
     }

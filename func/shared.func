@@ -6,9 +6,8 @@ log_event() {
 
     # Checking logging system
     if [ "$LOG_SYSTEM" = 'yes' ]; then
-        # Checking logging level
-        log=$(echo "$LOG_LEVEL" | cut -f 2 -d \' | grep -w "$level" )
-        if [ ! -z "$log" ]; then
+        log=$(echo "$LOG_LEVEL" | grep -w "$level" )
+        if [ -n "$log" ]; then
             echo "$event" >> $V_LOG/$level.log
         fi
     fi
@@ -27,7 +26,6 @@ log_history() {
 
 # Argument list checker
 check_args() {
-
     sys_args="$1"
     user_args="$2"
     usage="$3"
@@ -368,9 +366,9 @@ is_system_enabled() {
     }
 
     proxy_function() {
-        if [ "$PROXY_SYSTEM" != 'nginx' ]; then			# only nginx
-            echo "Error: proxy hosting support disabled"	# support for
-            log_event 'debug' "$E_DISABLED $V_EVENT"	# now
+        if [ "$PROXY_SYSTEM" != 'nginx' ]; then
+            echo "Error: proxy hosting support disabled"
+            log_event 'debug' "$E_DISABLED $V_EVENT"
             exit $E_DISABLED
         fi
     }

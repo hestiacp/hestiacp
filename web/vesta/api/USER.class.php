@@ -26,12 +26,12 @@ class USER extends AjaxHandler
             // get reports attribute
             $result_report = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $user, 'VALUE' => 'reports'), self::TEXT);
             if ($result_report['status'] != true) {
-            $report = null;
-        } 
-        else {
-            $report = $result_report['data'];
-        }
-            $fullname_id = rand(0, count($users)-1);
+                $report = null;
+            } 
+            else {
+                $report = $result_report['data'];
+            }
+            //$fullname_id = rand(0, count($users)-1);
             $fullname    = implode('', array($details['FNAME'], ' ', $details['LNAME']));
         
             $nses = $this->getNS($user, $details);
@@ -54,14 +54,12 @@ class USER extends AjaxHandler
                                 "SHELL"                 => $details['SHELL'],
                                 "BACKUPS"               => $details['BACKUPS'],
                                 "WEB_TPL"               => $details['WEB_TPL'],
-                                "MAX_CHILDS"            => $details['MAX_CHILDS'],
-                                "SUSPENDED"             => $details['SUSPENDED'],
-                                "OWNER"                 => $details['OWNER'],
-                                "ROLE"                  => $details['ROLE'],
+                                //"MAX_CHILDS"            => $details['MAX_CHILDS'],
+                                "SUSPEND"               => $details['SUSPENDED'],
                                 "IP_OWNED"              => $details['IP_OWNED'],
-                                "U_CHILDS"              => $details['U_CHILDS'],
-                                "U_DISK"                => $details['U_DISK'],//$u_disk,
-                                "U_BANDWIDTH"           => $details['U_BANDWIDTH'],//$u_bandwidth, 
+                                //"U_CHILDS"              => $details['U_CHILDS'],
+                                "U_DISK"                => $details['U_DISK'],
+                                "U_BANDWIDTH"           => $details['U_BANDWIDTH'],
                                 "U_WEB_DOMAINS"         => $details['U_WEB_DOMAINS'],
                                 "U_WEB_SSL"             => $details['U_WEB_SSL'],
                                 "U_DNS_DOMAINS"         => $details['U_DNS_DOMAINS'],
@@ -69,8 +67,8 @@ class USER extends AjaxHandler
                                 "U_MAIL_DOMAINS"        => $details['U_MAIL_DOMAINS'],
                                 "CONTACT"               => $details['CONTACT'],
                                 "DATE"                  => $details['DATE'],
-                                "U_MAIL_BOXES"          => rand(1, 10),  // TODO: skid
-                                "U_MAIL_FORWARDERS"     => rand(1, 10),  // TODO: skid
+                                "U_MAIL_BOXES"          => '0',  // TODO: skid
+                                "U_MAIL_FORWARDERS"     => '0',  // TODO: skid
                                 "REPORTS_ENABLED"       => $report,
                                 "U_WEB_DOMAINS"         => $details['U_WEB_DOMAINS']
                             );
@@ -94,13 +92,11 @@ class USER extends AjaxHandler
                     'USER'     => $spell['LOGIN_NAME'],
                     'PASSWORD' => $spell['PASSWORD'],
                     'EMAIL'    => $spell['CONTACT'],
-                    'ROLE'     => $spell['ROLE'],
-                    'OWNER'    => $user['uid'],
                     'PACKAGE'  => $spell['PACKAGE'],
                     'FNAME'    => $spell['FNAME'],
                     'LNAME'    => $spell['LNAME']
                   );
-    
+           
         $result = Vesta::execute(Vesta::V_ADD_SYS_USER, $params);      
         // Reports
         $enable_reports = Utils::getCheckboxBooleanValue($spell['REPORTS_ENABLED']);
@@ -111,7 +107,7 @@ class USER extends AjaxHandler
         if (!$result['status']) {
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
-    
+
         return $this->reply($result['status'], $result['data']);
     }
   
@@ -150,6 +146,16 @@ class USER extends AjaxHandler
         $_old = $request->getParameter('old');
 
         $_USER = $_old['LOGIN_NAME'];
+        
+        if ($_new['SUSPEND'] == 'on') {
+            $result = Vesta::execute(Vesta::V_SUSPEND_SYS_USER, array('USER' => $_USER));
+            return $this->reply($result['status']);
+        }
+        else {
+            $result = Vesta::execute(Vesta::V_UNSUSPEND_SYS_USER, array('USER' => $_USER));
+        }
+        
+        $reports_result = $this->setUserReports($_USER, $_new['REPORTS_ENABLED']);
 
         if (!empty($_new['PASSWORD']) && $_new['PASSWORD'] != Vesta::SAME_PASSWORD) {
             $result = array();
@@ -180,7 +186,7 @@ class USER extends AjaxHandler
 
         // Set SHELL
         $this->setShell($_USER, $_new['SHELL']);
-
+    
         $this->setNSentries($_USER, $_new);
 
         $names = array(
@@ -195,12 +201,38 @@ class USER extends AjaxHandler
             $this->errors['NAMES'] = array($result['error_code'] => $result['error_message']);
         }        
 
+
+        /*
+        if ($_old['SUSPEND'] != $_new['SUSPEND']) {
+            $result = array();
+            if($_new['SUSPEND'] == 'on'){
+                $result = Vesta::execute(Vesta::V_SUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN));
+            }
+            else{
+                $result = Vesta::execute(Vesta::V_UNSUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN));
+            }
+
+            if (!$result['status']) {
+                $this->status = FALSE;
+                $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+            }
+        }
+*/
         if (!$this->status) {
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_PASSWORD, array('USER' => $_USER, 'PASSWORD' => $_old['PASSWORD']));
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_PACKAGE,  array('USER' => $_USER, 'PACKAGE'  => $_old['PACKAGE']));
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_CONTACT,  array('USER' => $_USER, 'EMAIL'    => $_old['EMAIL']));
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_NS,       array('USER' => $_USER, 'NS1'      => $_old['NS1'], 'NS2' => $_old['NS2']));
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_SHELL,    array('USER' => $_USER, 'SHELL'    => $_old['SHELL']));
+
+            /*
+            if($_old['SUSPEND'] == 'on'){
+                $result = Vesta::execute(Vesta::V_SUSPEND_SYS_USER, array('USER' => $_USER));
+            }
+            else{
+              $result = Vesta::execute(Vesta::V_UNSUSPEND_SYS_USER, array('USER' => $_USER));
+            }
+            */
         }
 
         return $this->reply($this->status, '');
@@ -208,11 +240,11 @@ class USER extends AjaxHandler
 
     protected function setUserReports($user, $enabled)
     {
-        if ($enabled === true) {
-            $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $user));
+        if ($enabled == 'off') {
+            $result = Vesta::execute(Vesta::V_DEL_SYS_USER_REPORTS, array('USER' => $user));
         }
         else {
-            $result = Vesta::execute(Vesta::V_DEL_SYS_USER_REPORTS, array('USER' => $user));
+            $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $user));
         }
 
         return $result['status'];

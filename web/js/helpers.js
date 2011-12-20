@@ -38,6 +38,12 @@ App.Helpers.getHumanTabName = function()
     if (App.Env.world == 'DB') {
         return 'DATABASE';
     }
+    if (App.Env.world == 'BACKUPS') {
+        return 'BACKUP';
+    }
+    if (App.Env.world == 'STATS') {
+        return 'STATS';
+    }
     return App.Env.world;
 }
 
@@ -241,11 +247,11 @@ App.Helpers.getFormValuesFromElement = function(ref)
 App.Helpers.updateScreen = function()
 {
     
-    App.Ajax.request('MAIN.getInitial', {}, function(reply){
+    /*App.Ajax.request('MAIN.getInitial', {}, function(reply){
         App.Env.initialParams = reply.data;
         App.Helpers.updateInitial();
-    });
-    $('.row:first').addClass('first-row');    
+    });*/
+    $('.row:first').addClass('first-row');
     Custom.init();
 }
 
@@ -256,7 +262,7 @@ App.Helpers.alert = function(msg)
 
 App.Helpers.isEmpty = function(o) 
 {
-    return jQuery.isEmptyObject(o);
+    return 'undefined' == typeof o ? true : jQuery.isEmptyObject(o);
 }
 
 App.Helpers.liveValidate = function()
@@ -283,8 +289,9 @@ App.Helpers.Warn = function(msg)
     alert(msg);
 }
 
-App.Helpers.openInnerPopup = function(elm, html)
+App.Helpers.openInnerPopup = function(elm, html, title)
 {
+    var title = title || '';
     App.Helpers.closeInnerPopup();
     
     var offset = $(elm).offset();
@@ -292,6 +299,7 @@ App.Helpers.openInnerPopup = function(elm, html)
     tpl.set(':CONTENT', html);
     tpl.set(':LEFT', offset.left);
     tpl.set(':TOP', offset.top);
+    tpl.set(':POPUP_TITLE', title);
     
     $(document.body).append(tpl.finalize());
 }

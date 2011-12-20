@@ -17,12 +17,12 @@ class WEB_DOMAIN extends AjaxHandler
 
         $result = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS, array('USER' => $user['uid']), self::JSON);
 
-	$stat = array();
-	$result_stat = Vesta::execute('v_list_web_domains_stats', array('USER' => $user['uid']), self::JSON);
+        $stat = array();
+        $result_stat = Vesta::execute('v_list_web_domains_stats', array('USER' => $user['uid']), self::JSON);
 
-	foreach ($result_stat['data'] as $w_d => $w_d_details) {
-	    $stat[$w_d] = $w_d_details;
-	}
+        foreach ($result_stat['data'] as $w_d => $w_d_details) {
+            $stat[$w_d] = $w_d_details;
+        }
         foreach($result['data'] as $web_domain => $record)
         {
             $web_details = array(
@@ -30,7 +30,7 @@ class WEB_DOMAIN extends AjaxHandler
                               'U_DISK'      => $record['U_DISK'],
                               'U_BANDWIDTH' => $record['U_BANDWIDTH'],
                               'TPL'         => $record['TPL'],
-                              'ALIAS'       => $record['ALIAS'],
+                              'ALIAS'       => @str_replace(",", ", ", $record['ALIAS']),
                               'PHP'         => $record['PHP'],
                               'CGI'         => $record['CGI'],
                               'ELOG'        => $record['ELOG'],
@@ -39,13 +39,14 @@ class WEB_DOMAIN extends AjaxHandler
                               'SSL'         => $record['SSL'],
                               'SSL_HOME'    => $record['SSL_HOME'],
                               'SSL_CERT'    => $record['SSL_CERT'],
+                              'SSL_KEY'		=> $record['SSL_KEY'],
                               'NGINX'       => $record['NGINX'],
                               'NGINX_EXT'   => $record['NGINX_EXT'],
                               'SUSPEND'     => $record['SUSPEND'],
                               'DATE'        => date(Config::get('ui_date_format', strtotime($record['DATE'])))
                           );
-	    $web_details['STAT'] == '' ? $web_details['STAT'] = 'none' : true;
-	    $reply[$web_domain] = $web_details;
+            $web_details['STAT'] == '' ? $web_details['STAT'] = 'none' : true;
+            $reply[$web_domain] = $web_details;
         }
 
         if (!$result['status']) {
@@ -90,7 +91,7 @@ class WEB_DOMAIN extends AjaxHandler
       
         if (!empty($_s['ALIAS'])) {
             $alias = str_replace("\n", "", $_s['ALIAS']);
-	    $alias = str_replace("\n", "", $alias);
+			$alias = str_replace("\n", "", $alias);
 
             foreach ($alias_arr as $alias) {
                 $params = array(
@@ -157,9 +158,9 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
 
-        /*if ($_s['SSL']) {
+      /*  if ($_s['SSL']) {
                 $params = array(
-                            'USER'     => $user[''],
+                            'USER'     => $user['uid'],
                             'DOMAIN'   => $_s['DOMAIN'],
                             'SSL_CERT' => $_s['SSL_CERT']
                           );
@@ -213,6 +214,20 @@ class WEB_DOMAIN extends AjaxHandler
         if (!$result['status']) 
           $this->errors['MAIL_DOMAIN'] = array($result['error_code'] => $result['error_message']);
         }*/
+
+
+        if ($_s['SUSPEND'] == 'on') {
+            if($result['status']){
+                $result = array();
+
+                $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'JOB' => $_s['DOMAIN']));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+                }   
+            }
+        }
+
         
       
         return $this->reply($result['status'], $result['data']);
@@ -250,11 +265,19 @@ class WEB_DOMAIN extends AjaxHandler
 
         $_old['ELOG'] = $_old['ELOG'] == 'yes' ? 'on' : 'off';
         $_old['CGI']  = $_old['CGI']  == 'yes' ? 'on' : 'off';
-        $_old['AUTH']  = $_old['AUTH']  == 'yes' ? 'on' : 'off';
+        $_old['AUTH'] = $_old['AUTH']  == 'yes' ? 'on' : 'off';
         $_old['SSL']  = $_old['SSL']  == 'yes' ? 'on' : 'off';
 
         $user = $this->getLoggedUser();
         $_DOMAIN = $_new['DOMAIN'];
+    
+		if ($_new['SUSPEND'] == 'on') {
+            $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+            return $this->reply($result['status']);
+        }
+        else {
+            $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+        }
     
         if ($_old['IP'] != $_new['IP']) {
             $result = array();
@@ -276,13 +299,33 @@ class WEB_DOMAIN extends AjaxHandler
 
         if ($_old['ALIAS'] != $_new['ALIAS']) {
             $result = array();
-
-            $old_arr = explode(',', $_old['ALIAS']);
-            $new_arr = explode(',', $_new['ALIAS']);
-
-            $added = array_diff($new_arr, $old_arr);
+			
+            $old_arr_raw = preg_split('/[,\s]/', $_old['ALIAS']);
+            $new_arr_raw = preg_split('/[,\s]/', $_new['ALIAS']);
+			$old_arr = array();
+			$new_arr = array();
+			foreach ($old_arr_raw as $alias) {
+				if ('' != trim($alias)) {
+					$old_arr[] = $alias;
+				}
+			}
+			foreach ($new_arr_raw as $alias) {
+				if ('' != trim($alias)) {
+					$new_arr[] = $alias;
+				}
+			}
+			
+            $added   = array_diff($new_arr, $old_arr);
             $deleted = array_diff($old_arr, $new_arr);
-
+ 
+			foreach ($deleted as $alias) {
+                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_ALIAS, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'ALIAS' => $alias));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['DEL_ALIAS'] = array($result['error_code'] => $result['error_message']);
+                }
+            }
+ 
             foreach ($added as $alias) {
                 $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ALIAS, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'ALIAS' => $alias));
                 if (!$result['status']) {
@@ -290,18 +333,10 @@ class WEB_DOMAIN extends AjaxHandler
                     $this->errors['ADD_ALIAS'] = array($result['error_code'] => $result['error_message']);
                 }
             }
-        
-            foreach ($deleted as $alias) {
-                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_ALIAS, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'ALIAS' => $alias));
-                if (!$result['status']) {
-                    $this->status = FALSE;
-                    $this->errors['DEL_ALIAS'] = array($result['error_code'] => $result['error_message']);
-                }
-            }
         }
 
 
-        if (($_old['STATH_AUTH'] != $_new['STAT_AUTH']) && !empty($_s['STAT_AUTH']) && @Utils::getCheckboxBooleanValue($_s['STATS_AUTH'])) {
+        if (($_old['STAT_AUTH'] != $_new['STAT_AUTH']) && !empty($_s['STAT_AUTH']) && @Utils::getCheckboxBooleanValue($_s['STATS_AUTH'])) {
             $params = array(
                         'USER'          => $user['uid'],
                         'DOMAIN'        => $_DOMAIN,
@@ -379,7 +414,45 @@ class WEB_DOMAIN extends AjaxHandler
                 }
             }
         }
+        
+        if ($_new['SSL']) {
+			$params = array(
+						'USER'     => $user['uid'],
+						'DOMAIN'   => $_new['DOMAIN'],
+						'SSL_CERT' => $_new['SSL_CERT']
+					  );
 
+			if ($_new['SSL_HOME']) {
+				$params['SSL_HOME'] = $_new['SSL_HOME'];
+			}
+
+			$result = 0;
+			$result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
+
+			if (!$result['status']) {
+				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
+			}
+		}
+		
+		if ($_s['SSL_KEY']) {
+			$params = array(
+						'USER'     => $user['uid'],
+						'DOMAIN'   => $_s['DOMAIN'],
+						'SSL_KEY' => $_s['SSL_KEY']
+					  );
+
+			if ($_s['SSL_HOME']) {
+				$params['SSL_HOME'] = $_s['SSL_HOME'];
+			}
+
+			$result = 0;
+			$result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
+
+			if (!$result['status']) {
+				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
+			}
+		}
+        
         return $this->reply($result['status'], $result['data']);
     }
 

@@ -119,6 +119,19 @@ class DNS extends AjaxHandler
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
 
+    
+        if ($_s['SUSPEND'] == 'on') {
+            if($result['status']){
+                $result = array();
+
+                $result = Vesta::execute(Vesta::V_SUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_s['DNS_DOMAIN']));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+                }   
+            }
+        }
+
         return $this->reply($result['status'], $result['data']);
     }
 
@@ -228,6 +241,19 @@ class DNS extends AjaxHandler
         $user       = $this->getLoggedUser();
         $_DNS_DOMAIN = $_old['DNS_DOMAIN'];
 
+		$result = array();
+		if($_new['SUSPEND'] == 'on'){
+			$result = Vesta::execute(Vesta::V_SUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN));
+			return $this->reply($result['status']);
+		}
+		else{
+			$result = Vesta::execute(Vesta::V_UNSUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN));
+		}
+
+		if (!$result['status']) {
+			$this->status = FALSE;
+			$this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+		}
      
         if ($_old['IP'] != $_new['IP']) {
             $result = array();
@@ -281,6 +307,13 @@ class DNS extends AjaxHandler
             Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_TTL, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['TTL']));
             Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_EXP, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN, 'IP' => $_old['EXP']));
             Vesta::execute(Vesta::V_CHANGE_DNS_DOMAIN_SOA, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_new['DNS_DOMAIN'], 'IP' => $_old['SOA']));
+
+            if($_old['SUSPEND'] == 'on'){
+                $result = Vesta::execute(Vesta::V_SUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN));
+            }
+            else{
+                $result = Vesta::execute(Vesta::V_UNSUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_DNS_DOMAIN));
+            }
         }
 
         return $this->reply($this->status, '');

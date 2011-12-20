@@ -30,7 +30,7 @@ class CRON extends AjaxHandler
                             'DAY'       => $record['DAY'],
                             'MONTH'     => $record['MONTH'],
                             'WDAY'      => $record['WDAY'],
-                            'SUSPENDED' => $record['SUSPEND'],
+                            'SUSPEND'   => $record['SUSPEND'],
                             'DATE'      => date(Config::get('ui_date_format', strtotime($record['DATE']))),
                             'JOB'    => $id
                           );
@@ -51,16 +51,16 @@ class CRON extends AjaxHandler
      */
     public function addExecute(Request $request) 
     {
-    $user   = $this->getLoggedUser();
-    $spell  = $request->getParameter('spell');
+        $user   = $this->getLoggedUser();
+        $_s  = $request->getParameter('spell');
         $params = array(
                     'USER'      => $user['uid'],
-                    'MIN'       => $spell['MIN'],
-                    'HOUR'      => $spell['HOUR'],
-                    'DAY'       => $spell['DAY'],
-                    'MONTH'     => $spell['MONTH'],
-                    'WDAY'      => $spell['WDAY'],
-                    'CMD'       => $spell['CMD']
+                    'MIN'       => $_s['MIN'],
+                    'HOUR'      => $_s['HOUR'],
+                    'DAY'       => $_s['DAY'],
+                    'MONTH'     => $_s['MONTH'],
+                    'WDAY'      => $_s['WDAY'],
+                    'CMD'       => $_s['CMD']
                   );
     
         $result = Vesta::execute(Vesta::V_ADD_CRON_JOB, $params);
@@ -73,6 +73,20 @@ class CRON extends AjaxHandler
                 $this->errors['REPORTS'] = array($result['error_code'] => $result['error_message']);
             }
         }
+
+
+        if ($_s['SUSPEND'] == 'on') {
+            if($result['status']){
+                $result = array();
+
+                $result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOB, array('USER' => $user['uid'], 'JOB' => $_s['CMD']));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+                }   
+            }
+        }
+
 
         if (!$result['status']) {
             $this->errors[] = array($result['error_code'] => $result['error_message']);
@@ -89,8 +103,8 @@ class CRON extends AjaxHandler
      */
     public function deleteExecute(Request $request) 
     {
-    $user   = $this->getLoggedUser();
-    $spell  = $request->getParameter('spell'); 
+        $user   = $this->getLoggedUser();
+        $spell  = $request->getParameter('spell'); 
         $params = array(
                     'USER' => $user['uid'],
                     'JOB'  => $spell['JOB']
@@ -117,6 +131,20 @@ class CRON extends AjaxHandler
         $_old   = $request->getParameter('old');
         $_new   = $request->getParameter('new');
         $result = array();
+
+		if($_new['SUSPEND'] == 'on') {
+			$result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOB, array('USER' => $user['uid'], 'JOB' => $_new['CMD']));
+			return $this->reply($result['status']);
+		}
+		else {
+			$result = Vesta::execute(Vesta::V_UNSUSPEND_CRON_JOB, array('USER' => $user['uid'], 'JOB' => $_new['CMD']));
+		}
+
+		if (!$result['status']) {
+			$this->status = FALSE;
+			$this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+		}   
+
         $params = array(
                     'USER' => $user['uid'],
                     'JOB' => $_old['JOB'],
@@ -133,7 +161,9 @@ class CRON extends AjaxHandler
         if (!$result['status']) {
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
-    
+
+                   
+
         return $this->reply($result['status'], $result['data']);
     }
 

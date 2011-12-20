@@ -46,8 +46,8 @@ class AjaxHandler {
         $allowed_actions = array(
                                 'MAIN.signin', 
                                 'MAIN.logout', 
-                                'MAIN.requestpassword',
-                                'MAIN.resetpassword',
+                                'MAIN.requestPassword',
+                                'MAIN.resetPassword',
                                 'MAIN.about');
         $method = Request::parseAjaxMethod($request);
         

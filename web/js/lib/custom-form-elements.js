@@ -37,9 +37,13 @@ var Custom = {
 	init: function() {
 		var inputs = document.getElementsByTagName("input"), span = Array(), textnode, option, active;
 		for(a = 0; a < inputs.length; a++) {
-			if((inputs[a].type == "checkbox" || inputs[a].type == "radio") && $(inputs[a]).hasClass("styled")) {
-				span[a] = document.createElement("span");
+			if((inputs[a].type == "checkbox" || inputs[a].type == "radio") && $(inputs[a]).hasClass("styled") && !$(inputs[a]).hasClass("style-applied")) {
+				$(inputs[a]).addClass('style-applied');
+                span[a] = document.createElement("span");
 				span[a].className = inputs[a].type;
+				if ($(inputs[a]).attr('class').indexOf('do_action_toggle_suspend') != -1) {
+					span[a].className += ' do_action_toggle_suspend'; // save toggle functionality
+				}
 
 				if(inputs[a].checked == true) {
 					if(inputs[a].type == "checkbox") {
@@ -61,33 +65,33 @@ var Custom = {
 			}
 		}
 		inputs = document.getElementsByTagName("select");
-		for(a = 0; a < inputs.length; a++) {
-                    try{
-                        fb.log($(inputs[a]).hasClass("styled"));
-			if($(inputs[a]).hasClass("styled")) {
-				option = inputs[a].getElementsByTagName("option");
-				active = option[0].childNodes[0].nodeValue;
-				textnode = document.createTextNode(active);
-				for(b = 0; b < option.length; b++) {
-					if(option[b].selected == true) {
-						textnode = document.createTextNode(option[b].childNodes[0].nodeValue);
+		try {
+			for(a = 0; a < inputs.length; a++) {
+				if($(inputs[a]).hasClass("styled")) {
+					option = inputs[a].getElementsByTagName("option");
+					active = option[0].childNodes[0].nodeValue;
+					textnode = document.createTextNode(active);
+					for(b = 0; b < option.length; b++) {
+						if(option[b].selected == true) {
+							textnode = document.createTextNode(option[b].childNodes[0].nodeValue);
+						}
+					}
+					span[a] = document.createElement("span");
+					span[a].className = "select";
+					span[a].id = "select-" + inputs[a].name + a;
+					span[a].appendChild(textnode);
+					inputs[a].parentNode.insertBefore(span[a], inputs[a]);
+									inputs[a].id = inputs[a].name + a;
+					if(!inputs[a].getAttribute("disabled")) {
+						inputs[a].onchange = Custom.choose;
+					} else {
+						inputs[a].previousSibling.className = inputs[a].previousSibling.className += " disabled";
 					}
 				}
-				span[a] = document.createElement("span");
-				span[a].className = "select";
-				span[a].id = "select-" + inputs[a].name + a;
-				span[a].appendChild(textnode);
-				inputs[a].parentNode.insertBefore(span[a], inputs[a]);
-                                inputs[a].id = inputs[a].name + a;
-				if(!inputs[a].getAttribute("disabled")) {
-					inputs[a].onchange = Custom.choose;
-				} else {
-					inputs[a].previousSibling.className = inputs[a].previousSibling.className += " disabled";
-				}
 			}
-                    }catch(e){fb.error(e);}
+			document.onmouseup = Custom.clear;			
 		}
-		document.onmouseup = Custom.clear;
+		catch(e){ /* */ }
 	},
 	pushed: function() {
 		element = this.nextSibling;

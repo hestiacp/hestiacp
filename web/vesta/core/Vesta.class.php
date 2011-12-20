@@ -14,6 +14,8 @@ class Vesta
     const SAME_PASSWORD			            = '********'; 
 
     const V_LIST_SYS_CONFIG                 = 'v_list_sys_config';
+    // BACKUP
+    const V_LIST_SYS_USER_BACKUPS			= 'v_list_sys_user_backups';
     // IP
     const V_LIST_SYS_IPS                    = 'v_list_sys_ips';
     const V_ADD_SYS_IP                      = 'v_add_sys_ip';
@@ -36,6 +38,8 @@ class Vesta
     const V_CHANGE_DNS_DOMAIN_TTL           = 'v_change_dns_domain_ttl';
     const V_CHANGE_DNS_DOMAIN_EXP           = 'v_change_dns_domain_exp';
     const V_CHANGE_DNS_DOMAIN_RECORD        = 'v_change_dns_domain_record';
+    const V_SUSPEND_DNS_DOMAIN              = 'v_suspend_dns_domain';
+    const V_UNSUSPEND_DNS_DOMAIN            = 'v_unsuspend_dns_domain';
     const V_DEL_DNS_DOMAIN                  = 'v_del_dns_domain';
     const V_DEL_DNS_DOMAIN_RECORD           = 'v_del_dns_domain_record';
     // CRON
@@ -59,6 +63,14 @@ class Vesta
     const V_CHANGE_SYS_USER_PASSWORD        = 'v_change_sys_user_password';
     const V_CHANGE_SYS_USER_SHELL           = 'v_change_sys_user_shell';
     const V_CHANGE_SYS_USER_ROLE            = 'v_change_sys_user_role';
+    const V_SUSPEND_SYS_USER				= 'v_suspend_sys_user';
+    const V_UNSUSPEND_SYS_USER				= 'v_unsuspend_sys_user';
+    /*
+    const V_SUSPEND_SYS_USER                = 'v_suspend_sys_user';
+    const V_UNSUSPEND_SYS_USER              = 'v_unsuspend_sys_user';
+    const V_SUSPEND_SYS_USER                = 'v_suspend_sys_users';
+    const V_UNSUSPEND_SYS_USERS             = 'v_unsuspend_sys_users';
+    */ 
     const V_DEL_SYS_USER                    = 'v_del_sys_user';
     const V_CHANGE_SYS_USER_NAME	        = 'v_change_sys_user_name';
     // WEB_DOMAIN
@@ -99,7 +111,7 @@ class Vesta
     // DB    
     const V_LIST_DB_BASES                   = 'v_list_db_bases';
     const V_LIST_DB_HOSTS                   = 'v_list_db_hosts';
-    const V_LIST_WEB_DOMAIN_ALIAS	    = 'v_list_web_domain_alias';
+    const V_LIST_WEB_DOMAIN_ALIAS	        = 'v_list_web_domain_alias';
     const V_ADD_DB_BASE                     = 'v_add_db_base';
     const V_ADD_DB_HOST                     = 'v_add_db_host';
     const V_SUSPEND_DB_BASE                 = 'v_suspend_db_base';
@@ -120,7 +132,7 @@ class Vesta
      * @param array $parameters
      * @return string
      */
-    static function execute($cmd_command, $parameters=array(), $reply = '') 
+    static function execute($cmd_command, $parameters = array(), $reply = '') 
     {
         $r = new Request();
         $_DEBUG = $r->getParameter("debug", FALSE);
@@ -129,26 +141,27 @@ class Vesta
             throw new ProtectionException('No function name passed into Vesta::execute'); // TODO: move msg to Messages::
         }
 	
-	$reply_type = $reply;
-	if ($reply != AjaxHandler::JSON) {
-	    $reply = '';
-	}    
+        $reply_type = $reply;
+        if ($reply != AjaxHandler::JSON) {
+            $reply = '';
+        }    
 
         $params = array(
                     'sudo'       => Config::get('sudo_path'),
                     'functions'  => Config::get('vesta_functions_path'),
                     'parameters' => is_array($parameters) ? "'".implode("' '", $parameters)."'" : $parameters,
-		    'reply'      => $reply
+                    'reply'      => $reply
                   );
 
         // e.g.: /usr/bin/sudo /usr/local/vesta/bin/v_list_sys_users vesta json 
         $cmd = "{$params['sudo']} {$params['functions']}{$cmd_command} {$params['parameters']} {$params['reply']}";
+        
         exec($cmd, $output, $return);
         $result = 0;
         $result = array(
-                        'status' => TRUE,
-                        'data' => '',
-                        'error_code' => '',
+                        'status'        => TRUE,
+                        'data'          => '',
+                        'error_code'    => '',
                         'error_message' => ''
                   );
 

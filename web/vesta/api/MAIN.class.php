@@ -21,8 +21,10 @@ class MAIN extends AjaxHandler
 
     public function aboutExecute($request)
     {
+        // defaults
         $about  = array('version' => '0', 'company_email' => 'support@vestacp.com', 
                         'version_name' => 'OGRE-23-1', 'company_name' => 'vestacp.com');
+        // real data
         $config = Vesta::execute(Vesta::V_LIST_SYS_CONFIG, 'json');
         if (!empty($config['data']) && !empty($config['data']['config'])) {
             $config = $config['data']['config'];
@@ -37,12 +39,14 @@ class MAIN extends AjaxHandler
 
     public function requestPasswordExecute($request)
     {        
+        $user   = $this->getLoggedUser();
+        $rs = $config = Vesta::execute('v_get_sys_user_value', array($user['uid'], 'RKEY'));
+        
         if (empty($_SESSION['captcha_key']) 
                 || $_SESSION['captcha_key'] != $request->getParameter('captcha')) {
             return $this->reply(false, null, 'Captcha is invalid ');
         }
         
-        // TODO: captcha
         $users = Vesta::execute(Vesta::V_LIST_SYS_USERS, 'json');
         $email_matched_count = array();
         
@@ -103,10 +107,12 @@ MAIL;
     
     public function generateResetPasswordKey()
     {
-        $key = sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR']);
-        $key = substr($key, 0, 10) . $_SERVER['REQUEST_TIME'] . substr($key, 10, strlen($key));
+        /*$key = sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR']);
+        $key = substr($key, 0, 10) . $_SERVER['REQUEST_TIME'] . substr($key, 10, strlen($key));*/
+        $user   = $this->getLoggedUser();
+        $rs = Vesta::execute('v_get_sys_user_value', array('USER' => $user['uid'], 'VALUE' => 'RKEY'));
         
-        return $key;
+        return $rs[''];
     }
 
     public function signinExecute($request)
@@ -128,6 +134,14 @@ MAIL;
         VestaSession::logoff();
         return $this->reply(true);
     }
+    
+    public function getBackupsExecute(Request $request)
+    {
+		$user = VestaSession::getInstance()->getUser();
+		$rs = Vesta::execute(Vesta::V_LIST_SYS_USER_BACKUPS, array('USER' => $user['uid'], 'RESPONSE' => 'json'));
+		
+		return $this->reply($rs['status'], @$rs['data']);
+	}
 
     /**
      * Get Initial params.
@@ -198,8 +212,8 @@ MAIL;
         }
 
         $reply = array(
-                    'auth_user'  => array('uid' => $this->getLog),
-                    'WEB_DOMAIN' => $this->getWebDomainParams($data_web_domin, $global_data),
+                    'auth_user'  => array('uid' => $this->getLoggedUser()),
+                    'WEB_DOMAIN' => $this->getWebDomainParams($data_web_domain, $global_data),
                     'CRON'       => $this->getCronParams(),
                     'IP'         => $this->getIpParams($data_ip, $global_data),
                     'DNS'        => $this->getDnsParams(),
@@ -252,8 +266,8 @@ MAIL;
         return array(
                 'TPL' => $this->getTemplates(),
                 'ALIAS' => array(),
-                'STAT' => array(
-			    'none'      => 'none',
+                'STAT'  => array(
+			    'none'  => 'none',
                             'webalizer' => 'webalizer',
                             'awstats'   => 'awstats'
                           ),
@@ -288,15 +302,15 @@ MAIL;
         }                
 	
         return array(
-                'SYS_USERS' => $users,
+                'SYS_USERS' => $global_data['users'],
                 'STATUSES' => array(
-                                'shared' => 'shared',
+                                'shared'    => 'shared',
                                 'exclusive' => 'exclusive'
                               ),
                 'INTERFACES' => $ifaces,
                 'OWNER' => $global_data['users'],
                 'MASK' => array(
-                            '255.255.255.0' => '255.255.255.0',
+                            '255.255.255.0'   => '255.255.255.0',
                             '255.255.255.128' => '255.255.255.128',
                             '255.255.255.192' => '255.255.255.192',
                             '255.255.255.224' => '255.255.255.224', 
@@ -365,7 +379,7 @@ MAIL;
      * @params array $data
      * @return array
      */
-    public function getUsersParams($data = array(), $global_data)
+    public function getUsersParams($data = array(), $global_data = array())
     {        
         $pckg = array();
         // json
@@ -374,8 +388,6 @@ MAIL;
             $pckg[$pckg_name] = $pckg_name;
         }
         return array(
-                'ROLE'      => array('user' => 'user'),
-                'OWNER'     => $data['user_names'],
                 'PACKAGE'   => $pckg,
                 'SHELL'     => array(
                                 'sh'       => 'sh',

@@ -1,64 +1,81 @@
-App.Model.DNS.loadList = function()
+App.Model.DNS.loadList = function(callback)
 {
-    App.Ajax.request('DNS.getList', {}, App.View.listItems);
+	if (!callback) {
+		callback = App.View.listItems;
+	}
+    App.Ajax.request('DNS.getList', {}, callback);
 }
 
-App.Model.IP.loadList = function()
+App.Model.IP.loadList = function(callback)
 {
-    App.Ajax.request('IP.getList', {}, App.View.listItems);
+	if (!callback) {
+		callback = App.View.listItems;
+	}
+    App.Ajax.request('IP.getList', {}, callback);
 }
 
-App.Model.USER.loadList = function()
+App.Model.USER.loadList = function(callback)
 {
-    App.Ajax.request('USER.getList', {}, App.View.listItems);
+	if (!callback) {
+		callback = App.View.listItems;
+	}
+    App.Ajax.request('USER.getList', {}, callback);
 }
 
-App.Model.WEB_DOMAIN.loadList = function()
+App.Model.WEB_DOMAIN.loadList = function(callback)
 {
-    App.Ajax.request('WEB_DOMAIN.getList', {}, App.View.listItems);
+	if (!callback) {
+		callback = App.View.listItems;
+	}
+    App.Ajax.request('WEB_DOMAIN.getList', {}, callback);
 }
 
-App.Model.MAIL.loadList = function()
+App.Model.MAIL.loadList = function(callback)
 {
     //App.Ajax.request('MAIL.getList', {}, App.View.listItems);
     App.Ref.CONTENT.html('<center><h1 style="padding-top: 20px; font-size: 28px; position: absolute; margin-left: 351px; color: white; text-shadow: 2px 1px 1px rgb(65, 124, 213);">Under maintanance</h1><img width="900px" src="'+App.Helpers.generateUrl('images/Asteroid_Vesta.jpg')+'"></center>');
 }
 
-App.Model.DB.loadList = function()
+App.Model.DB.loadList = function(callback)
 {
-    App.Ajax.request('DB.getList', {}, function(reply)
-    {
-        var acc = [];
-        var build_method = App.Env.getWorldName() + '_entry';
-        var data = reply.data;   
-        // TODO: fix it data.data
-        $.each(data, function(key) 
-        {
-            var db_list = data[key];
-            fb.warn('KEY: %o', key);
-            fb.warn('DATA: %o', data[key]);
-            var tpl_divider = App.Templates.get('DIVIDER', 'db');
-            tpl_divider.set(':TYPE', key);
-            acc[acc.length++] = tpl_divider.finalize();
-            $(db_list).each(function(i, o)
-            {
-                acc[acc.length++] = App.HTML.Build[build_method](o, key);
-            });
-            
-            /*var o = data[key];
-            fb.warn(key);
-            acc[acc.length++] = App.HTML.Build[build_method](o, key);*/
-        });
-        
-        var html = acc.done().wrapperize('ENTRIES_WRAPPER', App.Env.getWorldName());
-        App.Ref.CONTENT.html(html);
-        App.Helpers.updateScreen();
-    });
+	if (!callback) {
+		callback = function(reply) {
+			var acc = [];
+			var build_method = App.Env.getWorldName() + '_entry';
+			var data = reply.data;   
+			// TODO: fix it data.data
+			$.each(data, function(key) 
+			{
+				var db_list = data[key];
+				fb.warn('KEY: %o', key);
+				fb.warn('DATA: %o', data[key]);
+				var tpl_divider = App.Templates.get('DIVIDER', 'db');
+				tpl_divider.set(':TYPE', key);
+				acc[acc.length++] = tpl_divider.finalize();
+				$(db_list).each(function(i, o)
+				{
+					acc[acc.length++] = App.HTML.Build[build_method](o, key);
+				});
+				
+				/*var o = data[key];
+				fb.warn(key);
+				acc[acc.length++] = App.HTML.Build[build_method](o, key);*/
+			});
+			
+			var html = acc.done().wrapperize('ENTRIES_WRAPPER', App.Env.getWorldName());
+			App.Ref.CONTENT.html(html);
+			App.Helpers.updateScreen();
+		};
+	}
+    App.Ajax.request('DB.getList', {}, callback);
 }
 
-App.Model.CRON.loadList = function()
+App.Model.CRON.loadList = function(callback)
 {
-    App.Ajax.request('CRON.getList', {}, App.View.listItems);
+	if (!callback) {
+		callback = App.View.listItems;
+	}
+    App.Ajax.request('CRON.getList', {}, callback);
 }
 
 
@@ -121,6 +138,23 @@ App.Model.update = function(values, source_json, elm)
             // todo: reply.data;
             App.Pages.prepareHTML();
             App.Helpers.updateScreen();
+            /*var refl = {'USER': 'LOGIN_NAME'};
+            App.Model[App.Env.world].loadList(function(reply) {
+				var acc = [];
+				var build_method = App.Env.getWorldName() + '_entry';
+				var data = reply.data;   
+				// TODO: fix it data.data
+				$.each(data, function(key) 
+				{
+					var o = data[key];
+					fb.warn(key);
+					acc[acc.length++] = App.HTML.Build[build_method](o, key);
+				});
+				
+				var html = acc.done().wrapperize('ENTRIES_WRAPPER', App.Env.getWorldName());
+				App.Ref.CONTENT.html(html);
+				App.Helpers.updateScreen();
+			);*/
         }
         // TODO: !
     });

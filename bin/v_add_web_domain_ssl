@@ -131,7 +131,7 @@ update_web_domain_value '$SSL_HOME' "$SSL_HOME"
 update_web_domain_value '$SSL' 'yes'
 
 # Logging
-log_history "$V_EVENT" "v_del_web_domain_ssl $user $domain"
+log_history "$V_EVENT" "v_delete_web_domain_ssl $user $domain"
 log_event 'system' "$V_EVENT"
 
 exit

@@ -94,7 +94,7 @@ update_web_domain_value '$STATS_AUTH' "$a_users"
 V_EVENT="$V_DATE $V_SCRIPT $user $domain $auth_user *****"
 
 # Logging
-log_history "$V_EVENT" "v_del_web_domain_stat_auth $user $domain $auth_user"
+log_history "$V_EVENT" "v_delete_web_domain_stat_auth $user $domain $auth_user"
 log_event 'system' "$V_EVENT"
 
 exit

@@ -45,7 +45,7 @@ fi
 # Checking web system is enabled
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     $V_BIN/v_unsuspend_web_domains $user
-    $V_BIN/v_del_web_domains $user
+    $V_BIN/v_delete_web_domains $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -55,7 +55,7 @@ fi
 # Checking dns system is enabled
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
     $V_BIN/v_unsuspend_dns_domains $user
-    $V_BIN/v_del_dns_domains $user
+    $V_BIN/v_delete_dns_domains $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -75,7 +75,7 @@ fi
 # Checking db system is enabled
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     $V_BIN/v_unsuspend_db_bases $user
-    $V_BIN/v_del_db_dbases $user
+    $V_BIN/v_delete_db_dbases $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -83,7 +83,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
 fi
 
 # Checking ip
-$V_BIN/v_del_sys_user_ips "$user"
+$V_BIN/v_delete_user_ips "$user"
 rv="$?"
 if [ "$rv" -ne '0' ]; then
     exit $rv

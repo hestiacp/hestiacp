@@ -81,13 +81,13 @@ cat $V_WEBTPL/$type.tpl |\
 #----------------------------------------------------------#
 
 # Adding command to pipe
-echo "$V_BIN/v_upd_web_domain_stat $user $domain" >> $V_QUEUE/stats.pipe
+echo "$V_BIN/v_update_web_domain_stat $user $domain" >> $V_QUEUE/stats.pipe
 
 # Adding stats in config
 update_web_domain_value '$STATS' "$type"
 
 # Logging
-log_history "$V_EVENT" "v_del_web_domain_stat $user $domain"
+log_history "$V_EVENT" "v_delete_web_domain_stat $user $domain"
 log_event 'system' "$V_EVENT"
 
 exit

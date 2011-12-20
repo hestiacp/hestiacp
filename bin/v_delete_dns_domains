@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: adding cron job
+# info: deleteing all user dns domains
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -7,19 +7,12 @@
 
 # Argument defenition
 user=$1
-min=$2
-hour=$3
-day=$4
-month=$5
-wday=$6
-command=$7
-job=$8
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
-source $V_FUNC/cron.func
+source $V_FUNC/domain.func
 
 
 #----------------------------------------------------------#
@@ -27,57 +20,50 @@ source $V_FUNC/cron.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '7' "$#" 'user min hour day month wday command [job]'
+check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user' 'min' 'hour' 'day' 'month' 'wday' 'command'
+format_validation 'user'
 
-# Checking cron system
-is_system_enabled 'cron'
+# Checking web system is enabled
+is_system_enabled 'dns'
 
 # Checking user
 is_user_valid
-
-# Get str position
-if [ -z "$job" ]; then
-    job=$(get_next_cron_string)
-fi
-
-# Checking id format
-format_validation 'job'
-
-# Checking job id
-is_cron_job_free
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Concatenating cron string
-command=$(echo $command|sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
-v_str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month"
-v_str="$v_str' WDAY='$wday' CMD='$command' SUSPEND='no' DATE='$V_DATE'"
+# Defining config
+conf="$V_USERS/$user/dns.conf"
 
-# Adding to crontab
-echo "$v_str">>$V_USERS/$user/cron.conf
+# Defining fileds to select
+field='$DOMAIN'
 
-# Sorting jobs by id
-sort_cron_jobs
+# Defining search string
+search_string="SUSPEND='no'"
 
-# Sync system cron with user
-sync_cron_jobs
+# Parsing domain list
+domains=$(dom_clear_search)
+
+# Starting delete loop
+for domain in $domains; do
+    $V_BIN/v_delete_dns_domain "$user" "$domain"
+    rv="$?"
+    if [ "$rv" -ne '0' ]; then
+        log_event 'debug' "$rv $V_EVENT"
+        exit $rv
+    fi
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding task to the vesta pipe
-restart_schedule 'cron'
-
 # Logging
-log_history "$V_EVENT" "v_del_sys_cron $user $job"
 log_event 'system' "$V_EVENT"
 
 exit

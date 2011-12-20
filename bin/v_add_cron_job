@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Unsuspending sys user
+# info: adding cron job
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -7,11 +7,19 @@
 
 # Argument defenition
 user=$1
+min=$2
+hour=$3
+day=$4
+month=$5
+wday=$6
+command=$7
+job=$8
 
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
+source $V_FUNC/cron.func
 
 
 #----------------------------------------------------------#
@@ -19,49 +27,46 @@ source $V_FUNC/shared.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'user'
+check_args '7' "$#" 'user min hour day month wday command [job]'
 
 # Checking argument format
-format_validation 'user'
+format_validation 'user' 'min' 'hour' 'day' 'month' 'wday' 'command'
+
+# Checking cron system
+is_system_enabled 'cron'
 
 # Checking user
 is_user_valid
 
-# Checking user vesta
-if [ "$user" = 'vesta' ]; then
-    exit
+# Get str position
+if [ -z "$job" ]; then
+    job=$(get_next_cron_string)
 fi
+
+# Checking id format
+format_validation 'job'
+
+# Checking job id
+is_cron_job_free
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting '!' in front of the password
-/usr/sbin/usermod --unlock $user
+# Concatenating cron string
+command=$(echo $command|sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
+v_str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month"
+v_str="$v_str' WDAY='$wday' CMD='$command' SUSPEND='no' DATE='$V_DATE'"
 
-# Unsuspending web domains
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $V_BIN/v_unsuspend_web_domains $user
-fi
+# Adding to crontab
+echo "$v_str">>$V_USERS/$user/cron.conf
 
-# Unsuspending dns domains
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $V_BIN/v_unsuspend_dns_domains $user
-fi
+# Sorting jobs by id
+sort_cron_jobs
 
-# Unsuspending mail domains
-# TBD
-
-# Unsuspending datbabases
-if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-    $V_BIN/v_unsuspend_db_bases $user
-fi
-
-# Unsuspending cron jobs
-if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    $V_BIN/v_unsuspend_sys_cron_jobs $user
-fi
+# Sync system cron with user
+sync_cron_jobs
 
 
 #----------------------------------------------------------#
@@ -70,13 +75,9 @@ fi
 
 # Adding task to the vesta pipe
 restart_schedule 'cron'
-restart_schedule 'web'
-restart_schedule 'dns'
-
-# Changing suspend value
-update_user_value "$user" '$SUSPENDED' 'no'
 
 # Logging
+log_history "$V_EVENT" "v_delete_cron_job $user $job"
 log_event 'system' "$V_EVENT"
 
 exit

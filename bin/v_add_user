@@ -109,13 +109,13 @@ mkdir $V_USERS/$user
 
 # Creating configuration files and pipes
 touch $V_USERS/$user/user.conf
-echo "v_upd_sys_user_disk $user" >> $V_QUEUE/disk.pipe
+echo "v_update_user_disk $user" >> $V_QUEUE/disk.pipe
 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     mkdir $V_USERS/$user/ssl
     touch $V_USERS/$user/web.conf
-    echo "$V_BIN/v_upd_web_domains_traff $user" >> $V_QUEUE/traffic.pipe
-    echo "v_upd_web_domains_disk $user" >> $V_QUEUE/disk.pipe
+    echo "$V_BIN/v_update_web_domains_traff $user" >> $V_QUEUE/traffic.pipe
+    echo "v_update_web_domains_disk $user" >> $V_QUEUE/disk.pipe
 fi
 
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
@@ -131,7 +131,7 @@ fi
 
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     touch $V_USERS/$user/db.conf
-    echo "v_upd_db_bases_disk $user" >> $V_QUEUE/disk.pipe
+    echo "v_update_db_bases_disk $user" >> $V_QUEUE/disk.pipe
 fi
 
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then

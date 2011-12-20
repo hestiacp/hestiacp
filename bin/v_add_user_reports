@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: deleteing all user web domains
+# info: adding user reports
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,7 +12,7 @@ user=$1
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $V_FUNC/cron.func
 
 
 #----------------------------------------------------------#
@@ -25,45 +25,33 @@ check_args '1' "$#" 'user'
 # Checking argument format
 format_validation 'user'
 
-# Checking web system is enabled
-is_system_enabled 'web'
-
 # Checking user
 is_user_valid
+
+# Checking user is active
+is_user_suspended
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="$V_USERS/$user/web.conf"
+# Changing user report value
+update_user_value "$user" '$REPORTS' 'yes'
 
-# Defining fileds to select
-field='$DOMAIN'
-
-# Defining search string
-search_string="SUSPEND='no'"
-
-# Parsing domain list
-domains=$(dom_clear_search)
-
-# Starting delete loop
-for domain in $domains; do
-    $V_BIN/v_del_web_domain "$user" "$domain"
-    rv="$?"
-    if [ "$rv" -ne '0' ]; then
-        log_event 'debug' "$rv $V_EVENT"
-        exit $rv
-    fi
-done
+# Sync system cron with user
+sync_cron_jobs
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Adding task to the vesta pipe
+restart_schedule 'cron'
+
 # Logging
+log_history "$V_EVENT" "v_delete_user_reports $user"
 log_event 'system' "$V_EVENT"
 
 exit

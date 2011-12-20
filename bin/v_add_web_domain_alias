@@ -116,7 +116,7 @@ update_web_domain_value '$ALIAS' "$ALIAS"
 # Adding task to the vesta pipe
 restart_schedule 'web'
 
-log_history "$V_EVENT" "v_del_web_domain_alias $user $domain $dom_alias"
+log_history "$V_EVENT" "v_delete_web_domain_alias $user $domain $dom_alias"
 log_event 'system' "$V_EVENT"
 
 exit

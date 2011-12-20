@@ -85,7 +85,7 @@ update_domain_zone
 restart_schedule 'dns'
 
 # Logging
-log_history "$V_EVENT" "v_del_dns_domain_record $user $domain $id"
+log_history "$V_EVENT" "v_delete_dns_domain_record $user $domain $id"
 log_event 'system' "$V_EVENT"
 
 exit

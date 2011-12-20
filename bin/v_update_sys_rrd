@@ -28,23 +28,23 @@ period=$1
 #----------------------------------------------------------#
 
 # Updateing system stats
-$V_BIN/v_upd_sys_rrd_la $period
-$V_BIN/v_upd_sys_rrd_net $period
-$V_BIN/v_upd_sys_rrd_mem $period
-$V_BIN/v_upd_sys_rrd_ssh $period
+$V_BIN/v_update_sys_rrd_la $period
+$V_BIN/v_update_sys_rrd_net $period
+$V_BIN/v_update_sys_rrd_mem $period
+$V_BIN/v_update_sys_rrd_ssh $period
 
 # Updating web stats
 if [ "$WEB_SYSTEM" = 'apache' ]; then
-    $V_BIN/v_upd_sys_rrd_httpd $period
+    $V_BIN/v_update_sys_rrd_httpd $period
 fi
 
 if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    $V_BIN/v_upd_sys_rrd_nginx $period
+    $V_BIN/v_update_sys_rrd_nginx $period
 fi
 
 # Updating ftp stats
 if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
-    $V_BIN/v_upd_sys_rrd_ftp $period
+    $V_BIN/v_update_sys_rrd_ftp $period
 fi
 
 # Updating db stats
@@ -52,8 +52,8 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     for type in ${DB_SYSTEM//,/ }; do
         # Switching on db type
         case $type in
-            mysql) $V_BIN/v_upd_sys_rrd_mysql $period ;;
-            pgsql) $V_BIN/v_upd_sys_rrd_pgsql $period ;;
+            mysql) $V_BIN/v_update_sys_rrd_mysql $period ;;
+            pgsql) $V_BIN/v_update_sys_rrd_pgsql $period ;;
         esac
     done
 fi

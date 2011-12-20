@@ -215,7 +215,7 @@ echo "$v_str" >>$V_USERS/$user/web.conf
 restart_schedule 'web'
 
 # Logging
-log_history "$V_EVENT" "v_del_web_domain $user $domain"
+log_history "$V_EVENT" "v_delete_web_domain $user $domain"
 log_event 'system' "$V_EVENT"
 
 exit

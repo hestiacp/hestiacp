@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: deleteing all user databases
+# info: Unsuspending sys user
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,7 +12,6 @@ user=$1
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
-source $V_FUNC/db.func
 
 
 #----------------------------------------------------------#
@@ -25,43 +24,57 @@ check_args '1' "$#" 'user'
 # Checking argument format
 format_validation 'user'
 
-# Checking web system is enabled
-is_system_enabled 'db'
-
 # Checking user
 is_user_valid
+
+# Checking user vesta
+if [ "$user" = 'vesta' ]; then
+    exit
+fi
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="$V_USERS/$user/db.conf"
+# Deleting '!' in front of the password
+/usr/sbin/usermod --unlock $user
 
-# Defining fileds to select
-field='$DB'
+# Unsuspending web domains
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    $V_BIN/v_unsuspend_web_domains $user
+fi
 
-# Defining search string
-search_string="SUSPEND='no'"
+# Unsuspending dns domains
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    $V_BIN/v_unsuspend_dns_domains $user
+fi
 
-# Parsing unsuspeneded domains
-databases=$(db_clear_search)
+# Unsuspending mail domains
+# TBD
 
-# Starting delete loop
-for database in $databases; do
-    $V_BIN/v_del_db_base "$user" "$database"
-    rv="$?"
-    if [ "$rv" -ne '0' ]; then
-        log_event 'debug' "$rv $V_EVENT"
-        exit $rv
-    fi
-done
+# Unsuspending datbabases
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    $V_BIN/v_unsuspend_db_bases $user
+fi
+
+# Unsuspending cron jobs
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    $V_BIN/v_unsuspend_cron_jobs $user
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Adding task to the vesta pipe
+restart_schedule 'cron'
+restart_schedule 'web'
+restart_schedule 'dns'
+
+# Changing suspend value
+update_user_value "$user" '$SUSPENDED' 'no'
 
 # Logging
 log_event 'system' "$V_EVENT"

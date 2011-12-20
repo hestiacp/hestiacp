@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: updating web statistics for all domains
+# info: deleteing all user databases
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,7 +12,7 @@ user=$1
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $V_FUNC/db.func
 
 
 #----------------------------------------------------------#
@@ -26,7 +26,7 @@ check_args '1' "$#" 'user'
 format_validation 'user'
 
 # Checking web system is enabled
-is_system_enabled 'web'
+is_system_enabled 'db'
 
 # Checking user
 is_user_valid
@@ -36,24 +36,25 @@ is_user_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Defining config
+conf="$V_USERS/$user/db.conf"
+
 # Defining fileds to select
-field='$DOMAIN'
-conf="$V_USERS/$user/web.conf"
+field='$DB'
+
+# Defining search string
 search_string="SUSPEND='no'"
 
-# Parsing domain list
-domains=$(dom_clear_search)
+# Parsing unsuspeneded domains
+databases=$(db_clear_search)
 
-# Starting upd loop
-for domain in $domains; do
-    stats=$(get_web_domain_value '$STATS')
-    if [ ! -z "$stats" ]; then
-        $V_BIN/v_upd_web_domain_stat "$user" "$domain"
-        rv="$?"
-        if [ "$rv" -ne '0' ]; then
-            log_event 'debug' "$rv $V_EVENT"
-            exit $rv
-        fi
+# Starting delete loop
+for database in $databases; do
+    $V_BIN/v_delete_db_base "$user" "$database"
+    rv="$?"
+    if [ "$rv" -ne '0' ]; then
+        log_event 'debug' "$rv $V_EVENT"
+        exit $rv
     fi
 done
 

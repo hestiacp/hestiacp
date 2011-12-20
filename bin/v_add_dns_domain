@@ -115,7 +115,7 @@ increase_user_value "$user" '$U_DNS_DOMAINS'
 restart_schedule 'dns'
 
 # Logging
-log_history "$V_EVENT" "v_del_dns_domain $user $domain"
+log_history "$V_EVENT" "v_delete_dns_domain $user $domain"
 log_event 'system' "$V_EVENT"
 
 exit

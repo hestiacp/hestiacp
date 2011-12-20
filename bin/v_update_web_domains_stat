@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: adding user reports
+# info: updating web statistics for all domains
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,7 +12,7 @@ user=$1
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
-source $V_FUNC/cron.func
+source $V_FUNC/domain.func
 
 
 #----------------------------------------------------------#
@@ -25,33 +25,44 @@ check_args '1' "$#" 'user'
 # Checking argument format
 format_validation 'user'
 
+# Checking web system is enabled
+is_system_enabled 'web'
+
 # Checking user
 is_user_valid
-
-# Checking user is active
-is_user_suspended
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing user report value
-update_user_value "$user" '$REPORTS' 'yes'
+# Defining fileds to select
+field='$DOMAIN'
+conf="$V_USERS/$user/web.conf"
+search_string="SUSPEND='no'"
 
-# Sync system cron with user
-sync_cron_jobs
+# Parsing domain list
+domains=$(dom_clear_search)
+
+# Starting upd loop
+for domain in $domains; do
+    stats=$(get_web_domain_value '$STATS')
+    if [ ! -z "$stats" ]; then
+        $V_BIN/v_update_web_domain_stat "$user" "$domain"
+        rv="$?"
+        if [ "$rv" -ne '0' ]; then
+            log_event 'debug' "$rv $V_EVENT"
+            exit $rv
+        fi
+    fi
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding task to the vesta pipe
-restart_schedule 'cron'
-
 # Logging
-log_history "$V_EVENT" "v_del_sys_user_reports $user"
 log_event 'system' "$V_EVENT"
 
 exit

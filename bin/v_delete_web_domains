@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: deleteing all user dns domains
+# info: deleteing all user web domains
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -26,7 +26,7 @@ check_args '1' "$#" 'user'
 format_validation 'user'
 
 # Checking web system is enabled
-is_system_enabled 'dns'
+is_system_enabled 'web'
 
 # Checking user
 is_user_valid
@@ -37,7 +37,7 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/dns.conf"
+conf="$V_USERS/$user/web.conf"
 
 # Defining fileds to select
 field='$DOMAIN'
@@ -50,7 +50,7 @@ domains=$(dom_clear_search)
 
 # Starting delete loop
 for domain in $domains; do
-    $V_BIN/v_del_dns_domain "$user" "$domain"
+    $V_BIN/v_delete_web_domain "$user" "$domain"
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         log_event 'debug' "$rv $V_EVENT"

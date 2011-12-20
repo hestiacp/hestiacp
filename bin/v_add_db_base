@@ -86,7 +86,7 @@ echo "$v_str">>$V_USERS/$user/db.conf
 V_EVENT="$V_DATE $V_SCRIPT $user $database $db_user ***** $type $host"
 
 # Logging
-log_history "$V_EVENT" "v_del_db_base $user $database"
+log_history "$V_EVENT" "v_delete_db_base $user $database"
 log_event 'system' "$V_EVENT"
 
 exit

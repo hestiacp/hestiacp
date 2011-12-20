@@ -63,7 +63,7 @@ fi
 
 # Suspending cron jobs
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    $V_BIN/v_suspend_sys_cron_jobs $user
+    $V_BIN/v_suspend_cron_jobs $user
 fi
 
 

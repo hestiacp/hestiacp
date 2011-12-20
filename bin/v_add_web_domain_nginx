@@ -89,7 +89,7 @@ update_web_domain_value '$NGINX_EXT' "$extentions"
 # Adding task to the vesta pipe
 restart_schedule 'web'
 
-log_history "$V_EVENT" "v_del_web_domain_nginx $user $domain"
+log_history "$V_EVENT" "v_delete_web_domain_nginx $user $domain"
 log_event 'system' "$V_EVENT"
 
 exit

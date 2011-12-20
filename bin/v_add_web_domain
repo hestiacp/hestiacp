@@ -41,7 +41,7 @@ is_user_suspended
 
 # Checking domain
 is_domain_new 'quiet'
-if [ $? -ne $OK ]; then
+if [ $? -ne 0 ]; then
 
     # Checking domain owner
     is_domain_owner

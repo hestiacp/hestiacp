@@ -46,7 +46,7 @@ is_domain_suspended 'web'
 
 # Checking alias on the server
 is_domain_new 'quiet' "$dom_alias"
-if [ $? -ne $OK ]; then
+if [ $? -ne 0 ]; then
 
     # Checking alias owner
     is_domain_owner "$dom_alias"

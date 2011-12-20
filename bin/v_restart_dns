@@ -19,4 +19,4 @@ if [ "$DNS_SYSTEM" = 'bind' ]; then
     bind
 fi
 
-exit $OK
+exit

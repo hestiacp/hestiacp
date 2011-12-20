@@ -33,4 +33,4 @@ if [ "$PROXY_SYSTEM" = 'nginx' ]; then
 fi
 
 # Logging
-exit $OK
+exit

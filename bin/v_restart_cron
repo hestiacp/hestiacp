@@ -20,4 +20,4 @@ if [ "$CRON_SYSTEM" = 'crond' ]; then
 fi
 
 # Logging
-exit  $OK
+exit

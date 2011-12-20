@@ -159,9 +159,7 @@ update_domain_zone() {
     fi
 
     # Parsing dns domains conf
-    for key in $line; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $line
 
     # Converting SOA to ascii
     SOA=$(idn --quiet -a -t "$SOA")
@@ -326,9 +324,7 @@ get_web_domain_value() {
     string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
-    for keys in $string; do
-        eval ${keys%%=*}=${keys#*=}
-    done
+    eval $string
 
     # Self reference
     eval value="$key"
@@ -341,9 +337,7 @@ get_web_domain_values() {
     # Defining domain parameters
     for line in $(grep "DOMAIN='$domain'" $V_USERS/$user/web.conf); do
         # Assing key=value
-        for key in $line; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $line
     done
 }
 
@@ -354,9 +348,7 @@ get_dns_domain_value() {
     string=$( grep "DOMAIN='$domain'" $V_USERS/$user/dns.conf )
 
     # Parsing key=value
-    for keys in $string; do
-        eval ${keys%%=*}=${keys#*=}
-    done
+    eval $string
 
     # Self reference
     eval value="$key"
@@ -378,9 +370,7 @@ update_web_domain_value() {
     str=$(echo $domain_str | cut -f 2 -d ':')
 
     # Reading key=values
-    for keys in $str; do
-        eval ${keys%%=*}=${keys#*=}
-    done
+    eval $str
 
     # Defining clean key
     c_key=$(echo "${key//$/}")
@@ -409,9 +399,7 @@ update_dns_domain_value() {
     str=$(echo $domain_str | cut -f 2 -d ':')
 
     # Reading key=values
-    for keys in $str; do
-        eval ${keys%%=*}=${keys#*=}
-    done
+    eval $str
 
     # Defining clean key
     c_key=$(echo "${key//$/}")
@@ -434,9 +422,7 @@ is_web_domain_key_empty() {
     string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
-    for keys in $string; do
-        eval ${keys%%=*}=${keys#*=}
-    done
+    eval $string
 
     # Self reference
     eval value="$key"
@@ -518,9 +504,7 @@ is_web_domain_value_exist() {
     string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
 
     # Parsing key=value
-    for keys in $string; do
-        eval ${keys%%=*}=${keys#*=}
-    done
+    eval $string
 
     # Self reference
     eval value="$key"
@@ -540,9 +524,7 @@ is_dns_domain_value_exist() {
     string=$( grep "DOMAIN='$domain'" $V_USERS/$user/dns.conf )
 
     # Parsing key=value
-    for keys in $string; do
-        eval ${keys%%=*}=${keys#*=}
-    done
+    eval $string
 
     # Self reference
     eval value="$key"
@@ -599,9 +581,8 @@ dom_clear_search(){
     # Reading file line by line
     for line in $(grep $search_string $conf); do
         # Parsing key=val
-        for key in $line; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $line
+
         # Print result line
         eval echo "$field"
     done
@@ -610,11 +591,8 @@ dom_clear_search(){
 dom_clear_list() {
     # Reading file line by line
     while read line ; do
-
         # Parsing key=value
-        for key in $line; do
-            eval ${key%%=*}=${key#*=}
-        done
+        eval $line
 
         # Print result line
         eval echo "$field"

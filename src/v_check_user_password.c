@@ -1,9 +1,9 @@
 /***************************************************************************/
-/*  v_check_passwd.c                                                       */
+/*  v_check_user_password.c                                                */
 /*                                                                         */
 /*  This program compare user pasword from input with /etc/shadow          */
 /*  To compile run:                                                        */
-/*  "gcc -lcrypt v_check_sys_user_password.c -o v_check_sys_user_password" */
+/*  "gcc -lcrypt v_check_user_password.c -o v_check_user_password"         */
 /*                                                                         */
 /*  Thanks to: bogolt, richie and burus                                    */
 /*                                                                         */

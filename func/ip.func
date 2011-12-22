@@ -1,6 +1,6 @@
 is_sys_ip_free() {
     # Parsing system ips
-    ip_list=$(ifconfig|grep 'inet addr:'|cut -f 2 -d ':'|cut -f 1 -d " ")
+    ip_list=$(/sbin/ifconfig|grep 'inet addr:'|cut -f 2 -d ':'|cut -f 1 -d " ")
 
     # Checking ip existance
     ip_check=$(echo "$ip_list"|grep -w "$ip")
@@ -13,7 +13,7 @@ is_sys_ip_free() {
 
 get_next_interface_number() {
     # Parsing ifconfig
-    i=$(ifconfig -a |grep -w "$interface"|cut -f1 -d ' '|\
+    i=$(/sbin/ifconfig -a |grep -w "$interface"|cut -f1 -d ' '|\
         tail -n 1|cut -f 2 -d :)
 
     # Checking result

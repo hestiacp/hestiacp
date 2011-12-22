@@ -35,9 +35,6 @@ is_ip_key_empty '$U_WEB_DOMAINS'
 # Checking users on ip
 is_ip_key_empty '$U_SYS_USERS'
 
-# We do not check ownership if 
-# no one actualy use this ip
-
 # Checking interface
 interface=$(get_current_interface)
 

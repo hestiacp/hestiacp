@@ -600,33 +600,29 @@ dom_clear_list() {
 }
 
 namehost_ip_support() {
-    #Checking web system
+    # Checking httpd config for NameHost string number
     if [ "$WEB_SYSTEM" = 'apache' ]; then
-
-        # Checking httpd config for NameHost string number
         conf_line=$(grep -n "NameVirtual" $conf|tail -n 1|cut -f 1 -d ':')
         if [ ! -z "$conf_line" ]; then
-            conf_ins=$((conf_line + 1))	        # inster into next line
+            conf_ins=$((conf_line + 1))
         else
-            conf_ins='1'        # insert into first line
+            conf_ins='1'
         fi
 
         # Checking ssl support
         if [ "$WEB_SSL" = 'mod_ssl' ]; then
-            web_ssl_port=$(get_config_value '$WEB_SSL_PORT')
-            sed -i "$conf_ins i NameVirtualHost $ip:$web_ssl_port" $conf
-            sed -i "$conf_ins i Listen $ip:$web_ssl_port" $conf
+            sed -i "$conf_ins i NameVirtualHost $ip:$WEB_SSL_PORT" $conf
+            sed -i "$conf_ins i Listen $ip:$WEB_SSL_PORT" $conf
         fi
 
-        web_port=$(get_config_value '$WEB_PORT')
-        sed -i "$conf_ins i NameVirtualHost $ip:$web_port" $conf
-        sed -i "$conf_ins i Listen $ip:$web_port" $conf
+        sed -i "$conf_ins i NameVirtualHost $ip:$WEB_PORT" $conf
+        sed -i "$conf_ins i Listen $ip:$WEB_PORT" $conf
 
         # Checking proxy support
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-            proxy_port=$(get_config_value '$PROXY_PORT')
             cat $V_WEBTPL/ngingx_ip.tpl | sed -e "s/%ip%/$ip/g" \
-             -e "s/%web_port%/$web_port/g" -e "s/%proxy_port%/$proxy_port/g" >>$nconf
+             -e "s/%web_port%/$WEB_SSL_PORT/g" \
+            -e "s/%proxy_port%/$PROXY_PORT/g" >>$nconf
 
             # Adding to rpaf ip pool as well
             ips=$(grep 'RPAFproxy_ips' $rconf)

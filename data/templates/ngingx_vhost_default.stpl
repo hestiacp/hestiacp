@@ -1,7 +1,6 @@
 server {
     listen      %ip%:%proxy_ssl_port%;
     server_name %domain_idn% %alias_idn%;
-    server_name_in_redirect off;
     ssl         on;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;

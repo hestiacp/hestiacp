@@ -18,7 +18,7 @@ source $V_FUNC/shared.func
 
 # Defining pipe functions
 restart_pipe() {
-    for service in $(cat $V_QUEUE/restart.pipe |sort |uniq); do
+    for service in $(cat $V_QUEUE/restart.pipe |awk '!x[$0]++'); do
         $V_BIN/v_restart_$service
     done
     echo > $V_QUEUE/restart.pipe
@@ -37,7 +37,7 @@ traff_pipe() {
 }
 
 backup_pipe() {
-    for user in $(cat $V_QUEUE/backup.pipe |sort |uniq ); do
+    for user in $(cat $V_QUEUE/backup.pipe |awk '!x[$0]++' ); do
         sed -i "/^$user$/d" $V_QUEUE/backup.pipe
         bash $V_BIN/v_backup_user $user
         # Send notification to user

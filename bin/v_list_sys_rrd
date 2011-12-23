@@ -1,0 +1,90 @@
+#!/bin/bash
+# info: listing available system rrd charts
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+format=${1-shell}
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
+
+# Define json function
+json_list_rrd() {
+    i=1
+    echo "{"
+    for type in $rrd_types; do
+        for rrd in $(ls $V_RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
+            if [ "$i" -ne 1 ]; then
+                echo -e "\t},"
+            fi
+            echo -e "\\t\"$i\""
+            echo -e "\t\t\"TYPE\": \"$type\"",
+            echo -e "\t\t\"RRD\": \"$rrd\""
+            (( ++i))
+        done
+    done
+
+    if [ "$i" -gt 1 ]; then
+        echo -e "\t}"
+    fi
+    echo "}"
+}
+
+# Define jshell function
+shell_list_rrd() {
+    if [  -z "$nohead" ]; then
+        # Print brief info
+        echo "PATH"
+        echo "---------"
+    fi
+
+    for type in $rrd_types; do
+        for rrd in $(ls $V_RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
+            echo "$V_RRD/$type/$rrd.rrd"
+        done
+    done
+}
+
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking enabled systems
+rrd_types="la mem net"
+
+if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    rrd_types="$rrd_types web"
+fi
+
+if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    rrd_types="$rrd_types db"
+fi
+
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    rrd_types="$rrd_types mail"
+fi
+
+if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
+    rrd_types="$rrd_types ftp"
+fi
+rrd_types="$rrd_types ssh"
+
+
+# Listing domains
+case $format in
+    json)   json_list_rrd ;;
+    plain)  nohead=1; shell_list_rrd ;;
+    shell)  shell_list_rrd | column -t ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

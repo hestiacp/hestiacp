@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: deleting sys cron
+# info: delete cron job
+# arguments: user job
+#
+# The function deletes cron job.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

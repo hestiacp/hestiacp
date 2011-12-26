@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: Suspending sys cron
+# info: suspend cron job
+# arguments: user job
+#
+# The function suspends a certain job of the cron scheduler.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: changing cron job
+# info: change cron job
+# arguments: user job min hour day month wday command
+#
+# The function is used for changing existing job. It fully replace job
+# parameters with new one but with same id.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

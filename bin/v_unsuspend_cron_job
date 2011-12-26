@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: Unuspending sys cron
+# info: unuspend cron job
+# arguments: user job
+#
+# The function unsuspen certain cron job.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

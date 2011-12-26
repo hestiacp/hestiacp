@@ -1,5 +1,9 @@
 #!/bin/bash
 # info: Suspending sys cron jobs
+# arguments: user
+#
+# The function suspends all user cron jobs.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

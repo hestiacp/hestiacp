@@ -20,7 +20,7 @@ json_list_rrd() {
             if [ "$i" -ne 1 ]; then
                 echo -e "\t},"
             fi
-            echo -e "\\t\"$i\""
+            echo -e "\\t\"$i\": {"
             echo -e "\t\t\"TYPE\": \"$type\"",
             echo -e "\t\t\"RRD\": \"$rrd\""
             (( ++i))

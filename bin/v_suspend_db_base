@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: Suspending databse
+# info: suspend database
+# arguments: user database
+#
+# The function for suspending a certain user database.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

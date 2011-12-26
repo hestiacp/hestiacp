@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: Suspending databses
+# info: suspend databases
+# arguments: user
+#
+# The function for suspending of all databases of a single user.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

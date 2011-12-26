@@ -1,5 +1,13 @@
 #!/bin/bash
-# info: adding data base server
+# info: add new database server
+# arguments: type host port db_user db_password [max_db] [tpl]
+#
+# The function add new database server to the server pool. It supports local
+# and remote database servers, which is useful for clusters. By adding a host
+# you can set limit for number of databases on a host. Template parameter is
+# used only for PostgreSQL and has an default value "template1". You can read
+# more about templates in official PostgreSQL documentation.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -11,9 +19,8 @@ host=$2
 port=$3
 db_user=$4
 db_password=$5
-max_usr=${6-300}
-max_db=${7-300}
-template=${8-template1}
+max_db=${6-300}
+template=${7-template1}
 
 
 # Importing variables
@@ -28,11 +35,11 @@ source $V_FUNC/db.func
 #----------------------------------------------------------#
 
 # Checking arg number
-args_usage='type host port db_user db_password [max_usr] [max_db] [tpl]'
+args_usage='type host port db_user db_password [max_db] [tpl]'
 check_args '5' "$#" "$args_usage"
 
 # Checking argument format
-format_validation 'host' 'port' 'db_user' 'db_password' 'max_usr' 'max_db'
+format_validation 'host' 'port' 'db_user' 'db_password' 'max_db'
 format_validation 'template'
 
 # Checking db system is enabled
@@ -50,6 +57,7 @@ case $type in
     pgsql) is_pgsql_host_alive ;;
 esac
 
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -57,13 +65,11 @@ esac
 # Concatentating db host string
 case $type in
     mysql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
-            new_str="$new_str PORT='$port' MAX_USERS='$max_usr'";
-            new_str="$new_str MAX_DB='$max_db' U_SYS_USERS=''";
+            new_str="$new_str PORT='$port' MAX_DB='$max_db' U_SYS_USERS=''";
             new_str="$new_str U_DB_BASES='0'  ACTIVE='yes' DATE='$V_DATE'";;
     pgsql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
             new_str="$new_str PORT='$port' TPL='$template'";
-            new_str="$new_str MAX_USERS='$max_usr' MAX_DB='$max_db'";
-            new_str="$new_str U_SYS_USERS=''";
+            new_str="$new_str MAX_DB='$max_db' U_SYS_USERS=''";
             new_str="$new_str U_DB_BASES='0' ACTIVE='yes' DATE='$V_DATE'";;
 esac
 

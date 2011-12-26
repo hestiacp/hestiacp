@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: Unsuspending databses
+# info: unsuspend databases
+# arguments: user
+#
+# The function for unsuspending all user's databases.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

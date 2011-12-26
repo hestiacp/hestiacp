@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: adding data base server
+# info: delete database serve
+# arguments: type host
+#
+# The function for deleting the database host from vesta configuration. It will
+# be deleted if there are no databases created on it only.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

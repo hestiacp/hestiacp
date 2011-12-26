@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: deleteing all user databases
+# info: delete user databases
+# arguments: user
+#
+# The function deletes all user databases.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

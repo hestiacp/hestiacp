@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: Deleting data base
+# info: delete database
+# arguments: user database
+#
+# The function for deleting the database. If database user have access to
+# another database, he will not be deleted.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

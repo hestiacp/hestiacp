@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing data base servers
+# info: list database host
+# arguments: type host [format]
+#
+# The function for obtaining host's database parameters.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -101,7 +105,7 @@ is_db_host_valid
 conf=$V_DB/$type.conf
 
 # Defining fileds to select
-fields='$HOST $PORT $MAX_USERS $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'
+fields='$HOST $PORT $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'
 
 # Listing database
 case $format in 

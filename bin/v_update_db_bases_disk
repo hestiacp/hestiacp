@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating disk usage for all databaes
+# info: update databases disk usage
+# arguments: user
+#
+# The function recalculates disk usage for all user databases.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

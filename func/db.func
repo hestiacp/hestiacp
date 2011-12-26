@@ -57,7 +57,7 @@ get_next_db_host() {
             eval ${key%%=*}="${key#*=}"
         done
         users=$(echo -e "${U_SYS_USERS//,/\n}"|wc -l)
-        if [ "$MAX_DB" -gt "$U_DB_BASES" ] && [ $MAX_USERS -gt "$users" ];then
+        if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
             host=$HOST
         fi
 
@@ -76,7 +76,7 @@ get_next_db_host() {
             weight=$(echo "$U_DB_BASES * 100 / $MAX_DB"|bc)
             users=$(echo -e "${U_SYS_USERS//,/\n}"|wc -l)
 
-            if [ "$ow" -gt "$weight" ] && [ $MAX_USERS -gt "$users" ]; then
+            if [ "$ow" -gt "$weight" ]; then
                 host="$HOST"
                 ow="$weight"
             fi
@@ -95,8 +95,7 @@ get_next_db_host() {
 
             users=$(echo -e "${U_SYS_USERS//,/\n}"|wc -l)
 
-            if [ "$MAX_DB" -gt "$U_DB_BASES" ] && [ $MAX_USERS -gt "$users" ]
-            then
+            if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
                 HOST_LIST="$HOST_LIST$HOST "
             fi
         done
@@ -122,8 +121,7 @@ get_next_db_host() {
             done
 
             users=$(echo -e "${U_SYS_USERS//,/\n}"|wc -l)
-            if [ "$MAX_DB" -gt "$U_DB_BASES" ] && [ $MAX_USERS -gt "$users" ]
-            then
+            if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
                 host="$HOST"
                 break
             fi
@@ -166,13 +164,12 @@ increase_db_value() {
     # Concatenating db string
     case $type in
         mysql) new_str="HOST='$HOST' USER='$USER' PASSWORD='$PASSWORD'";
-            new_str="$new_str PORT='$PORT' MAX_USERS='$MAX_USERS'";
-            new_str="$new_str MAX_DB='$MAX_DB' U_SYS_USERS='$U_SYS_USERS'";
-            new_str="$new_str U_DB_BASES='$U_DB_BASES'  ACTIVE='$ACTIVE'";
+            new_str="$new_str PORT='$PORT' MAX_DB='$MAX_DB'";
+            new_str="$new_str U_SYS_USERS='$U_SYS_USERS'";
+            new_str="$new_str U_DB_BASES='$U_DB_BASES' ACTIVE='$ACTIVE'";
             new_str="$new_str DATE='$DATE'";;
         pgsql) new_str="HOST='$HOST' USER='$USER' PASSWORD='$PASSWORD'";
-            new_str="$new_str PORT='$PORT' TPL='$TPL'";
-            new_str="$new_str MAX_USERS='$MAX_USERS' MAX_DB='$MAX_DB'";
+            new_str="$new_str PORT='$PORT' TPL='$TPL' MAX_DB='$MAX_DB'";
             new_str="$new_str U_SYS_USERS='$U_SYS_USERS'";
             new_str="$new_str U_DB_BASES='$U_DB_BASES' ACTIVE='$ACTIVE'";
             new_str="$new_str DATE='$DATE'";;
@@ -204,13 +201,13 @@ decrease_db_value() {
     # Concatenating db string
     case $type in
         mysql) new_str="HOST='$HOST' USER='$USER' PASSWORD='$PASSWORD'";
-            new_str="$new_str PORT='$PORT' MAX_USERS='$MAX_USERS'";
+            new_str="$new_str PORT='$PORT'";
             new_str="$new_str MAX_DB='$MAX_DB' U_SYS_USERS='$U_SYS_USERS'";
             new_str="$new_str U_DB_BASES='$U_DB_BASES'  ACTIVE='$ACTIVE'";
             new_str="$new_str DATE='$DATE'";;
         pgsql) new_str="HOST='$HOST' USER='$USER' PASSWORD='$PASSWORD'";
             new_str="$new_str PORT='$PORT' TPL='$TPL'";
-            new_str="$new_str MAX_USERS='$MAX_USERS' MAX_DB='$MAX_DB'";
+            new_str="$new_str MAX_DB='$MAX_DB'";
             new_str="$new_str U_SYS_USERS='$U_SYS_USERS'";
             new_str="$new_str U_DB_BASES='$U_DB_BASES' ACTIVE='$ACTIVE'";
             new_str="$new_str DATE='$DATE'";;

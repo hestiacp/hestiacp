@@ -1,3 +1,4 @@
+
 #!/bin/bash
 # info: updating ssh rrd
 
@@ -62,8 +63,8 @@ rrdtool graph $V_RRD/ssh/$period-ssh.png \
     --width="440" \
     --start "$start" \
     --end "$end" \
-    --title "SSH Usage" \
-    --vertical-label "Connections ($period)" \
+    --title "SSH Usage ($period)" \
+    --vertical-label "Connections" \
     --x-grid "$grid" \
     -c "BACK#484439" \
     -c "SHADEA#484439" \

@@ -1,0 +1,140 @@
+BASH CODING STYLE
+
+------------------------------------------------
+Contents:
+
+    1. Introduction
+    2. Naming Convention
+    3. Coments
+    4. Coding Styles
+    5. Basic formating
+    6. If, For, and While   
+    7. Use of shell builtin commands
+
+
+------------------------------------------------
+
+1. Introduction
+    The main reason for using a consistent set of coding conventions is to
+    improve the readability of the source code, allowing core team to
+    understand new code more quickly and thoroughly.
+
+
+2. Naming Convention
+    The names of files, variables and functions serve as comments of a sort.
+    So don’t choose terse names—instead, look for names that give useful
+    information about the meaning. Names should be English, like other
+    comments. They should be descriptive and correspond or to be appropriate to
+    functionality which it implements. Names should not be longer than 30
+    characters. Instead spaces use underscores to separate words in a name. And
+    it is always good idea to stick to lower case, exceptions are only global
+    or enviroment variables.
+
+        iCantReadThis.Shell             # Bad naming
+        backup_mysql_databases.sh       # Good naming
+
+        PATH='/bin:/home/user/bin'      # Global variable (capitals)
+        max_users=0                     # Local variable
+
+        print_user_password() {         #
+            echo $password              #  Function naming example
+        }                               #
+
+
+3. Coments
+    The total length of a line (including comment) must not exceed more than 80
+    characters. Every file must be documented with an introductory comment that
+    provides shorthand information on the file name and its contents.
+        #!/bin/bash
+        # info: adding web domain
+
+    Consecutive line end comments start in the same column. A blank will always
+    follow the introductory character of the comment to simplify the detection
+    of the beginning of the word.
+        cp foo bar                      # Copy foo to bar
+        rm -f foo                       # Remove foo
+
+    Use an extra '#' above and below the comment in the case of multi-line
+    comments:
+        #
+        # Modify the permissions on bar. We need to set them
+        # to root/sys in order to match the package prototype.
+        #
+        chown root bar
+        chgrp sys bar
+
+    Each script have 4 logical part Variables, Verifications, Action and Vesta.
+    Such parts should be devided by following frames.
+        #----------------------------------------------------------#
+        #                    Variable&Function                     #
+        #----------------------------------------------------------#
+
+
+5. Basic Formating
+    The indentation of program constructions has to agree with the logic
+    nesting depth. The indentation of one step usually is 4 spaces. Do not use
+    tabs in your code. You should set your editor to emit spaces when you hit
+    the tab key.
+        cp foo bar                                   
+        cp some_reallllllllly_realllllllllllllly_long_path \
+            to_another_really_long_path
+
+
+6. If, For, and While
+    To match Kernighan and Ritchie style, the sh token equivalent to the C "{"
+    should appear on the same line, separated by a ";", as in:
+        if [ $x = 'something' ]; then
+            echo "$x"
+        fi
+           
+        for i in 1 2 3; do
+            echo $i
+        done
+                   
+        while [ $# -gt 0 ]; do
+            echo $1
+            shift
+        done
+
+
+7. Use of Shell Builtin Commands
+    If possible shell buitins should be preferred to external utilities. Each
+    call of test true sed awk etc generates a new process. Used in a loop this
+    can extend the execution time considerably. So please do not write:
+        if test $# -gt 0; then
+    Instead use:
+        if [ $# -gt 0 ]; then
+
+    In the following example the shell parameter expansion is used to get the
+    base name and the directory of a path:
+        for pathname in $(find -type f -name "*" -print); do
+            basename=${pathname##*/}    # replaces basename
+            dirname=${pathname%/*}      # replaces dirname
+            dirlength=${#dirname}       # expr length
+        done
+
+    The proper way to write an infinite loop in the shell is to use the ":"
+    built-in, which evaluates to true (exit status 0). This is better than
+    using "true", because that is *not* a built-in and thus runs /bin/true.
+        while :; do
+            echo infinite loop
+        done
+
+    Do not test for non-/empty strings by comparing to "" or ''.  always use
+    the test operators -n (non-zero-length string) and -z (zero-length string).
+        if [ -z "$foo" ]; then
+            echo 'you forgot to set $foo'
+        fi
+        if [ -n "$BASEDIR" ]; then
+            echo "\$BASEDIR is set to $BASEDIR"
+        fi
+
+
+
+------------------------------------------------
+
+    BASH CODING STYLE
+    skid@vestacp.com 
+    2011.12.28
+
+------------------------------------------------

@@ -20,9 +20,36 @@ json_list_rrd() {
             if [ "$i" -ne 1 ]; then
                 echo -e "\t},"
             fi
-            echo -e "\\t\"$i\": {"
+
+            # Define title
+            if [ "$type" = 'la' ]; then
+                title="Load Average"
+            fi
+
+            if [ "$type" = 'mem' ]; then
+                title="Memory Usage"
+            fi
+
+            if [ "$type" = 'net' ]; then
+                title="Bandwidth Usage $rrd"
+            fi
+
+            if [ "$type" = 'web' ] || [ "$type" = 'ftp' ] ||\
+               [ "$type" = 'ssh' ]; then
+                title="$(echo $rrd| tr '[:lower:]' '[:upper:]') Usage"
+            fi
+
+            if [ "$type" = 'db' ]; then
+                db_type=$(echo $rrd|cut -f 1 -d _ |sed -e 's/mysql/MySQL/g' \
+                    -e 's/pgsql/PostgreSQL/g' )
+                db_host=$(echo $rrd|cut -f 2 -d _ )
+                title="$db_type Usage on $db_host"
+            fi
+
+            echo -e "\t\"$i\": {"
             echo -e "\t\t\"TYPE\": \"$type\"",
-            echo -e "\t\t\"RRD\": \"$rrd\""
+            echo -e "\t\t\"RRD\": \"$rrd\"",
+            echo -e "\t\t\"TITLE\": \"$title\""
             (( ++i))
         done
     done

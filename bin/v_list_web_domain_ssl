@@ -1,0 +1,86 @@
+#!/bin/bash
+# info: listing web ssl certificate
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+format=${3-shell}
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared.func
+source $V_FUNC/domain.func
+
+# Json function
+json_list_ssl() {
+    i='1'       # iterator
+    echo '{'
+    echo -e "\t\"$domain\": {"
+    echo "        \"CRT\": \"$crt\","
+    echo "        \"KEY\": \"$key\","
+    echo "        \"CA\": \"$ca\""
+    echo -e "\t}\n}"
+}
+
+# Shell function
+shell_list_ssl() {
+    if [ ! -z "$crt" ]; then
+        echo -e "$crt"
+    fi
+    if [ ! -z "$key" ]; then
+        echo -e "\n$key"
+
+    fi
+    if [ ! -z "$ca" ]; then
+        echo -e "\n$ca"
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '2' "$#" 'user domain [format]'
+
+# Checking user
+is_user_valid
+
+# Checking domain exist
+is_web_domain_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+if [ -e "$V_USERS/$user/ssl/$domain.crt" ]; then
+    crt=$(cat $V_USERS/$user/ssl/$domain.crt |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+fi
+
+if [ -e "$V_USERS/$user/ssl/$domain.key" ]; then
+    key=$(cat $V_USERS/$user/ssl/$domain.key |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+fi
+
+if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
+    ca=$(cat $V_USERS/$user/ssl/$domain.ca |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+fi
+
+# Listing domains
+case $format in
+    json)   json_list_ssl ;;
+    plain)  nohead=1; shell_list_ssl ;;
+    shell)  shell_list_ssl ;;
+    *)      check_args '1' '0' '[format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

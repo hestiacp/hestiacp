@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing dns templates
+# info: list dns templates
+# arguments: [format]
+#
+# The function for obtaining the list of all DNS templates available.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

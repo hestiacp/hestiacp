@@ -1,5 +1,13 @@
 #!/bin/bash
-# info: adding dns domain
+# info: add dns domain
+# arguments: user domain ip [template] [exp] [soa] [ttl]
+#
+# The function adds DNS zone with records defined in the template. If the exp
+# argument isn't stated, the expiration date value will be set to next year.
+# The soa argument is responsible for the relevant record. By default the first
+# user's NS server is used. TTL is set as common for the zone and for all of
+# its records with a default value of 14400 seconds.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

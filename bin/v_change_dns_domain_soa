@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: changing dns domain soa
+# info: change dns domain soa record
+# arguments: user domain soa
+#
+# The function for changing SOA record. This type of records can not be
+# modified by v_change_dns_domain_record call.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

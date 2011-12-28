@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: deliting dns domain
+# info: delite dns domain
+# arguments: user domain
+#
+# The function for deleting DNS domain. By deleting it all records will also be
+# deleted.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

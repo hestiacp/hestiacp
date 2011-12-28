@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: deleteing all user dns domains
+# info: delete dns domains
+# arguments: user
+#
+# The function for deleting all users DNS domains.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

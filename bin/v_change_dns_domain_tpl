@@ -1,5 +1,11 @@
 #!/bin/bash
-# info: changing dns domain template
+# info: change dns domain template
+# arguments: user domain
+#
+# The function for changing the template of records. By updating old records
+# will be removed and new records will be generated in accordance with
+# parameters of new template.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

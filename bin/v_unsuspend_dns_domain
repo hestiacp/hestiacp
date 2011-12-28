@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: unsuspening dns domain
+# info: unsuspend dns domain
+# arguments: user domain
+#
+# The function unsuspends a certain user's domain.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

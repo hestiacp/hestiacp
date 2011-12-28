@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing dns domains
+# info: list dns domains
+# arguments: user [format]
+#
+# The function for obtaining all DNS domains of a user.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

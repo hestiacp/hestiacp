@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: changing dns domain record
+# info: change dns domain record
+# arguments: user domain id record type value
+#
+# The function for changing DNS record.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

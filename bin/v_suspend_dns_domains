@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: suspening dns domains
+# info: suspend dns domains
+# arguments: user
+#
+# The function suspends all user's DNS domains.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

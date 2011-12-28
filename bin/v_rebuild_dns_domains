@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: rebuilding dns domains
+# info: rebuild dns domains
+# arguments: user
+#
+# The function rebuilds BIND configuration files for all dns domains.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

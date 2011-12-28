@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: deleting dns record
+# info: delete dns record
+# arguments: user domain id
+#
+# The function for deleting a certain record of DNS zone.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

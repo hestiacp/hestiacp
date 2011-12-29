@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: adding system ip
+# info: add system ip address
+# arguments: ip mask [interface] [user] [ip_status] [ip_name]
+#
+# The function adds ip address into a system including rc scripts.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

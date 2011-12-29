@@ -121,42 +121,22 @@ App.Model.update = function(values, source_json, elm)
 {    
     var method = App.Settings.getMethodName('update');
     var build_method = App.Env.getWorldName() + '_entry';
-    App.Ajax.request(method, {
+    var params = {
         'old': source_json,
         'new': App.Helpers.toJSON(values)
-    }, function(reply){
+    };
+    App.Ajax.request(method, params, function(reply){
         if(!reply.result) {
             var tpl = App.HTML.Build[build_method](App.Helpers.evalJSON(source_json));
             $(elm).replaceWith(tpl);
             App.Helpers.updateScreen();
-            App.Helpers.Warn('Changes were not applied');            
+            App.Helpers.Warn('Changes were not applied. ' + reply.message);
         }
         else {
-            /*var tpl = App.HTML.Build[build_method](reply.data);
+            var tpl = App.HTML.Build[build_method]($.extend(App.Helpers.evalJSON(source_json), values));
             $(elm).replaceWith(tpl);
-            App.Helpers.updateScreen();*/
-            // todo: reply.data;
-            App.Pages.prepareHTML();
             App.Helpers.updateScreen();
-            /*var refl = {'USER': 'LOGIN_NAME'};
-            App.Model[App.Env.world].loadList(function(reply) {
-				var acc = [];
-				var build_method = App.Env.getWorldName() + '_entry';
-				var data = reply.data;   
-				// TODO: fix it data.data
-				$.each(data, function(key) 
-				{
-					var o = data[key];
-					fb.warn(key);
-					acc[acc.length++] = App.HTML.Build[build_method](o, key);
-				});
-				
-				var html = acc.done().wrapperize('ENTRIES_WRAPPER', App.Env.getWorldName());
-				App.Ref.CONTENT.html(html);
-				App.Helpers.updateScreen();
-			);*/
         }
-        // TODO: !
     });
 }
 

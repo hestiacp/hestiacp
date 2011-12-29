@@ -1,5 +1,9 @@
 <?php
 
+
+/**
+ * Change password functionality
+ */
 class ChangePassword
 {
 

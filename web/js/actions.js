@@ -533,7 +533,7 @@ App.Actions.add_form_ns = function(evt)
     
     $(form).find('.ns-entry').each(function(i, o)
     {
-        $(o).find('label').text('NS #' + (i + 1));
+        $(o).find('label').text('NameServer #' + (i + 1));
         $(o).find('input').attr('name', 'NS' + (i + 1));
     });
 }
@@ -581,7 +581,7 @@ App.Actions.view_template_info = function(evt)
             $.each(reply.data, function(key) {
                 html += '<li><strong>'+key+':</strong> '+reply.data[key]+'</li>';
             });
-            App.Helpers.openInnerPopup(elm, '<ul>'+html+'</ul>', 'Template Info');
+            App.Helpers.openInnerPopup(elm, '<ul>'+html+'</ul>', 'Template Settings');
         }        
     });
 }

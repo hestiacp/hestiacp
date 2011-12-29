@@ -6,6 +6,7 @@ App.View.popup = function(content)
     } 
     
     tpl.set(':content', content);
+    tpl.set(':STYLE', 'height:'+$(window).height()+'px');
     $('#popup-bg, #popup').remove();
     $(document.body).append(tpl.finalize());
 }

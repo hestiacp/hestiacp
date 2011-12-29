@@ -36,10 +36,13 @@ App.Actions.update_cs_value = function(evt)
     var elm = $(evt.target);
     elm = elm.hasClass('cust-sel-option') ? elm : elm.parents('.cust-sel-option');
 
-    var val = elm.find('.c-s-value').val();fb.log(val);
-    elm.parents('.c-s-box').find('.c-s-title').text(val);
-    elm.parents('.c-s-box').find('.c-s-value-ref').val(val);
+    var val = elm.find('.c-s-value').val();
     $('.complex-select-content').addClass('hidden');
+    
+    if (App.Tmp[App.Env.world + '_selected_records'] > 0) {
+        var confirm_message_key = App.Tmp[App.Env.world + '_selected_records'] == 1 ? 1 + ' record' : App.Tmp[App.Env.world + '_selected_records'] + ' records';
+        var confirmed = confirm('This action will ' + val.toLowerCase() + ' ' + confirm_message_key + '. Do you want to proceede?');
+    }
 }
 
 App.Actions.do_change_password = function()

@@ -27,10 +27,10 @@ App.HTML.Build.dns_form = function (options, id) {
     tpl.set(':source', options);
     options = App.Helpers.evalJSON(options) || {};
     if (App.Helpers.isEmpty(options)) {
-        tpl.set(':title', 'New dns record');
+        tpl.set(':title', 'New dns domain');
         tpl.set(':save_button', 'ADD');
     } else {
-        tpl.set(':title', 'Edit dns record');
+        tpl.set(':title', 'Edit dns domain');
         tpl.set(':save_button', 'SAVE');
     }
     tpl.set(':id', id || '');

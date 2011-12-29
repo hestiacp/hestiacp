@@ -124,18 +124,18 @@ App.Templates.html = {
                     </div>\
                     <div class="form-row cc">\
                             <input type="hidden" value="~!:DATE~!" name="DATE">\
-                            <label for="#" class="field-label">domain:</label>\
+                            <label for="#" class="field-label">Domain:</label>\
                             <input type="text" name="DNS_DOMAIN" value="~!:DNS_DOMAIN~!" class="text-field rule-required rule-domain">\
                     </div>\
                     <div class="form-row cc">\
-                            <label for="#" class="field-label">ip address:</label>\
+                            <label for="#" class="field-label">IP:</label>\
                             <div class="autocomplete-box">\
                                     <input type="text" name="IP" value="~!:IP~!" class="text-field rule-required rule-ip">\
                                     <i class="arrow">&nbsp;</i>\
                             </div>\
                     </div>\
                     <div class="form-row dns-template-box cc">\
-                            <label for="#" class="field-label">template:</label>\
+                            <label for="#" class="field-label">Template:</label>\
                             <span class="select" id="selecttemplate">~!:TPL_DEFAULT_VALUE~!</span>\
                                 <select name="TPL" class="styled tpl-item">\
                                        ~!:TPL~!\
@@ -143,15 +143,15 @@ App.Templates.html = {
                             <span class="context-settings do_action_view_dns_template_settings">View template settings</span>\
                     </div>\
                     <div class="form-row cc">\
-                            <label for="#" class="field-label">ttl:</label>\
+                            <label for="#" class="field-label">TTL:</label>\
                             <input type="text" value="~!:TTL~!" name="TTL" class="text-field ttl-field rule-required rule-numeric">\
                     </div>\
                     <div class="form-row cc">\
-                            <label for="#" class="field-label">soa:</label>\
+                            <label for="#" class="field-label">SOA:</label>\
                             <input type="text" value="~!:SOA~!" name="SOA" class="text-field rule-required rule-ns">\
                     </div>\
                     <div class="form-row suspended cc">\
-							<label for="#" class="field-label">suspended:</label>\
+							<label for="#" class="field-label">Suspended:</label>\
 							<input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
 					</div>\
                     <div class="form-row buttons-row cc">\
@@ -251,41 +251,41 @@ App.Templates.html = {
                 <div class="form-error hidden">\
 						</div>\
                 <div class="form-row cc">\
-                        <label for="#" class="field-label">ip address:</label>\
+                        <label for="#" class="field-label">IP Address:</label>\
                         <input type="text" value="~!:IP_ADDRESS~!" name="IP_ADDRESS" class="text-field rule-required rule-ip">\
                 </div>\
                 <div class="form-row cc">\
-                        <label for="#" class="field-label">owner:</label>\
-                        <select name="OWNER" class="styled OWNER">\
-                                ~!:owner_options~!\
-                        </select>\
+                        <label for="#" class="field-label">Netmask:</label>\
+                        <div class="_autocomplete-box">\
+                                <input type="text" value="~!:NETMASK~!" name="NETMASK" class="text-field">\
+                        </div>\
                 </div>\
                 <div class="form-row cc">\
-                        <label for="#" class="field-label">status:</label>\
-                        <!-- span class="select" id="select">shared</span -->\
-                        <select class="styled status" name="STATUS">\
-                                ~!:status_options~!\
-                        </select>\
-                </div>\
-                <div class="form-row cc">\
-                        <label for="#" class="field-label">name:</label>\
-                        <input type="text" name="NAME" value="~!:NAME~!" class="text-field rule-domain">\
-                </div>\
-                <div class="form-row cc">\
-                        <label for="#" class="field-label">interface:</label>\
+                        <label for="#" class="field-label">Interface:</label>\
                         <!-- span class="select" id="select">eth1</span -->\
                         <select class="styled interface" name="INTERFACE">\
                                 ~!:interface_options~!\
                         </select>\
                 </div>\
                 <div class="form-row cc">\
-                        <label for="#" class="field-label">netmask:</label>\
-                        <div class="_autocomplete-box">\
-                                <input type="text" value="~!:NETMASK~!" name="NETMASK" class="text-field">\
-                        </div>\
+                        <label for="#" class="field-label">Owner:</label>\
+                        <select name="OWNER" class="styled OWNER">\
+                                ~!:owner_options~!\
+                        </select>\
+                </div>\
+                <div class="form-row cc">\
+                        <label for="#" class="field-label">Status:</label>\
+                        <!-- span class="select" id="select">shared</span -->\
+                        <select class="styled status" name="STATUS">\
+                                ~!:status_options~!\
+                        </select>\
+                </div>\
+                <div class="form-row cc">\
+                        <label for="#" class="field-label">Associated DNS Name:</label>\
+                        <input type="text" name="NAME" value="~!:NAME~!" class="text-field rule-domain">\
                 </div>\
                 <div class="form-row suspended cc">\
-							<label for="#" class="field-label">suspended:</label>\
+							<label for="#" class="field-label">Suspended:</label>\
 							<input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
 					</div>\
 				<div class="form-row buttons-row cc">\
@@ -387,22 +387,22 @@ App.Templates.html = {
 						<div class="form-error hidden">\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">username:</label>\
+							<label for="#" class="field-label">Username:</label>\
 							<input type="text" class="text-field rule-required rule-username" value="~!:LOGIN_NAME~!" name="LOGIN_NAME">\
 						</div>\
 						<div class="form-row pwd-box cc">\
-							<label for="#" class="field-label">password:</label>\
+							<label for="#" class="field-label">Password:</label>\
 							<input type="text" class="text-field password rule-required" name="PASSWORD" value="~!:PASSWORD~!">\
 							<span class="generate-pwd do_action_generate_pass">Generate</span>\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">package:</label>\
+							<label for="#" class="field-label">Package:</label>\
 							<select name="PACKAGE" class="styled">\
 								~!:PACKAGE_OPTIONS~!\
 							</select>\
 						</div>\
                         <div class="form-row cc">\
-							<label for="#" class="field-label">shell:</label>\
+							<label for="#" class="field-label">Shell:</label>\
 							<select class="styled" name="SHELL">\
 								~!:SHELL_OPTIONS~!\
 							</select>\
@@ -414,32 +414,32 @@ App.Templates.html = {
 							</select>\
 						</div -->\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">contact email:</label>\
+							<label for="#" class="field-label">Email:</label>\
 							<input type="text" name="CONTACT" class="text-field rule-email rule-required" value="~!:CONTACT~!">\
 						</div>\
 						<div class="form-row ~!:REPORTS_ENABLED_EDITABLE~! cc">\
-							<label for="#" class="field-label">reports:</label>\
+							<label for="#" class="field-label">Reports:</label>\
 							<input type="checkbox" name="REPORTS_ENABLED" ~!:CHECKED~! class="styled" value="~!:REPORTS_ENABLED~!">\
 						</div>\
                     		<div class="form-row cc">\
-							<label for="#" class="field-label">Firstname:</label>\
+							<label for="#" class="field-label">First name:</label>\
 							<input type="text" name="FNAME" class="text-field rule-abc  rule-required" value="~!:FNAME~!">\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">Lastname:</label>\
+							<label for="#" class="field-label">Last name:</label>\
 							<input type="text" name="LNAME" class="text-field rule-abc rule-required" value="~!:LNAME~!">\
 						</div>\
                         <div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">NS #1:</label>\
+							<label for="#" class="field-label">NameServer #1:</label>\
 							<input type="text" value="~!:NS1~!" name="NS1" class="text-field rule-required rule-ns">\
 						</div>\
                         <div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">NS #2:</label>\
+							<label for="#" class="field-label">NameServer #2:</label>\
 							<input type="text" value="~!:NS2~!" name="NS2" class="text-field rule-required rule-ns">\
 						</div>\
                         ~!:NS~!\
                         <div class="form-row suspended cc">\
-                            <label for="#" class="field-label">suspended:</label>\
+                            <label for="#" class="field-label">Suspended:</label>\
                             <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
                         </div>\
                         <div class="form-row buttons-row cc">\
@@ -587,11 +587,11 @@ App.Templates.html = {
 						<div class="form-error hidden">\
 						</div>\
                         <div class="form-row cc">\
-							<label for="#" class="field-label">domain:</label>\
+							<label for="#" class="field-label">Domain:</label>\
 							<input type="text" name="DOMAIN" class="text-field rule-required rule-ns" value="~!:DOMAIN~!">\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">ip:</label>\
+							<label for="#" class="field-label">IP:</label>\
 							<div class="">\
 								<select name="IP" class="styled">\
                                 ~!:IP_OPTIONS~!\
@@ -599,13 +599,13 @@ App.Templates.html = {
 							</div>\
 						</div>\
 						<div class="form-row cc adv_opts">\
-								<label for="#" class="field-label">template:</label>\
+								<label for="#" class="field-label">Template:</label>\
 								<select class="styled" name="TPL">\
 								~!:TPL_OPTIONS~!\
 								</select>\
 							</div>\
                         <div class="form-row suspended cc">\
-                            <label for="#" class="field-label">suspended:</label>\
+                            <label for="#" class="field-label">Suspended:</label>\
                             <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
                         </div>\
                         <!-- advanced options -->\
@@ -619,24 +619,24 @@ App.Templates.html = {
 							</div>\
                             <div class="sub_section hidden">\
 							<div class="form-row cc">\
-								<label for="#" class="field-label">CGI:</label>\
+								<label for="#" class="field-label">CGI Support:</label>\
 								<input type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="styled">\
 							</div>\
                             <div class="form-row cc">\
-								<label for="#" class="field-label">ELOG:</label>\
+								<label for="#" class="field-label">Error Logging:</label>\
 								<input type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="styled">\
 							</div>\
                             <div class="form-row cc">\
-								<label for="#" class="field-label">alias list:</label>\
+								<label for="#" class="field-label">Domain Aliases:</label>\
 								<textarea name="ALIAS" class="textarea rule-alias">~!:ALIAS~!</textarea>\
 							</div>\
 							<div class="form-row cc">\
-								<label for="#" class="field-label">statistics:</label>\
+								<label for="#" class="field-label">Statistics:</label>\
 								<select name="STAT" class="styled">~!:STAT_OPTIONS~!</select>\
 							</div>\
 							<div class="stats-settings">\
 								<div class="form-row cc">\
-									<label for="#" class="field-label">stats auth:</label>\
+									<label for="#" class="field-label">Password Protection:</label>\
 									<input id="stats-auth-enable" type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="styled do_action_toggle_stats_block">\
 								</div>\
 								<div class="form-row stats-block ~!:ACTIVE_LOGIN~! cc">\
@@ -650,20 +650,20 @@ App.Templates.html = {
 								</div>\
 							</div><!-- // stats settings -->\
 							<!-- div class="form-row cc">\
-								<label for="#" class="field-label">ssl:</label>\
+								<label for="#" class="field-label">SSL Support:</label>\
 								<input type="checkbox" name="SSL" class="styled" ~!:ssl_checked~!="" value="~!SSL~!">\
 							</div -->\
 							<div class="form-row cc">\
-								<label for="#" class="field-label">ssl home:</label>\
+								<label for="#" class="field-label">SSL Document Root:</label>\
 								<input type="text" name="SSL_HOME" class="text-field" value="~!:SSL_HOME~!">\
 							</div>\
 							<div class="form-row ssl-crtfct-box cc">\
-								<label for="#" class="field-label">ssl key: <span class="remark">(upload file or insert text)</span></label>\
+								<label for="#" class="field-label">SSL Certificate Key: <span class="remark">(upload file or paste as text)</span></label>\
 								<span class="ssl-key-input-dummy">...</span>\
 								<textarea name="SSL_KEY" class="textarea ssl-key">~!:SSL_KEY~!</textarea>\
 							</div>\
                             <div class="form-row ssl-crtfct-box cc">\
-								<label for="#" class="field-label">ssl certificate: <span class="remark">(upload file or insert text)</span></label>\
+								<label for="#" class="field-label">SSL Crtificate: <span class="remark">(upload file or paste as text)</span></label>\
 								<span class="ssl-cert-input-dummy">...</span>\
 								<textarea name="SSL_CERT" class="textarea ssl-cert">~!:SSL_CERT~!</textarea>\
 							</div>\
@@ -816,30 +816,30 @@ App.Templates.html = {
 						<div class="form-error hidden">\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">db type:</label>\
+							<label for="#" class="field-label">Type:</label>\
 							<select name="TYPE" class="styled">~!:TYPE_OPTIONS~!</select>\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">db name:</label>\
+							<label for="#" class="field-label">Name:</label>\
 							<input type="text" class="text-field" name="DB" value="~!:DB~!">\
 						</div>\
 						<div class="db-credentials ">\
 							<div class="form-row cc user">\
-								<label for="#" class="field-label">username</label>\
+								<label for="#" class="field-label">Username</label>\
 								<input type="text" name="USER" class="text-field" value="~!:USER~!">\
 							</div>\
 							<div class="form-row pwd-box cc psw">\
-								<label for="#" class="field-label">password:</label>\
+								<label for="#" class="field-label">Password:</label>\
 								<input type="text" name="PASSWORD" class="text-field password" value="~!:PASSWORD~!">\
 								<span class="generate-pwd do_action_generate_pass">Generate</span>\
 							</div>\
 						</div>\
 						<div class="form-row hidden cc">\
-							<label for="#" class="field-label">db host:</label>\
+							<label for="#" class="field-label">Host:</label>\
 							<select name="HOST" class="styled">~!:HOST_OPTIONS~!</select>\
 						</div>\
 						<div class="form-row suspended cc">\
-                            <label for="#" class="field-label">suspended:</label>\
+                            <label for="#" class="field-label">Suspended:</label>\
                             <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
                         </div>\
                         <div class="form-row buttons-row cc">\
@@ -908,40 +908,40 @@ App.Templates.html = {
 							</div>\
 						</div>\
 						<div class="form-row form-row-line run-at-box cc">\
-							<span class="row-header">run at:</span>\
+							<span class="row-header">Schedule Time:</span>\
 							<div class="field-box cron-minute-box">\
-								<label for="#" class="field-label ">minute:<br>(0&mdash;59)</label>\
+								<label for="#" class="field-label ">Minute:<br>(0&mdash;59)</label>\
 								<div class="field-box-inner cc">\
 									<input type="text" value="~!:MIN~!" name="MIN" class="text-field rule-required rule-cronminute">\
 								</div>\
 							</div>\
 							<div class="field-box cron-hour-box">\
-								<label for="#" class="field-label">hour:<br>(0&mdash;23)</label>\
+								<label for="#" class="field-label">Hour:<br>(0&mdash;23)</label>\
 								<div class="field-box-inner cc">\
 									<input type="text" value="~!:HOUR~!" name="HOUR" class="text-field rule-required rule-cronhour">\
 								</div>\
 							</div>\
 							<div class="field-box cron-day-box">\
-								<label for="#" class="field-label">day of Month:<br>(1&mdash;31)</label>\
+								<label for="#" class="field-label">Day of Month:<br>(1&mdash;31)</label>\
 								<div class="field-box-inner cc">\
 									<input type="text" value="~!:DAY~!" name="DAY" class="text-field rule-required rule-cronday">\
 								</div>\
 							</div>\
 							<div class="field-box cron-month-box">\
-								<label for="#" class="field-label">Month:<br>(1&mdash;12)(Jan&mdash;Dec)</label>\
+								<label for="#" class="field-label">Month:<br>(1&mdash;12) (Jan&mdash;Dec)</label>\
 								<div class="field-box-inner cc">\
 									<input type="text" value="~!:MONTH~!" name="MONTH" class="text-field rule-required rule-cronmonth">\
 								</div>\
 							</div>\
 							<div class="field-box cron-week-box">\
-								<label for="#" class="field-label">day of Week:<br>(1&mdash;7)(Sun&mdash;Sat)</label>\
+								<label for="#" class="field-label">Day of Week:<br>(1&mdash;7) (Sun&mdash;Sat)</label>\
 								<div class="field-box-inner cc">\
 									<input type="text" value="~!:WDAY~!" name="WDAY" class="text-field rule-required rule-cronwday">\
 								</div>\
 							</div>\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">command:</label>\
+							<label for="#" class="field-label">Command:</label>\
 							<textarea class="textarea rule-required" name="CMD">~!:CMD~!</textarea>\
 						</div>\
 						<div class="form-row cc hidden">\
@@ -949,7 +949,7 @@ App.Templates.html = {
 							<textarea class="textarea" name="REPORT_TO"></textarea>\
 						</div>\
 						<div class="form-row suspended cc">\
-                            <label for="#" class="field-label">suspended:</label>\
+                            <label for="#" class="field-label">Suspended:</label>\
                             <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
                         </div>\
                         <div class="form-row buttons-row cc">\

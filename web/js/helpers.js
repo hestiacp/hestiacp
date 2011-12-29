@@ -251,6 +251,7 @@ App.Helpers.updateScreen = function()
         App.Env.initialParams = reply.data;
         App.Helpers.updateInitial();
     });*/
+    $('.first-row').removeClass('first-row');
     $('.row:first').addClass('first-row');
     Custom.init();
 }

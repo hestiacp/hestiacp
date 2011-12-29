@@ -390,7 +390,7 @@ MAIL;
     {        
         $pckg = array();
         // json
-        $result = Vesta::execute(V_LIST_USER_PACKAGES, null, self::JSON);
+        $result = Vesta::execute(Vesta::V_LIST_USER_PACKAGES, null, self::JSON);        
         foreach ($result['data'] as $pckg_name => $pckg_data) {
             $pckg[$pckg_name] = $pckg_name;
         }

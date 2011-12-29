@@ -42,6 +42,41 @@ App.Actions.update_cs_value = function(evt)
     if (App.Tmp[App.Env.world + '_selected_records'] > 0) {
         var confirm_message_key = App.Tmp[App.Env.world + '_selected_records'] == 1 ? 1 + ' record' : App.Tmp[App.Env.world + '_selected_records'] + ' records';
         var confirmed = confirm('This action will ' + val.toLowerCase() + ' ' + confirm_message_key + '. Do you want to proceede?');
+        if (confirmed) {
+            fb.log('mass_' + val);
+            var func_name = val.toLowerCase();
+            'function' == typeof App.Actions['mass_' + func_name] ? App.Actions['mass_' + func_name]() : false;
+        }
+    }
+}
+
+App.Actions.mass_delete = function()
+{
+    App.Actions.mass_action('massiveDelete');
+}
+
+App.Actions.mass_suspend = function()
+{
+    App.Actions.mass_action('massiveSuspend');
+}
+
+App.Actions.mass_unsuspend = function()
+{
+    App.Actions.mass_action('massiveUnsuspend');
+}
+
+App.Actions.mass_action = function(method_name)
+{
+    var rows = $('.checked-row');
+    if (rows.length > 0) {
+        var acc = [];
+        rows.each(function(i, o) {
+            acc[acc.length++] = App.Helpers.evalJSON($(o).find('.source').val());
+        });
+        
+        App.Ajax.request(App.Env.world+'.'+method_name, {'entities': App.Helpers.toJSON(acc)}, function() {
+            App.Pages.prepareHTML();
+        });
     }
 }
 

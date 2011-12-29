@@ -44,6 +44,10 @@ var Custom = {
 				if ($(inputs[a]).attr('class').indexOf('do_action_toggle_suspend') != -1) {
 					span[a].className += ' do_action_toggle_suspend'; // save toggle functionality
 				}
+                if ($(inputs[a]).attr('class').indexOf('do_action_toggle_batch_selector') != -1) {
+					span[a].className += ' do_action_toggle_batch_selector'; // save toggle functionality
+				}
+                
 
 				if(inputs[a].checked == true) {
 					if(inputs[a].type == "checkbox") {

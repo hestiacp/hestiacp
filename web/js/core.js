@@ -15,7 +15,26 @@ App.Core.listen = function()
         if (action.length < 2) {
             if (elm.hasClass('check-this')) {
                 var ref = $(elm).parents('.row');
-                ref.hasClass('checked-row') ? ref.removeClass('checked-row') : ref.addClass('checked-row');
+                if (ref.hasClass('checked-row')) {
+                    ref.removeClass('checked-row');
+                    App.Tmp[App.Env.world + '_selected_records'] -= 1;
+                }
+                else {
+                    ref.addClass('checked-row');
+                    App.Tmp[App.Env.world + '_selected_records'] += 1;
+                }
+                
+                if (App.Tmp[App.Env.world + '_selected_records'] <= 0) {
+                    App.Tmp[App.Env.world + '_selected_records'] = 0; // if number is negative
+                    $('#batch-processor .selector-title').html('NONE');
+                    $('.styled.do_action_toggle_batch_selector.style-applied').attr('checked', false);
+                    $('.checkbox.do_action_toggle_batch_selector').css('background-position', '0 0');
+                }
+                else {
+                    $('#batch-processor .selector-title').html(App.Tmp[App.Env.world + '_selected_records'] + ' SELECTED');
+                    $('.styled.do_action_toggle_batch_selector.style-applied').attr('checked', true);
+                    $('.checkbox.do_action_toggle_batch_selector').css('background-position', '0 -50px');
+                }
             }    
             return; // no action found attached to the dom object
         }

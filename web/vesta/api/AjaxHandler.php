@@ -32,6 +32,11 @@ class AjaxHandler {
         return VestaSession::getInstance()->getUser();
     }
 
+    public function getLoggedUserRole()
+    {
+        return VestaSession::getInstance()->getUserRole();
+    }
+
     /**
      * Called functions should reply in the following way
      * return $this->reply($result, $data, $msg, $extra);
@@ -50,7 +55,7 @@ class AjaxHandler {
                                 'MAIN.resetPassword',
                                 'MAIN.about');
         $method = Request::parseAjaxMethod($request);
-        
+
         if (!in_array($method['namespace'].'.'.$method['function'], $allowed_actions)) {
             $user = $this->getLoggedUser();
         }
@@ -74,7 +79,7 @@ class AjaxHandler {
     /**
      * Prepare response for ajax
      */
-    public function reply($result, $data, $message = '', $extra = array()) 
+    public function reply($result, $data = null, $message = '', $extra = array()) 
     {
         return json_encode(array('result' => $result,
                    'data' => $data,

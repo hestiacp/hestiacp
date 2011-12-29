@@ -156,5 +156,35 @@ class DB extends AjaxHandler
     
         return $this->reply($result['status'], $result['data']);
     }
+
+    public function massiveSuspendExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+          $result = Vesta::execute(Vesta::V_SUSPEND_DB_BASE, array('USER' => $user, $entity['DB']));
+        }
+    }
+
+    public function massiveUnsuspendExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_UNSUSPEND_DB_BASE, array('USER' => $user, $entity['DB']));
+        }
+    }
+
+    public function massiveDeleteExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_DEL_DB_BASE, array('USER' => $user, $entity['DB']));
+        }
+    }
        
 }

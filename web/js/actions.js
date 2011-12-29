@@ -56,8 +56,7 @@ App.Actions.do_change_password = function()
         if (reply.result) {
             $('#change-psw-error').html('');           
             $('#change-psw-error').addClass('hidden');
-            $('#change-psw-success').html('Reset link was sent to email box provided by you.'
-            + ' You will need to provide <strong>"'+reply.data.key_code+'"</strong> code to for resetting the password. Please copy it.'); 
+            $('#change-psw-success').html('Reset link was sent to email box provided by you.'); 
             $('#change-psw-success').removeClass('hidden');
             $('.form-row').remove();            
         }
@@ -584,6 +583,58 @@ App.Actions.delete_selected = function(evt)
     if (!confirmed) {
         return;
     }
+}
+
+App.Actions.loadStats = function(type)
+{
+    var period = '';
+    switch (type) {
+        case 'month':
+            period = 'monthly'
+            break;
+        case 'today':
+            period = 'daily'
+            break;
+        case 'week':
+            period = 'weekly'
+            break;
+        case 'year':
+            period = 'yearly'
+            break;
+        default:
+            period = 'daily';
+            break;
+    }
     
+    $('#actions-toolbar .sub-active').removeClass('sub-active');
+    $('#actions-toolbar .'+type).addClass('sub-active');
     
+    App.Ajax.request('STATS.getList', {period: period}, function(reply) {
+		if (!reply.result) {
+			App.Herlers.alert('Stats list failed to load. Please try again a bit later');
+		}
+		
+		App.Ref.CONTENT.html(App.HTML.Build.stats_list(reply.data));
+        App.Helpers.updateScreen();
+	});
+}
+
+App.Actions.toggle_batch_selector = function() 
+{
+    if (App.Tmp[App.Env.world + '_selected_records'] == 0) { // Select all
+        var rows = $('.row');
+        rows.each(function(i, row) {
+            $(row).addClass('checked-row');
+        });
+        App.Tmp[App.Env.world + '_selected_records'] = rows.length;
+        $('#batch-processor .selector-title').html(rows.length + ' SELECTED');
+    }
+    else {
+        var rows = $('.row');
+        rows.each(function(i, row) {
+            $(row).removeClass('checked-row');
+        });
+        App.Tmp[App.Env.world + '_selected_records'] = 0;
+        $('#batch-processor .selector-title').html('NONE');
+    }
 }

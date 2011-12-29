@@ -14,7 +14,7 @@
         <link rel="stylesheet" media="all" type="text/css" href="css/vesta-login-form.css" />
 
         <!--[if lt IE 8]>
-		<link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/1750887/projects/vesta2/css/ie.css" />
+			<link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/1750887/projects/vesta2/css/ie.css" />
         <![endif]-->
                 
         <style>
@@ -53,24 +53,26 @@
             <div class="outer">
                 <div id="header">
                     <div class="logo-box">
-                        <h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
-                    </div>            
+                        <h1 class="logo"><a href="/">Vesta panel <span>&nbsp;</span></a></h1>
+                    </div>          
                     <ul class="settings">
-                        <li class="settings-item"><a href="#" class="item-title logged-as" id="user-name">...</a></li>
-                        <li class="settings-item"><a href="#" class="item-title">profile</a></li>
-                        <li class="settings-item"><a href="#" class="item-title do_action_view_profile_settings">settings</a></li>
-                        <li class="settings-item"><a href="#" class="item-title do_action_profile_exit">exit</a></li>
-                    </ul>       
-                    <ul class="extra-services">
-						<li class="service-item service-item_backups">
-							<span class="item-title">Backups</span>
-							<i class="item-devider"></i>
-						</li>
-						<li class="service-item">
-							<span class="item-title">Stats</span>
-							<i class="item-devider"></i>
-						</li>
-				    </ul> 
+                        <li class="settings-item">
+                            <span class="logged-as" id="user-name"></span>
+                            <!-- a class="item-title" href="#">Profile</a -->
+                        </li>
+                        <!-- li class="settings-item"><a class="item-title do_action_view_profile_settings" href="#">Settings</a></li -->
+                        <li class="logout"><a class="item-title do_action_profile_exit" href="javascript:void(0);">Exit</a></li>
+                   </ul>
+                   <ul class="extra-services">
+                        <li class="service-item" id="BACKUPS" onClick="App.Pages.loadBackups();">
+                            <span class="item-title" onClick="App.Pages.loadBackups();">Backups</span>
+                            <i class="item-devider"></i>
+                        </li>
+                        <li class="service-item" id="STATS" onClick="App.Pages.loadStats();">
+                            <span class="item-title" onClick="App.Pages.loadStats();">Stats</span>
+                            <i class="item-devider"></i>
+                        </li>
+                   </ul>
                 </div>
                 
                 <div id="primary-nav-box">
@@ -212,10 +214,10 @@
                         add new <span id="new-entry-keyword" class="do_action_new_entry">entry</span>
                     </a>
                     <div class="row-filters cc">
-						<div class="b-row-selector">
+						<div id="batch-processor" class="b-row-selector">
 							<div class="checkbox-selector cc">
-								<input class="styled" type="checkbox" value="" />
-								<span class="selector-title">385 Selected</span>
+								<input class="styled do_action_toggle_batch_selector" autocomplete="off" type="checkbox" value="" />
+								<span class="selector-title">All</span>
 							</div>
 							<div class="context-actions c-s-box">
 								<div class="b-cust-sel complex-select c-s-opt">

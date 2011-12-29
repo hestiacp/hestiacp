@@ -68,13 +68,16 @@
 }
 	.page-auth .field-label{
 		float:left;
-		width:87px;
-		padding-left:45px;
+		width:101px;
+		padding-left:15px;
+		padding-right:17px;
 		color:#e3d785;
 		font-size:12px;
+        font-weight:bold;
 		line-height:34px;
 		font-family:Arial, Helvetica, sans-serif;
 		text-transform:uppercase;
+        text-align:right;
 		/*letter-spacing:-.5px;*/
 	}
 	.page-auth .field-text{
@@ -183,7 +186,7 @@
 	margin:0 -20px;
 	padding:15px 20px;
 	font-size:14px;
-	border-top:2px solid #34352f;
+	border-top:1px solid #34352f;
 	color:#5a5e5d;
 	}
 	.page-auth .footnotes .additional-info{

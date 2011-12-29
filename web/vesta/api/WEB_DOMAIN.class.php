@@ -18,7 +18,7 @@ class WEB_DOMAIN extends AjaxHandler
         $result = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS, array('USER' => $user['uid']), self::JSON);
 
         $stat = array();
-        $result_stat = Vesta::execute('v_list_web_domains_stats', array('USER' => $user['uid']), self::JSON);
+        $result_stat = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS_STATS, array('USER' => $user['uid']), self::JSON);
 
         foreach ($result_stat['data'] as $w_d => $w_d_details) {
             $stat[$w_d] = $w_d_details;
@@ -27,8 +27,8 @@ class WEB_DOMAIN extends AjaxHandler
         {
             $web_details = array(
                               'IP'          => $record['IP'],
-                              'U_DISK'      => $record['U_DISK'],
-                              'U_BANDWIDTH' => $record['U_BANDWIDTH'],
+                              'U_DISK'      => (int)$record['U_DISK'],
+                              'U_BANDWIDTH' => (int)$record['U_BANDWIDTH'],
                               'TPL'         => $record['TPL'],
                               'ALIAS'       => @str_replace(",", ", ", $record['ALIAS']),
                               'PHP'         => $record['PHP'],
@@ -216,10 +216,11 @@ class WEB_DOMAIN extends AjaxHandler
         }*/
 
 
+       
         if ($_s['SUSPEND'] == 'on') {
             if($result['status']){
                 $result = array();
-
+          
                 $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'JOB' => $_s['DOMAIN']));
                 if (!$result['status']) {
                     $this->status = FALSE;
@@ -228,8 +229,6 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
 
-        
-      
         return $this->reply($result['status'], $result['data']);
     }
     
@@ -270,13 +269,21 @@ class WEB_DOMAIN extends AjaxHandler
 
         $user = $this->getLoggedUser();
         $_DOMAIN = $_new['DOMAIN'];
-    
-		if ($_new['SUSPEND'] == 'on') {
+
+ 		if ($_new['SUSPEND'] == 'on') {
             $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
-            return $this->reply($result['status']);
+            if (!$result['status']) {
+                $this->status = FALSE;
+                $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+            }
+              //            return $this->reply($result['status']);
         }
         else {
             $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+            if (!$result['status']) {
+                $this->status = FALSE;
+                $this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
+            }
         }
     
         if ($_old['IP'] != $_new['IP']) {
@@ -497,4 +504,35 @@ class WEB_DOMAIN extends AjaxHandler
         return $this->reply($result['status'], $result['data']);
     }
     
+
+    public function massiveSuspendExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+          $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
+        }
+    }
+
+    public function massiveUnsuspendExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_UNUSPEND_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
+        }
+    }
+
+    public function massiveDeleteExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
+        }
+    }
+
 }

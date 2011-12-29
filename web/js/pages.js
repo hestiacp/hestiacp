@@ -1,9 +1,12 @@
 App.Pages.init = function()
 {
-    App.Ajax.request('MAIN.getInitial', {}, function(reply) {
-        App.Env.initialParams = reply.data;
-        App.Helpers.updateInitial();
-    });    
+	if ('undefined' == typeof App.Env.initialParams) {
+		App.Ajax.request('MAIN.getInitial', {}, function(reply) {
+			App.Env.initialParams = reply.data;
+			App.Helpers.updateInitial();
+		});    
+	}
+    
     App.Pages.prepareHTML();    
     $('.section.active').removeClass('active');
     $('#'+App.Env.world).addClass('active');
@@ -15,7 +18,10 @@ App.Pages.init = function()
 
 App.Pages.prepareHTML = function()
 {
+    $('#actions-toolbar .stats-subbar').remove();
+    $('#actions-toolbar .do_action_new_entry').removeClass('hidden');
 	$('.active').removeClass('active');
+    $('.row-filters').removeClass('hidden');
     if ('undefined' != typeof App.Pages[App.Env.world].prepareHTML) {
         App.Pages[App.Env.world].prepareHTML();
     }  
@@ -24,6 +30,8 @@ App.Pages.prepareHTML = function()
     }
     $('#new-entry-keyword').text(App.Helpers.getHumanTabName());
     document.title = 'Vesta | ' + App.Helpers.getHumanTabName();
+    
+    App.Tmp[App.Env.world + '_selected_records'] = 0;
 }
 
 App.Pages.DNS.showSubform = function(ref) 
@@ -123,3 +131,33 @@ App.Pages.BACKUPS.prepareHTML = function()
 		//$('#content').html(App.HTML.Build.backup_list(reply.data));
 	});
 }
+
+App.Pages.loadStats = function()
+{
+	App.Env.world = 'STATS';
+	App.Pages.prepareHTML();
+}
+
+App.Pages.STATS.prepareHTML = function()
+{
+    $('.row-filters').addClass('hidden');
+    $('#actions-toolbar .do_action_new_entry').addClass('hidden');
+    $('#actions-toolbar .stats-subbar').remove();
+    $('#actions-toolbar .do_action_new_entry').after(App.Templates.get('SUBMENU', 'stats').finalize());
+    
+	$('#primary-nav-box .active').removeClass('active');
+	$('#STATS').addClass('active');
+	$('#new-entry-keyword').text(App.Helpers.getHumanTabName());
+    document.title = 'Vesta | ' + App.Helpers.getHumanTabName();
+    
+    App.Ajax.request('STATS.getList', {}, function(reply) {
+		if (!reply.result) {
+			App.Herlers.alert('Stats list failed to load. Please try again a bit later');
+		}
+		
+		App.Ref.CONTENT.html(App.HTML.Build.stats_list(reply.data));
+        App.Helpers.updateScreen();
+		//$('#content').html(App.HTML.Build.backup_list(reply.data));
+	});
+}
+

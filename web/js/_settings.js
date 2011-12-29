@@ -28,6 +28,7 @@ App.Constants.KEY.BACKSPACE         = 8;
 App.Constants.KEY.UP                = 38;
 App.Constants.KEY.DOWN              = 40;
 App.Constants.KEY.CODED_NAME        = {'27':'ESC', '13':'ENTER','32':'SPACE','8':'BACKSPACE','38':'UP','40':'DOWN'};
+App.Constants.KEY.WDAYS             = {'0':'Sunday', '1':'Monday','2':'Tuesday','3':'Wednesday','4':'Thursday','5':'Friday', '6': 'Saturday'};
 
 // Settings
 App.Settings.PSW_MIN_LEN            = 6;

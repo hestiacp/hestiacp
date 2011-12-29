@@ -127,7 +127,7 @@ class CRON extends AjaxHandler
      */
     public function changeExecute(Request $request)
     {
-    $user = $this->getLoggedUser();
+        $user = $this->getLoggedUser();
         $_old   = $request->getParameter('old');
         $_new   = $request->getParameter('new');
         $result = array();
@@ -177,7 +177,7 @@ class CRON extends AjaxHandler
     public function suspendExecute(Request $request)
     {
         $user   = $this->getLoggedUser();
-    $spell  = $request->getParameter('spell');
+        $spell  = $request->getParameter('spell');
         $params = array(
                     'USER' => $user['uid'],
                     'JOB'  => $spell['JOB']
@@ -200,8 +200,8 @@ class CRON extends AjaxHandler
      */
     public function unsuspendExecute(Request $request)
     {        
-    $user   = $this->getLoggedUser();
-    $spell  = $request->getParameter('spell');
+        $user   = $this->getLoggedUser();
+        $spell  = $request->getParameter('spell');
         $params = array(
                     'USER' => $user['uid'],
                     'JOB'  => $spell['JOB']
@@ -214,6 +214,36 @@ class CRON extends AjaxHandler
         }
     
         return $this->reply($result['status'], $result['data']);
+    }
+
+    public function massiveSuspendExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+          $result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOB, array('USER' => $user, $entity['JOB']));
+        }
+    }
+
+    public function massiveUnsuspendExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_UNSUSPEND_CRON_JOB, array('USER' => $user, $entity['JOB']));
+        }
+    }
+
+    public function massiveDeleteExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_DEL_CRON_JOB, array('USER' => $user, $entity['JOB']));
+        }
     }
    
 }

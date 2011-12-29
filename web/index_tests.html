@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" style="background-color: #fff;">
+
+    <head>
+        <title>Vesta Control Panel</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="imagetoolbar" content="false" />
+        
+        <link rel="shortcut icon" href="images/fav.ico" type="image/x-icon">
+
+        <link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/main.css" />        
+        <link rel="stylesheet" media="all" type="text/css" href="css/popup.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/vesta-login-form.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="http://dl.dropbox.com/u/1750887/projects/vesta2/css/vesta.css" />
+
+        <!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/1750887/projects/vesta2/css/ie.css" />
+        <![endif]-->
+                
+        <style>
+            #content .s-c-highlighted{background-color: black;color:white;}
+            .styled{display:block}
+            .black_overlay{
+                position: absolute;
+                top: 0%;
+                left: 0%;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                z-index:1001;
+                -moz-opacity: 0.8;
+                opacity:.80;
+                filter: alpha(opacity=80);
+            }
+
+            .popup_content {
+                position: absolute;
+                top: 25%;
+                left: 25%;
+                width: 50%;
+                height: 50%;
+                padding: 16px;
+                border: 16px solid orange;
+                background-color: white;
+                z-index:1002;
+                overflow: auto;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <div id="page" class="hi2dden">
+            <div class="outer">
+                <div id="header">
+                    <div class="logo-box">
+                        <h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
+                    </div>            
+                    <ul class="settings">
+                        <li class="settings-item"><span id="user-name" class="logged-as">...</span></li>
+                        <li class="settings-item"><a href="#" class="do_action_view_profile_settings">settings</a></li>
+                        <li class="settings-item"><a href="#" class="do_action_profile_exit">exit</a></li>
+                    </ul>        
+                </div>
+                
+                <div id="primary-nav-box">
+                    <ul class="primary-nav cc">
+                        <!-- li class="section"  id="USER">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">Users</span> 
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def"><span class="num-total">0</span> users</span>
+                                                <span class="def"><span class="num-blocked">0</span> suspended</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                            
+                            <i class="section-devider"></i>
+                        </li>                        
+                        <li class="section"  id="WEB_DOMAIN">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">Web</span> 
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                               <span class="def"><span class="num-total">0</span> web domains</span>
+                                               <span class="def"><span class="num-blocked">0</span> suspended</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                            <i class="section-devider"></i>
+                        </li>
+                        <li class="section"  id="MAIL">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">Mail</span> 
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                               <span class="def"><span class="num-total">0</span> mail domain(s)</span>                                               
+                                        </dd>
+                                    </dl>
+                            </div>
+                            <i class="section-devider"></i>
+                        </li>
+                        <li class="section"  id="DB">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">DB</span> 
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                               <span class="def"><span class="num-total">0</span> databases</span>
+                                               <span class="def"><span class="num-blocked">0</span> suspended</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                            <i class="section-devider"></i>
+                        </li>
+                        <li class="section active"  id="DNS">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">DNS</span> 
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                                <span class="def"><span class="num-total">0</span> dns domain(s)</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                            <i class="section-devider"></i>
+                        </li>
+                        <li class="section"  id="IP">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">IP</span> 
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                               <span class="def"><span class="num-total">0</span> ip address(es)</span>
+                                               <span class="def"><span class="num-blocked">0</span> suspended</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                            <i class="section-devider"></i>
+                        </li>
+                        <li class="section last-section" id="CRON">
+                            <div class="section-inner">
+                                    <dl class="users-nav-item">
+                                        <dt class="section-title cc">
+                                                <span class="to-section">Cron</span> 
+                                                <i class="add-entry do_action_new_entry">&nbsp;</i>
+                                        </dt>
+                                        <dd class="section-contains">
+                                               <span class="def"><span class="num-total">0</span> cron job(s)</span>
+                                               <span class="def"><span class="num-blocked">0</span> suspended</span>
+                                        </dd>
+                                    </dl>
+                            </div>
+                            <i class="section-devider"></i>
+                        </li -->
+                    </ul>
+                </div>
+                <!-- div id="console">
+                    <div class="b-console">
+
+                        <div class="b-console-wrap">
+                            <form class="b-console-form cc" action="" method="post">
+                                <fieldset>
+                                    <input class="b-console-field" type="text" value="/"/>
+                                    <input class="b-console-btn do_action_exec_v_console" type="submit" value="Go"/>
+                                </fieldset>
+                            </form>
+                            <div class="b-console-statuses hidden">
+                                <div class="b-console-status cc">
+
+                                    <p class="b-console-status-message">domain <b>test.com</b> have been added <br />
+                                        
+                                    </p>
+                                    <span class="b-console-status-action">cancel</span>
+                                    <i class="b-console-status-arrow">&nbsp;</i>							
+                                </div>
+                            </div>                            
+                        </div>
+
+                        <div class="b-console-results"></div>
+                    </div>
+                </div -->
+                <div id="actions-toolbar" class="cc">
+                    <a class="add-domain do_action_new_entry" href="javascript:void(0)">
+                        <i class="icon do_action_new_entry">&nbsp;</i>
+                        add new <span id="new-entry-keyword" class="do_action_new_entry">entry</span>
+                    </a>
+                    <span class="select-all do_action_select_all">select all</span>
+                    <span class="select-all do_action_deselect_all">deselect all</span>
+                    <span class="clear-selected do_action_delete_selected">Delete selected</span>
+                </div>
+
+               <div id="content">
+                <div class="content-inner">
+                    Tests: <br />
+                    <div class="context-actions c-s-box">
+                        <input type="text" name="" value="" class="c-s-value-ref">
+                        <div id="custom-select" class="b-cust-sel complex-select c-s-opt" style="width: 180px">
+                            <span class="title c-s-title do_action_toggle_custom_select c-s-opt">Action</span>
+                            <div class="cust-sel-arrow do_action_toggle_custom_select c-s-opt"><i class="do_action_toggle_custom_select c-s-opt">&nbsp;</i></div>
+                            <div class="cust-sel-options complex-select-content hidden c-s-opt">
+                                <div class="cust-sel-option ico_gray c-s-opt do_action_update_cs_value">
+                                    <input type="hidden" class="c-s-value" value="Suspended">
+                                    Suspend
+                                </div>
+                                <div class="cust-sel-option ico_green do_action_update_cs_value">
+                                    <input type="hidden" class="c-s-value" value="Unsuspended">
+                                    Unsuspend
+                                </div>
+                                <div class="cust-sel-option ico_red c-s-opt do_action_update_cs_value">
+                                    <input type="hidden" class="c-s-value" value="Delete">
+                                    Delete
+                                </div>
+                                <div class="cust-sel-option c-s-opt do_action_update_cs_value">
+                                    <input type="hidden" class="c-s-value" value="Chuck Norris">
+                                    <img class="c-s-opt do_action_update_cs_value" src="http://aviationhumor.net/wp-content/uploads/2011/02/chuck-norris.jpg" width="30px" height="30px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>                            
+        <script type="text/javascript" src="js/lib/cookie.js"></script>
+        <script type="text/javascript" src="js/lib/jquery-1.6.1.js"></script>
+        <script type="text/javascript" src="js/lib/jquery-ui-1.8.13.custom.min.js"></script>
+        <script type="text/javascript" src="js/lib/auth.js"></script>
+        <script type="text/javascript" src="js/date_format.js"></script>
+        <script type="text/javascript" src="js/lib/custom-form-elements.js"></script>
+        <script type="text/javascript" src="js/lib/browser.js"></script>
+        <script type="text/javascript" src="js/lib/popup.js"></script>        
+        <script type="text/javascript" src="js/app.js"></script>        
+        <script type="text/javascript" src="js/_settings.js"></script>
+        <script type="text/javascript" src="js/actions.js"></script>
+        <script type="text/javascript" src="js/helpers.js"></script>
+        <script type="text/javascript" src="js/templates.js"></script>
+        <script type="text/javascript" src="js/html.js"></script>
+        <script type="text/javascript" src="js/view.js"></script>
+        <script type="text/javascript" src="js/ref.js"></script>
+        <script type="text/javascript" src="js/pages.js"></script>
+        <script type="text/javascript" src="js/model.js"></script>
+        <script type="text/javascript" src="js/core.js"></script>
+        <script type="text/javascript" src="js/validators.js"></script>       
+        <script type="text/javascript">
+            App.Utils.detectBrowser();
+            App.Ref.init();
+
+            //App.Env.world = 'USER';
+            //App.Pages.init();
+            App.Core.listen();
+            App.Core.initMenu();
+            App.Helpers.liveValidate();
+            $(document).bind('submit', function(evt) {
+               evt.preventDefault(); 
+            });
+        </script>         
+    </body>
+</html>

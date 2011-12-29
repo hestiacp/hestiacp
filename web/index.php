@@ -1,7 +1,7 @@
 <?php
 echo "<title>Testing Vesta Control Panel</title>\n";
 echo "<pre>\n";
-$cmd='/usr/bin/sudo /usr/local/vesta/bin/v_list_sys_users json';
+$cmd='/usr/bin/sudo /usr/local/vesta/bin/v_list_users json';
 echo "Command: $cmd\n\n";
 exec ($cmd,$output,$return);
 if ($return > 0) {

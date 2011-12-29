@@ -50,13 +50,46 @@ class VestaSession
             $user = array('uid' => $_SESSION['user']);
             $user['DISK'] = 10000;
             $user['BANDWIDTH'] = 10000;
+            $user['role'] = $_SESSION['role'];
+
             return $user;
         }
 
         print json_encode(array('result' => "NOT_AUTHORISED"));
         exit;        
     }
-    
-}
 
+    public function getUserRole()
+    {   
+      //        if (isset($_SESSION['user'])) {
+            if($_SESSION['user'] == 'vesta'){
+                return Vesta::ADMIN;
+            }
+            else{
+                return Vesta::USER;
+            }
+            //        }
+
+        print json_encode(array('result' => "NOT_AUTHORISED"));
+        exit;        
+    }
+
+    public function loginAs($login)
+    {     
+      // TODO checkrights for login as   
+      //            if(Vesta::hasRights(self::getUserRole();, 'login_as')){
+    
+        if(!$_SESSION['real_user']) 
+            $_SESSION['real_user'] = $_SESSION['user'];
+
+        $_SESSION['user'] = $login;
+        
+        //      }
+    }
+
+    public function logoutAs()
+    {       
+        $_SESSION['user'] = $_SESSION['real_user'];
+    }
+}
 ?>

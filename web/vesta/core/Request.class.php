@@ -52,12 +52,12 @@ class Request
      */
     public function getParameter($key, $default=false) 
     {
-	$param = isset($this->_merged[$key]) ? $this->_merged[$key] : $default;      
-	if ($json = @json_decode($param, true)) {
-	    return $json;
-	}
+        $param = isset($this->_merged[$key]) ? $this->_merged[$key] : $default;      
+        if ($json = @json_decode($param, true)) {
+            return $json;
+        }
 
-	return $param;
+        return $param;
     }
 
     /**
@@ -94,6 +94,11 @@ class Request
     {
         return true;
     }
+    
+    public function getUserIP()
+    {
+        return $_SERVER['REMOTE_ADDR'];
+    }
 
     /**
      * Dissassemble ajax method
@@ -117,7 +122,7 @@ class Request
             throw new ProtectionException(Message::INVALID_METHOD);
         }
 
-        return array('namespace' => ucfirst($method[0]), 'function' => strtolower($method[1]));
+        return array('namespace' => ($method[0]), 'function' => ($method[1]));
     }
 
 }

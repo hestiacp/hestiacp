@@ -39,9 +39,6 @@ class MAIN extends AjaxHandler
 
     public function requestPasswordExecute($request)
     {        
-        $user   = $this->getLoggedUser();
-        $rs = $config = Vesta::execute('v_get_sys_user_value', array($user['uid'], 'RKEY'));
-        
         if (empty($_SESSION['captcha_key']) 
                 || $_SESSION['captcha_key'] != $request->getParameter('captcha')) {
             return $this->reply(false, null, 'Captcha is invalid ');
@@ -64,45 +61,48 @@ class MAIN extends AjaxHandler
             return $this->reply(false, null, 'There is no such user.');
         }
 
-        $secret_key = $this->generateResetPasswordKey();
-        $reset_link = 'https://'.$_SERVER['HTTP_HOST'].'/change_password.php?v='.$secret_key;
-        
-        $mail_body = <<<MAIL
-            <div lang="en" style="background-color:#fff;color:#222">  
-                <a target="_blank" href="" style="color:#FFF">
-                    <img width="81" height="22" style="display:block;border:0" src="http://vestacp.com/i/logo.png" alt="Twitter">
-                </a>  
-                <div style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;font-size:13px;margin:14px">
-                <h2 style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;margin:0 0 16px;font-size:18px;font-weight:normal">
-                    Vesta received a request to reset the password for your account {$user['FNAME']} {$user['LNAME']}?
-                </h2>
-                <p>
-                    If you want to reset your password, click on the link below (or copy and paste the URL into your browser):<br>
-                    <a target="_blank" href="{$reset_link}">{$reset_link}</a>
-                </p>
-                <p>
-                    If you don't want to reset your password, please ignore this message.
-                    Your password will not be reset.
-                    If you have any concerns, please contact us at support@vestacp.com.
-                </p>
-                <p style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;font-size:13px;line-height:18px;border-bottom:1px solid rgb(238, 238, 238);padding-bottom:10px;margin:0 0 10px">
-                    <span style="font:italic 13px Georgia,serif;color:rgb(102, 102, 102)">VestaCP</span>
-                </p>
-                <p style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;margin-top:5px;font-size:10px;color:#888888">
-                    Please do not reply to this message; it was sent from an unmonitored email address.      
-                </p>
+        foreach ($email_matched_count as $reset_user) {
+            
+            $secret_key = $reset_user['RKEY'];
+            $reset_link = 'https://'.$_SERVER['HTTP_HOST'].'/change_password.php?v='.$secret_key;
+            
+            $mail_body = <<<MAIL
+                <div lang="en" style="background-color:#fff;color:#222">  
+                    <a target="_blank" href="" style="color:#FFF">
+                        <img width="81" height="22" style="display:block;border:0" src="http://vestacp.com/i/logo.png" alt="Twitter">
+                    </a>  
+                    <div style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;font-size:13px;margin:14px">
+                    <h2 style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;margin:0 0 16px;font-size:18px;font-weight:normal">
+                        Vesta received a request to reset the password for your account {$reset_user['FNAME']} {$reset_user['LNAME']}?
+                    </h2>
+                    <p>
+                        If you want to reset your password, click on the link below (or copy and paste the URL into your browser):<br>
+                        <a target="_blank" href="{$reset_link}">{$reset_link}</a>
+                    </p>
+                    <p>
+                        If you don't want to reset your password, please ignore this message.
+                        Your password will not be reset.
+                        If you have any concerns, please contact us at support@vestacp.com.
+                    </p>
+                    <p style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;font-size:13px;line-height:18px;border-bottom:1px solid rgb(238, 238, 238);padding-bottom:10px;margin:0 0 10px">
+                        <span style="font:italic 13px Georgia,serif;color:rgb(102, 102, 102)">VestaCP</span>
+                    </p>
+                    <p style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;margin-top:5px;font-size:10px;color:#888888">
+                        Please do not reply to this message; it was sent from an unmonitored email address.      
+                    </p>
+                    </div>
                 </div>
-            </div>
 MAIL;
-        
-        $headers           = 'MIME-Version: 1.0' . "\n";
-        $headers           .= 'Content-type: text/html; charset=UTF-8' . "\n";
-        $to                 = $request->getParameter('email');
-        $subject            = 'Reset your Vesta password';
-        $message            = $mail_body;
-        mail($to, $subject, $message, $headers);
+            
+            $headers           = 'MIME-Version: 1.0' . "\n";
+            $headers           .= 'Content-type: text/html; charset=UTF-8' . "\n";
+            $to                 = $request->getParameter('email');
+            $subject            = 'Reset your Vesta password';
+            $message            = $mail_body;
+            mail($to, $subject, $message, $headers);
+        }
        
-        return $this->reply(true, array('key_code' => substr($secret_key, 0, 5) . $_SERVER['REQUEST_TIME'] . substr($secret_key, -5)));
+        return $this->reply(true);
     }
     
     public function generateResetPasswordKey()
@@ -110,7 +110,7 @@ MAIL;
         /*$key = sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR']);
         $key = substr($key, 0, 10) . $_SERVER['REQUEST_TIME'] . substr($key, 10, strlen($key));*/
         $user   = $this->getLoggedUser();
-        $rs = Vesta::execute('v_get_sys_user_value', array('USER' => $user['uid'], 'VALUE' => 'RKEY'));
+        $rs = Vesta::execute('v_get_user_value', array('USER' => $user['uid'], 'VALUE' => 'RKEY'));
         
         return $rs[''];
     }
@@ -119,7 +119,8 @@ MAIL;
     {
         $login    = $request->getParameter('login');
         $password = $request->getParameter('password');
-        $result   = Vesta::execute('v_check_sys_user_password', array('USER' => $login, 'PASSWORD' => $password), self::TEXT);
+        $ip       = $request->getUserIP();
+        $result   = Vesta::execute('v_check_user_password', array('USER' => $login, 'PASSWORD' => $password, 'IP' => $ip), self::TEXT);
 
         if ($result['status'] == true) {
             return $this->reply(true, array('v_sd' => VestaSession::authorize($login)));
@@ -211,8 +212,14 @@ MAIL;
             $cron['SUSPEND'] == 'yes' ? $totals['CRON']['blocked'] += 1 : false;
         }
 
+        $rs1 = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $this->getLoggedUser(), 'KEY' => 'BANDWIDTH'));
+        $bandwidth = $rs1['data'];
+        $rs = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $this->getLoggedUser(), 'KEY' => 'DISK_QUOTA'));
+        $disk_quota = $rs['data'];
+
         $reply = array(
                     'auth_user'  => array('uid' => $this->getLoggedUser()),
+                    'user_data'  => array('BANDWIDTH' => json_encode($rs1)/*(int)$bandwidth*/, 'DISK_QUOTA' => (int)$disk_quota),
                     'WEB_DOMAIN' => $this->getWebDomainParams($data_web_domain, $global_data),
                     'CRON'       => $this->getCronParams(),
                     'IP'         => $this->getIpParams($data_ip, $global_data),
@@ -254,7 +261,7 @@ MAIL;
     {
         $user = $this->getLoggedUser();
         $ips = array();
-            $result	= Vesta::execute(Vesta::V_LIST_SYS_USER_IPS, array('USER' => $user['uid']), self::JSON);
+        $result	= Vesta::execute(Vesta::V_LIST_USER_IPS, array('USER' => $user['uid']), self::JSON);
         foreach ($result['data'] as $sys_ip => $ip_data) {
             $ips[$sys_ip] = $sys_ip;
         }
@@ -383,7 +390,7 @@ MAIL;
     {        
         $pckg = array();
         // json
-        $result = Vesta::execute('v_list_sys_user_packages', null, self::JSON);
+        $result = Vesta::execute(V_LIST_USER_PACKAGES, null, self::JSON);
         foreach ($result['data'] as $pckg_name => $pckg_data) {
             $pckg[$pckg_name] = $pckg_name;
         }
@@ -397,5 +404,4 @@ MAIL;
                                 'csh'      => 'csh')
                 );
     }
-        
 }

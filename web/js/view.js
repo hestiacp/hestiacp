@@ -38,5 +38,5 @@ App.View.listItems = function(reply){
     
     var html = acc.done().wrapperize('ENTRIES_WRAPPER', App.Env.getWorldName());
     App.Ref.CONTENT.html(html);
-    App.Helpers.updateScreen();
+    //App.Helpers.updateScreen();
 }

@@ -53,8 +53,9 @@ App.Templates.html = {
                                 <input type="text" tabindex="1" id="change-email" class="field-text">\
                             </div>\
                             <div class="form-row cc">\
-                                <label class="field-label"><img id="captcha-img" width="127px;" src="~!:CAPTCHA_URL~!"  style="cursor: pointer" onClick="this.src = \'~!:CAPTCHA_URL_2~!?\'+Math.floor(Math.random() * 9999)"/></label>\
-                                <input type="text" id="captcha" class="field-text" style="margin-left: 50px; width: 240px;">\
+                                <label for="captcha" class="field-label">Captcha</label>\
+                                <label class="captcha"><img id="captcha-img" width="127px;" src="~!:CAPTCHA_URL~!"  style="cursor: pointer; float: left; margin-top: -7px; padding-left: 20px;" onClick="this.src = \'~!:CAPTCHA_URL_2~!?\'+Math.floor(Math.random() * 9999)"/></label>\
+                                <input type="text" id="captcha" class="field-text" style="margin-left: 11px; width: 132px; margin-bottom: 27px;">\
                             </div>\
                             <div id="change-psw-success" class="success-box hidden"></div>\
                             <div id="change-psw-error" class="error-box hidden"></div>\
@@ -84,12 +85,12 @@ App.Templates.html = {
                 </div>\
                 <form id="login-form" method="post" action="#" class="auth">\
                     <div class="form-row cc">\
-                        <label for="email" class="field-label">Email</label>\
-                        <input type="text" tabindex="1" id="authorize-login" class="field-text">\
+                        <label for="email" class="field-label">Login</label>\
+                        <input type="text" tabindex="1" id="authorize-login" autocomplete="on" class="field-text">\
                     </div>\
                     <div class="form-row cc">\
                         <label for="password" class="field-label">Password</label>\
-                        <input type="password" tabindex="2" id="authorize-password" class="field-text">\
+                        <input type="password" tabindex="2" id="authorize-password" autocomplete="on" class="field-text">\
                     </div>\
                     <div id="auth-error" class="error-box hidden"></div>\
                     <div class="form-row last-row cc">\
@@ -354,6 +355,8 @@ App.Templates.html = {
                                 <span class="delete-entry"><span class="delete-entry-text do_action_delete_ip">delete</span></span>'],
         SUSPENDED_TPL_DISABLED : ['<span class="ip-status-info ip-suspended-status do_action_delete_ip"><span class="ip-status-text">suspended</span></span>']
     },
+    
+    
     user: {
         WEB_TPL_MINIMIZED: ['~!:WEB_TPL_MINI~!\
                         <span class="group-switcher">\
@@ -609,8 +612,10 @@ App.Templates.html = {
 						<div class="form-options-group">\
 							<div class="group-header cc collapsed">\
 								<span class="group-title-outer do_action_toggle_section">\
-									<span class="group-title do_action_toggle_section">Advanced options</span>\
-								</span>									\
+									<span class="group-title-inner">\
+                                        <span class="group-title do_action_toggle_section">Advanced options</span>\
+                                    </span>\
+                                </span>\
 							</div>\
                             <div class="sub_section hidden">\
 							<div class="form-row cc">\
@@ -723,32 +728,37 @@ App.Templates.html = {
 										<span class="prop-value tpl-item do_action_view_template_settings">~!:TPL~!</span>\
 									</span>\
 								</div>\
-								<!-- disk usage block -->\
-								<div class="b-usage-box disk-usage cc">\
-									<span class="prop-title">disk usage:</span>\
-									<div class="usage-box">\
-										<div class="value-box">\
-											<span class="value">~!:U_DISK~!</span>\
-											<div class="graph low">\
-												<span style="width:~!:U_DISK_PERCENTS~!%;" class="bar"></span>\
-											</div>\
-										</div>\
-										<div class="max-size">~!:DISK~!<span class="units">Mb</span></div>\
-									</div>\
-								</div><!-- // disk usage block -->\
-								<!-- bandwidth usage block -->\
-								<div class="b-usage-box bandwidth-box cc">\
-									<span class="prop-title">bandwidth:</span>\
-									<div class="usage-box">\
-										<div class="value-box">\
-											<span class="value">~!:U_BANDWIDTH~!</span>\
-											<div class="graph low">\
-												<span style="width:U_BANDWIDTH_PERCENTS%;" class="bar"></span>\
-											</div>\
-										</div>\
-										<div class="max-size">~!:BANDWIDTH~! <span class="units">Mb</span></div>\
-									</div>\
-								</div><!-- // bandwidth usage block -->\
+								<div class="b-stats-box">\
+									<div class="stats-box-title">stats</div>	\
+                                    <!-- disk usage block -->\
+                                    <div class="b-usage-box2 disk-usage cc">\
+                                        <span class="prop-title">disk usage:</span>\
+                                        <div class="usage-box ~!:OVER_DRAFT_VALUE~!">\
+                                            <div class="value-box">\
+                                                <div class="graph">\
+                                                    <span style="left:~!:U_DISK_PERCENTAGE_2~!%;" class="value">~!:U_DISK_PERCENTAGE~!% <span class="value-size">(~!:U_DISK~! ~!:DISK_QUOTA_MEASURE~!)</span></span>\
+                                                    <span style="width:~!:U_DISK_PERCENTAGE_3~!%;" class="bar"></span>\
+                                                    ~!:OVER_BAR~!\
+                                                </div>\
+                                            </div>\
+                                            <div class="max-size">~!:DISK_QUOTA~! <span class="units">~!:DISK_QUOTA_MEASURE_2~!</span></div>\
+                                        </div>\
+                                    </div><!-- // disk usage block -->\
+								</div>\
+                                \
+                                <div class="b-usage-box2 bandwidth-box cc">\
+                                        <span class="prop-title">bandwidth:</span>\
+                                        <div class="usage-box">\
+                                            <div class="value-box ~!:OVER_DRAFT_VALUE_2~!">\
+                                                <div class="graph">\
+                                                    <span style="left:~!:U_BANDWIDTH_PERCENTAGE_2~!%;" class="value">~!:U_BANDWIDTH_PERCENTAGE~!% <span class="value-size">(~!:U_BANDWIDTH~! ~!:BANDWIDTH_MEASURE~!)</span></span>\
+                                                    <span style="width:~!:U_BANDWIDTH_PERCENTAGE_3~!%;" class="bar"></span>\
+                                                    ~!:OVER_BAR_2~!\
+                                                </div>\
+                                            </div>\
+                                            <div class="max-size">~!:BANDWIDTH~! <span class="units">~!:BANDWIDTH_MEASURE_2~!</span></div>\
+                                        </div>\
+                                    </div>\
 							</div>\
 							<div class="props-additional">\
 								<span class="prop-box php-box">\
@@ -1041,7 +1051,20 @@ App.Templates.html = {
 							</div>							\
 						</div><!-- // .row-details -->\
 					</div><!-- // .row 1 -->']
-	}
+	},
+    stats: {
+        WRAPPER: ['<div class="stats-list">~!:CONTENT~!</div>'],
+        ENTRY: ['<div class="stats-block" style="min-height: 252px">\
+                <h2 class="stats-block-header">~!:HEADER~!</h2>\
+                <div class="stats-block-wrap">\
+                    <img class="stats-graph" src="~!:IMG_SRC~!" alt="" />\
+                </div>\
+            </div>'],
+        SUBMENU: ['<span class="stats-subbar"><span class="today sub-active" onClick="App.Actions.loadStats(\'today\')">today</span>\
+                <span class="week" onClick="App.Actions.loadStats(\'week\')">week</span>\
+                <span class="month" onClick="App.Actions.loadStats(\'month\')">month</span>\
+                <span class="year" onClick="App.Actions.loadStats(\'year\')">year</span></div>']
+    }
 }
 
 

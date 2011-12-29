@@ -21,7 +21,7 @@ App.HTML.setTplKeys = function (tpl, o, empty) {
 
 App.HTML.Build.dns_form = function (options, id) {
     if ('undefined' == typeof App.Env.initialParams) {
-        return alert('PLease wait a bit. Some background processes are not yet executed. Thank you for patience.');
+        return alert('Please wait a bit. Some background processes are not yet executed. Thank you for patience.');
     }
     var tpl = App.Templates.get('FORM', 'dns');
     tpl.set(':source', options);
@@ -254,14 +254,14 @@ App.HTML.Build.dns_entry = function (o, is_new) {
 App.HTML.Build.user_entry = function (o, key) {
     var processed_data = {
         'NICKNAME': key,
-        'U_DISK_PERCENTAGE': o.U_DISK > 0 ? o.U_DISK / o.DISK_QUOTA * 100 : 1,
-        'U_BANDWIDTH_PERCENTAGE': o.U_BANDWIDTH > 0 ? o.U_BANDWIDTH / o.BANDWIDTH * 100 : 1,
-        'U_DISK': o.U_DISK == 0 ? 1 : App.Helpers.formatNumber(o.U_DISK),
-        'U_BANDWIDTH': o.U_BANDWIDTH == 0 ? 1 : App.Helpers.formatNumber(o.U_BANDWIDTH),
-        'DISK_QUOTA_MEASURE': App.Helpers.getMbHumanMeasure(o.DISK_QUOTA),
-        'BANDWIDTH_MEASURE': App.Helpers.getMbHumanMeasure(o.BANDWIDTH),
-        'BANDWIDTH': App.Helpers.getMbHuman(o.BANDWIDTH),
-        'DISK_QUOTA': App.Helpers.getMbHuman(o.DISK_QUOTA)
+        'U_DISK_PERCENTAGE':        o.U_DISK > 0        ? parseFloat(o.U_DISK / o.DISK_QUOTA * 100).toFixed(2)     : 1,
+        'U_BANDWIDTH_PERCENTAGE':   o.U_BANDWIDTH > 0   ? parseFloat(o.U_BANDWIDTH / o.BANDWIDTH * 100).toFixed(2) : 1,
+        'U_DISK':                   o.U_DISK == 0       ? 1 : App.Helpers.formatNumber(o.U_DISK),
+        'U_BANDWIDTH':              o.U_BANDWIDTH == 0  ? 1 : App.Helpers.formatNumber(o.U_BANDWIDTH),
+        'DISK_QUOTA_MEASURE':       App.Helpers.getMbHumanMeasure(o.DISK_QUOTA),
+        'BANDWIDTH_MEASURE':        App.Helpers.getMbHumanMeasure(o.BANDWIDTH),
+        'BANDWIDTH':                App.Helpers.getMbHuman(o.BANDWIDTH),
+        'DISK_QUOTA':               App.Helpers.getMbHuman(o.DISK_QUOTA)
     };
     var o = $.extend(o, processed_data);
     o.U_DISK_PERCENTAGE_2 = o.U_DISK_PERCENTAGE;
@@ -291,7 +291,8 @@ App.HTML.Build.user_entry = function (o, key) {
     });
     if (ns_full.length <= App.Settings.USER_VISIBLE_NS) {
         tpl.set(':NS', ns.done());
-    } else {
+    } 
+    else {
         var ns_custom = App.Templates.get('NS_MINIMIZED', 'user');
         ns_custom.set(':NS_MINI', ns.done());
         ns_custom.set(':NS_FULL', ns_full.done());
@@ -308,7 +309,8 @@ App.HTML.Build.user_entry = function (o, key) {
         tpl.set(':OVER_BAR', tpl_over.finalize());
         tpl.set(':U_DISK_PERCENTAGE_3', 100);
         tpl.set(':OVER_DRAFT_VALUE', 'overdraft');
-    } else {
+    } 
+    else {
         tpl.set(':OVER_BAR', '');
         tpl.set(':OVER_DRAFT_VALUE', '');
     }
@@ -320,7 +322,8 @@ App.HTML.Build.user_entry = function (o, key) {
         tpl.set(':OVER_BAR_2', tpl_over.finalize());
         tpl.set(':U_BANDWIDTH_PERCENTAGE_3', 100);
         tpl.set(':OVER_DRAFT_VALUE_2', 'overdraft');
-    } else {
+    } 
+    else {
         tpl.set(':OVER_BAR_2', '');
         tpl.set(':OVER_DRAFT_VALUE_2', '');
     }
@@ -329,19 +332,35 @@ App.HTML.Build.user_entry = function (o, key) {
 
 App.HTML.Build.web_domain_entry = function (o, key) {
     var processed_data = {
-        DOMAIN: key
+        DOMAIN: key,
+        'U_DISK_PERCENTAGE':        o.U_DISK > 0        ? parseFloat(o.U_DISK / App.Env.initialParams.user_data.DISK_QUOTA * 100).toFixed(2)     : 1,
+        'U_BANDWIDTH_PERCENTAGE':   o.U_BANDWIDTH > 0   ? parseFloat(o.U_BANDWIDTH / App.Env.initialParams.user_data.BANDWIDTH * 100).toFixed(2) : 1,
+        'U_DISK':                   o.U_DISK == 0       ? 1 : App.Helpers.formatNumber(o.U_DISK),
+        'U_BANDWIDTH':              o.U_BANDWIDTH == 0  ? 1 : App.Helpers.formatNumber(o.U_BANDWIDTH),
+        'DISK_QUOTA_MEASURE':       App.Helpers.getMbHumanMeasure(App.Env.initialParams.user_data.DISK_QUOTA),
+        'BANDWIDTH_MEASURE':        App.Helpers.getMbHumanMeasure(App.Env.initialParams.user_data.BANDWIDTH),
+        'BANDWIDTH':                App.Helpers.getMbHuman(App.Env.initialParams.user_data.BANDWIDTH),
+        'DISK_QUOTA':               App.Helpers.getMbHuman(App.Env.initialParams.user_data.DISK_QUOTA)
     };
     var o = $.extend(o, processed_data);
+    o.U_DISK_PERCENTAGE_2 = o.U_DISK_PERCENTAGE;
+    o.U_DISK_PERCENTAGE_3 = o.U_DISK_PERCENTAGE;
+    o.BANDWIDTH_MEASURE_2 = o.BANDWIDTH_MEASURE;
+    o.DISK_QUOTA_MEASURE_2 = o.DISK_QUOTA_MEASURE;
+    o.U_BANDWIDTH_PERCENTAGE_2 = o.U_BANDWIDTH_PERCENTAGE;
+    o.U_BANDWIDTH_PERCENTAGE_3 = o.U_BANDWIDTH_PERCENTAGE;
     var tpl = App.Templates.get('ENTRY', 'web_domain');
     tpl = App.HTML.setTplKeys(tpl, o);
 	tpl = App.HTML.toggle_suspended_entry(tpl, o);
     if (o.STATS_LOGIN.trim() != '') {
         tpl.set(':STATS_AUTH', '+auth');
-    } else {
+    } 
+    else {
         tpl.set(':STATS_AUTH', '');
     }
     tpl.set(':DISK', App.Env.initialParams.PROFILE.BANDWIDTH);
     tpl.set(':BANDWIDTH', App.Env.initialParams.PROFILE.DISK);
+        
     tpl = App.HTML.toggle_suspended_entry(tpl, o);
     
     return tpl.finalize();
@@ -407,12 +426,42 @@ App.HTML.Build.backup_list = function(backups)
 	var acc = [];
 	$.each(backups, function(key) {
 		var bckp = backups[key];
+        // generated time calc        
+        var generated_time = 1; //min
+        bckp.RUNTIME > 60 ? generated_time = bckp.RUNTIME / 60 + ' h.' : generated_time += ' m.';
+        
+        var created_date = new Date(key);
 		var tpl = App.Templates.get('ENTRY', 'backup');
 		tpl.set(':CREATED_AT', key);
 		tpl.set(':CREATED_AT_TIME', bckp.TIME);
-		tpl.set(':CREATED_AT_TIME', bckp.TIME);
+        tpl.set(':GENERATION_TIME', generated_time);
+        tpl.set(':OWNER', App.Env.initialParams.auth_user.uid.uid);
+		tpl.set(':CREATED_AT_WDAY', App.Constants.KEY.WDAYS[created_date.getDay()]);
+        tpl.set(':SIZE', App.Helpers.getMbHuman(bckp.SIZE) + ' ' + App.Helpers.getMbHuman(bckp.SIZE, true));
 		acc[acc.length++] = tpl.finalize()
-	})
+	});
+	
+	var wrap = App.Templates.get('WRAPPER', 'backup');
+	wrap.set(':CONTENT', acc.done());
+	
+	return wrap.finalize();
+}
+
+App.HTML.Build.stats_list = function(stats)
+{
+	if (!stats || stats.length == 0) {
+		return '<br /><br /><center><h1>Stats are not available</h1></center>';
+	}
+	
+	var acc = [];
+	$.each(stats, function(key) {
+		var stat = stats[key];
+        
+        var tpl = App.Templates.get('ENTRY', 'stats');
+        tpl.set(':HEADER', stat.TITLE);
+        tpl.set(':IMG_SRC', stat.SRC);
+        acc[acc.length++] = tpl.finalize()
+	});
 	
 	var wrap = App.Templates.get('WRAPPER', 'backup');
 	wrap.set(':CONTENT', acc.done());

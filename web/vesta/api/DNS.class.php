@@ -170,7 +170,7 @@ class DNS extends AjaxHandler
     /**
      * Delete DNS entry
      * 
-     * v_del_dns_domain user domain
+     * v_delete_dns_domain user domain
      * http://95.163.16.160:8083/dispatch.php?jedi_method=DNS.del&USER=vesta&DOMAIN=dev.vestacp.com
      * 
      * @param Request $request
@@ -197,7 +197,7 @@ class DNS extends AjaxHandler
     /**
      * Add DNS record
      * 
-     * v_del_dns_domain_record user domain id 
+     * v_delete_dns_domain_record user domain id 
      * http://95.163.16.160:8083/dispatch.php?jedi_method=DNS.delRecord&USER=vesta&DOMAIN=dev.vestacp.com&RECORD_ID=9
      * 
      * @param Request $request
@@ -403,7 +403,7 @@ class DNS extends AjaxHandler
     public function getTemplateInfoExecute($request)
     {
         $spell  = $request->getParameter('spell');
-        $result = Vesta::execute('v_list_sys_user_packages', null, self::JSON);
+        $result = Vesta::execute('v_list_user_packages', null, self::JSON);
         $reply = $result['data'];
         if (isset($spell['PACKAGE'])) {
             $reply = $result['data'][$spell['PACKAGE']];
@@ -412,4 +412,35 @@ class DNS extends AjaxHandler
         return $this->reply(true, $reply);
     }
 
+
+
+    public function massiveSuspendExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+          $result = Vesta::execute(Vesta::V_SUSPEND_DNS_DOMAIN, array('USER' => $user, $entity['DNS_DOMAIN']));
+        }
+    }
+
+    public function massiveUnsuspendExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_UNUSPEND_DNS_DOMAIN, array('USER' => $user, $entity['DNS_DOMAIN']));
+        }
+    }
+
+    public function massiveDeleteExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_DEL_DNS_DOMAIN, array('USER' => $user, $entity['DNS_DOMAIN']));
+        }
+    }
 }

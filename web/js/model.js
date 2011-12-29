@@ -82,6 +82,7 @@ App.Model.CRON.loadList = function(callback)
 App.Model.add = function(values, source_json) 
 {    
     var method = App.Settings.getMethodName('add');
+
     App.Ajax.request(method, {
         spell: $.toJSON(values)
     }, function(reply){
@@ -89,12 +90,7 @@ App.Model.add = function(values, source_json)
             App.Helpers.Warn('Changes were not applied ' + App.Helpers.toJSON(reply.errors) );
         }
         else {
-            /*var build_method = App.Env.getWorldName() + '_entry';
-            var tpl = App.HTML.Build[build_method](values, 'new');
-            App.Ref.CONTENT..replaceWith(tpl);*/
-            // todo: reply.data;
             App.Pages.prepareHTML();
-            App.Helpers.updateScreen();
         }
     });
 }

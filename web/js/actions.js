@@ -252,11 +252,19 @@ App.Actions.save_form = function(evt) {
     }
     
     if (elm.attr('id') == App.Constants[elm_id]) { // NEW ITEM
-        var values = App.Helpers.getFormValues(elm);
-        if(App.Validate.form(values, $('#'+elm_id))) {
-            App.Model.add(values, source);
-            var form_id = App.Constants[App.Env.world + '_FORM_ID'];
-            $('#'+form_id).remove();
+        if ($('.b-new-entry').length > 1) {
+            var confirmed = confirm('You were editing other entries and those changes will be discarded. Click cancel if you want to save updated entries before adding new one.');
+            if (!confirmed) {
+                return true;
+            }
+            else {
+                var values = App.Helpers.getFormValues(elm);
+                if(App.Validate.form(values, $('#'+elm_id))) {
+                    App.Model.add(values, source);
+                    var form_id = App.Constants[App.Env.world + '_FORM_ID'];
+                    $('#'+form_id).remove();
+                }
+            }
         }
     }
     else { // OLD ITEM, UPDATING IT

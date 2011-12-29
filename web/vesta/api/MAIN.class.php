@@ -212,14 +212,14 @@ MAIL;
             $cron['SUSPEND'] == 'yes' ? $totals['CRON']['blocked'] += 1 : false;
         }
 
-        $rs1 = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $this->getLoggedUser(), 'KEY' => 'BANDWIDTH'));
+        $rs1 = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $user['uid'], 'KEY' => 'BANDWIDTH'));
         $bandwidth = $rs1['data'];
-        $rs = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $this->getLoggedUser(), 'KEY' => 'DISK_QUOTA'));
+        $rs = Vesta::execute(Vesta::V_GET_SYS_USER_VALUE, array('USER' => $user['uid'], 'KEY' => 'DISK_QUOTA'));
         $disk_quota = $rs['data'];
 
         $reply = array(
                     'auth_user'  => array('uid' => $this->getLoggedUser()),
-                    'user_data'  => array('BANDWIDTH' => json_encode($rs1)/*(int)$bandwidth*/, 'DISK_QUOTA' => (int)$disk_quota),
+                    'user_data'  => array('BANDWIDTH' => (int)$bandwidth, 'DISK_QUOTA' => (int)$disk_quota),
                     'WEB_DOMAIN' => $this->getWebDomainParams($data_web_domain, $global_data),
                     'CRON'       => $this->getCronParams(),
                     'IP'         => $this->getIpParams($data_ip, $global_data),

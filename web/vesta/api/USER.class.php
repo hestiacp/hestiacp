@@ -338,6 +338,8 @@ class USER extends AjaxHandler
         foreach($_entities as $entity){
             $result = Vesta::execute(Vesta::V_SUSPEND_SYS_USER, array('USER' => $entity['LOGIN_NAME']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
 
     public function massiveUnsuspendExecute(Request $request)
@@ -347,6 +349,8 @@ class USER extends AjaxHandler
         foreach($_entities as $entity){
             $result = Vesta::execute(Vesta::V_UNSUSPEND_SYS_USER, array('USER' => $entity['LOGIN_NAME']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
 
     public function massiveDeleteExecute(Request $request)
@@ -356,17 +360,22 @@ class USER extends AjaxHandler
         foreach($_entities as $entity){
             $result = Vesta::execute(Vesta::V_DEL_SYS_USER, array('USER' => $entity['LOGIN_NAME']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
 
     public function loginAsExecute(Request $request)
     {
         $_user = $request->getParameter('user');
         VestaSession::loginAs($_user);
+
+        return $this->reply(TRUE, '');
     }
 
     public function logoutAsExecute(Request $request)
     {
         VestaSession::logoutAs();
+        return $this->reply(TRUE, '');
     }
     
 

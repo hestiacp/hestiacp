@@ -420,8 +420,10 @@ class DNS extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-          $result = Vesta::execute(Vesta::V_SUSPEND_DNS_DOMAIN, array('USER' => $user, $entity['DNS_DOMAIN']));
+          $result = Vesta::execute(Vesta::V_SUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], $entity['DNS_DOMAIN']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
 
     public function massiveUnsuspendExecute(Request $request)
@@ -430,8 +432,10 @@ class DNS extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-            $result = Vesta::execute(Vesta::V_UNUSPEND_DNS_DOMAIN, array('USER' => $user, $entity['DNS_DOMAIN']));
+            $result = Vesta::execute(Vesta::V_UNUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], $entity['DNS_DOMAIN']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
 
     public function massiveDeleteExecute(Request $request)
@@ -440,7 +444,9 @@ class DNS extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-            $result = Vesta::execute(Vesta::V_DEL_DNS_DOMAIN, array('USER' => $user, $entity['DNS_DOMAIN']));
+            $result = Vesta::execute(Vesta::V_DEL_DNS_DOMAIN, array('USER' => $user['uid'], $entity['DNS_DOMAIN']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
 }

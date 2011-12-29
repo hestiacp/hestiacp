@@ -222,8 +222,10 @@ class CRON extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-          $result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOB, array('USER' => $user, $entity['JOB']));
+          $result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOB, array('USER' => $user['uid'], $entity['JOB']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
 
     public function massiveUnsuspendExecute(Request $request)
@@ -232,8 +234,10 @@ class CRON extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-            $result = Vesta::execute(Vesta::V_UNSUSPEND_CRON_JOB, array('USER' => $user, $entity['JOB']));
+            $result = Vesta::execute(Vesta::V_UNSUSPEND_CRON_JOB, array('USER' => $user['uid'], $entity['JOB']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
 
     public function massiveDeleteExecute(Request $request)
@@ -242,8 +246,10 @@ class CRON extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-            $result = Vesta::execute(Vesta::V_DEL_CRON_JOB, array('USER' => $user, $entity['JOB']));
+            $result = Vesta::execute(Vesta::V_DEL_CRON_JOB, array('USER' => $user['uid'], $entity['JOB']));
         }
+
+        return $this->reply($result['status'], $result['data']);
     }
    
 }

@@ -204,10 +204,10 @@ App.HTML.Build.cron_form = function (options, id) {
     tpl.set(':id', id || '');
     options = App.Helpers.evalJSON(options) || {};
     if (App.Helpers.isEmpty(options)) {
-        tpl.set(':title', 'New cron entry');
+        tpl.set(':title', 'New cron job');
         tpl.set(':save_button', 'ADD');
     } else {
-        tpl.set(':title', 'Edit cron entry');
+        tpl.set(':title', 'Edit cron job');
         tpl.set(':save_button', 'SAVE');
     }
     options = !App.Helpers.isEmpty(options) ? options : {

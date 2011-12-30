@@ -227,7 +227,8 @@ MAIL;
                     'DB'         => $this->getDbParams($data_db),
                     'USERS'      => $this->getUsersParams($data_user),
                     'totals'     => $totals,
-                    'PROFILE'    => $user
+                    'PROFILE'    => $user,
+                    'real_user'  => $_SESSION['real_user'] ? $_SESSION['real_user'] : NULL
                 );
 
         return $this->reply(true, $reply);

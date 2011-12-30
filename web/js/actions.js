@@ -1,3 +1,18 @@
+App.Actions.login_as = function(evt) 
+{
+    var elm = $(evt.target);
+    var ref = elm.parents('.row');
+    var source = App.Helpers.evalJSON($(ref).find('.source').val())
+    App.Ajax.request('USER.loginAs', {'user': source.LOGIN_NAME}, function(reply) {
+        if (reply.result) {
+            location.href = "";
+        }
+        else {
+            App.Helpers.alert('You cannot do this action. Please contact support');
+        }
+    });
+}
+
 App.Actions.toggle_suspend = function(evt)
 {
 	var elm = $(evt.target);
@@ -156,6 +171,19 @@ App.Actions.change_password = function(evt)
 App.Actions.profile_exit = function(evt)
 {
     evt.preventDefault();
+    if (App.Env.initialParams.real_user) { // exit "logged in as" state
+        App.Ajax.request('USER.logoutAs', {}, function(reply) {
+            if (reply.result) {
+                location.href = "";
+            }
+            else {
+                App.Helpers.alert('You cannot do this action. Please contact support');
+            }
+        });
+        return;
+    }
+    
+    
     App.Ajax.request('MAIN.logoff', {}, function(reply) {
         location.href = '';
     });

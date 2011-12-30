@@ -16,7 +16,8 @@ App.Templates.html = {
             "Well," the farmer said, "I didn\'t have anymore rope, so I took off my belt and tied her tail to the rafter. In that moment, my pants fell down and my wife walked in ... Some things you just can\'t explain."']
     },
     general: {
-	over_bar: ['<span style="width:~!:OVER_PERCENTS~!%;right:-~!:OVER_PERCENTS_2~!%;" class="bar_overdraft"></span>'],
+        logged_as: ['<div id="logged-in-as">You (<i>~!:YOU_ARE~!</i>) are viewing <strong style="font-weight: bold; color: #2A8FBD;">~!:USER~!</strong> interface. Exit it to return to your own.</div>'],
+        over_bar: ['<span style="width:~!:OVER_PERCENTS~!%;right:-~!:OVER_PERCENTS_2~!%;" class="bar_overdraft"></span>'],
         loading: ['<div id="loading" style="border-radius: 0 0 6px 6px;top: 0;font-size:19px;font-weight: bol;position:fixed;width: 150px; background-color:#6E6E62;z-index: 9999; padding: 8px;left: 50%;margin-left:-75px;">\
                 <center><div style="width: 105px; height:30px;background-image: url(\'../images/loading.png\');"></center>\
                 </div>'],
@@ -397,13 +398,13 @@ App.Templates.html = {
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">Package:</label>\
-							<select name="PACKAGE" class="styled">\
+							<select name="PACKAGE" class="styled disabled" >\
 								~!:PACKAGE_OPTIONS~!\
 							</select>\
 						</div>\
                         <div class="form-row cc">\
 							<label for="#" class="field-label">Shell:</label>\
-							<select class="styled" name="SHELL">\
+							<select class="styled disabled" name="SHELL">\
 								~!:SHELL_OPTIONS~!\
 							</select>\
 						</div>\
@@ -474,6 +475,9 @@ App.Templates.html = {
 										</span>\
 									</div>\
 									<div class="user-details-box">\
+                                        <span class="prop-box prop-box_group-values cc user-details do_action_login_as">\
+                                            <span class="prop-value login-as do_action_login_as">login as</span>\
+                                        </span>\
                                         <span class="prop-box user-name">\
                                             <span class="prop-title">name:</span>\
                                             <span class="prop-value">~!:FULLNAME~!</span>\

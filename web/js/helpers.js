@@ -134,6 +134,13 @@ App.Helpers.updateInitial = function()
     });
     $('#user-name').html(App.Env.initialParams.PROFILE.uid);
     $('#page').removeClass('hidden');
+    
+    if (App.Env.initialParams.real_user) {
+        var tpl = App.Templates.get('logged_as', 'general');
+        tpl.set(':YOU_ARE', App.Env.initialParams.real_user);
+        tpl.set(':USER', App.Env.initialParams.auth_user.uid.uid);
+        $('body').prepend(tpl.finalize());
+    }
 }
 
 App.Helpers.beforeAjax = function(jedi_method) 

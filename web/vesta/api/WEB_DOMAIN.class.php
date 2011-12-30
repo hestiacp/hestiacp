@@ -158,7 +158,7 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
 
-      /*  if ($_s['SSL']) {
+        /* if ($_s['SSL']) {
                 $params = array(
                             'USER'     => $user['uid'],
                             'DOMAIN'   => $_s['DOMAIN'],
@@ -178,7 +178,7 @@ class WEB_DOMAIN extends AjaxHandler
             }
         if ($_s['SSL_HOME']) {
 
-	}*/
+        }*/
       
         /*if (!empty($_s['DNS'])) {
             $params = array(
@@ -194,7 +194,7 @@ class WEB_DOMAIN extends AjaxHandler
             $result = $dns->addExecute($params);
             if (!$result['status']) {
                 $this->errors['DNS_DOMAIN'] = array($result['error_code'] => $result['error_message']);
-            }            
+            }
         }*/
       
         
@@ -264,25 +264,42 @@ class WEB_DOMAIN extends AjaxHandler
 
         $_old['ELOG'] = $_old['ELOG'] == 'yes' ? 'on' : 'off';
         $_old['CGI']  = $_old['CGI']  == 'yes' ? 'on' : 'off';
-        $_old['AUTH'] = $_old['AUTH']  == 'yes' ? 'on' : 'off';
+        $_old['AUTH'] = $_old['AUTH'] == 'yes' ? 'on' : 'off';
         $_old['SSL']  = $_old['SSL']  == 'yes' ? 'on' : 'off';
 
         $user = $this->getLoggedUser();
         $_DOMAIN = $_new['DOMAIN'];
 
- 		if ($_new['SUSPEND'] == 'on') {
-            $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
-            if (!$result['status']) {
-                $this->status = FALSE;
-                $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+        if ($_old['SUSPEND'] != $_new['SUSPEND']) {
+            if ($_new['SUSPEND'] == 'on') {
+                $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+                }
+                  //            return $this->reply($result['status']);
             }
-              //            return $this->reply($result['status']);
-        }
-        else {
-            $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
-            if (!$result['status']) {
-                $this->status = FALSE;
-                $this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
+            else {
+                $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
+                }
+            }
+            if ($_new['SUSPEND'] == 'on') {
+                $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+                }
+                  //            return $this->reply($result['status']);
+            }
+            else {
+                $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
+                }
             }
         }
     
@@ -422,7 +439,7 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
         
-        if ($_new['SSL']) {
+        /*if ($_new['SSL']) {
 			$params = array(
 						'USER'     => $user['uid'],
 						'DOMAIN'   => $_new['DOMAIN'],
@@ -439,16 +456,19 @@ class WEB_DOMAIN extends AjaxHandler
 			if (!$result['status']) {
 				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
 			}
-		}
+		}*/
 		
-		if ($_s['SSL_KEY']) {
+		if (!empty($_s['SSL_KEY'])) {
+            $ssl_file = tempnam(sys_get_temp_dir(), 'ssl');
+            file_put_contents($ssl_file, $_s['SSL_KEY']);
+            
 			$params = array(
 						'USER'     => $user['uid'],
 						'DOMAIN'   => $_s['DOMAIN'],
-						'SSL_KEY' => $_s['SSL_KEY']
+						'SSL_KEY'  => $ssl_file
 					  );
 
-			if ($_s['SSL_HOME']) {
+			if (!empty($_s['SSL_HOME'])) {
 				$params['SSL_HOME'] = $_s['SSL_HOME'];
 			}
 
@@ -459,6 +479,26 @@ class WEB_DOMAIN extends AjaxHandler
 				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
 			}
 		}
+        
+        
+        if (!empty($_s['SSL_CERT'])) {
+            $sslcert_file = tempnam(sys_get_temp_dir(), 'ssl');
+            file_put_contents($sslcert_file, $_s['SSL_CERT']);
+            
+			$params = array(
+						'USER'     => $user['uid'],
+						'DOMAIN'   => $_s['DOMAIN'],
+						'SSL_CERT'  => $sslcert_file
+					  );
+
+			$result = 0;
+			$result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSLCERT, $params);
+
+			if (!$result['status']) {
+				$this->errors['SSL_CERT'] = array($result['error_code'] => $result['error_message']);
+			}
+		}
+        
         
         return $this->reply($result['status'], $result['data']);
     }
@@ -511,7 +551,7 @@ class WEB_DOMAIN extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-          $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], $entity['DOMAIN']));
+          $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
         }
 
         return $this->reply($result['status'], $result['data']);
@@ -523,7 +563,7 @@ class WEB_DOMAIN extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-            $result = Vesta::execute(Vesta::V_UNUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], $entity['DOMAIN']));
+            $result = Vesta::execute(Vesta::V_UNUSPEND_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
         }
 
         return $this->reply($result['status'], $result['data']);
@@ -535,10 +575,9 @@ class WEB_DOMAIN extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-            $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN, array('USER' => $user['uid'], $entity['DOMAIN']));
+            $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
         }
 
         return $this->reply($result['status'], $result['data']);
     }
-
 }

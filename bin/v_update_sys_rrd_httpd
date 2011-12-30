@@ -69,7 +69,6 @@ rrdtool graph $V_RRD/web/$period-httpd.png \
     --width="440" \
     --start "$start" \
     --end "$end" \
-    --title "HTTPD Usage ($period)" \
     --vertical-label "Connections" \
     --x-grid "$grid" \
     -c "BACK#484439" \

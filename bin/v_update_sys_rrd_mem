@@ -64,7 +64,6 @@ rrdtool graph  $V_RRD/mem/$period-mem.png \
     --width="440" \
     --start "$start" \
     --end "$end" \
-    --title "Memory Usage ($period)" \
     --vertical-label "Mbytes" \
     --x-grid "$grid" \
     -c "BACK#484439" \

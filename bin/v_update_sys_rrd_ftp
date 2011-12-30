@@ -64,7 +64,6 @@ rrdtool graph $V_RRD/ftp/$period-ftp.png \
     --width="440" \
     --start "$start" \
     --end "$end" \
-    --title "$(echo $FTP_SYSTEM|tr '[a-z]' '[A-Z]') Usage ($period)" \
     --vertical-label "Connections" \
     --x-grid "$grid" \
     -c "BACK#484439" \

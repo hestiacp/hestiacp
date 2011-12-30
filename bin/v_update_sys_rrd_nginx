@@ -61,7 +61,6 @@ rrdtool graph $V_RRD/web/$period-nginx.png \
     --width="440" \
     --start "$start" \
     --end "$end" \
-    --title "NGINX Usage ($period)" \
     --vertical-label "Connections" \
     --x-grid "$grid" \
     -c "BACK#484439" \

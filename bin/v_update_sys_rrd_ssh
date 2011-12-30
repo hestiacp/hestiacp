@@ -62,7 +62,6 @@ rrdtool graph $V_RRD/ssh/$period-ssh.png \
     --width="440" \
     --start "$start" \
     --end "$end" \
-    --title "SSH Usage ($period)" \
     --vertical-label "Connections" \
     --x-grid "$grid" \
     -c "BACK#484439" \

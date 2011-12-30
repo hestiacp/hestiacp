@@ -101,7 +101,6 @@ for host in $hosts; do
         --width="440" \
         --start "$start" \
         --end "$end" \
-        --title "MySQL Usage on $host ($period)" \
         --vertical-label "Queries" \
         --x-grid "$grid" \
         -c "BACK#484439" \

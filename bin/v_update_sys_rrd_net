@@ -73,7 +73,6 @@ for iface in $ifaces; do
         --width="440" \
         --start "$start" \
         --end "$end" \
-        --title "Bandwidth Usage $iface ($period)" \
         --vertical-label "KBytes" \
         --x-grid "$grid" \
         -c "BACK#484439" \

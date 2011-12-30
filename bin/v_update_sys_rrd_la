@@ -64,7 +64,6 @@ rrdtool graph $V_RRD/la/$period-la.png \
     --width="440" \
     --start "$start" \
     --end "$end" \
-    --title "Load Average ($period)" \
     --vertical-label "Points" \
     --x-grid "$grid" \
     -c "BACK#484439" \

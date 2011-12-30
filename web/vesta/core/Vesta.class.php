@@ -219,9 +219,9 @@ class Vesta
      */
     public function hasRights($role, $command)
     {        
-      return TRUE;
-        echo 'role - '.$role;
-        exit();
+      //      return TRUE;
+      //        echo 'role - '.$role;
+      //        exit();
 
         $rights = array(
             self::ADMIN =>  array(),

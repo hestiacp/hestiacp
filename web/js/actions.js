@@ -53,16 +53,19 @@ App.Actions.update_cs_value = function(evt)
 App.Actions.mass_delete = function()
 {
     App.Actions.mass_action('massiveDelete');
+    App.Actions.reset_batch();
 }
 
 App.Actions.mass_suspend = function()
 {
     App.Actions.mass_action('massiveSuspend');
+    App.Actions.reset_batch();
 }
 
 App.Actions.mass_unsuspend = function()
 {
     App.Actions.mass_action('massiveUnsuspend');
+    App.Actions.reset_batch();
 }
 
 App.Actions.mass_action = function(method_name)
@@ -78,6 +81,13 @@ App.Actions.mass_action = function(method_name)
             App.Pages.prepareHTML();
         });
     }
+}
+
+App.Actions.reset_batch = function()
+{
+    $('#batch-processor .selector-title').html('NONE');
+    $('.styled.do_action_toggle_batch_selector.style-applied').attr('checked', false);
+    $('.checkbox.do_action_toggle_batch_selector').css('background-position', '0 0');
 }
 
 App.Actions.do_change_password = function()
@@ -533,7 +543,7 @@ App.Actions.add_form_ns = function(evt)
     
     $(form).find('.ns-entry').each(function(i, o)
     {
-        $(o).find('label').text('NameServer #' + (i + 1));
+        $(o).find('label').text('NS #' + (i + 1));
         $(o).find('input').attr('name', 'NS' + (i + 1));
     });
 }
@@ -581,7 +591,7 @@ App.Actions.view_template_info = function(evt)
             $.each(reply.data, function(key) {
                 html += '<li><strong>'+key+':</strong> '+reply.data[key]+'</li>';
             });
-            App.Helpers.openInnerPopup(elm, '<ul>'+html+'</ul>', 'Template Settings');
+            App.Helpers.openInnerPopup(elm, '<ul>'+html+'</ul>', 'Template Info');
         }        
     });
 }

@@ -367,9 +367,14 @@ class USER extends AjaxHandler
     public function loginAsExecute(Request $request)
     {
         $_user = $request->getParameter('user');
-        VestaSession::loginAs($_user);
 
-        return $this->reply(TRUE, '');
+        if(Vesta::hasRights(VestaSession::getInstance()->getUserRole(), 'login_as'))
+          {
+            VestaSession::loginAs($_user);
+            return $this->reply(TRUE, '');
+          }
+
+        return $this->reply(FALSE, '');
     }
 
     public function logoutAsExecute(Request $request)

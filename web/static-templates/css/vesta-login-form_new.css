@@ -1,0 +1,209 @@
+/* Page specific styles */
+.page-auth{
+	background:url(../images/auth/auth-bg.png) repeat;
+}
+.cc:after{
+ 	content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+*html .cc{
+	zoom:1;
+}
++html .cc{
+	zoom:1;
+}
+.page-auth .b-auth-form{}
+
+.page-auth .b-auth-form{
+	width:525px;
+	margin:7% auto 0;
+	padding:20px 20px 0;
+	background:url(../images/auth/form-bg.png) repeat;
+
+	-webkit-border-radius:15px;
+    -moz-border-radius:15px;
+	border-radius:15px;
+	behavior: url(js/PIE.htc);
+	font-family:Arial, Helvetica, sans-serif;
+}
+.page-auth .b-auth-form-wrap{
+	position:relative;
+	padding-top:30px;
+}
+.page-auth .vesta-logo{
+	position:absolute;
+	top:0;
+	left:0;
+	display:block;
+}
+.page-auth .b-client-title{
+	margin:0 0 45px;
+	padding-left:130px;
+	font-size:35px;
+	background:url(../images/auth/planet-1.png) no-repeat 85px 27px;
+	color:#fff;
+	}
+	.client-title-wrap{
+		position:relative;
+        text-transform: uppercase;
+        font-size:24px;
+	}
+	.client-title-wrap .planets{
+		display:block;
+		width:91px;
+		height:7px;
+		position:absolute;
+		top:40%;
+		right:-121px;
+		background:url(../images/auth/planet-2.png) no-repeat scroll 0 -1px;		
+	}	
+.page-auth .form-row{
+	margin:0 0 15px;
+}
+.page-auth .last-row{
+	padding:27px 90px 0 133px;
+}
+	.page-auth .field-label{
+		float:left;
+		width:87px;
+		padding-left:45px;
+		color:#e3d785;
+		font-size:12px;
+		line-height:34px;
+		font-family:Arial, Helvetica, sans-serif;
+		text-transform:uppercase;
+		/*letter-spacing:-.5px;*/
+	}
+	.page-auth .field-text{
+		width:290px;
+		padding:4px 5px;
+		font-size:20px;
+		border:2px solid #0c6c9c;
+		background:#2d2c28;
+		color:#fff;
+		}
+		.page-auth .field-text:focus{
+			-moz-box-shadow:0 0 8px rgba(76, 147, 189, 0.7);
+			-webkit-box-shadow:0 0 8px rgba(76, 147, 189, 0.7);
+			border-color:rgba(76, 147, 189, 0.85) !important;
+		}
+		
+	.page-auth .b-remember{
+		float:left;
+		padding-top:5px;
+			}
+			.page-auth .remember-label{
+				cursor:pointer;
+				padding:2px 2px 2px 8px;
+				color:#747975;
+				font-size:12px;
+				font-family:Arial, Helvetica, sans-serif;
+			}
+			span.ui-checkbox{
+				display: block;
+				float: left;
+				width: 14px;
+				height: 15px;
+/*				background:url(icon_checkbox.png) 0 -40px no-repeat;*/
+				background:url(../images/auth/checkboxes.png) no-repeat;
+			}
+			.ui-helper-hidden-accessible{
+				display: none;
+			}
+			span.ui-checkbox-state-hover{
+				background-position: 0 -15px;
+			}
+			span.ui-checkbox-state-checked,
+			span.ui-checkbox-state-checked-hover{
+				background-position: 0 -30px;
+			}
+		
+	.page-auth .sumbit-btn{
+		float:right;
+		overflow:visible;
+		height:30px;
+		padding:0 40px;
+		-webkit-border-radius:9px;
+		-moz-border-radius:9px;
+		border-radius:9px;
+		behavior: url(js/PIE.htc);		
+	
+		border:2px solid #2C2C10;
+		background-color:#BBBF45;
+		color:#ffffdf;
+		font-size:13px;
+		font-family:Arial, Helvetica, sans-serif;
+		font-weight:bold;
+		line-height:27px;
+		text-transform:uppercase;
+		cursor:pointer;
+		}
+		.page-auth .sumbit-btn:focus{
+			position:relative;
+			top:1px;
+		}
+		.page-auth .sumbit-btn:hover{
+			background-color:#ffcc00;
+			color:#483600;
+			border-color:#000;
+		}
+		.page-auth .sumbit-btn:active{
+			top:0;
+			background-color:#96A332;
+			color:#FFFFFF;
+			border-color:#2C2C10;
+		}
+
+	.page-auth .forgot-pwd{
+		padding:60px 0 10px 137px;
+		font-size:13px;
+		}
+		.page-auth .forgot-pwd-url{
+			color:#6f7571;
+		}
+		.page-auth a.forgot-pwd-url:hover{
+			color:#849e54;
+		}
+		.page-auth a.forgot-pwd-url:active{
+			color:#edca38;
+		}
+
+.page-auth .error-box{
+	border-top:1px dashed #f16d6b;
+	padding:10px 0 21px 131px;
+	font-size:14px;
+	font-weight:bold;
+	color:#f16d6b;
+}		
+
+.page-auth .footnotes{
+	margin:0 -20px;
+	padding:15px 20px;
+	font-size:14px;
+	border-top:2px solid #34352f;
+	color:#5a5e5d;
+	}
+	.page-auth .footnotes .additional-info{
+		float:left;
+		font-size:12px;
+		font-family:Georgia, "Times New Roman", Times, serif;
+		font-style:italic;
+	}
+	.page-auth .footnotes .questions-url{
+		color:#5a5e5d;
+	}
+	.page-auth .footnotes a.questions-url:hover{
+		color:#849e54;
+	}
+	.page-auth .footnotes a.questions-url:active{
+		color:#edca38;
+	}
+	.page-auth .footnotes .imprint{
+		float:right;
+		font-style:normal;
+        font-size:11px;
+        padding-top:1px;
+	}	

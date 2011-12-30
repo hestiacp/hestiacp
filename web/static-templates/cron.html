@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+<!doctype html>
+<html>
 
 <head>
-	<title>Vesta | IP</title>
+	<title>Vesta | Cron</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="imagetoolbar" content="false" />
 
@@ -105,7 +105,7 @@
 					</div>
 					<i class="section-devider"></i>
 				</li>
-				<li class="section active">
+				<li class="section">
 					<div class="section-inner">
 						<dl class="dns-nav-item">
 							<dt class="section-title cc">
@@ -133,7 +133,7 @@
 					</div>
 					<i class="section-devider"></i>
 				</li>
-				<li class="section last-section">
+				<li class="section active last-section">
 					<div class="section-inner">
 						<dl class="cron-nav-item">
 							<dt class="section-title cc">
@@ -173,7 +173,7 @@ Cтиль менеджмента, на первый взгляд, методич
 		</div>
 		<!-- actions toolbar -->
 		<div id="actions-toolbar" class="cc">
-			<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>add ip address</a>
+			<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>add cron record</a>
 			
 			<div class="row-filters cc">
 				<div class="b-row-selector">
@@ -201,15 +201,15 @@ Cтиль менеджмента, на первый взгляд, методич
 					</div>
 				</div><!-- // visible only for admin -->
 			</div>
-
+			
 		</div><!-- // actions toolbar -->
 		<div id="content">
 			<div class="content-inner">
-				<div class="ip-list">
+				<div class="cron-list">
 					<!-- row 1 -->
-					<div class="row first-row ip-details-row">
+					<div class="row first-row cron-details-row">
 						<div class="row-actions-box cc">
-							<div class="check-this"></div>
+							<div class="check-this check-control"></div>
 							<div class="row-operations">
 								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
 							</div>
@@ -218,50 +218,47 @@ Cтиль менеджмента, на первый взгляд, методич
 							<div class="entry-created">12.11.2010</div>
 						</div>
 						<div class="row-details cc">
-							<div class="props-main">
-								<div class="ip-adr-box">
-									<span class="ip-adr">192<span class="dot">.</span>52<span class="dot">.</span>107<span class="dot">.</span>26</span>
-								</div>
-								<span class="prop-box">
-									<span class="prop-title">netmask:</span>
-									<span class="prop-value">255.255.255.0</span>
+							<div class="cron-meta">
+								<span class="prop-box cron-min">
+									<span class="prop-title">min</span>
+									<span class="prop-value">0</span>									
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">interface:</span>
-									<span class="prop-value">eth1</span>
+								<span class="prop-box cron-hour">
+									<span class="prop-title">hour</span>
+									<span class="prop-value">0,6,9 &mdash; 15,18</span>									
 								</span>
-								<span class="prop-box ip-name-box">
-									<span class="prop-title">name:</span>
-									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
+								<span class="prop-box cron-day">
+									<span class="prop-title">day of Month</span>
+									<span class="prop-value">*</span>									
 								</span>
-							</div>
-							<div class="props-additional">
-								<span class="prop-box owner-box">
-									<span class="prop-title">owner:</span>
-									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
+								<span class="prop-box cron-month">
+									<span class="prop-title">Month</span>
+									<span class="prop-value">Jan, Feb, Mar</span>									
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">status:</span>
-									<span class="prop-value">shared</span>
+								<span class="prop-box cron-week">
+									<span class="prop-title">day of Week</span>
+									<span class="prop-value">1 &mdash; 5</span>									
 								</span>
 							</div>
-							<div class="props-ext">
-								<span class="prop-box">
-									<span class="prop-title">sys users:</span>
-									<span class="prop-value">9 999</span>
+							<div class="cron-command-box">
+								<strong class="cron-command-line">/usr/bin/top -n 1 -b -S</strong>
+							</div>
+							<div class="cron-reported-to">
+								<span class="prop-box cron-report-box">
+									<span class="prop-title">reported to:</span>
+									<span class="prop-value">naumov.socolov@gmail.com,</span>
+									<span class="prop-value">vasysualiy.pupkin@gmail.com,</span>
+									<span class="prop-value">na-derevniu-dedushke@dachniy-poselok-za-mkadom.com,</span>
+									<span class="prop-value">vasysualiy.pupkin@gmail.com</span>									
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">web domains:</span>
-									<span class="prop-value">2 346</span>
-								</span>
-							</div>							
+							</div>
 						</div><!-- // .row-details -->
 					</div><!-- // .row 1 -->
 
 					<!-- row 2 -->
-					<div class="row ip-details-row">
+					<div class="row cron-details-row">
 						<div class="row-actions-box cc">
-							<div class="check-this"></div>
+							<div class="check-this check-control"></div>
 							<div class="row-operations">
 								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
 							</div>
@@ -270,50 +267,44 @@ Cтиль менеджмента, на первый взгляд, методич
 							<div class="entry-created">12.11.2010</div>
 						</div>
 						<div class="row-details cc">
-							<div class="props-main">
-								<div class="ip-adr-box">
-									<span class="ip-adr">192<span class="dot">.</span>52<span class="dot">.</span>107<span class="dot">.</span>26</span>
-								</div>
-								<span class="prop-box">
-									<span class="prop-title">netmask:</span>
-									<span class="prop-value">255.255.255.0</span>
+							<div class="cron-meta">
+								<span class="prop-box cron-min">
+									<span class="prop-title">min</span>
+									<span class="prop-value">15</span>
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">interface:</span>
-									<span class="prop-value">eth1</span>
+								<span class="prop-box cron-hour">
+									<span class="prop-title">hour</span>
+									<span class="prop-value">1,3,5 &mdash; 15,19,21,23</span>									
 								</span>
-								<span class="prop-box ip-name-box">
-									<span class="prop-title">name:</span>
-									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
+								<span class="prop-box cron-day">
+									<span class="prop-title">day of Month</span>
+									<span class="prop-value">1,3,5,7,9,11,13,15,17,19</span>
 								</span>
-							</div>
-							<div class="props-additional">
-								<span class="prop-box owner-box">
-									<span class="prop-title">owner:</span>
-									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
+								<span class="prop-box cron-month">
+									<span class="prop-title">Month</span>
+									<span class="prop-value">*</span>									
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">status:</span>
-									<span class="prop-value">shared</span>
+								<span class="prop-box cron-week">
+									<span class="prop-title">day of Week</span>
+									<span class="prop-value">2 &mdash; 7</span>									
 								</span>
 							</div>
-							<div class="props-ext">
-								<span class="prop-box">
-									<span class="prop-title">sys users:</span>
-									<span class="prop-value">9 999</span>
+							<div class="cron-command-box">
+								<strong class="cron-command-line">/home/myuser/bin/pinghosts.sh > /home/myuser/pinghosts.log</strong>
+							</div>
+							<div class="cron-reported-to">
+								<span class="prop-box cron-report-box">
+									<span class="prop-title">reported to:</span>
+									<span class="prop-value">billy@microsoft.com</span>
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">web domains:</span>
-									<span class="prop-value">2 346</span>
-								</span>
-							</div>							
+							</div>
 						</div><!-- // .row-details -->
 					</div><!-- // .row 2 -->
 
 					<!-- row 3 -->
-					<div class="row ip-details-row">
+					<div class="row cron-details-row checked-row">
 						<div class="row-actions-box cc">
-							<div class="check-this"></div>
+							<div class="check-this check-control"></div>
 							<div class="row-operations">
 								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
 							</div>
@@ -322,50 +313,44 @@ Cтиль менеджмента, на первый взгляд, методич
 							<div class="entry-created">12.11.2010</div>
 						</div>
 						<div class="row-details cc">
-							<div class="props-main">
-								<div class="ip-adr-box">
-									<span class="ip-adr">192<span class="dot">.</span>52<span class="dot">.</span>107<span class="dot">.</span>26</span>
-								</div>
-								<span class="prop-box">
-									<span class="prop-title">netmask:</span>
-									<span class="prop-value">255.255.255.0</span>
+							<div class="cron-meta">
+								<span class="prop-box cron-min">
+									<span class="prop-title">min</span>
+									<span class="prop-value">*</span>
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">interface:</span>
-									<span class="prop-value">eth1</span>
+								<span class="prop-box cron-hour">
+									<span class="prop-title">hour</span>
+									<span class="prop-value">*</span>									
 								</span>
-								<span class="prop-box ip-name-box">
-									<span class="prop-title">name:</span>
-									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
+								<span class="prop-box cron-day">
+									<span class="prop-title">day of Month</span>
+									<span class="prop-value">*</span>
 								</span>
-							</div>
-							<div class="props-additional">
-								<span class="prop-box owner-box">
-									<span class="prop-title">owner:</span>
-									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
+								<span class="prop-box cron-month">
+									<span class="prop-title">Month</span>
+									<span class="prop-value">Jan, Mar, May, Jul, Sep, Nov</span>									
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">status:</span>
-									<span class="prop-value">shared</span>
+								<span class="prop-box cron-week">
+									<span class="prop-title">day of Week</span>
+									<span class="prop-value">2 &mdash; 7</span>									
 								</span>
 							</div>
-							<div class="props-ext">
-								<span class="prop-box">
-									<span class="prop-title">sys users:</span>
-									<span class="prop-value">9 999</span>
+							<div class="cron-command-box">
+								<strong class="cron-command-line">/home/myuser/bin/pinghosts.sh > /home/myuser/home/myuser/home/myuser/pinghosts.log</strong>
+							</div>
+							<div class="cron-reported-to">
+								<span class="prop-box cron-report-box">
+									<span class="prop-title">reported to:</span>
+									<span class="prop-value">billy@microsoft.com</span>
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">web domains:</span>
-									<span class="prop-value">2 346</span>
-								</span>
-							</div>							
+							</div>
 						</div><!-- // .row-details -->
 					</div><!-- // .row 3 -->
 
-					<!-- row 4, suspended status -->
-					<div class="row ip-details-row ip-details-suspended">
+					<!-- row 4 -->
+					<div class="row cron-details-row suspended-row">
 						<div class="row-actions-box cc">
-							<div class="check-this"></div>
+							<div class="check-this check-control"></div>
 							<div class="row-operations">
 								<span class="ip-status-info ip-suspended-status"><span class="ip-status-text">suspended</span></span>
 							</div>
@@ -374,96 +359,105 @@ Cтиль менеджмента, на первый взгляд, методич
 							<div class="entry-created">12.11.2010</div>
 						</div>
 						<div class="row-details cc">
-							<div class="props-main">
-								<div class="ip-adr-box">
-									<span class="ip-adr">192<span class="dot">.</span>52<span class="dot">.</span>107<span class="dot">.</span>26</span>
-								</div>
-								<span class="prop-box">
-									<span class="prop-title">netmask:</span>
-									<span class="prop-value">255.255.255.0</span>
+							<div class="cron-meta">
+								<span class="prop-box cron-min">
+									<span class="prop-title">min</span>
+									<span class="prop-value">15</span>
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">interface:</span>
-									<span class="prop-value">eth1</span>
+								<span class="prop-box cron-hour">
+									<span class="prop-title">hour</span>
+									<span class="prop-value">1,3,5 &mdash; 15,19,21,23</span>									
 								</span>
-								<span class="prop-box ip-name-box">
-									<span class="prop-title">name:</span>
-									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
+								<span class="prop-box cron-day">
+									<span class="prop-title">day of Month</span>
+									<span class="prop-value">1,3,5,7,9,11,13,15,17,19</span>
 								</span>
-							</div>
-							<div class="props-additional">
-								<span class="prop-box owner-box">
-									<span class="prop-title">owner:</span>
-									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
+								<span class="prop-box cron-month">
+									<span class="prop-title">Month</span>
+									<span class="prop-value">*</span>									
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">status:</span>
-									<span class="prop-value">shared</span>
+								<span class="prop-box cron-week">
+									<span class="prop-title">day of Week</span>
+									<span class="prop-value">2 &mdash; 7</span>									
 								</span>
 							</div>
-							<div class="props-ext">
-								<span class="prop-box">
-									<span class="prop-title">sys users:</span>
-									<span class="prop-value">9 999</span>
+							<div class="cron-command-box">
+								<strong class="cron-command-line">/home/myuser/bin/pinghosts.sh > /home/myuser/pinghosts.log</strong>
+							</div>
+							<div class="cron-reported-to">
+								<span class="prop-box cron-report-box">
+									<span class="prop-title">reported to:</span>
+									<span class="prop-value">billy@microsoft.com</span>
 								</span>
-								<span class="prop-box">
-									<span class="prop-title">web domains:</span>
-									<span class="prop-value">2 346</span>
-								</span>
-							</div>							
+							</div>
 						</div><!-- // .row-details -->
 					</div><!-- // .row 4 -->
 
 
 					<!-- form -->
-					<div class="b-new-entry b-new-entry_ip">
-						<div class="entry-header">New ip address</div>
-						<div class="form-row cc">
-							<label class="field-label" for="#">ip address:</label>
-							<input class="text-field" type="text" value="192.168.64.19" />
-						</div>
-						<div class="form-row cc">
-							<label class="field-label" for="#">owner:</label>
-							<select class="styled" name="ownership">
-								<option value="1" selected="selected">vesta</option>
-								<option value="2">new mexico</option>
-								<option value="3">land of magic</option>
-							</select>
-						</div>
-						<div class="form-row cc">
-							<label class="field-label" for="#">status:</label>
-							<select class="styled">
-								<option value="1" selected="selected">shared</option>
-								<option value="2">suspended</option>
-								<option value="3">other</option>
-							</select>
-						</div>
-						<div class="form-row cc">
-							<label class="field-label" for="#">name:</label>
-							<input class="text-field" type="text" value="super-puper-hoster.long-name.co.uk" />
-						</div>
-						<div class="form-row cc">
-							<label class="field-label" for="#">interface:</label>
-							<select class="styled">
-								<option value="1" selected="selected">eth1</option>
-								<option value="2">eth2</option>
-								<option value="3">eth3</option>
-							</select>
-						</div>
-						<div class="form-row cc">
-							<label class="field-label" for="#">netmask:</label>
-							<div class="autocomplete-box disabled-box">
-								<input class="text-field" type="text" value="" disabled="disabled" />
-								<i class="arrow">&nbsp;</i>
+					<div class="b-new-entry b-new-entry_cron">
+						<div class="entry-header">New cron</div>
+						<div class="form-error">
+							<div class="error-box">
+								<span class="error-message">Wrong minute format. Need some <a class="help-tip-url" href="#">Help</a> ?</span>
 							</div>
 						</div>
+						<div class="form-row form-row-line run-at-box cc">
+							<span class="row-header">run at:</span>
+							<div class="field-box cron-minute-box">
+								<label class="field-label" for="#">minute:<br />(0&mdash;59)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+							<div class="field-box cron-hour-box">
+								<label class="field-label" for="#">hour:<br />(0&mdash;23)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+							<div class="field-box cron-day-box">
+								<label class="field-label" for="#">day of Month:<br />(1&mdash;31)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+							<div class="field-box cron-month-box">
+								<label class="field-label" for="#">Month:<br />(1&mdash;12)(Jan&mdash;Dec)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+							<div class="field-box cron-week-box">
+								<label class="field-label" for="#">day of Week:<br />(1&mdash;7)(Sun&mdash;Sat)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-row cc">
+							<label class="field-label" for="#">command:</label>
+							<textarea class="textarea"></textarea>
+						</div>
+
+						<div class="form-row cc">
+							<label class="field-label" for="#">report to: <span class="remark">(devide by comma ",")</span></label>
+							<textarea class="textarea"></textarea>
+						</div>
+						
+						<div class="form-row cc">
+							<label class="field-label" for="#">suspended:</label>
+							<input class="styled" type="checkbox" value="" />
+						</div>
+						
 						<div class="form-row buttons-row cc">
 							<input class="add-entry-btn" type="submit" value="add" />
 							<span class="cancel-btn">Cancel</span>
 							<span class="delete-btn">Delete</span>
 						</div>
 					</div><!-- // form -->
-				</div><!-- // .ip-list -->
+				</div><!-- // .domain-list -->
 			</div>
 		</div><!-- // #content -->
 	</div>

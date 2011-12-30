@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+
+<head>
+	<title>Vesta | Login Form</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="imagetoolbar" content="false" />
+
+	<link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="css/vesta-login-form.css" />
+
+	<!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="css/ie.css" />
+    <![endif]-->
+</head>
+<body class="page-auth">
+    <div class="page">
+        <div class="b-auth-form">
+            <div class="b-auth-form-wrap">
+                <img class="vesta-logo" src="i/auth/logo.png" width="72" height="24" alt="" />
+                <div class="b-client-title">
+                    <span class="client-title-wrap">Rackspace <i class="planets">&nbsp;</i></span>
+                </div>
+                <form class="auth" action="#" method="post">
+                    <div class="form-row cc">
+                        <label class="field-label" for="email">Email</label>
+                        <input class="field-text" id="email" type="text" tabindex="1"/>
+                    </div>
+                    <div class="form-row cc">
+                        <label class="field-label" for="password">Password</label>
+                        <input class="field-text" id="password" type="password" tabindex="2"/>
+                    </div>
+                    <div class="error-box">Login or password is wrong</div>
+                    <div class="form-row last-row cc">
+                        <div class="b-remember">
+                            <input class="remember-me" id="remember-me" name="remember_me" type="checkbox" value="1" tabindex="3"/>
+                            <label class="remember-label" for="remember-me">remember me</label>
+                        </div>
+                        <input class="sumbit-btn" type="submit" value="enter" tabindex="4"/>
+                    </div>
+                </form>
+                <p class="forgot-pwd"><a class="forgot-pwd-url" href="#">forgot password?</a></p>
+                <div class="footnotes cc">
+                    <p class="additional-info">For questions please contact <a class="questions-url" href="mailto:support@vestacp.com">support@vestacp.com</a></p>
+                    <address class="imprint">&copy; 2011 Vesta Control Panel</address>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="js/jquery-1.4.2.js"%3E%3C/script%3E'))</script>
+    <script src="js/jquery.ui.widget.js"></script>
+    <script src="js/jquery.usermode.js"></script>
+    <script src="js/ui.checkbox.js"></script>
+    <script src="js/common.js"></script>
+</body>
+</html>

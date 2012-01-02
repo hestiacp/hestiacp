@@ -58,6 +58,9 @@ sync_cron_jobs
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Decreasing cron value
+decrease_user_value "$user" '$U_CRON_JOBS'
+
 # Adding task to the vesta pipe
 restart_schedule 'cron'
 

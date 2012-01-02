@@ -91,7 +91,7 @@ fields="$fields \$DNS_DOMAINS \$DISK_QUOTA \$BANDWIDTH \$NS \$SHELL \$BACKUPS"
 fields="$fields \$WEB_TPL \$SUSPENDED \$CONTACT \$RKEY \$REPORTS \$IP_OWNED"
 fields="$fields \$U_DIR_DISK \$U_DISK \$U_BANDWIDTH \$U_WEB_DOMAINS"
 fields="$fields \$U_WEB_SSL \$U_DNS_DOMAINS \$U_DATABASES \$U_MAIL_DOMAINS"
-fields="$fields \$DATE"
+fields="$fields \$U_CRON_JOBS \$DATE"
 
 # Listing domains
 case $format in 

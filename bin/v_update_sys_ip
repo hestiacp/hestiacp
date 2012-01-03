@@ -1,15 +1,19 @@
 #!/bin/bash
-# info: adding system ip
+# info: update system ip
+# options: [owner] [ip_status]
+#
+# The function scans configured ip in the system and register them with vesta
+# internal database. This call is intended for use on vps servers, where ip is
+# set by hypervizor.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
 # Argument defenition
-owner=$1
-ip_status=$2
-owner=${3-vesta}
-ip_status=${4-shared}
+owner=${1-vesta}
+ip_status=${2-shared}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -27,13 +31,13 @@ source $V_FUNC/domain.func
 check_args '0' "$#" '[owner] [ip_status]'
 
 # Checking owner
-if [ ! -z "$owner" ]; then
+if [ ! -z "$1" ]; then
     format_validation 'owner'
     is_user_valid "$owner"
 fi
 
 # Checking ip_status
-if [ ! -z "$ip_status" ]; then
+if [ ! -z "$2" ]; then
     format_validation 'ip_status'
 fi
 

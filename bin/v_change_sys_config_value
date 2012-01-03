@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: changing sysconfig value
+# info: change sysconfig value
+# options: key value
+#
+# The function is for changing main config settings such as COMPANY_NAME or
+# COMPANY_EMAIL and so on.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -29,8 +34,8 @@ format_validation 'key'
 check_ckey=$(grep "^$key='" $V_CONF/vesta.conf)
 if [ -z "$check_ckey" ]; then
     echo "Error: key not found"
-    log_event 'debug' "$E_KEY_INVALID $V_EVENT"
-    exit $E_KEY_INVALID
+    log_event 'debug' "$E_INVALID $V_EVENT"
+    exit $E_INVALID
 fi
 
 

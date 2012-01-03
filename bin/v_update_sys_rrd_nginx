@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating httpd rrd
+# info: update nginx rrd
+# options: period
+#
+# The function is for updating nginx rrd database and graphic.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: updating system rrd charts
+# info: update system rrd charts
+# options: period
+#
+# The script is wrapper for all rrd functions. It updates all 
+# v_update_sys_rrd_* at once.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

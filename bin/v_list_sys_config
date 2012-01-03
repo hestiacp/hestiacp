@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing system config
+# info: list system config
+# options: [format]
+#
+# The function for obtaining the list of system parameters.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

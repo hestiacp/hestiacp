@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: get dns domain value
-# arguments: user domain key
+# options: user domain key
 #
 # The function for getting a certain DNS domain parameter.
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unuspend cron job
-# arguments: user job
+# options: user job
 #
 # The function unsuspen certain cron job.
 

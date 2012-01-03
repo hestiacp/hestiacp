@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete cron job
-# arguments: user job
+# options: user job
 #
 # The function deletes cron job.
 

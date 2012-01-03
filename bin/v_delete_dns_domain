@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delite dns domain
-# arguments: user domain
+# options: user domain
 #
 # The function for deleting DNS domain. By deleting it all records will also be
 # deleted.

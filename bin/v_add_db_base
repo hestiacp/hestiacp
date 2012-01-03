@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add database
-# arguments: user db db_user db_password type [host] [encoding]
+# options: user db db_user db_password type [host] [encoding]
 #
 # The function creates the database concatenating username  and user_db.
 # Supported yypes of databases you can get using v_list_sys_config script.

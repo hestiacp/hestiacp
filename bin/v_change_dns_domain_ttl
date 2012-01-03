@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain ttl
-# arguments: user domain ttl
+# options: user domain ttl
 #
 # The function for chaning the time to live TTL parameter for all records.
 

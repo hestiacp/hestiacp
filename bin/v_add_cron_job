@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cron job
-# arguments: user min hour day month wday command [job]
+# options: user min hour day month wday command [job]
 #
 # The function adds a job to cron daemon. When executing commands, any output
 # is  mailed to user's email if parameter REPORTS is set to 'yes'.

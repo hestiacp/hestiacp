@@ -1,0 +1,403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+
+<head>
+	<title>Vesta | Backups</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="imagetoolbar" content="false" />
+
+	<link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="css/vesta.css" />
+
+	<!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="css/ie.css" />
+    <![endif]-->
+
+	<script type="text/javascript" src="js/custom-form-elements.js"></script>
+	<script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/backups-control.js"></script>
+	
+</head>
+
+<body>
+<div id="page">
+	<div class="outer">
+		<div id="header">
+			<div class="logo-box">
+				<h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
+			</div>
+			<ul class="settings">
+				<li class="settings-item">
+					<span class="logged-as">Fabricius Euphranor von Neoptolemos</span>
+					<a class="item-title" href="#">Profile</a>
+				</li>
+				<li class="settings-item"><a class="item-title" href="#">Settings</a></li>
+				<li class="settings-item"><a class="item-title" href="#">Exit</a></li>
+			</ul>
+			<ul class="extra-services">
+				<li class="service-item active">
+					<span class="item-title">Backups</span>
+					<i class="item-devider"></i>
+				</li>
+				<li class="service-item">
+					<span class="item-title">Stats</span>
+					<i class="item-devider"></i>
+				</li>
+			</ul>
+		</div>
+		<div id="primary-nav-box">
+			<ul class="primary-nav cc">
+				<li class="section">
+					<div class="section-inner">
+						<dl class="users-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Users</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">386 users</span>
+								<span class="def">7 blocked</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="domains-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Web</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">580 domains</span>
+								<span class="def">22 out of mem</span>
+								<span class="def">3 waiting</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="mail-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Mail</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">320 domains</span>
+								<span class="def">1209 mailboxes</span>
+								<span class="def">25 full</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="db-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">DB</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 db</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section active">
+					<div class="section-inner">
+						<dl class="dns-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Dns</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">289 records</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="dnstpl-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">IP</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 templates</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section last-section">
+					<div class="section-inner">
+						<dl class="cron-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Cron</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">15 records</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+			</ul>
+		</div>
+		<div id="console">
+			<div class="b-console">
+				<div class="b-console-wrap">
+					<form class="b-console-form cc" action="#" method="post">
+						<fieldset>
+							<input class="b-console-field" type="text" value="/"/>
+							<input class="b-console-btn" type="submit" value="Go" />
+						</fieldset>
+					</form>
+				</div>
+				<div class="b-console-results"></div>
+			</div>
+		</div>
+		<!-- actions toolbar -->
+		<div id="actions-toolbar" class="cc">
+			<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>create backup</a>
+		</div><!-- // actions toolbar -->
+		<div id="content">
+			<div class="content-inner">
+				<div class="backups-list">
+					<!-- row 1 -->
+					<div class="row first-row backup-details-row">
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-title">owner:</span>
+									<span class="prop-value">vestavestavesta</span>
+								</span>
+							</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<span class="prop-box entry-created">
+									<span class="backup-date">
+										<span class="backup-day">15 Oct 2011</span>
+										<span class="backup-time">00:31</span>
+									</span>
+									<span class="backup-weekday">Friday</span>
+								</span>
+								<span class="prop-box generation-time">
+									<span class="prop-title">Generation time:</span>
+									<span class="prop-value">78 min</span>
+								</span>
+							</div>
+							<div class="props-additional">
+								<span class="backup-size">
+									<span class="backup-size-inner">159 Gb</span>
+								</span>
+								<a class="backup-url" href="#">download</a>
+							</div>
+							<div class="props-ext">
+								<div class="backup-actions">
+									<a class="backup-actions-url restore-url" href="#">restore</a>
+									<a class="backup-actions-url detailed-restore-url" href="#">
+										<span class="detailed-restore-title">detailed</span>
+										<span class="detailed-restore-ext">restore</span>
+									</a>
+								</div>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 1 -->
+					
+					<!-- row 2 -->
+					<div class="row backup-details-row">
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-title">owner:</span>
+									<span class="prop-value">vestavestavesta</span>
+								</span>
+							</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<span class="prop-box entry-created">
+									<span class="backup-date">
+										<span class="backup-day">14 Oct 2011</span>
+										<span class="backup-time">00:17</span>
+									</span>
+									<span class="backup-weekday">Thursday</span>
+								</span>
+								<span class="prop-box generation-time">
+									<span class="prop-title">Generation time:</span>
+									<span class="prop-value">12 min</span>
+								</span>
+							</div>
+							<div class="props-additional">
+								<span class="backup-size">
+									<span class="backup-size-inner">14 Gb</span>
+								</span>
+								<a class="backup-url" href="#">download</a>
+							</div>
+							<div class="props-ext">
+								<div class="backup-actions">
+									<a class="backup-actions-url restore-url" href="#">restore</a>
+									<a class="backup-actions-url detailed-restore-url" href="#">
+										<span class="detailed-restore-title">detailed</span>
+										<span class="detailed-restore-ext">restore</span>
+									</a>
+								</div>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 2 -->
+					
+					<!-- row 3 -->
+					<div class="row backup-details-row">
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-title">owner:</span>
+									<span class="prop-value">vestavestavesta</span>
+								</span>
+							</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<span class="prop-box entry-created">
+									<span class="backup-date">
+										<span class="backup-day">12 Oct 2011</span>
+										<span class="backup-time">00:23</span>
+									</span>
+									<span class="backup-weekday">Sunday</span>
+								</span>
+								<span class="prop-box generation-time">
+									<span class="prop-title">Generation time:</span>
+									<span class="prop-value">47 min</span>
+								</span>
+							</div>
+							<div class="props-additional">
+								<span class="backup-size">
+									<span class="backup-size-inner">637 Gb</span>
+								</span>
+								<a class="backup-url" href="#">download</a>
+							</div>
+							<div class="props-ext">
+								<div class="backup-actions">
+									<a class="backup-actions-url restore-url" href="#">restore</a>
+									<a class="backup-actions-url detailed-restore-url" href="#">
+										<span class="detailed-restore-title">detailed</span>
+										<span class="detailed-restore-ext">restore</span>
+									</a>
+								</div>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 3 -->
+					
+
+					<!-- form -->
+					<div class="b-new-entry b-new-detailed-restore" style="margin-bottom:50px;">
+						<div class="entry-header">Detailed restore</div>
+						<div class="form-row cc">
+						
+						<ul class="backup-tree">
+							<li class="backup-tree-item unchecked">
+								<span class="node-item expanded">ceres</span>
+								<ul class="backup-sections sub-tree">
+									<li class="backup-tree-item unchecked">
+										<span class="node-item expanded">web</span>
+										<ul class="sub-tree">
+											<li class="backup-tree-item">
+												<span class="node-item">readingwriting.com</span>
+											</li>
+											<li class="backup-tree-item checked">
+												<span class="node-item">writing.com</span>
+											</li>
+											<li class="backup-tree-item checked">
+												<span class="node-item checked">singing.com</span>
+											</li>
+										</ul>
+									</li>
+									<li class="backup-tree-item checked">
+										<span class="node-item">db</span>
+									</li>
+									<li class="backup-tree-item checked">
+										<span class="node-item">dns</span>
+									</li>
+									<li class="backup-tree-item checked">
+										<span class="node-item">mail</span>
+									</li>
+									<li class="backup-tree-item checked">
+										<span class="node-item">cron</span>
+									</li>
+									<li class="backup-tree-item checked">
+										<span class="node-item">ip</span>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						
+						</div>
+						<div class="form-row buttons-row cc">
+							<input class="add-entry-btn" type="submit" value="restore" />
+							<span class="cancel-btn">Cancel</span>
+							<span class="delete-btn">Delete</span>
+						</div>
+					</div><!-- // form -->
+					
+					<!-- row 3 -->
+					<div class="row backup-details-row backup-details-row_highlighted">
+						<div class="notes-wrap">
+							<span class="restore-ico">Restore process</span> has been added to queue. It could take several hours.
+						</div>
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-title">owner:</span>
+									<span class="prop-value">vestavestavesta</span>
+								</span>
+							</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<span class="prop-box entry-created">
+									<span class="backup-date">
+										<span class="backup-day">12 Oct 2011</span>
+										<span class="backup-time">00:23</span>
+									</span>
+									<span class="backup-weekday">Sunday</span>
+								</span>
+								<span class="prop-box generation-time">
+									<span class="prop-title">Generation time:</span>
+									<span class="prop-value">47 min</span>
+								</span>
+							</div>
+							<div class="props-additional">
+								<span class="backup-size">
+									<span class="backup-size-inner">637 Gb</span>
+								</span>
+								<a class="backup-url" href="#">download</a>
+							</div>
+							<div class="props-ext">
+								<div class="backup-actions">
+									<a class="backup-actions-url restore-url" href="#">restore</a>
+									<a class="backup-actions-url detailed-restore-url" href="#">
+										<span class="detailed-restore-title">detailed</span>
+										<span class="detailed-restore-ext">restore</span>
+									</a>
+								</div>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 3 -->
+					
+				</div><!-- // .backups-list -->
+			</div>
+		</div><!-- // #content -->
+	</div>
+</div>
+</body>
+</html>

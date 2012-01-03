@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unsuspend dns domain
-# arguments: user domain
+# options: user domain
 #
 # The function unsuspends a certain user's domain.
 

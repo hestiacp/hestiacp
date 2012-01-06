@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend dns domains
-# arguments: user
+# options: user
 #
 # The function suspends all user's DNS domains.
 

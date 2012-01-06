@@ -156,6 +156,7 @@ U_WEB_SSL='0'
 U_DNS_DOMAINS='0'
 U_DATABASES='0'
 U_MAIL_DOMAINS='0'
+U_CRON_JOBS='0'
 DATE='$V_DATE'" > $V_USERS/$user/user.conf
 
 # Hiding password

@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing available system rrd charts
+# info: list system rrd charts
+# options: [format]
+#
+# List available rrd graphics, its titles and paths.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete cron job
-# arguments: user job
+# options: user job
 #
 # The function deletes cron job.
 
@@ -57,6 +57,9 @@ sync_cron_jobs
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Decreasing cron value
+decrease_user_value "$user" '$U_CRON_JOBS'
 
 # Adding task to the vesta pipe
 restart_schedule 'cron'

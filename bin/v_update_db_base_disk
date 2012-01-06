@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update database disk usage
-# arguments: user database
+# options: user database
 #
 # The function recalculates disk usage for speciefic database.
 

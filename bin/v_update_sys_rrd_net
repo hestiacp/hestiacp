@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating network rrd
+# info: update network rrd
+# options: period
+#
+# The function is for updating network usage rrd database and graphic.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

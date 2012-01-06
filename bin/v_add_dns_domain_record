@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns domain record
-# arguments: user domain record type value [id]
+# options: user domain record type value [id]
 #
 # The call is used for adding new DNS record. Complex records of TXT, MX and
 # SRV types can be used by a filling in the 'value' argument. The function also

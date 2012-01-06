@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating ftp rrd
+# info: update ftp rrd
+# options: period
+#
+# The function is for updating ftpd rrd database and graphic.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

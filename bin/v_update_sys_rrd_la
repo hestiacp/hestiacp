@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating load average rrd
+# info: update load average rrd
+# options: period
+#
+# The function is for updating load average rrd database and graphic.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

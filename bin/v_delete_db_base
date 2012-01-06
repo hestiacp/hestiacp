@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete database
-# arguments: user database
+# options: user database
 #
 # The function for deleting the database. If database user have access to
 # another database, he will not be deleted.

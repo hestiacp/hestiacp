@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend cron job
-# arguments: user job
+# options: user job
 #
 # The function suspends a certain job of the cron scheduler.
 

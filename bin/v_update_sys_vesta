@@ -1,8 +1,10 @@
 #!/bin/bash
-# info: updating vesta after rpm update
+# info: update vesta after rpm update
+# options: version
+#
+# The function is runs as rpm update trigger. It pulls shell script from vesta
+# server and runs it.
 
-# warn: please note that this scritp should be runned
-#    by yum or rpm only
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

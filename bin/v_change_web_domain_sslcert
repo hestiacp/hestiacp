@@ -23,10 +23,10 @@ source $V_FUNC/domain.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '3' "$#" 'user domain certificate'
+check_args '3' "$#" 'user domain ssl_dir'
 
 # Checking argument format
-format_validation 'user' 'domain' 'ssl'
+format_validation 'user' 'domain' 'ssl_dir'
 
 # Checking web system is enabled
 is_system_enabled 'web'

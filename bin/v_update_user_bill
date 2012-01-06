@@ -116,6 +116,7 @@ for user in $user_list; do
     v_str="$v_str U_MAIL_DOMAINS='$U_MAIL_DOMAINS' IP_OWNED='$IP_OWNED'"
     v_str="$v_str U_DISK_WEB_DOMAINS='$U_DISK_WEB_DOMAINS'"
     v_str="$v_str U_BANDWIDTH_WEB_DOMAINS='$U_BANDWIDTH_WEB_DOMAINS'"
+    v_str="$v_str U_CRON_JOBS"
 
     # Updating user billing log
     billing="$V_USERS/$user/billing.log"

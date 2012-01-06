@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list database host
-# arguments: type host [format]
+# options: type host [format]
 #
 # The function for obtaining host's database parameters.
 

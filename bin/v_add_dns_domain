@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns domain
-# arguments: user domain ip [template] [exp] [soa] [ttl]
+# options: user domain ip [template] [exp] [soa] [ttl]
 #
 # The function adds DNS zone with records defined in the template. If the exp
 # argument isn't stated, the expiration date value will be set to next year.

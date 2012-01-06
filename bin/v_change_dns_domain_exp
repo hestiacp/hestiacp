@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain expiriation date
-# arguments: user domain exp
+# options: user domain exp
 #
 # The function of changing the term of expiration domain's registration. The
 # serial number will be refreshed automatically during update.

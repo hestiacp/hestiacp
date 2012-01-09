@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: deleting system ip
+# info: delete system ip
+# options: ip
+#
+# The function for deleting a system ip. It does not allow to delete first ip
+# on interface and do not allow to delete ip which is used by a web domain.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

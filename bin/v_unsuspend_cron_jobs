@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unuspend sys cron
-# arguments: user
+# options: user
 #
 # The function unsuspends all suspended cron jobs.
 

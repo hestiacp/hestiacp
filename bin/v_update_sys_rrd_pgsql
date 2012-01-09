@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating PostgreSQL rrd
+# info: update PostgreSQL rrd
+# options: period
+#
+# The function is for updating postgresql rrd database and graphic.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

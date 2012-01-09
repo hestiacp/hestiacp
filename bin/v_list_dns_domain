@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list dns domain
-# arguments: user domain [format]
+# options: user domain [format]
 #
 # The function for getting all DNS domain's parameters.
 

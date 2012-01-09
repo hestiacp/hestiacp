@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing system ip
+# info: list system ip
+# options: ip [format]
+#
+# The function for getting the list of system ip parameters.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

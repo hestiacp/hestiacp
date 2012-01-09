@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete user databases
-# arguments: user
+# options: user
 #
 # The function deletes all user databases.
 

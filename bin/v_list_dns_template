@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list dns template
-# arguments: template [format]
+# options: template [format]
 #
 # The function for obtaining the DNS template parameters.
 

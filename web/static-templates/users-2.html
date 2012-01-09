@@ -1,0 +1,1060 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+
+<head>
+	<title>Vesta | Users</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="imagetoolbar" content="false" />
+
+	<link rel="shortcut icon" href="i/fav.ico" type="image/x-icon">
+
+	<link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="css/popup.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="css/vesta.css" />
+
+	<!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="css/ie.css" />
+    <![endif]-->
+
+	<script type="text/javascript" src="js/custom-form-elements.js"></script>
+</head>
+
+<body>
+<div id="page">
+	<div class="outer">
+		<div id="header">
+			<div class="logo-box">
+				<h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
+			</div>
+			<ul class="settings">
+				<li class="settings-item">
+					<span class="logged-as">Fabricius Euphranor von Neoptolemos</span>
+					<a class="item-title" href="#">Profile</a>
+				</li>
+				<li class="settings-item"><a class="item-title" href="#">Settings</a></li>
+				<li class="logout"><a class="item-title" href="#"><span class="item-title-inner">Exit</span></a></li>
+			</ul>
+			<ul class="extra-services">
+				<li class="service-item active">
+					<span class="item-title">Backups</span>
+					<i class="item-devider"></i>
+				</li>
+				<li class="service-item">
+					<span class="item-title">Stats</span>
+					<i class="item-devider"></i>
+				</li>
+			</ul>
+		</div>
+		<div id="primary-nav-box">
+			<ul class="primary-nav cc">
+				<li class="section active">
+					<div class="section-inner">
+						<dl class="users-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Users</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">386 users</span>
+								<span class="def">7 blocked</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="domains-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Web Domain</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">580 domains</span>
+								<span class="def">22 out of mem</span>
+								<span class="def">3 waiting</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="mail-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Mail</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">320 domains</span>
+								<span class="def">1209 mailboxes</span>
+								<span class="def">25 full</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="db-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">DB</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 db</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="dns-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Dns</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">289 records</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="dnstpl-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">IP</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 templates</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section last-section">
+					<div class="section-inner">
+						<dl class="cron-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Cron</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">15 records</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+			</ul>
+		</div>
+		<div id="console">
+			<div class="b-console">
+				<div class="b-console-wrap">
+					<form class="b-console-form cc" action="#" method="post">
+						<fieldset>
+							<input class="b-console-field" type="text" value="/"/>
+							<input class="b-console-btn" type="submit" value="Go" />
+						</fieldset>
+					</form>
+				</div>
+				<div class="b-console-results"></div>
+			</div>
+		</div>
+		<!-- actions toolbar -->
+		<div id="actions-toolbar" class="cc">
+			<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>add user</a>
+			
+			<div class="row-filters cc">
+				<div class="b-row-selector">
+					<div class="checkbox-selector cc">
+						<input class="styled" type="checkbox" value="" />
+						<span class="selector-title">385 Selected</span>
+					</div>
+					<div class="context-actions">
+						<div class="b-cust-sel b-cust-sel_inactive">
+							<span class="title">Action</span>
+							<div class="cust-sel-arrow"><i>&nbsp;</i></div>
+							<div class="cust-sel-options">
+								<div class="cust-sel-option ico_gray">Suspend</div>
+								<div class="cust-sel-option ico_green">Unsuspend</div>
+								<div class="cust-sel-option ico_red">Delete</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- visible only for admin -->
+				<div class="domain-groups-selector">
+					<div class="selector-wrap">
+						<strong class="selector-title">Show:</strong>
+						<span class="selected-groups">mine, vesta, Chronos, vasya (and 35 more)</span>
+					</div>
+				</div><!-- // visible only for admin -->
+				
+			</div>
+			
+		</div><!-- // actions toolbar -->
+		<div id="content">
+			<div class="content-inner">
+				<div class="users-list">
+					<!-- row 1 -->
+					<div class="row first-row user-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-title">owner:</span>
+									<span class="prop-value">vestavestavesta vestavesta vesta</span>
+								</span>
+							</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="user-wrap">
+									<div class="username-box">
+										<span class="user">
+											<span class="nickname">han_solo</span>
+											<span class="role">(user)</span>
+										</span>
+										<span class="prop-box template-box">
+											<span class="prop-title">package:</span>
+											<span class="prop-value">default</span>
+										</span>
+									</div>
+
+									<div class="user-details-box">
+                                        <span class="prop-box user-name">
+                                            <span class="prop-title">name:</span>
+                                            <span class="prop-value">Clayton Musselwhite</span>
+                                        </span>
+
+                                        <span class="prop-box prop-box_group-values cc user-details">
+                                            <span class="prop-title">email:</span>
+                                            <span class="group-values">
+                                                <span class="prop-value user-email">han_solo@han_solohan_solo.com</span>
+                                                <span class="prop-value user-reports">(reports enabled)</span>                                        	</span>
+                                        </span>
+                                        <span class="prop-box childs-box">
+                                            <span class="prop-title">childs:</span>
+                                            <span class="prop-value prop-value-collapsed-childs">2 (30)</span>
+                                        </span>
+									</div>
+                                    
+								</div>
+
+								<div class="b-stats-box">
+									<div class="stats-box-title">stats</div>	
+                                    <!-- disk usage block -->
+                                    <div class="b-usage-box2 disk-usage cc">
+                                        <span class="prop-title">disk usage:</span>
+                                        <div class="usage-box">
+                                            <div class="value-box">
+                                                <div class="graph">
+                                                    <span class="value" style="left:25%;">25% <span class="value-size">(900 Mb)</span></span>
+                                                    <span class="bar" style="width:25%;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="max-size">3 <span class="units">Gb</span></div>
+                                        </div>
+                                    </div><!-- // disk usage block -->
+                                    <!-- bandwidth usage block -->
+                                    <div class="b-usage-box2 bandwidth-box cc">
+                                        <span class="prop-title">bandwidth:</span>
+                                        <div class="usage-box">
+                                            <div class="value-box overdraft">
+                                                <div class="graph">
+                                                    <span class="value" style="left:135%;">135% <span class="value-size">(2572 Gb)</span></span>
+                                                    <span class="bar" style="width:100%;"></span>
+                                                    <span class="bar_overdraft" style="width:35%;right:-35%;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="max-size">800 <span class="units">Mb</span></div>
+                                        </div>
+                                    </div><!-- // bandwidth usage block -->
+								</div><!-- // .stats-box -->
+                                
+							</div>
+							<div class="props-additional">
+								<span class="prop-box webdomains-box">
+									<span class="prop-title">web domains:</span>
+									<span class="prop-value">1 (5)</span>
+								</span>
+								<span class="prop-box websl-box">
+									<span class="prop-title">web ssl:</span>
+									<span class="prop-value">0 (5)</span>
+								</span>
+								<span class="prop-box webalias-box">
+									<span class="prop-title">web alias:</span>
+									<span class="prop-value prop-value-collapsed-childs">(7) per domain</span>
+								</span>
+								<span class="prop-box prop-box_group-values cc webtpl-box">
+									<span class="prop-title">web templates:</span>
+									<span class="group-values group-values__bullet">
+										<span class="prop-value">default</span>
+										<span class="prop-value">phpcgi</span>
+										<span class="prop-value">unlim</span>
+										<span class="group-switcher">
+											<span class="group-values-count">6 more</span>
+										</span>
+									</span>
+								</span>
+								<span class="prop-box db-box">
+									<span class="prop-title">databases:</span>
+									<span class="prop-value">1 (5)</span>
+								</span>
+								<span class="prop-box shell-box">
+									<span class="prop-title">shell:</span>
+									<span class="prop-value">bash</span>
+								</span>
+								<span class="prop-box backups-box">
+									<span class="prop-title">backups:</span>
+									<span class="prop-value">retention 3</span>
+								</span>
+							</div>
+							<div class="props-ext">
+								<span class="prop-box mailboxes-box">
+									<span class="prop-title">mailboxes:</span>
+									<span class="prop-value">? (30)</span>
+								</span>
+								<span class="prop-box mailfwds-box">
+									<span class="prop-title">mail forwarders:</span>
+									<span class="prop-value">? (30)</span>
+								</span>
+								<span class="prop-box maildomains-box">
+									<span class="prop-title">mail domains:</span>
+									<span class="prop-value">0 (?)</span>
+								</span>
+								<span class="prop-box dnsdomains-box">
+									<span class="prop-title">dns domains:</span>
+									<span class="prop-value">0 (5)</span>
+								</span>
+								<span class="prop-box prop-box_group-values cc ns-list-box">
+									<span class="prop-title">ns list:</span>
+									<span class="group-values group-values__bullet">
+										<span class="prop-value">n1.readwriteweb.com</span>
+										<span class="prop-value">n2.readwriteweb.com</span>
+										<span class="prop-value">n3.readwriteweb.com</span>
+										<span class="group-switcher">
+											<span class="group-values-count">6 more</span>
+										</span>
+									</span>
+								</span>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 1 -->
+
+					<!-- row 2 -->
+					<div class="row user-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-title">owner:</span>
+									<span class="prop-value">loraine_pledger</span>
+								</span>
+							</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="user-wrap">
+									<div class="username-box">
+										<span class="user">
+											<span class="nickname">loraine_pledger</span>
+											<span class="role">(user)</span>
+										</span>
+										<span class="prop-box template-box">
+											<span class="prop-title">package:</span>
+											<span class="prop-value">default</span>
+										</span>
+									</div>
+									<div class="user-details-box">
+                                        <span class="prop-box user-name">
+                                            <span class="prop-title">name:</span>
+                                            <span class="prop-value">Louisa Brockwell</span>
+                                        </span>
+                                        <span class="prop-box prop-box_group-values cc user-details">
+                                            <span class="prop-title">email:</span>
+                                            <span class="group-values">
+                                                <span class="prop-value user-email">louisa.brockwell@han_solo_loraine_pledger.com</span>
+                                                <span class="prop-value user-reports">(reports enabled)</span>
+											</span>
+                                        </span>
+									</div>
+								</div>
+								<div class="b-stats-box">
+									<div class="stats-box-title">stats</div>	
+                                    <!-- disk usage block -->
+                                    <div class="b-usage-box2 disk-usage cc">
+                                        <span class="prop-title">disk usage:</span>
+                                        <div class="usage-box">
+                                            <div class="value-box">
+                                                <div class="graph">
+                                                    <span class="value" style="left:75%;">75% <span class="value-size">(2304 Mb)</span></span>
+                                                    <span class="bar" style="width:75%;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="max-size">3 <span class="units">Gb</span></div>
+                                        </div>
+                                    </div><!-- // disk usage block -->
+                                    <!-- bandwidth usage block -->
+                                    <div class="b-usage-box2 bandwidth-box cc">
+                                        <span class="prop-title">bandwidth:</span>
+                                        <div class="usage-box">
+                                            <div class="value-box">
+                                                <div class="graph">
+                                                    <span class="value" style="left:95%;">95% <span class="value-size">(750 Gb)</span></span>
+                                                    <span class="bar" style="width:95%;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="max-size">800 <span class="units">Mb</span></div>
+                                        </div>
+                                    </div><!-- // bandwidth usage block -->
+								</div><!-- // .stats-box -->
+							</div>
+							<div class="props-additional">
+								<span class="prop-box webdomains-box">
+									<span class="prop-title">web domains:</span>
+									<span class="prop-value">1 (5)</span>
+								</span>
+								<span class="prop-box websl-box">
+									<span class="prop-title">web ssl:</span>
+									<span class="prop-value">0 (5)</span>
+								</span>
+								<span class="prop-box webalias-box">
+									<span class="prop-title">web alias:</span>
+									<span class="prop-value prop-value-collapsed-childs">(7) per domain</span>
+								</span>
+								<span class="prop-box prop-box_group-values cc webtpl-box">
+									<span class="prop-title">web templates:</span>
+									<span class="group-values group-values__bullet">
+										<span class="prop-value">default</span>
+										<span class="prop-value">phpcgi</span>
+										<span class="prop-value">unlim</span>
+									</span>
+								</span>
+								<span class="prop-box db-box">
+									<span class="prop-title">databases:</span>
+									<span class="prop-value">1 (5)</span>
+								</span>
+								<span class="prop-box shell-box">
+									<span class="prop-title">shell:</span>
+									<span class="prop-value">bash</span>
+								</span>
+								<span class="prop-box backups-box">
+									<span class="prop-title">backups:</span>
+									<span class="prop-value">retention 3</span>
+								</span>
+							</div>
+							<div class="props-ext">
+								<span class="prop-box mailboxes-box">
+									<span class="prop-title">mailboxes:</span>
+									<span class="prop-value">? (30)</span>
+								</span>
+								<span class="prop-box mailfwds-box">
+									<span class="prop-title">mail forwarders:</span>
+									<span class="prop-value">? (30)</span>
+								</span>
+								<span class="prop-box maildomains-box">
+									<span class="prop-title">mail domains:</span>
+									<span class="prop-value">0 (?)</span>
+								</span>
+								<span class="prop-box dnsdomains-box">
+									<span class="prop-title">dns domains:</span>
+									<span class="prop-value">0 (5)</span>
+								</span>
+								<span class="prop-box prop-box_group-values cc ns-list-box">
+									<span class="prop-title">ns list:</span>
+									<span class="group-values group-values__bullet">
+										<span class="prop-value">n1.readwriteweb.com</span>
+										<span class="prop-value">n2.readwriteweb.com</span>
+										<span class="prop-value">n3.readwriteweb.com</span>
+										<span class="group-switcher">
+											<span class="group-values-count">6 more</span>
+										</span>
+									</span>
+								</span>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 2 -->
+
+					<!-- row 3 -->
+					<div class="row user-details-row checked-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-title">owner:</span>
+									<span class="prop-value">vestavestavesta vestavesta vesta</span>
+								</span>
+							</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="user-wrap">
+									<div class="username-box">
+										<span class="user">
+											<span class="nickname">Clayton.Musselwhite</span>
+											<span class="role">(user)</span>
+										</span>
+										<span class="prop-box template-box">
+											<span class="prop-title">package:</span>
+											<span class="prop-value">default</span>
+										</span>
+									</div>
+									<div class="user-details-box">
+                                        <span class="prop-box user-name">
+                                            <span class="prop-title">name:</span>
+                                            <span class="prop-value">Clayton Musselwhite</span>
+                                        </span>
+                                        <span class="prop-box prop-box_group-values cc user-details">
+                                            <span class="prop-title">email:</span>
+                                            <span class="group-values">
+                                                <span class="prop-value user-email">Clayton.Musselwhite@clayton-musselwhite.com</span>
+                                                <span class="prop-value user-reports">(reports enabled)</span>
+											</span>
+                                        </span>
+									</div>
+								</div>
+								<div class="b-stats-box">
+									<div class="stats-box-title">stats</div>	
+                                    <!-- disk usage block -->
+                                    <div class="b-usage-box2 disk-usage cc">
+                                        <span class="prop-title">disk usage:</span>
+                                        <div class="usage-box">
+                                            <div class="value-box">
+                                                <div class="graph">
+                                                    <span class="value" style="left:15%;">15% <span class="value-size">(304 Mb)</span></span>
+                                                    <span class="bar" style="width:15%;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="max-size">3 <span class="units">Gb</span></div>
+                                        </div>
+                                    </div><!-- // disk usage block -->
+                                    <!-- bandwidth usage block -->
+                                    <div class="b-usage-box2 bandwidth-box cc">
+                                        <span class="prop-title">bandwidth:</span>
+                                        <div class="usage-box">
+                                            <div class="value-box overdraft">
+                                                <div class="graph">
+                                                    <span class="value" style="left:205%;">205% <span class="value-size">(16 Tb)</span></span>
+                                                    <span class="bar" style="width:100%;"></span>
+                                                    <span class="bar_overdraft" style="width:105%;right:-105%;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="max-size">800 <span class="units">Mb</span></div>
+                                        </div>
+                                    </div><!-- // bandwidth usage block -->
+								</div><!-- // .stats-box -->
+							</div>
+							<div class="props-additional">
+								<span class="prop-box webdomains-box">
+									<span class="prop-title">web domains:</span>
+									<span class="prop-value">1 (5)</span>
+								</span>
+								<span class="prop-box websl-box">
+									<span class="prop-title">web ssl:</span>
+									<span class="prop-value">0 (5)</span>
+								</span>
+								<span class="prop-box webalias-box">
+									<span class="prop-title">web alias:</span>
+									<span class="prop-value prop-value-collapsed-childs">(7) per domain</span>
+								</span>
+								<span class="prop-box prop-box_group-values cc webtpl-box">
+									<span class="prop-title">web templates:</span>
+									<span class="group-values group-values__bullet">
+										<span class="prop-value">default</span>
+										<span class="prop-value">phpcgi</span>
+										<span class="prop-value">unlim</span>
+									</span>
+								</span>
+								<span class="prop-box db-box">
+									<span class="prop-title">databases:</span>
+									<span class="prop-value">1 (5)</span>
+								</span>
+								<span class="prop-box shell-box">
+									<span class="prop-title">shell:</span>
+									<span class="prop-value">bash</span>
+								</span>
+								<span class="prop-box backups-box">
+									<span class="prop-title">backups:</span>
+									<span class="prop-value">retention 3</span>
+								</span>
+							</div>
+							<div class="props-ext">
+								<span class="prop-box mailboxes-box">
+									<span class="prop-title">mailboxes:</span>
+									<span class="prop-value">? (30)</span>
+								</span>
+								<span class="prop-box mailfwds-box">
+									<span class="prop-title">mail forwarders:</span>
+									<span class="prop-value">? (30)</span>
+								</span>
+								<span class="prop-box maildomains-box">
+									<span class="prop-title">mail domains:</span>
+									<span class="prop-value">0 (?)</span>
+								</span>
+								<span class="prop-box dnsdomains-box">
+									<span class="prop-title">dns domains:</span>
+									<span class="prop-value">0 (5)</span>
+								</span>
+								<span class="prop-box prop-box_group-values cc ns-list-box">
+									<span class="prop-title">ns list:</span>
+									<span class="group-values group-values__bullet">
+										<span class="prop-value">n1.readwriteweb.com</span>
+										<span class="prop-value">n2.readwriteweb.com</span>
+										<span class="prop-value">n3.readwriteweb.com</span>
+										<span class="group-switcher">
+											<span class="group-values-count">6 more</span>
+										</span>
+									</span>
+								</span>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 3 -->
+
+					<!-- row 4, suspended status -->
+					<div class="row user-details-row suspended-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-suspended-status"><span class="ip-status-text">suspended</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-title">owner:</span>
+									<span class="prop-value">vestavestavesta vestavesta vesta</span>
+								</span>
+							</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="user-wrap">
+									<div class="username-box">
+										<span class="user">
+											<span class="nickname">Althea-Switalski</span>
+											<span class="role">(user)</span>
+										</span>
+										<span class="prop-box template-box">
+											<span class="prop-title">package:</span>
+											<span class="prop-value">default</span>
+										</span>
+									</div>
+									<div class="user-details-box">
+                                        <span class="prop-box user-name">
+                                            <span class="prop-title">name:</span>
+                                            <span class="prop-value">Althea Switalski</span>
+                                        </span>
+                                        <span class="prop-box prop-box_group-values cc user-details">
+                                            <span class="prop-title">email:</span>
+                                            <span class="group-values">
+                                                <span class="prop-value user-email">Althea.Switalski@han_solo_musselwhite.com</span>
+                                                <span class="prop-value user-reports">(reports enabled)</span>
+											</span>
+                                        </span>
+									</div>
+								</div>
+								<div class="b-stats-box">
+									<div class="stats-box-title">stats</div>	
+                                    <!-- disk usage block -->
+                                    <div class="b-usage-box2 disk-usage cc">
+                                        <span class="prop-title">disk usage:</span>
+                                        <div class="usage-box">
+                                            <div class="value-box">
+                                                <div class="graph">
+                                                    <span class="value" style="left:75%;">75% <span class="value-size">(2304 Mb)</span></span>
+                                                    <span class="bar" style="width:75%;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="max-size">3 <span class="units">Gb</span></div>
+                                        </div>
+                                    </div><!-- // disk usage block -->
+                                    <!-- bandwidth usage block -->
+                                    <div class="b-usage-box2 bandwidth-box cc">
+                                        <span class="prop-title">bandwidth:</span>
+                                        <div class="usage-box">
+                                            <div class="value-box">
+                                                <div class="graph">
+                                                    <span class="value" style="left:95%;">95% <span class="value-size">(750 Gb)</span></span>
+                                                    <span class="bar" style="width:95%;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="max-size">800 <span class="units">Mb</span></div>
+                                        </div>
+                                    </div><!-- // bandwidth usage block -->
+								</div><!-- // .stats-box -->
+							</div>
+							<div class="props-additional">
+								<span class="prop-box webdomains-box">
+									<span class="prop-title">web domains:</span>
+									<span class="prop-value">1 (5)</span>
+								</span>
+								<span class="prop-box websl-box">
+									<span class="prop-title">web ssl:</span>
+									<span class="prop-value">0 (5)</span>
+								</span>
+								<span class="prop-box webalias-box">
+									<span class="prop-title">web alias:</span>
+									<span class="prop-value prop-value-collapsed-childs">(7) per domain</span>
+								</span>
+								<span class="prop-box prop-box_group-values cc webtpl-box">
+									<span class="prop-title">web templates:</span>
+									<span class="group-values group-values__bullet">
+										<span class="prop-value">default</span>
+										<span class="prop-value">phpcgi</span>
+										<span class="prop-value">unlim</span>
+									</span>
+								</span>
+								<span class="prop-box db-box">
+									<span class="prop-title">databases:</span>
+									<span class="prop-value">1 (5)</span>
+								</span>
+								<span class="prop-box shell-box">
+									<span class="prop-title">shell:</span>
+									<span class="prop-value">bash</span>
+								</span>
+								<span class="prop-box backups-box">
+									<span class="prop-title">backups:</span>
+									<span class="prop-value">retention 3</span>
+								</span>
+							</div>
+							<div class="props-ext">
+								<span class="prop-box mailboxes-box">
+									<span class="prop-title">mailboxes:</span>
+									<span class="prop-value">? (30)</span>
+								</span>
+								<span class="prop-box mailfwds-box">
+									<span class="prop-title">mail forwarders:</span>
+									<span class="prop-value">? (30)</span>
+								</span>
+								<span class="prop-box maildomains-box">
+									<span class="prop-title">mail domains:</span>
+									<span class="prop-value">0 (?)</span>
+								</span>
+								<span class="prop-box dnsdomains-box">
+									<span class="prop-title">dns domains:</span>
+									<span class="prop-value">0 (5)</span>
+								</span>
+								<span class="prop-box prop-box_group-values cc ns-list-box">
+									<span class="prop-title">ns list:</span>
+									<span class="group-values group-values__bullet">
+										<span class="prop-value">n1.readwriteweb.com</span>
+										<span class="prop-value">n2.readwriteweb.com</span>
+										<span class="prop-value">n3.readwriteweb.com</span>
+										<span class="group-switcher">
+											<span class="group-values-count">6 more</span>
+										</span>
+									</span>
+								</span>
+							</div>							
+						</div><!-- // .row-details -->
+					</div><!-- // .row 4 -->
+
+					<!-- form -->
+					<div class="b-new-entry b-new-entry_user">
+						<div class="entry-header">New user</div>
+						<div class="form-error">
+							<div class="error-box">
+								<span class="error-message">Wrong minute format. Need some <a class="help-tip-url" href="#">Help</a> ?</span>
+							</div>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">username:</label>
+							<input class="text-field" type="text" value="Carlene Delcambre" />
+						</div>
+						<div class="form-row pwd-box cc">
+							<label class="field-label" for="#">password:</label>
+							<input class="text-field" type="text" value="g179x2vpvfamn7v" />
+							<span class="generate-pwd">Generate</span>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">package:</label>
+							<select class="styled" name="template">
+								<option value="1" selected="selected">default</option>
+								<option value="2">custom</option>
+								<option value="3">advanced</option>
+							</select>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">role:</label>
+							<select class="styled" name="template">
+								<option value="1" selected="selected">user</option>
+								<option value="2">administrator</option>
+							</select>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">contact email:</label>
+							<input class="text-field" type="text" value="hansolo.buheit@digital-photography-school.com" />
+						</div>
+
+						<div class="form-row cc">
+							<label class="field-label" for="#">reports:</label>
+							<input class="styled" type="checkbox" value="" />
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">ns1:</label>
+							<input class="text-field" type="text" value="shared-dedicated-1.digital-photography-school.com" />
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">ns2:</label>
+							<input class="text-field" type="text" value="custom-edge-cdn2.digital-photography-school.com" />
+						</div>
+
+						
+						<div class="form-row buttons-row cc">
+							<input class="add-entry-btn" type="submit" value="add" />
+							<span class="cancel-btn">Cancel</span>
+							<span class="delete-btn">Delete</span>
+						</div>
+					</div><!-- // form -->
+					
+					<!-- form -->
+					<div class="b-new-entry b-new-entry_user">
+						<div class="entry-header">Edit user</div>
+						<div class="form-error">
+							<div class="error-box">
+								<span class="error-message">Wrong minute format. Need some <a class="help-tip-url" href="#">Help</a> ?</span>
+							</div>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">username:</label>
+							<input class="text-field" type="text" value="Carlene Delcambre" />
+						</div>
+						<div class="form-row pwd-box cc">
+							<label class="field-label" for="#">password:</label>
+							<input class="text-field" type="text" value="g179x2vpvfamn7v" />
+							<span class="generate-pwd">Generate</span>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">first name:</label>
+							<input class="text-field" type="text" value="Carlene" />
+						</div>
+						<div class="form-row lastname-box cc">
+							<label class="field-label" for="#">last name:</label>
+							<input class="text-field" type="text" value="Delcambre" />
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">package:</label>
+							<select class="styled" name="template">
+								<option value="1" selected="selected">default</option>
+								<option value="2">custom</option>
+								<option value="3">advanced</option>
+							</select>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">role:</label>
+							<select class="styled" name="template">
+								<option value="1" selected="selected">user</option>
+								<option value="2">administrator</option>
+							</select>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">contact email:</label>
+							<input class="text-field" type="text" value="hansolo.buheit@digital-photography-school.com" />
+						</div>
+
+						<div class="form-row cc">
+							<label class="field-label" for="#">reports:</label>
+							<input class="styled" type="checkbox" value="" />
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">ns1:</label>
+							<input class="text-field" type="text" value="shared-dedicated-1.digital-photography-school.com" />
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">ns2:</label>
+							<input class="text-field" type="text" value="custom-edge-cdn2.digital-photography-school.com" />
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">ns3:</label>
+							<input class="text-field" type="text" value="" />
+							<b class="delete-record"></b>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">ns4:</label>
+							<input class="text-field" type="text" value="" />
+							<b class="delete-record"></b>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">ns5:</label>
+							<input class="text-field" type="text" value="" />
+							<b class="delete-record"></b>
+						</div>
+						<div class="form-row cc">
+							<a class="add-ns" href="#">
+								<i class="icon">&nbsp;</i> 
+								<span class="btn-title">Add additional NS</span>
+							</a>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">suspended:</label>
+							<input class="styled" type="checkbox" value="" />
+						</div>
+						<div class="form-row buttons-row cc">
+							<input class="add-entry-btn" type="submit" value="add" />
+							<span class="cancel-btn">Cancel</span>
+							<span class="delete-btn">Delete</span>
+						</div>
+					</div><!-- // form -->
+
+				</div><!-- // .domain-list -->
+			</div>
+		</div><!-- // #content -->
+	</div>
+</div>
+<div class="d-popup d-popup-ns-list" style="left:1160px;top:685px;z-index:1000;display:block;">
+	<div class="d-popup-inner">
+		<span class="close">&times;</span>
+        <div class="d-popup-content">
+        	<div class="d-popup-title">NS List</div>
+            <ul class="d-popup-items">
+            	<li class="item">read1@write.com</li>
+            	<li class="item">read2@write.com</li>
+            	<li class="item">read3@write.com</li>
+            	<li class="item">read4@write.com</li>
+            	<li class="item">read5@write.com</li>
+            	<li class="item">read5@write.com</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="d-popup d-popup-webaliases-list" style="left:975px;top:485px;z-index:1001;display:none;">
+	<div class="d-popup-inner">
+		<span class="close">&times;</span>
+        <div class="d-popup-content">
+        	<div class="d-popup-title">Web aliases</div>
+            <ul class="d-popup-items">
+            	<li class="item"><a href="#">write.com</a> 1</li>
+            	<li class="item"><a href="#">write.com</a> 1</li>
+            	<li class="item"><a href="#">write.com</a> 1</li>
+            	<li class="item"><a href="#">write.com</a> 1</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="d-popup d-popup-default-tpl" style="left:780px;top:840px;z-index:1002;">
+	<div class="d-popup-inner">
+		<span class="close">&times;</span>
+        <div class="d-popup-content">
+        	<div class="d-popup-title">Defaul template</div>
+			<div class="group">
+                <span class="prop-box webdomains-box">
+                    <span class="prop-title">web domains:</span>
+                    <span class="prop-value">1 (5)</span>
+                </span>
+                <span class="prop-box websl-box">
+                    <span class="prop-title">web sl:</span>
+                    <span class="prop-value">0 (5)</span>
+                </span>
+                <span class="prop-box webalias-box">
+                    <span class="prop-title">web alias:</span>
+                    <span class="prop-value">? (10)</span>
+                </span>
+                <span class="prop-box shell-box">
+                    <span class="prop-title">shell:</span>
+                    <span class="prop-value">bash</span>
+                </span>
+                <span class="prop-box db-box">
+                    <span class="prop-title">databases:</span>
+                    <span class="prop-value">1 (5)</span>
+                </span>
+                <span class="prop-box mailboxes-box">
+                    <span class="prop-title">mailboxes:</span>
+                    <span class="prop-value">? (30)</span>
+                </span>
+                <span class="prop-box mailboxes-box">
+                    <span class="prop-title">mail forwarders:</span>
+                    <span class="prop-value">? (30)</span>
+                </span>
+                <span class="prop-box mailboxes-box">
+                    <span class="prop-title">mail domains:</span>
+                    <span class="prop-value">0 (?)</span>
+                </span>
+                <span class="prop-box mailboxes-box">
+                    <span class="prop-title">dns domains:</span>
+                    <span class="prop-value">0 (5)</span>
+                </span>
+			</div>
+        </div>
+    </div>
+</div>
+<div class="d-popup d-popup-package-tpl" style="left:780px;top:1240px;z-index:1000;display:block;">
+	<div class="d-popup-inner">
+		<span class="close">&times;</span>
+        <div class="d-popup-content">
+		----------PACKAGE:          defaultWEB_DOMAINS:      10WEB_SSL:          10WEB_ALIASES:      10DATABASES:        10MAIL_DOMAINS:     10MAIL_BOXES:       30MAIL_FORWARDERS:  30DNS_DOMAINS:      10DISK_QUOTA:       10000BANDWIDTH:        10000NS1:NS2:SHELL:            nologinBACKUPS:          3WEB_TPL:          default,phpcgi,unlim,phpfcgidMAX_CHILDS:       300----------PACKAGE:          palegreenWEB_DOMAINS:      30WEB_SSL:          30WEB_ALIASES:      50DATABASES:        30MAIL_DOMAINS:     30MAIL_BOXES:       50MAIL_FORWARDERS:  50DNS_DOMAINS:      30DISK_QUOTA:       50000BANDWIDTH:        50000NS1:NS2:SHELL:            nologinBACKUPS:          5WEB_TPL:          default,phpcgi,unlim,phpfcgidMAX_CHILDS:       300                
+		</div>
+	</div>
+</div>
+<div class="d-popup d-popup-errors" style="left:900px;top:290px;z-index:999;display:block;">
+	<div class="d-popup-inner">
+		<span class="close">&times;</span>
+		<div class="d-popup-content">
+			<div class="d-popup-title">
+				<span class="popup-title-wrap">This is out of Newton's Phisics <i class="planets">&nbsp;</i></span>
+			</div>
+			<div class="d-popup-main">
+				<h2 class="section-title">Internet connection seems to be lost</h2>
+				<div class="d-popup-summary">
+					<ul>
+						<li>Please check your connection</li>
+						<li>Contact your provider</li>
+						<li>or give us a call (+373 22) 25-11-65</li>
+					</ul>
+				</div>
+			</div>
+			<div class="footnotes cc">
+				<p class="additional-info">For questions please contact <a class="questions-url" href="mailto:support@vestacp.com">support@vestacp.com</a></p>
+				<a class="report-case-url" href="#">report this case</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="d-popup d-popup-errors d-popup-errors2" style="left:320px;top:290px;z-index:999;display:block;">
+	<div class="d-popup-inner">
+		<span class="close">&times;</span>
+		<div class="d-popup-content">
+			<div class="d-popup-title">
+				<span class="popup-title-wrap">This is out of Newton's Phisics <i class="planets">&nbsp;</i></span>
+			</div>
+			<div class="d-popup-main">
+				<h2 class="section-title">Something went wrong. We're working on getting this fixed as soon as we can. </h2>
+				<div class="d-popup-summary">
+<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
+				</div>
+			</div>
+			<div class="footnotes cc">
+				<p class="additional-info">For questions please contact <a class="questions-url" href="mailto:support@vestacp.com">support@vestacp.com</a></p>
+				<a class="report-case-url" href="#">report this case</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

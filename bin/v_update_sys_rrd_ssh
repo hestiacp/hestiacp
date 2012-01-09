@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating ssh rrd
+# info: update ssh rrd
+# options: period
+#
+# The function is for updating ssh rrd database and graphic.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

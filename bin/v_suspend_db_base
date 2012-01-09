@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend database
-# arguments: user database
+# options: user database
 #
 # The function for suspending a certain user database.
 

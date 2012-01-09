@@ -23,7 +23,7 @@ source $V_FUNC/domain.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '3' "$#" 'user domain sslhome'
+check_args '3' "$#" 'user domain ssl_home'
 
 # Checking argument format
 format_validation 'user' 'domain'

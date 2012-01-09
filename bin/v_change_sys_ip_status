@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: changing ip status
+# info: change ip status
+# options: ip ip_status
+#
+# The function of changing an ip address's status.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

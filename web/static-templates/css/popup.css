@@ -1,0 +1,141 @@
+/* Styles for popups */
+.d-popup{
+	position:absolute;
+	top:100px;
+	left:0;
+	z-index:100;
+	background-color:#ccc;
+	background:url(../i/info-popup-bg-2.png) repeat;
+	
+	width:250px;
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+.d-popup-inner{
+	padding:20px;
+	color:#fff;	
+}
+.d-popup .close{
+	position:absolute;
+	top:10px;
+	right:10px;
+	
+	display:block;
+	width:14px;
+	height:14px;
+	/*background:url(../i/info-popup-sprite.png) no-repeat;*/
+	background:url(../i/info-popup-sprite-2011-12-14.png) no-repeat 0 -1px;
+	cursor:pointer;
+	font-size:0;
+	line-height:0;
+	text-indent:-9999px;
+	}
+	.d-popup span.close:hover{
+		background-position:0 -17px;
+	}
+	.d-popup span.close:active{
+		background-position:0 -33px;
+	}
+	
+.d-popup-title{
+	font-size:11px;
+	text-transform:uppercase;
+	text-align:center;
+	color:#fffdd4;
+	margin:0 0 9px;
+}
+.d-popup-items{
+	font-size:12px;
+	color:#fff;
+}
+.d-popup-items .item{
+	margin:0 0 9px;
+}
+.d-popup-items a{
+	color:#aaa;
+	padding-right:5px;
+}
+.d-popup .prop-box{
+	display:block;
+}
+.d-popup .prop-title{
+	color:#bbb;
+}
+.d-popup .prop-value{
+	color:#fff;
+} 
+
+/* errors popup */
+.d-popup-errors{
+	width:auto;
+	background: url(../i/auth/form-bg.png) repeat;
+	}
+	.d-popup-errors .d-popup-inner{
+		width:480px;
+		padding:20px 40px 0;
+	}
+	.d-popup-errors .d-popup-title{
+		position:relative;
+		margin:0 0 27px;
+		padding:0 105px 0 40px;
+		font-size:21px;
+		line-height:27px;
+		font-weight:normal;
+		text-transform:uppercase;
+		color:#6536c4;
+		text-align:left;
+		background:url(../i/auth/planet-1.png) no-repeat 5px 13px;
+		letter-spacing:-1px;
+	}
+	.d-popup-errors .planets{
+		display:block;
+		width:91px;
+		height:7px;
+		position:absolute;
+		top:11px;
+		right:0;
+		background:url(../i/auth/planet-2.png) no-repeat;		
+	}
+	.d-popup-errors .d-popup-main{
+		padding-left:40px;
+		min-height:250px;
+	}
+	.d-popup-errors .section-title{
+		margin:0 0 38px;
+		font-size:30px;
+		font-weight:normal;
+		color:#f0f042;
+	}
+	.d-popup-errors .d-popup-summary{
+		padding:0 0 20px 0;
+		font-size:15px;
+	}
+	.d-popup-errors .d-popup-summary li{
+		padding-left:15px;
+		background:url(../i/blue-bullet.png) no-repeat 0 50%;
+	}
+	.d-popup-errors .footnotes{
+		margin: 0 -40px;
+		padding:15px 20px;
+		font-size:14px;
+		line-height:18px;
+		border-top:2px solid #34352f;
+		color:#686c6d;
+		}
+		
+	.d-popup-errors .questions-url{
+		color:#686c6d;	
+		text-decoration:none;
+	}
+	.d-popup-errors .additional-info{
+		float:left;
+		white-space:nowrap;
+		font-size:12px;
+	}
+	.d-popup-errors .report-case-url{
+		float:right;
+		display:block;
+		color:#686c6d;
+	}

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend databases
-# arguments: user
+# options: user
 #
 # The function for suspending of all databases of a single user.
 

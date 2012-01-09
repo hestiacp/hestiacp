@@ -1,0 +1,466 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Vesta | Cron</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="imagetoolbar" content="false" />
+
+	<link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="css/vesta.css" />
+
+	<!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="css/ie.css" />
+    <![endif]-->
+
+	<script type="text/javascript" src="js/custom-form-elements.js"></script>
+</head>
+
+<body>
+<div id="page">
+	<div class="outer">
+		<div id="header">
+			<div class="logo-box">
+				<h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
+			</div>
+			<ul class="settings">
+				<li class="settings-item">
+					<span class="logged-as">Fabricius Euphranor von Neoptolemos</span>
+					<a class="item-title" href="#">Profile</a>
+				</li>
+				<li class="settings-item"><a class="item-title" href="#">Settings</a></li>
+				<li class="logout"><a class="item-title" href="#"><span class="item-title-inner">Exit</span></a></li>
+			</ul>
+			<ul class="extra-services">
+				<li class="service-item active">
+					<span class="item-title">Backups</span>
+					<i class="item-devider"></i>
+				</li>
+				<li class="service-item">
+					<span class="item-title">Stats</span>
+					<i class="item-devider"></i>
+				</li>
+			</ul>
+		</div>
+		<div id="primary-nav-box">
+			<ul class="primary-nav cc">
+				<li class="section">
+					<div class="section-inner">
+						<dl class="users-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Users</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">386 users</span>
+								<span class="def">7 blocked</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="domains-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Web Domain</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">580 domains</span>
+								<span class="def">22 out of mem</span>
+								<span class="def">3 waiting</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="mail-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Mail</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">320 domains</span>
+								<span class="def">1209 mailboxes</span>
+								<span class="def">25 full</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="db-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">DB</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 db</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="dns-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Dns</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">289 records</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="dnstpl-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">IP</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 templates</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section active last-section">
+					<div class="section-inner">
+						<dl class="cron-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Cron</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">15 records</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+			</ul>
+		</div>
+		<div id="console">
+			<div class="b-console">
+				<div class="b-console-wrap">
+					<form class="b-console-form cc" action="#" method="post">
+						<fieldset>
+							<input class="b-console-field" type="text" value="/"/>
+							<input class="b-console-btn" type="submit" value="Go" />
+						</fieldset>
+					</form>
+					<!-- div class="b-console-statuses">
+						<div class="b-console-status cc">
+							<p class="b-console-status-message">domain <b>google.com</b> have been added <br />
+Cтиль менеджмента, на первый взгляд, методически оправдывает культурный побочный PR-эффект, осознавая социальную ответственность бизнеса. Исходя из структуры пирамиды Маслоу, рекламное сообщество экономит product placement, невзирая на действия конкурентов. Узнавание бренда слабо транслирует имидж, оптимизируя бюджеты.
+							</p>
+							<span class="b-console-status-action">cancel</span>
+							<i class="b-console-status-arrow">&nbsp;</i>							
+						</div>
+					</div -->
+				</div>
+				<div class="b-console-results"></div>
+			</div>
+		</div>
+		<!-- actions toolbar -->
+		<div id="actions-toolbar" class="cc">
+			<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>add cron record</a>
+			
+			<div class="row-filters cc">
+				<div class="b-row-selector">
+					<div class="checkbox-selector cc">
+						<input class="styled" type="checkbox" value="" />
+						<span class="selector-title">385 Selected</span>
+					</div>
+					<div class="context-actions">
+						<div class="b-cust-sel b-cust-sel_inactive">
+							<span class="title">Action</span>
+							<div class="cust-sel-arrow"><i>&nbsp;</i></div>
+							<div class="cust-sel-options">
+								<div class="cust-sel-option ico_gray">Suspend</div>
+								<div class="cust-sel-option ico_green">Unsuspend</div>
+								<div class="cust-sel-option ico_red">Delete</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- visible only for admin -->
+				<div class="domain-groups-selector">
+					<div class="selector-wrap">
+						<strong class="selector-title">Show:</strong>
+						<span class="selected-groups">mine, vesta, Chronos, vasya (and 35 more)</span>
+					</div>
+				</div><!-- // visible only for admin -->
+			</div>
+			
+		</div><!-- // actions toolbar -->
+		<div id="content">
+			<div class="content-inner">
+				<div class="cron-list">
+					<!-- row 1 -->
+					<div class="row first-row cron-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+						</div>
+						<div class="row-details cc">
+							<div class="cron-meta">
+								<span class="prop-box cron-min">
+									<span class="prop-title">min</span>
+									<span class="prop-value">0</span>									
+								</span>
+								<span class="prop-box cron-hour">
+									<span class="prop-title">hour</span>
+									<span class="prop-value">0,6,9 &mdash; 15,18</span>									
+								</span>
+								<span class="prop-box cron-day">
+									<span class="prop-title">day of Month</span>
+									<span class="prop-value">*</span>									
+								</span>
+								<span class="prop-box cron-month">
+									<span class="prop-title">Month</span>
+									<span class="prop-value">Jan, Feb, Mar</span>									
+								</span>
+								<span class="prop-box cron-week">
+									<span class="prop-title">day of Week</span>
+									<span class="prop-value">1 &mdash; 5</span>									
+								</span>
+							</div>
+							<div class="cron-command-box">
+								<strong class="cron-command-line">/usr/bin/top -n 1 -b -S</strong>
+							</div>
+							<div class="cron-reported-to">
+								<span class="prop-box cron-report-box">
+									<span class="prop-title">reported to:</span>
+									<span class="prop-value">naumov.socolov@gmail.com,</span>
+									<span class="prop-value">vasysualiy.pupkin@gmail.com,</span>
+									<span class="prop-value">na-derevniu-dedushke@dachniy-poselok-za-mkadom.com,</span>
+									<span class="prop-value">vasysualiy.pupkin@gmail.com</span>									
+								</span>
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 1 -->
+
+					<!-- row 2 -->
+					<div class="row cron-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+						</div>
+						<div class="row-details cc">
+							<div class="cron-meta">
+								<span class="prop-box cron-min">
+									<span class="prop-title">min</span>
+									<span class="prop-value">15</span>
+								</span>
+								<span class="prop-box cron-hour">
+									<span class="prop-title">hour</span>
+									<span class="prop-value">1,3,5 &mdash; 15,19,21,23</span>									
+								</span>
+								<span class="prop-box cron-day">
+									<span class="prop-title">day of Month</span>
+									<span class="prop-value">1,3,5,7,9,11,13,15,17,19</span>
+								</span>
+								<span class="prop-box cron-month">
+									<span class="prop-title">Month</span>
+									<span class="prop-value">*</span>									
+								</span>
+								<span class="prop-box cron-week">
+									<span class="prop-title">day of Week</span>
+									<span class="prop-value">2 &mdash; 7</span>									
+								</span>
+							</div>
+							<div class="cron-command-box">
+								<strong class="cron-command-line">/home/myuser/bin/pinghosts.sh > /home/myuser/pinghosts.log</strong>
+							</div>
+							<div class="cron-reported-to">
+								<span class="prop-box cron-report-box">
+									<span class="prop-title">reported to:</span>
+									<span class="prop-value">billy@microsoft.com</span>
+								</span>
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 2 -->
+
+					<!-- row 3 -->
+					<div class="row cron-details-row checked-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+						</div>
+						<div class="row-details cc">
+							<div class="cron-meta">
+								<span class="prop-box cron-min">
+									<span class="prop-title">min</span>
+									<span class="prop-value">*</span>
+								</span>
+								<span class="prop-box cron-hour">
+									<span class="prop-title">hour</span>
+									<span class="prop-value">*</span>									
+								</span>
+								<span class="prop-box cron-day">
+									<span class="prop-title">day of Month</span>
+									<span class="prop-value">*</span>
+								</span>
+								<span class="prop-box cron-month">
+									<span class="prop-title">Month</span>
+									<span class="prop-value">Jan, Mar, May, Jul, Sep, Nov</span>									
+								</span>
+								<span class="prop-box cron-week">
+									<span class="prop-title">day of Week</span>
+									<span class="prop-value">2 &mdash; 7</span>									
+								</span>
+							</div>
+							<div class="cron-command-box">
+								<strong class="cron-command-line">/home/myuser/bin/pinghosts.sh > /home/myuser/home/myuser/home/myuser/pinghosts.log</strong>
+							</div>
+							<div class="cron-reported-to">
+								<span class="prop-box cron-report-box">
+									<span class="prop-title">reported to:</span>
+									<span class="prop-value">billy@microsoft.com</span>
+								</span>
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 3 -->
+
+					<!-- row 4 -->
+					<div class="row cron-details-row suspended-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="ip-status-info ip-suspended-status"><span class="ip-status-text">suspended</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="entry-created">12.11.2010</div>
+						</div>
+						<div class="row-details cc">
+							<div class="cron-meta">
+								<span class="prop-box cron-min">
+									<span class="prop-title">min</span>
+									<span class="prop-value">15</span>
+								</span>
+								<span class="prop-box cron-hour">
+									<span class="prop-title">hour</span>
+									<span class="prop-value">1,3,5 &mdash; 15,19,21,23</span>									
+								</span>
+								<span class="prop-box cron-day">
+									<span class="prop-title">day of Month</span>
+									<span class="prop-value">1,3,5,7,9,11,13,15,17,19</span>
+								</span>
+								<span class="prop-box cron-month">
+									<span class="prop-title">Month</span>
+									<span class="prop-value">*</span>									
+								</span>
+								<span class="prop-box cron-week">
+									<span class="prop-title">day of Week</span>
+									<span class="prop-value">2 &mdash; 7</span>									
+								</span>
+							</div>
+							<div class="cron-command-box">
+								<strong class="cron-command-line">/home/myuser/bin/pinghosts.sh > /home/myuser/pinghosts.log</strong>
+							</div>
+							<div class="cron-reported-to">
+								<span class="prop-box cron-report-box">
+									<span class="prop-title">reported to:</span>
+									<span class="prop-value">billy@microsoft.com</span>
+								</span>
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 4 -->
+
+
+					<!-- form -->
+					<div class="b-new-entry b-new-entry_cron">
+						<div class="entry-header">New cron</div>
+						<div class="form-error">
+							<div class="error-box">
+								<span class="error-message">Wrong minute format. Need some <a class="help-tip-url" href="#">Help</a> ?</span>
+							</div>
+						</div>
+						<div class="form-row form-row-line run-at-box cc">
+							<span class="row-header">run at:</span>
+							<div class="field-box cron-minute-box">
+								<label class="field-label" for="#">minute:<br />(0&mdash;59)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+							<div class="field-box cron-hour-box">
+								<label class="field-label" for="#">hour:<br />(0&mdash;23)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+							<div class="field-box cron-day-box">
+								<label class="field-label" for="#">day of Month:<br />(1&mdash;31)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+							<div class="field-box cron-month-box">
+								<label class="field-label" for="#">Month:<br />(1&mdash;12)(Jan&mdash;Dec)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+							<div class="field-box cron-week-box">
+								<label class="field-label" for="#">day of Week:<br />(1&mdash;7)(Sun&mdash;Sat)</label>
+								<div class="field-box-inner cc">
+									<input class="text-field" type="text" value="" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-row cc">
+							<label class="field-label" for="#">command:</label>
+							<textarea class="textarea"></textarea>
+						</div>
+
+						<div class="form-row cc">
+							<label class="field-label" for="#">report to: <span class="remark">(devide by comma ",")</span></label>
+							<textarea class="textarea"></textarea>
+						</div>
+						
+						<div class="form-row cc">
+							<label class="field-label" for="#">suspended:</label>
+							<input class="styled" type="checkbox" value="" />
+						</div>
+						
+						<div class="form-row buttons-row cc">
+							<input class="add-entry-btn" type="submit" value="add" />
+							<span class="cancel-btn">Cancel</span>
+							<span class="delete-btn">Delete</span>
+						</div>
+					</div><!-- // form -->
+				</div><!-- // .domain-list -->
+			</div>
+		</div><!-- // #content -->
+	</div>
+</div>
+</body>
+</html>

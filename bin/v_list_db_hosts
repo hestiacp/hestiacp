@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list data base servers
-# arguments: type [format]
+# options: type [format]
 #
 # The function for obtaining the list of all hosts of the same databases' type.
 

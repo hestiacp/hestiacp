@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain ip address
-# arguments: user domain ip
+# options: user domain ip
 #
 # The function for changing the main ip of DNS zone.
 

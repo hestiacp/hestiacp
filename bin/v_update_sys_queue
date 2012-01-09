@@ -1,5 +1,13 @@
 #!/bin/bash
-# info: updating system queue
+# info: update system queue
+# options: pipe
+#
+# This function is responsible queue processing. Restarts of services,
+# scheduled backups, web log parsing and other heavy resource consuming
+# operations are handled by this script. It helps to optimize system behaviour.
+# In a nutshell Apache will be restarted only once even if 10 domains are
+# added or deleted.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -8,7 +16,7 @@
 pipe=$1
 
 # Importing system enviroment  as we run this script
-#     mostly by cron wich not read it by itself
+# mostly by cron wich not read it by itself
 source /etc/profile.d/vesta.sh
 
 # Importing variables

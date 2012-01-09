@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unsuspend database
-# arguments: user database
+# options: user database
 #
 # The function for unsuspending database.
 

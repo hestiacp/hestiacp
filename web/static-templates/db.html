@@ -1,0 +1,700 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+
+<head>
+	<title>Vesta | Databases</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="imagetoolbar" content="false" />
+
+	<link rel="stylesheet" media="all" type="text/css" href="css/reset2.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="css/vesta.css" />
+
+	<!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="css/ie.css" />
+    <![endif]-->
+
+	<script type="text/javascript" src="js/custom-form-elements.js"></script>
+</head>
+
+<body>
+<div id="page">
+	<div class="outer">
+		<div id="header">
+			<div class="logo-box">
+				<h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
+			</div>
+			<ul class="settings">
+				<li class="settings-item">
+					<span class="logged-as">Fabricius Euphranor von Neoptolemos</span>
+					<a class="item-title" href="#">Profile</a>
+				</li>
+				<li class="settings-item"><a class="item-title" href="#">Settings</a></li>
+				<li class="logout"><a class="item-title" href="#"><span class="item-title-inner">Exit</span></a></li>
+			</ul>
+			<ul class="extra-services">
+				<li class="service-item active">
+					<span class="item-title">Backups</span>
+					<i class="item-devider"></i>
+				</li>
+				<li class="service-item">
+					<span class="item-title">Stats</span>
+					<i class="item-devider"></i>
+				</li>
+			</ul>
+		</div>
+		<div id="primary-nav-box">
+			<ul class="primary-nav cc">
+				<li class="section">
+					<div class="section-inner">
+						<dl class="users-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Users</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">386 users</span>
+								<span class="def">7 blocked</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="domains-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Web Domain</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">580 domains</span>
+								<span class="def">22 out of mem</span>
+								<span class="def">3 waiting</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="mail-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Mail</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">320 domains</span>
+								<span class="def">1209 mailboxes</span>
+								<span class="def">25 full</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section active">
+					<div class="section-inner">
+						<dl class="db-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">DB</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 db</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="dns-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Dns</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">289 records</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section">
+					<div class="section-inner">
+						<dl class="dnstpl-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">IP</span> 
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">7 templates</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+				<li class="section last-section">
+					<div class="section-inner">
+						<dl class="cron-nav-item">
+							<dt class="section-title cc">
+								<span class="to-section">Cron</span>
+								<i class="add-entry">&nbsp;</i>
+							</dt>
+							<dd class="section-contains">
+								<span class="def">15 records</span>
+							</dd>
+						</dl>
+					</div>
+					<i class="section-devider"></i>
+				</li>
+			</ul>
+		</div>
+		<div id="console">
+			<div class="b-console">
+				<div class="b-console-wrap">
+					<form class="b-console-form cc" action="#" method="post">
+						<fieldset>
+							<input class="b-console-field" type="text" value="/"/>
+							<input class="b-console-btn" type="submit" value="Go" />
+						</fieldset>
+					</form>
+					<!-- div class="b-console-statuses">
+						<div class="b-console-status cc">
+							<p class="b-console-status-message">domain <b>google.com</b> have been added <br />
+Cтиль менеджмента, на первый взгляд, методически оправдывает культурный побочный PR-эффект, осознавая социальную ответственность бизнеса. Исходя из структуры пирамиды Маслоу, рекламное сообщество экономит product placement, невзирая на действия конкурентов. Узнавание бренда слабо транслирует имидж, оптимизируя бюджеты.
+							</p>
+							<span class="b-console-status-action">cancel</span>
+							<i class="b-console-status-arrow">&nbsp;</i>							
+						</div>
+					</div -->
+				</div>
+				<div class="b-console-results"></div>
+			</div>
+		</div>
+		<!-- actions toolbar -->
+		<div id="actions-toolbar" class="cc">
+			<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>add database</a>
+			<div class="row-filters cc">
+				<div class="b-row-selector">
+					<div class="checkbox-selector cc">
+						<input class="styled" type="checkbox" value="" />
+						<span class="selector-title">385 Selected</span>
+					</div>
+					<div class="context-actions">
+						<div class="b-cust-sel b-cust-sel_inactive">
+							<span class="title">Action</span>
+							<div class="cust-sel-arrow"><i>&nbsp;</i></div>
+							<div class="cust-sel-options">
+								<div class="cust-sel-option ico_gray">Suspend</div>
+								<div class="cust-sel-option ico_green">Unsuspend</div>
+								<div class="cust-sel-option ico_red">Delete</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- visible only for admin -->
+				<div class="domain-groups-selector">
+					<div class="selector-wrap">
+						<strong class="selector-title">Show:</strong>
+						<span class="selected-groups">mine, vesta, Chronos, vasya (and 35 more)</span>
+					</div>
+				</div><!-- // visible only for admin -->
+			</div>
+
+			<a class="db-manager" href="#">Php<em class="highlighted">pg</em>admin</a>			
+			<a class="db-manager" href="#">Php<em class="highlighted">my</em>admin</a>
+		</div><!-- // actions toolbar -->
+		<div id="content">
+			<div class="content-inner">
+				<div class="db-list">
+					<div class="db-devider">
+						<span class="db-devider-title">
+							<span class="db-devider-outer">
+								<span class="db-devider-inner">MySQL</span>
+							</span>
+						</span>
+					</div>	
+					<!-- row 1 -->
+					<div class="row first-row db-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-value">Javier Henneman</span>
+								</span>
+							</div>
+							<div class="entry-created">05.03.2011</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="db-name-box">
+									<span class="db-name">Clinton Brazeal Super DB</span>
+								</div>
+							</div>
+							<div class="props-additional">
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">naumov-socolov</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">socialmediaexaminer (read only)</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<span class="add-db-user">Add user</span>
+							</div>
+							<div class="props-ext">
+								<span class="backup-db">backup</span>
+								<!-- disk usage block -->
+								<div class="b-usage-box disk-usage cc">
+									<div class="usage-box">
+										<div class="value-box">
+											<span class="value">12</span>
+											<div class="graph middle">
+												<span class="bar" style="width:55%;"></span>
+											</div>
+										</div>
+										<div class="max-size">300 <span class="units">Mb</span></div>
+									</div>
+								</div><!-- // disk usage block -->
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 1 -->
+
+					<!-- row 2 -->
+					<div class="row db-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-value">Allan Cumberland</span>
+								</span>
+							</div>
+							<div class="entry-created">06.03.2011</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="db-name-box">
+									<span class="db-name">Example database name</span>
+								</div>
+							</div>
+							<div class="props-additional">
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Lance Lafata</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Tania Maietta (read only)</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Tyrone Diangelo</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Elinor Boissonneault (read only)</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<span class="add-db-user">Add user</span>
+							</div>
+							<div class="props-ext">
+								<span class="backup-db">backup</span>
+								<!-- disk usage block -->
+								<div class="b-usage-box disk-usage cc">
+									<div class="usage-box">
+										<div class="value-box">
+											<span class="value">280</span>
+											<div class="graph critical">
+												<span class="bar" style="width:85%;"></span>
+											</div>
+										</div>
+										<div class="max-size">300 <span class="units">Mb</span></div>
+									</div>
+								</div><!-- // disk usage block -->
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 2 -->
+
+					<!-- row 3 -->
+					<div class="row db-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-value">Dick Costolo</span>
+								</span>
+							</div>
+							<div class="entry-created">11.05.2011</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="db-name-box">
+									<span class="db-name">Twitter User Object</span>
+								</div>
+							</div>
+							<div class="props-additional">
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Evan Williams</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Jack Dorsey</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Biz Stone</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Abdur Chowdhury</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Jason Goldman</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Sean Garrett</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Greg Pass (read only)</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<span class="add-db-user">Add user</span>
+							</div>
+							<div class="props-ext">
+								<span class="backup-db">backup</span>
+								<!-- disk usage block -->
+								<div class="b-usage-box disk-usage cc">
+									<div class="usage-box">
+										<div class="value-box">
+											<span class="value">280</span>
+											<div class="graph critical">
+												<span class="bar" style="width:85%;"></span>
+											</div>
+										</div>
+										<div class="max-size">300 <span class="units">Mb</span></div>
+									</div>
+								</div><!-- // disk usage block -->
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 3 -->
+
+					<div class="db-devider">
+						<span class="db-devider-title">
+							<span class="db-devider-outer">
+								<span class="db-devider-inner">Postgres</span>
+							</span>
+						</span>
+					</div>	
+
+					<!-- row 1 -->
+					<div class="row first-row db-details-row checked-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-value">Richard Yoo</span>
+								</span>
+							</div>
+							<div class="entry-created">05.03.2011</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="db-name-box">
+									<span class="db-name">Edgebuzz</span>
+								</div>
+							</div>
+							<div class="props-additional">
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Pat Condon</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Graham Weston (read only)</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Mark Roenigk</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Bruce Knooihuizen (read only)</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">John Engates</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Lanham Napier</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<span class="add-db-user">Add user</span>
+							</div>
+							<div class="props-ext">
+								<span class="backup-db">backup</span>
+								<!-- disk usage block -->
+								<div class="b-usage-box disk-usage cc">
+									<div class="usage-box">
+										<div class="value-box">
+											<span class="value">12</span>
+											<div class="graph middle">
+												<span class="bar" style="width:55%;"></span>
+											</div>
+										</div>
+										<div class="max-size">300 <span class="units">Mb</span></div>
+									</div>
+								</div><!-- // disk usage block -->
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 1 -->
+
+					<!-- row 2 -->
+					<div class="row db-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-value">General Hugh Shelton</span>
+								</span>
+							</div>
+							<div class="entry-created">05.03.2011</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="db-name-box">
+									<span class="db-name">Bubbledog</span>
+								</div>
+							</div>
+							<div class="props-additional">
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Jim Whitehurst</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Naren Gupta (read only)</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Jeff Clarke</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Micheline Chau (read only)</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Jeff Clarke</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<span class="add-db-user">Add user</span>
+							</div>
+							<div class="props-ext">
+								<span class="backup-db">backup</span>
+								<!-- disk usage block -->
+								<div class="b-usage-box disk-usage cc">
+									<div class="usage-box">
+										<div class="value-box">
+											<span class="value">45</span>
+											<div class="graph middle">
+												<span class="bar" style="width:35%;"></span>
+											</div>
+										</div>
+										<div class="max-size">300 <span class="units">Mb</span></div>
+									</div>
+								</div><!-- // disk usage block -->
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 2 -->
+					
+					<!-- row 3 -->
+					<div class="row db-details-row">
+						<div class="row-actions-box cc">
+							<div class="check-this check-control"></div>
+							<div class="row-operations">
+								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+							</div>
+						</div>
+						<div class="row-meta">
+							<div class="ownership">
+								<span class="prop-box">
+									<span class="prop-value">Mark Shuttleworth</span>
+								</span>
+							</div>
+							<div class="entry-created">05.03.2011</div>
+						</div>
+						<div class="row-details cc">
+							<div class="props-main">
+								<div class="db-name-box">
+									<span class="db-name">Feednation</span>
+								</div>
+							</div>
+							<div class="props-additional">
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Jason Fried</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">David Heinemeier Hansson</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<div class="db-user-box cc">
+									<span class="db-user-wrap">
+										<span class="db-user">Stephen Campbell</span>
+									</span>
+									<span class="change-pwd">change password</span>										
+								</div>
+								<span class="add-db-user">Add user</span>
+							</div>
+							<div class="props-ext">
+								<span class="backup-db">backup</span>
+								<!-- disk usage block -->
+								<div class="b-usage-box disk-usage cc">
+									<div class="usage-box">
+										<div class="value-box">
+											<span class="value">12</span>
+											<div class="graph low">
+												<span class="bar" style="width:15%;"></span>
+											</div>
+										</div>
+										<div class="max-size">300 <span class="units">Mb</span></div>
+									</div>
+								</div><!-- // disk usage block -->
+							</div>
+						</div><!-- // .row-details -->
+					</div><!-- // .row 3 -->
+
+					<!-- form -->
+					<div class="b-new-entry b-new-entry_db">
+						<div class="entry-header">New database</div>
+						<div class="form-error">
+							<div class="error-box">
+								<span class="error-message">Database named "ReadWriteWeb" already exists.</span>
+							</div>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">db type:</label>
+							<select class="styled" name="db-type">
+								<option value="1" selected="selected">MySQL</option>
+								<option value="2">Postgres</option>
+							</select>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#"><span class="mandatory">db name:</span></label>
+							<input class="text-field rule-required" type="text" value="ReadWriteWeb" />
+						</div>
+						<div class="db-credentials">
+							<div class="form-row cc">
+								<label class="field-label" for="#"><span class="mandatory">username</span></label>
+								<input class="text-field rule-required" type="text" value="" />
+							</div>
+							<div class="form-row pwd-box cc">
+								<label class="field-label" for="#">password:</label>
+								<input class="text-field disabled" type="text" value="g179x2vpvfamn7v" />
+								<span class="generate-pwd">Generate</span>
+							</div>
+						</div>
+						<div class="form-row cc">
+							<label class="field-label" for="#">db host:</label>
+							<select class="styled" name="db-host">
+								<option value="1">user</option>
+								<option value="2" selected="selected">smashingmagazine.com</option>
+							</select>
+						</div>
+
+						<div class="form-row cc">
+							<label class="field-label" for="#">suspended:</label>
+							<input class="styled" type="checkbox" value="" />
+						</div>
+						
+						<div class="form-row buttons-row cc">
+							<input class="add-entry-btn" type="submit" value="add" />
+							<span class="cancel-btn">Cancel</span>
+							<span class="delete-btn">Delete</span>
+						</div>
+					</div><!-- // form -->
+				</div><!-- // .domain-list -->
+			</div>
+		</div><!-- // #content -->
+	</div>
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: listing data bases
-# arguments: user [format]
+# options: user [format]
 #
 # The function for obtaining the list of all user's databases.
 

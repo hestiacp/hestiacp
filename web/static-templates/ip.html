@@ -24,8 +24,22 @@
 				<h1 class="logo"><a href="#">Vesta panel <span>&nbsp;</span></a></h1>
 			</div>
 			<ul class="settings">
-				<li><a href="#">settings</a></li>
-				<li><a href="#">exit</a></li>
+				<li class="settings-item">
+					<span class="logged-as">Fabricius Euphranor von Neoptolemos</span>
+					<a class="item-title" href="#">Profile</a>
+				</li>
+				<li class="settings-item"><a class="item-title" href="#">Settings</a></li>
+				<li class="logout"><a class="item-title" href="#"><span class="item-title-inner">Exit</span></a></li>
+			</ul>
+			<ul class="extra-services">
+				<li class="service-item active">
+					<span class="item-title">Backups</span>
+					<i class="item-devider"></i>
+				</li>
+				<li class="service-item">
+					<span class="item-title">Stats</span>
+					<i class="item-devider"></i>
+				</li>
 			</ul>
 		</div>
 		<div id="primary-nav-box">
@@ -43,6 +57,7 @@
 							</dd>
 						</dl>
 					</div>
+					<i class="section-devider"></i>
 				</li>
 				<li class="section">
 					<div class="section-inner">
@@ -58,6 +73,7 @@
 							</dd>
 						</dl>
 					</div>
+					<i class="section-devider"></i>
 				</li>
 				<li class="section">
 					<div class="section-inner">
@@ -73,6 +89,7 @@
 							</dd>
 						</dl>
 					</div>
+					<i class="section-devider"></i>
 				</li>
 				<li class="section">
 					<div class="section-inner">
@@ -86,6 +103,7 @@
 							</dd>
 						</dl>
 					</div>
+					<i class="section-devider"></i>
 				</li>
 				<li class="section active">
 					<div class="section-inner">
@@ -99,6 +117,7 @@
 							</dd>
 						</dl>
 					</div>
+					<i class="section-devider"></i>
 				</li>
 				<li class="section">
 					<div class="section-inner">
@@ -112,6 +131,7 @@
 							</dd>
 						</dl>
 					</div>
+					<i class="section-devider"></i>
 				</li>
 				<li class="section last-section">
 					<div class="section-inner">
@@ -125,6 +145,7 @@
 							</dd>
 						</dl>
 					</div>
+					<i class="section-devider"></i>
 				</li>
 			</ul>
 		</div>
@@ -153,17 +174,36 @@ Cтиль менеджмента, на первый взгляд, методич
 		<!-- actions toolbar -->
 		<div id="actions-toolbar" class="cc">
 			<a class="add-btn" href="#"><i class="add-btn-icon">&nbsp;</i>add ip address</a>
-			<span class="select-all">select all</span>
-			<span class="clear-selected">Delete selected</span>
+			
+			<div class="row-filters cc">
+				<div class="b-row-selector">
+					<div class="checkbox-selector cc">
+						<input class="styled" type="checkbox" value="" />
+						<span class="selector-title">385 Selected</span>
+					</div>
+					<div class="context-actions">
+						<div class="b-cust-sel b-cust-sel_inactive">
+							<span class="title">Action</span>
+							<div class="cust-sel-arrow"><i>&nbsp;</i></div>
+							<div class="cust-sel-options">
+								<div class="cust-sel-option ico_gray">Suspend</div>
+								<div class="cust-sel-option ico_green">Unsuspend</div>
+								<div class="cust-sel-option ico_red">Delete</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- visible only for admin -->
+				<div class="domain-groups-selector">
+					<div class="selector-wrap">
+						<strong class="selector-title">Show:</strong>
+						<span class="selected-groups">mine, vesta, Chronos, vasya (and 35 more)</span>
+					</div>
+				</div><!-- // visible only for admin -->
+			</div>
+
 		</div><!-- // actions toolbar -->
 		<div id="content">
-			<!-- additional info block -->
-			<div class="b-ext-info-wrap b-ext-info-wrap_collapsed">
-				<div class="b-ext-info">
-<p>Механическая природа пододвигается под устойчивый силовой трёхосный гироскопический стабилизатор, что увязывается со структурно-тектонической обстановкой, гидродинамическими условиями и литолого-минералогическим составом пород. Фосфоритообразование методически опускает уходящий огненный пояс, исходя из суммы моментов. Инерциальная навигация, в соответствии с основным законом динамики, представляет собой тальк, пользуясь последними системами уравнений. Имея такие данные, можно сделать существенный вывод о том, что маховик неустойчив.</p>
-				</div>
-				<div class="b-ext-info-btn"></div>
-			</div><!-- // additional info block -->
 			<div class="content-inner">
 				<div class="ip-list">
 					<!-- row 1 -->
@@ -171,8 +211,7 @@ Cтиль менеджмента, на первый взгляд, методич
 						<div class="row-actions-box cc">
 							<div class="check-this"></div>
 							<div class="row-operations">
-								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>
-								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
 							</div>
 						</div>
 						<div class="row-meta">
@@ -191,7 +230,7 @@ Cтиль менеджмента, на первый взгляд, методич
 									<span class="prop-title">interface:</span>
 									<span class="prop-value">eth1</span>
 								</span>
-								<span class="prop-box">
+								<span class="prop-box ip-name-box">
 									<span class="prop-title">name:</span>
 									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
 								</span>
@@ -224,8 +263,7 @@ Cтиль менеджмента, на первый взгляд, методич
 						<div class="row-actions-box cc">
 							<div class="check-this"></div>
 							<div class="row-operations">
-								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>
-								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
 							</div>
 						</div>
 						<div class="row-meta">
@@ -244,7 +282,7 @@ Cтиль менеджмента, на первый взгляд, методич
 									<span class="prop-title">interface:</span>
 									<span class="prop-value">eth1</span>
 								</span>
-								<span class="prop-box">
+								<span class="prop-box ip-name-box">
 									<span class="prop-title">name:</span>
 									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
 								</span>
@@ -277,8 +315,7 @@ Cтиль менеджмента, на первый взгляд, методич
 						<div class="row-actions-box cc">
 							<div class="check-this"></div>
 							<div class="row-operations">
-								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>
-								<span class="delete-entry"><span class="delete-entry-text">delete</span></span>
+								<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">active</span></span>
 							</div>
 						</div>
 						<div class="row-meta">
@@ -297,7 +334,7 @@ Cтиль менеджмента, на первый взгляд, методич
 									<span class="prop-title">interface:</span>
 									<span class="prop-value">eth1</span>
 								</span>
-								<span class="prop-box">
+								<span class="prop-box ip-name-box">
 									<span class="prop-title">name:</span>
 									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
 								</span>
@@ -349,7 +386,7 @@ Cтиль менеджмента, на первый взгляд, методич
 									<span class="prop-title">interface:</span>
 									<span class="prop-value">eth1</span>
 								</span>
-								<span class="prop-box">
+								<span class="prop-box ip-name-box">
 									<span class="prop-title">name:</span>
 									<span class="prop-value">shared1.hosting-with-very-long-name.co.uk</span>
 								</span>
@@ -415,15 +452,15 @@ Cтиль менеджмента, на первый взгляд, методич
 						</div>
 						<div class="form-row cc">
 							<label class="field-label" for="#">netmask:</label>
-							<div class="autocomplete-box">
-								<input class="text-field" type="text" value="" />
+							<div class="autocomplete-box disabled-box">
+								<input class="text-field" type="text" value="" disabled="disabled" />
 								<i class="arrow">&nbsp;</i>
 							</div>
 						</div>
 						<div class="form-row buttons-row cc">
 							<input class="add-entry-btn" type="submit" value="add" />
 							<span class="cancel-btn">Cancel</span>
-							<span class="help-btn">Help</span>
+							<span class="delete-btn">Delete</span>
 						</div>
 					</div><!-- // form -->
 				</div><!-- // .ip-list -->

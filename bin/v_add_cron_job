@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cron job
-# arguments: user min hour day month wday command [job]
+# options: user min hour day month wday command [job]
 #
 # The function adds a job to cron daemon. When executing commands, any output
 # is  mailed to user's email if parameter REPORTS is set to 'yes'.
@@ -77,6 +77,9 @@ sync_cron_jobs
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Increasing cron value
+increase_user_value "$user" '$U_CRON_JOBS'
 
 # Adding task to the vesta pipe
 restart_schedule 'cron'

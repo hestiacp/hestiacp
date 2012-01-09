@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user cron jobs
-# arguments: user [format]
+# options: user [format]
 #
 # The function for obtaining the list of all users cron jobs.
 

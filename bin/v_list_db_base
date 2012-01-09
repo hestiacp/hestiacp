@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list database
-# arguments: user database [format]
+# options: user database [format]
 #
 # The function for obtaining of all database's parameters.
 

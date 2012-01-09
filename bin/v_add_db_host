@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add new database server
-# arguments: type host port db_user db_password [max_db] [tpl]
+# options: type host port db_user db_password [max_db] [tpl]
 #
 # The function add new database server to the server pool. It supports local
 # and remote database servers, which is useful for clusters. By adding a host

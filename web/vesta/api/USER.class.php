@@ -19,6 +19,11 @@ class USER extends AjaxHandler
      */
     public function getListExecute(Request $request) 
     {
+        if(!VestaSession::getUserRole()){
+          return self::getUserExecute($request);
+        }
+
+
         $reply  = array();
         $result = Vesta::execute(Vesta::V_LIST_SYS_USERS, array(Config::get('response_type')));
 
@@ -58,7 +63,9 @@ class USER extends AjaxHandler
                                 "U_MAIL_DOMAINS"        => $details['U_MAIL_DOMAINS'],
                                 "DATE"                  => $details['DATE'],
                                 "U_MAIL_FORWARDERS"     => '0',
-                                "U_MAIL_BOXES"          => '0'
+                                "U_MAIL_BOXES"          => '0',
+                                "U_CRON_JOBS"           => $details['U_CRON_JOBS'],
+                                "IP_OWNED"              => $details['IP_OWNED']
                             );
             $reply[$user] = array_merge($user_details, $nses);
             //            $reply[$user] = $user_details;
@@ -107,6 +114,8 @@ class USER extends AjaxHandler
                                 "U_DNS_DOMAINS"         => $details['U_DNS_DOMAINS'],
                                 "U_DATABASES"           => $details['U_DATABASES'],
                                 "U_MAIL_DOMAINS"        => $details['U_MAIL_DOMAINS'],
+                                "U_CRON_JOBS"           => 'todo',
+                                "IP_OWNED"              => $details['IP_OWNED'],
                                 "DATE"                  => $details['DATE']
                             );
             $reply[$user] = $user_details;

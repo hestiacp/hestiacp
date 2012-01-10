@@ -1,13 +1,16 @@
 #!/bin/bash
-# info: updating montly billing user report
+# info: backup all users
+# options: none
+#
+# The function backups all system users.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-
 # Importing system enviroment  as we run this script 
-#               mostly by cron wich not read it by itself
+# mostly by cron wich not read it by itself
 source /etc/profile.d/vesta.sh
 
 # Importing variables

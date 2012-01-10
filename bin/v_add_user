@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: adding system user
+# info: add system user
+# options: user password email [package] [fname] [lname]
+#
+# The function creates new user account.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -56,10 +60,11 @@ is_package_valid "$package"
 package_data=$(cat $V_PKG/$package.pkg)
 
 # Checking shell
-shell_conf=$(echo "$package_data"|grep 'SHELL'|cut -f 2 -d \')
+shell_conf=$(echo "$package_data" | grep 'SHELL' | cut -f 2 -d \')
 case $shell_conf in
     nologin) shell='/sbin/nologin' ;;
     bash) shell='/bin/bash' ;;
+    sh) shell='/bin/bash' ;;
     *) shell='/sbin/nologin' ;;
 esac
 
@@ -95,8 +100,8 @@ chmod -R a+x $V_HOME/$user
 
 # Checking quota
 if [ ! -z "$DISK_QUOTA" ] && [ "$DISK_QUOTA" != 'no' ]; then
-    DISK_QUOTA=$(echo "$package_data"|grep 'DISK_QUOTA' | cut -f 2 -d \')
-    set_quota "$user" "$DISK_QUOTA"
+    DISK_QUOTA=$(echo "$package_data" | grep 'DISK_QUOTA' | cut -f 2 -d \')
+    #$V_BIN/v_add_user_quota "$user" "$DISK_QUOTA"
 fi
 
 

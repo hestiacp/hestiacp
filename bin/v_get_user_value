@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: Getting system user value
+# info: get user value
+# options: user key
+#
+# The function for obtaining certain user's parameters.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

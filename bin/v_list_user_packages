@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing sys user packages
+# info: list user packages
+# options: [format]
+#
+# The function for obtaining the list of available hosting packages.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

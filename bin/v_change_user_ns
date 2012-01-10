@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: changing user nameservers
+# info: change user nameservers
+# options: user ns1 ns2 [ns3] [ns4] [ns5] [ns6] [ns7] [ns8]
+#
+# The function for changing default nameservers for speciefic user.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: deliting system user
+# info: delete user
+# options: user
+#
+# This function deletes a certain user and all his resourses such as domains,
+# databases, cron jobs, etc.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

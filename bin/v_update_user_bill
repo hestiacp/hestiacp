@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating montly billing user report
+# info: update billing user billing
+# options: user
+#
+# Function logs user parameters into billing database.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

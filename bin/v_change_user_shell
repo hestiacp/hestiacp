@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: changing user shell
+# info: change user shell
+# options: user shell
+#
+# The function changes system shell of a user. Shell gives abilty to use ssh.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

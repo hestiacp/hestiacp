@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing user ips
+# info: list user ips
+# options user [format]
+#
+# The function for obtainig the list of available ip addresses.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

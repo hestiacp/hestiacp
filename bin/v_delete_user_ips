@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: deliting system user ips
+# info: delete user ips
+# options: user
+#
+# The function deletes all user's ip addresses.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

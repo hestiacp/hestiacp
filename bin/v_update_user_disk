@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating disk usage for user directories
+# info: update user disk usage
+# options: user
+#
+# The functions recalculates disk usage and updates database.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

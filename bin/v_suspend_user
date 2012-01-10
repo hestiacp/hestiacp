@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: Suspending sys user
+# info: suspend user
+# options: user
+#
+# The function suspends a certain user and all his objects.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

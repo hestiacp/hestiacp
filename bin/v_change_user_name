@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: changing user nameservers
+# info: change user full name
+# options: user fname lname
+#
+# The function allow to change user's full name.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

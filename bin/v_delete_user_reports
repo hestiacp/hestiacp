@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: adding user reports
+# info: delete user reports
+# options: user
+#
+# The script for disabling reports on cron tasks and administrative
+# notifications.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

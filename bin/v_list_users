@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing system users
+# info: list system users
+# options: [format]
+#
+# The function for obtainig the list of all server's users.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

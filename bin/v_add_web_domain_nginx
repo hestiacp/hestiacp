@@ -79,8 +79,6 @@ fi
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-echo "NGINX=$NGINX"
-echo "NGINX_EXT=$NGINX_EXT"
 
 # Adding nginx params to config
 update_web_domain_value '$NGINX' "$NGINX"

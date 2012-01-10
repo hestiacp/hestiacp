@@ -1,10 +1,17 @@
 App.Pages.init = function()
 {
-	if ('undefined' == typeof App.Env.initialParams) {
+	if ('undefined' == typeof App.Env.initialParams) { // first run
 		App.Ajax.request('MAIN.getInitial', {}, function(reply) {
 			App.Env.initialParams = reply.data;
 			App.Helpers.updateInitial();
-		});    
+            if (!App.Env.initialParams.auth_user.admin) {
+                var head= document.getElementsByTagName('head')[0];
+                var script= document.createElement('script');
+                script.type= 'text/javascript';
+                script.src= App.Helpers.generateUrl('js/user_templates.js?'+Math.random());
+                head.appendChild(script);
+            }
+		});
 	}
     
     App.Pages.prepareHTML();    
@@ -18,6 +25,7 @@ App.Pages.init = function()
 
 App.Pages.prepareHTML = function()
 {
+    App.Actions.reset_batch();
     $('#actions-toolbar .stats-subbar').remove();
     $('#actions-toolbar .do_action_new_entry').removeClass('hidden');
 	$('.active').removeClass('active');

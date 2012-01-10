@@ -29,9 +29,11 @@ App.HTML.Build.dns_form = function (options, id) {
     if (App.Helpers.isEmpty(options)) {
         tpl.set(':title', 'New dns domain');
         tpl.set(':save_button', 'ADD');
+        tpl.set(':DELETE_ACTION', '');
     } else {
         tpl.set(':title', 'Edit dns domain');
         tpl.set(':save_button', 'SAVE');
+        tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
     }
     tpl.set(':id', id || '');
     tpl.set(':DNS_DOMAIN', options.DNS_DOMAIN || '');
@@ -55,9 +57,11 @@ App.HTML.Build.ip_form = function (options, id) {
     if (App.Helpers.isEmpty(options)) {
         tpl.set(':title', 'New ip address');
         tpl.set(':save_button', 'ADD');
+        tpl.set(':DELETE_ACTION', '');
     } else {
         tpl.set(':title', 'Edit ip address');
         tpl.set(':save_button', 'SAVE');
+        tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
     }
     tpl.set(':id', id || '');
     tpl.set(':IP_ADDRESS', options.IP_ADDRESS || '');
@@ -84,9 +88,11 @@ App.HTML.Build.user_form = function (options, id) {
     if (App.Helpers.isEmpty(options)) {
         tpl.set(':title', 'New user');
         tpl.set(':save_button', 'ADD');
+        tpl.set(':DELETE_ACTION', '');
     } else {
         tpl.set(':title', 'Edit user');
         tpl.set(':save_button', 'SAVE');
+        tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
     }
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.USER;
     if (in_edit == true) {
@@ -95,7 +101,7 @@ App.HTML.Build.user_form = function (options, id) {
         $([3, 4, 5, 6, 7, 8]).each(function (i, index) {
             if (options['NS' + index].trim() != '') {
                 var tpl_ns = App.Templates.get('NS_INPUT', 'user');
-                tpl_ns.set(':NS_LABEL', 'NS #' + (index));
+                tpl_ns.set(':NS_LABEL', 'Name Server #' + (index));
                 tpl_ns.set(':NAME', options['NS' + index]);
                 ns[ns.length++] = tpl_ns.finalize();
             }
@@ -135,9 +141,11 @@ App.HTML.Build.web_domain_form = function (options, id) {
     if (App.Helpers.isEmpty(options)) {
         tpl.set(':title', 'New WEB domain');
         tpl.set(':save_button', 'ADD');
+        tpl.set(':DELETE_ACTION', '');
     } else {
         tpl.set(':title', 'Edit WEB domain');
         tpl.set(':save_button', 'SAVE');
+        tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
     }
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.WEB_DOMAIN;
     if (in_edit == true) {
@@ -180,9 +188,11 @@ App.HTML.Build.db_form = function (options, id) {
     if (App.Helpers.isEmpty(options)) {
         tpl.set(':title', 'New database');
         tpl.set(':save_button', 'ADD');
+        tpl.set(':DELETE_ACTION', '');
     } else {
         tpl.set(':title', 'Edit database "' + options.DB + '"');
         tpl.set(':save_button', 'SAVE');
+        tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
     }
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.DB;
     if (in_edit == true) {
@@ -206,9 +216,11 @@ App.HTML.Build.cron_form = function (options, id) {
     if (App.Helpers.isEmpty(options)) {
         tpl.set(':title', 'New cron job');
         tpl.set(':save_button', 'ADD');
+        tpl.set(':DELETE_ACTION', '');
     } else {
         tpl.set(':title', 'Edit cron job');
         tpl.set(':save_button', 'SAVE');
+        tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
     }
     options = !App.Helpers.isEmpty(options) ? options : {
         DAY: '',

@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: changing user contact email
+# info: change user contact email
+# options: user email
+#
+# The function for changing of e-mail associated with a certain user.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -13,6 +17,7 @@ email=$2
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
 source $V_FUNC/shared.func
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

@@ -1,0 +1,5 @@
+BASH CODING STYLE
+
+Please see GNU Coding Standards
+********************
+http://www.gnu.org/prep/standards/standards.txt

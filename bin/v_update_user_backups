@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating current backups for
+# info: update user backups
+# options: user
+#
+# The function rescan backup directory and updates backup database.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

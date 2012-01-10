@@ -54,6 +54,11 @@ App.Actions.update_cs_value = function(evt)
     var val = elm.find('.c-s-value').val();
     $('.complex-select-content').addClass('hidden');
     
+    if (val.toLowerCase() == 'nothing') {
+        App.Actions.mass_nothing();
+        return;
+    }
+    
     if (App.Tmp[App.Env.world + '_selected_records'] > 0) {
         var confirm_message_key = App.Tmp[App.Env.world + '_selected_records'] == 1 ? 1 + ' record' : App.Tmp[App.Env.world + '_selected_records'] + ' records';
         var confirmed = confirm('This action will ' + val.toLowerCase() + ' ' + confirm_message_key + '. Do you want to proceede?');
@@ -81,6 +86,11 @@ App.Actions.mass_unsuspend = function()
 {
     App.Actions.mass_action('massiveUnsuspend');
     App.Actions.reset_batch();
+}
+
+App.Actions.mass_nothing = function()
+{
+    $('.complex-select-content').addClass('hidden');
 }
 
 App.Actions.mass_action = function(method_name)
@@ -561,7 +571,7 @@ App.Actions.add_form_ns = function(evt)
     
     var tpl = App.Templates.get('NS_INPUT', 'user');
     tpl.set(':NAME', '');
-    tpl.set(':NS_LABEL', 'NS');
+    tpl.set(':NS_LABEL', 'Name Server');
     var ref = $(elm).hasClass('form-row') ? elm : $(elm).parents('.form-row');
     $(ref).before(tpl.finalize());
     
@@ -571,7 +581,7 @@ App.Actions.add_form_ns = function(evt)
     
     $(form).find('.ns-entry').each(function(i, o)
     {
-        $(o).find('label').text('NS #' + (i + 1));
+        $(o).find('label').text('Name Server #' + (i + 1));
         $(o).find('input').attr('name', 'NS' + (i + 1));
     });
 }
@@ -587,7 +597,7 @@ App.Actions.delete_ns = function(evt)
     form = elm.parents('.form:first');
     var total_nses = $(form).find('.ns-entry').length;
     if (total_nses == App.Settings.NS_MIN) {
-        return App.Helpers.alert('Minimum number of NS is ' + App.Settings.NS_MIN);
+        return App.Helpers.alert('Minimum number of Name Servers is ' + App.Settings.NS_MIN);
     }
     
     var form = elm.parents('.form:first');
@@ -596,7 +606,7 @@ App.Actions.delete_ns = function(evt)
     
     $(form).find('.ns-entry').each(function(i, o)
     {
-        $(o).find('label').text('NS #' + (i + 1));
+        $(o).find('label').text('Name Server #' + (i + 1));
         $(o).find('input').attr('name', 'NS' + (i + 1));
     });
 }
@@ -604,7 +614,7 @@ App.Actions.delete_ns = function(evt)
 App.Actions.view_full_ns_list = function(evt)
 {
     var elm = $(evt.target);
-    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'NS list');    
+    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'Name Server list');    
 }
 
 App.Actions.view_template_info = function(evt)

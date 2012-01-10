@@ -432,11 +432,11 @@ App.Templates.html = {
 							<input type="text" name="LNAME" class="text-field rule-abc rule-required" value="~!:LNAME~!">\
 						</div>\
                         <div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">NameServer #1:</label>\
+							<label for="#" class="field-label">Name Server #1:</label>\
 							<input type="text" value="~!:NS1~!" name="NS1" class="text-field rule-required rule-ns">\
 						</div>\
                         <div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">NameServer #2:</label>\
+							<label for="#" class="field-label">Name Server #2:</label>\
 							<input type="text" value="~!:NS2~!" name="NS2" class="text-field rule-required rule-ns">\
 						</div>\
                         ~!:NS~!\
@@ -660,15 +660,15 @@ App.Templates.html = {
 									<span class="generate-pwd do_action_generate_pass">Generate</span>\
 								</div>\
 							</div><!-- // stats settings -->\
-							<!-- div class="form-row cc">\
+							<div class="form-row cc">\
 								<label for="#" class="field-label">SSL Support:</label>\
 								<input type="checkbox" name="SSL" class="styled" ~!:ssl_checked~!="" value="~!SSL~!">\
-							</div -->\
+							</div>\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">SSL Document Root:</label>\
 								<input type="text" name="SSL_HOME" class="text-field" value="~!:SSL_HOME~!">\
 							</div>\
-							<div class="form-row ssl-crtfct-box cc">\
+                            <div class="form-row ssl-crtfct-box cc">\
 								<label for="#" class="field-label">SSL Crtificate: <span class="remark">(upload file or paste as text)</span></label>\
 								<span class="ssl-cert-input-dummy">...</span>\
 								<textarea name="SSL_CRT" class="textarea ssl-cert">~!:SSL_CRT~!</textarea>\

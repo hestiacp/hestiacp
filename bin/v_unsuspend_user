@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: Unsuspending sys user
+# info: unsuspend user
+# options: user
+#
+# The function unsuspends user and all his objects.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

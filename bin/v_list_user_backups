@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing system bakups
+# info: list user backups
+# options: user [format]
+#
+# The function for obtainig the list of available user backups.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

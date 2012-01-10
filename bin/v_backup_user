@@ -1,5 +1,9 @@
 #!/bin/bash
 # info: backup system user with all its objects
+# options: user
+#
+# The call is used for backing up user with all its domains and databases.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

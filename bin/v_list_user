@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing system user
+# info: list system user
+# options: user [format]
+#
+# The function for obtainig the list of all user's parameters.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

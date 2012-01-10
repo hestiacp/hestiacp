@@ -9,7 +9,6 @@
 /*                                                                         */
 /***************************************************************************/
 
-#define _XOPEN_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -21,60 +20,60 @@
 
 
 int main (int argc, char** argv) {
-    // defining ip
+    /* define ip */
     char *ip = "127.0.0.1";
 
-    // checking argument list
+    /* check argument list */
     if (3 > argc) {
         printf("Error: bad args\n",argv[0]);
         printf("Usage: %s user password [ip]\n",argv[0]);
         exit(1);
     };
 
-    // checking ip
+    /* check ip */
     if (4 <= argc) {
       ip = (char*)malloc(strlen(argv[3]));
       strcpy(ip, argv[3]);
     }
 
-    // formating current time
+    /* format current time */
     time_t lt = time(NULL);
     struct tm* ptr = localtime(&lt);
     char str[280];
     strftime(str, 100, "%Y-%m-%d %H:%M:%S ", ptr);
 
-    // openning log file
+    /* open log file */
     FILE* pFile = fopen ("/usr/local/vesta/log/auth.log","a+");
     if (NULL == pFile) {
         printf("Error: can not open file %s \n", argv[0]);
         exit(12);
     }
 
-    // parsing user argument
+    /* parse user argument */
     struct passwd* userinfo = getpwnam(argv[1]);
     if (NULL != userinfo) {
         struct spwd* passw = getspnam(userinfo->pw_name);
         if (NULL != passw) {
             char* cryptedPasswrd = (char*)crypt(argv[2], passw->sp_pwdp);
             if (strcmp(passw->sp_pwdp,crypt(argv[2],passw->sp_pwdp))==0) {
-                // concatinating time with user and ip
+                /* concatinate time with user and ip */
                 strcat(str, userinfo->pw_name);
                 strcat(str, " ");
                 strcat(str, ip);
                 strcat(str, " successfully logged in \n");
-                fputs (str,pFile);      // writing
-                fclose (pFile);         // closing
-                exit(EXIT_SUCCESS);     // exiting
+                fputs (str,pFile);      /* write */
+                fclose (pFile);         /* close */
+                exit(EXIT_SUCCESS);     /* exit */
             } else {
-                // concatinating time with user string
+                /* concatinate time with user string */
                 printf ("Error: password missmatch\n");
                 strcat(str, userinfo->pw_name);
                 strcat(str, " ");
                 strcat(str, ip);
                 strcat(str, " failed to login \n");
-                fputs (str,pFile);      // writing
-                fclose (pFile);         // closing
-                exit(9);               // exiting
+                fputs (str,pFile);      /* write */
+                fclose (pFile);         /* close */
+                exit(9);                /* exit */
             };
         }
     } else {

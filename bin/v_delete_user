@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: deliting system user
+# info: delete user
+# options: user
+#
+# This function deletes a certain user and all his resourses such as domains,
+# databases, cron jobs, etc.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -113,7 +118,7 @@ if [ ! -z "$statp" ]; then
 fi
 
 # Removing system user
-userdel -f $user
+/usr/sbin/userdel -f $user
 rm -rf $V_HOME/$user
 rm -f /var/spool/mail/$user
 rm -f /var/spool/cron/$user

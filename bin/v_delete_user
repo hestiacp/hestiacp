@@ -113,7 +113,7 @@ if [ ! -z "$statp" ]; then
 fi
 
 # Removing system user
-userdel -f $user
+/usr/sbin/userdel -f $user
 rm -rf $V_HOME/$user
 rm -f /var/spool/mail/$user
 rm -f /var/spool/cron/$user

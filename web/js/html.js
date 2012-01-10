@@ -101,7 +101,7 @@ App.HTML.Build.user_form = function (options, id) {
         $([3, 4, 5, 6, 7, 8]).each(function (i, index) {
             if (options['NS' + index].trim() != '') {
                 var tpl_ns = App.Templates.get('NS_INPUT', 'user');
-                tpl_ns.set(':NS_LABEL', 'NS #' + (index));
+                tpl_ns.set(':NS_LABEL', 'Name Server #' + (index));
                 tpl_ns.set(':NAME', options['NS' + index]);
                 ns[ns.length++] = tpl_ns.finalize();
             }

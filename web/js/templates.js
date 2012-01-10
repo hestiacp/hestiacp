@@ -378,7 +378,7 @@ App.Templates.html = {
         PLUS_ONE_NS: ['<div class="form-row cc do_action_add_form_ns additional-ns-add">\
 							<a href="javascript:void(0);" class="add-ns do_action_add_form_ns">\
 								<i class="icon do_action_add_form_ns">&nbsp;</i>\
-								<span class="btn-title do_action_add_form_ns">Add additional NS</span>\
+								<span class="btn-title do_action_add_form_ns">Add additional Name Server</span>\
 							</a>\
 						</div>'],
         ENTRIES_WRAPPER: ['<div class="users-list items-list">~!:content~!</div>'], 
@@ -432,11 +432,11 @@ App.Templates.html = {
 							<input type="text" name="LNAME" class="text-field rule-abc rule-required" value="~!:LNAME~!">\
 						</div>\
                         <div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">NameServer #1:</label>\
+							<label for="#" class="field-label">Name Server #1:</label>\
 							<input type="text" value="~!:NS1~!" name="NS1" class="text-field rule-required rule-ns">\
 						</div>\
                         <div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">NameServer #2:</label>\
+							<label for="#" class="field-label">Name Server #2:</label>\
 							<input type="text" value="~!:NS2~!" name="NS2" class="text-field rule-required rule-ns">\
 						</div>\
                         ~!:NS~!\

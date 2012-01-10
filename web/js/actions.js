@@ -561,7 +561,7 @@ App.Actions.add_form_ns = function(evt)
     
     var tpl = App.Templates.get('NS_INPUT', 'user');
     tpl.set(':NAME', '');
-    tpl.set(':NS_LABEL', 'NS');
+    tpl.set(':NS_LABEL', 'Name Server');
     var ref = $(elm).hasClass('form-row') ? elm : $(elm).parents('.form-row');
     $(ref).before(tpl.finalize());
     
@@ -571,7 +571,7 @@ App.Actions.add_form_ns = function(evt)
     
     $(form).find('.ns-entry').each(function(i, o)
     {
-        $(o).find('label').text('NS #' + (i + 1));
+        $(o).find('label').text('Name Server #' + (i + 1));
         $(o).find('input').attr('name', 'NS' + (i + 1));
     });
 }
@@ -587,7 +587,7 @@ App.Actions.delete_ns = function(evt)
     form = elm.parents('.form:first');
     var total_nses = $(form).find('.ns-entry').length;
     if (total_nses == App.Settings.NS_MIN) {
-        return App.Helpers.alert('Minimum number of NS is ' + App.Settings.NS_MIN);
+        return App.Helpers.alert('Minimum number of Name Servers is ' + App.Settings.NS_MIN);
     }
     
     var form = elm.parents('.form:first');
@@ -596,7 +596,7 @@ App.Actions.delete_ns = function(evt)
     
     $(form).find('.ns-entry').each(function(i, o)
     {
-        $(o).find('label').text('NS #' + (i + 1));
+        $(o).find('label').text('Name Server #' + (i + 1));
         $(o).find('input').attr('name', 'NS' + (i + 1));
     });
 }
@@ -604,7 +604,7 @@ App.Actions.delete_ns = function(evt)
 App.Actions.view_full_ns_list = function(evt)
 {
     var elm = $(evt.target);
-    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'NS list');    
+    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'Name Server list');    
 }
 
 App.Actions.view_template_info = function(evt)

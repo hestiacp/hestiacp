@@ -35,7 +35,8 @@ App.Templates.html = {
         select_option: ['<option ~!:SELECTED~! value="~!:VALUE~!">~!:TEXT~!</option>'],
         error_elm: ['<div class="error-box">~!:ERROR~!</div>'],
         SUSPENDED_TPL_NOT_SUSPENDED : ['<span class="ip-status-info ip-enabled-status"><span class="ip-status-text">enabled</span></span>'],
-        SUSPENDED_TPL_SUSPENDED : ['<span class="ip-status-info ip-suspended-status"><span class="ip-status-text">suspended</span></span>']        
+        SUSPENDED_TPL_SUSPENDED : ['<span class="ip-status-info ip-suspended-status"><span class="ip-status-text">suspended</span></span>'],
+        DELETE_ACTION: ['<span class="delete-btn do_action_delete_entry">Delete</span>']
     },
     popup: {
         error: ['<div class="error"><center><h1 style="color: red;">Important: An Error Has Occured.</h1><hr></center>&nbsp;&nbsp;&nbsp;&nbsp;Something went wrong and some of your actions can be not saved in system. Mostly, it happens when you have network connection errors.<br>,&nbsp;&nbsp;&nbsp;&nbsp;However, please notify us about the situation. It would be helpfull if you will write us approximate time the error occured and last actions you were performing. You send your petition on <a href="mail_to">this email: BLABLA</a>,<br><br><center><span style="color: rgb(92, 92, 92);">Sorry for inconvinience. (We recommend you to reload the page)</span></center></div>'],
@@ -158,7 +159,7 @@ App.Templates.html = {
                     <div class="form-row buttons-row cc">\
                        <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
                        <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                       <span class="delete-btn do_action_delete_entry">Delete</span>\
+                       ~!:DELETE_ACTION~!\
                     </div>\
             </div>'
         ],        
@@ -292,7 +293,7 @@ App.Templates.html = {
 				<div class="form-row buttons-row cc">\
                    <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
                    <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                   <span class="delete-btn do_action_delete_entry">Delete</span>\
+                   ~!:DELETE_ACTION~!\
                 </div>\
         </div>\
          '],
@@ -320,12 +321,12 @@ App.Templates.html = {
                                         <span class="prop-value">~!:NETMASK~!</span>\
                                 </span>\
                                 <span class="prop-box">\
-                                        <span class="prop-title">interface:</span>\
-                                        <span class="prop-value">~!:INTERFACE~!</span>\
-                                </span>\
-                                <span class="prop-box">\
                                         <span class="prop-title">name:</span>\
                                         <span class="prop-value">~!:NAME~!</span>\
+                                </span>\
+                                <span class="prop-box">\
+                                        <span class="prop-title">interface:</span>\
+                                        <span class="prop-value">~!:INTERFACE~!</span>\
                                 </span>\
                         </div>\
                         <div class="ip-props-additional">\
@@ -340,7 +341,7 @@ App.Templates.html = {
                         </div>\
                         <div class="ip-props-ext">\
                                 <span class="prop-box">\
-                                        <span class="prop-title">sys users:</span>\
+                                        <span class="prop-title">users:</span>\
                                         <span class="prop-value">~!:U_SYS_USERS~!</span>\
                                 </span>\
                                 <span class="prop-box">\
@@ -377,7 +378,7 @@ App.Templates.html = {
         PLUS_ONE_NS: ['<div class="form-row cc do_action_add_form_ns additional-ns-add">\
 							<a href="javascript:void(0);" class="add-ns do_action_add_form_ns">\
 								<i class="icon do_action_add_form_ns">&nbsp;</i>\
-								<span class="btn-title do_action_add_form_ns">Add additional NS</span>\
+								<span class="btn-title do_action_add_form_ns">Add additional Name Server</span>\
 							</a>\
 						</div>'],
         ENTRIES_WRAPPER: ['<div class="users-list items-list">~!:content~!</div>'], 
@@ -446,7 +447,7 @@ App.Templates.html = {
                         <div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
                            <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                           <span class="delete-btn do_action_delete_entry">Delete</span>\
+                           ~!:DELETE_ACTION~!\
                         </div>\
 					</div>'],
         ENTRY: ['<div class="row user-details-row ~!:SUSPENDED_CLASS~!">\
@@ -469,18 +470,12 @@ App.Templates.html = {
 											<span class="nickname do_action_edit">~!:LOGIN_NAME~!</span>\
                                             <!-- span class="role">(~!:ROLE~!)</span -->\
 										</span>\
-										<span class="prop-box template-box">\
-											<span class="prop-title">package:</span>\
-											<span class="prop-value do_action_view_template_info">~!:PACKAGE~!</span>\
-										</span>\
-									</div>\
+                                        <span class="prop-box user-name">\
+                                            <span class="prop-value">~!:FULLNAME~!</span>\
+                                        </span>\									</div>\
 									<div class="user-details-box">\
                                         <span class="prop-box prop-box_group-values cc user-details do_action_login_as">\
                                             <span class="prop-value login-as do_action_login_as">login as</span>\
-                                        </span>\
-                                        <span class="prop-box user-name">\
-                                            <span class="prop-title">name:</span>\
-                                            <span class="prop-value">~!:FULLNAME~!</span>\
                                         </span>\
                                         <span class="prop-box prop-box_group-values cc user-details">\
                                             <span class="prop-title">email:</span>\
@@ -489,9 +484,14 @@ App.Templates.html = {
                                                 <span class="prop-value user-reports">(reports ~!:REPORTS_ENABLED~!)</span>\
                                                 </span>\
                                         </span>\
+										<span class="prop-box template-box">\
+											<span class="prop-title">package:</span>\
+											<span class="prop-value do_action_view_template_info">~!:PACKAGE~!</span>\
+										</span>\
 									</div>\
 								</div>\
-								<!-- disk usage block -->\
+                                \
+								<!-- stats block -->\
                                 \
                                 <div class="b-stats-box">\
 									<div class="stats-box-title">stats</div>	\
@@ -509,8 +509,6 @@ App.Templates.html = {
                                             <div class="max-size">~!:DISK_QUOTA~! <span class="units">~!:DISK_QUOTA_MEASURE_2~!</span></div>\
                                         </div>\
                                     </div><!-- // disk usage block -->\
-								</div>\
-                                \
                                 <div class="b-usage-box2 bandwidth-box cc">\
                                         <span class="prop-title">bandwidth:</span>\
                                         <div class="usage-box">\
@@ -524,8 +522,14 @@ App.Templates.html = {
                                             <div class="max-size">~!:BANDWIDTH~! <span class="units">~!:BANDWIDTH_MEASURE_2~!</span></div>\
                                         </div>\
                                     </div>\
+								</div><!-- // stats block -->\
+                                \
                             </div>\
 							<div class="props-additional">\
+								<span class="prop-box webdomains-box">\
+									<span class="prop-title">web domains:</span>\
+									<span class="prop-value">~!:U_WEB_DOMAINS~! (~!:WEB_DOMAINS~!)</span>\
+								</span>\
 								<span class="prop-box websl-box">\
 									<span class="prop-title">web ssl:</span>\
 									<span class="prop-value">~!:U_WEB_SSL~! (~!:WEB_SSL~!)</span>\
@@ -544,6 +548,37 @@ App.Templates.html = {
 									<span class="prop-title">databases:</span>\
 									<span class="prop-value">~!:U_DATABASES~! (~!:DATABASES~!)</span>\
 								</span>\
+								<span class="prop-box ip-box">\
+									<span class="prop-title">Dedicated IP\'s:</span>\
+									<span class="prop-value">~!:IP_OWNED~!</span>\
+								</span>\
+								<span class="prop-box cron-box">\
+									<span class="prop-title">cron jobs:</span>\
+									<span class="prop-value">~!:U_CRON_JOBS~!</span>\
+								</span>\
+							</div>\
+							<div class="props-ext">\
+								<span class="prop-box maildomains-box">\
+									<span class="prop-title">mail domains:</span>\
+									<span class="prop-value">~!:U_MAIL_DOMAINS~! (~!:MAIL_DOMAINS~!)</span>\
+								</span>\
+								<span class="prop-box mailboxes-box">\
+									<span class="prop-title">mail accounts:</span>\
+									<span class="prop-value">~!:MAIL_BOXES~! per domain</span>\
+								</span>\
+								<span class="prop-box mailfwds-box">\
+									<span class="prop-title">mail forwarders:</span>\
+									<span class="prop-value">~!:MAIL_FORWARDERS~! per domain</span>\
+								</span>\
+                                <span class="prop-box dnsdomains-box">\
+									<span class="prop-title">dns domains:</span>\
+									<span class="prop-value">~!:U_DNS_DOMAINS~! (~!:DNS_DOMAINS~!)</span>\
+								</span>\
+								<span class="prop-box prop-box_group-values cc ns-list-box">\
+									<span class="prop-title">name servers:</span>\
+									<span class="group-values">\
+									~!:NS~!</span>\
+								</span>\
 								<span class="prop-box shell-box">\
 									<span class="prop-title">shell:</span>\
 									<span class="prop-value">~!:SHELL~!</span>\
@@ -551,35 +586,7 @@ App.Templates.html = {
 								<span class="prop-box backups-box">\
 									<span class="prop-title">backups:</span>\
 									<span class="prop-value">retention ~!:BACKUPS~!</span>\
-								</span>\
-							</div>\
-							<div class="props-ext">\
-								<span class="prop-box mailboxes-box">\
-									<span class="prop-title">mailboxes:</span>\
-									<span class="prop-value">~!:U_MAIL_BOXES~! (~!:MAIL_BOXES~!)</span>\
-								</span>\
-								<span class="prop-box mailfwds-box">\
-									<span class="prop-title">mail forwarders:</span>\
-									<span class="prop-value">~!:U_MAIL_FORWARDERS~! (~!:MAIL_FORWARDERS~!)</span>\
-								</span>\
-								<span class="prop-box maildomains-box">\
-									<span class="prop-title">mail domains:</span>\
-									<span class="prop-value">~!:U_MAIL_DOMAINS~! (~!:MAIL_DOMAINS~!)</span>\
-								</span>\
-								<span class="prop-box webdomains-box">\
-									<span class="prop-title">web domains:</span>\
-									<span class="prop-value">~!:U_WEB_DOMAINS~! (~!:WEB_DOMAINS~!)</span>\
-								</span>\
-                                <span class="prop-box dnsdomains-box">\
-									<span class="prop-title">dns domains:</span>\
-									<span class="prop-value">~!:U_DNS_DOMAINS~! (~!:DNS_DOMAINS~!)</span>\
-								</span>\
-								<span class="prop-box prop-box_group-values cc ns-list-box">\
-									<span class="prop-title">ns list:</span>\
-									<span class="group-values">\
-									~!:NS~!</span>\
-								</span>\
-							</div>\
+								</span>\							</div>\
 						</div><!-- // .row-details -->\
 					</div>']
     },
@@ -662,14 +669,19 @@ App.Templates.html = {
 								<input type="text" name="SSL_HOME" class="text-field" value="~!:SSL_HOME~!">\
 							</div>\
 							<div class="form-row ssl-crtfct-box cc">\
+								<label for="#" class="field-label">SSL Crtificate: <span class="remark">(upload file or paste as text)</span></label>\
+								<span class="ssl-cert-input-dummy">...</span>\
+								<textarea name="SSL_CRT" class="textarea ssl-cert">~!:SSL_CRT~!</textarea>\
+							</div>\
+							<div class="form-row ssl-crtfct-box cc">\
 								<label for="#" class="field-label">SSL Certificate Key: <span class="remark">(upload file or paste as text)</span></label>\
 								<span class="ssl-key-input-dummy">...</span>\
 								<textarea name="SSL_KEY" class="textarea ssl-key">~!:SSL_KEY~!</textarea>\
 							</div>\
                             <div class="form-row ssl-crtfct-box cc">\
-								<label for="#" class="field-label">SSL Crtificate: <span class="remark">(upload file or paste as text)</span></label>\
-								<span class="ssl-cert-input-dummy">...</span>\
-								<textarea name="SSL_CERT" class="textarea ssl-cert">~!:SSL_CERT~!</textarea>\
+								<label for="#" class="field-label">SSL Certificate CA: <span class="remark">(upload file or paste as text)</span></label>\
+								<span class="ssl-key-input-dummy">...</span>\
+								<textarea name="SSL_CA" class="textarea ssl-key">~!:SSL_CA~!</textarea>\
 							</div>\
 						</div><!-- // advanced options -->\
 						</div>\
@@ -702,7 +714,7 @@ App.Templates.html = {
 						<div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
                            <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                           <span class="delete-btn do_action_delete_entry">Delete</span>\
+                           ~!:DELETE_ACTION~!\
                         </div>\
 					</div>'],
         ENTRIES_WRAPPER: ['<div class="domains-list items-list">~!:content~!</div>'],
@@ -721,7 +733,6 @@ App.Templates.html = {
 						<div class="row-details cc">\
 							<div class="names">\
 								<strong class="domain-name primary do_action_edit">~!:DOMAIN~!</strong>\
-								<span class="alias-title">Alias:</span>\
 								~!:ALIAS~!\
 							</div>\
 							<div class="props-main">\
@@ -732,6 +743,8 @@ App.Templates.html = {
 										<span class="prop-value tpl-item do_action_view_template_settings">~!:TPL~!</span>\
 									</span>\
 								</div>\
+								\
+								<!-- stats block -->\
 								<div class="b-stats-box">\
 									<div class="stats-box-title">stats</div>	\
                                     <!-- disk usage block -->\
@@ -748,8 +761,7 @@ App.Templates.html = {
                                             <div class="max-size">~!:DISK_QUOTA~! <span class="units">~!:DISK_QUOTA_MEASURE_2~!</span></div>\
                                         </div>\
                                     </div><!-- // disk usage block -->\
-								</div>\
-                                \
+									<!-- bandwidth block -->\
                                 <div class="b-usage-box2 bandwidth-box cc">\
                                         <span class="prop-title">bandwidth:</span>\
                                         <div class="usage-box">\
@@ -762,7 +774,9 @@ App.Templates.html = {
                                             </div>\
                                             <div class="max-size">~!:BANDWIDTH~! <span class="units">~!:BANDWIDTH_MEASURE_2~!</span></div>\
                                         </div>\
-                                    </div>\
+                                    </div><!-- // bandwidth block -->\
+								</div><!-- // stats block -->\
+                                \
 							</div>\
 							<div class="props-additional">\
 								<span class="prop-box php-box">\
@@ -793,7 +807,7 @@ App.Templates.html = {
 								<span class="prop-box nginx-box">\
 									<span class="prop-title">nginx:</span>\
 									<span class="prop-value">~!:NGINX~!</span>\
-									<span class="nginx-ext-list">extension list</span>\
+									<span class="nginx-ext-list do_action_view_nginx_extensions">extension list</span>\
 								</span>\
 							</div>							\
 						</div><!-- // .row-details -->\
@@ -829,7 +843,7 @@ App.Templates.html = {
 						</div>\
 						<div class="db-credentials ">\
 							<div class="form-row cc user">\
-								<label for="#" class="field-label">Username</label>\
+								<label for="#" class="field-label">Username:</label>\
 								<input type="text" name="USER" class="text-field" value="~!:USER~!">\
 							</div>\
 							<div class="form-row pwd-box cc psw">\
@@ -849,7 +863,7 @@ App.Templates.html = {
                         <div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
                            <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                           <span class="delete-btn do_action_delete_entry">Delete</span>\
+                           ~!:DELETE_ACTION~!\
                         </div>\
 					</div>'],
         ENTRY: ['<div class="row db-details-row ~!:SUSPENDED_CLASS~!">\
@@ -959,7 +973,7 @@ App.Templates.html = {
                         <div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
                            <span class="cancel-btn do_action_cancel_form">Cancel</span>\
-                           <span class="delete-btn do_action_delete_entry">Delete</span>\
+                           ~!:DELETE_ACTION~!\
                         </div>\
 					</div>'],
         ENTRIES_WRAPPER: ['<div class="cron-list">~!:content~!</div>'],

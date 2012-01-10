@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : December 16, 2011
+last updated : January 11, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -138,8 +138,19 @@ body{
 		background-color:#ffff66;
 		color:#272700;
 	}
-
-	
+#logged-in-as{
+    background-color: #FFCC00;
+    border: 2px solid #EE7250;
+    color: #FFFFFF;
+    font-family: arial;
+    font-size: 12px;
+    font-weight: bold;
+    height: 26px;
+    margin: 2px auto -3px;
+    padding: 7px 0 0;
+    text-align: center;
+    width: 955px;
+}
 .extra-services{
 	float:right;
 	margin-right:59px;
@@ -1563,12 +1574,27 @@ input::-moz-focus-inner{
 		width: 195px;
 		height: 28px;
 		padding: 0 24px 0 8px;
-		color: #333;
+		color: #555;
 		font:bold 14px/28px arial,sans-serif;
 		background:#fff url(../images/select-arrow.png) no-repeat 100% 50%;
 		overflow: hidden;
 		border:2px solid #b8c2c3;
 	}
+	.b-new-entry .select.disabled{
+        border: 0;
+        background-color: #FFFFCB;
+        opacity: 1;
+        background: 0;
+    }
+    
+    .b-new-entry .checkbox.disabled{
+        background-position: -331px -126px;
+        margin-right:5px;
+     }
+    .b-new-entry .text-field:disabled{
+        border:0;
+        background-color:#FFFFCB;
+    }
 	.b-new-entry select.styled{
 		top:10px;
 	}
@@ -1650,7 +1676,7 @@ input::-moz-focus-inner{
 		width:18px;
 		height:18px;
 		margin:6px 0 0;
-		background:url(../images/checkbox-1.png) no-repeat;
+		background:url(../images/checkboxes.png) no-repeat;
 	}
 	.b-new-entry .checkbox:hover{
 		background-position:0 -98px;
@@ -2180,18 +2206,27 @@ input::-moz-focus-inner{
 	background:url(../images/stats-brace.png) no-repeat 0 50%;
 	}
 	.stats-box-title{
+        /*
+		background: url("../images/stats-curve.png") no-repeat 85% 50%;
+
+        line-height: 61px;
+        margin-right: 33px;
+        padding-right: 35px;
+		*/
 		position:absolute;
 		top:50%;
-		left:-65px;
+		left:-68px;
+		
+		width:28px;
 		margin-top:-10px;
-		padding-right:25px;		
+		padding-right:35px;
 		text-transform:uppercase;
 		font-size:9px;
 		line-height:12px;
-		background:url(../images/stats-curve.png) no-repeat 100% 50%;
+		background:url(../images/stats-curve.png) no-repeat 85% 50%;
 		color:#acacac;
-		/*border-bottom:1px solid #acacac;*/
 	}
+
 .b-usage-box2{
 	display:block;
 	margin:0 0 22px;
@@ -2273,9 +2308,6 @@ input::-moz-focus-inner{
 		}		
 
 	
-.domains-list .disk-usage{
-	margin:0 0 6px;
-}
 .domains-list .props-additional .prop-box,
 .domains-list .props-ext .prop-box{
 	display:block;
@@ -2477,7 +2509,7 @@ input::-moz-focus-inner{
 		}
 		.users-list .webtpl-box .group-switcher,
 		.users-list .ns-list-box .group-switcher{
-			padding-left:15px;
+			padding-left:2px;
 		}
 		.users-list .props-additional .ns1-box .prop-title,
 		.users-list .props-additional .ns2-box .prop-title{
@@ -2513,6 +2545,13 @@ input::-moz-focus-inner{
 		.user-details .user-reports{
 			color:#9c9c9c;
 		}
+
+		.user-details .login-as{
+            border-bottom: 1px solid #CBCBBF;
+            cursor: pointer;
+            padding-left: 0;
+		}
+
 		.user-details-box .prop-box{
 			margin:0 0 5px;
 		}
@@ -2539,8 +2578,8 @@ input::-moz-focus-inner{
 			display:block;
 			position:absolute;
 			top:-8px;
-			left:-50%;
-			width:200%;
+			left:0;
+			width:100%;
 			}
 			.db-list .db-devider-outer{
 				display:block;
@@ -2976,6 +3015,13 @@ input::-moz-focus-inner{
 	color:#6aa0ac;
 	border-bottom-color:#cacbbd;
 }
+
+.row:hover .user-details .login-as{
+    border-bottom: 1px solid #FF9591;
+    color: #FFCC00;
+}
+
+
 .row:hover .template-box .prop-value:hover,
 .row:hover .show-records:hover,
 .hide-records:hover, 

@@ -54,6 +54,11 @@ App.Actions.update_cs_value = function(evt)
     var val = elm.find('.c-s-value').val();
     $('.complex-select-content').addClass('hidden');
     
+    if (val.toLowerCase() == 'nothing') {
+        App.Actions.mass_nothing();
+        return;
+    }
+    
     if (App.Tmp[App.Env.world + '_selected_records'] > 0) {
         var confirm_message_key = App.Tmp[App.Env.world + '_selected_records'] == 1 ? 1 + ' record' : App.Tmp[App.Env.world + '_selected_records'] + ' records';
         var confirmed = confirm('This action will ' + val.toLowerCase() + ' ' + confirm_message_key + '. Do you want to proceede?');
@@ -81,6 +86,11 @@ App.Actions.mass_unsuspend = function()
 {
     App.Actions.mass_action('massiveUnsuspend');
     App.Actions.reset_batch();
+}
+
+App.Actions.mass_nothing = function()
+{
+    $('.complex-select-content').addClass('hidden');
 }
 
 App.Actions.mass_action = function(method_name)

@@ -362,7 +362,7 @@ App.Templates.html = {
     user: {
         WEB_TPL_MINIMIZED: ['~!:WEB_TPL_MINI~!\
                         <span class="group-switcher">\
-                            <span class="group-values-count do_action_view_full_ns_list">~!:MORE_NUMBER~! more</span>\
+                            <span class="group-values-count do_action_view_full_web_templates">~!:MORE_NUMBER~! more</span>\
                         </span><span class="hidden ns-full-list"><span class="group-values">~!:WEB_TPL_FULL~!</span></span>'],
         WEB_TPL: ['<span class="prop-value">~!:NAME~!</span>'],
         NS_MINIMIZED: ['~!:NS_MINI~!\

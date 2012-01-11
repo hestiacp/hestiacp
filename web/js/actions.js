@@ -627,6 +627,12 @@ App.Actions.view_full_ns_list = function(evt)
     App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'Name Server list');    
 }
 
+App.Actions.view_full_web_templates = function(evt)
+{
+    var elm = $(evt.target);
+    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'Web Templates list');    
+}
+
 App.Actions.view_template_info = function(evt)
 {
     var elm = $(evt.target);

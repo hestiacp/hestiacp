@@ -1,3 +1,13 @@
+App.Actions.view_nginx_extensions = function(evt)
+{
+    var elm = $(evt.target);
+    var ref = elm.hasClass('row') ? elm : elm.parents('.row');
+    var data = App.Helpers.evalJSON(ref.find('.source').val());
+    var extensions = data['NGINX_EXT'] || '';
+    var html = extensions.replace(/,/gi, ' ');
+    App.Helpers.openInnerPopup(elm, html, 'Nginx extensions');
+}
+
 App.Actions.login_as = function(evt) 
 {
     var elm = $(evt.target);

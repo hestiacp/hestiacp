@@ -303,7 +303,7 @@ App.Templates.html = {
                 <input type="hidden" class="source" name="source" value=\'~!:source~!\' />\
                 <input type="hidden" class="target" name="target" value="" />\
                 <div class="row-actions-box cc">\
-                        <div class="check-this"></div>\
+                        <div class="check-this check-control"></div>\
                         <div class="row-operations">\
                             ~!:SUSPENDED_TPL~!\
                         </div>\
@@ -509,19 +509,19 @@ App.Templates.html = {
                                             <div class="max-size">~!:DISK_QUOTA~! <span class="units">~!:DISK_QUOTA_MEASURE_2~!</span></div>\
                                         </div>\
                                     </div><!-- // disk usage block -->\
-                                <div class="b-usage-box2 bandwidth-box cc">\
-                                        <span class="prop-title">bandwidth:</span>\
-                                        <div class="usage-box">\
-                                            <div class="value-box ~!:OVER_DRAFT_VALUE_2~!">\
-                                                <div class="graph">\
-                                                    <span style="left:~!:U_BANDWIDTH_PERCENTAGE_2~!%;" class="value">~!:U_BANDWIDTH_PERCENTAGE~!% <span class="value-size">(~!:U_BANDWIDTH~! ~!:BANDWIDTH_MEASURE~!)</span></span>\
-                                                    <span style="width:~!:U_BANDWIDTH_PERCENTAGE_3~!%;" class="bar"></span>\
-                                                    ~!:OVER_BAR_2~!\
-                                                </div>\
-                                            </div>\
-                                            <div class="max-size">~!:BANDWIDTH~! <span class="units">~!:BANDWIDTH_MEASURE_2~!</span></div>\
-                                        </div>\
-                                    </div>\
+									<div class="b-usage-box2 bandwidth-box cc">\
+										<span class="prop-title">bandwidth:</span>\
+										<div class="usage-box">\
+											<div class="value-box ~!:OVER_DRAFT_VALUE_2~!">\
+												<div class="graph">\
+													<span style="left:~!:U_BANDWIDTH_PERCENTAGE_2~!%;" class="value">~!:U_BANDWIDTH_PERCENTAGE~!% <span class="value-size">(~!:U_BANDWIDTH~! ~!:BANDWIDTH_MEASURE~!)</span></span>\
+													<span style="width:~!:U_BANDWIDTH_PERCENTAGE_3~!%;" class="bar"></span>\
+													~!:OVER_BAR_2~!\
+												</div>\
+											</div>\
+											<div class="max-size">~!:BANDWIDTH~! <span class="units">~!:BANDWIDTH_MEASURE_2~!</span></div>\
+										</div>\
+									</div>\
 								</div><!-- // stats block -->\
                                 \
                             </div>\
@@ -640,6 +640,10 @@ App.Templates.html = {
                             <div class="form-row cc">\
 								<label for="#" class="field-label">Domain Aliases:</label>\
 								<textarea name="ALIAS" class="textarea rule-alias">~!:ALIAS~!</textarea>\
+							</div>\
+							<div class="form-row cc">\
+								<label for="#" class="field-label">Nginx extensions:</label>\
+								<textarea name="NGINX_EXT" class="textarea rule-list">~!:NGINX_EXT~!</textarea>\
 							</div>\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">Statistics:</label>\
@@ -762,7 +766,7 @@ App.Templates.html = {
                                         </div>\
                                     </div><!-- // disk usage block -->\
 									<!-- bandwidth block -->\
-                                <div class="b-usage-box2 bandwidth-box cc">\
+									<div class="b-usage-box2 bandwidth-box cc">\
                                         <span class="prop-title">bandwidth:</span>\
                                         <div class="usage-box">\
                                             <div class="value-box ~!:OVER_DRAFT_VALUE_2~!">\
@@ -809,7 +813,7 @@ App.Templates.html = {
 									<span class="prop-value">~!:NGINX~!</span>\
 									<span class="nginx-ext-list do_action_view_nginx_extensions">extension list</span>\
 								</span>\
-							</div>							\
+							</div>\
 						</div><!-- // .row-details -->\
 					</div>']
     },
@@ -856,6 +860,10 @@ App.Templates.html = {
 							<label for="#" class="field-label">Host:</label>\
 							<select name="HOST" class="styled">~!:HOST_OPTIONS~!</select>\
 						</div>\
+						<div class="form-row cc">\
+							<label for="#" class="field-label">Encoding:</label>\
+							<select name="TYPE" class="styled">~!:ENCODING_OPTIONS~!</select>\
+						</div>\
 						<div class="form-row suspended cc">\
                             <label for="#" class="field-label">Suspended:</label>\
                             <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
@@ -899,7 +907,11 @@ App.Templates.html = {
 								<span class="add-db-user do_action_add_db_user">Add user</span>\
 							</div>\
 							<div class="props-ext">\
-								<span class="backup-db do_action_backup_db">backup</span>\
+								<!-- span class="backup-db do_action_backup_db">backup</span-->\
+									<span class="prop-box">\
+										<span class="prop-title">encoding:</span>\
+										<span class="prop-value">~!:ENCODING~!</span>\
+									</span>\
 								<!-- disk usage block -->\
 								<div class="b-usage-box disk-usage cc">\
 									<div class="usage-box">\

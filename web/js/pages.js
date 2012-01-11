@@ -25,6 +25,7 @@ App.Pages.init = function()
 
 App.Pages.prepareHTML = function()
 {
+	$('.d-popup').remove();
     App.Actions.reset_batch();
     $('#actions-toolbar .stats-subbar').remove();
     $('#actions-toolbar .do_action_new_entry').removeClass('hidden');

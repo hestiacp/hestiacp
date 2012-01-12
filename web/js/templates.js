@@ -715,6 +715,10 @@ App.Templates.html = {
                             </div>\
                         </div>\
                         </div><!-- Mail options -->\
+    					<div class="form-row cc">\
+        					<label for="#" class="field-label">create DNS domain:</label>\
+							<input type="checkbox" value="" name="DNS_DOMAIN" class="styled">\
+						</div>\
 						<div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
                            <span class="cancel-btn do_action_cancel_form">Cancel</span>\
@@ -856,13 +860,13 @@ App.Templates.html = {
 								<span class="generate-pwd do_action_generate_pass">Generate</span>\
 							</div>\
 						</div>\
-						<div class="form-row hidden cc">\
+						<!--div class="form-row hidden cc">\
 							<label for="#" class="field-label">Host:</label>\
 							<select name="HOST" class="styled">~!:HOST_OPTIONS~!</select>\
-						</div>\
+						</div -->\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">Encoding:</label>\
-							<select name="TYPE" class="styled">~!:ENCODING_OPTIONS~!</select>\
+							<select name="ENCODING" class="styled">~!:ENCODING_OPTIONS~!</select>\
 						</div>\
 						<div class="form-row suspended cc">\
                             <label for="#" class="field-label">Suspended:</label>\

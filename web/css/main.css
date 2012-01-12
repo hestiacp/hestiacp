@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : January 11, 2012
+last updated : January 12, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -585,7 +585,7 @@ input::-moz-focus-inner{
 		width:11px;
 		height:11px;
 		margin:2px 5px 0 0;
-		background:url(../images/chekbox-selector.png) no-repeat;
+		background:url(../images/checkbox-selector.png) no-repeat;
 		cursor:pointer;		
 	}
 	.checkbox-selector .selector-title{
@@ -610,18 +610,6 @@ input::-moz-focus-inner{
 	font-size: 12px;
 
 	background-color: #fff;
-/*  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(0.5, white));
-  background-image: -webkit-linear-gradient(center bottom, #eeeeee 0%, white 50%);
-  background-image: -moz-linear-gradient(center bottom, #eeeeee 0%, white 50%);
-  background-image: -o-linear-gradient(top, #eeeeee 0%,#ffffff 50%);
-  background-image: -ms-linear-gradient(top, #eeeeee 0%,#ffffff 50%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#ffffff',GradientType=0 );
-  background-image: linear-gradient(top, #eeeeee 0%,#ffffff 50%);
-
-  -moz-background-clip   : padding;
-  -webkit-background-clip: padding-box;
-  background-clip        : padding-box;
-*/
 
 	box-shadow: inset 1px 1px 4px 0px rgba(0, 0, 0, 0.10);
 	-moz-box-shadow: inset 1px 1px 4px 0px rgba(0, 0, 0, 0.10);
@@ -652,15 +640,6 @@ input::-moz-focus-inner{
   background-clip        : padding-box;
   background: #ccc;
 
-/*  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #ccc), color-stop(0.6, #eee));
-  background-image: -webkit-linear-gradient(center bottom, #ccc 0%, #eee 60%);
-  background-image: -moz-linear-gradient(center bottom, #ccc 0%, #eee 60%);
-  background-image: -o-linear-gradient(bottom, #ccc 0%, #eee 60%);
-  background-image: -ms-linear-gradient(top, #cccccc 0%,#eeeeee 60%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#eeeeee',GradientType=0 );
-  background-image: linear-gradient(top, #cccccc 0%,#eeeeee 60%);
-*/  
-  
   background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #fff), color-stop(0.6, #f5f4ef));
   background-image: -webkit-linear-gradient(center bottom, #fff 0%, #f5f4ef 60%);
   background-image: -moz-linear-gradient(center bottom, #fff 0%, #f5f4ef 60%);
@@ -1676,10 +1655,10 @@ input::-moz-focus-inner{
 		width:18px;
 		height:18px;
 		margin:6px 0 0;
-		background:url(../images/checkboxes.png) no-repeat;
+		background:url(/images/form-checkboxes.png) no-repeat;
 	}
 	.b-new-entry .checkbox:hover{
-		background-position:0 -98px;
+		background-position:0 -100px;
 	}	
 	.b-new-entry .stats-settings{
 		padding-left:40px;
@@ -1687,10 +1666,6 @@ input::-moz-focus-inner{
 	.b-new-entry .db-credentials .field-label{
 		text-indent:40px;
 	}
-	/*.b-new-entry .pwd-box .text-field{
-		float:left;
-		margin:0 15px 0 0;
-	}*/
 	.b-new-entry_user .lastname-box{
 		margin-bottom:30px;
 	}
@@ -1774,26 +1749,6 @@ input::-moz-focus-inner{
 		border-top:1px solid #dcdbad;
 		background:url(../images/form-bottom-bg.png) repeat-x;
 	}
-/*	.b-new-entry .help-btn{
-		position:absolute;
-		top:13px;
-		right:20px;		
-		font-size:11px;
-		line-height:12px;
-		color:#b4b39f;
-		text-transform:uppercase;
-		cursor:pointer;
-		border-bottom:1px solid #b4b39f;
-		text-decoration:none;
-		}
-		.b-new-entry .help-btn:hover{
-			color:#000;
-			border-bottom-color:#9fb35a;
-		}
-		.b-new-entry .help-btn:active{
-			color:#4B9427;
-		}
-*/
 
 	.b-new-entry .cancel-btn{
 
@@ -1893,7 +1848,6 @@ input::-moz-focus-inner{
 				height:32px;
 				font-size:0;
 				line-height:0;
-/*				background:#fff url(../images/select-arrow.png) no-repeat 100% 50%;*/
 				background:#fff url(../images/autocomplete-field-arrows-sprite.png) no-repeat;
 				cursor:pointer;
 			}
@@ -1981,12 +1935,6 @@ input::-moz-focus-inner{
 	.b-new-detailed-restore .add-entry-btn{
 		padding:0 30px;
 	}
-/*	
-	.b-new-detailed-restore .cancel-btn{
-		left:auto;
-		right:16px;
-	}
-*/
 	
 /* Show/edit dns records form
 - - - - - - - - - - - - - - - - - - - */
@@ -2206,19 +2154,12 @@ input::-moz-focus-inner{
 	background:url(../images/stats-brace.png) no-repeat 0 50%;
 	}
 	.stats-box-title{
-        /*
-		background: url("../images/stats-curve.png") no-repeat 85% 50%;
-
-        line-height: 61px;
-        margin-right: 33px;
-        padding-right: 35px;
-		*/
 		position:absolute;
 		top:50%;
 		left:-68px;
 		
 		width:28px;
-		margin-top:-10px;
+		margin-top:-6px;
 		padding-right:35px;
 		text-transform:uppercase;
 		font-size:9px;

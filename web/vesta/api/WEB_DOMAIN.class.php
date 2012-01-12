@@ -38,14 +38,26 @@ class WEB_DOMAIN extends AjaxHandler
                               'STATS_LOGIN' => $record['STATS_AUTH'],
                               'SSL'         => $record['SSL'],
                               'SSL_HOME'    => $record['SSL_HOME'],
-                              'SSL_CERT'    => $record['SSL_CERT'],
-                              'SSL_KEY'		=> $record['SSL_KEY'],
+                              'SSL_CRT'     => '',
+                              'SSL_KEY'		=> '',
+                              'SSL_CA'		=> '',
                               'NGINX'       => $record['NGINX'],
                               'NGINX_EXT'   => $record['NGINX_EXT'],
-                              'SUSPEND'     => $record['SUSPEND'],
+                              'SUSPEND'     => $record['SUSPEND'] == 'on' ? 'on' : 'off',
                               'DATE'        => date(Config::get('ui_date_format', strtotime($record['DATE'])))
                           );
             $web_details['STAT'] == '' ? $web_details['STAT'] = 'none' : true;
+
+            if($record['SSL'] == 'yes'){
+                $result_ssl = Vesta::execute(Vesta::V_LIST_WEB_DOMAIN_SSL, array('USER' => $user['uid'], 'DOMAIN' => $web_domain, self::JSON));
+
+                if($result_ssl['status']){
+                    foreach ($result_ssl['data'][$web_domain] as $key => $value) {
+                        $web_details['SSL_'.$key] = $value;
+                    }
+                }
+            }
+            
             $reply[$web_domain] = $web_details;
         }
 
@@ -439,25 +451,7 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
         
-        /*if ($_new['SSL']) {
-			$params = array(
-						'USER'     => $user['uid'],
-						'DOMAIN'   => $_new['DOMAIN'],
-						'SSL_CERT' => $_new['SSL_CERT']
-					  );
-
-			if ($_new['SSL_HOME']) {
-				$params['SSL_HOME'] = $_new['SSL_HOME'];
-			}
-
-			$result = 0;
-			$result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
-
-			if (!$result['status']) {
-				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
-			}
-		}*/
-		
+        /*
 		if (!empty($_s['SSL_KEY'])) {
             $ssl_file = tempnam(sys_get_temp_dir(), 'ssl');
             file_put_contents($ssl_file, $_s['SSL_KEY']);
@@ -498,8 +492,74 @@ class WEB_DOMAIN extends AjaxHandler
 				$this->errors['SSL_CERT'] = array($result['error_code'] => $result['error_message']);
 			}
 		}
-        
-        
+        */
+
+
+		if (!empty($_new['SSL_KEY']) && !empty($_new['SSL_CRT'])) {
+          //          $ssl_dir = sys_get_temp_dir().'/ssl/'.rand();
+            $ssl_dir = sys_get_temp_dir().'/';
+//            if(!mkdir($ssl_dir)){
+//                return $this->reply(FALSE, array('error' => 'can\'t create temp ssl dir: '.$ssl_dir));
+//            }
+
+            
+            
+            $ssl_crt_file = $ssl_dir . $_new['DOMAIN'] . '.crt';
+            if(!file_put_contents($ssl_crt_file, $_new['SSL_CRT']))
+
+            $ssl_key_file = $ssl_dir . $_new['DOMAIN'] . '.key';
+            file_put_contents($ssl_key_file, $_new['SSL_KEY']);
+
+    		if (!empty($_new['SSL_CA'])) {
+                $ssl_ca_file = $ssl_dir . $_new['DOMAIN'] . '.ca';
+                //                file_put_contents($ssl_ca_file, $_new['SSL_CA']);
+            }
+ 
+
+            //            echo '<br>';
+            //            echo $ssl_crt_file;
+            //            echo '<br>';
+            //            echo $ssl_key_file;
+            //            echo '<br>';
+            //            echo $ssl_ca_file;
+
+			$params = array(
+						'USER'     => $user['uid'],
+						'DOMAIN'   => $_DOMAIN,
+                        'SSL_DIR'  => $ssl_dir
+                        //					    'SSL_DIR'  => 'tmp'
+                        );
+
+            //			if (!empty($_s['SSL_HOME'])) {
+            //				$params['SSL_HOME'] = $_s['SSL_HOME'];
+            //			}
+
+			$result = 0;
+
+            if($_old['SSL'] == 'on'){
+                $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_SSL, $params);
+            }
+            else{
+                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
+            }
+
+            //            print_r($result);
+            
+			if (!$result['status']) {
+				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
+			}
+
+            unlink($ssl_crt_file);
+            unlink($ssl_key_file);
+            unlink($ssl_ca_file);
+
+		}
+
+		if (empty($_new['SSL_KEY']) && empty($_new['SSL_CRT']) && $_old['SSL'] == 'on') {
+			$result = 0;
+			$result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_SSL, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+        }
+
         return $this->reply($result['status'], $result['data']);
     }
 
@@ -551,7 +611,7 @@ class WEB_DOMAIN extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-          $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
+          $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], $entity['DOMAIN']));
         }
 
         return $this->reply($result['status'], $result['data']);
@@ -563,7 +623,7 @@ class WEB_DOMAIN extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-            $result = Vesta::execute(Vesta::V_UNUSPEND_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
+            $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], $entity['DOMAIN']));
         }
 
         return $this->reply($result['status'], $result['data']);
@@ -575,7 +635,7 @@ class WEB_DOMAIN extends AjaxHandler
         $_entities = $request->getParameter('entities');
 
         foreach($_entities as $entity){
-            $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN, array('USER' => $user, $entity['DOMAIN']));
+            $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN, array('USER' => $user['uid'], $entity['DOMAIN']));
         }
 
         return $this->reply($result['status'], $result['data']);

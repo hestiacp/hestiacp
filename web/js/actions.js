@@ -1,3 +1,13 @@
+App.Actions.view_nginx_extensions = function(evt)
+{
+    var elm = $(evt.target);
+    var ref = elm.hasClass('row') ? elm : elm.parents('.row');
+    var data = App.Helpers.evalJSON(ref.find('.source').val());
+    var extensions = data['NGINX_EXT'] || '';
+    var html = extensions.replace(/,/gi, ' ');
+    App.Helpers.openInnerPopup(elm, html, 'Nginx extensions');
+}
+
 App.Actions.login_as = function(evt) 
 {
     var elm = $(evt.target);
@@ -615,6 +625,12 @@ App.Actions.view_full_ns_list = function(evt)
 {
     var elm = $(evt.target);
     App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'Name Server list');    
+}
+
+App.Actions.view_full_web_templates = function(evt)
+{
+    var elm = $(evt.target);
+    App.Helpers.openInnerPopup(elm, $(elm).parents('.prop-box').find('.ns-full-list:first').html(), 'Web Templates list');    
 }
 
 App.Actions.view_template_info = function(evt)

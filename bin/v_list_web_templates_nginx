@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: listing web templates
+# info: listing nginx templates
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -20,8 +20,8 @@ json_list_wtpl() {
 
     # Listing files by mask
     for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
-        if [ -e "$V_WEBTPL/apache_$template.descr" ]; then
-            descr=$(cat $V_WEBTPL/apache_$template.descr | grep '#'|\
+        if [ -e "$V_WEBTPL/ngingx_vhost_$template.descr" ]; then
+            descr=$(cat $V_WEBTPL/ngingx_vhost_$template.descr | grep '#'|\
                 sed -e ':a;N;$!ba;s/\n/ /g')
             # Checking !first line to print bracket
             if [ $i -ne 1 ]; then
@@ -39,13 +39,13 @@ json_list_wtpl() {
         echo -e "\t}"
     fi
     echo '}'
-}
+    }
 
 # Shell function
 shell_list_wtpl() {
     for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
-        if [ -e "$V_WEBTPL/apache_$template.descr" ]; then
-            tpl_descr=$(cat $V_WEBTPL/apache_$template.descr |grep '#')
+        if [ -e "$V_WEBTPL/ngingx_vhost_$template.descr" ]; then
+            tpl_descr=$(cat $V_WEBTPL/ngingx_vhost_$template.descr |grep '#')
             if [ -z "$nohead" ]; then
                 echo "----------"
             fi

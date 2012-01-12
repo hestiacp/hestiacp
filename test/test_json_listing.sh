@@ -24,7 +24,8 @@ v_list_user_packages json
 v_list_users json
 v_list_web_domains vesta json
 v_list_web_domain vesta default.vesta.domain json
-v_list_web_templates vesta json'
+v_list_web_templates vesta json
+v_list_web_templates_nginx vesta json'
 
 IFS=$'\n'
 for cmd in $commands; do

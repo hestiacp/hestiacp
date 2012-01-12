@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: deliting web domain alias
+# info: delete web domain alias
+# options user domain alias
+#
+# The function of deleting the alias domain (parked domain). By this call
+# default www aliase can be removed as well.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

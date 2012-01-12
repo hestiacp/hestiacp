@@ -1,5 +1,11 @@
 #!/bin/bash
-# info: listing web domain
+# info: list web domains and alias key
+# options: user [format]
+#
+# The function for obtaining the list of domains with SSL parameter displayed.
+# This call was arranged for filling in the lack of information by applying
+# v_list_web_domains call in the shell format.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

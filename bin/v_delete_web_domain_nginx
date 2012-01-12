@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: deleting web domain nginx config
+# info: deleting web domain nginx configuration
+# options: user domain
+#
+# The function of deleting the virtualhost nginx configuration.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing web templates
+# info: list web templates
+# options: user [format]
+#
+# The function for obtaining the list of apache templates available to a user.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

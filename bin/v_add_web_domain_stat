@@ -1,5 +1,13 @@
 #!/bin/bash
-# info: adding stats for domain
+# info: add log analyzer to generate domain statitics
+# options: user domain type
+#
+# The call is used for enabling log analyzer system to a domain.  At this time
+# two types of these system is supported - awstats and webalizer. For viewing
+# the domain statistics use http://domain.tld/vstats/ link. Access this page
+# is not protected by default. If you want to secure it with passwords you
+# should use v_add_web_domain_stat_auth script.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

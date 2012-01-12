@@ -1,5 +1,12 @@
 #!/bin/bash
-# info: adding web domain
+# info: disable webdomain stats  authentication support
+# options: user domain [auth_user]
+#
+# The function removes authentication of statistics system. If the script is
+# called without naming a certain user, all users will be removed. After
+# deleting all of them statistics will be accessible for view without an
+# authentication.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

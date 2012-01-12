@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing web ssl certificate
+# info: list web domain ssl certificate
+# options: user domain [format]
+#
+# The function of obtaining domain ssl files.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

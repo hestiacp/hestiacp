@@ -1,5 +1,14 @@
 #!/bin/bash
-# info: adding web domain
+# info: add web domain
+# options: user domain ip [template]
+#
+# The function adds virtual host to a server. In cases when a template is
+# undefined in the script, the template "default" will be used. The alias of
+# www.domain.tld type will be automatically assigned to the domain. If ip have
+# assocated dns name, this domain will also get the alias domain-tpl.$ipname.
+# An alias with the ip name is useful during the site testing while dns isn't
+# moved to a server yet.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

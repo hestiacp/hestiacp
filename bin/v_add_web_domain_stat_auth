@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: adding web domain
+# info: add password protection to web domain statistics
+# options: user domain auth_user auth_password
+#
+# The call is used for securing the web statistics page.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

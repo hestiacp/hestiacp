@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: unsuspening web domain (with ssl)
+# info: unsuspend web domains
+# options: user
+#
+# The function of unsuspending all user's sites.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -1,5 +1,12 @@
 #!/bin/bash
-# info: deliting cgi for domain
+# info: delete web domain cgi support
+# options: user domain
+#
+# The function for deleting cgi support (adds -ExecCGI directive into
+# configuration file). It is recommended to apply this function only for a
+# temporary use (for lightening the consequences of DDoS, for example);
+# otherwise it is preferable to use templates.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

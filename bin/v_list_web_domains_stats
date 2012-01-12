@@ -1,5 +1,12 @@
 #!/bin/bash
-# info: listing web domain
+# info: list web domains and stats key
+# options: user [format]
+#
+# The function for obtaining the list of domains with statistics parameter
+# displayed, including authentication settings. This call was arranged for
+# filling in the lack of information by applying v_list_web_domains call in
+# the shell format.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

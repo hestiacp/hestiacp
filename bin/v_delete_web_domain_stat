@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: adding web domain
+# info: delete web domain statistics
+# options: user domain
+#
+# The function of deleting site's system of statistics. Its type is
+# automatically chooses from client's configuration file.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

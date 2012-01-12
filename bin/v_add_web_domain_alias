@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: adding web domain alias
+# info: add web domain alias
+# options: user domain alias
+#
+# The call is intended for adding aliases to a domain (it is also called
+# "domain parking"). The function supports wildcards *.domain.tpl.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

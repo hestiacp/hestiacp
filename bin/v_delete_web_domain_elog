@@ -1,5 +1,11 @@
 #!/bin/bash
-# info: deleting error log for domain
+# info: delete web domain error loggin support
+# options: user domain
+#
+# The function of disabling error logging feature. It comments  ErrorLog 
+# direcitve in apache or/and nginx configuration. The data already collected
+# remains untouched.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

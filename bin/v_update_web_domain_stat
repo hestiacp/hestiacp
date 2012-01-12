@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating domain web statistics
+# info: update domain statistics
+# options: user domain
+#
+# The function runs log analyzer for speciefic webdomain.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

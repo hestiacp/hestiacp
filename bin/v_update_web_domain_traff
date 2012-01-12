@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating traffic usage for domain
+# info: update domain bandwidth usage
+# options: user domain
+#
+# The function recalculates bandwidth usage for speciefic domain.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

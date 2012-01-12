@@ -1,5 +1,9 @@
 #!/bin/bash
 # info: listing nginx templates
+# options: user [format]
+#
+# The function for obtaining the list of nginx templates available to a user.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

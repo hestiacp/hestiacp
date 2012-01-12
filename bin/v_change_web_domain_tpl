@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: changing domain template
+# info: change web domain template
+# options: user domain template
+#
+# The function changes template of httpd.conf configuration file. The content
+# of webdomain directories remains untouched.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

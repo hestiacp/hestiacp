@@ -1,6 +1,13 @@
 #!/bin/bash
-# Internal vesta function
-# web system restart
+# info: restart dns service
+# options: none
+#
+# The function tells BIND service to reload dns zone files.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -23,6 +30,11 @@ nginx() {
     fi
 }
 
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
 # Checking system
 if [ "$WEB_SYSTEM" = 'apache' ]; then
     apache
@@ -31,6 +43,11 @@ fi
 if [ "$PROXY_SYSTEM" = 'nginx' ]; then
     nginx
 fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
 
 # Logging
 exit

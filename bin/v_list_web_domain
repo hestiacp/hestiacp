@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: listing web domain
+# info: list web domain
+# options: user domain [format]
+#
+# The function of obtaining the list of domain parameters. This call, just as
+# all v_list_* calls, supports 3 formats - json, shell and plain.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

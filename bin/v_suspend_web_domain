@@ -1,5 +1,11 @@
 #!/bin/bash
-# info: suspening web domain (with ssl)
+# info: suspend web domain
+# options: user domain
+#
+# The function for suspending the site's operation. After blocking it all
+# visitors will be redirected to a web page explaining the reason of suspend.
+# By blocking the site the content of all its directories remains untouched.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -1,5 +1,12 @@
 #!/bin/bash
-# info: deliting web domain
+# info: delete web domain
+# options: user domain
+#
+# The call of function leads to the removal of domain and all its components
+# (statistics, folders contents, ssl certificates, etc.). This operation is
+# not fully supported by "undo" function, so the data recovery is possible
+# only with a help of reserve copy.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

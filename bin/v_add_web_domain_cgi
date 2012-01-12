@@ -1,5 +1,12 @@
 #!/bin/bash
-# info: adding cgi support for domain
+# info: add cgi support for domain
+# options: user domain
+#
+# The function switches on cgi support by adding +ExecCGI directive into
+# webserver configuration file. The use of this function is provided for
+# cases, when temporary cgi support is necessary, for other cases use of
+# templates is recommended.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

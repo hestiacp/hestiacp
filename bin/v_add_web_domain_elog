@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: adding error log for domain
+# info: add error logging for domain
+# options: user domain
+#
+# The function enables a separate ErrorLog file for a domain, accessible for
+# reading by users.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

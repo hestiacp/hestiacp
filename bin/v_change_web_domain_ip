@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: changing domain ip
+# info: change web domain ip address
+# options: user domain ip
+#
+# The call is used for changing the site ip address. The ip change will be
+# performed for a virtual apache host and for a configuration nginx file both.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

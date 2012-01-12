@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: deliting web domain ssl
+# info: delete web domain ssl support
+# options: user domain
+#
+# The function disable https support and deletes SSL certificates.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

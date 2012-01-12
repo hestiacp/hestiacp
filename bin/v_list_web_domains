@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: listing web domains
+# info: list web domains
+# options user [format]
+#
+# The function of obtaining the list of all user domains.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

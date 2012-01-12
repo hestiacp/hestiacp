@@ -1,5 +1,9 @@
 #!/bin/bash
-# info: updating disk usage for domain
+# info: update disk usage for domain
+# options: user domain
+#
+# The function recalculates disk usage for speciefic webdomain.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

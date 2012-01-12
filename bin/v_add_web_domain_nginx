@@ -1,5 +1,10 @@
 #!/bin/bash
-# info: adding nginx support
+# info: add webdomain nginx support
+# options: user domain
+#
+# The function enables nginx support for a domain. It can significantly improve
+# website speed.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

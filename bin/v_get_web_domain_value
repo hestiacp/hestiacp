@@ -1,5 +1,11 @@
 #!/bin/bash
-# info: Getting web domain value
+# info: get web domain value
+# options: user domain key
+#
+# The function is intended for obtaining a domain value by the key. This call
+# is useful for arranging composite queries. The answer is displayed only in
+# raw form; output formats aren't supported.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -666,9 +666,9 @@ App.Templates.html = {
 							</div><!-- // stats settings -->\
 							<div class="form-row cc">\
 								<label for="#" class="field-label">SSL Support:</label>\
-								<input type="checkbox" name="SSL" class="styled" ~!:ssl_checked~!="" value="~!SSL~!">\
+								<input type="checkbox" name="SSL" class="styled do_action_toggle_ssl_support ssl_support" ~!:ssl_checked~! value="~!SSL~!">\
 							</div>\
-							<div class="form-row cc">\
+							<div class="form-row cc ssl-crtfct-box">\
 								<label for="#" class="field-label">SSL Document Root:</label>\
 								<input type="text" name="SSL_HOME" class="text-field" value="~!:SSL_HOME~!">\
 							</div>\
@@ -684,7 +684,7 @@ App.Templates.html = {
 							</div>\
                             <div class="form-row ssl-crtfct-box cc">\
 								<label for="#" class="field-label">SSL Certificate CA: <span class="remark">(upload file or paste as text)</span></label>\
-								<span class="ssl-key-input-dummy">...</span>\
+								<span class="ssl-ca-input-dummy">...</span>\
 								<textarea name="SSL_CA" class="textarea ssl-key">~!:SSL_CA~!</textarea>\
 							</div>\
 						</div><!-- // advanced options -->\
@@ -697,7 +697,7 @@ App.Templates.html = {
 							</div>\
 							<div class="sub_section hidden">\
                             <div class="form-row cc">\
-								<label for="#" class="field-label">create dns domain:</label>\
+								<label for="#" class="field-label">create DNS domain:</label>\
 								<input type="checkbox" value="~!:DNS~!" ~!:CHECKED_DNS~! name="DNS" class="styled">\
 							</div>\
 						</div><!-- DNS options -->\

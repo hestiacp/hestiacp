@@ -1,3 +1,19 @@
+App.Actions.toggle_ssl_support = function(evt, elm)
+{
+    if (!elm) {
+        var elm = $(evt.target);
+    }
+    
+    var ref = elm.hasClass('form') ? elm : elm.parents('.form');
+    fb.log(ref);
+    if (ref.find('.ssl_support').attr('checked')) {
+        $('.ssl-crtfct-box', ref).removeClass('hidden');
+    }
+    else {
+        $('.ssl-crtfct-box', ref).addClass('hidden');
+    }
+}
+
 App.Actions.view_nginx_extensions = function(evt)
 {
     var elm = $(evt.target);

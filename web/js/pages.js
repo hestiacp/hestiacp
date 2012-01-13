@@ -87,8 +87,11 @@ App.Pages.WEB_DOMAIN.new_entry = function(evt)
     $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden');   
     var ssl_key_upload  = App.HTML.Build.ssl_key_file();
     var ssl_cert_upload = App.HTML.Build.ssl_cert_file();
+    var ssl_ca_upload = App.HTML.Build.ssl_ca_file();
     $('#'+form_id).find('.ssl-key-input-dummy:first').replaceWith(ssl_key_upload);
     $('#'+form_id).find('.ssl-cert-input-dummy:first').replaceWith(ssl_cert_upload);
+    $('#'+form_id).find('.ssl-ca-input-dummy:first').replaceWith(ssl_ca_upload);
+    App.Actions.toggle_ssl_support({}, $('#'+form_id));
 }
 
 App.Pages.WEB_DOMAIN.edit = function(evt) 
@@ -102,9 +105,14 @@ App.Pages.WEB_DOMAIN.edit = function(evt)
     // ssls uploads
     var ssl_key_upload  = App.HTML.Build.ssl_key_file();
     var ssl_cert_upload = App.HTML.Build.ssl_cert_file();
+    var ssl_ca_upload = App.HTML.Build.ssl_ca_file();
     tpl = tpl.replace('<span class="ssl-key-input-dummy">...</span>', ssl_key_upload);
     tpl = tpl.replace('<span class="ssl-cert-input-dummy">...</span>', ssl_cert_upload);
-    elm.replaceWith(tpl);
+    tpl = tpl.replace('<span class="ssl-ca-input-dummy">...</span>', ssl_cert_upload);
+    var tmp_elm = $('<div>').html(tpl);
+    App.Actions.toggle_ssl_support({}, tmp_elm.find('.form'));
+    elm.replaceWith(tmp_elm.html());
+    
     
     App.Helpers.disableNotEditable();
     App.Helpers.updateScreen();

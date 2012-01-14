@@ -146,13 +146,20 @@ App.HTML.Build.web_domain_form = function (options, id) {
         tpl.set(':title', 'Edit WEB domain');
         tpl.set(':save_button', 'SAVE');
         tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
-        if (options.SSL == 'yes') {
+        if (options.SSL == 'on') {
             tpl.set(':ssl_checked', 'checked="checked"');
         }
         else {
             tpl.set(':ssl_checked', '');
         }
+        if (options.SSL_HOME == 'on') {
+            tpl.set(':ssl_home_checked', 'checked="checked"');
+        }
+        else{
+            tpl.set(':ssl_home_checked', '');
+        }
     }
+    
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.WEB_DOMAIN;
     if (in_edit == true) {
         options.STATS_PASSWORD = options.STATS_LOGIN.trim() != '' ? App.Settings.PASSWORD_IMMUTE : '';
@@ -176,6 +183,25 @@ App.HTML.Build.web_domain_form = function (options, id) {
         tpl.set(':ACTIVE_PASSWORD', 'hidden');
         tpl.set(':stats_auth_checked', '');
     }
+
+    if (options.SSL == 'on') {
+        tpl.set(':ssl_checked', 'checked="checked"');
+        if (options.SSL_HOME == 'on') {
+            tpl.set(':ssl_home_checked', 'checked="checked"');
+        }
+        else{
+            tpl.set(':ssl_home_checked', '');
+        }
+    }
+    else {
+        tpl.set(':ssl_checked', '');
+        tpl.set(':ssl_home_checked', '');
+        tpl.set(':SSL_HOME', '');
+        tpl.set(':SSL_CRT', '');
+        tpl.set(':SSL_KEY', '');
+        tpl.set(':SSL_CA', '');
+    }
+
     return tpl.finalize();
 }
 

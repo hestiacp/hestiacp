@@ -669,8 +669,8 @@ App.Templates.html = {
 								<input type="checkbox" name="SSL" class="styled do_action_toggle_ssl_support ssl_support" ~!:ssl_checked~! value="~!SSL~!">\
 							</div>\
 							<div class="form-row cc ssl-crtfct-box">\
-								<label for="#" class="field-label">SSL Document Root:</label>\
-								<input type="text" name="SSL_HOME" class="text-field" value="~!:SSL_HOME~!">\
+								<label for="#" class="field-label">SSL Shared DocRoot:</label>\
+								<input type="checkbox" name="SSL_HOME" class="styled" ~!:ssl_home_checked~! value="~!SSL_HOME~!">\
 							</div>\
                             <div class="form-row ssl-crtfct-box cc">\
 								<label for="#" class="field-label">SSL Crtificate: <span class="remark">(upload file or paste as text)</span></label>\

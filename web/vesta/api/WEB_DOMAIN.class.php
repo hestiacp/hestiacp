@@ -36,8 +36,8 @@ class WEB_DOMAIN extends AjaxHandler
                               'ELOG'        => $record['ELOG'],
                               'STAT'        => $record['STATS'],
                               'STATS_LOGIN' => $record['STATS_AUTH'],
-                              'SSL'         => $record['SSL'],
-                              'SSL_HOME'    => $record['SSL_HOME'],
+                              'SSL'         => $record['SSL'] == 'yes' ? 'on' : 'off',
+                              'SSL_HOME'    => $record['SSL_HOME'] == 'tsingle' ? 'off' : 'on',
                               'SSL_CRT'     => '',
                               'SSL_KEY'		=> '',
                               'SSL_CA'		=> '',
@@ -170,29 +170,10 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
 
-        /* if ($_s['SSL']) {
-                $params = array(
-                            'USER'     => $user['uid'],
-                            'DOMAIN'   => $_s['DOMAIN'],
-                            'SSL_CERT' => $_s['SSL_CERT']
-                          );
-
-                if ($_s['SSL_HOME']) {
-                    $params['SSL_HOME'] = $_s['SSL_HOME'];
-                }
-
-                $result = 0;
-                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
-
-                if (!$result['status']) {
-                    $this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
-                }
-            }
-        if ($_s['SSL_HOME']) {
-
-        }*/
-      
-        /*if (!empty($_s['DNS'])) {
+        if (($_s['DNS_DOMAIN']) == 'on') {
+          echo 'adding dns domain';
+          echo '<br>';
+    
             $params = array(
                         'USER'       => $user['uid'],
                         'DNS_DOMAIN' => $_s['DOMAIN'],
@@ -207,7 +188,7 @@ class WEB_DOMAIN extends AjaxHandler
             if (!$result['status']) {
                 $this->errors['DNS_DOMAIN'] = array($result['error_code'] => $result['error_message']);
             }
-        }*/
+        }
       
         
         /*if (!empty($_s['MAIL'])) {
@@ -277,10 +258,14 @@ class WEB_DOMAIN extends AjaxHandler
         $_old['ELOG'] = $_old['ELOG'] == 'yes' ? 'on' : 'off';
         $_old['CGI']  = $_old['CGI']  == 'yes' ? 'on' : 'off';
         $_old['AUTH'] = $_old['AUTH'] == 'yes' ? 'on' : 'off';
-        $_old['SSL']  = $_old['SSL']  == 'yes' ? 'on' : 'off';
+        //        $_old['SSL']  = $_old['SSL']  == 'yes' ? 'on' : 'off';
+        //        $_new['SSL']  = $_new['SSL']  == 'yes' ? 'on' : 'off';
+        //        $_new['SSL_HOME']  = $_new['SSL_HOME']  == 'no' ? 'shared' : 'single';
 
         $user = $this->getLoggedUser();
         $_DOMAIN = $_new['DOMAIN'];
+
+        $result['status'] = TRUE;
 
         if ($_old['SUSPEND'] != $_new['SUSPEND']) {
             if ($_new['SUSPEND'] == 'on') {
@@ -451,91 +436,29 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
         
-        /*
-		if (!empty($_s['SSL_KEY'])) {
-            $ssl_file = tempnam(sys_get_temp_dir(), 'ssl');
-            file_put_contents($ssl_file, $_s['SSL_KEY']);
-            
-			$params = array(
-						'USER'     => $user['uid'],
-						'DOMAIN'   => $_s['DOMAIN'],
-						'SSL_KEY'  => $ssl_file
-					  );
 
-			if (!empty($_s['SSL_HOME'])) {
-				$params['SSL_HOME'] = $_s['SSL_HOME'];
-			}
-
-			$result = 0;
-			$result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
-
-			if (!$result['status']) {
-				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
-			}
-		}
-        
-        
-        if (!empty($_s['SSL_CERT'])) {
-            $sslcert_file = tempnam(sys_get_temp_dir(), 'ssl');
-            file_put_contents($sslcert_file, $_s['SSL_CERT']);
-            
-			$params = array(
-						'USER'     => $user['uid'],
-						'DOMAIN'   => $_s['DOMAIN'],
-						'SSL_CERT'  => $sslcert_file
-					  );
-
-			$result = 0;
-			$result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSLCERT, $params);
-
-			if (!$result['status']) {
-				$this->errors['SSL_CERT'] = array($result['error_code'] => $result['error_message']);
-			}
-		}
-        */
-
-
-		if (!empty($_new['SSL_KEY']) && !empty($_new['SSL_CRT'])) {
-          //          $ssl_dir = sys_get_temp_dir().'/ssl/'.rand();
+		if (( !empty($_new['SSL_KEY']) && !empty($_new['SSL_CRT']) && $_new['SSL'] == 'on') || $_old['SSL_HOME'] != $_new['SSL_HOME']) {
             $ssl_dir = sys_get_temp_dir().'/';
-//            if(!mkdir($ssl_dir)){
-//                return $this->reply(FALSE, array('error' => 'can\'t create temp ssl dir: '.$ssl_dir));
-//            }
-
-            
             
             $ssl_crt_file = $ssl_dir . $_new['DOMAIN'] . '.crt';
-            if(!file_put_contents($ssl_crt_file, $_new['SSL_CRT']))
+            file_put_contents($ssl_crt_file, $_new['SSL_CRT']);
 
             $ssl_key_file = $ssl_dir . $_new['DOMAIN'] . '.key';
             file_put_contents($ssl_key_file, $_new['SSL_KEY']);
 
     		if (!empty($_new['SSL_CA'])) {
                 $ssl_ca_file = $ssl_dir . $_new['DOMAIN'] . '.ca';
-                //                file_put_contents($ssl_ca_file, $_new['SSL_CA']);
+                file_put_contents($ssl_ca_file, $_new['SSL_CA']);
             }
  
-
-            //            echo '<br>';
-            //            echo $ssl_crt_file;
-            //            echo '<br>';
-            //            echo $ssl_key_file;
-            //            echo '<br>';
-            //            echo $ssl_ca_file;
-
 			$params = array(
 						'USER'     => $user['uid'],
 						'DOMAIN'   => $_DOMAIN,
-                        'SSL_DIR'  => $ssl_dir
-                        //					    'SSL_DIR'  => 'tmp'
+                        'SSL_DIR'  => $ssl_dir,
+                        'SSL_HOME' => $_new['SSL_HOME'] == 'on' ? 'shared' : 'single'
                         );
 
-            //			if (!empty($_s['SSL_HOME'])) {
-            //				$params['SSL_HOME'] = $_s['SSL_HOME'];
-            //			}
-
 			$result = 0;
-
             if($_old['SSL'] == 'on'){
                 $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_SSL, $params);
             }
@@ -543,8 +466,6 @@ class WEB_DOMAIN extends AjaxHandler
                 $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
             }
 
-            //            print_r($result);
-            
 			if (!$result['status']) {
 				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
 			}
@@ -552,12 +473,14 @@ class WEB_DOMAIN extends AjaxHandler
             unlink($ssl_crt_file);
             unlink($ssl_key_file);
             unlink($ssl_ca_file);
-
 		}
 
-		if (empty($_new['SSL_KEY']) && empty($_new['SSL_CRT']) && $_old['SSL'] == 'on') {
+		if ( ((empty($_new['SSL_KEY']) || empty($_new['SSL_CRT'])) && $_old['SSL'] == 'on') || ( $_old['SSL'] == 'on' && $_new['SSL'] == 'off') ){
 			$result = 0;
 			$result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_SSL, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+			if (!$result['status']) {
+				$this->errors['SSL_REMOVING'] = array($result['error_code'] => $result['error_message']);
+			}
         }
 
         return $this->reply($result['status'], $result['data']);

@@ -146,7 +146,20 @@ App.HTML.Build.web_domain_form = function (options, id) {
         tpl.set(':title', 'Edit WEB domain');
         tpl.set(':save_button', 'SAVE');
         tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
+        if (options.SSL == 'on') {
+            tpl.set(':ssl_checked', 'checked="checked"');
+        }
+        else {
+            tpl.set(':ssl_checked', '');
+        }
+        if (options.SSL_HOME == 'on') {
+            tpl.set(':ssl_home_checked', 'checked="checked"');
+        }
+        else{
+            tpl.set(':ssl_home_checked', '');
+        }
     }
+    
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.WEB_DOMAIN;
     if (in_edit == true) {
         options.STATS_PASSWORD = options.STATS_LOGIN.trim() != '' ? App.Settings.PASSWORD_IMMUTE : '';
@@ -170,6 +183,25 @@ App.HTML.Build.web_domain_form = function (options, id) {
         tpl.set(':ACTIVE_PASSWORD', 'hidden');
         tpl.set(':stats_auth_checked', '');
     }
+
+    if (options.SSL == 'on') {
+        tpl.set(':ssl_checked', 'checked="checked"');
+        if (options.SSL_HOME == 'on') {
+            tpl.set(':ssl_home_checked', 'checked="checked"');
+        }
+        else{
+            tpl.set(':ssl_home_checked', '');
+        }
+    }
+    else {
+        tpl.set(':ssl_checked', '');
+        tpl.set(':ssl_home_checked', '');
+        tpl.set(':SSL_HOME', '');
+        tpl.set(':SSL_CRT', '');
+        tpl.set(':SSL_KEY', '');
+        tpl.set(':SSL_CA', '');
+    }
+
     return tpl.finalize();
 }
 
@@ -581,6 +613,9 @@ App.HTML.Build.ssl_key_file = function () {
 App.HTML.Build.ssl_cert_file = function () {
     return '<iframe src="' + App.Helpers.getUploadUrl() + '?action=show&type=cert" width="500px;" height="53px;" framevorder="0" scroll="no">..</iframe>';
 }
+App.HTML.Build.ssl_ca_file = function () {
+    return '<iframe src="' + App.Helpers.getUploadUrl() + '?action=show&type=ca" width="500px;" height="53px;" framevorder="0" scroll="no">..</iframe>';
+}
 App.HTML.Build.user_selects = function (tpl, options) {
     var acc = [];
     var pkg = App.Env.initialParams.USERS.PACKAGE;
@@ -615,6 +650,7 @@ App.HTML.Build.db_selects = function (tpl, options) {
         acc[acc.length++] = tpl.finalize();
     });
     tpl.set(':TYPE_OPTIONS', acc.done());
+
     acc = [];
     var items = App.Env.initialParams.DB.HOST;
     $.each(items, function (val) {
@@ -625,6 +661,18 @@ App.HTML.Build.db_selects = function (tpl, options) {
         acc[acc.length++] = tpl.finalize();
     });
     tpl.set(':HOST_OPTIONS', acc.done());
+
+    acc = [];
+    var items = App.Env.initialParams.DB.ENCODING;
+    $.each(items, function (val) {
+        var tpl = App.Templates.get('select_option', 'general');
+        tpl.set(':VALUE', val);
+        tpl.set(':TEXT', items[val]);
+        tpl.set(':SELECTED', val == options.ENCODING ? 'selected="selected"' : '');
+        acc[acc.length++] = tpl.finalize();
+    });
+    tpl.set(':ENCODING_OPTIONS', acc.done());
+
     return tpl;
 }
 App.HTML.Build.ip_selects = function (tpl, options) {

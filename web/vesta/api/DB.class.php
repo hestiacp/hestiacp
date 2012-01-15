@@ -38,6 +38,8 @@ class DB extends AjaxHandler
                                 'TYPE'      => $record['TYPE'],
                                 'U_DISK'    => $record['U_DISK'],
                                 'DISK'      => 2024,
+                                'ENCODING'  => "utf-8",//$record['ENCODING'],
+                                //                                'ENCODING'  => $record['ENCODING'],
                                 'SUSPEND'   => $record['SUSPEND'],
                                 'DATE'      => date(Config::get('ui_date_format', strtotime($record['DATE'])))
                               );
@@ -65,7 +67,9 @@ class DB extends AjaxHandler
                     'DB'            => $_s['DB'],
                     'DB_USER'       => $_s['USER'],
                     'DB_PASSWORD'   => $_s['PASSWORD'],
-                    'TYPE'          => $_s['TYPE']
+                    'TYPE'          => $_s['TYPE'],
+                    'HOST'          => ''
+                    //                    'ENCODING'      => $_s['ENCODING']
                   );
 
         $result = Vesta::execute(Vesta::V_ADD_DB_BASE, $params);
@@ -74,7 +78,7 @@ class DB extends AjaxHandler
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
 
-        if ($_s['SUSPEND'] == 'on') {
+        if (Utils::getCheckboxBooleanValue($_s['SUSPEND'])) {
             if($result['status']){
                 $result = array();
 
@@ -86,7 +90,6 @@ class DB extends AjaxHandler
             }
         }
 
-    
         return $this->reply($result['status'], $result['data']);
     }
   
@@ -128,16 +131,19 @@ class DB extends AjaxHandler
 
         $user  = $this->getLoggedUser();
         $result = array();
-		if($_new['SUSPEND'] == 'on'){
-			$result = Vesta::execute(Vesta::V_SUSPEND_DB_BASE, array('USER' => $user['uid'], 'DB' => $_new['DB']));
-		}
-		else{
-			$result = Vesta::execute(Vesta::V_UNSUSPEND_DB_BASE, array('USER' => $user['uid'], 'DB' => $_new['DB']));
-		}
 
-		if (!$result['status']) {
-			$this->status = FALSE;
-			$this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
+		$result = array();
+		if(@Utils::getCheckboxBooleanValue($_new['SUSPEND'])){
+			$result = Vesta::execute(Vesta::V_SUSPEND_DB_BASE, array('USER' => $user['uid'], 'DB' => $_new['DB']));
+			return $this->reply($result['status'], $result['error_message']);
+		}
+		elseif(@Utils::getCheckboxBooleanValue($_old['SUSPEND'])){
+			$result = Vesta::execute(Vesta::V_UNSUSPEND_DB_BASE, array('USER' => $user['uid'], 'DB' => $_new['DB']));
+    		if (!$result['status']) {
+    			$this->status = FALSE;
+    			$this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
+    			return $this->reply($result['status'], $result['error_message']);
+        	}
 		}
 
         if ($_new['PASSWORD'] != Vesta::SAME_PASSWORD && $_new['PASSWORD'] != $_old['PASSWORD']) {

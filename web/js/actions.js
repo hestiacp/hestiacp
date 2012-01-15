@@ -366,14 +366,13 @@ App.Actions.save_form = function(evt) {
             if (!confirmed) {
                 return true;
             }
-            else {
-                var values = App.Helpers.getFormValues(elm);
-                if(App.Validate.form(values, $('#'+elm_id))) {
-                    App.Model.add(values, source);
-                    var form_id = App.Constants[App.Env.world + '_FORM_ID'];
-                    $('#'+form_id).remove();
-                }
-            }
+        }
+
+        var values = App.Helpers.getFormValues(elm);
+        if(App.Validate.form(values, $('#'+elm_id))) {
+            App.Model.add(values, source);
+            var form_id = App.Constants[App.Env.world + '_FORM_ID'];
+            $('#'+form_id).remove();
         }
     }
     else { // OLD ITEM, UPDATING IT

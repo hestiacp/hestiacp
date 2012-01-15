@@ -19,6 +19,10 @@ class IP extends AjaxHandler
      */ 
     public function getListExecute(Request $request) 
     {
+        if(!VestaSession::getUserRole()){
+          return self::getListUserIpsExecute($request);
+        }
+
         $reply  = array();
         $result = Vesta::execute(Vesta::V_LIST_SYS_IPS, array(Config::get('response_type')));
         foreach ($result['data'] as $ip => $details) {
@@ -44,8 +48,10 @@ class IP extends AjaxHandler
      */ 
     public function getListUserIpsExecute(Request $request) 
     {
+        $user = $this->getLoggedUser();
+
         $reply  = array();
-        $result = Vesta::execute(Vesta::V_LIST_USER_IPS, array(Config::get('response_type')));
+        $result = Vesta::execute(Vesta::V_LIST_USER_IPS, array($user['uid'], Config::get('response_type')));
         foreach ($result['data'] as $ip => $details) {
             $reply[] = array_merge(
                             array(

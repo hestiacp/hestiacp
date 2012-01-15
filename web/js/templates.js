@@ -138,7 +138,7 @@ App.Templates.html = {
                     </div>\
                     <div class="form-row dns-template-box cc">\
                             <label for="#" class="field-label">Template:</label>\
-                            <span class="select" id="selecttemplate">~!:TPL_DEFAULT_VALUE~!</span>\
+                            <span class="select" id="selecttemplate">~!:TPL_DEFAULT_VALUE~! t </span>\
                                 <select name="TPL" class="styled tpl-item">\
                                        ~!:TPL~!\
                                 </select>\
@@ -286,10 +286,10 @@ App.Templates.html = {
                         <label for="#" class="field-label">Associated DNS Name:</label>\
                         <input type="text" name="NAME" value="~!:NAME~!" class="text-field rule-domain">\
                 </div>\
-                <div class="form-row suspended cc">\
+                <!-- div class="form-row suspended cc">\
 							<label for="#" class="field-label">Suspended:</label>\
 							<input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
-					</div>\
+					</div -->\
 				<div class="form-row buttons-row cc">\
                    <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
                    <span class="cancel-btn do_action_cancel_form">Cancel</span>\
@@ -403,12 +403,12 @@ App.Templates.html = {
 								~!:PACKAGE_OPTIONS~!\
 							</select>\
 						</div>\
-                        <div class="form-row cc">\
+                        <!-- div class="form-row cc">\
 							<label for="#" class="field-label">Shell:</label>\
 							<select class="styled disabled" name="SHELL">\
 								~!:SHELL_OPTIONS~!\
 							</select>\
-						</div>\
+						</div -->\
 						<!-- div class="form-row cc">\
 							<label for="#" class="field-label">role:</label>\
 							<select class="styled" name="ROLE">\
@@ -474,9 +474,9 @@ App.Templates.html = {
                                             <span class="prop-value">~!:FULLNAME~!</span>\
                                         </span>\									</div>\
 									<div class="user-details-box">\
-                                        <span class="prop-box prop-box_group-values cc user-details do_action_login_as">\
+                                        <!-- span class="prop-box prop-box_group-values cc user-details do_action_login_as">\
                                             <span class="prop-value login-as do_action_login_as">login as</span>\
-                                        </span>\
+                                        </span -->\
                                         <span class="prop-box prop-box_group-values cc user-details">\
                                             <span class="prop-title">email:</span>\
                                             <span class="group-values">\
@@ -716,7 +716,7 @@ App.Templates.html = {
                         </div>\
                         </div><!-- Mail options -->\
     					<div class="form-row cc">\
-        					<label for="#" class="field-label">create DNS domain:</label>\
+        					<label for="#" class="field-label">Create DNS domain also:</label>\
 							<input type="checkbox" value="" name="DNS_DOMAIN" class="styled">\
 						</div>\
 						<div class="form-row buttons-row cc">\
@@ -846,7 +846,7 @@ App.Templates.html = {
 							<select name="TYPE" class="styled">~!:TYPE_OPTIONS~!</select>\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">Name:</label>\
+							<label for="#" class="field-label">DB name:</label>\
 							<input type="text" class="text-field" name="DB" value="~!:DB~!">\
 						</div>\
 						<div class="db-credentials ">\
@@ -864,10 +864,10 @@ App.Templates.html = {
 							<label for="#" class="field-label">Host:</label>\
 							<select name="HOST" class="styled">~!:HOST_OPTIONS~!</select>\
 						</div -->\
-						<div class="form-row cc">\
+						<!-- div class="form-row cc">\
 							<label for="#" class="field-label">Encoding:</label>\
 							<select name="ENCODING" class="styled">~!:ENCODING_OPTIONS~!</select>\
-						</div>\
+						</div -->\
 						<div class="form-row suspended cc">\
                             <label for="#" class="field-label">Suspended:</label>\
                             <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
@@ -912,10 +912,10 @@ App.Templates.html = {
 							</div>\
 							<div class="props-ext">\
 								<!-- span class="backup-db do_action_backup_db">backup</span-->\
-									<span class="prop-box">\
+									<!-- span class="prop-box">\
 										<span class="prop-title">encoding:</span>\
 										<span class="prop-value">~!:ENCODING~!</span>\
-									</span>\
+									</span -->\
 								<!-- disk usage block -->\
 								<div class="b-usage-box disk-usage cc">\
 									<div class="usage-box">\
@@ -1075,13 +1075,13 @@ App.Templates.html = {
 								<a class="backup-url" href="return alert(\'Not available at the time\');">download</a>\
 							</div>\
 							<div class="props-ext">\
-								<div class="backup-actions">\
+								<!-- div class="backup-actions">\
 									<a class="backup-actions-url restore-url" href="return alert(\'Not available at the time\');">restore</a>\
 									<a class="backup-actions-url detailed-restore-url" href="return alert(\'Not available at the time\');">\
 										<span class="detailed-restore-title">detailed</span>\
 										<span class="detailed-restore-ext">restore</span>\
 									</a>\
-								</div>\
+								</div -->\
 							</div>							\
 						</div><!-- // .row-details -->\
 					</div><!-- // .row 1 -->']

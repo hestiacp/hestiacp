@@ -218,7 +218,7 @@ MAIL;
         $disk_quota = $rs['data'];
 
         $reply = array(
-                    'auth_user'  => array('uid' => $this->getLoggedUser()),
+                    'auth_user'  => array('uid' => $this->getLoggedUser(), 'admin' => !!VestaSession::getUserRole()),
                     'user_data'  => array('BANDWIDTH' => (int)$bandwidth, 'DISK_QUOTA' => (int)$disk_quota),
                     'WEB_DOMAIN' => $this->getWebDomainParams($data_web_domain, $global_data),
                     'CRON'       => $this->getCronParams(),
@@ -372,7 +372,50 @@ MAIL;
         $db_types = $this->getDBTypes();
         return array(
                     'TYPE' => $db_types,
-                    'HOST' => array('vestacp.com' => 'vestacp.com', 'askcow.org' => 'askcow.org')
+                    'HOST' => array('vestacp.com' => 'vestacp.com', 'askcow.org' => 'askcow.org'),
+                    'ENCODING'      => array(
+
+                            'utf8' => 'utf8', 'latin1' => 'latin1', 'cp1251' => 'cp1251',
+
+                            ''          => '', 
+
+                            'big5'      => 'Big5    — Traditional Chinese ', 
+                            'dec8'      => 'dec8    — DEC West European ', 
+                            'cp850'     => 'cp850   — DOS West European', 
+                            'hp8'       => 'hp8     — HP West European', 
+                            'koi8r'     => 'koi8r   — KOI8-R Relcom Russian', 
+                            'latin1'    => 'latin1  — cp1252 West European', 
+                            'latin2'    => 'latin2  — ISO 8859-2 Central European', 
+                            'swe7'      => 'swe7    — 7bit Swedish', 
+                            'ascii'     => 'ascii   — US ASCII', 
+                            'ujis'      => 'ujis    — EUC-JP Japanese', 
+                            'sjis'      => 'sjis    — Shift-JIS Japanese', 
+                            'hebrew'    => 'hebrew  — ISO 8859-8 Hebrew', 
+                            'tis620'    => 'tis620  — TIS620 Thai', 
+                            'euckr'     => 'euckr   — EUC-KR Korean', 
+                            'koi8u'     => 'koi8u   — KOI8-U Ukrainian', 
+                            'gb2312'    => 'gb2312  — GB2312 Simplified Chinese', 
+                            'greek'     => 'greek   — ISO 8859-7 Greek', 
+                            'cp1250'    => 'cp1250  — Windows Central European', 
+                            'gbk'       => 'gbk     — GBK Simplified Chinese', 
+                            'latin5'    => 'latin5  — ISO 8859-9 Turkish', 
+                            'armscii8'  => 'armscii8— ARMSCII-8 Armenian', 
+                            'utf8'      => 'utf8    — UTF-8 Unicode', 
+                            'ucs2'      => 'ucs2    — UCS-2 Unicode', 
+                            'cp866'     => 'cp866   — DOS Russian', 
+                            'keybcs2'   => 'keybcs2 — DOS Kamenicky Czech-Slovak', 
+                            'macce'     => 'macce   — Mac Central European', 
+                            'macroman'  => 'macroman— Mac West European', 
+                            'cp853'     => 'cp852   — DOS Central European', 
+                            'latin7'    => 'latin7  — ISO 8859-13 Baltic', 
+                            'cp1251'    => 'cp1251  — Windows Cyrillic', 
+                            'cp1256'    => 'cp1256  — Windows Arabic', 
+                            'cp1257'    => 'cp1257  — Windows Baltic', 
+                            'binary'    => 'binary  — Binary pseudo charset', 
+                            'geostd8'   => 'geostd8 — GEOSTD8 Georgian', 
+                            'cp932'     => 'cp932   — SJIS for Windows Japanese', 
+                            'eucjpms'   => 'eucjpms — UJIS for Windows Japanese'
+                        )
                 );
     }
     

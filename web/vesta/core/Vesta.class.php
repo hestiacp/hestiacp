@@ -46,6 +46,7 @@ class Vesta
     const V_LIST_WEB_DOMAINS_PROXY          = 'v_list_web_domains_proxy';
     const V_LIST_WEB_DOMAINS_SSL            = 'v_list_web_domains_ssl';
     const V_LIST_WEB_DOMAINS_STATS          = 'v_list_web_domains_stats';
+    const V_LIST_WEB_DOMAIN_SSL             = 'v_list_web_domain_ssl';
     const V_LIST_WEB_TEMPLATES              = 'v_list_web_templates';
     const V_ADD_WEB_DOMAIN                  = 'v_add_web_domain';
     const V_ADD_WEB_DOMAIN_ALIAS            = 'v_add_web_domain_alias';
@@ -55,7 +56,7 @@ class Vesta
     const V_ADD_WEB_DOMAIN_ELOG             = 'v_add_web_domain_elog';
     const V_ADD_WEB_DOMAIN_CGI              = 'v_add_web_domain_cgi';
     const V_CHANGE_WEB_DOMAIN_IP            = 'v_change_web_domain_ip';
-    const V_CHANGE_WEB_DOMAIN_SSLCERT       = 'v_change_web_domain_sslcert';
+    const V_CHANGE_WEB_DOMAIN_SSL           = 'v_change_web_domain_sslcert';
     const V_CHANGE_WEB_DOMAIN_SSLHOME       = 'v_change_web_domain_sslhome';
     const V_CHANGE_WEB_DOMAIN_TPL           = 'v_change_web_domain_tpl';
     const V_DEL_WEB_DOMAIN_CGI              = 'v_delete_web_domain_cgi';

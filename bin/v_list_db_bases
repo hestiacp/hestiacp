@@ -40,13 +40,14 @@ is_user_valid
 conf=$V_USERS/$user/db.conf
 
 # Defining fileds to select
-fields='$DB $USER $HOST $TYPE $U_DISK $SUSPEND $DATE'
+fields='$DB $USER $HOST $TYPE $CHARSET $U_DISK $SUSPEND $DATE'
 
 # Listing databases
 case $format in 
     json)   json_list ;;
     plain)  nohead=1; shell_list ;;
-    shell)  shell_list | column -t ;;
+    shell)  fields='$DB $USER $HOST $TYPE $U_DISK $DATE';
+            shell_list | column -t ;;
     *)      check_args '1' '0' 'user [format]'
 esac
 

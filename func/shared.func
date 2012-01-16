@@ -263,6 +263,64 @@ format_validation() {
         fi
     }
 
+    # Define minute/hour/day/month validator
+    format_mhd() {
+        val="$1"
+        digit=$val
+        limit=60
+
+        if [ "$var" = 'day' ]; then
+            limit=31
+        fi
+        if [ "$var" = 'month' ]; then
+            limit=12
+        fi
+        if [ "$var" = 'wday' ]; then
+            limit=7
+        fi
+
+        letters=$(echo "$val"|grep -c "[a-Z]")
+        lslash=$(echo "$val"| grep "^/")
+        if [ -z "$val" ] || [ 0 -ne "$letters" ] || [ -n "$lslash" ]; then
+            echo "Error: $var is out of range"
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
+        fi
+
+        special_chars=$(echo "$val" | \
+            grep -c "[!|@|#|$|^|&|(|)|+|=|{|}|:|,|.|<|>|?|\|\"|'|;|%| ]" )
+        if [[ 0 -ne "$special_chars" ]] || [ 5 -le ${#val} ]; then
+            echo "Error: $var is out of range"
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
+        fi
+
+        star=$(echo "$val" |grep '*')
+        if [ ! -z "$star" ]; then
+            slash=$(echo $val |grep "^*/")
+            if [ "$val" != '*' ] && [ -z "$slash" ]; then
+                echo "Error: $var is out of range"
+                log_event 'debug' "$E_INVALID $V_EVENT"
+                exit $E_INVALID
+            else
+                if [ -n "$slash" ]; then
+                    digit=$(echo $val | cut -f 2 -d / )
+                fi
+                if [ "$val" = '*' ]; then
+                    digit=0
+                fi
+            fi
+        fi
+
+        if [ "$limit" -lt "$digit" ]; then
+            echo "Error: $var is out of range"
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
+        fi
+    }
+
+
+
     # Defining format_ext function
     format_ext() {
         val="$1"
@@ -313,6 +371,7 @@ format_validation() {
             ssl)                format_usr "$v" ;;
             domain)             format_dom "$v" ;;
             database)           format_db  "$v" ;;
+            day)                format_mhd "$v" ;;
             db_user)            format_dbu "$v" ;;
             dvalue)             format_dvl "$v" ;;
             fname)              format_usr "$v" ;;
@@ -328,6 +387,7 @@ format_validation() {
             ns8)                format_dom "$v" ;;
             email)              format_eml "$v" ;;
             extentions)         format_ext "$v" ;;
+            hour)               format_mhd "$v" ;;
             host)               format_usr "$v" ;;
             interface)          format_ifc "$v" ;;
             ip)                 format_ip  "$v" ;;
@@ -337,6 +397,8 @@ format_validation() {
             mask)               format_ip  "$v" ;;
             max_usr)            format_int "$v" ;;
             max_db)             format_int "$v" ;;
+            min)                format_mhd "$v" ;;
+            month)              format_mhd "$v" ;;
             lname)              format_usr "$v" ;;
             owner)              format_usr "$v" ;;
             package)            format_usr "$v" ;;
@@ -349,6 +411,7 @@ format_validation() {
             template)           format_usr "$v" ;;
             ttl)                format_int "$v" ;;
             user)               format_usr "$v" ;;
+            wday)               format_mhd "$v" ;;
         esac
     done
 }

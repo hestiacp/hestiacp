@@ -40,9 +40,6 @@ is_user_suspended
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing user shell
-update_user_value "$user" '$SHELL' "$shell"
-
 # Get shell full path
 shell_path=$(/usr/bin/chsh --list-shells | grep -w "$shell" )
 
@@ -50,9 +47,13 @@ shell_path=$(/usr/bin/chsh --list-shells | grep -w "$shell" )
 /usr/bin/chsh -s "$shell_path" "$user" >/dev/null 2>&1
 
 
+
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Changing user shell
+update_user_value "$user" '$SHELL' "$shell"
 
 # Logging
 log_event 'system' "$V_EVENT"

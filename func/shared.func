@@ -61,10 +61,10 @@ format_validation() {
 
         # Checking shell
         check_shell=$(/usr/bin/chsh --list-shells | grep -w "$val" )
-        if [ -z "$check_shell" ]; then
+        if [ -z "$1"] || [ -z "$check_shell" ]; then
             echo "Error: shell not found"
-            log_event 'debug' "$E_INVALID $V_EVENT"
-            exit $E_INVALID
+            log_event 'debug' "$E_NOTEXIST $V_EVENT"
+            exit $E_NOTEXIST
         fi
     }
 

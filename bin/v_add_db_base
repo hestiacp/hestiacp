@@ -94,6 +94,7 @@ echo "$v_str">>$V_USERS/$user/db.conf
 
 # Hiding password
 V_EVENT="$V_DATE $V_SCRIPT $user $database $db_user ***** $type $host"
+V_EVENT="$V_EVENT $encoding"
 
 # Logging
 log_history "$V_EVENT" "v_delete_db_base $user $database"

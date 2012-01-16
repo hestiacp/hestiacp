@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : January 12, 2012
+last updated : January 15, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -266,6 +266,7 @@ input::-moz-focus-inner{
 		float:left;
 		margin-right:4px;
 	}
+	/*
 	.section .section-title .add-entry{
 		position:relative;
 		top:2px;
@@ -282,17 +283,20 @@ input::-moz-focus-inner{
 			background-position:-14px 0;
 			cursor:pointer;
 		}
-
+	*/
 .section .section-devider{
 	position:absolute;
 	left:0;
 	bottom:0;
 	z-index:10;
-	/*background:url(../images/section-status-sprite-5.gif) no-repeat -420px 115px;	*/
 	display:block;
 	width:100%;
 	height:3px;
-	background:url(../images/section-status-sprite-6.png) no-repeat -420px 100%;
+
+	/*background:url(../images/section-status-sprite-5.gif) no-repeat -420px 115px;	*/
+	/*background:url(../images/section-status-sprite-6.png) no-repeat -420px 100%;*/
+	background:url(../images/section-status-sprite-7.png) no-repeat -136px 100%;
+	
 }
 		
 .dnstpl-nav-item .section-title{
@@ -319,7 +323,9 @@ input::-moz-focus-inner{
 	cursor:pointer;
 	}
 	.primary-nav .active .section-devider{
-		background-position:-283px 100%;
+		/*background-position:-283px 100%;*/
+		background-position:-276px 100%;
+
 		height:6px;
 		bottom:-3px;
 	}
@@ -596,6 +602,9 @@ input::-moz-focus-inner{
 		color:#5d5d5d;
 		cursor:pointer;
 		white-space:nowrap;
+	}
+	.checkbox-selector:hover .checkbox{
+		background-position:0 -90px;
 	}
 	.checkbox-selector .selector-title:hover{
 		color:#2ea8bd;	
@@ -1575,10 +1584,14 @@ input::-moz-focus-inner{
         background-color:#FFFFCB;
     }
 	.b-new-entry select.styled{
-		top:10px;
+		top:0;
 	}
 	.b-new-entry option{
-		font:14px arial,sans-serif;
+		padding:5px 5px 5px 8px;
+		font-family:Arial, Helvetica, sans-serif;
+		font-size:14px;
+		font-weight:bold;
+		color:#555;
 	}
 	.b-new-entry .form-options-group{}
 	

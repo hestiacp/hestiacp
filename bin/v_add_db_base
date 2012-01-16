@@ -23,7 +23,7 @@ db_password=$4
 type=$5
 host=$6
 encoding=${7-UTF8}
-
+encoding=$(echo "$encoding" |tr '[:lower:]' '[:upper:]')
 # Importing variables
 source $VESTA/conf/vars.conf
 source $V_CONF/vesta.conf
@@ -89,11 +89,12 @@ increase_user_value "$user" '$U_DATABASES'
 
 # Adding db to db conf
 v_str="DB='$database' USER='$db_user' HOST='$host' TYPE='$type'"
-v_str="$v_str U_DISK='0' SUSPEND='no' DATE='$V_DATE'"
+v_str="$v_str CHARSET='$encoding' U_DISK='0' SUSPEND='no' DATE='$V_DATE'"
 echo "$v_str">>$V_USERS/$user/db.conf
 
 # Hiding password
 V_EVENT="$V_DATE $V_SCRIPT $user $database $db_user ***** $type $host"
+V_EVENT="$V_EVENT $encoding"
 
 # Logging
 log_history "$V_EVENT" "v_delete_db_base $user $database"

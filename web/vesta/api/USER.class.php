@@ -51,6 +51,7 @@ class USER extends AjaxHandler
                                 "SUSPEND"               => $details['SUSPENDED'],
                                 "CONTACT"               => $details['CONTACT'],
                                 "REPORTS"               => $details['REPORTS'],
+                                "REPORTS_ENABLED"       => $details['REPORTS'],
                                 "IP_OWNED"              => $details['IP_OWNED'],
                                 "U_DIR_DISK"            => $details['U_DIR_DISK'],
                                 "U_DISK"                => $details['U_DISK'],
@@ -132,33 +133,42 @@ class USER extends AjaxHandler
      */
     public function addExecute(Request $request) 
     {
-        $spell  = $request->getParameter('spell');
+        $_s  = $request->getParameter('spell');
         $user   = $this->getLoggedUser(); 
         $params = array(
-                    'USER'     => $spell['LOGIN_NAME'],
-                    'PASSWORD' => $spell['PASSWORD'],
-                    'EMAIL'    => $spell['CONTACT'],
-                    'PACKAGE'  => $spell['PACKAGE'],
-                    'FNAME'    => $spell['FNAME'],
-                    'LNAME'    => $spell['LNAME']
+                    'USER'     => $_s['LOGIN_NAME'],
+                    'PASSWORD' => $_s['PASSWORD'],
+                    'EMAIL'    => $_s['CONTACT'],
+                    'PACKAGE'  => $_s['PACKAGE'],
+                    'FNAME'    => $_s['FNAME'],
+                    'LNAME'    => $_s['LNAME']
                   );
            
         $result = Vesta::execute(Vesta::V_ADD_SYS_USER, $params);      
         // Reports
-        $enable_reports = Utils::getCheckboxBooleanValue($spell['REPORTS_ENABLED']);
-        $reports_result = $this->setUserReports($spell['LOGIN_NAME'], $spell['REPORTS_ENABLED']);              
+        //        $enable_reports = Utils::getCheckboxBooleanValue($spell['REPORTS_ENABLED']);
+        //        $reports_result = $this->setUserReports($spell['LOGIN_NAME'], $spell['REPORTS_ENABLED']);              
         // Set SHELL
-        $this->setShell($spell['LOGIN_NAME'], $spell['SHELL']);
+        //        $this->setShell($_s['LOGIN_NAME'], $_s['SHELL']);
 
         if (!$result['status']) {
             $this->errors[] = array($result['error_code'] => $result['error_message']);
         }
 
+ 		if(@Utils::getCheckboxBooleanValue($_s['REPORTS_ENABLED'])){
+           $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $_USER));
+            if (!$result['status']) {
+                $this->status = FALSE;
+                $this->errors['REPORTS'] = array($result['error_code'] => $result['error_message']);
+            }
+        }
+
+
         if ($_s['SUSPEND'] == 'on') {
             if($result['status']){
                 $result = array();
 
-                $result = Vesta::execute(Vesta::V_SUSPEND_SYS_USER,  array('USER' => $user['uid'], 'USER' => $spell['LOGIN_NAME']));
+                $result = Vesta::execute(Vesta::V_SUSPEND_SYS_USER,  array('USER' => $user['uid'], 'USER' => $_s['LOGIN_NAME']));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
@@ -246,6 +256,20 @@ class USER extends AjaxHandler
             if (!$result['status']) {
                 $this->status = FALSE;
                 $this->errors['EMAIL'] = array($result['error_code'] => $result['error_message']);
+            }
+        }
+
+        if ($_old['REPORTS_ENABLED'] != $_new['REPORTS_ENABLED']) {
+            $result = array();
+    		if(@Utils::getCheckboxBooleanValue($_new['REPORTS_ENABLED'])){
+                $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $_USER));
+            }
+            else{
+                $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $_USER));
+            }
+            if (!$result['status']) {
+                $this->status = FALSE;
+                $this->errors['REPORTS'] = array($result['error_code'] => $result['error_message']);
             }
         }
 

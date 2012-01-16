@@ -87,7 +87,7 @@ App.Actions.update_cs_value = function(evt)
     
     if (App.Tmp[App.Env.world + '_selected_records'] > 0) {
         var confirm_message_key = App.Tmp[App.Env.world + '_selected_records'] == 1 ? 1 + ' record' : App.Tmp[App.Env.world + '_selected_records'] + ' records';
-        var confirmed = confirm('This action will ' + val.toLowerCase() + ' ' + confirm_message_key + '. Do you want to proceede?');
+        var confirmed = confirm('This action will ' + val.toLowerCase() + ' ' + confirm_message_key + '. Do you want to proceed?');
         if (confirmed) {
             fb.log('mass_' + val);
             var func_name = val.toLowerCase();

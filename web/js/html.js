@@ -110,7 +110,7 @@ App.HTML.Build.user_form = function (options, id) {
         ns[ns.length++] = App.Templates.get('PLUS_ONE_NS', 'user').finalize();
         tpl.set(':NS', ns.done());
     } else {
-//        tpl.set(':NS', '');
+        tpl.set(':NS', '');
     }
     tpl = App.HTML.setTplKeys(tpl, options, true);
     tpl = App.HTML.Build.user_selects(tpl, options);
@@ -664,27 +664,14 @@ App.HTML.Build.db_selects = function (tpl, options) {
     });
     tpl.set(':TYPE_OPTIONS', acc.done());
 
-    acc = [];
-    var items = App.Env.initialParams.DB.HOST;
-    $.each(items, function (val) {
-        var tpl = App.Templates.get('select_option', 'general');
-        tpl.set(':VALUE', val);
-        tpl.set(':TEXT', items[val]);
-        tpl.set(':SELECTED', val == options.HOST ? 'selected="selected"' : '');
-        acc[acc.length++] = tpl.finalize();
-    });
-    tpl.set(':HOST_OPTIONS', acc.done());
+    var obj = App.Env.initialParams.DB.HOST;
+    var opts = App.HTML.Build.options(obj, options.HOST);
+    tpl.set(':HOST_OPTIONS', opts);
 
-    acc = [];
-    var items = App.Env.initialParams.DB.ENCODING;
-    $.each(items, function (val) {
-        var tpl = App.Templates.get('select_option', 'general');
-        tpl.set(':VALUE', val);
-        tpl.set(':TEXT', items[val]);
-        tpl.set(':SELECTED', val == options.ENCODING ? 'selected="selected"' : '');
-        acc[acc.length++] = tpl.finalize();
-    });
-    tpl.set(':ENCODING_OPTIONS', acc.done());
+
+    var obj = App.Env.initialParams.DB.CHARSET;
+    var opts = App.HTML.Build.options(obj, options.CHARSET);
+    tpl.set(':CHARSET_OPTIONS', opts);
 
     return tpl;
 }

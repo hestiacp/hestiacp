@@ -11,9 +11,9 @@ $('document').ready(function() {
         App.Utils.detectBrowser();
         App.Ref.init();    
         
-        App.Env.world = 'USER';
+        //App.Env.world = 'USER';
         // Disabled cookie tab restoring. Enable if needed
-        /*if ('undefined' != typeof App.Tmp.loadTAB) {
+        if ('undefined' != typeof App.Tmp.loadTAB) {
             App.Env.world = App.Tmp.loadTAB;
         }
         
@@ -25,7 +25,7 @@ $('document').ready(function() {
             else {
                 App.Env.world = App.Constants.TABS[0];
             }
-        }*/
+        }
         
         App.Pages.init();        
         App.Core.listen();

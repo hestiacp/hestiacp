@@ -76,20 +76,20 @@ class VestaSession
 
     public function loginAs($login)
     {     
-      // TODO checkrights for login as   
-      //            if(Vesta::hasRights(self::getUserRole();, 'login_as')){
-    
-        if(!$_SESSION['real_user']) 
-            $_SESSION['real_user'] = $_SESSION['user'];
+        // TODO checkrights for login as   
+        if(Vesta::hasRights(self::getUserRole(), 'login_as')){
+            if(!$_SESSION['real_user']){
+                $_SESSION['real_user'] = $_SESSION['user'];
+            }
+        }  
 
-        $_SESSION['user'] = $login;
-        
-        //      }
+      $_SESSION['user'] = $login;
     }
 
     public function logoutAs()
     {       
         $_SESSION['user'] = $_SESSION['real_user'];
+        $_SESSION['real_user'] = false;
     }
 }
 ?>

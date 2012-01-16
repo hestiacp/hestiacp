@@ -370,13 +370,14 @@ MAIL;
     public function getDbParams($data = array())
     {
         $db_types = $this->getDBTypes();
+        $db_hosts = $this->getDBHosts();
+        $result = Vesta::execute(Vesta::V_LIST_DNS_TEMPLATES, null, self::JSON);
         return array(
-                    'TYPE' => $db_types,
-                    'HOST' => array('vestacp.com' => 'vestacp.com', 'askcow.org' => 'askcow.org'),
-                    'ENCODING'      => array(
-
-                            'utf8' => 'utf8', 'latin1' => 'latin1', 'cp1251' => 'cp1251',
-
+                    'TYPE'      => $db_types,
+                    'HOST'      => $db_hosts,
+                    'CHARSET'   => array(
+                            'utf8' => 'utf8', 'latin1' => 'latin1', 'cp1251' => 'cp1251'
+/*
                             ''          => '', 
 
                             'big5'      => 'Big5    — Traditional Chinese ', 
@@ -415,13 +416,30 @@ MAIL;
                             'geostd8'   => 'geostd8 — GEOSTD8 Georgian', 
                             'cp932'     => 'cp932   — SJIS for Windows Japanese', 
                             'eucjpms'   => 'eucjpms — UJIS for Windows Japanese'
+*/
                         )
                 );
     }
     
     public function getDBTypes()
     {
-        return array('mysql' => 'mysql', 'postgre' => 'postgre');
+        return array('mysql' => 'MySQL', 'pgsql' => 'PostgreSQL');
+    }
+
+    public function getDBHosts()
+    {
+
+        return array('localhost' => 'localhost');
+        foreach($this->getDBTypes() as $type => $type_name){
+            $result = Vesta::execute(Vesta::V_LIST_DB_HOSTS, $type, self::JSON);        
+            foreach ($result['data'] as $host_name => $host_data) {
+                if (Utils::getCheckboxBooleanValue($host_data['ACTIVE'])) {
+                    $hosts[$host_name] = $type_name .' – '. $host_name;
+                }
+            }
+        }
+
+        return $hosts;
     }
     
     /**

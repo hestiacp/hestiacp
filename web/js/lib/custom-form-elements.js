@@ -25,7 +25,7 @@ Visit http://ryanfait.com/ for more information.
 
 var checkboxHeight = "25";
 var radioHeight = "25";
-var selectWidth = "210";
+var selectWidth = "230";
 
 
 /* No need to change anything after this */
@@ -46,6 +46,9 @@ var Custom = {
 				}
                 if ($(inputs[a]).attr('class').indexOf('do_action_toggle_batch_selector') != -1) {
 					span[a].className += ' do_action_toggle_batch_selector'; // save toggle functionality
+				}
+                if ($(inputs[a]).attr('class').indexOf('do_action_toggle_ssl_support') != -1) {
+					span[a].className += ' do_action_toggle_ssl_support'; // save toggle functionality
 				}
                 
 

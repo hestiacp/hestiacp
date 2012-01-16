@@ -29,6 +29,7 @@ class Vesta
     const V_LIST_SYS_USER                   = 'v_list_user';
     const V_LIST_USER_PACKAGES              = 'v_list_user_packages';
     const V_ADD_SYS_USER                    = 'v_add_user';
+    const V_ADD_SYS_USER_REPORTS            = 'v_add_user_reports';
     const V_CHANGE_SYS_USER_CONTACT         = 'v_change_user_contact';
     const V_CHANGE_SYS_USER_NS              = 'v_change_user_ns';
     const V_CHANGE_SYS_USER_PACKAGE         = 'v_change_user_package';
@@ -39,6 +40,7 @@ class Vesta
     const V_SUSPEND_SYS_USER				= 'v_suspend_user';
     const V_UNSUSPEND_SYS_USER				= 'v_unsuspend_user';
     const V_DEL_SYS_USER                    = 'v_delete_user';
+    const V_DEL_SYS_USER_REPORTS            = 'v_delete_user_reports';
     // WEB_DOMAIN
     const V_LIST_WEB_DOMAINS                = 'v_list_web_domains';
     const V_LIST_WEB_DOMAINS_ALIAS          = 'v_list_web_domains_alias';
@@ -122,14 +124,14 @@ class Vesta
     // CRON
     const V_LIST_CRON_JOBS                  = 'v_list_cron_jobs';
     const V_ADD_CRON_JOB                    = 'v_add_cron_job';
-    const V_ADD_SYS_USER_REPORTS            = 'v_add_user_reports';
+    //    const V_ADD_SYS_USER_REPORTS            = 'v_add_user_reports';
     const V_CHANGE_CRON_JOB                 = 'v_change_cron_job';
     const V_SUSPEND_CRON_JOB                = 'v_suspend_cron_job';
     const V_SUSPEND_CRON_JOBS               = 'v_suspend_cron_jobs';
     const V_UNSUSPEND_CRON_JOB              = 'v_unsuspend_cron_job';
     const V_UNSUSPEND_CRON_JOBS             = 'v_unsuspend_cron_jobs';
     const V_DEL_CRON_JOB                    = 'v_delete_cron_job';
-    const V_DEL_SYS_USER_REPORTS            = 'v_delete_user_reports';
+    //    const V_DEL_SYS_USER_REPORTS            = 'v_delete_user_reports';
     // STATS
     const V_LIST_SYS_RRD                    = 'v_list_sys_rrd json';
     const V_UPDATE_SYS_RRD                  = 'v_update_sys_rrd';

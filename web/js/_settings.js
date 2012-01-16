@@ -59,11 +59,12 @@ App.Messages.get = function(key, plural) {
 }
 
 // Imutable
-App.Settings.Imutable       = {};
-App.Settings.Imutable.USER  = ['LOGIN_NAME'];
-App.Settings.Imutable.DB    = ['DB', 'TYPE', 'USER'];
-App.Settings.Imutable.DNS   = ['DNS_DOMAIN'];
-App.Settings.Imutable.IP    = ['INTERFACE'];
+App.Settings.Imutable               = {};
+App.Settings.Imutable.USER          = ['LOGIN_NAME'];
+App.Settings.Imutable.WEB_DOMAIN    = ['DOMAIN'];
+App.Settings.Imutable.DB            = ['DB', 'TYPE', 'USER', 'CHARSET', 'HOST'];
+App.Settings.Imutable.DNS           = ['DNS_DOMAIN'];
+App.Settings.Imutable.IP            = ['IP_ADDRESS', 'NETMASK', 'INTERFACE'];
 
 
 // Empty

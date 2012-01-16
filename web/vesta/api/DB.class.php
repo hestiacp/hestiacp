@@ -38,8 +38,7 @@ class DB extends AjaxHandler
                                 'TYPE'      => $record['TYPE'],
                                 'U_DISK'    => $record['U_DISK'],
                                 'DISK'      => 2024,
-                                'ENCODING'  => "utf-8",//$record['ENCODING'],
-                                //                                'ENCODING'  => $record['ENCODING'],
+                                'CHARSET'   => strtolower($record['CHARSET']),
                                 'SUSPEND'   => $record['SUSPEND'],
                                 'DATE'      => date(Config::get('ui_date_format', strtotime($record['DATE'])))
                               );
@@ -68,8 +67,8 @@ class DB extends AjaxHandler
                     'DB_USER'       => $_s['USER'],
                     'DB_PASSWORD'   => $_s['PASSWORD'],
                     'TYPE'          => $_s['TYPE'],
-                    'HOST'          => ''
-                    //                    'ENCODING'      => $_s['ENCODING']
+                    'HOST'          => $_s['HOST'],
+                    'CHARSET'       => $_s['CHARSET']
                   );
 
         $result = Vesta::execute(Vesta::V_ADD_DB_BASE, $params);

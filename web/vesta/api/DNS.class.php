@@ -102,7 +102,7 @@ class DNS extends AjaxHandler
                     'TPL'           => $_s['TPL'],
                     'EXP'           => $_s['EXP'],
                     'SOA'           => $_s['SOA'],
-                    'TTL'           => $_s['TTL'],
+                    'TTL'           => $_s['TTL']
                 );
     
         $result = Vesta::execute(Vesta::V_ADD_DNS_DOMAIN, $params);

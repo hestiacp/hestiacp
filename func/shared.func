@@ -674,15 +674,11 @@ get_user_value() {
 
 restart_schedule() {
     type="$1"
-    period="$2"
-
-    # Checking period
-    if [ -z "$period" ]; then
-        period=$(grep 'RESTART_PERIOD=' $V_CONF/vesta.conf | cut -f 2 -d \')
+    if  [ -z "$RESTART_PERIOD" ]; then
+        RESTART_PERIOD=0
     fi
-
-    if [ "$period" -le 0 ]; then
-        $V_FUNC/restart_"$type"
+    if [ "$RESTART_PERIOD" -le 0 ]; then
+        $V_BIN/v_restart_"$type"
     else
         echo "$type" >> $V_QUEUE/restart.pipe
     fi

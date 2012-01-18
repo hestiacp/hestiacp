@@ -27,6 +27,11 @@ export PATH
 # Argument defenition
 period=$1
 
+# Checking rrddir
+if [ ! -d "$V_RRD" ]; then
+    mkdir -p $V_RRD
+fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #

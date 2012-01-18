@@ -95,6 +95,7 @@ App.HTML.Build.user_form = function (options, id) {
         tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
     }
     options = !App.Helpers.isEmpty(options) ? options : App.Empty.USER;
+
     if (in_edit == true) {
         options.PASSWORD = App.Settings.PASSWORD_IMMUTE;
         var ns = [];
@@ -146,6 +147,15 @@ App.HTML.Build.web_domain_form = function (options, id) {
         tpl.set(':title', 'Edit WEB domain');
         tpl.set(':save_button', 'SAVE');
         tpl.set(':DELETE_ACTION', App.Templates.get('DELETE_ACTION', 'general').finalize());
+
+        if(options.SSL_CRT == '' || options.SSL_KEY == ''){
+            options.SSL = '';
+            options.SSL_HOME = '';
+            options.SSL_CRT = '';
+            options.SSL_KEY = '';
+            options.SSL_CA = '';
+        }
+
         if (options.SSL == 'on') {
             tpl.set(':ssl_checked', 'checked="checked"');
         }
@@ -167,7 +177,7 @@ App.HTML.Build.web_domain_form = function (options, id) {
     tpl = App.HTML.setTplKeys(tpl, options, true);
     tpl = App.HTML.Build.web_domain_selects(tpl, options);
     tpl = App.HTML.toggle_suspended_form(tpl, options);
-    if (options.CGI == 'yes') {
+    if (options.CGI == 'yes' || !in_edit) {
         tpl.set(':CHECKED_CGI', 'checked="checked"');
     }
     if (options.ELOG == 'yes') {
@@ -384,8 +394,11 @@ App.HTML.Build.web_domain_entry = function (o, key) {
         'DISK_QUOTA_MEASURE':       App.Helpers.getMbHumanMeasure(App.Env.initialParams.user_data.DISK_QUOTA),
         'BANDWIDTH_MEASURE':        App.Helpers.getMbHumanMeasure(App.Env.initialParams.user_data.BANDWIDTH),
         'BANDWIDTH':                App.Helpers.getMbHuman(App.Env.initialParams.user_data.BANDWIDTH),
-        'DISK_QUOTA':               App.Helpers.getMbHuman(App.Env.initialParams.user_data.DISK_QUOTA)
+        'DISK_QUOTA':               App.Helpers.getMbHuman(App.Env.initialParams.user_data.DISK_QUOTA),
+        'SSL':                      (o.SSL_CRT == '' || o.SSL_KEY == '' || o.SSL != 'on') ? 'off' : 'on'
     };
+
+
     var o = $.extend(o, processed_data);
     o.U_DISK_PERCENTAGE_2 = o.U_DISK_PERCENTAGE;
     o.U_DISK_PERCENTAGE_3 = o.U_DISK_PERCENTAGE;
@@ -651,27 +664,14 @@ App.HTML.Build.db_selects = function (tpl, options) {
     });
     tpl.set(':TYPE_OPTIONS', acc.done());
 
-    acc = [];
-    var items = App.Env.initialParams.DB.HOST;
-    $.each(items, function (val) {
-        var tpl = App.Templates.get('select_option', 'general');
-        tpl.set(':VALUE', val);
-        tpl.set(':TEXT', items[val]);
-        tpl.set(':SELECTED', val == options.HOST ? 'selected="selected"' : '');
-        acc[acc.length++] = tpl.finalize();
-    });
-    tpl.set(':HOST_OPTIONS', acc.done());
+    var obj = App.Env.initialParams.DB.HOST;
+    var opts = App.HTML.Build.options(obj, options.HOST);
+    tpl.set(':HOST_OPTIONS', opts);
 
-    acc = [];
-    var items = App.Env.initialParams.DB.ENCODING;
-    $.each(items, function (val) {
-        var tpl = App.Templates.get('select_option', 'general');
-        tpl.set(':VALUE', val);
-        tpl.set(':TEXT', items[val]);
-        tpl.set(':SELECTED', val == options.ENCODING ? 'selected="selected"' : '');
-        acc[acc.length++] = tpl.finalize();
-    });
-    tpl.set(':ENCODING_OPTIONS', acc.done());
+
+    var obj = App.Env.initialParams.DB.CHARSET;
+    var opts = App.HTML.Build.options(obj, options.CHARSET);
+    tpl.set(':CHARSET_OPTIONS', opts);
 
     return tpl;
 }
@@ -691,9 +691,11 @@ App.HTML.Build.dns_selects = function (tpl, options) {
         $.each(App.Env.initialParams.DNS.TPL, function (key) {
             obj[key] = key;
         });
-        var opts = App.HTML.Build.options(obj, options.PACKAGE);
+
+        var opts = App.HTML.Build.options(obj, options.TPL);
         tpl.set(':TPL', opts);
-        tpl.set(':TPL_DEFAULT_VALUE', options.TPL || App.Helpers.getFirstKey(obj));
+//        tpl.set(':TPL_DEFAULT_VALUE', options.TPL || App.Helpers.getFirstKey(obj));
+
     } catch (e) {
         return tpl;
     }

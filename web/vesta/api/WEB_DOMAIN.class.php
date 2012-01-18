@@ -37,13 +37,13 @@ class WEB_DOMAIN extends AjaxHandler
                               'STAT'        => $record['STATS'],
                               'STATS_LOGIN' => $record['STATS_AUTH'],
                               'SSL'         => $record['SSL'] == 'yes' ? 'on' : 'off',
-                              'SSL_HOME'    => $record['SSL_HOME'] == 'tsingle' ? 'off' : 'on',
+                              'SSL_HOME'    => $record['SSL_HOME'] == 'same' ? 'off' : 'on',
                               'SSL_CRT'     => '',
                               'SSL_KEY'		=> '',
                               'SSL_CA'		=> '',
                               'NGINX'       => $record['NGINX'],
                               'NGINX_EXT'   => $record['NGINX_EXT'],
-                              'SUSPEND'     => $record['SUSPEND'] == 'on' ? 'on' : 'off',
+                              'SUSPEND'     => $record['SUSPEND'], // == 'yes' ? 'on' : 'off',
                               'DATE'        => date(Config::get('ui_date_format', strtotime($record['DATE'])))
                           );
             $web_details['STAT'] == '' ? $web_details['STAT'] = 'none' : true;
@@ -85,6 +85,7 @@ class WEB_DOMAIN extends AjaxHandler
 
         if (!$result['status']) {
             $this->errors[] = array($result['error_code'] => $result['error_message']);
+            return $this->reply($result['status'], $result['data']);
         }
 
         if (!empty($_s['TPL'])) {
@@ -101,9 +102,9 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
       
+
         if (!empty($_s['ALIAS'])) {
-            $alias = str_replace("\n", "", $_s['ALIAS']);
-			$alias = str_replace("\n", "", $alias);
+            $alias_arr = explode(',', str_replace("\n", "", $_s['ALIAS']));
 
             foreach ($alias_arr as $alias) {
                 $params = array(
@@ -112,7 +113,6 @@ class WEB_DOMAIN extends AjaxHandler
                             'ALIAS'  => trim($alias)
                            );
                 $result = 0;
-
                 $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ALIAS, $params);
 
                 if (!$result['status']) {
@@ -121,7 +121,7 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
             
-        if (!empty($_s['STATS']) && @$_s['STATS'] != 'none') {
+        if (!empty($_s['STAT']) && @$_s['STAT'] != 'none') {
             $params = array(
                         'USER'   => $user['uid'],
                         'DOMAIN' => $_s['DOMAIN'],
@@ -148,21 +148,31 @@ class WEB_DOMAIN extends AjaxHandler
                 $this->errors['STAT_AUTH'] = array($result['error_code'] => $result['error_message']);
             }
 
-        if (!empty($_new['CGI'])) {
-            if (Utils::getCheckboxBooleanValue($_new['CGI'])) {
+        if (!empty($_s['CGI'])) {
+            if (Utils::getCheckboxBooleanValue($_s['CGI'])) {
+                /* removed due to CGI is set by default at WEB DOMAIN creation
                 $result = array();
-                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_CGI, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_CGI, array('USER' => $user['uid'], 'DOMAIN' => $_s['DOMAIN']));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['ADD_CGI'] = array($result['error_code'] => $result['error_message']);
                 }
+                */
+            }
+            else{
+                $result = array();
+                $result = Vesta::execute(Vesta::V_DEL_WEB_DOMAIN_CGI, array('USER' => $user['uid'], 'DOMAIN' => $_s['DOMAIN']));
+                if (!$result['status']) {
+                    $this->status = FALSE;
+                    $this->errors['DEL_CGI'] = array($result['error_code'] => $result['error_message']);
+                }
             }
         }
 
-        if (!empty($_new['ELOG'])) {
-            if (Utils::getCheckboxBooleanValue($_new['ELOG'])) {
+        if (!empty($_s['ELOG'])) {
+            if (Utils::getCheckboxBooleanValue($_s['ELOG'])) {
                 $result = array();
-                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ELOG, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+                $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_ELOG, array('USER' => $user['uid'], 'DOMAIN' => $_s['DOMAIN']));
                 if (!$result['status']) {
                     $this->status = FALSE;
                     $this->errors['ADD_ELOG'] = array($result['error_code'] => $result['error_message']);
@@ -170,16 +180,12 @@ class WEB_DOMAIN extends AjaxHandler
             }
         }
 
-        if (($_s['DNS_DOMAIN']) == 'on') {
-          echo 'adding dns domain';
-          echo '<br>';
-    
-            $params = array(
-                        'USER'       => $user['uid'],
-                        'DNS_DOMAIN' => $_s['DOMAIN'],
-                        'IP'         => $_s['IP']
-                      );
+        if (Utils::getCheckboxBooleanValue($_s['DNS_DOMAIN'])) {
 
+            echo 'adding dns domain';
+            echo '<br>';
+
+            /*
             require_once V_ROOT_DIR . 'api/DNS.class.php';
 
             $dns = new DNS();
@@ -188,6 +194,36 @@ class WEB_DOMAIN extends AjaxHandler
             if (!$result['status']) {
                 $this->errors['DNS_DOMAIN'] = array($result['error_code'] => $result['error_message']);
             }
+            */
+
+
+    
+            $_GET['debug'] = 2;
+            $params = array(
+                        'USER'       => $user['uid'],
+                        'DNS_DOMAIN' => $_s['DOMAIN'],
+                        'IP'         => $_s['IP']
+                      );
+
+            $result = Vesta::execute(Vesta::V_ADD_DNS_DOMAIN, $params);
+            if (!$result['status']) {
+                $this->errors[] = array($result['error_code'] => $result['error_message']);
+            }
+
+    
+            if (@Utils::getCheckboxBooleanValue($_s['SUSPEND'])) {
+                if($result['status']){
+                    $result = array();
+
+                    $result = Vesta::execute(Vesta::V_SUSPEND_DNS_DOMAIN, array('USER' => $user['uid'], 'DNS_DOMAIN' => $_s['DOMAIN']));
+                    if (!$result['status']) {
+                        $this->status = FALSE;
+                        $this->errors['DNS_SUSPEND'] = array($result['error_code'] => $result['error_message']);
+                    }   
+                }
+            }
+
+
         }
       
         
@@ -209,8 +245,41 @@ class WEB_DOMAIN extends AjaxHandler
         }*/
 
 
-       
-        if ($_s['SUSPEND'] == 'on') {
+
+		if (!empty($_s['SSL_KEY']) && !empty($_s['SSL_CRT']) && $_s['SSL'] == 'on' ) {
+            $ssl_dir = sys_get_temp_dir().'/';
+            
+            $ssl_crt_file = $ssl_dir . $_s['DOMAIN'] . '.crt';
+            file_put_contents($ssl_crt_file, $_s['SSL_CRT']);
+
+            $ssl_key_file = $ssl_dir . $_s['DOMAIN'] . '.key';
+            file_put_contents($ssl_key_file, $_s['SSL_KEY']);
+
+    		if (!empty($_s['SSL_CA'])) {
+                $ssl_ca_file = $ssl_dir . $_s['DOMAIN'] . '.ca';
+                file_put_contents($ssl_ca_file, $_s['SSL_CA']);
+            }
+
+            //            $_GET['debug'] = 2;
+			$params = array(
+						'USER'     => $user['uid'],
+						'DOMAIN'   => $_s['DOMAIN'],
+                        'SSL_DIR'  => $ssl_dir,
+                        'SSL_HOME' => $_s['SSL_HOME'] == 'on' ? 'single' : 'same'
+                        );
+
+			$result = 0;
+            $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
+    		if (!$result['status']) {
+                $this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
+            }
+
+            unlink($ssl_crt_file);
+            unlink($ssl_key_file);
+            unlink($ssl_ca_file);
+		}
+
+        if (@Utils::getCheckboxBooleanValue($_s['SUSPEND'])) {
             if($result['status']){
                 $result = array();
           
@@ -221,6 +290,7 @@ class WEB_DOMAIN extends AjaxHandler
                 }   
             }
         }
+
 
         return $this->reply($result['status'], $result['data']);
     }
@@ -267,39 +337,20 @@ class WEB_DOMAIN extends AjaxHandler
 
         $result['status'] = TRUE;
 
-        if ($_old['SUSPEND'] != $_new['SUSPEND']) {
-            if ($_new['SUSPEND'] == 'on') {
-                $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
-                if (!$result['status']) {
-                    $this->status = FALSE;
-                    $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
-                }
-                  //            return $this->reply($result['status']);
-            }
-            else {
-                $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
-                if (!$result['status']) {
-                    $this->status = FALSE;
-                    $this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
-                }
-            }
-            if ($_new['SUSPEND'] == 'on') {
-                $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
-                if (!$result['status']) {
-                    $this->status = FALSE;
-                    $this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
-                }
-                  //            return $this->reply($result['status']);
-            }
-            else {
-                $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
-                if (!$result['status']) {
-                    $this->status = FALSE;
-                    $this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
-                }
-            }
-        }
-    
+
+    	if(@Utils::getCheckboxBooleanValue($_new['SUSPEND'])){
+            $result = Vesta::execute(Vesta::V_SUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+			return $this->reply($result['status'], $result['error_message']);
+		}
+		elseif(@Utils::getCheckboxBooleanValue($_old['SUSPEND'])){
+            $result = Vesta::execute(Vesta::V_UNSUSPEND_WEB_DOMAIN, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN));
+    		if (!$result['status']) {
+    			$this->status = FALSE;
+    			$this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
+    			return $this->reply($result['status'], $result['error_message']);
+        	}
+		}
+
         if ($_old['IP'] != $_new['IP']) {
             $result = array();
             $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_IP, array('USER' => $user['uid'], 'DOMAIN' => $_DOMAIN, 'IP' => $_new['IP']));
@@ -437,7 +488,15 @@ class WEB_DOMAIN extends AjaxHandler
         }
         
 
-		if (( !empty($_new['SSL_KEY']) && !empty($_new['SSL_CRT']) && $_new['SSL'] == 'on') || $_old['SSL_HOME'] != $_new['SSL_HOME']) {
+		if (    (   $_old['SSL_KEY'] != $_new['SSL_KEY'] 
+                    || $_old['SSL_CRT'] != $_new['SSL_CRT'] 
+                    || $_old['SSL_CA'] != $_new['SSL_CA'] 
+                    || $_old['SSL_HOME'] != $_new['SSL_HOME'] 
+                )
+                && !empty($_new['SSL_KEY']) 
+                && !empty($_new['SSL_CRT']) 
+                && $_new['SSL'] == 'on'
+            ) {
             $ssl_dir = sys_get_temp_dir().'/';
             
             $ssl_crt_file = $ssl_dir . $_new['DOMAIN'] . '.crt';
@@ -455,20 +514,39 @@ class WEB_DOMAIN extends AjaxHandler
 						'USER'     => $user['uid'],
 						'DOMAIN'   => $_DOMAIN,
                         'SSL_DIR'  => $ssl_dir,
-                        'SSL_HOME' => $_new['SSL_HOME'] == 'on' ? 'shared' : 'single'
+                        'SSL_HOME' => $_new['SSL_HOME'] == 'on' ? 'single' : 'same'
                         );
 
 			$result = 0;
+
+            // updating ssl 
             if($_old['SSL'] == 'on'){
                 $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_SSL, $params);
+        		if (!$result['status']) {
+           			$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
+                }
+ 
+                // if ssl home dir changed, updating it
+                if($_old['SSL_HOME'] != $_new['SSL_HOME']){
+             		$params = array(
+        				'USER'     => $user['uid'],
+            			'DOMAIN'   => $_DOMAIN,
+                        'SSL_HOME' => $_new['SSL_HOME'] == 'on' ? 'single' : 'same'
+                        );
+                    $result = Vesta::execute(Vesta::V_CHANGE_WEB_DOMAIN_SSLHOME, $params);
+            		if (!$result['status']) {
+                		$this->errors['SSL_HOME'] = array($result['error_code'] => $result['error_message']);
+                    }
+                }
             }
+            // adding new ssl
             else{
                 $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN_SSL, $params);
+    			if (!$result['status']) {
+                    $this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
+                }
             }
 
-			if (!$result['status']) {
-				$this->errors['SSL'] = array($result['error_code'] => $result['error_message']);
-			}
 
             unlink($ssl_crt_file);
             unlink($ssl_key_file);

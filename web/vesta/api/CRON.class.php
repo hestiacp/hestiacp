@@ -132,18 +132,20 @@ class CRON extends AjaxHandler
         $_new   = $request->getParameter('new');
         $result = array();
 
-		if($_new['SUSPEND'] == 'on') {
-			$result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOB, array('USER' => $user['uid'], 'JOB' => $_new['CMD']));
-			return $this->reply($result['status']);
-		}
-		else {
-			$result = Vesta::execute(Vesta::V_UNSUSPEND_CRON_JOB, array('USER' => $user['uid'], 'JOB' => $_new['CMD']));
-		}
 
-		if (!$result['status']) {
-			$this->status = FALSE;
-			$this->errors['SUSPEND'] = array($result['error_code'] => $result['error_message']);
-		}   
+		$result = array();
+		if(@Utils::getCheckboxBooleanValue($_new['SUSPEND'])){
+			$result = Vesta::execute(Vesta::V_SUSPEND_CRON_JOB, array('USER' => $user['uid'], 'JOB' => $_old['JOB']));
+			return $this->reply($result['status'], $result['error_message']);
+		}
+		elseif(@Utils::getCheckboxBooleanValue($_old['SUSPEND'])){
+			$result = Vesta::execute(Vesta::V_UNSUSPEND_CRON_JOB, array('USER' => $user['uid'], 'JOB' => $_old['JOB']));
+    		if (!$result['status']) {
+    			$this->status = FALSE;
+    			$this->errors['UNSUSPEND'] = array($result['error_code'] => $result['error_message']);
+    			return $this->reply($result['status'], $result['error_message']);
+        	}
+		}
 
         $params = array(
                     'USER' => $user['uid'],

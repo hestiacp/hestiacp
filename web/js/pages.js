@@ -70,7 +70,8 @@ App.Pages.USER.new_entry = function(evt)
     $(box).find('.suspended').addClass('hidden');
     App.Ref.CONTENT.prepend($(box).html());
     App.Helpers.updateScreen(); 
-    $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden');   
+    $('#'+form_id).find('.ns-entry, .additional-ns-add').addClass('hidden').find('.rule-required').removeClass('rule-required');   
+    $('#'+form_id).find('.shell-entry').addClass('hidden');
 }
 
 App.Pages.WEB_DOMAIN.new_entry = function(evt)

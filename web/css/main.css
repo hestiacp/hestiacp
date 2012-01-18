@@ -592,7 +592,7 @@ input::-moz-focus-inner{
 		height:11px;
 		margin:2px 5px 0 0;
 		background:url(../images/checkbox-selector.png) no-repeat;
-		cursor:pointer;		
+		cursor:pointer;
 	}
 	.checkbox-selector .selector-title{
 		float:left;
@@ -648,7 +648,7 @@ input::-moz-focus-inner{
   -webkit-background-clip: padding-box;
   background-clip        : padding-box;
   background: #ccc;
-
+  
   background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #fff), color-stop(0.6, #f5f4ef));
   background-image: -webkit-linear-gradient(center bottom, #fff 0%, #f5f4ef 60%);
   background-image: -moz-linear-gradient(center bottom, #fff 0%, #f5f4ef 60%);
@@ -1562,7 +1562,7 @@ input::-moz-focus-inner{
 		width: 195px;
 		height: 28px;
 		padding: 0 24px 0 8px;
-		color: #555;
+		color: #555555;
 		font:bold 14px/28px arial,sans-serif;
 		background:#fff url(../images/select-arrow.png) no-repeat 100% 50%;
 		overflow: hidden;
@@ -2561,7 +2561,7 @@ input::-moz-focus-inner{
 		padding-top:6px;
 	}
 	.db-list .props-ext{
-		width:185px;
+		width:257px;
 		padding-top:6px;		
 	}
 	.db-name{
@@ -3148,6 +3148,16 @@ input::-moz-focus-inner{
 }
 
 /* START: DEV!! */
-.stats-subbar {cursor: pointer;}
-.stats-subbar .sub-active{font-weight: bold;}
+.stats-subbar span{
+    cursor: pointer; 
+    margin-left: 22px; 
+    color: #5D5D5D; 
+    border-bottom: 1px dotted #5D5D5D;
+    font-size: 11px;
+}
+.stats-subbar .sub-active{
+    font-weight: bold; 
+    color: #FF6766; 
+    border-bottom: 0;
+}
 /* END: DEV */

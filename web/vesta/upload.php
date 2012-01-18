@@ -18,7 +18,7 @@ switch ($_GET['action']) {
 	    handleUpload();
 	}
 	else {
-    	    show_form();
+        show_form();
 	}
 	break;
 }
@@ -59,8 +59,8 @@ function handleUpload()
 function show_form()
 {
     $type = $_GET['type'];
-    if (!in_array($type, array('key', 'cert'))) {
-	exit;
+    if (!in_array($type, array('key', 'cert', 'ca'))) {
+        exit;
     }
         
     print <<<HTML

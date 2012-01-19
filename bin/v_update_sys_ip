@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update system ip
-# options: [owner] [ip_status]
+# options: [user] [ip_status]
 #
 # The function scans configured ip in the system and register them with vesta
 # internal database. This call is intended for use on vps servers, where ip is
@@ -12,7 +12,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-owner=${1-vesta}
+user=${1-vesta}
 ip_status=${2-shared}
 
 # Importing variables
@@ -28,12 +28,12 @@ source $V_FUNC/domain.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '0' "$#" '[owner] [ip_status]'
+check_args '0' "$#" '[user] [ip_status]'
 
-# Checking owner
+# Checking user
 if [ ! -z "$1" ]; then
-    format_validation 'owner'
-    is_user_valid "$owner"
+    format_validation 'user'
+    is_user_valid "$user"
 fi
 
 # Checking ip_status
@@ -92,10 +92,7 @@ done
 #----------------------------------------------------------#
 
 # Updating user conf
-if [ ! -z "$owner" ]; then
-    user="$owner"
-    increase_user_value "$user" '$IP_OWNED'
-fi
+increase_user_value "$user" '$IP_OWNED'
 
 # Adding task to the vesta pipe
 if [ "$web_restart" = 'yes' ]; then

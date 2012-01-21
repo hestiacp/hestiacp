@@ -657,7 +657,6 @@ input::-moz-focus-inner{
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#f5f4ef',GradientType=0 );
   background-image: linear-gradient(top, #cccccc 0%,#f5f4ef 60%);
   
-  border-left: 1px solid #c5c4bf;
   position: absolute;
   right: 0;
   top: 0;
@@ -1501,24 +1500,24 @@ input::-moz-focus-inner{
 		color:#747668;
 	}
 	.b-new-entry .form-row{
-		position:relative;
-		padding:10px 15px;
+		position: relative;
+		padding: 10px 15px 9px;
 	}
 	.b-new-entry .field-label,
 	.b-new-entry .row-header{
 		float:left;
 		width:180px;
 		font-size:15px;
-		line-height:2;
+		line-height:35px;
 		color:#3d504a;
 	}
 	.b-new-entry .text-field{
 		float:left;
 		width:265px;
 		margin:0 15px 0 0;
-		padding:6px 7px;
+        padding: 8px 0 7px 7px;
 		border:2px solid #b8c2c3;
-		color:#555;
+		color:#3B3937;
 		font-family:Arial, Helvetica, sans-serif;
 		font-size:14px;
 		font-weight:bold;
@@ -1549,7 +1548,7 @@ input::-moz-focus-inner{
 		-moz-box-shadow:0 0 8px rgba(82, 168, 236, 0.5);
 		-webkit-box-shadow:0 0 8px rgba(82, 168, 236, 0.5);
 		border-color:rgba(82, 168, 236, 0.75) !important;
-		color:#333;
+		color:#262523;
 	}	
 		
 	.b-new-entry .ssl-crtfct-box .textarea{
@@ -1561,7 +1560,7 @@ input::-moz-focus-inner{
 		left:195px;
 		width: 195px;
 		height: 28px;
-		padding: 0 24px 0 8px;
+        padding: 2px 24px 2px 9px;
 		color: #555555;
 		font:bold 14px/28px arial,sans-serif;
 		background:#fff url(../images/select-arrow.png) no-repeat 100% 50%;
@@ -1707,6 +1706,7 @@ input::-moz-focus-inner{
 		line-height:1;
 		letter-spacing:0.5px;
 	}
+/*
 	.generate-pwd:hover,
 	.context-settings:hover{
 		color:#575757;
@@ -1716,6 +1716,7 @@ input::-moz-focus-inner{
 	.context-settings:active{
 		color:#b4c775;	
 	}
+*/
 
 	.b-new-entry .add-ns{
 		display:-moz-inline-stack;
@@ -1745,15 +1746,6 @@ input::-moz-focus-inner{
 			display:inline-block;
 			border-bottom:1px solid #b5c968;
 			}		
-			.add-ns .btn-title:hover{
-				color:#000;
-				border-bottom-color:#b85152;
-			}
-			.add-ns .btn-title:active{
-				color:#b85152;
-				border-bottom-color:#000;
-			}
-	
 	
 	.b-new-entry .buttons-row{
 		position:relative;
@@ -2887,17 +2879,25 @@ input::-moz-focus-inner{
 /* row hover effect
 - - - - - - - - - - - - - - - - - - - */
 .row:hover{
-	background-color:#ffffcb;		
+//	background-color:#ffffcb;
+	background-color: #FEFFD9;
 }
 .ip-list .row:hover .ip-adr,
 .domains-list .row:hover .names .primary,
 .dns-list .row:hover .names .primary,
 .cron-list .row:hover .cron-command-line,
 .users-list .row:hover .username-box .nickname,
-.db-list .row:hover .db-name{
-	border-bottom-style:dashed;
-	border-bottom-color:#e5e5e5;
-	border-bottom-color:#bbb;	
+.db-list .row:hover .db-name
+{
+	border-bottom-style:solid;
+//	border-bottom-color:#e5e5e5;
+//	border-bottom-color:#ccc;
+//	border-bottom-color: #1DB4D6;
+    color: #2EAABD;
+//    color: #333;
+    text-decoration: underline;
+//    text-shadow: 1px 1px 3px #3DB8FF;
+//    text-shadow: 1px 1px 2px #B4DEFC;
 }
 .ip-list .row:hover .ip-adr:hover,
 .domains-list .row:hover .names .primary:hover,
@@ -2906,8 +2906,14 @@ input::-moz-focus-inner{
 .users-list .row:hover .username-box .nickname:hover,
 .db-list .row:hover .db-name:hover{
 	cursor:pointer;
-	border-bottom-style:solid;
-	border-bottom-color:#b4c775;
+//	border-bottom-style:solid;
+//	border-bottom-color:#b4c775;
+//	border-bottom-color:#333;
+//    color: #FF4B4B;
+//    color: #E9640B;
+    color: #FF5B5B;
+    text-decoration: underline;
+    text-shadow: 1px 1px 2px #FEFFC7;
 }
 .ip-list .ip-details-suspended:hover .ip-adr,
 .ip-list .ip-details-suspended:hover .ip-adr:hover{
@@ -2965,8 +2971,9 @@ input::-moz-focus-inner{
 .row:hover .db-user-box .change-pwd,
 .row:hover .add-db-user,
 .row:hover .backup-db,
-.row:hover .user-backups-box .prop-title{
-	color:#6aa0ac;
+.row:hover .user-backups-box .prop-title,
+.row:hover .group-switcher .group-values-count{
+	color: #5BA0AD;
 	border-bottom-color:#cacbbd;
 }
 
@@ -2984,11 +2991,19 @@ input::-moz-focus-inner{
 .row .db-user-box .change-pwd:hover,
 .row .add-db-user:hover,
 .row .backup-db:hover,
-.row .user-backups-box:hover .prop-title{
-	color:#575757;
+.row .user-backups-box:hover .prop-title,
+.row .group-switcher:hover .group-values-count,
+.generate-pwd:hover,
+.context-settings:hover,
+.add-ns .btn-title:hover
+{
+//	color: #26A9E0;
+    color: #FF8D80;
 	border-bottom-color:#b4c775;
 }
-.row .template-box .prop-value:active,
+
+.row .template-box:active .prop-value,
+.row .prop-value:active,
 .row .show-records:active,
 .hide-records:active, 
 .domains-list .row:hover .stats-box .stats-auth-text:active,
@@ -2998,9 +3013,22 @@ input::-moz-focus-inner{
 .row .db-user-box .change-pwd:active,
 .row .add-db-user:active,
 .row .backup-db:active,
-.row .user-backups-box .prop-title:active{
-	color:#b4c775;
+.row .user-backups-box:active .prop-title,
+.row .group-switcher:active .group-values-count,
+.generate-pwd:active,
+.context-settings:active,
+.add-ns .btn-title:active
+{
+	color: #FFCC00;
 }
+.add-domain:hover{
+    color: #92BD10;
+    border-bottom: 1px solid #828477;
+}
+.add-domain:active{
+    color: #FFCC00;
+}
+
 
 /* Checked row
 - - - - - - - - - - - - - - - - - - - */

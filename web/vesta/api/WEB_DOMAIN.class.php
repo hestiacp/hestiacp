@@ -182,23 +182,6 @@ class WEB_DOMAIN extends AjaxHandler
 
         if (Utils::getCheckboxBooleanValue($_s['DNS_DOMAIN'])) {
 
-            echo 'adding dns domain';
-            echo '<br>';
-
-            /*
-            require_once V_ROOT_DIR . 'api/DNS.class.php';
-
-            $dns = new DNS();
-            $result = 0;
-            $result = $dns->addExecute($params);
-            if (!$result['status']) {
-                $this->errors['DNS_DOMAIN'] = array($result['error_code'] => $result['error_message']);
-            }
-            */
-
-
-    
-            $_GET['debug'] = 2;
             $params = array(
                         'USER'       => $user['uid'],
                         'DNS_DOMAIN' => $_s['DOMAIN'],

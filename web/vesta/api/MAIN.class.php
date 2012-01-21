@@ -178,24 +178,31 @@ MAIL;
                 $totals['USER']['blocked'] += 1;
             }            
         }
+
         // web_domains
         $rs = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS, array('USER' => $user['uid']), self::JSON);
         $data_web_domain = $rs['data'];
         foreach ($data_web_domain as $web) {
             $totals['WEB_DOMAIN']['total'] += 1;
+            $web['SUSPEND'] == 'yes' ? $totals['WEB_DOMAIN']['blocked'] += 1 : false;
         }
+
         // db
         $rs = Vesta::execute(Vesta::V_LIST_DB_BASES, array('USER' => $user['uid']), self::JSON);
         $data_db = $rs['data'];
         foreach ($data_db as $db) {
             $totals['DB']['total'] += 1;            
+            $db['SUSPEND'] == 'yes' ? $totals['DB']['blocked'] += 1 : false;
         }
+
         // dns
         $rs = Vesta::execute(Vesta::V_LIST_DNS_DOMAINS, array('USER' => $user['uid']), self::JSON);
         $data_dns = $rs['data'];
         foreach ($data_dns as $dns) {
             $totals['DNS']['total'] += 1;
+            $dns['SUSPEND'] == 'yes' ? $totals['DNS']['blocked'] += 1 : false;
         }
+
         // ip
         $global_data['ips'] = array();
         $rs = Vesta::execute(Vesta::V_LIST_SYS_IPS, null, self::JSON);
@@ -204,6 +211,7 @@ MAIL;
             $totals['IP']['total'] += 1;
             $global_data['ips'][$ip] = $ip;
         }
+
         // cron
         $rs = Vesta::execute(Vesta::V_LIST_CRON_JOBS, array('USER' => $user['uid']), self::JSON);
         $data_cron = $rs['data'];

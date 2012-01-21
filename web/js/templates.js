@@ -88,11 +88,11 @@ App.Templates.html = {
                 <form id="login-form" method="post" action="#" class="auth">\
                     <div class="form-row cc">\
                         <label for="email" class="field-label">Login</label>\
-                        <input type="text" tabindex="1" id="authorize-login" autocomplete="on" class="field-text">\
+                        <input type="text" tabindex="1" id="authorize-login" autocomplete="on" class="field-text" name="login">\
                     </div>\
                     <div class="form-row cc">\
                         <label for="password" class="field-label">Password</label>\
-                        <input type="password" tabindex="2" id="authorize-password" autocomplete="on" class="field-text">\
+                        <input type="password" tabindex="2" id="authorize-password" autocomplete="on" class="field-text" name="password">\
                     </div>\
                     <div id="auth-error" class="error-box hidden"></div>\
                     <div class="form-row last-row cc">\

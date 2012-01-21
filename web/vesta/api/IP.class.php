@@ -192,5 +192,16 @@ class IP extends AjaxHandler
     
         return $this->reply($result['status'], $reply);
     }
-    
+
+    public function massiveDeleteExecute(Request $request)
+    {
+        $user   = $this->getLoggedUser();
+        $_entities = $request->getParameter('entities');
+
+        foreach($_entities as $entity){
+            $result = Vesta::execute(Vesta::V_DEL_SYS_IP, array($entity['IP_ADDRESS']));
+        }
+
+        return $this->reply($result['status'], $result['data']);
+    }
 }

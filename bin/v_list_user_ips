@@ -23,15 +23,15 @@ json_list_user_ips() {
     echo '{'
 
     owned_ips=$(grep -l "OWNER='$user'" $V_IPS/*)
-    shared_ips=$(grep -A5 "OWNER='vesta'" $V_IPS/* |\
+    shared_ips=$(grep -H -A5 "OWNER='vesta'" $V_IPS/* |\
                     grep "STATUS='shared'"|\
                     cut -f 1 -d - )
 
-    ip_list="$owned_ips $shared_ips"
+    ip_list="$owned_ips\n$shared_ips"
     fileds_count=$(echo "$fields" | wc -w)
 
     # Starting main loop
-    for IP in $ip_list; do
+    for IP in $(echo -e "$ip_list" | sort -u); do
         IP=$(basename $IP)
         ip_data=$(cat $V_IPS/$IP)
 
@@ -75,11 +75,11 @@ json_list_user_ips() {
 # Shell function
 shell_list_user_ips() {
     owned_ips=$(grep -l "OWNER='$user'" $V_IPS/*)
-    shared_ips=$(grep -A5 "OWNER='vesta'" $V_IPS/* |\
+    shared_ips=$(grep -H -A5 "OWNER='vesta'" $V_IPS/* |\
                     grep "STATUS='shared'"|\
                     cut -f 1 -d - )
 
-    ip_list="$owned_ips $shared_ips"
+    ip_list="$owned_ips\n$shared_ips"
     if [ -z "$nohead" ]; then
         # Print brief info
         echo "${fields//$/}"
@@ -90,7 +90,7 @@ shell_list_user_ips() {
     fi
 
     # Starting main loop
-    for IP in $ip_list; do
+    for IP in $(echo -e "$ip_list" | sort -u); do
         IP=$(basename $IP)
         ip_data=$(cat $V_IPS/$IP)
 

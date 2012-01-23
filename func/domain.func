@@ -621,7 +621,7 @@ namehost_ip_support() {
         # Checking proxy support
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
             cat $V_WEBTPL/ngingx_ip.tpl | sed -e "s/%ip%/$ip/g" \
-             -e "s/%web_port%/$WEB_SSL_PORT/g" \
+             -e "s/%web_port%/$WEB_PORT/g" \
             -e "s/%proxy_port%/$PROXY_PORT/g" >>$nconf
 
             # Adding to rpaf ip pool as well

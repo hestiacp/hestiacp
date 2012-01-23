@@ -53,7 +53,7 @@ fi
 
 # Parsing data
 if [ -z "$update" ]; then
-    server_status=$(wget -qO-  http://localhost:$WEB_PORT/server-status |\
+    server_status=$(wget -qO-  http://localhost:8081/server-status |\
         grep 'currently being processed'| \
         cut -f 2 -d '>' |\
         sed 's/requests currently being processed, //' | \

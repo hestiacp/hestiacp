@@ -73,11 +73,25 @@ conf="$V_HOME/$user/conf/nginx.conf"
 upd_web_domain_values
 add_web_config
 
+# Checking main vesta httpd config
+main_conf='/etc/nginx/conf.d/vesta_users.conf'
+main_conf_check=$(grep "$conf" $main_conf )
+if [ -z "$main_conf_check" ]; then
+    echo "include $conf;" >>$main_conf
+fi
+
+
 if [ "$SSL" = 'yes' ]; then
     proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
     tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
     conf="$V_HOME/$user/conf/snginx.conf"
     add_web_config
+
+    main_conf='/etc/nginx/conf.d/vesta_users.conf'
+    main_conf_check=$(grep "$conf" $main_conf )
+    if [ -z "$main_conf_check" ]; then
+        echo "include $conf;" >>$main_conf
+    fi
 fi
 
 

@@ -44,7 +44,7 @@ class WEB_DOMAIN extends AjaxHandler
                               'NGINX'       => $record['NGINX'],
                               'NGINX_EXT'   => $record['NGINX_EXT'],
                               'SUSPEND'     => $record['SUSPEND'], // == 'yes' ? 'on' : 'off',
-                              'DATE'        => date(Config::get('ui_date_format', strtotime($record['DATE'])))
+                              'DATE'        => $record['DATE'] //date(Config::get('ui_date_format', strtotime($record['DATE'])))
                           );
             $web_details['STAT'] == '' ? $web_details['STAT'] = 'none' : true;
 

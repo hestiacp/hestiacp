@@ -4,14 +4,27 @@ App.Pages.init = function()
 		App.Ajax.request('MAIN.getInitial', {}, function(reply) {
 			App.Env.initialParams = reply.data;
 			App.Helpers.updateInitial();
-            if (!App.Env.initialParams.auth_user.admin) {
+		});
+
+
+/*
+        if (!App.Env.initialParams.auth_user.admin) {
                 var head= document.getElementsByTagName('head')[0];
                 var script= document.createElement('script');
                 script.type= 'text/javascript';
                 script.src= App.Helpers.generateUrl('js/user_templates.js?'+Math.random());
                 head.appendChild(script);
-            }
-		});
+        }
+        else{
+                var head= document.getElementsByTagName('head')[0];
+                var script= document.createElement('script');
+                script.type= 'text/javascript';
+                script.src= App.Helpers.generateUrl('js/templates.js?'+Math.random());
+                head.appendChild(script);
+        }
+*/
+
+
 	}
     
     App.Pages.prepareHTML();    
@@ -45,6 +58,8 @@ App.Pages.prepareHTML = function()
 
 App.Pages.DNS.showSubform = function(ref) 
 {
+    fb.log('loading');
+    return;
     App.Helpers.showLoading();
     var data = ref.find('.source:first').val();
     App.Ajax.request('DNS.getListRecords', {

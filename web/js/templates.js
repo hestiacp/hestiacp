@@ -144,14 +144,14 @@ App.Templates.html = {
                                 </select>\
                             <span class="context-settings do_action_view_dns_template_settings">View template settings</span>\
                     </div>\
-                    <!-- div class="form-row cc">\
+                    <div class="form-row cc">\
                             <label for="#" class="field-label">TTL:</label>\
                             <input type="text" value="~!:TTL~!" name="TTL" class="text-field ttl-field rule-required rule-numeric">\
                     </div>\
                     <div class="form-row cc">\
                             <label for="#" class="field-label">SOA:</label>\
                             <input type="text" value="~!:SOA~!" name="SOA" class="text-field rule-required rule-ns">\
-                    </div -->\
+                    </div>\
                     <div class="form-row suspended cc">\
 							<label for="#" class="field-label">Suspended:</label>\
 							<input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
@@ -474,9 +474,9 @@ App.Templates.html = {
                                             <span class="prop-value">~!:FULLNAME~!</span>\
                                         </span>\									</div>\
 									<div class="user-details-box">\
-                                        <!-- span class="prop-box prop-box_group-values cc user-details do_action_login_as">\
+                                        <span class="prop-box prop-box_group-values cc user-details do_action_login_as">\
                                             <span class="prop-value login-as do_action_login_as">login as</span>\
-                                        </span -->\
+                                        </span>\
                                         <span class="prop-box prop-box_group-values cc user-details">\
                                             <span class="prop-title">email:</span>\
                                             <span class="group-values">\
@@ -650,10 +650,10 @@ App.Templates.html = {
 								<select name="STAT" class="styled">~!:STAT_OPTIONS~!</select>\
 							</div>\
 							<div class="stats-settings">\
-								<div class="form-row cc">\
+								<!-- div class="form-row cc">\
 									<label for="#" class="field-label">Password Protection:</label>\
 									<input id="stats-auth-enable" type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="styled do_action_toggle_stats_block">\
-								</div>\
+								</div -->\
 								<div class="form-row stats-block ~!:ACTIVE_LOGIN~! cc">\
 									<label for="#" class="field-label">stats login:</label>\
 									<input type="text" class="text-field rule-statslogin" name="STATS_LOGIN" value="~!:STATS_LOGIN~!">\
@@ -715,7 +715,7 @@ App.Templates.html = {
                             </div>\
                         </div>\
                         </div><!-- Mail options -->\
-    					<div class="form-row cc">\
+    					<div class="form-row cc ~!:DNS_DOMAIN_ALSO~!">\
         					<label for="#" class="field-label">Create DNS domain also:</label>\
 							<input type="checkbox" value="" name="DNS_DOMAIN" class="styled">\
 						</div>\

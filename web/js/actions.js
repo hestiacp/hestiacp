@@ -378,8 +378,8 @@ App.Actions.save_form = function(evt) {
     else { // OLD ITEM, UPDATING IT
         var source = $(elm).find('.source').val();
         var values = App.Helpers.getFormValues(elm);
-        if(App.Validate.form(values, $('#'+elm_id))) {            
-            App.Model.update(values, source, elm);         
+        if(App.Validate.form(values, $('#'+elm_id))) {
+            App.Model.update(values, source, elm);     
         }       
     }        
 }

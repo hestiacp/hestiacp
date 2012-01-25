@@ -112,10 +112,11 @@ App.HTML.Build.user_form = function (options, id) {
     } else {
         tpl.set(':NS', '');
     }
+
     tpl = App.HTML.setTplKeys(tpl, options, true);
     tpl = App.HTML.Build.user_selects(tpl, options);
     tpl = App.HTML.toggle_suspended_form(tpl, options);
-    if (options.REPORTS_ENABLED == 'yes') {
+    if (options.REPORTS_ENABLED == 'yes' || options.REPORTS_ENABLED == 'on') {
         tpl.set(':CHECKED', 'checked="checked"');
     } else {
         tpl.set(':CHECKED', '');
@@ -177,10 +178,13 @@ App.HTML.Build.web_domain_form = function (options, id) {
     tpl = App.HTML.setTplKeys(tpl, options, true);
     tpl = App.HTML.Build.web_domain_selects(tpl, options);
     tpl = App.HTML.toggle_suspended_form(tpl, options);
-    if (options.CGI == 'yes' || !in_edit) {
+
+    if (options.CGI == 'yes' || options.CGI == 'on' || !in_edit) {
         tpl.set(':CHECKED_CGI', 'checked="checked"');
     }
-    if (options.ELOG == 'yes') {
+
+
+    if (options.ELOG == 'yes' || options.ELOG == 'on') {
         tpl.set(':CHECKED_ELOG', 'checked="checked"');
     }
     if (options.STATS_LOGIN.trim() != '') {
@@ -211,6 +215,9 @@ App.HTML.Build.web_domain_form = function (options, id) {
         tpl.set(':SSL_KEY', '');
         tpl.set(':SSL_CA', '');
     }
+
+    tpl.set(':DNS_DOMAIN_ALSO', in_edit? 'hidden' : '');
+
 
     return tpl.finalize();
 }
@@ -290,16 +297,12 @@ App.HTML.Build.ip_entry = function (o) {
     
     return tpl.finalize();
 }
-App.HTML.Build.dns_entry = function (o, is_new) {
+App.HTML.Build.dns_entry = function (o) {
     var tpl = App.Templates.get('ENTRY', 'dns');
     tpl = App.HTML.setTplKeys(tpl, o);
     var ip = o.IP.split('.');
     tpl.set(':IP', ip.join('<span class="dot">.</span>'));
     tpl.set(':CHECKED', '');
-    if (is_new) {
-        var now = new Date();
-        tpl.set(':DATE', now.format("d.mm.yyyy"));
-    }
     tpl.set(':TPL_VAL', o.TPL);
     tpl = App.HTML.toggle_suspended_entry(tpl, o);
     
@@ -354,7 +357,8 @@ App.HTML.Build.user_entry = function (o, key) {
         tpl.set(':NS', ns_custom.finalize());
     }
     tpl = App.HTML.Build.user_web_tpl(tpl, o);
-    tpl.set(':REPORTS_ENABLED', o.REPORTS_ENABLED == 'yes' ? 'enabled' : 'DISABLED');
+
+    tpl.set(':REPORTS_ENABLED', o.REPORTS_ENABLED == 'yes' || o.REPORTS_ENABLED == 'on' ? 'enabled' : 'DISABLED');
     if (o.U_DISK_PERCENTAGE > 100) {
         var tpl_over = App.Templates.get('over_bar', 'general');
         var difference = parseInt(o.U_DISK_PERCENTAGE, 10) - 100;

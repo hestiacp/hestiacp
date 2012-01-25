@@ -31,7 +31,7 @@ class CRON extends AjaxHandler
                             'MONTH'     => $record['MONTH'],
                             'WDAY'      => $record['WDAY'],
                             'SUSPEND'   => $record['SUSPEND'],
-                            'DATE'      => date(Config::get('ui_date_format', strtotime($record['DATE']))),
+                            'DATE'      => $record['DATE'], //date(Config::get('ui_date_format', strtotime($record['DATE']))),
                             'JOB'    => $id
                           );
         }

@@ -29,7 +29,7 @@ class IP extends AjaxHandler
             $reply[] = array_merge(
                             array(
                                 'IP_ADDRESS' => $ip,
-                                'DATE'       => date(Config::get('ui_date_format', strtotime($details['DATE'])))
+                                'DATE'       => $details['DATE'] //date(Config::get('ui_date_format', strtotime($details['DATE'])))
                             ), $details);
         }
     

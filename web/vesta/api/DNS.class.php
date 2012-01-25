@@ -34,7 +34,7 @@ class DNS extends AjaxHandler
                          'EXP'          => $details['EXP'],
                          'SOA'          => $details['SOA'],
                          'SUSPEND'      => $details['SUSPEND'],
-                         'DATE'         => date(Config::get('ui_date_format', strtotime($details['DATE'])))
+                         'DATE'         => $details['DATE'] // date(Config::get('ui_date_format', strtotime($details['DATE'])))
                       );
         }
         

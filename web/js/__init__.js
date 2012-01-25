@@ -6,6 +6,8 @@ App.Ajax.request('MAIN.about', {}, function(reply) {
         App.Settings.VestaAbout.version_name  = reply.data.version_name;
     }
 });
+
+
 $('document').ready(function() {
     try {
         App.Utils.detectBrowser();

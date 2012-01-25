@@ -23,12 +23,10 @@ class USER extends AjaxHandler
           return self::getUserExecute($request);
         }
 
-
         $reply  = array();
         $result = Vesta::execute(Vesta::V_LIST_SYS_USERS, array(Config::get('response_type')));
 
         foreach ($result['data'] as $user => $details) {
-            $nses = $this->getNS($user, $details);
             $user_details = array(
                                 "FNAME"                 => $details['FNAME'],
                                 "LNAME"                 => $details['LNAME'],
@@ -50,7 +48,7 @@ class USER extends AjaxHandler
                                 "WEB_TPL"               => $details['WEB_TPL'],
                                 "SUSPEND"               => $details['SUSPENDED'],
                                 "CONTACT"               => $details['CONTACT'],
-                                "REPORTS"               => $details['REPORTS'],
+                                //                                "REPORTS"               => $details['REPORTS'],
                                 "REPORTS_ENABLED"       => $details['REPORTS'],
                                 "IP_OWNED"              => $details['IP_OWNED'],
                                 "U_DIR_DISK"            => $details['U_DIR_DISK'],
@@ -68,6 +66,7 @@ class USER extends AjaxHandler
                                 "IP_OWNED"              => $details['IP_OWNED'],
                                 "NGINX_EXT"				=> $details['"NGINX_EXT']
                             );
+            $nses = $this->getNS($user, $details);
             $reply[$user] = array_merge($user_details, $nses);
             //            $reply[$user] = $user_details;
         }
@@ -119,7 +118,9 @@ class USER extends AjaxHandler
                                 "IP_OWNED"              => $details['IP_OWNED'],
                                 "DATE"                  => $details['DATE']
                             );
-            $reply[$user] = $user_details;
+            $nses = $this->getNS($user, $details);
+            $reply[$user] = array_merge($user_details, $nses);
+            //            $reply[$user] = $user_details;
         }
 
         return $this->reply(TRUE, $reply);
@@ -230,8 +231,6 @@ class USER extends AjaxHandler
         	}
 		}
 
-        $reports_result = $this->setUserReports($_USER, $_new['REPORTS_ENABLED']);
-
         if (!empty($_new['PASSWORD']) && $_new['PASSWORD'] != Vesta::SAME_PASSWORD) {
             $result = array();
             $result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_PASSWORD, array('USER' => $_USER, 'PASSWORD' => $_new['PASSWORD']));
@@ -265,7 +264,7 @@ class USER extends AjaxHandler
                 $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $_USER));
             }
             else{
-                $result = Vesta::execute(Vesta::V_ADD_SYS_USER_REPORTS, array('USER' => $_USER));
+              $result = Vesta::execute(Vesta::V_DEL_SYS_USER_REPORTS, array('USER' => $_USER));
             }
             if (!$result['status']) {
                 $this->status = FALSE;
@@ -274,27 +273,34 @@ class USER extends AjaxHandler
         }
 
         // Set SHELL
-        $this->setShell($_USER, $_new['SHELL']);
+        if($_new['SHELL'] != $_old['SHELL']){
+            $this->setShell($_USER, $_new['SHELL']);
+        }
     
-        $this->setNSentries($_USER, $_new);
+        if($_new[NS1].' '.$_new[NS2].' '.$_new[NS3].' '.$_new[NS4].' '.$_new[NS5].' '.$_new[NS6].' '.$_new[NS7].' '.$_new[NS8] != 
+           $_old[NS1].' '.$_old[NS2].' '.$_old[NS3].' '.$_old[NS4].' '.$_old[NS5].' '.$_old[NS6].' '.$_old[NS7].' '.$_old[NS8]){
+            $this->setNSentries($_USER, $_new); 
+        }
 
-        $names = array(
-                'USER'  => $_USER,
-                'FNAME' => $_new['FNAME'],
-                'LNAME' => $_new['LNAME']
-             );
+        if($_new['FNAME'] != $_old['FNAME'] || $_new['LNAME'] != $_old['LNAME']){
+            $names = array(
+                    'USER'  => $_USER,
+                    'FNAME' => $_new['FNAME'],
+                    'LNAME' => $_new['LNAME']
+                 );
  
-        $result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_NAME, $names);
-        if (!$result['status']) {
-            $this->status = FALSE;
-            $this->errors['NAMES'] = array($result['error_code'] => $result['error_message']);
-        }        
+            $result = Vesta::execute(Vesta::V_CHANGE_SYS_USER_NAME, $names);
+            if (!$result['status']) {
+                $this->status = FALSE;
+                $this->errors['NAMES'] = array($result['error_code'] => $result['error_message']);
+            }        
+        }
 
         if (!$this->status) {
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_PASSWORD, array('USER' => $_USER, 'PASSWORD' => $_old['PASSWORD']));
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_PACKAGE,  array('USER' => $_USER, 'PACKAGE'  => $_old['PACKAGE']));
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_CONTACT,  array('USER' => $_USER, 'EMAIL'    => $_old['EMAIL']));
-            Vesta::execute(Vesta::V_CHANGE_SYS_USER_NS,       array('USER' => $_USER, 'NS1'      => $_old['NS1'], 'NS2' => $_old['NS2']));
+            //            Vesta::execute(Vesta::V_CHANGE_SYS_USER_NS,       array('USER' => $_USER, 'NS1'      => $_old['NS1'], 'NS2' => $_old['NS2']));
             Vesta::execute(Vesta::V_CHANGE_SYS_USER_SHELL,    array('USER' => $_USER, 'SHELL'    => $_old['SHELL']));
         }
 

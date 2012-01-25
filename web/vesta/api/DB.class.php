@@ -40,7 +40,7 @@ class DB extends AjaxHandler
                                 'DISK'      => 2024,
                                 'CHARSET'   => strtolower($record['CHARSET']),
                                 'SUSPEND'   => $record['SUSPEND'],
-                                'DATE'      => date(Config::get('ui_date_format', strtotime($record['DATE'])))
+                                'DATE'      => $record['DATE']// date(Config::get('ui_date_format', strtotime($record['DATE'])))
                               );
         }
     

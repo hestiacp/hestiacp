@@ -584,8 +584,8 @@ App.Templates.html = {
 									<span class="prop-value">~!:SHELL~!</span>\
 								</span>\
 								<span class="prop-box backups-box">\
-									<span class="prop-title">backups:</span>\
-									<span class="prop-value">retention ~!:BACKUPS~!</span>\
+									<span class="prop-title">backup retention:</span>\
+									<span class="prop-value">~!:BACKUPS~!</span>\
 								</span>\							</div>\
 						</div><!-- // .row-details -->\
 					</div>']

@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : January 15, 2012
+last updated : January 26, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -1531,6 +1531,11 @@ input::-moz-focus-inner{
 		color:#a3a590;
 	}
 	
+	.b-new-entry .mandatory{
+		padding-right:5px;
+		background:url(../images/asterisk2.png) no-repeat 100% 2px;
+	}
+	
 	.b-new-entry .custom-select{}
 	
 	.b-new-entry .textarea{
@@ -1925,6 +1930,7 @@ input::-moz-focus-inner{
 	.b-new-entry_cron .form-row-line .text-field{
 		width:112px;
 		margin:0;
+		padding-right:7px;
 	}
 	.b-new-entry_cron .form-row-line .cron-week-box	.text-field{
 		width:109px;

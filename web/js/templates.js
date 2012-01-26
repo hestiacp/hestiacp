@@ -126,18 +126,18 @@ App.Templates.html = {
                     </div>\
                     <div class="form-row cc">\
                             <input type="hidden" value="~!:DATE~!" name="DATE">\
-                            <label for="#" class="field-label">Domain:</label>\
-                            <input type="text" name="DNS_DOMAIN" value="~!:DNS_DOMAIN~!" class="text-field rule-required rule-domain">\
+                            <label for="dns-domain" class="field-label"><span class="mandatory">Domain:</span></label>\
+                            <input type="text" id="dns-domain" name="DNS_DOMAIN" value="~!:DNS_DOMAIN~!" class="text-field rule-required rule-domain">\
                     </div>\
                     <div class="form-row cc">\
-                            <label for="#" class="field-label">IP:</label>\
+                            <label for="ip" class="field-label"><span class="mandatory">IP:</span></label>\
                             <div class="autocomplete-box">\
-                                    <input type="text" name="IP" value="~!:IP~!" class="text-field rule-required rule-ip">\
+                                    <input type="text" id="ip" name="IP" value="~!:IP~!" class="text-field rule-required rule-ip">\
                                     <i class="arrow">&nbsp;</i>\
                             </div>\
                     </div>\
                     <div class="form-row dns-template-box cc">\
-                            <label for="#" class="field-label">Template:</label>\
+                            <label for="selecttemplate" class="field-label">Template:</label>\
                             <span class="select" id="selecttemplate">~!:TPL_DEFAULT_VALUE~! t </span>\
                                 <select name="TPL" class="styled tpl-item">\
                                        ~!:TPL~!\
@@ -145,12 +145,12 @@ App.Templates.html = {
                             <span class="context-settings do_action_view_dns_template_settings">View template settings</span>\
                     </div>\
                     <div class="form-row cc">\
-                            <label for="#" class="field-label">TTL:</label>\
-                            <input type="text" value="~!:TTL~!" name="TTL" class="text-field ttl-field rule-required rule-numeric">\
+                            <label for="ttl" class="field-label"><span class="mandatory">TTL:</span></label>\
+                            <input value="~!:TTL~!" id="ttl" name="TTL" class="text-field ttl-field rule-required rule-numeric" type="text">\
                     </div>\
                     <div class="form-row cc">\
-                            <label for="#" class="field-label">SOA:</label>\
-                            <input type="text" value="~!:SOA~!" name="SOA" class="text-field rule-required rule-ns">\
+                            <label for="soa" class="field-label"><span class="mandatory">SOA:</span></label>\
+                            <input type="text" value="~!:SOA~!" id="soa" name="SOA" class="text-field rule-required rule-ns">\
                     </div>\
                     <div class="form-row suspended cc">\
 							<label for="#" class="field-label">Suspended:</label>\
@@ -253,8 +253,8 @@ App.Templates.html = {
                 <div class="form-error hidden">\
 						</div>\
                 <div class="form-row cc">\
-                        <label for="#" class="field-label">IP Address:</label>\
-                        <input type="text" value="~!:IP_ADDRESS~!" name="IP_ADDRESS" class="text-field rule-required rule-ip">\
+                        <label for="ip-address" class="field-label"><span class="mandatory">IP Address:</span></label>\
+                        <input type="text" value="~!:IP_ADDRESS~!" id="ip-address" name="IP_ADDRESS" class="text-field rule-required rule-ip">\
                 </div>\
                 <div class="form-row cc">\
                         <label for="#" class="field-label">Netmask:</label>\
@@ -371,7 +371,7 @@ App.Templates.html = {
                         </span><span class="hidden ns-full-list"><span class="group-values">~!:NS_FULL~!</span></span>'],        
         NS_RECORD: ['<span class="prop-value">~!:NAME~!</span>'],
         NS_INPUT: ['<div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">~!:NS_LABEL~!:</label>\
+							<label for="#" class="field-label"><span class="mandatory">~!:NS_LABEL~!:</span></label>\
 							<input type="text" value="~!:NAME~!" name="" class="text-field ns-input rule-required rule-ns">\
 							<b class="do_action_delete_ns delete-record"></b>\
 						</div>'],
@@ -389,11 +389,11 @@ App.Templates.html = {
 						<div class="form-error hidden">\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">Username:</label>\
-							<input type="text" class="text-field rule-required rule-username" value="~!:LOGIN_NAME~!" name="LOGIN_NAME">\
+							<label for="login-name" class="field-label"><span class="mandatory">Username:</span></label>\
+							<input type="text" class="text-field rule-required rule-username" value="~!:LOGIN_NAME~!" id="login-name" name="LOGIN_NAME">\
 						</div>\
 						<div class="form-row pwd-box cc">\
-							<label for="#" class="field-label">Password:</label>\
+							<label for="#" class="field-label"><span class="mandatory">Password:</span></label>\
 							<input type="text" class="text-field password rule-required" name="PASSWORD" value="~!:PASSWORD~!">\
 							<span class="generate-pwd do_action_generate_pass">Generate</span>\
 						</div>\
@@ -416,7 +416,7 @@ App.Templates.html = {
 							</select>\
 						</div -->\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">Email:</label>\
+							<label for="#" class="field-label"><span class="mandatory">Email:</span></label>\
 							<input type="text" name="CONTACT" class="text-field rule-email rule-required" value="~!:CONTACT~!">\
 						</div>\
 						<div class="form-row ~!:REPORTS_ENABLED_EDITABLE~! cc">\
@@ -424,19 +424,19 @@ App.Templates.html = {
 							<input type="checkbox" name="REPORTS_ENABLED" ~!:CHECKED~! class="styled" value="~!:REPORTS_ENABLED~!">\
 						</div>\
                     		<div class="form-row cc">\
-							<label for="#" class="field-label">First name:</label>\
+							<label for="#" class="field-label"><span class="mandatory">First name:</span></label>\
 							<input type="text" name="FNAME" class="text-field rule-abc  rule-required" value="~!:FNAME~!">\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">Last name:</label>\
+							<label for="#" class="field-label"><span class="mandatory">Last name:</span></label>\
 							<input type="text" name="LNAME" class="text-field rule-abc rule-required" value="~!:LNAME~!">\
 						</div>\
                         <div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">Name Server #1:</label>\
+							<label for="#" class="field-label"><span class="mandatory">Name Server #1:</span></label>\
 							<input type="text" value="~!:NS1~!" name="NS1" class="text-field rule-required rule-ns">\
 						</div>\
                         <div class="form-row ns-entry cc">\
-							<label for="#" class="field-label">Name Server #2:</label>\
+							<label for="#" class="field-label"><span class="mandatory">Name Server #2:</span></label>\
 							<input type="text" value="~!:NS2~!" name="NS2" class="text-field rule-required rule-ns">\
 						</div>\
                         ~!:NS~!\
@@ -598,8 +598,8 @@ App.Templates.html = {
 						<div class="form-error hidden">\
 						</div>\
                         <div class="form-row cc">\
-							<label for="#" class="field-label">Domain:</label>\
-							<input type="text" name="DOMAIN" class="text-field rule-required rule-ns" value="~!:DOMAIN~!">\
+							<label for="domain" class="field-label"><span class="mandatory">Domain:</span></label>\
+							<input type="text" id="domain" name="DOMAIN" class="text-field rule-required rule-ns" value="~!:DOMAIN~!">\
 						</div>\
 						<div class="form-row cc">\
 							<label for="#" class="field-label">IP:</label>\
@@ -942,7 +942,7 @@ App.Templates.html = {
 							</div>\
 						</div>\
 						<div class="form-row form-row-line run-at-box cc">\
-							<span class="row-header">Schedule Time:</span>\
+							<span class="row-header"><span class="mandatory">Schedule Time:</span></span>\
 							<div class="field-box cron-minute-box">\
 								<label for="#" class="field-label ">Minute:<br>(0&mdash;59)</label>\
 								<div class="field-box-inner cc">\
@@ -975,8 +975,8 @@ App.Templates.html = {
 							</div>\
 						</div>\
 						<div class="form-row cc">\
-							<label for="#" class="field-label">Command:</label>\
-							<textarea class="textarea rule-required" name="CMD">~!:CMD~!</textarea>\
+							<label for="cmd" class="field-label"><span class="mandatory">Command:</span></label>\
+							<textarea class="textarea rule-required" id="cmd" name="CMD">~!:CMD~!</textarea>\
 						</div>\
 						<div class="form-row cc hidden">\
 							<label for="#" class="field-label">report to: <span class="remark">(devide by comma ",")</span></label>\

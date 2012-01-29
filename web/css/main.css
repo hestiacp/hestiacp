@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : January 26, 2012
+last updated : January 30, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -578,24 +578,26 @@ input::-moz-focus-inner{
 	}
 	
 .checkbox-selector,
-.context-actions{
+.context-actions,
+.checkbox-selector .ui-checkbox{
 	display:-moz-inline-stack;
 	display: inline-block;
 	zoom: 1;
 	*display: inline;
 	vertical-align:top;
 	}
-	.checkbox-selector .checkbox{
-		display:block;
-		float:left;
+	.ui-helper-hidden-accessible{
+		display:none;
+	}
+	.checkbox-selector span.ui-checkbox{
+		float:none;
 		width:11px;
 		height:11px;
-		margin:2px 5px 0 0;
-		background:url(../images/checkbox-selector.png) no-repeat;
+		margin:2px 2px 0 0;
+		background:url(../images/checkbox-selector-2012-01-29.png) no-repeat;
 		cursor:pointer;
 	}
 	.checkbox-selector .selector-title{
-		float:left;
 		font-size:11px;
 		line-height:15px;
 		text-transform:uppercase;
@@ -603,8 +605,14 @@ input::-moz-focus-inner{
 		cursor:pointer;
 		white-space:nowrap;
 	}
-	.checkbox-selector:hover .checkbox{
-		background-position:0 -90px;
+	.checkbox-selector span.ui-checkbox-hover{
+		background-position:0 -20px;
+	}
+	.checkbox-selector span.ui-checkbox-state-checked{
+		background-position:0 -40px;
+	}
+	.checkbox-selector span.ui-checkbox-state-checked-hover{
+		background-position:0 -60px;
 	}
 	.checkbox-selector .selector-title:hover{
 		color:#2ea8bd;	

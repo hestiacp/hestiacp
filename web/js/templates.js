@@ -153,8 +153,8 @@ App.Templates.html = {
                             <input type="text" value="~!:SOA~!" id="soa" name="SOA" class="text-field rule-required rule-ns">\
                     </div>\
                     <div class="form-row suspended cc">\
-							<label for="#" class="field-label">Suspended:</label>\
-							<input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
+							<label for="suspended" class="field-label">Suspended:</label>\
+							<input id="suspended" type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="cust-checkbox do_action_toggle_suspend" name="SUSPEND" />\
 					</div>\
                     <div class="form-row buttons-row cc">\
                        <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
@@ -420,8 +420,8 @@ App.Templates.html = {
 							<input type="text" name="CONTACT" class="text-field rule-email rule-required" value="~!:CONTACT~!">\
 						</div>\
 						<div class="form-row ~!:REPORTS_ENABLED_EDITABLE~! cc">\
-							<label for="#" class="field-label">Reports:</label>\
-							<input type="checkbox" name="REPORTS_ENABLED" ~!:CHECKED~! class="styled" value="~!:REPORTS_ENABLED~!">\
+							<label for="user-reports" class="field-label">Reports:</label>\
+							<input id="user-reports" class="cust-checkbox" type="checkbox" name="REPORTS_ENABLED" ~!:CHECKED~! value="~!:REPORTS_ENABLED~!">\
 						</div>\
                     		<div class="form-row cc">\
 							<label for="#" class="field-label"><span class="mandatory">First name:</span></label>\
@@ -441,8 +441,8 @@ App.Templates.html = {
 						</div>\
                         ~!:NS~!\
                         <div class="form-row suspended cc">\
-                            <label for="#" class="field-label">Suspended:</label>\
-                            <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
+                            <label for="suspended" class="field-label">Suspended:</label>\
+                            <input id="suspended" type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="cust-checkbox do_action_toggle_suspend" name="SUSPEND"/>\
                         </div>\
                         <div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
@@ -616,8 +616,8 @@ App.Templates.html = {
 								</select>\
 							</div>\
                         <div class="form-row suspended cc">\
-                            <label for="#" class="field-label">Suspended:</label>\
-                            <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
+                            <label for="suspended" class="field-label">Suspended:</label>\
+                            <input id="suspended" type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="cust-checkbox do_action_toggle_suspend" name="SUSPEND"/>\
                         </div>\
                         <!-- advanced options -->\
 						<div class="form-options-group">\
@@ -630,12 +630,12 @@ App.Templates.html = {
 							</div>\
                             <div class="sub_section hidden">\
 							<div class="form-row cc">\
-								<label for="#" class="field-label">CGI Support:</label>\
-								<input type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="styled">\
+								<label for="domain-cgi" class="field-label">CGI Support:</label>\
+								<input id="domain-cgi" type="checkbox" value="~!:CGI~!" ~!:CHECKED_CGI~! name="CGI" class="cust-checkbox">\
 							</div>\
                             <div class="form-row cc">\
-								<label for="#" class="field-label">Error Logging:</label>\
-								<input type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="styled">\
+								<label for="domain-errlogging" class="field-label">Error Logging:</label>\
+								<input id="domain-errlogging" type="checkbox" value="~!:ELOG~!" ~!:CHECKED_ELOG~! name="ELOG" class="cust-checkbox">\
 							</div>\
                             <div class="form-row cc">\
 								<label for="#" class="field-label">Domain Aliases:</label>\
@@ -651,7 +651,7 @@ App.Templates.html = {
 							</div>\
 							<div class="stats-settings">\
 								<!-- div class="form-row cc">\
-									<label for="#" class="field-label">Password Protection:</label>\
+									<label for="stats-auth-enable" class="field-label">Password Protection:</label>\
 									<input id="stats-auth-enable" type="checkbox" name="STATS_AUTH" ~!:stats_auth_checked~!="" value="~!:STATS_AUTH~!" class="styled do_action_toggle_stats_block">\
 								</div -->\
 								<div class="form-row stats-block ~!:ACTIVE_LOGIN~! cc">\
@@ -665,12 +665,12 @@ App.Templates.html = {
 								</div>\
 							</div><!-- // stats settings -->\
 							<div class="form-row cc">\
-								<label for="#" class="field-label">SSL Support:</label>\
-								<input type="checkbox" name="SSL" class="styled do_action_toggle_ssl_support ssl_support" ~!:ssl_checked~! value="~!SSL~!">\
+								<label for="domain-ssl" class="field-label">SSL Support:</label>\
+								<input id="domain-ssl" type="checkbox" name="SSL" class="cust-checkbox do_action_toggle_ssl_support ssl_support" ~!:ssl_checked~! value="~!SSL~!">\
 							</div>\
 							<div class="form-row cc ssl-crtfct-box">\
-								<label for="#" class="field-label">SSL Shared DocRoot:</label>\
-								<input type="checkbox" name="SSL_HOME" class="styled" ~!:ssl_home_checked~! value="~!SSL_HOME~!">\
+								<label for="domain-ssl-docroot" class="field-label">SSL Shared DocRoot:</label>\
+								<input id="domain-ssl-docroot" type="checkbox" name="SSL_HOME" class="cust-checkbox" ~!:ssl_home_checked~! value="~!SSL_HOME~!">\
 							</div>\
                             <div class="form-row ssl-crtfct-box cc">\
 								<label for="#" class="field-label">SSL Crtificate: <span class="remark">(upload file or paste as text)</span></label>\
@@ -697,8 +697,8 @@ App.Templates.html = {
 							</div>\
 							<div class="sub_section hidden">\
                             <div class="form-row cc">\
-								<label for="#" class="field-label">create DNS domain:</label>\
-								<input type="checkbox" value="~!:DNS~!" ~!:CHECKED_DNS~! name="DNS" class="styled">\
+								<label for="domain-dns" class="field-label">create DNS domain:</label>\
+								<input id="domain-dns" type="checkbox" value="~!:DNS~!" ~!:CHECKED_DNS~! name="DNS" class="cust-checkbox">\
 							</div>\
 						</div><!-- DNS options -->\
 						<div class="form-options-group hidden">\
@@ -709,15 +709,15 @@ App.Templates.html = {
 							</div>\
 							<div class="sub_section hidden">\
                                 <div class="form-row cc">\
-                                    <label for="#" class="field-label">create mail domain:</label>\
-                                    <input type="checkbox" value="~!:MAIL~!" ~!:CHECKED_MAIL~! name="MAIL" class="styled">\
+                                    <label for="domain-mail" class="field-label">create mail domain:</label>\
+                                    <input id="domain-mail" type="checkbox" value="~!:MAIL~!" ~!:CHECKED_MAIL~! name="MAIL" class="cust-checkbox">\
                                 </div>\
                             </div>\
                         </div>\
                         </div><!-- Mail options -->\
     					<div class="form-row cc ~!:DNS_DOMAIN_ALSO~!">\
-        					<label for="#" class="field-label">Create DNS domain also:</label>\
-							<input type="checkbox" value="" name="DNS_DOMAIN" class="styled">\
+        					<label for="domain-mail-dns" class="field-label">Create DNS domain also:</label>\
+							<input id="domain-mail-dns" type="checkbox" value="" name="DNS_DOMAIN" class="cust-checkbox">\
 						</div>\
 						<div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
@@ -869,8 +869,8 @@ App.Templates.html = {
 							<select name="CHARSET" class="styled">~!:CHARSET_OPTIONS~!</select>\
 						</div>\
 						<div class="form-row suspended cc">\
-                            <label for="#" class="field-label">Suspended:</label>\
-                            <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND" />\
+                            <label for="suspended" class="field-label">Suspended:</label>\
+                            <input id="suspended" type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="cust-checkbox do_action_toggle_suspend" name="SUSPEND" />\
                         </div>\
                         <div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\
@@ -983,8 +983,8 @@ App.Templates.html = {
 							<textarea class="textarea" name="REPORT_TO"></textarea>\
 						</div>\
 						<div class="form-row suspended cc">\
-                            <label for="#" class="field-label">Suspended:</label>\
-                            <input type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="styled do_action_toggle_suspend" name="SUSPEND"/>\
+                            <label for="suspended" class="field-label">Suspended:</label>\
+                            <input id="suspended" type="checkbox" ~!:SUSPENDED_CHECKED~! value="~!:SUSPENDED_VALUE~!" class="cust-checkbox do_action_toggle_suspend" name="SUSPEND"/>\
                         </div>\
                         <div class="form-row buttons-row cc">\
                            <input class="add-entry-btn do_action_save_form" type="submit" value="~!:save_button~!"/>\

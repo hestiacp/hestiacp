@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : January 30, 2012
+last updated : February 1, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -594,7 +594,8 @@ input::-moz-focus-inner{
 		width:11px;
 		height:11px;
 		margin:2px 2px 0 0;
-		background:url(../images/checkbox-selector-2012-01-29.png) no-repeat;
+		/*background:url(../i/checkbox-selector-2012-01-29.png) no-repeat;*/
+		background:url(../images/checkbox-selector-2012-01-31.png) no-repeat;
 		cursor:pointer;
 	}
 	.checkbox-selector .selector-title{
@@ -1674,17 +1675,30 @@ input::-moz-focus-inner{
 		}
 		
 	
-	.b-new-entry .checkbox{
+	/*.b-new-entry .checkbox,*/
+	.b-new-entry span.ui-checkbox{
 		display:block;
 		float:left;
 		width:18px;
 		height:18px;
 		margin:6px 0 0;
-		background:url(/images/form-checkboxes.png) no-repeat;
+		/*background:url(../i/checkbox-1.png) no-repeat;*/
+		/*background:url(../i/form-checkboxes.png) no-repeat;*/
+		background:url(../images/checkbox-selector-2012-01-31.png) no-repeat -12px 0;
 	}
-	.b-new-entry .checkbox:hover{
-		background-position:0 -100px;
+	.b-new-entry .ui-checkbox-hover{
+		cursor:pointer;
+	}
+	.b-new-entry span.ui-checkbox-hover{
+		background-position:-12px -20px;
 	}	
+	.b-new-entry span.ui-checkbox-state-checked{
+		background-position:-12px -40px;
+	}	
+	.b-new-entry span.ui-checkbox-state-checked-hover{
+		background-position:-12px -60px;
+	}
+	
 	.b-new-entry .stats-settings{
 		padding-left:40px;
 	}

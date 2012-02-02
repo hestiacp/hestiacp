@@ -44,26 +44,26 @@ class MAIN extends AjaxHandler
             return $this->reply(false, null, 'Captcha is invalid ');
         }
         
-        $users = Vesta::execute(Vesta::V_LIST_SYS_USERS, 'json');
-        $email_matched_count = array();
-        
-        if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/",$request->getParameter('email'))) {
-            return $this->reply(false, null, 'Email is invalid');
-        }
-        
-        foreach ($users['data'] as $user) {           
-            if ($user['CONTACT'] == trim($request->getParameter('email'))) {
-                $email_matched_count[] = $user;
+        $cmd = Config::get('sudo_path')." ".Config::get('vesta_functions_path').Vesta::V_LIST_SYS_USERS." 'json'";
+        exec($cmd, $output, $return);
+ 
+        $users = json_decode(implode('', $output), true);
+
+        $login_matched_count = array();
+
+        foreach ($users as $user => $data) {           
+            if ($user == trim($request->getParameter('login'))) {
+                $login_matched_count[$user] = $data;
             }
         }
         
-        if (empty($email_matched_count)) {
+        if (empty($login_matched_count)) {
             return $this->reply(false, null, 'There is no such user.');
         }
 
-        foreach ($email_matched_count as $reset_user) {
+        foreach ($login_matched_count as $reset_user => $data) {
             
-            $secret_key = $reset_user['RKEY'];
+            $secret_key = $data['RKEY'];
             $reset_link = 'https://'.$_SERVER['HTTP_HOST'].'/change_password.php?v='.$secret_key;
             
             $mail_body = <<<MAIL
@@ -73,7 +73,7 @@ class MAIN extends AjaxHandler
                     </a>  
                     <div style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;font-size:13px;margin:14px">
                     <h2 style="font-family:'Helvetica Neue', Arial, Helvetica, sans-serif;margin:0 0 16px;font-size:18px;font-weight:normal">
-                        Vesta received a request to reset the password for your account {$reset_user['FNAME']} {$reset_user['LNAME']}?
+                        Vesta received a request to reset the password for your account {$data['FNAME']} {$data['LNAME']}?
                     </h2>
                     <p>
                         If you want to reset your password, click on the link below (or copy and paste the URL into your browser):<br>
@@ -94,9 +94,9 @@ class MAIN extends AjaxHandler
                 </div>
 MAIL;
             
-            $headers           = 'MIME-Version: 1.0' . "\n";
+            $headers            = 'MIME-Version: 1.0' . "\n";
             $headers           .= 'Content-type: text/html; charset=UTF-8' . "\n";
-            $to                 = $request->getParameter('email');
+            $to                 = $data['CONTACT'];
             $subject            = 'Reset your Vesta password';
             $message            = $mail_body;
             mail($to, $subject, $message, $headers);

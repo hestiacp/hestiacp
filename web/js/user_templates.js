@@ -126,18 +126,18 @@ App.Templates.html = {
                     </div>\
                     <div class="form-row cc">\
                             <input type="hidden" value="~!:DATE~!" name="DATE">\
-                            <label for="#" class="field-label">Domain:</label>\
-                            <input type="text" name="DNS_DOMAIN" value="~!:DNS_DOMAIN~!" class="text-field rule-required rule-domain">\
+                            <label for="dns-domain" class="field-label"><span class="mandatory">Domain:</span></label>\
+                            <input type="text" id="dns-domain" name="DNS_DOMAIN" value="~!:DNS_DOMAIN~!" class="text-field rule-required rule-domain">\
                     </div>\
                     <div class="form-row cc">\
-                            <label for="#" class="field-label">IP:</label>\
+                            <label for="ip" class="field-label"><span class="mandatory">IP:</span></label>\
                             <div class="autocomplete-box">\
-                                    <input type="text" name="IP" value="~!:IP~!" class="text-field rule-required rule-ip">\
+                                    <input type="text" id="ip" name="IP" value="~!:IP~!" class="text-field rule-required rule-ip">\
                                     <i class="arrow">&nbsp;</i>\
                             </div>\
                     </div>\
                     <div class="form-row dns-template-box cc">\
-                            <label for="#" class="field-label">Template:</label>\
+                            <label for="selecttemplate" class="field-label">Template:</label>\
                             <span class="select" id="selecttemplate">~!:TPL_DEFAULT_VALUE~! t </span>\
                                 <select name="TPL" class="styled tpl-item">\
                                        ~!:TPL~!\
@@ -149,8 +149,8 @@ App.Templates.html = {
                             <input type="text" value="~!:TTL~!" name="TTL" class="text-field ttl-field rule-required rule-numeric">\
                     </div>\
                     <div class="form-row cc">\
-                            <label for="#" class="field-label">SOA:</label>\
-                            <input type="text" value="~!:SOA~!" name="SOA" class="text-field rule-required rule-ns">\
+                            <label for="soa" class="field-label"><span class="mandatory">SOA:</span></label>\
+                            <input type="text" value="~!:SOA~!" id="soa" name="SOA" class="text-field rule-required rule-ns">\
                     </div -->\
                     <div class="form-row suspended cc">\
 							<label for="#" class="field-label">Suspended:</label>\
@@ -584,8 +584,8 @@ App.Templates.html = {
 									<span class="prop-value">~!:SHELL~!</span>\
 								</span>\
 								<span class="prop-box backups-box">\
-									<span class="prop-title">backups:</span>\
-									<span class="prop-value">retention ~!:BACKUPS~!</span>\
+									<span class="prop-title">backup retention:</span>\
+									<span class="prop-value">~!:BACKUPS~!</span>\
 								</span>\							</div>\
 						</div><!-- // .row-details -->\
 					</div>']

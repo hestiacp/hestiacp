@@ -61,14 +61,12 @@ class VestaSession
 
     public function getUserRole()
     {   
-      //        if (isset($_SESSION['user'])) {
-            if($_SESSION['user'] == 'vesta'){
-                return Vesta::ADMIN;
-            }
-            else{
-                return Vesta::USER;
-            }
-            //        }
+        if($_SESSION['user'] == 'vesta'){
+            return Vesta::ADMIN;
+        }
+        else{
+            return Vesta::USER;
+        }
 
         print json_encode(array('result' => "NOT_AUTHORISED"));
         exit;        

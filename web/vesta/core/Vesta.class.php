@@ -208,7 +208,7 @@ class Vesta
 	} 
 	else {
             $result['data'] = json_decode(implode('', $output), true);
-        }
+    }
     
         return $result;
     }  

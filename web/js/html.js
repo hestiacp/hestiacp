@@ -43,7 +43,7 @@ App.HTML.Build.dns_form = function (options, id) {
     tpl.set(':DATE', options.DATE || '');
     tpl = App.HTML.Build.dns_selects(tpl, options);
     tpl = App.HTML.toggle_suspended_form(tpl, options);
-    
+
     return tpl.finalize();
 }
 
@@ -217,7 +217,6 @@ App.HTML.Build.web_domain_form = function (options, id) {
     }
 
     tpl.set(':DNS_DOMAIN_ALSO', in_edit? 'hidden' : '');
-
 
     return tpl.finalize();
 }

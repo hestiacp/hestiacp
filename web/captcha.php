@@ -14,7 +14,7 @@ class Captcha
     protected $color3  = null; 
     protected $keyword = '';
     public    $key_len = 7;
-    protected $chars   = 'qw1e2r3t4y5u67o8p9as9d38f6g4h3j2k1l3z5x7c8v3b5n781234567890';
+    protected $chars   = 'qw1e2r3ty5u678p97as9d3o87f6gh3j2k73z5x7c8v3b75n77812356789';
     
     public function __construct()
     {

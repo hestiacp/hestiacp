@@ -143,9 +143,8 @@ App.Actions.reset_batch = function()
 
 App.Actions.do_change_password = function()
 {
-    
     var params = {
-        email: $('#change-email').val(),
+        login: $('#change-login').val(),
         captcha: $('#captcha').val()
     }
     
@@ -261,11 +260,13 @@ App.Actions.new_entry = function() {
         var build_method = App.Env.getWorldName() + '_form';
         var tpl = App.HTML.Build[build_method]({}, form_id);
         var box = $('<div>').html(tpl);
+
         $(box).find('.suspended').addClass('hidden');
         App.Ref.CONTENT.prepend($(box).html());
         
         App.Helpers.updateScreen();
     }
+    $('.cust-checkbox').checkBox();
 }
 
 // execute authorisation
@@ -403,6 +404,7 @@ App.Actions.edit = function(evt)
         App.Helpers.disableNotEditable();
         App.Helpers.updateScreen();
     }
+    $('.cust-checkbox').checkBox();
 }
 
 // do_cancel_form

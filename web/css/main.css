@@ -591,8 +591,8 @@ input::-moz-focus-inner{
 	}
 	.checkbox-selector span.ui-checkbox{
 		float:none;
-		width:11px;
-		height:11px;
+		width:10px;
+		height:10px;
 		margin:2px 2px 0 0;
 		/*background:url(../i/checkbox-selector-2012-01-29.png) no-repeat;*/
 		background:url(../images/checkbox-selector-2012-01-31.png) no-repeat;
@@ -608,12 +608,16 @@ input::-moz-focus-inner{
 	}
 	.checkbox-selector span.ui-checkbox-hover{
 		background-position:0 -20px;
+    	-moz-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
+		-webkit-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
 	}
 	.checkbox-selector span.ui-checkbox-state-checked{
 		background-position:0 -40px;
 	}
 	.checkbox-selector span.ui-checkbox-state-checked-hover{
 		background-position:0 -60px;
+    	-moz-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
+		-webkit-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
 	}
 	.checkbox-selector .selector-title:hover{
 		color:#2ea8bd;	
@@ -1277,6 +1281,8 @@ input::-moz-focus-inner{
 		.row-actions-box .check-control:hover{
 			cursor:pointer;
 			background-position:0 -89px;
+        	-moz-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
+        	-webkit-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
 		}		
 		.row-actions-box .row-operations{
 			float:right;
@@ -1681,7 +1687,7 @@ input::-moz-focus-inner{
 		float:left;
 		width:18px;
 		height:18px;
-		margin:6px 0 0;
+		margin:9px 0 0;
 		/*background:url(../i/checkbox-1.png) no-repeat;*/
 		/*background:url(../i/form-checkboxes.png) no-repeat;*/
 		background:url(../images/checkbox-selector-2012-01-31.png) no-repeat -12px 0;
@@ -1691,12 +1697,16 @@ input::-moz-focus-inner{
 	}
 	.b-new-entry span.ui-checkbox-hover{
 		background-position:-12px -20px;
+    	-moz-box-shadow:0 0 8px rgba(82, 168, 236, 0.6);
+		-webkit-box-shadow:0 0 8px rgba(82, 168, 236, 0.6);
 	}	
 	.b-new-entry span.ui-checkbox-state-checked{
 		background-position:-12px -40px;
 	}	
 	.b-new-entry span.ui-checkbox-state-checked-hover{
 		background-position:-12px -60px;
+    	-moz-box-shadow:0 0 8px rgba(82, 168, 236, 0.6);
+		-webkit-box-shadow:0 0 8px rgba(82, 168, 236, 0.6);
 	}
 	
 	.b-new-entry .stats-settings{

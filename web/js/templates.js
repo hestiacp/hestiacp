@@ -44,20 +44,22 @@ App.Templates.html = {
             '<div id="change-psw-block" class="page2">\
                 <div class="b-auth-form">\
                     <div class="b-auth-form-wrap">\
+                        <a href="/">\
                         <img width="72" height="24" alt="" src="~!:LOGO_URL~!" class="vesta-logo">\
+                        </a>\
                         <span style="color: #5E696B; float: right; margin-top: -48px;">~!:VERSION~!</span>\
                         <div class="b-client-title">\
                             <span class="client-title-wrap">~!:PRODUCT_NAME~!<i class="planets">&nbsp;</i></span>\
                         </div>\
                         <form id="change_psw-form" method="post" action="#" class="auth">\
                             <div class="form-row cc">\
-                                <label for="change-email" class="field-label">Email</label>\
-                                <input type="text" tabindex="1" id="change-email" class="field-text">\
+                                <label for="change-login" class="field-label">Login</label>\
+                                <input type="text" tabindex="1" id="change-login" class="field-text">\
                             </div>\
                             <div class="form-row cc">\
                                 <label for="captcha" class="field-label">Captcha</label>\
                                 <label class="captcha"><img id="captcha-img" width="127px;" src="~!:CAPTCHA_URL~!"  style="cursor: pointer; float: left; margin-top: -7px; padding-left: 20px;" onClick="this.src = \'~!:CAPTCHA_URL_2~!?\'+Math.floor(Math.random() * 9999)"/></label>\
-                                <input type="text" id="captcha" class="field-text" style="margin-left: 11px; width: 132px; margin-bottom: 27px;">\
+                                <input type="text" id="captcha" tabindex=2 class="field-text" style="margin-left: 11px; width: 132px; margin-bottom: 27px;">\
                             </div>\
                             <div id="change-psw-success" class="success-box hidden"></div>\
                             <div id="change-psw-error" class="error-box hidden"></div>\
@@ -65,7 +67,7 @@ App.Templates.html = {
                                 <div class="b-remember">\
                                     <span class="remember-me">&nbsp;</span>\
                                 </div>\
-                                <input type="submit" tabindex="4" value="Send confirmation" class="sumbit-btn do_action_do_change_password">\
+                                <input type="submit" tabindex="3" value="Send confirmation" class="sumbit-btn do_action_do_change_password">\
                             </div>\
                         </form>\
                         <p class="forgot-pwd"><a href="#" class="forgot-pwd-url do_action_back_to_login">Back to login?</a></p>\
@@ -80,7 +82,9 @@ App.Templates.html = {
         login: ['<div id="auth-block" class="page2">\
         <div class="b-auth-form">\
             <div class="b-auth-form-wrap">\
+                <a href="/">\
                 <img width="72" height="24" alt="" src="~!:LOGO_URL~!" class="vesta-logo">\
+                </a>\
                 <span style="color: #5E696B; float: right; margin-top: -48px;">~!:VERSION~!</span>\
                 <div class="b-client-title">\
                     <span class="client-title-wrap">~!:PRODUCT_NAME~!<i class="planets">&nbsp;</i></span>\

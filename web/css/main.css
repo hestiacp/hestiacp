@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : February 1, 2012
+last updated : February 8, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -579,7 +579,8 @@ input::-moz-focus-inner{
 	
 .checkbox-selector,
 .context-actions,
-.checkbox-selector .ui-checkbox{
+.checkbox-selector .ui-checkbox,
+.cust-checkbox-wrap .ui-checkbox{
 	display:-moz-inline-stack;
 	display: inline-block;
 	zoom: 1;
@@ -589,15 +590,16 @@ input::-moz-focus-inner{
 	.ui-helper-hidden-accessible{
 		display:none;
 	}
+	.cust-checkbox-wrap span.ui-checkbox,
 	.checkbox-selector span.ui-checkbox{
 		float:none;
 		width:10px;
 		height:10px;
 		margin:2px 2px 0 0;
-		/*background:url(../i/checkbox-selector-2012-01-29.png) no-repeat;*/
 		background:url(../images/checkbox-selector-2012-01-31.png) no-repeat;
 		cursor:pointer;
 	}
+	.cust-checkbox-wrap .cust-checkbox-title,
 	.checkbox-selector .selector-title{
 		font-size:11px;
 		line-height:15px;
@@ -606,22 +608,27 @@ input::-moz-focus-inner{
 		cursor:pointer;
 		white-space:nowrap;
 	}
+	.cust-checkbox-wrap span.ui-checkbox-hover,
 	.checkbox-selector span.ui-checkbox-hover{
 		background-position:0 -20px;
     	-moz-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
 		-webkit-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
 	}
+	.cust-checkbox-wrap span.ui-checkbox-state-checked,
 	.checkbox-selector span.ui-checkbox-state-checked{
 		background-position:0 -40px;
 	}
+	.cust-checkbox-wrap span.ui-checkbox-state-checked-hover,
 	.checkbox-selector span.ui-checkbox-state-checked-hover{
 		background-position:0 -60px;
     	-moz-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
 		-webkit-box-shadow:0 0 5px rgba(82, 168, 236, 0.6);
 	}
+	.cust-checkbox-wrap .cust-checkbox-title:hover,
 	.checkbox-selector .selector-title:hover{
 		color:#2ea8bd;	
 	}
+	.cust-checkbox-wrap .cust-checkbox-title:active,
 	.checkbox-selector .selector-title:active{
 		color:#fc0;
 	}
@@ -3196,6 +3203,7 @@ input::-moz-focus-inner{
 .form-suspended .do_action_toggle_suspend {opacity: 1; filter: alpha(opacity = 100);}
 
 
+/*
 .stats-block{
     background:#474338;
     padding:10px;
@@ -3212,8 +3220,8 @@ input::-moz-focus-inner{
     display:block;
     margin:0 auto;
 }
-
-/* START: DEV!! */
+*/
+/* START: DEV!! 
 .stats-subbar span{
     cursor: pointer; 
     margin-left: 22px; 
@@ -3226,4 +3234,105 @@ input::-moz-focus-inner{
     color: #FF6766; 
     border-bottom: 0;
 }
-/* END: DEV */
+ END: DEV */
+
+
+/* stats
+- - - - - - - - - - - - - - - - - - - */
+.date-range-controls{
+	float:left;
+	margin-left:-220px;
+	}
+	.date-range-control{
+		display:-moz-inline-stack;
+		display: inline-block;
+		zoom: 1;
+		*display: inline;
+		vertical-align:top;
+		
+		margin:0 0 0 20px;
+		font-size:11px;
+		line-height:15px;
+		border-bottom:1px dotted #5D5D5D;
+		cursor:pointer;
+		} 
+		span.date-range-control:hover{
+			color:#2ea8bd;
+			border-bottom-color:#2ea8bd;
+		}
+		span.date-range-control:active{
+			color:#fc0;
+			border-bottom-color:#fc0;
+		}
+
+	.date-range-controls .active{
+		border:none;
+		font-weight:bold;
+		color:#ff6766;
+	}
+  	.date-range-controls .motive{
+        text-transform: uppercase;
+        color: #898989;
+        line-height: 17px;
+    }
+
+
+.stats-components{
+	position:relative;
+	/*top:3px;*/
+	float:right;
+	}
+	.stats-components .stats-component{
+		margin-left:7px;
+	}
+	.stats-components .cust-checkbox-title{
+		line-height:13px;
+	}
+
+.stats-period{
+	width:620px;
+	padding:30px 0 0;
+	margin:0 auto 20px;
+	font-size:11px;
+	}
+	.stats-period-title{
+		padding:2px 40px 0 0;
+		text-transform:uppercase;
+		color:#bcbcbc;
+	}
+	.stats-period .dt-day,
+	.stats-period .dt-time{
+		font-size:12px;
+		line-height:18px;
+		font-weight:bold;
+	}
+	.stats-period .dt-day{
+		color:#5f5e59;
+	}
+	.stats-period .dt-time{
+		padding-left:10px;
+		font-size:11px;
+		color:#bab7ae;
+	}
+	.stats-period-devider{
+		padding:0 25px;
+	}
+
+.stats-block{
+    width:600px;
+    margin:0 auto 10px;
+    padding:10px 10px 34px;
+    background:#474338;
+	}
+	.stats-block-header{
+		color:#fc0;
+		font-size:12px;
+		font-weight:bold;
+		text-align:center;
+	}
+	.stats-block .stats-graph{
+		display:block;
+		margin:0 auto;
+	}	
+
+

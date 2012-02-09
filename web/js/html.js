@@ -512,7 +512,6 @@ App.HTML.Build.stats_list = function(stats)
 	if (!stats || stats.length == 0) {
 		return '<br /><br /><center><h1>Stats are not available</h1></center>';
 	}
-	
 	var acc = [];
 	$.each(stats, function(key) {
 		var stat = stats[key];
@@ -523,8 +522,31 @@ App.HTML.Build.stats_list = function(stats)
         acc[acc.length++] = tpl.finalize()
 	});
 	
-	var wrap = App.Templates.get('WRAPPER', 'backup');
+	var wrap = App.Templates.get('WRAPPER', 'stats');
+
+    var period_start = new Date();
+    var period_end = new Date();
+    switch (stats[1]['PERIOD'])
+    {
+        case "daily": period_start.setDate(period_start.getDate()-1); break;
+        case "weekly": period_start.setDate(period_start.getDate()-7); break;
+        case "monthly": period_start.setMonth(period_start.getMonth()-1); break;
+        case "yearly": period_start.setFullYear(period_start.getFullYear()-1); break;
+    }
+
+    var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    var period_tpl = App.Templates.get('PERIOD', 'stats');
+    period_tpl.set(':PERIOD_START_DATE', period_start.getDate() + ' ' + month[period_start.getMonth()] + ' ' + period_start.getFullYear());
+    period_tpl.set(':PERIOD_START_TIME', (period_start.getHours() < 10 ? '0' + period_start.getHours() : period_start.getHours()) 
+                                 + ':' + (period_start.getMinutes() < 10 ? '0' + period_start.getMinutes() : period_start.getMinutes()));
+    period_tpl.set(':PERIOD_END_DATE', period_end.getDate() + ' ' + month[period_end.getMonth()] + ' ' + period_end.getFullYear());
+    period_tpl.set(':PERIOD_END_TIME', (period_end.getHours() < 10 ? '0' + period_end.getHours() : period_end.getHours()) 
+                                 + ':' + (period_end.getMinutes() < 10 ? '0' + period_end.getMinutes() : period_end.getMinutes()));
+    var period = period_tpl.finalize();
+
 	wrap.set(':CONTENT', acc.done());
+	wrap.set(':PERIOD', period);
 	
 	return wrap.finalize();
 }

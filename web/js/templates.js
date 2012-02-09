@@ -1091,17 +1091,70 @@ App.Templates.html = {
 					</div><!-- // .row 1 -->']
 	},
     stats: {
-        WRAPPER: ['<div class="stats-list">~!:CONTENT~!</div>'],
-        ENTRY: ['<div class="stats-block" style="min-height: 252px">\
+        WRAPPER: ['<div class="stats-list">\
+                    ~!:PERIOD~!\
+                    ~!:CONTENT~!\
+                    </div>'],
+        PERIOD: ['<div class="stats-period">\
+							<span class="stats-period-title">Statistics for:</span>\
+							<span class="stats-dtstart">\
+								<span class="dt-day">~!:PERIOD_START_DATE~!</span>\
+								<span class="dt-time">~!:PERIOD_START_TIME~!</span>\
+							</span>\
+							<span class="stats-period-devider">&mdash;</span>\
+							<span class="stats-dtend">\
+								<span class="dt-day">~!:PERIOD_END_DATE~!</span>\
+								<span class="dt-time">~!:PERIOD_END_TIME~!</span>\
+							</span>\
+						</div>'],
+        ENTRY: ['<div class="stats-block">\
                 <h2 class="stats-block-header">~!:HEADER~!</h2>\
                 <div class="stats-block-wrap">\
                     <img class="stats-graph" src="~!:IMG_SRC~!" alt="" />\
                 </div>\
             </div>'],
-        SUBMENU: ['<span class="stats-subbar"><span class="today sub-active" onClick="App.Actions.loadStats(\'today\')">today</span>\
-                <span class="week" onClick="App.Actions.loadStats(\'week\')">week</span>\
-                <span class="month" onClick="App.Actions.loadStats(\'month\')">month</span>\
-                <span class="year" onClick="App.Actions.loadStats(\'year\')">year</span></div>']
+        SUBMENU: ['<div class="date-range-controls stats-subbar"><span class="motive">Genarate For:</span><span class="date-range-control today active" onClick="App.Actions.loadStats(\'today\')">today</span>\
+                <span class="date-range-control week" onClick="App.Actions.loadStats(\'week\')">week</span>\
+                <span class="date-range-control month" onClick="App.Actions.loadStats(\'month\')">month</span>\
+                <span class="date-range-control year" onClick="App.Actions.loadStats(\'year\')">year</span></div>'],
+		FILTERS: ['<div class="stats-components">\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-la" class="cust-checkbox" type="checkbox" value=""/>\
+							<label for="stats-la" class="cust-checkbox-title">la</label>\
+						</span>\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-mem" class="cust-checkbox" type="checkbox" value=""/>\
+							<label for="stats-mem" class="cust-checkbox-title">mem</label>\
+						</span>\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-mysql" class="cust-checkbox" type="checkbox" value="" />\
+							<label for="stats-mysql" class="cust-checkbox-title">mysql</label>\
+						</span>\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-postgres" class="cust-checkbox" type="checkbox" value="" />\
+							<label for="stats-postgres" class="cust-checkbox-title">postgres</label>\
+						</span>\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-vsftpd" class="cust-checkbox" type="checkbox" value="" />\
+							<label for="stats-vsftpd" class="cust-checkbox-title">vsftpd</label>\
+						</span>\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-httpd" class="cust-checkbox" type="checkbox" value="" />\
+							<label for="stats-httpd" class="cust-checkbox-title">httpd</label>\
+						</span>\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-nginx" class="cust-checkbox" type="checkbox" value="" />\
+							<label for="stats-nginx" class="cust-checkbox-title">nginx</label>\
+						</span>\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-bandwidth" class="cust-checkbox" type="checkbox" value="" />\
+							<label for="stats-bandwidth" class="cust-checkbox-title">bandwidth</label>\
+						</span>\
+						<span class="cust-checkbox-wrap stats-component">\
+							<input id="stats-ssh" class="cust-checkbox" type="checkbox" value="" />\
+							<label for="stats-ssh" class="cust-checkbox-title">ssh</label>\
+						</span>\
+					</div>']
     }
 }
 

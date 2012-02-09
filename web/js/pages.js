@@ -41,6 +41,7 @@ App.Pages.prepareHTML = function()
 	$('.d-popup').remove();
     App.Actions.reset_batch();
     $('#actions-toolbar .stats-subbar').remove();
+	$('#actions-toolbar .stats-components').remove();
     $('#actions-toolbar .do_action_new_entry').removeClass('hidden');
 	$('.active').removeClass('active');
     $('.row-filters').removeClass('hidden');
@@ -176,8 +177,12 @@ App.Pages.STATS.prepareHTML = function()
     $('.row-filters').addClass('hidden');
     $('#actions-toolbar .do_action_new_entry').addClass('hidden');
     $('#actions-toolbar .stats-subbar').remove();
+	$('#actions-toolbar .stats-components').remove();
     $('#actions-toolbar .do_action_new_entry').after(App.Templates.get('SUBMENU', 'stats').finalize());
+	$('#actions-toolbar .date-range-controls').after(App.Templates.get('FILTERS', 'stats').finalize());
     
+	$('#content .stats-list').after('zzz');
+	
 	$('#primary-nav-box .active').removeClass('active');
 	$('#STATS').addClass('active');
 	$('#new-entry-keyword').text(App.Helpers.getHumanTabName());

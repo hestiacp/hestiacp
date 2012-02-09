@@ -733,8 +733,8 @@ App.Actions.loadStats = function(type)
             break;
     }
     
-    $('#actions-toolbar .sub-active').removeClass('sub-active');
-    $('#actions-toolbar .'+type).addClass('sub-active');
+    $('#actions-toolbar .active').removeClass('active');
+    $('#actions-toolbar .'+type).addClass('active');
     
     App.Ajax.request('STATS.getList', {period: period}, function(reply) {
 		if (!reply.result) {

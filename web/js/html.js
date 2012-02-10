@@ -498,6 +498,10 @@ App.HTML.Build.backup_list = function(backups)
         tpl.set(':OWNER', App.Env.initialParams.auth_user.uid.uid);
 		tpl.set(':CREATED_AT_WDAY', App.Constants.KEY.WDAYS[created_date.getDay()]);
         tpl.set(':SIZE', App.Helpers.getMbHuman(bckp.SIZE) + ' ' + App.Helpers.getMbHuman(bckp.SIZE, true));
+//		tpl.set(':DOWNLOAD_LINK', '/backup/' + App.Env.initialParams.auth_user.uid.uid + '.' + key + '.tar');
+		tpl.set(':DOWNLOAD_LINK', '/dispatch.php?jedi_method=MAIN.downloadBackup&key=' + key);
+
+        
 		acc[acc.length++] = tpl.finalize()
 	});
 	

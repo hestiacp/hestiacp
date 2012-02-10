@@ -1076,7 +1076,7 @@ App.Templates.html = {
 								<span class="backup-size">\
 									<span class="backup-size-inner">~!:SIZE~!</span>\
 								</span>\
-								<a class="backup-url" href="return alert(\'Not available at the time\');">download</a>\
+								<a class="backup-url" href="~!:DOWNLOAD_LINK~!">download</a>\
 							</div>\
 							<div class="props-ext">\
 								<!-- div class="backup-actions">\

@@ -144,6 +144,17 @@ MAIL;
 		return $this->reply($rs['status'], @$rs['data']);
 	}
 
+    public function downloadBackupExecute(Request $request)
+    {
+		$user = VestaSession::getInstance()->getUser();
+
+        header('Content-type: application/x-tar');
+        header('Content-Disposition: attachment; filename="'.$user['uid'].'.'.$_REQUEST['key'].'.tar"');
+        header('X-Accel-Redirect: /backup/'.$user['uid'].'.'.$_REQUEST['key'].'.tar');
+
+        exit;
+	}
+
     /**
      * Get Initial params.
      * Global constants / variables / configs

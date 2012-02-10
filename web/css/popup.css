@@ -37,13 +37,13 @@
 	.d-popup span.close:active{
 		background-position:0 -33px;
 	}
-	
 .d-popup-title{
 	font-size:11px;
 	text-transform:uppercase;
 	text-align:center;
-	color:#fffdd4;
-	margin:0 0 9px;
+	color:#fffaba;
+	margin:5px 0 16px;
+    letter-spacing: 2px;
 }
 .d-popup-items{
 	font-size:12px;
@@ -64,4 +64,22 @@
 }
 .d-popup .prop-value{
 	color:#fff;
+    margin-bottom: 5px;
 } 
+.d-popup-content{
+    color: #fff;
+    font-size: 13px;
+    line-height: 24px;
+}
+.d-popup-content li{
+    margin-bottom: 5px;
+    color: #fff;
+    font-size: 12px;
+}
+.d-popup-content li strong{
+    color: #BDB9AE; 
+    text-transfom: uppercese;
+    font-weight: normal;
+    font-size: 10px;
+    margin-right: 7px;
+}

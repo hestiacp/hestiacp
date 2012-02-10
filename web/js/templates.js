@@ -1113,10 +1113,10 @@ App.Templates.html = {
                     <img class="stats-graph" src="~!:IMG_SRC~!" alt="" />\
                 </div>\
             </div>'],
-        SUBMENU: ['<div class="date-range-controls stats-subbar"><span class="motive">Genarate For:</span><span class="date-range-control today active" onClick="App.Actions.loadStats(\'today\')">today</span>\
-                <span class="date-range-control week" onClick="App.Actions.loadStats(\'week\')">week</span>\
-                <span class="date-range-control month" onClick="App.Actions.loadStats(\'month\')">month</span>\
-                <span class="date-range-control year" onClick="App.Actions.loadStats(\'year\')">year</span></div>'],
+        SUBMENU: ['<div class="date-range-controls stats-subbar"><span class="motive">Genarate:</span><span class="date-range-control today active" onClick="App.Actions.loadStats(\'today\')">daily</span>\
+                <span class="date-range-control week" onClick="App.Actions.loadStats(\'week\')">weekly</span>\
+                <span class="date-range-control month" onClick="App.Actions.loadStats(\'month\')">monthly</span>\
+                <span class="date-range-control year" onClick="App.Actions.loadStats(\'year\')">yearly</span></div>'],
 		FILTERS: ['<div class="stats-components">\
 						<span class="cust-checkbox-wrap stats-component">\
 							<input id="stats-la" class="cust-checkbox" type="checkbox" value=""/>\

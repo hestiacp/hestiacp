@@ -78,6 +78,7 @@ ip=$IP
 email="$user@$domain"
 group="$user"
 docroot="$V_HOME/$user/web/$domain/public_html"
+docroot_string="DocumentRoot $docroot"
 conf="$V_HOME/$user/conf/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
 

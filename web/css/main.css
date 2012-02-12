@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : February 11, 2012
+last updated : February 8, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -1894,7 +1894,7 @@ input::-moz-focus-inner{
 				cursor:pointer;
 				padding-top:6px;
 				padding-bottom:6px;
-			}
+				}
 				.b-new-entry .autocomplete-box .text-field{
 					-moz-box-shadow:none;
 					-webkit-box-shadow:none;

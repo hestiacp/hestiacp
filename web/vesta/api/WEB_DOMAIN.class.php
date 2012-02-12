@@ -78,7 +78,8 @@ class WEB_DOMAIN extends AjaxHandler
         $params = array(
                       'USER'   => $user['uid'],
                       'DOMAIN' => $_s['DOMAIN'],
-                      'IP'     => $_s['IP']
+                      'IP'     => $_s['IP'],
+                      'TPL'    => $_s['TPL']
                   );
         
         $result = Vesta::execute(Vesta::V_ADD_WEB_DOMAIN, $params);
@@ -88,6 +89,7 @@ class WEB_DOMAIN extends AjaxHandler
             return $this->reply($result['status'], $result['data']);
         }
 
+        /*
         if (!empty($_s['TPL'])) {
             $params = array(
                         'USER'   => $user['uid'],
@@ -101,7 +103,7 @@ class WEB_DOMAIN extends AjaxHandler
                 $this->errors['CHANGE_TPL'] = array($result['error_code'] => $result['error_message']);
             }
         }
-      
+        */
 
         if (!empty($_s['ALIAS'])) {
             $alias_arr = explode(',', str_replace("\n", "", $_s['ALIAS']));

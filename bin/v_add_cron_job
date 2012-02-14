@@ -67,6 +67,8 @@ v_str="$v_str' WDAY='$wday' CMD='$command' SUSPEND='no' DATE='$V_DATE'"
 # Adding to crontab
 echo "$v_str">>$V_USERS/$user/cron.conf
 
+chmod 660 $V_USERS/$user/cron.conf
+
 # Sorting jobs by id
 sort_cron_jobs
 

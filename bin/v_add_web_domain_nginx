@@ -67,11 +67,15 @@ get_web_domain_values
 NGINX="$template"
 NGINX_EXT="$extentions"
 tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
-conf="$V_HOME/$user/conf/nginx.conf"
+conf="$V_HOME/$user/conf/web/nginx.conf"
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
 add_web_config
+
+# Set permission and ownership
+chown root:nginx $conf
+chmod 640 $conf
 
 # Checking main vesta httpd config
 main_conf='/etc/nginx/conf.d/vesta_users.conf'
@@ -80,12 +84,15 @@ if [ -z "$main_conf_check" ]; then
     echo "include $conf;" >>$main_conf
 fi
 
-
+# Checking ssl
 if [ "$SSL" = 'yes' ]; then
     proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
     tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-    conf="$V_HOME/$user/conf/snginx.conf"
+    conf="$V_HOME/$user/conf/web/snginx.conf"
     add_web_config
+
+    chown root:nginx $conf
+    chmod 640 $conf
 
     main_conf='/etc/nginx/conf.d/vesta_users.conf'
     main_conf_check=$(grep "$conf" $main_conf )
@@ -93,6 +100,7 @@ if [ "$SSL" = 'yes' ]; then
         echo "include $conf;" >>$main_conf
     fi
 fi
+
 
 
 #----------------------------------------------------------#

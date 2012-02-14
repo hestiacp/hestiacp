@@ -54,13 +54,13 @@ tpl_name=$(get_dns_domain_value '$TPL')
 old_ip=$(get_dns_domain_value '$IP')
 
 # Deleting domain in named.conf
-rm_string=$(grep -n /etc/namedb/$domain.db $named_conf|cut -d : -f 1)
+rm_string=$(grep -n /conf/dns/$domain.db $named_conf |cut -d : -f 1)
 if [ ! -z "$rm_string" ]; then
     sed -i "$rm_string d" $named_conf
 fi
 
-if [ -e "/etc/namedb/$domain.db" ]; then
-    rm -f /etc/namedb/$domain.db
+if [ -e "$V_HOME/$user/conf/dns/$domain.db" ]; then
+    rm -f $V_HOME/$user/conf/dns/$domain.db
 fi
 
 

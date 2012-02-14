@@ -503,6 +503,7 @@ backup_str="$backup_str MAIL='${mail_list// /,}'"
 backup_str="$backup_str DB='${db_list// /,}'"
 backup_str="$backup_str CRON='$cron_list'"
 echo "$backup_str" >> $V_USERS/$user/backup.conf
+chmod 660 $V_USERS/$user/backup.conf
 
 # Logging
 log_event 'system' "$V_EVENT"

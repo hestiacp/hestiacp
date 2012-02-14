@@ -129,7 +129,8 @@ for user in $user_list; do
         check_month=$(grep -n "DATE='$DATE'" $billing|cut -f 1 -d :)
         if [ -z "$check_month" ]; then
             # Updating as there no dublicates
-            echo "$v_str" >>$billing
+            echo "$v_str" >> $billing
+            chmod 660 $billing
         else
             # Replacing string with new data
             sed -i "$check_month s/.*/$v_str/" $billing
@@ -137,6 +138,7 @@ for user in $user_list; do
     else
         # Creating billing log
         echo "$v_str" >$billing
+        chmod 660 $billing
     fi
 done
 

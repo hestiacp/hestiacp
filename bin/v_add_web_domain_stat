@@ -81,7 +81,7 @@ cat $V_WEBTPL/$type.tpl |\
         -e "s/%home%/${V_HOME////\/}/g" \
         -e "s/%alias%/${aliases//,/ }/g" \
         -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
-    > $V_HOME/$user/conf/$type.$domain.conf
+    > $V_HOME/$user/conf/web/$type.$domain.conf
 
 
 #----------------------------------------------------------#

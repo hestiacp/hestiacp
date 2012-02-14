@@ -54,7 +54,7 @@ is_web_domain_value_exist '$STATS'
 stats=$(get_web_domain_value '$STATS')
 
 # Checking config
-config="$V_HOME/$user/conf/$stats.$domain.conf"
+config="$V_HOME/$user/conf/web/$stats.$domain.conf"
 if [ ! -e "$config" ]; then
     echo "Error: Parsing error"
     log_event 'debug' "$E_PARSING $V_EVENT"

@@ -11,7 +11,8 @@
 
 # Importing variables
 source /etc/profile.d/vesta.sh
-source $VESTA/conf/vesta.conf
+source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
 
 
 #----------------------------------------------------------#
@@ -22,7 +23,8 @@ if [ "$DNS_SYSTEM" = 'bind' ]; then
     /etc/init.d/named reload >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         #$V_FUNC/report_issue 'sys' 'cron'
-        echo "$E_RESTART_FAILED $V_EVENT"
+        echo "$E_RESTART $1"
+        exit $E_RESTART
     fi
 fi
 

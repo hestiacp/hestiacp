@@ -103,7 +103,11 @@ for domain in $domains; do
     sort_dns_records
 
     # Updating zone
+    conf="$V_HOME/$user/conf/dns/$domain.db"
     update_domain_zone
+
+    chmod 640 $conf
+    chown root:named $conf
 
     # Bind config check
     nconf='/etc/named.conf'
@@ -114,10 +118,9 @@ for domain in $domains; do
             sed -i "$rm_string d" $nconf
         fi
     else
-	check_string=$(grep /etc/namedb/$domain.db $nconf)
-	if [ -z "$check_string" ]; then
-            named="zone \"$domain_idn\""
-            named="$named {type master; file \"/etc/namedb/$domain.db\";};"
+	if [ -z "$(grep /$domain.db $nconf)" ]; then
+            named="zone \"$domain_idn\" {type master; file"
+            named="$named \"$V_HOME/$user/conf/dns/$domain.db\";};"
             echo "$named" >> /etc/named.conf
         fi
     fi

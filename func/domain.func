@@ -136,7 +136,6 @@ update_domain_zone() {
     # Definigng variables
     line=$(grep "DOMAIN='$domain'" $V_USERS/$user/dns.conf)
     fields='$RECORD\t$TTL\tIN\t$TYPE\t$VALUE'
-    conf="/etc/namedb/$domain.db"
 
     # Checking serial
     if [ -e $conf ]; then
@@ -187,7 +186,6 @@ update_domain_zone() {
         VALUE=$(idn --quiet -a -t "$VALUE")
         eval echo -e "\"$fields\""|sed -e "s/%quote%/'/g" >> $conf
     done < $V_USERS/$user/dns/$domain
-
 }
 
 get_next_dns_record() {
@@ -749,10 +747,10 @@ upd_web_domain_values() {
     fi
 
     # Defining SSL vars
-    ssl_crt="$V_HOME/$user/conf/ssl.$domain.crt"
-    ssl_key="$V_HOME/$user/conf/ssl.$domain.key"
-    ssl_pem="$V_HOME/$user/conf/ssl.$domain.pem"
-    ssl_ca="$V_HOME/$user/conf/ssl.$domain.ca"
+    ssl_crt="$V_HOME/$user/conf/web/ssl.$domain.crt"
+    ssl_key="$V_HOME/$user/conf/web/ssl.$domain.key"
+    ssl_pem="$V_HOME/$user/conf/web/ssl.$domain.pem"
+    ssl_ca="$V_HOME/$user/conf/web/ssl.$domain.ca"
     if [ ! -e "$V_USERS/$user/ssl/$domain.ca" ]; then
         ssl_ca_str='#'
     fi

@@ -675,7 +675,7 @@ get_user_value() {
 restart_schedule() {
     type="$1"
     if  [ -z "$RESTART_PERIOD" ]; then
-        $V_BIN/v_restart_"$type"
+        $V_BIN/v_restart_"$type" "$V_EVENT"
     else
         echo "$type" >> $V_QUEUE/restart.pipe
     fi

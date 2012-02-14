@@ -65,20 +65,58 @@ for domain in $(shell_list) ; do
 
     # Adding domain to the tmp_httpd.conf
     tpl_file="$V_WEBTPL/apache_$TPL.tpl"
-    conf="$V_HOME/$user/conf/tmp_httpd.conf"
+    conf="$V_HOME/$user/conf/web/tmp_httpd.conf"
     add_web_config
+    chown root:apache $conf
+    chmod 640 $conf
 
     # Running template trigger
     if [ -x $V_WEBTPL/apache_$TPL.sh ]; then
         $V_WEBTPL/apache_$TPL.sh $user $domain $ip $V_HOME $docroot
     fi
 
+    # Checking stats
+    if [ ! -z "$STATS" ]; then
+    cat $V_WEBTPL/$STATS.tpl |\
+        sed -e "s/%ip%/$ip/g" \
+            -e "s/%web_port%/$WEB_PORT/g" \
+            -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
+            -e "s/%proxy_port%/$PROXY_PORT/g" \
+            -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+            -e "s/%domain_idn%/$domain_idn/g" \
+            -e "s/%domain%/$domain/g" \
+            -e "s/%user%/$user/g" \
+            -e "s/%home%/${V_HOME////\/}/g" \
+            -e "s/%alias%/${aliases//,/ }/g" \
+            -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
+        > $V_HOME/$user/conf/web/$STATS.$domain.conf
+
+        stats_string="$V_BIN/v_update_web_domain_stat $user $domain"
+        check_stats_pipe=$(grep "$stats_string" $V_QUEUE/stats.pipe)
+        if [ -z "$check_stats_pipe" ]; then
+            echo "$stats_string" >> $V_QUEUE/stats.pipe
+        fi
+    fi
+
     # Checking ssl
     if [ "$SSL" = 'yes' ]; then
         # Adding domain to the shttpd.conf
-        conf="$V_HOME/$user/conf/tmp_shttpd.conf"
+        conf="$V_HOME/$user/conf/web/tmp_shttpd.conf"
         tpl_file="$V_WEBTPL/apache_$TPL.stpl"
         add_web_config
+        chown root:apache $conf
+        chmod 640 $conf
+
+        cp -f $V_USERS/$user/ssl/$domain.crt \
+            $V_HOME/$user/conf/web/ssl.$domain.crt
+        cp -f $V_USERS/$user/ssl/$domain.key \
+            $V_HOME/$user/conf/web/ssl.$domain.key
+        cp -f $V_USERS/$user/ssl/$domain.pem \
+            $V_HOME/$user/conf/web/ssl.$domain.pem
+        if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
+            cp -f $V_USERS/$user/ssl/$domain.ca \
+                $V_HOME/$user/conf/web/ssl.$domain.ca
+        fi
 
         # Running template trigger
         if [ -x $V_WEBTPL/apache_$TPL.sh ]; then
@@ -91,8 +129,10 @@ for domain in $(shell_list) ; do
     # Checking nginx
     if [ ! -z "$NGINX" ]; then
         tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
-        conf="$V_HOME/$user/conf/tmp_nginx.conf"
+        conf="$V_HOME/$user/conf/web/tmp_nginx.conf"
         add_web_config
+        chown root:nginx $conf
+        chmod 640 $conf
 
         if [ "$SSL" = 'yes' ]; then
             if [ "$SUSPEND" = 'yes' ]; then
@@ -102,16 +142,18 @@ for domain in $(shell_list) ; do
             fi
     
             tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-            conf="$V_HOME/$user/conf/tmp_snginx.conf"
+            conf="$V_HOME/$user/conf/web/tmp_snginx.conf"
             add_web_config
+            chown root:nginx $conf
+            chmod 640 $conf
         fi
 	ngix_change='yes'
     fi
 done
 
 # Renaming tmp config
-tmp_conf="$V_HOME/$user/conf/tmp_httpd.conf"
-conf="$V_HOME/$user/conf/httpd.conf"
+tmp_conf="$V_HOME/$user/conf/web/tmp_httpd.conf"
+conf="$V_HOME/$user/conf/web/httpd.conf"
 if [ -e "$tmp_conf" ]; then
     mv $tmp_conf $conf
 fi
@@ -119,14 +161,14 @@ fi
 # Checking include in main httpd.conf
 main_conf='/etc/httpd/conf.d/vesta.conf'
 main_conf_check=$(grep "$conf" $main_conf )
-if [ ! -z "$domains" ] && [ -z "$main_conf_check" ]; then
+if [ ! -z "$domain" ] && [ -z "$main_conf_check" ]; then
     echo "Include $conf" >>$main_conf
 fi
 
 # Checking ssl 
 if [ "$ssl_change" = 'yes' ]; then
-    tmp_conf="$V_HOME/$user/conf/tmp_shttpd.conf"
-    conf="$V_HOME/$user/conf/shttpd.conf"
+    tmp_conf="$V_HOME/$user/conf/web/tmp_shttpd.conf"
+    conf="$V_HOME/$user/conf/web/shttpd.conf"
     mv $tmp_conf $conf
 
     # Checking include in main httpd.conf
@@ -139,10 +181,9 @@ fi
 # Checking nginx
 if [ "$ngix_change" = 'yes' ]; then
     nginx_conf='/etc/nginx/conf.d/vesta_users.conf'
-    tmp_conf="$V_HOME/$user/conf/tmp_nginx.conf"
-    conf="$V_HOME/$user/conf/nginx.conf"
+    tmp_conf="$V_HOME/$user/conf/web/tmp_nginx.conf"
+    conf="$V_HOME/$user/conf/web/nginx.conf"
     mv $tmp_conf $conf
-
 
     nginx_conf_check=$(grep "$conf" $nginx_conf )
     if [ -z "$nginx_conf_check" ]; then
@@ -151,8 +192,8 @@ if [ "$ngix_change" = 'yes' ]; then
 
     # Checking ssl for nginx
     if [ "$ssl_change" = 'yes' ]; then
-        tmp_conf="$V_HOME/$user/conf/tmp_snginx.conf"
-        conf="$V_HOME/$user/conf/snginx.conf"
+        tmp_conf="$V_HOME/$user/conf/web/tmp_snginx.conf"
+        conf="$V_HOME/$user/conf/web/snginx.conf"
         mv $tmp_conf $conf
         nginx_conf_check=$(grep "$conf" $nginx_conf )
         if [ -z "$nginx_conf_check" ]; then

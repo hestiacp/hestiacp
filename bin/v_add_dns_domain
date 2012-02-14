@@ -103,13 +103,19 @@ cat $V_DNSTPL/$template.tpl |\
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
 dns_rec="$dns_rec SOA='$soa' SUSPEND='no' DATE='$V_DATE'"
 echo "$dns_rec" >> $V_USERS/$user/dns.conf
+chmod 660 $V_USERS/$user/dns.conf
 
 # Adding zone in named.conf
-named="zone \"$domain_idn\" {type master; file \"/etc/namedb/$domain.db\";};"
+named="zone \"$domain_idn\" {type master; file"
+named="$named \"$V_HOME/$user/conf/dns/$domain.db\";};"
 echo "$named" >> /etc/named.conf
 
 # Updating domain dns zone
+conf="$V_HOME/$user/conf/dns/$domain.db"
 update_domain_zone
+
+chmod 640 $conf
+chown root:named $conf
 
 
 #----------------------------------------------------------#

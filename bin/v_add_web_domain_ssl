@@ -76,10 +76,11 @@ if [ -e "$ssl_dir/$domain.ca" ]; then
     cp -f $ssl_dir/$domain.ca $V_USERS/$user/ssl/$domain.ca
     cat $V_USERS/$user/ssl/$domain.ca >> $V_USERS/$user/ssl/$domain.pem
 fi
+chmod 660 $V_USERS/$user/ssl/$domain.*
 
 # Parsing domain values
 get_web_domain_values
-conf="$V_HOME/$user/conf/shttpd.conf"
+conf="$V_HOME/$user/conf/web/shttpd.conf"
 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
 SSL_HOME="$ssl_home"
 
@@ -92,12 +93,15 @@ upd_web_domain_values
 # Adding domain to the shttpd.conf
 add_web_config
 
+chown root:apache $conf
+chmod 640 $conf
+
 # Adding certificate to user dir
-cp -f $V_USERS/$user/ssl/$domain.crt $V_HOME/$user/conf/ssl.$domain.crt
-cp -f $V_USERS/$user/ssl/$domain.key $V_HOME/$user/conf/ssl.$domain.key
-cp -f $V_USERS/$user/ssl/$domain.pem $V_HOME/$user/conf/ssl.$domain.pem
+cp -f $V_USERS/$user/ssl/$domain.crt $V_HOME/$user/conf/web/ssl.$domain.crt
+cp -f $V_USERS/$user/ssl/$domain.key $V_HOME/$user/conf/web/ssl.$domain.key
+cp -f $V_USERS/$user/ssl/$domain.pem $V_HOME/$user/conf/web/ssl.$domain.pem
 if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
-    cp -f $V_USERS/$user/ssl/$domain.ca $V_HOME/$user/conf/ssl.$domain.ca
+    cp -f $V_USERS/$user/ssl/$domain.ca $V_HOME/$user/conf/web/ssl.$domain.ca
 fi
 
 # Running template trigger
@@ -115,9 +119,12 @@ fi
 # Checking  nginx
 if [ ! -z "$NGINX" ]; then
     # Adding domain to the snginx.conf
-    conf="$V_HOME/$user/conf/snginx.conf"
+    conf="$V_HOME/$user/conf/web/snginx.conf"
     tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
     add_web_config
+
+    chown root:nginx $conf
+    chmod 640 $conf
 
     # Checking vesta nginx config
     main_conf='/etc/nginx/conf.d/vesta_users.conf'

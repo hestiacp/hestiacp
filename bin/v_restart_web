@@ -18,7 +18,8 @@ apache() {
     /etc/init.d/httpd 'graceful' >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         #$V_FUNC/report_issue 'web' 'apache'
-        echo "$E_RESTART_FAILED $V_EVENT"
+        echo "$E_RESTART $1"
+        exit $E_RESTART
     fi
 }
 
@@ -26,7 +27,8 @@ nginx() {
     /etc/init.d/nginx 'reload' >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         #$V_FUNC/report_issue 'web' 'nginx'
-        echo "$E_RESTART_FAILED $V_EVENT"
+        echo "$E_RESTART $1"
+        exit $E_RESTART
     fi
 }
 
@@ -37,11 +39,11 @@ nginx() {
 
 # Checking system
 if [ "$WEB_SYSTEM" = 'apache' ]; then
-    apache
+    apache $1
 fi
 
 if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    nginx
+    nginx $1
 fi
 
 

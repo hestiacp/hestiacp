@@ -90,7 +90,8 @@ increase_user_value "$user" '$U_DATABASES'
 # Adding db to db conf
 v_str="DB='$database' USER='$db_user' HOST='$host' TYPE='$type'"
 v_str="$v_str CHARSET='$encoding' U_DISK='0' SUSPEND='no' DATE='$V_DATE'"
-echo "$v_str">>$V_USERS/$user/db.conf
+echo "$v_str" >> $V_USERS/$user/db.conf
+chmod 660 $V_USERS/$user/db.conf
 
 # Hiding password
 V_EVENT="$V_DATE $V_SCRIPT $user $database $db_user ***** $type $host"

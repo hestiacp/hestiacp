@@ -75,25 +75,31 @@ esac
 echo "$password" | /usr/bin/passwd "$user" --stdin >/dev/null 2>&1
 
 # Building directory tree
-if [ ! -z "$BACKUP_SYSTEM" ] && [ "$BACKUP_SYSTEM" != 'no' ]; then
-    mkdir $V_HOME/$user/backup
-    chmod 751 $V_HOME/$user/backup
-fi
+mkdir $V_HOME/$user/conf
+chmod 751 $V_HOME/$user/conf/web
 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    mkdir $V_HOME/$user/conf
+    mkdir $V_HOME/$user/conf/web
     mkdir $V_HOME/$user/web
     mkdir $V_HOME/$user/tmp
-    chmod 751 $V_HOME/$user/conf
+    chmod 751 $V_HOME/$user/conf/web
     chmod 751 $V_HOME/$user/web
     chmod 777 $V_HOME/$user/tmp
     chown $user:$user $V_HOME/$user/web
 fi
 
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    mkdir $V_HOME/$user/conf/mail
     mkdir $V_HOME/$user/mail
     chmod 751 $V_HOME/$user/mail
+    chmod 751 $V_HOME/$user/conf/mail
+fi
+
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    mkdir $V_HOME/$user/conf/dns
+    chmod 751 $V_HOME/$user/conf/dns
 fi 
+
 
 # Set permissions
 chmod -R a+x $V_HOME/$user
@@ -111,36 +117,51 @@ fi
 
 # Adding user dir
 mkdir $V_USERS/$user
+chmod 770 $V_USERS/$user
 
 # Creating configuration files and pipes
-touch $V_USERS/$user/user.conf
+touch $V_USERS/$user/backup.conf
+chmod 660 $V_USERS/$user/backup.conf
+touch $V_USERS/$user/history.log
+chmod 660 $V_USERS/$user/history.log
+touch $V_USERS/$user/billing.log
+chmod 660 $V_USERS/$user/billing.log
+
 echo "v_update_user_disk $user" >> $V_QUEUE/disk.pipe
 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     mkdir $V_USERS/$user/ssl
+    chmod 770 $V_USERS/$user/ssl
     touch $V_USERS/$user/web.conf
+    chmod 660 $V_USERS/$user/web.conf
     echo "$V_BIN/v_update_web_domains_traff $user" >> $V_QUEUE/traffic.pipe
     echo "v_update_web_domains_disk $user" >> $V_QUEUE/disk.pipe
 fi
 
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    touch $V_USERS/$user/dns.conf
     mkdir $V_USERS/$user/dns
+    chmod 770 $V_USERS/$user/dns
+    touch $V_USERS/$user/dns.conf
+    chmod 660 $V_USERS/$user/dns.conf
 fi
 
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    touch $V_USERS/$user/mail_domains.conf
-    touch $V_USERS/$user/mail_boxes.conf
+    mkdir $V_USERS/$user/mail
+    chmod 770 $V_USERS/$user/mail
+    touch $V_USERS/$user/mail.conf
+    chmod 660 $V_USERS/$user/mail.conf
     echo "v_upd_mail_domains_disk $user" >> $V_QUEUE/disk.pipe
 fi
 
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     touch $V_USERS/$user/db.conf
+    chmod 660 $V_USERS/$user/db.conf
     echo "v_update_db_bases_disk $user" >> $V_QUEUE/disk.pipe
 fi
 
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
     touch $V_USERS/$user/cron.conf
+    chmod 660 $V_USERS/$user/cron.conf
 fi
 
 # Filling user config
@@ -163,6 +184,7 @@ U_DATABASES='0'
 U_MAIL_DOMAINS='0'
 U_CRON_JOBS='0'
 DATE='$V_DATE'" > $V_USERS/$user/user.conf
+chmod 660 $V_USERS/$user/user.conf
 
 # Hiding password
 V_EVENT="$V_DATE $V_SCRIPT $user ***** $email $package $fname $lname"

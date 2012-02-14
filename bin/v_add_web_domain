@@ -99,7 +99,7 @@ email="$user@$domain"
 docroot="$V_HOME/$user/web/$domain/public_html"
 docroot_string="DocumentRoot $docroot"
 
-conf="$V_HOME/$user/conf/httpd.conf"
+conf="$V_HOME/$user/conf/web/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
 
 # Parsing template keys
@@ -167,8 +167,10 @@ done
 # Changing file owner
 chown -R $user:$user $V_HOME/$user/web/$domain
 chown root:$user /var/log/httpd/domains/$domain.*
+chown root:apache $conf
 
 # Changing file permissions
+chmod 640 $conf
 chmod 551 $V_HOME/$user/web/$domain
 chmod 751 $V_HOME/$user/web/$domain/private
 chmod 751 $V_HOME/$user/web/$domain/cgi-bin
@@ -218,7 +220,8 @@ v_str="$v_str SSL='no' SSL_HOME='single'"
 v_str="$v_str NGINX='' NGINX_EXT='' SUSPEND='no' DATE='$V_DATE'"
 
 # Registering domain
-echo "$v_str" >>$V_USERS/$user/web.conf
+echo "$v_str" >> $V_USERS/$user/web.conf
+chmod 660 $V_USERS/$user/web.conf
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

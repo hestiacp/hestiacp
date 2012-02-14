@@ -22,8 +22,8 @@ source $V_CONF/vesta.conf
 if [ "$CRON_SYSTEM" = 'crond' ]; then
     /etc/init.d/crond 'reload' >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        echo "$E_PARSING $V_EVENT"
-        exit $E_PARSING
+        echo "$E_RESTART $1"
+        exit $E_RESTART
     fi
 fi
 

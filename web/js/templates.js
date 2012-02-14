@@ -485,7 +485,7 @@ App.Templates.html = {
                                             <span class="prop-title">email:</span>\
                                             <span class="group-values">\
                                                 <span class="prop-value user-email">~!:CONTACT~!</span>\
-                                                <span class="prop-value user-reports">(reporting ~!:REPORTS_ENABLED~!)</span>\
+                                                <span class="prop-value user-reports">(reports ~!:REPORTS_ENABLED~!)</span>\
                                                 </span>\
                                         </span>\
 										<span class="prop-box template-box">\
@@ -1113,7 +1113,7 @@ App.Templates.html = {
                     <img class="stats-graph" src="~!:IMG_SRC~!" alt="" />\
                 </div>\
             </div>'],
-        SUBMENU: ['<div class="date-range-controls stats-subbar"><span class="motive">Generate:</span><span class="date-range-control today active" onClick="App.Actions.loadStats(\'today\')">daily</span>\
+        SUBMENU: ['<div class="date-range-controls stats-subbar"><span class="motive">Genarate:</span><span class="date-range-control today active" onClick="App.Actions.loadStats(\'today\')">daily</span>\
                 <span class="date-range-control week" onClick="App.Actions.loadStats(\'week\')">weekly</span>\
                 <span class="date-range-control month" onClick="App.Actions.loadStats(\'month\')">monthly</span>\
                 <span class="date-range-control year" onClick="App.Actions.loadStats(\'year\')">yearly</span></div>'],

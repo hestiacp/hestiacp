@@ -43,9 +43,7 @@ App.Pages.prepareHTML = function()
     $('#actions-toolbar .stats-subbar').remove();
 	$('#actions-toolbar .stats-components').remove();
     $('#actions-toolbar .do_action_new_entry').removeClass('hidden');
-
 	$('.active').removeClass('active');
-
     $('.row-filters').removeClass('hidden');
     if ('undefined' != typeof App.Pages[App.Env.world].prepareHTML) {
         App.Pages[App.Env.world].prepareHTML();
@@ -55,8 +53,7 @@ App.Pages.prepareHTML = function()
     }
     $('#new-entry-keyword').text(App.Helpers.getHumanTabName());
     document.title = 'Vesta | ' + App.Helpers.getHumanTabName();
-
-    $('#'+App.Env.world).addClass('active');
+    
     App.Tmp[App.Env.world + '_selected_records'] = 0;
 }
 

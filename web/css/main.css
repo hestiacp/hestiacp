@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : February 8, 2012
+last updated : February 13, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -1891,15 +1891,9 @@ input::-moz-focus-inner{
 				width:221px;
 				margin:0;
 				border-right:0;
-				cursor:pointer;
 				padding-top:6px;
 				padding-bottom:6px;
-				}
-				.b-new-entry .autocomplete-box .text-field{
-					-moz-box-shadow:none;
-					-webkit-box-shadow:none;
-					border-color:#B8C2C3;
-				}
+			}
 
 			.b-new-entry .autocomplete-box .arrow{
 				position:absolute;
@@ -1913,7 +1907,6 @@ input::-moz-focus-inner{
 				background:#fff url(../images/autocomplete-field-arrows-sprite-2012-02-11.png) no-repeat;
 				cursor:pointer;
 			}
-			.b-new-entry .autocomplete-box:hover .arrow,
 			.b-new-entry .autocomplete-box .arrow:hover,
 			.b-new-entry .autocomplete-box .arrow:active,
 			.b-new-entry .autocomplete-box .arrow:focus{

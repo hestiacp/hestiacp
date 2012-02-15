@@ -257,6 +257,7 @@ ip_add_vesta() {
 
     # Adding ip
     echo -e "$ip_data" >$V_IPS/$ip
+    chmod 660 $V_IPS/$ip
 }
 
 ip_add_startup() {

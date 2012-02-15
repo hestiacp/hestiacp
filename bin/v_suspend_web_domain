@@ -57,7 +57,7 @@ is_domain_suspended 'web'
 get_web_domain_values
 tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 conf="$V_HOME/$user/conf/httpd.conf"
-SUSPEND='yes'
+SUSPENDED='yes'
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
@@ -96,7 +96,7 @@ fi
 #----------------------------------------------------------#
 
 # Adding suspend in config
-update_web_domain_value '$SUSPEND' 'yes'
+update_web_domain_value '$SUSPENDED' 'yes'
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

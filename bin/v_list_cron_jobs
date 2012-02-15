@@ -114,13 +114,13 @@ is_user_valid
 conf=$V_USERS/$user/cron.conf
 
 # Defining fileds to select
-fields='$JOB $MIN $HOUR $DAY $MONTH $WDAY $CMD $SUSPEND $DATE'
+fields='$JOB $MIN $HOUR $DAY $MONTH $WDAY $CMD $SUSPENDED $DATE'
 
 # Listing domains
 case $format in 
     json)   json_list_cron ;;
     plain)  nohead=1;
-            fields="\"\$JOB\" \"\$SUSPEND\" \"\$MIN\" \"\$HOUR\" \"\$DAY\""
+            fields="\"\$JOB\" \"\$SUSPENDED\" \"\$MIN\" \"\$HOUR\" \"\$DAY\""
             fields="$fields \"\$MONTH\" \"\$WDAY\" \"\$CMD\"";
             shell_list_cron ;;
     shell)  fields='$JOB~$SUSPEND~$MIN~$HOUR~$DAY~$MONTH~$WDAY~$CMD';

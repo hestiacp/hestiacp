@@ -40,9 +40,9 @@ is_user_valid
 conf=$V_USERS/$user/web.conf
 
 # Defining fileds to select
-fields="\$DOMAIN \$IP \$U_DISK \$U_BANDWIDTH \$TPL \$ALIAS \$PHP \$CGI \$ELOG"
-fields="$fields \$STATS \$STATS_AUTH \$SSL \$SSL_HOME \$NGINX \$NGINX_EXT"
-fields="$fields \$SUSPEND \$DATE"
+fields="\$DOMAIN \$IP \$IP6 \$U_DISK \$U_BANDWIDTH \$TPL \$ALIAS \$PHP \$CGI"
+fields="$fields \$ELOG \$STATS \$STATS_AUTH \$SSL \$SSL_HOME \$NGINX"
+fields="$fields \$NGINX_EXT \$SUSPENDED \$DATE"
 
 # Listing domains
 case $format in 

@@ -43,7 +43,7 @@ is_user_valid
 # Defining fileds to select
 conf="$V_USERS/$user/web.conf"
 field='$DOMAIN'
-search_string="SUSPEND='yes'"
+search_string="SUSPENDED='yes'"
 domains=$(dom_clear_search)
 
 # Starting unsuspend loop

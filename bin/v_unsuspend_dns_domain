@@ -60,7 +60,7 @@ echo "$nmd_rec" >> $conf
 #----------------------------------------------------------#
 
 # Unsuspending domain in config
-update_dns_domain_value '$SUSPEND' 'no'
+update_dns_domain_value '$SUSPENDED' 'no'
 
 # Adding task to the vesta pipe
 restart_schedule 'dns'

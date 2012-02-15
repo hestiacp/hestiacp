@@ -47,7 +47,7 @@ conf="$V_USERS/$user/dns.conf"
 field='$DOMAIN'
 
 # Defining search string
-search_string="SUSPEND='no'"
+search_string="SUSPENDED='no'"
 
 # Parsing unsuspeneded domains
 domains=$(dom_clear_search)
@@ -61,7 +61,7 @@ for domain in $domains; do
         sed -i "$rm_string d" $conf
     fi
     # Adding suspend in config
-    update_dns_domain_value '$SUSPEND' 'yes'
+    update_dns_domain_value '$SUSPENDED' 'yes'
 done
 
 

@@ -40,7 +40,7 @@ is_user_valid
 conf=$V_USERS/$user/db.conf
 
 # Defining fileds to select
-fields='$DB $USER $HOST $TYPE $CHARSET $U_DISK $SUSPEND $DATE'
+fields='$DB $USER $HOST $TYPE $CHARSET $U_DISK $SUSPENDED $DATE'
 
 # Listing databases
 case $format in 

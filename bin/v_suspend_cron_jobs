@@ -40,12 +40,12 @@ is_user_valid
 # Searching jobs
 conf="$V_USERS/$user/cron.conf"
 field='$JOB'
-search_string="SUSPEND='no'"
+search_string="SUSPENDED='no'"
 jobs=$(cron_clear_search)
 
 # Suspendning
 for job in $jobs; do
-    update_cron_job_value '$SUSPEND' 'yes'
+    update_cron_job_value '$SUSPENDED' 'yes'
 done
 
 # Sync system cron with user

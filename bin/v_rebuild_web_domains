@@ -135,7 +135,7 @@ for domain in $(shell_list) ; do
         chmod 640 $conf
 
         if [ "$SSL" = 'yes' ]; then
-            if [ "$SUSPEND" = 'yes' ]; then
+            if [ "$SUSPENDED" = 'yes' ]; then
                 proxy_string="rewrite ^(.*)\$ http://$url;"
             else
                 proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"

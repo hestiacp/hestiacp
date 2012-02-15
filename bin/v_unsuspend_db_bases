@@ -47,7 +47,7 @@ conf="$V_USERS/$user/db.conf"
 field='$DB'
 
 # Defining search string
-search_string="SUSPEND='yes'"
+search_string="SUSPENDED='yes'"
 
 # Parsing unsuspeneded domains
 databases=$(db_clear_search)
@@ -65,7 +65,7 @@ for database in $databases; do
     esac
 
     # Updating db value
-    update_db_base_value '$SUSPEND' 'no'
+    update_db_base_value '$SUSPENDED' 'no'
 done
 
 

@@ -45,7 +45,7 @@ conf="$V_USERS/$user/web.conf"
 
 # Defining fileds to select
 field='$DOMAIN'
-search_string="SUSPEND='no'"
+search_string="SUSPENDED='no'"
 domains=$(dom_clear_search)
 
 # Starting update disk loop

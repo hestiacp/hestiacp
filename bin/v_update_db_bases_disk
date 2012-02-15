@@ -47,7 +47,7 @@ conf="$V_USERS/$user/db.conf"
 field='$DB'
 
 # Defining search string
-search_string="SUSPEND='no'"
+search_string="SUSPENDED='no'"
 
 # Parsing unsuspeneded domains
 databases=$(db_clear_search)

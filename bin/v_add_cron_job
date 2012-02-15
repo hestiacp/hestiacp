@@ -62,7 +62,7 @@ is_cron_job_free
 # Concatenating cron string
 command=$(echo $command|sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
 v_str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month"
-v_str="$v_str' WDAY='$wday' CMD='$command' SUSPEND='no' DATE='$V_DATE'"
+v_str="$v_str' WDAY='$wday' CMD='$command' SUSPENDED='no' DATE='$V_DATE'"
 
 # Adding to crontab
 echo "$v_str">>$V_USERS/$user/cron.conf

@@ -59,7 +59,7 @@ is_job_valid
 # Concatenating cron string
 command=$(echo $command|sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
 v_str="JOB='$job' MIN='$min' HOUR='$hour' WDAY='$wday'"
-v_str="$v_str MONTH='$month' DAY='$day' CMD='$command' SUSPEND='no'"
+v_str="$v_str MONTH='$month' DAY='$day' CMD='$command' SUSPENDED='no'"
 
 # Deleting job
 del_cron_job

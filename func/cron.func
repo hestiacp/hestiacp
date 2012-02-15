@@ -48,7 +48,7 @@ sync_cron_jobs() {
             eval ${key%%=*}="${key#*=}"
         done
 
-        if [ "$SUSPEND" = 'no' ] ; then
+        if [ "$SUSPENDED" = 'no' ] ; then
             # Adding line to system cron
             echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" |\
             sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" >> $conf
@@ -75,7 +75,7 @@ del_cron_job() {
 
 is_job_suspended() {
     # Parsing jobs
-    str=$(grep "JOB='$job'" $V_USERS/$user/cron.conf|grep "SUSPEND='yes'" )
+    str=$(grep "JOB='$job'" $V_USERS/$user/cron.conf|grep "SUSPENDED='yes'" )
 
     # Checkng key
     if [ ! -z "$str" ]; then
@@ -87,7 +87,7 @@ is_job_suspended() {
 
 is_job_unsuspended() {
     # Parsing jobs
-    str=$(grep "JOB='$job'" $V_USERS/$user/cron.conf|grep "SUSPEND='no'" )
+    str=$(grep "JOB='$job'" $V_USERS/$user/cron.conf|grep "SUSPENDED='no'" )
 
     # Checkng key
     if [ ! -z "$str" ]; then

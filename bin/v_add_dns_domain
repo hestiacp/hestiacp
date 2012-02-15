@@ -102,7 +102,7 @@ cat $V_DNSTPL/$template.tpl |\
 
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
-dns_rec="$dns_rec SOA='$soa' SUSPEND='no' DATE='$V_DATE'"
+dns_rec="$dns_rec SOA='$soa' SUSPENDED='no' DATE='$V_DATE'"
 echo "$dns_rec" >> $V_USERS/$user/dns.conf
 chmod 660 $V_USERS/$user/dns.conf
 

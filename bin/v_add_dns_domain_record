@@ -77,7 +77,7 @@ zone="$V_USERS/$user/dns/$domain"
 
 # Adding record
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' VALUE='$dvalue'"
-dns_rec="$dns_rec SUSPEND='no' DATE='$V_DATE'"
+dns_rec="$dns_rec SUSPENDED='no' DATE='$V_DATE'"
 echo "$dns_rec" >> $zone 
 
 # Sorting records

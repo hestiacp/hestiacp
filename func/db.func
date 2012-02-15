@@ -348,7 +348,7 @@ is_pgsql_host_alive() {
 
 is_db_suspended() {
     config="$V_USERS/$user/db.conf"
-    check_db=$(grep "DB='$database'" $config|grep "SUSPEND='yes'")
+    check_db=$(grep "DB='$database'" $config|grep "SUSPENDED='yes'")
 
     # Checking result
     if [ ! -z "$check_db" ]; then
@@ -360,7 +360,7 @@ is_db_suspended() {
 
 is_db_unsuspended() {
     config="$V_USERS/$user/db.conf"
-    check_db=$(grep "DB='$database'" $config|grep "SUSPEND='yes'")
+    check_db=$(grep "DB='$database'" $config|grep "SUSPENDED='yes'")
 
     # Checking result
     if [ -z "$check_db" ]; then

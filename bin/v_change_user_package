@@ -21,17 +21,15 @@ source $V_FUNC/shared.func
 is_package_avalable() {
     # Parsing user data
     usr_data=$(cat $V_USERS/$user/user.conf)
+    IFS=$'\n'
     for key in $usr_data; do
         eval ${key%%=*}=${key#*=}
     done
 
     # Clearing vars
     WEB_DOMAINS='0'
-    WEB_SSL='0'
     DATABASES='0'
     MAIL_DOMAINS='0'
-    MAIL_BOXES='0'
-    MAIL_FORWARDERS='0'
     DNS_DOMAINS='0'
     DISK_QUOTA='0'
     BANDWIDTH='0'
@@ -44,10 +42,10 @@ is_package_avalable() {
 
     # Comparing user data with package
     if [ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ] ||\
-       [ "$WEB_SSL" -lt "$U_WEB_SSL" ] ||\
-       [ "$DATABASES" -lt "$U_DATABASES" ] ||\
-       [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ] ||\
        [ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ] ||\
+       [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ] ||\
+       [ "$DATABASES" -lt "$U_DATABASES" ] ||\
+       [ "$CRON_JOBS" -lt "$U_CRON_JOBS" ] ||\
        [ "$DISK_QUOTA" -lt "$U_DISK" ] ||\
        [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]; then
         echo "Error: Upgrade package"
@@ -59,6 +57,7 @@ is_package_avalable() {
 change_user_package() {
     # Parsing user data
     usr_data=$(cat $V_USERS/$user/user.conf)
+    IFS=$'\n'
     for key in $usr_data; do
         eval ${key%%=*}=${key#*=}
     done
@@ -73,32 +72,41 @@ change_user_package() {
 LNAME='$LNAME'
 PACKAGE='$package'
 WEB_DOMAINS='$WEB_DOMAINS'
-WEB_SSL='$WEB_SSL'
 WEB_ALIASES='$WEB_ALIASES'
-DATABASES='$DATABASES'
-MAIL_DOMAINS='$MAIL_DOMAINS'
-MAIL_BOXES='$MAIL_BOXES'
-MAIL_FORWARDERS='$MAIL_FORWARDERS'
+WEB_TPL='$WEB_TPL'
 DNS_DOMAINS='$DNS_DOMAINS'
+DNS_RECORDS='$DNS_RECORDS'
+MAIL_DOMAINS='$MAIL_DOMAINS'
+MAIL_ACCOUNTS='$MAIL_ACCOUNTS'
+DATABASES='$DATABASES'
+CRON_JOBS='$CRON_JOBS'
 DISK_QUOTA='$DISK_QUOTA'
 BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'
 BACKUPS='$BACKUPS'
-WEB_TPL='$WEB_TPL'
-SUSPENDED='$SUSPENDED'
 CONTACT='$CONTACT'
-RKEY='$RKEY'
 REPORTS='$REPORTS'
+RKEY='$RKEY'
+SUSPENDED='$SUSPENDED'
+SUSPENDED_USERS='$SUSPENDED_USERS'
+SUSPENDED_WEB='$SUSPENDED_WEB'
+SUSPENDED_DNS='$SUSPENDED_DNS'
+SUSPENDED_MAIL='$SUSPENDED_MAIL'
+SUSPENDED_DB='$SUSPENDED_DB'
+SUSPENDED_CRON='$SUSPENDED_CRON'
 IP_OWNED='$IP_OWNED'
 U_DIR_DISK='$U_DIR_DISK'
 U_DISK='$U_DISK'
 U_BANDWIDTH='$U_BANDWIDTH'
 U_WEB_DOMAINS='$U_WEB_DOMAINS'
 U_WEB_SSL='$U_WEB_SSL'
+U_WEB_ALIASES='$U_WEB_ALIASES'
 U_DNS_DOMAINS='$U_DNS_DOMAINS'
-U_DATABASES='$U_DATABASES'
+U_DNS_RECORDS='$U_DNS_RECORDS'
 U_MAIL_DOMAINS='$U_MAIL_DOMAINS'
+U_MAIL_ACCOUNTS='$U_MAIL_ACCOUNTS'
+U_DATABASES='$U_DATABASES'
 U_CRON_JOBS='$U_CRON_JOBS'
 DATE='$DATE'" > $V_USERS/$user/user.conf
 }
@@ -117,9 +125,6 @@ format_validation 'user' 'package'
 # Checking user
 is_user_valid
 
-# Checking user is active
-is_user_suspended
-
 # Checking package
 is_package_valid
 
@@ -130,9 +135,6 @@ is_package_avalable
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-# Get old package value
-old_package=$(get_user_value '$PACKAGE')
 
 # Changing user package
 change_user_package

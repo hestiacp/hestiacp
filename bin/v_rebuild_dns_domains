@@ -80,7 +80,7 @@ for domain in $domains; do
     exp="$(get_dns_domain_value '$EXP')"
     soa="$(get_dns_domain_value '$SOA')"
     ttl="$(get_dns_domain_value '$TTL')"
-    suspend="$(get_dns_domain_value '$SUSPEND')"
+    suspended="$(get_dns_domain_value '$SUSPENDED')"
 
     # Checking zone file
     if [ ! -e "$V_USERS/$user/dns/$domain" ]; then
@@ -112,7 +112,7 @@ for domain in $domains; do
     # Bind config check
     nconf='/etc/named.conf'
 
-    if [ "$suspend" = 'yes' ]; then
+    if [ "$suspended" = 'yes' ]; then
 	rm_string=$(grep -n /etc/namedb/$domain.db $nconf | cut -d : -f 1)
         if [ ! -z "$rm_string" ]; then
             sed -i "$rm_string d" $nconf

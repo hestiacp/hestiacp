@@ -68,7 +68,7 @@ fi
 
 # Adding record
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' VALUE='$value'"
-dns_rec="$dns_rec SUSPEND='no' DATE='$V_DATE'"
+dns_rec="$dns_rec SUSPENDED='no' DATE='$V_DATE'"
 echo "$dns_rec" >> $zone 
 
 # Sorting records

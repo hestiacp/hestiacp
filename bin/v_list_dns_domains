@@ -40,14 +40,14 @@ is_user_valid
 conf=$V_USERS/$user/dns.conf
 
 # Defining fileds to select
-fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SUSPEND $DATE'
+fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SUSPENDED $DATE'
 
 
 # Listing domains
 case $format in 
     json)   json_list ;;
     plain)  nohead=1; shell_list ;;
-    shell)  fields='$DOMAIN $IP $TPL $TTL $EXP $SUSPEND';
+    shell)  fields='$DOMAIN $IP $TPL $TTL $EXP $DATE';
             shell_list| column -t ;;
     *)      check_args '1' '0' 'user [format]';;
 esac

@@ -89,7 +89,7 @@ increase_user_value "$user" '$U_DATABASES'
 
 # Adding db to db conf
 v_str="DB='$database' USER='$db_user' HOST='$host' TYPE='$type'"
-v_str="$v_str CHARSET='$encoding' U_DISK='0' SUSPEND='no' DATE='$V_DATE'"
+v_str="$v_str CHARSET='$encoding' U_DISK='0' SUSPENDED='no' DATE='$V_DATE'"
 echo "$v_str" >> $V_USERS/$user/db.conf
 chmod 660 $V_USERS/$user/db.conf
 

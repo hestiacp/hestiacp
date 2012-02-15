@@ -218,7 +218,7 @@ v_str="$v_str ALIAS='$aliases'"
 v_str="$v_str $template_data"    # Inserting PHP, CGI and ELOG keys
 v_str="$v_str STATS='' STATS_AUTH=''"
 v_str="$v_str SSL='no' SSL_HOME='single'"
-v_str="$v_str NGINX='' NGINX_EXT='' SUSPEND='no' DATE='$V_DATE'"
+v_str="$v_str NGINX='' NGINX_EXT='' SUSPENDED='no' DATE='$V_DATE'"
 
 # Registering domain
 echo "$v_str" >> $V_USERS/$user/web.conf

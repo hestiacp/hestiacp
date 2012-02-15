@@ -121,7 +121,7 @@ is_dns_domain_valid
 conf=$V_USERS/$user/dns/$domain
 
 # Defining fileds to select
-fields='$ID $RECORD $TYPE $VALUE $SUSPEND $DATE'
+fields='$ID $RECORD $TYPE $VALUE $SUSPENDED $DATE'
 
 # Listing domains
 case $format in 

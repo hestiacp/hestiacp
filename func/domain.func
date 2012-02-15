@@ -108,7 +108,7 @@ is_domain_suspended() {
     config_type="$1"
     # Parsing domain values
     check_domain=$(grep "DOMAIN='$domain'" $V_USERS/$user/$config_type.conf|\
-        grep "SUSPEND='yes'")
+        grep "SUSPENDED='yes'")
 
     # Checking result
     if [ ! -z "$check_domain" ]; then
@@ -122,7 +122,7 @@ is_domain_unsuspended() {
     config_type="$1"
     # Parsing domain values
     check_domain=$(grep "DOMAIN='$domain'" $V_USERS/$user/$config_type.conf|\
-        grep "SUSPEND='no'")
+        grep "SUSPENDED='no'")
 
     # Checking result
     if [ ! -z "$check_domain" ]; then
@@ -741,7 +741,7 @@ upd_web_domain_values() {
     fi
 
     # Checking suspend
-    if [ "$SUSPEND" = 'yes' ]; then
+    if [ "$SUSPENDED" = 'yes' ]; then
         docroot_string="Redirect / http://$url"
         proxy_string="rewrite ^(.*)\$ http://$url;"
     fi

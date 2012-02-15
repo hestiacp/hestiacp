@@ -12,7 +12,7 @@
 
 # Argument defenition
 key=$(echo "$1" | tr '[:lower:]' '[:upper:]' )
-value=${2// /%spc%}
+value=$2
 
 # Importing variables
 source $VESTA/conf/vars.conf

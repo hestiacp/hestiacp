@@ -1,12 +1,8 @@
 #!/bin/bash
-# info: add dns domain
-# options: user domain ip [template] [exp] [soa] [ttl]
+# info: add mail domain
+# options: user domain [antispam] [antivirus]
 #
-# The function adds DNS zone with records defined in the template. If the exp
-# argument isn't stated, the expiration date value will be set to next year.
-# The soa argument is responsible for the relevant record. By default the first
-# user's NS server is used. TTL is set as common for the zone and for all of
-# its records with a default value of 14400 seconds.
+# The function adds MAIL domain.
 
 
 #----------------------------------------------------------#
@@ -18,12 +14,8 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
-ip=$3
-template=${4-default}
-next_year=$(date +%F -d "+ 1 year")
-exp=${5-$next_year}
-soa=$6
-ttl=${7-14400}
+antispam=${3-yes}
+antivirus=${3-yes}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -37,13 +29,13 @@ source $V_FUNC/domain.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '3' "$#" 'user domain ip [template] [exp] [soa] [ttl]'
+check_args '3' "$#" 'user domain [antispam] [antivirus]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'ip' 'template' 'exp' 'ttl'
+format_validation 'user' 'domain' 'antispam' 'antivirus'
 
 # Checking dns system is enabled
-is_system_enabled 'dns'
+is_system_enabled 'mail'
 
 # Checking user
 is_user_valid
@@ -63,11 +55,9 @@ if [ $? -ne 0 ]; then
 fi
 
 # Checking package
-is_package_full 'dns'
+is_package_full 'mail'
 
-# Checking template
-is_template_valid 'dns'
-
+exit
 
 #----------------------------------------------------------#
 #                       Action                             #

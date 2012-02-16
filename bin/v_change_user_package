@@ -57,16 +57,11 @@ is_package_avalable() {
 change_user_package() {
     # Parsing user data
     usr_data=$(cat $V_USERS/$user/user.conf)
-    IFS=$'\n'
-    for key in $usr_data; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $usr_data
 
     # Parsing package
     pkg_data=$(cat $V_PKG/$package.pkg)
-    for key in $pkg_data; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $pkg_data
 
     echo "FNAME='$FNAME'
 LNAME='$LNAME'
@@ -96,8 +91,12 @@ SUSPENDED_MAIL='$SUSPENDED_MAIL'
 SUSPENDED_DB='$SUSPENDED_DB'
 SUSPENDED_CRON='$SUSPENDED_CRON'
 IP_OWNED='$IP_OWNED'
-U_DIR_DISK='$U_DIR_DISK'
+U_USERS='$U_USERS'
 U_DISK='$U_DISK'
+U_DISK_DIRS='$U_DISK_DIRS'
+U_DISK_WEB='$U_DISK_WEB'
+U_DISK_MAIL='$U_DISK_MAIL'
+U_DISK_DB='$U_DISK_DB'
 U_BANDWIDTH='$U_BANDWIDTH'
 U_WEB_DOMAINS='$U_WEB_DOMAINS'
 U_WEB_SSL='$U_WEB_SSL'

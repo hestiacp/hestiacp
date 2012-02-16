@@ -22,13 +22,10 @@ source $V_FUNC/shared.func
 json_list_user() {
     i=1
     fileds_count=$(echo "$fields" | wc -w)
-    line=$(cat $V_USERS/$USER/user.conf)
+    source $V_USERS/$USER/user.conf
 
     # Print top bracket
     echo '{'
-
-    # Assing key=value
-    eval $line
 
     # Starting output loop
     for field in $fields; do
@@ -59,12 +56,8 @@ json_list_user() {
 
 # Shell function
 shell_list_user() {
-    line=$(cat $V_USERS/$USER/user.conf)
+    source $V_USERS/$USER/user.conf
 
-    # Parsing key=value
-    eval $line
-
-    # Print result line
     for field in $fields; do
         eval key="$field"
         echo "${field//$/}: $key "
@@ -98,10 +91,10 @@ fields='$USER $FNAME $LNAME $PACKAGE $WEB_DOMAINS $WEB_ALIASES $WEB_TPL
     $DNS_DOMAINS $DNS_RECORDS $MAIL_DOMAINS $MAIL_ACCOUNTS $DATABASES
     $CRON_JOBS $DISK_QUOTA $BANDWIDTH $NS $SHELL $BACKUPS $CONTACT $REPORTS
     $RKEY $SUSPENDED $SUSPENDED_USERS $SUSPENDED_WEB $SUSPENDED_DNS
-    $SUSPENDED_MAIL $SUSPENDED_DB $SUSPENDED_CRON $IP_OWNED $U_DIR_DISK $U_DISK
-    $U_BANDWIDTH $U_WEB_DOMAINS $U_WEB_SSL $U_WEB_ALIASES $U_DNS_DOMAINS
-    $U_DNS_RECORDS $U_MAIL_DOMAINS $U_MAIL_ACCOUNTS $U_DATABASES $U_CRON_JOBS
-    $DATE'
+    $SUSPENDED_MAIL $SUSPENDED_DB $SUSPENDED_CRON $IP_OWNED $U_USERS
+    $U_DISK $U_DISK_DIRS $U_DISK_WEB $U_DISK_MAIL $U_DISK_DB $U_BANDWIDTH
+    $U_WEB_DOMAINS $U_WEB_SSL $U_WEB_ALIASES $U_DNS_DOMAINS $U_DNS_RECORDS
+    $U_MAIL_DOMAINS $U_MAIL_ACCOUNTS $U_DATABASES $U_CRON_JOBS $DATE'
 
 # Listing user
 case $format in 

@@ -1,0 +1,190 @@
+#!/bin/bash
+# info: update user usage counters
+# options: user
+#
+# Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
+source $V_FUNC/shared.func
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '0' "$#" 'user'
+
+# If user specified
+if [ ! -z "$user" ]; then
+    # Checking argument format
+    format_validation 'user'
+
+    # Checking user
+    is_user_valid
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Creating user_list
+if [ -z "$user" ]; then
+    user_list=$(ls $V_USERS/)
+else
+    user_list="$user"
+fi
+
+# Updating user stats
+for user in $user_list; do
+    # Cleaning counters
+    SUSPENDED_USERS=0
+    SUSPENDED_WEB=0
+    SUSPENDED_DNS=0
+    SUSPENDED_MAIL=0
+    SUSPENDED_DB=0
+    SUSPENDED_CRON=0
+    IP_OWNED=0
+    U_USERS=0
+    DISK=0
+    U_DISK=0
+    U_DISK_DIRS=$(get_user_value '$U_DISK_DIRS')
+    if [ -z "$U_DISK_DIRS" ]; then
+        U_DISK_DIRS=0
+    fi
+    U_DISK_WEB=0
+    U_DISK_MAIL=0
+    U_DISK_DB=0
+    BANDWIDTH=0
+    U_BANDWIDTH=0
+    U_WEB_DOMAINS=0
+    U_WEB_SSL=0
+    U_WEB_ALIASES=0
+    U_DNS_DOMAINS=0
+    U_DNS_RECORDS=0
+    U_MAIL_DOMAINS=0
+    U_MAIL_ACCOUNTS=0
+    U_DATABASES=0
+    U_CRON_JOBS=0
+
+    # New IFS
+    IFS=$'\n'
+
+    # Checking users
+    if [ "$user" = 'vesta' ]; then
+        SUSPENDED_USERS=$(grep "SUSPENDED='yes'" $V_USERS/*/user.conf|wc -l)
+        U_USERS=$(ls $V_USERS/|wc -l)
+        U_USERS=$((U_USERS - 1))
+    fi
+
+    # Checking ip
+    for ip in $(ls $V_IPS) ;do
+        source $V_IPS/$ip
+        if [ "$OWNER" = "$user" ]; then
+            IP_OWNED=$((IP_OWNED + 1))
+        fi
+    done
+
+    # Checking web system
+    for domain_str in $(cat $V_USERS/$user/web.conf) ;do
+        eval $domain_str
+        U_DISK_WEB=$((U_DISK_WEB + U_DISK))
+        U_WEB_DOMAINS=$((U_WEB_DOMAINS + 1))
+        if [ "$SSL" = 'yes' ]; then
+            U_WEB_SSL=$((U_WEB_SSL + 1))
+        fi
+        if [ "$SUSPENDED" = 'yes' ]; then
+            SUSPENDED_WEB=$((SUSPENDED_WEB + 1))
+        fi
+        if [ ! -z "$ALIAS" ]; then
+            aliases=$(echo "$ALIAS"|tr ',' '\n'| wc -l)
+            aliases=$((aliases + 1))
+            U_WEB_ALIASES=$((U_WEB_ALIASES + aliases))
+        fi
+        BANDWIDTH=$((BANDWIDTH + U_BANDWIDTH))
+    done
+    DISK=$((DISK + U_DISK_WEB))
+
+    # Checking dns system
+    for domain_str in $(cat $V_USERS/$user/dns.conf); do
+        eval $domain_str
+        U_DNS_DOMAINS=$((U_DNS_DOMAINS + 1))
+        records=$(wc -l $V_USERS/$user/dns/$DOMAIN| cut -f 1 -d ' ')
+        U_DNS_RECORDS=$((U_DNS_RECORDS + records))
+        if [ "$SUSPENDED" = 'yes' ]; then
+            SUSPENDED_DNS=$((SUSPENDED_DNS + 1))
+        fi
+    done
+
+    # Checking mail system
+    SUSPENDED_MAIL=0
+    DISK=$((DISK + U_DISK_MAIL))
+
+    # Checking db system
+    for db_str in $(cat $V_USERS/$user/db.conf); do
+        eval $db_str
+        U_DISK_DB=$((U_DISK_DB + U_DISK))
+        U_DATABASES=$((U_DATABASES + 1))
+        if [ "$SUSPENDED" = 'yes' ]; then
+            SUSPENDED_DB=$((SUSPENDED_DB + 1))
+        fi
+    done
+    DISK=$((DISK + U_DISK_DB))
+
+    # Checking mail system
+    for cron_str in $(cat $V_USERS/$user/cron.conf);do
+        eval $cron_str
+        U_CRON_JOBS=$((U_CRON_JOBS + 1))
+        if [ "$SUSPENDED" = 'yes' ]; then
+            SUSPENDED_CRON=$((SUSPENDED_CRON + 1))
+        fi
+    done
+
+    U_DISK=$DISK
+    U_BANDWIDTH=$BANDWIDTH
+    update_user_value "$user" '$SUSPENDED_USERS' "$SUSPENDED_USERS"
+    update_user_value "$user" '$SUSPENDED_WEB' "$SUSPENDED_WEB"
+    update_user_value "$user" '$SUSPENDED_DNS' "$SUSPENDED_DNS"
+    update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
+    update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
+    update_user_value "$user" '$SUSPENDED_CRON' "$SUSPENDED_CRON"
+    update_user_value "$user" '$IP_OWNED' "$IP_OWNED"
+    update_user_value "$user" '$U_USERS' "$U_USERS"
+    update_user_value "$user" '$U_DISK' "$U_DISK"
+    update_user_value "$user" '$U_DISK_DIRS' "$U_DISK_DIRS"
+    update_user_value "$user" '$U_DISK_WEB' "$U_DISK_WEB"
+    update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
+    update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
+    update_user_value "$user" '$U_BANDWIDTH' "$U_BANDWIDTH"
+    update_user_value "$user" '$U_WEB_DOMAINS' "$U_WEB_DOMAINS"
+    update_user_value "$user" '$U_WEB_SSL' "$U_WEB_SSL"
+    update_user_value "$user" '$U_WEB_ALIASES' "$U_WEB_ALIASES"
+    update_user_value "$user" '$U_DNS_DOMAINS' "$U_DNS_DOMAINS"
+    update_user_value "$user" '$U_DNS_RECORDS' "$U_DNS_RECORDS"
+    update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
+    update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
+    update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
+    update_user_value "$user" '$U_CRON_JOBS' "$U_CRON_JOBS"
+
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit

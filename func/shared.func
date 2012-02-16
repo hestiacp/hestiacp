@@ -652,23 +652,11 @@ is_template_valid() {
     esac
 }
 
-
 get_user_value() {
     key="$1"
     USER="$user"
-
-    # Parsing domains
-    string=$( cat $V_USERS/$user/user.conf )
-
-    # Parsing key=value
-    for keys in $string; do
-        eval ${keys%%=*}=${keys#*=}
-    done
-
-    # Self reference
+    source $V_USERS/$user/user.conf
     eval value="$key"
-
-    # Print value
     echo "$value"
 }
 
@@ -691,31 +679,14 @@ is_package_valid() {
 
 update_user_value() {
     USER="$1"
-    key="$2"
+    key="${2//$}"
     value="$3"
 
-    # Defining conf
     conf="$V_USERS/$USER/user.conf"
-
-    # Parsing conf
-    str=$(cat $conf)
-
-    # Reading key=values
-    for keys in $str; do
-        eval ${keys%%=*}=${keys#*=}
-    done
-
-    # Define clean key
-    c_key=$(echo "${key//$/}")
-
-    eval old="${key}"
-
-    # Escaping slashes
-    old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-    new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+    old=$(grep "$key=" $conf | cut -f 2 -d \')
 
     # Updating conf
-    sed -i "s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g" $conf
+    sed -i "s/$key='$old'/$key='$value'/g" $conf
 }
 
 increase_user_value() {

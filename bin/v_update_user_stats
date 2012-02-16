@@ -1,0 +1,101 @@
+#!/bin/bash
+# info: update user statistics
+# options: user
+#
+# Function logs user parameters into statistics database.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+
+# Importing system enviroment  as we run this script 
+#       mostly by cron wich not read it by itself
+source /etc/profile.d/vesta.sh
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
+source $V_FUNC/shared.func
+source $V_FUNC/domain.func
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '0' "$#" 'user'
+
+# If user specified
+if [ ! -z "$user" ]; then
+    # Checking argument format
+    format_validation 'user'
+
+    # Checking user
+    is_user_valid
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Creating user_list
+if [ -z "$user" ]; then
+    user_list=$(ls $V_USERS/)
+else
+    user_list="$user"
+fi
+
+# Updating user stats
+for user in $user_list; do 
+
+    # Importing user values
+    source $V_USERS/$user/user.conf
+    DATE=$(date -d "$(date +'%m/01') -1day" +%F)
+
+    # Compiling report string
+    s="DATE='$DATE' PACKAGE='$PACKAGE' IP_OWNED='$IP_OWNED'" 
+    s="$s U_DISK='$U_DISK' U_DISK_DIRS='$U_DISK_DIRS' U_DISK_WEB='$U_DISK_WEB'"
+    s="$s U_DISK_MAIL='$U_DISK_MAIL' U_DISK_DB='$U_DISK_DB'" 
+    s="$s U_DISK_DATABASES='$U_DISK_DATABASES'" 
+    s="$s U_BANDWIDTH='$U_BANDWIDTH'  U_WEB_DOMAINS='$U_WEB_DOMAINS'"
+    s="$s U_WEB_SSL='$U_WEB_SSL'  U_WEB_ALIASES='$U_WEB_ALIASES'"
+    s="$s U_DNS_DOMAINS='$U_DNS_DOMAINS' U_DNS_RECORDS='$U_DNS_RECORDS'"
+    s="$s U_MAIL_DOMAINS='$U_MAIL_DOMAINS' U_MAIL_DOMAINS='$U_MAIL_DOMAINS'"
+    s="$s U_MAIL_ACCOUNTS='$U_MAIL_ACCOUNTS' U_DATABASES='$U_DATABASES'"
+    s="$s U_CRON_JOBS='$U_CRON_JOBS'"
+
+    # Updating user stats log
+    stats="$V_USERS/$user/stats.log"
+    if [ -e "$stats" ]; then
+        # Checking dublicates
+        check_month=$(grep -n "DATE='$DATE'" $stats|cut -f 1 -d :)
+        if [ -z "$check_month" ]; then
+            # Updating as there no dublicates
+            echo "$s" >> $stats
+            chmod 660 $stats
+        else
+            # Replacing string with new data
+            sed -i "$check_month s/.*/$s/" $stats
+        fi
+    else
+        # Creating stats log
+        echo "$s" >$stats
+        chmod 660 $stats
+    fi
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event 'system' "$V_EVENT"
+
+exit

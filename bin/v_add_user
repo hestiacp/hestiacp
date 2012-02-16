@@ -124,8 +124,8 @@ touch $V_USERS/$user/backup.conf
 chmod 660 $V_USERS/$user/backup.conf
 touch $V_USERS/$user/history.log
 chmod 660 $V_USERS/$user/history.log
-touch $V_USERS/$user/billing.log
-chmod 660 $V_USERS/$user/billing.log
+touch $V_USERS/$user/stats.log
+chmod 660 $V_USERS/$user/stats.log
 
 echo "v_update_user_disk $user" >> $V_QUEUE/disk.pipe
 
@@ -180,8 +180,12 @@ SUSPENDED_MAIL='0'
 SUSPENDED_DB='0'
 SUSPENDED_CRON='0'
 IP_OWNED='0'
-U_DIR_DISK='0'
+U_USERS='0'
 U_DISK='0'
+U_DISK_DIRS='0'
+U_DISK_WEB='0'
+U_DISK_MAIL='0'
+U_DISK_DB='0'
 U_BANDWIDTH='0'
 U_WEB_DOMAINS='0'
 U_WEB_SSL='0'

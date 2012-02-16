@@ -691,29 +691,18 @@ update_user_value() {
 
 increase_user_value() {
     USER="$1"
-    key="$2"
-
-    # Defining conf
-    conf="$V_USERS/$USER/user.conf"
-
-    # Deleting $
-    key=$(echo "${key//$/}")
+    key="${2//$}"
 
     # Parsing current value
-    current_value=$(grep "$key=" $conf |cut -f 2 -d \')
-
-    # Checking result
-    if [ -z "$current_value" ]; then
-        echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
-        exit $E_PARSING
+    conf="$V_USERS/$USER/user.conf"
+    old=$(grep "$key=" $conf | cut -f 2 -d \')
+    if [ -z "$old" ]; then
+        old=0
     fi
 
-    # Plus one
-    new_value=$(expr $current_value + 1 )
-
-    # Changing config
-    sed -i "s/$key='$current_value'/$key='$new_value'/g" $conf
+    # Increasing
+    new=$((old + 1 ))
+    sed -i "s/$key='$old'/$key='$new'/g" $conf
 }
 
 is_type_valid() {

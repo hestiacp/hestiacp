@@ -156,14 +156,11 @@ then
 
     for domain in $web_list; do
         echo -e "$(date "+%F %T") $domain"
-	# Building directory tree
         mkdir -p $tmpdir/web/$domain/conf
-        mkdir -p $tmpdir/web/$domain/ssl
 
         # Defining domain variables
         domain_idn=$(idn -t --quiet -a "$domain")
         get_web_domain_values
-
 
         # Packing data folders
         cd $V_HOME/$user/web/$domain
@@ -173,20 +170,20 @@ then
         # Creating web.config
         cd $tmpdir/web/$domain/
         conf="$V_USERS/$user/web.conf"
-        grep "DOMAIN='$domain'" $conf > conf/web.conf
+        grep "DOMAIN='$domain'" $conf > conf/vesta.conf
 
         # Apache config
         if [ "$WEB_SYSTEM" = 'apache' ]; then
             # Parsing httpd.conf
             tpl_file="$V_WEBTPL/apache_$TPL.tpl"
-            conf="$V_HOME/$user/conf/httpd.conf"
+            conf="$V_HOME/$user/conf/web/httpd.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/httpd.conf
 
             # SSL check
             if [ "$SSL" = 'yes' ]; then
                 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-                conf="$V_HOME/$user/conf/shttpd.conf"
+                conf="$V_HOME/$user/conf/web/shttpd.conf"
                 get_web_config_brds
                 sed -n "$top_line,$bottom_line p" $conf > conf/shttpd.conf
             fi
@@ -195,30 +192,30 @@ then
         # Nginx config
         if [ ! -z "$NGINX" ] ; then
             tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
-            conf="$V_HOME/$user/conf/nginx.conf"
+            conf="$V_HOME/$user/conf/web/nginx.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/nginx.conf
 
             # SSL check
             if [ "$SSL" = 'yes' ] ; then
                 tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-                conf="$V_HOME/$user/conf/snginx.conf"
+                conf="$V_HOME/$user/conf/web/snginx.conf"
                 get_web_config_brds
                 sed -n "$top_line,$bottom_line p" $conf > conf/snginx.conf
             fi
         fi
 
         # Suplemental configs
-        for sconfig in $(ls $V_HOME/$user/conf/|grep ".$domain.conf"); do
-            cp $V_HOME/$user/conf/$sconfig conf/
+        for sconfig in $(ls $V_HOME/$user/conf/web/|grep ".$domain.conf"); do
+            cp $V_HOME/$user/conf/web/$sconfig conf/
         done
 
         # SSL Certificates
         if [ "$SSL" = 'yes' ] ; then
-            cp $V_HOME/$user/conf/ssl.$domain.* ssl/
+            cp $V_HOME/$user/conf/web/ssl.$domain.* conf/
         fi
 
-        tar -rf $tmpdir/web/$domain/$domain.tar conf ssl
+        tar -rf $tmpdir/web/$domain/$domain.tar conf
         mv $tmpdir/web/$domain/$domain.tar $tmpdir/web/
         rm -rf $tmpdir/web/$domain
 
@@ -263,7 +260,7 @@ then
 
         # Backingup dns recods
         cp $V_USERS/$user/dns/$domain $domain
-        cp /etc/namedb/$domain.db $domain.db
+        cp $V_USERS/$user/conf/dns/$domain.db $domain.db
     done
     echo
 fi

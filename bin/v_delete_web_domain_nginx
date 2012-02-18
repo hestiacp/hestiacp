@@ -81,13 +81,13 @@ conf='/etc/nginx/conf.d/vesta_users.conf'
 last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web.conf)
 last_snginx=$(echo "$last_nginx" | grep "SSL='yes'")
 if [ -z "$last_snginx" ]; then
-    sed -i "/$user\/conf\/snginx.conf/d" $conf
-    rm -f $V_HOME/$user/conf/snginx.conf
+    sed -i "/$user\/conf\/web\/snginx.conf/d" $conf
+    rm -f $V_HOME/$user/conf/web/snginx.conf
 fi
 
 if [ -z "$last_nginx" ]; then
-    sed -i "/$user\/conf\/nginx.conf/d" $conf
-    rm -f $V_HOME/$user/conf/nginx.conf
+    sed -i "/$user\/conf\/web\/nginx.conf/d" $conf
+    rm -f $V_HOME/$user/conf/web/nginx.conf
 fi
 
 # Adding task to the vesta pipe

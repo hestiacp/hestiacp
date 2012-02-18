@@ -56,7 +56,7 @@ is_web_domain_value_exist '$SSL'
 
 # Parsing domain values
 get_web_domain_values
-conf="$V_HOME/$user/conf/shttpd.conf"
+conf="$V_HOME/$user/conf/web/shttpd.conf"
 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
 
 # Deleting domain
@@ -65,7 +65,7 @@ del_web_config
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
     tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-    conf="$V_HOME/$user/conf/snginx.conf"
+    conf="$V_HOME/$user/conf/web/snginx.conf"
     del_web_config
 fi
 

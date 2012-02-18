@@ -58,7 +58,7 @@ is_domain_suspended 'web'
 # Get template name
 get_web_domain_values
 tpl_file="$V_WEBTPL/apache_$TPL.tpl"
-conf="$V_HOME/$user/conf/httpd.conf"
+conf="$V_HOME/$user/conf/web/httpd.conf"
 
 # Deleting domain
 del_web_config
@@ -66,50 +66,41 @@ del_web_config
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
     tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-    conf="$V_HOME/$user/conf/shttpd.conf"
+    conf="$V_HOME/$user/conf/web/shttpd.conf"
     del_web_config
 
     # Deleting certificates
-    rm -f $V_HOME/$user/conf/ssl.$domain.*
+    rm -f $V_HOME/$user/conf/web/ssl.$domain.*
     rm -f $V_USERS/$user/ssl/$domain.*
 fi
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
     tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
-    conf="$V_HOME/$user/conf/nginx.conf"
+    conf="$V_HOME/$user/conf/web/nginx.conf"
     del_web_config
 
     if [ "$SSL" = 'yes' ]; then
         proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
         tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-        conf="$V_HOME/$user/conf/snginx.conf"
+        conf="$V_HOME/$user/conf/web/snginx.conf"
         del_web_config
     fi
 fi
 
 # Checking stats
 if [ ! -z "$STATS" ] && [ "$STATS" != 'no' ]; then
-    # Parsing pipe line
-    line=$(grep -n "$STATS.$domain.conf" $V_QUEUE/stats.pipe | \
-        cut -f 1 -d : | head -n 1 )
-
-    # Deleting pipe command
-    if [ ! -z "$line" ]; then
-        sed -i "$line d" $V_QUEUE/stats.pipe
-    fi
-
-    # Deleteing config
-    rm -f $V_HOME/$user/conf/$STATS.$domain.conf
+    sed -i "/ $domain$/d" $V_QUEUE/stats.pipe
+    rm -f $V_HOME/$user/conf/web/$STATS.$domain.conf
 fi
 
 # Deleting directory
 rm -rf $V_HOME/$user/web/$domain
 
 # Deleting logs
-rm -rf /var/log/httpd/domains/$domain.log*
-rm -rf /var/log/httpd/domains/$domain.bytes
-rm -rf /var/log/httpd/domains/$domain.error*
+rm -f /var/log/httpd/domains/$domain.log*
+rm -f /var/log/httpd/domains/$domain.bytes
+rm -f /var/log/httpd/domains/$domain.error*
 
 
 #----------------------------------------------------------#
@@ -122,14 +113,14 @@ del_web_domain
 # Checking last ssl domain
 ssl_dom=$(grep "SSL='yes'" $V_USERS/$user/web.conf | wc -l)
 if [ "$ssl_dom" -eq '0' ]; then
-    sed -i "s/ Include /#Include /"  $V_HOME/$user/conf/httpd.conf
+    sed -i "s/ Include /#Include /"  $V_HOME/$user/conf/web/httpd.conf
 fi
 
 # Checking last domain
 domains=$(wc -l $V_USERS/$user/web.conf|cut -f 1 -d ' ')
 if [ "$domains" -eq '0' ]; then
     conf='/etc/httpd/conf.d/vesta.conf'
-    line=$(grep -n "$V_HOME/$user/conf/httpd.conf" $conf | cut -f 1 -d : )
+    line=$(grep -n "$V_HOME/$user/conf/web/httpd.conf" $conf | cut -f 1 -d : )
     if [ ! -z "$line" ]; then
         sed -i "$line d" $conf
     fi
@@ -140,19 +131,19 @@ conf='/etc/nginx/conf.d/vesta_users.conf'
 last_nginx=$(grep -v "NGINX=''" $V_USERS/$user/web.conf)
 last_snginx=$(echo "$last_nginx" | grep "SSL='yes'")
 if [ -z "$last_snginx" ]; then
-    sline=$(grep -n "$V_HOME/$user/conf/snginx.conf" $conf | cut -f 1 -d : )
+    sline=$(grep -n "$V_HOME/$user/conf/web/snginx.conf" $conf |cut -f 1 -d :)
     if [ ! -z "$sline" ]; then
         sed -i "$sline d" $conf
     fi
-    rm -f $V_HOME/$user/conf/snginx.conf
+    rm -f $V_HOME/$user/conf/web/snginx.conf
 fi
 
 if [ -z "$last_nginx" ]; then
-    line=$(grep -n "$V_HOME/$user/conf/nginx.conf" $conf | cut -f 1 -d : )
+    line=$(grep -n "$V_HOME/$user/conf/web/nginx.conf" $conf | cut -f 1 -d : )
     if [ ! -z "$line" ]; then
         sed -i "$line d" $conf
     fi
-    rm -f $V_HOME/$user/conf/nginx.conf
+    rm -f $V_HOME/$user/conf/web/nginx.conf
 fi
 
 # Decreasing ip value

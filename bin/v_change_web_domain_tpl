@@ -63,13 +63,13 @@ get_web_domain_values
 # Deleting domain
 tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 old_tpl=$TPL
-conf="$V_HOME/$user/conf/httpd.conf"
+conf="$V_HOME/$user/conf/web/httpd.conf"
 del_web_config
 
 # Deleting ssl vhost
 if [ "$SSL" = 'yes' ]; then
     tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-    conf="$V_HOME/$user/conf/shttpd.conf"
+    conf="$V_HOME/$user/conf/web/shttpd.conf"
     del_web_config
 fi
 
@@ -79,7 +79,7 @@ email="$user@$domain"
 group="$user"
 docroot="$V_HOME/$user/web/$domain/public_html"
 docroot_string="DocumentRoot $docroot"
-conf="$V_HOME/$user/conf/httpd.conf"
+conf="$V_HOME/$user/conf/web/httpd.conf"
 tpl_file="$V_WEBTPL/apache_$template.tpl"
 
 
@@ -147,18 +147,18 @@ fi
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
     # Defining SSL vars
-    ssl_crt="$V_HOME/$user/conf/ssl.$domain.crt"
-    ssl_key="$V_HOME/$user/conf/ssl.$domain.key"
-    ssl_pem="$V_HOME/$user/conf/ssl.$domain.pem"
-    ssl_ca="$V_HOME/$user/conf/ssl.$domain.ca"
-    if [ ! -e "$V_USERS/$user/ssl/$domain.ca" ]; then
+    ssl_crt="$V_HOME/$user/conf/web/ssl.$domain.crt"
+    ssl_key="$V_HOME/$user/conf/web/ssl.$domain.key"
+    ssl_pem="$V_HOME/$user/conf/web/ssl.$domain.pem"
+    ssl_ca="$V_HOME/$user/conf/web/ssl.$domain.ca"
+    if [ ! -e "$V_USERS/$user/web/ssl/$domain.ca" ]; then
         ssl_ca_str='#'
     fi
     case $SSL_HOME in
         single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
         same)   docroot="$V_HOME/$user/web/$domain/public_html" ;;
     esac
-    conf="$V_HOME/$user/conf/shttpd.conf"
+    conf="$V_HOME/$user/conf/web/shttpd.conf"
     tpl_file="$V_WEBTPL/apache_$template.stpl"
 
     # Adding domain to the httpd.conf

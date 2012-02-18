@@ -69,7 +69,7 @@ ALIAS=$(echo "$ALIAS" |\
     sed -e "/^$/d"|\
     sed -e ':a;N;$!ba;s/\n/,/g')
 tpl_file="$V_WEBTPL/apache_$TPL.tpl"
-conf="$V_HOME/$user/conf/httpd.conf"
+conf="$V_HOME/$user/conf/web/httpd.conf"
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
@@ -80,7 +80,7 @@ add_web_config
 
 if [ "$SSL" = 'yes' ]; then
     tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-    conf="$V_HOME/$user/conf/shttpd.conf"
+    conf="$V_HOME/$user/conf/web/shttpd.conf"
     del_web_config
     add_web_config
 fi
@@ -88,14 +88,14 @@ fi
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
     tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
-    conf="$V_HOME/$user/conf/nginx.conf"
+    conf="$V_HOME/$user/conf/web/nginx.conf"
     del_web_config
     add_web_config
 
     if [ "$SSL" = 'yes' ]; then
         proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
         tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-        conf="$V_HOME/$user/conf/snginx.conf"
+        conf="$V_HOME/$user/conf/web/snginx.conf"
         del_web_config
         add_web_config
     fi

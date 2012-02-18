@@ -12,7 +12,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user=${1-vesta}
+user=${1-admin}
 ip_status=${2-shared}
 
 # Importing variables

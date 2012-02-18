@@ -82,7 +82,7 @@ for user in $user_list; do
     IFS=$'\n'
 
     # Checking users
-    if [ "$user" = 'vesta' ]; then
+    if [ "$user" = 'admin' ]; then
         SUSPENDED_USERS=$(grep "SUSPENDED='yes'" $V_USERS/*/user.conf|wc -l)
         U_USERS=$(ls $V_USERS/|wc -l)
         U_USERS=$((U_USERS - 1))

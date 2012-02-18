@@ -18,7 +18,7 @@
 ip=$1
 mask=$2
 interface="${3-eth0}"
-user="${4-vesta}"
+user="${4-admin}"
 ip_status="${5-shared}"
 ip_name=$6
 

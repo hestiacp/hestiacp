@@ -153,7 +153,7 @@ format_validation() {
         if [ -z "$check_at" ] ||\
            [ -z "$check_dt" ] ||\
            [ "${#check_dt}" -lt 2 ] &&\
-           [ "$val" != 'vesta@localhost' ]; then
+           [ "$val" != 'admin@localhost' ]; then
             echo "Error: email format is wrong"
             log_event 'debug' "$E_INVALID $V_EVENT"
             exit $E_INVALID

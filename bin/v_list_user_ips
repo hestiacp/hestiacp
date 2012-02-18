@@ -23,7 +23,7 @@ json_list_user_ips() {
     echo '{'
 
     owned_ips=$(grep -l "OWNER='$user'" $V_IPS/*)
-    shared_ips=$(grep -H -A5 "OWNER='vesta'" $V_IPS/* |\
+    shared_ips=$(grep -H -A5 "OWNER='admin'" $V_IPS/* |\
                     grep "STATUS='shared'"|\
                     cut -f 1 -d - )
 
@@ -75,7 +75,7 @@ json_list_user_ips() {
 # Shell function
 shell_list_user_ips() {
     owned_ips=$(grep -l "OWNER='$user'" $V_IPS/*)
-    shared_ips=$(grep -H -A5 "OWNER='vesta'" $V_IPS/* |\
+    shared_ips=$(grep -H -A5 "OWNER='admin'" $V_IPS/* |\
                     grep "STATUS='shared'"|\
                     cut -f 1 -d - )
 

@@ -31,8 +31,8 @@ format_validation 'user'
 # Checking user
 is_user_valid
 
-# Checking user vesta
-if [ "$user" = 'vesta' ]; then
+# Checking user admin
+if [ "$user" = 'admin' ]; then
     exit
 fi
 

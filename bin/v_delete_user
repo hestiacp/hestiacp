@@ -38,8 +38,8 @@ is_user_valid
 # Checking user is active
 is_user_suspended
 
-# Checking user vesta
-if [ "$user" = 'vesta' ]; then
+# Checking user admin
+if [ "$user" = 'admin' ]; then
     exit
 fi
 

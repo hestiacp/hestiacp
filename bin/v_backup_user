@@ -89,9 +89,9 @@ echo -e "$(date "+%F %T") user.conf"
 
 cp -r $V_USERS/$user/user.conf $tmpdir/vesta/
 
-if [ -e "$V_USERS/$user/billing.log" ]; then
-    echo -e "$(date "+%F %T") billing.log"
-    cp -r $V_USERS/$user/billing.log $tmpdir/vesta/
+if [ -e "$V_USERS/$user/stats.log" ]; then
+    echo -e "$(date "+%F %T") stats.log"
+    cp -r $V_USERS/$user/stats.log $tmpdir/vesta/
 fi
 
 if [ -e "$V_USERS/$user/history.log" ]; then

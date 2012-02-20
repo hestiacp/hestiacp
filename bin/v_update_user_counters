@@ -55,6 +55,7 @@ for user in $user_list; do
     SUSPENDED_MAIL=0
     SUSPENDED_DB=0
     SUSPENDED_CRON=0
+    IP_AVAIL=0
     IP_OWNED=0
     U_USERS=0
     DISK=0
@@ -85,7 +86,6 @@ for user in $user_list; do
     if [ "$user" = 'admin' ]; then
         SUSPENDED_USERS=$(grep "SUSPENDED='yes'" $V_USERS/*/user.conf|wc -l)
         U_USERS=$(ls $V_USERS/|wc -l)
-        U_USERS=$((U_USERS - 1))
     fi
 
     # Checking ip
@@ -94,7 +94,14 @@ for user in $user_list; do
         if [ "$OWNER" = "$user" ]; then
             IP_OWNED=$((IP_OWNED + 1))
         fi
+        if [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
+            IP_AVAIL=$((IP_AVAIL + IP_OWNED))
+            IP_AVAIL=$((IP_AVAIL + 1))
+        fi
     done
+    if [ "$user" = 'admin' ]; then
+        IP_AVAIL=$(ls $V_IPS | wc -l)
+    fi    
 
     # Checking web system
     for domain_str in $(cat $V_USERS/$user/web.conf) ;do
@@ -159,6 +166,7 @@ for user in $user_list; do
     update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
     update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
     update_user_value "$user" '$SUSPENDED_CRON' "$SUSPENDED_CRON"
+    update_user_value "$user" '$IP_AVAIL' "$IP_AVAIL"
     update_user_value "$user" '$IP_OWNED' "$IP_OWNED"
     update_user_value "$user" '$U_USERS' "$U_USERS"
     update_user_value "$user" '$U_DISK' "$U_DISK"

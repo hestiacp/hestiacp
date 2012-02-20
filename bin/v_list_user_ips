@@ -21,46 +21,55 @@ source $V_FUNC/shared.func
 json_list_user_ips() {
     # Print top bracket
     echo '{'
-
-    owned_ips=$(grep -l "OWNER='$user'" $V_IPS/*)
-    shared_ips=$(grep -H -A5 "OWNER='admin'" $V_IPS/* |\
-                    grep "STATUS='shared'"|\
-                    cut -f 1 -d - )
-
-    ip_list="$owned_ips\n$shared_ips"
     fileds_count=$(echo "$fields" | wc -w)
-
-    # Starting main loop
-    for IP in $(echo -e "$ip_list" | sort -u); do
-        IP=$(basename $IP)
-        ip_data=$(cat $V_IPS/$IP)
-
-        # Assing key=value
-        eval $ip_data
-
-        # Closing bracket if there already was output
-        if [ -n "$data" ]; then
-            echo -e '        },'
-        fi
-        i=1
-        for field in $fields; do
-            eval value=$field
-
-            if [ $i -eq 1 ]; then
-                # Printing parrent
-                (( ++i))
-                echo -e "\t\"$value\": {"
-            else
-                # Printing child
-                if [ $i -lt $fileds_count ]; then
-                    (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    data=1
-                fi
+    for IP in $(ls $V_IPS/); do
+        source $V_IPS/$IP
+        if [ "$OWNER" = "$user" ]; then
+            eval echo "$fields"
+            # Closing bracket if there already was output
+            if [ -n "$data" ]; then
+                echo -e '        },'
             fi
-        done
+            i=1
+            for field in $fields; do
+                eval value=$field
+                if [ $i -eq 1 ]; then
+                    # Printing parrent
+                    (( ++i))
+                    echo -e "\t\"$value\": {"
+                else
+                    # Printing child
+                    if [ $i -lt $fileds_count ]; then
+                        (( ++i))
+                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                    else
+                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                        data=1
+                    fi
+                fi
+            done
+        else
+            if  [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
+                i=1
+                for field in $fields; do
+                    eval value=$field
+                    if [ $i -eq 1 ]; then
+                        # Printing parrent
+                        (( ++i))
+                        echo -e "\t\"$value\": {"
+                    else
+                        # Printing child
+                        if [ $i -lt $fileds_count ]; then
+                            (( ++i))
+                            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                        else
+                            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                            data=1
+                        fi
+                    fi
+                done
+            fi
+        fi
     done
 
     # Closing bracket if there was output
@@ -70,35 +79,20 @@ json_list_user_ips() {
 
     # Printing bottom bracket
     echo -e '}'
+
 }
 
 # Shell function
 shell_list_user_ips() {
-    owned_ips=$(grep -l "OWNER='$user'" $V_IPS/*)
-    shared_ips=$(grep -H -A5 "OWNER='admin'" $V_IPS/* |\
-                    grep "STATUS='shared'"|\
-                    cut -f 1 -d - )
-
-    ip_list="$owned_ips\n$shared_ips"
-    if [ -z "$nohead" ]; then
-        # Print brief info
-        echo "${fields//$/}"
-        for a in $fields; do
-            echo -e "--------- \c"
-        done
-        echo
-    fi
-
-    # Starting main loop
-    for IP in $(echo -e "$ip_list" | sort -u); do
-        IP=$(basename $IP)
-        ip_data=$(cat $V_IPS/$IP)
-
-        # Assign key/value config
-        eval $ip_data
-
-        # Print result line
-        eval echo "$fields"
+    for IP in $(ls $V_IPS/); do
+        source $V_IPS/$IP
+        if [ "$OWNER" = "$user" ]; then
+            eval echo "$fields"
+        else
+            if  [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
+                eval echo "$fields"
+            fi
+        fi
     done
 }
 

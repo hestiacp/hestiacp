@@ -165,6 +165,14 @@ if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
 fi
 
 # Filling user config
+if [ "$user" != 'admin' ]; then
+    ip_avail=$($V_BIN/v_list_user_ips admin plain |grep -w shared|wc -l)
+    u_users=0
+else
+    ip_avail=0
+    u_users=1
+fi
+
 echo "FNAME='$fname'
 LNAME='$lname'
 PACKAGE='$package'
@@ -179,8 +187,9 @@ SUSPENDED_DNS='0'
 SUSPENDED_MAIL='0'
 SUSPENDED_DB='0'
 SUSPENDED_CRON='0'
+IP_AVAIL='$ip_avail'
 IP_OWNED='0'
-U_USERS='0'
+U_USERS='$u_users'
 U_DISK='0'
 U_DISK_DIRS='0'
 U_DISK_WEB='0'

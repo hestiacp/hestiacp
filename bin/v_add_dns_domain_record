@@ -91,6 +91,13 @@ update_domain_zone
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Updating dns domain values
+records="$(wc -l $V_USERS/$user/dns/$domain)"
+update_dns_domain_value '$RECORDS' "$records"
+
+# Updating user counters
+increase_user_value "$user" '$U_DNS_RECORDS'
+
 # Adding task to the vesta pipe
 restart_schedule 'dns'
 

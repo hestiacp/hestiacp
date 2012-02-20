@@ -45,23 +45,12 @@ conf="$V_USERS/$user/dns.conf"
 
 # Defining fileds to select
 field='$DOMAIN'
-
-# Defining search string
 search_string="SUSPENDED='no'"
-
-# Parsing unsuspeneded domains
 domains=$(dom_clear_search)
 
 # Starting suspend loop
 for domain in $domains; do
-    # Defining named config
-    conf="/etc/named.conf"
-    rm_string=$(grep -n /etc/namedb/$domain.db $conf|cut -d : -f 1)
-    if [ ! -z "$rm_string" ]; then
-        sed -i "$rm_string d" $conf
-    fi
-    # Adding suspend in config
-    update_dns_domain_value '$SUSPENDED' 'yes'
+    $V_BIN/v_suspend_web_domain "$user" "$domain" "$url"
 done
 
 

@@ -63,6 +63,7 @@ fi
 
 # Adding suspend in config
 update_dns_domain_value '$SUSPENDED' 'yes'
+increase_user_value "$user" '$SUSPENDED_DNS'
 
 # Adding task to the vesta pipe
 restart_schedule 'dns'

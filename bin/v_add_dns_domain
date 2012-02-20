@@ -100,9 +100,11 @@ cat $V_DNSTPL/$template.tpl |\
         -e "s/%ns8%/$ns8/g" \
         -e "s/%date%/$V_DATE/g" > $V_USERS/$user/dns/$domain
 
+records="$(wc -l $V_USERS/$user/dns/$domain)"
+
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
-dns_rec="$dns_rec SOA='$soa' SUSPENDED='no' DATE='$V_DATE'"
+dns_rec="$dns_rec SOA='$soa' RECORDS='$records' SUSPENDED='no' DATE='$V_DATE'"
 echo "$dns_rec" >> $V_USERS/$user/dns.conf
 chmod 660 $V_USERS/$user/dns.conf
 
@@ -125,6 +127,7 @@ chown root:named $conf
 
 # Increasing domain value
 increase_user_value "$user" '$U_DNS_DOMAINS'
+increase_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Adding task to the vesta pipe
 restart_schedule 'dns'

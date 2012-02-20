@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list dns domain
+# info: list dns domain records
 # options: user domain [format]
 #
-# The function for getting all DNS domain's parameters.
+# The function for getting all DNS domain records.
 
 
 #----------------------------------------------------------#

@@ -40,8 +40,7 @@ is_user_valid
 conf=$V_USERS/$user/dns.conf
 
 # Defining fileds to select
-fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SUSPENDED $DATE'
-
+fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $RECORDS $SUSPENDED $DATE'
 
 # Listing domains
 case $format in 

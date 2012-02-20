@@ -207,6 +207,7 @@ increase_ip_value "$ip"
 
 # Increasing domain value
 increase_user_value "$user" '$U_WEB_DOMAINS'
+increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Defining domain variables
 v_str="DOMAIN='$domain'"

@@ -692,6 +692,7 @@ update_user_value() {
 increase_user_value() {
     USER="$1"
     key="${2//$}"
+    factor="${3-1}"
 
     # Parsing current value
     conf="$V_USERS/$USER/user.conf"
@@ -701,7 +702,7 @@ increase_user_value() {
     fi
 
     # Increasing
-    new=$((old + 1 ))
+    new=$((old + factor))
     sed -i "s/$key='$old'/$key='$new'/g" $conf
 }
 
@@ -731,6 +732,7 @@ is_type_valid() {
 decrease_user_value() {
     USER="$1"
     key="${2//$}"
+    factor="${3-1}"
 
     # Parsing current value
     conf="$V_USERS/$USER/user.conf"
@@ -743,7 +745,7 @@ decrease_user_value() {
     if [ "$old" -le 1 ]; then
         new=0
     else
-        new=$((old - 1 ))
+        new=$((old - factor))
     fi
     sed -i "s/$key='$old'/$key='$new'/g" $conf
 }

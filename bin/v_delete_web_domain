@@ -63,6 +63,13 @@ conf="$V_HOME/$user/conf/web/httpd.conf"
 # Deleting domain
 del_web_config
 
+# Checking aliases
+if [ ! -z "$ALIAS" ]; then
+    aliases=$(echo $ALIAS | tr ',' '\n' | wc -l )
+else
+    aliases=0
+fi
+
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
     tpl_file="$V_WEBTPL/apache_$TPL.stpl"
@@ -151,6 +158,14 @@ decrease_ip_value "$IP"
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_WEB_DOMAINS'
+
+# Decreasing web aliases
+decrease_user_value "$user" '$U_WEB_ALIASES' "$aliases"
+
+# Decreasing web ssl
+if [ "$SSL" = 'yes' ]; then
+    decrease_user_value "$user" '$U_WEB_SSL'
+fi
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

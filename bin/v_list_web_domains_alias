@@ -48,7 +48,7 @@ fields="\$DOMAIN \$ALIAS"
 case $format in 
     json)   json_list ;;
     plain)  nohead=1; shell_list ;;
-    shell)  shell_list | column -t ;;
+    shell)  shell_list;;
     *)      check_args '1' '0' 'user [format]'
 esac
 

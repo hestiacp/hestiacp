@@ -120,6 +120,9 @@ fi
 # Adding new alias
 update_web_domain_value '$ALIAS' "$ALIAS"
 
+# Update counters
+increase_user_value "$user" '$U_WEB_ALIASES'
+
 # Adding task to the vesta pipe
 restart_schedule 'web'
 

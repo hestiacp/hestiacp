@@ -46,6 +46,7 @@ is_job_suspended
 
 # Suspending job
 update_cron_job_value '$SUSPENDED' 'yes'
+increase_user_value "$user" '$SUSPENDED_CRON'
 
 # Sync system cron with user
 sync_cron_jobs
@@ -56,7 +57,9 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Adding task to the vesta pipe
-restart_schedule 'cron'
+if [ "$3" != 'no_restart' ]; then
+    restart_schedule 'cron'
+fi
 
 # Logging
 log_event 'system' "$V_EVENT"

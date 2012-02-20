@@ -45,7 +45,7 @@ jobs=$(cron_clear_search)
 
 # Suspendning
 for job in $jobs; do
-    update_cron_job_value '$SUSPENDED' 'yes'
+    $V_BIN/v_suspend_cron_job $user $job 'no_restart'
 done
 
 # Sync system cron with user

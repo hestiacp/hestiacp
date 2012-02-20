@@ -55,17 +55,7 @@ domains=$(dom_clear_search)
 
 # Starting unsuspend loop
 for domain in $domains; do
-
-    # Defining named config
-    conf="/etc/named.conf"
-
-    # Adding zone in named.conf
-    rec="zone \"$domain\" { type master; file \"/etc/namedb/$domain.db\"; };"
-    echo "$rec" >> $conf
-
-    # Unsuspendin in config
-    update_domain_value 'dns' '$SUSPENDED' 'no'
-
+    $V_BIN/v_unsuspend_dns_domain "$user" "$domain"
 done
 
 

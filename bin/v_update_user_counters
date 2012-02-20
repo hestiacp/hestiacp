@@ -104,10 +104,12 @@ for user in $user_list; do
     fi    
 
     # Checking web system
+    U_WEB_DOMAINS=0
     for domain_str in $(cat $V_USERS/$user/web.conf) ;do
         eval $domain_str
         U_DISK_WEB=$((U_DISK_WEB + U_DISK))
         U_WEB_DOMAINS=$((U_WEB_DOMAINS + 1))
+
         if [ "$SSL" = 'yes' ]; then
             U_WEB_SSL=$((U_WEB_SSL + 1))
         fi
@@ -116,7 +118,6 @@ for user in $user_list; do
         fi
         if [ ! -z "$ALIAS" ]; then
             aliases=$(echo "$ALIAS"|tr ',' '\n'| wc -l)
-            aliases=$((aliases + 1))
             U_WEB_ALIASES=$((U_WEB_ALIASES + aliases))
         fi
         BANDWIDTH=$((BANDWIDTH + U_BANDWIDTH))

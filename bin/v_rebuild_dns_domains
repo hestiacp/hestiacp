@@ -44,6 +44,7 @@ is_user_suspended
 #                       Action                             #
 #----------------------------------------------------------#
 
+user_domains=0
 user_records=0
 suspended_dns=0
 
@@ -77,18 +78,13 @@ done
 for domain in $domains; do
 
     # Defining variables
+    get_domain_values 'dns'
     domain_idn=$(idn -t --quiet -a "$domain")
-    ip="$(get_domain_value 'dns' '$IP')"
-    template="$(get_domain_value 'dns' '$TPL')"
-    exp="$(get_domain_value 'dns' '$EXP')"
-    soa="$(get_domain_value 'dns' '$SOA')"
-    ttl="$(get_domain_value 'dns' '$TTL')"
-    suspended="$(get_domain_value 'dns' '$SUSPENDED')"
 
     # Checking zone file
     if [ ! -e "$V_USERS/$user/dns/$domain" ]; then
-        cat $V_DNSTPL/$template.tpl |\
-            sed -e "s/%ip%/$ip/g" \
+        cat $V_DNSTPL/$TPL.tpl |\
+            sed -e "s/%ip%/$IP/g" \
                 -e "s/%domain_idn%/$domain_idn/g" \
                 -e "s/%domain%/$domain/g" \
                 -e "s/%ns1%/$ns1/g" \
@@ -115,7 +111,7 @@ for domain in $domains; do
     # Bind config check
     nconf='/etc/named.conf'
 
-    if [ "$suspended" = 'yes' ]; then
+    if [ "$SUSPENDED" = 'yes' ]; then
 	rm_string=$(grep -n /etc/namedb/$domain.db $nconf | cut -d : -f 1)
         if [ ! -z "$rm_string" ]; then
             sed -i "$rm_string d" $nconf
@@ -128,6 +124,7 @@ for domain in $domains; do
             echo "$named" >> /etc/named.conf
         fi
     fi
+    user_domains=$((user_domains + 1))
     records=$(wc -l $V_USERS/$user/dns/$domain | cut -f 1 -d ' ')
     user_records=$((user_records + records))
     update_domain_value 'dns' '$RECORDS' "$records"
@@ -139,6 +136,7 @@ done
 #----------------------------------------------------------#
 
 # Updating counters
+update_user_value "$user" '$U_DNS_DOMAINS' "$user_domains"
 update_user_value "$user" '$U_DNS_RECORDS' "$user_records"
 update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
 

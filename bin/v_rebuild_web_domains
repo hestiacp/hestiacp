@@ -45,6 +45,11 @@ is_user_suspended
 #                       Action                             #
 #----------------------------------------------------------#
 
+user_domains=0
+user_ssl=0
+user_aliases=0
+suspended_web=0
+
 # Clean up old config
 rm -f $V_HOME/$user/conf/tmp_*.conf
 
@@ -73,6 +78,12 @@ for domain in $(shell_list) ; do
     # Running template trigger
     if [ -x $V_WEBTPL/apache_$TPL.sh ]; then
         $V_WEBTPL/apache_$TPL.sh $user $domain $ip $V_HOME $docroot
+    fi
+
+    # Checking aliases
+    if [ ! -z "$ALIAS" ]; then
+        aliases=$(echo "$ALIAS"|tr ',' '\n'| wc -l)
+        user_aliases=$((user_aliases + aliases))
     fi
 
     # Checking stats
@@ -123,6 +134,7 @@ for domain in $(shell_list) ; do
             $V_WEBTPL/apache_$TPL.sh $user $domain $ip $V_HOME $docroot
         fi
 
+        user_ssl=$((user_ssl + 1))
         ssl_change='yes'
     fi
 
@@ -149,6 +161,10 @@ for domain in $(shell_list) ; do
         fi
 	ngix_change='yes'
     fi
+    if [ "$SUSPENDED" = 'yes' ]; then
+        suspended_web=$((suspended_web + 1))
+    fi
+    user_domains=$((user_domains + 1))
 done
 
 # Renaming tmp config
@@ -205,6 +221,12 @@ fi
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Updating counters
+update_user_value "$user" '$SUSPENDED_WEB' "$suspended_web"
+update_user_value "$user" '$U_WEB_DOMAINS' "$user_domains"
+update_user_value "$user" '$U_WEB_SSL' "$user_ssl"
+update_user_value "$user" '$U_WEB_ALIASES' "$user_aliases"
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

@@ -208,6 +208,11 @@ U_CRON_JOBS='0'
 DATE='$V_DATE'" > $V_USERS/$user/user.conf
 chmod 660 $V_USERS/$user/user.conf
 
+# Updating admin counter
+if [ "$user" != 'admin' ]; then
+    increase_user_value 'admin' '$U_USERS'
+fi
+
 # Hiding password
 V_EVENT="$V_DATE $V_SCRIPT $user ***** $email $package $fname $lname"
 

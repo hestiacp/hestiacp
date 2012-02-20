@@ -124,6 +124,11 @@ rm -f /var/spool/mail/$user
 rm -f /var/spool/cron/$user
 rm -rf $V_USERS/$user
 
+# Updating admin counter
+if [ "$user" != 'admin' ]; then
+    decrease_user_value 'admin' '$U_USERS'
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

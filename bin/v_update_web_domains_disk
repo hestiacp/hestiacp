@@ -60,7 +60,7 @@ for domain in $domains; do
     fi
 
     # Updating disk value in config
-    update_web_domain_value '$U_DISK' "$disk_usage"
+    update_domain_value 'web' '$U_DISK' "$disk_usage"
 done
 
 

@@ -43,7 +43,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
@@ -58,7 +58,7 @@ is_template_valid "web"
 #----------------------------------------------------------#
 
 # Parsing domain values
-get_web_domain_values
+get_domain_values 'web'
 
 # Deleting domain
 tpl_file="$V_WEBTPL/apache_$TPL.tpl"
@@ -177,13 +177,13 @@ fi
 #----------------------------------------------------------#
 
 # Changing tpl in config
-update_web_domain_value '$TPL' "$template"
+update_domain_value 'web' '$TPL' "$template"
 
 # Updating db keys
 for keys in $(cat $V_WEBTPL/apache_$template.descr|grep -v '#'); do
     key=$(echo "$keys"| cut -f 1 -d '=' |sed -e "s/^/\$/g")
     value=$(echo "$keys" |cut -f 2 -d \')
-    update_web_domain_value "$key" "$value"
+    update_domain_value 'web' "$key" "$value"
 done
 
 # Adding task to the vesta pipe

@@ -160,7 +160,7 @@ then
 
         # Defining domain variables
         domain_idn=$(idn -t --quiet -a "$domain")
-        get_web_domain_values
+        get_domain_values 'web'
 
         # Packing data folders
         cd $V_HOME/$user/web/$domain

@@ -75,13 +75,13 @@ for domain in $domains; do
     echo > $log_file
 
     # Parsing old value
-    old_val=$(get_web_domain_value '$U_BANDWIDTH')
+    old_val=$(get_domain_value 'web' '$U_BANDWIDTH')
 
     # Defining new value
     bandwidth=$((old_val + mb))
 
     # Updating bandwidth value in config
-    update_web_domain_value '$U_BANDWIDTH' "$bandwidth"
+    update_domain_value 'web' '$U_BANDWIDTH' "$bandwidth"
 
 done
 

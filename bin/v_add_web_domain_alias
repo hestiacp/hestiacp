@@ -46,7 +46,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
@@ -71,7 +71,7 @@ is_package_full 'web_alias'
 #----------------------------------------------------------#
 
 # Parsing domain values
-get_web_domain_values
+get_domain_values 'web'
 tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 conf="$V_HOME/$user/conf/web/httpd.conf"
 
@@ -118,7 +118,7 @@ fi
 #----------------------------------------------------------#
 
 # Adding new alias
-update_web_domain_value '$ALIAS' "$ALIAS"
+update_domain_value 'web' '$ALIAS' "$ALIAS"
 
 # Update counters
 increase_user_value "$user" '$U_WEB_ALIASES'

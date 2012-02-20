@@ -41,13 +41,13 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
 
 # Checking stats enabled
-is_web_domain_value_exist '$STATS'
+is_domain_value_exist 'web' '$STATS'
 
 
 #----------------------------------------------------------#
@@ -55,7 +55,7 @@ is_web_domain_value_exist '$STATS'
 #----------------------------------------------------------#
 
 # Defining statistic type
-type=$(get_web_domain_value '$STATS')
+type=$(get_domain_value 'web' '$STATS')
 
 # Defining statistic dir
 stat_dir="$V_HOME/$user/web/$domain/stats"
@@ -75,7 +75,7 @@ rm -f $V_HOME/$user/conf/$type.$domain.conf
 sed -i "/ $domain$/d" $V_QUEUE/stats.pipe
 
 # Deleting stats
-update_web_domain_value '$STATS' ''
+update_domain_value 'web' '$STATS' ''
 
 # Logging
 log_history "$V_EVENT" "v_add_web_domain_stat $user $doman $type"

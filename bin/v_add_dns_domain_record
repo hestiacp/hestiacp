@@ -51,7 +51,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Checking domain is active
 is_domain_suspended 'dns'
@@ -93,7 +93,7 @@ update_domain_zone
 
 # Updating dns domain values
 records="$(wc -l $V_USERS/$user/dns/$domain)"
-update_dns_domain_value '$RECORDS' "$records"
+update_domain_value 'dns' '$RECORDS' "$records"
 
 # Updating user counters
 increase_user_value "$user" '$U_DNS_RECORDS'

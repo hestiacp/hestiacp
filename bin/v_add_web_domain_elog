@@ -42,13 +42,13 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
 
 # Checking errorlog is not added
-is_web_domain_key_empty '$ELOG'
+is_domain_key_empty 'web' '$ELOG'
 
 
 #----------------------------------------------------------#
@@ -56,7 +56,7 @@ is_web_domain_key_empty '$ELOG'
 #----------------------------------------------------------#
 
 # Parsing domain values
-get_web_domain_values
+get_domain_values 'web'
 tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 conf="$V_HOME/$user/conf/web/httpd.conf"
 ELOG='yes'
@@ -98,7 +98,7 @@ fi
 #----------------------------------------------------------#
 
 # Adding elog in config
-update_web_domain_value '$ELOG' 'yes'
+update_domain_value 'web' '$ELOG' 'yes'
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

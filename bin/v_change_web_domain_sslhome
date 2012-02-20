@@ -38,13 +38,13 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
 
 # Check SSL is added
-is_web_domain_value_exist '$SSL'
+is_domain_value_exist 'web' '$SSL'
 
 
 #----------------------------------------------------------#
@@ -52,7 +52,7 @@ is_web_domain_value_exist '$SSL'
 #----------------------------------------------------------#
 
 # Get domain values
-get_web_domain_values
+get_domain_values 'web'
 old_ssl_home=$SSL_HOME
 SSL_HOME=$ssl_home
 tpl_file="$V_WEBTPL/apache_$TPL.stpl"
@@ -83,7 +83,7 @@ fi
 #----------------------------------------------------------#
 
 # Adding sslhome in config
-update_web_domain_value '$SSL_HOME' "$SSL_HOME"
+update_domain_value 'web' '$SSL_HOME' "$SSL_HOME"
 
 # Adding task to the vesta pipe
 restart_schedule 'web'

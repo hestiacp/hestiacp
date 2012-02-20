@@ -110,7 +110,7 @@ format_validation 'user' 'domain'
 is_user_valid
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 
 #----------------------------------------------------------#

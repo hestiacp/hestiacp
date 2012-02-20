@@ -24,7 +24,6 @@ is_domain_new() {
         fi
         return $E_EXISTS
     fi
-
 }
 
 is_domain_owner() {
@@ -80,21 +79,9 @@ is_web_domain_free() {
     fi
 }
 
-is_dns_domain_valid() {
+is_domain_valid() {
     # Parsing domain values
-    check_domain=$(grep -F "DOMAIN='$domain'" $V_USERS/$user/dns.conf)
-
-    # Checking result
-    if [ -z "$check_domain" ]; then
-        echo "Error: domain not exist"
-        log_event 'debug' "$E_NOTEXIST $V_EVENT"
-        exit $E_NOTEXIST
-    fi
-}
-
-is_web_domain_valid() {
-    # Parsing domain values
-    check_domain=$(grep -F "DOMAIN='$domain'" $V_USERS/$user/web.conf)
+    check_domain=$(grep -F "DOMAIN='$domain'" $V_USERS/$user/$1.conf)
 
     # Checking result
     if [ -z "$check_domain" ]; then
@@ -315,11 +302,12 @@ replace_web_config() {
     sed -i  "$top_line,$bottom_line s/$clean_old/$clean_new/" $conf
 }
 
-get_web_domain_value() {
-    key="$1"
+get_domain_value() {
+    domain_type="$1"
+    key="$2"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/$domain_type.conf )
 
     # Parsing key=value
     eval $string
@@ -331,36 +319,21 @@ get_web_domain_value() {
     echo "$value"
 }
 
-get_web_domain_values() {
+get_domain_values() {
     # Defining domain parameters
-    for line in $(grep "DOMAIN='$domain'" $V_USERS/$user/web.conf); do
+    for line in $(grep "DOMAIN='$domain'" $V_USERS/$user/$1.conf); do
         # Assing key=value
         eval $line
     done
 }
 
-get_dns_domain_value() {
-    key="$1"
-
-    # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/dns.conf )
-
-    # Parsing key=value
-    eval $string
-
-    # Self reference
-    eval value="$key"
-
-    # Print value
-    echo "$value"
-}
-
-update_web_domain_value() {
-    key="$1"
-    value="$2"
+update_domain_value() {
+    domain_type="$1"
+    key="$2"
+    value="$3"
 
     # Defining conf
-    conf="$V_USERS/$user/web.conf"
+    conf="$V_USERS/$user/$domain_type.conf"
 
     # Parsing conf
     domain_str=$(grep -n "DOMAIN='$domain'" $conf)
@@ -384,40 +357,12 @@ update_web_domain_value() {
      $conf
 }
 
-update_dns_domain_value() {
-    key="$1"
-    value="$2"
-
-    # Defining conf
-    conf="$V_USERS/$user/dns.conf"
-
-    # Parsing conf
-    domain_str=$(grep -n "DOMAIN='$domain'" $conf)
-    str_number=$(echo $domain_str | cut -f 1 -d ':')
-    str=$(echo $domain_str | cut -f 2 -d ':')
-
-    # Reading key=values
-    eval $str
-
-    # Defining clean key
-    c_key=$(echo "${key//$/}")
-
-    eval old="${key}"
-
-    # Escaping slashes
-    old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-    new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-
-    # Updating conf
-    sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g"\
-     $conf
-}
-
-is_web_domain_key_empty() {
-    key="$1"
+is_domain_key_empty() {
+    domain_type="$1"
+    key="$2"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/$domain_type.conf )
 
     # Parsing key=value
     eval $string
@@ -483,7 +428,6 @@ is_web_domain_cert_valid() {
     fi
 }
 
-
 is_dns_record_valid() {
     # Checking record id
     check_id=$(grep "^ID='$id'" $V_USERS/$user/dns/$domain)
@@ -495,11 +439,12 @@ is_dns_record_valid() {
     fi
 }
 
-is_web_domain_value_exist() {
-    key="$1"
+is_domain_value_exist() {
+    domain_type="$1"
+    key="$2"
 
     # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/web.conf )
+    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/$domain_type.conf )
 
     # Parsing key=value
     eval $string
@@ -514,27 +459,6 @@ is_web_domain_value_exist() {
         exit $E_NOTEXIST
     fi
 }
-
-is_dns_domain_value_exist() {
-    key="$1"
-
-    # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $V_USERS/$user/dns.conf )
-
-    # Parsing key=value
-    eval $string
-
-    # Self reference
-    eval value="$key"
-
-    # Checking result
-    if [ -z "$value" ] || [ "$value" = 'no' ]; then
-        echo "Error: ${key//$/} is empty"
-        log_event 'debug' "$E_NOTEXIST $V_EVENT"
-        exit $E_EXISTS
-    fi
-}
-
 
 del_web_config() {
     # Get config borders

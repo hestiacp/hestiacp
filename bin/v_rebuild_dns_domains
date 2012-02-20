@@ -78,12 +78,12 @@ for domain in $domains; do
 
     # Defining variables
     domain_idn=$(idn -t --quiet -a "$domain")
-    ip="$(get_dns_domain_value '$IP')"
-    template="$(get_dns_domain_value '$TPL')"
-    exp="$(get_dns_domain_value '$EXP')"
-    soa="$(get_dns_domain_value '$SOA')"
-    ttl="$(get_dns_domain_value '$TTL')"
-    suspended="$(get_dns_domain_value '$SUSPENDED')"
+    ip="$(get_domain_value 'dns' '$IP')"
+    template="$(get_domain_value 'dns' '$TPL')"
+    exp="$(get_domain_value 'dns' '$EXP')"
+    soa="$(get_domain_value 'dns' '$SOA')"
+    ttl="$(get_domain_value 'dns' '$TTL')"
+    suspended="$(get_domain_value 'dns' '$SUSPENDED')"
 
     # Checking zone file
     if [ ! -e "$V_USERS/$user/dns/$domain" ]; then
@@ -130,7 +130,7 @@ for domain in $domains; do
     fi
     records=$(wc -l $V_USERS/$user/dns/$domain | cut -f 1 -d ' ')
     user_records=$((user_records + records))
-    update_dns_domain_value '$RECORDS' "$records"
+    update_domain_value 'dns' '$RECORDS' "$records"
 done
 
 

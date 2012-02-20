@@ -38,20 +38,20 @@ is_system_enabled 'web'
 is_user_valid
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
 
 # Checking stats enabled
-is_web_domain_value_exist '$STATS'
+is_domain_value_exist 'web' '$STATS'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-stats=$(get_web_domain_value '$STATS')
+stats=$(get_domain_value 'web' '$STATS')
 
 # Checking config
 config="$V_HOME/$user/conf/web/$stats.$domain.conf"

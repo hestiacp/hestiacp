@@ -42,7 +42,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Checking domain is not suspened
 is_domain_suspended 'dns'
@@ -53,10 +53,10 @@ is_domain_suspended 'dns'
 #----------------------------------------------------------#
 
 # Get old soa
-old_soa=$(get_dns_domain_value '$SOA')
+old_soa=$(get_domain_value 'dns' '$SOA')
 
 # Changing soa
-update_dns_domain_value '$SOA' "$soa"
+update_domain_value 'dns' '$SOA' "$soa"
 
 # Updating zone
 update_domain_zone

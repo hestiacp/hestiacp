@@ -42,7 +42,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
@@ -77,7 +77,7 @@ fi
 #----------------------------------------------------------#
 
 # Get current value
-curr_val=$(get_web_domain_value '$STATS_AUTH')
+curr_val=$(get_domain_value 'web' '$STATS_AUTH')
 check_uniq=$(echo "$curr_val" | grep -w "$auth_user")
 
 # Checking current users
@@ -92,7 +92,7 @@ else
 fi
 
 # Adding stats user in config
-update_web_domain_value '$STATS_AUTH' "$a_users"
+update_domain_value 'web' '$STATS_AUTH' "$a_users"
 
 # Hiding password
 V_EVENT="$V_DATE $V_SCRIPT $user $domain $auth_user *****"

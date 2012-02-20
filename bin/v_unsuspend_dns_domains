@@ -64,7 +64,7 @@ for domain in $domains; do
     echo "$rec" >> $conf
 
     # Unsuspendin in config
-    update_dns_domain_value '$SUSPENDED' 'no'
+    update_domain_value 'dns' '$SUSPENDED' 'no'
 
 done
 

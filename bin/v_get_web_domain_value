@@ -41,7 +41,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
@@ -51,7 +51,7 @@ is_domain_suspended 'web'
 #                       Action                             #
 #----------------------------------------------------------#
 
-value=$(get_web_domain_value "$key")
+value=$(get_domain_value 'web' "$key")
 echo "$value"
 
 

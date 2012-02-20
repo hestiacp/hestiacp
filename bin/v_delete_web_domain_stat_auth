@@ -44,13 +44,13 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
 
 # Checking stats auth enabled
-is_web_domain_value_exist '$STATS_AUTH'
+is_domain_value_exist 'web' '$STATS_AUTH'
 
 
 #----------------------------------------------------------#
@@ -81,7 +81,7 @@ fi
 # Checking auth_user
 if [ ! -z "$auth_user" ]; then
     # Get current value
-    curr_val=$(get_web_domain_value '$STATS_AUTH')
+    curr_val=$(get_domain_value 'web' '$STATS_AUTH')
 
     # Deleteting auth_user
     new_val=$(echo "$curr_val" |\
@@ -101,7 +101,7 @@ else
 fi
 
 # Deleting stats auth_user
-update_web_domain_value '$STATS_AUTH' "$new_val"
+update_domain_value 'web' '$STATS_AUTH' "$new_val"
 
 # Logging
 log_history "$V_EVENT"

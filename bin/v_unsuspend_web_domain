@@ -38,7 +38,7 @@ is_system_enabled 'web'
 is_user_valid
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Check domain is suspened
 is_domain_unsuspended 'web'
@@ -49,7 +49,7 @@ is_domain_unsuspended 'web'
 #----------------------------------------------------------#
 
 # Parsing domain values
-get_web_domain_values
+get_domain_values 'web'
 tpl_file="$V_WEBTPL/apache_$TPL.tpl"
 conf="$V_HOME/$user/conf/web/httpd.conf"
 SUSPENDED='no'
@@ -91,7 +91,7 @@ fi
 #----------------------------------------------------------#
 
 # Updating suspend keys
-update_web_domain_value '$SUSPENDED' 'no'
+update_domain_value 'web' '$SUSPENDED' 'no'
 decrease_user_value "$user" '$SUSPENDED_WEB'
 
 # Adding task to the vesta pipe

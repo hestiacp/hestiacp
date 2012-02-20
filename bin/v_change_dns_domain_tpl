@@ -44,7 +44,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Checking domain is not suspened
 is_domain_suspended 'dns'
@@ -58,13 +58,13 @@ is_template_valid 'dns'
 #----------------------------------------------------------#
 
 # Get vals
-old_tpl=$(get_dns_domain_value '$TPL')
-ip=$(get_dns_domain_value '$IP')
+old_tpl=$(get_domain_value 'dns' '$TPL')
+ip=$(get_domain_value 'dns' '$IP')
 ns1=$(get_user_value '$NS1')
 ns2=$(get_user_value '$NS2')
 
 # Changing tpl
-update_dns_domain_value '$TPL' "$template"
+update_domain_value 'dns' '$TPL' "$template"
 
 cat $V_DNSTPL/$template.tpl |\
     sed -e "s/%ip%/$ip/g" \

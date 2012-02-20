@@ -44,13 +44,13 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
 
 # Checking alias is added
-get_web_domain_values
+get_domain_values 'web'
 check_alias=$(echo ${ALIAS//,/ }|grep -w "$dom_alias")
 if [ -z "$check_alias" ]; then
     echo "Error: alias not exist"
@@ -107,7 +107,7 @@ fi
 #----------------------------------------------------------#
 
 # Deleting alias
-update_web_domain_value '$ALIAS' "$ALIAS"
+update_domain_value 'web' '$ALIAS' "$ALIAS"
 
 # Update counters
 decrease_user_value "$user" '$U_WEB_ALIASES'

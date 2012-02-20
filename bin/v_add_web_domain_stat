@@ -46,7 +46,7 @@ is_user_valid "$user"
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
@@ -55,7 +55,7 @@ is_domain_suspended 'web'
 is_type_valid 'stat' "$type"
 
 # Check statistic is not added
-is_web_domain_key_empty '$STATS'
+is_domain_key_empty 'web' '$STATS'
 
 
 #----------------------------------------------------------#
@@ -63,7 +63,7 @@ is_web_domain_key_empty '$STATS'
 #----------------------------------------------------------#
 
 # Parse aliases
-get_web_domain_values
+get_domain_values 'web'
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
@@ -92,7 +92,7 @@ cat $V_WEBTPL/$type.tpl |\
 echo "$V_BIN/v_update_web_domain_stat $user $domain" >> $V_QUEUE/stats.pipe
 
 # Adding stats in config
-update_web_domain_value '$STATS' "$type"
+update_domain_value 'web' '$STATS' "$type"
 
 # Logging
 log_history "$V_EVENT" "v_delete_web_domain_stat $user $domain"

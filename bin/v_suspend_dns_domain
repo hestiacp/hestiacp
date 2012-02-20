@@ -38,7 +38,7 @@ is_system_enabled 'dns'
 is_user_valid
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Checking domain is not suspened
 is_domain_suspended 'dns'
@@ -62,7 +62,7 @@ fi
 #----------------------------------------------------------#
 
 # Adding suspend in config
-update_dns_domain_value '$SUSPENDED' 'yes'
+update_domain_value 'dns' '$SUSPENDED' 'yes'
 increase_user_value "$user" '$SUSPENDED_DNS'
 
 # Adding task to the vesta pipe

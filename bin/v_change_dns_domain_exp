@@ -43,7 +43,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Checking domain is not suspened
 is_domain_suspended 'dns'
@@ -54,10 +54,10 @@ is_domain_suspended 'dns'
 #----------------------------------------------------------#
 
 # Get old expiriation date
-old_exp=$(get_dns_domain_value '$EXP')
+old_exp=$(get_domain_value 'dns' '$EXP')
 
 # Changing exp
-update_dns_domain_value '$EXP' "$exp"
+update_domain_value 'dns' '$EXP' "$exp"
 
 
 #----------------------------------------------------------#

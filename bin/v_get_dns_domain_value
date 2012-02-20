@@ -36,7 +36,7 @@ format_validation 'user' 'domain'
 is_user_valid
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Checking domain is not suspened
 is_domain_suspended 'dns'
@@ -47,7 +47,7 @@ is_domain_suspended 'dns'
 #----------------------------------------------------------#
 
 # Checking key
-value=$(get_dns_domain_value "$key")
+value=$(get_domain_value 'dns' "$key")
 
 # Printing value
 echo "$value"

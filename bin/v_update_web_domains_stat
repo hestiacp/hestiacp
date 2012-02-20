@@ -50,7 +50,7 @@ domains=$(dom_clear_search)
 
 # Starting upd loop
 for domain in $domains; do
-    stats=$(get_web_domain_value '$STATS')
+    stats=$(get_domain_value 'web' '$STATS')
     if [ ! -z "$stats" ]; then
         $V_BIN/v_update_web_domain_stat "$user" "$domain"
         rv="$?"

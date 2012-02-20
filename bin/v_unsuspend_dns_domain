@@ -38,7 +38,7 @@ is_system_enabled 'dns'
 is_user_valid
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Check domain is suspened
 is_domain_unsuspended 'dns'
@@ -60,7 +60,7 @@ echo "$nmd_rec" >> $conf
 #----------------------------------------------------------#
 
 # Unsuspending domain in config
-update_dns_domain_value '$SUSPENDED' 'no'
+update_domain_value 'dns' '$SUSPENDED' 'no'
 decrease_user_value "$user" '$SUSPENDED_DNS'
 
 # Adding task to the vesta pipe

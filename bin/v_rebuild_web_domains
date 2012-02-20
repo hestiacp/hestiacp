@@ -58,7 +58,7 @@ for domain in $(shell_list) ; do
     domain_idn=$(idn -t --quiet -a "$domain")
 
     # Parsing domain values
-    get_web_domain_values
+    get_domain_values 'web'
 
     # Preparing domain values for the template substitution
     upd_web_domain_values

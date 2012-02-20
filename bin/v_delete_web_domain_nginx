@@ -41,13 +41,13 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_web_domain_valid
+is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
 
 # Checking ssl is added
-is_web_domain_value_exist '$NGINX'
+is_domain_value_exist 'web' '$NGINX'
 
 
 #----------------------------------------------------------#
@@ -55,7 +55,7 @@ is_web_domain_value_exist '$NGINX'
 #----------------------------------------------------------#
 
 # Defining domain parameters
-get_web_domain_values
+get_domain_values 'web'
 tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
 conf="$V_HOME/$user/conf/nginx.conf"
 del_web_config
@@ -73,8 +73,8 @@ fi
 #----------------------------------------------------------#
 
 # Deleting nginx keys
-update_web_domain_value '$NGINX' ''
-update_web_domain_value '$NGINX_EXT' ''
+update_domain_value 'web' '$NGINX' ''
+update_domain_value 'web' '$NGINX_EXT' ''
 
 # Checking last nginx domain
 conf='/etc/nginx/conf.d/vesta_users.conf'

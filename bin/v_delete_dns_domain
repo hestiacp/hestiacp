@@ -42,7 +42,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 
 #----------------------------------------------------------#
@@ -50,8 +50,8 @@ is_dns_domain_valid
 #----------------------------------------------------------#
 
 # Get template name
-tpl_name=$(get_dns_domain_value '$TPL')
-old_ip=$(get_dns_domain_value '$IP')
+tpl_name=$(get_domain_value 'dns' '$TPL')
+old_ip=$(get_domain_value 'dns' '$IP')
 
 # Deleting domain in named.conf
 rm_string=$(grep -n /conf/dns/$domain.db $named_conf |cut -d : -f 1)

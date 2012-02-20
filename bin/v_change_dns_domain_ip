@@ -41,7 +41,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Checking domain is not suspened
 is_domain_suspended 'dns'
@@ -52,10 +52,10 @@ is_domain_suspended 'dns'
 #----------------------------------------------------------#
 
 # Get old ip
-old_ip=$(get_dns_domain_value '$IP')
+old_ip=$(get_domain_value 'dns' '$IP')
 
 # Changing ip
-update_dns_domain_value '$IP' "$ip"
+update_domain_value 'dns' '$IP' "$ip"
 
 # Changing records
 sed -i "s/$old_ip/$ip/g" $V_USERS/$user/dns/$domain

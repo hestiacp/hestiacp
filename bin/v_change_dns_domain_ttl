@@ -42,7 +42,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain exist
-is_dns_domain_valid
+is_domain_valid 'dns'
 
 # Checking domain is not suspened
 is_domain_suspended 'dns'
@@ -53,10 +53,10 @@ is_domain_suspended 'dns'
 #----------------------------------------------------------#
 
 # Get old ttl
-old_ttl=$(get_dns_domain_value '$TTL')
+old_ttl=$(get_domain_value 'dns' '$TTL')
 
 # Changing ttl
-update_dns_domain_value '$TTL' "$ttl"
+update_domain_value 'dns' '$TTL' "$ttl"
 
 # Updating zone
 update_domain_zone

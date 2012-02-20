@@ -65,6 +65,7 @@ esac
 
 # Updating db value
 update_db_base_value '$SUSPENDED' 'yes'
+increase_user_value "$user" '$SUSPENDED_DB'
 
 # Logging
 log_event 'system' "$V_EVENT"

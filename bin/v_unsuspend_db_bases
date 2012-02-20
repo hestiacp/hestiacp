@@ -52,20 +52,9 @@ search_string="SUSPENDED='yes'"
 # Parsing unsuspeneded domains
 databases=$(db_clear_search)
 
+# Starting suspend loop
 for database in $databases; do
-    # Define database variables
-    db_user=$(get_db_value '$USER')
-    host=$(get_db_value '$HOST')
-    type=$(get_db_value '$TYPE')
-
-    # Switching on db type
-    case $type in
-        mysql) unsuspend_db_mysql ;;
-        pgsql) unsuspend_db_pgsql ;;
-    esac
-
-    # Updating db value
-    update_db_base_value '$SUSPENDED' 'no'
+    $V_BIN/v_unsuspend_db_base "$user" "$database"
 done
 
 

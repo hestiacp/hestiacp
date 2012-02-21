@@ -93,15 +93,15 @@ for user in $user_list; do
         source $V_IPS/$ip
         if [ "$OWNER" = "$user" ]; then
             IP_OWNED=$((IP_OWNED + 1))
+            IP_AVAIL=$((IP_AVAIL + 1))
         fi
         if [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
-            IP_AVAIL=$((IP_AVAIL + IP_OWNED))
             IP_AVAIL=$((IP_AVAIL + 1))
         fi
     done
     if [ "$user" = 'admin' ]; then
         IP_AVAIL=$(ls $V_IPS | wc -l)
-    fi    
+    fi
 
     # Checking web system
     U_WEB_DOMAINS=0

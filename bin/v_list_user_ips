@@ -25,7 +25,6 @@ json_list_user_ips() {
     for IP in $(ls $V_IPS/); do
         source $V_IPS/$IP
         if [ "$OWNER" = "$user" ]; then
-            eval echo "$fields"
             # Closing bracket if there already was output
             if [ -n "$data" ]; then
                 echo -e '        },'

@@ -90,8 +90,20 @@ namehost_ip_support
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Updating user conf
+# Updating user counters
 increase_user_value "$user" '$IP_OWNED'
+if [ "$user" = 'admin' ]; then
+    if [ "$ip_status" = 'shared' ]; then
+        for user in $(ls $V_USERS/); do
+            increase_user_value "$user" '$IP_AVAIL'
+        done
+    else
+        increase_user_value 'admin' '$IP_AVAIL'
+    fi
+else
+    increase_user_value "$user" '$IP_AVAIL'
+    increase_user_value 'admin' '$IP_AVAIL'
+fi
 
 # Adding task to the vesta pipe
 if [ "$web_restart" = 'yes' ]; then

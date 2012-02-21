@@ -53,9 +53,35 @@ is_ip_key_empty '$U_SYS_USERS'
 # Changing ip owner
 ip_owner=$(get_sys_ip_value '$OWNER')
 if [ "$ip_owner" != "$user" ]; then
+    ip_status="$(get_sys_ip_value '$STATUS')"
     update_sys_ip_value '$OWNER' "$user"
     decrease_user_value "$ip_owner" '$IP_OWNED'
+    if [ "$ip_owner" = 'admin' ]; then
+        if [ "$ip_status" = 'shared' ]; then
+            for vesta_user in $(ls $V_USERS/); do
+                decrease_user_value "$vesta_user" '$IP_AVAIL'
+            done
+        else
+            decrease_user_value 'admin' '$IP_AVAIL'
+        fi
+    else
+        decrease_user_value "$ip_owner" '$IP_AVAIL'
+        decrease_user_value 'admin' '$IP_AVAIL'
+    fi
+
     increase_user_value "$user" '$IP_OWNED'
+    if [ "$user" = 'admin' ]; then
+        if [ "$ip_status" = 'shared' ]; then
+            for user in $(ls $V_USERS/); do
+                increase_user_value "$user" '$IP_AVAIL'
+            done
+        else
+            increase_user_value 'admin' '$IP_AVAIL'
+        fi
+    else
+        increase_user_value "$user" '$IP_AVAIL'
+        increase_user_value 'admin' '$IP_AVAIL'
+    fi
 fi
 
 

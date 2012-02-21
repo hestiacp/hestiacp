@@ -57,7 +57,8 @@ for ip in $ip_list; do
     # Assig ip to main account
     update_sys_ip_value '$OWNER' 'admin'
     update_sys_ip_value '$STATUS' 'exclusive'
-
+    increase_user_value 'admin' '$IP_OWNED'
+    increase_user_value 'admin' '$IP_AVAIL'
 done
 
 

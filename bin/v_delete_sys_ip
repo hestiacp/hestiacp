@@ -56,6 +56,7 @@ rconf='/etc/httpd/conf.d/rpaf.conf'
 
 # Get ip owner
 user="$(get_sys_ip_value '$OWNER')"
+ip_status="$(get_sys_ip_value '$STATUS')"
 
 # Deleting interface
 /sbin/ifconfig "$interface" down
@@ -81,6 +82,20 @@ namehost_ip_disable
 if [ ! -z "$user" ]; then
     decrease_user_value "$user" '$IP_OWNED'
 fi
+
+if [ "$user" = 'admin' ]; then
+    if [ "$ip_status" = 'shared' ]; then
+        for user in $(ls $V_USERS/); do
+            decrease_user_value "$user" '$IP_AVAIL'
+        done
+    else
+        decrease_user_value 'admin' '$IP_AVAIL'
+    fi
+else
+    decrease_user_value "$user" '$IP_AVAIL'
+    decrease_user_value 'admin' '$IP_AVAIL'
+fi
+
 
 # Adding task to the vesta pipe
 if [ "$web_restart" = 'yes' ]; then

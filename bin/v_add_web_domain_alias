@@ -52,15 +52,7 @@ is_domain_valid 'web'
 is_domain_suspended 'web'
 
 # Checking alias on the server
-is_domain_new 'quiet' "$dom_alias"
-if [ $? -ne 0 ]; then
-
-    # Checking alias owner
-    is_domain_owner "$dom_alias"
-
-    # Checking alias service
-    is_web_domain_free "$dom_alias"
-fi
+is_domain_new 'web' "$dom_alias"
 
 # Checking package
 is_package_full 'web_alias'

@@ -50,16 +50,7 @@ is_user_valid
 is_user_suspended
 
 # Checking domain
-is_domain_new 'quiet'
-if [ $? -ne 0 ]; then
-
-    # Checking domain owner
-    is_domain_owner
-
-    # Checking domain service
-    is_web_domain_free
-
-fi
+is_domain_new 'dns'
 
 # Checking ip
 is_ip_avalable

@@ -1,81 +1,22 @@
 # Checking domain existance
 is_domain_new() {
-    output_mode="$1"
-    search_dom=${2-$domain}
-
-    # Parsing domain values
-    check_domain=$(grep -F "DOMAIN='$search_dom'" $V_USERS/*/*.conf| \
-        grep -v cron.conf)
-
-    # Parsing alias values
-    check_alias=$(grep -F 'ALIAS=' $V_USERS/*/*.conf | \
-        grep -v cron.conf | \
-        awk -F "ALIAS=" '{print $2}' | \
-        cut -f 2 -d \' | \
-        sed -e "s/,/\n/g" | \
-        grep "^$search_dom$" )
-
-    # Checking result
-    if [ ! -z "$check_domain" ] || [ ! -z "$check_alias" ]; then
-        if [ "$output_mode" != 'quiet' ]; then
-            echo "Error: domain exist"
+    config_type="$1"
+    dom=${2-domain}
+    check_all=$(grep -w $dom $V_USERS/*/*.conf)
+    if [ ! -z "$check_all" ]; then
+        check_ownership=$(grep -w $dom $V_USERS/$user/*.conf)
+        if [ ! -z "$check_ownership" ]; then
+            check_type=$(grep -w $dom $V_USERS/$user/$config_type.conf)
+            if [ ! -z "$check_type" ]; then
+                echo "Error: $dom exist"
+                log_event 'debug' "$E_EXISTS $V_EVENT"
+                exit $E_EXISTS
+            fi
+        else
+            echo "Error: $dom exist"
             log_event 'debug' "$E_EXISTS $V_EVENT"
             exit $E_EXISTS
         fi
-        return $E_EXISTS
-    fi
-}
-
-is_domain_owner() {
-    search_dom=${1-$domain}
-
-    # Parsing domain values
-    check_domain=$(grep "DOMAIN='$search_dom'" $V_USERS/$user/*.conf)
-
-    # Parsing alias values
-    check_alias=$(grep 'ALIAS=' $V_USERS/$user/*.conf | \
-        awk -F "ALIAS=" '{print $2}' | \
-        cut -f 2 -d \' | \
-        sed -e "s/,/\n/g" | \
-        grep "^$search_dom$" )
-
-    # Checking result
-    if [ -z "$check_domain" ] && [ -z "$check_alias" ]; then
-        echo "Error: domain not owned"
-        log_event 'debug' "$E_FORBIDEN $V_EVENT"
-        exit $E_FORBIDEN
-    fi
-}
-
-is_dns_domain_free() {
-    # Parsing domain values
-    check_domain=$(grep -F "DOMAIN='$domain'" $V_USERS/$user/dns.conf)
-
-    # Checking result
-    if [ ! -z "$check_domain" ]; then
-        echo "Error: domain exist"
-        log_event 'debug' "$E_EXISTS $V_EVENT"
-        exit $E_EXISTS
-    fi
-}
-
-is_web_domain_free() {
-    search_dom=${1-$domain}
-    # Parsing domain values
-    check_domain=$(grep -F "DOMAIN='$search_dom'" $V_USERS/$user/web.conf)
-
-    # Parsing alias values
-    check_alias=$(grep -F 'ALIAS=' $V_USERS/$user/web.conf | \
-        awk -F "ALIAS=" '{print $2}' | \
-        cut -f 2 -d \' | \
-        sed -e "s/,/\n/g" | \
-        grep "^$search_dom$" )
-
-    # Checking result
-    if [ ! -z "$check_domain" ] || [ ! -z "$check_alias" ]; then
-        echo "Error: domain exist"
-        log_event 'debug' "$E_EXISTS $V_EVENT"
-        exit $E_EXISTS
     fi
 }
 

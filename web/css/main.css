@@ -3,7 +3,7 @@ Title  : Vesta
 Author : Eugen Lobicov, eugen.lobicov@gmail.com 
 
 created : November 27, 2009
-last updated : February 13, 2012
+last updated : February 22, 2012
 - - - - - - - - - - - - - - - - - - */
 
 html{
@@ -337,24 +337,19 @@ input::-moz-focus-inner{
 	}		
 
 #console{
-	position:relative;
 	clear:both;
+	position:relative;
 	height:70px;
-	background-color:#a09d98;
 	background:#535049 url(../images/console-box-bg.png) repeat-x;
 	border-bottom:1px solid #7a7967;
 	z-index:1;
 }
-
-.b-console{
-	position:absolute;
-	left:50%;
-}
+.b-console{}
 
 .b-console-wrap{
 	position:relative;
-	right:50%;
 	width:655px;
+	margin:0 auto;
 	padding:10px 15px 16px 25px;
 	background:url(../images/console-bg.png) repeat;
 	

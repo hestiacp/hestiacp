@@ -33,7 +33,7 @@ check_args '4' "$#" 'user domain auth_user auth_password'
 format_validation 'user' 'domain' 'auth_user' 'auth_pass'
 
 # Checking web system is enabled
-is_system_enabled 'web'
+is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
 is_user_valid

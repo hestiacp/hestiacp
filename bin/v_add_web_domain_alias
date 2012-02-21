@@ -37,7 +37,7 @@ check_args '3' "$#" 'user domain dom_alias'
 format_validation 'user' 'domain' 'dom_alias'
 
 # Checking web system is enabled
-is_system_enabled 'web'
+is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
 is_user_valid
@@ -55,7 +55,7 @@ is_domain_suspended 'web'
 is_domain_new 'web' "$dom_alias"
 
 # Checking package
-is_package_full 'web_alias'
+is_package_full 'WEB_ALIASES'
 
 
 #----------------------------------------------------------#

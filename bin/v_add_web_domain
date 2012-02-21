@@ -41,7 +41,7 @@ check_args '3' "$#" 'user domain ip [template]'
 format_validation 'user' 'domain' 'ip' 'template'
 
 # Checking web system is enabled
-is_system_enabled 'web'
+is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
 is_user_valid
@@ -56,7 +56,7 @@ is_domain_new 'dns'
 is_ip_avalable
 
 # Checking package
-is_package_full 'web_domain'
+is_package_full 'WEB_DOMAINS'
 
 # Checking template
 templates=$(get_user_value '$WEB_TPL')

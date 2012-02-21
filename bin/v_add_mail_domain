@@ -29,13 +29,13 @@ source $V_FUNC/domain.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '3' "$#" 'user domain [antispam] [antivirus]'
+check_args '2' "$#" 'user domain [antispam] [antivirus]'
 
 # Checking argument format
 format_validation 'user' 'domain' 'antispam' 'antivirus'
 
 # Checking dns system is enabled
-is_system_enabled 'mail'
+is_system_enabled 'MAIL_SYSTEM'
 
 # Checking user
 is_user_valid
@@ -44,18 +44,11 @@ is_user_valid
 is_user_suspended
 
 # Checking domain
-is_domain_new 'quiet'
-if [ $? -ne 0 ]; then
-
-    # Checking domain owner
-    is_domain_owner
-
-    # Checking domain service
-    is_dns_domain_free
-fi
+is_domain_new 'mail'
 
 # Checking package
-is_package_full 'mail'
+is_package_full 'MAIL_DOMAINS'
+
 
 exit
 

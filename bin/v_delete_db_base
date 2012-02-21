@@ -32,7 +32,7 @@ check_args '2' "$#" 'user db_name'
 format_validation 'user' 'database'
 
 # Checking db system is enabled
-is_system_enabled 'db'
+is_system_enabled 'DB_SYSTEM'
 
 # Checking user
 is_user_valid

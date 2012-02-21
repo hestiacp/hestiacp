@@ -43,7 +43,7 @@ check_args '3' "$#" 'user domain ip [template] [exp] [soa] [ttl]'
 format_validation 'user' 'domain' 'ip' 'template' 'exp' 'ttl'
 
 # Checking dns system is enabled
-is_system_enabled 'dns'
+is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
 is_user_valid
@@ -55,7 +55,7 @@ is_user_suspended
 is_domain_new 'dns'
 
 # Checking package
-is_package_full 'dns'
+is_package_full 'DNS_DOMAINS'
 
 # Checking template
 is_template_valid 'dns'

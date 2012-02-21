@@ -43,7 +43,7 @@ format_validation 'host' 'port' 'db_user' 'db_password' 'max_db'
 format_validation 'template'
 
 # Checking db system is enabled
-is_system_enabled 'db'
+is_system_enabled 'DB_SYSTEM'
 
 # Checking db type
 is_type_valid 'db' "$type"

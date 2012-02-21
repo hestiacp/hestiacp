@@ -190,7 +190,7 @@ check_ftp_connection(){
 check_args '1' "$#" 'user'
 
 # Checking backup system is enabled
-is_system_enabled 'backup'
+is_system_enabled 'BACKUP_SYSTEM'
 
 # Checking argument format
 format_validation 'user'

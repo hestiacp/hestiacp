@@ -418,65 +418,12 @@ format_validation() {
 
 # Sub system checker
 is_system_enabled() {
-    stype="$1"
-
-    web_function() {
-        if [ -z "$WEB_SYSTEM" ] || [ "$WEB_SYSTEM" = "no" ]; then
-            echo "Error: web hosting support disabled"
-            log_event 'debug' "$E_DISABLED $V_EVENT"
-            exit $E_DISABLED
-        fi
-    }
-
-    proxy_function() {
-        if [ "$PROXY_SYSTEM" != 'nginx' ]; then
-            echo "Error: proxy hosting support disabled"
-            log_event 'debug' "$E_DISABLED $V_EVENT"
-            exit $E_DISABLED
-        fi
-    }
-
-    dns_function() {
-        if [ -z "$DNS_SYSTEM" ] || [ "$DNS_SYSTEM" = "no" ]; then
-            echo "Error: dns support disabled"
-            log_event 'debug' "$E_DISABLED $V_EVENT"
-            exit $E_DISABLED
-        fi
-    }
-
-    cron_function() {
-        if [ -z "$CRON_SYSTEM" ] || [ "$CRON_SYSTEM" = "no" ]; then
-            echo "Error: crond support disabled"
-            log_event 'debug' "$E_DISABLED $V_EVENT"
-            exit $E_DISABLED
-        fi
-    }
-
-    db_function() {
-        if [ -z "$DB_SYSTEM" ] || [ "$DB_SYSTEM" = "no" ]; then
-            echo "Error: db support disabled"
-            log_event 'debug' "$E_DISABLED $V_EVENT"
-            exit $E_DISABLED
-        fi
-    }
-
-    backup_function() {
-        if [ -z "$BACKUP_SYSTEM" ] || [ "$BACKUP_SYSTEM" = "no" ]; then
-            echo "Error: backup support disabled"
-            log_event 'debug' "$E_DISABLED $V_EVENT"
-            exit $E_DISABLED
-        fi
-    }
-
-    case $stype in
-        web) web_function ;;
-        proxy) proxy_function ;;
-        dns) dns_function ;;
-        cron) cron_function ;;
-        db) db_function ;;
-        backup) backup_function ;;
-        *) check_args '1' '0' 'system'
-    esac
+    eval system=\$$1
+    if [ -z "$system" ] || [ "$system" = "no" ]; then
+        echo "Error: $system disabled"
+        log_event 'debug' "$E_DISABLED $V_EVENT"
+        exit $E_DISABLED
+    fi
 }
 
 # System user check
@@ -508,99 +455,25 @@ is_user_suspended() {
 
 # User package check
 is_package_full() {
-    stype="$1"
-
-    web_domain() {
-        # Checking zero domains
-        domain_number=$(wc -l $V_USERS/$user/web.conf|cut -f 1 -d ' ')
-
-        # Comparing current val with conf
-        val=$(grep '^WEB_DOMAINS=' $V_USERS/$user/user.conf|cut -f 2 -d \' )
-        if [ "$domain_number" -ge "$val" ]; then
-            echo "Error: Upgrade package"
-            log_event 'debug' "$E_LIMIT $v_log"
-            exit $E_LIMIT
-        fi
-    }
-
-    web_alias() {
-        # Parsing aliases
-        alias_nmb=$(grep "DOMAIN='$domain'" $V_USERS/$user/web.conf|\
-            awk -F "ALIAS=" '{print $2}' | cut -f 2 -d \' |\
-            sed -e "s/,/\n/g" | wc -l )
-
-        # Parsing config
-        val=$(grep 'WEB_ALIASES=' $V_USERS/$user/user.conf | cut -f 2 -d \' )
-        if [ "$alias_nmb" -ge "$val" ]; then
-            echo "Error: Upgrade package"
-            log_event 'debug' "$E_LIMIT $v_log"
-            exit $E_LIMIT
-        fi
-    }
-
-    web_ssl() {
-        # Parsing config
-        val=$(grep '^WEB_SSL=' $V_USERS/$user/user.conf | cut -f 2 -d \' )
-        if [ "$val" -eq '0' ]; then
-            echo "Error: Upgrade package"
-            log_event 'debug' "$E_LIMIT $v_log"
-            exit $E_LIMIT
-        fi
-
-        # Checking domains
-        domain_nmb=$(grep "SSL='yes'" $V_USERS/$user/web.conf | wc -l)
-        # Comparing current val with conf
-        if [ "$domain_nmb" -ge "$val" ]; then
-            echo "Error: Upgrade package"
-            log_event 'debug' "$E_LIMIT $v_log"
-            exit $E_LIMIT
-        fi
-    }
-
-    dns_domain() {
-        # Checking zero domains
-        domain_number=$(wc -l $V_USERS/$user/dns.conf | cut -f 1 -d " ")
-
-        # Comparing current val with conf
-        val=$(grep '^DNS_DOMAINS=' $V_USERS/$user/user.conf | cut -f 2 -d \' )
-        if [ "$domain_number" -ge "$val" ]; then
-            echo "Error: Upgrade package"
-            log_event 'debug' "$E_LIMIT $v_log"
-            exit $E_LIMIT
-        fi
-    }
-
-    db_base() {
-        # Checking zero domains
-        db_number=$(wc -l $V_USERS/$user/db.conf | cut -f 1 -d " ")
-
-        # Comparing current val with conf
-        val=$(grep '^DATABASES=' $V_USERS/$user/user.conf | cut -f 2 -d \' )
-        if [ "$db_number" -ge "$val" ]; then
-            echo "Error: Upgrade package"
-            log_event 'debug' "$E_LIMIT $v_log"
-            exit $E_LIMIT
-        fi
-    }
-
-    # FIXME - should finish other functions
-
-    # Switching
-    case "$stype" in
-        web_domain) web_domain "$user" ;;
-        web_alias) web_alias "$user" "$domain" ;;
-        web_ssl) web_ssl "$user" ;;
-        dns) dns_domain "$user" ;;
-        db_base) db_base "$user" ;;
-        mail_domain) mail_domain "$user" ;;
-        mail_box) mail_box "$user" "$domain";;
-        mail_forwarder) mail_forwarder "$user" "$domain";;
-        *)
-            echo "Error: bad type"
-            log_event 'debug' "$E_INVALID $V_EVENT"
-            exit $E_INVALID 
-            ;;
+    limit=$(grep "^$1=" $V_USERS/$user/user.conf | cut -f 2 -d \' )
+    # Switching on 
+    case "$1" in
+        WEB_DOMAINS) used=$(wc -l $V_USERS/$user/web.conf|cut -f1 -d ' ');;
+        WEB_ALIASES) used=$(grep "DOMAIN='$domain'" $V_USERS/$user/web.conf |\
+                          awk -F "ALIAS='" '{print $2}' | cut -f 1 -d "'" |\
+                          tr ',' '\n'| wc -l );;
+        DNS_DOMAINS) used=$(wc -l $V_USERS/$user/dns.conf|cut -f1 -d ' ');;
+        DNS_RECORDS) used=$(wc -l $V_USERS/$user/dns/$domain|cut -f1 -d ' ');;
+        MAIL_DOMAINS) used=$(wc -l $V_USERS/$user/mail.conf|cut -f1 -d ' ');;
+        DATABASES) used=$(wc -l $V_USERS/$user/db.conf|cut -f1 -d ' ');;
+        CRON_JOBS) used=$(wc -l $V_USERS/$user/cron.conf|cut -f1 -d ' ');;
     esac
+
+    if [ "$used" -ge "$limit" ]; then
+	echo "Error: Upgrade package"
+        log_event 'debug' "$E_LIMIT $v_log"
+        exit $E_LIMIT
+    fi
 }
 
 is_template_valid() {
@@ -608,7 +481,6 @@ is_template_valid() {
 
     web_template() {
         check_tpl=$(echo "$templates"|sed -e "s/,/\n/g"|grep  "^$template$")
-
         tpl="$V_WEBTPL/apache_$template.tpl"
         descr="$V_WEBTPL/apache_$template.descr"
         ssl="$V_WEBTPL/apache_$template.stpl"

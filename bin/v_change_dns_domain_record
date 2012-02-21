@@ -36,7 +36,7 @@ check_args '5' "$#" 'user domain id record type value'
 format_validation 'user' 'domain' 'id' 'record' 'rtype'
 
 # Checking web system is enabled
-is_system_enabled 'dns'
+is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
 is_user_valid

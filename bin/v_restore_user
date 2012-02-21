@@ -73,7 +73,7 @@ check_args '2' "$#" 'user backup'
 format_validation 'user' 'backup'
 
 # Checking backup system is enabled
-is_system_enabled 'backup'
+is_system_enabled 'BACKUP_SYSTEM'
 
 # Checking load averages
 la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')

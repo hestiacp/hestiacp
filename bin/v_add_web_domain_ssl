@@ -40,7 +40,7 @@ check_args '3' "$#" 'user domain ssl_dir [ssl_home]'
 format_validation 'user' 'domain' 'ssl_dir'
 
 # Checking web system is enabled
-is_system_enabled 'web'
+is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
 is_user_valid
@@ -53,9 +53,6 @@ is_domain_valid 'web'
 
 # Checking domain is not suspened
 is_domain_suspended 'web'
-
-# Checking package
-is_package_full 'web_ssl'
 
 # Check ssl is not added
 is_domain_key_empty 'web' '$SSL'

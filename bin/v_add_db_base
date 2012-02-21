@@ -42,7 +42,7 @@ check_args '5' "$#" 'user db db_user db_password type [host] [encoding]'
 format_validation 'user' 'database' 'db_user' 'db_password' 'encoding'
 
 # Checking db system is enabled
-is_system_enabled 'db'
+is_system_enabled 'DB_SYSTEM'
 
 # Checking db type
 is_type_valid 'db' "$type"
@@ -63,7 +63,7 @@ fi
 is_db_host_valid
 
 # Checking package
-is_package_full 'db_base'
+is_package_full 'DATABASES'
 
 
 #----------------------------------------------------------#

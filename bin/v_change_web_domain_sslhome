@@ -29,7 +29,7 @@ check_args '3' "$#" 'user domain ssl_home'
 format_validation 'user' 'domain'
 
 # Checking web system is enabled
-is_system_enabled 'web'
+is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
 is_user_valid

@@ -34,7 +34,7 @@ check_args '3' "$#" 'user domain template'
 format_validation 'user' 'domain' 'template'
 
 # Checking web system is enabled
-is_system_enabled 'web'
+is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
 is_user_valid

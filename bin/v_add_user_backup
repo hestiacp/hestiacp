@@ -29,7 +29,7 @@ check_args '1' "$#" 'user'
 format_validation 'user'
 
 # Checking backup system is enabled
-is_system_enabled 'backup'
+is_system_enabled 'BACKUP_SYSTEM'
 
 # Checking user
 is_user_valid

@@ -32,7 +32,7 @@ check_args '1' "$#" 'user [suspend_url]'
 format_validation 'user' 'url'
 
 # Checking web system is enabled
-is_system_enabled 'web'
+is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
 is_user_valid

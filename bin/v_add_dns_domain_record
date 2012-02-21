@@ -42,7 +42,7 @@ check_args '5' "$#" 'user domain record type value [id]'
 format_validation 'user' 'domain' 'record' 'rtype' 'dvalue'
 
 # Checking web system is enabled
-is_system_enabled 'dns'
+is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
 is_user_valid
@@ -55,6 +55,9 @@ is_domain_valid 'dns'
 
 # Checking domain is active
 is_domain_suspended 'dns'
+
+# Checking package                                                              
+is_package_full 'DNS_RECORDS'
 
 # Defining if emtpy
 if [ -z "$id"] ; then

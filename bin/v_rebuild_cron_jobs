@@ -30,7 +30,7 @@ check_args '1' "$#" 'user'
 format_validation 'user'
 
 # Checking cron system
-is_system_enabled 'cron'
+is_system_enabled 'CRON_SYSTEM'
 
 # Checking user
 is_user_valid

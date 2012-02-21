@@ -32,7 +32,7 @@ check_args '2' "$#" 'type host'
 format_validation 'host'
 
 # Checking db system is enabled
-is_system_enabled 'db'
+is_system_enabled 'DB_SYSTEM'
 
 # Checking db type
 is_type_valid 'db' "$type"

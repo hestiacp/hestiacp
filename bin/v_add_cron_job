@@ -38,10 +38,13 @@ check_args '7' "$#" 'user min hour day month wday command [job]'
 format_validation 'user' 'min' 'hour' 'day' 'month' 'wday' 'command'
 
 # Checking cron system
-is_system_enabled 'cron'
+is_system_enabled 'CRON_SYSTEM'
 
 # Checking user
 is_user_valid
+
+# Checking package
+is_package_full 'CRON_JOBS'
 
 # Get str position
 if [ -z "$job" ]; then

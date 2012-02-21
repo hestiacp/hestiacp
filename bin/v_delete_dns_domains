@@ -30,7 +30,7 @@ check_args '1' "$#" 'user'
 format_validation 'user'
 
 # Checking web system is enabled
-is_system_enabled 'dns'
+is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
 is_user_valid

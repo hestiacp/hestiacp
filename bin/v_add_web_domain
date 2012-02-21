@@ -162,7 +162,7 @@ chown root:$user /var/log/httpd/domains/$domain.*
 chown root:apache $conf
 
 # Changing file permissions
-chmod 640 $conf
+chmod 660 $conf
 chmod 551 $V_HOME/$user/web/$domain
 chmod 751 $V_HOME/$user/web/$domain/private
 chmod 751 $V_HOME/$user/web/$domain/cgi-bin

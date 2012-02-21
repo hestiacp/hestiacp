@@ -319,7 +319,15 @@ format_validation() {
         fi
     }
 
-
+    # Defining format_boolean function
+    format_bool() {
+        val="$1"
+        if [ "$val" != 'yes' ] &&  [ "$val" != 'no' ]; then
+            echo "Error: $var is out of range"
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
+        fi
+    }
 
     # Defining format_ext function
     format_ext() {
@@ -365,6 +373,8 @@ format_validation() {
 
         # Checking variable format
         case $var in
+            antispam)           format_bool "$v" ;;
+            antivirus)          format_bool "$v" ;;
             dom_alias)          format_dom "$v" ;;
             auth_pass)          format_pwd "$v" ;;
             auth_user)          format_usr "$v" ;;
@@ -458,15 +468,15 @@ is_package_full() {
     limit=$(grep "^$1=" $V_USERS/$user/user.conf | cut -f 2 -d \' )
     # Switching on 
     case "$1" in
-        WEB_DOMAINS) used=$(wc -l $V_USERS/$user/web.conf|cut -f1 -d ' ');;
+        WEB_DOMAINS) used=$(wc -l $V_USERS/$user/web.conf|cut -f1 -d \ );;
         WEB_ALIASES) used=$(grep "DOMAIN='$domain'" $V_USERS/$user/web.conf |\
-                          awk -F "ALIAS='" '{print $2}' | cut -f 1 -d "'" |\
+                          awk -F "ALIAS='" '{print $2}' | cut -f 1 -d \' |\
                           tr ',' '\n'| wc -l );;
-        DNS_DOMAINS) used=$(wc -l $V_USERS/$user/dns.conf|cut -f1 -d ' ');;
-        DNS_RECORDS) used=$(wc -l $V_USERS/$user/dns/$domain|cut -f1 -d ' ');;
-        MAIL_DOMAINS) used=$(wc -l $V_USERS/$user/mail.conf|cut -f1 -d ' ');;
-        DATABASES) used=$(wc -l $V_USERS/$user/db.conf|cut -f1 -d ' ');;
-        CRON_JOBS) used=$(wc -l $V_USERS/$user/cron.conf|cut -f1 -d ' ');;
+        DNS_DOMAINS) used=$(wc -l $V_USERS/$user/dns.conf|cut -f1 -d \ );;
+        DNS_RECORDS) used=$(wc -l $V_USERS/$user/dns/$domain|cut -f1 -d \ );;
+        MAIL_DOMAINS) used=$(wc -l $V_USERS/$user/mail.conf|cut -f1 -d \ );;
+        DATABASES) used=$(wc -l $V_USERS/$user/db.conf|cut -f1 -d \ );;
+        CRON_JOBS) used=$(wc -l $V_USERS/$user/cron.conf|cut -f1 -d \ );;
     esac
 
     if [ "$used" -ge "$limit" ]; then

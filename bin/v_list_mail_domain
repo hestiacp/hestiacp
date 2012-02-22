@@ -1,0 +1,115 @@
+#!/bin/bash
+# info: list web domain
+# options: user domain [format]
+#
+# The function of obtaining the list of domain parameters. This call, just as
+# all v_list_* calls, supports 3 formats - json, shell and plain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+format=${3-shell}
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared.func
+source $V_FUNC/domain.func
+
+# Json function
+json_list_domain() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    line=$(grep "DOMAIN='$domain'" $conf)
+
+    # Print top bracket
+    echo '{'
+
+    # Assing key=value
+    eval $line
+
+    # Starting output loop
+    for field in $fields; do
+        # Parsing key=value
+        eval value=$field
+
+        # Checking first field
+        if [ "$i" -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ "$fileds_count" -eq "$i" ]; then
+                echo -e "\t\t\"${field//$/}\": \"$value\","
+            else
+                echo -e "\t\t\"${field//$/}\": \"$value\""
+            fi
+        fi
+        # Updating iterator
+        (( ++i))
+    done
+
+    # If there was any output
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+    # Printing bottom json bracket
+    echo -e "}"
+}
+
+# Shell function
+shell_list_domain() {
+    line=$(grep "DOMAIN='$domain'" $conf)
+
+    # Parsing key=value
+    eval $line
+
+    # Print result line
+    for field in $fields; do
+        eval key="$field"
+        echo "${field//$/}: $key "
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '2' "$#" 'user domain [format]'
+
+# Checking user
+is_user_valid
+
+# Checking domain exist
+is_domain_valid 'web'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf=$V_USERS/$user/mail.conf
+
+# Defining fileds to select
+fields='$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK $CATCHALL
+$SUSPENDED $DATE'
+
+# Listing domains
+case $format in 
+    json)   json_list_domain ;;
+    plain)  nohead=1; shell_list_domain ;;
+    shell)  shell_list_domain |column -t ;;
+    *)      check_args '2' '0' 'user domain [format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

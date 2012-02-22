@@ -1,19 +1,19 @@
 # Checking domain existance
 is_domain_new() {
     config_type="$1"
-    dom=${2-domain}
+    dom=${2-$domain}
     check_all=$(grep -w $dom $V_USERS/*/*.conf)
     if [ ! -z "$check_all" ]; then
         check_ownership=$(grep -w $dom $V_USERS/$user/*.conf)
         if [ ! -z "$check_ownership" ]; then
             check_type=$(grep -w $dom $V_USERS/$user/$config_type.conf)
             if [ ! -z "$check_type" ]; then
-                echo "Error: $dom exist"
+                echo "Error: domain $dom exist"
                 log_event 'debug' "$E_EXISTS $V_EVENT"
                 exit $E_EXISTS
             fi
         else
-            echo "Error: $dom exist"
+            echo "Error: domain $dom exist"
             log_event 'debug' "$E_EXISTS $V_EVENT"
             exit $E_EXISTS
         fi
@@ -26,7 +26,7 @@ is_domain_valid() {
 
     # Checking result
     if [ -z "$check_domain" ]; then
-        echo "Error: domain not exist"
+        echo "Error: domain $domain not exist"
         log_event 'debug' "$E_NOTEXIST $V_EVENT"
         exit $E_NOTEXIST
     fi
@@ -111,7 +111,7 @@ update_domain_zone() {
 
         # Converting utf records to ascii
         RECORD=$(idn --quiet -a -t "$RECORD")
-        VALUE=$(idn --quiet -a -t "$VALUE")
+        #VALUE=$(idn --quiet -a -t "$VALUE")
         eval echo -e "\"$fields\""|sed -e "s/%quote%/'/g" >> $conf
     done < $V_USERS/$user/dns/$domain
 }
@@ -313,7 +313,7 @@ is_domain_key_empty() {
 
     # Checkng key
     if [ ! -z "$value" ] && [ "$value" != 'no' ]; then
-        echo "Error: value is not empty = $value"
+        echo "Error: ${key//$} is not empty = $value"
         log_event 'debug' "$E_EXISTS $V_EVENT"
         exit $E_EXISTS
     fi

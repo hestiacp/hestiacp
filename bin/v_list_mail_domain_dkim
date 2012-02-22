@@ -1,0 +1,80 @@
+#!/bin/bash
+# info: list mail domain dkim
+# options: user domain [format]
+#
+# The function of obtaining domain dkim files.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+format=${3-shell}
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared.func
+source $V_FUNC/domain.func
+
+# Json function
+json_list_ssl() {
+    echo '{'
+    echo -e "\t\"$domain\": {"
+    echo "        \"PEM\": \"$pem\","
+    echo "        \"PUB\": \"$pub\","
+    echo -e "\t}\n}"
+}
+
+# Shell function
+shell_list_ssl() {
+    if [ ! -z "$pem" ]; then
+        echo -e "$pem"
+    fi
+    if [ ! -z "$pub" ]; then
+        echo -e "\n$pub"
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '2' "$#" 'user domain [format]'
+
+# Checking user
+is_user_valid
+
+# Checking domain exist
+is_domain_valid 'mail'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+if [ -e "$V_USERS/$user/mail/$domain.pem" ]; then
+    pem=$(cat $V_USERS/$user/mail/$domain.pem |sed -e ':a;N;$!ba;s/\n/\\n/g')
+fi
+
+if [ -e "$V_USERS/$user/mail/$domain.pub" ]; then
+    pub=$(cat $V_USERS/$user/mail/$domain.pub |sed -e ':a;N;$!ba;s/\n/\\n/g')
+fi
+
+# Listing domains
+case $format in
+    json)   json_list_ssl ;;
+    plain)  nohead=1; shell_list_ssl ;;
+    shell)  shell_list_ssl ;;
+    *)      check_args '1' '0' '[format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

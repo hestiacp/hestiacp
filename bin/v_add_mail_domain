@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add mail domain
-# options: user domain [antispam] [antivirus]
+# options: user domain [antispam] [antivirus] [dkim] [dkim_size]
 #
 # The function adds MAIL domain.
 
@@ -15,7 +15,9 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 antispam=${3-yes}
-antivirus=${3-yes}
+antivirus=${4-yes}
+dkim=${5-yes}
+dkim_size=${6-512}
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -29,10 +31,10 @@ source $V_FUNC/domain.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '2' "$#" 'user domain [antispam] [antivirus]'
+check_args '2' "$#" 'user domain [antispam] [antivirus] [dkim] [dkim_size]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'antispam' 'antivirus'
+format_validation 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
 
 # Checking dns system is enabled
 is_system_enabled 'MAIL_SYSTEM'
@@ -50,56 +52,61 @@ is_domain_new 'mail'
 is_package_full 'MAIL_DOMAINS'
 
 
-exit
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining variables
-i=1
-ns=$(get_user_value '$NS')
-for nameserver in ${ns//,/ };do
-    eval ns$i=$nameserver
-    i=$((i + 1))
-done
+# Adding domain directory
+mkdir $V_HOME/$user/conf/mail/$domain
+touch $V_HOME/$user/conf/mail/$domain/aliases
+touch $V_HOME/$user/conf/mail/$domain/protection
+touch $V_HOME/$user/conf/mail/$domain/passwd
+chown -R root:mail $V_HOME/$user/conf/mail/$domain
+chmod 770 $V_HOME/$user/conf/mail/$domain
+chmod 660 $V_HOME/$user/conf/mail/$domain*
 
-if [ -z "$soa" ]; then
-    soa="$ns1"
+# Adding antispam protection
+if [ "$antispam" = 'yes' ]; then
+    echo 'antispam' >> $V_HOME/$user/conf/mail/$domain/protection
 fi
 
-# Adding zone to dns dir
-cat $V_DNSTPL/$template.tpl |\
-    sed -e "s/%ip%/$ip/g" \
-        -e "s/%domain_idn%/$domain_idn/g" \
-        -e "s/%domain%/$domain/g" \
-        -e "s/%ns1%/$ns1/g" \
-        -e "s/%ns2%/$ns2/g" \
-        -e "s/%ns3%/$ns3/g" \
-        -e "s/%ns4%/$ns4/g" \
-        -e "s/%ns5%/$ns5/g" \
-        -e "s/%ns6%/$ns6/g" \
-        -e "s/%ns7%/$ns7/g" \
-        -e "s/%ns8%/$ns8/g" \
-        -e "s/%date%/$V_DATE/g" > $V_USERS/$user/dns/$domain
+# Adding antivirus protection
+if [ "$antivirus" = 'yes' ]; then
+    echo 'antivirus' >> $V_HOME/$user/conf/mail/$domain/protection
+fi
 
-# Adding dns.conf record
-dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
-dns_rec="$dns_rec SOA='$soa' SUSPENDED='no' DATE='$V_DATE'"
-echo "$dns_rec" >> $V_USERS/$user/dns.conf
-chmod 660 $V_USERS/$user/dns.conf
+# Adding dkim
+if [ "$dkim" = 'yes' ]; then
+    openssl genrsa -out $V_USERS/$user/mail/$domain.pem $dkim_size 2>/dev/null
+    openssl rsa -pubout -in $V_USERS/$user/mail/$domain.pem \
+        -out $V_USERS/$user/mail/$domain.pub 2>/dev/null
+    chmod 660 $V_USERS/$user/mail/$domain.*
 
-# Adding zone in named.conf
-named="zone \"$domain_idn\" {type master; file"
-named="$named \"$V_HOME/$user/conf/dns/$domain.db\";};"
-echo "$named" >> /etc/named.conf
+    cp $V_USERS/$user/mail/$domain.pem $V_HOME/$user/conf/mail/$domain/dkim.pem
+    chown root:mail $V_HOME/$user/conf/mail/$domain/dkim.pem
+    chmod 660 $V_HOME/$user/conf/mail/$domain/dkim.pem
 
-# Updating domain dns zone
-conf="$V_HOME/$user/conf/dns/$domain.db"
-update_domain_zone
+    # Adding dkim dns records
+    check_dns_domain=$(is_domain_valid 'dns')
+    if [ "$?" -eq 0 ]; then
+        p=$(cat $V_USERS/$user/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
+        record='_domainkey'
+        policy="\"t=y; o=~;\""
+        $V_BIN/v_add_dns_domain_record $user $domain $record TXT "$policy"
 
-chmod 640 $conf
-chown root:named $conf
+        record='mail._domainkey'
+        selector="\"k=rsa\; p=$p\""
+        $V_BIN/v_add_dns_domain_record $user $domain $record TXT "$selector"
+    fi
+fi
+
+# Adding domain to vesta db
+s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
+s="$s ACCOUNTS='0' U_DISK='0' CATCHALL='' SUSPENDED='no' DATE='$V_DATE'"
+echo $s >> $V_USERS/$user/mail.conf
+touch $V_USERS/$user/mail/$domain
+chmod 660 $V_USERS/$user/mail.conf
+chmod 660 $V_USERS/$user/mail/$domain
 
 
 #----------------------------------------------------------#
@@ -107,13 +114,10 @@ chown root:named $conf
 #----------------------------------------------------------#
 
 # Increasing domain value
-increase_user_value "$user" '$U_DNS_DOMAINS'
-
-# Adding task to the vesta pipe
-restart_schedule 'dns'
+increase_user_value "$user" '$U_MAIL_DOMAINS'
 
 # Logging
-log_history "$V_EVENT" "v_delete_dns_domain $user $domain"
+log_history "$V_EVENT" "v_delete_mail_domain $user $domain"
 log_event 'system' "$V_EVENT"
 
 exit

@@ -329,6 +329,26 @@ format_validation() {
         fi
     }
 
+    # Defining format_bit function
+    format_bit() {
+        val="$1"
+        case $val in 
+            128) known='yes';;
+            256) known='yes';;
+            512) known='yes';;
+            768) known='yes';;
+            1024) known='yes';;
+            2048) known='yes';;
+            *)  known='no';;
+        esac
+
+        if [[ "$known" != 'yes' ]]; then
+            echo "Error: $var is out of range"
+            log_event 'debug' "$E_INVALID $V_EVENT"
+            exit $E_INVALID
+        fi
+    }
+
     # Defining format_ext function
     format_ext() {
         val="$1"
@@ -375,14 +395,15 @@ format_validation() {
         case $var in
             antispam)           format_bool "$v" ;;
             antivirus)          format_bool "$v" ;;
-            dom_alias)          format_dom "$v" ;;
             auth_pass)          format_pwd "$v" ;;
             auth_user)          format_usr "$v" ;;
-            ssl)                format_usr "$v" ;;
-            domain)             format_dom "$v" ;;
             database)           format_db  "$v" ;;
             day)                format_mhd "$v" ;;
             db_user)            format_dbu "$v" ;;
+            domain)             format_dom "$v" ;;
+            dom_alias)          format_dom "$v" ;;
+            dkim)               format_bool "$v" ;;
+            dkim_size)          format_bit "$v" ;;
             dvalue)             format_dvl "$v" ;;
             fname)              format_usr "$v" ;;
             job)                format_int "$v" ;;
@@ -415,6 +436,7 @@ format_validation() {
             password)           format_pwd "$v" ;;
             port)               format_int "$v" ;;
             rtype)              format_rcd "$v" ;;
+            ssl)                format_usr "$v" ;;
             shell)              format_sh  "$v" ;;
             soa)                format_dom "$v" ;;
             suspend_url)        format_url "$v" ;;

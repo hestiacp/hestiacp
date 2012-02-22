@@ -65,15 +65,22 @@ ns2=$(get_user_value '$NS2')
 
 # Changing tpl
 update_domain_value 'dns' '$TPL' "$template"
-
 cat $V_DNSTPL/$template.tpl |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
         -e "s/%domain%/$domain/g" \
         -e "s/%ns1%/$ns1/g" \
-        -e "s/%ns2%/$ns2/g" > $V_USERS/$user/dns/$domain
+        -e "s/%ns2%/$ns2/g" \
+        -e "s/%ns3%/$ns3/g" \
+        -e "s/%ns4%/$ns4/g" \
+        -e "s/%ns5%/$ns5/g" \
+        -e "s/%ns6%/$ns6/g" \
+        -e "s/%ns7%/$ns7/g" \
+        -e "s/%ns8%/$ns8/g" \
+        -e "s/%date%/$V_DATE/g" > $V_USERS/$user/dns/$domain
 
 # Updating zone
+conf="$V_HOME/$user/conf/dns/$domain.db"
 update_domain_zone
 
 

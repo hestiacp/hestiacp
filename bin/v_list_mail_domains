@@ -1,0 +1,60 @@
+#!/bin/bash
+# info: list mail domains
+# options user [format]
+#
+# The function of obtaining the list of all user domains.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+format=${2-shell}
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_FUNC/shared.func
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '1' "$#" 'user [format]'
+
+# Checking argument format
+format_validation 'user'
+
+# Checking user
+is_user_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf=$V_USERS/$user/mail.conf
+
+# Defining fileds to select
+fields="\$DOMAIN \$ANTIVIRUS \$ANTISPAM \$DKIM \$ACCOUNTS \$U_DISK \$CATCHALL"
+fields="$fields \$SUSPENDED \$DATE"
+
+# Listing domains
+case $format in 
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell) fields='$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK $DATE';
+            shell_list | column -t ;;
+    *)      check_args '1' '0' 'user [format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

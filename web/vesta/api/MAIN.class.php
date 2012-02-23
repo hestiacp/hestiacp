@@ -18,6 +18,7 @@ class MAIN extends AjaxHandler
 {
 
     protected $templates = null;
+    protected $data = array();
 
     public function aboutExecute($request)
     {
@@ -165,7 +166,9 @@ MAIL;
     public function getInitialExecute(Request $request) 
     {
         $user = VestaSession::getInstance()->getUser();
+
         $global_data = array();
+
         $totals = array(
                     'USER'       => array('total' => 0, 'blocked' => 0),
                     'WEB_DOMAIN' => array('total' => 0, 'blocked' => 0),
@@ -175,20 +178,81 @@ MAIL;
                     'IP'         => array('total' => 0, 'blocked' => 0),
                     'CRON'       => array('total' => 0, 'blocked' => 0)                
                 );
-    
+
+        $params = Vesta::execute(Vesta::V_LIST_SYS_USER, array('USER' => $user['uid']), self::JSON);
+        $init = $params['data'][$user['uid']];
+
+
+        $totals = array(
+                    'USER'       => array(  'total' => (int)$init['U_USERS'],        
+                                            'blocked' => (int)$init['SUSPENDED_USERS']),
+
+                    'WEB_DOMAIN' => array(  'total' => (int)$init['U_WEB_DOMAIN'],
+                                            'ssl' => (int)$init['U_WEB_SSL'], 
+                                            'alias' => (int)$init['U_WEB_ALIASES'],
+                                            'blocked' => (int)$init['SUSPENDED_WEB']),
+
+                    'MAIL'       => array(  'total' => (int)$init['U_MAIL_DOMAINS'], 
+                                            'accounts' => (int)$init['U_MAIL_ACCOUNTS'], 
+                                            'blocked' => (int)$init['SUSPENDED_MAIL']),
+
+                    'DB'         => array(  'total' => (int)$init['U_DATABASES'],    
+                                            'blocked' => (int)$init['SUSPENDED_DB']),
+
+                    'DNS'        => array(  'total' => (int)$init['U_DNS_DOMAINS'],
+                                            'records' => (int)$init['U_DNS_RECORDS'],
+                                            'blocked' => (int)$init['SUSPENDED_DNS']),
+
+                    'IP'         => array(  'total' => (int)$init['IP_AVAIL'],
+                                            'owned' => (int)$init['IP_OWNED']),
+
+                    'CRON'       => array(  'total' => (int)$init['U_CRON_JOBS'],
+                                            'blocked' => (int)$init['SUSPENDED_CRON'])
+                );
+
+
         // users
         $rs = Vesta::execute(Vesta::V_LIST_SYS_USERS, null, self::JSON);
         $data_user = $rs['data'];
         $global_data['users'] = array();
         foreach ($data_user as $login_name => $usr) {
-            $totals['USER']['total'] += 1;
+//            $totals['USER']['total'] += 1;
             if ($usr['SUSPENDED'] != 'yes') {		
-                $global_data['users'][$login_name] = $login_name;
+                $this->data['users'] = array($login_name => $login_name);
             }
             else {
-                $totals['USER']['blocked'] += 1;
+//                $totals['USER']['blocked'] += 1;
             }            
         }
+
+
+        // ip
+        $global_data['ips'] = array();
+        $rs = Vesta::execute(Vesta::V_LIST_SYS_IPS, null, self::JSON);
+        $data_ip = $rs['data'];
+        foreach ($data_ip as $ip => $obj) {
+//            $totals['IP']['total'] += 1;
+            $this->data['ips'] = array($ip => $ip);
+        }
+
+
+        $reply = array(
+                    'auth_user'  => array('uid' => $user, 'admin' => !!VestaSession::getUserRole()),
+                    'user_data'  => array('BANDWIDTH' => (int)$init['BANDWIDTH'], 'DISK_QUOTA' => (int)$init['DISK_QUOTA']),
+                    'WEB_DOMAIN' => $this->getWebDomainParams(),
+                    'CRON'       => $this->getCronParams(),
+                    'IP'         => $this->getIpParams(),
+                    'DNS'        => $this->getDnsParams(),
+                    'DB'         => $this->getDbParams(),
+                    'USERS'      => $this->getUsersParams(),
+                    'totals'     => $totals,
+                    'PROFILE'    => $user,
+                    'real_user'  => $_SESSION['real_user'] ? $_SESSION['real_user'] : NULL
+                );
+
+        
+        return $this->reply(true, $reply);
+
 
         // web_domains
         $rs = Vesta::execute(Vesta::V_LIST_WEB_DOMAINS, array('USER' => $user['uid']), self::JSON);
@@ -241,9 +305,9 @@ MAIL;
                     'user_data'  => array('BANDWIDTH' => (int)$bandwidth, 'DISK_QUOTA' => (int)$disk_quota),
                     'WEB_DOMAIN' => $this->getWebDomainParams($data_web_domain, $global_data),
                     'CRON'       => $this->getCronParams(),
-                    'IP'         => $this->getIpParams($data_ip, $global_data),
+                    'IP'         => $this->getIpParams(),
                     'DNS'        => $this->getDnsParams(),
-                    'DB'         => $this->getDbParams($data_db),
+                    'DB'         => $this->getDbParams(),
                     'USERS'      => $this->getUsersParams($data_user),
                     'totals'     => $totals,
                     'PROFILE'    => $user,
@@ -277,28 +341,22 @@ MAIL;
      * @params array $data
      * @return array
      */
-    public function getWebDomainParams($data, $global_data)
+    public function getWebDomainParams()
     {
         $user = $this->getLoggedUser();
-        $ips = array();
-        $result	= Vesta::execute(Vesta::V_LIST_USER_IPS, array('USER' => $user['uid']), self::JSON);
-        foreach ($result['data'] as $sys_ip => $ip_data) {
-            $ips[$sys_ip] = $sys_ip;
-        }
-
-        if (empty($ips)) {
-            $ips['No available IP'] = 'No available IP';
+        if (empty($this->data['ips'])) {
+            $this->data['ips']['No available IP'] = 'No available IP';
         }
 
         return array(
                 'TPL' => $this->getTemplates(),
                 'ALIAS' => array(),
                 'STAT'  => array(
-			    'none'  => 'none',
-                            'webalizer' => 'webalizer',
-                            'awstats'   => 'awstats'
-                          ),
-                'IP' => $ips
+    			    'none'  => 'none',
+                    'webalizer' => 'webalizer',
+                    'awstats'   => 'awstats'
+                ),
+                'IP' => $this->data['ips']
            );
     }
     
@@ -319,23 +377,22 @@ MAIL;
      * @params array $data
      * @return array
      */
-    public function getIpParams($data = array(), $global_data = array())
+    public function getIpParams()
     {
-        $ifaces  = array();                                                                                                                                                                                                            
-        $result = Vesta::execute(Vesta::V_LIST_SYS_INTERFACES, array(Config::get('response_type')));                                                                                                                                  
-                                                                                                                                                                                                                                      
-        foreach ($result['data'] as $iface) {                                                                                                                                                                                         
-            $ifaces[$iface] = $iface;                                                                                                                                                                                                  
-        }                
+        $ifaces  = array();
+        $result = Vesta::execute(Vesta::V_LIST_SYS_INTERFACES, array(Config::get('response_type')));
+        foreach ($result['data'] as $iface) {
+            $this->data['ifaces'] = array($iface => $iface);
+        }
 	
         return array(
-                'SYS_USERS' => $global_data['users'],
+                'SYS_USERS' => $this->data['users'],
                 'STATUSES' => array(
                                 'shared'    => 'shared',
                                 'exclusive' => 'exclusive'
                               ),
-                'INTERFACES' => $ifaces,
-                'OWNER' => $global_data['users'],
+                'INTERFACES' => $this->data['ifaces'],
+                'OWNER' => $this->data['users'],
                 'MASK' => array(
                             '255.255.255.0'   => '255.255.255.0',
                             '255.255.255.128' => '255.255.255.128',
@@ -359,22 +416,23 @@ MAIL;
     {
         $dns_templates = array();
         $user = $this->getLoggedUser();
+
         $this->templates = array();
         $result = Vesta::execute(Vesta::V_LIST_DNS_TEMPLATES, null, self::JSON);
         // TODO: handle errors!
         foreach ($result['data'] as $tpl => $description) {
-            $dns_templates[$tpl] = $description;
+            $this->data['dns_templates'] = array($tpl => $description);
         }
 
         return  array(
-                'IP' => @$data['ips'],
-                'TPL' => $dns_templates,
+                'IP' => $this->data['ips'],
+                'TPL' => $this->data['dns_templates'],
                 'EXP' => array(),
                 'SOA' => array(),
                 'TTL' => array(),
                 'record' => array(
                                 'RECORD' => array(),
-                                'RECORD_TYPE' => array('A' => 'A', 'NS' => 'NS', 'MX' => 'MX', 'TXT' => 'TXT'),
+                                'RECORD_TYPE' => array('A' => 'A', 'NS' => 'NS', 'MX' => 'MX', 'TXT' => 'TXT', 'MAIL' => 'MAIL'),
                                 'RECORD_VALUE' => array()
                             )
             );
@@ -386,11 +444,11 @@ MAIL;
      * @params array $data
      * @return array
      */
-    public function getDbParams($data = array())
+    public function getDbParams()
     {
         $db_types = $this->getDBTypes();
         $db_hosts = $this->getDBHosts();
-        $result = Vesta::execute(Vesta::V_LIST_DNS_TEMPLATES, null, self::JSON);
+
         return array(
                     'TYPE'      => $db_types,
                     'HOST'      => $db_hosts,
@@ -467,16 +525,15 @@ MAIL;
      * @params array $data
      * @return array
      */
-    public function getUsersParams($data = array(), $global_data = array())
+    public function getUsersParams()
     {        
-        $pckg = array();
-        // json
-        $result = Vesta::execute(Vesta::V_LIST_USER_PACKAGES, null, self::JSON);        
+        $result = Vesta::execute(Vesta::V_LIST_USER_PACKAGES, null, self::JSON);
         foreach ($result['data'] as $pckg_name => $pckg_data) {
-            $pckg[$pckg_name] = $pckg_name;
+            $this->data['user_packages'] = array($pckg_name => $pckg_name);
         }
+
         return array(
-                'PACKAGE'   => $pckg,
+                'PACKAGE'   => $this->data['user_packages'],
                 'SHELL'     => array(
                                 'sh'       => 'sh',
                                 'bash'     => 'bash',

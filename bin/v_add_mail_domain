@@ -65,6 +65,9 @@ chown -R root:mail $V_HOME/$user/conf/mail/$domain
 chmod 770 $V_HOME/$user/conf/mail/$domain
 chmod 660 $V_HOME/$user/conf/mail/$domain*
 
+# Adding symlink
+ln -s $V_HOME/$user/conf/mail/$domain /etc/exim/domains/
+
 # Adding antispam protection
 if [ "$antispam" = 'yes' ]; then
     echo 'antispam' >> $V_HOME/$user/conf/mail/$domain/protection

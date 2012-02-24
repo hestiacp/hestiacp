@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: add mail domain catchall account
-# options: user domain email
+# info: delete mail domain dkim support
+# options: user domain [dkim_size]
 #
-# The function enables catchall account for incomming emails. 
+# The function delete DKIM domain pem.
 
 
 #----------------------------------------------------------#
@@ -13,8 +13,6 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
-email="$3"
 
 # Importing variables
 source $VESTA/conf/vars.conf
@@ -28,10 +26,10 @@ source $V_FUNC/domain.func
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '3' "$#" 'user domain email'
+check_args '2' "$#" 'user domain'
 
 # Checking argument format
-format_validation 'user' 'domain' 'email'
+format_validation 'user' 'domain'
 
 # Checking dns system is enabled
 is_system_enabled 'MAIL_SYSTEM'
@@ -49,27 +47,38 @@ is_domain_valid 'mail'
 is_domain_suspended 'mail'
 
 # Checking errorlog is not added
-is_domain_key_empty 'mail' '$CATCHALL'
+is_domain_value_exist 'mail' '$DKIM'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding catchall alias
-sed -i "/*@demo.vestacp.com:/d" $V_HOME/$user/conf/mail/$domain/aliases
-echo "*@demo.vestacp.com:$email" >> $V_HOME/$user/conf/mail/$domain/aliases
+# Generating dkim
+rm -f $V_USERS/$user/mail/$domain.pem
+rm -f $V_USERS/$user/mail/$domain.pub
+rm -f $V_HOME/$user/conf/mail/$domain/dkim.pem
+
+# Checking dns domain
+check_dns_domain=$(is_domain_valid 'dns')
+if [ "$?" -eq 0 ]; then
+    records=$($V_BIN/v_list_dns_domain_records $user $domain plain)
+    dkim_records=$(echo "$records" |grep -w '_domainkey'|cut -f 1 -d ' ')
+    for id in $dkim_records; do
+        $V_BIN/v_delete_dns_domain_record $user $domain $id
+    done
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding antispam in config
-update_domain_value 'mail' '$CATCHALL' "$email"
+# Adding dkim in config
+update_domain_value 'mail' '$DKIM' 'no'
 
 # Logging
-log_history "$V_EVENT" "v_delete_mail_domain_catchall $user $domain"
+log_history "$V_EVENT" "v_add_mail_domain_dkim $user $domain"
 log_event 'system' "$V_EVENT"
 
 exit

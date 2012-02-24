@@ -2,7 +2,7 @@
 # info: add mail domain antivirus support
 # options: user domain
 #
-# The function enables clamav for incomming emails.
+# The function enables clamav scan for incomming emails.
 
 
 #----------------------------------------------------------#
@@ -47,7 +47,7 @@ is_domain_valid 'mail'
 # Checking domain is not suspened
 is_domain_suspended 'mail'
 
-# Checking errorlog is not added
+# Checking current value
 is_domain_key_empty 'mail' '$ANTIVIRUS'
 
 
@@ -55,7 +55,7 @@ is_domain_key_empty 'mail' '$ANTIVIRUS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding antispam key to config
+# Adding antivirus key to config
 if [ -z "$(grep 'virus' $V_HOME/$user/conf/mail/$domain/protection)" ]; then
     echo 'antivirus' >> $V_HOME/$user/conf/mail/$domain/protection
 fi
@@ -64,7 +64,7 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding antispam in config
+# Adding antivirus in config
 update_domain_value 'mail' '$ANTIVIRUS' 'yes'
 
 # Logging

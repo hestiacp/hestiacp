@@ -63,6 +63,7 @@ fi
 sort_dns_records
 
 # Updating zone
+conf="$V_HOME/$user/conf/dns/$domain.db"
 update_domain_zone
 
 

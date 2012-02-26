@@ -1,0 +1,75 @@
+#!/bin/bash
+# info: change mail domain catchall email
+# options: user domain email
+#
+# The function changes mail domain cathcall.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+domain_idn=$(idn -t --quiet -a "$domain")
+email="$3"
+
+# Importing variables
+source $VESTA/conf/vars.conf
+source $V_CONF/vesta.conf
+source $V_FUNC/shared.func
+source $V_FUNC/domain.func
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '3' "$#" 'user domain email'
+
+# Checking argument format
+format_validation 'user' 'domain' 'email'
+
+# Checking dns system is enabled
+is_system_enabled 'MAIL_SYSTEM'
+
+# Checking user
+is_user_valid
+
+# Checking user is active
+is_user_suspended
+
+# Checking domain
+is_domain_valid 'mail'
+
+# Checking domain is not suspened
+is_domain_suspended 'mail'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get old catchall 
+catchall=$(get_domain_value 'mail' '$CATCHALL')
+
+# Change cathcall alias
+sed -i "/*@demo.vestacp.com:/d" $V_HOME/$user/conf/mail/$domain/aliases
+echo "*@demo.vestacp.com:$email" >> $V_HOME/$user/conf/mail/$domain/aliases
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Change catchall in config
+update_domain_value 'mail' '$CATCHALL' "$email"
+
+# Logging
+log_history "$V_EVENT" "v_change_mail_domain_catchall $user $domain $catchall"
+log_event 'system' "$V_EVENT"
+
+exit

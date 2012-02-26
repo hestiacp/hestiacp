@@ -85,7 +85,7 @@ check_args '2' "$#" 'user domain [format]'
 is_user_valid
 
 # Checking domain exist
-is_domain_valid 'web'
+is_domain_valid 'mail'
 
 
 #----------------------------------------------------------#

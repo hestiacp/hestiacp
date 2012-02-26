@@ -78,6 +78,7 @@ for user in $user_list; do
     U_MAIL_ACCOUNTS=0
     U_DATABASES=0
     U_CRON_JOBS=0
+    U_BACKUPS=0
 
     # New IFS
     IFS=$'\n'
@@ -185,7 +186,7 @@ for user in $user_list; do
     update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
     update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
     update_user_value "$user" '$U_CRON_JOBS' "$U_CRON_JOBS"
-
+    update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 done
 
 

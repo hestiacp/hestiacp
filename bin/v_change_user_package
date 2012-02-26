@@ -41,13 +41,13 @@ is_package_avalable() {
     done
 
     # Comparing user data with package
-    if [ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ] ||\
-       [ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ] ||\
-       [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ] ||\
-       [ "$DATABASES" -lt "$U_DATABASES" ] ||\
-       [ "$CRON_JOBS" -lt "$U_CRON_JOBS" ] ||\
-       [ "$DISK_QUOTA" -lt "$U_DISK" ] ||\
-       [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]; then
+    if [[ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ]] ||\
+       [[ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ]] ||\
+       [[ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ]] ||\
+       [[ "$DATABASES" -lt "$U_DATABASES" ]] ||\
+       [[ "$CRON_JOBS" -lt "$U_CRON_JOBS" ]] ||\
+       [[ "$DISK_QUOTA" -lt "$U_DISK" ]] ||\
+       [[ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]]; then
         echo "Error: Upgrade package"
         log_event 'debug' "$E_LIMIT $v_log"
         exit $E_LIMIT
@@ -108,6 +108,7 @@ U_MAIL_DOMAINS='$U_MAIL_DOMAINS'
 U_MAIL_ACCOUNTS='$U_MAIL_ACCOUNTS'
 U_DATABASES='$U_DATABASES'
 U_CRON_JOBS='$U_CRON_JOBS'
+U_BACKUPS='$U_BACKUPS'
 DATE='$DATE'" > $V_USERS/$user/user.conf
 }
 

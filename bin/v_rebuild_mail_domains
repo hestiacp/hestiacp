@@ -122,6 +122,17 @@ for domain in $domains; do
         fi
     fi
 
+    # Adding antispam protection
+    if [ "$SUSPENDED" != 'yes' ]; then
+        ln -s $V_HOME/$user/conf/mail/$domain /etc/exim/domains/
+    fi
+
+    if [ ! -e $V_HOME/$user/mail/$domain ]; then
+        mkdir $V_HOME/$user/mail/$domain
+    fi
+    chown $user:mail $V_HOME/$user/mail/$domain
+    chmod 770 $V_HOME/$user/mail/$domain
+
     # Rebuild counters
     U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
     U_DISK_MAIL=$((U_DISK_MAIL + U_DISK))

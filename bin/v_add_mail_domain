@@ -64,6 +64,9 @@ touch $V_HOME/$user/conf/mail/$domain/passwd
 chown -R root:mail $V_HOME/$user/conf/mail/$domain
 chmod 770 $V_HOME/$user/conf/mail/$domain
 chmod 660 $V_HOME/$user/conf/mail/$domain*
+mkdir $V_HOME/$user/mail/$domain
+chown $user:mail $V_HOME/$user/mail/$domain
+chmod 770 $V_HOME/$user/mail/$domain
 
 # Adding symlink
 ln -s $V_HOME/$user/conf/mail/$domain /etc/exim/domains/

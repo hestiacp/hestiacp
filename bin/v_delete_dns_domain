@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: delite dns domain
+# info: delete dns domain
 # options: user domain
 #
 # The function for deleting DNS domain. By deleting it all records will also be
@@ -49,9 +49,10 @@ is_domain_valid 'dns'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get template name
+# Get domain values
 tpl_name=$(get_domain_value 'dns' '$TPL')
 old_ip=$(get_domain_value 'dns' '$IP')
+records=$(wc -l $V_USERS/$user/dns/$domain|cut -f 1 -d ' ')
 
 # Deleting domain in named.conf
 rm_string=$(grep -n /conf/dns/$domain.db $named_conf |cut -d : -f 1)
@@ -68,11 +69,13 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Deleting domain
+sed -i "/DOMAIN='$domain'/ d" $V_USERS/$user/dns.conf
+rm -f $V_USERS/$user/dns/$domain
+
 # Decreasing domain value
 decrease_user_value "$user" '$U_DNS_DOMAINS'
-
-# Deleting domain
-del_dns_domain
+decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Adding task to the vesta pipe
 restart_schedule 'dns'

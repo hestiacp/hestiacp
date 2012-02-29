@@ -115,7 +115,7 @@ rm -f /var/log/httpd/domains/$domain.error*
 #----------------------------------------------------------#
 
 # Deleting domain
-del_web_domain
+sed -i "/DOMAIN='$domain'/ d" $V_USERS/$user/web.conf
 
 # Checking last ssl domain
 ssl_dom=$(grep "SSL='yes'" $V_USERS/$user/web.conf | wc -l)

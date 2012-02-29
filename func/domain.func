@@ -40,7 +40,7 @@ is_domain_suspended() {
 
     # Checking result
     if [ ! -z "$check_domain" ]; then
-        echo "Error: domain suspended"
+        echo "Error: domain $domain is suspended"
         log_event 'debug' "$E_SUSPENDED $V_EVENT"
         exit $E_SUSPENDED
     fi
@@ -408,34 +408,6 @@ del_web_config() {
     # Deleting lines from config
     sed -i "$top_line,$bottom_line d" $conf
 }
-
-del_dns_domain() {
-    conf="$V_USERS/$user/dns.conf"
-
-    # Parsing domains
-    string=$( grep -n "DOMAIN='$domain'" $conf | cut -f 1 -d : )
-    if [ -z "$string" ]; then
-        echo "Error: parse error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
-        exit $E_PARSING
-    fi
-    sed -i "$string d" $conf
-    rm -f $V_USERS/$user/dns/$domain
-}
-
-del_web_domain() {
-    conf="$V_USERS/$user/web.conf"
-
-    # Parsing domains
-    string=$( grep -n "DOMAIN='$domain'" $conf | cut -f 1 -d : )
-    if [ -z "$string" ]; then
-        echo "Error: parse error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
-        exit $E_PARSING
-    fi
-    sed -i "$string d" $conf
-}
-
 
 dom_clear_search(){
     # Defining delimeter

@@ -50,7 +50,7 @@ domains=$(dom_clear_search)
 
 # Starting suspend loop
 for domain in $domains; do
-    $V_BIN/v_suspend_web_domain "$user" "$domain" "$url"
+    $V_BIN/v_suspend_dns_domain "$user" "$domain"
 done
 
 

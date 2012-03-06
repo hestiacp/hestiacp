@@ -15,10 +15,9 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -29,13 +28,13 @@ source $V_FUNC/domain.func
 check_args '2' "$#" 'user domain'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -49,7 +48,7 @@ is_domain_suspended 'web'
 #----------------------------------------------------------#
 
 # Defining home directory
-home_dir="$V_HOME/$user/web/$domain/"
+home_dir="$HOMEDIR/$user/web/$domain/"
 
 # Checking home directory exist
 if [ -e "$home_dir" ]; then
@@ -65,10 +64,9 @@ fi
 update_domain_value 'web' '$U_DISK' "$disk_usage"
 
 # Recalculating user disk space
-disk_size=$(get_usr_disk)
-update_user_value "$user" '$U_DISK' "$disk_size"
+recalc_user_disk_usage
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

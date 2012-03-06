@@ -18,10 +18,9 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -32,16 +31,16 @@ source $V_FUNC/domain.func
 check_args '2' "$#" 'user domain'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -58,8 +57,8 @@ is_domain_value_exist 'web' '$CGI'
 #----------------------------------------------------------#
 
 get_domain_values 'web'
-tpl_file="$V_WEBTPL/apache_$TPL.tpl"
-conf="$V_HOME/$user/conf/web/httpd.conf"
+tpl_file="$WEBTPL/apache_$TPL.tpl"
+conf="$HOMEDIR/$user/conf/web/httpd.conf"
 CGI='no'
 
 # Preparing domain values for the template substitution
@@ -71,8 +70,8 @@ add_web_config
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-    conf="$V_HOME/$user/conf/web/shttpd.conf"
+    tpl_file="$WEBTPL/apache_$TPL.stpl"
+    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
     del_web_config
     add_web_config
 fi
@@ -86,10 +85,10 @@ fi
 update_domain_value 'web' '$CGI' 'no'
 
 # Adding task to the vesta pipe
-restart_schedule 'web'
+$BIN/v_restart_web
 
 # Logging
-log_history "$V_EVENT" "v_add_web_domain_cgi $user $domain"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_add_web_domain_cgi $user $domain"
+log_event "$OK" "$EVENT"
 
 exit

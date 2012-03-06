@@ -13,10 +13,9 @@
 user=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/db.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
@@ -27,13 +26,13 @@ source $V_FUNC/db.func
 check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking db system is enabled
 is_system_enabled 'DB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -41,7 +40,7 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/db.conf"
+conf="$USER_DATA/db.conf"
 
 # Defining fileds to select
 field='$DB'
@@ -54,7 +53,7 @@ databases=$(db_clear_search)
 
 # Starting suspend loop
 for database in $databases; do
-    $V_BIN/v_unsuspend_db_base "$user" "$database"
+    $BIN/v_unsuspend_db_base "$user" "$database"
 done
 
 
@@ -63,6 +62,6 @@ done
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

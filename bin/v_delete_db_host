@@ -15,10 +15,9 @@ type=$1
 host=$2
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/db.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
@@ -29,13 +28,13 @@ source $V_FUNC/db.func
 check_args '2' "$#" 'type host'
 
 # Checking argument format
-format_validation 'host'
+validate_format 'host'
 
 # Checking db system is enabled
 is_system_enabled 'DB_SYSTEM'
 
 # Checking db type
-is_type_valid 'db' "$type"
+is_type_valid "$DB_SYSTEM" "$type"
 
 # Checking host existance
 is_db_host_valid
@@ -57,6 +56,6 @@ del_dbhost_vesta
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

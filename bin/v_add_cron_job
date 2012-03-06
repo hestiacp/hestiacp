@@ -20,42 +20,24 @@ wday=$6
 command=$7
 job=$8
 
-# Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/cron.func
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '7' "$#" 'user min hour day month wday command [job]'
-
-# Checking argument format
-format_validation 'user' 'min' 'hour' 'day' 'month' 'wday' 'command'
-
-# Checking cron system
-is_system_enabled 'CRON_SYSTEM'
-
-# Checking user
-is_user_valid
-
-# Checking package
+validate_format 'user' 'min' 'hour' 'day' 'month' 'wday' 'command'
+is_system_enabled $CRON_SYSTEM
+is_object_valid 'user' 'USER' "$user"
+is_object_suspended 'user' 'USER' "$user"
 is_package_full 'CRON_JOBS'
-
-# Get str position
-if [ -z "$job" ]; then
-    job=$(get_next_cron_string)
-fi
-
-# Checking id format
-format_validation 'job'
-
-# Checking job id
-is_cron_job_free
+get_next_cronjob
+validate_format 'job'
+is_object_free 'cron' 'JOB' "$job"
 
 
 #----------------------------------------------------------#
@@ -63,19 +45,20 @@ is_cron_job_free
 #----------------------------------------------------------#
 
 # Concatenating cron string
-command=$(echo $command|sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
-v_str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month"
-v_str="$v_str' WDAY='$wday' CMD='$command' SUSPENDED='no' DATE='$V_DATE'"
+command=$(echo $command | sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
+str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month WDAY='$wday'"
+str="$v_str' CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 
 # Adding to crontab
-echo "$v_str">>$V_USERS/$user/cron.conf
+echo "$str" >> $VESTA/data/users/$user/cron.conf
 
-chmod 660 $V_USERS/$user/cron.conf
+# Chaning permissions
+chmod 660 $VESTA/data/users/$user/cron.conf
 
-# Sorting jobs by id
+# Sort jobs by id number
 sort_cron_jobs
 
-# Sync system cron with user
+# Sync cronjobs with system crond
 sync_cron_jobs
 
 
@@ -84,13 +67,13 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Increasing cron value
-increase_user_value "$user" '$U_CRON_JOBS'
+increase_user_value $user '$U_CRON_JOBS'
 
-# Adding task to the vesta pipe
-restart_schedule 'cron'
+# Restart crond
+$BIN/v_restart_cron
 
 # Logging
-log_history "$V_EVENT" "v_delete_cron_job $user $job"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT"
+log_event "$OK" "$EVENT"
 
 exit

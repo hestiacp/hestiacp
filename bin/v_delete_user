@@ -14,12 +14,11 @@
 user=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
-source $V_FUNC/db.func
-source $V_FUNC/ip.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/db.sh
+source $VESTA/func/ip.sh
 
 
 #----------------------------------------------------------#
@@ -30,13 +29,13 @@ source $V_FUNC/ip.func
 check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking user admin
 if [ "$user" = 'admin' ]; then
@@ -49,8 +48,8 @@ fi
 
 # Checking web system is enabled
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $V_BIN/v_unsuspend_web_domains $user
-    $V_BIN/v_delete_web_domains $user
+    $BIN/v_unsuspend_web_domains $user
+    $BIN/v_delete_web_domains $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -59,8 +58,8 @@ fi
 
 # Checking dns system is enabled
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $V_BIN/v_unsuspend_dns_domains $user
-    $V_BIN/v_delete_dns_domains $user
+    $BIN/v_unsuspend_dns_domains $user
+    $BIN/v_delete_dns_domains $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -69,8 +68,8 @@ fi
 
 # Checking mail system is enabled
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    $V_BIN/v_unsuspend_mail_domains $user
-    $V_BIN/v_del_mail_domains $user
+    $BIN/v_unsuspend_mail_domains $user
+    $BIN/v_del_mail_domains $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -79,8 +78,8 @@ fi
 
 # Checking db system is enabled
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-    $V_BIN/v_unsuspend_db_bases $user
-    $V_BIN/v_delete_db_dbases $user
+    $BIN/v_unsuspend_db_bases $user
+    $BIN/v_delete_db_dbases $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -88,41 +87,23 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
 fi
 
 # Checking ip
-$V_BIN/v_delete_user_ips "$user"
+$BIN/v_delete_user_ips "$user"
 rv="$?"
 if [ "$rv" -ne '0' ]; then
     exit $rv
 fi
 
 # Deleteing user pipes
-diskp=$(grep -n " $user$" $V_QUEUE/disk.pipe|cut -d : -f 1|sort -n -r)
-trafp=$(grep -n " $user$" $V_QUEUE/traffic.pipe|cut -d : -f 1|sort -n -r)
-statp=$(grep -n "/$user/" $V_QUEUE/stats.pipe|cut -d : -f 1|sort -n -r)
-
-if [ ! -z "$diskp" ]; then
-    for str in $diskp; do
-        sed -i "$str d" $V_QUEUE/disk.pipe
-    done
-fi
-
-if [ ! -z "$trafp" ]; then
-    for str in $trafp; do
-        sed -i "$str d" $V_QUEUE/traffic.pipe
-    done
-fi
-
-if [ ! -z "$statp" ]; then
-    for str in $statp; do
-        sed -i "$str d" $V_QUEUE/stats.pipe
-    done
-fi
+sed -i "/v_update_db_bases_disk $user$/d" $VESTA/data/queue/disk.pipe
+sed -i "/v_update_web_domains_traff $user$/d" $VESTA/data/queue/traffic.pipe
+sed -i "/v_update_web_domain_stat $user /d" $VESTA/data/queue/stats.pipe
 
 # Removing system user
 /usr/sbin/userdel -f $user
-rm -rf $V_HOME/$user
+rm -rf $HOMEDIR/$user
 rm -f /var/spool/mail/$user
 rm -f /var/spool/cron/$user
-rm -rf $V_USERS/$user
+rm -rf $USER_DATA
 
 # Updating admin counter
 if [ "$user" != 'admin' ]; then
@@ -135,6 +116,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

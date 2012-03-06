@@ -18,9 +18,8 @@ updates=''
 source /etc/profile.d/vesta.sh
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -40,12 +39,12 @@ if [ "$version" != "$VERSION" ]; then
     # Downloading version tree
     upd_host="yum.vestacp.com"
     wget -O "/tmp/versions" http://$V_UPD_HOST/upd_scripts/version_tree.txt \
-        >/dev/null 2>&1
+        &>/dev/null
 
     # Checking download result
     if [ "$?" -ne "0" ]; then
         echo "Error: version tree update failed"
-        log_event 'debug' "$E_UPDATE $V_EVENT"
+        log_event 'debug' "$E_UPDATE $EVENT"
         exit $E_UPDATE
     fi
 
@@ -82,25 +81,25 @@ if [ "$version" != "$VERSION" ]; then
 
     # Executing update scripts
     if [ ! -z "$updates" ]; then
-        mkdir $V_BIN/updates >/dev/null 2>&1
+        mkdir $BIN/updates &>/dev/null
 
         for update in $updates; do
-            wget -O $V_BIN/updates/$update.sh \
-                http://$V_UPD_HOST/upd_scripts/$update.sh >/dev/null 2>&1
+            wget -O $BIN/updates/$update.sh \
+                http://$V_UPD_HOST/upd_scripts/$update.sh &>/dev/null
 
             # Checking download result
             if [ "$?" -ne "0" ]; then
                 echo "Error: version tree update failed"
-                log_event 'debug' "$E_UPDATE $V_EVENT"
+                log_event 'debug' "$E_UPDATE $EVENT"
                 exit $E_UPDATE
             fi
-            bash  $V_BIN/updates/$update.sh
+            bash  $BIN/updates/$update.sh
         done
-        rm -rf $V_BIN/updates
+        rm -rf $BIN/updates
     fi
 
     # Updating config version
-    sed -i "s/VERSION='$VERSION'/VERSION='$version'/g" $V_CONF/vesta.conf
+    sed -i "s/VERSION='$VERSION'/VERSION='$version'/g" $VESTA/conf/vesta.conf
 fi
 
 
@@ -109,6 +108,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

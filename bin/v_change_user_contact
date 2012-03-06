@@ -14,9 +14,8 @@ user=$1
 email=$2
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -27,13 +26,13 @@ source $V_FUNC/shared.func
 check_args '2' "$#" 'user email'
 
 # Checking argument format
-format_validation 'user' 'email'
+validate_format 'user' 'email'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -57,7 +56,7 @@ sed -i "$str s/$old_email/$email/g" /etc/passwd
 #----------------------------------------------------------#
 
 # Logging
-log_history "$V_EVENT" "$V_SCRIPT $user $old_email"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "$SCRIPT $user $old_email"
+log_event "$OK" "$EVENT"
 
 exit

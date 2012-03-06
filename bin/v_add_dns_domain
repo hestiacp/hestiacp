@@ -26,10 +26,9 @@ soa=$6
 ttl=${7-14400}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -40,16 +39,16 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain ip [template] [exp] [soa] [ttl]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'ip' 'template' 'exp' 'ttl'
+validate_format 'user' 'domain' 'ip' 'template' 'exp' 'ttl'
 
 # Checking dns system is enabled
 is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain
 is_domain_new 'dns'
@@ -58,8 +57,7 @@ is_domain_new 'dns'
 is_package_full 'DNS_DOMAINS'
 
 # Checking template
-is_template_valid 'dns'
-
+is_dns_template_valid
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -78,7 +76,7 @@ if [ -z "$soa" ]; then
 fi
 
 # Adding zone to dns dir
-cat $V_DNSTPL/$template.tpl |\
+cat $DNSTPL/$template.tpl |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
         -e "s/%domain%/$domain/g" \
@@ -90,23 +88,23 @@ cat $V_DNSTPL/$template.tpl |\
         -e "s/%ns6%/$ns6/g" \
         -e "s/%ns7%/$ns7/g" \
         -e "s/%ns8%/$ns8/g" \
-        -e "s/%date%/$V_DATE/g" > $V_USERS/$user/dns/$domain
+        -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain
 
-records="$(wc -l $V_USERS/$user/dns/$domain)"
+records="$(wc -l $USER_DATA/dns/$domain)"
 
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
-dns_rec="$dns_rec SOA='$soa' RECORDS='$records' SUSPENDED='no' DATE='$V_DATE'"
-echo "$dns_rec" >> $V_USERS/$user/dns.conf
-chmod 660 $V_USERS/$user/dns.conf
+dns_rec="$dns_rec SOA='$soa' RECORDS='$records' SUSPENDED='no' DATE='$DATE'"
+echo "$dns_rec" >> $USER_DATA/dns.conf
+chmod 660 $USER_DATA/dns.conf
 
 # Adding zone in named.conf
 named="zone \"$domain_idn\" {type master; file"
-named="$named \"$V_HOME/$user/conf/dns/$domain.db\";};"
+named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
 echo "$named" >> /etc/named.conf
 
 # Updating domain dns zone
-conf="$V_HOME/$user/conf/dns/$domain.db"
+conf="$HOMEDIR/$user/conf/dns/$domain.db"
 update_domain_zone
 
 chmod 640 $conf
@@ -122,10 +120,10 @@ increase_user_value "$user" '$U_DNS_DOMAINS'
 increase_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Adding task to the vesta pipe
-restart_schedule 'dns'
+$BIN/v_restart_dns
 
 # Logging
-log_history "$V_EVENT" "v_delete_dns_domain $user $domain"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_delete_dns_domain $user $domain"
+log_event "$OK" "$EVENT"
 
 exit

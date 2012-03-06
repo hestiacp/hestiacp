@@ -13,13 +13,12 @@
 user=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
-source $V_FUNC/ip.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/ip.sh
 
-url=${2-$V_SUSPEND_URL}
+url=${2-$SUSPEND_URL}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -29,16 +28,16 @@ url=${2-$V_SUSPEND_URL}
 check_args '1' "$#" 'user [suspend_url]'
 
 # Checking argument format
-format_validation 'user' 'url'
+validate_format 'user' 'url'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -51,10 +50,10 @@ user_aliases=0
 suspended_web=0
 
 # Clean up old config
-rm -f $V_HOME/$user/conf/tmp_*.conf
+rm -f $HOMEDIR/$user/conf/tmp_*.conf
 
 # Defining config
-conf=$V_USERS/$user/web.conf
+conf=$USER_DATA/web.conf
 fields='$DOMAIN'
 nohead=1
 
@@ -69,15 +68,15 @@ for domain in $(shell_list) ; do
     upd_web_domain_values
 
     # Adding domain to the tmp_httpd.conf
-    tpl_file="$V_WEBTPL/apache_$TPL.tpl"
-    conf="$V_HOME/$user/conf/web/tmp_httpd.conf"
+    tpl_file="$WEBTPL/apache_$TPL.tpl"
+    conf="$HOMEDIR/$user/conf/web/tmp_httpd.conf"
     add_web_config
     chown root:apache $conf
     chmod 640 $conf
 
     # Running template trigger
-    if [ -x $V_WEBTPL/apache_$TPL.sh ]; then
-        $V_WEBTPL/apache_$TPL.sh $user $domain $ip $V_HOME $docroot
+    if [ -x $WEBTPL/apache_$TPL.sh ]; then
+        $WEBTPL/apache_$TPL.sh $user $domain $ip $HOMEDIR $docroot
     fi
 
     # Checking aliases
@@ -88,7 +87,7 @@ for domain in $(shell_list) ; do
 
     # Checking stats
     if [ ! -z "$STATS" ]; then
-    cat $V_WEBTPL/$STATS.tpl |\
+    cat $WEBTPL/$STATS.tpl |\
         sed -e "s/%ip%/$ip/g" \
             -e "s/%web_port%/$WEB_PORT/g" \
             -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
@@ -97,12 +96,12 @@ for domain in $(shell_list) ; do
             -e "s/%domain_idn%/$domain_idn/g" \
             -e "s/%domain%/$domain/g" \
             -e "s/%user%/$user/g" \
-            -e "s/%home%/${V_HOME////\/}/g" \
+            -e "s/%home%/${HOMEDIR////\/}/g" \
             -e "s/%alias%/${aliases//,/ }/g" \
             -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
-        > $V_HOME/$user/conf/web/$STATS.$domain.conf
+        > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 
-        stats_string="$V_BIN/v_update_web_domain_stat $user $domain"
+        stats_string="$BIN/v_update_web_domain_stat $user $domain"
         check_stats_pipe=$(grep "$stats_string" $V_QUEUE/stats.pipe)
         if [ -z "$check_stats_pipe" ]; then
             echo "$stats_string" >> $V_QUEUE/stats.pipe
@@ -112,26 +111,26 @@ for domain in $(shell_list) ; do
     # Checking ssl
     if [ "$SSL" = 'yes' ]; then
         # Adding domain to the shttpd.conf
-        conf="$V_HOME/$user/conf/web/tmp_shttpd.conf"
-        tpl_file="$V_WEBTPL/apache_$TPL.stpl"
+        conf="$HOMEDIR/$user/conf/web/tmp_shttpd.conf"
+        tpl_file="$WEBTPL/apache_$TPL.stpl"
         add_web_config
         chown root:apache $conf
         chmod 640 $conf
 
-        cp -f $V_USERS/$user/ssl/$domain.crt \
-            $V_HOME/$user/conf/web/ssl.$domain.crt
-        cp -f $V_USERS/$user/ssl/$domain.key \
-            $V_HOME/$user/conf/web/ssl.$domain.key
-        cp -f $V_USERS/$user/ssl/$domain.pem \
-            $V_HOME/$user/conf/web/ssl.$domain.pem
-        if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
-            cp -f $V_USERS/$user/ssl/$domain.ca \
-                $V_HOME/$user/conf/web/ssl.$domain.ca
+        cp -f $USER_DATA/ssl/$domain.crt \
+            $HOMEDIR/$user/conf/web/ssl.$domain.crt
+        cp -f $USER_DATA/ssl/$domain.key \
+            $HOMEDIR/$user/conf/web/ssl.$domain.key
+        cp -f $USER_DATA/ssl/$domain.pem \
+            $HOMEDIR/$user/conf/web/ssl.$domain.pem
+        if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
+            cp -f $USER_DATA/ssl/$domain.ca \
+                $HOMEDIR/$user/conf/web/ssl.$domain.ca
         fi
 
         # Running template trigger
-        if [ -x $V_WEBTPL/apache_$TPL.sh ]; then
-            $V_WEBTPL/apache_$TPL.sh $user $domain $ip $V_HOME $docroot
+        if [ -x $WEBTPL/apache_$TPL.sh ]; then
+            $WEBTPL/apache_$TPL.sh $user $domain $ip $HOMEDIR $docroot
         fi
 
         user_ssl=$((user_ssl + 1))
@@ -140,8 +139,8 @@ for domain in $(shell_list) ; do
 
     # Checking nginx
     if [ ! -z "$NGINX" ]; then
-        tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
-        conf="$V_HOME/$user/conf/web/tmp_nginx.conf"
+        tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
+        conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
         add_web_config
         chown root:nginx $conf
         chmod 640 $conf
@@ -153,8 +152,8 @@ for domain in $(shell_list) ; do
                 proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
             fi
     
-            tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-            conf="$V_HOME/$user/conf/web/tmp_snginx.conf"
+            tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+            conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
             add_web_config
             chown root:nginx $conf
             chmod 640 $conf
@@ -168,8 +167,8 @@ for domain in $(shell_list) ; do
 done
 
 # Renaming tmp config
-tmp_conf="$V_HOME/$user/conf/web/tmp_httpd.conf"
-conf="$V_HOME/$user/conf/web/httpd.conf"
+tmp_conf="$HOMEDIR/$user/conf/web/tmp_httpd.conf"
+conf="$HOMEDIR/$user/conf/web/httpd.conf"
 if [ -e "$tmp_conf" ]; then
     mv $tmp_conf $conf
 fi
@@ -183,8 +182,8 @@ fi
 
 # Checking ssl 
 if [ "$ssl_change" = 'yes' ]; then
-    tmp_conf="$V_HOME/$user/conf/web/tmp_shttpd.conf"
-    conf="$V_HOME/$user/conf/web/shttpd.conf"
+    tmp_conf="$HOMEDIR/$user/conf/web/tmp_shttpd.conf"
+    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
     mv $tmp_conf $conf
 
     # Checking include in main httpd.conf
@@ -197,8 +196,8 @@ fi
 # Checking nginx
 if [ "$ngix_change" = 'yes' ]; then
     nginx_conf='/etc/nginx/conf.d/vesta_users.conf'
-    tmp_conf="$V_HOME/$user/conf/web/tmp_nginx.conf"
-    conf="$V_HOME/$user/conf/web/nginx.conf"
+    tmp_conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
+    conf="$HOMEDIR/$user/conf/web/nginx.conf"
     mv $tmp_conf $conf
 
     nginx_conf_check=$(grep "$conf" $nginx_conf )
@@ -208,8 +207,8 @@ if [ "$ngix_change" = 'yes' ]; then
 
     # Checking ssl for nginx
     if [ "$ssl_change" = 'yes' ]; then
-        tmp_conf="$V_HOME/$user/conf/web/tmp_snginx.conf"
-        conf="$V_HOME/$user/conf/web/snginx.conf"
+        tmp_conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
+        conf="$HOMEDIR/$user/conf/web/snginx.conf"
         mv $tmp_conf $conf
         nginx_conf_check=$(grep "$conf" $nginx_conf )
         if [ -z "$nginx_conf_check" ]; then
@@ -229,9 +228,9 @@ update_user_value "$user" '$U_WEB_SSL' "$user_ssl"
 update_user_value "$user" '$U_WEB_ALIASES' "$user_aliases"
 
 # Adding task to the vesta pipe
-restart_schedule 'web'
+$BIN/v_restart_web
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

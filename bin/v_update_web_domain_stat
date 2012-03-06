@@ -15,10 +15,9 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -29,13 +28,13 @@ source $V_FUNC/domain.func
 check_args '2' "$#" 'user domain'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -54,15 +53,15 @@ is_domain_value_exist 'web' '$STATS'
 stats=$(get_domain_value 'web' '$STATS')
 
 # Checking config
-config="$V_HOME/$user/conf/web/$stats.$domain.conf"
+config="$HOMEDIR/$user/conf/web/$stats.$domain.conf"
 if [ ! -e "$config" ]; then
     echo "Error: Parsing error"
-    log_event 'debug' "$E_PARSING $V_EVENT"
+    log_event 'debug' "$E_PARSING $EVENT"
     exit $E_PARSING
 fi
 
 # Checking statistics directory
-dir="$V_HOME/$user/web/$domain/stats"
+dir="$HOMEDIR/$user/web/$domain/stats"
 if [ ! -e "$dir" ]; then
     mkdir -p $dir
 fi
@@ -102,7 +101,7 @@ build_awstats() {
     done
 
     # Creating index page
-    cat  $V_WEBTPL/awstats_index.tpl | sed -e "s/%month%/$month/g" \
+    cat  $WEBTPL/awstats_index.tpl | sed -e "s/%month%/$month/g" \
          > $dir/index.html
 
     # Creating navigation page
@@ -111,7 +110,7 @@ build_awstats() {
     for link in $months; do
         select_m="$select_m\t    <option value=\"$link\">$link<\/option>\n"
     done
-    cat $V_WEBTPL/awstats_nav.tpl | sed -e "s/%select_month%/$select_m/" \
+    cat $WEBTPL/awstats_nav.tpl | sed -e "s/%select_month%/$select_m/" \
          > $dir/nav.html
 
 }
@@ -131,6 +130,6 @@ chown -R $user:$(groups $user| cut -f 3 -d ' ') $dir
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

@@ -20,10 +20,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 type=$3
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -34,16 +33,16 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain type'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid "$user"
+is_object_valid 'user' 'USER' "$user" "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -52,7 +51,7 @@ is_domain_valid 'web'
 is_domain_suspended 'web'
 
 # Checking statistic type
-is_type_valid 'stat' "$type"
+is_type_valid "$STATS_SYSTEM" "$type"
 
 # Check statistic is not added
 is_domain_key_empty 'web' '$STATS'
@@ -69,7 +68,7 @@ get_domain_values 'web'
 upd_web_domain_values
 
 # Adding statistic config
-cat $V_WEBTPL/$type.tpl |\
+cat $WEBTPL/$type.tpl |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%web_port%/$WEB_PORT/g" \
         -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
@@ -78,10 +77,10 @@ cat $V_WEBTPL/$type.tpl |\
         -e "s/%domain_idn%/$domain_idn/g" \
         -e "s/%domain%/$domain/g" \
         -e "s/%user%/$user/g" \
-        -e "s/%home%/${V_HOME////\/}/g" \
+        -e "s/%home%/${HOMEDIR////\/}/g" \
         -e "s/%alias%/${aliases//,/ }/g" \
         -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
-    > $V_HOME/$user/conf/web/$type.$domain.conf
+    > $HOMEDIR/$user/conf/web/$type.$domain.conf
 
 
 #----------------------------------------------------------#
@@ -89,13 +88,13 @@ cat $V_WEBTPL/$type.tpl |\
 #----------------------------------------------------------#
 
 # Adding command to pipe
-echo "$V_BIN/v_update_web_domain_stat $user $domain" >> $V_QUEUE/stats.pipe
+echo "$BIN/v_update_web_domain_stat $user $domain" >> $V_QUEUE/stats.pipe
 
 # Adding stats in config
 update_domain_value 'web' '$STATS' "$type"
 
 # Logging
-log_history "$V_EVENT" "v_delete_web_domain_stat $user $domain"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_delete_web_domain_stat $user $domain"
+log_event "$OK" "$EVENT"
 
 exit

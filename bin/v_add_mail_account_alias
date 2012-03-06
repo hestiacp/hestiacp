@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: delete mail domain antispam support
-# options: user domain
+# info: add mail account alias aka nickname
+# options: user domain account alias
 #
-# The function disable spamassasin for incomming emails.
+# The function add new email account.
 
 
 #----------------------------------------------------------#
@@ -14,6 +14,8 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
+account=$3
+malias=$4
 
 # Importing variables
 source $VESTA/conf/vesta.conf
@@ -26,10 +28,10 @@ source $VESTA/func/domain.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '2' "$#" 'user domain'
+check_args '4' "$#" 'user domain account alias'
 
 # Checking argument format
-validate_format 'user' 'domain'
+validate_format 'user' 'domain' 'account' 'malias'
 
 # Checking dns system is enabled
 is_system_enabled 'MAIL_SYSTEM'
@@ -46,27 +48,38 @@ is_domain_valid 'mail'
 # Checking domain is not suspened
 is_domain_suspended 'mail'
 
-# Checking current value
-is_domain_value_exist 'mail' '$ANTISPAM'
+# Checking account
+is_mail_account_valid
+
+# Checking account
+is_mail_account_free "$malias"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Delete antispam key
-sed -i "/antispam/d" $HOMEDIR/$user/conf/mail/$domain/protection
+# Adding exim alias
+str="$mailas@$domain:$account@$domain"
+echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Delete antispam in config
-update_domain_value 'mail' '$ANTISPAM' 'no'
+# Adding vesta alias
+aliases=$(get_domain_value "mail/$domain" '$ALIAS' "ACCOUNT='$account'")
+if [ -z "$aliases" ]; then
+    aliases="$malias"
+else
+    aliases="$aliases,$malias"
+fi
+update_domain_value "mail/$domain" '$ALIAS' "$aliases" "ACCOUNT='$account'"
 
 # Logging
-log_history "$EVENT" "v_add_mail_domain_antispam $user $domain"
+cmd='v_delete_mail_account_alias'
+log_history "$EVENT" "$cmd $user $domain $account $malias"
 log_event "$OK" "$EVENT"
 
 exit

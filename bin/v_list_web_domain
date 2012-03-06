@@ -16,9 +16,7 @@ domain=$2
 format=${3-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/func/shared.sh
 
 # Json function
 json_list_domain() {
@@ -82,7 +80,7 @@ shell_list_domain() {
 check_args '2' "$#" 'user domain [format]'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -93,7 +91,7 @@ is_domain_valid 'web'
 #----------------------------------------------------------#
 
 # Defining config
-conf=$V_USERS/$user/web.conf
+conf=$USER_DATA/web.conf
 
 # Defining fileds to select
 fields='$DOMAIN $IP $IP6 $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG
@@ -103,7 +101,7 @@ fields='$DOMAIN $IP $IP6 $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG
 case $format in 
     json)   json_list_domain ;;
     plain)  nohead=1; shell_list_domain ;;
-    shell)  shell_list_domain |column -t ;;
+    shell)  shell_list_domain ;;
     *)      check_args '2' '0' 'user domain [format]'
 esac
 

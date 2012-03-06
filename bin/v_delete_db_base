@@ -15,10 +15,9 @@ user=$1
 database=$2
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/db.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
@@ -29,16 +28,16 @@ source $V_FUNC/db.func
 check_args '2' "$#" 'user db_name'
 
 # Checking argument format
-format_validation 'user' 'database'
+validate_format 'user' 'database'
 
 # Checking db system is enabled
 is_system_enabled 'DB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking db existance
 is_db_valid
@@ -77,6 +76,6 @@ decrease_user_value "$user" '$U_DATABASES'
 del_db_vesta
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

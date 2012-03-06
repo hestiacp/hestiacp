@@ -4,9 +4,9 @@ is_sys_ip_free() {
 
     # Checking ip existance
     ip_check=$(echo "$ip_list"|grep -w "$ip")
-    if [ -n "$ip_check" ] || [ -e "$V_IPS/$ip" ]; then
+    if [ -n "$ip_check" ] || [ -e "$VESTA/data/ips/$ip" ]; then
         echo "Error: IP exist"
-        log_event 'debug' "$E_EXISTS $V_EVENT"
+        log_event 'debug' "$E_EXISTS $EVENT"
         exit  $E_EXISTS
     fi
 }
@@ -30,9 +30,9 @@ is_sys_ip_valid() {
     check_ifc=$(/sbin/ifconfig |grep "inet addr:$ip")
 
     # Checking ip existance
-    if [ ! -e "$V_IPS/$ip" ] || [ -z "$check_ifc" ]; then
+    if [ ! -e "$VESTA/data/ips/$ip" ] || [ -z "$check_ifc" ]; then
         echo "Error: IP not exist"
-        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        log_event 'debug' "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi
 }
@@ -41,7 +41,7 @@ is_ip_key_empty() {
     key="$1"
 
     # Parsing ip
-    string=$(cat $V_IPS/$ip )
+    string=$(cat $VESTA/data/ips/$ip )
 
     # Parsing key=value
     for keys in $string; do
@@ -54,7 +54,7 @@ is_ip_key_empty() {
     # Checkng key
     if [ ! -z "$value" ] && [ "$value" != '0' ]; then
         echo "Error: value is not empty = $value "
-        log_event 'debug' "$E_EXISTS $V_EVENT"
+        log_event 'debug' "$E_EXISTS $EVENT"
         exit $E_EXISTS
     fi
 }
@@ -64,7 +64,7 @@ update_sys_ip_value() {
     value="$2"
 
     # Defining conf
-    conf="$V_IPS/$ip"
+    conf="$VESTA/data/ips/$ip"
 
     # Parsing conf
     str=$(cat $conf)
@@ -90,14 +90,14 @@ update_sys_ip_value() {
 
 is_ip_avalable() {
     # Checking ip existance
-    if [ ! -e "$V_IPS/$ip" ]; then
+    if [ ! -e "$VESTA/data/ips/$ip" ]; then
         echo "Error: IP not exist"
-        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        log_event 'debug' "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi
 
     # Parsing ip data
-    ip_data=$(cat $V_IPS/$ip)
+    ip_data=$(cat $VESTA/data/ips/$ip)
     ip_owner=$(echo "$ip_data" | grep 'OWNER=' | cut -f 2 -d \' )
     ip_status=$(echo "$ip_data" | grep 'STATUS=' | cut -f 2 -d \' )
 
@@ -110,7 +110,7 @@ is_ip_avalable() {
 
     if [ "$ip_owner" != "$user" ] && [ "$ip_shared" != 'yes' ]; then
         echo "Error: ip not owned by user"
-        log_event 'debug' "$E_FORBIDEN $V_EVENT"
+        log_event 'debug' "$E_FORBIDEN $EVENT"
         exit $E_FORBIDEN
     fi
 }
@@ -118,17 +118,17 @@ is_ip_avalable() {
 is_sys_ip_owner() {
     # Parsing ip
     ip="$IP"
-    ip_owner=$(grep 'OWNER=' $V_IPS/$ip|cut -f 2 -d \')
+    ip_owner=$(grep 'OWNER=' $VESTA/data/ips/$ip|cut -f 2 -d \')
     if [ "$ip_owner" != "$user" ]; then
         echo "Error: IP not owned"
-        log_event 'debug' "$E_FORBIDEN $V_EVENT"
+        log_event 'debug' "$E_FORBIDEN $EVENT"
         exit $E_FORBIDEN
     fi
 }
 
 get_ip_name() {
     # Prinitng name
-    grep "NAME=" $V_IPS/$ip |cut -f 2 -d \'
+    grep "NAME=" $VESTA/data/ips/$ip |cut -f 2 -d \'
 }
 
 increase_ip_value() {
@@ -138,13 +138,13 @@ increase_ip_value() {
     usr_key='U_SYS_USERS'
 
     # Parsing values
-    current_web=$(grep "$web_key=" $V_IPS/$sip |cut -f 2 -d \')
-    current_usr=$(grep "$usr_key=" $V_IPS/$sip |cut -f 2 -d \')
+    current_web=$(grep "$web_key=" $VESTA/data/ips/$sip |cut -f 2 -d \')
+    current_usr=$(grep "$usr_key=" $VESTA/data/ips/$sip |cut -f 2 -d \')
 
     # Checking result
     if [ -z "$current_web" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -164,8 +164,10 @@ increase_ip_value() {
     fi
 
     # Changing config
-    sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" $V_IPS/$ip
-    sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" $V_IPS/$ip
+    sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
+        $VESTA/data/ips/$ip
+    sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" \
+        $VESTA/data/ips/$ip
 }
 
 decrease_ip_value() {
@@ -175,13 +177,13 @@ decrease_ip_value() {
     usr_key='U_SYS_USERS'
 
     # Parsing values
-    current_web=$(grep "$web_key=" $V_IPS/$sip |cut -f 2 -d \')
-    current_usr=$(grep "$usr_key=" $V_IPS/$sip |cut -f 2 -d \')
+    current_web=$(grep "$web_key=" $VESTA/data/ips/$sip |cut -f 2 -d \')
+    current_usr=$(grep "$usr_key=" $VESTA/data/ips/$sip |cut -f 2 -d \')
 
     # Checking result
     if [ -z "$current_web" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -189,7 +191,7 @@ decrease_ip_value() {
     new_web=$((current_web - 1))
 
     # -1 user
-    check_ip=$(grep $sip $V_USERS/$user/web.conf |wc -l)
+    check_ip=$(grep $sip $USER_DATA/web.conf |wc -l)
     if [ "$check_ip" -lt 2 ]; then
         new_usr=$(echo "$current_usr" |\
             sed -e "s/,/\n/g"|\
@@ -201,15 +203,17 @@ decrease_ip_value() {
     fi
 
     # Changing config
-    sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" $V_IPS/$sip
-    sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" $V_IPS/$sip
+    sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
+        $VESTA/data/ips/$sip
+    sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" \
+        $VESTA/data/ips/$sip
 }
 
 get_sys_ip_value() {
     key="$1"
 
     # Parsing domains
-    string=$( cat $V_IPS/$ip )
+    string=$( cat $VESTA/data/ips/$ip )
 
     # Parsing key=value
     for keys in $string; do
@@ -230,7 +234,7 @@ get_current_interface() {
     # Checking result
     if [ -z "$i" ]; then
         echo "Error: IP not exist"
-        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        log_event 'debug' "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi
 
@@ -238,7 +242,7 @@ get_current_interface() {
     check_alias=$(echo $i| cut -s -f 2 -d :)
     if [ -z "$check_alias" ]; then
         echo "Error: Main IP on interface"
-        log_event 'debug' "$E_FORBIDEN $V_EVENT"
+        log_event 'debug' "$E_FORBIDEN $EVENT"
         exit $E_FORBIDEN
     fi
     echo "$i"
@@ -253,16 +257,16 @@ ip_add_vesta() {
     ip_data="$ip_data\nU_WEB_DOMAINS='0'"
     ip_data="$ip_data\nINTERFACE='$interface'"
     ip_data="$ip_data\nNETMASK='$mask'"
-    ip_data="$ip_data\nDATE='$V_DATE'"
+    ip_data="$ip_data\nDATE='$DATE'"
 
     # Adding ip
-    echo -e "$ip_data" >$V_IPS/$ip
-    chmod 660 $V_IPS/$ip
+    echo -e "$ip_data" >$VESTA/data/ips/$ip
+    chmod 660 $VESTA/data/ips/$ip
 }
 
 ip_add_startup() {
     # Filling ip values
-    ip_data="# Added by vesta $V_SCRIPT"
+    ip_data="# Added by vesta $SCRIPT"
     ip_data="$ip_data\nDEVICE=$iface"
     ip_data="$ip_data\nBOOTPROTO=static\nONBOOT=yes"
     ip_data="$ip_data\nIPADDR=$ip"
@@ -273,8 +277,8 @@ ip_add_startup() {
 }
 
 ip_owner_search(){
-    for ip in $(ls $V_IPS/); do
-        check_owner=$(grep "OWNER='$user'" $V_IPS/$ip)
+    for ip in $(ls $VESTA/data/ips/); do
+        check_owner=$(grep "OWNER='$user'" $VESTA/data/ips/$ip)
         if [ ! -z "$check_owner" ]; then
             echo "$ip"
         fi

@@ -15,9 +15,8 @@ database=$2
 format=${3-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
-source $V_FUNC/db.func
+source $VESTA/func/shared.sh
+source $VESTA/func/db.sh
 
 # Json function
 json_list_db() {
@@ -90,10 +89,10 @@ shell_list_db() {
 check_args '2' "$#" 'user db_name [format]'
 
 # Checking argument format
-format_validation 'user' 'database'
+validate_format 'user' 'database'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking database exist
 is_db_valid
@@ -104,7 +103,7 @@ is_db_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf=$V_USERS/$user/db.conf
+conf=$USER_DATA/db.conf
 
 # Defining fileds to select
 fields='$DB $USER $HOST $TYPE $CHARSET $U_DISK $SUSPENDED $DATE'

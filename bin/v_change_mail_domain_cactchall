@@ -17,10 +17,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 email="$3"
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -31,16 +30,16 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain email'
 
 # Checking argument format
-format_validation 'user' 'domain' 'email'
+validate_format 'user' 'domain' 'email'
 
 # Checking dns system is enabled
 is_system_enabled 'MAIL_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain
 is_domain_valid 'mail'
@@ -57,8 +56,8 @@ is_domain_suspended 'mail'
 catchall=$(get_domain_value 'mail' '$CATCHALL')
 
 # Change cathcall alias
-sed -i "/*@demo.vestacp.com:/d" $V_HOME/$user/conf/mail/$domain/aliases
-echo "*@demo.vestacp.com:$email" >> $V_HOME/$user/conf/mail/$domain/aliases
+sed -i "/*@demo.vestacp.com:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+echo "*@demo.vestacp.com:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 
 
 #----------------------------------------------------------#
@@ -69,7 +68,7 @@ echo "*@demo.vestacp.com:$email" >> $V_HOME/$user/conf/mail/$domain/aliases
 update_domain_value 'mail' '$CATCHALL' "$email"
 
 # Logging
-log_history "$V_EVENT" "v_change_mail_domain_catchall $user $domain $catchall"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_change_mail_domain_catchall $user $domain $catchall"
+log_event "$OK" "$EVENT"
 
 exit

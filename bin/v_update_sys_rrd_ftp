@@ -14,8 +14,7 @@ update=$1
 period=${1-daily}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#
@@ -32,14 +31,14 @@ case $period in
 esac
 
 # Checking directory
-if [ ! -d "$V_RRD/ftp" ]; then
-    mkdir $V_RRD/ftp
+if [ ! -d "$RRD/ftp" ]; then
+    mkdir $RRD/ftp
 fi
 
 # Checking database
-if [ ! -e "$V_RRD/ftp/ftp.rrd" ]; then
+if [ ! -e "$RRD/ftp/ftp.rrd" ]; then
     # Adding database
-    rrdtool create $V_RRD/ftp/ftp.rrd --step $V_RRD_STEP \
+    rrdtool create $RRD/ftp/ftp.rrd --step $RRD_STEP \
         DS:A:GAUGE:600:U:U \
         RRA:AVERAGE:0.5:1:600 \
         RRA:AVERAGE:0.5:6:700 \
@@ -58,11 +57,11 @@ if [ -z "$update" ]; then
         grep -v root|wc -l)
 
     # Updating rrd database
-    rrdtool update $V_RRD/ftp/ftp.rrd N:$a
+    rrdtool update $RRD/ftp/ftp.rrd N:$a
 fi
 
 # Updating rrd graph
-rrdtool graph $V_RRD/ftp/$period-ftp.png \
+rrdtool graph $RRD/ftp/$period-ftp.png \
     --imgformat PNG \
     --height="120" \
     --width="440" \
@@ -79,12 +78,12 @@ rrdtool graph $V_RRD/ftp/$period-ftp.png \
     -c "MGRID#AAAAAA" \
     -c "FRAME#202020" \
     -c "ARROW#FFFFFF" \
-    DEF:a=$V_RRD/ftp/ftp.rrd:A:AVERAGE \
+    DEF:a=$RRD/ftp/ftp.rrd:A:AVERAGE \
     COMMENT:'\r' \
     LINE1:a#fefda0:"Users " \
     GPRINT:a:'LAST:Current\:''%8.0lf' \
     GPRINT:a:'MIN:Min\:''%8.0lf' \
-    GPRINT:a:'MAX:Max\:''%8.0lf\j' >/dev/null 2>/dev/null;  result=$?
+    GPRINT:a:'MAX:Max\:''%8.0lf\j' &>/dev/null;  result=$?
 
 
 #----------------------------------------------------------#

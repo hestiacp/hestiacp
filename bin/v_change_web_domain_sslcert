@@ -17,10 +17,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 ssl_dir=$3
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -31,16 +30,16 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain ssl_dir'
 
 # Checking argument format
-format_validation 'user' 'domain' 'ssl_dir'
+validate_format 'user' 'domain' 'ssl_dir'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -60,26 +59,26 @@ is_web_domain_cert_valid
 #----------------------------------------------------------#
 
 # Deleting old certificate
-tmpdir=$(mktemp -p $V_HOME/$user/web/$domain/private -d)
-rm -f $V_HOME/$user/conf/ssl.$domain.*
-mv $V_USERS/$user/ssl/$domain.* $tmpdir
+tmpdir=$(mktemp -p $HOMEDIR/$user/web/$domain/private -d)
+rm -f $HOMEDIR/$user/conf/ssl.$domain.*
+mv $USER_DATA/ssl/$domain.* $tmpdir
 chown -R $user:$user $tmpdir
 
 # Adding new certificate to user data directory
-cp -f $ssl_dir/$domain.crt $V_USERS/$user/ssl/$domain.crt
-cp -f $ssl_dir/$domain.key $V_USERS/$user/ssl/$domain.key
-cp -f $ssl_dir/$domain.crt $V_USERS/$user/ssl/$domain.pem
+cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
+cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key
+cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.pem
 if [ -e "$ssl_dir/$domain.ca" ]; then
-    cp -f $ssl_dir/$domain.ca $V_USERS/$user/ssl/$domain.ca
-    cat $V_USERS/$user/ssl/$domain.ca >> $V_USERS/$user/ssl/$domain.pem
+    cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
+    cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
 fi
 
 # Adding new certificate to user dir
-cp -f $V_USERS/$user/ssl/$domain.crt $V_HOME/$user/conf/ssl.$domain.crt
-cp -f $V_USERS/$user/ssl/$domain.key $V_HOME/$user/conf/ssl.$domain.key
-cp -f $V_USERS/$user/ssl/$domain.pem $V_HOME/$user/conf/ssl.$domain.pem
-if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
-    cp -f $V_USERS/$user/ssl/$domain.ca $V_HOME/$user/conf/ssl.$domain.ca
+cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/ssl.$domain.crt
+cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/ssl.$domain.key
+cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/ssl.$domain.pem
+if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
+    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/ssl.$domain.ca
 fi
 
 
@@ -88,10 +87,10 @@ fi
 #----------------------------------------------------------#
 
 # Adding task to the vesta pipe
-restart_schedule 'web'
+$BIN/v_restart_web
 
 # Logging
-log_history "$V_EVENT" "$V_SCRIPT $user $domain $tmpdir"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "$SCRIPT $user $domain $tmpdir"
+log_event "$OK" "$EVENT"
 
 exit

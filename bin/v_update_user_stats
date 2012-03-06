@@ -17,10 +17,9 @@ user=$1
 source /etc/profile.d/vesta.sh
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -33,10 +32,10 @@ check_args '0' "$#" 'user'
 # If user specified
 if [ ! -z "$user" ]; then
     # Checking argument format
-    format_validation 'user'
+    validate_format 'user'
 
     # Checking user
-    is_user_valid
+    is_object_valid 'user' 'USER' "$user"
 fi
 
 
@@ -55,7 +54,7 @@ fi
 for user in $user_list; do 
 
     # Importing user values
-    source $V_USERS/$user/user.conf
+    source $USER_DATA/user.conf
     DATE=$(date -d "$(date +'%m/01') -1day" +%F)
 
     # Compiling report string
@@ -71,7 +70,7 @@ for user in $user_list; do
     s="$s U_CRON_JOBS='$U_CRON_JOBS'"
 
     # Updating user stats log
-    stats="$V_USERS/$user/stats.log"
+    stats="$USER_DATA/stats.log"
     if [ -e "$stats" ]; then
         # Checking dublicates
         check_month=$(grep -n "DATE='$DATE'" $stats|cut -f 1 -d :)
@@ -96,6 +95,6 @@ done
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

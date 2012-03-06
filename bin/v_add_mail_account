@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: delete mail domain antispam support
-# options: user domain
+# info: add mail domain account
+# options: user domain account password [quota]
 #
-# The function disable spamassasin for incomming emails.
+# The function add new email account.
 
 
 #----------------------------------------------------------#
@@ -14,6 +14,9 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
+account=$3
+password=$4
+quota=${5-0}
 
 # Importing variables
 source $VESTA/conf/vesta.conf
@@ -26,10 +29,10 @@ source $VESTA/func/domain.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '2' "$#" 'user domain'
+check_args '4' "$#" 'user domain account password quota'
 
 # Checking argument format
-validate_format 'user' 'domain'
+validate_format 'user' 'domain' 'account' 'password' 'quota'
 
 # Checking dns system is enabled
 is_system_enabled 'MAIL_SYSTEM'
@@ -46,27 +49,37 @@ is_domain_valid 'mail'
 # Checking domain is not suspened
 is_domain_suspended 'mail'
 
-# Checking current value
-is_domain_value_exist 'mail' '$ANTISPAM'
+# Checking package
+is_package_full 'MAIL_ACCOUNTS'
+
+# Checking account
+is_mail_account_free
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-# Delete antispam key
-sed -i "/antispam/d" $HOMEDIR/$user/conf/mail/$domain/protection
+password=$(/usr/sbin/dovecotpw -s md5 -p "$password")
+str="$account:$password:$user:mail::$HOMEDIR/$user:$quota"
+echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Delete antispam in config
-update_domain_value 'mail' '$ANTISPAM' 'no'
+str="ACCOUNT='$account' ALIAS='' QUOTA='$quota' AUTOREPLY='no' FWD=''"
+str="$str U_DISK='0' SUSPENDED='no' DATE='$DATE'"
+echo "$str" >> $USER_DATA/mail/$domain.conf
+
+# Increase mail accounts counter
+accounts=$(wc -l $USER_DATA/mail/$domain.conf|cut -f 1 -d ' ')
+increase_user_value "$user" '$U_MAIL_ACCOUNTS'
+update_domain_value 'mail' '$ACCOUNTS' "$accounts"
 
 # Logging
-log_history "$EVENT" "v_add_mail_domain_antispam $user $domain"
+EVENT="$DATE $SCRIPT $user $domain ***** $quota"
+log_history "$EVENT" "v_delete_mail_account $user $domain $account"
 log_event "$OK" "$EVENT"
 
 exit

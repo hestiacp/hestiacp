@@ -16,10 +16,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 key=$(echo "$3"| tr '[:lower:]' '[:upper:]'|sed -e "s/^/$/")
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -30,10 +29,10 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain key'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'dns'
@@ -58,6 +57,6 @@ echo "$value"
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit 

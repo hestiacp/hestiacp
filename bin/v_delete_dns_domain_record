@@ -16,10 +16,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 id=$3
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -30,13 +29,13 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain id'
 
 # Checking argument format
-format_validation 'user' 'domain' 'id'
+validate_format 'user' 'domain' 'id'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'dns'
@@ -53,7 +52,7 @@ is_dns_record_valid
 #----------------------------------------------------------#
 
 # Deleting record
-conf="$V_USERS/$user/dns/$domain"
+conf="$USER_DATA/dns/$domain"
 rm_string=$(grep -n "^ID='$id'" $conf|cut -d : -f 1)
 if [ ! -z "$rm_string" ]; then
     sed -i "$rm_string d" $conf
@@ -63,7 +62,7 @@ fi
 sort_dns_records
 
 # Updating zone
-conf="$V_HOME/$user/conf/dns/$domain.db"
+conf="$HOMEDIR/$user/conf/dns/$domain.db"
 update_domain_zone
 
 
@@ -72,9 +71,9 @@ update_domain_zone
 #----------------------------------------------------------#
 
 # Adding task to the vesta pipe
-restart_schedule 'dns'
+$BIN/v_restart_dns
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

@@ -15,9 +15,8 @@ host=$2
 format=${3-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
-source $V_FUNC/db.func
+source $VESTA/func/shared.sh
+source $VESTA/func/db.sh
 
 # Json function
 json_list_dbhost() {
@@ -88,10 +87,10 @@ shell_list_dbhost() {
 check_args '2' "$#" 'type host [format]'
 
 # Checking argument format
-format_validation 'host'
+validate_format 'host'
 
 # Checking db type
-is_type_valid 'db' "$type"
+is_type_valid "$DB_SYSTEM" "$type"
 
 # Checking db host
 is_db_host_valid
@@ -102,7 +101,7 @@ is_db_host_valid
 #----------------------------------------------------------#
 
 # Defining config type
-conf=$V_DB/$type.conf
+conf=$VESTA/conf/$type.conf
 
 # Defining fileds to select
 fields='$HOST $PORT $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'

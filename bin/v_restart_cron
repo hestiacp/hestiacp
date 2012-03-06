@@ -9,10 +9,8 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-
+# Includes
+source $VESTA/conf/vesta.conf
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -20,7 +18,7 @@ source $V_CONF/vesta.conf
 
 # Parsing config / or just source config
 if [ "$CRON_SYSTEM" = 'crond' ]; then
-    /etc/init.d/crond 'reload' >/dev/null 2>&1
+    /etc/init.d/crond 'reload' &>/dev/null
     if [ $? -ne 0 ]; then
         echo "$E_RESTART $1"
         exit $E_RESTART

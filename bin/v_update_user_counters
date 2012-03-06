@@ -13,9 +13,8 @@
 user=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -28,10 +27,10 @@ check_args '0' "$#" 'user'
 # If user specified
 if [ ! -z "$user" ]; then
     # Checking argument format
-    format_validation 'user'
+    validate_format 'user'
 
     # Checking user
-    is_user_valid
+    is_object_valid 'user' 'USER' "$user"
 fi
 
 
@@ -90,8 +89,8 @@ for user in $user_list; do
     fi
 
     # Checking ip
-    for ip in $(ls $V_IPS) ;do
-        source $V_IPS/$ip
+    for ip in $(ls $VESTA/data/ips) ;do
+        source $VESTA/data/ips/$ip
         if [ "$OWNER" = "$user" ]; then
             IP_OWNED=$((IP_OWNED + 1))
             IP_AVAIL=$((IP_AVAIL + 1))
@@ -101,12 +100,12 @@ for user in $user_list; do
         fi
     done
     if [ "$user" = 'admin' ]; then
-        IP_AVAIL=$(ls $V_IPS | wc -l)
+        IP_AVAIL=$(ls $VESTA/data/ips | wc -l)
     fi
 
     # Checking web system
     U_WEB_DOMAINS=0
-    for domain_str in $(cat $V_USERS/$user/web.conf) ;do
+    for domain_str in $(cat $USER_DATA/web.conf) ;do
         eval $domain_str
         U_DISK_WEB=$((U_DISK_WEB + U_DISK))
         U_WEB_DOMAINS=$((U_WEB_DOMAINS + 1))
@@ -126,10 +125,10 @@ for user in $user_list; do
     DISK=$((DISK + U_DISK_WEB))
 
     # Checking dns system
-    for domain_str in $(cat $V_USERS/$user/dns.conf); do
+    for domain_str in $(cat $USER_DATA/dns.conf); do
         eval $domain_str
         U_DNS_DOMAINS=$((U_DNS_DOMAINS + 1))
-        records=$(wc -l $V_USERS/$user/dns/$DOMAIN| cut -f 1 -d ' ')
+        records=$(wc -l $USER_DATA/dns/$DOMAIN| cut -f 1 -d ' ')
         U_DNS_RECORDS=$((U_DNS_RECORDS + records))
         if [ "$SUSPENDED" = 'yes' ]; then
             SUSPENDED_DNS=$((SUSPENDED_DNS + 1))
@@ -141,7 +140,7 @@ for user in $user_list; do
     DISK=$((DISK + U_DISK_MAIL))
 
     # Checking db system
-    for db_str in $(cat $V_USERS/$user/db.conf); do
+    for db_str in $(cat $USER_DATA/db.conf); do
         eval $db_str
         U_DISK_DB=$((U_DISK_DB + U_DISK))
         U_DATABASES=$((U_DATABASES + 1))
@@ -152,7 +151,7 @@ for user in $user_list; do
     DISK=$((DISK + U_DISK_DB))
 
     # Checking mail system
-    for cron_str in $(cat $V_USERS/$user/cron.conf);do
+    for cron_str in $(cat $USER_DATA/cron.conf);do
         eval $cron_str
         U_CRON_JOBS=$((U_CRON_JOBS + 1))
         if [ "$SUSPENDED" = 'yes' ]; then
@@ -195,6 +194,6 @@ done
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

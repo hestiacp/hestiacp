@@ -13,13 +13,12 @@
 user=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 # Defining url
-url="${2-$V_SUSPEND_URL}"
+url="${2-$SUSPEND_URL}"
 
 
 #----------------------------------------------------------#
@@ -30,13 +29,13 @@ url="${2-$V_SUSPEND_URL}"
 check_args '1' "$#" 'user [suspend_url]'
 
 # Checking argument format
-format_validation 'user' 'url'
+validate_format 'user' 'url'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -44,7 +43,7 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf="$V_USERS/$user/web.conf"
+conf="$USER_DATA/web.conf"
 
 # Defining fileds to select
 field='$DOMAIN'
@@ -53,7 +52,7 @@ domains=$(dom_clear_search)
 
 # Starting suspend loop
 for domain in $domains; do
-    $V_BIN/v_suspend_web_domain "$user" "$domain" "$url"
+    $BIN/v_suspend_web_domain "$user" "$domain" "$url"
 done
 
 
@@ -62,6 +61,6 @@ done
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

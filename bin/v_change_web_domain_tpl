@@ -17,10 +17,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 template=$3
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -31,16 +30,16 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain template'
 
 # Checking argument format
-format_validation 'user' 'domain' 'template'
+validate_format 'user' 'domain' 'template'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -50,7 +49,7 @@ is_domain_suspended 'web'
 
 # Checking template
 templates=$(get_user_value '$WEB_TPL')
-is_template_valid "web"
+is_apache_template_valid
 
 
 #----------------------------------------------------------#
@@ -61,15 +60,15 @@ is_template_valid "web"
 get_domain_values 'web'
 
 # Deleting domain
-tpl_file="$V_WEBTPL/apache_$TPL.tpl"
+tpl_file="$WEBTPL/apache_$TPL.tpl"
 old_tpl=$TPL
-conf="$V_HOME/$user/conf/web/httpd.conf"
+conf="$HOMEDIR/$user/conf/web/httpd.conf"
 del_web_config
 
 # Deleting ssl vhost
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-    conf="$V_HOME/$user/conf/web/shttpd.conf"
+    tpl_file="$WEBTPL/apache_$TPL.stpl"
+    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
     del_web_config
 fi
 
@@ -77,10 +76,10 @@ fi
 ip=$IP
 email="$user@$domain"
 group="$user"
-docroot="$V_HOME/$user/web/$domain/public_html"
+docroot="$HOMEDIR/$user/web/$domain/public_html"
 docroot_string="DocumentRoot $docroot"
-conf="$V_HOME/$user/conf/web/httpd.conf"
-tpl_file="$V_WEBTPL/apache_$template.tpl"
+conf="$HOMEDIR/$user/conf/web/httpd.conf"
+tpl_file="$WEBTPL/apache_$template.tpl"
 
 
 # Parsing domain aliases
@@ -124,7 +123,7 @@ IFS=$OLD_IFS
 
 
 # Parsing new template
-template_data=$(cat $V_WEBTPL/apache_$template.descr | grep -v '#')
+template_data=$(cat $WEBTPL/apache_$template.descr | grep -v '#')
 for keys in $template_data; do
     eval ${keys%%=*}=${keys#*=}
 done
@@ -140,34 +139,34 @@ fi
 add_web_config
 
 # Running template trigger
-if [ -x $V_WEBTPL/apache_$template.sh ]; then
-    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
+if [ -x $WEBTPL/apache_$template.sh ]; then
+    $WEBTPL/apache_$template.sh $user $domain $ip $HOMEDIR $docroot
 fi
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
     # Defining SSL vars
-    ssl_crt="$V_HOME/$user/conf/web/ssl.$domain.crt"
-    ssl_key="$V_HOME/$user/conf/web/ssl.$domain.key"
-    ssl_pem="$V_HOME/$user/conf/web/ssl.$domain.pem"
-    ssl_ca="$V_HOME/$user/conf/web/ssl.$domain.ca"
-    if [ ! -e "$V_USERS/$user/web/ssl/$domain.ca" ]; then
+    ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"
+    ssl_key="$HOMEDIR/$user/conf/web/ssl.$domain.key"
+    ssl_pem="$HOMEDIR/$user/conf/web/ssl.$domain.pem"
+    ssl_ca="$HOMEDIR/$user/conf/web/ssl.$domain.ca"
+    if [ ! -e "$USER_DATA/web/ssl/$domain.ca" ]; then
         ssl_ca_str='#'
     fi
     case $SSL_HOME in
-        single) docroot="$V_HOME/$user/web/$domain/public_shtml" ;;
-        same)   docroot="$V_HOME/$user/web/$domain/public_html" ;;
+        single) docroot="$HOMEDIR/$user/web/$domain/public_shtml" ;;
+        same)   docroot="$HOMEDIR/$user/web/$domain/public_html" ;;
     esac
-    conf="$V_HOME/$user/conf/web/shttpd.conf"
-    tpl_file="$V_WEBTPL/apache_$template.stpl"
+    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+    tpl_file="$WEBTPL/apache_$template.stpl"
 
     # Adding domain to the httpd.conf
     add_web_config
 
     # Running template trigger
-    if [ -x $V_WEBTPL/apache_$template.sh ]; then
-        $V_WEBTPL/apache_$template.sh \
-            "$user" "$domain" "$ip" "$V_HOME" "$docroot"
+    if [ -x $WEBTPL/apache_$template.sh ]; then
+        $WEBTPL/apache_$template.sh \
+            "$user" "$domain" "$ip" "$HOMEDIR" "$docroot"
     fi
 fi
 
@@ -180,17 +179,17 @@ fi
 update_domain_value 'web' '$TPL' "$template"
 
 # Updating db keys
-for keys in $(cat $V_WEBTPL/apache_$template.descr|grep -v '#'); do
+for keys in $(cat $WEBTPL/apache_$template.descr|grep -v '#'); do
     key=$(echo "$keys"| cut -f 1 -d '=' |sed -e "s/^/\$/g")
     value=$(echo "$keys" |cut -f 2 -d \')
     update_domain_value 'web' "$key" "$value"
 done
 
 # Adding task to the vesta pipe
-restart_schedule 'web'
+$BIN/v_restart_web
 
 # Logging
-log_history "$V_EVENT" "v_change_web_domain_tpl $user $domain $old_tpl"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_change_web_domain_tpl $user $domain $old_tpl"
+log_event "$OK" "$EVENT"
 
 exit

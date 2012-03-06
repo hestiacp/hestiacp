@@ -15,10 +15,9 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -29,16 +28,16 @@ source $V_FUNC/domain.func
 check_args '2' "$#" 'user domain'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -58,13 +57,13 @@ is_domain_value_exist 'web' '$STATS'
 type=$(get_domain_value 'web' '$STATS')
 
 # Defining statistic dir
-stat_dir="$V_HOME/$user/web/$domain/stats"
+stat_dir="$HOMEDIR/$user/web/$domain/stats"
 
 # Deleting dir content
 rm -rf $stat_dir/*
 
 # Deleting config
-rm -f $V_HOME/$user/conf/$type.$domain.conf
+rm -f $HOMEDIR/$user/conf/$type.$domain.conf
 
 
 #----------------------------------------------------------#
@@ -78,7 +77,7 @@ sed -i "/ $domain$/d" $V_QUEUE/stats.pipe
 update_domain_value 'web' '$STATS' ''
 
 # Logging
-log_history "$V_EVENT" "v_add_web_domain_stat $user $doman $type"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_add_web_domain_stat $user $doman $type"
+log_event "$OK" "$EVENT"
 
 exit

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete web domain alias
-# options user domain alias
+# options: user domain alias
 #
 # The function of deleting the alias domain (parked domain). By this call
 # default www aliase can be removed as well.
@@ -18,10 +18,9 @@ dom_alias=$(idn -t --quiet -u "$3" )
 dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -32,16 +31,16 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain dom_alias'
 
 # Checking argument format
-format_validation 'user' 'domain' 'dom_alias'
+validate_format 'user' 'domain' 'dom_alias'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -54,7 +53,7 @@ get_domain_values 'web'
 check_alias=$(echo ${ALIAS//,/ }|grep -w "$dom_alias")
 if [ -z "$check_alias" ]; then
     echo "Error: alias not exist"
-    log_event 'debug' "$E_NOTEXIST $V_EVENT"
+    log_event 'debug' "$E_NOTEXIST $EVENT"
     exit $E_NOTEXIST
 fi
 
@@ -68,8 +67,8 @@ ALIAS=$(echo "$ALIAS" |\
     sed -e "s/^$dom_alias$//g"|\
     sed -e "/^$/d"|\
     sed -e ':a;N;$!ba;s/\n/,/g')
-tpl_file="$V_WEBTPL/apache_$TPL.tpl"
-conf="$V_HOME/$user/conf/web/httpd.conf"
+tpl_file="$WEBTPL/apache_$TPL.tpl"
+conf="$HOMEDIR/$user/conf/web/httpd.conf"
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
@@ -79,23 +78,23 @@ del_web_config
 add_web_config
 
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$V_WEBTPL/apache_$TPL.stpl"
-    conf="$V_HOME/$user/conf/web/shttpd.conf"
+    tpl_file="$WEBTPL/apache_$TPL.stpl"
+    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
     del_web_config
     add_web_config
 fi
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
-    conf="$V_HOME/$user/conf/web/nginx.conf"
+    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
+    conf="$HOMEDIR/$user/conf/web/nginx.conf"
     del_web_config
     add_web_config
 
     if [ "$SSL" = 'yes' ]; then
         proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
-        tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-        conf="$V_HOME/$user/conf/web/snginx.conf"
+        tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+        conf="$HOMEDIR/$user/conf/web/snginx.conf"
         del_web_config
         add_web_config
     fi
@@ -113,10 +112,10 @@ update_domain_value 'web' '$ALIAS' "$ALIAS"
 decrease_user_value "$user" '$U_WEB_ALIASES'
 
 # Adding task to the vesta pipe
-restart_schedule 'web'
+$BIN/v_restart_web
 
 # Logging
-log_history "$V_EVENT" "v_add_web_domain_alias $user $domain $dom_alias"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_add_web_domain_alias $user $domain $dom_alias"
+log_event "$OK" "$EVENT"
 
 exit

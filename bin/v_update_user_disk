@@ -13,9 +13,8 @@
 user=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -26,10 +25,10 @@ source $V_FUNC/shared.func
 check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -41,13 +40,13 @@ OLDIFS=$IFS
 IFS=$(echo -en "\n\b")
 
 # Defining directory list
-dir_list=$(ls $V_HOME/$user/ |grep -v '^web$' | grep -v '^mail$' |\
+dir_list=$(ls $HOMEDIR/$user/ |grep -v '^web$' | grep -v '^mail$' |\
     grep -v '^conf$')
 
 # Starting update disk loop
 disk_usage='0'
 for dir in $dir_list; do
-    dir_disk=$(du -shm "$V_HOME/$user/$dir"|cut -f 1 )
+    dir_disk=$(du -shm "$HOMEDIR/$user/$dir"|cut -f 1 )
     disk_usage=$((disk_usage + dir_disk))
 done
 
@@ -63,10 +62,9 @@ update_user_value "$user" '$U_DIR_DISK' "$disk_usage"
 #----------------------------------------------------------#
 
 # Recalculating user disk space
-disk_size=$(get_usr_disk)
-update_user_value "$user" '$U_DISK' "$disk_size"
+recalc_user_disk_usage
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

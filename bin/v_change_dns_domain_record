@@ -19,10 +19,9 @@ rtype=$(echo "$5"| tr '[:lower:]' '[:upper:]')
 value=$(idn -t --quiet -u "$6" )
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -33,16 +32,16 @@ source $V_FUNC/domain.func
 check_args '5' "$#" 'user domain id record type value'
 
 # Checking argument format
-format_validation 'user' 'domain' 'id' 'record' 'rtype'
+validate_format 'user' 'domain' 'id' 'record' 'rtype'
 
 # Checking web system is enabled
 is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'dns'
@@ -58,7 +57,7 @@ is_dns_record_valid
 #----------------------------------------------------------#
 
 # Defining zone path
-zone="$V_USERS/$user/dns/$domain"
+zone="$USER_DATA/dns/$domain"
 
 # Deleting old record
 rm_string=$(grep -n "^ID='$id'" $zone|cut -d : -f 1)
@@ -68,7 +67,7 @@ fi
 
 # Adding record
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' VALUE='$value'"
-dns_rec="$dns_rec SUSPENDED='no' DATE='$V_DATE'"
+dns_rec="$dns_rec SUSPENDED='no' DATE='$DATE'"
 echo "$dns_rec" >> $zone 
 
 # Sorting records
@@ -83,10 +82,10 @@ update_domain_zone
 #----------------------------------------------------------#
 
 # Adding task to the vesta pipe
-restart_schedule 'dns'
+$BIN/v_restart_dns
 
 # Logging
-log_history "$V_EVENT"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT"
+log_event "$OK" "$EVENT"
 
 exit

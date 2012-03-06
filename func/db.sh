@@ -1,23 +1,20 @@
 is_db_valid() {
-    config="$V_USERS/$user/db.conf"
+    config="$USER_DATA/db.conf"
     check_db=$(grep "DB='$database'" $config)
 
     # Checking result
     if [ -z "$check_db" ]; then
         echo "Error: db not added"
-        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        log_event 'debug' "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi
 }
 
 is_db_new() {
-    # Parsing domain values
-    check_db=$(grep -F "DB='$database'" $V_USERS/$user/db.conf)
-
-    # Checking result
+    check_db=$(grep "DB='$database'" $USER_DATA/db.conf)
     if [ ! -z "$check_db" ]; then
         echo "Error: db exist"
-        log_event 'debug' "$E_EXISTS $V_EVENT"
+        log_event 'debug' "$E_EXISTS $EVENT"
         exit $E_EXISTS
     fi
 }
@@ -25,124 +22,51 @@ is_db_new() {
 
 # Checking database host existance
 is_db_host_valid() {
-    config="$V_DB/$type.conf"
+    config="$VESTA/conf/$type.conf"
     check_db=$(grep "HOST='$host'" $config)
 
     # Checking result
     if [ -z "$check_db" ]; then
         echo "Error: host not added"
-        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        log_event 'debug' "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi
 }
 
-get_next_db_host() {
-    # Defining vars
-    config="$V_DB/$type.conf"
-    host="empty"
-    host_str=$(grep "ACTIVE='yes'" $config)
+get_next_dbhost() {
+    if [ -z "$host" ]; then
+        IFS=$'\n'
+        host='NULL_DB_HOST'
+        config="$VESTA/conf/$type.conf"
+        host_str=$(grep "SUSPENDED='no'" $config)
+        check_row=$(echo "$host_str"|wc -l)
 
-    # Checking rows count
-    check_row=$(echo "$host_str"|wc -l)
-
-    # Checking empty result
-    if [ 0 -eq "$check_row" ]; then
-        echo "$host"
-        exit
-    fi
-
-    # Checking one host
-    if [ 1 -eq "$check_row" ]; then
-        for key in $host_str; do
-            eval ${key%%=*}="${key#*=}"
-        done
-        users=$(echo -e "${U_SYS_USERS//,/\n}"|wc -l)
-        if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
-            host=$HOST
+        if [ 0 -lt "$check_row" ]; then
+            if [ 1 -eq "$check_row" ]; then
+                for db in $host_str; do
+                    eval $db
+                    if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
+                        host=$HOST
+                    fi
+                done
+            else
+                old_weight='100'
+                for db in $host_str; do
+                    eval $db
+                    let weight="$U_DB_BASES * 100 / $MAX_DB" &>/dev/null
+                    if [ "$old_weight" -gt "$weight" ]; then
+                        host="$HOST"
+                        old_weight="$weight"
+                    fi
+                done
+            fi
         fi
-
-        echo "$host"
-        exit
     fi
-
-    # Defining balancing function
-    weight_balance() {
-        ow='100'                # old_weght
-        IFS=$'\n'
-        for db in $host_str; do
-            for key in $(echo $db|sed -e "s/' /'\n/g"); do
-                eval ${key%%=*}="${key#*=}"
-            done
-            weight=$(echo "$U_DB_BASES * 100 / $MAX_DB"|bc)
-            users=$(echo -e "${U_SYS_USERS//,/\n}"|wc -l)
-
-            if [ "$ow" -gt "$weight" ]; then
-                host="$HOST"
-                ow="$weight"
-            fi
-        done
-    }
-
-    # Defining random balancing function
-    random_balance() {
-    # Parsing host pool
-        HOST_LIST=''
-        IFS=$'\n'
-        for db in $host_str; do
-            for key in $(echo $db|sed -e "s/' /'\n/g"); do
-                eval ${key%%=*}="${key#*=}"
-            done
-
-            users=$(echo -e "${U_SYS_USERS//,/\n}"|wc -l)
-
-            if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
-                HOST_LIST="$HOST_LIST$HOST "
-            fi
-        done
-
-        # Checking one host
-        if [ 2 -eq $(echo -e "${HOST_LIST// /\n}"|wc -l) ]; then
-            host="${HOST_LIST// /\n}"# should test with disabled host
-        else
-            # Selecting all hosts
-            HOSTS=($(echo -e "${HOST_LIST// /\n}"))
-            num=${#HOSTS[*]}
-            host="${HOSTS[$((RANDOM%num))]}"
-        fi
-    }
-
-    # Defining first balancing function
-    first_balance() {
-        # Parsing host pool
-        IFS=$'\n'
-        for db in $host_str; do
-            for key in $(echo $db|sed -e "s/' /'\n/g"); do
-                eval ${key%%=*}="${key#*=}"
-            done
-
-            users=$(echo -e "${U_SYS_USERS//,/\n}"|wc -l)
-            if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
-                host="$HOST"
-                break
-            fi
-        done
-    }
-
-    # Parsing domain values
-    db_balance=$(grep "DB_BALANCE='" $V_CONF/vesta.conf|cut -f 2 -d \')
-
-    case $db_balance in 
-        weight) weight_balance "$config" ;;
-        random) random_balance "$config" ;;
-        first) first_balance "$config" ;;
-        *) random_balance "$config" ;;
-    esac
-    echo "$host"
 }
 
 increase_db_value() {
     # Defining vars
-    conf="$V_DB/$type.conf"
+    conf="$VESTA/conf/$type.conf"
     host_str=$(grep "HOST='$host'" $conf)
 
     for key in $host_str; do
@@ -181,7 +105,7 @@ increase_db_value() {
 
 decrease_db_value() {
     # Defining vars
-    conf="$V_DB/$type.conf"
+    conf="$VESTA/conf/$type.conf"
     host_str=$(grep "HOST='$host'" $conf)
 
     for key in $host_str; do
@@ -192,7 +116,7 @@ decrease_db_value() {
     U_DB_BASES=$((U_DB_BASES - 1))
 
     # Checking user databases on that host
-    udb=$(grep "TYPE='$type'" $V_USERS/$user/db.conf|grep "HOST='$host'"|wc -l)
+    udb=$(grep "TYPE='$type'" $USER_DATA/db.conf|grep "HOST='$host'"|wc -l)
     if [ 2 -gt "$udb" ]; then
         U_SYS_USERS=$(echo "$U_SYS_USERS" |  sed -e "s/,/\n/g" |\
             sed -e "/^$user$/d" | sed -e :a -e '$!N;s/\n/,/;ta')
@@ -219,7 +143,7 @@ decrease_db_value() {
 
 create_db_mysql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/mysql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -228,7 +152,7 @@ create_db_mysql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -236,7 +160,7 @@ create_db_mysql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -245,7 +169,7 @@ create_db_mysql() {
     code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -265,7 +189,7 @@ create_db_mysql() {
 
 create_db_pgsql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/pgsql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -276,7 +200,7 @@ create_db_pgsql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -284,7 +208,7 @@ create_db_pgsql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -293,7 +217,7 @@ create_db_pgsql() {
     code=$?
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -313,11 +237,11 @@ create_db_pgsql() {
 }
 
 is_db_host_new() {
-    if [ -e "$V_DB/$type.conf" ]; then
-        check_host=$(grep "HOST='$host'" $V_DB/$type.conf)
+    if [ -e "$VESTA/conf/$type.conf" ]; then
+        check_host=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
         if [ ! -z "$check_host" ]; then
             echo "Error: db host exist"
-            log_event 'debug' "$E_EXISTS $V_EVENT"
+            log_event 'debug' "$E_EXISTS $EVENT"
             exit $E_EXISTS
         fi
     fi
@@ -329,7 +253,7 @@ is_mysql_host_alive() {
     $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 }
@@ -341,50 +265,50 @@ is_pgsql_host_alive() {
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 }
 
 is_db_suspended() {
-    config="$V_USERS/$user/db.conf"
+    config="$USER_DATA/db.conf"
     check_db=$(grep "DB='$database'" $config|grep "SUSPENDED='yes'")
 
     # Checking result
     if [ ! -z "$check_db" ]; then
         echo "Error: db suspended"
-        log_event 'debug' "$E_SUSPENDED $V_EVENT"
+        log_event 'debug' "$E_SUSPENDED $EVENT"
         exit $E_SUSPENDED
     fi
 }
 
 is_db_unsuspended() {
-    config="$V_USERS/$user/db.conf"
+    config="$USER_DATA/db.conf"
     check_db=$(grep "DB='$database'" $config|grep "SUSPENDED='yes'")
 
     # Checking result
     if [ -z "$check_db" ]; then
         echo "Error: db unsuspended"
-        log_event 'debug' "$E_UNSUSPENDED $V_EVENT"
+        log_event 'debug' "$E_UNSUSPENDED $EVENT"
         exit $E_UNSUSPENDED
     fi
 }
 
 is_db_user_valid() {
-    config="$V_USERS/$user/db.conf"
+    config="$USER_DATA/db.conf"
     check_db=$(grep "DB='$database'" $config|grep "USER='$db_user'")
 
     # Checking result
     if [ -z "$check_db" ]; then
         echo "Error: dbuser not exist"
-        log_event 'debug' "$E_NOTEXIST $V_EVENT"
+        log_event 'debug' "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi
 }
 
 change_db_mysql_password() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/mysql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -393,7 +317,7 @@ change_db_mysql_password() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -401,7 +325,7 @@ change_db_mysql_password() {
     $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -416,7 +340,7 @@ change_db_mysql_password() {
 
 change_db_pgsql_password() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/pgsql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -427,7 +351,7 @@ change_db_pgsql_password() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -435,7 +359,7 @@ change_db_pgsql_password() {
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -446,7 +370,7 @@ change_db_pgsql_password() {
 get_db_value() {
     # Defining vars
     key="$1"
-    db_str=$(grep "DB='$database'" $V_USERS/$user/db.conf)
+    db_str=$(grep "DB='$database'" $USER_DATA/db.conf)
 
     # Parsing key=value
     for keys in $db_str; do
@@ -462,7 +386,7 @@ get_db_value() {
 
 del_db_mysql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/mysql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -471,7 +395,7 @@ del_db_mysql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -479,7 +403,7 @@ del_db_mysql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -487,12 +411,12 @@ del_db_mysql() {
     $sql "DROP DATABASE $database" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
     # Deleting user
-    check_users=$(grep "USER='$db_user'" $V_USERS/$user/db.conf |wc -l)
+    check_users=$(grep "USER='$db_user'" $USER_DATA/db.conf |wc -l)
     if [ 1 -ge "$check_users" ]; then
         $sql "DROP USER '$db_user'@'%'"
         if [ "$host" = 'localhost' ]; then
@@ -509,7 +433,7 @@ del_db_mysql() {
 
 del_db_pgsql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/pgsql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -520,7 +444,7 @@ del_db_pgsql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -528,7 +452,7 @@ del_db_pgsql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -537,12 +461,12 @@ del_db_pgsql() {
     $sql "DROP DATABASE $database" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
     # Deleting user
-    check_users=$(grep "USER='$db_user'" $V_USERS/$user/db.conf |wc -l)
+    check_users=$(grep "USER='$db_user'" $USER_DATA/db.conf |wc -l)
     if [ 1 -ge "$check_users" ]; then
         $sql "REVOKE CONNECT ON DATABASE template1 FROM $db_user" >/dev/null
         $sql "DROP ROLE $db_user" >/dev/null
@@ -553,13 +477,13 @@ del_db_pgsql() {
 
 
 del_db_vesta() {
-    conf="$V_USERS/$user/db.conf"
+    conf="$USER_DATA/db.conf"
 
     # Parsing domains
     string=$( grep -n "DB='$database'" $conf | cut -f 1 -d : )
     if [ -z "$string" ]; then
         echo "Error: parse error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
     sed -i "$string d" $conf
@@ -567,7 +491,7 @@ del_db_vesta() {
 
 dump_db_mysql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/mysql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -577,7 +501,7 @@ dump_db_mysql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -585,7 +509,7 @@ dump_db_mysql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -599,7 +523,7 @@ dump_db_mysql() {
 
 dump_db_pgsql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/pgsql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -610,7 +534,7 @@ dump_db_pgsql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -618,7 +542,7 @@ dump_db_pgsql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -638,7 +562,7 @@ dump_db_pgsql() {
 
 is_db_host_free() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/$type.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -646,19 +570,19 @@ is_db_host_free() {
     # Checking U_DB_BASES
     if [ 0 -ne "$U_DB_BASES" ]; then
         echo "Error: host is used"
-        log_event 'debug' "$E_INUSE $V_EVENT"
+        log_event 'debug' "$E_INUSE $EVENT"
         exit $E_INUSE
     fi
 }
 
 del_dbhost_vesta() {
-    conf="$V_DB/$type.conf"
+    conf="$VESTA/conf/$type.conf"
 
     # Parsing domains
     string=$( grep -n "HOST='$host'" $conf | cut -f 1 -d : )
     if [ -z "$string" ]; then
         echo "Error: parse error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
     sed -i "$string d" $conf
@@ -669,7 +593,7 @@ update_db_base_value() {
     value="$2"
 
     # Defining conf
-    conf="$V_USERS/$user/db.conf"
+    conf="$USER_DATA/db.conf"
 
     # Parsing conf
     db_str=$(grep -n "DB='$database'" $conf)
@@ -697,7 +621,7 @@ update_db_base_value() {
 
 suspend_db_mysql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/mysql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -706,7 +630,7 @@ suspend_db_mysql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -714,7 +638,7 @@ suspend_db_mysql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -725,7 +649,7 @@ suspend_db_mysql() {
 
 suspend_db_pgsql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/pgsql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -736,7 +660,7 @@ suspend_db_pgsql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -744,7 +668,7 @@ suspend_db_pgsql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -755,7 +679,7 @@ suspend_db_pgsql() {
 
 unsuspend_db_mysql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/mysql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -764,7 +688,7 @@ unsuspend_db_mysql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -772,7 +696,7 @@ unsuspend_db_mysql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -783,7 +707,7 @@ unsuspend_db_mysql() {
 
 unsuspend_db_pgsql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/pgsql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -794,7 +718,7 @@ unsuspend_db_pgsql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -802,7 +726,7 @@ unsuspend_db_pgsql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -828,7 +752,7 @@ db_clear_search() {
 
 get_disk_db_mysql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/mysql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -837,7 +761,7 @@ get_disk_db_mysql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -845,7 +769,7 @@ get_disk_db_mysql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
     if [ '0' -ne "$code" ]; then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -871,7 +795,7 @@ get_disk_db_mysql() {
 
 get_disk_db_pgsql() {
     # Defining vars
-    host_str=$(grep "HOST='$host'" $V_DB/pgsql.conf)
+    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
     for key in $host_str; do
         eval ${key%%=*}=${key#*=}
     done
@@ -882,7 +806,7 @@ get_disk_db_pgsql() {
     # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 
@@ -890,7 +814,7 @@ get_disk_db_pgsql() {
     $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
     if [ '0' -ne "$code" ];  then
         echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $V_EVENT"
+        log_event 'debug' "$E_DB $EVENT"
         exit $E_DB
     fi
 
@@ -914,4 +838,30 @@ get_disk_db_pgsql() {
     else
         echo "$size"
     fi
+}
+
+
+increase_dbhost_values() {
+    conf="$VESTA/conf/$type.conf"
+
+    # Parsing conf
+    dbhost_str=$(grep -n "HOST='$host'" $conf)
+    str_number=$(echo $dbhost_str | cut -f 1 -d ':')
+    str=$(echo $dbhost_str | cut -f 2 -d ':')
+
+    # Reading key=values
+    eval $str
+
+    # Defining clean key
+    c_key=$(echo "${key//$/}")
+
+    eval old="${key}"
+
+    # Escaping slashes
+    old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+    new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+
+    # Updating conf
+    sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g"\
+        $conf
 }

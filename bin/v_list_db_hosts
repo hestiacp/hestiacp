@@ -14,8 +14,7 @@ type=$1
 format=${2-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -23,13 +22,10 @@ source $V_FUNC/shared.func
 #----------------------------------------------------------#
 
 # Checking args
-check_args '1' "$#" 'type [format] [limit] [offset]'
-
-# Checking argument format
-format_validation 'limit' 'offset'
+check_args '1' "$#" 'type [format]'
 
 # Checking db type
-is_type_valid 'db' "$type"
+is_type_valid "$DB_SYSTEM" "$type"
 
 
 #----------------------------------------------------------#
@@ -37,7 +33,7 @@ is_type_valid 'db' "$type"
 #----------------------------------------------------------#
 
 # Defining config type
-conf=$V_DB/$type.conf
+conf=$VESTA/conf/$type.conf
 
 # Defining fileds to select
 fields='$HOST $PORT $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'

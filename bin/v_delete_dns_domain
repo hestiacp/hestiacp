@@ -16,10 +16,9 @@ domain=$(idn -t --quiet -u "$2" )
 named_conf=/etc/named.conf
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -30,16 +29,16 @@ source $V_FUNC/domain.func
 check_args '2' "$#" 'user domain'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking web system is enabled
 is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'dns'
@@ -52,7 +51,7 @@ is_domain_valid 'dns'
 # Get domain values
 tpl_name=$(get_domain_value 'dns' '$TPL')
 old_ip=$(get_domain_value 'dns' '$IP')
-records=$(wc -l $V_USERS/$user/dns/$domain|cut -f 1 -d ' ')
+records=$(wc -l $USER_DATA/dns/$domain|cut -f 1 -d ' ')
 
 # Deleting domain in named.conf
 rm_string=$(grep -n /conf/dns/$domain.db $named_conf |cut -d : -f 1)
@@ -60,8 +59,8 @@ if [ ! -z "$rm_string" ]; then
     sed -i "$rm_string d" $named_conf
 fi
 
-if [ -e "$V_HOME/$user/conf/dns/$domain.db" ]; then
-    rm -f $V_HOME/$user/conf/dns/$domain.db
+if [ -e "$HOMEDIR/$user/conf/dns/$domain.db" ]; then
+    rm -f $HOMEDIR/$user/conf/dns/$domain.db
 fi
 
 
@@ -70,18 +69,18 @@ fi
 #----------------------------------------------------------#
 
 # Deleting domain
-sed -i "/DOMAIN='$domain'/ d" $V_USERS/$user/dns.conf
-rm -f $V_USERS/$user/dns/$domain
+sed -i "/DOMAIN='$domain'/ d" $USER_DATA/dns.conf
+rm -f $USER_DATA/dns/$domain
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_DNS_DOMAINS'
 decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Adding task to the vesta pipe
-restart_schedule 'dns'
+$BIN/v_restart_dns
 
 # Logging
-log_history "$V_EVENT" "v_add_dns_domain $user $domain $old_ip $tpl_name"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_add_dns_domain $user $domain $old_ip $tpl_name"
+log_event "$OK" "$EVENT"
 
 exit

@@ -14,11 +14,10 @@ user=$1
 backup=$2
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
-source $V_FUNC/db.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/db.sh
 
 # Defining ftp command function
 ftpc() {
@@ -34,11 +33,11 @@ EOF
 
 init_ftp_variables() {
     # Checking config
-    source $V_CONF/ftp.backup.conf
+    source $VESTA/conf/ftp.backup.conf
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
         [ -z "$BPATH" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 }
@@ -51,7 +50,7 @@ check_ftp_connection(){
              rm $ftmpdir"
     if [ ! -z "$(ftpc "$command")" ] ; then
         echo "Error: FTP error"
-        log_event 'debug' "$E_FTP $V_EVENT"
+        log_event 'debug' "$E_FTP $EVENT"
         exit $E_FTP
     fi
 }
@@ -70,7 +69,7 @@ echo
 check_args '2' "$#" 'user backup'
 
 # Checking argument format
-format_validation 'user' 'backup'
+validate_format 'user' 'backup'
 
 # Checking backup system is enabled
 is_system_enabled 'BACKUP_SYSTEM'
@@ -78,35 +77,35 @@ is_system_enabled 'BACKUP_SYSTEM'
 # Checking load averages
 la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')
 i=0
-while [ "$la" -ge "$V_BACKUP_LA_LIMIT" ]; do
+while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
     echo "$(date "+%F %T") Load Average $la"
     echo
     sleep 60
     if [ "$i" -ge "15" ]; then
         echo "Error: LA is too high"
-        log_event 'debug' "$E_LA $V_EVENT"
+        log_event 'debug' "$E_LA $EVENT"
         exit $E_LA
     fi
     (( ++i))
 done
 
 # Checking local backup existance
-if [ ! -e "$V_BACKUP/$user.$backup.tar" ]; then
+if [ ! -e "$BACKUP/$user.$backup.tar" ]; then
     if [ ! -z "$(echo $BACKUP_SYSTEM | grep -w ftp)" ]; then
         init_ftp_variables
         check_ftp_connection
         if [ ! -z "$(ftpc ls |awk '{print $9}' |grep $user.$backup.)" ]; then
-            cd $V_BACKUP
+            cd $BACKUP
             echo "$(date "+%F %T") Downloading ftp backup"
-            ftpc "get $user.$backup.tar" >> /dev/null 2>/dev/null
+            ftpc "get $user.$backup.tar" &>/dev/null
             echo "$(date "+%F %T") Downloaded $user.$backup.tar"
         fi
     fi
 fi
 
-if [ ! -e "$V_BACKUP/$user.$backup.tar" ]; then
-    echo "Error: $V_BACKUP/$user.$backup.tar  backup not found"
-    log_event 'debug' "$E_NOTEXIST $V_EVENT"
+if [ ! -e "$BACKUP/$user.$backup.tar" ]; then
+    echo "Error: $BACKUP/$user.$backup.tar  backup not found"
+    log_event 'debug' "$E_NOTEXIST $EVENT"
     exit $E_NOTEXIST
 fi
 
@@ -141,11 +140,11 @@ fi
 #----------------------------------------------------------#
 
 # Creating temporary directory
-tmpdir=$(mktemp -p $V_BACKUP -d)
+tmpdir=$(mktemp -p $BACKUP -d)
 echo "TMPDIR is $tmpdir"
 cd $tmpdir
 echo "$(date "+%F %T") Extracting files from backup"
-tar -xf $V_BACKUP/$user.$backup.tar
+tar -xf $BACKUP/$user.$backup.tar
 echo "$(date "+%F %T") Backup has been unpacked"
 
 # Checking Vesta
@@ -157,6 +156,6 @@ echo "$(date "+%F %T") Backup has been unpacked"
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

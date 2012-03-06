@@ -24,10 +24,9 @@ template=${7-template1}
 
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/db.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
@@ -39,14 +38,14 @@ args_usage='type host port db_user db_password [max_db] [tpl]'
 check_args '5' "$#" "$args_usage"
 
 # Checking argument format
-format_validation 'host' 'port' 'db_user' 'db_password' 'max_db'
-format_validation 'template'
+validate_format 'host' 'port' 'db_user' 'db_password' 'max_db'
+validate_format 'template'
 
 # Checking db system is enabled
 is_system_enabled 'DB_SYSTEM'
 
 # Checking db type
-is_type_valid 'db' "$type"
+is_type_valid "$DB_SYSTEM" "$type"
 
 # Checking host existance
 is_db_host_new
@@ -66,16 +65,16 @@ esac
 case $type in
     mysql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
             new_str="$new_str PORT='$port' MAX_DB='$max_db' U_SYS_USERS=''";
-            new_str="$new_str U_DB_BASES='0'  ACTIVE='yes' DATE='$V_DATE'";;
+            new_str="$new_str U_DB_BASES='0'  ACTIVE='yes' DATE='$DATE'";;
     pgsql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
             new_str="$new_str PORT='$port' TPL='$template'";
             new_str="$new_str MAX_DB='$max_db' U_SYS_USERS=''";
-            new_str="$new_str U_DB_BASES='0' ACTIVE='yes' DATE='$V_DATE'";;
+            new_str="$new_str U_DB_BASES='0' ACTIVE='yes' DATE='$DATE'";;
 esac
 
 # Adding host to conf
-echo "$new_str" >> $V_DB/$type.conf
-chmod 660 $V_DB/$type.conf
+echo "$new_str" >> $VESTA/conf/$type.conf
+chmod 660 $VESTA/conf/$type.conf
 
 
 #----------------------------------------------------------#
@@ -83,9 +82,9 @@ chmod 660 $V_DB/$type.conf
 #----------------------------------------------------------#
 
 # Hidding db pass
-V_EVENT=$(echo $V_EVENT | sed -e "s/$db_password/xxxxxx/g")
+EVENT=$(echo $EVENT | sed -e "s/$db_password/xxxxxx/g")
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

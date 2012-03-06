@@ -13,8 +13,7 @@
 format=${1-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
+source $VESTA/func/shared.sh
 
 # Json function
 json_list_dnstpl() {
@@ -22,13 +21,13 @@ json_list_dnstpl() {
     echo '{'
 
     # Count fields
-    for template in $(ls $V_DNSTPL/| grep '.descr'); do
+    for template in $(ls $DNSTPL/| grep '.descr'); do
         # Closing bracket if there already was output
         if [ -n "$data" ]; then
             echo -e '        },'
         fi
 
-        tpl_descr=$(cat $V_DNSTPL/$template |grep '#'|tr -d '\n')
+        tpl_descr=$(cat $DNSTPL/$template |grep '#'|tr -d '\n')
         tpl_name="${template//.descr/}"
         echo -e  "\t\"$tpl_name\": {"
         echo -e "\t\t\"DESCR\": \"${tpl_descr//# /}\""
@@ -47,9 +46,9 @@ json_list_dnstpl() {
 
 # Shell function
 shell_list_dnstpl() {
-    for template in $(ls $V_DNSTPL/| grep '.descr'); do
+    for template in $(ls $DNSTPL/| grep '.descr'); do
         tpl_name="${template//.descr/}"
-        tpl_descr=$(cat $V_DNSTPL/$template |grep '#')
+        tpl_descr=$(cat $DNSTPL/$template |grep '#')
 
         # Print result
         if [ -z "$nohead" ] ; then

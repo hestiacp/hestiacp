@@ -14,10 +14,9 @@ ip=$1
 ip_name=$2
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/ip.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/ip.sh
 
 
 #----------------------------------------------------------#
@@ -28,7 +27,7 @@ source $V_FUNC/ip.func
 check_args '2' "$#" 'ip ip_name'
 
 # Checking argument format
-format_validation 'ip' 'ip_name'
+validate_format 'ip' 'ip_name'
 
 # Checking system ip
 is_sys_ip_valid
@@ -47,6 +46,6 @@ update_sys_ip_value '$NAME' "$ip_name"
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

@@ -15,15 +15,14 @@ IP=$ip
 format=${2-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
-source $V_FUNC/ip.func
+source $VESTA/func/shared.sh
+source $VESTA/func/ip.sh
 
 # Json function
 json_list_ip() {
     i=1
     fileds_count=$(echo "$fields" | wc -w)
-    ip_data=$(cat $V_IPS/$IP)
+    ip_data=$(cat $VESTA/data/ips/$IP)
 
     # Print top bracket
     echo '{'
@@ -58,7 +57,7 @@ json_list_ip() {
 
 # Shell function
 shell_list_ip() {
-    line=$(cat $V_IPS/$IP)
+    line=$(cat $VESTA/data/ips/$IP)
 
     # Assing key=value
     eval $line
@@ -79,7 +78,7 @@ shell_list_ip() {
 check_args '1' "$#" 'ip [format]'
 
 # Checking argument format
-format_validation 'ip'
+validate_format 'ip'
 
 # Checking ip
 is_sys_ip_valid
@@ -87,7 +86,7 @@ is_sys_ip_valid
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-conf=$V_IPS/$IP
+conf=$VESTA/data/ips/$IP
 
 # Defining fileds to select
 fields='$IP $OWNER $STATUS $NAME $U_SYS_USERS $U_WEB_DOMAINS

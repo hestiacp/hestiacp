@@ -1,0 +1,694 @@
+# Internal variables
+DATE=$(date +%F)
+TIME=$(date +%T)
+SCRIPT=$(basename $0)
+EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT' ARGUMENTS='$*'"
+BACKUP_GZIP=5
+BACKUP_DISK_LIMIT=95
+BACKUP_LA_LIMIT=5
+RRD_STEP=300
+RRD_IFACE_EXCLUDE=lo
+
+BIN=$VESTA/bin
+USER_DATA=$VESTA/data/users/$user
+WEBTPL=$VESTA/data/templates/web
+DNSTPL=$VESTA/data/templates/dns
+RRD=$VESTA/web/rrd
+
+# Return codes
+OK=0
+E_ARGS=1
+E_INVALID=2
+E_NOTEXIST=3
+E_EXISTS=4
+E_SUSPENDED=5
+E_UNSUSPENDED=6
+E_INUSE=7
+E_LIMIT=8
+E_PASSWORD=9
+E_FORBIDEN=10
+E_DISABLED=11
+E_PARSING=12
+E_DISK=13
+E_LA=14
+E_FTP=15
+E_SSH=16
+E_DB=17
+E_RRD=18
+E_UPDATE=19
+E_RESTART=20
+
+# Log event function
+log_event() {
+    echo "$1 $2" >> $VESTA/log/system.log
+}
+
+# Log user history
+log_history() {
+    echo "$1" >> $USER_DATA/history.log
+}
+
+# Argument list checker
+check_args() {
+    if [ "$1" -gt "$2" ]; then
+        echo "Error: bad args"
+        echo "Usage: $SCRIPT $3"
+        log_event "$E_ARGS" "$EVENT"
+        exit $E_ARGS
+    fi
+}
+
+# Subsystem checker
+is_system_enabled() {
+    if [ -z "$1" ] || [ "$1" = no ]; then
+        echo "Error: subsystem disabled"
+        log_event "$E_DISABLED" "$EVENT"
+        exit $E_DISABLED
+    fi
+}
+
+# User package check
+is_package_full() {
+    case "$1" in
+        WEB_DOMAINS) used=$(wc -l $USER_DATA/web.conf|cut -f1 -d \ );;
+        WEB_ALIASES) used=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |\
+             awk -F "ALIAS='" '{print $2}' | cut -f 1 -d \' | tr ',' '\n' |\
+             wc -l );;
+        DNS_DOMAINS) used=$(wc -l $USER_DATA/dns.conf |cut -f1 -d \ );;
+        DNS_RECORDS) used=$(wc -l $USER_DATA/dns/$domain |cut -f1 -d \ );;
+        MAIL_DOMAINS) used=$(wc -l $USER_DATA/mail.conf |cut -f1 -d \ );;
+        MAIL_ACCOUNTS) used=$(wc -l $USER_DATA/mail/$domain |\
+            cut -f1 -d \ );;
+        DATABASES) used=$(wc -l $USER_DATA/db.conf |cut -f1 -d \ );;
+        CRON_JOBS) used=$(wc -l $USER_DATA/cron.conf |cut -f1 -d \ );;
+    esac
+
+    limit=$(grep "^$1=" $USER_DATA/user.conf | cut -f 2 -d \' )
+    if [ "$used" -ge "$limit" ]; then
+	echo "Error: Upgrade package"
+        log_event "$E_LIMIT" "$EVENT"
+        exit $E_LIMIT
+    fi
+}
+
+# Random password generator
+gen_password() {
+    matrix='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+    lenght=10
+    while [ ${n:=1} -le $lenght ]; do
+        pass="$pass${matrix:$(($RANDOM%${#matrix})):1}"
+        let n+=1
+    done
+    echo "$pass"
+}
+
+# Web template check
+is_apache_template_valid() {
+    c=$(echo "$templates" | grep -w  "$template")
+    t="$WEBTPL/apache_$template.tpl"
+    d="$WEBTPL/apache_$template.descr"
+    s="$WEBTPL/apache_$template.stpl"
+    if [ -z "$c" ] || [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
+        echo "Error: $template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+# Nginx template check
+is_nginx_template_valid() {
+    t="$WEBTPL/ngingx_vhost_$template.tpl"
+    d="$WEBTPL/ngingx_vhost_$template.descr"
+    s="$WEBTPL/ngingx_vhost_$template.stpl"
+    if [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
+        echo "Error: $template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+# DNS template check
+is_dns_template_valid() {
+    tpl="$DNSTPL/$template.tpl"
+    descr="$DNSTPL/$template.descr"
+    if [ ! -e $tpl ] || [ ! -e $descr ]; then
+        echo "Error: template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+# Package existance check
+is_package_valid() {
+    if [ ! -e "$VESTA/data/packages/$package.pkg" ]; then
+        echo "Error: $package is not exist"
+        log_event "$E_NOTEXIST $EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+# Validate system type
+is_type_valid() {
+    if [ -z "$(echo $1 | grep -w $2)" ]; then
+        echo "Error: unknown type"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Checkk user backup settings
+is_backup_enabled() {
+    BACKUPS=$(grep "BACKUPS='" $USER_DATA/user.conf | cut -f 2 -d \')
+    if [ -z "$BACKUPS" ] || [[ "$BACKUPS" -le '0' ]]; then
+        echo "Error:  user backup disabled"
+        log_event "$E_DISABLED" "$EVENT"
+        exit $E_DISABLED
+    fi
+}
+
+# Check if object is free and can be created
+is_object_free() {
+    if [ $2 = 'USER' ]; then
+        if [ -d "$USER_DATA" ]; then
+            object="OK"
+        fi
+    else
+        object=$(grep "$2='$3'" $USER_DATA/$1.conf)
+    fi
+    if [ ! -z "$object" ]; then
+        echo "Error: $3 exists"
+        log_event "$E_EXISTS" "$EVENT"
+        exit $E_EXISTS
+    fi
+}
+
+# Check if object exists and can be used
+is_object_valid() {
+    if [ $2 = 'USER' ]; then
+        if [ -d "$VESTA/data/users/$user" ]; then
+            object="OK"
+        fi
+    else
+        if [ $2 = 'DBHOST' ]; then
+            object=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+        else
+            object=$(grep "$2='$3'" $VESTA/data/users/$user/$1.conf)
+        fi
+    fi
+    if [ -z "$object" ]; then
+        echo "Error: $3 not exist"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+# Check if object is supended
+is_object_suspended() {
+    if [ $2 = 'USER' ]; then
+        spnd=$(cat $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
+    else
+        spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
+    fi
+    if [ ! -z "$spnd" ]; then
+        echo "Error: $3 is suspended"
+        log_event "$E_SUSPENDED" "$EVENT"
+        exit $E_SUSPENDED
+    fi
+}
+
+# Check if object is unsupended
+is_object_unsuspended() {
+    if [ $2 = 'USER' ]; then
+        spnd=$(cat $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
+    else
+        spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
+    fi
+    if [ -z "$spnd" ]; then
+        echo "Error: $3 is not suspended"
+        log_event "$E_UNSUSPENDED" "$EVENT"
+        exit $E_UNSUSPENDED
+    fi
+}
+
+# Update object value
+update_object_value() {
+    row=$(grep -n "$2='$3'" $USER_DATA/$1.conf)
+    lnr=$(echo $row | cut -f 1 -d ':')
+    object=$(echo $row | sed -e "s/^$lnr://")
+    eval "$object"
+    eval old="$4"
+    old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+    new=$(echo "$5" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+    sed -i "$lnr s/${4//$/}='${old//\*/\\*}'/${4//$/}='${new//\*/\\*}'/g" \
+        $USER_DATA/$1.conf
+}
+
+# Search objects
+search_objects() {
+    OLD_IFS="$IFS"
+    IFS=$'\n'
+    for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
+        eval $line
+        eval echo \$$4
+    done
+    IFS="$OLD_IFS"
+}
+
+# Get user value
+get_user_value() {
+    grep "^$1=" $USER_DATA/user.conf| cut -f 2 -d \'
+}
+
+# Update user value in user.conf
+update_user_value() {
+    key="${2//$}"
+    conf="$VESTA/data/users/$1/user.conf"
+    old=$(grep "$key=" $conf | cut -f 2 -d \')
+    sed -i "s/$key='$old'/$key='$3'/g" $conf
+}
+
+# Increase user counter
+increase_user_value() {
+    key="${2//$}"
+    factor="${3-1}"
+    conf="$VESTA/data/users/$1/user.conf"
+    old=$(grep "$key=" $conf | cut -f 2 -d \')
+    if [ -z "$old" ]; then
+        old=0
+    fi
+    new=$((old + factor))
+    sed -i "s/$key='$old'/$key='$new'/g" $conf
+}
+
+# Decrease user counter
+decrease_user_value() {
+    key="${2//$}"
+    factor="${3-1}"
+    conf="$VESTA/data/users/$1/user.conf"
+    old=$(grep "$key=" $conf | cut -f 2 -d \')
+    if [ -z "$old" ]; then
+        old=0
+    fi
+    if [ "$old" -le 1 ]; then
+        new=0
+    else
+        new=$((old - factor))
+    fi
+    sed -i "s/$key='$old'/$key='$new'/g" $conf
+}
+
+# Json listing function
+json_list() {
+    echo '{'
+    fileds_count=$(echo $fields| wc -w )
+    while read line; do
+        eval $line
+        if [ -n "$data_output" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        for field in $fields; do
+            eval value=$field
+            if [ $i -eq 1 ]; then
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"$value\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"$value\""
+                    data_output=yes
+                fi
+            fi
+        done
+    done < $conf
+
+    if [ "$data_output" = 'yes' ]; then
+        echo -e '        }'
+    fi
+    echo -e '}'
+}
+
+# Shell listing function
+shell_list() {
+    if [ -z "$nohead" ] ; then
+        echo "${fields//$/}"
+        for a in $fields; do
+            echo -e "------ \c"
+        done
+        echo
+    fi
+    while read line ; do
+        eval $line
+        for field in $fields; do
+            eval value=$field
+            if [ -z "$value" ]; then
+                value='NULL'
+            fi
+            echo -n "$value "
+        done
+        echo
+    done < $conf
+}
+
+# Recalculate U_DISK value
+recalc_user_disk_usage() {
+    usage=$(grep 'U_DIR_DISK=' $USER_DATA/user.conf | cut -f 2 -d "'")
+    for conf_type in mail db web; do
+        if [ -f "$USER_DATA/$conf_type.conf" ]; then
+            dusage=$(grep 'U_DISK=' $USER_DATA/$conf_type.conf |\
+                awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
+            for disk in $dusage; do 
+                usage=$((usage + disk))
+            done
+        fi
+    done
+    old=$(grep "U_DISK='" $USER_DATA/user.conf | cut -f 2 -d \')
+    sed -i "s/U_DISK='$old'/U_DISK='$usage'/g" $USER_DATA/user.conf
+}
+
+# Recalculate U_BANDWIDTH value
+recalc_user_bandwidth_usage() {
+    usage=0
+    bandwidth_usage=$(grep 'U_BANDWIDTH=' $USER_DATA/web.conf |\
+        awk -F "U_BANDWIDTH='" '{print $2}'|cut -f 1 -d \')
+    for bandwidth in $bandwidth_usage; do 
+        usage=$((usage + bandwidth))
+    done
+    old=$(grep "U_BANDWIDTH='" $USER_DATA/user.conf | cut -f 2 -d \')
+    sed -i "s/U_BANDWIDTH='$old'/U_BANDWIDTH='$usage'/g" $USER_DATA/user.conf
+}
+
+# Get next cron job id
+get_next_cronjob() {
+    if [ -z "$job" ]; then
+        curr_str=$(grep "JOB=" $USER_DATA/cron.conf|cut -f 2 -d \'|\
+                 sort -n|tail -n1)
+        job="$((curr_str +1))"
+    fi
+}
+
+# Sort cron jobs by id
+sort_cron_jobs() {
+    cat $USER_DATA/cron.conf |sort -n -k 2 -t \' > $USER_DATA/cron.tmp
+    mv -f $USER_DATA/cron.tmp $USER_DATA/cron.conf
+}
+
+# Sync cronjobs with system cron
+sync_cron_jobs() {
+    source $USER_DATA/user.conf
+    rm -f /var/spool/cron/$user
+    if [ "$CRON_REPORTS" = 'yes' ]; then
+        echo "MAILTO=$CONTACT" > /var/spool/cron/$user
+    fi
+    while read line ; do
+        eval $line
+        if [ "$SUSPENDED" = 'no' ] ; then
+            echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" |\
+                sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" |\
+                    >> /var/spool/cron/$user
+        fi
+    done < $USER_DATA/cron.conf
+}
+
+
+### Format Validators ###
+# URL
+validate_format_url() {
+    check_http=$(echo "$1" | grep "^http://" )
+    needed_chars=$(echo "$1" | cut -f 2 -d \.)
+    if [ -z "$check_http" ] || [ -z "$needed_chars" ]; then
+        echo "Error: url $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Shell
+validate_format_shell() {
+    if [ -z "$(grep -x $1 /etc/shells)" ]; then
+        echo "Error: shell $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Password
+validate_format_password() {
+    if [ "${#1}" -lt '6' ]; then
+        echo "Error: password is too short"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Integer
+validate_format_int() {
+    if ! [[ "$1" =~ ^[0-9]+$ ]] ; then 
+        echo "Error: int $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Boolean
+validate_format_boolean() {
+    if [ "$1" != 'yes' ] ||  [ "$1" != 'no' ]; then
+        echo "Error: boolean $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Network interface
+validate_format_interface() {
+    netdevices=$(cat /proc/net/dev | grep : | cut -f 1 -d : | tr -d ' ')
+    if [ -z $(echo "$netdevices"| grep -x $1) ]; then
+        echo "Error: intreface $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# IP address
+validate_format_ip() {
+    valid_octets=0
+    for octet in ${1//./ }; do
+        if [[ $octet =~ ^[0-9]{1,3}$ ]] && [[ $octet -le 255 ]]; then
+            ((++valid_octets))
+        fi
+    done
+    if [ "$valid_octets" -lt 4 ]; then
+        echo "Error: ip $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# IP address status
+validate_format_ip_status() {
+    if [ -z "$(echo shared,dedicated | grep -w $1 )" ]; then
+        echo "Error: ip_status $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Email address
+validate_format_email() {
+    local_part=$(echo $1 | cut  -s -f1 -d\@)
+    remote_host=$(echo $1 | cut -s -f2 -d\@)
+    mx_failed=1
+    if [ ! -z "$remote_host" ] && [ ! -z "$local_part" ]; then
+        /usr/bin/host -t mx "$remote_host" &> /dev/null
+        mx_failed="$?"
+    fi
+    if [ "$mx_failed" -eq 1 ]; then
+        echo "Error: email $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Username
+validate_format_username() {
+    if ! [[ "$1" =~ ^[0-Z]+(\.[0-Z]+)?$ ]] || [[ "${#1}" -gt 28 ]]; then
+        echo "Error: usernmae $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Domain
+validate_format_domain() {
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%| ]"
+    dpart1=$(echo $1 | cut -f 1 -d .)
+    if [[ "$1" =~ $exclude ]] || [ -z "$dpart1" ]; then
+        echo "Error: domain $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Database
+validate_format_database() {
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%| ]"
+    if [[ "$1" =~ $exclude ]] || [ 17 -le ${#1} ]; then
+        echo "Error: database $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# DNS type
+validate_format_dns_type() {
+    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF'
+    if [ -z "$(echo $known_dnstype | grep -w $1)" ]; then
+        echo "Error: dnstype $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# DKIM key size
+validate_format_key_size() {
+    known_size='128,256,512,768,1024,2048'
+    if [ -z "$(echo $known_size | grep -w $1)" ]; then
+        echo "Error: key_size $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Minute / Hour / Day / Month / Day of Week
+validate_format_mhdmw() {
+    limit=60
+    check_format=''
+    if [ "$2" = 'day' ]; then
+        limit=31
+    fi
+    if [ "$2" = 'month' ]; then
+        limit=12
+    fi
+    if [ "$2" = 'wday' ]; then
+        limit=7
+    fi
+    if [ "$1" = '*' ]; then
+        check_format='ok'
+    fi
+    if [[ "$1" =~ ^[\*]+[/]+[0-9] ]]; then
+        if [ "$(echo $1 |cut -f 2 -d /)" -lt $limit ]; then
+            check_format='ok'
+        fi
+    fi
+    if [[ "$1" =~ ^[0-9]+$ ]] && [ "$1" -lt $limit ]; then
+        check_format='ok'
+    fi
+    if [ "$check_format" != 'ok' ]; then
+        echo "Error: $2 $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Nginx static extention or DNS record
+validate_format_extentions() {
+    exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%| ]"
+    if [[ "$1" =~ $exclude ]] || [ 200 -le ${#1} ]; then
+        echo "Error: extention $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# DNS record value
+validate_format_dvalue() {
+    record_types="$(echo A,AAAA,NS,CNAME | grep -w "$rtype")"
+    if [[ "$1" =~ [\ ] ]] && [ ! -z "$record_types" ]; then
+        echo "Error: dvalue $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+    if [ "$rtype" = 'A' ]; then
+        validate_format_ip "$1"
+    fi
+    if [ "$rtype" = 'NS' ]; then
+        validate_format_domain "$1"
+    fi
+}
+
+# Date
+validate_format_date() {
+    if ! [[ "$1" =~ ^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$ ]]; then
+        echo "Error: date $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Format validation controller
+validate_format(){
+    for arg_name in $*; do
+        eval arg=\$$argument_name
+        case $var in
+            account)        validate_format_username "$arg" ;;
+            antispam)       validate_format_boolean "$arg" ;;
+            antivirus)      validate_format_boolean "$arg" ;;
+            auth_pass)      validate_format_password "$arg" ;;
+            auth_user)      validate_format_username "$arg" ;;
+            backup)         validate_format_date "$arg" ;;
+            database)       validate_format_database "$arg" ;;
+            day)            validate_format_mhdmw "$arg" $arg_name ;;
+            db_password)    validate_format_password "$arg" ;;
+            db_user)        validate_format_database "$arg" ;;
+            dkim)           validate_format_boolean "$arg" ;;
+            dkim_size)      validate_format_key_size "$arg" ;;
+            domain)         validate_format_domain "$arg" ;;
+            dom_alias)      validate_format_domain "$arg" ;;
+            dvalue)         validate_format_dvalue "$arg";;
+            email)          validate_format_email "$arg" ;;
+            encoding)       validate_format_username "$arg" ;;
+            exp)            validate_format_date "$arg" ;;
+            extentions)     validate_format_extentions "$arg" ;;
+            fname)          validate_format_username "$arg" ;;
+            host)           validate_format_username "$arg" ;;
+            hour)           validate_format_mhdmw "$arg" $arg_name ;;
+            id)             validate_format_int "$arg" ;;
+            interface)      validate_format_interface "$arg" ;;
+            ip)             validate_format_ip "$arg" ;;
+            ip_name)        validate_format_domain "$arg" ;;
+            ip_status)      validate_format_ip_status "$arg" ;;
+            job)            validate_format_int "$arg" ;;
+            key)            validate_format_username "$arg" ;;
+            lname)          validate_format_username "$arg" ;;
+            malias)         validate_format_username "$arg" ;;
+            mask)           validate_format_ip "$arg" ;;
+            max_db)         validate_format_int "$arg" ;;
+            min)            validate_format_mhdmw "$arg" $arg_name ;;
+            month)          validate_format_mhdmw "$arg" $arg_name ;;
+            ns1)            validate_format_domain "$arg" ;;
+            ns2)            validate_format_domain "$arg" ;;
+            ns3)            validate_format_domain "$arg" ;;
+            ns4)            validate_format_domain "$arg" ;;
+            ns5)            validate_format_domain "$arg" ;;
+            ns6)            validate_format_domain "$arg" ;;
+            ns7)            validate_format_domain "$arg" ;;
+            ns8)            validate_format_domain "$arg" ;;
+            package)        validate_format_username "$arg" ;;
+            password)       validate_format_password "$arg" ;;
+            port)           validate_format_int "$arg" ;;
+            quota)          validate_format_int "$arg" ;;
+            restart)        validate_format_boolean "$arg" ;;
+            record)         validate_format_extentions "$arg" ;;
+            rtype)          validate_format_dns_type "$arg" ;;
+            shell)          validate_format_shell "$arg" ;;
+            soa)            validate_format_domain "$arg" ;;
+            template)       validate_format_username "$arg" ;;
+            ttl)            validate_format_int "$arg" ;;
+            url)            validate_format_url "$arg" ;;
+            user)           validate_format_username "$arg" ;;
+            wday)           validate_format_mhdmw "$arg" $arg_name ;;
+        esac
+    done
+}

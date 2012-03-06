@@ -14,11 +14,10 @@
 ip=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/ip.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/ip.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -29,7 +28,7 @@ source $V_FUNC/domain.func
 check_args '1' "$#" 'ip'
 
 # Checking argument format
-format_validation 'ip'
+validate_format 'ip'
 
 # Checking system ip
 is_sys_ip_valid "$ip"
@@ -65,10 +64,10 @@ ip_status="$(get_sys_ip_value '$STATUS')"
 rm -f $iconf-$interface
 
 # Deleting vesta ip
-rm -f $V_IPS/$ip
+rm -f $VESTA/data/ips/$ip
 
 # Importing main config
-source $V_CONF/vesta.conf
+source $VESTA/conf/vesta.conf
 
 # Deleting namehosting support
 namehost_ip_disable
@@ -99,10 +98,10 @@ fi
 
 # Adding task to the vesta pipe
 if [ "$web_restart" = 'yes' ]; then
-    restart_schedule 'web'
+    $BIN/v_restart_web
 fi
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

@@ -12,16 +12,13 @@
 # Argument defenition
 format=${1-shell}
 
-# Importing variables
-source $VESTA/conf/vars.conf
-
 # Json function
 json_list_conf() {
-    lines=$(wc -l $V_CONF/vesta.conf | cut -f 1 -d ' ')
+    lines=$(wc -l $VESTA/conf/vesta.conf | cut -f 1 -d ' ')
     i='0'
     IFS=$'\n'
     echo -e "{\n\t\"config\": {"
-    for str in $(cat $V_CONF/vesta.conf); do
+    for str in $(cat $VESTA/conf/vesta.conf); do
         (( ++i))
         key=${str%%=*}
         value=${str#*=}
@@ -37,7 +34,7 @@ json_list_conf() {
 # Shell function
 shell_list_conf() {
     IFS=$'\n'
-    for str in $(cat $V_CONF/vesta.conf); do
+    for str in $(cat $VESTA/conf/vesta.conf); do
         key=${str%%=*}
         value=${str#*=}
         echo "$key: ${value//\'/}"

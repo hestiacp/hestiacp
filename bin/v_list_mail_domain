@@ -16,9 +16,7 @@ domain=$2
 format=${3-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/func/shared.sh
 
 # Json function
 json_list_domain() {
@@ -82,7 +80,7 @@ shell_list_domain() {
 check_args '2' "$#" 'user domain [format]'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'mail'
@@ -93,7 +91,7 @@ is_domain_valid 'mail'
 #----------------------------------------------------------#
 
 # Defining config
-conf=$V_USERS/$user/mail.conf
+conf=$USER_DATA/mail.conf
 
 # Defining fileds to select
 fields='$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK $CATCHALL

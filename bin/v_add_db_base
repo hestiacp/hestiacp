@@ -24,45 +24,26 @@ type=$5
 host=$6
 encoding=${7-UTF8}
 encoding=$(echo "$encoding" |tr '[:lower:]' '[:upper:]')
+
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/db.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '5' "$#" 'user db db_user db_password type [host] [encoding]'
-
-# Checking argument format
-format_validation 'user' 'database' 'db_user' 'db_password' 'encoding'
-
-# Checking db system is enabled
+validate_format 'user' 'database' 'db_user' 'db_password' 'encoding'
 is_system_enabled 'DB_SYSTEM'
-
-# Checking db type
-is_type_valid 'db' "$type"
-
-# Checking user
-is_user_valid
-
-# Checking user is active
-is_user_suspended
-
-# Checking db existance
-is_db_new
-
-# Checking db host
-if [ -z "$host" ]; then
-    host=$(get_next_db_host)
-fi
-is_db_host_valid
-
-# Checking package
+is_type_valid "$DB_SYSTEM" "$type"
+is_object_valid 'user' 'USER' "$user"
+is_object_suspended 'user' 'USER' "$user"
+is_object_free 'db' 'DB' "$database"
+get_next_dbhost
+is_object_valid "$type" 'DBHOST' "$host"
 is_package_full 'DATABASES'
 
 
@@ -81,24 +62,22 @@ esac
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Increasing db value
-increase_db_value
-
-# Increasing domain value
+# Increasing counters
+increase_dbhost_values
 increase_user_value "$user" '$U_DATABASES'
 
 # Adding db to db conf
 v_str="DB='$database' USER='$db_user' HOST='$host' TYPE='$type'"
-v_str="$v_str CHARSET='$encoding' U_DISK='0' SUSPENDED='no' DATE='$V_DATE'"
-echo "$v_str" >> $V_USERS/$user/db.conf
-chmod 660 $V_USERS/$user/db.conf
+v_str="$v_str CHARSET='$encoding' U_DISK='0' SUSPENDED='no' DATE='$DATE'"
+echo "$v_str" >> $USER_DATA/db.conf
+chmod 660 $USER_DATA/db.conf
 
 # Hiding password
-V_EVENT="$V_DATE $V_SCRIPT $user $database $db_user ***** $type $host"
-V_EVENT="$V_EVENT $encoding"
+EVENT="$DATE $SCRIPT $user $database $db_user ***** $type $host"
+EVENT="$EVENT $encoding"
 
 # Logging
-log_history "$V_EVENT" "v_delete_db_base $user $database"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_delete_db_base $user $database"
+log_event "$OK" "$EVENT"
 
 exit

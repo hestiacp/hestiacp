@@ -15,10 +15,9 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -29,16 +28,16 @@ source $V_FUNC/domain.func
 check_args '2' "$#" 'user domain'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking web system is enabled
 is_system_enabled 'MAIL_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'mail'
@@ -50,11 +49,11 @@ is_domain_valid 'mail'
 
 # Get domain values
 get_domain_values 'mail'
-accounts=$(wc -l $V_USERS/$user/mail/$domain|cut -f 1 -d ' ')
+accounts=$(wc -l $USER_DATA/mail/$domain.conf|cut -f 1 -d ' ')
 
 rm -f /etc/exim/domains/$domain
-rm -rf $V_HOME/$user/conf/$domain
-rm -rf $V_HOME/$user/mail/$domain
+rm -rf $HOMEDIR/$user/conf/$domain
+rm -rf $HOMEDIR/$user/mail/$domain
 
 
 #----------------------------------------------------------#
@@ -62,10 +61,10 @@ rm -rf $V_HOME/$user/mail/$domain
 #----------------------------------------------------------#
 
 # Delete domain config
-sed -i "/DOMAIN='$domain'/ d" $V_USERS/$user/mail.conf
-rm -f $V_USERS/$user/mail/$domain
-rm -f $V_USERS/$user/mail/$domain.pem
-rm -f $V_USERS/$user/mail/$domain.pub
+sed -i "/DOMAIN='$domain'/ d" $USER_DATA/mail.conf
+rm -f $USER_DATA/mail/$domain.conf
+rm -f $USER_DATA/mail/$domain.pem
+rm -f $USER_DATA/mail/$domain.pub
 # autoreply
 
 # Decreasing domain value
@@ -74,7 +73,7 @@ decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
 
 # Logging
 cmd='"v_add_mail_domain'
-log_history "$V_EVENT" "$cmd $user $domain $ANTISPAM $ANTIVIRUS $DKIM"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "$cmd $user $domain $ANTISPAM $ANTIVIRUS $DKIM"
+log_event "$OK" "$EVENT"
 
 exit

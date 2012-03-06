@@ -16,20 +16,19 @@ source /etc/profile.d/vesta.sh
 
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 # Another workaround for cron enviroment
-PATH="$PATH:$V_BIN"
+PATH="$PATH:$BIN"
 export PATH
 
 # Argument defenition
 period=$1
 
 # Checking rrddir
-if [ ! -d "$V_RRD" ]; then
-    mkdir -p $V_RRD
+if [ ! -d "$RRD" ]; then
+    mkdir -p $RRD
 fi
 
 
@@ -38,23 +37,23 @@ fi
 #----------------------------------------------------------#
 
 # Updateing system stats
-$V_BIN/v_update_sys_rrd_la $period
-$V_BIN/v_update_sys_rrd_net $period
-$V_BIN/v_update_sys_rrd_mem $period
-$V_BIN/v_update_sys_rrd_ssh $period
+$BIN/v_update_sys_rrd_la $period
+$BIN/v_update_sys_rrd_net $period
+$BIN/v_update_sys_rrd_mem $period
+$BIN/v_update_sys_rrd_ssh $period
 
 # Updating web stats
 if [ "$WEB_SYSTEM" = 'apache' ]; then
-    $V_BIN/v_update_sys_rrd_httpd $period
+    $BIN/v_update_sys_rrd_httpd $period
 fi
 
 if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    $V_BIN/v_update_sys_rrd_nginx $period
+    $BIN/v_update_sys_rrd_nginx $period
 fi
 
 # Updating ftp stats
 if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
-    $V_BIN/v_update_sys_rrd_ftp $period
+    $BIN/v_update_sys_rrd_ftp $period
 fi
 
 # Updating db stats
@@ -62,8 +61,8 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     for type in ${DB_SYSTEM//,/ }; do
         # Switching on db type
         case $type in
-            mysql) $V_BIN/v_update_sys_rrd_mysql $period ;;
-            pgsql) $V_BIN/v_update_sys_rrd_pgsql $period ;;
+            mysql) $BIN/v_update_sys_rrd_mysql $period ;;
+            pgsql) $BIN/v_update_sys_rrd_pgsql $period ;;
         esac
     done
 fi
@@ -74,6 +73,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

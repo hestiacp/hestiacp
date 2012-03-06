@@ -22,11 +22,10 @@ ssl_dir=$3
 ssl_home=${4-single}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
-source $V_FUNC/ip.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/ip.sh
 
 
 #----------------------------------------------------------#
@@ -37,16 +36,16 @@ source $V_FUNC/ip.func
 check_args '3' "$#" 'user domain ssl_dir [ssl_home]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'ssl_dir'
+validate_format 'user' 'domain' 'ssl_dir'
 
 # Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -66,19 +65,19 @@ is_web_domain_cert_valid
 #----------------------------------------------------------#
 
 # Adding certificate to user data directory
-cp -f $ssl_dir/$domain.crt $V_USERS/$user/ssl/$domain.crt
-cp -f $ssl_dir/$domain.key $V_USERS/$user/ssl/$domain.key
-cp -f $ssl_dir/$domain.crt $V_USERS/$user/ssl/$domain.pem
+cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
+cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key
+cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.pem
 if [ -e "$ssl_dir/$domain.ca" ]; then
-    cp -f $ssl_dir/$domain.ca $V_USERS/$user/ssl/$domain.ca
-    cat $V_USERS/$user/ssl/$domain.ca >> $V_USERS/$user/ssl/$domain.pem
+    cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
+    cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
 fi
-chmod 660 $V_USERS/$user/ssl/$domain.*
+chmod 660 $USER_DATA/ssl/$domain.*
 
 # Parsing domain values
 get_domain_values 'web'
-conf="$V_HOME/$user/conf/web/shttpd.conf"
-tpl_file="$V_WEBTPL/apache_$TPL.stpl"
+conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+tpl_file="$WEBTPL/apache_$TPL.stpl"
 SSL_HOME="$ssl_home"
 
 # Checking ip ownership
@@ -94,16 +93,16 @@ chown root:apache $conf
 chmod 640 $conf
 
 # Adding certificate to user dir
-cp -f $V_USERS/$user/ssl/$domain.crt $V_HOME/$user/conf/web/ssl.$domain.crt
-cp -f $V_USERS/$user/ssl/$domain.key $V_HOME/$user/conf/web/ssl.$domain.key
-cp -f $V_USERS/$user/ssl/$domain.pem $V_HOME/$user/conf/web/ssl.$domain.pem
-if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
-    cp -f $V_USERS/$user/ssl/$domain.ca $V_HOME/$user/conf/web/ssl.$domain.ca
+cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/ssl.$domain.crt
+cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/ssl.$domain.key
+cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/ssl.$domain.pem
+if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
+    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/ssl.$domain.ca
 fi
 
 # Running template trigger
-if [ -x $V_WEBTPL/apache_$template.sh ]; then
-    $V_WEBTPL/apache_$template.sh $user $domain $ip $V_HOME $docroot
+if [ -x $WEBTPL/apache_$template.sh ]; then
+    $WEBTPL/apache_$template.sh $user $domain $ip $HOMEDIR $docroot
 fi
 
 # Checking main vesta httpd config
@@ -116,8 +115,8 @@ fi
 # Checking  nginx
 if [ ! -z "$NGINX" ]; then
     # Adding domain to the snginx.conf
-    conf="$V_HOME/$user/conf/web/snginx.conf"
-    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
+    conf="$HOMEDIR/$user/conf/web/snginx.conf"
+    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
     add_web_config
 
     chown root:nginx $conf
@@ -144,7 +143,7 @@ update_domain_value 'web' '$SSL_HOME' "$SSL_HOME"
 update_domain_value 'web' '$SSL' 'yes'
 
 # Logging
-log_history "$V_EVENT" "v_delete_web_domain_ssl $user $domain"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_delete_web_domain_ssl $user $domain"
+log_event "$OK" "$EVENT"
 
 exit

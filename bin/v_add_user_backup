@@ -13,9 +13,8 @@
 user=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -26,13 +25,13 @@ source $V_FUNC/shared.func
 check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking backup system is enabled
 is_system_enabled 'BACKUP_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user backups
 is_backup_enabled
@@ -43,7 +42,7 @@ is_backup_enabled
 #----------------------------------------------------------#
 
 # Adding backup to pipe
-echo "$user" >> $V_QUEUE/backup.pipe
+echo "$user" >> $VESTA/data/queue/backup.pipe
 
 
 #----------------------------------------------------------#
@@ -51,6 +50,6 @@ echo "$user" >> $V_QUEUE/backup.pipe
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

@@ -14,13 +14,12 @@ user=$1
 package=$2
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 is_package_avalable() {
     # Parsing user data
-    usr_data=$(cat $V_USERS/$user/user.conf)
+    usr_data=$(cat $USER_DATA/user.conf)
     IFS=$'\n'
     for key in $usr_data; do
         eval ${key%%=*}=${key#*=}
@@ -35,7 +34,7 @@ is_package_avalable() {
     BANDWIDTH='0'
 
     # Parsing package
-    pkg_data=$(cat $V_PKG/$package.pkg)
+    pkg_data=$(cat $VESTA/data/packages/$package.pkg)
     for key in $pkg_data; do
         eval ${key%%=*}=${key#*=}
     done
@@ -56,11 +55,11 @@ is_package_avalable() {
 
 change_user_package() {
     # Parsing user data
-    usr_data=$(cat $V_USERS/$user/user.conf)
+    usr_data=$(cat $USER_DATA/user.conf)
     eval $usr_data
 
     # Parsing package
-    pkg_data=$(cat $V_PKG/$package.pkg)
+    pkg_data=$(cat $VESTA/data/packages/$package.pkg)
     eval $pkg_data
 
     echo "FNAME='$FNAME'
@@ -81,7 +80,7 @@ NS='$NS'
 SHELL='$SHELL'
 BACKUPS='$BACKUPS'
 CONTACT='$CONTACT'
-REPORTS='$REPORTS'
+CRON_REPORTS='$CRON_REPORTS'
 RKEY='$RKEY'
 SUSPENDED='$SUSPENDED'
 SUSPENDED_USERS='$SUSPENDED_USERS'
@@ -109,7 +108,7 @@ U_MAIL_ACCOUNTS='$U_MAIL_ACCOUNTS'
 U_DATABASES='$U_DATABASES'
 U_CRON_JOBS='$U_CRON_JOBS'
 U_BACKUPS='$U_BACKUPS'
-DATE='$DATE'" > $V_USERS/$user/user.conf
+DATE='$DATE'" > $USER_DATA/user.conf
 }
 
 
@@ -121,10 +120,10 @@ DATE='$DATE'" > $V_USERS/$user/user.conf
 check_args '2' "$#" 'user package'
 
 # Checking argument format
-format_validation 'user' 'package'
+validate_format 'user' 'package'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking package
 is_package_valid
@@ -146,6 +145,6 @@ change_user_package
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

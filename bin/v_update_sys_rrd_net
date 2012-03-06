@@ -14,7 +14,6 @@ update=$1
 period=${1-daily}
 
 # Importing variables
-source $VESTA/conf/vars.conf
 
 
 #----------------------------------------------------------#
@@ -31,23 +30,23 @@ case $period in
 esac
 
 # Checking directory
-if [ ! -d "$V_RRD/net" ]; then
-    mkdir $V_RRD/net
+if [ ! -d "$RRD/net" ]; then
+    mkdir $RRD/net
 fi
 
 # Parsing network interfaces
 ifaces=$(cat /proc/net/dev |grep : |cut -f 1 -d : |sed -e "s/ //g")
 
 # Parsing excludes
-for exclude in $(echo ${V_RRD_IFACE_EXCLUDE//,/ }); do
+for exclude in $(echo ${RRD_IFACE_EXCLUDE//,/ }); do
     ifaces=$(echo "$ifaces" |grep -vw "$exclude" )
 done
 
 for iface in $ifaces; do
     # Checking database
-    if [ ! -e "$V_RRD/net/$iface.rrd" ]; then
+    if [ ! -e "$RRD/net/$iface.rrd" ]; then
         # Adding database
-        rrdtool create $V_RRD/net/$iface.rrd --step $V_RRD_STEP \
+        rrdtool create $RRD/net/$iface.rrd --step $RRD_STEP \
             DS:RX:COUNTER:600:U:U \
             DS:TX:COUNTER:600:U:U \
             RRA:AVERAGE:0.5:1:600 \
@@ -67,11 +66,11 @@ for iface in $ifaces; do
         tx=$(echo "$raw_iface" |awk '{print $10}')
 
         # Updating rrd database
-        rrdtool update $V_RRD/net/$iface.rrd N:$rx:$tx
+        rrdtool update $RRD/net/$iface.rrd N:$rx:$tx
     fi
 
     # Updating rrd graph
-    rrdtool graph $V_RRD/net/$period-$iface.png \
+    rrdtool graph $RRD/net/$period-$iface.png \
         --imgformat PNG \
         --height="120" \
         --width="440" \
@@ -88,8 +87,8 @@ for iface in $ifaces; do
         -c "MGRID#AAAAAA" \
         -c "FRAME#202020" \
         -c "ARROW#FFFFFF" \
-        DEF:inoctets=$V_RRD/net/$iface.rrd:RX:AVERAGE \
-        DEF:outoctets=$V_RRD/net/$iface.rrd:TX:AVERAGE \
+        DEF:inoctets=$RRD/net/$iface.rrd:RX:AVERAGE \
+        DEF:outoctets=$RRD/net/$iface.rrd:TX:AVERAGE \
         "CDEF:in=inoctets,8,*" \
         "CDEF:out=outoctets,8,*" \
         COMMENT:'\r' \
@@ -100,7 +99,7 @@ for iface in $ifaces; do
         LINE1:out#1c74cd:"Output (tx)" \
         GPRINT:out:'LAST:Current\:''%8.0lf' \
         GPRINT:out:'MIN:Min\:''%8.0lf' \
-        GPRINT:out:'MAX:Max\:''%8.0lf\j'  >/dev/null 2>/dev/null; result=$?
+        GPRINT:out:'MAX:Max\:''%8.0lf\j'  &>/dev/null; result=$?
 
     if [ "$result" -ne 0 ]; then
         exit $E_RRD

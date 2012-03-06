@@ -14,8 +14,7 @@ update=$1
 period=${1-daily}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -32,12 +31,12 @@ case $period in
 esac
 
 # Checking directory
-if [ ! -d "$V_RRD/db" ]; then
-    mkdir $V_RRD/db
+if [ ! -d "$RRD/db" ]; then
+    mkdir $RRD/db
 fi
 
 # Parsing db hosts
-conf="$V_DB/mysql.conf"
+conf="$VESTA/conf/mysql.conf"
 fields='$HOST'
 nohead=1
 hosts=$(shell_list)
@@ -47,15 +46,15 @@ if [ 0 -eq "$check_row" ]; then
 fi
 
 # Parsing excludes
-for exclude in $(echo ${V_RRD_MYSQL_EXCLUDE//,/ }); do
+for exclude in $(echo ${RRD_MYSQL_EXCLUDE//,/ }); do
     hosts=$(echo "$hosts" |grep -vw "$exclude" )
 done
 
 for host in $hosts; do
     # Checking database
-    if [ ! -e "$V_RRD/db/mysql_$host.rrd" ]; then
+    if [ ! -e "$RRD/db/mysql_$host.rrd" ]; then
         # Adding database
-        rrdtool create $V_RRD/db/mysql_$host.rrd --step $V_RRD_STEP \
+        rrdtool create $RRD/db/mysql_$host.rrd --step $RRD_STEP \
             DS:A:COUNTER:600:U:U \
             DS:S:COUNTER:600:U:U \
             RRA:AVERAGE:0.5:1:600 \
@@ -80,12 +79,12 @@ for host in $hosts; do
         if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]
         then
             echo "Error: config is broken"
-            log_event 'debug' "$E_PARSING $V_EVENT"
+            log_event 'debug' "$E_PARSING $EVENT"
             exit $E_PARSING
         fi
 
         # Parsing data
-        status=$($sql "SHOW GLOBAL STATUS"  2>/dev/null); code="$?"
+        status=$($sql "SHOW GLOBAL STATUS" 2>/dev/null); code="$?"
         if [ '0' -ne "$code" ]; then
             active=0
             slow=0
@@ -95,11 +94,11 @@ for host in $hosts; do
         fi
 
         # Updating rrd
-        rrdtool update $V_RRD/db/mysql_$host.rrd N:$active:$slow
+        rrdtool update $RRD/db/mysql_$host.rrd N:$active:$slow
     fi
 
     # Updating daily graph
-    rrdtool graph  $V_RRD/db/$period-mysql_$host.png \
+    rrdtool graph  $RRD/db/$period-mysql_$host.png \
         --imgformat PNG \
         --height="120" \
         --width="440" \
@@ -116,8 +115,8 @@ for host in $hosts; do
         -c "MGRID#AAAAAA" \
         -c "FRAME#202020" \
         -c "ARROW#FFFFFF" \
-        DEF:a=$V_RRD/db/mysql_$host.rrd:A:AVERAGE \
-        DEF:s=$V_RRD/db/mysql_$host.rrd:S:AVERAGE \
+        DEF:a=$RRD/db/mysql_$host.rrd:A:AVERAGE \
+        DEF:s=$RRD/db/mysql_$host.rrd:S:AVERAGE \
         COMMENT:'\r' \
         LINE1:a#fefda0:"Queries"\
         GPRINT:a:'LAST: Current\:''%8.0lf'  \
@@ -126,7 +125,7 @@ for host in $hosts; do
         AREA:s#f57900:"Slow   " \
         GPRINT:s:'LAST:Current\:''%8.0lf' \
         GPRINT:s:'MIN:Min\:''%8.0lf' \
-        GPRINT:s:'MAX:Max\:''%8.0lf\j'  >/dev/null 2>/dev/null; result=$?
+        GPRINT:s:'MAX:Max\:''%8.0lf\j'  &>/dev/null; result=$?
 
     if [ "$result" -ne 0 ]; then
         exit $E_RRD

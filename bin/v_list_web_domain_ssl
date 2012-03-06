@@ -15,9 +15,7 @@ domain=$2
 format=${3-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/func/shared.sh
 
 # Json function
 json_list_ssl() {
@@ -53,7 +51,7 @@ shell_list_ssl() {
 check_args '2' "$#" 'user domain [format]'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -62,16 +60,16 @@ is_domain_valid 'web'
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-if [ -e "$V_USERS/$user/ssl/$domain.crt" ]; then
-    crt=$(cat $V_USERS/$user/ssl/$domain.crt |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+if [ -e "$USER_DATA/ssl/$domain.crt" ]; then
+    crt=$(cat $USER_DATA/ssl/$domain.crt |sed -e ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
-if [ -e "$V_USERS/$user/ssl/$domain.key" ]; then
-    key=$(cat $V_USERS/$user/ssl/$domain.key |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+if [ -e "$USER_DATA/ssl/$domain.key" ]; then
+    key=$(cat $USER_DATA/ssl/$domain.key |sed -e ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
-if [ -e "$V_USERS/$user/ssl/$domain.ca" ]; then
-    ca=$(cat $V_USERS/$user/ssl/$domain.ca |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
+    ca=$(cat $USER_DATA/ssl/$domain.ca |sed -e ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
 # Listing domains

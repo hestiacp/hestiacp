@@ -16,8 +16,7 @@ user=$1
 format=${2-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -28,10 +27,10 @@ source $V_FUNC/shared.func
 check_args '1' "$#" 'user [format]'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -39,7 +38,7 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf=$V_USERS/$user/web.conf
+conf=$USER_DATA/web.conf
 
 # Defining fileds to select
 fields="\$DOMAIN \$ALIAS"

@@ -13,46 +13,40 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 # Argument defenition
-pipe=$1
+queue=$1
 
 # Importing system enviroment  as we run this script
 # mostly by cron wich not read it by itself
 source /etc/profile.d/vesta.sh
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 # Export PATH for cron
-PATH=$PATH:$V_BIN
+PATH=$PATH:$BIN
 
 # Defining pipe functions
 restart_pipe() {
-    for service in $(cat $V_QUEUE/restart.pipe |awk '!x[$0]++'); do
-        v_restart_$service
-    done
-    echo > $V_QUEUE/restart.pipe
+    bash $VESTA/data/queue/restart.pipe
+    rm $VESTA/data/queue/restart.pipe
+    touch $VESTA/data/queue/restart.pipe
 }
 
 stats_pipe() {
-    bash $V_QUEUE/stats.pipe
+    bash $VESTA/data/queue/stats.pipe
 }
 
 disk_pipe() {
-    bash $V_QUEUE/disk.pipe
+    bash $VESTA/data/queue/disk.pipe
 }
 
 traff_pipe() {
-    bash $V_QUEUE/traffic.pipe
+    bash $VESTA/data/queue/traffic.pipe
 }
 
 backup_pipe() {
-    for user in $(cat $V_QUEUE/backup.pipe |awk '!x[$0]++' ); do
-        sed -i "/^$user$/d" $V_QUEUE/backup.pipe
-        v_backup_user $user
-        # Send notification to user
-    done
+    bash $VESTA/data/queue/backup.pip
 }
 
 
@@ -62,23 +56,20 @@ backup_pipe() {
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'pipe'
-
-# Checking argument format
-format_validation 'pipe'
+check_args '1' "$#" 'queue'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-case $pipe in
+case $queue in
     restart)    restart_pipe ;;
     stats)      stats_pipe ;;
     backup)     backup_pipe ;;
     disk)       disk_pipe ;;
     traffic)    traff_pipe ;;
-    *)          check_args '1' '0' 'pipe'
+    *)          check_args '1' '0' 'queue'
 esac
 
 
@@ -87,6 +78,6 @@ esac
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

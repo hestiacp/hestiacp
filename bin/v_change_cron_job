@@ -20,52 +20,37 @@ month=$6
 wday=$7
 command=$8
 
-# Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/cron.func
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '7' "$#" 'user job min hour day month wday command'
+validate_format 'user' 'job' 'min' 'hour' 'day' 'month' 'wday' 'command' 
+is_system_enabled $CRON_SYSTEM
+is_object_valid 'user' 'USER' "$user"
+is_object_suspended 'user' 'USER' "$user"
+is_object_valid 'cron' 'JOB' "$job"
 
-# Checking argument format
-format_validation 'user' 'job' 'min' 'hour' 'day' 'month' 'wday' 'command' 
-
-# Checking cron system
-is_system_enabled 'CRON_SYSTEM'
-
-# Checking user
-is_user_valid
-
-# Checking user is active
-is_user_suspended
-
-# Checking cron job
-is_job_valid
-
-# Checking job is active
-# is_job_suspended
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Concatenating cron string
-command=$(echo $command|sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
-v_str="JOB='$job' MIN='$min' HOUR='$hour' WDAY='$wday'"
-v_str="$v_str MONTH='$month' DAY='$day' CMD='$command' SUSPENDED='no'"
+command=$(echo $command | sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
+str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month WDAY='$wday'"
+str="$v_str' CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 
-# Deleting job
-del_cron_job
+# Deleting old job
+sed -i "/JOB='$job' /d" $USER_DATA/cron.conf
 
-# Adding to crontab
-echo "$v_str">>$V_USERS/$user/cron.conf
+# Adding new
+echo "$v_str" >> $USER_DATA/cron.conf
 
 # Sorting jobs by id
 sort_cron_jobs
@@ -78,11 +63,11 @@ sync_cron_jobs
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding task to the vesta pipe
-restart_schedule 'cron'
+# Restart crond
+$BIN/v_restart_cron
 
 # Logging
-log_history "$V_EVENT"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT"
+log_event "$OK" "$EVENT"
 
 exit

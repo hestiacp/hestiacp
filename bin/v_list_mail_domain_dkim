@@ -15,9 +15,7 @@ domain=$2
 format=${3-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/func/shared.sh
 
 # Json function
 json_list_ssl() {
@@ -47,7 +45,7 @@ shell_list_ssl() {
 check_args '2' "$#" 'user domain [format]'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'mail'
@@ -56,12 +54,12 @@ is_domain_valid 'mail'
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-if [ -e "$V_USERS/$user/mail/$domain.pem" ]; then
-    pem=$(cat $V_USERS/$user/mail/$domain.pem |sed -e ':a;N;$!ba;s/\n/\\n/g')
+if [ -e "$USER_DATA/mail/$domain.pem" ]; then
+    pem=$(cat $USER_DATA/mail/$domain.pem |sed -e ':a;N;$!ba;s/\n/\\n/g')
 fi
 
-if [ -e "$V_USERS/$user/mail/$domain.pub" ]; then
-    pub=$(cat $V_USERS/$user/mail/$domain.pub |sed -e ':a;N;$!ba;s/\n/\\n/g')
+if [ -e "$USER_DATA/mail/$domain.pub" ]; then
+    pub=$(cat $USER_DATA/mail/$domain.pub |sed -e ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 # Listing domains

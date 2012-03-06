@@ -17,10 +17,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 exp=$3
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -31,16 +30,16 @@ source $V_FUNC/domain.func
 check_args '3' "$#" 'user domain exp'
 
 # Checking argument format
-format_validation 'user' 'domain' 'exp'
+validate_format 'user' 'domain' 'exp'
 
 # Checking web system is enabled
 is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'dns'
@@ -65,7 +64,7 @@ update_domain_value 'dns' '$EXP' "$exp"
 #----------------------------------------------------------#
 
 # Logging
-log_history "$V_EVENT" "$V_SCRIPT $user $domain $old_exp"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "$SCRIPT $user $domain $old_exp"
+log_event "$OK" "$EVENT"
 
 exit

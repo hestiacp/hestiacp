@@ -12,54 +12,38 @@
 # Argument defenition
 user=$1
 
-# Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/cron.func
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
-format_validation 'user'
-
-# Checking user
-is_user_valid
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Searching jobs
-conf="$V_USERS/$user/cron.conf"
-field='$JOB'
-search_string="SUSPENDED='no'"
-jobs=$(cron_clear_search)
-
-# Suspendning
-for job in $jobs; do
-    $V_BIN/v_suspend_cron_job $user $job 'no_restart'
+# Suspendn all jobs
+for job in $(search_objects 'cron' 'SUSPENDED' 'no' 'JOB'); do
+    $BIN/v_suspend_cron_job $user $job 'no'
 done
-
-# Sync system cron with user
-sync_cron_jobs "$user"
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding task to the vesta pipe
-restart_schedule 'cron'
+# Restart crond
+$BIN/v_restart_cron
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

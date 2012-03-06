@@ -15,9 +15,8 @@ fname=$2
 lname=$3
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -28,13 +27,13 @@ source $V_FUNC/shared.func
 check_args '3' "$#" 'user fname lname'
 
 # Checking argument format
-format_validation 'user' 'fname' 'lname'
+validate_format 'user' 'fname' 'lname'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -55,7 +54,7 @@ update_user_value "$user" '$LNAME' "$lname"
 #----------------------------------------------------------#
 
 # Logging
-log_history "$V_EVENT" "$V_SCRIPT $user $old_fname $old_lname"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "$SCRIPT $user $old_fname $old_lname"
+log_event "$OK" "$EVENT"
 
 exit

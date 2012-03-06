@@ -13,11 +13,10 @@
 user=$1
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
-source $V_FUNC/ip.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/ip.sh
 
 
 #----------------------------------------------------------#
@@ -28,16 +27,16 @@ source $V_FUNC/ip.func
 check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking dns system is enabled
 is_system_enabled 'DNS_SYSTEM'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -49,13 +48,13 @@ user_records=0
 suspended_dns=0
 
 # Checking dns folder
-if [ ! -d "$V_USERS/$user/dns" ]; then
-    rm -f $V_USERS/$user/dns
-    mkdir $V_USERS/$user/dns
+if [ ! -d "$USER_DATA/dns" ]; then
+    rm -f $USER_DATA/dns
+    mkdir $USER_DATA/dns
 fi
 
 # Defining config
-conf="$V_USERS/$user/dns.conf"
+conf="$USER_DATA/dns.conf"
 
 # Defining search string
 search_string="DOMAIN"
@@ -82,8 +81,8 @@ for domain in $domains; do
     domain_idn=$(idn -t --quiet -a "$domain")
 
     # Checking zone file
-    if [ ! -e "$V_USERS/$user/dns/$domain" ]; then
-        cat $V_DNSTPL/$TPL.tpl |\
+    if [ ! -e "$USER_DATA/dns/$domain" ]; then
+        cat $DNSTPL/$TPL.tpl |\
             sed -e "s/%ip%/$IP/g" \
                 -e "s/%domain_idn%/$domain_idn/g" \
                 -e "s/%domain%/$domain/g" \
@@ -95,14 +94,14 @@ for domain in $domains; do
                 -e "s/%ns6%/$ns6/g" \
                 -e "s/%ns7%/$ns7/g" \
                 -e "s/%ns8%/$ns8/g" \
-                -e "s/%date%/$V_DATE/g" > $V_USERS/$user/dns/$domain
+                -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain
     fi
 
     # Sorting records
     sort_dns_records
 
     # Updating zone
-    conf="$V_HOME/$user/conf/dns/$domain.db"
+    conf="$HOMEDIR/$user/conf/dns/$domain.db"
     update_domain_zone
 
     chmod 640 $conf
@@ -120,12 +119,12 @@ for domain in $domains; do
     else
 	if [ -z "$(grep /$domain.db $nconf)" ]; then
             named="zone \"$domain_idn\" {type master; file"
-            named="$named \"$V_HOME/$user/conf/dns/$domain.db\";};"
+            named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
             echo "$named" >> /etc/named.conf
         fi
     fi
     user_domains=$((user_domains + 1))
-    records=$(wc -l $V_USERS/$user/dns/$domain | cut -f 1 -d ' ')
+    records=$(wc -l $USER_DATA/dns/$domain | cut -f 1 -d ' ')
     user_records=$((user_records + records))
     update_domain_value 'dns' '$RECORDS' "$records"
 done
@@ -141,9 +140,9 @@ update_user_value "$user" '$U_DNS_RECORDS' "$user_records"
 update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
 
 # Adding task to the vesta pipe
-restart_schedule 'dns'
+$BIN/v_restart_dns
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

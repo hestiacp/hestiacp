@@ -10,20 +10,19 @@
 #----------------------------------------------------------#
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
+source $VESTA/conf/vesta.conf
 
 # Restart functions
 apache() {
-    /etc/init.d/httpd status >/dev/null 2>&1
+    /etc/init.d/httpd status &>/dev/null
     if [ $? -eq 0 ]; then
-        /etc/init.d/httpd graceful >/dev/null 2>&1
+        /etc/init.d/httpd graceful &>/dev/null
         if [ $? -ne 0 ]; then
             echo "$E_RESTART $1"
             exit $E_RESTART
         fi
     else
-        /etc/init.d/httpd start >/dev/null 2>&1
+        /etc/init.d/httpd start &>/dev/null
         if [ $? -ne 0 ]; then
             echo "$E_RESTART $1"
             exit $E_RESTART
@@ -32,15 +31,15 @@ apache() {
 }
 
 nginx() {
-    /etc/init.d/nginx status >/dev/null 2>&1
+    /etc/init.d/nginx status &>/dev/null
     if [ $? -eq 0 ]; then
-        /etc/init.d/nginx reload >/dev/null 2>&1
+        /etc/init.d/nginx reload &>/dev/null
         if [ $? -ne 0 ]; then
             echo "$E_RESTART $1"
             exit $E_RESTART
         fi
     else
-        /etc/init.d/nginx start >/dev/null 2>&1
+        /etc/init.d/nginx start &>/dev/null
         if [ $? -ne 0 ]; then
             echo "$E_RESTART $1"
             exit $E_RESTART

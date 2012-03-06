@@ -14,8 +14,7 @@ user=$1
 format=${2-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
+source $VESTA/func/shared.sh
 
 # Json function
 json_list_wtpl() {
@@ -24,8 +23,8 @@ json_list_wtpl() {
 
     # Listing files by mask
     for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
-        if [ -e "$V_WEBTPL/ngingx_vhost_$template.descr" ]; then
-            descr=$(cat $V_WEBTPL/ngingx_vhost_$template.descr | grep '#'|\
+        if [ -e "$WEBTPL/ngingx_vhost_$template.descr" ]; then
+            descr=$(cat $WEBTPL/ngingx_vhost_$template.descr | grep '#'|\
                 sed -e ':a;N;$!ba;s/\n/ /g')
             # Checking !first line to print bracket
             if [ $i -ne 1 ]; then
@@ -48,8 +47,8 @@ json_list_wtpl() {
 # Shell function
 shell_list_wtpl() {
     for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
-        if [ -e "$V_WEBTPL/ngingx_vhost_$template.descr" ]; then
-            tpl_descr=$(cat $V_WEBTPL/ngingx_vhost_$template.descr |grep '#')
+        if [ -e "$WEBTPL/ngingx_vhost_$template.descr" ]; then
+            tpl_descr=$(cat $WEBTPL/ngingx_vhost_$template.descr |grep '#')
             if [ -z "$nohead" ]; then
                 echo "----------"
             fi
@@ -68,10 +67,10 @@ shell_list_wtpl() {
 check_args '1' "$#" 'user'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#

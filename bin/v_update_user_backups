@@ -10,9 +10,8 @@
 #----------------------------------------------------------#
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 # Argument defenition
 user=$1
@@ -158,11 +157,11 @@ EOF
 
 init_ftp_variables() {
     # Checking config
-    source $V_CONF/ftp.backup.conf
+    source $VESTA/conf/ftp.backup.conf
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
         [ -z "$BPATH" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSING $V_EVENT"
+        log_event 'debug' "$E_PARSING $EVENT"
         exit $E_PARSING
     fi
 }
@@ -175,7 +174,7 @@ check_ftp_connection(){
              rm $ftmpdir"
     if [ ! -z "$(ftpc "$command")" ] ; then
         echo "Error: FTP error"
-        log_event 'debug' "$E_FTP $V_EVENT"
+        log_event 'debug' "$E_FTP $EVENT"
         exit $E_FTP
     fi
 }
@@ -193,15 +192,15 @@ check_args '1' "$#" 'user'
 is_system_enabled 'BACKUP_SYSTEM'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking load averages
 la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')
-if [ "$la" -ge "$V_BACKUP_LA_LIMIT" ]; then
-    log_event 'debug' "$E_LA $V_EVENT"
+if [ "$la" -ge "$BACKUP_LA_LIMIT" ]; then
+    log_event 'debug' "$E_LA $EVENT"
     exit $E_LA
 fi
 
@@ -211,22 +210,22 @@ fi
 #----------------------------------------------------------#
 
 # Checking tmp file
-tmp_file="$V_USERS/$user/backup.conf_tmp"
+tmp_file="$USER_DATA/backup.conf_tmp"
 if [ -e "$tmp_file" ]; then
     rm -f $tmp_file
 fi
 
 # Checking local
 if [ "$type" = 'local' ]; then
-    backups=$(ls $V_BACKUP |grep "^$user."|sort)
+    backups=$(ls $BACKUP |grep "^$user."|sort)
     for backup in $backups; do
-        get_backup_info $V_BACKUP/$backup $type >> $tmp_file
+        get_backup_info $BACKUP/$backup $type >> $tmp_file
     done
 fi
 
 # Checking ftp
 if [ "$type" = 'ftp' ]; then
-    tmpdir=$(mktemp -p $V_BACKUP -d)
+    tmpdir=$(mktemp -p $BACKUP -d)
     ftmpdir=$(basename $tmpdir)
     init_ftp_variables
     check_ftp_connection
@@ -236,7 +235,7 @@ if [ "$type" = 'ftp' ]; then
         cd $tmpdir
         if [ ! -z "$(ftpc "get $backup")" ]; then
             echo "Error: FTP transfer error"
-            log_event 'debug' "$E_FTP $V_EVENT"
+            log_event 'debug' "$E_FTP $EVENT"
             exit $E_FTP
         fi
         get_backup_info $tmpdir/$backup $type >> $tmp_file
@@ -248,12 +247,12 @@ fi
 # Checking both local and ftp
 if [ "$type" = 'ftp,local' ] || [ "$type" = 'local,ftp' ]; then
 
-    tmpdir=$(mktemp -p $V_BACKUP -d)
+    tmpdir=$(mktemp -p $BACKUP -d)
     ftmpdir=$(basename $tmpdir)
     init_ftp_variables
     check_ftp_connection
     ftp_backups=$(ftpc ls|awk '{print $9}'|grep "^$user.")
-    local_backups=$(ls $V_BACKUP/ |grep "^$user." |sort)
+    local_backups=$(ls $BACKUP/ |grep "^$user." |sort)
     backups=$(echo -e "$local_backups\n$ftp_backups" |\
                 sort |uniq -c | awk '{print $1" "$2}')
 
@@ -263,29 +262,29 @@ if [ "$type" = 'ftp,local' ] || [ "$type" = 'local,ftp' ]; then
             cd $tmpdir
             if [ ! -z "$(ftpc "get $backup")" ]; then
                 echo "Error: FTP transfer error"
-                log_event 'debug' "$E_FTP $V_EVENT"
+                log_event 'debug' "$E_FTP $EVENT"
                 exit $E_FTP
             fi
             get_backup_info $tmpdir/$backup ftp >> $tmp_file
             rm -f $tmpdir/$backup
         else
-            get_backup_info $V_BACKUP/$backup local >> $tmp_file
+            get_backup_info $BACKUP/$backup local >> $tmp_file
 	fi
     done
 
     for backup in $(echo "$backups"|grep "^2 "|cut -f 2 -d ' '); do
-        get_backup_info $V_BACKUP/$backup $type >> $tmp_file
+        get_backup_info $BACKUP/$backup $type >> $tmp_file
     done
     rm -rf $tmpdir
 fi
 
 # Checking if there was any output
 if [ -e "$tmp_file" ]; then
-    cat $tmp_file | sort > $V_USERS/$user/backup.conf
+    cat $tmp_file | sort > $USER_DATA/backup.conf
     rm $tmp_file
 else
-    rm $V_USERS/$user/backup.conf
-    touch $V_USERS/$user/backup.conf
+    rm $USER_DATA/backup.conf
+    touch $USER_DATA/backup.conf
 fi
 
 
@@ -294,6 +293,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

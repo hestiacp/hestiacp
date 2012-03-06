@@ -15,8 +15,7 @@ USER="$user"
 format=${2-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
+source $VESTA/func/shared.sh
 
 # Json function
 json_list_user() {
@@ -73,10 +72,10 @@ shell_list_user() {
 check_args '1' "$#" 'user [format]'
 
 # Checking argument format
-format_validation 'user'
+validate_format 'user'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
@@ -84,18 +83,18 @@ is_user_valid
 #----------------------------------------------------------#
 
 # Defining config
-conf=$V_USERS/$user/user.conf
+conf=$USER_DATA/user.conf
 
 # Defining fileds to select
 fields='$USER $FNAME $LNAME $PACKAGE $WEB_DOMAINS $WEB_ALIASES $WEB_TPL 
     $DNS_DOMAINS $DNS_RECORDS $MAIL_DOMAINS $MAIL_ACCOUNTS $DATABASES
-    $CRON_JOBS $DISK_QUOTA $BANDWIDTH $NS $SHELL $BACKUPS $CONTACT $REPORTS
-    $RKEY $SUSPENDED $SUSPENDED_USERS $SUSPENDED_WEB $SUSPENDED_DNS
-    $SUSPENDED_MAIL $SUSPENDED_DB $SUSPENDED_CRON $IP_AVAIL $IP_OWNED $U_USERS
-    $U_DISK $U_DISK_DIRS $U_DISK_WEB $U_DISK_MAIL $U_DISK_DB $U_BANDWIDTH
-    $U_WEB_DOMAINS $U_WEB_SSL $U_WEB_ALIASES $U_DNS_DOMAINS $U_DNS_RECORDS
-    $U_MAIL_DOMAINS $U_MAIL_ACCOUNTS $U_DATABASES $U_CRON_JOBS $U_BACKUPS
-    $DATE'
+    $CRON_JOBS $DISK_QUOTA $BANDWIDTH $NS $SHELL $BACKUPS $CONTACT
+    $CRON_REPORTS $RKEY $SUSPENDED $SUSPENDED_USERS $SUSPENDED_WEB
+    $SUSPENDED_DNS $SUSPENDED_MAIL $SUSPENDED_DB $SUSPENDED_CRON $IP_AVAIL
+    $IP_OWNED $U_USERS $U_DISK $U_DISK_DIRS $U_DISK_WEB $U_DISK_MAIL $U_DISK_DB
+    $U_BANDWIDTH $U_WEB_DOMAINS $U_WEB_SSL $U_WEB_ALIASES $U_DNS_DOMAINS
+    $U_DNS_RECORDS $U_MAIL_DOMAINS $U_MAIL_ACCOUNTS $U_DATABASES $U_CRON_JOBS
+    $U_BACKUPS $TIME $DATE'
 
 # Listing user
 case $format in 

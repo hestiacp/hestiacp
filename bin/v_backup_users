@@ -14,9 +14,8 @@
 source /etc/profile.d/vesta.sh
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#
@@ -27,7 +26,7 @@ user_list=$(ls $V_USERS/)
 
 # Updating user billing
 for user in $user_list; do 
-    $V_BIN/v_backup_user $user >> $V_LOG/backup.log 2>> $V_LOG/backup.log
+    $BIN/v_backup_user $user &>> $VESTA/logs/backup.log 
 done
 
 #----------------------------------------------------------#
@@ -35,6 +34,6 @@ done
 #----------------------------------------------------------#
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

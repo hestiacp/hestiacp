@@ -16,11 +16,10 @@ user=${1-admin}
 ip_status=${2-shared}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf    # include for internal func
-source $V_FUNC/shared.func
-source $V_FUNC/ip.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf    # include for internal func
+source $VESTA/func/shared.sh
+source $VESTA/func/ip.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -32,13 +31,13 @@ check_args '0' "$#" '[user] [ip_status]'
 
 # Checking user
 if [ ! -z "$1" ]; then
-    format_validation 'user'
-    is_user_valid "$user"
+    validate_format 'user'
+    is_object_valid 'user' 'USER' "$user" "$user"
 fi
 
 # Checking ip_status
 if [ ! -z "$2" ]; then
-    format_validation 'ip_status'
+    validate_format 'ip_status'
 fi
 
 
@@ -51,7 +50,7 @@ ip_list=$(/sbin/ifconfig |grep 'inet addr:'|cut -f 2 -d :|\
     cut -f 1 -d ' '| grep -v 127.0.0.1)
 
 # Get vesta registered ip list
-vesta_ip_list=$(ls $V_IPS/)
+vesta_ip_list=$(ls $VESTA/data/ips/)
 
 # Defining config paths
 conf='/etc/httpd/conf.d/vesta.conf'
@@ -96,10 +95,10 @@ increase_user_value "$user" '$IP_OWNED'
 
 # Adding task to the vesta pipe
 if [ "$web_restart" = 'yes' ]; then
-    restart_schedule 'web'
+    $BIN/v_restart_web
 fi
 
 # Logging
-log_event 'system' "$V_EVENT"
+log_event "$OK" "$EVENT"
 
 exit

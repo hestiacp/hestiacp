@@ -20,10 +20,9 @@ pdf,ppt,txt,tar,wav,bmp,rtf,js,mp3,avi,mpeg,html,htm"
 extentions=${4-$default_extentions}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -34,16 +33,16 @@ source $V_FUNC/domain.func
 check_args '2' "$#" 'user domain [template] [extentions]'
 
 # Checking argument format
-format_validation 'user' 'domain' 'template' 'extentions'
+validate_format 'user' 'domain' 'template' 'extentions'
 
 # Checking proxy system is enabled
 is_system_enabled 'proxy'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_user_suspended
+is_object_suspended 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'web'
@@ -55,7 +54,7 @@ is_domain_suspended 'web'
 is_domain_key_empty 'web' '$NGINX'
 
 # Checking template
-is_template_valid "proxy"
+is_nginx_template_valid
 
 
 #----------------------------------------------------------#
@@ -66,8 +65,8 @@ is_template_valid "proxy"
 get_domain_values 'web'
 NGINX="$template"
 NGINX_EXT="$extentions"
-tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.tpl"
-conf="$V_HOME/$user/conf/web/nginx.conf"
+tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
+conf="$HOMEDIR/$user/conf/web/nginx.conf"
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
@@ -87,8 +86,8 @@ fi
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
     proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
-    tpl_file="$V_WEBTPL/ngingx_vhost_$NGINX.stpl"
-    conf="$V_HOME/$user/conf/web/snginx.conf"
+    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+    conf="$HOMEDIR/$user/conf/web/snginx.conf"
     add_web_config
 
     chown root:nginx $conf
@@ -112,9 +111,9 @@ update_domain_value 'web' '$NGINX' "$NGINX"
 update_domain_value 'web' '$NGINX_EXT' "$extentions"
 
 # Adding task to the vesta pipe
-restart_schedule 'web'
+$BIN/v_restart_web
 
-log_history "$V_EVENT" "v_delete_web_domain_nginx $user $domain"
-log_event 'system' "$V_EVENT"
+log_history "$EVENT" "v_delete_web_domain_nginx $user $domain"
+log_event "$OK" "$EVENT"
 
 exit

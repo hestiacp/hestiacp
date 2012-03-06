@@ -13,8 +13,7 @@
 format=${1-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
+source $VESTA/func/shared.sh
 
 # Json function
 json_list_pkgs() {
@@ -24,10 +23,10 @@ json_list_pkgs() {
     fileds_count=$(echo "$fields" | wc -w)
 
     # Starting main loop
-    for package in $(ls $V_DATA/packages); do
+    for package in $(ls $VESTA/data/packages); do
         PACKAGE=${package/.pkg/}
         # Assing key=value
-        pkg_data=$(cat $V_DATA/packages/$package)
+        pkg_data=$(cat $VESTA/data/packages/$package)
         eval $pkg_data
 
         # Closing bracket if there already was output
@@ -67,10 +66,10 @@ json_list_pkgs() {
 # Shell fnction
 shell_list_pkgs() {
     # Listing pkg files
-    for package in $(ls $V_DATA/packages); do
+    for package in $(ls $VESTA/data/packages); do
         PACKAGE=${package/.pkg/}
         # Assign key=value
-        pkg_descr=$(cat $V_DATA/packages/$package)
+        pkg_descr=$(cat $VESTA/data/packages/$package)
         eval $pkg_descr
 
 

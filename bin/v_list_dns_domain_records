@@ -15,9 +15,7 @@ domain=$2
 format=${3-shell}
 
 # Importing variables
-source $VESTA/conf/vars.conf
-source $V_FUNC/shared.func
-source $V_FUNC/domain.func
+source $VESTA/func/shared.sh
 
 # Json func
 json_list_dns() {
@@ -104,10 +102,10 @@ shell_list_dns() {
 check_args '2' "$#" 'user domain [format]'
 
 # Checking argument format
-format_validation 'user' 'domain'
+validate_format 'user' 'domain'
 
 # Checking user
-is_user_valid
+is_object_valid 'user' 'USER' "$user"
 
 # Checking domain exist
 is_domain_valid 'dns'
@@ -118,7 +116,7 @@ is_domain_valid 'dns'
 #----------------------------------------------------------#
 
 # Defining config
-conf=$V_USERS/$user/dns/$domain
+conf=$USER_DATA/dns/$domain
 
 # Defining fileds to select
 fields='$ID $RECORD $TYPE $VALUE $SUSPENDED $DATE'

@@ -10,17 +10,15 @@
 #----------------------------------------------------------#
 
 format=${1-shell}
-
-# Importing variables
-source $VESTA/conf/vars.conf
-source $V_CONF/vesta.conf
+source $VESTA/conf/vesta.conf
+RRD=$VESTA/web/rrd
 
 # Define json function
 json_list_rrd() {
     i=1
     echo "{"
     for type in $rrd_types; do
-        for rrd in $(ls $V_RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
+        for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
             if [ "$i" -ne 1 ]; then
                 echo -e "\t},"
             fi
@@ -73,8 +71,8 @@ shell_list_rrd() {
     fi
 
     for type in $rrd_types; do
-        for rrd in $(ls $V_RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
-            echo "$V_RRD/$type/$rrd.rrd"
+        for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
+            echo "$RRD/$type/$rrd.rrd"
         done
     done
 }

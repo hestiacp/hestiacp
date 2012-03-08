@@ -14,26 +14,16 @@ user=$1
 domain=$2
 format=${3-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json func
 json_list_dns() {
-    # Print top bracket
     echo '{'
-
-    # Count fields
     fileds_count=$(echo $fields| wc -w )
-
-    # Reading file line by line
     while read line; do
-        # New delimeter
         IFS=$'\n'
-
-        # Assing key=value pair
         eval $line
-
-        # Closing bracket if there already was output
         if [ -n "$data" ]; then
             echo -e '        },'
         fi
@@ -42,13 +32,10 @@ json_list_dns() {
         for field in $fields; do
             eval value=\"$field\"
             value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-
             if [ $i -eq 1 ]; then
-                # Printing parrent
                 (( ++i))
                 echo -e "\t\"$value\": {"
             else
-                # Printing child
                 if [ $i -lt $fileds_count ]; then
                     (( ++i))
                     echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
@@ -59,13 +46,9 @@ json_list_dns() {
             fi
         done
     done < $conf
-
-    # Closing bracket if there was output
     if [ -n "$data" ]; then
         echo -e '        }'
     fi
-
-    # Printing bottom bracket
     echo -e '}'
 }
 
@@ -73,22 +56,15 @@ json_list_dns() {
 shell_list_dns() {
 
     if [ -z "$nohead" ] ; then
-        # Print brief info
         echo "${fields//$/}"
         for a in $fields; do
             echo -e "------ \c"
         done
         echo
     fi
-
-    # Reading file line by line
     while read line ; do
-        # New delimeter
         IFS=$'\n'
-        # Assing key=value pair
         eval $line
-
-        # Print result
         eval echo "$fields" | sed -e "s/%quote%/'/g"
     done < $conf
 }
@@ -98,28 +74,19 @@ shell_list_dns() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '2' "$#" 'user domain [format]'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'dns'
+is_object_valid 'dns' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/dns/$domain
-
-# Defining fileds to select
-fields='$ID $RECORD $TYPE $VALUE $SUSPENDED $DATE'
+# Defining config and fields
+conf=$USER_DATA/dns/$domain.conf
+fields='$ID $RECORD $TYPE $PRIORITY $VALUE $SUSPENDED $TIME $DATE'
 
 # Listing domains
 case $format in 

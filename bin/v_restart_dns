@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing variables
+# Includes
 source /etc/profile.d/vesta.sh
 source $VESTA/conf/vesta.conf
 

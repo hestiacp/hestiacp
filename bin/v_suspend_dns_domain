@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend dns domain
-# options: user domain
+# options: user domain [restart]
 #
 # The function suspends a certain user's domain.
 
@@ -13,47 +13,31 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
+restart="$3"
 
 # Importing variables
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
-check_args '2' "$#" 'user domain'
-
-# Checking argument format
+check_args '2' "$#" 'user domain [restart]'
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'DNS_SYSTEM'
-
-# Checking user
+is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'dns'
-
-# Checking domain is not suspened
-is_domain_suspended 'dns'
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="/etc/named.conf"
-
-rm_string=$(grep -n /etc/namedb/$domain.db $conf|cut -d : -f 1)
-if [ ! -z "$rm_string" ]; then
-    sed -i "$rm_string d" $conf
-fi
+# Deleting domain from named.conf
+sed -i "/\/$domain.db\"/d" /etc/named.conf
 
 
 #----------------------------------------------------------#
@@ -61,11 +45,13 @@ fi
 #----------------------------------------------------------#
 
 # Adding suspend in config
-update_domain_value 'dns' '$SUSPENDED' 'yes'
+update_object_value 'dns' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
 increase_user_value "$user" '$SUSPENDED_DNS'
 
-# Adding task to the vesta pipe
-$BIN/v_restart_dns
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_dns
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

@@ -1,3 +1,39 @@
+# Web template check
+is_apache_template_valid() {
+    c=$(echo "$templates" | grep -w  "$template")
+    t="$WEBTPL/apache_$template.tpl"
+    d="$WEBTPL/apache_$template.descr"
+    s="$WEBTPL/apache_$template.stpl"
+    if [ -z "$c" ] || [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
+        echo "Error: $template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+# Nginx template check
+is_nginx_template_valid() {
+    t="$WEBTPL/ngingx_vhost_$template.tpl"
+    d="$WEBTPL/ngingx_vhost_$template.descr"
+    s="$WEBTPL/ngingx_vhost_$template.stpl"
+    if [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
+        echo "Error: $template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+# DNS template check
+is_dns_template_valid() {
+    tpl="$DNSTPL/$template.tpl"
+    descr="$DNSTPL/$template.descr"
+    if [ ! -e $tpl ] || [ ! -e $descr ]; then
+        echo "Error: template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
 # Checking domain existance
 is_domain_new() {
     config_type="$1"
@@ -20,38 +56,12 @@ is_domain_new() {
     fi
 }
 
-is_domain_suspended() {
-    config_type="$1"
-    # Parsing domain values
-    check_domain=$(grep "DOMAIN='$domain'" $USER_DATA/$config_type.conf|\
-        grep "SUSPENDED='yes'")
-
-    # Checking result
-    if [ ! -z "$check_domain" ]; then
-        echo "Error: domain $domain is suspended"
-        log_event 'debug' "$E_SUSPENDED $EVENT"
-        exit $E_SUSPENDED
-    fi
-}
-
-is_domain_unsuspended() {
-    config_type="$1"
-    # Parsing domain values
-    check_domain=$(grep "DOMAIN='$domain'" $USER_DATA/$config_type.conf|\
-        grep "SUSPENDED='no'")
-
-    # Checking result
-    if [ ! -z "$check_domain" ]; then
-        echo "Error: domain unsuspended"
-        log_event 'debug' "$E_UNSUSPENDED $EVENT"
-        exit $E_UNSUSPENDED
-    fi
-}
-
+# Update domain zone
 update_domain_zone() {
     # Definigng variables
+    conf="$HOMEDIR/$user/conf/dns/$domain.db"
     line=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    fields='$RECORD\t$TTL\tIN\t$TYPE\t$VALUE'
+    fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
 
     # Checking serial
     if [ -e $conf ]; then
@@ -99,34 +109,21 @@ update_domain_zone() {
 
         # Converting utf records to ascii
         RECORD=$(idn --quiet -a -t "$RECORD")
-        #VALUE=$(idn --quiet -a -t "$VALUE")
         eval echo -e "\"$fields\""|sed -e "s/%quote%/'/g" >> $conf
-    done < $USER_DATA/dns/$domain
+    done < $USER_DATA/dns/$domain.conf
 }
 
-get_next_dns_record() {
-    # Parsing config
-    curr_str=$(grep "ID=" $USER_DATA/dns/$domain|cut -f 2 -d \'|\
-        sort -n|tail -n1)
-
-    # Print result
-    echo "$((curr_str +1))"
-}
-
-is_dns_record_free() {
-    # Checking record id
-    check_id=$(grep "ID='$id'" $USER_DATA/dns/$domain)
-
-    if [ ! -z "$check_id" ]; then
-        echo "Error: ID exist"
-        log_event 'debug' "$E_EXISTS $EVENT"
-        exit  $E_EXISTS
+get_next_dnsrecord(){
+    if [ -z "$id" ]; then
+        curr_str=$(grep "ID=" $USER_DATA/dns/$domain.conf | cut -f 2 -d \' |\
+            sort -n|tail -n1)
+        id="$((curr_str +1))"
     fi
 }
 
 sort_dns_records() {
     # Defining conf
-    conf="$USER_DATA/dns/$domain"
+    conf="$USER_DATA/dns/$domain.conf"
     cat $conf |sort -n -k 2 -t \' >$conf.tmp
     mv -f $conf.tmp $conf
 }
@@ -231,84 +228,11 @@ replace_web_config() {
     sed -i  "$top_line,$bottom_line s/$clean_old/$clean_new/" $conf
 }
 
-get_domain_value() {
-    conf_type="$1"
-    key="$2"
-    default_str="DOMAIN='$domain'"
-    search_str="${3-DOMAIN=$search_str}"
-
-    # Parsing config
-    string=$(grep "$search_str" $USER_DATA/$conf_type.conf )
-
-    # Parsing key=value
-    eval $string
-
-    # Self reference
-    eval value="$key"
-
-    # Print value
-    echo "$value"
-}
-
+# Get domain values
 get_domain_values() {
-    # Defining domain parameters
     for line in $(grep "DOMAIN='$domain'" $USER_DATA/$1.conf); do
-        # Assing key=value
         eval $line
     done
-}
-
-update_domain_value() {
-    conf_type="$1"
-    key="$2"
-    value="$3"
-    default_str="DOMAIN='$domain'"
-    search_str=${4-$default_str}
-
-    # Defining conf
-    conf="$USER_DATA/$conf_type.conf"
-
-    # Parsing conf
-    domain_str=$(grep -n "$search_str" $conf)
-    str_number=$(echo $domain_str | cut -f 1 -d ':')
-    str=$(echo $domain_str | cut -f 2 -d ':')
-
-    # Reading key=values
-    eval $str
-
-    # Defining clean key
-    c_key=$(echo "${key//$/}")
-
-    eval old="${key}"
-
-    # Escaping slashes
-    old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-    new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-
-    # Updating conf
-    sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g"\
-     $conf
-}
-
-is_domain_key_empty() {
-    conf_type="$1"
-    key="$2"
-
-    # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $USER_DATA/$conf_type.conf )
-
-    # Parsing key=value
-    eval $string
-
-    # Self reference
-    eval value="$key"
-
-    # Checkng key
-    if [ ! -z "$value" ] && [ "$value" != 'no' ]; then
-        echo "Error: ${key//$} is not empty = $value"
-        log_event 'debug' "$E_EXISTS $EVENT"
-        exit $E_EXISTS
-    fi
 }
 
 is_web_domain_cert_valid() {

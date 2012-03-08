@@ -16,47 +16,31 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 exp=$3
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '3' "$#" 'user domain exp'
-
-# Checking argument format
 validate_format 'user' 'domain' 'exp'
-
-# Checking web system is enabled
-is_system_enabled 'DNS_SYSTEM'
-
-# Checking user
+is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
-is_object_suspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'dns'
-
-# Checking domain is not suspened
-is_domain_suspended 'dns'
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get old expiriation date
-old_exp=$(get_domain_value 'dns' '$EXP')
-
 # Changing exp
-update_domain_value 'dns' '$EXP' "$exp"
+update_object_value 'dns' 'DOMAIN' "$domain" '$EXP' "$exp"
+
 
 
 #----------------------------------------------------------#
@@ -64,7 +48,7 @@ update_domain_value 'dns' '$EXP' "$exp"
 #----------------------------------------------------------#
 
 # Logging
-log_history "$EVENT" "$SCRIPT $user $domain $old_exp"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

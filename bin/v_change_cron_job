@@ -33,7 +33,7 @@ check_args '7' "$#" 'user job min hour day month wday command'
 validate_format 'user' 'job' 'min' 'hour' 'day' 'month' 'wday' 'command' 
 is_system_enabled $CRON_SYSTEM
 is_object_valid 'user' 'USER' "$user"
-is_object_suspended 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'cron' 'JOB' "$job"
 
 

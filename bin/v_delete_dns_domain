@@ -13,9 +13,9 @@
 # Argument defenition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
-named_conf=/etc/named.conf
+restart="$3"
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -25,43 +25,24 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'DNS_SYSTEM'
-
-# Checking user
+is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
-is_object_suspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'dns'
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get domain values
-tpl_name=$(get_domain_value 'dns' '$TPL')
-old_ip=$(get_domain_value 'dns' '$IP')
-records=$(wc -l $USER_DATA/dns/$domain|cut -f 1 -d ' ')
+records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
 
 # Deleting domain in named.conf
-rm_string=$(grep -n /conf/dns/$domain.db $named_conf |cut -d : -f 1)
-if [ ! -z "$rm_string" ]; then
-    sed -i "$rm_string d" $named_conf
-fi
-
-if [ -e "$HOMEDIR/$user/conf/dns/$domain.db" ]; then
-    rm -f $HOMEDIR/$user/conf/dns/$domain.db
-fi
+sed -i "/\/$domain.db\"/d" /etc/named.conf
+rm -f $HOMEDIR/$user/conf/dns/$domain.db
 
 
 #----------------------------------------------------------#
@@ -69,18 +50,21 @@ fi
 #----------------------------------------------------------#
 
 # Deleting domain
-sed -i "/DOMAIN='$domain'/ d" $USER_DATA/dns.conf
-rm -f $USER_DATA/dns/$domain
+sed -i "/DOMAIN='$domain'/d" $USER_DATA/dns.conf
+rm -f $USER_DATA/dns/$domain.conf
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_DNS_DOMAINS'
 decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 
-# Adding task to the vesta pipe
-$BIN/v_restart_dns
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_dns
+fi
+
 
 # Logging
-log_history "$EVENT" "v_add_dns_domain $user $domain $old_ip $tpl_name"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

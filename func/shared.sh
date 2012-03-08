@@ -51,7 +51,7 @@ log_history() {
 # Argument list checker
 check_args() {
     if [ "$1" -gt "$2" ]; then
-        echo "Error: bad args"
+        echo "Error: not enought arguments"
         echo "Usage: $SCRIPT $3"
         log_event "$E_ARGS" "$EVENT"
         exit $E_ARGS
@@ -75,14 +75,13 @@ is_package_full() {
              awk -F "ALIAS='" '{print $2}' | cut -f 1 -d \' | tr ',' '\n' |\
              wc -l );;
         DNS_DOMAINS) used=$(wc -l $USER_DATA/dns.conf |cut -f1 -d \ );;
-        DNS_RECORDS) used=$(wc -l $USER_DATA/dns/$domain |cut -f1 -d \ );;
+        DNS_RECORDS) used=$(wc -l $USER_DATA/dns/$domain.conf |cut -f1 -d \ );;
         MAIL_DOMAINS) used=$(wc -l $USER_DATA/mail.conf |cut -f1 -d \ );;
-        MAIL_ACCOUNTS) used=$(wc -l $USER_DATA/mail/$domain |\
+        MAIL_ACCOUNTS) used=$(wc -l $USER_DATA/mail/$domain.conf |\
             cut -f1 -d \ );;
         DATABASES) used=$(wc -l $USER_DATA/db.conf |cut -f1 -d \ );;
         CRON_JOBS) used=$(wc -l $USER_DATA/cron.conf |cut -f1 -d \ );;
     esac
-
     limit=$(grep "^$1=" $USER_DATA/user.conf | cut -f 2 -d \' )
     if [ "$used" -ge "$limit" ]; then
 	echo "Error: Upgrade package"
@@ -100,42 +99,6 @@ gen_password() {
         let n+=1
     done
     echo "$pass"
-}
-
-# Web template check
-is_apache_template_valid() {
-    c=$(echo "$templates" | grep -w  "$template")
-    t="$WEBTPL/apache_$template.tpl"
-    d="$WEBTPL/apache_$template.descr"
-    s="$WEBTPL/apache_$template.stpl"
-    if [ -z "$c" ] || [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
-        echo "Error: $template not found"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
-    fi
-}
-
-# Nginx template check
-is_nginx_template_valid() {
-    t="$WEBTPL/ngingx_vhost_$template.tpl"
-    d="$WEBTPL/ngingx_vhost_$template.descr"
-    s="$WEBTPL/ngingx_vhost_$template.stpl"
-    if [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
-        echo "Error: $template not found"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
-    fi
-}
-
-# DNS template check
-is_dns_template_valid() {
-    tpl="$DNSTPL/$template.tpl"
-    descr="$DNSTPL/$template.descr"
-    if [ ! -e $tpl ] || [ ! -e $descr ]; then
-        echo "Error: template not found"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
-    fi
 }
 
 # Package existance check
@@ -176,7 +139,7 @@ is_object_free() {
         object=$(grep "$2='$3'" $USER_DATA/$1.conf)
     fi
     if [ ! -z "$object" ]; then
-        echo "Error: $3 exists"
+        echo "Error: $2 with value $3 exists"
         log_event "$E_EXISTS" "$EVENT"
         exit $E_EXISTS
     fi
@@ -209,7 +172,7 @@ is_object_suspended() {
     else
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
     fi
-    if [ ! -z "$spnd" ]; then
+    if [ -z "$spnd" ]; then
         echo "Error: $3 is suspended"
         log_event "$E_SUSPENDED" "$EVENT"
         exit $E_SUSPENDED
@@ -223,11 +186,19 @@ is_object_unsuspended() {
     else
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
     fi
-    if [ -z "$spnd" ]; then
+    if [ ! -z "$spnd" ]; then
         echo "Error: $3 is not suspended"
         log_event "$E_UNSUSPENDED" "$EVENT"
         exit $E_UNSUSPENDED
     fi
+}
+
+# Get object value
+get_object_value() {
+    object=$(grep "$2='$3'" $USER_DATA/$1.conf)
+    eval "$object"
+    eval object_val="$4"
+    echo "$object_val"
 }
 
 # Update object value
@@ -256,7 +227,7 @@ search_objects() {
 
 # Get user value
 get_user_value() {
-    grep "^$1=" $USER_DATA/user.conf| cut -f 2 -d \'
+    grep "^${1//$/}=" $USER_DATA/user.conf| cut -f 2 -d \'
 }
 
 # Update user value in user.conf
@@ -514,7 +485,7 @@ validate_format_email() {
 # Username
 validate_format_username() {
     if ! [[ "$1" =~ ^[0-Z]+(\.[0-Z]+)?$ ]] || [[ "${#1}" -gt 28 ]]; then
-        echo "Error: usernmae $1 is not valid"
+        echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
@@ -593,10 +564,10 @@ validate_format_mhdmw() {
 }
 
 # Nginx static extention or DNS record
-validate_format_extentions() {
-    exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%| ]"
+validate_format_common() {
+    exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%| ]"
     if [[ "$1" =~ $exclude ]] || [ 200 -le ${#1} ]; then
-        echo "Error: extention $1 is not valid"
+        echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
@@ -616,6 +587,11 @@ validate_format_dvalue() {
     if [ "$rtype" = 'NS' ]; then
         validate_format_domain "$1"
     fi
+    if [ "$rtype" = 'MX' ]; then
+        validate_format_domain "$1"
+        validate_format_int "$priority"
+    fi
+
 }
 
 # Date
@@ -630,13 +606,19 @@ validate_format_date() {
 # Format validation controller
 validate_format(){
     for arg_name in $*; do
-        eval arg=\$$argument_name
-        case $var in
-            account)        validate_format_username "$arg" ;;
+        eval arg=\$$arg_name
+        if [ -z "$arg" ]; then
+            echo "Error: argument $arg_name is not valid (empty)"
+            log_event "$E_INVALID" "$EVENT"
+            exit $E_INVALID
+        fi
+
+        case $arg_name in
+            account)        validate_format_username "$arg" "$arg_name" ;;
             antispam)       validate_format_boolean "$arg" ;;
             antivirus)      validate_format_boolean "$arg" ;;
             auth_pass)      validate_format_password "$arg" ;;
-            auth_user)      validate_format_username "$arg" ;;
+            auth_user)      validate_format_username "$arg" "$arg_name" ;;
             backup)         validate_format_date "$arg" ;;
             database)       validate_format_database "$arg" ;;
             day)            validate_format_mhdmw "$arg" $arg_name ;;
@@ -648,11 +630,11 @@ validate_format(){
             dom_alias)      validate_format_domain "$arg" ;;
             dvalue)         validate_format_dvalue "$arg";;
             email)          validate_format_email "$arg" ;;
-            encoding)       validate_format_username "$arg" ;;
+            encoding)       validate_format_username "$arg" "$arg_name" ;;
             exp)            validate_format_date "$arg" ;;
-            extentions)     validate_format_extentions "$arg" ;;
-            fname)          validate_format_username "$arg" ;;
-            host)           validate_format_username "$arg" ;;
+            extentions)     validate_format_common "$arg" 'extentions' ;;
+            fname)          validate_format_username "$arg" "$arg_name" ;;
+            host)           validate_format_username "$arg" "$arg_name" ;;
             hour)           validate_format_mhdmw "$arg" $arg_name ;;
             id)             validate_format_int "$arg" ;;
             interface)      validate_format_interface "$arg" ;;
@@ -660,9 +642,9 @@ validate_format(){
             ip_name)        validate_format_domain "$arg" ;;
             ip_status)      validate_format_ip_status "$arg" ;;
             job)            validate_format_int "$arg" ;;
-            key)            validate_format_username "$arg" ;;
-            lname)          validate_format_username "$arg" ;;
-            malias)         validate_format_username "$arg" ;;
+            key)            validate_format_username "$arg" "$arg_name" ;;
+            lname)          validate_format_username "$arg" "$arg_name" ;;
+            malias)         validate_format_username "$arg" "$arg_name" ;;
             mask)           validate_format_ip "$arg" ;;
             max_db)         validate_format_int "$arg" ;;
             min)            validate_format_mhdmw "$arg" $arg_name ;;
@@ -675,16 +657,16 @@ validate_format(){
             ns6)            validate_format_domain "$arg" ;;
             ns7)            validate_format_domain "$arg" ;;
             ns8)            validate_format_domain "$arg" ;;
-            package)        validate_format_username "$arg" ;;
+            package)        validate_format_username "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" ;;
             quota)          validate_format_int "$arg" ;;
             restart)        validate_format_boolean "$arg" ;;
-            record)         validate_format_extentions "$arg" ;;
+            record)         validate_format_common "$arg" 'record';;
             rtype)          validate_format_dns_type "$arg" ;;
             shell)          validate_format_shell "$arg" ;;
             soa)            validate_format_domain "$arg" ;;
-            template)       validate_format_username "$arg" ;;
+            template)       validate_format_username "$arg" "$arg_name" ;;
             ttl)            validate_format_int "$arg" ;;
             url)            validate_format_url "$arg" ;;
             user)           validate_format_username "$arg" ;;

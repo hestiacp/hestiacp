@@ -15,41 +15,26 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 key=$(echo "$3"| tr '[:lower:]' '[:upper:]'|sed -e "s/^/$/")
 
-# Importing variables
-source $VESTA/conf/vesta.conf
+# Includes
 source $VESTA/func/shared.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '3' "$#" 'user domain key'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'dns'
-
-# Checking domain is not suspened
-is_domain_suspended 'dns'
+is_object_valid 'dns' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking key
-value=$(get_domain_value 'dns' "$key")
-
-# Printing value
-echo "$value"
+# Print
+get_object_value 'dns' 'DOMAIN' "$domain" "$key"
 
 
 #----------------------------------------------------------#

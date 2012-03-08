@@ -17,7 +17,7 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 template=$3
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -27,28 +27,13 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '3' "$#" 'user domain template'
-
-# Checking argument format
 validate_format 'user' 'domain' 'template'
-
-# Checking web system is enabled
-is_system_enabled 'DNS_SYSTEM'
-
-# Checking user
+is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
-is_object_suspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'dns'
-
-# Checking domain is not suspened
-is_domain_suspended 'dns'
-
-# Checking template
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_dns_template_valid
 
 
@@ -56,14 +41,20 @@ is_dns_template_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get vals
-old_tpl=$(get_domain_value 'dns' '$TPL')
-ip=$(get_domain_value 'dns' '$IP')
-ns1=$(get_user_value '$NS1')
-ns2=$(get_user_value '$NS2')
+# Defining variables
+ip=$(get_object_value 'dns' 'DOMAIN' "$domain" '$IP')
+
+i=1
+ns=$(get_user_value '$NS')
+for nameserver in ${ns//,/ };do
+    eval ns$i=$nameserver
+    (( ++i))
+done
 
 # Changing tpl
-update_domain_value 'dns' '$TPL' "$template"
+update_object_value 'dns' 'DOMAIN' "$domain" '$TPL' "$template"
+
+# Adding zone to dns dir
 cat $DNSTPL/$template.tpl |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
@@ -76,10 +67,10 @@ cat $DNSTPL/$template.tpl |\
         -e "s/%ns6%/$ns6/g" \
         -e "s/%ns7%/$ns7/g" \
         -e "s/%ns8%/$ns8/g" \
-        -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain
+        -e "s/%time%/$TIME/g" \
+        -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
 
 # Updating zone
-conf="$HOMEDIR/$user/conf/dns/$domain.db"
 update_domain_zone
 
 
@@ -87,11 +78,11 @@ update_domain_zone
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding task to the vesta pipe
+# Restart named
 $BIN/v_restart_dns
 
 # Logging
-log_history "$EVENT" "$SCRIPT $user $domain $old_tpl"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

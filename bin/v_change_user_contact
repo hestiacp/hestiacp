@@ -32,7 +32,7 @@ validate_format 'user' 'email'
 is_object_valid 'user' 'USER' "$user"
 
 # Checking user is active
-is_object_suspended 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#

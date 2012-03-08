@@ -40,7 +40,7 @@ validate_format 'user' 'database' 'db_user' 'db_password' 'encoding'
 is_system_enabled 'DB_SYSTEM'
 is_type_valid "$DB_SYSTEM" "$type"
 is_object_valid 'user' 'USER' "$user"
-is_object_suspended 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 is_object_free 'db' 'DB' "$database"
 get_next_dbhost
 is_object_valid "$type" 'DBHOST' "$host"

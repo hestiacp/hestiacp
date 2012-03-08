@@ -32,7 +32,7 @@ validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
 # Checking domain is not suspened
-is_object_suspended 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#

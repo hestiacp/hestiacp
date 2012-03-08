@@ -24,10 +24,10 @@ source $VESTA/func/shared.sh
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'user job [restart]'
-validate_format 'user' 'job' 'rstart'
+validate_format 'user' 'job'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'cron' 'JOB' "$job"
-is_object_suspended 'cron' 'JOB' "$job"
+is_object_unsuspended 'cron' 'JOB' "$job"
 
 
 #----------------------------------------------------------#

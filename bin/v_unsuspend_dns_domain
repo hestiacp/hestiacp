@@ -13,57 +13,45 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
+restart="$3"
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'DNS_SYSTEM'
-
-# Checking user
+is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'dns'
-
-# Check domain is suspened
-is_domain_unsuspended 'dns'
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_suspended 'dns' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="/etc/named.conf"
-
 # Adding zone in named.conf
-nmd_rec="zone \"$domain\" { type master; file \"/etc/namedb/$domain.db\"; };"
-echo "$nmd_rec" >> $conf
+echo "zone \"$domain\" { type master; file \"/etc/namedb/$domain.db\"; };" \
+    >> /etc/named.conf
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
 # Unsuspending domain in config
-update_domain_value 'dns' '$SUSPENDED' 'no'
+update_object_value 'dns' 'DOMAIN' "$domain" '$SUSPENDED' 'no'
 decrease_user_value "$user" '$SUSPENDED_DNS'
 
-# Adding task to the vesta pipe
-$BIN/v_restart_dns
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_dns
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

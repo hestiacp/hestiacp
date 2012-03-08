@@ -9,29 +9,22 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Includes
+source $VESTA/func/shared.sh
+
 # Argument defenition
 user=$1
 USER="$user"
 format=${2-shell}
 
-# Importing variables
-source $VESTA/func/shared.sh
-
 # Json function
 json_list_user() {
     i=1
     fileds_count=$(echo "$fields" | wc -w)
-    source $V_USERS/$USER/user.conf
-
-    # Print top bracket
+    source $VESTA/data/users/$user/user.conf
     echo '{'
-
-    # Starting output loop
     for field in $fields; do
-        # Parsing key=value
         eval value=$field
-
-        # Checking first field
         if [ "$i" -eq 1 ]; then
             echo -e "\t\"$value\": {"
         else
@@ -41,22 +34,17 @@ json_list_user() {
                 echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
             fi
         fi
-        # Updating iterator
         (( ++i))
     done
-
-    # If there was any output
     if [ -n "$value" ]; then
         echo -e '        }'
     fi
-    # Printing bottom json bracket
     echo -e "}"
 }
 
 # Shell function
 shell_list_user() {
-    source $V_USERS/$USER/user.conf
-
+    source $VESTA/data/users/$user/user.conf
     for field in $fields; do
         eval key="$field"
         echo "${field//$/}: $key "
@@ -68,13 +56,8 @@ shell_list_user() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '1' "$#" 'user [format]'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -101,7 +84,6 @@ case $format in
     json)   json_list_user ;;
     plain)  nohead=1; shell_list_user ;;
     shell)  shell_list_user | column -t ;;
-    *)      check_args '1' '0' 'user [format]' ;;
 esac
 
 

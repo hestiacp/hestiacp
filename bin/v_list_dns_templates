@@ -12,35 +12,25 @@
 # Argument defenition
 format=${1-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
 json_list_dnstpl() {
-    # Print top bracket
     echo '{'
-
-    # Count fields
     for template in $(ls $DNSTPL/| grep '.descr'); do
-        # Closing bracket if there already was output
         if [ -n "$data" ]; then
             echo -e '        },'
         fi
-
         tpl_descr=$(cat $DNSTPL/$template |grep '#'|tr -d '\n')
         tpl_name="${template//.descr/}"
         echo -e  "\t\"$tpl_name\": {"
         echo -e "\t\t\"DESCR\": \"${tpl_descr//# /}\""
-
         data=1
     done
-
-    # Closing bracket if there was output
     if [ -n "$data" ]; then
         echo -e '        }'
     fi
-
-    # Printing bottom bracket
     echo -e '}'
 }
 
@@ -49,8 +39,6 @@ shell_list_dnstpl() {
     for template in $(ls $DNSTPL/| grep '.descr'); do
         tpl_name="${template//.descr/}"
         tpl_descr=$(cat $DNSTPL/$template |grep '#')
-
-        # Print result
         if [ -z "$nohead" ] ; then
             echo "----------"
         fi

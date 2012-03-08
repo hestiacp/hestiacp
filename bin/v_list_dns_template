@@ -13,41 +13,17 @@
 template=$1
 format=${2-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
 
-
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
-
-# Checking args
-check_args '1' "$#" 'template [format]'
-
-# Checking argument format
-validate_format 'template'
-
-# Checking template
-is_dns_template_valid
-
 # Json func
 json_list_dns() {
-    # Print top bracket
     echo '{'
-
-    # Count fields
     fileds_count=$(echo $fields| wc -w )
-
-    # Reading file line by line
     while read line; do
-        # New delimeter
         IFS=$'\n'
-
-        # Assing key=value pair
         eval $line
-
-        # Closing bracket if there already was output
         if [ -n "$data" ]; then
             echo -e '        },'
         fi
@@ -56,13 +32,10 @@ json_list_dns() {
         for field in $fields; do
             eval value=\"$field\"
             value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-
             if [ $i -eq 1 ]; then
-                # Printing parrent
                 (( ++i))
                 echo -e "\t\"$value\": {"
             else
-                # Printing child
                 if [ $i -lt $fileds_count ]; then
                     (( ++i))
                     echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
@@ -73,21 +46,15 @@ json_list_dns() {
             fi
         done
     done < $conf
-
-    # Closing bracket if there was output
     if [ -n "$data" ]; then
         echo -e '        }'
     fi
-
-    # Printing bottom bracket
     echo -e '}'
 }
 
 # Shell function
 shell_list_dns() {
-
     if [ -z "$nohead" ] ; then
-        # Print brief info
         echo "${fields//$/}"
         for a in $fields; do
             echo -e "------ \c"
@@ -95,28 +62,31 @@ shell_list_dns() {
         echo
     fi
 
-    # Reading file line by line
     while read line ; do
-        # Assing key=value pair
         eval $line
-
-        # Print result
         eval echo "$fields" | sed -e "s/%quote%/'/g"
     done < $conf
 }
 
 
 #----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'template [format]'
+validate_format 'template'
+is_dns_template_valid
+
+
+#----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
+# Defining config and fields
 conf=$DNSTPL/$template.tpl
+fields='$RECORD $TYPE $PRIORITY $VALUE'
 
-# Defining fileds to select
-fields='$RECORD $TYPE $VALUE'
-
-# Listing domains
+# Listing templates
 case $format in 
     json)   json_list_dns ;;
     plain)  nohead=1; shell_list_dns ;;

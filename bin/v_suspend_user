@@ -31,7 +31,7 @@ validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
 # Checking user status
-is_object_suspended 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 
 # Checking user admin
 if [ "$user" = 'admin' ]; then

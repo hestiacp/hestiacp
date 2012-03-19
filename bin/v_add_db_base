@@ -18,14 +18,14 @@
 # Argument defenition
 user=$1
 database="$user"_"$2"
-db_user="$user"_"$3"
-db_password=$4
+dbuser="$user"_"$3"
+dbpass=$4
 type=$5
 host=$6
 encoding=${7-UTF8}
 encoding=$(echo "$encoding" |tr '[:lower:]' '[:upper:]')
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/db.sh
@@ -35,17 +35,17 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'user db db_user db_password type [host] [encoding]'
-validate_format 'user' 'database' 'db_user' 'db_password' 'encoding'
-is_system_enabled 'DB_SYSTEM'
+check_args '5' "$#" 'user db dbuser dbpass type [host] [encoding]'
+validate_format 'user' 'database' 'dbuser' 'dbpass' 'encoding'
+is_system_enabled "$DB_SYSTEM"
 is_type_valid "$DB_SYSTEM" "$type"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_free 'db' 'DB' "$database"
 get_next_dbhost
-is_object_valid "$type" 'DBHOST' "$host"
+is_object_valid "../../../conf/$type" 'HOST' "$host"
+is_db_encoding_valid
 is_package_full 'DATABASES'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -67,17 +67,18 @@ increase_dbhost_values
 increase_user_value "$user" '$U_DATABASES'
 
 # Adding db to db conf
-v_str="DB='$database' USER='$db_user' HOST='$host' TYPE='$type'"
-v_str="$v_str CHARSET='$encoding' U_DISK='0' SUSPENDED='no' DATE='$DATE'"
+v_str="DB='$database' USER='$dbuser' HOST='$host' TYPE='$type'"
+v_str="$v_str CHARSET='$encoding' U_DISK='0' SUSPENDED='no' TIME='$TIME'"
+v_str="$v_str DATE='$DATE'"
 echo "$v_str" >> $USER_DATA/db.conf
 chmod 660 $USER_DATA/db.conf
 
 # Hiding password
-EVENT="$DATE $SCRIPT $user $database $db_user ***** $type $host"
-EVENT="$EVENT $encoding"
+EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
+EVENT="$EVENT ARGUMENTS='$user $database $dbuser ***** $type $host'"
 
 # Logging
-log_history "$EVENT" "v_delete_db_base $user $database"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

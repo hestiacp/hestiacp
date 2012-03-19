@@ -622,8 +622,8 @@ validate_format(){
             backup)         validate_format_date "$arg" ;;
             database)       validate_format_database "$arg" ;;
             day)            validate_format_mhdmw "$arg" $arg_name ;;
-            db_password)    validate_format_password "$arg" ;;
-            db_user)        validate_format_database "$arg" ;;
+            dbpass)         validate_format_password "$arg" ;;
+            dbuser)         validate_format_database "$arg" ;;
             dkim)           validate_format_boolean "$arg" ;;
             dkim_size)      validate_format_key_size "$arg" ;;
             domain)         validate_format_domain "$arg" ;;

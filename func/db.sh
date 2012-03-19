@@ -1,42 +1,8 @@
-is_db_valid() {
-    config="$USER_DATA/db.conf"
-    check_db=$(grep "DB='$database'" $config)
-
-    # Checking result
-    if [ -z "$check_db" ]; then
-        echo "Error: db not added"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
-}
-
-is_db_new() {
-    check_db=$(grep "DB='$database'" $USER_DATA/db.conf)
-    if [ ! -z "$check_db" ]; then
-        echo "Error: db exist"
-        log_event 'debug' "$E_EXISTS $EVENT"
-        exit $E_EXISTS
-    fi
-}
-
-
-# Checking database host existance
-is_db_host_valid() {
-    config="$VESTA/conf/$type.conf"
-    check_db=$(grep "HOST='$host'" $config)
-
-    # Checking result
-    if [ -z "$check_db" ]; then
-        echo "Error: host not added"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
-}
-
+# Get database host
 get_next_dbhost() {
     if [ -z "$host" ]; then
         IFS=$'\n'
-        host='NULL_DB_HOST'
+        host='EMPTY_DB_HOST'
         config="$VESTA/conf/$type.conf"
         host_str=$(grep "SUSPENDED='no'" $config)
         check_row=$(echo "$host_str"|wc -l)
@@ -64,184 +30,135 @@ get_next_dbhost() {
     fi
 }
 
-increase_db_value() {
-    # Defining vars
-    conf="$VESTA/conf/$type.conf"
-    host_str=$(grep "HOST='$host'" $conf)
+# Database encoding validation
+is_db_encoding_valid() {
+    host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+    eval $host_str
 
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
+    if [ -z "$(echo $ENCODINGS | grep -wi $encoding )" ]; then
+        echo "Error: encoding $encoding not exist"
+        log_event "$E_NOTEXIST $EVENT"
+        exit $E_NOTEXIST
+    fi
+}
 
-    # Increasing db_bases usage value
-    U_DB_BASES=$((U_DB_BASES + 1))
-    # Adding user to SYS_USERS pool
+# Increase database host value
+increase_dbhost_values() {
+    host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+    eval $host_str
+
+    old_dbbases="U_DB_BASES='$U_DB_BASES'"
+    new_dbbases="U_DB_BASES='$((U_DB_BASES + 1))'"
     if [ -z "$U_SYS_USERS" ]; then
-        U_SYS_USERS="$user"
+        old_users="U_SYS_USERS=''"
+        new_users="U_SYS_USERS='$user'"
     else
-        check_users=$(echo $U_SYS_USERS|sed -e "s/,/\n/g"|grep -w "$user")
-        if [ -z "$check_users" ]; then
-            U_SYS_USERS="$U_SYS_USERS,$user"
+        old_users="U_SYS_USERS='$U_SYS_USERS'"
+        new_users="U_SYS_USERS='$U_SYS_USERS'"
+        if [ -z "$(echo $U_SYS_USERS|sed -e "s/,/\n/g"|grep -w $user)" ]; then
+            old_users="U_SYS_USERS='$U_SYS_USERS'"
+            new_users="U_SYS_USERS='$U_SYS_USERS,$user'"
         fi
     fi
 
-    # Concatenating db string
-    case $type in
-        mysql) new_str="HOST='$HOST' USER='$USER' PASSWORD='$PASSWORD'";
-            new_str="$new_str PORT='$PORT' MAX_DB='$MAX_DB'";
-            new_str="$new_str U_SYS_USERS='$U_SYS_USERS'";
-            new_str="$new_str U_DB_BASES='$U_DB_BASES' ACTIVE='$ACTIVE'";
-            new_str="$new_str DATE='$DATE'";;
-        pgsql) new_str="HOST='$HOST' USER='$USER' PASSWORD='$PASSWORD'";
-            new_str="$new_str PORT='$PORT' TPL='$TPL' MAX_DB='$MAX_DB'";
-            new_str="$new_str U_SYS_USERS='$U_SYS_USERS'";
-            new_str="$new_str U_DB_BASES='$U_DB_BASES' ACTIVE='$ACTIVE'";
-            new_str="$new_str DATE='$DATE'";;
-    esac
-
-    # Changing config
-    sed -i "s/$host_str/$new_str/g" $conf
+    sed -i "s/$old_dbbases/$new_dbbases/g" $VESTA/conf/$type.conf
+    sed -i "s/$old_users/$new_users/g" $VESTA/conf/$type.conf
 }
 
-decrease_db_value() {
-    # Defining vars
-    conf="$VESTA/conf/$type.conf"
-    host_str=$(grep "HOST='$host'" $conf)
+# Decrease database host value
+decrease_dbhost_values() {
+    host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+    eval $host_str
 
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
+    old_dbbases="U_DB_BASES='$U_DB_BASES'"
+    new_dbbases="U_DB_BASES='$((U_DB_BASES - 1))'"
+    old_users="U_SYS_USERS='$U_SYS_USERS'"
+    U_SYS_USERS=$(echo "$U_SYS_USERS" |\
+        sed -e "s/,/\n/g"|\
+        sed -e "s/^$users$//g"|\
+        sed -e "/^$/d"|\
+        sed -e ':a;N;$!ba;s/\n/,/g')
+    new_users="U_SYS_USERS='$U_SYS_USERS'"
 
-    # Decreasing db_bases usage value
-    U_DB_BASES=$((U_DB_BASES - 1))
-
-    # Checking user databases on that host
-    udb=$(grep "TYPE='$type'" $USER_DATA/db.conf|grep "HOST='$host'"|wc -l)
-    if [ 2 -gt "$udb" ]; then
-        U_SYS_USERS=$(echo "$U_SYS_USERS" |  sed -e "s/,/\n/g" |\
-            sed -e "/^$user$/d" | sed -e :a -e '$!N;s/\n/,/;ta')
-    fi
-
-    # Concatenating db string
-    case $type in
-        mysql) new_str="HOST='$HOST' USER='$USER' PASSWORD='$PASSWORD'";
-            new_str="$new_str PORT='$PORT'";
-            new_str="$new_str MAX_DB='$MAX_DB' U_SYS_USERS='$U_SYS_USERS'";
-            new_str="$new_str U_DB_BASES='$U_DB_BASES'  ACTIVE='$ACTIVE'";
-            new_str="$new_str DATE='$DATE'";;
-        pgsql) new_str="HOST='$HOST' USER='$USER' PASSWORD='$PASSWORD'";
-            new_str="$new_str PORT='$PORT' TPL='$TPL'";
-            new_str="$new_str MAX_DB='$MAX_DB'";
-            new_str="$new_str U_SYS_USERS='$U_SYS_USERS'";
-            new_str="$new_str U_DB_BASES='$U_DB_BASES' ACTIVE='$ACTIVE'";
-            new_str="$new_str DATE='$DATE'";;
-    esac
-
-    # Changing config
-    sed -i "s/$host_str/$new_str/g" $conf
+    sed -i "s/$old_dbbases/$new_dbbases/g" $VESTA/conf/$type.conf
+    sed -i "s/$old_users/$new_users/g" $VESTA/conf/$type.conf
 }
 
+# Create MySQL database
 create_db_mysql() {
-    # Defining vars
     host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-    sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
-
-    # Checking empty vars
+    eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
-    # Adding database & checking result
-    $sql "CREATE DATABASE $database CHARACTER SET $encoding" > /dev/null 2>&1
-    code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
-        exit $E_DB
+    query="CREATE DATABASE $database CHARACTER SET $encoding"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="GRANT ALL ON $database.* TO '$dbuser'@'%' IDENTIFIED BY '$dbpass'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    if [ "$HOST" = 'localhost' ]; then
+        query="GRANT ALL ON $database.* TO '$dbuser'@'localhost'
+            IDENTIFIED BY '$dbpass'"
+        mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
     fi
-
-    # Adding user with password (% will give access to db from any ip)
-    $sql "GRANT ALL ON $database.* TO '$db_user'@'%' \
-             IDENTIFIED BY '$db_password'"
-
-    # Adding grant for localhost (% doesn't do that )
-    if [ "$host" = 'localhost' ]; then
-        $sql "GRANT ALL ON $database.* TO '$db_user'@'localhost' \
-            IDENTIFIED BY '$db_password'"
-    fi
-
-    # Flushing priveleges
-    $sql "FLUSH PRIVILEGES"
 }
 
+# Create PostgreSQL database
 create_db_pgsql() {
-    # Defining vars
     host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-
+    eval $host_str
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -p $PORT -c"
-
-    # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: postgresql config parsion failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
-    # Adding new role
-    $sql "CREATE ROLE $db_user WITH LOGIN PASSWORD '$db_password'" >/dev/null
-    code=$?
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
-        exit $E_DB
-    fi
+    query="CREATE ROLE $db_user WITH LOGIN PASSWORD '$db_password'"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 
-    # Adding database & checking result
-    sql_q="CREATE DATABASE $database  OWNER $db_user" > /dev/null
+    query="CREATE DATABASE $database  OWNER $db_user"
     if [ "$TPL" = 'template0' ]; then
-        sql_q="$sql_q ENCODING '$encoding' TEMPLATE $TPL" > /dev/null
+        query="$query ENCODING '$encoding' TEMPLATE $TPL"
     else
-        sql_q="$sql_q TEMPLATE $TPL" > /dev/null
+        query="$query TEMPLATE $TPL"
     fi
-    $sql "$sql_q" >/dev/null
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 
+    query="GRANT ALL PRIVILEGES ON DATABASE $database TO $db_user"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 
-    $sql "GRANT ALL PRIVILEGES ON DATABASE $database TO $db_user" > /dev/null
-    $sql "GRANT CONNECT ON DATABASE template1 to $db_user" > /dev/null
-    export PGPASSWORD='pgsql'
+    query="GRANT CONNECT ON DATABASE template1 to $db_user"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
 }
 
-is_db_host_new() {
+is_dbhost_new() {
     if [ -e "$VESTA/conf/$type.conf" ]; then
         check_host=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
         if [ ! -z "$check_host" ]; then
             echo "Error: db host exist"
-            log_event 'debug' "$E_EXISTS $EVENT"
+            log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
     fi
@@ -840,28 +757,3 @@ get_disk_db_pgsql() {
     fi
 }
 
-
-increase_dbhost_values() {
-    conf="$VESTA/conf/$type.conf"
-
-    # Parsing conf
-    dbhost_str=$(grep -n "HOST='$host'" $conf)
-    str_number=$(echo $dbhost_str | cut -f 1 -d ':')
-    str=$(echo $dbhost_str | cut -f 2 -d ':')
-
-    # Reading key=values
-    eval $str
-
-    # Defining clean key
-    c_key=$(echo "${key//$/}")
-
-    eval old="${key}"
-
-    # Escaping slashes
-    old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-    new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-
-    # Updating conf
-    sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g"\
-        $conf
-}

@@ -1,9 +1,8 @@
 #!/bin/bash
-# info: delete database serve
-# options: type host
+# info: suspend database
+# options: user database
 #
-# The function for deleting the database host from vesta configuration. It will
-# be deleted if there are no databases created on it only.
+# The function for suspending a certain user database.
 
 
 #----------------------------------------------------------#
@@ -11,10 +10,10 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-type=$1
-host=$2
+user=$1
+database=$2
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/db.sh
@@ -24,36 +23,36 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
-check_args '2' "$#" 'type host'
-
-# Checking argument format
-validate_format 'host'
-
-# Checking db system is enabled
-is_system_enabled 'DB_SYSTEM'
-
-# Checking db type
-is_type_valid "$DB_SYSTEM" "$type"
-
-# Checking host existance
-is_db_host_valid
-
-# Checking db host users
-is_db_host_free
+check_args '2' "$#" 'user database'
+validate_format 'user' 'database'
+is_system_enabled "$DB_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'db' 'DB' "$database"
+is_object_unsuspended 'db' 'DB' "$database"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting host from conf
-del_dbhost_vesta
+# Get database values
+get_database_values
+
+# Switching on db type
+case $type in
+    mysql) suspend_mysql_database ;;
+    pgsql) suspend_pgsql_database ;;
+esac
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Updating db value
+update_object_value 'db' 'DB' "$database" '$SUSPENDED' 'yes'
+increase_user_value "$user" '$SUSPENDED_DB'
 
 # Logging
 log_event "$OK" "$EVENT"

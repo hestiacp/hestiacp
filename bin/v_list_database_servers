@@ -1,0 +1,51 @@
+#!/bin/bash
+# info: list database servers
+# options: type [format]
+#
+# The function for obtaining the list of all hosts of the same databases' type.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+type=$1
+format=${2-shell}
+
+# Includes
+source $VESTA/func/shared.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '1' "$#" 'type [format]'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining fileds to select
+conf=$VESTA/conf/$type.conf
+fields='$HOST $PORT $CHARSETS $MAX_DB $U_SYS_USERS $U_DB_BASES $TPL $SUSPENDED'
+fields="$fields \$TIME \$DATE"
+
+# Listing database
+case $format in 
+    json)   json_list ;;
+    plain)  nohead=1; shell_list;;
+    shell)  fields='$HOST $PORT $MAX_DB $U_DB_BASES $SUSPENDED $DATE';
+            shell_list | column -t ;;
+    *)      check_args '2' '0' 'type [format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

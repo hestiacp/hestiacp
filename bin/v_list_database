@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list database host
-# options: type host [format]
+# info: list database
+# options: user database [format]
 #
-# The function for obtaining host's database parameters.
+# The function for obtaining of all database's parameters.
 
 
 #----------------------------------------------------------#
@@ -10,42 +10,26 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-type=$1
-host=$2
+user=$1
+database=$2
 format=${3-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
-source $VESTA/func/db.sh
 
 # Json function
-json_list_dbhost() {
-    # Definigng variables
+json_list_db() {
     i=1
-
-    # Define words number
-    fields_count=$(echo "$fields" | wc -w)
-
-    # Reading file line by line
-    line=$(grep "HOST='$host'" $conf)
-
-    # Print top bracket
+    last_word=$(echo "$fields" | wc -w)
+    line=$(grep "DB='$database'" $conf)
     echo '{'
-
-    # Assign key=value
     eval $line
-
-    # Starting output loop
     for field in $fields; do
-
-        # Parsing key=value
         eval value=$field
-
-        # Checking first field
         if [ "$i" -eq 1 ]; then
             echo -e "\t\"$value\": {"
         else
-            if [ "$fields_count" -eq "$i" ]; then
+            if [ "$last_word" -eq "$i" ]; then
                 echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
             else
                 echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
@@ -53,28 +37,19 @@ json_list_dbhost() {
         fi
         (( ++i))
     done
-    # If there was any output
     if [ -n "$value" ]; then
         echo -e "\t}"
     fi
-
-    # Printing bottom json bracket
-    echo -e "}"
+    echo -e '}'
 }
 
-# Shell function
-shell_list_dbhost() {
-
-    # Reading file line by line
-    line=$(grep "HOST='$host'" $conf)
-
-    # Parsing key=value
+# Shell list for single database
+shell_list_db() {
+    line=$(grep "DB='$database'" $conf)
     eval $line
-
-    # Print result line
     for field in $fields; do
         eval key="$field"
-        echo "${field//$/}: $key"
+        echo "${field//$/}: $key "
     done
 }
 
@@ -83,35 +58,27 @@ shell_list_dbhost() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
-check_args '2' "$#" 'type host [format]'
-
-# Checking argument format
-validate_format 'host'
-
-# Checking db type
-is_type_valid "$DB_SYSTEM" "$type"
-
-# Checking db host
-is_db_host_valid
+check_args '2' "$#" 'user database [format]'
+validate_format 'user' 'database'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'db' 'DB' "$database"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config type
-conf=$VESTA/conf/$type.conf
 
 # Defining fileds to select
-fields='$HOST $PORT $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'
+conf=$USER_DATA/db.conf
+fields='$DB $DBUSER $HOST $TYPE $CHARSET $U_DISK $SUSPENDED $TIME $DATE'
 
 # Listing database
 case $format in 
-    json)   json_list_dbhost ;;
-    plain)  nohead=1; shell_list_dbhost ;;
-    shell)  shell_list_dbhost | column -t;;
-    *)      check_args '2' '0' 'type host [format]'
+    json)   json_list_db ;;
+    plain)  shell_list_db ;;
+    shell)  shell_list_db | column -t ;;
+    *)      check_args '2' '0' 'user database [format]'
 esac
 
 

@@ -30,13 +30,13 @@ get_next_dbhost() {
     fi
 }
 
-# Database encoding validation
-is_db_encoding_valid() {
+# Database charset validation
+is_charset_valid() {
     host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
     eval $host_str
 
-    if [ -z "$(echo $ENCODINGS | grep -wi $encoding )" ]; then
-        echo "Error: encoding $encoding not exist"
+    if [ -z "$(echo $CHARSETS | grep -wi $charset )" ]; then
+        echo "Error: charset $charset not exist"
         log_event "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi
@@ -67,7 +67,7 @@ increase_dbhost_values() {
 
 # Decrease database host value
 decrease_dbhost_values() {
-    host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/$TYPE.conf)
     eval $host_str
 
     old_dbbases="U_DB_BASES='$U_DB_BASES'"
@@ -80,12 +80,12 @@ decrease_dbhost_values() {
         sed -e ':a;N;$!ba;s/\n/,/g')
     new_users="U_SYS_USERS='$U_SYS_USERS'"
 
-    sed -i "s/$old_dbbases/$new_dbbases/g" $VESTA/conf/$type.conf
-    sed -i "s/$old_users/$new_users/g" $VESTA/conf/$type.conf
+    sed -i "s/$old_dbbases/$new_dbbases/g" $VESTA/conf/$TYPE.conf
+    sed -i "s/$old_users/$new_users/g" $VESTA/conf/$TYPE.conf
 }
 
 # Create MySQL database
-create_db_mysql() {
+add_mysql_database() {
     host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
@@ -102,26 +102,24 @@ create_db_mysql() {
         exit $E_DB
     fi
 
-    query="CREATE DATABASE $database CHARACTER SET $encoding"
+    query="CREATE DATABASE $database CHARACTER SET $charset"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
     query="GRANT ALL ON $database.* TO '$dbuser'@'%' IDENTIFIED BY '$dbpass'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    if [ "$HOST" = 'localhost' ]; then
-        query="GRANT ALL ON $database.* TO '$dbuser'@'localhost'
-            IDENTIFIED BY '$dbpass'"
-        mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
-    fi
+    query="GRANT ALL ON $database.* TO '$dbuser'@'localhost'
+        IDENTIFIED BY '$dbpass'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 }
 
 # Create PostgreSQL database
-create_db_pgsql() {
+add_pgsql_database() {
     host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
     eval $host_str
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: postgresql config parsion failed"
+        echo "Error: postgresql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
@@ -134,12 +132,12 @@ create_db_pgsql() {
         exit $E_DB
     fi
 
-    query="CREATE ROLE $db_user WITH LOGIN PASSWORD '$db_password'"
+    query="CREATE ROLE $dbuser WITH LOGIN PASSWORD '$dbpass'"
     psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 
-    query="CREATE DATABASE $database  OWNER $db_user"
+    query="CREATE DATABASE $database OWNER $dbuser"
     if [ "$TPL" = 'template0' ]; then
-        query="$query ENCODING '$encoding' TEMPLATE $TPL"
+        query="$query ENCODING '$charset' TEMPLATE $TPL"
     else
         query="$query TEMPLATE $TPL"
     fi
@@ -150,9 +148,9 @@ create_db_pgsql() {
 
     query="GRANT CONNECT ON DATABASE template1 to $db_user"
     psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
-
 }
 
+# Check if database host do not exist in config 
 is_dbhost_new() {
     if [ -e "$VESTA/conf/$type.conf" ]; then
         check_host=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
@@ -164,247 +162,152 @@ is_dbhost_new() {
     fi
 }
 
+# Check MySQL database host
 is_mysql_host_alive() {
-    # Checking connection
-    sql="mysql -h $host -u $db_user -p$db_password -P$port -e"
-    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    mysql -h $host -u $dbuser -p$dbpass -P $port -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection to $host failed"
+        log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 }
 
+# Check PostgreSQL database host
 is_pgsql_host_alive() {
-    # Checking connection
-    export PGPASSWORD="$db_password"
-    sql="psql -h $host -U $db_user -p $port -c "
-    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    export PGPASSWORD="$dbpass"
+    psql -h $host -U $dbuser -p $port -c "SELECT VERSION()" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection to $host failed"
+        log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 }
 
-is_db_suspended() {
-    config="$USER_DATA/db.conf"
-    check_db=$(grep "DB='$database'" $config|grep "SUSPENDED='yes'")
-
-    # Checking result
-    if [ ! -z "$check_db" ]; then
-        echo "Error: db suspended"
-        log_event 'debug' "$E_SUSPENDED $EVENT"
-        exit $E_SUSPENDED
-    fi
-}
-
-is_db_unsuspended() {
-    config="$USER_DATA/db.conf"
-    check_db=$(grep "DB='$database'" $config|grep "SUSPENDED='yes'")
-
-    # Checking result
-    if [ -z "$check_db" ]; then
-        echo "Error: db unsuspended"
-        log_event 'debug' "$E_UNSUSPENDED $EVENT"
-        exit $E_UNSUSPENDED
-    fi
-}
-
-is_db_user_valid() {
-    config="$USER_DATA/db.conf"
-    check_db=$(grep "DB='$database'" $config|grep "USER='$db_user'")
-
-    # Checking result
-    if [ -z "$check_db" ]; then
-        echo "Error: dbuser not exist"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
-}
-
-change_db_mysql_password() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-    sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
-
-    # Checking empty vars
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
-        exit $E_PARSING
-    fi
-
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
-        exit $E_DB
-    fi
-
-    # Changing user password
-    $sql "GRANT ALL ON $database.* TO '$db_user'@'%' \
-             IDENTIFIED BY '$db_password'"
-    $sql "GRANT ALL ON $database.* TO '$db_user'@'localhost' \
-             IDENTIFIED BY '$db_password'"
-    #$sql "SET PASSWORD FOR '$db_user'@'%' = PASSWORD('$db_password');"
-    $sql "FLUSH PRIVILEGES"
-}
-
-change_db_pgsql_password() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-
-    export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -p $PORT -c"
-
-    # Checking empty vars
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
-        exit $E_PARSING
-    fi
-
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
-        exit $E_DB
-    fi
-
-    $sql "ALTER ROLE $db_user WITH LOGIN PASSWORD '$db_password'" >/dev/null
-    export PGPASSWORD='pgsql'
-}
-
-get_db_value() {
-    # Defining vars
-    key="$1"
+# Get database values
+get_database_values() {
     db_str=$(grep "DB='$database'" $USER_DATA/db.conf)
-
-    # Parsing key=value
-    for keys in $db_str; do
-        eval ${keys%%=*}=${keys#*=}
-    done
-
-    # Self reference
-    eval value="$key"
-
-    # Print value
-    echo "$value"
+    eval $db_str
 }
 
-del_db_mysql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-    sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
-
-    # Checking empty vars
+# Change MySQL database password
+change_mysql_password() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
+    eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event "$E_DB $EVENT"
         exit $E_DB
     fi
 
-    # Deleting database & checking result
-    $sql "DROP DATABASE $database" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
-        exit $E_DB
-    fi
+    query="GRANT ALL ON $database.* TO '$DBUSER'@'%' IDENTIFIED BY '$dbpass'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    # Deleting user
-    check_users=$(grep "USER='$db_user'" $USER_DATA/db.conf |wc -l)
-    if [ 1 -ge "$check_users" ]; then
-        $sql "DROP USER '$db_user'@'%'"
-        if [ "$host" = 'localhost' ]; then
-            $sql "DROP USER '$db_user'@'localhost'"
-        fi
-    else
-        $sql "REVOKE ALL ON $database.* from '$db_user'@'%'"
-        if [ "$host" = 'localhost' ]; then
-            $sql "REVOKE ALL ON $database.* from '$db_user'@'localhost'"
-        fi
-    fi
-    $sql "FLUSH PRIVILEGES"
+    query="GRANT ALL ON $database.* TO '$DBUSER'@'localhost'
+        IDENTIFIED BY '$dbpass'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 }
 
-del_db_pgsql() {
-    # Defining vars
+# Change PostgreSQL database password
+change_pgsql_password() {
     host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-
+    eval $host_str
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -p $PORT -c"
-
-    # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: postgresql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
-    # Deleting database & checking result
-    $sql "REVOKE ALL PRIVILEGES ON DATABASE $database FROM $db_user">/dev/null
-    $sql "DROP DATABASE $database" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
-        exit $E_DB
-    fi
-
-    # Deleting user
-    check_users=$(grep "USER='$db_user'" $USER_DATA/db.conf |wc -l)
-    if [ 1 -ge "$check_users" ]; then
-        $sql "REVOKE CONNECT ON DATABASE template1 FROM $db_user" >/dev/null
-        $sql "DROP ROLE $db_user" >/dev/null
-    fi
-
-    export PGPASSWORD='pgsql'
+    query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 }
 
-
-del_db_vesta() {
-    conf="$USER_DATA/db.conf"
-
-    # Parsing domains
-    string=$( grep -n "DB='$database'" $conf | cut -f 1 -d : )
-    if [ -z "$string" ]; then
-        echo "Error: parse error"
-        log_event 'debug' "$E_PARSING $EVENT"
+# Delete MySQL database
+delete_mysql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
+    eval $host_str
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
-    sed -i "$string d" $conf
+
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event  "$E_DB $EVENT"
+        exit $E_DB
+    fi
+
+    query="DROP DATABASE $database"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="REVOKE ALL ON $database.* FROM '$DBUSER'@'%'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="REVOKE ALL ON $database.* FROM '$DBUSER'@'localhost'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
+        query="DROP USER '$DBUSER'@'%'"
+        mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+        query="DROP USER '$DBUSER'@'localhost'"
+        mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    fi
 }
+
+# Delete PostgreSQL database
+delete_pgsql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
+    eval $host_str
+    export PGPASSWORD="$PASSWORD"
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
+        echo "Error: postgresql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
+        exit $E_PARSING
+    fi
+
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_DB" "$EVENT"
+        exit $E_DB
+    fi
+
+    query="REVOKE ALL PRIVILEGES ON DATABASE $database FROM $DBUSER"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
+    query="DROP DATABASE $database"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
+    if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
+        query="REVOKE CONNECT ON DATABASE template1 FROM $db_user"
+        psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+        query="DROP ROLE $db_user"
+        psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    fi
+}
+
 
 dump_db_mysql() {
     # Defining vars
@@ -475,285 +378,169 @@ dump_db_pgsql() {
     export PGPASSWORD='pgsql'
 }
 
-
-
-is_db_host_free() {
-    # Defining vars
+# Check if database server is in use
+is_dbhost_free() {
     host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-
-    # Checking U_DB_BASES
+    eval $host_str
     if [ 0 -ne "$U_DB_BASES" ]; then
-        echo "Error: host is used"
-        log_event 'debug' "$E_INUSE $EVENT"
+        echo "Error: host $HOST is used"
+        log_event "$E_INUSE" "$EVENT"
         exit $E_INUSE
     fi
 }
 
-del_dbhost_vesta() {
-    conf="$VESTA/conf/$type.conf"
-
-    # Parsing domains
-    string=$( grep -n "HOST='$host'" $conf | cut -f 1 -d : )
-    if [ -z "$string" ]; then
-        echo "Error: parse error"
-        log_event 'debug' "$E_PARSING $EVENT"
-        exit $E_PARSING
-    fi
-    sed -i "$string d" $conf
-}
-
-update_db_base_value() {
-    key="$1"
-    value="$2"
-
-    # Defining conf
-    conf="$USER_DATA/db.conf"
-
-    # Parsing conf
-    db_str=$(grep -n "DB='$database'" $conf)
-    str_number=$(echo $db_str | cut -f 1 -d ':')
-    str=$(echo $db_str | cut -f 2 -d ':')
-
-    # Reading key=values
-    for keys in $str; do
-        eval ${keys%%=*}=${keys#*=}
-    done
-
-    # Defining clean key
-    c_key=$(echo "${key//$/}")
-
-    eval old="${key}"
-
-    # Escaping slashes
-    old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-    new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-
-    # Updating conf
-    sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g"\
-     $conf
-}
-
-suspend_db_mysql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-    sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
-
-    # Checking empty vars
+# Suspend MySQL database
+suspend_mysql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
+    eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
-    # Suspending user
-    $sql "REVOKE ALL ON $database.* FROM '$db_user'@'%'"
-    $sql "FLUSH PRIVILEGES"
+    query="REVOKE ALL ON $database.* FROM '$DBUSER'@'%'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="REVOKE ALL ON $database.* FROM '$DBUSER'@'localhost'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
 }
 
-suspend_db_pgsql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-
+# Suspend PostgreSQL database
+suspend_pgsql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
+    eval $host_str
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -p $PORT -c"
-
-    # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: postgresql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
-    # Suspending user
-    $sql "REVOKE ALL PRIVILEGES ON $database FROM $db_user">/dev/null
-    export PGPASSWORD='pgsql'
+    query="REVOKE ALL PRIVILEGES ON $database FROM $DBUSER"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 }
 
-unsuspend_db_mysql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-    sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
-
-    # Checking empty vars
+# Unsuspend MySQL database
+unsuspend_mysql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
+    eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
-    # Unsuspending user
-    $sql "GRANT ALL ON $database.* to '$db_user'@'%'"
-    $sql "FLUSH PRIVILEGES"
+    query="GRANT ALL ON $database.* FROM '$DBUSER'@'%'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="GRANT ALL ON $database.* FROM '$DBUSER'@'localhost'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 }
 
-unsuspend_db_pgsql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-
+# Unsuspend PostgreSQL database
+unsuspend_pgsql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
+    eval $host_str
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -p $PORT -c"
-
-    # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: postgresql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
-    # Unsuspending user
-    $sql "GRANT ALL PRIVILEGES ON DATABASE $database TO $db_user" >/dev/null
-    export PGPASSWORD='pgsql'
+    query="GRANT ALL PRIVILEGES ON DATABASE $database TO $DBUSER"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 }
 
-db_clear_search() {
-    # Defining delimeter
-    IFS=$'\n'
-
-    # Reading file line by line
-    for line in $(grep $search_string $conf); do
-        # Parsing key=val
-        for key in $line; do
-            eval ${key%%=*}=${key#*=}
-        done
-        # Print result line
-        eval echo "$field"
-    done
-}
-
-get_disk_db_mysql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-    sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
-
-    # Checking empty vars
+# Get MySQL disk usage
+get_mysql_disk_usage() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
+    eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
-    # Deleting database & checking result
-    query="SELECT sum( data_length + index_length ) / 1024 / 1024 \"Size\"
-            FROM information_schema.TABLES WHERE table_schema='$database'"
-    raw_size=$($sql "$query" |tail -n 1)
-
-    # Checking null output (this means error btw)
-    if [ "$raw_size" == 'NULL' ]; then
-        raw_size='0'
+    query="SELECT SUM( data_length + index_length ) / 1024 / 1024 \"Size\"
+        FROM information_schema.TABLES WHERE table_schema='$database'"
+    usage=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |tail -n1)
+    if [ "$usage" == 'NULL' ] || [ "${usage:0:1}" -eq '0' ]; then
+        usage=1
     fi
-
-    # Rounding zero size
-    if [ "${raw_size:0:1}" -eq '0' ]; then
-        raw_size='1'
-    fi
-
-    # Printing round size in mb
-    printf "%0.f\n" $raw_size
-
+    usage=$(printf "%0.f\n"  $usage)
 }
 
-get_disk_db_pgsql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-
+# Get MySQL disk usage
+get_pgsql_disk_usage() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
+    eval $host_str
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -p $PORT -c"
-
-    # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: postgresql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
-    # Raw query
-
-    raq_query=$($sql "SELECT pg_database_size('$database');")
-    raw_size=$(echo "$raq_query" | grep -v "-" | grep -v 'row' |\
-        sed -e "/^$/d" |grep -v "pg_database_size" | awk '{print $1}')
-
-    # Checking null output (this means error btw)
-    if [ -z "$raw_size" ]; then
-        raw_size='0'
+    query="SELECT pg_database_size('$database');"
+    usage=$(psql -h $HOST -U $USER -p $PORT -c "$query")
+    usage=$(echo "$usage" | grep -v "-" | grep -v 'row' | sed -e "/^$/d")
+    usage=$(echo "$usage" | grep -v "pg_database_size" | awk '{print $1}')
+    if [ -z "$usage" ]; then
+        usage=0
     fi
-
-    # Converting to MB
-    size=$(expr $raw_size / 1048576)
-
-    # Rounding zero size
-    if [ "$size" -eq '0' ]; then
-        echo '1'
-    else
-        echo "$size"
+    usage=$(($usage / 1048576))
+    if [ "$usage" -eq '0' ]; then
+        usage=1
     fi
 }
-

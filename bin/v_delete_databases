@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: suspend databases
+# info: delete user databases
 # options: user
 #
-# The function for suspending of all databases of a single user.
+# The function deletes all user databases.
 
 
 #----------------------------------------------------------#
@@ -12,48 +12,29 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
-source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking db system is enabled
-is_system_enabled 'DB_SYSTEM'
-
-# Checking user
+is_system_enabled "$DB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="$USER_DATA/db.conf"
-
-# Defining fileds to select
-field='$DB'
-
-# Defining search string
-search_string="SUSPENDED='no'"
-
-# Parsing unsuspeneded domains
-databases=$(db_clear_search)
-
-# Starting suspend loop
-for database in $databases; do
-    $BIN/v_suspend_db_base "$user" "$database"
+# Starting delete loop
+for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
+    $BIN/v_delete_database "$user" "$database"
 done
 
 

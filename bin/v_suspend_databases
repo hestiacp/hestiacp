@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: listing data bases
-# options: user [format]
+# info: suspend databases
+# options: user
 #
-# The function for obtaining the list of all user's databases.
+# The function for suspending of all databases of a single user.
 
 
 #----------------------------------------------------------#
@@ -11,9 +11,9 @@
 
 # Argument defenition
 user=$1
-format=${2-shell}
 
-# Importing variables
+# Includes
+source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
 
@@ -21,13 +21,9 @@ source $VESTA/func/shared.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
-check_args '1' "$#" 'user [format]'
-
-# Checking argument format
+check_args '1' "$#" 'user'
 validate_format 'user'
-
-# Checking user
+is_system_enabled "$DB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -35,24 +31,17 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/db.conf
-
-# Defining fileds to select
-fields='$DB $USER $HOST $TYPE $CHARSET $U_DISK $SUSPENDED $DATE'
-
-# Listing databases
-case $format in 
-    json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$DB $USER $HOST $TYPE $U_DISK $DATE';
-            shell_list | column -t ;;
-    *)      check_args '1' '0' 'user [format]'
-esac
+# Starting suspend loop
+for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
+    $BIN/v_suspend_database "$user" "$database"
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
 
 exit

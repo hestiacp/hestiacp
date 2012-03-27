@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: unsuspend databases
-# options: user
+# info: listing databases
+# options: user [format]
 #
-# The function for unsuspending all user's databases.
+# The function for obtaining the list of all user's databases.
 
 
 #----------------------------------------------------------#
@@ -11,27 +11,18 @@
 
 # Argument defenition
 user=$1
+format=${2-shell}
 
-# Importing variables
-source $VESTA/conf/vesta.conf
+# Includes
 source $VESTA/func/shared.sh
-source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
-check_args '1' "$#" 'user'
-
-# Checking argument format
+check_args '1' "$#" 'user [format]'
 validate_format 'user'
-
-# Checking db system is enabled
-is_system_enabled 'DB_SYSTEM'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -39,29 +30,22 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="$USER_DATA/db.conf"
-
 # Defining fileds to select
-field='$DB'
+conf=$USER_DATA/db.conf
+fields='$DB $DBUSER $HOST $TYPE $CHARSET $U_DISK $SUSPENDED $TIME $DATE'
 
-# Defining search string
-search_string="SUSPENDED='yes'"
-
-# Parsing unsuspeneded domains
-databases=$(db_clear_search)
-
-# Starting suspend loop
-for database in $databases; do
-    $BIN/v_unsuspend_db_base "$user" "$database"
-done
+# Listing databases
+case $format in 
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  fields='$DB $DBUSER $HOST $TYPE $U_DISK $DATE';
+            shell_list | column -t ;;
+    *)      check_args '1' '0' 'user [format]'
+esac
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Logging
-log_event "$OK" "$EVENT"
 
 exit

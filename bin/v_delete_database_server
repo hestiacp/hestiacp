@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: list data base servers
-# options: type [format]
+# info: delete database server
+# options: type host
 #
-# The function for obtaining the list of all hosts of the same databases' type.
+# The function for deleting the database host from vesta configuration. It will
+# be deleted if there are no databases created on it only.
 
 
 #----------------------------------------------------------#
@@ -11,45 +12,38 @@
 
 # Argument defenition
 type=$1
-format=${2-shell}
+host=$2
 
 # Importing variables
+source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
+source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
-check_args '1' "$#" 'type [format]'
-
-# Checking db type
+check_args '2' "$#" "type host"
+validate_format 'type' 'host'
+is_system_enabled "$DB_SYSTEM"
 is_type_valid "$DB_SYSTEM" "$type"
+is_object_valid "../../conf/$type" 'HOST' "$host"
+is_dbhost_free
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-# Defining config type
-conf=$VESTA/conf/$type.conf
-
-# Defining fileds to select
-fields='$HOST $PORT $MAX_DB $U_SYS_USERS $U_DB_BASES $ACTIVE $DATE'
-
-# Listing database
-case $format in 
-    json)   json_list ;;
-    plain)  nohead=1; shell_list;;
-    shell)  fields='$HOST $PORT $MAX_DB $U_DB_BASES $ACTIVE $DATE';
-            shell_list | column -t ;;
-    *)      check_args '2' '0' 'type [format]'
-esac
+# Deleting server
+sed -i "/HOST='$host' /d" $VESTA/conf/$type.conf
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
 
 exit

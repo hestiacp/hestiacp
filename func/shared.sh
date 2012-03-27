@@ -173,7 +173,7 @@ is_object_suspended() {
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
     fi
     if [ -z "$spnd" ]; then
-        echo "Error: $3 is suspended"
+        echo "Error: $3 is not suspended"
         log_event "$E_SUSPENDED" "$EVENT"
         exit $E_SUSPENDED
     fi
@@ -187,7 +187,7 @@ is_object_unsuspended() {
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
     fi
     if [ ! -z "$spnd" ]; then
-        echo "Error: $3 is not suspended"
+        echo "Error: $3 is suspended"
         log_event "$E_UNSUSPENDED" "$EVENT"
         exit $E_UNSUSPENDED
     fi
@@ -620,6 +620,8 @@ validate_format(){
             auth_pass)      validate_format_password "$arg" ;;
             auth_user)      validate_format_username "$arg" "$arg_name" ;;
             backup)         validate_format_date "$arg" ;;
+            charset)        validate_format_username "$arg" "$arg_name" ;;
+            charsets)       validate_format_common "$arg" 'charsets' ;;
             database)       validate_format_database "$arg" ;;
             day)            validate_format_mhdmw "$arg" $arg_name ;;
             dbpass)         validate_format_password "$arg" ;;
@@ -630,11 +632,10 @@ validate_format(){
             dom_alias)      validate_format_domain "$arg" ;;
             dvalue)         validate_format_dvalue "$arg";;
             email)          validate_format_email "$arg" ;;
-            encoding)       validate_format_username "$arg" "$arg_name" ;;
             exp)            validate_format_date "$arg" ;;
             extentions)     validate_format_common "$arg" 'extentions' ;;
             fname)          validate_format_username "$arg" "$arg_name" ;;
-            host)           validate_format_username "$arg" "$arg_name" ;;
+            host)           validate_format_domain "$arg" "$arg_name" ;;
             hour)           validate_format_mhdmw "$arg" $arg_name ;;
             id)             validate_format_int "$arg" ;;
             interface)      validate_format_interface "$arg" ;;

@@ -1,0 +1,47 @@
+#!/bin/bash
+# info: suspend database server
+# options: type host
+#
+# The function for suspending a database server.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+type=$1
+host=$2
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'type host'
+validate_format 'type' 'host'
+is_system_enabled "$DB_SYSTEM"
+is_object_valid "../../conf/$type" 'HOST' "$host"
+is_object_unsuspended "../../conf/$type" 'HOST' "$host"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Suspend database creation on a server
+update_object_value "../../conf/$type" 'HOST' "$host" '$SUSPENDED' 'yes'
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add new database server
-# options: type host port db_user db_password [max_db] [tpl]
+# options: type host port dbuser dbpass [max_db] [charsets] [template]
 #
 # The function add new database server to the server pool. It supports local
 # and remote database servers, which is useful for clusters. By adding a host
@@ -17,13 +17,13 @@
 type=$1
 host=$2
 port=$3
-db_user=$4
-db_password=$5
+dbuser=$4
+dbpass=$5
 max_db=${6-300}
-template=${7-template1}
+charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
+template=${8-template1}
 
-
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/db.sh
@@ -33,24 +33,12 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
-args_usage='type host port db_user db_password [max_db] [tpl]'
+args_usage='type host port dbuser dbpass [max_db] [charsets] [tpl]'
 check_args '5' "$#" "$args_usage"
-
-# Checking argument format
-validate_format 'host' 'port' 'db_user' 'db_password' 'max_db'
-validate_format 'template'
-
-# Checking db system is enabled
-is_system_enabled 'DB_SYSTEM'
-
-# Checking db type
+validate_format 'host' 'port' 'dbuser' 'dbpass' 'max_db' 'charsets' 'template'
+is_system_enabled "$DB_SYSTEM"
 is_type_valid "$DB_SYSTEM" "$type"
-
-# Checking host existance
-is_db_host_new
-
-# Checking host connection
+is_dbhost_new
 case $type in
     mysql) is_mysql_host_alive ;;
     pgsql) is_pgsql_host_alive ;;
@@ -63,17 +51,17 @@ esac
 
 # Concatentating db host string
 case $type in
-    mysql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
-            new_str="$new_str PORT='$port' MAX_DB='$max_db' U_SYS_USERS=''";
-            new_str="$new_str U_DB_BASES='0'  ACTIVE='yes' DATE='$DATE'";;
-    pgsql) new_str="HOST='$host' USER='$db_user' PASSWORD='$db_password'";
-            new_str="$new_str PORT='$port' TPL='$template'";
-            new_str="$new_str MAX_DB='$max_db' U_SYS_USERS=''";
-            new_str="$new_str U_DB_BASES='0' ACTIVE='yes' DATE='$DATE'";;
+    mysql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass' PORT='$port'";
+           str="$str CHARSETS='$charsets' MAX_DB='$max_db' U_SYS_USERS='' ";
+           str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'";;
+    pgsql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass' PORT='$port'";
+           str="$str CHARSETS='$charsets' TPL='$template' MAX_DB='$max_db'";
+           str="$str U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no'";
+           str="$str TIME='$TIME' DATE='$DATE'";;
 esac
 
 # Adding host to conf
-echo "$new_str" >> $VESTA/conf/$type.conf
+echo "$str" >> $VESTA/conf/$type.conf
 chmod 660 $VESTA/conf/$type.conf
 
 
@@ -81,8 +69,10 @@ chmod 660 $VESTA/conf/$type.conf
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Hidding db pass
-EVENT=$(echo $EVENT | sed -e "s/$db_password/xxxxxx/g")
+# Hiding password
+EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
+EVENT="$EVENT ARGUMENTS='$type $host $port $dbuser ****** $max_db $charsets"
+EVENT="$EVENT $tpl'"
 
 # Logging
 log_event "$OK" "$EVENT"

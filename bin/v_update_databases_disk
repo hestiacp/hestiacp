@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: update database disk usage
-# options: user database
+# info: update databases disk usage
+# options: user
 #
-# The function recalculates disk usage for speciefic database.
+# The function recalculates disk usage for all user databases.
 
 
 #----------------------------------------------------------#
@@ -11,67 +11,35 @@
 
 # Argument defenition
 user=$1
-database=$2
 
 # Importing variables
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
-source $VESTA/func/db.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
-check_args '2' "$#" 'user db_name'
-
-# Checking argument format
-validate_format 'user' 'database'
-
-# Checking web system is enabled
-is_system_enabled 'DB_SYSTEM'
-
-# Checking user
+check_args '1' "$#" 'user'
+validate_format 'user'
+is_system_enabled "$DB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking db existance
-is_db_valid
-
-# Checking db is active
-is_db_suspended
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get some variables we do not have now
-db_user=$(get_db_value '$USER')
-host=$(get_db_value '$HOST')
-type=$(get_db_value '$TYPE')
-
-# Switching on db type
-case $type in
-    mysql) disk_usage=$(get_disk_db_mysql); ret_val="$?" ;;
-    pgsql) disk_usage=$(get_disk_db_pgsql); ret_val="$?" ;;
-esac
-
-# Checking ret_val
-if [ "$ret_val" -ne '0' ]; then
-    exit $ret_val
-fi
+# Starting update loop
+for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
+    $BIN/v_update_database_disk "$user" "$database"
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Updating disk value in config
-update_db_base_value '$U_DISK' "$disk_usage"
-
-# Recalculating user disk space
-recalc_user_disk_usage
 
 # Logging
 log_event "$OK" "$EVENT"

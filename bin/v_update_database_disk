@@ -1,9 +1,8 @@
 #!/bin/bash
-# info: change database user password
-# options: user db_name db_password
+# info: update database disk usage
+# options: user database
 #
-# The function for changing database user  password to a database. It uses the
-# full name of database as argument.
+# The function recalculates disk usage for speciefic database.
 
 
 #----------------------------------------------------------#
@@ -13,9 +12,8 @@
 # Argument defenition
 user=$1
 database=$2
-db_password=$3
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/db.sh
@@ -25,41 +23,26 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
-check_args '3' "$#" 'user db_name db_password'
-
-# Checking argument format
-validate_format 'user' 'database' 'db_password'
-
-# Checking db system is enabled
-is_system_enabled 'DB_SYSTEM'
-
-# Checking user
+check_args '2' "$#" 'user database'
+validate_format 'user' 'database'
+is_system_enabled "$DB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking db existance
-is_db_valid
-
-# Checking db is active
-is_db_suspended
+is_object_valid 'db' 'DB' "$database"
+is_object_unsuspended 'db' 'DB' "$database"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Define database variables
-db_user=$(get_db_value '$USER')
-host=$(get_db_value '$HOST')
-type=$(get_db_value '$TYPE')
+# Get database values
+get_database_values
 
 # Switching on db type
-case $type in
-    mysql) change_db_mysql_password ;;
-    pgsql) change_db_pgsql_password ;;
+case $TYPE in
+    mysql) get_mysql_disk_usage ;;
+    pgsql) get_pgsql_disk_usage ;;
 esac
 
 
@@ -67,8 +50,9 @@ esac
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Hiding password
-EVENT="$DATE $SCRIPT $user $database *****"
+# Updating disk usage
+update_object_value 'db' 'DB' "$database" '$U_DISK' "$usage"
+recalc_user_disk_usage
 
 # Logging
 log_event "$OK" "$EVENT"

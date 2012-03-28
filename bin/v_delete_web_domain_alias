@@ -17,7 +17,7 @@ domain_idn=$(idn -t --quiet -a "$domain" )
 dom_alias=$(idn -t --quiet -u "$3" )
 dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -27,35 +27,20 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '3' "$#" 'user domain dom_alias'
-
-# Checking argument format
 validate_format 'user' 'domain' 'dom_alias'
-
-# Checking web system is enabled
 is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
-
-# Checking alias is added
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
-check_alias=$(echo ${ALIAS//,/ }|grep -w "$dom_alias")
-if [ -z "$check_alias" ]; then
-    echo "Error: alias not exist"
-    log_event 'debug' "$E_NOTEXIST $EVENT"
+if [ -z "$(echo $ALIAS | tr ',' '\n' | grep ^$dom_alias$)" ]; then
+    echo "Error: alias $dom_alias not exist"
+    log_event "$E_NOTEXIST" "$EVENT"
     exit $E_NOTEXIST
 fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -105,17 +90,17 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Deleting alias
-update_domain_value 'web' '$ALIAS' "$ALIAS"
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$ALIAS' "$ALIAS"
 
 # Update counters
 decrease_user_value "$user" '$U_WEB_ALIASES'
 
-# Adding task to the vesta pipe
-$BIN/v_restart_web
+# Restart web server
+$BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT" "v_add_web_domain_alias $user $domain $dom_alias"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

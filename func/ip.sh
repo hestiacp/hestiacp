@@ -1,3 +1,41 @@
+# Validationg ip address
+is_ip_valid() {
+    check_ifc=$(/sbin/ifconfig |grep "inet addr:$ip")
+    if [ ! -e "$VESTA/data/ips/$ip" ] || [ -z "$check_ifc" ]; then
+        echo "Error: IP $ip not exist"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+# Check if ip availabile for user
+is_ip_avalable() {
+    ip_data=$(cat $VESTA/data/ips/$ip)
+    owner=$(echo "$ip_data"|grep OWNER= | cut -f 2 -d \')
+    status=$(echo "$ip_data"|grep OWNER= | cut -f 2 -d \')
+    shared=no
+    if [ 'admin' = "$owner" ] && [ "$status" = 'shared' ]; then
+        shared='yes'
+    fi
+    if [ "$owner" != "$user" ] && [ "$shared" != 'yes' ]; then
+        echo "Error: User $user don't have permission to use $ip"
+        log_event "$E_FORBIDEN" "$EVENT"
+        exit $E_FORBIDEN
+    fi
+}
+
+# Check ip ownership
+is_sys_ip_owner() {
+    # Parsing ip
+    owner=$(grep 'OWNER=' $VESTA/data/ips/$IP|cut -f 2 -d \')
+    if [ "$owner" != "$user" ]; then
+        echo "Error: IP $IP not owned"
+        log_event "$E_FORBIDEN" "$EVENT"
+        exit $E_FORBIDEN
+    fi
+}
+
+
 is_sys_ip_free() {
     # Parsing system ips
     ip_list=$(/sbin/ifconfig|grep 'inet addr:'|cut -f 2 -d ':'|cut -f 1 -d " ")
@@ -25,17 +63,6 @@ get_next_interface_number() {
     echo ":$n"
 }
 
-is_sys_ip_valid() {
-    # Parsing ifconfig
-    check_ifc=$(/sbin/ifconfig |grep "inet addr:$ip")
-
-    # Checking ip existance
-    if [ ! -e "$VESTA/data/ips/$ip" ] || [ -z "$check_ifc" ]; then
-        echo "Error: IP not exist"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
-}
 
 is_ip_key_empty() {
     key="$1"
@@ -88,43 +115,7 @@ update_sys_ip_value() {
          $conf
 }
 
-is_ip_avalable() {
-    # Checking ip existance
-    if [ ! -e "$VESTA/data/ips/$ip" ]; then
-        echo "Error: IP not exist"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
 
-    # Parsing ip data
-    ip_data=$(cat $VESTA/data/ips/$ip)
-    ip_owner=$(echo "$ip_data" | grep 'OWNER=' | cut -f 2 -d \' )
-    ip_status=$(echo "$ip_data" | grep 'STATUS=' | cut -f 2 -d \' )
-
-    # Parsing user data
-    if [ 'admin' = "$ip_owner" ] && [ "$ip_status" = 'shared' ]; then
-        ip_shared='yes'
-    else
-        ip_shared='no'
-    fi
-
-    if [ "$ip_owner" != "$user" ] && [ "$ip_shared" != 'yes' ]; then
-        echo "Error: ip not owned by user"
-        log_event 'debug' "$E_FORBIDEN $EVENT"
-        exit $E_FORBIDEN
-    fi
-}
-
-is_sys_ip_owner() {
-    # Parsing ip
-    ip="$IP"
-    ip_owner=$(grep 'OWNER=' $VESTA/data/ips/$ip|cut -f 2 -d \')
-    if [ "$ip_owner" != "$user" ]; then
-        echo "Error: IP not owned"
-        log_event 'debug' "$E_FORBIDEN $EVENT"
-        exit $E_FORBIDEN
-    fi
-}
 
 get_ip_name() {
     # Prinitng name

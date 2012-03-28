@@ -50,7 +50,7 @@ decrease_user_value "$user" '$SUSPENDED_DNS'
 
 # Restart named
 if [ "$restart" != 'no' ]; then
-    $BIN/v_restart_dns
+    $BIN/v_restart_dns "$EVENT"
 fi
 
 # Logging

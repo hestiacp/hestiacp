@@ -9,56 +9,48 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
-
-# Restart functions
-apache() {
-    /etc/init.d/httpd status &>/dev/null
-    if [ $? -eq 0 ]; then
-        /etc/init.d/httpd graceful &>/dev/null
-        if [ $? -ne 0 ]; then
-            echo "$E_RESTART $1"
-            exit $E_RESTART
-        fi
-    else
-        /etc/init.d/httpd start &>/dev/null
-        if [ $? -ne 0 ]; then
-            echo "$E_RESTART $1"
-            exit $E_RESTART
-        fi
-    fi
-}
-
-nginx() {
-    /etc/init.d/nginx status &>/dev/null
-    if [ $? -eq 0 ]; then
-        /etc/init.d/nginx reload &>/dev/null
-        if [ $? -ne 0 ]; then
-            echo "$E_RESTART $1"
-            exit $E_RESTART
-        fi
-    else
-        /etc/init.d/nginx start &>/dev/null
-        if [ $? -ne 0 ]; then
-            echo "$E_RESTART $1"
-            exit $E_RESTART
-        fi
-    fi
-}
-
+source $VESTA/func/shared.sh
+EVENT=${1-$EVENT}
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking system
 if [ "$WEB_SYSTEM" = 'apache' ]; then
-    apache $1
+    /etc/init.d/httpd status &>/dev/null
+    if [ $? -eq 0 ]; then
+        /etc/init.d/httpd graceful &>/dev/null
+        if [ $? -ne 0 ]; then
+            log_event "$E_RESTART" "$EVENT"
+            exit $E_RESTART
+        fi
+    else
+        /etc/init.d/httpd start &>/dev/null
+        if [ $? -ne 0 ]; then
+            log_event "$E_RESTART" "$EVENT"
+            exit $E_RESTART
+        fi
+    fi
 fi
 
 if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    nginx $1
+    /etc/init.d/nginx status &>/dev/null
+    if [ $? -eq 0 ]; then
+        /etc/init.d/nginx reload &>/dev/null
+        if [ $? -ne 0 ]; then
+            log_event "$E_RESTART" "$EVENT"
+            exit $E_RESTART
+        fi
+    else
+        /etc/init.d/nginx start &>/dev/null
+        if [ $? -ne 0 ]; then
+            log_event "$E_RESTART" "$EVENT"
+            exit $E_RESTART
+        fi
+    fi
+
 fi
 
 
@@ -66,5 +58,4 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Logging
 exit

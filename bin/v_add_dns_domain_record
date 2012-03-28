@@ -79,7 +79,7 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 increase_user_value "$user" '$U_DNS_RECORDS'
 
 # Restart named
-$BIN/v_restart_dns
+$BIN/v_restart_dns "$EVENT"
 
 # Logging
 log_history "$EVENT"

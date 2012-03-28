@@ -14,7 +14,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -24,29 +24,14 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
-
-# Checking ssl is added
-is_domain_value_exist 'web' '$SSL'
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
 
 
 #----------------------------------------------------------#
@@ -79,13 +64,13 @@ chown -R $user:$user $tmpdir
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Deleting ssl in config
-update_domain_value 'web' '$SSL' 'no'
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$SSL' 'no'
 
 # Checking last ssl domain
 ssl_dom=$(grep "SSL='yes'" $USER_DATA/web.conf)
 main_conf='/etc/httpd/conf.d/vesta.conf'
-conf="$HOMEDIR/$user/conf/shttpd.conf"
+conf="$HOMEDIR/$user/conf/web/shttpd.conf"
 if [ -z "$ssl_dom" ]; then
     sed -i "/Include ${conf////\/}/d" $main_conf
     rm -f $conf
@@ -96,19 +81,18 @@ conf='/etc/nginx/conf.d/vesta_users.conf'
 last_nginx=$(grep -v "NGINX=''" $USER_DATA/web.conf)
 last_snginx=$(echo "$last_nginx" | grep "SSL='yes'")
 if [ -z "$last_snginx" ]; then
-if [ -z "$last_nginx" ]; then
-    sed -i "/$user\/conf\/snginx.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/snginx.conf
+    sed -i "/$user\/conf\/web\/snginx.conf/d" $conf
+    rm -f $HOMEDIR/$user/conf/web/snginx.conf
 fi
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_WEB_SSL'
 
-# Adding task to the vesta pipe
-$BIN/v_restart_web
+# Restart web server
+$BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT" "v_add_web_domain_ssl $user $domain $tmpdir $SSL_HOME"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

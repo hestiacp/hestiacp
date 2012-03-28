@@ -50,7 +50,7 @@ update_domain_zone
 #----------------------------------------------------------#
 
 # Restart named
-$BIN/v_restart_dns
+$BIN/v_restart_dns "$EVENT"
 
 # Logging
 log_event "$OK" "$EVENT"

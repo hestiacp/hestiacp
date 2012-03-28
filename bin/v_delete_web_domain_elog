@@ -16,7 +16,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -26,29 +26,14 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user" "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
-
-# Check errorlog is added
-is_domain_value_exist 'web' '$ELOG'
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$ELOG'
 
 
 #----------------------------------------------------------#
@@ -97,14 +82,14 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Deleting elog in config
-update_domain_value 'web' '$ELOG' 'no'
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$ELOG' 'no'
 
-# Adding task to the vesta pipe
-$BIN/v_restart_web
+# Restart web server
+$BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT" "v_add_web_domain_elog $user $domain"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

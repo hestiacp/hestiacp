@@ -40,7 +40,7 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Restart crond
-$BIN/v_restart_cron
+$BIN/v_restart_cron "$EVENT"
 
 # Logging
 log_event "$OK" "$EVENT"

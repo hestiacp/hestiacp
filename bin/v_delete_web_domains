@@ -12,26 +12,18 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -39,26 +31,9 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="$USER_DATA/web.conf"
-
-# Defining fileds to select
-field='$DOMAIN'
-
-# Defining search string
-search_string="SUSPENDED='no'"
-
-# Parsing domain list
-domains=$(dom_clear_search)
-
 # Starting delete loop
-for domain in $domains; do
-    $BIN/v_delete_web_domain "$user" "$domain"
-    rv="$?"
-    if [ "$rv" -ne '0' ]; then
-        log_event 'debug' "$rv $EVENT"
-        exit $rv
-    fi
+for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
+    $BIN/v_delete_web_domain "$user" "$domain" 'no'
 done
 
 

@@ -228,7 +228,7 @@ update_user_value "$user" '$U_WEB_SSL' "$user_ssl"
 update_user_value "$user" '$U_WEB_ALIASES' "$user_aliases"
 
 # Adding task to the vesta pipe
-$BIN/v_restart_web
+$BIN/v_restart_web "$EVENT"
 
 # Logging
 log_event "$OK" "$EVENT"

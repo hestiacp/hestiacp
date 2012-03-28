@@ -109,7 +109,7 @@ increase_user_value "$user" '$U_DNS_DOMAINS'
 increase_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Restart named
-$BIN/v_restart_dns
+$BIN/v_restart_web "$EVENT"
 
 # Logging
 log_history "$EVENT"

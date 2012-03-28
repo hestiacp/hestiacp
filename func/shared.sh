@@ -113,7 +113,7 @@ is_package_valid() {
 # Validate system type
 is_type_valid() {
     if [ -z "$(echo $1 | grep -w $2)" ]; then
-        echo "Error: unknown type"
+        echo "Error: $2 is unknown type"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
@@ -190,6 +190,30 @@ is_object_unsuspended() {
         echo "Error: $3 is suspended"
         log_event "$E_UNSUSPENDED" "$EVENT"
         exit $E_UNSUSPENDED
+    fi
+}
+
+# Check if object value is empty
+is_object_value_empty() {
+    str=$(grep "$2='$3'" $USER_DATA/$1.conf)
+    eval $str
+    eval value=$4
+    if [ ! -z "$value" ] && [ "$value" != 'no' ]; then
+        echo "Error: ${4//$}=$value (not empty)"
+        log_event "$E_EXISTS" "$EVENT"
+        exit $E_EXISTS
+    fi
+}
+
+# Check if object value is empty
+is_object_value_exist() {
+    str=$(grep "$2='$3'" $USER_DATA/$1.conf)
+    eval $str
+    eval value=$4
+    if [ -z "$value" ] || [ "$value" = 'no' ]; then
+        echo "Error: ${4//$}=$value (not exist)"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
@@ -617,8 +641,6 @@ validate_format(){
             account)        validate_format_username "$arg" "$arg_name" ;;
             antispam)       validate_format_boolean "$arg" ;;
             antivirus)      validate_format_boolean "$arg" ;;
-            auth_pass)      validate_format_password "$arg" ;;
-            auth_user)      validate_format_username "$arg" "$arg_name" ;;
             backup)         validate_format_date "$arg" ;;
             charset)        validate_format_username "$arg" "$arg_name" ;;
             charsets)       validate_format_common "$arg" 'charsets' ;;
@@ -667,6 +689,8 @@ validate_format(){
             rtype)          validate_format_dns_type "$arg" ;;
             shell)          validate_format_shell "$arg" ;;
             soa)            validate_format_domain "$arg" ;;
+            stats_pass)     validate_format_password "$arg" ;;
+            stats_user)     validate_format_username "$arg" "$arg_name" ;;
             template)       validate_format_username "$arg" "$arg_name" ;;
             ttl)            validate_format_int "$arg" ;;
             url)            validate_format_url "$arg" ;;

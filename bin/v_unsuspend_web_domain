@@ -94,7 +94,7 @@ update_domain_value 'web' '$SUSPENDED' 'no'
 decrease_user_value "$user" '$SUSPENDED_WEB'
 
 # Adding task to the vesta pipe
-$BIN/v_restart_web
+$BIN/v_restart_web "$EVENT"
 
 # Logging
 log_event "$OK" "$EVENT"

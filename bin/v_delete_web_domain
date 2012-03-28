@@ -16,8 +16,9 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
+restart=$3
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -28,26 +29,13 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
@@ -119,7 +107,7 @@ sed -i "/DOMAIN='$domain'/ d" $USER_DATA/web.conf
 # Checking last ssl domain
 ssl_dom=$(grep "SSL='yes'" $USER_DATA/web.conf | wc -l)
 if [ "$ssl_dom" -eq '0' ]; then
-    sed -i "s/ Include /#Include /"  $HOMEDIR/$user/conf/web/httpd.conf
+    sed -i "s/ Include /#Include /" $HOMEDIR/$user/conf/web/httpd.conf
 fi
 
 # Checking last domain
@@ -152,22 +140,18 @@ if [ -z "$last_nginx" ]; then
     rm -f $HOMEDIR/$user/conf/web/nginx.conf
 fi
 
-# Decreasing ip value
+# Decrease counters
 decrease_ip_value "$IP"
-
-# Decreasing domain value
 decrease_user_value "$user" '$U_WEB_DOMAINS'
-
-# Decreasing web aliases
 decrease_user_value "$user" '$U_WEB_ALIASES' "$aliases"
-
-# Decreasing web ssl
 if [ "$SSL" = 'yes' ]; then
     decrease_user_value "$user" '$U_WEB_SSL'
 fi
 
-# Adding task to the vesta pipe
-$BIN/v_restart_web
+# Restart web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

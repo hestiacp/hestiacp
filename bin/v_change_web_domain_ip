@@ -16,7 +16,7 @@ domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -27,28 +27,14 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '3' "$#" 'user domain ip'
-
-# Checking argument format
 validate_format 'user' 'domain' 'ip'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
-
-# Checking ip
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_ip_valid
 is_ip_avalable
 
 
@@ -90,20 +76,18 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Increasing ip value
+# Update counters
 increase_ip_value "$new"
-
-# Decreasing old ip value
 decrease_ip_value "$old"
 
-# Adding ip in config
-update_domain_value 'web' '$IP' "$new"
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$ip"
 
-# Adding task to the vesta pipe
-$BIN/v_restart_web
+# Restart web server
+$BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT" "$SCRIPT $user $domain $old_ip"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

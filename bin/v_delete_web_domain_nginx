@@ -14,7 +14,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -24,29 +24,14 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
-
-# Checking ssl is added
-is_domain_value_exist 'web' '$NGINX'
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$NGINX'
 
 
 #----------------------------------------------------------#
@@ -56,13 +41,13 @@ is_domain_value_exist 'web' '$NGINX'
 # Defining domain parameters
 get_domain_values 'web'
 tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
-conf="$HOMEDIR/$user/conf/nginx.conf"
+conf="$HOMEDIR/$user/conf/web/nginx.conf"
 del_web_config
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
     tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
-    conf="$HOMEDIR/$user/conf/snginx.conf"
+    conf="$HOMEDIR/$user/conf/web/snginx.conf"
     del_web_config
 fi
 
@@ -71,9 +56,9 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Deleting nginx keys
-update_domain_value 'web' '$NGINX' ''
-update_domain_value 'web' '$NGINX_EXT' ''
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$NGINX' ''
+update_object_value 'web' 'DOMAIN' "$domain" '$NGINX_EXT' ''
 
 # Checking last nginx domain
 conf='/etc/nginx/conf.d/vesta_users.conf'
@@ -89,11 +74,11 @@ if [ -z "$last_nginx" ]; then
     rm -f $HOMEDIR/$user/conf/web/nginx.conf
 fi
 
-# Adding task to the vesta pipe
-$BIN/v_restart_web
+# Restart web server
+$BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT" "v_add_web_domain_nginx $user $domain $NGINX $NGINX_EXT"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

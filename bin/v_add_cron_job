@@ -70,7 +70,7 @@ sync_cron_jobs
 increase_user_value $user '$U_CRON_JOBS'
 
 # Restart crond
-$BIN/v_restart_cron
+$BIN/v_restart_cron "$EVENT"
 
 # Logging
 log_history "$EVENT"

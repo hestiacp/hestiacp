@@ -14,7 +14,7 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -24,29 +24,14 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
-
-# Checking stats enabled
-is_domain_value_exist 'web' '$STATS'
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS'
 
 
 #----------------------------------------------------------#
@@ -54,16 +39,16 @@ is_domain_value_exist 'web' '$STATS'
 #----------------------------------------------------------#
 
 # Defining statistic type
-type=$(get_domain_value 'web' '$STATS')
+get_domain_values 'web'
 
 # Defining statistic dir
-stat_dir="$HOMEDIR/$user/web/$domain/stats"
+stats_dir="$HOMEDIR/$user/web/$domain/stats"
 
 # Deleting dir content
-rm -rf $stat_dir/*
+rm -rf $stats_dir/*
 
 # Deleting config
-rm -f $HOMEDIR/$user/conf/$type.$domain.conf
+rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 
 
 #----------------------------------------------------------#
@@ -73,11 +58,11 @@ rm -f $HOMEDIR/$user/conf/$type.$domain.conf
 # Deleting pipe command
 sed -i "/ $domain$/d" $V_QUEUE/stats.pipe
 
-# Deleting stats
-update_domain_value 'web' '$STATS' ''
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$STATS' ''
 
 # Logging
-log_history "$EVENT" "v_add_web_domain_stat $user $doman $type"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

@@ -1,11 +1,8 @@
 #!/bin/bash
-# info: add cgi support for domain
-# options: user domain
+# info: add password protection to web domain statistics
+# options: user domain stats_user stats_password
 #
-# The function switches on cgi support by adding +ExecCGI directive into
-# webserver configuration file. The use of this function is provided for
-# cases, when temporary cgi support is necessary, for other cases use of
-# templates is recommended.
+# The call is used for securing the web statistics page.
 
 
 #----------------------------------------------------------#
@@ -15,9 +12,10 @@
 # Argument defenition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
+stats_user=$3
+stats_pass=$4
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -27,51 +25,45 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain'
-validate_format 'user' 'domain'
+check_args '4' "$#" 'user domain stats_user stats_pass'
+validate_format 'user' 'domain' 'stats_user' 'stats_pass'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_value_empty 'web' 'DOMAIN' "$domain" '$CGI'
+is_object_value_empty 'web' 'DOMAIN' "$domain" '$STATS_USER'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing domain values
-get_domain_values 'web'
-tpl_file="$WEBTPL/apache_$TPL.tpl"
-conf="$HOMEDIR/$user/conf/web/httpd.conf"
-CGI='yes'
+# Definining statistic dir
+stats_dir="$HOMEDIR/$user/web/$domain/stats"
 
-# Preparing domain values for the template substitution
-upd_web_domain_values
+# Adding htaccess file
+rm -f $stats_dir/.htaccess
+echo "AuthUserFile $stats_dir/.htpasswd
+AuthName \"Web Statistics\"
+AuthType Basic
+Require valid-user" > $stats_dir/.htaccess
 
-# Recreating vhost
-del_web_config
-add_web_config
-
-# Checking ssl
-if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/apache_$TPL.stpl"
-    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
-    del_web_config
-    add_web_config
-fi
+# Generating htaccess user and password
+rm -f $stats_dir/.htpasswd
+htpasswd -bc $stats_dir/.htpasswd "$stats_user" "$stats_pass" &>/dev/null
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Update config value
-update_object_value 'web' 'DOMAIN' "$domain" '$CGI' 'yes'
+# Adding stats user in config
+update_object_value 'web' 'DOMAIN' "$domain" '$STATS_USER' "$stats_user"
 
-# Adding task to the vesta pipe
-$BIN/v_restart_web "$EVENT"
+# Hiding password
+EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
+EVENT="$EVENT ARGUMENTS='$user $domain $stats_user *****'"
 
 # Logging
 log_history "$EVENT"

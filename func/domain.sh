@@ -1,11 +1,11 @@
 # Web template check
 is_apache_template_valid() {
-    c=$(echo "$templates" | grep -w  "$template")
+    c=$(echo "$(get_user_value '$WEB_TPL')" | grep -w  "$template")
     t="$WEBTPL/apache_$template.tpl"
     d="$WEBTPL/apache_$template.descr"
     s="$WEBTPL/apache_$template.stpl"
     if [ -z "$c" ] || [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
-        echo "Error: $template not found"
+        echo "Error: template $template not found"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
@@ -38,19 +38,19 @@ is_dns_template_valid() {
 is_domain_new() {
     config_type="$1"
     dom=${2-$domain}
-    check_all=$(grep -w $dom $V_USERS/*/*.conf)
+    check_all=$(grep -w $dom $VESTA/data/users/*/*.conf)
     if [ ! -z "$check_all" ]; then
         check_ownership=$(grep -w $dom $USER_DATA/*.conf)
         if [ ! -z "$check_ownership" ]; then
             check_type=$(grep -w $dom $USER_DATA/$config_type.conf)
             if [ ! -z "$check_type" ]; then
                 echo "Error: domain $dom exist"
-                log_event 'debug' "$E_EXISTS $EVENT"
+                log_event "$E_EXISTS" "$EVENT"
                 exit $E_EXISTS
             fi
         else
             echo "Error: domain $dom exist"
-            log_event 'debug' "$E_EXISTS $EVENT"
+            log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
     fi
@@ -58,12 +58,9 @@ is_domain_new() {
 
 # Update domain zone
 update_domain_zone() {
-    # Definigng variables
     conf="$HOMEDIR/$user/conf/dns/$domain.db"
     line=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
-
-    # Checking serial
     if [ -e $conf ]; then
         zn_serial=$(head $conf|grep 'SOA' -A1|tail -n 1|sed -e "s/ //g")
         s_date=$(echo ${zn_serial:0:8})
@@ -83,12 +80,8 @@ update_domain_zone() {
         serial="$(date +'%Y%m%d01')"
     fi
 
-    # Parsing dns domains conf
     eval $line
-
-    # Converting SOA to ascii
     SOA=$(idn --quiet -a -t "$SOA")
-    # Adding zone header
     echo "\$TTL $TTL
 @    IN    SOA    $SOA.    root.$domain_idn. (
                                             $serial
@@ -97,22 +90,18 @@ update_domain_zone() {
                                             1209600
                                             180 )
 " > $conf
-
-    # Adding zone records
     while read line ; do
-        # Defining new delimeter
         IFS=$'\n'
-        # Parsing key=value
         for key in $(echo $line|sed -e "s/' /'\n/g"); do
             eval ${key%%=*}="${key#*=}"
         done
 
-        # Converting utf records to ascii
         RECORD=$(idn --quiet -a -t "$RECORD")
         eval echo -e "\"$fields\""|sed -e "s/%quote%/'/g" >> $conf
     done < $USER_DATA/dns/$domain.conf
 }
 
+# Get next DNS record ID
 get_next_dnsrecord(){
     if [ -z "$id" ]; then
         curr_str=$(grep "ID=" $USER_DATA/dns/$domain.conf | cut -f 2 -d \' |\
@@ -121,15 +110,15 @@ get_next_dnsrecord(){
     fi
 }
 
+# Sort DNS records
 sort_dns_records() {
-    # Defining conf
     conf="$USER_DATA/dns/$domain.conf"
     cat $conf |sort -n -k 2 -t \' >$conf.tmp
     mv -f $conf.tmp $conf
 }
 
+# Add web config
 add_web_config() {
-    # Adding template to config
     cat $tpl_file | \
         sed -e "s/%ip%/$ip/g" \
             -e "s/%web_port%/$WEB_PORT/g" \
@@ -159,25 +148,22 @@ add_web_config() {
     >> $conf
 }
 
+# Get config top and bottom line numbers
 get_web_config_brds() {
-    # Defining template borders
     serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
     if [ -z "$serv_line" ]; then
-        log_event 'debug' "$E_PARSING $EVENT"
+        log_event "$E_PARSING" "$EVENT"
         return $E_PARSING
     fi
 
-    # Template lines
     last_line=$(wc -l $tpl_file|cut -f 1 -d ' ')
     bfr_line=$((serv_line - 1))
     aftr_line=$((last_line - serv_line - 1))
 
-    # Config lines
     str=$(grep -ni "Name $domain_idn" $conf | cut -f 1 -d :)
     top_line=$((str - serv_line + 1))
     bottom_line=$((top_line + last_line -1))
 
-    # Check for multialias (8k alias issue)
     multi=$(sed -n "$top_line,$bottom_line p" $conf |grep ServerAlias |wc -l)
     if [ "$multi" -ge 2 ]; then
         bottom_line=$((bottom_line + multi -1))
@@ -185,173 +171,98 @@ get_web_config_brds() {
 
 }
 
+# Change web config
 change_web_config() {
-    # Get config borders
     get_web_config_brds || exit $?
-
-    # Parsing config
     vhost=$(grep -A $aftr_line -B $bfr_line -ni "Name $domain_idn" $conf)
     str=$(echo "$vhost" | grep -F "$search_phrase" | head -n 1)
-
-    # Parsing string position and content
     str_numb=$(echo "$str" | sed -e "s/-/=/" | cut -f 1 -d '=')
     str_cont=$(echo "$str" | sed -e "s/-/=/" | cut -f 2 -d '=')
 
-    # Escaping chars
     str_repl=$(echo "$str_repl" | sed \
         -e 's/\\/\\\\/g' \
         -e 's/&/\\&/g' \
         -e 's/\//\\\//g')
 
-    # Changing config
     if [ ! -z "$str" ]; then
         sed -i  "$str_numb s/.*/$str_repl/" $conf
     fi
 }
 
+# Replace web config
 replace_web_config() {
-    # Get config borders
     get_web_config_brds || exit $?
-
-    # Escaping chars
     clean_new=$(echo "$new" | sed \
         -e 's/\\/\\\\/g' \
         -e 's/&/\\&/g' \
         -e 's/\//\\\//g')
-
     clean_old=$(echo "$old" | sed \
         -e 's/\\/\\\\/g' \
         -e 's/&/\\&/g' \
         -e 's/\//\\\//g')
 
-    # Replacing string in config
     sed -i  "$top_line,$bottom_line s/$clean_old/$clean_new/" $conf
 }
 
-# Get domain values
+# Get domain variables
 get_domain_values() {
     for line in $(grep "DOMAIN='$domain'" $USER_DATA/$1.conf); do
         eval $line
     done
 }
 
+# SSL certificate verification
 is_web_domain_cert_valid() {
-
-    # Checking file existance
     if [ ! -e "$ssl_dir/$domain.crt" ] || [ ! -e "$ssl_dir/$domain.key" ]; then
-        echo "Error: ssl certificate not exist"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
+        echo "Error: $ssl_dir/$domain.[crt|key] not found"
+        log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
 
-    # Checking certificate
     crt=$(openssl verify $ssl_dir/$domain.crt 2>/dev/null |grep '/C=')
     if [ -z "$crt" ]; then
-        echo "Error: ssl certificate invalid"
-        log_event 'debug' "$E_INVALID $EVENT"
+        echo "Error: certificate is not valid"
+        log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
 
-    # Checking certificate key
-    openssl rsa -in "$ssl_dir/$domain.key" -check >/dev/null 2>/dev/null
+    openssl rsa -in "$ssl_dir/$domain.key" -check &>/dev/null
     if [ "$?" -ne 0 ]; then
-        echo "Error: ssl key invalid"
-        log_event 'debug' "$E_INVALID $EVENT"
+        echo "Error: ssl key is not valid"
+        log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
 
-    # Checking certificate authority
     if [ -e "$ssl_dir/$domain.ca" ]; then
         ca=$(openssl verify $ssl_dir/$domain.ca 2>/dev/null |grep '/C=')
         if [ -z "$ca" ]; then
-            echo "Error: ssl certificate invalid"
-            log_event 'debug' "$E_INVALID $EVENT"
+            echo "Error: ssl certificate authority is not valid"
+            log_event "$E_INVALID" "$EVENT"
             exit $E_INVALID
         fi
     fi
 
-    # Checking server
-    openssl s_server -quiet \
-        -cert $ssl_dir/$domain.crt -key $ssl_dir/$domain.key &
+    openssl s_server -quiet -cert $ssl_dir/$domain.crt \
+        -key $ssl_dir/$domain.key &
     pid=$!
-    sleep 1
-    disown > /dev/null 2>&1
-    kill $pid > /dev/null 2>&1
-    result=$?
-    if [ "$result" -ne '0' ]; then
-        echo "Error: ssl certificate key pair invalid"
-        log_event 'debug' "$E_INVALID $EVENT"
+    sleep 0.5
+    disown &> /dev/null
+    kill $pid &> /dev/null
+    if [ "$?" -ne '0' ]; then
+        echo "Error: ssl certificate key pair is not valid"
+        log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
 }
 
-is_dns_record_valid() {
-    # Checking record id
-    check_id=$(grep "^ID='$id'" $USER_DATA/dns/$domain)
-
-    if [ -z "$check_id" ]; then
-        echo "Error: ID not exist"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
-}
-
-is_domain_value_exist() {
-    domain_type="$1"
-    key="$2"
-
-    # Parsing domains
-    string=$( grep "DOMAIN='$domain'" $USER_DATA/$domain_type.conf )
-
-    # Parsing key=value
-    eval $string
-
-    # Self reference
-    eval value="$key"
-
-    # Checking result
-    if [ -z "$value" ] || [ "$value" = 'no' ]; then
-        echo "Error: ${key//$/} is empty"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
-}
-
+# Delete web configuartion
 del_web_config() {
-    # Get config borders
     get_web_config_brds || exit $?
-
-    # Deleting lines from config
     sed -i "$top_line,$bottom_line d" $conf
 }
 
-dom_clear_search(){
-    # Defining delimeter
-    IFS=$'\n'
-
-    # Reading file line by line
-    for line in $(grep $search_string $conf); do
-        # Parsing key=val
-        eval $line
-
-        # Print result line
-        eval echo "$field"
-    done
-}
-
-dom_clear_list() {
-    # Reading file line by line
-    while read line ; do
-        # Parsing key=value
-        eval $line
-
-        # Print result line
-        eval echo "$field"
-    done < $conf
-}
-
+# Add ip virtual hosting support
 namehost_ip_support() {
-    # Checking httpd config for NameHost string number
     if [ "$WEB_SYSTEM" = 'apache' ]; then
         conf_line=$(grep -n "NameVirtual" $conf|tail -n 1|cut -f 1 -d ':')
         if [ ! -z "$conf_line" ]; then
@@ -360,7 +271,6 @@ namehost_ip_support() {
             conf_ins='1'
         fi
 
-        # Checking ssl support
         if [ "$WEB_SSL" = 'mod_ssl' ]; then
             sed -i "$conf_ins i NameVirtualHost $ip:$WEB_SSL_PORT" $conf
             sed -i "$conf_ins i Listen $ip:$WEB_SSL_PORT" $conf
@@ -369,67 +279,54 @@ namehost_ip_support() {
         sed -i "$conf_ins i NameVirtualHost $ip:$WEB_PORT" $conf
         sed -i "$conf_ins i Listen $ip:$WEB_PORT" $conf
 
-        # Checking proxy support
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
             cat $WEBTPL/ngingx_ip.tpl | sed -e "s/%ip%/$ip/g" \
              -e "s/%web_port%/$WEB_PORT/g" \
             -e "s/%proxy_port%/$PROXY_PORT/g" >>$nconf
 
-            # Adding to rpaf ip pool as well
             ips=$(grep 'RPAFproxy_ips' $rconf)
             sed -i "s/$ips/$ips $ip/g" $rconf
         fi
-
-        # Scheduling restart
         web_restart='yes'
     fi
 }
 
+# Disable virtual ip hosting support
 namehost_ip_disable() {
-    #Checking web system
     if [ "$WEB_SYSTEM" = 'apache' ]; then
         sed -i "/NameVirtualHost $ip:/d" $conf
         sed -i "/Listen $ip:/d" $conf
 
-        # Checking proxy support
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
             tpl_ln=$(wc -l $WEBTPL/ngingx_ip.tpl | cut -f 1 -d ' ')
             ip_line=$(grep -n "%ip%" $WEBTPL/ngingx_ip.tpl |head -n1 |\
                 cut -f 1 -d :)
-
             conf_line=$(grep -n -w $ip $nconf|head -n1|cut -f 1 -d :)
-
-            # Checking parsed lines
             if [ -z "$tpl_ln" ] || [ -z "$ip_line" ] || [ -z "$conf_line" ]
             then
                 echo "Error: nginx config paring error"
-                log_event 'debug' "$E_PARSING $EVENT"
+                log_event "$E_PARSING" "$EVENT"
                 exit $E_PARSING
             fi
-
             up_line=$((ip_line - 1))
             first_line=$((conf_line - up_line))
             last_line=$((conf_line - ip_line + tpl_ln))
 
-            # Checking parsed lines
             if [ -z "$first_line" ] || [ -z "$last_line" ]; then
                 echo "Error: nginx config paring error"
-                log_event 'debug' "$E_PARSING $EVENT"
+                log_event "$E_PARSING" "$EVENT"
                 exit $E_PARSING
             fi
             sed -i "$first_line,$last_line d" $nconf
-
-            # Deleting from rpaf ip pool as well
             ips=$(grep 'RPAFproxy_ips' $rconf)
             new_ips=$(echo "$ips"|sed -e "s/$ip//")
             sed -i "s/$ips/$new_ips/g" $rconf
         fi
-
-        # Scheduling restart
         web_restart='yes'
     fi
 }
 
+# Update web domain values
 upd_web_domain_values() {
     ip=$IP
     group="$user"
@@ -438,7 +335,6 @@ upd_web_domain_values() {
     docroot_string="DocumentRoot $docroot"
     proxy_string="proxy_pass     http://$ip:$WEB_PORT;"
 
-    # Parsing domain aliases
     i=1
     j=1
     OLD_IFS="$IFS"
@@ -447,7 +343,6 @@ upd_web_domain_values() {
     alias_string=''
     for dalias in $ALIAS; do
         dalias=$(idn -t --quiet -a $dalias)
-        # Spliting ServerAlias lines
         check_8k="$server_alias $dalias"
         if [ "${#check_8k}" -ge '8100' ]; then
             if [ "$j" -eq 1 ]; then
@@ -476,15 +371,12 @@ upd_web_domain_values() {
     fi
 
     IFS=$OLD_IFS
-
-    # Checking error log status
     if [ "$ELOG" = 'no' ]; then
         elog='#'
     else
         elog=''
     fi
 
-    # Checking cgi
     if [ "$CGI" != 'yes' ]; then
         cgi='#'
         cgi_option='-ExecCGI'
@@ -493,13 +385,11 @@ upd_web_domain_values() {
         cgi_option='+ExecCGI'
     fi
 
-    # Checking suspend
     if [ "$SUSPENDED" = 'yes' ]; then
         docroot_string="Redirect / http://$url"
         proxy_string="rewrite ^(.*)\$ http://$url;"
     fi
 
-    # Defining SSL vars
     ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"
     ssl_key="$HOMEDIR/$user/conf/web/ssl.$domain.key"
     ssl_pem="$HOMEDIR/$user/conf/web/ssl.$domain.pem"
@@ -514,22 +404,3 @@ upd_web_domain_values() {
     esac
 }
 
-is_mail_account_free() {
-    acc=${1-$account}
-    check_acc=$(grep -w $acc $USER_DATA/mail/$domain.conf)
-    if [ ! -z "$check_acc" ]; then
-        echo "Error: account $acc exists"
-        log_event 'debug' "$E_EXISTS $EVENT"
-        exit $E_EXISTS
-    fi
-}
-
-is_mail_account_valid() {
-    acc=${1-$account}
-    check_acc=$(grep -w $acc $USER_DATA/mail/$domain.conf)
-    if [ -z "$check_acc" ]; then
-        echo "Error: account $acc not exist"
-        log_event 'debug' "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
-}

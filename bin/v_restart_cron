@@ -11,6 +11,9 @@
 
 # Includes
 source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+EVENT=${1-$EVENT}
+
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -20,8 +23,11 @@ source $VESTA/conf/vesta.conf
 if [ "$CRON_SYSTEM" = 'crond' ]; then
     /etc/init.d/crond 'reload' &>/dev/null
     if [ $? -ne 0 ]; then
-        echo "$E_RESTART $1"
-        exit $E_RESTART
+        /etc/init.d/crond 'restart' &>/dev/null
+        if [ $? -ne 0 ]; then
+            log_event "$E_RESTART" "$EVENT"
+            exit $E_RESTART
+        fi
     fi
 fi
 

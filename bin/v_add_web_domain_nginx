@@ -29,31 +29,14 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain [template] [extentions]'
-
-# Checking argument format
 validate_format 'user' 'domain' 'template' 'extentions'
-
-# Checking proxy system is enabled
-is_system_enabled 'proxy'
-
-# Checking user
+is_system_enabled "$PROXY_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
-
-# Check nginx is not added
-is_domain_key_empty 'web' '$NGINX'
-
-# Checking template
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_empty 'web' 'DOMAIN' "$domain" '$NGINX'
 is_nginx_template_valid
 
 
@@ -106,14 +89,14 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding nginx params to config
-update_domain_value 'web' '$NGINX' "$NGINX"
-update_domain_value 'web' '$NGINX_EXT' "$extentions"
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$NGINX' "$NGINX"
+update_object_value 'web' 'DOMAIN' "$domain" '$NGINX_EXT' "$extentions"
 
 # Adding task to the vesta pipe
-$BIN/v_restart_web
+$BIN/v_restart_web "$EVENT"
 
-log_history "$EVENT" "v_delete_web_domain_nginx $user $domain"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

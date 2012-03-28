@@ -22,7 +22,7 @@ domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
 template=${4-default}
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -33,32 +33,15 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '3' "$#" 'user domain ip [template]'
-
-# Checking argument format
 validate_format 'user' 'domain' 'ip' 'template'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain
-is_domain_new 'dns'
-
-# Checking ip
+is_domain_new 'web'
+is_ip_valid
 is_ip_avalable
-
-# Checking package
 is_package_full 'WEB_DOMAINS'
-
-# Checking template
-templates=$(get_user_value '$WEB_TPL')
 is_apache_template_valid
 
 
@@ -89,7 +72,6 @@ group="$user"
 email="$user@$domain"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 docroot_string="DocumentRoot $docroot"
-
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
 tpl_file="$WEBTPL/apache_$template.tpl"
 
@@ -192,34 +174,26 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Increasing ip value
+# Increasing counters
 increase_ip_value "$ip"
-
-# Increasing domain value
 increase_user_value "$user" '$U_WEB_DOMAINS'
 increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Defining domain variables
-v_str="DOMAIN='$domain'"
-v_str="$v_str IP='$ip' IP6=''"
-v_str="$v_str U_DISK='0'"
-v_str="$v_str U_BANDWIDTH='0'"
-v_str="$v_str TPL='$template'"
-v_str="$v_str ALIAS='$aliases'"
-v_str="$v_str $template_data"    # Inserting PHP, CGI and ELOG keys
-v_str="$v_str STATS='' STATS_AUTH=''"
-v_str="$v_str SSL='no' SSL_HOME='single'"
-v_str="$v_str NGINX='' NGINX_EXT='' SUSPENDED='no' DATE='$DATE'"
+str="DOMAIN='$domain' IP='$ip' IP6='' ALIAS='$aliases' TPL='$template'"
+str="$str $template_data SSL='no' SSL_HOME='single' NGINX='' NGINX_EXT=''"
+str="$str STATS='' STATS_USER='' U_DISK='0' U_BANDWIDTH='0' SUSPENDED='no'"
+str="$str TIME='$TIME' DATE='$DATE'"
 
 # Registering domain
-echo "$v_str" >> $USER_DATA/web.conf
+echo "$str" >> $USER_DATA/web.conf
 chmod 660 $USER_DATA/web.conf
 
-# Adding task to the vesta pipe
-$BIN/v_restart_web
+# Restart web server
+$BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT" "v_delete_web_domain $user $domain"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

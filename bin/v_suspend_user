@@ -75,9 +75,9 @@ fi
 #----------------------------------------------------------#
 
 # Adding task to the vesta pipe
-$BIN/v_restart_cron
-$BIN/v_restart_web
-$BIN/v_restart_dns
+$BIN/v_restart_cron "$EVENT"
+$BIN/v_restart_web "$EVENT"
+$BIN/v_restart_dns "$EVENT"
 
 # Changing suspend value
 update_user_value "$user" '$SUSPENDED' 'yes'

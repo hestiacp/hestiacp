@@ -10,9 +10,9 @@
 #----------------------------------------------------------#
 
 # Includes
-source /etc/profile.d/vesta.sh
 source $VESTA/conf/vesta.conf
-
+source $VESTA/func/shared.sh
+EVENT=${1-$EVENT}
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -21,9 +21,11 @@ source $VESTA/conf/vesta.conf
 if [ "$DNS_SYSTEM" = 'bind' ]; then
     /etc/init.d/named reload &>/dev/null
     if [ $? -ne 0 ]; then
-        #$VESTA/func/report_issue 'sys' 'cron'
-        echo "$E_RESTART $1"
-        exit $E_RESTART
+        /etc/init.d/named restart &>/dev/null
+        if [ $? -ne 0 ]; then
+            log_event "$E_RESTART" "$EVENT"
+            exit $E_RESTART
+        fi
     fi
 fi
 

@@ -95,7 +95,7 @@ increase_user_value "$user" '$IP_OWNED'
 
 # Adding task to the vesta pipe
 if [ "$web_restart" = 'yes' ]; then
-    $BIN/v_restart_web
+    $BIN/v_restart_web "$EVENT"
 fi
 
 # Logging

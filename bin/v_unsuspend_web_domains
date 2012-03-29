@@ -12,7 +12,7 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -22,16 +22,9 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -39,21 +32,18 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fileds to select
-conf="$USER_DATA/web.conf"
-field='$DOMAIN'
-search_string="SUSPENDED='yes'"
-domains=$(dom_clear_search)
-
 # Starting unsuspend loop
-for domain in $domains; do
-    $BIN/v_unsuspend_web_domain "$user" "$domain"
+for domain in $(search_objects 'web' 'SUSPENDED' "yes" 'DOMAIN'); do
+    $BIN/v_unsuspend_web_domain "$user" "$domain" 'no'
 done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Restart web server
+$BIN/v_restart_web "$EVENT"
 
 # Logging
 log_event "$OK" "$EVENT"

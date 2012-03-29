@@ -15,7 +15,7 @@
 user=$1
 format=${2-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 
@@ -23,13 +23,8 @@ source $VESTA/func/shared.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '1' "$#" 'user [format]'
-
-# Checking argument format
 validate_format 'user' 
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -41,7 +36,7 @@ is_object_valid 'user' 'USER' "$user"
 conf=$USER_DATA/web.conf
 
 # Defining fileds to select
-fields="\$DOMAIN \$ELOG"
+fields="\$DOMAIN \$ELOG \$SUSPENDED \$TIME \$DATE"
 
 # Listing domains
 case $format in 

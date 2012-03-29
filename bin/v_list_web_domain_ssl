@@ -14,7 +14,7 @@ user=$1
 domain=$2
 format=${3-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
@@ -35,7 +35,6 @@ shell_list_ssl() {
     fi
     if [ ! -z "$key" ]; then
         echo -e "\n$key"
-
     fi
     if [ ! -z "$ca" ]; then
         echo -e "\n$ca"
@@ -47,15 +46,9 @@ shell_list_ssl() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '2' "$#" 'user domain [format]'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
+is_object_valid 'web' 'DOMAIN' "$domain"
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -14,7 +14,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -24,23 +24,13 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
-
-# Checking domain is not suspened
-is_domain_suspended 'web'
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
@@ -54,10 +44,8 @@ log_file="/var/log/httpd/domains/$domain.bytes"
 bytes=0
 
 # Parsing log
-while read line
-do
-    if [[ '-' != "$line" ]] && [[ 0 -lt "$line" ]] 
-    then
+while read line; do
+    if [[ '-' != "$line" ]] && [[ 0 -lt "$line" ]]; then
         bytes=$(($bytes + $line))
     fi
 done < $log_file
@@ -74,13 +62,13 @@ echo > $log_file
 #----------------------------------------------------------#
 
 # Parsing old value
-old_val=$(get_domain_value 'web' '$U_BANDWIDTH')
+get_domain_values 'web'
 
 # Defining new value
-bandwidth=$((old_val + mb))
+bandwidth=$((U_BANDWIDTH + mb))
 
 # Updating bandwidth value in config
-update_domain_value 'web' '$U_BANDWIDTH' "$bandwidth"
+update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' "$bandwidth"
 
 # Logging
 log_event "$OK" "$EVENT"

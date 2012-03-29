@@ -24,19 +24,10 @@ url=${2-$SUSPEND_URL}
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user [suspend_url]'
-
-# Checking argument format
 validate_format 'user' 'url'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
 
 
@@ -227,7 +218,7 @@ update_user_value "$user" '$U_WEB_DOMAINS' "$user_domains"
 update_user_value "$user" '$U_WEB_SSL' "$user_ssl"
 update_user_value "$user" '$U_WEB_ALIASES' "$user_aliases"
 
-# Adding task to the vesta pipe
+# Restart web server
 $BIN/v_restart_web "$EVENT"
 
 # Logging

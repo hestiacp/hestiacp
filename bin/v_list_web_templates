@@ -13,31 +13,25 @@
 user=$1
 format=${2-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
 json_list_wtpl() {
-    i='1'       # iterator
+    i=1
     echo '{'
-
-    # Listing files by mask
     for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
         if [ -e "$WEBTPL/apache_$template.descr" ]; then
             descr=$(cat $WEBTPL/apache_$template.descr | grep '#'|\
                 sed -e ':a;N;$!ba;s/\n/ /g')
-            # Checking !first line to print bracket
             if [ $i -ne 1 ]; then
                 echo -e "\t},"
             fi
-            # Print result
             echo -e  "\t\"$template\": {"
             echo -e "\t\t\"DESCR\": \"${descr//# /}\""
             (( ++i))
         fi
     done
-
-    # If there was any output
     if [ -n "$template" ]; then
         echo -e "\t}"
     fi
@@ -63,13 +57,8 @@ shell_list_wtpl() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
 
 

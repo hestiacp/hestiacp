@@ -12,54 +12,33 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking web system is enabled
-is_system_enabled 'WEB_SYSTEM'
-
-# Checking user
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf="$USER_DATA/web.conf"
-
-# Defining fileds to select
-field='$DOMAIN'
-search_string="SUSPENDED='no'"
-domains=$(dom_clear_search)
-
-# Starting update disk loop
-for domain in $domains; do
-
-    # Defining home directory
+# Domain loop
+for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
     home_dir="$HOMEDIR/$user/web/$domain/"
-
-    # Checking home directory exist
     if [ -e "$home_dir" ]; then
         disk_usage=$(nice -n 19 du -shm $home_dir | cut -f 1 )
     fi
-
-    # Updating disk value in config
-    update_domain_value 'web' '$U_DISK' "$disk_usage"
+    update_object_value 'web' 'DOMAIN' "$domain" '$U_DISK' "$disk_usage"
 done
 
 

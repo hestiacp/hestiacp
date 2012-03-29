@@ -15,7 +15,7 @@ user=$1
 domain=$2
 format=${3-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
@@ -23,19 +23,10 @@ json_list_domain() {
     i=1
     fileds_count=$(echo "$fields" | wc -w)
     line=$(grep "DOMAIN='$domain'" $conf)
-
-    # Print top bracket
     echo '{'
-
-    # Assing key=value
     eval $line
-
-    # Starting output loop
     for field in $fields; do
-        # Parsing key=value
         eval value=$field
-
-        # Checking first field
         if [ "$i" -eq 1 ]; then
             echo -e "\t\"$value\": {"
         else
@@ -45,28 +36,23 @@ json_list_domain() {
                 echo -e "\t\t\"${field//$/}\": \"$value\""
             fi
         fi
-        # Updating iterator
         (( ++i))
     done
-
-    # If there was any output
     if [ -n "$value" ]; then
         echo -e '        }'
     fi
-    # Printing bottom json bracket
     echo -e "}"
 }
 
 # Shell function
 shell_list_domain() {
     line=$(grep "DOMAIN='$domain'" $conf)
-
-    # Parsing key=value
     eval $line
-
-    # Print result line
     for field in $fields; do
         eval key="$field"
+        if [ -z "$key" ]; then
+            key='NULL'
+        fi
         echo "${field//$/}: $key "
     done
 }
@@ -76,14 +62,9 @@ shell_list_domain() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '2' "$#" 'user domain [format]'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'web'
+is_object_valid 'web' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
@@ -101,7 +82,7 @@ fields='$DOMAIN $IP $IP6 $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG
 case $format in 
     json)   json_list_domain ;;
     plain)  nohead=1; shell_list_domain ;;
-    shell)  shell_list_domain ;;
+    shell)  shell_list_domain |column -t;;
     *)      check_args '2' '0' 'user domain [format]'
 esac
 

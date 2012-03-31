@@ -24,23 +24,11 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'ip'
-
-# Checking argument format
 validate_format 'ip'
-
-# Checking system ip
-is_sys_ip_valid "$ip"
-
-# Checking webdomains on ip
+is_ip_valid "$ip"
 is_ip_key_empty '$U_WEB_DOMAINS'
-
-# Checking users on ip
 is_ip_key_empty '$U_SYS_USERS'
-
-# Checking interface
-interface=$(get_current_interface)
 
 
 #----------------------------------------------------------#
@@ -54,10 +42,11 @@ iconf='/etc/sysconfig/network-scripts/ifcfg'
 rconf='/etc/httpd/conf.d/rpaf.conf'
 
 # Get ip owner
-user="$(get_sys_ip_value '$OWNER')"
-ip_status="$(get_sys_ip_value '$STATUS')"
+user="$(get_ip_value '$OWNER')"
+ip_status="$(get_ip_value '$STATUS')"
 
 # Deleting interface
+get_current_interface
 /sbin/ifconfig "$interface" down
 
 # Deleting startup script
@@ -65,9 +54,6 @@ rm -f $iconf-$interface
 
 # Deleting vesta ip
 rm -f $VESTA/data/ips/$ip
-
-# Importing main config
-source $VESTA/conf/vesta.conf
 
 # Deleting namehosting support
 namehost_ip_disable
@@ -84,7 +70,7 @@ fi
 
 if [ "$user" = 'admin' ]; then
     if [ "$ip_status" = 'shared' ]; then
-        for user in $(ls $V_USERS/); do
+        for user in $(ls $VESTA/data/users/); do
             decrease_user_value "$user" '$IP_AVAIL'
         done
     else

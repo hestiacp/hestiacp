@@ -14,7 +14,7 @@
 key=$(echo "$1" | tr '[:lower:]' '[:upper:]' )
 value=$2
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -23,17 +23,12 @@ source $VESTA/func/shared.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '2' "$#" 'key value'
-
-# Checking argument format
 validate_format 'key'
-
-# Checking key existance
 check_ckey=$(grep "^$key='" $VESTA/conf/vesta.conf)
 if [ -z "$check_ckey" ]; then
-    echo "Error: key not found"
-    log_event 'debug' "$E_INVALID $EVENT"
+    echo "Error: key $key not found"
+    log_event "$E_INVALID" "$EVENT"
     exit $E_INVALID
 fi
 

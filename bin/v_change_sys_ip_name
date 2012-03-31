@@ -13,7 +13,7 @@
 ip=$1
 ip_name=$2
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/ip.sh
@@ -23,14 +23,9 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'ip ip_name'
-
-# Checking argument format
 validate_format 'ip' 'ip_name'
-
-# Checking system ip
-is_sys_ip_valid
+is_ip_valid
 
 
 #----------------------------------------------------------#
@@ -38,7 +33,7 @@ is_sys_ip_valid
 #----------------------------------------------------------#
 
 # Changing ip name
-update_sys_ip_value '$NAME' "$ip_name"
+update_ip_value '$NAME' "$ip_name"
 
 
 #----------------------------------------------------------#

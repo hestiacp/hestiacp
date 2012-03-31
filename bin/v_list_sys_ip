@@ -14,7 +14,7 @@ ip=$1
 IP=$ip
 format=${2-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 source $VESTA/func/ip.sh
 
@@ -23,17 +23,10 @@ json_list_ip() {
     i=1
     fileds_count=$(echo "$fields" | wc -w)
     ip_data=$(cat $VESTA/data/ips/$IP)
-
-    # Print top bracket
     echo '{'
-
-    # Assign key=value
     eval $ip_data
-
     for field in $fields; do
         eval value=$field
-
-        # Checking first field
         if [ $i -eq 1 ]; then
             echo -e "\t\"$value\": {"
         else
@@ -45,26 +38,21 @@ json_list_ip() {
         fi
     (( ++i))
     done
-
-    # If there was any output
     if [ -n "$value" ]; then
         echo -e '        }'
     fi
-
-    # Printing bottom json bracket
     echo -e '}'
 }
 
 # Shell function
 shell_list_ip() {
     line=$(cat $VESTA/data/ips/$IP)
-
-    # Assing key=value
     eval $line
-
-    # Print result line
     for field in $fields; do
         eval key="$field"
+        if [ -z "$key" ]; then
+            key='NULL'
+        fi
         echo "${field//$/}: $key "
     done
 }
@@ -76,12 +64,8 @@ shell_list_ip() {
 
 # Checking args
 check_args '1' "$#" 'ip [format]'
-
-# Checking argument format
 validate_format 'ip'
-
-# Checking ip
-is_sys_ip_valid
+is_ip_valid
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -89,8 +73,8 @@ is_sys_ip_valid
 conf=$VESTA/data/ips/$IP
 
 # Defining fileds to select
-fields='$IP $OWNER $STATUS $NAME $U_SYS_USERS $U_WEB_DOMAINS
-    $INTERFACE $NETMASK $DATE'
+fields='$IP $OWNER $STATUS $NAME $U_SYS_USERS $U_WEB_DOMAINS $INTERFACE
+    $NETMASK $DATE'
 
 # Listing ip
 case $format in 

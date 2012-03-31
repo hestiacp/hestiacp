@@ -12,7 +12,7 @@
 # Argument defenition
 format=${1-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
@@ -21,8 +21,6 @@ json_list_iface() {
     int_counter=$(echo "$interfaces" | wc -l)
     i=1
     echo '['
-
-    # Listing ifaces
     for interface in $interfaces; do
         if [ "$i" -lt "$int_counter" ]; then
             echo -e  "\t\"$interface\","
@@ -41,7 +39,6 @@ shell_list_iface() {
         echo "INTERFACES"
         echo "----------"
     fi
-
     for interface in $interfaces; do
         echo "$interface"
     done

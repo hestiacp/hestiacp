@@ -11,11 +11,10 @@
 #----------------------------------------------------------#
 
 # Importing system enviroment  as we run this script
-#     mostly by cron wich do not read it by itself
+# mostly by cron wich do not read it by itself
 source /etc/profile.d/vesta.sh
 
-
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 

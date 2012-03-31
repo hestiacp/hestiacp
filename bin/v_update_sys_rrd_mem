@@ -13,7 +13,9 @@
 update=$1
 period=${1-daily}
 
-# Importing variables
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
 
 
 #----------------------------------------------------------#

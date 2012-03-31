@@ -15,7 +15,7 @@
 user=${1-admin}
 ip_status=${2-shared}
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf    # include for internal func
 source $VESTA/func/shared.sh
 source $VESTA/func/ip.sh
@@ -26,19 +26,9 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '0' "$#" '[user] [ip_status]'
-
-# Checking user
-if [ ! -z "$1" ]; then
-    validate_format 'user'
-    is_object_valid 'user' 'USER' "$user" "$user"
-fi
-
-# Checking ip_status
-if [ ! -z "$2" ]; then
-    validate_format 'ip_status'
-fi
+validate_format 'user' 'ip_status'
+is_object_valid 'user' 'USER' "$user" "$user"
 
 
 #----------------------------------------------------------#
@@ -46,7 +36,7 @@ fi
 #----------------------------------------------------------#
 
 # Get ip list
-ip_list=$(/sbin/ifconfig |grep 'inet addr:'|cut -f 2 -d :|\
+ip_list=$(/sbin/ifconfig | grep 'inet addr:' | cut -f 2 -d : | \
     cut -f 1 -d ' '| grep -v 127.0.0.1)
 
 # Get vesta registered ip list
@@ -60,15 +50,14 @@ rconf='/etc/httpd/conf.d/rpaf.conf'
 
 # Comparing each ip
 for ip in $ip_list; do
-    check_ip=$(echo $vesta_ip_list|grep -w "$ip")
+    check_ip=$(echo $vesta_ip_list | grep -w "$ip")
 
     # Checking ip registered
     if [ -z "$check_ip" ]; then
-
         # Parsing additional params
-        iface=$(/sbin/ifconfig|grep -B1 -w "$ip"|head -n 1|cut -f 1 -d ' ')
+        iface=$(/sbin/ifconfig |grep -B1 -w $ip |head -n 1 |cut -f 1 -d ' ')
         interface=$(echo "$iface" | cut -f 1 -d :)
-        mask=$(/sbin/ifconfig |grep -w "$ip"|awk -F "Mask:" '{print $2}')
+        mask=$(/sbin/ifconfig |grep -w $ip |awk -F "Mask:" '{print $2}')
 
         # Adding vesta ip
         ip_add_vesta
@@ -82,7 +71,7 @@ for ip in $ip_list; do
         fi
     fi
 
-    # NOTE: later we'll make revers comparation
+    # TBD: revers comparation
 done
 
 
@@ -93,7 +82,7 @@ done
 # Updating user conf
 increase_user_value "$user" '$IP_OWNED'
 
-# Adding task to the vesta pipe
+# Restart web server
 if [ "$web_restart" = 'yes' ]; then
     $BIN/v_restart_web "$EVENT"
 fi

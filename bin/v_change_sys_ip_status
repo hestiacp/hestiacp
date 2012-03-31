@@ -13,8 +13,7 @@
 ip=$1
 ip_status=$2
 
-# Importing variables
-source $VESTA/conf/vesta.conf
+# Includes
 source $VESTA/func/shared.sh
 source $VESTA/func/ip.sh
 
@@ -23,32 +22,21 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'ip ip_status'
-
-# Checking argument format
 validate_format 'ip' 'ip_status'
-
-# Checking system ip
-is_sys_ip_valid
-
-# Checking current status
-current_status=$(get_sys_ip_value '$STATUS')
-if [ "$ip_status" = "$current_status" ]; then
-    echo "Error: status is already set"
-    log_event 'debug' "$E_EXISTS $EVENT"
+is_ip_valid
+if [ "$ip_status" = "$(get_ip_value '$STATUS')" ]; then
+    echo "Error: status $ip_status is already set"
+    log_event "$E_EXISTS" "$EVENT"
     exit $E_EXISTS
 fi
 
-# Parsing current ip usage
-web_domains=$(get_sys_ip_value '$U_WEB_DOMAINS')
-sys_user=$(get_sys_ip_value '$U_SYS_USERS')
-ip_owner=$(get_sys_ip_value '$OWNER')
-
-# Checking condition
+web_domains=$(get_ip_value '$U_WEB_DOMAINS')
+sys_user=$(get_ip_value '$U_SYS_USERS')
+ip_owner=$(get_ip_value '$OWNER')
 if [ "$web_domains" -ne '0' ] && [ "$sys_user" != "$ip_owner" ]; then
-    echo "Error: ip is used"
-    log_event 'debug' "$E_INUSE $EVENT"
+    echo "Error: ip $ip is used"
+    log_event "$E_INUSE" "$EVENT"
     exit $E_INUSE
 fi
 
@@ -58,7 +46,7 @@ fi
 #----------------------------------------------------------#
 
 # Changing ip name
-update_sys_ip_value '$STATUS' "$ip_status"
+update_ip_value '$STATUS' "$ip_status"
 
 
 #----------------------------------------------------------#

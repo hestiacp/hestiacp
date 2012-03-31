@@ -13,7 +13,8 @@
 update=$1
 period=${1-daily}
 
-# Importing variables
+# Includes
+source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
 
@@ -79,7 +80,7 @@ for host in $hosts; do
         if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]
         then
             echo "Error: config is broken"
-            log_event 'debug' "$E_PARSING $EVENT"
+            log_event "$E_PARSING" "$EVENT"
             exit $E_PARSING
         fi
 

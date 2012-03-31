@@ -17,7 +17,7 @@ updates=''
 # Importing system enviroment
 source /etc/profile.d/vesta.sh
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 

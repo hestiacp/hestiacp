@@ -22,34 +22,22 @@ user="${4-admin}"
 ip_status="${5-shared}"
 ip_name=$6
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/ip.sh
-source $VESTA/func/domain.sh    # for namehosting
+source $VESTA/func/domain.sh
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'ip mask [interface] [user] [ip_status] [ip_name]'
-
-# Checking argument format
-validate_format 'ip' 'mask' 'interface' 'user'
-
-# Checking system ip
-is_sys_ip_free
-
-# Checking user
-is_object_valid 'user' 'USER' "$user" "$user"
-
-# Checking ip_status
-if [ ! -z "$ip_status" ]; then
-    validate_format 'ip_status'
-fi
-
-# Checking ip_name
+validate_format 'ip' 'mask' 'interface' 'user' 'ip_status'
+is_ip_free
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 if [ ! -z "$ip_name" ] ; then
     validate_format 'ip_name'
 fi
@@ -59,9 +47,8 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get interface number
-i_number=$(get_next_interface_number)
-iface="$interface$i_number"
+# Get full interface name
+get_ip_iface
 
 # Defining config paths
 conf='/etc/httpd/conf.d/vesta.conf'
@@ -73,15 +60,12 @@ rconf='/etc/httpd/conf.d/rpaf.conf'
 /sbin/ifconfig "$iface" "$ip" netmask "$mask"
 
 # Adding startup script
-ip_add_startup
+create_ip_startup
 
 # Adding vesta ip
-ip_add_vesta
+create_vesta_ip
 
-# Importing main config
-source $VESTA/conf/vesta.conf
-
-# Adding namehosting support
+# Namehosting support
 namehost_ip_support
 
 
@@ -93,7 +77,7 @@ namehost_ip_support
 increase_user_value "$user" '$IP_OWNED'
 if [ "$user" = 'admin' ]; then
     if [ "$ip_status" = 'shared' ]; then
-        for user in $(ls $V_USERS/); do
+        for user in $(ls $VESTA/data/users); do
             increase_user_value "$user" '$IP_AVAIL'
         done
     else
@@ -104,7 +88,7 @@ else
     increase_user_value 'admin' '$IP_AVAIL'
 fi
 
-# Adding task to the vesta pipe
+# Restart web server
 if [ "$web_restart" = 'yes' ]; then
     $BIN/v_restart_web "$EVENT"
 fi

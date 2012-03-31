@@ -19,43 +19,18 @@ queue=$1
 # mostly by cron wich not read it by itself
 source /etc/profile.d/vesta.sh
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
 # Export PATH for cron
 PATH=$PATH:$BIN
-
-# Defining pipe functions
-restart_pipe() {
-    bash $VESTA/data/queue/restart.pipe
-    rm $VESTA/data/queue/restart.pipe
-    touch $VESTA/data/queue/restart.pipe
-}
-
-stats_pipe() {
-    bash $VESTA/data/queue/stats.pipe
-}
-
-disk_pipe() {
-    bash $VESTA/data/queue/disk.pipe
-}
-
-traff_pipe() {
-    bash $VESTA/data/queue/traffic.pipe
-}
-
-backup_pipe() {
-    bash $VESTA/data/queue/backup.pip
-}
-
-
+export $PATH
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'queue'
 
 
@@ -63,12 +38,15 @@ check_args '1' "$#" 'queue'
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Defining pipe functions
 case $queue in
-    restart)    restart_pipe ;;
-    stats)      stats_pipe ;;
-    backup)     backup_pipe ;;
-    disk)       disk_pipe ;;
-    traffic)    traff_pipe ;;
+    restart)    bash $VESTA/data/queue/restart.pipe;
+                rm $VESTA/data/queue/restart.pipe;
+                touch $VESTA/data/queue/restart.pipe;;
+    stats)      bash $VESTA/data/queue/stats.pipe;;
+    backup)     bash $VESTA/data/queue/backup.pip;;
+    disk)       bash $VESTA/data/queue/disk.pipe;;
+    traffic)    bash $VESTA/data/queue/traffic.pipe;;
     *)          check_args '1' '0' 'queue'
 esac
 

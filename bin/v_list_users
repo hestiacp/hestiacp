@@ -12,32 +12,22 @@
 # Argument defenition
 format=${1-shell}
 
-# Importing variables
-
 # Json function
 json_list_users() {
     echo '{'
     fileds_count=$(echo "$fields" | wc -w)
-
-    # Starting main loop
     for USER in $(ls $VESTA/data/users/); do
-        # Reading user data
         source $VESTA/data/users/$USER/user.conf
-
-        # Closing bracket if there already was output
         if [ -n "$data" ]; then
             echo -e '        },'
         fi
         i=1
         for field in $fields; do
             eval value=$field
-
             if [ $i -eq 1 ]; then
-                # Printing parrent
                 (( ++i))
                 echo -e "\t\"$value\": {"
             else
-                # Printing child
                 if [ $i -lt $fileds_count ]; then
                     (( ++i))
                     echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
@@ -48,27 +38,22 @@ json_list_users() {
             fi
         done
     done
-    # Closing bracket if there was output
     if [ -n "$data" ]; then
         echo -e '        }'
     fi
-
-    # Printing bottom bracket
     echo -e '}'
 }
 
 # Shell function
 shell_list_users() {
     if [  -z "$nohead" ]; then
-        # Print brief info
         echo "${fields//$/}"
         for a in $fields; do
             echo -e "--------- \c"
         done
-        echo                        # new line
+        echo
     fi
 
-    # Starting main loop
     for USER in $(ls $VESTA/data/users/); do
         source $VESTA/data/users/$USER/user.conf
         eval echo "$fields"

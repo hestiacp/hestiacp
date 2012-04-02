@@ -40,7 +40,6 @@ for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
     $BIN/v_suspend_web_domain "$user" "$domain" "$url" 'no'
 done
 
-
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#

@@ -47,6 +47,9 @@ shell_list_user() {
     source $VESTA/data/users/$user/user.conf
     for field in $fields; do
         eval key="$field"
+        if [ -z "$key" ]; then
+            key='NULL'
+        fi
         echo "${field//$/}: $key "
     done
 }

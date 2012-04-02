@@ -16,7 +16,7 @@ user=$1
 #       mostly by cron wich not read it by itself
 source /etc/profile.d/vesta.sh
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -26,15 +26,9 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '0' "$#" 'user'
-
-# If user specified
 if [ ! -z "$user" ]; then
-    # Checking argument format
     validate_format 'user'
-
-    # Checking user
     is_object_valid 'user' 'USER' "$user"
 fi
 
@@ -45,20 +39,19 @@ fi
 
 # Creating user_list
 if [ -z "$user" ]; then
-    user_list=$(ls $V_USERS/)
+    user_list=$(ls $VESTA/data/users)
 else
     user_list="$user"
 fi
 
 # Updating user stats
 for user in $user_list; do 
-
-    # Importing user values
+    USER_DATA=$VESTA/data/users/$user
     source $USER_DATA/user.conf
     DATE=$(date -d "$(date +'%m/01') -1day" +%F)
 
     # Compiling report string
-    s="DATE='$DATE' PACKAGE='$PACKAGE' IP_OWNED='$IP_OWNED'" 
+    s="DATE='$DATE' TIME='$TIME' PACKAGE='$PACKAGE' IP_OWNED='$IP_OWNED'" 
     s="$s U_DISK='$U_DISK' U_DISK_DIRS='$U_DISK_DIRS' U_DISK_WEB='$U_DISK_WEB'"
     s="$s U_DISK_MAIL='$U_DISK_MAIL' U_DISK_DB='$U_DISK_DB'" 
     s="$s U_DISK_DATABASES='$U_DISK_DATABASES'" 

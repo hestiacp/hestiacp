@@ -218,7 +218,7 @@ change_mysql_password() {
 
 # Change PostgreSQL database password
 change_pgsql_password() {
-    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
     eval $host_str
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
@@ -308,74 +308,62 @@ delete_pgsql_database() {
     fi
 }
 
-
-dump_db_mysql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-    sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
-    dumper="mysqldump -h $HOST -u $USER -p$PASSWORD -P$PORT -r"
-
-    # Checking empty vars
+# Dump MySQL database
+dump_mysql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
+    eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1; code="$?"
-    if [ '0' -ne "$code" ]; then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
-    # Dumping database
-    $dumper $dump $database
+    mysqldump -h $HOST -u $USER -p$PASSWORD -P$PORT -r $dump $database
 
-    # Dumping user grants
-    $sql "SHOW GRANTS FOR $db_user@localhost" | grep -v "Grants for" > $grants
-    $sql "SHOW GRANTS FOR $db_user@'%'" | grep -v "Grants for" >> $grants
+    query="SHOW GRANTS FOR '$DBUSER'@'localhost'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |\
+        grep -v "Grants for" > $grants
+
+    query="SHOW GRANTS FOR '$DBUSER'@'%'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |\
+        grep -v "Grants for" > $grants
 }
 
-dump_db_pgsql() {
-    # Defining vars
-    host_str=$(grep "HOST='$host'" $VESTA/conf/pgsql.conf)
-    for key in $host_str; do
-        eval ${key%%=*}=${key#*=}
-    done
-
+# Dump PostgreSQL database
+dump_pgsql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
+    eval $host_str
     export PGPASSWORD="$PASSWORD"
-    sql="psql -h $HOST -U $USER -p $PORT -c"
-    dumper="pg_dump -h $HOST -U $USER -p $PORT -c -d -O -x -i -f"
-    # Checking empty vars
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: config is broken"
-        log_event 'debug' "$E_PARSING $EVENT"
+        echo "Error: postgresql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
-    # Checking connection
-    $sql "SELECT VERSION()" >/dev/null 2>&1;code="$?"
-    if [ '0' -ne "$code" ];  then
-        echo "Error: Connect failed"
-        log_event 'debug' "$E_DB $EVENT"
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
-    # Dumping database
-    $dumper $dump $database
+    pg_dump -h $HOST -U $USER -p $PORT -c -d -O -x -i -f $dump $database \
+        2> /dev/null
 
-    # Dumping user grants
-    md5=$($sql "SELECT rolpassword FROM pg_authid WHERE rolname='$db_user';")
-    md5=$(echo "$md5" | head -n 1 | cut -f 2 -d ' ')
-    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$db_user';"
-    gr_str="GRANT ALL PRIVILEGES ON DATABASE $database to '$db_user'"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
+    md5=$(psql -h $HOST -U $USER -p $PORT -c "$query"|head -n1|cut -f 2 -d \ )
+    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER';"
+    gr_str="GRANT ALL PRIVILEGES ON DATABASE $database to '$DBUSER'"
     echo -e "$pw_str\n$gr_str" >> $grants
-    export PGPASSWORD='pgsql'
 }
 
 # Check if database server is in use

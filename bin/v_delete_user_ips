@@ -12,7 +12,7 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/ip.sh
@@ -22,22 +22,14 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking user vesta
 if [ "$user" = 'admin' ]; then
     exit
 fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -54,8 +46,8 @@ for ip in $ip_list; do
     is_ip_key_empty '$U_SYS_USERS'
 
     # Assig ip to main account
-    update_sys_ip_value '$OWNER' 'admin'
-    update_sys_ip_value '$STATUS' 'dedicated'
+    update_ip_value '$OWNER' 'admin'
+    update_ip_value '$STATUS' 'dedicated'
     increase_user_value 'admin' '$IP_OWNED'
     increase_user_value 'admin' '$IP_AVAIL'
 done

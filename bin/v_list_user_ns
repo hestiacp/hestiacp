@@ -13,17 +13,15 @@
 user=$1
 format=${2-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
 json_list_ns() {
     ns=$(grep "^NS='" $USER_DATA/user.conf |cut -f 2 -d \')
-    # Print top bracket
     echo '['
     i=1
     nslistc=$(echo -e "${ns//,/\n}"|wc -l)
-    # Listing servers
     for nameserver in ${ns//,/ };do
         if [ "$i" -ne "$nslistc" ]; then
             echo -e  "\t\"$nameserver\","
@@ -32,7 +30,6 @@ json_list_ns() {
         fi
         (( ++i))
     done
-
     echo "]"
 }
 
@@ -40,11 +37,9 @@ json_list_ns() {
 shell_list_ns() {
     ns=$(grep "^NS='" $USER_DATA/user.conf |cut -f 2 -d \')
     if [ -z "$nohead" ]; then
-        # Print result
         echo "NAMESERVER"
         echo "----------"
     fi
-
     for nameserver in ${ns//,/ };do
         echo "$nameserver"
     done
@@ -55,13 +50,8 @@ shell_list_ns() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '1' "$#" 'user [format]'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
 
 

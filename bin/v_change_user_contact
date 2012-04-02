@@ -13,7 +13,7 @@
 user=$1
 email=$2
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -22,16 +22,9 @@ source $VESTA/func/shared.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user email'
-
-# Checking argument format
 validate_format 'user' 'email'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
 
 
@@ -39,13 +32,9 @@ is_object_unsuspended 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get old value
-old_email=$(get_user_value '$CONTACT')
-
 # Changing user contact email
+old_email=$get_user_value '$CONTACT')
 update_user_value "$user" '$CONTACT' "$email"
-
-# Changing passwd file
 pw_str=$(grep -n "^$user:" /etc/passwd)
 str=$(echo "$pw_str" | cut -f 1 -d :)
 sed -i "$str s/$old_email/$email/g" /etc/passwd
@@ -56,7 +45,7 @@ sed -i "$str s/$old_email/$email/g" /etc/passwd
 #----------------------------------------------------------#
 
 # Logging
-log_history "$EVENT" "$SCRIPT $user $old_email"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

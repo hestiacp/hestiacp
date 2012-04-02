@@ -12,7 +12,7 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -21,15 +21,9 @@ source $VESTA/func/shared.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '0' "$#" 'user'
-
-# If user specified
 if [ ! -z "$user" ]; then
-    # Checking argument format
     validate_format 'user'
-
-    # Checking user
     is_object_valid 'user' 'USER' "$user"
 fi
 
@@ -40,13 +34,14 @@ fi
 
 # Creating user_list
 if [ -z "$user" ]; then
-    user_list=$(ls $V_USERS/)
+    user_list=$(ls $VESTA/data/users)
 else
     user_list="$user"
 fi
 
 # Updating user stats
 for user in $user_list; do
+    USER_DATA=$VESTA/data/users/$user
     # Cleaning counters
     SUSPENDED_USERS=0
     SUSPENDED_WEB=0
@@ -84,8 +79,9 @@ for user in $user_list; do
 
     # Checking users
     if [ "$user" = 'admin' ]; then
-        SUSPENDED_USERS=$(grep "SUSPENDED='yes'" $V_USERS/*/user.conf|wc -l)
-        U_USERS=$(ls $V_USERS/|wc -l)
+        SUSPENDED_USERS=$(grep "SUSPENDED='yes'" $VESTA/data/users/*/user.conf)
+	SUSPENDED_USERS=$(echo "$SUSPENDED_USERS" |wc -l)
+        U_USERS=$(ls $VESTA/data/users/|wc -l)
     fi
 
     # Checking ip
@@ -128,7 +124,7 @@ for user in $user_list; do
     for domain_str in $(cat $USER_DATA/dns.conf); do
         eval $domain_str
         U_DNS_DOMAINS=$((U_DNS_DOMAINS + 1))
-        records=$(wc -l $USER_DATA/dns/$DOMAIN| cut -f 1 -d ' ')
+        records=$(wc -l $USER_DATA/dns/$DOMAIN.conf| cut -f 1 -d ' ')
         U_DNS_RECORDS=$((U_DNS_RECORDS + records))
         if [ "$SUSPENDED" = 'yes' ]; then
             SUSPENDED_DNS=$((SUSPENDED_DNS + 1))

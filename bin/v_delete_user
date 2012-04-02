@@ -13,7 +13,7 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -25,19 +25,10 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking user admin
 if [ "$user" = 'admin' ]; then
     exit
 fi
@@ -69,7 +60,7 @@ fi
 # Checking mail system is enabled
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
     $BIN/v_unsuspend_mail_domains $user
-    $BIN/v_del_mail_domains $user
+    #$BIN/v_delete_mail_domains $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -78,8 +69,8 @@ fi
 
 # Checking db system is enabled
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-    $BIN/v_unsuspend_db_bases $user
-    $BIN/v_delete_db_dbases $user
+    $BIN/v_unsuspend_databases $user
+    $BIN/v_delete_databases $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv

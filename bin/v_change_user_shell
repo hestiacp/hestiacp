@@ -13,7 +13,7 @@
 user=$1
 shell=$2
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -22,16 +22,9 @@ source $VESTA/func/shared.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user shell'
-
-# Checking argument format
 validate_format 'user' 'shell'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
 
 
@@ -40,11 +33,11 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Get shell full path
-shell_path=$(/usr/bin/chsh --list-shells | grep -w "$shell" )
+shell_path=$(/usr/bin/chsh --list-shells | grep -w "$shell" |head -n1)
 
 # Changing passwd file
 /usr/bin/chsh -s "$shell_path" "$user" &>/dev/null
-
+shell=$(basename $shell_path)
 
 
 #----------------------------------------------------------#

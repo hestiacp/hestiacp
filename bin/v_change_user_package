@@ -13,7 +13,7 @@
 user=$1
 package=$2
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -25,7 +25,6 @@ is_package_avalable() {
         eval ${key%%=*}=${key#*=}
     done
 
-    # Clearing vars
     WEB_DOMAINS='0'
     DATABASES='0'
     MAIL_DOMAINS='0'
@@ -33,11 +32,8 @@ is_package_avalable() {
     DISK_QUOTA='0'
     BANDWIDTH='0'
 
-    # Parsing package
     pkg_data=$(cat $VESTA/data/packages/$package.pkg)
-    for key in $pkg_data; do
-        eval ${key%%=*}=${key#*=}
-    done
+    eval $pkg_data
 
     # Comparing user data with package
     if [[ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ]] ||\
@@ -48,17 +44,15 @@ is_package_avalable() {
        [[ "$DISK_QUOTA" -lt "$U_DISK" ]] ||\
        [[ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]]; then
         echo "Error: Upgrade package"
-        log_event 'debug' "$E_LIMIT $v_log"
+        log_event "$E_LIMIT" "$EVENT"
         exit $E_LIMIT
     fi
 }
 
 change_user_package() {
-    # Parsing user data
     usr_data=$(cat $USER_DATA/user.conf)
     eval $usr_data
 
-    # Parsing package
     pkg_data=$(cat $VESTA/data/packages/$package.pkg)
     eval $pkg_data
 
@@ -116,19 +110,10 @@ DATE='$DATE'" > $USER_DATA/user.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user package'
-
-# Checking argument format
 validate_format 'user' 'package'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking package
 is_package_valid
-
-# Checking current data 
 is_package_avalable
 
 

@@ -17,7 +17,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -70,7 +70,7 @@ fi
 # Update config value
 update_object_value 'web' 'DOMAIN' "$domain" '$CGI' 'yes'
 
-# Adding task to the vesta pipe
+# Restart web server
 $BIN/v_restart_web "$EVENT"
 
 # Logging

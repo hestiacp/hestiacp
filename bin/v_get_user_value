@@ -13,7 +13,7 @@
 user=$1
 key=$(echo "$2"| tr '[:lower:]' '[:upper:]'|sed -e "s/^/$/")
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -22,17 +22,9 @@ source $VESTA/func/shared.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '2' "$#" 'user key'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain is not suspened
-is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#

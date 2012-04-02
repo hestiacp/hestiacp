@@ -13,18 +13,16 @@
 user=$1
 format=${2-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
 json_list_user_ips() {
-    # Print top bracket
     echo '{'
     fileds_count=$(echo "$fields" | wc -w)
     for IP in $(ls $VESTA/data/ips/); do
         source $VESTA/data/ips/$IP
         if [ "$OWNER" = "$user" ]; then
-            # Closing bracket if there already was output
             if [ -n "$data" ]; then
                 echo -e '        },'
             fi
@@ -32,11 +30,9 @@ json_list_user_ips() {
             for field in $fields; do
                 eval value=$field
                 if [ $i -eq 1 ]; then
-                    # Printing parrent
                     (( ++i))
                     echo -e "\t\"$value\": {"
                 else
-                    # Printing child
                     if [ $i -lt $fileds_count ]; then
                         (( ++i))
                         echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
@@ -52,11 +48,9 @@ json_list_user_ips() {
                 for field in $fields; do
                     eval value=$field
                     if [ $i -eq 1 ]; then
-                        # Printing parrent
                         (( ++i))
                         echo -e "\t\"$value\": {"
                     else
-                        # Printing child
                         if [ $i -lt $fileds_count ]; then
                             (( ++i))
                             echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
@@ -69,13 +63,9 @@ json_list_user_ips() {
             fi
         fi
     done
-
-    # Closing bracket if there was output
     if [ -n "$data" ]; then
         echo -e '        }'
     fi
-
-    # Printing bottom bracket
     echo -e '}'
 
 }
@@ -99,13 +89,8 @@ shell_list_user_ips() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user [format]'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
 
 

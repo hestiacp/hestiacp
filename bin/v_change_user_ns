@@ -20,7 +20,7 @@ ns6=$7
 ns7=$8
 ns8=$9
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -37,40 +37,29 @@ validate_format 'user' 'ns1' 'ns2'
 if [ ! -z "$ns3" ]; then
     validate_format 'ns3'
 fi
-
 if [ ! -z "$ns4" ]; then
     validate_format 'ns4'
 fi
-
 if [ ! -z "$ns5" ]; then
     validate_format 'ns5'
 fi
-
 if [ ! -z "$ns6" ]; then
     validate_format 'ns6'
 fi
-
 if [ ! -z "$ns7" ]; then
     validate_format 'ns7'
 fi
-
 if [ ! -z "$ns8" ]; then
     validate_format 'ns8'
 fi
 
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-# Get old values
-old_ns=$(get_user_value '$NS')
 
 # Merging values
 ns="$ns1,$ns2,$ns3,$ns4,$ns5,$ns6,$ns7,$ns8"
@@ -85,7 +74,7 @@ update_user_value "$user" '$NS' "$ns"
 #----------------------------------------------------------#
 
 # Logging
-log_history "$EVENT" "$SCRIPT $user ${old_ns//,/ }"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

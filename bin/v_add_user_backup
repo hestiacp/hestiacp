@@ -12,7 +12,7 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -21,19 +21,10 @@ source $VESTA/func/shared.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking backup system is enabled
-is_system_enabled 'BACKUP_SYSTEM'
-
-# Checking user
+is_system_enabled "$BACKUP_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user backups
 is_backup_enabled
 
 

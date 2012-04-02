@@ -13,7 +13,7 @@
 # Argument defenition
 ip=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/ip.sh

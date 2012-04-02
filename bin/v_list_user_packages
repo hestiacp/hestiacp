@@ -12,37 +12,27 @@
 # Argument defenition
 format=${1-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
 json_list_pkgs() {
-    # Print top bracket
     echo '{'
-
     fileds_count=$(echo "$fields" | wc -w)
-
-    # Starting main loop
     for package in $(ls $VESTA/data/packages); do
         PACKAGE=${package/.pkg/}
-        # Assing key=value
         pkg_data=$(cat $VESTA/data/packages/$package)
         eval $pkg_data
-
-        # Closing bracket if there already was output
         if [ -n "$data" ]; then
             echo -e '        },'
         fi
         i=1
         for field in $fields; do
             eval value=$field
-
             if [ $i -eq 1 ]; then
-                # Printing parrent
                 (( ++i))
                 echo -e "\t\"$value\": {"
             else
-                # Printing child
                 if [ $i -lt $fileds_count ]; then
                     (( ++i))
                     echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
@@ -53,38 +43,27 @@ json_list_pkgs() {
             fi
         done
     done
-
-    # Closing bracket if there was output
     if [ -n "$data" ]; then
         echo -e '        }'
     fi
-
-    # Printing bottom bracket
     echo -e '}'
 }
 
 # Shell fnction
 shell_list_pkgs() {
-    # Listing pkg files
     for package in $(ls $VESTA/data/packages); do
         PACKAGE=${package/.pkg/}
-        # Assign key=value
         pkg_descr=$(cat $VESTA/data/packages/$package)
         eval $pkg_descr
-
-
         if [ -z "$nohead" ]; then
             echo '----------'
         fi
-
         for field in $fields; do
             eval value=$field
             echo -e "${field//$/}: $value"
         done
-
     done
 }
-
 
 
 #----------------------------------------------------------#

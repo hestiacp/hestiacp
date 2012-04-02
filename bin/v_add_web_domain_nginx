@@ -19,7 +19,7 @@ default_extentions="jpg,jpeg,gif,png,ico,css,zip,tgz,gz,rar,bz2,doc,xls,exe,\
 pdf,ppt,txt,tar,wav,bmp,rtf,js,mp3,avi,mpeg,html,htm"
 extentions=${4-$default_extentions}
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -93,7 +93,7 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$NGINX' "$NGINX"
 update_object_value 'web' 'DOMAIN' "$domain" '$NGINX_EXT' "$extentions"
 
-# Adding task to the vesta pipe
+# Restart web server
 $BIN/v_restart_web "$EVENT"
 
 log_history "$EVENT"

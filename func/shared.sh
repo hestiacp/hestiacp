@@ -119,11 +119,11 @@ is_type_valid() {
     fi
 }
 
-# Checkk user backup settings
+# Check user backup settings
 is_backup_enabled() {
-    BACKUPS=$(grep "BACKUPS='" $USER_DATA/user.conf | cut -f 2 -d \')
+    BACKUPS=$(grep "^BACKUPS=" $USER_DATA/user.conf | cut -f2 -d \')
     if [ -z "$BACKUPS" ] || [[ "$BACKUPS" -le '0' ]]; then
-        echo "Error:  user backup disabled"
+        echo "Error: user backup disabled"
         log_event "$E_DISABLED" "$EVENT"
         exit $E_DISABLED
     fi
@@ -422,7 +422,7 @@ validate_format_url() {
 
 # Shell
 validate_format_shell() {
-    if [ -z "$(grep -x $1 /etc/shells)" ]; then
+    if [ -z "$(grep -w $1 /etc/shells)" ]; then
         echo "Error: shell $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID

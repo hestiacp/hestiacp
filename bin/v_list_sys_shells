@@ -1,0 +1,67 @@
+#!/bin/bash
+# info: list system shells
+# options: [format]
+#
+# The function for obtaining the list of system shells.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/shared.sh
+
+# Json function
+json_list_sh() {
+    shells=$(cat /etc/shells)
+    sh_counter=$(echo "$shells" | wc -l)
+    i=1
+    echo '['
+    for shell in $shells; do
+        shell=$(basename $shell)
+        if [ "$i" -lt "$sh_counter" ]; then
+            echo -e  "\t\"$shell\","
+        else
+            echo -e  "\t\"$shell\""
+        fi
+        (( ++i))
+    done
+    echo "]"
+}
+
+# Shell function
+shell_list_sh() {
+    shells=$(cat /etc/shells)
+    if [ -z "$nohead" ]; then
+        echo "SHELLS"
+        echo "----------"
+    fi
+    for shell in $shells; do
+        shell=$(basename $shell)
+        echo "$shell"
+    done
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Listing domains
+case $format in 
+    json)   json_list_sh ;;
+    plain)  nohead=1; shell_list_sh ;;
+    shell)  shell_list_sh ;;
+    *)      check_args '1' '0' '[format]' ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

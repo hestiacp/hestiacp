@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -19,8 +19,8 @@ type="${2-$BACKUP_SYSTEM}"
 
 # Defining tar parser function 
 get_backup_info() {
-    backup=$1           # full path to backup
-    backup_type="$2"    # backup type
+    backup=$1
+    backup_type="$2"
 
     backup_name=$(basename $backup )
     backup_date=$(echo $backup_name |cut -f 2 -d '.' )
@@ -28,7 +28,6 @@ get_backup_info() {
     backup_size=$(du -sm $backup |cut -f 1 )
     backup_data=$(tar -tf  $backup)
 
-    # Checking system data
     vst_data=$(echo "$backup_data" |grep "^./vesta/" |grep -v "^./vesta/$")
     if [ -z "$vst_data" ]; then
         vst=''
@@ -36,7 +35,6 @@ get_backup_info() {
         vst='yes'
     fi
 
-    # Checking pam
     pam_data=$(echo "$backup_data" |grep "^./pam/" |grep -v "^./pam/$")
     if [ -z "$pam_data" ]; then
         pam=''
@@ -44,7 +42,6 @@ get_backup_info() {
         pam='yes'
     fi
 
-    # Checking web data
     web_data=$(echo "$backup_data" |grep "^./web/" |grep -v "^./web/$" |sort)
     if [ -z "$web_data" ]; then
         web=''
@@ -61,7 +58,6 @@ get_backup_info() {
         done
     fi
 
-    # Checking dns data
     dns_data=$(echo "$backup_data" |grep "^./dns/" |grep ".db$" |sort)
     if [ -z "$dns_data" ]; then
         dns=''
@@ -78,7 +74,6 @@ get_backup_info() {
         done
     fi
 
-    # Checking mail
     mail_data=$(echo "$backup_data"|grep "^./mail/"|grep -v "^./mail/$"|sort)
     if [ -z "$mail_data" ]; then
         ml=''
@@ -95,7 +90,6 @@ get_backup_info() {
         done
     fi
 
-    # Checking databases
     db_data=$(echo "$backup_data"|grep "^./db/"|grep ".sql.gz$"|sort)
     if [ -z "$db_data" ]; then
         db=''
@@ -112,7 +106,6 @@ get_backup_info() {
         done
     fi
 
-    # Checking certificates
     ssl_data=$(echo "$backup_data"|grep "^./ssl/"|grep ".crt$"|sort)
     if [ -z "$ssl_data" ]; then
         ssl=''
@@ -129,8 +122,6 @@ get_backup_info() {
         done
     fi
 
-
-    # Checking cron data
     cron_data=$(echo "$backup_data" |grep "^./cron/" |grep -v "^./cron/$")
     if [ -z "$cron_data" ]; then
         cron=''
@@ -156,25 +147,23 @@ EOF
 }
 
 init_ftp_variables() {
-    # Checking config
     source $VESTA/conf/ftp.backup.conf
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
         [ -z "$BPATH" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSING $EVENT"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 }
 
 check_ftp_connection(){
-    # Checking ftp permission
     ftmpdir=$(mktemp -u -p $BPATH)
     command="mkdir $ftmpdir
              ls $ftmpdir
              rm $ftmpdir"
     if [ ! -z "$(ftpc "$command")" ] ; then
         echo "Error: FTP error"
-        log_event 'debug' "$E_FTP $EVENT"
+        log_event "$E_FTP" "$EVENT"
         exit $E_FTP
     fi
 }
@@ -185,22 +174,13 @@ check_ftp_connection(){
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking backup system is enabled
-is_system_enabled 'BACKUP_SYSTEM'
-
-# Checking argument format
+is_system_enabled "$BACKUP_SYSTEM"
 validate_format 'user'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking load averages
 la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')
 if [ "$la" -ge "$BACKUP_LA_LIMIT" ]; then
-    log_event 'debug' "$E_LA $EVENT"
+    log_event "$E_LA" "$EVENT"
     exit $E_LA
 fi
 
@@ -235,7 +215,7 @@ if [ "$type" = 'ftp' ]; then
         cd $tmpdir
         if [ ! -z "$(ftpc "get $backup")" ]; then
             echo "Error: FTP transfer error"
-            log_event 'debug' "$E_FTP $EVENT"
+            log_event "$E_FTP" "$EVENT"
             exit $E_FTP
         fi
         get_backup_info $tmpdir/$backup $type >> $tmp_file
@@ -262,7 +242,7 @@ if [ "$type" = 'ftp,local' ] || [ "$type" = 'local,ftp' ]; then
             cd $tmpdir
             if [ ! -z "$(ftpc "get $backup")" ]; then
                 echo "Error: FTP transfer error"
-                log_event 'debug' "$E_FTP $EVENT"
+                log_event "$E_FTP" "$EVENT"
                 exit $E_FTP
             fi
             get_backup_info $tmpdir/$backup ftp >> $tmp_file

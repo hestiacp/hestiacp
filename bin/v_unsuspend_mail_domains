@@ -49,13 +49,13 @@ field='$DOMAIN'
 search_string="SUSPENDED='yes'"
 
 # Parsing suspeneded domains
-domains=$(dom_clear_search)
+#domains=$(dom_clear_search)
 
 
 # Starting unsuspend loop
-for domain in $domains; do
-    $BIN/v_unsuspend_mail_domain "$user" "$domain"
-done
+#for domain in $domains; do
+#    $BIN/v_unsuspend_mail_domain "$user" "$domain"
+#done
 
 
 #----------------------------------------------------------#

@@ -13,7 +13,7 @@
 # mostly by cron wich not read it by itself
 source /etc/profile.d/vesta.sh
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 
@@ -22,11 +22,12 @@ source $VESTA/func/shared.sh
 #                       Action                             #
 #----------------------------------------------------------#
 
-user_list=$(ls $V_USERS/)
-
 # Updating user billing
-for user in $user_list; do 
-    $BIN/v_backup_user $user &>> $VESTA/logs/backup.log 
+for user in $(ls $VESTA/data/users); do
+    check_suspend=$(grep "SUSPENDED='no'" $VESTA/data/users/$user/user.conf)
+    if [ ! -z "$check_suspend" ]; then
+        $BIN/v_backup_user $user >> $VESTA/log/backup.log 2>&1
+    fi
 done
 
 #----------------------------------------------------------#

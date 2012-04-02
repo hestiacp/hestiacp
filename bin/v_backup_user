@@ -12,7 +12,7 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -23,36 +23,23 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking backup system is enabled
-is_system_enabled 'BACKUP_SYSTEM'
-
-# Checking user
+is_system_enabled "$BACKUP_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user backups
+is_object_unsuspended 'user' 'USER' "$user"
 is_backup_enabled
-
-# Checking load averages
 la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')
 i=0
 while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
     echo "$(date "+%F %T") Load Average $la"
     echo
-
     sleep 60
-
     if [ "$i" -ge "15" ]; then
         echo "Error: LA is too high"
-        log_event 'debug' "$E_LA $EVENT"
+        log_event "$E_LA" "$EVENT"
         exit $E_LA
     fi
-
     (( ++i))
 done
 
@@ -75,8 +62,6 @@ echo
 # Addding backup and vesta version
 echo "1.0" > $tmpdir/backup_version
 echo "$VERSION" > $tmpdir/vesta_version
-
-
 
 # Vesta
 echo "-- VESTA --"
@@ -102,7 +87,6 @@ if [ -e "$USER_DATA/backup.excludes" ]; then
     echo -e "$(date "+%F %T") backup.excludes"
     cp -r $USER_DATA/backup.excludes $tmpdir/vesta/
 fi
-
 
 echo
 
@@ -139,13 +123,7 @@ then
 
     # Parsing unsuspeneded domains
     conf="$USER_DATA/web.conf"
-    field='$DOMAIN'
-    search_string='DOMAIN='
-    domains=$(dom_clear_search)
-    domain_list=''
-
-    # Cleaning excludes
-    for domain in $domains; do
+    for domain in $(search_objects 'web' 'SUSPENDED' "*" 'DOMAIN'); do
 	check_exl=$(echo "$WEB"|grep -w $domain)
         if [ -z "$check_exl" ]; then
             web_list="$web_list $domain"
@@ -163,8 +141,8 @@ then
 
         # Packing data folders
         cd $HOMEDIR/$user/web/$domain
-        tar -cf $tmpdir/web/$domain/$domain.tar \
-            public_html public_shtml private document_errors cgi-bin stats
+        domain_direcotries=$(ls |grep -v logs)
+        tar -cf $tmpdir/web/$domain/$domain.tar $domain_direcotries
 
         # Creating web.config
         cd $tmpdir/web/$domain/
@@ -233,13 +211,7 @@ then
     mkdir $tmpdir/dns/
 
     # Parsing unsuspeneded domains
-    conf="$USER_DATA/dns.conf"
-    field='$DOMAIN'
-    search_string='DOMAIN='
-    domains=$(dom_clear_search)
-
-    # Cleaning excludes
-    for domain in $domains; do
+    for domain in $(search_objects 'dns' 'SUSPENDED' "*" 'DOMAIN'); do
 	check_exl=$(echo "$DNS"|grep -w $domain)
         if [ -z "$check_exl" ]; then
             dns_list="$dns_list $domain"
@@ -258,8 +230,8 @@ then
         grep "DOMAIN='$domain'" $conf > dns.conf
 
         # Backingup dns recods
-        cp $USER_DATA/dns/$domain $domain
-        cp $USER_DATA/conf/dns/$domain.db $domain.db
+        cp $USER_DATA/dns/$domain.conf $domain.conf
+        cp $HOMEDIR/$user/conf/dns/$domain.db $domain.db
     done
     echo
 fi
@@ -274,13 +246,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
     mkdir $tmpdir/db/
 
     # Parsing unsuspeneded domains
-    conf="$USER_DATA/db.conf"
-    field='$DB'
-    search_string='DB='
-    dbs=$(dom_clear_search)
-
-    # Cleaning excludes
-    for database in $dbs; do
+    for database in $(search_objects 'db' 'SUSPENDED' "*" 'DB'); do
 	check_exl=$(echo "$DB"|grep -w $database)
         if [ -z "$check_exl" ]; then
             db_list="$db_list $database"
@@ -289,23 +255,17 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
     db_list=$(echo "$db_list" | sed -e "s/  */\ /g" -e "s/^ //")
 
     for database in $db_list; do
-        type=$(get_db_value '$TYPE')
-        host=$(get_db_value '$HOST')
-        db_user=$(get_db_value '$USER')
-        dump="$tmpdir/db/$database.$type.sql"
-        grants="$tmpdir/db/$database.$type.$db_user"
-
-        echo -e "$(date "+%F %T") $database $type"
-
-        case $type in
-            mysql) dump_db_mysql ;;
-            pgsql) dump_db_pgsql ;;
+        get_database_values
+        dump="$tmpdir/db/$database.$TYPE.sql"
+        grants="$tmpdir/db/$database.$TYPE.$DBUSER"
+        echo -e "$(date "+%F %T") $database $TYPE"
+        case $TYPE in
+            mysql) dump_mysql_database ;;
+            pgsql) dump_pgsql_database ;;
         esac
-
         if [ ! -z "$BACKUP_GZIP" ]; then 
             gzip -$BACKUP_GZIP $dump
         fi
-
     done
     echo
 fi
@@ -333,6 +293,9 @@ size="$(du -shm $tmpdir | cut -f 1)"
 
 # Get current time
 end_time=$(date '+%s')
+DATE=$(date +%F)
+TIME=$(date +%T)
+
 
 # Defining local storage function
 local_backup(){
@@ -349,7 +312,6 @@ local_backup(){
     # Checking retention
     backup_list=$(ls -lrt $BACKUP/ | awk '{print $9}' |grep "^$user\.")
     backups_count=$(echo "$backup_list" | wc -l)
-
     if [ "$BACKUPS" -le "$backups_count" ]; then
         backups_rm_number=$((backups_count - BACKUPS))
         (( ++backups_rm_number))
@@ -367,7 +329,7 @@ local_backup(){
     disk_usage=$(df $BACKUP | awk '{print $5}'|tail -n1|cut -f 1 -d '%')
     if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
         echo "Error: Not enough disk space"
-        log_event 'debug' "$E_DISK $EVENT"
+        log_event "$E_DISK" "$EVENT"
         exit $E_DISK
     fi
 
@@ -402,7 +364,7 @@ ftp_backup(){
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
         [ -z "$BPATH" ]; then
         echo "Error: Parsing error"
-        log_event 'debug' "$E_PARSING $EVENT"
+        log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
@@ -417,7 +379,7 @@ ftp_backup(){
              rm $ftmpdir"
     if [ ! -z "$(ftpc "$command")" ] ; then
         echo "Error: FTP error"
-        log_event 'debug' "$E_FTP $EVENT"
+        log_event "$E_FTP" "$EVENT"
         exit $E_FTP
     fi
 
@@ -489,7 +451,7 @@ for backup_record in $deprecated; do
 done
 
 # Concatenating string
-backup_str="DATE='$DATE' TIME='$current_time' RUNTIME='$run_time'"
+backup_str="DATE='$DATE' TIME='$TIME' RUNTIME='$run_time'"
 backup_str="$backup_str TYPE='$BACKUP_SYSTEM' SIZE='$size'"
 backup_str="$backup_str VESTA='$vst'"
 backup_str="$backup_str PAM='$pam'"

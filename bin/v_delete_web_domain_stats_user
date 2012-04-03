@@ -51,6 +51,8 @@ rm -f $HOMEDIR/$user/web/$domain/stats/.htaccess
 
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS_USER' ''
+update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' ''
+
 
 # Logging
 log_history "$EVENT"

@@ -17,7 +17,7 @@ domain_idn=$(idn -t --quiet -a "$domain")
 account=$3
 malias=$4
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -27,32 +27,16 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '4' "$#" 'user domain account alias'
-
-# Checking argument format
 validate_format 'user' 'domain' 'account' 'malias'
-
-# Checking dns system is enabled
-is_system_enabled 'MAIL_SYSTEM'
-
-# Checking user
+is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain
-is_domain_valid 'mail'
-
-# Checking domain is not suspened
-is_domain_suspended 'mail'
-
-# Checking account
-is_mail_account_valid
-
-# Checking account
-is_mail_account_free "$malias"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_valid "mail/$domain" 'ACCOUNT' "$account"
+is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
+is_mail_new "$malias"
 
 
 #----------------------------------------------------------#
@@ -60,7 +44,7 @@ is_mail_account_free "$malias"
 #----------------------------------------------------------#
 
 # Adding exim alias
-str="$mailas@$domain:$account@$domain"
+str="$malias@$domain:$account@$domain"
 echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 
 
@@ -69,17 +53,16 @@ echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 #----------------------------------------------------------#
 
 # Adding vesta alias
-aliases=$(get_domain_value "mail/$domain" '$ALIAS' "ACCOUNT='$account'")
+aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
 if [ -z "$aliases" ]; then
     aliases="$malias"
 else
     aliases="$aliases,$malias"
 fi
-update_domain_value "mail/$domain" '$ALIAS' "$aliases" "ACCOUNT='$account'"
+update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
 
 # Logging
-cmd='v_delete_mail_account_alias'
-log_history "$EVENT" "$cmd $user $domain $account $malias"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

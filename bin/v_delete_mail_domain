@@ -14,7 +14,7 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -24,23 +24,13 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking web system is enabled
-is_system_enabled 'MAIL_SYSTEM'
-
-# Checking user
+is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'mail'
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
@@ -65,15 +55,14 @@ sed -i "/DOMAIN='$domain'/ d" $USER_DATA/mail.conf
 rm -f $USER_DATA/mail/$domain.conf
 rm -f $USER_DATA/mail/$domain.pem
 rm -f $USER_DATA/mail/$domain.pub
-# autoreply
+rm -f $USER_DATA/mail/*@$domain.msg
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
 
 # Logging
-cmd='"v_add_mail_domain'
-log_history "$EVENT" "$cmd $user $domain $ANTISPAM $ANTIVIRUS $DKIM"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

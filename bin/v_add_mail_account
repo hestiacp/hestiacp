@@ -18,7 +18,7 @@ account=$3
 password=$4
 quota=${5-0}
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -28,39 +28,22 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
-check_args '4' "$#" 'user domain account password quota'
-
-# Checking argument format
+check_args '4' "$#" 'user domain account password [quota]'
 validate_format 'user' 'domain' 'account' 'password' 'quota'
-
-# Checking dns system is enabled
-is_system_enabled 'MAIL_SYSTEM'
-
-# Checking user
+is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain
-is_domain_valid 'mail'
-
-# Checking domain is not suspened
-is_domain_suspended 'mail'
-
-# Checking package
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_package_full 'MAIL_ACCOUNTS'
-
-# Checking account
-is_mail_account_free
+is_mail_new "$account"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-password=$(/usr/sbin/dovecotpw -s md5 -p "$password")
-str="$account:$password:$user:mail::$HOMEDIR/$user:$quota"
+md5=$(/usr/sbin/dovecotpw -s md5 -p "$password")
+str="$account:$md5:$user:mail::$HOMEDIR/$user:$quota"
 echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
 
 
@@ -69,17 +52,21 @@ echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
 #----------------------------------------------------------#
 
 str="ACCOUNT='$account' ALIAS='' QUOTA='$quota' AUTOREPLY='no' FWD=''"
-str="$str U_DISK='0' SUSPENDED='no' DATE='$DATE'"
+str="$str MD5='$md5' U_DISK='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 echo "$str" >> $USER_DATA/mail/$domain.conf
+chmod 660 $USER_DATA/mail/$domain.conf
 
 # Increase mail accounts counter
-accounts=$(wc -l $USER_DATA/mail/$domain.conf|cut -f 1 -d ' ')
+accounts=$(wc -l $USER_DATA/mail/$domain.conf | cut -f 1 -d ' ')
 increase_user_value "$user" '$U_MAIL_ACCOUNTS'
-update_domain_value 'mail' '$ACCOUNTS' "$accounts"
+update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accounts"
+
+# Hiding password
+EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
+EVENT="$EVENT ARGUMENTS='$user $domain ***** $quota'"
 
 # Logging
-EVENT="$DATE $SCRIPT $user $domain ***** $quota"
-log_history "$EVENT" "v_delete_mail_account $user $domain $account"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

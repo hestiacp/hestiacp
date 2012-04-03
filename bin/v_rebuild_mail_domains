@@ -12,7 +12,7 @@
 # Argument defenition
 user=$1
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -22,19 +22,10 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '1' "$#" 'user'
-
-# Checking argument format
 validate_format 'user'
-
-# Checking mail system is enabled
-is_system_enabled 'MAIL_SYSTEM'
-
-# Checking user
+is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
 
 
@@ -54,14 +45,8 @@ if [ ! -d "$USER_DATA/mail" ]; then
     mkdir $USER_DATA/mail
 fi
 
-# Defining config
-conf="$USER_DATA/mail.conf"
-search_string="DOMAIN"
-field='$DOMAIN'
-domains=$(dom_clear_search)
-
 # Starting loop
-for domain in $domains; do
+for domain in $(search_objects 'dns' 'SUSPENDED' "*" 'DOMAIN'); do
 
     # Defining variables
     get_domain_values 'mail'
@@ -108,7 +93,7 @@ for domain in $domains; do
         done
 
         # Adding dkim dns records
-        check_dns_domain=$(is_domain_valid 'dns')
+        check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
         if [ "$?" -eq 0 ]; then
             p=$(cat $pub|grep -v ' KEY---'|tr -d '\n')
             record='_domainkey'
@@ -152,9 +137,6 @@ update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
 update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
 update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
 update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
-
-# Adding task to the vesta pipe
-$BIN/v_restart_mail
 
 # Logging
 log_event "$OK" "$EVENT"

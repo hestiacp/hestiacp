@@ -15,7 +15,7 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -25,26 +25,13 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking dns system is enabled
-is_system_enabled 'MAIL_SYSTEM'
-
-# Checking user
+is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain
-is_domain_valid 'mail'
-
-# Checking domain is not suspened
-is_domain_suspended 'mail'
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
@@ -60,7 +47,7 @@ rm -f /etc/exim/domains/$domain
 #----------------------------------------------------------#
 
 # Updating config
-update_domain_value 'mail' '$SUSPENDED' 'yes'
+update_object_value 'mail' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
 
 # Logging
 log_event "$OK" "$EVENT"

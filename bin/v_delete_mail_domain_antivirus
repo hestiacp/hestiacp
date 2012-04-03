@@ -15,7 +15,7 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -25,29 +25,14 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain'
-
-# Checking argument format
 validate_format 'user' 'domain'
-
-# Checking dns system is enabled
-is_system_enabled 'MAIL_SYSTEM'
-
-# Checking user
+is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain
-is_domain_valid 'mail'
-
-# Checking domain is not suspened
-is_domain_suspended 'mail'
-
-# Checking current value
-is_domain_value_exist 'mail' '$ANTIVIRUS'
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_value_exist 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS'
 
 
 #----------------------------------------------------------#
@@ -63,10 +48,10 @@ sed -i "/antivirus/d" $HOMEDIR/$user/conf/mail/$domain/protection
 #----------------------------------------------------------#
 
 # Delete antivirus in config
-update_domain_value 'mail' '$ANTIVIRUS' 'no'
+update_object_value 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS' 'no'
 
 # Logging
-log_history "$EVENT" "v_add_mail_domain_antivirus $user $domain"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

@@ -15,7 +15,7 @@ user=$1
 domain=$2
 format=${3-shell}
 
-# Importing variables
+# Includes
 source $VESTA/func/shared.sh
 
 # Json function
@@ -23,19 +23,10 @@ json_list_domain() {
     i=1
     fileds_count=$(echo "$fields" | wc -w)
     line=$(grep "DOMAIN='$domain'" $conf)
-
-    # Print top bracket
     echo '{'
-
-    # Assing key=value
     eval $line
-
-    # Starting output loop
     for field in $fields; do
-        # Parsing key=value
         eval value=$field
-
-        # Checking first field
         if [ "$i" -eq 1 ]; then
             echo -e "\t\"$value\": {"
         else
@@ -45,26 +36,19 @@ json_list_domain() {
                 echo -e "\t\t\"${field//$/}\": \"$value\""
             fi
         fi
-        # Updating iterator
         (( ++i))
     done
 
-    # If there was any output
     if [ -n "$value" ]; then
         echo -e '        }'
     fi
-    # Printing bottom json bracket
     echo -e "}"
 }
 
 # Shell function
 shell_list_domain() {
     line=$(grep "DOMAIN='$domain'" $conf)
-
-    # Parsing key=value
     eval $line
-
-    # Print result line
     for field in $fields; do
         eval key="$field"
         echo "${field//$/}: $key "
@@ -76,24 +60,17 @@ shell_list_domain() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '2' "$#" 'user domain [format]'
-
-# Checking user
 is_object_valid 'user' 'USER' "$user"
-
-# Checking domain exist
-is_domain_valid 'mail'
+is_object_valid 'mail' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/mail.conf
-
 # Defining fileds to select
+conf=$USER_DATA/mail.conf
 fields='$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK $CATCHALL
 $SUSPENDED $DATE'
 

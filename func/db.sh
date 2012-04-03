@@ -111,6 +111,10 @@ add_mysql_database() {
     query="GRANT ALL ON $database.* TO '$dbuser'@'localhost'
         IDENTIFIED BY '$dbpass'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="SHOW GRANTS FOR '$dbuser'"
+    md5=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query")
+    md5=$(echo "$md5" |grep 'PASSWORD' |tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
 }
 
 # Create PostgreSQL database
@@ -143,11 +147,14 @@ add_pgsql_database() {
     fi
     psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 
-    query="GRANT ALL PRIVILEGES ON DATABASE $database TO $db_user"
+    query="GRANT ALL PRIVILEGES ON DATABASE $database TO $dbuser"
     psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 
-    query="GRANT CONNECT ON DATABASE template1 to $db_user"
+    query="GRANT CONNECT ON DATABASE template1 to $dbuser"
     psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser';"
+    md5=$(psql -h $HOST -U $USER -p $PORT -c "$query"|grep md5|cut -f 2 -d \ )
 }
 
 # Check if database host do not exist in config 
@@ -214,6 +221,10 @@ change_mysql_password() {
     query="GRANT ALL ON $database.* TO '$DBUSER'@'localhost'
         IDENTIFIED BY '$dbpass'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="SHOW GRANTS FOR '$DBUSER'"
+    md5=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query")
+    md5=$(echo "$md5" |grep 'PASSWORD' |tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
 }
 
 # Change PostgreSQL database password
@@ -237,6 +248,9 @@ change_pgsql_password() {
 
     query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
     psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
+    md5=$(psql -h $HOST -U $USER -p $PORT -c "$query"|grep md5|cut -f 2 -d \ )
 }
 
 # Delete MySQL database

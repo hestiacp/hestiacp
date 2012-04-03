@@ -61,6 +61,7 @@ zone="$USER_DATA/dns/$domain.conf"
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
 dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 echo "$dns_rec" >> $zone
+chmod 660 $zone
 
 # Sorting records
 sort_dns_records 

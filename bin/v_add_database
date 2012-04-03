@@ -68,7 +68,7 @@ increase_dbhost_values
 increase_user_value "$user" '$U_DATABASES'
 
 # Adding db to db conf
-str="DB='$database' DBUSER='$dbuser' HOST='$host' TYPE='$type'"
+str="DB='$database' DBUSER='$dbuser' MD5='$md5' HOST='$host' TYPE='$type'"
 str="$str CHARSET='$charset' U_DISK='0' SUSPENDED='no' TIME='$TIME'"
 str="$str DATE='$DATE'"
 echo "$str" >> $USER_DATA/db.conf

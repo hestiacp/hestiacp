@@ -172,6 +172,7 @@ PACKAGE='$package'
 $package_data
 CONTACT='$email'
 CRON_REPORTS='yes'
+MD5='$(awk -v user=$user -F : 'user == $1 {print $2}' /etc/shadow)'
 RKEY='$(gen_password)'
 SUSPENDED='no'
 SUSPENDED_USERS='0'

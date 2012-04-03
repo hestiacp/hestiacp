@@ -19,7 +19,7 @@ antivirus=${4-yes}
 dkim=${5-yes}
 dkim_size=${6-512}
 
-# Importing variables
+# Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
 source $VESTA/func/domain.sh
@@ -29,25 +29,12 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking arg number
 check_args '2' "$#" 'user domain [antispam] [antivirus] [dkim] [dkim_size]'
-
-# Checking argument format
 validate_format 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
-
-# Checking dns system is enabled
-is_system_enabled 'MAIL_SYSTEM'
-
-# Checking user
+is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-
-# Checking user is active
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Checking domain
 is_domain_new 'mail'
-
-# Checking package
 is_package_full 'MAIL_DOMAINS'
 
 
@@ -92,7 +79,7 @@ if [ "$dkim" = 'yes' ]; then
     chmod 660 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 
     # Adding dkim dns records
-    check_dns_domain=$(is_domain_valid 'dns')
+    check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
     if [ "$?" -eq 0 ]; then
         p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
         record='_domainkey'
@@ -107,7 +94,9 @@ fi
 
 # Adding domain to vesta db
 s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
-s="$s ACCOUNTS='0' U_DISK='0' CATCHALL='' SUSPENDED='no' DATE='$DATE'"
+s="$s ACCOUNTS='0' U_DISK='0' CATCHALL='' SUSPENDED='no' TIME='$TIME'"
+s="$s DATE='$DATE'"
+
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf
 chmod 660 $USER_DATA/mail.conf
@@ -122,7 +111,7 @@ chmod 660 $USER_DATA/mail/$domain.conf
 increase_user_value "$user" '$U_MAIL_DOMAINS'
 
 # Logging
-log_history "$EVENT" "v_delete_mail_domain $user $domain"
+log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

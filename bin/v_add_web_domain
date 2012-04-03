@@ -182,8 +182,8 @@ increase_user_value "$user" '$U_WEB_ALIASES'
 # Defining domain variables
 str="DOMAIN='$domain' IP='$ip' IP6='' ALIAS='$aliases' TPL='$template'"
 str="$str $template_data SSL='no' SSL_HOME='single' NGINX='' NGINX_EXT=''"
-str="$str STATS='' STATS_USER='' U_DISK='0' U_BANDWIDTH='0' SUSPENDED='no'"
-str="$str TIME='$TIME' DATE='$DATE'"
+str="$str STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'"
+str="$str SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 
 # Registering domain
 echo "$str" >> $USER_DATA/web.conf

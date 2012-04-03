@@ -56,6 +56,30 @@ is_domain_new() {
     fi
 }
 
+# Checking mail account existance
+is_mail_new() {
+    check_acc=$(grep "ACCOUNT='$1'" $USER_DATA/mail/$domain.conf)
+    if [ ! -z "$check_acc" ]; then
+        echo "Error: mail account $1 exist"
+        log_event "$E_EXISTS" "$EVENT"
+        exit
+    fi
+    check_als=$(awk -F "ALIAS='" '{print $2}' $USER_DATA/mail/$domain.conf )
+    check_als=$(echo "$check_als" | cut -f 1 -d "'" | grep -w $1)
+    if [ ! -z "$check_als" ]; then
+        echo "Error: mail alias $1 exist"
+        log_event "$E_EXISTS" "$EVENT"
+        exit
+    fi
+    check_fwd=$(awk -F "FWD='" '{print $2}' $USER_DATA/mail/$domain.conf )
+    check_fwd=$(echo "$check_fwd" | cut -f 1 -d "'" | grep -w $1)
+    if [ ! -z "$check_fwd" ]; then
+        echo "Error: mail forward $1 exist"
+        log_event "$E_EXISTS" "$EVENT"
+        exit
+    fi
+}
+
 # Update domain zone
 update_domain_zone() {
     conf="$HOMEDIR/$user/conf/dns/$domain.db"

@@ -6,18 +6,20 @@ V_BIN="$VESTA/bin"
 V_TEST="$VESTA/test"
 
 commands='v_list_cron_jobs admin json
-v_list_db_bases admin json
-v_list_db_base admin admin_read json
-v_list_db_host mysql localhost json
-v_list_db_hosts mysql json
+v_list_databases admin json
+v_list_database admin admin_vesta json
+v_list_database_server mysql localhost json
+v_list_database_servers mysql json
 v_list_dns_domains admin json
+v_list_mail_domains admin json
 v_list_dns_templates json
+v_list_mail_domains admin json
 v_list_sys_config json
 v_list_sys_interfaces json
 v_list_sys_ips json
 v_list_sys_rrd json
 v_list_user admin json
-v_list_user_backups vesta json
+v_list_user_backups admin json
 v_list_user_ips admin json
 v_list_user_ns admin json
 v_list_user_packages json

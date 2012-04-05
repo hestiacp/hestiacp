@@ -46,8 +46,8 @@ is_object_free 'cron' 'JOB' "$job"
 
 # Concatenating cron string
 command=$(echo $command | sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
-str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month WDAY='$wday'"
-str="$v_str' CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
+str="$str CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 
 # Adding to crontab
 echo "$str" >> $VESTA/data/users/$user/cron.conf

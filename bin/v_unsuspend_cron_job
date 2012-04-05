@@ -12,7 +12,7 @@
 # Argument defenition
 user=$1
 job=$2
-restart="$3"
+restart="${3-yes}"
 
 # Includes
 source $VESTA/conf/vesta.conf

@@ -426,9 +426,9 @@ sync_cron_jobs() {
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > /var/spool/cron/$user
     fi
-    while read line ; do
+    while read line; do
         eval $line
-        if [ "$SUSPENDED" = 'no' ] ; then
+        if [ "$SUSPENDED" = 'no' ]; then
             echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" |\
                 sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" |\
                     >> /var/spool/cron/$user

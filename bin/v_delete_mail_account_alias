@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: add mail account alias aka nickname
+# info: delete mail account alias aka nickname
 # options: user domain account alias
 #
-# The function add new email alias.
+# The function deletes email account alias.
 
 
 #----------------------------------------------------------#
@@ -36,29 +36,31 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
-is_mail_new "$malias"
+aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
+if [ -z "$(echo $aliases | grep -w $malias)" ]; then
+    echo "Error: alias $malias is not exist"
+    log_event "$E_NOTEXIST $EVENT"
+    exit $E_NOTEXIST
+fi
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding exim alias
-str="$malias@$domain:$account@$domain"
-echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+sed -i "/^$malias@$domain:$account/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+aliases=$(echo "$aliases" |\
+    sed -e "s/,/\n/g"|\
+    sed -e "s/^$malias$//g"|\
+    sed -e "/^$/d"|\
+    sed -e ':a;N;$!ba;s/\n/,/g')
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding vesta alias
-aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
-if [ -z "$aliases" ]; then
-    aliases="$malias"
-else
-    aliases="$aliases,$malias"
-fi
+# Update config
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
 
 # Logging

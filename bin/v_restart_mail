@@ -1,0 +1,37 @@
+#!/bin/bash
+# info: restart mail service
+# options: none
+#
+# The function tells Exim service to reload configuration files.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/shared.sh
+EVENT=${1-$EVENT}
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$MAIL_SYSTEM" = 'exim' ]; then
+    /etc/init.d/exim reload &>/dev/null
+    if [ $? -ne 0 ]; then
+        /etc/init.d/exim restart &>/dev/null
+        if [ $? -ne 0 ]; then
+            log_event "$E_RESTART" "$EVENT"
+            exit $E_RESTART
+        fi
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

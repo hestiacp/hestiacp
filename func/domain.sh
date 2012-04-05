@@ -71,13 +71,6 @@ is_mail_new() {
         log_event "$E_EXISTS" "$EVENT"
         exit
     fi
-    check_fwd=$(awk -F "FWD='" '{print $2}' $USER_DATA/mail/$domain.conf )
-    check_fwd=$(echo "$check_fwd" | cut -f 1 -d "'" | grep -w $1)
-    if [ ! -z "$check_fwd" ]; then
-        echo "Error: mail forward $1 exist"
-        log_event "$E_EXISTS" "$EVENT"
-        exit
-    fi
 }
 
 # Update domain zone

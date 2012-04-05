@@ -34,13 +34,14 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 
 # Defining fileds to select
 conf=$USER_DATA/mail/$domain.conf
-fields="\$ACCOUNT \$ALIAS \$FWD \$AUTOREPLY \$U_DISK \$SUSPENDED \$DATE"
+fields="\$ACCOUNT \$ALIAS \$FWD \$AUTOREPLY \$QUOTA \$U_DISK \$SUSPENDED"
+fields="$fields \$TIME \$DATE"
 
 # Listing domain accounts
 case $format in 
     json)  json_list ;;
     plain) nohead=1; shell_list ;;
-    shell) fields='$ACCOUNT $ALIAS $FWD $AUTOREPLY $U_DISK $DATE';
+    shell) fields='$ACCOUNT $AUTOREPLY $QUOTA $U_DISK $SUSPENDED $TIME $DATE';
            shell_list | column -t ;;
     *)     check_args '1' '0' 'user [format]'
 esac

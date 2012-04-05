@@ -1,0 +1,94 @@
+#!/bin/bash
+# info: list mail domain account
+# options: user domain account [format]
+#
+# The function of obtaining the list of account parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+account=$3
+format=${4-shell}
+
+# Includes
+source $VESTA/func/shared.sh
+
+# Json function
+json_list_account() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    line=$(grep "ACCOUNT='$account'" $conf)
+    echo '{'
+    eval $line
+    for field in $fields; do
+        eval value=$field
+        if [ "$i" -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ "$fileds_count" -eq "$i" ]; then
+                echo -e "\t\t\"${field//$/}\": \"$value\","
+            else
+                echo -e "\t\t\"${field//$/}\": \"$value\""
+            fi
+        fi
+        (( ++i))
+    done
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+    echo -e "}"
+}
+
+# Shell function
+shell_list_account() {
+    line=$(grep "ACCOUNT='$account'" $conf)
+    eval $line
+    for field in $fields; do
+        eval key="$field"
+        if [ -z "$key" ]; then
+            key=NULL
+        fi
+        echo "${field//$/}: $key "
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'user domain account [format]'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_valid "mail/$domain" 'ACCOUNT' "$account"
+
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config and fields to select
+conf=$USER_DATA/mail/$domain.conf
+fields="\$ACCOUNT \$ALIAS \$FWD \$QUOTA \$AUTOREPLY \$U_DISK \$SUSPENDED"
+fields="$fields \$TIME \$DATE"
+
+# Listing domains
+case $format in 
+    json)   json_list_account ;;
+    plain)  nohead=1; shell_list_account ;;
+    shell)  shell_list_account |column -t ;;
+    *)      check_args '2' '0' 'user domain account [format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

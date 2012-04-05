@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: add mail account alias aka nickname
-# options: user domain account alias
+# info: list mail account autoreply
+# options: user domain account [format]
 #
-# The function add new email alias.
+# The function of obtainin mail account autoreply message.
 
 
 #----------------------------------------------------------#
@@ -11,58 +11,62 @@
 
 # Argument defenition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 account=$3
-malias=$4
+format=${4-shell}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/shared.sh
-source $VESTA/func/domain.sh
+
+# Json function
+json_list_msg() {
+    i='1'       # iterator
+    echo '{'
+    echo -e "\t\"$account\": {"
+    echo "        \"MSG\": \"$msg\""
+    echo -e "\t}\n}"
+}
+
+# Shell function
+shell_list_msg() {
+    if [ ! -z "$msg" ]; then
+        echo -e "$msg"
+    fi
+}
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'user domain account alias'
-validate_format 'user' 'domain' 'account' 'malias'
-is_system_enabled "$MAIL_SYSTEM"
+check_args '2' "$#" 'user domain [format]'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
-is_mail_new "$malias"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding exim alias
-str="$malias@$domain:$account@$domain"
-echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+if [ -e "$USER_DATA/mail/$account@$domain.msg" ]; then
+    msg=$(cat $USER_DATA/mail/$account@$domain.msg |\
+        sed -e ':a;N;$!ba;s/\n/\\n/g' )
+fi
+
+# Listing domains
+case $format in
+    json)   json_list_msg ;;
+    plain)  nohead=1; shell_list_msg ;;
+    shell)  shell_list_msg ;;
+    *)      check_args '1' '0' '[format]'
+esac
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Adding vesta alias
-aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
-if [ -z "$aliases" ]; then
-    aliases="$malias"
-else
-    aliases="$aliases,$malias"
-fi
-update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
-
-# Logging
-log_history "$EVENT"
-log_event "$OK" "$EVENT"
 
 exit

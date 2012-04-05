@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: add mail account alias aka nickname
-# options: user domain account alias
+# info: delete mail account
+# options: user domain account
 #
-# The function add new email alias.
+# The function deletes email account.
 
 
 #----------------------------------------------------------#
@@ -15,7 +15,6 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 account=$3
-malias=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -27,8 +26,8 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'user domain account alias'
-validate_format 'user' 'domain' 'account' 'malias'
+check_args '3' "$#" 'user domain account'
+validate_format 'user' 'domain' 'account'
 is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -36,30 +35,28 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
-is_mail_new "$malias"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
+for al in ${aliases//,/ }; do
+    sed -i "/^$al@$domain:$account/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+done
 
-# Adding exim alias
-str="$malias@$domain:$account@$domain"
-echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+sed -i "/^$account@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
+rm -rf $HOMEDIR/$user/mail/$domain/$account
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Adding vesta alias
-aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
-if [ -z "$aliases" ]; then
-    aliases="$malias"
-else
-    aliases="$aliases,$malias"
-fi
-update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
+# Update config
+sed -i "/ACCOUNT='$account'/d" $USER_DATA/mail/$domain.conf
+
 
 # Logging
 log_history "$EVENT"

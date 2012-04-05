@@ -56,7 +56,14 @@ shell_list_users() {
 
     for USER in $(ls $VESTA/data/users/); do
         source $VESTA/data/users/$USER/user.conf
-        eval echo "$fields"
+        for field in $fields; do
+            eval value=$field
+            if [ -z "$value" ]; then
+                value='NULL'
+            fi
+            echo -n "$value "
+        done
+        echo
     done
 }
 

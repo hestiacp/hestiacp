@@ -221,8 +221,7 @@ is_object_value_exist() {
 get_object_value() {
     object=$(grep "$2='$3'" $USER_DATA/$1.conf)
     eval "$object"
-    eval object_val="$4"
-    echo "$object_val"
+    eval echo $4
 }
 
 # Update object value
@@ -257,9 +256,11 @@ get_user_value() {
 # Update user value in user.conf
 update_user_value() {
     key="${2//$}"
-    conf="$VESTA/data/users/$1/user.conf"
-    old=$(grep "$key=" $conf | cut -f 2 -d \')
-    sed -i "s/$key='$old'/$key='$3'/g" $conf
+    lnr=$(grep -n "^$key='" $VESTA/data/users/$1/user.conf |cut -f 1 -d ':')
+    if [ ! -z "$lnr" ]; then
+        sed -i "$lnr d" $VESTA/data/users/$1/user.conf
+        sed -i "$lnr i\\$key='${3}'" $VESTA/data/users/$1/user.conf
+    fi
 }
 
 # Increase user counter
@@ -349,18 +350,46 @@ shell_list() {
 
 # Recalculate U_DISK value
 recalc_user_disk_usage() {
+    u_usage=0
+    if [ -f "$USER_DATA/web.conf" ]; then
+        usage=0
+        dusage=$(grep 'U_DISK=' $USER_DATA/web.conf |\
+            awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
+        for disk_usage in $dusage; do 
+                usage=$((usage + disk_usage))
+        done
+        d=$(grep "U_DISK_WEB='" $USER_DATA/user.conf | cut -f 2 -d \')
+        sed -i "s/U_DISK_WEB='$d'/U_DISK_WEB='$usage'/g" $USER_DATA/user.conf
+        u_usage=$((u_usage + usage))
+    fi
+
+    if [ -f "$USER_DATA/mail.conf" ]; then
+        usage=0
+        dusage=$(grep 'U_DISK=' $USER_DATA/mail.conf |\
+            awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
+        for disk_usage in $dusage; do 
+                usage=$((usage + disk_usage))
+        done
+        d=$(grep "U_DISK_MAIL='" $USER_DATA/user.conf | cut -f 2 -d \')
+        sed -i "s/U_DISK_MAIL='$d'/U_DISK_MAIL='$usage'/g" $USER_DATA/user.conf
+        u_usage=$((u_usage + usage))
+    fi
+
+    if [ -f "$USER_DATA/db.conf" ]; then
+        usage=0
+        dusage=$(grep 'U_DISK=' $USER_DATA/db.conf |\
+            awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
+        for disk_usage in $dusage; do 
+                usage=$((usage + disk_usage))
+        done
+        d=$(grep "U_DISK_DB='" $USER_DATA/user.conf | cut -f 2 -d \')
+        sed -i "s/U_DISK_DB='$d'/U_DISK_DB='$usage'/g" $USER_DATA/user.conf
+        u_usage=$((u_usage + usage))
+    fi
     usage=$(grep 'U_DIR_DISK=' $USER_DATA/user.conf | cut -f 2 -d "'")
-    for conf_type in mail db web; do
-        if [ -f "$USER_DATA/$conf_type.conf" ]; then
-            dusage=$(grep 'U_DISK=' $USER_DATA/$conf_type.conf |\
-                awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
-            for disk in $dusage; do 
-                usage=$((usage + disk))
-            done
-        fi
-    done
+    u_usage=$((u_usage + usage))
     old=$(grep "U_DISK='" $USER_DATA/user.conf | cut -f 2 -d \')
-    sed -i "s/U_DISK='$old'/U_DISK='$usage'/g" $USER_DATA/user.conf
+    sed -i "s/U_DISK='$old'/U_DISK='$u_usage'/g" $USER_DATA/user.conf
 }
 
 # Recalculate U_BANDWIDTH value
@@ -449,8 +478,8 @@ validate_format_int() {
 
 # Boolean
 validate_format_boolean() {
-    if [ "$1" != 'yes' ] ||  [ "$1" != 'no' ]; then
-        echo "Error: boolean $1 is not valid"
+    if [ "$1" != 'yes' ] && [ "$1" != 'no' ]; then
+        echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
@@ -517,7 +546,7 @@ validate_format_username() {
 
 # Domain
 validate_format_domain() {
-    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%| ]"
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
     dpart1=$(echo $1 | cut -f 1 -d .)
     if [[ "$1" =~ $exclude ]] || [ -z "$dpart1" ]; then
         echo "Error: domain $1 is not valid"
@@ -528,7 +557,7 @@ validate_format_domain() {
 
 # Database
 validate_format_database() {
-    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%| ]"
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [ 17 -le ${#1} ]; then
         echo "Error: database $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
@@ -589,7 +618,7 @@ validate_format_mhdmw() {
 
 # Nginx static extention or DNS record
 validate_format_common() {
-    exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%| ]"
+    exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [ 200 -le ${#1} ]; then
         echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
@@ -627,6 +656,16 @@ validate_format_date() {
     fi
 }
 
+# Autoreply
+validate_format_autoreply() {
+    exclude="[$|\`]"
+    if [[ "$1" =~ $exclude ]] || [ 10240 -le ${#1} ]; then
+        echo "Error: autoreply is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
 # Format validation controller
 validate_format(){
     for arg_name in $*; do
@@ -639,8 +678,9 @@ validate_format(){
 
         case $arg_name in
             account)        validate_format_username "$arg" "$arg_name" ;;
-            antispam)       validate_format_boolean "$arg" ;;
-            antivirus)      validate_format_boolean "$arg" ;;
+            antispam)       validate_format_boolean "$arg" 'antispam' ;;
+            antivirus)      validate_format_boolean "$arg" 'antivirus' ;;
+            autoreply)      validate_format_autoreply "$arg" ;;
             backup)         validate_format_date "$arg" ;;
             charset)        validate_format_username "$arg" "$arg_name" ;;
             charsets)       validate_format_common "$arg" 'charsets' ;;
@@ -648,7 +688,7 @@ validate_format(){
             day)            validate_format_mhdmw "$arg" $arg_name ;;
             dbpass)         validate_format_password "$arg" ;;
             dbuser)         validate_format_database "$arg" ;;
-            dkim)           validate_format_boolean "$arg" ;;
+            dkim)           validate_format_boolean "$arg" 'dkim' ;;
             dkim_size)      validate_format_key_size "$arg" ;;
             domain)         validate_format_domain "$arg" ;;
             dom_alias)      validate_format_domain "$arg" ;;
@@ -657,6 +697,7 @@ validate_format(){
             exp)            validate_format_date "$arg" ;;
             extentions)     validate_format_common "$arg" 'extentions' ;;
             fname)          validate_format_username "$arg" "$arg_name" ;;
+            forward)        validate_format_email "$arg" ;;
             host)           validate_format_domain "$arg" "$arg_name" ;;
             hour)           validate_format_mhdmw "$arg" $arg_name ;;
             id)             validate_format_int "$arg" ;;
@@ -684,7 +725,7 @@ validate_format(){
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" ;;
             quota)          validate_format_int "$arg" ;;
-            restart)        validate_format_boolean "$arg" ;;
+            restart)        validate_format_boolean "$arg" 'restart' ;;
             record)         validate_format_common "$arg" 'record';;
             rtype)          validate_format_dns_type "$arg" ;;
             shell)          validate_format_shell "$arg" ;;

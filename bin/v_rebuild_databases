@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: unsuspend database
-# options: user database
+# info: rebuild databases
+# options: user
 #
-# The function for unsuspending database.
+# The function for rebuilding of all databases of a single user.
 
 
 #----------------------------------------------------------#
@@ -11,7 +11,6 @@
 
 # Argument defenition
 user=$1
-database=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -23,35 +22,30 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user database'
-validate_format 'user' 'database'
+check_args '1' "$#" 'user'
+validate_format 'user'
 is_system_enabled "$DB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-is_object_valid 'db' 'DB' "$database"
-is_object_suspended 'db' 'DB' "$database"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get database values
-get_database_values
-
-# Switching on db type
-case $TYPE in
-    mysql) unsuspend_mysql_database ;;
-    pgsql) unsuspend_pgsql_database ;;
-esac
+# Starting rebuild loop
+for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
+    get_database_values
+    # Switching on db type
+    case $TYPE in
+        mysql) rebuild_mysql_database ;;
+        pgsql) rebuild_pgsql_database ;;
+    esac
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Updating db value
-update_object_value 'db' 'DB' "$database" '$SUSPENDED' 'no'
-decrease_user_value "$user" '$SUSPENDED_DB'
 
 # Logging
 log_event "$OK" "$EVENT"

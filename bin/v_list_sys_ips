@@ -77,7 +77,7 @@ conf=$VESTA/data/ips/*
 fields="\$IP \$OWNER \$STATUS \$NAME \$U_SYS_USERS \$U_WEB_DOMAINS"
 fields="$fields \$INTERFACE \$NETMASK \$DATE"
 
-# Listing domains
+# Listing ip addresses
 case $format in 
     json)   json_list_ips ;;
     plain)  nohead=1; shell_list_ips ;;

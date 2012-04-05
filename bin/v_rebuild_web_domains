@@ -50,9 +50,49 @@ nohead=1
 
 # Starting loop
 for domain in $(shell_list) ; do
-    domain_idn=$(idn -t --quiet -a "$domain")
+
+    # Rebuilding directories
+    mkdir -p $HOMEDIR/$user/web/$domain \
+        $HOMEDIR/$user/web/$domain/public_html \
+        $HOMEDIR/$user/web/$domain/public_shtml \
+        $HOMEDIR/$user/web/$domain/document_errors \
+        $HOMEDIR/$user/web/$domain/cgi-bin \
+        $HOMEDIR/$user/web/$domain/private \
+        $HOMEDIR/$user/web/$domain/stats \
+        $HOMEDIR/$user/web/$domain/logs
+    if [ ! -e "$HOMEDIR/$user/web/$domain/logs/$domain.log" ]; then
+        ln -s /var/log/httpd/domains/$domain.error.log \
+            $HOMEDIR/$user/web/$domain/logs/$domain.log
+    fi
+    if [ ! -e "$HOMEDIR/$user/web/$domain/logs/$domain.error.log" ]; then
+        ln -s /var/log/httpd/domains/$domain.error.log \
+            $HOMEDIR/$user/web/$domain/logs/$domain.error.log
+    fi
+    if [ -e "$WEBTPL/skel/document_errors/" ]; then
+        cp -r $WEBTPL/skel/document_errors/ $HOMEDIR/$user/web/$domain/
+    fi
+    chmod 551 $HOMEDIR/$user/web/$domain
+    chmod 751 $HOMEDIR/$user/web/$domain/private
+    chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
+    chmod 751 $HOMEDIR/$user/web/$domain/public_html
+    chmod 751 $HOMEDIR/$user/web/$domain/public_shtml
+    chmod 751 $HOMEDIR/$user/web/$domain/document_errors
+    chmod -f -R 775 $HOMEDIR/$user/web/$domain/document_errors/*
+    chmod 551 $HOMEDIR/$user/web/$domain/stats
+    chmod 551 $HOMEDIR/$user/web/$domain/logs
+    chmod 640 /var/log/httpd/domains/$domain.*
+
+    chown $user:$user $HOMEDIR/$user/web/$domain
+    chown $user:$user $HOMEDIR/$user/web/$domain/private
+    chown $user:$user $HOMEDIR/$user/web/$domain/cgi-bin
+    chown $user:$user $HOMEDIR/$user/web/$domain/public_html
+    chown $user:$user $HOMEDIR/$user/web/$domain/public_shtml
+    chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
+    chown root:$user /var/log/httpd/domains/$domain.*
+    chown root:apache $conf
 
     # Parsing domain values
+    domain_idn=$(idn -t --quiet -a "$domain")
     get_domain_values 'web'
 
     # Preparing domain values for the template substitution
@@ -78,24 +118,40 @@ for domain in $(shell_list) ; do
 
     # Checking stats
     if [ ! -z "$STATS" ]; then
-    cat $WEBTPL/$STATS.tpl |\
-        sed -e "s/%ip%/$ip/g" \
-            -e "s/%web_port%/$WEB_PORT/g" \
-            -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
-            -e "s/%proxy_port%/$PROXY_PORT/g" \
-            -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
-            -e "s/%domain_idn%/$domain_idn/g" \
-            -e "s/%domain%/$domain/g" \
-            -e "s/%user%/$user/g" \
-            -e "s/%home%/${HOMEDIR////\/}/g" \
-            -e "s/%alias%/${aliases//,/ }/g" \
-            -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
-        > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+        cat $WEBTPL/$STATS.tpl |\
+            sed -e "s/%ip%/$ip/g" \
+                -e "s/%web_port%/$WEB_PORT/g" \
+                -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
+                -e "s/%proxy_port%/$PROXY_PORT/g" \
+                -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+                -e "s/%domain_idn%/$domain_idn/g" \
+                -e "s/%domain%/$domain/g" \
+                -e "s/%user%/$user/g" \
+                -e "s/%home%/${HOMEDIR////\/}/g" \
+                -e "s/%alias%/${aliases//,/ }/g" \
+                -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
+                > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 
         stats_string="$BIN/v_update_web_domain_stat $user $domain"
         check_stats_pipe=$(grep "$stats_string" $V_QUEUE/stats.pipe)
         if [ -z "$check_stats_pipe" ]; then
             echo "$stats_string" >> $V_QUEUE/stats.pipe
+        fi
+
+        if [ ! -z "$STATS_USER" ]; then
+            # Definining statistic dir
+            stats_dir="$HOMEDIR/$user/web/$domain/stats"
+
+            # Adding htaccess file
+            echo "AuthUserFile $stats_dir/.htpasswd" > $stats_dir/.htaccess
+            echo "AuthName \"Web Statistics\"" >> $stats_dir/.htaccess
+            echo "AuthType Basic" >> $stats_dir/.htaccess
+            echo "Require valid-user" >> $stats_dir/.htaccess
+
+            # Generating htaccess user and password
+            rm -f $stats_dir/.htpasswd
+            htpasswd -bc $stats_dir/.htpasswd "$STATS_USER" "$STATS_CRYPT" \
+                &>/dev/null
         fi
     fi
 

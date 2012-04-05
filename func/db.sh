@@ -515,7 +515,7 @@ get_mysql_disk_usage() {
     usage=$(printf "%0.f\n"  $usage)
 }
 
-# Get MySQL disk usage
+# Get PostgreSQL disk usage
 get_pgsql_disk_usage() {
     host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
     eval $host_str
@@ -545,4 +545,75 @@ get_pgsql_disk_usage() {
     if [ "$usage" -eq '0' ]; then
         usage=1
     fi
+}
+
+# Rebuild MySQL database
+rebuild_mysql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
+    eval $host_str
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
+        exit $E_PARSING
+    fi
+
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event  "$E_DB $EVENT"
+        exit $E_DB
+    fi
+
+    query="CREATE DATABASE $database CHARACTER SET $CHARSET"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="GRANT ALL ON $database.* TO '$DBUSER'@'*'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="GRANT ALL ON $database.* TO '$DBUSER'@'localhost'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER';"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+}
+
+# Rebuild PostgreSQL database
+rebuild_pgsql_database() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
+    eval $host_str
+    export PGPASSWORD="$PASSWORD"
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
+        echo "Error: postgresql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
+        exit $E_PARSING
+    fi
+
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_DB" "$EVENT"
+        exit $E_DB
+    fi
+
+    query="CREATE ROLE $DBUSER"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
+    query="UPDATE pg_authid SET rolpassword='$MD5' WHERE rolname='$DBUSER'"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
+    query="CREATE DATABASE $database OWNER $DBUSER"
+    if [ "$TPL" = 'template0' ]; then
+        query="$query ENCODING '$CHARSET' TEMPLATE $TPL"
+    else
+        query="$query TEMPLATE $TPL"
+    fi
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
+    query="GRANT ALL PRIVILEGES ON DATABASE $database TO $DBUSER"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+
+    query="GRANT CONNECT ON DATABASE template1 to $dbuser"
+    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
 }

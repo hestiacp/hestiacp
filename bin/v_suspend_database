@@ -40,7 +40,7 @@ is_object_unsuspended 'db' 'DB' "$database"
 get_database_values
 
 # Switching on db type
-case $type in
+case $TYPE in
     mysql) suspend_mysql_database ;;
     pgsql) suspend_pgsql_database ;;
 esac

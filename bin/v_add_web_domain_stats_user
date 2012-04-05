@@ -43,7 +43,6 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS'
 stats_dir="$HOMEDIR/$user/web/$domain/stats"
 
 # Adding htaccess file
-rm -f $stats_dir/.htaccess
 echo "AuthUserFile $stats_dir/.htpasswd
 AuthName \"Web Statistics\"
 AuthType Basic

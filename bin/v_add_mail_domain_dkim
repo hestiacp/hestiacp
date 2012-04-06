@@ -72,6 +72,7 @@ fi
 
 # Adding dkim in config
 update_object_value 'mail' 'DOMAIN' "$domain" '$DKIM' 'yes'
+increase_user_value "$user" '$U_MAIL_DKMI'
 
 # Logging
 log_history "$EVENT"

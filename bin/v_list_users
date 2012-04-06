@@ -82,8 +82,8 @@ fields="$fields \$SUSPENDED_MAIL \$SUSPENDED_DB \$SUSPENDED_CRON \$IP_AVAIL"
 fields="$fields \$IP_OWNED \$U_USERS \$U_DISK \$U_DISK_DIRS \$U_DISK_WEB"
 fields="$fields \$U_DISK_MAIL \$U_DISK_DB \$U_BANDWIDTH \$U_WEB_DOMAINS"
 fields="$fields \$U_WEB_SSL \$U_WEB_ALIASES \$U_DNS_DOMAINS \$U_DNS_RECORDS"
-fields="$fields \$U_MAIL_DOMAINS \$U_MAIL_ACCOUNTS \$U_DATABASES \$U_CRON_JOBS"
-fields="$fields \$U_BACKUPS \$TIME \$DATE"
+fields="$fields \$U_MAIL_DOMAINS \$U_MAIL_DKIM \$U_MAIL_ACCOUNTS \$U_DATABASES"
+fields="$fields \$U_CRON_JOBS \$U_BACKUPS \$TIME \$DATE"
 
 # Listing domains
 case $format in 

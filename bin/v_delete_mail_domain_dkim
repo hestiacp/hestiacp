@@ -60,6 +60,7 @@ fi
 
 # Updatoing config
 update_object_value 'mail' 'DOMAIN' "$domain" '$DKIM' 'no'
+decrease_user_value "$user" '$U_MAIL_DKMI'
 
 # Logging
 log_history "$EVENT"

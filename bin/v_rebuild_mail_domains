@@ -34,10 +34,11 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Reset counters
-U_MAIL_DOMAINS='0'
-U_MAIL_ACCOUNTS='0'
-SUSPENDED_MAIL='0'
-U_DISK_MAIL='0'
+U_MAIL_DOMAINS=0
+U_MAIL_DKMI=0
+U_MAIL_ACCOUNTS=0
+SUSPENDED_MAIL=0
+U_DISK_MAIL=0
 
 # Checking mail folder
 if [ ! -d "$USER_DATA/mail" ]; then
@@ -78,6 +79,7 @@ for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
 
     # Adding dkim
     if [ "$DKIM" = 'yes' ]; then
+        U_MAIL_DKMI=$((U_MAIL_DKMI + 1))
         pem="$USER_DATA/mail/$domain.pem"
         pub="$USER_DATA/mail/$domain.pub"
         openssl genrsa -out $pem 512 &>/dev/null
@@ -169,9 +171,11 @@ done
 
 # Updating counters
 update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
+update_user_value "$user" '$U_MAIL_DKMI' "$U_MAIL_DKMI"
 update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
 update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
 update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
+
 recalc_user_disk_usage
 
 # Logging

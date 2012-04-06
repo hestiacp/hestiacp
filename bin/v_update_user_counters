@@ -69,6 +69,7 @@ for user in $user_list; do
     U_DNS_DOMAINS=0
     U_DNS_RECORDS=0
     U_MAIL_DOMAINS=0
+    U_MAIL_DKMI=0
     U_MAIL_ACCOUNTS=0
     U_DATABASES=0
     U_CRON_JOBS=0
@@ -132,6 +133,19 @@ for user in $user_list; do
     done
 
     # Checking mail system
+    for domain_str in $(cat $USER_DATA/mail.conf); do
+        eval $domain_str
+        U_DISK_MAIL=$((U_DISK_MAIL + U_DISK))
+        U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
+        accounts=$(wc -l $USER_DATA/mail/$DOMAIN.conf| cut -f 1 -d ' ')
+        U_MAIL_ACCOUNTS=$((U_MAIL_ACCOUNTS + accounts))
+        if [ "$DKIM" = 'yes' ]; then
+            U_MAIL_DKIM=$((U_MAIL_DKIM + 1))
+        fi
+        if [ "$SUSPENDED" = 'yes' ]; then
+            SUSPENDED_MAIL=$((SUSPENDED_MAIL + 1))
+        fi
+    done
     SUSPENDED_MAIL=0
     DISK=$((DISK + U_DISK_MAIL))
 
@@ -178,6 +192,7 @@ for user in $user_list; do
     update_user_value "$user" '$U_DNS_DOMAINS' "$U_DNS_DOMAINS"
     update_user_value "$user" '$U_DNS_RECORDS' "$U_DNS_RECORDS"
     update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
+    update_user_value "$user" '$U_MAIL_DKIM' "$U_MAIL_DKIM"
     update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
     update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
     update_user_value "$user" '$U_CRON_JOBS' "$U_CRON_JOBS"

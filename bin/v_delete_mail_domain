@@ -59,7 +59,11 @@ rm -f $USER_DATA/mail/*@$domain.msg
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'
+if [ "$DKIM" = 'yes' ]; then
+    decrease_user_value "$user" '$U_MAIL_DKMI'
+fi
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
+
 
 # Logging
 log_history "$EVENT"

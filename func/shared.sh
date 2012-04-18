@@ -297,6 +297,7 @@ decrease_user_value() {
 json_list() {
     echo '{'
     fileds_count=$(echo $fields| wc -w )
+    #for line in $(cat $conf); do
     while read line; do
         eval $line
         if [ -n "$data_output" ]; then

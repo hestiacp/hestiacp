@@ -30,9 +30,9 @@ json_list_users() {
             else
                 if [ $i -lt $fileds_count ]; then
                     (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                    echo -e "\t\t\"${field//$/}\": \"$value\","
                 else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    echo -e "\t\t\"${field//$/}\": \"$value\""
                     data=1
                 fi
             fi

@@ -33,7 +33,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Changing user contact email
-old_email=$get_user_value '$CONTACT')
+old_email=$(get_user_value '$CONTACT')
 update_user_value "$user" '$CONTACT' "$email"
 pw_str=$(grep -n "^$user:" /etc/passwd)
 str=$(echo "$pw_str" | cut -f 1 -d :)

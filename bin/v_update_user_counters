@@ -52,12 +52,12 @@ for user in $user_list; do
     IP_AVAIL=0
     IP_OWNED=0
     U_USERS=0
-    DISK=0
     U_DISK=0
     U_DISK_DIRS=$(get_user_value '$U_DISK_DIRS')
     if [ -z "$U_DISK_DIRS" ]; then
         U_DISK_DIRS=0
     fi
+    DISK=$((DISK + U_DISK_DIRS))
     U_DISK_WEB=0
     U_DISK_MAIL=0
     U_DISK_DB=0
@@ -69,7 +69,7 @@ for user in $user_list; do
     U_DNS_DOMAINS=0
     U_DNS_RECORDS=0
     U_MAIL_DOMAINS=0
-    U_MAIL_DKMI=0
+    U_MAIL_DKIM=0
     U_MAIL_ACCOUNTS=0
     U_DATABASES=0
     U_CRON_JOBS=0

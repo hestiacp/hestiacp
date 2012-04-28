@@ -92,7 +92,6 @@ echo
 
 # PAM
 echo "-- PAM --"
-pam='yes'
 mkdir $tmpdir/pam
 echo -e "$(date "+%F %T") passwd / shadow /group"
 grep "^$user:" /etc/passwd > $tmpdir/pam/passwd
@@ -451,15 +450,15 @@ for backup_record in $deprecated; do
 done
 
 # Concatenating string
-backup_str="DATE='$DATE' TIME='$TIME' RUNTIME='$run_time'"
+backup_str="BACKUP='$user.$DATE.tar'"
 backup_str="$backup_str TYPE='$BACKUP_SYSTEM' SIZE='$size'"
 backup_str="$backup_str VESTA='$vst'"
-backup_str="$backup_str PAM='$pam'"
 backup_str="$backup_str WEB='${web_list// /,}'"
 backup_str="$backup_str DNS='${dns_list// /,}'"
 backup_str="$backup_str MAIL='${mail_list// /,}'"
 backup_str="$backup_str DB='${db_list// /,}'"
 backup_str="$backup_str CRON='$cron_list'"
+backup_str="$backup_str RUNTIME='$run_time' TIME='$TIME' DATE='$DATE'"
 echo "$backup_str" >> $USER_DATA/backup.conf
 chmod 660 $USER_DATA/backup.conf
 

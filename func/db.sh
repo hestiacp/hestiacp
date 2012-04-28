@@ -568,7 +568,7 @@ rebuild_mysql_database() {
     query="CREATE DATABASE $database CHARACTER SET $CHARSET"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="GRANT ALL ON $database.* TO '$DBUSER'@'*'"
+    query="GRANT ALL ON $database.* TO '$DBUSER'@'%'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
     query="GRANT ALL ON $database.* TO '$DBUSER'@'localhost'"

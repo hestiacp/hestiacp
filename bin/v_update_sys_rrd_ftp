@@ -10,7 +10,6 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-update=$1
 period=${1-daily}
 
 # Includes
@@ -52,7 +51,7 @@ if [ ! -e "$RRD/ftp/ftp.rrd" ]; then
 fi
 
 # Parsing data
-if [ -z "$update" ]; then
+if [ "$period" = 'daily' ]; then
     a=0
     a=$(ps aux |grep $FTP_SYSTEM |grep -v grep| grep -v nobody|\
         grep -v root|wc -l)
@@ -70,14 +69,14 @@ rrdtool graph $RRD/ftp/$period-ftp.png \
     --end "$end" \
     --vertical-label "Connections" \
     --x-grid "$grid" \
-    -c "BACK#484439" \
-    -c "SHADEA#484439" \
-    -c "SHADEB#484439" \
-    -c "FONT#DDDDDD" \
-    -c "CANVAS#202020" \
+    -c "BACK#7a766d" \
+    -c "SHADEA#7a766d" \
+    -c "SHADEB#7a766d" \
+    -c "FONT#FFFFFF" \
+    -c "CANVAS#302c2d" \
     -c "GRID#666666" \
     -c "MGRID#AAAAAA" \
-    -c "FRAME#202020" \
+    -c "FRAME#302c2d" \
     -c "ARROW#FFFFFF" \
     DEF:a=$RRD/ftp/ftp.rrd:A:AVERAGE \
     COMMENT:'\r' \

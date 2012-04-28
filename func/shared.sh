@@ -431,8 +431,8 @@ sync_cron_jobs() {
         eval $line
         if [ "$SUSPENDED" = 'no' ]; then
             echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" |\
-                sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" |\
-                    >> /var/spool/cron/$user
+                sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
+                >> /var/spool/cron/$user
         fi
     done < $USER_DATA/cron.conf
 }

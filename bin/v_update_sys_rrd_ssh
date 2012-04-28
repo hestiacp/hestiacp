@@ -10,7 +10,6 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-update=$1
 period=${1-daily}
 
 # Includes
@@ -52,7 +51,7 @@ if [ ! -e "$RRD/ssh/ssh.rrd" ]; then
 fi
 
 # Parsing data
-if [ -z "$update" ]; then
+if [ "$period" = 'daily' ]; then
     a=0
     a=$(ps auxf|grep sshd |grep -v grep |grep -v '/usr/sbin/'| wc -l)
 
@@ -69,14 +68,14 @@ rrdtool graph $RRD/ssh/$period-ssh.png \
     --end "$end" \
     --vertical-label "Connections" \
     --x-grid "$grid" \
-    -c "BACK#484439" \
-    -c "SHADEA#484439" \
-    -c "SHADEB#484439" \
-    -c "FONT#DDDDDD" \
-    -c "CANVAS#202020" \
+    -c "BACK#7a766d" \
+    -c "SHADEA#7a766d" \
+    -c "SHADEB#7a766d" \
+    -c "FONT#FFFFFF" \
+    -c "CANVAS#302c2d" \
     -c "GRID#666666" \
     -c "MGRID#AAAAAA" \
-    -c "FRAME#202020" \
+    -c "FRAME#302c2d" \
     -c "ARROW#FFFFFF" \
     DEF:a=$RRD/ssh/ssh.rrd:A:AVERAGE \
     COMMENT:'\r' \

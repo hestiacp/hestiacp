@@ -10,7 +10,6 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-update=$1
 period=${1-daily}
 
 # Includes
@@ -53,7 +52,7 @@ if [ ! -e "$RRD/mem/mem.rrd" ]; then
 fi
 
 # Parsing data
-if [ -z "$update" ]; then
+if [ "$period" = 'daily' ]; then
     mem=$(free -m)
     ram=$(echo "$mem" |awk '{print $3}'|head -n2 |tail -n1)
     swap=$(echo "$mem" |awk '{print $3}'|tail -n1)
@@ -71,14 +70,14 @@ rrdtool graph  $RRD/mem/$period-mem.png \
     --end "$end" \
     --vertical-label "Mbytes" \
     --x-grid "$grid" \
-    -c "BACK#484439" \
-    -c "SHADEA#484439" \
-    -c "SHADEB#484439" \
-    -c "FONT#DDDDDD" \
-    -c "CANVAS#202020" \
+    -c "BACK#7a766d" \
+    -c "SHADEA#7a766d" \
+    -c "SHADEB#7a766d" \
+    -c "FONT#FFFFFF" \
+    -c "CANVAS#302c2d" \
     -c "GRID#666666" \
     -c "MGRID#AAAAAA" \
-    -c "FRAME#202020" \
+    -c "FRAME#302c2d" \
     -c "ARROW#FFFFFF" \
     DEF:ram=$RRD/mem/mem.rrd:RAM:AVERAGE \
     DEF:swap=$RRD/mem/mem.rrd:SWAP:AVERAGE \

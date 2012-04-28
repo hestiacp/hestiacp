@@ -10,7 +10,6 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-update=$1
 period=${1-daily}
 
 # Includes
@@ -53,7 +52,7 @@ if [ ! -e "$RRD/web/httpd.rrd" ]; then
 fi
 
 # Parsing data
-if [ -z "$update" ]; then
+if [ "$period" = 'daily' ]; then
     server_status=$(wget -qO-  http://localhost:8081/server-status |\
         grep 'currently being processed'| \
         cut -f 2 -d '>' |\
@@ -76,14 +75,14 @@ rrdtool graph $RRD/web/$period-httpd.png \
     --end "$end" \
     --vertical-label "Connections" \
     --x-grid "$grid" \
-    -c "BACK#484439" \
-    -c "SHADEA#484439" \
-    -c "SHADEB#484439" \
-    -c "FONT#DDDDDD" \
-    -c "CANVAS#202020" \
+    -c "BACK#7a766d" \
+    -c "SHADEA#7a766d" \
+    -c "SHADEB#7a766d" \
+    -c "FONT#FFFFFF" \
+    -c "CANVAS#302c2d" \
     -c "GRID#666666" \
     -c "MGRID#AAAAAA" \
-    -c "FRAME#202020" \
+    -c "FRAME#302c2d" \
     -c "ARROW#FFFFFF" \
     DEF:a=$RRD/web/httpd.rrd:A:AVERAGE \
     COMMENT:'\r' \

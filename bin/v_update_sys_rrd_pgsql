@@ -10,7 +10,6 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-update=$1
 period=${1-daily}
 
 # Includes
@@ -68,7 +67,7 @@ for host in $hosts; do
             RRA:MAX:0.5:288:797
     fi
 
-    if [ -z "$update" ]; then
+    if [ "$period" = 'daily' ]; then
         # Defining host credentials
         host_str=$(grep "HOST='$host'" $conf)
         for key in $host_str; do
@@ -112,14 +111,14 @@ for host in $hosts; do
         --end "$end" \
         --vertical-label "Queries" \
         --x-grid "$grid" \
-        -c "BACK#484439" \
-        -c "SHADEA#484439" \
-        -c "SHADEB#484439" \
-        -c "FONT#DDDDDD" \
-        -c "CANVAS#202020" \
+        -c "BACK#7a766d" \
+        -c "SHADEA#7a766d" \
+        -c "SHADEB#7a766d" \
+        -c "FONT#FFFFFF" \
+        -c "CANVAS#302c2d" \
         -c "GRID#666666" \
         -c "MGRID#AAAAAA" \
-        -c "FRAME#202020" \
+        -c "FRAME#302c2d" \
         -c "ARROW#FFFFFF" \
         DEF:a=$RRD/db/pgsql_$host.rrd:A:AVERAGE \
         DEF:t=$RRD/db/pgsql_$host.rrd:T:AVERAGE \

@@ -10,7 +10,6 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-update=$1
 period=${1-daily}
 
 # Includes
@@ -62,7 +61,7 @@ for iface in $ifaces; do
     fi
 
     # Parsing device stats
-    if [ -z "$update" ]; then
+    if [ "$period" = 'daily' ]; then
         raw_iface=$(grep "$iface:" /proc/net/dev |sed -e "s/:/ /")
         rx=$(echo "$raw_iface" |awk '{print $2}')
         tx=$(echo "$raw_iface" |awk '{print $10}')
@@ -80,14 +79,14 @@ for iface in $ifaces; do
         --end "$end" \
         --vertical-label "KBytes" \
         --x-grid "$grid" \
-        -c "BACK#484439" \
-        -c "SHADEA#484439" \
-        -c "SHADEB#484439" \
-        -c "FONT#DDDDDD" \
-        -c "CANVAS#202020" \
+        -c "BACK#7a766d" \
+        -c "SHADEA#7a766d" \
+        -c "SHADEB#7a766d" \
+        -c "FONT#FFFFFF" \
+        -c "CANVAS#302c2d" \
         -c "GRID#666666" \
         -c "MGRID#AAAAAA" \
-        -c "FRAME#202020" \
+        -c "FRAME#302c2d" \
         -c "ARROW#FFFFFF" \
         DEF:inoctets=$RRD/net/$iface.rrd:RX:AVERAGE \
         DEF:outoctets=$RRD/net/$iface.rrd:TX:AVERAGE \

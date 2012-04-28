@@ -10,7 +10,6 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-update=$1
 period=${1-daily}
 
 # Includes
@@ -53,7 +52,7 @@ if [ ! -e "$RRD/la/la.rrd" ]; then
 fi
 
 # Parsing data
-if [ -z "$update" ]; then
+if [ "$period" = 'daily' ]; then
     loadavg=$(cat /proc/loadavg )
     la=$(echo "$loadavg"|cut -f 2 -d ' ')
     pr=$(echo "$loadavg"|cut -f 4 -d ' '|cut -f 2 -d /)
@@ -71,14 +70,14 @@ rrdtool graph $RRD/la/$period-la.png \
     --end "$end" \
     --vertical-label "Points" \
     --x-grid "$grid" \
-    -c "BACK#484439" \
-    -c "SHADEA#484439" \
-    -c "SHADEB#484439" \
-    -c "FONT#DDDDDD" \
-    -c "CANVAS#202020" \
+    -c "BACK#7a766d" \
+    -c "SHADEA#7a766d" \
+    -c "SHADEB#7a766d" \
+    -c "FONT#FFFFFF" \
+    -c "CANVAS#302c2d" \
     -c "GRID#666666" \
     -c "MGRID#AAAAAA" \
-    -c "FRAME#202020" \
+    -c "FRAME#484243" \
     -c "ARROW#FFFFFF" \
     DEF:la=$RRD/la/la.rrd:LA:AVERAGE \
     DEF:pr=$RRD/la/la.rrd:PR:AVERAGE \

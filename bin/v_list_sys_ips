@@ -35,9 +35,9 @@ json_list_ips() {
             else
                 if [ $i -lt $fileds_count ]; then
                     (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                    echo -e "\t\t\"${field//$/}\": \"$value\","
                 else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    echo -e "\t\t\"${field//$/}\": \"$value\""
                     data=1
                 fi
             fi
@@ -75,7 +75,7 @@ shell_list_ips() {
 # Defining fileds to select
 conf=$VESTA/data/ips/*
 fields="\$IP \$OWNER \$STATUS \$NAME \$U_SYS_USERS \$U_WEB_DOMAINS"
-fields="$fields \$INTERFACE \$NETMASK \$DATE"
+fields="$fields \$INTERFACE \$NETMASK \$TIME \$DATE"
 
 # Listing ip addresses
 case $format in 

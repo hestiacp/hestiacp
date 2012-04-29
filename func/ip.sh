@@ -191,6 +191,7 @@ create_vesta_ip() {
     ip_data="$ip_data\nU_WEB_DOMAINS='0'"
     ip_data="$ip_data\nINTERFACE='$interface'"
     ip_data="$ip_data\nNETMASK='$mask'"
+    ip_data="$ip_data\nTIME='$TIME'"
     ip_data="$ip_data\nDATE='$DATE'"
     echo -e "$ip_data" >$VESTA/data/ips/$ip
     chmod 660 $VESTA/data/ips/$ip

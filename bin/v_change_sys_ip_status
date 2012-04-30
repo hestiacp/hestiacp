@@ -14,7 +14,7 @@ ip=$1
 ip_status=$2
 
 # Includes
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 source $VESTA/func/ip.sh
 
 

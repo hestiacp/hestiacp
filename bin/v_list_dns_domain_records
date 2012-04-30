@@ -15,7 +15,7 @@ domain=$2
 format=${3-shell}
 
 # Includes
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 
 # Json func
 json_list_dns() {

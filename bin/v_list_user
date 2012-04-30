@@ -10,7 +10,7 @@
 #----------------------------------------------------------#
 
 # Includes
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 
 # Argument defenition
 user=$1

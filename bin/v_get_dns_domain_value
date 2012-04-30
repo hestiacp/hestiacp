@@ -16,7 +16,7 @@ domain_idn=$(idn -t --quiet -a "$domain")
 key=$(echo "$3"| tr '[:lower:]' '[:upper:]'|sed -e "s/^/$/")
 
 # Includes
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 
 
 #----------------------------------------------------------#

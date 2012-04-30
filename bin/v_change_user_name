@@ -16,7 +16,7 @@ lname=$3
 
 # Includes
 source $VESTA/conf/vesta.conf
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 
 
 #----------------------------------------------------------#

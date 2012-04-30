@@ -14,7 +14,7 @@ user=$1
 format=${2-shell}
 
 # Includes
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 
 
 #----------------------------------------------------------#

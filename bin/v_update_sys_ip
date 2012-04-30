@@ -17,7 +17,7 @@ ip_status=${2-shared}
 
 # Includes
 source $VESTA/conf/vesta.conf    # include for internal func
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 source $VESTA/func/ip.sh
 source $VESTA/func/domain.sh
 

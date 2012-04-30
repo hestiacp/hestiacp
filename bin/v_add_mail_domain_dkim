@@ -18,7 +18,7 @@ dkim_size=${3-512}
 
 # Includes
 source $VESTA/conf/vesta.conf
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 
 

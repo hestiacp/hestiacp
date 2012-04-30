@@ -16,7 +16,7 @@ domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 
 # Includes
 source $VESTA/conf/vesta.conf
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 
 

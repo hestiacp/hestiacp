@@ -16,7 +16,7 @@ source /etc/profile.d/vesta.sh
 
 # Includes
 source $VESTA/conf/vesta.conf
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 
 # Another workaround for cron enviroment
 PATH="$PATH:$BIN"

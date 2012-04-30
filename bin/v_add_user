@@ -19,7 +19,7 @@ lname=$6
 
 # Includes
 source $VESTA/conf/vesta.conf
-source $VESTA/func/shared.sh
+source $VESTA/func/main.sh
 
 is_user_free() {
     check_sysuser=$(cut -f 1 -d : /etc/passwd | grep -w "$user" )

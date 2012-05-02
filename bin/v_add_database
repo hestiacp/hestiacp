@@ -30,6 +30,9 @@ source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/db.sh
 
+# Hiding password
+A4='******'
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -73,10 +76,6 @@ str="$str CHARSET='$charset' U_DISK='0' SUSPENDED='no' TIME='$TIME'"
 str="$str DATE='$DATE'"
 echo "$str" >> $USER_DATA/db.conf
 chmod 660 $USER_DATA/db.conf
-
-# Hiding password
-EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
-EVENT="$EVENT ARGUMENTS='$user $database $dbuser ***** $type $host $charset'"
 
 # Logging
 log_history "$EVENT"

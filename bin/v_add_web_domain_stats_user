@@ -20,6 +20,9 @@ source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 
+# Hiding password
+A4='******'
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -60,10 +63,6 @@ stats_crypt=$(grep $stats_user: $stats_dir/.htpasswd |cut -f 2 -d :)
 # Adding stats user in config
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS_USER' "$stats_user"
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' "$stats_crypt"
-
-# Hiding password
-EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
-EVENT="$EVENT ARGUMENTS='$user $domain $stats_user *****'"
 
 # Logging
 log_history "$EVENT"

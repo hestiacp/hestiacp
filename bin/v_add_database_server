@@ -19,7 +19,7 @@ host=$2
 port=$3
 dbuser=$4
 dbpass=$5
-max_db=${6-300}
+A5='******'
 charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
 template=${8-template1}
 
@@ -27,6 +27,9 @@ template=${8-template1}
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/db.sh
+
+# Hiding password
+max_db=${6-500}
 
 
 #----------------------------------------------------------#
@@ -68,11 +71,6 @@ chmod 660 $VESTA/conf/$type.conf
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Hiding password
-EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
-EVENT="$EVENT ARGUMENTS='$type $host $port $dbuser ****** $max_db $charsets"
-EVENT="$EVENT $tpl'"
 
 # Logging
 log_event "$OK" "$EVENT"

@@ -17,12 +17,15 @@ hour=$3
 day=$4
 month=$5
 wday=$6
-command=$7
+command=$(echo $7 | sed -e "s/'/%quote%/g")
 job=$8
 
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+
+# Assing new value
+A7="$command"
 
 
 #----------------------------------------------------------#
@@ -45,7 +48,6 @@ is_object_free 'cron' 'JOB' "$job"
 #----------------------------------------------------------#
 
 # Concatenating cron string
-command=$(echo $command | sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
 str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
 str="$str CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 

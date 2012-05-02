@@ -2,7 +2,17 @@
 DATE=$(date +%F)
 TIME=$(date +%T)
 SCRIPT=$(basename $0)
-EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT' ARGUMENTS='$*'"
+A1=$1
+A2=$2
+A3=$3
+A4=$4
+A5=$5
+A6=$6
+A7=$7
+A8=$8
+A9=$9
+EVENT="DATE='$DATE' TIME='$TIME' CMD='$SCRIPT' A1='$A1' A2='$A2' A3='$A3'"
+EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
 BACKUP_GZIP=5
 BACKUP_DISK_LIMIT=95
 BACKUP_LA_LIMIT=5
@@ -40,12 +50,18 @@ E_RESTART=20
 
 # Log event function
 log_event() {
-    echo "$1 $2" >> $VESTA/log/system.log
+    echo "RC='$1' $2" >> $VESTA/log/system.log
 }
 
 # Log user history
 log_history() {
-    echo "$1" >> $USER_DATA/history.log
+    touch $USER_DATA/history.log
+    if [ '99' -lt "$(wc -l $USER_DATA/history.log |cut -f 1 -d ' ')" ]; then
+        tail -n 99 $USER_DATA/history.log > $USER_DATA/history.log.mv
+        mv -f $USER_DATA/history.log.mv $USER_DATA/history.log
+        chmod 660 $USER_DATA/history.log
+    fi
+    echo "$1 UNDO='$2'" >> $USER_DATA/history.log
 }
 
 # Argument list checker

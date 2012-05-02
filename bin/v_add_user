@@ -21,6 +21,9 @@ lname=$6
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 
+# Hiding password
+A2='******'
+
 is_user_free() {
     check_sysuser=$(cut -f 1 -d : /etc/passwd | grep -w "$user" )
     if [ ! -z "$check_sysuser" ] || [ -e "$USER_DATA" ]; then
@@ -204,10 +207,6 @@ chmod 660 $USER_DATA/user.conf
 if [ "$user" != 'admin' ]; then
     increase_user_value 'admin' '$U_USERS'
 fi
-
-# Hiding password
-EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
-EVENT="$EVENT ARGUMENTS='$user ***** $email $package $fname $lname'"
 
 # Logging
 log_event "$OK" "$EVENT"

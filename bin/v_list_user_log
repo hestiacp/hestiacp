@@ -1,0 +1,88 @@
+#!/bin/bash
+# info: list user log
+# options: user [format]
+#
+# The function of obtaining the list of 100 last users commands.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+format=${2-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json func
+json_list_history() {
+    echo '{'
+    fileds_count=$(echo $fields| wc -w )
+    while read line; do
+        IFS=$'\n'
+        eval $line
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        IFS=' '
+        for field in $fields; do
+            eval value=\"$field\"
+            value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+            if [ $i -eq 1 ]; then
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done < $conf
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+    echo -e '}'
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'user [format]'
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf=$USER_DATA/history.log
+
+# Defining fileds to select
+fields="\$CMD \$A1 \$A2 \$A3 \$A4 \$A5 \$A6 \$A7 \$A8 \$A9 \$TIME \$DATE"
+
+# Listing domains
+case $format in 
+    json)   json_list_history ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  fields="\$DATE \$TIME \$CMD \$A1 \$A2 \$A3 \$A4 \$A5 \$A6 \$A7"
+            shell_list ;;
+    *)      check_args '1' '0' 'user [format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

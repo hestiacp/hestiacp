@@ -23,6 +23,9 @@ source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 
+# Hiding password
+A4='******'
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -60,10 +63,6 @@ chmod 660 $USER_DATA/mail/$domain.conf
 accounts=$(wc -l $USER_DATA/mail/$domain.conf | cut -f 1 -d ' ')
 increase_user_value "$user" '$U_MAIL_ACCOUNTS'
 update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accounts"
-
-# Hiding password
-EVENT="DATE='$DATE' TIME='$TIME' COMMAND='$SCRIPT'"
-EVENT="$EVENT ARGUMENTS='$user $domain ***** $quota'"
 
 # Logging
 log_history "$EVENT"

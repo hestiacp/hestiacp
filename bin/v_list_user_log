@@ -69,7 +69,8 @@ is_object_valid 'user' 'USER' "$user"
 conf=$USER_DATA/history.log
 
 # Defining fileds to select
-fields="\$CMD \$A1 \$A2 \$A3 \$A4 \$A5 \$A6 \$A7 \$A8 \$A9 \$TIME \$DATE"
+fields="\$DATE\$TIME \$CMD \$A1 \$A2 \$A3 \$A4 \$A5 \$A6 \$A7 \$A8 \$A9"
+fields="$fields \$TIME \$DATE"
 
 # Listing domains
 case $format in 

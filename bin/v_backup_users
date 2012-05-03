@@ -22,7 +22,6 @@ source $VESTA/func/main.sh
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Updating user billing
 for user in $(ls $VESTA/data/users); do
     check_suspend=$(grep "SUSPENDED='no'" $VESTA/data/users/$user/user.conf)
     if [ ! -z "$check_suspend" ]; then

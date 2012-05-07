@@ -10,8 +10,10 @@
 #----------------------------------------------------------#
 
 format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
-RRD=$VESTA/web/rrd
 
 # Define json function
 json_list_rrd() {
@@ -44,7 +46,9 @@ json_list_rrd() {
             echo -e "\t\"$i\": {"
             echo -e "\t\t\"TYPE\": \"$type\"",
             echo -e "\t\t\"RRD\": \"$rrd\"",
-            echo -e "\t\t\"TITLE\": \"$title\""
+            echo -e "\t\t\"TITLE\": \"$title\","
+            echo -e "\t\t\"TIME\": \"$TIME\","
+            echo -e "\t\t\"DATE\": \"$DATE\""
             (( ++i))
         done
     done

@@ -1,0 +1,51 @@
+<table class='data'>
+
+<?php
+foreach ($data as $key => $value) {
+?>
+
+<tr class="data-row">
+    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+        <table class="data-col1">
+            <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
+            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+            <tr><td class="data-active"><i><b>active</b></i></td></tr>
+        </table>
+    </td>
+    <td class="data-dotted" width="830px" style="vertical-align:top;">
+        <table width="830px"><tr>
+            <td></td>
+            <td class="data-controls" width="70px"><img src="/images/delete.png" width="7px" height="7px"><a href="#"> delete</a></td>
+        </tr></table>
+
+        <table class="data-col2" width="830px">
+            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4;"><?php echo $key ?><i><a class="aliases"><?php echo  $data[$key]['NAME'] ?></i></a></td></tr>
+            <tr>
+                <td style="vertical-align:top;" >
+                    <table>
+                        <tr><td class="counter-name" style="padding: 4 0 2 0"> <?php echo $data[$key]['NETMASK'] ?></td></tr>
+                        <tr><td class="counter-name"> <?php echo $data[$key]['INTERFACE'] ?> </td></tr>
+                    </table>
+                </td>
+                <td style="vertical-align:top;" width="250">
+                    <table>
+                        <tr><td class="counter-name">Web Domains: </td> <td><a class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?></a></td></tr>
+                        <tr><td class="counter-name">Status: </td><td><a class="counter-value"> <?php echo $data[$key]['STATUS'] ?></a></td></tr>
+
+                    </table>
+                </td>
+                <td rowspan=4 style="vertical-align:top;" width="300">
+                    <table>
+                        <tr><td class="counter-name" colspan="2" >Sys Users: <a style="padding: 0 0 0 26" class="nginx-ext"><?php echo str_replace(',', ', ', $data[$key]['U_SYS_USERS']) ?></td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+
+    <?php
+}
+?>
+</table>

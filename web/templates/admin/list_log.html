@@ -1,0 +1,31 @@
+<table class='data'>
+
+<?php
+foreach ($data as $key => $value) {
+    ?>
+
+<tr class="data-row">
+    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150px">
+        <table class="data-col1" width="150">
+            <tr><td style="padding: 18 0 4 4;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+            <tr><td style="padding: 0 0 0 4;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
+        </table>
+    </td>
+    <td class="data-dotted" width="830px" style="vertical-align:top;">
+
+        <table width="830px"><tr>
+            <td></td>
+            <td class="data-controls" width="60px"><img src="/images/undo.png" width="8px" height="8px"><a href="#"> undo</a></td>
+        </tr></table>
+
+        <table class="data-col5" width="720px">
+            <tr><td class="log" style="padding: 0 0 20 0" ><?php echo $data[$key]['CMD'] ?> <a class="log-counter-value">
+            <?php echo "".$data[$key]['A1']." ".$data[$key]['A2']." ".$data[$key]['A3']." ".$data[$key]['A4']." ".$data[$key]['A5']." ".$data[$key]['A6']." ".$data[$key]['A7']." ".$data[$key]['A8']." ".$data[$key]['A9'] ?></td></tr>
+        </table>
+    </td>
+</tr>
+
+    <?php
+}
+?>
+</table>

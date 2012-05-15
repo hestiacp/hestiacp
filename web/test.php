@@ -1,4 +1,7 @@
 <?php
-echo "<pre>\n";
-exec('sudo /usr/local/vesta/bin/v_list_users json', $out);
-print_r($out);
+
+echo "ok<br><pre>";
+if (!empty($_GET['d'])){
+    echo 'ok';
+}
+//print_r($_GET);

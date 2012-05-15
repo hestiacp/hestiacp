@@ -1,0 +1,480 @@
+<html>
+<head>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <title>Vesta - <?php echo "$TAB"; ?> </title>
+    <style type="text/css">
+    img {
+        border: none;
+    }
+
+    body {
+        margin: 0;
+        margin-left: auto;
+        margin-right: auto;
+        background-image: url(/images/b.png);
+        behavior: url(/templates/csshover3.htc) 
+    }
+    .main {
+        background: #ffffff;
+        border-left: 1px solid #cccccc;
+        border-right: 1px solid #cccccc;
+        box-shadow: 0 0 8px 8px #d7d7d7;
+<?php
+if (!empty($_SESSION['look'])) {
+    echo "        border-left: 2px solid #f79b44;";
+    echo "    border-right: 2px solid #f79b44;";
+}
+?>
+    }
+    .top {
+        background: #484243;
+        color: #ebe2ae;
+        padding: 0 10 0 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 990px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        text-align: right;
+     }
+
+    .top-link {
+        text-decoration: none;
+        color: #dbdbdb;
+     }
+
+    .top-link:visited {
+        text-decoration: none;
+        color: #dbdbdb;
+     }
+
+    .top-link:hover {
+        text-decoration: underline;
+        color: white;
+     }
+
+    .top-link:active{
+        text-decoration: underline;
+        color: #e5a907
+     }
+
+    .top-slink {
+        text-decoration: none;
+        color: #e5a907;
+     }
+
+    .bottom {
+        background: #ebe9dc;
+        color: #484243;
+        color: #777;
+        margin: 30 0 0 0;
+        padding: 4 20 8 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 990px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 8pt;
+        text-align: center;
+        vertical-align:top;
+        line-height: 0.8em;
+        border-top: 4px solid #d6d4c9;
+     }
+
+    .bottom a:link {
+        font-size: 7pt;
+        text-decoration: none;
+        color: #555;
+     }
+
+    .bottom a:visited {
+        font-size: 7pt;
+        text-decoration: none;
+        color: #555;
+     }
+
+    .bottom a:hover {
+        font-size: 7pt;
+        text-decoration: underline;
+        color: #333;
+     }
+
+    .nav {
+        background: #cce4f0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 990px;
+        text-align: left;
+        vertical-align:top;
+        padding: 0;
+        border-bottom: 8px solid #F5F3E6;
+     }
+    .nav td {
+        text-align: left;
+        vertical-align:top;
+        margin: 0;
+        padding: 0;
+    }
+
+    #nav-block {
+        padding: 0;
+        float: left;
+    }
+
+
+    #nav-block ul {
+        margin-top: 0;
+    }
+
+    #nav-block li {
+        display: inline;
+        list-style: none outside none;
+        float: left;
+        height: 102px;
+        width: 95px;
+        padding: 20px 0 2px 15px;
+        line-height: 1.0em;
+        font-size: 9pt;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #2d2d2d;
+        background: url(/images/transparent-image.png) no-repeat;
+    }
+
+    #nav-block li:first-child { 
+         margin-left:-10px   
+    }
+
+    #nav-block li:hover {
+        background: #f6f6f6;
+        color: black;
+    }
+
+    .nav-link {
+        font-size: 16pt;
+        color: #484243;
+        font-family: 'Trebuchet MS';
+        text-decoration: none;
+    }
+
+    .nav-link:hover {
+        text-decoration: underline;
+    }
+
+
+    .nav-link:active {
+        color: #68797d;
+        text-decoration: underline;
+    }
+
+    .nav-slink {
+        font-size: 16pt;
+        color: #8b99a2;
+        font-family: 'Trebuchet MS';
+        text-decoration: none;
+    }
+
+    .sub-menu {
+        margin-left: auto;
+        margin-right: auto;
+        width: 990px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        text-align: left;
+        vertical-align:top;
+        padding: 10px 10px 16px 0;
+     }
+
+    .add {
+        padding: 0 8px 0 3px;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        text-decoration: none;
+        color: #34536A;
+        font-size: 12pt;
+     }
+
+    .add:hover {
+        text-decoration: underline;
+     }
+
+    .add:active {
+        color: #849322;
+     }
+
+    .counters {
+        line-height: 1.4em;
+        font-size: 9pt;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #2d2d2d;
+        padding: 6px 0 0 0;
+        margin: 0;
+        height:73px;
+    }
+
+    .hostname {
+        font-size: 8pt;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: left;
+        padding: 0 5;
+        color: #cccccc;
+    }
+
+    .data {
+        border-collapse:collapse;
+        margin-left: auto;
+        margin-right: auto;
+        width: 990px;
+        font-family: Georgia, serif;
+        font-size: 12pt;
+        text-align: left;
+        vertical-align:top;
+        margin: 0;
+     }
+
+    .data-row:hover {
+        margin: 0;
+        background-color: #f7f6ed;
+    }
+
+    .data-add {
+        margin: 0;
+        background-color: #f7f6ed;
+    }
+
+    .data-dotted {
+        text-align: left;
+        vertical-align:top;
+        border-top:1px dotted #dce8f5;
+        padding: 0 0 26px 0;
+        margin: 0;
+    }
+
+    .data-dotted td {
+        margin: 0;
+    }
+
+    .data-col1 {
+        text-align: left;
+        padding: 0;
+    }
+
+    .data-col2 {
+        text-align: left;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .data-col5 {
+        table-layout: fixed;
+        text-align: left;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .data-date {
+        padding: 0 0 0 18;
+        letter-spacing: 0.3em;
+        font-size: 8pt;
+        font-family: Tahoma;
+        color: #6A6A6A
+    }
+
+    .data-active {
+        font-size: 8pt;
+        font-family: Georgia;
+        letter-spacing: 0.1em;
+        color: #80C376;
+        padding: 0 0 13 18;
+    }
+
+    .data-suspended {
+        font-size: 8pt;
+        font-family: Georgia;
+        letter-spacing: 0.1em;
+        color: #de6c5d;
+        padding: 0 0 13 18;
+    }
+
+    .data-controls {
+        border-left: 1px solid #E6E6E6;
+        font-size: 8pt;
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 2 5 0 5;
+        letter-spacing: 0.1em;
+    }
+
+    .data-controls:hover {
+        background: #f79b44;
+    }
+
+    .data-controls a:link {
+        color: #34536A;
+        text-decoration: none;
+    }
+
+    .data-controls a:visited {
+        color: #34536A;
+        text-decoration: none;
+    }
+
+    .data-controls a:hover {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .data-controls a:active {
+        color: #433832;
+        text-decoration: none;
+    }
+
+    .chart1 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+    }
+
+    .chart2 {
+        color: #484243;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 8pt;
+    }
+
+    .username {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 16pt;
+        line-height: 0.8em;
+    }
+
+    .domain {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 16pt;
+        line-height: 0.8em;
+    }
+
+    .cron {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14pt;
+    }
+
+    .log {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+    }
+
+    .aliases {
+        font-family: Georgia;
+        font-size: 12pt;
+        color: #5c4d45;
+        padding: 0 0 0 8px;
+    }
+
+    .nginx-ext {
+        color: black;
+        vertical-align:top;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        line-height: 1.2em;
+    }
+
+    .fullname {
+        font-family: Georgia;
+        font-size: 14pt;
+        color: #5c4d45;
+        padding: 0 0 0 8px;
+    }
+
+    .counter-name {
+        vertical-align:top;
+        line-height: 1em;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        color: #484243;
+    }
+
+    .cron-counter-name {
+        vertical-align:top;
+        line-height: 0.8em;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 8pt;
+        padding: 4 0 0 0;
+        color: #484243;
+    }
+
+    .counter-value {
+        vertical-align:top;
+        line-height: 1.2em;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        color: black;
+    }
+
+    .log-counter-value {
+        vertical-align:top;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+        color: #484243;
+    }
+
+    .cron-counter-value {
+        vertical-align:top;
+        line-height: 1.2em;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+        color: #484243;
+    }
+
+    .add-name {
+        font-family: Georgia;
+        font-size: 14pt;
+        color: #5c4d45;
+        padding: 0 0 0 28px;
+    }
+
+    .add-error {
+        font-family: Georgia;
+        font-size: 14pt;
+        color: #de6c5d;
+        padding: 0 0 0 6px;
+    }
+
+    .add-text {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+    }
+
+    .add-input {
+        padding: 4px 80px 3px 0;
+        font-size: 14pt;
+        color: #555;
+    }
+
+    .add-list {
+        padding: 4px;
+        font-size: 12pt;
+        color: #555;
+    }
+
+
+    .add-button {
+        padding: 4px;
+        margin: 0 6px 0 0;
+        font-size: 12pt;
+
+    }
+
+    </style>
+    <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
+    <script language="JavaScript">
+        function checkAll(bx) {
+          var cbs = document.getElementsByTagName('input');
+          for(var i=0; i < cbs.length; i++) {
+            if(cbs[i].type == 'checkbox') {
+              cbs[i].checked = bx.checked;
+            }
+          }
+        }
+    </script>
+</head>
+<body>
+<center>

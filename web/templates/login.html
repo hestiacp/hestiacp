@@ -1,0 +1,116 @@
+<head>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <title> VestaCP - Login </title>
+    <style type="text/css">
+    body {
+        padding: 0;
+        margin: 0;
+        margin-left: auto;
+        margin-right: auto;
+        background-image: url(/images/b.png);
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .forgot {
+        color: #484243;
+        font-size: 8pt;
+        padding: 0px 10px 0px 0px;
+    }
+
+    .login {
+        margin: 130px 0px 0px 0px;
+        padding: 0;
+        border-top: 1px solid #cccccc;
+        border-left: 1px solid #cccccc;
+        border-right: 1px solid #cccccc;
+        background: #cce4f0;
+        text-align: left;
+        vertical-align:top;
+        padding: 0px;
+        width: 500px;
+    }
+
+    .login-box {
+        text-align: left;
+        vertical-align:top;
+        padding: 0px 0px 20px 40px;
+    }
+
+    .login-text1 {
+        padding: 10px 0px 0px 0px;
+        color: #433832;
+        font-family: 'Trebuchet MS', Helvetica, sans-serif;
+        font-size: 16pt;
+    }
+    .login-text1 a {
+        padding: 0px 6px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        text-shadow: none;
+    }
+    .login-text2 {
+        padding: 12px 0px 10px 0px;
+        color: #484243;
+    }
+
+    .login-bottom {
+        color: #484243;
+        text-align: right;
+        width: 500px;
+        height: 50px;
+        background: #484243;
+        padding: 0px 8px 0px 0px;
+        margin: 0px 0px 80px 0px;
+    }
+    .vestacp{
+        font-size: 8pt;
+        color: #CCCCB4;
+        text-align: right;
+        padding: 20px 0px 0px 0px;
+    }
+    .error {
+        font-size: 10pt;
+        color: #DE6C5D;
+    }
+
+    </style>
+</head>
+<body>
+<center>
+<table class="login">
+<tr>
+    <td>
+    <table>
+    <tr>
+        <td style="padding: 0 30 0 20;">
+            <img src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" />
+        </td>
+        <td><form method="post" action="/login/" >
+            <table class="login-box">
+            <tr>
+                <td><p class="login-text1">Username</p></td>
+            </tr><tr>
+                <td><input tabindex="1" type="text" size="24px" name="user" ></td>
+            </tr><tr>
+                <td><p class="login-text1">Password <a tabindex="5" class="forgot" href="#" >(forgot password)</a></p></td>
+            </tr><tr>
+                <td><input tabindex="2" type="password" size="24px" name="password" ></td>
+            </tr><tr>
+                <td><p class="login-text2"><input tabindex="4" type="checkbox" style="margin: 0px 8px 0px 0px" >Remember me</p></td>
+            </tr><tr>
+                <td><input tabindex="3" type="submit" value="Log In" ></td>
+            </tr>
+            </table>
+            </form>
+        </td>
+    </tr>
+    </table>
+    </td>
+</tr></table>
+<table class="login-bottom">
+    <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
+    <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
+</table>
+</center>
+</body>
+</html>

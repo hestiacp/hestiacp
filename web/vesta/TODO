@@ -1,3 +1,0 @@
--   Do not show $error->getTrace() information in errors
--   Session handling
--   Params validation

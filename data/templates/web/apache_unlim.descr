@@ -1,0 +1,2 @@
+# Almost unlimited php options and vhost configuration.
+PHP='module' CGI='yes' ELOG='yes'

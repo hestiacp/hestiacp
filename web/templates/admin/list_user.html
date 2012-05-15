@@ -64,8 +64,29 @@ foreach ($data as $key => $value) {
             <td></td>
             <td class="data-controls" width="70px"><img src="/images/login-as.png" width="7px" height="8px">
                 <?php
-                    if($key == $user) {
+                    if ($key == $user) {
                         echo "<a href=\"/logout/\">logout</a>";
+                        if (!empty($_SESSION['look_alert'])) {
+                            ?>
+                            <script type="text/javascript">
+                                $(function() {
+                                    $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                                    $( "#dialog-message" ).dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Ok: function() {
+                                                $( this ).dialog( "close" );
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
+                            <div id="dialog-message" title="Wellcome">
+                                <p>Your have logged in as <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> user.</p>
+                            </div>
+                            <?php
+                            unset($_SESSION['look_alert']);
+                        }
                     } else {
                         echo "<a href=\"/login/?loginas=$key\">login as</a>";
                     }
@@ -76,14 +97,14 @@ foreach ($data as $key => $value) {
                 <img src="/images/suspend.png" width="7px" height="8px">
                 <a href="#" id="<?php echo $spnd_action ?>_link_<?php echo "$key" ?>"> <?php echo $spnd_action ?></a>
                 <div id="<?php echo $spnd_action ?>_dialog_<?php echo "$key" ?>" title="Confirmation">
-                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <b><?php echo "$key" ?></b> user account?</p>
+                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> user account?</p>
                 </div>
             </td>
             <td class="data-controls" width="70px">
                 <img src="/images/delete.png" width="7px" height="7px">
                 <a href="#" id="delete_link_<?php echo "$key" ?>"> delete</a>
                 <div id="delete_dialog_<?php echo "$key" ?>" title="Confirmation">
-                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> user account?</p>
+                    <p class="counter-value">Are you sure you want to delete <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> user account?</p>
                 </div>
             </td>
         </tr></table>

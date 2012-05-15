@@ -13,12 +13,13 @@
 
     .forgot {
         color: #484243;
+        font-family: Arial, Helvetica, sans-serif;
         font-size: 8pt;
-        padding: 0px 10px 0px 0px;
+        padding: 0 10px 0 0;
     }
 
     .login {
-        margin: 130px 0px 0px 0px;
+        margin: 100px 0 80px 0;
         padding: 0;
         border-top: 1px solid #cccccc;
         border-left: 1px solid #cccccc;
@@ -26,30 +27,30 @@
         background: #cce4f0;
         text-align: left;
         vertical-align:top;
-        padding: 0px;
         width: 500px;
+        box-shadow: 0 0 8px 8px #d7d7d7;
     }
 
     .login-box {
         text-align: left;
         vertical-align:top;
-        padding: 0px 0px 20px 40px;
+        padding: 0 0 10px 40px;
     }
 
     .login-text1 {
-        padding: 10px 0px 0px 0px;
+        padding: 10px 0 0 0;
         color: #433832;
         font-family: 'Trebuchet MS', Helvetica, sans-serif;
-        font-size: 16pt;
+        font-size: 14pt;
     }
     .login-text1 a {
-        padding: 0px 6px;
+        padding: 0 6px;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 10pt;
         text-shadow: none;
     }
     .login-text2 {
-        padding: 12px 0px 10px 0px;
+        padding: 12px 0 10px 0;
         color: #484243;
     }
 
@@ -59,14 +60,14 @@
         width: 500px;
         height: 50px;
         background: #484243;
-        padding: 0px 8px 0px 0px;
-        margin: 0px 0px 80px 0px;
+        padding: 0 8px 0 0;
+        margin: 0;
     }
     .vestacp{
         font-size: 8pt;
         color: #CCCCB4;
         text-align: right;
-        padding: 20px 0px 0px 0px;
+        padding: 20px 0 0 0;
     }
     .error {
         font-size: 10pt;
@@ -82,10 +83,10 @@
     <td>
     <table>
     <tr>
-        <td style="padding: 0 30 0 20;">
+        <td style="padding: 0 30 0 30;">
             <img src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" />
         </td>
-        <td><form method="post" action="/login/" >
+        <td style="padding: 20px 0 0 0;"><form method="post" action="/login/" >
             <table class="login-box">
             <tr>
                 <td><p class="login-text1">Username</p></td>
@@ -96,21 +97,22 @@
             </tr><tr>
                 <td><input tabindex="2" type="password" size="24px" name="password" ></td>
             </tr><tr>
-                <td><p class="login-text2"><input tabindex="4" type="checkbox" style="margin: 0px 8px 0px 0px" >Remember me</p></td>
+                <td><p class="login-text2"><input tabindex="4" type="checkbox" style="margin: 0 8px 0 0" >Remember me</p></td>
             </tr><tr>
                 <td><input tabindex="3" type="submit" value="Log In" ></td>
             </tr>
             </table>
             </form>
         </td>
+    </tr><tr>
+    <td colspan=2>
+        <table class="login-bottom">
+            <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
+            <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
+        </table>
     </tr>
     </table>
-    </td>
 </tr></table>
-<table class="login-bottom">
-    <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
-    <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
-</table>
 </center>
 </body>
 </html>

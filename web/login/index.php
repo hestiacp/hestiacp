@@ -11,6 +11,7 @@ if (isset($_SESSION['user'])) {
             unset($_SESSION['look']);
         } else {
             $_SESSION['look'] = $_GET['loginas'];
+            $_SESSION['look_alert'] = $_GET['loginas'];
         }
     }
     

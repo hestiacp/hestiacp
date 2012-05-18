@@ -1,5 +1,16 @@
+<script type="text/javascript">
+function randomString() {
+var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+var string_length = 10;
+var randomstring = '';
+for (var i=0; i<string_length; i++) {
+  var rnum = Math.floor(Math.random() * chars.length);
+  randomstring += chars.substring(rnum,rnum+1);
+}
+document.v_add_user.v_password.value = randomstring;
+}
+</script>
 <table class='data'>
-
 <tr class="data-add">
     <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
         <table class="data-col1">
@@ -12,29 +23,33 @@
         </tr></table>
 
         <table class="data-col2" width="830px">
-            <form method="post">
+            <form method="post" name="v_add_user">
             <tr><td class="add-text" style="padding: 10 0 0 2px;">Username</td></tr>
-            <tr><td><input type="text" size="20" class="add-input" name="vusername"></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Password</td></tr>
-            <tr><td><input type="text" size="20" class="add-input" name="vpassword"></tr>
+            <tr><td><input type="text" size="20" class="add-input" name="v_username" <?php if (!empty($v_username)) echo "value=".$v_username;  ?> ></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;">
+                Password <a href="#" onclick="randomString();" class="genpass">generate</a></td></tr>
+            <tr><td><input type="text" size="20" class="add-input" name="v_password"</tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Email</td></tr>
-            <tr><td><input type="text" size="20" class="add-input" name="email"></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;" name="package">Package</td></tr>
-            <tr><td><select class="add-list">
-<?php
-foreach ($data as $key => $value) {
-    echo "\t\t\t\t<option>".$key."</option>\n";
-}
-?>
+            <tr><td><input type="text" size="20" class="add-input" name="v_email" <?php if (!empty($v_email)) echo "value=".$v_email; ?>></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;" name="v_package">Package</td></tr>
+            <tr><td><select class="add-list" name="v_package">
+            <?php
+                foreach ($data as $key => $value) {
+                    echo "\t\t\t\t<option value=\"".$key."\"";
+                    if ((!empty($v_package)) && ( $key == $_POST['package'])){
+                        echo 'selected' ;
+                    }
+                    echo ">".$key."</option>\n";
+                }
+            ?>
                 </select></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;" name="fname">Frist Name</td></tr>
-            <tr><td><input type="text" size="20" class="add-input"></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;" name="lname">Last Name</td></tr>
-            <tr><td><input type="text" size="20" class="add-input"></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Frist Name</td></tr>
+            <tr><td><input type="text" size="20" class="add-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".$v_fname; ?>></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Last Name</td></tr>
+            <tr><td><input type="text" size="20" class="add-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>></tr>
             <tr><td style="padding: 24px 0 0 0;">
                 <input type="submit" name="ok" value="OK" class="add-button">
                 <input type="submit" class="add-button" name="cancel" value="Cancel">
-
             </td></tr>
             </form>
         </table>

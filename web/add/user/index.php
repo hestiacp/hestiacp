@@ -24,19 +24,20 @@ if ($_SESSION['user'] == 'admin') {
     // Ok
     if (!empty($_POST['ok'])) {
         // Check input
+        if (empty($_POST['v_username'])) $errors[] = 'user';
+        if (empty($_POST['v_password'])) $errors[] = 'password';
+        if (empty($_POST['v_package'])) $errrors[] = 'package';
+        if (empty($_POST['v_email'])) $errors[] = 'email';
+        if (empty($_POST['v_fname'])) $errors[] = 'first name';
+        if (empty($_POST['v_lname'])) $errors[] = 'last name';
+
+        // Protect input
         $v_username = escapeshellarg($_POST['v_username']);
         $v_password = escapeshellarg($_POST['v_password']);
         $v_package = escapeshellarg($_POST['v_package']);
         $v_email = escapeshellarg($_POST['v_email']);
         $v_fname = escapeshellarg($_POST['v_fname']);
         $v_lname = escapeshellarg($_POST['v_lname']);
-
-        if (empty($v_username)) $errors[] = 'user';
-        if (empty($v_password)) $errors[] = 'password';
-        if (empty($v_package)) $errrors[] = 'package';
-        if (empty($v_email)) $errors[] = 'email';
-        if (empty($v_fname)) $errors[] = 'first name';
-        if (empty($v_lname)) $errors[] = 'last name';
 
         // Check for errors
         if (!empty($errors[0])) {
@@ -55,7 +56,7 @@ if ($_SESSION['user'] == 'admin') {
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
                 $_SESSION['error_msg'] = $error;
             } else {
-                $_SESSION['ok_msg'] = "OK: user <b>".$v_username."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: user <b>".$_POST[v_username]."</b> has been created successfully.";
                 unset($v_username);
                 unset($v_password);
                 unset($v_email);

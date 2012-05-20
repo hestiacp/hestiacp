@@ -2,6 +2,7 @@
 
 <?php
 foreach ($data as $key => $value) {
+    ++$i;
 ?>
 
 <tr class="data-row">
@@ -48,4 +49,17 @@ foreach ($data as $key => $value) {
     <?php
 }
 ?>
+</table>
+<table class="data-count">
+<tr>
+    <td><i>→ 
+    <?php
+        if ( $i == 1) {
+            echo "1 ip address ";
+        } else {
+            echo "$i ip addresses ";
+        }
+    ?>
+    listed</i></td>
+</tr>
 </table>

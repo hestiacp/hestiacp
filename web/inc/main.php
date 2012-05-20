@@ -16,6 +16,7 @@ if (!empty($_SESSION['look'])&& $_SESSION['look'] != 'admin') {
 
 define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
 
+$i = 0;
 
 // Define functions
 function check_error($return_var){

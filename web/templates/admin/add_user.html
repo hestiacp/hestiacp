@@ -36,7 +36,7 @@ document.v_add_user.v_password.value = randomstring;
             <?php
                 foreach ($data as $key => $value) {
                     echo "\t\t\t\t<option value=\"".$key."\"";
-                    if ((!empty($v_package)) && ( $key == $_POST['package'])){
+                    if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
                         echo 'selected' ;
                     }
                     echo ">".$key."</option>\n";

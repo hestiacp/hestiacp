@@ -2,6 +2,7 @@
 
 <?php
 foreach ($data as $key => $value) {
+    ++$i;
     if ($data[$key]['SUSPENDED'] == 'yes') {
         $status = 'suspended';
         $spnd_action = 'ususpend' ;
@@ -59,3 +60,15 @@ foreach ($data as $key => $value) {
 }
 ?>
 </table>
+<table class="data-count">
+<tr>
+    <td><i>→ 
+    <?php
+        if ( $i == 1) {
+            echo "1 mail account ";
+        } else {
+            echo "$i mail accounts ";
+        }
+    ?>
+    listed</i></td>
+</tr>

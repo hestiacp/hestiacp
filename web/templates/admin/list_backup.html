@@ -2,6 +2,7 @@
 
 <?php
 foreach ($data as $key => $value) {
+    ++$i;
     $web = 'no';
     $dns = 'no';
     $mail = 'no';
@@ -62,4 +63,17 @@ foreach ($data as $key => $value) {
     <?php
 }
 ?>
+</table>
+<table class="data-count">
+<tr>
+    <td><i>→ 
+    <?php
+        if ( $i == 1) {
+            echo "1 backup archive ";
+        } else {
+            echo "$i backup archives ";
+        }
+    ?>
+    listed</i></td>
+</tr>
 </table>

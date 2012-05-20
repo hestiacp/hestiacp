@@ -2,6 +2,7 @@
 
 <?php
 foreach ($data as $key => $value) {
+    ++$i;
     if ($data[$key]['SUSPENDED'] == 'yes') {
         $status = 'suspended';
         $spnd_action = 'ususpend' ;
@@ -60,4 +61,17 @@ foreach ($data as $key => $value) {
     <?php
 }
 ?>
+</table>
+<table class="data-count">
+<tr>
+    <td><i>→ 
+    <?php
+        if ( $i == 1) {
+            echo "1 user dns domain ";
+        } else {
+            echo "$i dns domains ";
+        }
+    ?>
+    listed</i></td>
+</tr>
 </table>

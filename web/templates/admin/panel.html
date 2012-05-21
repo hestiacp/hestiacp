@@ -1,8 +1,7 @@
 <table class="main"><tr><td>
 <table class="top">
 <tr>
-    <td width="192px"><p class="hostname"><?php echo exec('hostname') ?></p></td>
-    <td><a class="top-<?php if($TAB == 'PACKAGES' ) echo 's' ?>link" href="/list/packages/">Packages</a></td>
+    <td width="154px"><p class="hostname"><?php echo exec('hostname') ?></p></td>
     <td><a class="top-<?php if($TAB == 'IP' ) echo 's' ?>link" href="/list/ip/">IP Adresses </a></td>
     <td><a class="top-<?php if($TAB == 'RRD' ) echo 's' ?>link" href="/list/rrd/">RRD Graphics</a></td>
     <td><a class="top-<?php if($TAB == 'STATS' ) echo 's' ?>link" href="/list/stats/">Statistics</a></td>
@@ -40,7 +39,7 @@
             jobs: <? echo $panel[$user]['U_CRON_JOBS']?><br>
             suspended: <? echo $panel[$user]['SUSPENDED_CRON']?></p></li>
         <li><b><a class="nav-<?php if($TAB == 'BACKUP' ) echo 's' ?>link" href="/list/backup/">BACKUP</a></a></b><p class="counters">
-            available: <? echo $panel[$user]['U_BACKUPS']?><br>
+            backups: <? echo $panel[$user]['U_BACKUPS']?><br>
     <ul></div></td>
 </tr>
 </table>

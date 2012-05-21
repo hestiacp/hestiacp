@@ -83,7 +83,7 @@ foreach ($data as $key => $value) {
                                 });
                             </script>
                             <div id="dialog-message" title="Wellcome">
-                                <p>Your have logged in as <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> user.</p>
+                                <p>You have logged in as user <?php echo "$key" ?>.</p>
                             </div>
                             <?php
                             unset($_SESSION['look_alert']);
@@ -188,6 +188,6 @@ foreach ($data as $key => $value) {
             echo "$i user accounts ";
         }
     ?>
-    listed</i></td>
+    </i></td>
 </tr>
 </table>

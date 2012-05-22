@@ -17,7 +17,6 @@ if ($_SESSION['user'] == 'admin') {
 
     // Cancel
     if (!empty($_POST['cancel'])) {
-        echo $_POST['cancel'];
         header("Location: /list/user/");
     }
 

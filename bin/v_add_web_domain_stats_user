@@ -22,6 +22,8 @@ source $VESTA/func/domain.sh
 
 # Hiding password
 A4='******'
+EVENT="DATE='$DATE' TIME='$TIME' CMD='$SCRIPT' A1='$A1' A2='$A2' A3='$A3'"
+EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
 
 
 #----------------------------------------------------------#

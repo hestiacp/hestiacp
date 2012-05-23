@@ -53,9 +53,11 @@ document.v_edit_user.v_password.value = randomstring;
             <?php
                 foreach ($shells as $key => $value) {
                     echo "\t\t\t\t<option value=\"".$value."\"";
-                    if ((!empty($v_shell)) && ( $value == $v_shell)){
+                    $svalue = "'".$value."'";
+                    if (( $value == $v_shell ) || ($svalue == $v_shell )){
                         echo 'selected' ;
                     }
+
                     echo ">".$value."</option>\n";
                 }
             ?>

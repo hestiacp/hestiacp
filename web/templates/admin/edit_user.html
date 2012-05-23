@@ -37,7 +37,8 @@ document.v_edit_user.v_password.value = randomstring;
             <?php
                 foreach ($packages as $key => $value) {
                     echo "\t\t\t\t<option value=\"".$key."\"";
-                    if ((!empty($v_package)) && ( $key == $v_package)){
+                    $skey = "'".$key."'";
+                    if (( $key == $v_package ) || ( $skey == $v_package)){
                         echo 'selected' ;
                     }
                     echo ">".$key."</option>\n";

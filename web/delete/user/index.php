@@ -23,26 +23,25 @@ if ($_SESSION['user'] == 'admin') {
     // Ok
     if (!empty($_GET['user'])) {
         $v_username = escapeshellarg($_GET['user']);
-        exec (VESTA_CMD."v_unsuspend_user ".$v_username, $output, $return_var);
+        exec (VESTA_CMD."v_delete_user ".$v_username, $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = 'Error: vesta did not return any output.';
             $_SESSION['error_msg'] = $error;
         } else {
-            $_SESSION['ok_msg'] = "OK: user <b>".$_GET[user]."</b> has been unsuspended.";
+            $_SESSION['ok_msg'] = "OK: user <b>".$_GET[user]."</b> has been deleted.";
                 unset($v_lname);
         }
         unset($output);
 
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_unsuspend_user.html');
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/unsuspend_user.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_delete_user.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/delete_user.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
 
     } else {
         header("Location: /list/user/");
     }
-
 }
 
 // Footer

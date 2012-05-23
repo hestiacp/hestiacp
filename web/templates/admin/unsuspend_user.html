@@ -9,12 +9,21 @@
         <table width="830px"><tr>
             <td></td>
         </tr></table>
-        <form method="post" name="v_suspend_user">
+
         <table class="data-col2" width="830px">
-            <tr><td style="padding: 24px 0 0 0;">
-                <input type="submit" class="add-button" name="back" value="Back to users">
-            </td></tr>
-            </form>
+            <tr>
+                <td style="padding: 24px 0 0 0;" width="100px">
+                    <form method="post">
+                        <input type="submit" class="add-button" name="back" value="Back to users">
+                    </form>
+                </td>
+                <td style="padding: 24px 0 0 0;">
+                    <form action="/suspend/user/" method="get">
+                        <input type="hidden" name="user" value="<?php echo $_GET['user']?>">
+                        <input type="submit" class="add-button" name="suspend" value="Suspend <?php echo $_GET['user']?>">
+                    </form>
+                </td>
+            </tr>
         </table>
     </td>
 </tr>

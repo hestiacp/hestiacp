@@ -46,6 +46,14 @@ if ($_SESSION['user'] == 'admin') {
         $v_ns2 = $nameservers[1];
         $v_ns3 = $nameservers[2];
         $v_ns4 = $nameservers[3];
+        $v_suspended = $data[$v_username]['SUSPENDED'];
+        if ( $v_suspended == 'yes' ) {
+            $v_status =  'suspended';
+        } else {
+            $v_status =  'active';
+        }
+        $v_time = $data[$v_username]['TIME'];
+        $v_date = $data[$v_username]['DATE'];
 
         unset($output);
 

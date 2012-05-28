@@ -8,5 +8,5 @@ if (!empty($_SESSION['look'])) {
 }
 
 header("Location: /");
-
+exit;
 ?>

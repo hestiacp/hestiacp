@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add web domain
-# options: user domain ip [template]
+# options: user domain ip [template] [restart]
 #
 # The function adds virtual host to a server. In cases when a template is
 # undefined in the script, the template "default" will be used. The alias of
@@ -21,6 +21,7 @@ domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
 template=${4-default}
+restart=$5
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -33,7 +34,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ip [template]'
+check_args '3' "$#" 'user domain ip [template] [restart]'
 validate_format 'user' 'domain' 'ip' 'template'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -190,7 +191,9 @@ echo "$str" >> $USER_DATA/web.conf
 chmod 660 $USER_DATA/web.conf
 
 # Restart web server
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

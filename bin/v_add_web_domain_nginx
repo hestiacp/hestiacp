@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add webdomain nginx support
-# options: user domain
+# options: user domain [template] [extentions] [restart]
 #
 # The function enables nginx support for a domain. It can significantly improve
 # website speed.
@@ -18,6 +18,7 @@ template=${3-default}
 default_extentions="jpg,jpeg,gif,png,ico,css,zip,tgz,gz,rar,bz2,doc,xls,exe,\
 pdf,ppt,txt,tar,wav,bmp,rtf,js,mp3,avi,mpeg,html,htm"
 extentions=${4-$default_extentions}
+restart="$5"
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -29,7 +30,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [template] [extentions]'
+check_args '2' "$#" 'user domain [template] [extentions] [restart]'
 validate_format 'user' 'domain' 'template' 'extentions'
 is_system_enabled "$PROXY_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -94,7 +95,9 @@ update_object_value 'web' 'DOMAIN' "$domain" '$NGINX' "$NGINX"
 update_object_value 'web' 'DOMAIN' "$domain" '$NGINX_EXT' "$extentions"
 
 # Restart web server
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 log_history "$EVENT"
 log_event "$OK" "$EVENT"

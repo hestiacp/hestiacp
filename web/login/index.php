@@ -14,8 +14,8 @@ if (isset($_SESSION['user'])) {
             $_SESSION['look_alert'] = $_GET['loginas'];
         }
     }
-    
     header("Location: /");
+    exit;
 } else {
     if (isset($_POST['user']) && isset($_POST['password'])) {
         $cmd="/usr/bin/sudo /usr/local/vesta/bin/";
@@ -25,7 +25,14 @@ if (isset($_SESSION['user'])) {
             $ERROR = "<a class=\"error\">ERROR: Invalid username or password</a>";
         } else {
             $_SESSION['user'] = $_POST['user'];
-            header("Location: /");
+            if (!empty($_SESSION['request_uri'])) {
+                header("Location: ".$_SESSION['request_uri']);
+                unset($_SESSION['request_uri']);
+                exit;
+            } else {
+                header("Location: /");
+                exit;
+            }
         }
     }
     require_once '../templates/login.html';

@@ -2,17 +2,18 @@
 // Set timezone
 date_default_timezone_set('UTC');
 
-// Check user
+// Check user session
 if (!isset($_SESSION['user'])) {
+    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
+    exit;
 }
 
-if (!empty($_SESSION['look'])&& $_SESSION['look'] != 'admin') {
+if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
     $user = $_SESSION['look'];
 } else {
     $user = $_SESSION['user'];
 }
-
 
 define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
 
@@ -22,6 +23,7 @@ $i = 0;
 function check_error($return_var){
     if ( $return_var > 0 ) {
         header("Location: /error/");
+        exit;
     }
 }
 

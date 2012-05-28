@@ -1,0 +1,66 @@
+#!/bin/bash
+# info: list web statistics
+# options: [format]
+#
+# The function for obtaining the list of system shells.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# Json function
+json_list_st() {
+    stats=$(echo "${STATS_SYSTEM//,/ } none")
+    st_counter=$(echo "$stats" | wc -w)
+    i=1
+    echo '['
+    for st in $stats; do
+        if [ "$i" -lt "$st_counter" ]; then
+            echo -e  "\t\"$st\","
+        else
+            echo -e  "\t\"$st\""
+        fi
+        (( ++i))
+    done
+    echo "]"
+}
+
+# Shell function
+shell_list_st() {
+    stats=$(echo "none ${STATS_SYSTEM//,/ }")
+    if [ -z "$nohead" ]; then
+        echo "STATS"
+        echo "----------"
+    fi
+    for st in $stats; do
+        echo "$st"
+    done
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Listing domains
+case $format in 
+    json)   json_list_st ;;
+    plain)  nohead=1; shell_list_st ;;
+    shell)  shell_list_st ;;
+    *)      check_args '1' '0' '[format]' ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

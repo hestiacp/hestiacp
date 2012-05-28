@@ -1,9 +1,8 @@
 #!/bin/bash
-# info: add error logging for domain
-# options: user domain [restart]
+# info: add dns domain or dns record based on web domain alias
+# options: user domain
 #
-# The function enables a separate ErrorLog file for a domain, accessible for
-# reading by users.
+# The function adds dns domain or dns record based on web domain alias.
 
 
 #----------------------------------------------------------#
@@ -14,7 +13,6 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-restart="$3"
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -26,9 +24,10 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [restart]'
+check_args '2' "$#" 'user domain'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
+is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
@@ -41,57 +40,34 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Parsing domain values
 get_domain_values 'web'
-if [ $ELOG == 'yes' ]; then
-    exit 0
-fi
 
-tpl_file="$WEBTPL/apache_$TPL.tpl"
-conf="$HOMEDIR/$user/conf/web/httpd.conf"
-ELOG='yes'
-
-# Preparing domain values for the template substitution
-upd_web_domain_values
-
-# Recreating vhost
-del_web_config
-add_web_config
-
-# Checking ssl
-if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/apache_$TPL.stpl"
-    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
-    del_web_config
-    add_web_config
-fi
-
-# Checking nginx
-if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
-    conf="$HOMEDIR/$user/conf/web/nginx.conf"
-    del_web_config
-    add_web_config
-
-    if [ "$SSL" = 'yes' ]; then
-        proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
-        tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
-        conf="$HOMEDIR/$user/conf/web/snginx.conf"
-        del_web_config
-        add_web_config
+OLD_IFS=$IFS
+IFS=','
+for web_alias in $ALIAS; do
+    # Check if parent dns domain exist
+    sub_domain=$(echo $web_alias | cut -f1 -d .)
+    pr_domain=$(echo $web_alias | sed -e "s/^$sub_domain.//" )
+    check_parent=$(grep "DOMAIN='$pr_domain'" $USER_DATA/dns.conf)
+    if [ -z "$check_parent" ]; then
+        check_dom=$(grep "DOMAIN='$web_alias'" $USER_DATA/dns.conf)
+        if [ -z "$check_dom" ]; then
+            $BIN/v_add_dns_domain $user $web_alias $IP
+        fi
+    else
+        check_rec=$(grep "RECORD='$sub_domain'" $USER_DATA/dns/$pr_domain.conf)
+        if [ -z "$check_rec" ]; then
+            $BIN/v_add_dns_domain_record $user $pr_domain $sub_domain A $IP
+        fi
     fi
-fi
+done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$ELOG' 'yes'
-
-# Adding task to the vesta pipe
-if [ "$restart" != 'no' ]; then
-    $BIN/v_restart_web "$EVENT"
-fi
+# Restart web server
+$BIN/v_restart_dns "$EVENT"
 
 # Logging
 log_history "$EVENT"

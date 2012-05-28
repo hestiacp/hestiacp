@@ -6,6 +6,10 @@ session_start();
 $TAB = 'USER';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+if (empty($_SESSION['user'])) {
+    header("Location: /login/");
+}
+
 // Header
 include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 

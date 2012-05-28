@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add web domain alias
-# options: user domain alias
+# options: user domain alias [restart]
 #
 # The call is intended for adding aliases to a domain (it is also called
 # "domain parking"). The function supports wildcards *.domain.tpl.
@@ -18,6 +18,7 @@ domain_idn=$(idn -t --quiet -a "$domain")
 dom_alias=$(idn -t --quiet -u "$3" )
 dom_alias=$(echo $dom_alias | tr '[:upper:]' '[:lower:]')
 dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
+restart="$4"
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -29,7 +30,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain dom_alias'
+check_args '3' "$#" 'user domain dom_alias [restart]'
 validate_format 'user' 'domain' 'dom_alias'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -98,7 +99,9 @@ update_object_value 'web' 'DOMAIN' "$domain" '$ALIAS' "$ALIAS"
 increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Adding task to the vesta pipe
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 log_history "$EVENT"
 log_event "$OK" "$EVENT"

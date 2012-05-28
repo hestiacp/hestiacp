@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: adding ssl for domain
-# options: user domain ssl_dir [ssl_home]
+# options: user domain ssl_dir [ssl_home] [restart]
 #
 # The function turns on SSL support for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file 
@@ -19,7 +19,8 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ssl_dir=$3
-ssl_home=${4-single}
+ssl_home=${4-same}
+restart="$5"
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -32,7 +33,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ssl_dir [ssl_home]'
+check_args '3' "$#" 'user domain ssl_dir [ssl_home] [restart]'
 validate_format 'user' 'domain' 'ssl_dir'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -124,7 +125,9 @@ update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL' "yes"
 
 # Restart web server
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

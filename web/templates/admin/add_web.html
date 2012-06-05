@@ -30,7 +30,7 @@
             <tr><td><select class="add-list" name="v_ip">
             <?php
                 foreach ($ips as $key => $value) {
-                echo "\t\t\t\t<option value=\"".$key."\"";
+                    echo "\t\t\t\t<option value=\"".$key."\"";
                     if ((!empty($v_ip)) && ( $key == $_POST['v_ip'])){
                         echo ' selected';
                     }
@@ -51,16 +51,16 @@
                 }
             ?>
                 </select></td></tr>
-            <tr><td class="add-text" style="padding: 10 0 0 2px;">DNS support</td></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;">DNS support</td></tr>
             <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_dns" <?php if (empty($v_dns)) echo "checked=yes"; ?>></tr>
 
-            <tr><td class="add-text" style="padding: 10 0 0 2px;">Mail support</td></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Mail support</td></tr>
             <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_mail" <?php if (empty($v_mail)) echo "checked=yes"; ?>></tr>
-            <tr><td class="add-text" style="padding: 10 0 0 2px;"><a href="javascript:elementHideShow('advtable');" class="add-advanced">Advanced Options ⇢</a></td></tr>
-            <tr><td class="add-text" style="padding: 10 0 0 0px;">
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;"><a href="javascript:elementHideShow('advtable');" class="add-advanced">Advanced Options ⇢</a></td></tr>
+            <tr><td class="add-text" style="padding: 9px 0 0 0px;">
                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                     <tr><td class="add-text" style="padding: 0 0 0 2px;">Aliases</td></tr>
-                    <tr><td><textarea size="20" class="add-input" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea></td></tr>
+                    <tr><td><textarea size="20" class="add-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea></td></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Error Logging</td></tr>
                     <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_elog" <?php if (!empty($v_elog)) echo "checked=yes" ?>></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Nginx Support</td></tr>
@@ -68,11 +68,11 @@
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Support</td></tr>
                     <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_ssl" <?php if (!empty($v_ssl)) echo "checked=yes" ?>></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Certificate</td></tr>
-                    <tr><td><textarea size="20" class="add-input" name="v_ssl_cert"><?php if (!empty($v_ssl_cert)) echo $v_ssl_cert;  ?></textarea></tr>
+                    <tr><td><textarea size="20" class="add-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo $v_ssl_crt;  ?></textarea></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Key</td></tr>
-                    <tr><td><textarea size="20" class="add-input" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo $v_ssl_key;  ?></textarea></tr>
-                    <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL PEM</td></tr>
-                    <tr><td><textarea size="20" class="add-input" name="v_ssl_pem"><?php if (!empty($v_ssl_pem)) echo $v_ssl_pem;  ?></textarea></tr>
+                    <tr><td><textarea size="20" class="add-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo $v_ssl_key;  ?></textarea></tr>
+                    <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Certificate Authority <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span></td></tr>
+                    <tr><td><textarea size="20" class="add-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo $v_ssl_ca;  ?></textarea></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics</td></tr>
                     <tr><td><select class="add-list" name="v_stats">
                     <?php

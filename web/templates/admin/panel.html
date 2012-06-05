@@ -1,11 +1,12 @@
 <table class="main"><tr><td>
 <table class="top">
 <tr>
-    <td width="154px"><p class="hostname"><?php echo exec('hostname') ?></p></td>
-    <td><a class="top-<?php if($TAB == 'IP' ) echo 's' ?>link" href="/list/ip/">IP Adresses </a></td>
-    <td><a class="top-<?php if($TAB == 'RRD' ) echo 's' ?>link" href="/list/rrd/">RRD Graphics</a></td>
-    <td><a class="top-<?php if($TAB == 'STATS' ) echo 's' ?>link" href="/list/stats/">Statistics</a></td>
-    <td><a class="top-<?php if($TAB == 'LOG' ) echo 's' ?>link" href="/list/log/">History Log</a></td>
+    <td width="188px"><p class="hostname"><?php echo exec('hostname') ?></p></td>
+    <td width="100px"><a class="top-<?php if($TAB == 'IP' ) echo 's' ?>link" href="/list/ip/">IP Adresses </a></td>
+    <td width="100px"><a class="top-<?php if($TAB == 'RRD' ) echo 's' ?>link" href="/list/rrd/">RRD Graphics</a></td>
+    <td width="84px"><a class="top-<?php if($TAB == 'STATS' ) echo 's' ?>link" href="/list/stats/">Statistics</a></td>
+    <td width="90px"><a class="top-<?php if($TAB == 'LOG' ) echo 's' ?>link" href="/list/log/">History Log</a></td>
+    <td></td>
     <td width="260px"><b><?php if($user != $_SESSION['user']) echo 'admin / ' ?><?php echo $user ?></b><a class="top-link" style="padding: 0 0 0 6" href="/logout/">Log out</a></td>
 </tr>
 </table>

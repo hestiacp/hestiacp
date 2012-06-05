@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change web domain ip address
-# options: user domain ip
+# options: user domain ip [restart]
 #
 # The call is used for changing the site ip address. The ip change will be
 # performed for a virtual apache host and for a configuration nginx file both.
@@ -15,6 +15,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
+restart=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -27,7 +28,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ip'
+check_args '3' "$#" 'user domain ip [restart]'
 validate_format 'user' 'domain' 'ip'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -84,7 +85,9 @@ decrease_ip_value "$old"
 update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$ip"
 
 # Restart web server
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

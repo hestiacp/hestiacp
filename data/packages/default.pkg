@@ -1,6 +1,6 @@
 WEB_DOMAINS='100'
 WEB_ALIASES='100'
-WEB_TPL='default,phpfcgi,unlim'
+WEB_TPL='default,phpfcgid,unlim'
 DNS_DOMAINS='100'
 DNS_RECORDS='100'
 MAIL_DOMAINS='100'

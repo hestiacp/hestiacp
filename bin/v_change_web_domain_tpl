@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change web domain template
-# options: user domain template
+# options: user domain template [restart]
 #
 # The function changes template of httpd.conf configuration file. The content
 # of webdomain directories remains untouched.
@@ -15,6 +15,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 template=$3
+restart=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -26,7 +27,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain template'
+check_args '3' "$#" 'user domain template [restart]'
 validate_format 'user' 'domain' 'template'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -170,7 +171,9 @@ for keys in $(cat $WEBTPL/apache_$template.descr|grep -v '#'); do
 done
 
 # Restart web
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

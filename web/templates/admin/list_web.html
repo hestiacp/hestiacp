@@ -10,6 +10,16 @@ foreach ($data as $key => $value) {
         $status = 'active';
         $spnd_action = 'suspend' ;
     }
+
+    if (!empty($data[$key]['SSL_HOME'])) {
+        if ($data[$key]['SSL_HOME'] == 'same') {
+            $ssl_home = 'public_html';
+        } else {
+            $ssl_home = 'public_shtml';
+        }
+    } else {
+        $ssl_home = '';
+    }
     ?>
 
 <tr class="data-row">
@@ -24,7 +34,7 @@ foreach ($data as $key => $value) {
     <td class="data-dotted" width="830px" style="vertical-align:top;">
         <table width="830px"><tr>
             <td></td>
-            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="#"> edit</a></td>
+            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/web/?domain=<?php echo "$key" ?>"> edit</a></td>
             <td class="data-controls" width="80px"><img src="/images/suspend.png" width="7px" height="8px"><a href="#"> <?php echo $spnd_action ?></a></td>
             <td class="data-controls" width="70px"><img src="/images/delete.png" width="7px" height="7px"><a href="#"> delete</a></td>
         </tr></table>
@@ -54,7 +64,7 @@ foreach ($data as $key => $value) {
                 <td rowspan=4 style="vertical-align:top;" width="300">
                     <table width="300">
                         <tr><td class="counter-name" width="40%">SSL Support:</td><td class="counter-value"><?php echo $data[$key]['SSL'] ?></td></tr>
-                        <tr><td class="counter-name">SSL Home:</td><td class="counter-value"><?php echo $data[$key]['SSL_HOME'] ?></td></tr>
+                        <tr><td class="counter-name">SSL Home:</td><td class="counter-value"><?php echo $ssl_home ?></td></tr>
                         <tr><td class="counter-name">Nginx Template:</td><td class="counter-value"><?php echo $data[$key]['NGINX'] ?></td></tr>
                         <tr><td colspan="2" class="counter-name">Nginx Extentions: <a class="nginx-ext" style="padding: 0 12 0 12"><?php echo str_replace(',', ', ', $data[$key]['NGINX_EXT']) ?></td></tr>
                     </table>

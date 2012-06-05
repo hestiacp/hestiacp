@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete web domain error loggin support
-# options: user domain
+# options: user domain [restart]
 #
 # The function of disabling error logging feature. It comments  ErrorLog 
 # direcitve in apache or/and nginx configuration. The data already collected
@@ -15,6 +15,7 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
+restart=$3
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -26,7 +27,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain'
+check_args '2' "$#" 'user domain [restart]'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user" "$user"
@@ -86,7 +87,9 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$ELOG' 'no'
 
 # Restart web server
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

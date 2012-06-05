@@ -16,11 +16,6 @@
         SSLRequireSSL
         Options +Includes -Indexes %cgi_option%
         php_admin_value upload_tmp_dir %home%/%user%/tmp
-        php_admin_value upload_max_filesize 60M
-        php_admin_value max_execution_time 60
-        php_admin_value post_max_size  60M
-        php_admin_value memory_limit 60M
-        php_admin_flag mysql.allow_persistent  off
         php_admin_flag safe_mode off
         php_admin_value session.save_path %home%/%user%/tmp
         php_admin_value sendmail_path '/usr/sbin/sendmail -t -i -f %email%'

@@ -1,6 +1,6 @@
 <?php
 // Init
-//error_reporting(NULL);
+error_reporting(NULL);
 ob_start();
 session_start();
 $TAB = 'WEB';
@@ -20,15 +20,15 @@ if ($_SESSION['user'] == 'admin') {
         header("Location: /list/web/");
     }
 
-    // OK
+    // Action
     if (!empty($_POST['ok'])) {
         // Check input
         if (empty($_POST['v_domain'])) $errors[] = 'domain';
         if (empty($_POST['v_ip'])) $errors[] = 'ip';
         if (empty($_POST['v_template'])) $errors[] = 'template';
-        if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_cert']))) $errors[] = 'ssl certificate';
+        if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))) $errors[] = 'ssl certificate';
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))) $errors[] = 'ssl key';
-        if ((!empty($_POST['v_aliases'])) || (!empty($_POST['v_elog'])) || (!empty($_POST['v_ssl'])) || (!empty($_POST['v_ssl_cert'])) || (!empty($_POST['v_ssl_key'])) || (!empty($_POST['v_ssl_pem'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
+        if ((!empty($_POST['v_aliases'])) || (!empty($_POST['v_elog'])) || (!empty($_POST['v_ssl'])) || (!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key'])) || (!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
 
         // Protect input
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
@@ -41,9 +41,9 @@ if ($_SESSION['user'] == 'admin') {
         $v_elog = $_POST['v_elog'];
         $v_nginx = $_POST['v_nginx'];
         $v_ssl = $_POST['v_ssl'];
-        $v_ssl_cert = $_POST['v_ssl_cert'];
+        $v_ssl_crt = $_POST['v_ssl_crt'];
         $v_ssl_key = $_POST['v_ssl_key'];
-        $v_ssl_pem = $_POST['v_ssl_pem'];
+        $v_ssl_ca = $_POST['v_ssl_ca'];
         $v_stats = escapeshellarg($_POST['v_stats']);
 
         // Check for errors
@@ -57,6 +57,7 @@ if ($_SESSION['user'] == 'admin') {
             }
             $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
         } else {
+            // Add WEB
             exec (VESTA_CMD."v_add_web_domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." 'no'", $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
@@ -92,7 +93,7 @@ if ($_SESSION['user'] == 'admin') {
                 $valiases = preg_replace("/\n/", " ", $_POST['v_aliases']);
                 $valiases = preg_replace("/,/", " ", $valiases);
                 $valiases = preg_replace('/\s+/', ' ',$valiases);
-
+                $valiases = trim($valiases);
                 $aliases = explode(" ", $valiases);
                 foreach ($aliases as $alias) {
                     $alias = escapeshellarg($alias);
@@ -146,23 +147,23 @@ if ($_SESSION['user'] == 'admin') {
                 $tmpdir = $output[0];
 
                 // Certificate
-                if (!empty($_POST['v_ssl_cert'])) {
+                if (!empty($_POST['v_ssl_crt'])) {
                     $fp = fopen($tmpdir."/".$_POST['v_domain'].".crt", 'w');
-                    fwrite($fp, $_POST['v_ssl_cert']."\n");
+                    fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_crt']));
                     fclose($fp);
                 }
 
                 // Key
                 if (!empty($_POST['v_ssl_key'])) {
                     $fp = fopen($tmpdir."/".$_POST['v_domain'].".key", 'w');
-                    fwrite($fp, $_POST['v_ssl_key']."\n");
+                    fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_key']));
                     fclose($fp);
                 }
 
-                // Pem
-                if (!empty($_POST['v_ssl_pem'])) {
-                    $fp = fopen($tmpdir."/".$_POST['v_domain'].".pem", 'w');
-                    fwrite($fp, $_POST['v_ssl_pem']."\n");
+                // CA
+                if (!empty($_POST['v_ssl_ca'])) {
+                    $fp = fopen($tmpdir."/".$_POST['v_domain'].".ca", 'w');
+                    fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_ca']));
                     fclose($fp);
                 }
 
@@ -199,9 +200,9 @@ if ($_SESSION['user'] == 'admin') {
                 unset($v_domain);
                 unset($v_aliases);
                 unset($v_ssl);
-                unset($v_ssl_cert);
+                unset($v_ssl_crt);
                 unset($v_ssl_key);
-                unset($v_ssl_pem);
+                unset($v_ssl_ca);
             }
         }
     }

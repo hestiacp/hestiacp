@@ -14,6 +14,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
+restart=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -53,7 +54,9 @@ update_domain_zone
 #----------------------------------------------------------#
 
 # Restart named
-$BIN/v_restart_dns "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_dns "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

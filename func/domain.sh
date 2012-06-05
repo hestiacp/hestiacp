@@ -17,7 +17,7 @@ is_nginx_template_valid() {
     d="$WEBTPL/ngingx_vhost_$template.descr"
     s="$WEBTPL/ngingx_vhost_$template.stpl"
     if [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
-        echo "Error: $template not found"
+        echo "Error: nginx $template not found"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi

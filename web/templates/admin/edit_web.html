@@ -107,7 +107,7 @@
             <tr><td><table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v_add_web_domain_stats_user"><tr>
                 <tr><td class="add-text" style="padding: 9px 0 0 2px;">Web Statistics Username</td></tr>
                 <tr><td><input type="text" size="20" class="add-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".$v_stats_user;  ?>></tr>
-                <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics Password <a onclick="randomString();" class="genpass">generate</a></td></tr>
+                <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics Password <a href="javascript:randomString();" class="genpass">generate</a></td></tr>
                 <tr><td><input type="text" size="20" class="add-input" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".$v_stats_password;  ?> id="v_password"></tr>
             </td></tr></tr></table>
             <tr><td style="padding: 24px 0 0 0;">

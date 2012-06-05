@@ -20,7 +20,56 @@ foreach ($data as $key => $value) {
     } else {
         $ssl_home = '';
     }
+    if (strlen($data[$key]['NGINX_EXT']) > 16 ) {
+        $nginx_ext = substr($data[$key]['NGINX_EXT'], 0, 16);
+        $nginx_ext = trim($nginx_ext, ",");
+        $nginx_ext = str_replace(',', ', ', $nginx_ext);
+        $nginx_ext = $nginx_ext.", ...";
+    } else {
+        $nginx_ext = str_replace(',', ', ', $data[$key]['NGINX_EXT']);
+    }
+
     ?>
+<script type="text/javascript">
+    $(function(){
+        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog({
+            modal: true,
+            autoOpen: false,
+            width: 360,
+            buttons: {
+                "Ok": function(event, ui) {
+                     location.href = '/<?php echo $spnd_action ?>/web/?domain=<?php echo "$key" ?>';
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $('#<?php echo $spnd_action ?>_link_<?php echo "$i" ?>').click(function(){
+            $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog('open');
+            return false;
+        });
+
+        $('#delete_dialog_<?php echo "$i" ?>').dialog({
+            modal: true,
+            autoOpen: false,
+            width: 360,
+            buttons: {
+                "Ok": function(event, ui) {
+                     location.href = '/delete/web/?domain=<?php echo "$key" ?>';
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $('#delete_link_<?php echo "$i" ?>').click(function(){
+            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
+            return false;
+        });
+
+    });
+</script>
 
 <tr class="data-row">
     <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
@@ -35,20 +84,32 @@ foreach ($data as $key => $value) {
         <table width="830px"><tr>
             <td></td>
             <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/web/?domain=<?php echo "$key" ?>"> edit</a></td>
-            <td class="data-controls" width="80px"><img src="/images/suspend.png" width="7px" height="8px"><a href="#"> <?php echo $spnd_action ?></a></td>
-            <td class="data-controls" width="70px"><img src="/images/delete.png" width="7px" height="7px"><a href="#"> delete</a></td>
+            <td class="data-controls" width="80px">
+                <img src="/images/suspend.png" width="7px" height="8px">
+                <a href="#" id="<?php echo $spnd_action ?>_link_<?php echo "$i" ?>"> <?php echo $spnd_action ?></a>
+                <div id="<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>" title="Confirmation">
+                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> domain?</p>
+                </div>
+            </td>
+            <td class="data-controls" width="70px">
+                <img src="/images/delete.png" width="7px" height="7px">
+                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
+                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
+                    <p class="counter-value">Are you sure you want to delete <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> domain?</p>
+                </div>
+            </td>
         </tr></table>
 
         <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4;"><?php echo $key ?> <i><a class="aliases" style="padding: 0 20 0 0"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></i></a></td></tr>
+            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b> <i><a class="aliases" style="padding: 0 30px 0 8px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></i></td></tr>
             <tr>
                 <td style="vertical-align:top;" >
                     <table>
-                        <tr><td class="counter-name" style="padding: 4 0 0 0;"><?php echo $data[$key]['IP'] ?></td>
-                        <tr><td class="counter-name" style="padding: 0 0 6 0">[<?php echo $data[$key]['TPL'] ?>] template</td></tr>
-                        <tr><td class="chart1">Bandwidth: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>
+                        <tr><td class="counter-name" style="padding: 2px 0 0 2px;"><?php echo $data[$key]['IP'] ?></td>
+                        <tr><td class="counter-name" style="padding: 0 0 8px 2px">[<?php echo $data[$key]['TPL'] ?>] template</td></tr>
+                        <tr><td class="chart1" style="padding: 0 0 0 2px">Bandwidth: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>
                             <div style="width:160px; height:6px; font-size:0;background-color:#B3CED5;"><div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:6px; background-color:#629FBB; border-right:1px #629FBB solid;"></div></div></td></tr>
-                        <tr><td class="chart1">Disk: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
+                        <tr><td class="chart1" style="padding: 0 0 0 2px">Disk: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
                             <div style="width:160px; height:6px; font-size:0;background-color:#B3CED5;"><div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#629FBB; border-right:1px #629FBB solid;"></div></div></td></tr>
                     </table>
                 </td>
@@ -66,7 +127,7 @@ foreach ($data as $key => $value) {
                         <tr><td class="counter-name" width="40%">SSL Support:</td><td class="counter-value"><?php echo $data[$key]['SSL'] ?></td></tr>
                         <tr><td class="counter-name">SSL Home:</td><td class="counter-value"><?php echo $ssl_home ?></td></tr>
                         <tr><td class="counter-name">Nginx Template:</td><td class="counter-value"><?php echo $data[$key]['NGINX'] ?></td></tr>
-                        <tr><td colspan="2" class="counter-name">Nginx Extentions: <a class="nginx-ext" style="padding: 0 12 0 12"><?php echo str_replace(',', ', ', $data[$key]['NGINX_EXT']) ?></td></tr>
+                        <tr><td class="counter-name">Nginx Extentions:</td><td class="counter-value"><?php echo $nginx_ext ?></td></tr>
                     </table>
                 </td>
             </tr>

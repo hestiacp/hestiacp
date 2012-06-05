@@ -36,11 +36,11 @@ foreach ($data as $key => $value) {
         </tr></table>
 
         <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4;"><?php echo $key ?></td></tr>
+            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b></td></tr>
             <tr>
                 <td style="vertical-align:top;" >
                     <table>
-                        <tr><td class="counter-name" style="padding: 4 0 6 0">catchall > <?php echo $data[$key]['CATCHALL'] ?></td></tr>
+                        <tr><td class="counter-name" style="padding: 2px 0 2px 0">catchall > <?php echo $data[$key]['CATCHALL'] ?></td></tr>
                         <tr><td class="chart1">Disk: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
                             <div style="width:160px; height:6px; font-size:0;background-color:#B3CED5;"><div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#629FBB; border-right:1px #629FBB solid;"></div></div></td></tr>
                     </table>

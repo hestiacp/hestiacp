@@ -13,7 +13,7 @@ foreach ($data as $key => $value) {
     ?>
 <script type="text/javascript">
     $(function(){
-        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$key" ?>').dialog({
+        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog({
             modal: true,
             autoOpen: false,
             width: 360,
@@ -26,12 +26,12 @@ foreach ($data as $key => $value) {
                 }
             }
         });
-        $('#<?php echo $spnd_action ?>_link_<?php echo "$key" ?>').click(function(){
-            $('#<?php echo $spnd_action ?>_dialog_<?php echo "$key" ?>').dialog('open');
+        $('#<?php echo $spnd_action ?>_link_<?php echo "$i" ?>').click(function(){
+            $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog('open');
             return false;
         });
 
-        $('#delete_dialog_<?php echo "$key" ?>').dialog({
+        $('#delete_dialog_<?php echo "$i" ?>').dialog({
             modal: true,
             autoOpen: false,
             width: 360,
@@ -44,14 +44,12 @@ foreach ($data as $key => $value) {
                 }
             }
         });
-        $('#delete_link_<?php echo "$key" ?>').click(function(){
-            $('#delete_dialog_<?php echo "$key" ?>').dialog('open');
+        $('#delete_link_<?php echo "$i" ?>').click(function(){
+            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
             return false;
         });
-
-
     });
-    </script>
+</script>
 <tr class="data-row">
     <td class="data-dotted" style="padding: 0px 10px 0px 0px">
         <table class="data-col1">
@@ -96,29 +94,29 @@ foreach ($data as $key => $value) {
             <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/user/?user=<?php echo "$key" ?>"> edit</a></td>
             <td class="data-controls" width="80px">
                 <img src="/images/suspend.png" width="7px" height="8px">
-                <a href="#" id="<?php echo $spnd_action ?>_link_<?php echo "$key" ?>"> <?php echo $spnd_action ?></a>
-                <div id="<?php echo $spnd_action ?>_dialog_<?php echo "$key" ?>" title="Confirmation">
+                <a href="#" id="<?php echo $spnd_action ?>_link_<?php echo $i ?>"> <?php echo $spnd_action ?></a>
+                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" title="Confirmation">
                     <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> user account?</p>
                 </div>
             </td>
             <td class="data-controls" width="70px">
                 <img src="/images/delete.png" width="7px" height="7px">
-                <a href="#" id="delete_link_<?php echo "$key" ?>"> delete</a>
-                <div id="delete_dialog_<?php echo "$key" ?>" title="Confirmation">
+                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
+                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
                     <p class="counter-value">Are you sure you want to delete <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> user account?</p>
                 </div>
             </td>
         </tr></table>
 
         <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="username" style="padding: 0 0 0 4;"><?php echo $key ?><a class="fullname"><i><?php echo $data[$key]['FNAME']?> <?php echo $data[$key]['LNAME']?></i></a></td></tr>
+            <tr><td colspan=3 class="username" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b><a class="fullname"><i> <?php echo $data[$key]['FNAME']?> <?php echo $data[$key]['LNAME']?></i></a></td></tr>
             <td style="vertical-align:top;" >
                 <table>
-                    <tr><td colspan=2 class="counter-name"  style="padding: 4 0 0 0;"><?php echo $data[$key]['CONTACT']?></td></tr>
-                    <tr><td colspan=2 class="counter-name"  style="padding: 0pt 0pt 20px;">[<?php echo $data[$key]['PACKAGE']?>] package</td></tr>
-                    <tr><td class="chart1" colspan=2 style="padding: 0 0 0 3;">Bandwidth: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
+                    <tr><td colspan=2 class="counter-name"  style="padding: 2px 0 0 2px;"><?php echo $data[$key]['CONTACT']?></td></tr>
+                    <tr><td colspan=2 class="counter-name"  style="padding: 0 0 18px 2px;">[<?php echo $data[$key]['PACKAGE']?>] package</td></tr>
+                    <tr><td class="chart1" colspan=2 style="padding: 0 0 0 3px;">Bandwidth: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
                         <div style="width:160px; height:6px; font-size:0;background-color:#B3CED5;"><div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:6px; background-color:#629FBB; border-right:1px #629FBB solid;"></div></div></td></tr>
-                    <tr><td class="chart1" colspan=2 style="padding: 0 0 0 3;">Disk: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
+                    <tr><td class="chart1" colspan=2 style="padding: 0 0 0 3[x;">Disk: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
                         <div style="width:160px; height:6px; font-size:0;background-color:#B3CED5;"><div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:6px; background-color:#629FBB; border-right:1px #629FBB solid;"></div></div></td></tr>
                     <tr><td colspan=2>
                         <table class="chart2"><tr>
@@ -134,7 +132,7 @@ foreach ($data as $key => $value) {
                 </table>
             </td>
             <td style="vertical-align:top;" width="300">
-                <table width="300">
+                <table width="320">
                     <tr><td class="counter-name" width="37%">Web Domains:</td>
                     <td class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?> / <?php echo $data[$key]['WEB_DOMAINS'] ?></td></tr>
                     <tr><td class="counter-name">Web SSL:</td>

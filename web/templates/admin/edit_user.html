@@ -28,7 +28,7 @@ document.v_edit_user.v_password.value = randomstring;
             <tr><td class="add-text" style="padding: 10 0 0 2px;">Username</td></tr>
             <tr><td><input type="text" size="20" class="add-input" name="v_user" <?php if (!empty($v_username)) echo "value=".$v_username;  ?> disabled> <input type="hidden" name="v_username" <?php if (!empty($v_username)) echo "value=".$v_username;  ?>></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">
-                Password <a href="#" onclick="randomString();" class="genpass">generate</a></td></tr>
+                Password <a href="javascript:randomString();" class="genpass">generate</a></td></tr>
             <tr><td><input type="text" size="20" class="add-input" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password;  ?>></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Email</td></tr>
             <tr><td><input type="text" size="20" class="add-input" name="v_email" <?php if (!empty($v_email)) echo "value=".$v_email; ?>></tr>

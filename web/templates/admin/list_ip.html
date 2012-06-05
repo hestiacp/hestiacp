@@ -20,11 +20,11 @@ foreach ($data as $key => $value) {
         </tr></table>
 
         <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4;"><?php echo $key ?><i><a class="aliases"><?php echo  $data[$key]['NAME'] ?></i></a></td></tr>
+            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b><i><a class="aliases" style="padding:0 0 0 8px;"><?php echo  $data[$key]['NAME'] ?></i></a></td></tr>
             <tr>
                 <td style="vertical-align:top;" >
                     <table>
-                        <tr><td class="counter-name" style="padding: 4 0 2 0"> <?php echo $data[$key]['NETMASK'] ?></td></tr>
+                        <tr><td class="counter-name" style="padding: 2px 0 0 0"> <?php echo $data[$key]['NETMASK'] ?></td></tr>
                         <tr><td class="counter-name"> <?php echo $data[$key]['INTERFACE'] ?> </td></tr>
                     </table>
                 </td>

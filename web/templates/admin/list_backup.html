@@ -31,11 +31,11 @@ foreach ($data as $key => $value) {
         </tr></table>
 
         <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4;"><?php echo $key ?></td></tr>
+            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b></td></tr>
             <tr>
                 <td style="vertical-align:top;" >
                     <table>
-                        <tr><td class="counter-name" style="padding: 4 0 0 0"> <?php echo $data[$key]['TYPE'] ?></td></tr>
+                        <tr><td class="counter-name" style="padding: 2px 0 0 0"> <?php echo $data[$key]['TYPE'] ?></td></tr>
                         <tr><td class="chart1">Run Time: <?php echo humanize_time($data[$key]['RUNTIME']) ?> </td></tr>
                         <tr><td class="chart1">Backup Size: <?php echo humanize_usage($data[$key]['SIZE']) ?> </td></tr>
                     </table>

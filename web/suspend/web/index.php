@@ -17,13 +17,13 @@ if ($_SESSION['user'] == 'admin') {
 
     // Cancel
     if (!empty($_POST['back'])) {
-        header("Location: /list/user/");
+        header("Location: /list/web/");
     }
 
     // Ok
     if (!empty($_GET['user'])) {
         $v_username = escapeshellarg($_GET['user']);
-        exec (VESTA_CMD."v_suspend_user ".$v_username, $output, $return_var);
+        exec (VESTA_CMD."v_suspend_web_domain ".$v_username, $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = 'Error: vesta did not return any output.';

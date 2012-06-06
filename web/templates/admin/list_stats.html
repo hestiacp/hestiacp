@@ -24,9 +24,9 @@ foreach ($data as $key => $value) {
                 <table>
                     <tr><td colspan=2 class="counter-name"  style="padding: 2px 0px 6px 2px;">[<?php echo $data[$key]['PACKAGE']?>] package</td></tr>
                     <tr><td class="chart1" colspan=2 style="padding: 0 0 0 2px;">Bandwidth: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
-                        <div style="width:160px; height:6px; font-size:0;background-color:#B3CED5;"><div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:6px; background-color:#629FBB; border-right:1px #629FBB solid;"></div></div></td></tr>
+                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
                     <tr><td class="chart1" colspan=2 style="padding: 0 0 0 2px;">Disk: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
-                        <div style="width:160px; height:6px; font-size:0;background-color:#B3CED5;"><div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:6px; background-color:#629FBB; border-right:1px #629FBB solid;"></div></div></td></tr>
+                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
                     <tr><td colspan=2>
                         <table class="chart2"><tr>
                             <td>

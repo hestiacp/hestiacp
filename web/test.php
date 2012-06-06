@@ -1,15 +1,25 @@
-<br>
-<form method="post">
-<textarea size="20" class="add-input" name="v_ssl_cert"><?php if (!empty($v_ssl_cert)) echo $v_ssl_cert;  ?></textarea>
-<br>
-<input type="submit" name="ok" value="OK" class="add-button">
-
-<br>
-<?php
-    if (!empty($_POST['v_ssl_cert'])) {
-        $fp = fopen("/tmp/test.crt", 'w');
-        fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_cert']));
-        fclose($fp);
+<script type="text/javascript">
+var checked=false;
+var frmname='';
+function checkedAll(frmname)
+{
+    var valus= document.getElementById(frmname);
+    if (checked==false)
+    {
+	checked=true;
     }
-
-?>
+    else
+    {
+	checked = false;
+    }
+    for (var i =0; i < valus.elements.length; i++) 
+    {
+	valus.elements[i].checked=checked;
+    }
+}
+</script>
+<form id ="cbexample">
+<input type="checkbox" name="chk1">Apple
+<input type="checkbox" name="chk2">Banana
+<a onclick='checkedAll("cbexample");'>Select All</a>
+</form>

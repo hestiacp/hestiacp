@@ -28,7 +28,7 @@ if (!empty($_SESSION['look'])) {
      }
     .top {
         background: #574f51;
-        color: #ebe2ae;
+        color: #f5edb6;
         padding: 0 10 0 0;
         margin-left: auto;
         margin-right: auto;
@@ -36,10 +36,11 @@ if (!empty($_SESSION['look'])) {
         font-family: Arial, sans-serif;
         font-size: 10pt;
         text-align: right;
-        line-height: 1.4em;
+        line-height: 1.2em;
      }
 
     .top-link {
+
         font-family: Arial, sans-serif;
         text-decoration: none;
         color: #dbdbdb;
@@ -57,12 +58,12 @@ if (!empty($_SESSION['look'])) {
 
     .top-link:active{
         text-decoration: underline;
-        color: #f5edb6;
+        color: #CCE4F0;
      }
 
     .top-slink {
         text-decoration: none;
-        color: #f5edb6;
+        color: #CCE4F0;
      }
 
     .bottom {
@@ -133,6 +134,7 @@ if (!empty($_SESSION['look'])) {
         width: 95px;
         padding: 20px 0 2px 15px;
         line-height: 1.0em;
+
         font-size: 9pt;
         font-family: Arial, sans-serif;
         color: #2d2d2d;
@@ -149,9 +151,9 @@ if (!empty($_SESSION['look'])) {
     }
 
     .nav-link {
+        letter-spacing: -1.2px;
         font-size: 16pt;
-        color: #484243;
-        font-family: 'Trebuchet MS';
+        color: #574F51;
         font-family: Arial, sans-serif;
         text-decoration: none;
     }
@@ -167,9 +169,9 @@ if (!empty($_SESSION['look'])) {
     }
 
     .nav-slink {
+        letter-spacing: -1.2px;
         font-size: 16pt;
-        color: #8b99a2;
-        font-family: 'Trebuchet MS';
+        color: #68797d;
         font-family: Arial, sans-serif;
         text-decoration: none;
     }
@@ -184,6 +186,19 @@ if (!empty($_SESSION['look'])) {
         vertical-align:top;
         padding: 10px 10px 16px 0;
      }
+
+
+    .select-controls {
+        color: #6A6A6A;
+        font-size: 8pt;
+        font-family: Arial, sans-serif;
+        letter-spacing: 0.1em;
+        text-decoration: none;
+    }
+
+    .select-controls:hover {
+	text-decoration: underline;
+    }
 
     .add {
         padding: 0 8px 0 3px;
@@ -333,7 +348,7 @@ if (!empty($_SESSION['look'])) {
 
     .data-count {
         background: #ebe9dc;
-        color: #777;
+        color: #888;
         font-size:18 pt;
         font-family: Arial;
         margin: 22px 0 0 0;
@@ -527,14 +542,19 @@ if (!empty($_SESSION['look'])) {
     <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
     <script language="JavaScript">
-        function checkAll(bx) {
-          var cbs = document.getElementsByTagName('input');
-          for(var i=0; i < cbs.length; i++) {
-            if(cbs[i].type == 'checkbox') {
-              cbs[i].checked = bx.checked;
-            }
-          }
+    var checked=false;
+    var frmname='';
+    function checkedAll(frmname) {
+        var valus= document.getElementById(frmname);
+        if (checked==false) {
+            checked=true;
+        } else {
+            checked = false;
         }
+        for (var i =0; i < valus.elements.length; i++) {
+            valus.elements[i].checked=checked;
+        }
+    }
     </script>
 </head>
 <body>

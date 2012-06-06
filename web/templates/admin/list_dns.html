@@ -17,7 +17,7 @@ foreach ($data as $key => $value) {
         <table class="data-col1">
             <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
             <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-            <tr><td class="data-<?php echo $status ?>"><i><b><?php echo $status ?></b></i></td></tr>
+            <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
 
         </table>
     </td>
@@ -64,7 +64,7 @@ foreach ($data as $key => $value) {
 </table>
 <table class="data-count">
 <tr>
-    <td><i>→ 
+    <td>→ 
     <?php
         if ( $i == 1) {
             echo "1 user dns domain ";
@@ -72,6 +72,6 @@ foreach ($data as $key => $value) {
             echo "$i dns domains ";
         }
     ?>
-    </i></td>
+    </td>
 </tr>
 </table>

@@ -62,17 +62,17 @@ function humanize_usage($usage) {
                 if ( $usage > 1000 ) {
                     $usage = $usage / 1000 ;
                     $usage = number_format($usage, 2);
-                    $usage = $usage." PB";
+                    $usage = $usage." Pb";
                 } else {
                     $usage = number_format($usage, 2);
-                    $usage = $usage." TB";
+                    $usage = $usage." Tb";
                 }
         } else {
             $usage = number_format($usage, 2);
-            $usage = $usage." GB";
+            $usage = $usage." Gb";
         }
     } else {
-        $usage = $usage." MB";
+        $usage = $usage." Mb";
     }
     return $usage;
 }

@@ -17,7 +17,7 @@ foreach ($data as $key => $value) {
         <table class="data-col1">
             <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
             <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-            <tr><td class="data-<?php echo $status ?>"><i><b><?php echo $status ?></b></i></td></tr>
+            <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
 
         </table>
     </td>
@@ -30,7 +30,7 @@ foreach ($data as $key => $value) {
         </tr></table>
 
         <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b> <i><a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></i></a></td></tr>
+            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
             <tr>
                 <td style="vertical-align:top;" >
                     <table>
@@ -62,7 +62,7 @@ foreach ($data as $key => $value) {
 </table>
 <table class="data-count">
 <tr>
-    <td><i>→ 
+    <td>→ 
     <?php
         if ( $i == 1) {
             echo "1 mail account ";
@@ -70,5 +70,5 @@ foreach ($data as $key => $value) {
             echo "$i mail accounts ";
         }
     ?>
-    </i></td>
+    </td>
 </tr>

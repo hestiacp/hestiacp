@@ -1,12 +1,12 @@
 <table class="sub-menu">
 <tr>
-    <td style="padding: 10px 2px 28px 0;" ><a class="add-name"><i>Editing User</i></a>
+    <td style="padding: 10px 2px 28px 0;" ><a class="add-name"><b>Editing User</b></a>
     <?php 
         if (!empty($_SESSION['error_msg'])) {
-            echo "<a class=\"add-error\"><i> → ".$_SESSION['error_msg']."</i></a>";
+            echo "<a class=\"add-error\"> → ".$_SESSION['error_msg']."</a>";
         } else {
             if (!empty($_SESSION['ok_msg'])) {
-                echo "<a class=\"add-ok\"><i> → ".$_SESSION['ok_msg']."</i></a>";
+                echo "<a class=\"add-ok\"> → ".$_SESSION['ok_msg']."</a>";
             }
         }
     ?>

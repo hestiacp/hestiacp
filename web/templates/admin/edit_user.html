@@ -70,9 +70,9 @@ document.v_edit_user.v_password.value = randomstring;
             <tr><td><input type="text" size="20" class="add-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>></tr>
             <tr><td style="padding: 24px 0 0 0;">
                 <input type="submit" class="add-button" name="save" value="Save">
-                <input type="submit" class="add-button" name="cancel" value="Cancel">
+                </form>
+                <input type="button" class="add-button" value="Cancel" onClick="location.href='/list/user/'">
             </td></tr>
-            </form>
         </table>
     </td>
 </tr>

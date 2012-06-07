@@ -49,9 +49,9 @@ document.v_add_user.v_password.value = randomstring;
             <tr><td><input type="text" size="20" class="add-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>></tr>
             <tr><td style="padding: 24px 0 0 0;">
                 <input type="submit" name="ok" value="OK" class="add-button">
-                <input type="submit" class="add-button" name="cancel" value="Cancel">
+                </form>
+                <input type="button" class="add-button" value="Cancel" onClick="location.href='/list/user/'">
             </td></tr>
-            </form>
         </table>
     </td>
 </tr>

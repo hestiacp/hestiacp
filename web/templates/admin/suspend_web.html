@@ -14,13 +14,13 @@
             <tr>
                 <td style="padding: 24px 0 0 0;" width="100px">
                     <form method="get">
-                        <input type="button" class="add-button" value="Back to users" onClick="location.href='/list/user/'">
+                        <input type="button" class="add-button" value="Back to domains" onClick="location.href='/list/web/'">
                     </form>
                 </td>
                 <td style="padding: 24px 0 0 0;">
-                    <form action="/unsuspend/user/" method="get">
-                        <input type="hidden" name="user" value="<?php echo $_GET['user']?>">
-                        <input type="submit" class="add-button" name="unsuspend" value="Unsuspend <?php echo $_GET['user']?>">
+                    <form action="/unsuspend/web/" method="get">
+                        <input type="hidden" name="domain" value="<?php echo $_GET['domain']?>">
+                        <input type="submit" class="add-button" name="unsuspend" value="Unsuspend <?php echo $_GET['domain']?>">
                     </form>
                 </td>
             </tr>

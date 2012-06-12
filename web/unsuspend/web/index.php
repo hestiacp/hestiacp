@@ -24,19 +24,19 @@ if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['domain'])) {
         $v_username = escapeshellarg($user);
         $v_domain = escapeshellarg($_GET['domain']);
-        exec (VESTA_CMD."v_suspend_web_domain ".$v_username." ".$v_domain, $output, $return_var);
+        exec (VESTA_CMD."v_unsuspend_web_domain ".$v_username." ".$v_domain, $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = 'Error: vesta did not return any output.';
             $_SESSION['error_msg'] = $error;
         } else {
-            $_SESSION['ok_msg'] = "OK: web domain <b>".$_GET['domain']."</b> has been suspended.";
+            $_SESSION['ok_msg'] = "OK: web domain <b>".$_GET['domain']."</b> has been unsuspended.";
                 unset($v_lname);
         }
         unset($output);
 
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_suspend_web.html');
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/suspend_web.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_unsuspend_web.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/unsuspend_web.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
 

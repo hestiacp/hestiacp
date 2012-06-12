@@ -5,7 +5,7 @@ foreach ($data as $key => $value) {
     ++$i;
     if ($data[$key]['SUSPENDED'] == 'yes') {
         $status = 'suspended';
-        $spnd_action = 'ususpend' ;
+        $spnd_action = 'unsuspend' ;
     } else {
         $status = 'active';
         $spnd_action = 'suspend' ;

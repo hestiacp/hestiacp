@@ -16,7 +16,7 @@ format=${1-shell}
 json_list_users() {
     echo '{'
     fileds_count=$(echo "$fields" | wc -w)
-    for USER in $(ls $VESTA/data/users/); do
+    for USER in $(grep @ /etc/passwd|cut -f 1 -d :); do
         source $VESTA/data/users/$USER/user.conf
         if [ -n "$data" ]; then
             echo -e '        },'
@@ -54,7 +54,7 @@ shell_list_users() {
         echo
     fi
 
-    for USER in $(ls $VESTA/data/users/); do
+    for USER in $(grep @ /etc/passwd|cut -f 1 -d :); do
         source $VESTA/data/users/$USER/user.conf
         for field in $fields; do
             eval value=$field

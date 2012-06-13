@@ -40,9 +40,9 @@ json_list_domain() {
             echo -e "\t\"$value\": {"
         else
             if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"$value\","
-            else
                 echo -e "\t\t\"${field//$/}\": \"$value\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"$value\","
             fi
         fi
         # Updating iterator

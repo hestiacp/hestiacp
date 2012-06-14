@@ -114,7 +114,9 @@ update_domain_zone() {
         done
 
         RECORD=$(idn --quiet -a -t "$RECORD")
-        eval echo -e "\"$fields\""|sed -e "s/%quote%/'/g" >> $conf
+        if [ "$SUSPENDED" != 'yes' ]; then
+            eval echo -e "\"$fields\""|sed -e "s/%quote%/'/g" >> $conf
+        fi
     done < $USER_DATA/dns/$domain.conf
 }
 

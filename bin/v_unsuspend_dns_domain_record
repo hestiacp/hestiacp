@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: unsuspend dns domain
-# options: user domain
+# info: unsuspend dns domain record
+# options: user domain id [restart]
 #
-# The function unsuspends a certain user's domain.
+# The function unsuspends a certain domain record.
 
 
 #----------------------------------------------------------#
@@ -13,42 +13,51 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-restart="$3"
+id=$3
+restart="$4"
 
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain'
-validate_format 'user' 'domain'
+check_args '3' "$#" 'user domain id [restart]'
+validate_format 'user' 'domain' 'id'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
-is_object_suspended 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+is_object_valid "dns/$domain" 'ID' "$id"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding zone in named.conf
-echo "zone \"$domain\" { type master; file \"/etc/namedb/$domain.db\"; };" \
-    >> /etc/named.conf
+line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
+eval $line
+sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
+
+# Adding record
+dns_rec="ID='$id' RECORD='$RECORD' TYPE='$TYPE' PRIORITY='$PRIORITY'"
+dns_rec="$dns_rec VALUE='$VALUE' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
+
+# Sorting records
+sort_dns_records
+
+# Updating zone
+update_domain_zone
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Unsuspending domain in config
-update_object_value 'dns' 'DOMAIN' "$domain" '$SUSPENDED' 'no'
-decrease_user_value "$user" '$SUSPENDED_DNS'
-sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/dns/$domain.conf
-
 
 # Restart named
 if [ "$restart" != 'no' ]; then

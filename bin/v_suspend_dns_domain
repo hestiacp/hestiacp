@@ -46,6 +46,7 @@ sed -i "/\/$domain.db\"/d" /etc/named.conf
 
 # Adding suspend in config
 update_object_value 'dns' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
+sed -i "s/SUSPENDED='no'/SUSPENDED='yes'/g" $USER_DATA/dns/$domain.conf
 increase_user_value "$user" '$SUSPENDED_DNS'
 
 # Restart named

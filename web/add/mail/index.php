@@ -86,7 +86,11 @@ if ($_SESSION['user'] == 'admin') {
         $v_account = escapeshellarg($_POST['v_account']);
         $v_password = escapeshellarg($_POST['v_password']);
         $v_quota = escapeshellarg($_POST['v_quota']);
+        $v_aliases = $_POST['v_aliases'];
+        $v_fwd = $_POST['v_fwd'];
+
         if (empty($_POST['v_quota'])) $v_quota = 0;
+        if ((!empty($_POST['v_quota'])) || (!empty($_POST['v_aliases'])) || (!empty($_POST['v_fwd'])) ) $v_adv = 'yes';
 
         // Check for errors
         if (!empty($errors[0])) {
@@ -106,11 +110,58 @@ if ($_SESSION['user'] == 'admin') {
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
                 $_SESSION['error_msg'] = $error;
             }
+
+            // Add Aliases
+            if ((!empty($_POST['v_aliases'])) && (empty($_SESSION['error_msg']))) {
+                $valiases = preg_replace("/\n/", " ", $_POST['v_aliases']);
+                $valiases = preg_replace("/,/", " ", $valiases);
+                $valiases = preg_replace('/\s+/', ' ',$valiases);
+                $valiases = trim($valiases);
+                $aliases = explode(" ", $valiases);
+                foreach ($aliases as $alias) {
+                    $alias = escapeshellarg($alias);
+                    if (empty($_SESSION['error_msg'])) {
+                        exec (VESTA_CMD."v_add_mail_account_alias ".$user." ".$v_domain." ".$v_account." ".$alias, $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            $_SESSION['error_msg'] = $error;
+                        }
+                    }
+                    unset($output);
+                }
+            }
+
+            // Add Forwads
+            if ((!empty($_POST['v_fwd'])) && (empty($_SESSION['error_msg']))) {
+                $vfwd = preg_replace("/\n/", " ", $_POST['v_fwd']);
+                $vfwd = preg_replace("/,/", " ", $vfwd);
+                $vfwd = preg_replace('/\s+/', ' ',$vfwd);
+                $vfwd = trim($vfwd);
+                $fwd = explode(" ", $vfwd);
+                foreach ($fwd as $forward) {
+                    $forward = escapeshellarg($forward);
+                    if (empty($_SESSION['error_msg'])) {
+                        exec (VESTA_CMD."v_add_mail_account_forward ".$user." ".$v_domain." ".$v_account." ".$forward, $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            $_SESSION['error_msg'] = $error;
+                        }
+                    }
+                    unset($output);
+                }
+            }
+
             unset($output);
             if (empty($_SESSION['error_msg'])) {
                 $_SESSION['ok_msg'] = "OK: account <b>".$_POST['v_account']."</b> has been created successfully.";
                 unset($v_account);
                 unset($v_password);
+                unset($v_password);
+                unset($v_aliases);
+                unset($v_fwd);
+                unset($v_quota);
             }
         }
     }

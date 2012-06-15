@@ -31,9 +31,9 @@ json_list_domain() {
             echo -e "\t\"$value\": {"
         else
             if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"$value\","
-            else
                 echo -e "\t\t\"${field//$/}\": \"$value\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"$value\","
             fi
         fi
         (( ++i))
@@ -72,7 +72,7 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 # Defining fileds to select
 conf=$USER_DATA/mail.conf
 fields='$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK $CATCHALL
-$SUSPENDED $DATE'
+$SUSPENDED $TIME $DATE'
 
 # Listing domains
 case $format in 

@@ -73,9 +73,14 @@ foreach ($data as $key => $value) {
                     <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> domain?</p>
                 </div>
             </td>
-            <td class="data-controls" width="70px"><img src="/images/delete.png" width="7px" height="7px"><a href="#"> delete</a></td>
+            <td class="data-controls" width="70px">
+                <img src="/images/delete.png" width="7px" height="7px">
+                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
+                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
+                    <p class="counter-value">Are you sure you want to delete <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> domain?</p>
+                </div>
+            </td>
         </tr></table>
-
         <table class="data-col2" width="830px">
             <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b></td></tr>
             <tr>

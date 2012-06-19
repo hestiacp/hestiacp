@@ -96,14 +96,14 @@ foreach ($data as $key => $value) {
                 <img src="/images/suspend.png" width="7px" height="8px">
                 <a href="#" id="<?php echo $spnd_action ?>_link_<?php echo $i ?>"> <?php echo $spnd_action ?></a>
                 <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" title="Confirmation">
-                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> user account?</p>
+                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <b><?php echo "$key" ?></b> user account?</p>
                 </div>
             </td>
             <td class="data-controls" width="70px">
                 <img src="/images/delete.png" width="7px" height="7px">
                 <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
                 <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
-                    <p class="counter-value">Are you sure you want to delete <span style="color: #34536A;"><b><?php echo "$key" ?></b></span> user account?</p>
+                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> user account?</p>
                 </div>
             </td>
         </tr></table>

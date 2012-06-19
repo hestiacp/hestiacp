@@ -5,7 +5,7 @@ foreach ($data as $key => $value) {
     ++$i;
     if ($data[$key]['SUSPENDED'] == 'yes') {
         $status = 'suspended';
-        $spnd_action = 'ususpend' ;
+        $spnd_action = 'unsuspend' ;
     } else {
         $status = 'active';
         $spnd_action = 'suspend' ;
@@ -15,6 +15,45 @@ foreach ($data as $key => $value) {
         $data[$key]['CATCHALL'] = '/dev/null';
     }
     ?>
+<script type="text/javascript">
+    $(function(){
+        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog({
+            modal: true,
+            autoOpen: false,
+            width: 360,
+            buttons: {
+                "Ok": function(event, ui) {
+                     location.href = '/<?php echo $spnd_action ?>/mail/?domain=<?php echo "$key" ?>';
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $('#<?php echo $spnd_action ?>_link_<?php echo "$i" ?>').click(function(){
+            $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog('open');
+            return false;
+        });
+
+        $('#delete_dialog_<?php echo "$i" ?>').dialog({
+            modal: true,
+            autoOpen: false,
+            width: 360,
+            buttons: {
+                "Ok": function(event, ui) {
+                     location.href = '/delete/mail/?domain=<?php echo "$key" ?>';
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $('#delete_link_<?php echo "$i" ?>').click(function(){
+            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
+            return false;
+        });
+    });
+</script>
 
 <tr class="data-row">
     <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
@@ -31,8 +70,20 @@ foreach ($data as $key => $value) {
             <td class="data-controls" width="100px"><img src="/images/more.png" width="8px" height="8px"><a href="?domain=<?php echo $key ?>"> list accounts</a></td>
             <td class="data-controls" width="98px"><img src="/images/add.png" width="8px" height="8px"><a href="/add/mail/?domain=<?php echo $key ?>"> add account</a></td>
             <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/mail/?domain=<?php echo $key ?>"> edit</a></td>
-            <td class="data-controls" width="80px"><img src="/images/suspend.png" width="7px" height="8px"><a href="#"> <?php echo $spnd_action ?></a></td>
-            <td class="data-controls" width="70px"><img src="/images/delete.png" width="7px" height="7px"><a href="#"> delete</a></td>
+            <td class="data-controls" width="80px">
+                <img src="/images/suspend.png" width="7px" height="8px">
+                <a href="#" id="<?php echo $spnd_action ?>_link_<?php echo "$i" ?>"> <?php echo $spnd_action ?></a>
+                <div id="<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>" title="Confirmation">
+                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <b><?php echo "$key" ?></b> domain?</p>
+                </div>
+            </td>
+            <td class="data-controls" width="70px">
+                <img src="/images/delete.png" width="7px" height="7px">
+                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
+                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
+                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> domain?</p>
+                </div>
+            </td>
         </tr></table>
 
         <table class="data-col2" width="830px">

@@ -171,9 +171,11 @@ if ($_SESSION['user'] == 'admin') {
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);
     } else {
+
+        $v_username = $user;
         $v_domain = escapeshellarg($_GET['domain']);
-        $v_record_id = escapeshellarg($_GET['record_id']);
-        exec (VESTA_CMD."v_list_dns_domain_records ".$user." ".$v_domain." 'json'", $output, $return_var);
+        $v_account = escapeshellarg($_GET['account']);
+        exec (VESTA_CMD."v_list_mail_account ".$user." ".$v_domain." ".$v_account." 'json'", $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -183,46 +185,185 @@ if ($_SESSION['user'] == 'admin') {
             unset($output);
             $v_username = $user;
             $v_domain = $_GET['domain'];
-            $v_d = $_GET['record_id'];
-            $v_rec = $data[$v_record_id]['RECORD'];
-            $v_type = $data[$v_record_id]['TYPE'];
-            $v_val = $data[$v_record_id]['VALUE'];
-            $v_priority = $data[$v_record_id]['PRIORITY'];
-            $v_suspended = $data[$v_record_id]['SUSPENDED'];
+            $v_account = $_GET['account'];
+            $v_password = "••••••••";
+            $v_aliases = str_replace(',', "\n", $data[$v_account]['ALIAS']);
+            $valiases = explode(",", $data[$v_account]['ALIAS']);
+            $v_fwd = str_replace(',', "\n", $data[$v_account]['FWD']);
+            $vfwd = explode(",", $data[$v_account]['FWD']);
+            $v_quota = $data[$v_account]['QUOTA'];
+            $v_autoreply = $data[$v_account]['AUTOREPLY'];
+            if ( $v_autoreply == 'yes' ) {
+                exec (VESTA_CMD."v_list_mail_account_autoreply ".$user." '".$v_domain."' '".$v_account."' json", $output, $return_var);
+                $autoreply_str = json_decode(implode('', $output), true);
+                unset($output);
+                $v_autoreply_message = $autoreply_str[$v_account]['MSG'];
+            }
+            $v_suspended = $data[$v_account]['SUSPENDED'];
             if ( $v_suspended == 'yes' ) {
                 $v_status =  'suspended';
             } else {
                 $v_status =  'active';
             }
-            $v_date = $data[$v_record_id]['DATE'];
-            $v_time = $data[$v_record_id]['TIME'];
+            $v_date = $data[$v_account]['DATE'];
+            $v_time = $data[$v_account]['TIME'];
         }
 
         // Action
         if (!empty($_POST['save'])) {
             $v_domain = escapeshellarg($_POST['v_domain']);
-            $v_record_id = escapeshellarg($_POST['v_record_id']);
+            $v_account = escapeshellarg($_POST['v_account']);
 
-            if (($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) && (empty($_SESSION['error_msg']))) {
-                $v_val = escapeshellarg($_POST['v_val']);
-                $v_priority = escapeshellarg($_POST['v_priority']);
-                exec (VESTA_CMD."v_change_dns_domain_record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
+            // Password
+            if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
+                $v_password = escapeshellarg($_POST['v_password']);
+                exec (VESTA_CMD."v_change_mail_account_password ".$v_username." ".$v_domain." ".$v_account." ".$v_password, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
                     $_SESSION['error_msg'] = $error;
                 }
-                $restart_dns = 'yes';
+                $v_password = "••••••••";
                 unset($output);
             }
-    
+
+            // Quota
+            if (($v_quota != $_POST['v_quota']) && (empty($_SESSION['error_msg']))) {
+                if (empty($_POST['v_quota'])) {
+                    $v_quota = 0; 
+                } else {
+                    $v_quota = escapeshellarg($_POST['v_quota']);
+                }
+                exec (VESTA_CMD."v_change_mail_account_quota ".$v_username." ".$v_domain." ".$v_account." ".$v_quota, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                }
+                unset($output);
+            }
+
+
+            // Aliases
+            if (empty($_SESSION['error_msg'])) {
+                $waliases = preg_replace("/\n/", " ", $_POST['v_aliases']);
+                $waliases = preg_replace("/,/", " ", $waliases);
+                $waliases = preg_replace('/\s+/', ' ',$waliases);
+                $waliases = trim($waliases);
+                $aliases = explode(" ", $waliases);
+                $v_aliases = str_replace(' ', "\n", $waliases);
+                $result = array_diff($valiases, $aliases);
+                foreach ($result as $alias) {
+                    if (empty($_SESSION['error_msg'])) {
+                        exec (VESTA_CMD."v_delete_mail_account_alias ".$v_username." ".$v_domain." ".$v_account." '".$alias, $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            $_SESSION['error_msg'] = $error;
+                        }
+                        unset($output);
+                    }
+                }
+                $result = array_diff($aliases, $valiases);
+                foreach ($result as $alias) {
+                    if (empty($_SESSION['error_msg'])) {
+                        exec (VESTA_CMD."v_add_mail_account_alias ".$v_username." ".$v_domain." ".$v_account." '".$alias, $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            $_SESSION['error_msg'] = $error;
+                        }
+                        unset($output);
+                    }
+                }
+            }
+
+            // Forwarders
+            if (empty($_SESSION['error_msg'])) {
+                $wfwd = preg_replace("/\n/", " ", $_POST['v_fwd']);
+                $wfwd = preg_replace("/,/", " ", $wfwd);
+                $wfwd = preg_replace('/\s+/', ' ',$wfwd);
+                $wfwd = trim($wfwd);
+                $fwd = explode(" ", $wfwd);
+                $v_fwd = str_replace(' ', "\n", $wfwd);
+                $result = array_diff($vfwd, $fwd);
+                foreach ($result as $forward) {
+                    if (empty($_SESSION['error_msg'])) {
+                        exec (VESTA_CMD."v_delete_mail_account_forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            $_SESSION['error_msg'] = $error;
+                        }
+                        unset($output);
+                    }
+                }
+                $result = array_diff($fwd, $vfwd);
+                foreach ($result as $forward) {
+                    if (empty($_SESSION['error_msg'])) {
+                        exec (VESTA_CMD."v_add_mail_account_forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            $_SESSION['error_msg'] = $error;
+                        }
+                        unset($output);
+                    }
+                }
+            }
+
+            // Autoreply
+            if (($v_autoreply == 'yes') && (empty($_POST['v_autoreply'])) && (empty($_SESSION['error_msg']))) {
+                exec (VESTA_CMD."v_delete_mail_account_autoreply ".$v_username." ".$v_domain." ".$v_account, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                }
+                unset($output);
+                $v_autoreply = 'no';
+		$v_autoreply_message = '';
+            }
+            if (($v_autoreply == 'yes') && (!empty($_POST['v_autoreply'])) && (empty($_SESSION['error_msg']))) {
+                if ( $v_autoreply_message != str_replace("\r\n", "\n", $_POST['v_autoreply_message'])) {
+                    $v_autoreply_message = str_replace("\r\n", "\n", $_POST['v_autoreply_message']);
+                    $v_autoreply_message = escapeshellarg($v_autoreply_message);
+                    exec (VESTA_CMD."v_add_mail_account_autoreply ".$v_username." ".$v_domain." ".$v_account." ".$v_autoreply_message, $output, $return_var);
+                    if ($return_var != 0) {
+                        $error = implode('<br>', $output);
+                        if (empty($error)) $error = 'Error: vesta did not return any output.';
+                        $_SESSION['error_msg'] = $error;
+                    }
+                    unset($output);
+                    $v_autoreply_message = $_POST['v_autoreply_message'];
+                }
+            }
+
+            if (($v_autoreply == 'no') && (!empty($_POST['v_autoreply'])) && (empty($_SESSION['error_msg']))) {
+                if (empty($_POST['v_autoreply_message'])) $_SESSION['error_msg'] = "Error: field atoreply message  can not be blank.";
+                if (empty($_SESSION['error_msg'])) {
+                    $v_autoreply_message = str_replace("\r\n", "\n", $_POST['v_autoreply_message']);
+                    $v_autoreply_message = escapeshellarg($v_autoreply_message);
+                    exec (VESTA_CMD."v_add_mail_account_autoreply ".$v_username." ".$v_domain." ".$v_account." ".$v_autoreply_message, $output, $return_var);
+                    if ($return_var != 0) {
+                        $error = implode('<br>', $output);
+                        if (empty($error)) $error = 'Error: vesta did not return any output.';
+                        $_SESSION['error_msg'] = $error;
+                    }
+	            unset($output);
+                    $v_autoreply = 'yes';
+                    $v_autoreply_message = $_POST['v_autoreply_message'];
+                }
+            }
+
+
             if (empty($_SESSION['error_msg'])) {
                 $_SESSION['ok_msg'] = "OK: changes has been saved.";
             }
 
         }
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_dns_rec.html');
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_dns_rec.html');
+        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_mail_acc.html');
+        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_mail_acc.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);
     }

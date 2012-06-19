@@ -72,7 +72,7 @@
             <tr><td><table style="display:<?php if (empty($v_nginx)) { echo 'none';} else {echo 'block';}?> ;" id="nginxtable"><tr>
                 <tr><td class="add-text" style="padding: 9px 0 0 2px;">Nginx Supported Extentions</td></tr>
                 <tr><td><textarea size="20" class="add-textinput" name="v_nginx_ext"><?php if (!empty($v_nginx_ext)) { echo $v_nginx_ext;} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea></tr>
-            </td></tr></tr></table>
+            </td></tr></tr></table></td></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Support</td></tr>
             <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"></tr>
             <tr><td><table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable"><tr>
@@ -87,7 +87,7 @@
                 <tr><td><textarea size="20" class="add-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo $v_ssl_key;  ?></textarea></tr>
                 <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Certificate Authority <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span></td></tr>
                 <tr><td><textarea size="20" class="add-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo $v_ssl_ca;  ?></textarea></tr>
-            </td></tr></tr></table>
+            </td></tr></tr></table></td></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics</td></tr>
             <tr><td><select class="add-list" name="v_stats">
             <?php

@@ -1,6 +1,6 @@
 #!/bin/bash
-# info: add mail account alias aka nickname
-# options: user domain account alias
+# info: add mail account autoreply message
+# options: user domain account message
 #
 # The function add new email account.
 
@@ -27,7 +27,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'user domain account autoreply'
+check_args '4' "$#" 'user domain account message'
 validate_format 'user' 'domain' 'account' 'autoreply'
 is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

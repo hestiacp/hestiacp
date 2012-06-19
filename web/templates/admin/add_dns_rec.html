@@ -43,7 +43,7 @@
                     <option value="PTR" <?php if ($v_type == 'PTR') echo selected; ?>>PTR</option>
                     <option value="SPF" <?php if ($v_type == 'SPF') echo selected; ?>>SPF</option>
                 </select></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Value</td></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;">IP or Value</td></tr>
             <tr><td><input type="text" size="20" class="add-input" name="v_val" <?php if (!empty($v_val)) echo "value=".$v_val; ?>></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Priority <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span></td></tr>
             <tr><td><input type="text" size="20" class="add-input" name="v_priority" <?php if (!empty($v_priority)) echo "value=".$v_priority; ?>></tr>

@@ -39,13 +39,13 @@
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Account</td></tr>
             <tr><td><input type="text" size="20" class="add-input" name="v_account" <?php if (!empty($v_account)) echo "value=".$v_account; ?>></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Password <a href="javascript:randomString();" class="genpass">generate</a></td></tr>
-            <tr><td><input type="text" size="20" class="add-input" name="v_password"</tr>
+            <tr><td><input type="text" size="20" class="add-input" name="v_password"></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;"><a href="javascript:elementHideShow('advtable');" class="add-advanced">Advanced Options ⇢</a></td></tr>
             <tr><td class="add-text" style="padding: 9px 0 0 0px;">
                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                     <tr><td class="add-text" style="padding: 0 0 0 2px;">Quota <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(in megabytes)</span></td></tr>
                     <tr><td><input type="text" size="20" class="add-input" name="v_quota" <?php if (!empty($v_quota)) echo "value=".$v_quota; ?>></tr>
-                    <tr><td class="add-text" style="padding: 10 0 0 2px;">Aliases <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(local part only)</span></td></tr>
+                    <tr><td class="add-text" style="padding: 10 0 0 2px;">Aliases <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(use local-part)</span></td></tr>
                     <tr><td><textarea size="20" class="add-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea></td></tr>
                     <tr><td class="add-text" style="padding: 10 0 0 2px;">Forward to <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(email address or addresses)</span></td></tr>
                     <tr><td><textarea size="20" class="add-textinput" name="v_fwd"><?php if (!empty($v_fwd)) echo $v_fwd;  ?></textarea></td></tr>

@@ -23,7 +23,7 @@ json_list_msg() {
     i='1'       # iterator
     echo '{'
     echo -e "\t\"$account\": {"
-    echo "        \"MSG\": \"$msg\""
+    echo "            \"MSG\": \"$msg\""
     echo -e "\t}\n}"
 }
 

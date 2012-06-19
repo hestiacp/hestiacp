@@ -188,6 +188,7 @@ if ($_SESSION['user'] == 'admin') {
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
                     $_SESSION['error_msg'] = $error;
                 }
+                $v_val = $_POST['v_val'];
                 $restart_dns = 'yes';
                 unset($output);
             }

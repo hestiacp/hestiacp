@@ -14,13 +14,6 @@ top_panel($user,$TAB);
 
 // Are you admin?
 if ($_SESSION['user'] == 'admin') {
-
-    // Cancel
-    if (!empty($_POST['cancel'])) {
-        header("Location: /list/dns/");
-    }
-
-    // DNS Domain
     if (!empty($_POST['ok'])) {
         // Check input
         if (empty($_POST['v_domain'])) $errors[] = 'domain';

@@ -1,6 +1,6 @@
 # Get database host
 get_next_dbhost() {
-    if [ -z "$host" ]; then
+    if [ -z "$host" ] || [ "$host" == 'default' ]; then
         IFS=$'\n'
         host='EMPTY_DB_HOST'
         config="$VESTA/conf/$type.conf"

@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list web statistics
+# info: list supported database types
 # options: [format]
 #
-# The function for obtaining the list of web statistics analyzer.
+# The function for obtaining the list of database types.
 
 
 #----------------------------------------------------------#
@@ -17,16 +17,16 @@ source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
 # Json function
-json_list_st() {
-    stats=$(echo "${STATS_SYSTEM//,/ } none")
-    st_counter=$(echo "$stats" | wc -w)
+json_list_dbtypes() {
+    types=$(echo "${DB_SYSTEM//,/ }")
+    t_counter=$(echo "$types" | wc -w)
     i=1
     echo '['
-    for st in $stats; do
-        if [ "$i" -lt "$st_counter" ]; then
-            echo -e  "\t\"$st\","
+    for type in $types; do
+        if [ "$i" -lt "$t_counter" ]; then
+            echo -e  "\t\"$type\","
         else
-            echo -e  "\t\"$st\""
+            echo -e  "\t\"$type\""
         fi
         (( ++i))
     done
@@ -34,14 +34,14 @@ json_list_st() {
 }
 
 # Shell function
-shell_list_st() {
-    stats=$(echo "none ${STATS_SYSTEM//,/ }")
+shell_list_dbtypes() {
+    types=$(echo "${DB_SYSTEM//,/ }")
     if [ -z "$nohead" ]; then
-        echo "STATS"
+        echo "TYPES"
         echo "----------"
     fi
-    for st in $stats; do
-        echo "$st"
+    for type in $types; do
+        echo "$type"
     done
 }
 
@@ -52,9 +52,9 @@ shell_list_st() {
 
 # Listing domains
 case $format in 
-    json)   json_list_st ;;
-    plain)  nohead=1; shell_list_st ;;
-    shell)  shell_list_st ;;
+    json)   json_list_dbtypes ;;
+    plain)  nohead=1; shell_list_dbtypes ;;
+    shell)  shell_list_dbtypes ;;
     *)      check_args '1' '0' '[format]' ;;
 esac
 

@@ -1,6 +1,6 @@
 <?php
 // Init
-//error_reporting(NULL);
+error_reporting(NULL);
 ob_start();
 session_start();
 
@@ -19,10 +19,7 @@ if ($_SESSION['user'] == 'admin') {
     // Check user argument?
     if (empty($_GET['domain'])) {
         header("Location: /list/mail/");
-    }
-
-    if (!empty($_POST['cancel'])) {
-        header("Location: /list/mail/");
+        exit;
     }
 
     // Check domain

@@ -1,6 +1,6 @@
 <?php
 // Init
-//error_reporting(NULL);
+error_reporting(NULL);
 session_start();
 $TAB = 'IP';
 

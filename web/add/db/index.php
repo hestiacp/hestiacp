@@ -1,6 +1,6 @@
 <?php
 // Init
-//error_reporting(NULL);
+error_reporting(NULL);
 ob_start();
 session_start();
 $TAB = 'DB';

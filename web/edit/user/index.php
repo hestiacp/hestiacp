@@ -19,10 +19,7 @@ if ($_SESSION['user'] == 'admin') {
     // Check user argument?
     if (empty($_GET['user'])) {
         header("Location: /list/user/");
-    }
-
-    if (!empty($_POST['cancel'])) {
-        header("Location: /list/user/");
+        exit;
     }
 
     // Check user

@@ -1,0 +1,59 @@
+<script type="text/javascript">
+  function elementHideShow(elementToHideOrShow) {
+      var el = document.getElementById(elementToHideOrShow);
+      if (el.style.display == "block") {
+        el.style.display = "none";
+      } else {
+        el.style.display = "block";
+      }
+    }
+
+    function randomString() {
+      var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+      var string_length = 10;
+      var randomstring = '';
+      for (var i=0; i<string_length; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        randomstring += chars.substring(rnum,rnum+1);
+      }
+      document.v_add_user.v_password.value = randomstring;
+    }
+</script>
+
+
+<table class='data'>
+<tr class="data-add">
+    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+        <table class="data-col1">
+            <tr><td style="padding: 20px 0 4px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
+            <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
+            <tr><td style="padding: 0 0 0 24px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
+        </table>
+    </td>
+    <td class="data-dotted" width="830px" style="vertical-align:top;">
+        <table width="830px"><tr>
+            <td></td>
+        </tr></table>
+        <table class="data-col2" width="600px">
+            <form method="post" name="v_add_user">
+            <tr><td style="padding: 10 0 0 2px; color:99a7af;" >Prefix "<?php echo $user."_"; ?>" will be automaticaly added to database name and database user</td></tr>
+            <tr><td class="add-text" style="padding: 10 0 0 2px;">Database</td></tr>
+            <tr><td><input type="text" size="20" class="add-input" name="v_database" <?php if (!empty($v_database)) echo "value=".$v_database; ?> disabled></td></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Username</td></tr>
+            <tr><td></span><input type="text" size="20" class="add-input" name="v_dbuser" <?php if (!empty($v_dbuser)) echo "value=".$v_dbuser; ?> disabled></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Password <a href="javascript:randomString();" class="genpass">generate</a></td></tr>
+            <tr><td><input type="text" size="20" class="add-input" name="v_password"  <?php if (!empty($v_password)) echo "value=".$v_password; ?>></td></tr>
+            <tr><td class="add-text" style="padding: 10 0 0 2px;">Type</td></tr>
+            <tr><td></span><input type="text" size="20" class="add-input" name="v_type" <?php if (!empty($v_type)) echo "value=".$v_type; ?> disabled></tr>
+            <tr><td class="add-text" style="padding: 10 0 0 2px;">Host</td></tr>
+            <tr><td></span><input type="text" size="20" class="add-input" name="v_host" <?php if (!empty($v_host)) echo "value=".$v_host; ?> disabled></tr>
+            <tr><td class="add-text" style="padding: 10 0 0 2px;">Charset</td></tr>
+            <tr><td></span><input type="text" size="20" class="add-input" name="v_charset" <?php if (!empty($v_charset)) echo "value=".$v_charset; ?> disabled></tr>
+            <tr><td style="padding: 24px 0 0 0;">
+                <input type="submit" name="save" value="Save" class="add-button"></form>
+                <input type="button" class="add-button" value="Cancel" onClick="location.href='/list/db/'">
+            </td></tr>
+        </table>
+    </td>
+</tr>
+</table>

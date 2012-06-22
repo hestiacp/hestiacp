@@ -57,6 +57,11 @@ rm -rf $HOMEDIR/$user/mail/$domain/$account
 # Update config
 sed -i "/ACCOUNT='$account'/d" $USER_DATA/mail/$domain.conf
 
+# Decrease mail accounts counter
+accounts=$(wc -l $USER_DATA/mail/$domain.conf | cut -f 1 -d ' ')
+decrease_user_value "$user" '$U_MAIL_ACCOUNTS'
+update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accounts"
+
 
 # Logging
 log_history "$EVENT"

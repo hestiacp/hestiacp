@@ -48,6 +48,7 @@ rm -f /etc/exim/domains/$domain
 
 # Updating config
 update_object_value 'mail' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
+sed -i "s/SUSPENDED='no'/SUSPENDED='yes'/g" $USER_DATA/mail/$domain.conf
 
 # Logging
 log_event "$OK" "$EVENT"

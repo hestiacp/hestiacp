@@ -43,14 +43,14 @@ is_object_valid 'cron' 'JOB' "$job"
 
 # Concatenating cron string
 command=$(echo $command | sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
-str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month WDAY='$wday'"
-str="$v_str' CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
+str="$str CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 
 # Deleting old job
 sed -i "/JOB='$job' /d" $USER_DATA/cron.conf
 
 # Adding new
-echo "$v_str" >> $USER_DATA/cron.conf
+echo "$str" >> $USER_DATA/cron.conf
 
 # Sorting jobs by id
 sort_cron_jobs

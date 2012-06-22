@@ -83,7 +83,7 @@ is_object_valid 'user' 'USER' "$user"
 conf=$USER_DATA/cron.conf
 
 # Defining fileds to select
-fields='$JOB $MIN $HOUR $DAY $MONTH $WDAY $CMD $SUSPENDED $TIME $DATE'
+fields='$JOB $MIN $HOUR $DAY $MONTH $WDAY $CMD $JOB $SUSPENDED $TIME $DATE'
 
 # Listing domains
 case $format in 

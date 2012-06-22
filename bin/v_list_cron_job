@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: list cron job
+# options: user job [format]
+#
+# The function of obtaining cron job settings.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+job=$2
+format=${3-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json function
+json_list_job() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    line=$(grep "JOB='$job'" $conf)
+    echo '{'
+    eval $line
+    for field in $fields; do
+        eval value=$field
+        value=$(echo "$value"|sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        if [ "$i" -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ "$fileds_count" -eq "$i" ]; then
+                echo -e "\t\t\"${field//$/}\": \"$value\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"$value\","
+            fi
+        fi
+        (( ++i))
+    done
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+    echo -e "}"
+}
+
+# Shell function
+shell_list_job() {
+    line=$(grep "JOB='$job'" $conf)
+    eval $line
+    for field in $fields; do
+        eval key="$field"
+        if [ -z "$key" ]; then
+            key=NULL
+        fi
+        echo "${field//$/}: $key "
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'user job [format]'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config and fields to select
+conf=$USER_DATA/cron.conf
+fields="\$JOB \$MIN \$HOUR \$DAY \$MONTH \$WDAY \$CMD \$SUSPENDED"
+fields="$fields \$TIME \$DATE"
+
+# Listing domains
+case $format in 
+    json)   json_list_job ;;
+    plain)  nohead=1; shell_list_job ;;
+    shell)  shell_list_job |column -t ;;
+    *)      check_args '2' '0' 'user job [format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

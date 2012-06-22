@@ -1,3 +1,0 @@
-# Default template with basic php module restrictions.
-# Best performance. Not recomended for shared hosting.
-PHP='module' CGI='yes' ELOG='no'

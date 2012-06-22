@@ -1,3 +1,0 @@
-# Template with php as cgi for better security.
-# (it uses post instal script)
-PHP='cgi' CGI='yes' ELOG='no'

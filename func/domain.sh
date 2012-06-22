@@ -160,6 +160,7 @@ add_web_config() {
             -e "s/%ssl_key%/${ssl_key////\/}/g" \
             -e "s/%ssl_pem%/${ssl_pem////\/}/g" \
             -e "s/%ssl_ca_str%/${ssl_ca_str////\/}/g" \
+            -e "s/%ssl_ca%/${ssl_ca////\/}/g" \
             -e "s/%nginx_extentions%/${NGINX_EXT//,/|}/g" \
             -e "s/%elog%/$elog/g" \
             -e "s/%cgi%/$cgi/g" \
@@ -238,7 +239,12 @@ is_web_domain_cert_valid() {
         exit $E_NOTEXIST
     fi
 
-    crt=$(openssl verify $ssl_dir/$domain.crt 2>/dev/null |grep '/C=')
+    if [ ! -e "$ssl_dir/$domain.ca" ]; then
+        crt=$(openssl verify $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
+    else
+        crt=$(openssl verify -untrusted $ssl_dir/$domain.ca \
+	    $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
+    fi
     if [ -z "$crt" ]; then
         echo "Error: certificate is not valid"
         log_event "$E_INVALID" "$EVENT"
@@ -253,7 +259,7 @@ is_web_domain_cert_valid() {
     fi
 
     if [ -e "$ssl_dir/$domain.ca" ]; then
-        ca=$(openssl verify $ssl_dir/$domain.ca 2>/dev/null |grep '/C=')
+        ca=$(openssl verify $ssl_dir/$domain.ca 2>/dev/null |grep 'OK')
         if [ -z "$ca" ]; then
             echo "Error: ssl certificate authority is not valid"
             log_event "$E_INVALID" "$EVENT"

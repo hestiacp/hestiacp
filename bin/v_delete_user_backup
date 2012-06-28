@@ -1,0 +1,53 @@
+#!/bin/bash
+# info: delete user backup
+# options: user nackup
+#
+# The function deletes user backup.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+backup=$(echo $2| cut -f 2 -d \.)
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'user backup'
+validate_format 'user' 'backup'
+is_system_enabled "$BACKUP_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'backup' 'BACKUP' "$2"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting backup
+rm -f $BACKUP/$2
+sed -i "/BACKUP='$2' /d" $USER_DATA/backup.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Update counter
+U_BACKUPS=$(ls $BACKUP/|grep "^$user."|wc -l)
+update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
+
+# Logging
+log_history "$EVENT"
+log_event "$OK" "$EVENT"
+
+exit

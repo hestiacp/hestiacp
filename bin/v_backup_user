@@ -390,6 +390,9 @@ local_backup(){
     chown nginx:$user $BACKUP/$user.$DATE.tar
     localbackup='yes'
     echo
+
+    U_BACKUPS=$(ls $BACKUP/|grep "^$user."|wc -l)
+    update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 }
 
 

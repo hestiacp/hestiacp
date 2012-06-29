@@ -1,7 +1,8 @@
 # Validationg ip address
 is_ip_valid() {
-    check_ifc=$(/sbin/ifconfig |grep "inet addr:$ip")
-    if [ ! -e "$VESTA/data/ips/$ip" ] || [ -z "$check_ifc" ]; then
+    #check_ifc=$(/sbin/ifconfig |grep "inet addr:$ip")
+    #if [ ! -e "$VESTA/data/ips/$ip" ] || [ -z "$check_ifc" ]; then
+    if [ ! -e "$VESTA/data/ips/$ip" ] ; then
         echo "Error: IP $ip not exist"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST

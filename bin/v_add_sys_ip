@@ -19,7 +19,7 @@ ip=$1
 mask=$2
 interface="${3-eth0}"
 user="${4-admin}"
-ip_status="${5-shared}"
+ip_status="${5-shared}"     # can be dedicated as well   
 ip_name=$6
 
 # Includes

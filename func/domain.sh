@@ -13,9 +13,9 @@ is_apache_template_valid() {
 
 # Nginx template check
 is_nginx_template_valid() {
-    t="$WEBTPL/ngingx_vhost_$template.tpl"
-    d="$WEBTPL/ngingx_vhost_$template.descr"
-    s="$WEBTPL/ngingx_vhost_$template.stpl"
+    t="$WEBTPL/ngingx_$template.tpl"
+    d="$WEBTPL/ngingx_$template.descr"
+    s="$WEBTPL/ngingx_$template.stpl"
     if [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
         echo "Error: nginx $template not found"
         log_event "$E_NOTEXIST" "$EVENT"
@@ -142,7 +142,6 @@ add_web_config() {
         sed -e "s/%ip%/$ip/g" \
             -e "s/%web_port%/$WEB_PORT/g" \
             -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
-            -e "s/%proxy_string%/${proxy_string////\/}/g" \
             -e "s/%proxy_port%/$PROXY_PORT/g" \
             -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
             -e "s/%domain_idn%/$domain_idn/g" \
@@ -151,7 +150,7 @@ add_web_config() {
             -e "s/%group%/$group/g" \
             -e "s/%home%/${HOMEDIR////\/}/g" \
             -e "s/%docroot%/${docroot////\/}/g" \
-            -e "s/%docroot_string%/${docroot_string////\/}/g" \
+            -e "s/%sdocroot%/${sdocroot////\/}/g" \
             -e "s/%email%/$email/g" \
             -e "s/%alias_string%/$alias_string/g" \
             -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
@@ -305,7 +304,7 @@ namehost_ip_support() {
         sed -i "$conf_ins i Listen $ip:$WEB_PORT" $conf
 
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-            cat $WEBTPL/ngingx_ip.tpl | sed -e "s/%ip%/$ip/g" \
+            cat $WEBTPL/ngingx.ip.tpl | sed -e "s/%ip%/$ip/g" \
              -e "s/%web_port%/$WEB_PORT/g" \
             -e "s/%proxy_port%/$PROXY_PORT/g" >>$nconf
 
@@ -323,8 +322,8 @@ namehost_ip_disable() {
         sed -i "/Listen $ip:/d" $conf
 
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-            tpl_ln=$(wc -l $WEBTPL/ngingx_ip.tpl | cut -f 1 -d ' ')
-            ip_line=$(grep -n "%ip%" $WEBTPL/ngingx_ip.tpl |head -n1 |\
+            tpl_ln=$(wc -l $WEBTPL/ngingx.ip.tpl | cut -f 1 -d ' ')
+            ip_line=$(grep -n "%ip%" $WEBTPL/ngingx.ip.tpl |head -n1 |\
                 cut -f 1 -d :)
             conf_line=$(grep -n -w $ip $nconf|head -n1|cut -f 1 -d :)
             if [ -z "$tpl_ln" ] || [ -z "$ip_line" ] || [ -z "$conf_line" ]
@@ -357,8 +356,9 @@ upd_web_domain_values() {
     group="$user"
     email="$user@$domain"
     docroot="$HOMEDIR/$user/web/$domain/public_html"
-    docroot_string="DocumentRoot $docroot"
-    proxy_string="proxy_pass     http://$ip:$WEB_PORT;"
+    if [ "$SSL_HOME" = 'single' ]; then
+        sdocroot="$HOMEDIR/$user/web/$domain/public_shtml" ;
+    fi
 
     i=1
     j=1
@@ -410,11 +410,6 @@ upd_web_domain_values() {
         cgi_option='+ExecCGI'
     fi
 
-    if [ "$SUSPENDED" = 'yes' ]; then
-        docroot_string="Redirect / http://$url"
-        proxy_string="rewrite ^(.*)\$ http://$url;"
-    fi
-
     ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"
     ssl_key="$HOMEDIR/$user/conf/web/ssl.$domain.key"
     ssl_pem="$HOMEDIR/$user/conf/web/ssl.$domain.pem"
@@ -423,9 +418,9 @@ upd_web_domain_values() {
         ssl_ca_str='#'
     fi
 
-    case $SSL_HOME in
-        single) docroot="$HOMEDIR/$user/web/$domain/public_shtml" ;;
-        same) docroot="$HOMEDIR/$user/web/$domain/public_html" ;;
-    esac
+    if [ "$SUSPENDED" = 'yes' ]; then
+        docroot="$VESTA/data/templates/web/suspend"
+        sdocroot="$VESTA/data/templates/web/suspend"
+    fi
 }
 

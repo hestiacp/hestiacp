@@ -72,7 +72,6 @@ fi
 group="$user"
 email="$user@$domain"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
-docroot_string="DocumentRoot $docroot"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
 tpl_file="$WEBTPL/apache_$template.tpl"
 

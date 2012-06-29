@@ -60,14 +60,14 @@ fi
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
+    tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
     conf="$HOMEDIR/$user/conf/web/nginx.conf"
     replace_web_config
 fi
 
 # Checking nginx
 if [ "$SSL" = 'yes' ] && [ ! -z "$NGINX" ]; then 
-    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     replace_web_config
 fi

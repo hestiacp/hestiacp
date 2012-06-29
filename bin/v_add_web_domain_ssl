@@ -84,7 +84,7 @@ fi
 
 # Running template trigger
 if [ -x $WEBTPL/apache_$template.sh ]; then
-    $WEBTPL/apache_$template.sh $user $domain $ip $HOMEDIR $docroot
+    $WEBTPL/apache_$template.sh $user $domain $ip $HOMEDIR $sdocroot
 fi
 
 # Checking main vesta httpd config
@@ -98,7 +98,7 @@ fi
 if [ ! -z "$NGINX" ]; then
     # Adding domain to the snginx.conf
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
-    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
     add_web_config
 
     chown root:nginx $conf

@@ -70,13 +70,12 @@ fi
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
+    tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
     conf="$HOMEDIR/$user/conf/web/nginx.conf"
     del_web_config
 
     if [ "$SSL" = 'yes' ]; then
-        proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
-        tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+        tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
         conf="$HOMEDIR/$user/conf/web/snginx.conf"
         del_web_config
     fi

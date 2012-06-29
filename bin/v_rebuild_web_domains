@@ -18,14 +18,13 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/func/ip.sh
 
-url=${2-$SUSPEND_URL}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [suspend_url]'
-validate_format 'user' 'url'
+check_args '1' "$#" 'user'
+validate_format 'user'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -177,7 +176,7 @@ for domain in $(shell_list) ; do
 
         # Running template trigger
         if [ -x $WEBTPL/apache_$TPL.sh ]; then
-            $WEBTPL/apache_$TPL.sh $user $domain $ip $HOMEDIR $docroot
+            $WEBTPL/apache_$TPL.sh $user $domain $ip $HOMEDIR $sdocroot
         fi
 
         user_ssl=$((user_ssl + 1))
@@ -186,20 +185,14 @@ for domain in $(shell_list) ; do
 
     # Checking nginx
     if [ ! -z "$NGINX" ]; then
-        tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
+        tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
         conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
         add_web_config
         chown root:nginx $conf
         chmod 640 $conf
 
         if [ "$SSL" = 'yes' ]; then
-            if [ "$SUSPENDED" = 'yes' ]; then
-                proxy_string="rewrite ^(.*)\$ http://$url;"
-            else
-                proxy_string="proxy_pass     https://$ip:$WEB_SSL_PORT;"
-            fi
-    
-            tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+            tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
             conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
             add_web_config
             chown root:nginx $conf

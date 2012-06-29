@@ -3,7 +3,7 @@
     ServerName %domain_idn%
     %alias_string%
     ServerAdmin %email%
-    %docroot_string%
+    DocumentRoot %docroot%
     %cgi%ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
     Alias /vstats/ %home%/%user%/web/%domain%/stats/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/

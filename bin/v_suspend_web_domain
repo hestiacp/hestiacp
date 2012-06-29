@@ -15,22 +15,21 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
+restart=$3
 
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 
-url="${3-$SUSPEND_URL}"
-restart=$4
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [suspend_url]'
-validate_format 'user' 'domain' 'url'
+check_args '2' "$#" 'user domain [restart]'
+validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
@@ -64,14 +63,13 @@ fi
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.tpl"
+    tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
     conf="$HOMEDIR/$user/conf/web/nginx.conf"
     del_web_config
     add_web_config
 
     if [ "$SSL" = 'yes' ]; then
-        proxy_string="rewrite ^(.*)\$ http://$url;"
-        tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+        tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
         conf="$HOMEDIR/$user/conf/web/snginx.conf"
         del_web_config
         add_web_config

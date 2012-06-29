@@ -457,17 +457,6 @@ sync_cron_jobs() {
 
 
 ### Format Validators ###
-# URL
-validate_format_url() {
-    check_http=$(echo "$1" | grep "^http://" )
-    needed_chars=$(echo "$1" | cut -f 2 -d \.)
-    if [ -z "$check_http" ] || [ -z "$needed_chars" ]; then
-        echo "Error: url $1 is not valid"
-        log_event "$E_INVALID" "$EVENT"
-        exit $E_INVALID
-    fi
-}
-
 # Shell
 validate_format_shell() {
     if [ -z "$(grep -w $1 /etc/shells)" ]; then
@@ -753,7 +742,6 @@ validate_format(){
             stats_user)     validate_format_username "$arg" "$arg_name" ;;
             template)       validate_format_username "$arg" "$arg_name" ;;
             ttl)            validate_format_int "$arg" ;;
-            url)            validate_format_url "$arg" ;;
             user)           validate_format_username "$arg" ;;
             wday)           validate_format_mhdmw "$arg" $arg_name ;;
         esac

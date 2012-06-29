@@ -17,9 +17,6 @@ source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 
-# Defining url
-url="${2-$SUSPEND_URL}"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

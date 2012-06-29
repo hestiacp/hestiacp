@@ -49,7 +49,7 @@ del_web_config
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/ngingx_vhost_$NGINX.stpl"
+    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     del_web_config
 fi

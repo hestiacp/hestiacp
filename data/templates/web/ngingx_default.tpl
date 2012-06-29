@@ -1,13 +1,10 @@
 server {
-    listen      %ip%:%proxy_ssl_port%;
+    listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
-    ssl         on;
-    ssl_certificate      %ssl_pem%;
-    ssl_certificate_key  %ssl_key%;
     %elog%error_log  /var/log/httpd/domains/%domain%.error.log error;
 
     location / {
-        %proxy_string%
+        proxy_pass      http://%ip%:%web_port%;
         location ~* ^.+\.(%nginx_extentions%)$ {
             root           %docroot%;
             access_log     /var/log/httpd/domains/%domain%.log combined;
@@ -22,7 +19,7 @@ server {
     }
 
     location @fallback {
-        proxy_pass      https://%ip%:%web_ssl_port%;
+        proxy_pass      http://%ip%:%web_port%;
     }
 
     location ~ /\.ht    {return 404;}
@@ -31,6 +28,6 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/snginx.%domain%.conf*;
+    include %home%/%user%/conf/nginx.%domain%.conf*;
 }
 

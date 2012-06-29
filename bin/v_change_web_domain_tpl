@@ -58,54 +58,8 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 # Defining variables for new vhost config
-ip=$IP
-email="$user@$domain"
-group="$user"
-docroot="$HOMEDIR/$user/web/$domain/public_html"
-docroot_string="DocumentRoot $docroot"
-conf="$HOMEDIR/$user/conf/web/httpd.conf"
+upd_web_domain_values
 tpl_file="$WEBTPL/apache_$template.tpl"
-
-
-# Parsing domain aliases
-i=1
-j=1
-OLD_IFS="$IFS"
-IFS=','
-for dom_alias in $ALIAS; do
-    dom_alias=$(idn -t --quiet -a $dom_alias)
-
-    # Spliting ServerAlias lines
-    check_8k="$server_alias $dom_alias"
-    if [ "${#check_8k}" -ge '8100' ]; then
-        if [ "$j" -eq 1 ]; then
-            alias_string="ServerAlias $server_alias"
-        else
-            alias_string="$alias_string\n    ServerAlias $server_alias"
-        fi
-        (( ++j))
-        server_alias=''
-    fi
-
-    if [ "$i" -eq 1 ]; then
-        aliases_idn="$dom_alias"
-        server_alias="$dom_alias"
-        alias_string="ServerAlias $server_alias"
-    else
-        aliases_idn="$aliases_idn,$dom_alias"
-        server_alias="$server_alias $dom_alias"
-    fi
-    (( ++i))
-done
-if [ -z "$alias_string" ]; then
-    alias_string="ServerAlias $server_alias"
-else
-     if [ ! -z "$server_alias" ]; then
-        alias_string="$alias_string\n    ServerAlias $server_alias"
-    fi
-fi
-IFS=$OLD_IFS
-
 
 # Parsing new template
 template_data=$(cat $WEBTPL/apache_$template.descr | grep -v '#')
@@ -130,28 +84,15 @@ fi
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    # Defining SSL vars
-    ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"
-    ssl_key="$HOMEDIR/$user/conf/web/ssl.$domain.key"
-    ssl_pem="$HOMEDIR/$user/conf/web/ssl.$domain.pem"
-    ssl_ca="$HOMEDIR/$user/conf/web/ssl.$domain.ca"
-    if [ ! -e "$USER_DATA/web/ssl/$domain.ca" ]; then
-        ssl_ca_str='#'
-    fi
-    case $SSL_HOME in
-        single) docroot="$HOMEDIR/$user/web/$domain/public_shtml" ;;
-        same)   docroot="$HOMEDIR/$user/web/$domain/public_html" ;;
-    esac
     conf="$HOMEDIR/$user/conf/web/shttpd.conf"
     tpl_file="$WEBTPL/apache_$template.stpl"
 
-    # Adding domain to the httpd.conf
     add_web_config
 
     # Running template trigger
     if [ -x $WEBTPL/apache_$template.sh ]; then
         $WEBTPL/apache_$template.sh \
-            "$user" "$domain" "$ip" "$HOMEDIR" "$docroot"
+            "$user" "$domain" "$ip" "$HOMEDIR" "$sdocroot"
     fi
 fi
 

@@ -97,6 +97,7 @@ foreach ($data as $key => $value) {
 ?>
 </table>
 <table class="data-count">
+<?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?>
 <tr>
     <td>→ 
     <?php
@@ -110,3 +111,4 @@ foreach ($data as $key => $value) {
 </tr>
 </table>
 </form>
+<?php if ($i < 3) echo "<table class=\"data-spacer\"><tr><td></td></tr></table>"; ?>

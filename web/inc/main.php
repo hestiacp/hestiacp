@@ -39,7 +39,7 @@ function top_panel($user, $TAB) {
     if ( $user == 'admin' ) {
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/panel.html');
     } else {
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/panel.html');
+        include($_SERVER['DOCUMENT_ROOT'].'/templates/user/panel.html');
     }
 }
 

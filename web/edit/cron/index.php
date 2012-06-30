@@ -14,7 +14,7 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Are you admin?
-if ($_SESSION['user'] == 'admin') {
+//if ($_SESSION['user'] == 'admin') {
 
     // Check user argument?
     if (empty($_GET['job'])) {
@@ -78,7 +78,7 @@ if ($_SESSION['user'] == 'admin') {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_cron.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
-}
+//}
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

@@ -1,0 +1,134 @@
+<table class='data'>
+
+<?php
+foreach ($data as $key => $value) {
+    ++$i;
+    if ($data[$key]['SUSPENDED'] == 'yes') {
+        $status = 'suspended';
+        $spnd_action = 'unsuspend' ;
+    } else {
+        $status = 'active';
+        $spnd_action = 'suspend' ;
+    }
+
+    if (!empty($data[$key]['SSL_HOME'])) {
+        if ($data[$key]['SSL_HOME'] == 'same') {
+            $ssl_home = 'public_html';
+        } else {
+            $ssl_home = 'public_shtml';
+        }
+    } else {
+        $ssl_home = '';
+    }
+    if (strlen($data[$key]['NGINX_EXT']) > 16 ) {
+        $nginx_ext = substr($data[$key]['NGINX_EXT'], 0, 16);
+        $nginx_ext = trim($nginx_ext, ",");
+        $nginx_ext = str_replace(',', ', ', $nginx_ext);
+        $nginx_ext = $nginx_ext.", ...";
+    } else {
+        $nginx_ext = str_replace(',', ', ', $data[$key]['NGINX_EXT']);
+    }
+
+    ?>
+<script type="text/javascript">
+    $(function(){
+        $('#delete_dialog_<?php echo "$i" ?>').dialog({
+            modal: true,
+            autoOpen: false,
+            width: 360,
+            buttons: {
+                "Ok": function(event, ui) {
+                     location.href = '/delete/web/?domain=<?php echo "$key" ?>';
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $('#delete_link_<?php echo "$i" ?>').click(function(){
+            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
+            return false;
+        });
+
+    });
+</script>
+
+<tr class="data-row">
+    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+        <table class="data-col1">
+            <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
+            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+            <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
+
+        </table>
+    </td>
+    <td class="data-dotted" width="830px" style="vertical-align:top;">
+        <table width="830px"><tr>
+            <td></td>
+            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/web/?domain=<?php echo "$key" ?>"> edit</a></td>
+            <td class="data-controls" width="70px">
+                <img src="/images/delete.png" width="7px" height="7px">
+                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
+                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
+                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> domain?</p>
+                </div>
+            </td>
+        </tr></table>
+
+        <table class="data-col2" width="830px">
+            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b> <a class="aliases" style="padding: 0 30px 0 8px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
+            <tr>
+                <td style="vertical-align:top;" >
+                    <table>
+                        <tr><td class="counter-name" style="padding: 2px 0 0 2px;"><?php echo $data[$key]['IP'] ?></td>
+                        <tr><td class="counter-name" style="padding: 0 0 8px 2px">[<?php echo $data[$key]['TPL'] ?>] template</td></tr>
+                        <tr><td class="chart1" style="padding: 0 0 0 2px">Bandwidth: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>
+                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
+                        <tr><td class="chart1" style="padding: 0 0 0 2px">Disk: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
+                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
+                    </table>
+                </td>
+                <td style="vertical-align:top;" width="250">
+                    <table>
+                        <tr><td class="counter-name">PHP Type:</td><td class="counter-value"><?php echo $data[$key]['PHP'] ?></td></tr>
+                        <tr><td class="counter-name">CGI Support:</td><td class="counter-value"><?php echo $data[$key]['CGI'] ?></td></tr>
+                        <tr><td class="counter-name">Error Log:</td><td class="counter-value"><?php echo $data[$key]['ELOG'] ?></td></tr>
+                        <tr><td class="counter-name">Web Statistics:</td><td class="counter-value"><?php echo $data[$key]['STATS'] ?></td></tr>
+                        <tr><td class="counter-name">Statistics Auth:</td><td class="counter-value"><?php echo $data[$key]['STATS_AUTH'] ?></td></tr>
+                    </table>
+                </td>
+                <td rowspan=4 style="vertical-align:top;" width="300">
+                    <table width="300">
+                        <tr><td class="counter-name" width="40%">SSL Support:</td><td class="counter-value"><?php echo $data[$key]['SSL'] ?></td></tr>
+                        <tr><td class="counter-name">SSL Home:</td><td class="counter-value"><?php echo $ssl_home ?></td></tr>
+                        <tr><td class="counter-name">Nginx Template:</td><td class="counter-value"><?php echo $data[$key]['NGINX'] ?></td></tr>
+                        <tr><td class="counter-name">Nginx Extentions:</td><td class="counter-value"><?php echo $nginx_ext ?></td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+
+    <?php
+}
+?>
+</table>
+<?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?>
+<table class="data-count">
+<tr>
+    <td>→ 
+    <?php
+        if ( $i == 1) {
+            echo "1 web domain ";
+        } else {
+            echo "$i web domains ";
+        }
+    ?>
+    </td>
+</tr>
+</table>
+</form>
+<?php if ($i == 0) echo "<table class=\"data-spacer\" style=\"height:279px\"><tr><td></td></tr></table>"; ?>
+<?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:113px\"><tr><td></td></tr></table>"; ?>

@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Are you admin?
-if ($_SESSION['user'] == 'admin') {
+//if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
         if (empty($_POST['v_domain'])) $errors[] = 'domain';
@@ -216,7 +216,7 @@ if ($_SESSION['user'] == 'admin') {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_web.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
-}
+//}
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

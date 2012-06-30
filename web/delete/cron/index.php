@@ -5,13 +5,13 @@ ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-if ($_SESSION['user'] == 'admin') {
+//if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['job'])) {
         $v_username = escapeshellarg($user);
         $v_job = escapeshellarg($_GET['job']);
         exec (VESTA_CMD."v_delete_cron_job ".$v_username." ".$v_job, $output, $return_var);
         unset($output);
     }
-}
+//}
 
 header("Location: /list/cron/");

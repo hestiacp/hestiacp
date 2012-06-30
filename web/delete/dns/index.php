@@ -5,7 +5,7 @@ ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-if ($_SESSION['user'] == 'admin') {
+//if ($_SESSION['user'] == 'admin') {
     // DNS domain
     if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
         $v_username = escapeshellarg($user);
@@ -26,6 +26,6 @@ if ($_SESSION['user'] == 'admin') {
         header("Location: /list/dns/?domain=".$_GET['domain']);
         exit;
     }
-}
+//}
 
 header("Location: /list/dns/");

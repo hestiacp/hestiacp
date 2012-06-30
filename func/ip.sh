@@ -13,7 +13,7 @@ is_ip_valid() {
 is_ip_avalable() {
     ip_data=$(cat $VESTA/data/ips/$ip)
     owner=$(echo "$ip_data"|grep OWNER= | cut -f 2 -d \')
-    status=$(echo "$ip_data"|grep OWNER= | cut -f 2 -d \')
+    status=$(echo "$ip_data"|grep STATUS= | cut -f 2 -d \')
     shared=no
     if [ 'admin' = "$owner" ] && [ "$status" = 'shared' ]; then
         shared='yes'

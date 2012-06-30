@@ -44,7 +44,11 @@ json_list_user_ips() {
             done
         else
             if  [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
+                if [ -n "$data" ]; then
+                    echo -e '        },'
+                fi
                 i=1
+
                 for field in $fields; do
                     eval value=$field
                     if [ $i -eq 1 ]; then

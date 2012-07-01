@@ -69,6 +69,7 @@ foreach ($data as $key => $value) {
             <td></td>
             <td class="data-controls" width="100px"><img src="/images/more.png" width="8px" height="8px"><a href="?domain=<?php echo $key ?>"> list accounts</a></td>
             <td class="data-controls" width="98px"><img src="/images/add.png" width="8px" height="8px"><a href="/add/mail/?domain=<?php echo $key ?>"> add account</a></td>
+            <td class="data-controls" width="104px"><img src="/images/new_window.png" width="8px" height="8px"> <a href="<?php echo "http://".$_SERVER["HTTP_HOST"]."/webmail/"; ?>" target="_blank"> open webmail</a></td>
             <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/mail/?domain=<?php echo $key ?>"> edit</a></td>
             <td class="data-controls" width="80px">
                 <img src="/images/suspend.png" width="7px" height="8px">

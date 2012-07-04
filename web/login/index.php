@@ -25,6 +25,7 @@ if (isset($_SESSION['user'])) {
             $ERROR = "<a class=\"error\">ERROR: Invalid username or password</a>";
         } else {
             $_SESSION['user'] = $_POST['user'];
+            if ($_POST['user'] == 'root') $_SESSION['user'] = 'admin';
             if (!empty($_SESSION['request_uri'])) {
                 header("Location: ".$_SESSION['request_uri']);
                 unset($_SESSION['request_uri']);

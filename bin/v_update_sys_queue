@@ -25,7 +25,7 @@ source $VESTA/func/main.sh
 
 # Export PATH for cron
 PATH=$PATH:$BIN
-export $PATH
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -44,7 +44,7 @@ case $queue in
                 rm $VESTA/data/queue/restart.pipe;
                 touch $VESTA/data/queue/restart.pipe;;
     stats)      bash $VESTA/data/queue/stats.pipe;;
-    backup)     bash $VESTA/data/queue/backup.pip;;
+    backup)     bash $VESTA/data/queue/backup.pipe;;
     disk)       bash $VESTA/data/queue/disk.pipe;;
     traffic)    bash $VESTA/data/queue/traffic.pipe;;
     *)          check_args '1' '0' 'queue'

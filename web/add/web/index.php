@@ -21,7 +21,7 @@ top_panel($user,$TAB);
         if (empty($_POST['v_template'])) $errors[] = 'template';
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))) $errors[] = 'ssl certificate';
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))) $errors[] = 'ssl key';
-        if ((!empty($_POST['v_aliases'])) || (!empty($_POST['v_elog'])) || (!empty($_POST['v_ssl'])) || (!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key'])) || (!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
+        if ((!empty($_POST['v_aliases'])) || (!empty($_POST['v_elog'])) || (!empty($_POST['v_ssl'])) || (!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key'])) || (!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none') || (empty($_POST['v_nginx']))) $v_adv = 'yes';
 
         // Protect input
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
@@ -30,9 +30,9 @@ top_panel($user,$TAB);
         $v_template = escapeshellarg($_POST['v_template']);
         if (empty($_POST['v_dns'])) $v_dns = 'off';
         if (empty($_POST['v_mail'])) $v_mail = 'off';
+        if (empty($_POST['v_nginx'])) $v_nginx = 'off';
         $v_aliases = $_POST['v_aliases'];
         $v_elog = $_POST['v_elog'];
-        $v_nginx = $_POST['v_nginx'];
         $v_ssl = $_POST['v_ssl'];
         $v_ssl_crt = $_POST['v_ssl_crt'];
         $v_ssl_key = $_POST['v_ssl_key'];
@@ -123,7 +123,7 @@ top_panel($user,$TAB);
             }
 
             // Add Nginx
-            if ((!empty($_POST['v_nginx'])) && (empty($_SESSION['error_msg']))) {
+            if (($_POST['v_nginx'] == 'on') && (empty($_SESSION['error_msg']))) {
                 $nginx_ext = "'jpg,jpeg,gif,png,ico,css,zip,tgz,gz,rar,bz2,doc,xls,exe,pdf,ppt,txt,tar,wav,bmp,rtf,js,mp3,avi,mpeg,html,htm'";
                 exec (VESTA_CMD."v_add_web_domain_nginx ".$user." ".$v_domain." 'default' ".$nginx_ext." 'no'", $output, $return_var);
                 if ($return_var != 0) {

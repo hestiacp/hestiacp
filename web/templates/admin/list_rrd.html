@@ -21,8 +21,7 @@ foreach ($data as $key => $value) {
     <td class="data-dotted" width="830px" style="vertical-align:top;">
         <table width="830px"><tr>
             <td></td>
-            <td class="data-controls" width="80px"><img src="/images/download.png" width="8px" height="8px"><a href="#"> download</a></td>
-            <td class="data-controls" width="70px"><img src="/images/delete.png" width="7px" height="7px"><a href="#"> update</a></td>
+            <td class="data-controls" width="80px"><img src="/images/download.png" width="8px" height="8px"><a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank"> download</a></td>
         </tr></table>
 
         <table class="data-col2" width="830px">

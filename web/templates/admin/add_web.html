@@ -64,7 +64,7 @@
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Error Logging</td></tr>
                     <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_elog" <?php if (!empty($v_elog)) echo "checked=yes" ?>></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Nginx Support</td></tr>
-                    <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_nginx" <?php if (!empty($v_nginx)) echo "checked=yes" ?>></tr>
+                    <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_nginx" <?php if (empty($v_nginx)) echo "checked=yes" ?>></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Support</td></tr>
                     <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_ssl" <?php if (!empty($v_ssl)) echo "checked=yes" ?>></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Certificate</td></tr>

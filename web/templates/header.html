@@ -169,9 +169,14 @@ if (!empty($_SESSION['look'])) {
     .nav-slink {
         letter-spacing: -1.2px;
         font-size: 16pt;
-        color: #8B99A2;
+        color: #7ba1aa;
         font-family: Arial, sans-serif;
         text-decoration: none;
+    }
+
+    .nav-slink:active {
+        color: #68797d;
+        text-decoration: underline;
     }
 
     .sub-menu {
@@ -519,9 +524,29 @@ if (!empty($_SESSION['look'])) {
     }
 
     .add-button {
+        cursor: pointer;
+        background-color: #F1F1F1;
+        border: 1px solid #ACACAC;
+        border-radius: 3px 3px 3px 3px;
+        color: #555555;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 3px 16px;
+        width: 105px;
         padding: 4px;
         margin: 0 6px 0 0;
-        font-size: 12pt;
+    }
+
+    button {
+        cursor: pointer;
+        background-color: #F1F1F1;
+        border: 1px solid #ACACAC;
+        border-radius: 3px 3px 3px 3px;
+        color: #555555;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 3px 16px;
+        width: 105px;
     }
 
     .genpass {

@@ -496,20 +496,32 @@ if (!empty($_SESSION['look'])) {
     }
 
     .add-textinput {
+        background-color: #FFFFFF;
+        border: 1px solid #999999;
+        border-radius: 3px 3px 3px 3px;
+        color: #555555;
+        font-family: Arial,sans-serif;
+        font-size: 14pt;
+        padding: 6px;
         width: 360px;
         height: 120px;
-        padding: 4px;
-        font-size: 12pt;
-        color: #555;
-        font-family: Arial, sans-serif;
+    }
+    .add-textinput:disabled {
+        background-color: #F1F1F1;
     }
 
     .add-input {
-        width: 360px;
-        padding: 4px;
+        background-color: #FFFFFF;
+        border: 1px solid #999999;
+        border-radius: 3px 3px 3px 3px;
+        color: #555555;
+        font-family: Arial,sans-serif;
         font-size: 14pt;
-        color: #555;
-        font-family: Arial, sans-serif;
+        padding: 6px;
+        width: 360px;
+    }
+    .add-input:disabled {
+        background-color: #F1F1F1;
     }
 
     .add-list {
@@ -525,7 +537,7 @@ if (!empty($_SESSION['look'])) {
 
     .add-button {
         cursor: pointer;
-        background-color: #F1F1F1;
+        background-color: #f6f6f6;
         border: 1px solid #ACACAC;
         border-radius: 3px 3px 3px 3px;
         color: #555555;
@@ -537,16 +549,30 @@ if (!empty($_SESSION['look'])) {
         margin: 0 6px 0 0;
     }
 
+    .add-button:hover {
+        background-color: #f0f0f0;
+    }
+
+    .add-button:active {
+        background-color: #EBE9DC;
+    }
+
     button {
         cursor: pointer;
-        background-color: #F1F1F1;
+        color: #333333;
+        background-color: #f6f6f6;
         border: 1px solid #ACACAC;
         border-radius: 3px 3px 3px 3px;
-        color: #555555;
         font-size: 12px;
-        font-weight: bold;
         padding: 3px 16px;
         width: 105px;
+    }
+    button:hover {
+        background-color: #f0f0f0;
+
+    }
+    button:active {
+        background-color: #EBE9DC;
     }
 
     .genpass {

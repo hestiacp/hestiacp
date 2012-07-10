@@ -742,7 +742,7 @@ validate_format(){
             stats_user)     validate_format_username "$arg" "$arg_name" ;;
             template)       validate_format_username "$arg" "$arg_name" ;;
             ttl)            validate_format_int "$arg" ;;
-            user)           validate_format_username "$arg" ;;
+            user)           validate_format_username "$arg" "$arg_name" ;;
             wday)           validate_format_mhdmw "$arg" $arg_name ;;
         esac
     done

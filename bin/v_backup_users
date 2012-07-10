@@ -11,7 +11,7 @@
 
 # Importing system enviroment  as we run this script 
 # mostly by cron wich not read it by itself
-source /etc/profile.d/vesta.sh
+source /etc/profile
 
 # Includes
 source $VESTA/conf/vesta.conf

@@ -15,7 +15,7 @@ version=$1
 updates=''
 
 # Importing system enviroment
-source /etc/profile.d/vesta.sh
+source /etc/profile
 
 # Includes
 source $VESTA/conf/vesta.conf

@@ -251,8 +251,8 @@ top_panel($user,$TAB);
                 $v_aliases = str_replace(' ', "\n", $waliases);
                 $result = array_diff($valiases, $aliases);
                 foreach ($result as $alias) {
-                    if (empty($_SESSION['error_msg'])) {
-                        exec (VESTA_CMD."v_delete_mail_account_alias ".$v_username." ".$v_domain." ".$v_account." '".$alias, $output, $return_var);
+                    if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
+                        exec (VESTA_CMD."v_delete_mail_account_alias ".$v_username." ".$v_domain." ".$v_account." '".$alias."'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -263,8 +263,8 @@ top_panel($user,$TAB);
                 }
                 $result = array_diff($aliases, $valiases);
                 foreach ($result as $alias) {
-                    if (empty($_SESSION['error_msg'])) {
-                        exec (VESTA_CMD."v_add_mail_account_alias ".$v_username." ".$v_domain." ".$v_account." '".$alias, $output, $return_var);
+                    if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
+                        exec (VESTA_CMD."v_add_mail_account_alias ".$v_username." ".$v_domain." ".$v_account." '".$alias."'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -285,7 +285,7 @@ top_panel($user,$TAB);
                 $v_fwd = str_replace(' ', "\n", $wfwd);
                 $result = array_diff($vfwd, $fwd);
                 foreach ($result as $forward) {
-                    if (empty($_SESSION['error_msg'])) {
+                    if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
                         exec (VESTA_CMD."v_delete_mail_account_forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
@@ -297,7 +297,7 @@ top_panel($user,$TAB);
                 }
                 $result = array_diff($fwd, $vfwd);
                 foreach ($result as $forward) {
-                    if (empty($_SESSION['error_msg'])) {
+                    if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
                         exec (VESTA_CMD."v_add_mail_account_forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);

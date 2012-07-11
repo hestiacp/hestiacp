@@ -21,11 +21,13 @@ foreach ($data as $key => $value) {
         $ssl_home = '';
     }
     if (strlen($data[$key]['NGINX_EXT']) > 16 ) {
+        $nginx_ext_title = str_replace(',', ', ', $data[$key]['NGINX_EXT']);
         $nginx_ext = substr($data[$key]['NGINX_EXT'], 0, 16);
         $nginx_ext = trim($nginx_ext, ",");
         $nginx_ext = str_replace(',', ', ', $nginx_ext);
         $nginx_ext = $nginx_ext.", ...";
     } else {
+        $nginx_ext_title = '';
         $nginx_ext = str_replace(',', ', ', $data[$key]['NGINX_EXT']);
     }
 
@@ -65,6 +67,10 @@ foreach ($data as $key => $value) {
     <td class="data-dotted" width="830px" style="vertical-align:top;">
         <table width="830px"><tr>
             <td></td>
+            <?php if (!empty($data[$key]['STATS'])) {
+                echo '            <td class="data-controls" width="114px"><img src="/images/new_window.png" width="8px" height="8px">';
+                echo "<a href='http://".$key."/vstats/' target='_blank'> open webstats </a></td>";
+            } ?>
             <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/web/?domain=<?php echo "$key" ?>"> edit</a></td>
             <td class="data-controls" width="70px">
                 <img src="/images/delete.png" width="7px" height="7px">
@@ -102,7 +108,7 @@ foreach ($data as $key => $value) {
                         <tr><td class="counter-name" width="40%">SSL Support:</td><td class="counter-value"><?php echo $data[$key]['SSL'] ?></td></tr>
                         <tr><td class="counter-name">SSL Home:</td><td class="counter-value"><?php echo $ssl_home ?></td></tr>
                         <tr><td class="counter-name">Nginx Template:</td><td class="counter-value"><?php echo $data[$key]['NGINX'] ?></td></tr>
-                        <tr><td class="counter-name">Nginx Extentions:</td><td class="counter-value"><?php echo $nginx_ext ?></td></tr>
+                        <tr><td class="counter-name">Nginx Extentions:</td><td class="counter-value" <?php if (!empty($nginx_ext_title)) echo "title='".$nginx_ext_title."'" ?>><?php echo $nginx_ext ?></td></tr>
                     </table>
                 </td>
             </tr>

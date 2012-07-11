@@ -12,7 +12,9 @@ foreach ($data as $key => $value) {
     }
 
     list($http_host, $port) = split(':', $_SERVER["HTTP_HOST"]);
+    if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
     if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "http://".$http_host."/phpMyAdmin/";
+    if ($data[$key]['TYPE'] == 'pgsql') $db_admin = "phpPgAdmin";
     if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "http://".$http_host."/phpPgAdmin/";
     ?>
 
@@ -68,7 +70,7 @@ foreach ($data as $key => $value) {
     <td class="data-dotted" width="830px" style="vertical-align:top;">
         <table width="830px"><tr>
             <td></td>
-            <td class="data-controls" width="120px"><img src="/images/new_window.png" width="8px" height="8px"> <a href="<?php echo $db_admin_link; ?>" target="_blank"> open web admin</a></td>
+            <td class="data-controls" width="126px"><img src="/images/new_window.png" width="8px" height="8px"> <a href="<?php echo $db_admin_link; ?>" target="_blank"> open <?php echo $db_admin ?> </a></td>
             <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/db/?database=<?php echo $key ?>"> edit</a></td>
             <td class="data-controls" width="80px">
                 <img src="/images/suspend.png" width="7px" height="8px">

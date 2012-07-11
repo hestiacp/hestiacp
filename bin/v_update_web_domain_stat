@@ -104,7 +104,7 @@ build_awstats() {
 }
 
 # Switching on statistics type
-case $stats in
+case $STATS in
     webalizer) build_webalizer ;;
     awstats) build_awstats ;;
 esac

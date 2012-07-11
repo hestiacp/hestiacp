@@ -80,4 +80,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$STATS' "$type"
 log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
+# Build stats
+exec $BIN/v_update_web_domain_stat $user $domain
+
 exit

@@ -555,8 +555,7 @@ validate_format_username() {
 # Domain
 validate_format_domain() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-    dpart1=$(echo $1 | cut -f 1 -d .)
-    if [[ "$1" =~ $exclude ]] || [ -z "$dpart1" ]; then
+    if [[ "$1" =~ $exclude ]] || [[ "$1" =~ "^[0-9]+$" ]]; then
         echo "Error: domain $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID

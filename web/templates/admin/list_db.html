@@ -1,6 +1,7 @@
 <table class='data'>
 
 <?php
+list($http_host, $port) = split(':', $_SERVER["HTTP_HOST"]);
 foreach ($data as $key => $value) {
     ++$i;
     if ($data[$key]['SUSPENDED'] == 'yes') {
@@ -10,8 +11,6 @@ foreach ($data as $key => $value) {
         $status = 'active';
         $spnd_action = 'suspend' ;
     }
-
-    list($http_host, $port) = split(':', $_SERVER["HTTP_HOST"]);
     if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
     if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "http://".$http_host."/phpMyAdmin/";
     if ($data[$key]['TYPE'] == 'pgsql') $db_admin = "phpPgAdmin";

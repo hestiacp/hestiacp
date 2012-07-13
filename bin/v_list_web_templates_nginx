@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: listing nginx templates
-# options: user [format]
+# options: [format]
 #
 # The function for obtaining the list of nginx templates available to a user.
 
@@ -10,65 +10,46 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user=$1
-format=${2-shell}
+format=${1-shell}
 
 # Includes
 source $VESTA/func/main.sh
 
 # Json function
 json_list_wtpl() {
-    i='1'       # iterator
-    echo '{'
-    for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
-        if [ -e "$WEBTPL/ngingx_$template.descr" ]; then
-            descr=$(cat $WEBTPL/ngingx_$template.descr | grep '#'|\
-                sed -e ':a;N;$!ba;s/\n/ /g')
-            if [ $i -ne 1 ]; then
-                echo -e "\t},"
-            fi
-            echo -e  "\t\"$template\": {"
-            echo -e "\t\t\"DESCR\": \"${descr//# /}\""
-            (( ++i))
+    templates=$(ls -t $WEBTPL |grep 'nginx' |grep '\.tpl' |cut -f 2 -d '_'\
+        |cut -f 1 -d  '.')
+    t_counter=$(echo "$templates" | wc -w)
+    i=1
+    echo '['
+    for template in $templates; do
+        if [ "$i" -lt "$t_counter" ]; then
+            echo -e  "\t\"$template\","
+        else
+            echo -e  "\t\"$template\""
         fi
+        (( ++i))
     done
-
-    if [ -n "$template" ]; then
-        echo -e "\t}"
-    fi
-    echo '}'
+    echo "]"
     }
 
 # Shell function
 shell_list_wtpl() {
-    for template in $(echo "$templates" |sed -e "s/,/\n/g"); do
-        if [ -e "$WEBTPL/ngingx_$template.descr" ]; then
-            tpl_descr=$(cat $WEBTPL/ngingx_$template.descr |grep '#')
-            if [ -z "$nohead" ]; then
-                echo "----------"
-            fi
-            echo "TEMPLATE: $template"
-            echo "DESCRIPTION: ${tpl_descr//# /}"
-        fi
+    templates=$(ls -t $WEBTPL |grep 'nginx' |grep '\.tpl' |cut -f 2 -d '_'\
+        |cut -f 1 -d  '.')
+    if [ -z "$nohead" ]; then
+        echo "Templates"
+        echo "----------"
+    fi
+    for template in $templates; do
+        echo "$template"
     done
 }
 
 
 #----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
-
-check_args '1' "$#" 'user'
-validate_format 'user'
-is_object_valid 'user' 'USER' "$user"
-
-
-#----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-# Get user package package
-templates=$(get_user_value '$WEB_TPL')
 
 # Listing domains
 case $format in

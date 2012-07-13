@@ -73,7 +73,7 @@ top_panel($user,$TAB);
             }
 
             // Template
-            if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
+            if (( $_SESSION['user'] == 'admin') && ($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
                 $v_template = escapeshellarg($_POST['v_template']);
                 exec (VESTA_CMD."v_change_dns_domain_tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
                 if ($return_var != 0) {
@@ -139,8 +139,13 @@ top_panel($user,$TAB);
             }
 
         }
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_dns.html');
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_dns.html');
+        if ($_SESSION['user'] == 'admin') {
+            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_dns.html');
+            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_dns.html');
+        } else {
+            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_dns.html');
+            include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_dns.html');
+        }
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);
     } else {

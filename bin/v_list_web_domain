@@ -75,8 +75,8 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 conf=$USER_DATA/web.conf
 
 # Defining fileds to select
-fields='$DOMAIN $IP $IP6 $U_DISK $U_BANDWIDTH $TPL $ALIAS $PHP $CGI $ELOG
- $STATS $STATS_USER $SSL $SSL_HOME $NGINX $NGINX_EXT $SUSPENDED $TIME $DATE'
+fields='$DOMAIN $IP $IP6 $U_DISK $U_BANDWIDTH $TPL $ALIAS $CGI $ELOG $STATS
+ $STATS_USER $SSL $SSL_HOME $NGINX $NGINX_EXT $SUSPENDED $TIME $DATE'
 
 # Listing domains
 case $format in 

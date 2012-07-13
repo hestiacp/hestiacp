@@ -52,20 +52,6 @@
 
             <tr><td class="add-text" style="padding: 10 0 0 2px;">Aliases</td></tr>
             <tr><td><textarea size="20" class="add-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Template</td></tr>
-            <tr><td><select class="add-list" name="v_template">
-            <?php
-                foreach ($templates as $key => $value) {
-                    echo "\t\t\t\t<option value=\"".$value."\"";
-                    $svalue = "'".$value."'";
-                    if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
-                        echo ' selected' ;
-                    }
-                    echo ">".$value."</option>\n";
-                }
-            ?>
-                </select></td></tr>
-
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Error Logging</td></tr>
             <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_elog" <?php if ($v_elog == 'yes') echo "checked=yes" ?>></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Nginx Support</td></tr>

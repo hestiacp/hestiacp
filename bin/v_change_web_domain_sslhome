@@ -56,7 +56,7 @@ replace_web_config
 
 # Checking nginx config
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web//snginx.conf"
     replace_web_config
 fi

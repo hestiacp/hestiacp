@@ -14,7 +14,7 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
-template=${3-default}
+template=$3
 default_extentions="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,\
 exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm"
 extentions=${4-$default_extentions}
@@ -31,14 +31,20 @@ source $VESTA/func/domain.sh
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'user domain [template] [extentions] [restart]'
-validate_format 'user' 'domain' 'template' 'extentions'
+validate_format 'user' 'domain' 'extentions'
 is_system_enabled "$PROXY_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_empty 'web' 'DOMAIN' "$domain" '$NGINX'
-is_nginx_template_valid
+if [ ! -z "$template" ]; then
+    validate_format 'template'
+    is_nginx_template_valid
+else
+    template=$(get_user_value '$TEMPLATE')
+    is_nginx_template_valid
+fi
 
 
 #----------------------------------------------------------#
@@ -49,7 +55,7 @@ is_nginx_template_valid
 get_domain_values 'web'
 NGINX="$template"
 NGINX_EXT="$extentions"
-tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
+tpl_file="$WEBTPL/nginx_$NGINX.tpl"
 conf="$HOMEDIR/$user/conf/web/nginx.conf"
 
 # Preparing domain values for the template substitution
@@ -69,7 +75,7 @@ fi
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     add_web_config
 

@@ -35,6 +35,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_username = $_GET['user'];
         $v_password = "••••••••";
         $v_email = $data[$v_username]['CONTACT'];
+        $v_template = $data[$v_username]['TEMPLATE'];
         $v_package = $data[$v_username]['PACKAGE'];
         $v_fname = $data[$v_username]['FNAME'];
         $v_lname = $data[$v_username]['LNAME'];
@@ -56,6 +57,10 @@ if ($_SESSION['user'] == 'admin') {
 
         exec (VESTA_CMD."v_list_user_packages json", $output, $return_var);
         $packages = json_decode(implode('', $output), true);
+        unset($output);
+
+        exec (VESTA_CMD."v_list_web_templates json", $output, $return_var);
+        $templates = json_decode(implode('', $output), true);
         unset($output);
 
         exec (VESTA_CMD."v_list_sys_shells json", $output, $return_var);
@@ -84,6 +89,18 @@ if ($_SESSION['user'] == 'admin') {
         if (($v_package != $_POST['v_package']) && (empty($_SESSION['error_msg']))) {
             $v_package = escapeshellarg($_POST['v_package']);
             exec (VESTA_CMD."v_change_user_package ".$v_username." ".$v_package, $output, $return_var);
+            if ($return_var != 0) {
+                $error = implode('<br>', $output);
+                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                $_SESSION['error_msg'] = $error;
+            }
+            unset($output);
+        }
+
+        // Change template
+        if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
+            $v_template = escapeshellarg($_POST['v_template']);
+            exec (VESTA_CMD."v_change_user_template ".$v_username." ".$v_template, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -258,7 +275,7 @@ if ($_SESSION['user'] == 'admin') {
             $_SESSION['ok_msg'] = "OK: changes has been saved.";
         }
     }
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/menu_edit_user.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_user.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_user.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);

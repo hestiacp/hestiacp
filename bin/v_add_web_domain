@@ -20,7 +20,7 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
-template=${4-default}
+template=$4
 restart=$5
 
 # Includes
@@ -35,7 +35,7 @@ source $VESTA/func/ip.sh
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'user domain ip [template] [restart]'
-validate_format 'user' 'domain' 'ip' 'template'
+validate_format 'user' 'domain' 'ip'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -43,7 +43,13 @@ is_domain_new 'web'
 is_ip_valid
 is_ip_avalable
 is_package_full 'WEB_DOMAINS'
-is_apache_template_valid
+if [ ! -z "$template" ]; then
+    validate_format 'template'
+    is_apache_template_valid
+else
+    template=$(get_user_value '$TEMPLATE')
+    is_apache_template_valid
+fi
 
 
 #----------------------------------------------------------#
@@ -74,28 +80,9 @@ email="$user@$domain"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
 tpl_file="$WEBTPL/apache_$template.tpl"
-
-# Parsing template keys
-template_data=$(cat $WEBTPL/apache_$template.descr|grep -v '#')
-for keys in $template_data; do
-    eval ${keys%%=*}=${keys#*=}
-done
-
-# Checking error log status
-if [ "$ELOG" = 'no' ]; then
-    elog='#'
-else
-    elog=''
-fi
-
-# Checking cgi
-if [ "$CGI" != 'yes' ]; then
-    cgi='#'
-    cgi_option='-ExecCGI'
-else
-    cgi=''
-    cgi_option='+ExecCGI'
-fi
+elog=''
+cgi=''
+cgi_option='+ExecCGI'
 
 # Adding domain to the httpd.conf
 add_web_config
@@ -181,9 +168,9 @@ increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Defining domain variables
 str="DOMAIN='$domain' IP='$ip' IP6='' ALIAS='$aliases' TPL='$template'"
-str="$str $template_data SSL='no' SSL_HOME='single' NGINX='' NGINX_EXT=''"
-str="$str STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'"
-str="$str SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+str="$str CGI='yes' ELOG='yes' SSL='no' SSL_HOME='single' NGINX=''"
+str="$str NGINX_EXT='' STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0'"
+str="$str U_BANDWIDTH='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 
 # Registering domain
 echo "$str" >> $USER_DATA/web.conf

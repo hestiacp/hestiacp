@@ -69,7 +69,7 @@ top_panel($user,$TAB);
         $ips = json_decode(implode('', $output), true);
         unset($output);
 
-        exec (VESTA_CMD."v_list_web_templates ".$user." json", $output, $return_var);
+        exec (VESTA_CMD."v_list_web_templates json", $output, $return_var);
         $templates = json_decode(implode('', $output), true);
         unset($output);
 
@@ -120,7 +120,7 @@ top_panel($user,$TAB);
         }
 
         // Template
-        if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
+        if (( $_SESSION['user'] == 'admin') && ($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
             $v_template = escapeshellarg($_POST['v_template']);
             exec (VESTA_CMD."v_change_web_domain_tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
             if ($return_var != 0) {
@@ -509,8 +509,13 @@ top_panel($user,$TAB);
         }
 
     }
+if ($_SESSION['user'] == 'admin') {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_web.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_web.html');
+} else {
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_web.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_web.html');
+}
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
 //}

@@ -98,7 +98,7 @@ fi
 if [ ! -z "$NGINX" ]; then
     # Adding domain to the snginx.conf
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
-    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
     add_web_config
 
     chown root:nginx $conf

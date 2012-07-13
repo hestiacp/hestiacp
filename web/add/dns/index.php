@@ -18,7 +18,6 @@ top_panel($user,$TAB);
         // Check input
         if (empty($_POST['v_domain'])) $errors[] = 'domain';
         if (empty($_POST['v_ip'])) $errors[] = 'ip';
-        if (empty($_POST['v_template'])) $errors[] = 'template';
         if (empty($_POST['v_exp'])) $errors[] = 'expiriation date';
         if (empty($_POST['v_soa'])) $errors[] = 'SOA';
         if (empty($_POST['v_ttl'])) $errors[] = 'TTL';
@@ -27,7 +26,11 @@ top_panel($user,$TAB);
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
         $v_domain = escapeshellarg($v_domain);
         $v_ip = escapeshellarg($_POST['v_ip']);
-        $v_template = escapeshellarg($_POST['v_template']);
+        if ($_SESSION['user'] == 'admin') {
+            $v_template = escapeshellarg($_POST['v_template']);
+        } else {
+            $v_template = "''";
+        }
         $v_exp = escapeshellarg($_POST['v_exp']);
         $v_soa = escapeshellarg($_POST['v_soa']);
         $v_ttl = escapeshellarg($_POST['v_ttl']);
@@ -120,8 +123,13 @@ top_panel($user,$TAB);
         $v_ttl = 14400;
         $v_exp = date('Y-m-d', strtotime('+1 year'));
 
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_dns.html');
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_dns.html');
+        if ($_SESSION['user'] == 'admin') {
+            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_dns.html');
+            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_dns.html');
+        } else {
+            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_dns.html');
+            include($_SERVER['DOCUMENT_ROOT'].'/templates/user/add_dns.html');
+        }
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);
     } else {

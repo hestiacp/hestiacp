@@ -17,36 +17,30 @@ source $VESTA/func/main.sh
 
 # Json function
 json_list_dnstpl() {
-    echo '{'
-    for template in $(ls $DNSTPL/| grep '.descr'); do
-        if [ -n "$data" ]; then
-            echo -e '        },'
+    templates=$(ls -t $DNSTPL |grep '\.tpl' |cut -f 1 -d  '.')
+    t_counter=$(echo "$templates" | wc -w)
+    i=1
+    echo '['
+    for template in $templates; do
+        if [ "$i" -lt "$t_counter" ]; then
+            echo -e  "\t\"$template\","
+        else
+            echo -e  "\t\"$template\""
         fi
-        tpl_descr=$(cat $DNSTPL/$template |grep '#'|tr -d '\n')
-        tpl_name="${template//.descr/}"
-        echo -e  "\t\"$tpl_name\": {"
-        echo -e "\t\t\"DESCR\": \"${tpl_descr//# /}\""
-        data=1
+        (( ++i))
     done
-    if [ -n "$data" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+    echo "]"
 }
 
 # Shell function
 shell_list_dnstpl() {
-    for template in $(ls $DNSTPL/| grep '.descr'); do
-        tpl_name="${template//.descr/}"
-        tpl_descr=$(cat $DNSTPL/$template |grep '#')
-        if [ -z "$nohead" ] ; then
-            echo "----------"
-        fi
-        echo "TEMPLATE: $tpl_name"
-        echo "DESCRIPTION: ${tpl_descr//# /}"
-        if [ -z "$nohead" ] ; then
-            echo
-        fi
+    templates=$(ls -t $DNSTPL |grep '\.tpl' |cut -f 1 -d  '.')
+    if [ -z "$nohead" ]; then
+        echo "Templates"
+        echo "----------"
+    fi
+    for template in $templates; do
+        echo "$template"
     done
 }
 

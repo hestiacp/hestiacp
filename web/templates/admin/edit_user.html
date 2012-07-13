@@ -49,6 +49,21 @@ document.v_edit_user.v_password.value = randomstring;
             <tr><td><input type="text" size="20" class="add-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".$v_fname; ?>></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Last Name</td></tr>
             <tr><td><input type="text" size="20" class="add-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>></tr>
+            <tr><td class="add-text" style="padding: 10px 0 0 2px;" >Default Template:</td></tr>
+            <tr><td><select class="add-list" name="v_template">
+            <?php
+                foreach ($templates as $key => $value) {
+                    echo "\t\t\t\t<option value=\"".$value."\"";
+                    $svalue = "'".$value."'";
+                    if (( $value == $v_template ) || ($svalue == $v_template )){
+                        echo 'selected' ;
+                    }
+
+                    echo ">".$value."</option>\n";
+                }
+            ?>
+                </select></td></tr>
+
             <tr><td class="add-text" style="padding: 10px 0 0 2px;" >Shell</td></tr>
             <tr><td><select class="add-list" name="v_shell">
             <?php

@@ -12,13 +12,10 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 // Panel
 top_panel($user,$TAB);
 
-// Are you admin?
-//if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
         if (empty($_POST['v_domain'])) $errors[] = 'domain';
         if (empty($_POST['v_ip'])) $errors[] = 'ip';
-        if (empty($_POST['v_template'])) $errors[] = 'template';
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))) $errors[] = 'ssl certificate';
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))) $errors[] = 'ssl key';
         if ((!empty($_POST['v_aliases'])) || (!empty($_POST['v_elog'])) || (!empty($_POST['v_ssl'])) || (!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key'])) || (!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none') || (empty($_POST['v_nginx']))) $v_adv = 'yes';
@@ -27,7 +24,11 @@ top_panel($user,$TAB);
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
         $v_domain = escapeshellarg($v_domain);
         $v_ip = escapeshellarg($_POST['v_ip']);
-        $v_template = escapeshellarg($_POST['v_template']);
+        if ($_SESSION['user'] == 'admin') {
+            $v_template = escapeshellarg($_POST['v_template']);
+        } else {
+            $v_template = "''";
+        }
         if (empty($_POST['v_dns'])) $v_dns = 'off';
         if (empty($_POST['v_mail'])) $v_mail = 'off';
         if (empty($_POST['v_nginx'])) $v_nginx = 'off';
@@ -204,7 +205,7 @@ top_panel($user,$TAB);
     $ips = json_decode(implode('', $output), true);
     unset($output);
 
-    exec (VESTA_CMD."v_list_web_templates ".$user." json", $output, $return_var);
+    exec (VESTA_CMD."v_list_web_templates json", $output, $return_var);
     $templates = json_decode(implode('', $output), true);
     unset($output);
 
@@ -212,8 +213,14 @@ top_panel($user,$TAB);
     $stats = json_decode(implode('', $output), true);
     unset($output);
 
+// Are you admin?
+if ($_SESSION['user'] == 'admin') {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_web.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_web.html');
+} else {
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_web.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/add_web.html');
+}
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
 //}

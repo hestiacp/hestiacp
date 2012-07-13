@@ -1,36 +1,46 @@
 # Web template check
 is_apache_template_valid() {
-    c=$(echo "$(get_user_value '$WEB_TPL')" | grep -w  "$template")
     t="$WEBTPL/apache_$template.tpl"
-    d="$WEBTPL/apache_$template.descr"
     s="$WEBTPL/apache_$template.stpl"
-    if [ -z "$c" ] || [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
-        echo "Error: template $template not found"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
+    if [ ! -e $t ] || [ ! -e $s ]; then
+        template='default'
+        t="$WEBTPL/apache_$template.tpl"
+        s="$WEBTPL/apache_$template.stpl"
+        if [ ! -e $t ] || [ ! -e $s ]; then
+            echo "Error: template $template not found"
+            log_event "$E_NOTEXIST" "$EVENT"
+            exit $E_NOTEXIST
+        fi
     fi
 }
 
 # Nginx template check
 is_nginx_template_valid() {
-    t="$WEBTPL/ngingx_$template.tpl"
-    d="$WEBTPL/ngingx_$template.descr"
-    s="$WEBTPL/ngingx_$template.stpl"
-    if [ ! -e $t ] || [ ! -e $d ] || [ ! -e $s ]; then
-        echo "Error: nginx $template not found"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
+    t="$WEBTPL/nginx_$template.tpl"
+    s="$WEBTPL/nginx_$template.stpl"
+    if [ ! -e $t ] || [ ! -e $s ]; then
+        template='default'
+        t="$WEBTPL/nginx_$template.tpl"
+        s="$WEBTPL/nginx_$template.stpl"
+        if [ ! -e $t ] || [ ! -e $s ]; then
+            echo "Error: nginx $template not found"
+            log_event "$E_NOTEXIST" "$EVENT"
+            exit $E_NOTEXIST
+        fi
     fi
 }
 
 # DNS template check
 is_dns_template_valid() {
     tpl="$DNSTPL/$template.tpl"
-    descr="$DNSTPL/$template.descr"
-    if [ ! -e $tpl ] || [ ! -e $descr ]; then
-        echo "Error: template not found"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
+    if [ ! -e $tpl ]; then
+        template='default'
+        tpl="$DNSTPL/$template.tpl"
+        if [ ! -e $tpl ]; then
+            echo "Error: template not found"
+            log_event "$E_NOTEXIST" "$EVENT"
+            exit $E_NOTEXIST
+        fi
     fi
 }
 

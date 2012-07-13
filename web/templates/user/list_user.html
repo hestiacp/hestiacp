@@ -89,14 +89,14 @@ foreach ($data as $key => $value) {
             </td>
             <td style="vertical-align:top;" width="320">
                 <table width="300">
-                    <tr><td class="counter-name" width="37%">Web Domains:</td>
+                    <tr><td class="counter-name" width="36%">Predefined Template:</td>
+                    <td class="counter-value"><?php echo $data[$key]['TEMPLATE'] ?></td></tr>
+                    <tr><td class="counter-name">Web Domains:</td>
                     <td class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?> / <?php echo $data[$key]['WEB_DOMAINS'] ?></td></tr>
                     <tr><td class="counter-name">Web SSL:</td>
                     <td class="counter-value"><?php echo $data[$key]['U_WEB_SSL'] ?></td></tr>
                     <tr><td class="counter-name">Web Aliases:</td>
                     <td class="counter-value"><?php echo $data[$key]['WEB_ALIASES'] ?> per domain</td></tr>
-                    <tr><td class="counter-name">Web Templates:</td>
-                    <td class="counter-value"><?php echo str_replace(',', ', ',$data[$key]['WEB_TPL']) ?></td></tr>
                     <tr><td class="counter-name">Dns Domains:</td>
                     <td class="counter-value"><?php echo $data[$key]['U_DNS_DOMAINS'] ?> / <?php echo $data[$key]['DNS_DOMAINS'] ?></td></tr>
                     <tr><td class="counter-name">Dns Records:</td>

@@ -185,14 +185,14 @@ for domain in $(shell_list) ; do
 
     # Checking nginx
     if [ ! -z "$NGINX" ]; then
-        tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
+        tpl_file="$WEBTPL/nginx_$NGINX.tpl"
         conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
         add_web_config
         chown root:nginx $conf
         chmod 640 $conf
 
         if [ "$SSL" = 'yes' ]; then
-            tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
+            tpl_file="$WEBTPL/nginx_$NGINX.stpl"
             conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
             add_web_config
             chown root:nginx $conf

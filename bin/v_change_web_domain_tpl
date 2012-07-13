@@ -61,12 +61,6 @@ fi
 upd_web_domain_values
 tpl_file="$WEBTPL/apache_$template.tpl"
 
-# Parsing new template
-template_data=$(cat $WEBTPL/apache_$template.descr | grep -v '#')
-for keys in $template_data; do
-    eval ${keys%%=*}=${keys#*=}
-done
-
 # Checking error log
 if [ "$ELOG" = 'no' ]; then
     elog='#'
@@ -103,13 +97,6 @@ fi
 
 # Changing tpl in config
 update_object_value 'web' 'DOMAIN' "$domain" '$TPL' "$template"
-
-# Updating db keys
-for keys in $(cat $WEBTPL/apache_$template.descr|grep -v '#'); do
-    key=$(echo "$keys"| cut -f 1 -d '=' |sed -e "s/^/\$/g")
-    value=$(echo "$keys" |cut -f 2 -d \')
-    update_object_value 'web' 'DOMAIN' "$domain" "$key" "$value"
-done
 
 # Restart web
 if [ "$restart" != 'no' ]; then

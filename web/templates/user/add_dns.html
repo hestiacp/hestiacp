@@ -32,19 +32,6 @@
             <tr><td class="add-text" style="padding: 10px 0 0 2px;"><a href="javascript:elementHideShow('advtable');" class="add-advanced">Advanced Options ⇢</a></td></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 0px;">
                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
-                    <tr><td class="add-text" style="padding: 10px 0 0 2px;">Template</td></tr>
-                    <tr><td><select class="add-list" name="v_template">
-                    <?php
-                        echo "<option value=''></option>";
-                        foreach ($templates as $key => $value) {
-                            echo "\t\t\t\t<option value=\"".$value."\"";
-                            if ((!empty($v_template)) && ( $value == $_POST['v_template'])){
-                                echo ' selected' ;
-                            }
-                            echo ">".$value."</option>\n";
-                        }
-                    ?>
-                        </select></td></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Domain Expiriation</td></tr>
                     <tr><td><input type="text" size="20" class="add-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".$v_exp; ?>></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">SOA</td></tr>

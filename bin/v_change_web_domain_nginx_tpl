@@ -48,7 +48,7 @@ is_nginx_template_valid
 
 # Parsing domain values
 get_domain_values 'web'
-tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
+tpl_file="$WEBTPL/nginx_$NGINX.tpl"
 conf="$HOMEDIR/$user/conf/web/nginx.conf"
 
 # Delete old vhost
@@ -56,7 +56,7 @@ del_web_config
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     del_web_config
 fi
@@ -64,7 +64,7 @@ fi
 # Add new vhost
 NGINX="$template"
 NGINX_EXT="$extentions"
-tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
+tpl_file="$WEBTPL/nginx_$NGINX.tpl"
 conf="$HOMEDIR/$user/conf/web/nginx.conf"
 upd_web_domain_values
 add_web_config
@@ -73,7 +73,7 @@ chmod 640 $conf
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     add_web_config
     chown root:nginx $conf

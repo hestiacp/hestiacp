@@ -41,13 +41,13 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$NGINX'
 
 # Defining domain parameters
 get_domain_values 'web'
-tpl_file="$WEBTPL/ngingx_$NGINX.tpl"
+tpl_file="$WEBTPL/nginx_$NGINX.tpl"
 conf="$HOMEDIR/$user/conf/web/nginx.conf"
 del_web_config
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/ngingx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     del_web_config
 fi

@@ -49,6 +49,11 @@ update_domain_zone
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Upddate counters
+records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f1 -d ' ')"
+update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+decrease_user_value "$user" '$U_DNS_RECORDS'
+
 # Restart named
 $BIN/v_restart_dns "$EVENT"
 

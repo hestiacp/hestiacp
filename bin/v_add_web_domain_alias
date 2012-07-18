@@ -16,6 +16,7 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 dom_alias=$(idn -t --quiet -u "$3" )
+dom_alias=$(echo $dom_alias | sed -e 's/\.*$//g' -e 's/^\.*//g')
 dom_alias=$(echo $dom_alias | tr '[:upper:]' '[:lower:]')
 dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 restart="$4"

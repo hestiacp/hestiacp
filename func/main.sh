@@ -562,6 +562,16 @@ validate_format_domain() {
     fi
 }
 
+# Domain alias
+validate_format_domain_alias() {
+    exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
+    if [[ "$1" =~ $exclude ]] || [[ "$1" =~ "^[0-9]+$" ]]; then
+        echo "Error: domain alias $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
 # Database
 validate_format_database() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%|\`| ]"
@@ -698,7 +708,7 @@ validate_format(){
             dkim)           validate_format_boolean "$arg" 'dkim' ;;
             dkim_size)      validate_format_key_size "$arg" ;;
             domain)         validate_format_domain "$arg" ;;
-            dom_alias)      validate_format_domain "$arg" ;;
+            dom_alias)      validate_format_domain_alias "$arg" ;;
             dvalue)         validate_format_dvalue "$arg";;
             email)          validate_format_email "$arg" ;;
             exp)            validate_format_date "$arg" ;;

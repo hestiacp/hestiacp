@@ -35,22 +35,30 @@
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Template</td></tr>
                     <tr><td><select class="add-list" name="v_template">
                     <?php
-                        echo "<option value=''></option>";
                         foreach ($templates as $key => $value) {
                             echo "\t\t\t\t<option value=\"".$value."\"";
                             if ((!empty($v_template)) && ( $value == $_POST['v_template'])){
                                 echo ' selected' ;
                             }
+                            if ((empty($v_template)) && ( $value == $template)){
+                                echo ' selected' ;
+                            }
+
                             echo ">".$value."</option>\n";
                         }
                     ?>
                         </select></td></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Domain Expiriation</td></tr>
                     <tr><td><input type="text" size="20" class="add-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".$v_exp; ?>></tr>
-                    <tr><td class="add-text" style="padding: 10px 0 0 2px;">SOA</td></tr>
-                    <tr><td><input type="text" size="20" class="add-input" name="v_soa" <?php if (!empty($v_soa)) echo "value=".$v_soa; ?>></tr>
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">TTL</td></tr>
                     <tr><td><input type="text" size="20" class="add-input" name="v_ttl" <?php if (!empty($v_ttl)) echo "value=".$v_ttl; ?>></tr>
+                    <tr><td class="add-text" style="padding: 10px 0 0 2px;">NameServers</td></tr>
+                    <tr><td><input type="text" size="20" class="add-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".$v_ns1; ?>></tr>
+                    <tr><td><input type="text" size="20" class="add-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".$v_ns2; ?>></tr>
+                    <tr><td><input type="text" size="20" class="add-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".$v_ns3; ?>></tr>
+                    <tr><td><input type="text" size="20" class="add-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>></tr>
+
+
                 </table>
             </td></tr>
             <tr><td style="padding: 24px 0 0 0;">

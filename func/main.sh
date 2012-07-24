@@ -734,10 +734,6 @@ validate_format(){
             ns2)            validate_format_domain "$arg" ;;
             ns3)            validate_format_domain "$arg" ;;
             ns4)            validate_format_domain "$arg" ;;
-            ns5)            validate_format_domain "$arg" ;;
-            ns6)            validate_format_domain "$arg" ;;
-            ns7)            validate_format_domain "$arg" ;;
-            ns8)            validate_format_domain "$arg" ;;
             package)        validate_format_username "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" ;;

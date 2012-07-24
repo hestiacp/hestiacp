@@ -2,7 +2,7 @@
 
 
 <?php
-list($http_host, $port) = split(':', $_SERVER["HTTP_HOST"]);
+list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"]);
 foreach ($data as $key => $value) {
     ++$i;
     if ($data[$key]['SUSPENDED'] == 'yes') {

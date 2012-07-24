@@ -63,10 +63,6 @@ cat $DNSTPL/$template.tpl |\
         -e "s/%ns2%/$ns2/g" \
         -e "s/%ns3%/$ns3/g" \
         -e "s/%ns4%/$ns4/g" \
-        -e "s/%ns5%/$ns5/g" \
-        -e "s/%ns6%/$ns6/g" \
-        -e "s/%ns7%/$ns7/g" \
-        -e "s/%ns8%/$ns8/g" \
         -e "s/%time%/$TIME/g" \
         -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
 

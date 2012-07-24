@@ -42,7 +42,4 @@ echo "$value"
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Logging
-log_event "$OK" "$EVENT"
-
 exit

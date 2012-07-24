@@ -18,9 +18,6 @@ top_panel($user,$TAB);
         // Check input
         if (empty($_POST['v_domain'])) $errors[] = 'domain';
         if (empty($_POST['v_ip'])) $errors[] = 'ip';
-        if (empty($_POST['v_exp'])) $errors[] = 'expiriation date';
-        if (empty($_POST['v_soa'])) $errors[] = 'SOA';
-        if (empty($_POST['v_ttl'])) $errors[] = 'TTL';
 
         // Protect input
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
@@ -31,9 +28,10 @@ top_panel($user,$TAB);
         } else {
             $v_template = "''";
         }
-        $v_exp = escapeshellarg($_POST['v_exp']);
-        $v_soa = escapeshellarg($_POST['v_soa']);
-        $v_ttl = escapeshellarg($_POST['v_ttl']);
+        if (!empty($_POST['v_ns1'])) $v_ns1 = escapeshellarg($_POST['v_ns1']);
+        if (!empty($_POST['v_ns2'])) $v_ns2 = escapeshellarg($_POST['v_ns2']);
+        if (!empty($_POST['v_ns3'])) $v_ns3 = escapeshellarg($_POST['v_ns3']);
+        if (!empty($_POST['v_ns4'])) $v_ns4 = escapeshellarg($_POST['v_ns4']);
 
         // Check for errors
         if (!empty($errors[0])) {
@@ -48,13 +46,37 @@ top_panel($user,$TAB);
         } else {
 
             // Add DNS
-            exec (VESTA_CMD."v_add_dns_domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." ".$v_exp." ".$v_soa." ".$v_ttl, $output, $return_var);
+            exec (VESTA_CMD."v_add_dns_domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$ns4, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
+
+            // Change Expiriation date
+            if ((!empty($_POST['v_exp'])) && ($_POST['v_exp'] != date('Y-m-d', strtotime('+1 year')))) {
+                $v_exp = escapeshellarg($_POST['v_exp']);
+                exec (VESTA_CMD."v_change_dns_domain_exp ".$user." ".$v_domain." ".$v_exp, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                }
+                unset($output);
+            }
+
+            // Change TTL
+            if ((!empty($_POST['v_ttl'])) && ($_POST['v_ttl'] != '14400')) {
+                $v_ttl = escapeshellarg($_POST['v_ttl']);
+                exec (VESTA_CMD."v_change_dns_domain_ttl ".$user." ".$v_domain." ".$v_ttl, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                }
+                unset($output);
+            }
 
             if (empty($_SESSION['error_msg'])) {
                 $_SESSION['ok_msg'] = "OK: domain <b>".$_POST[v_domain]."</b> has been created successfully.";
@@ -111,17 +133,26 @@ top_panel($user,$TAB);
 
 
     if ((empty($_GET['domain'])) && (empty($_POST['domain'])))  {
+        exec (VESTA_CMD."v_get_user_value ".$user." 'TEMPLATE'", $output, $return_var);
+        $template = $output[0] ;
+        unset($output);
+
         exec (VESTA_CMD."v_list_dns_templates json", $output, $return_var);
         $templates = json_decode(implode('', $output), true);
         unset($output);
 
-        exec (VESTA_CMD."v_list_user_ns ".$user." json", $output, $return_var);
-        $soa = json_decode(implode('', $output), true);
-        $v_soa = $soa[0];
-        unset($output);
+        if ((empty($v_ns1)) && (empty($v_ns2))) {
+            exec (VESTA_CMD."v_list_user_ns ".$user." json", $output, $return_var);
+            $nameservers = json_decode(implode('', $output), true);
+            $v_ns1 = $nameservers[0];
+            $v_ns2 = $nameservers[1];
+            $v_ns3 = $nameservers[2];
+            $v_ns4 = $nameservers[3];
+            unset($output);
+        }
 
-        $v_ttl = 14400;
-        $v_exp = date('Y-m-d', strtotime('+1 year'));
+        if (empty($v_ttl)) $v_ttl = 14400;
+        if (empty($v_exp)) $v_exp = date('Y-m-d', strtotime('+1 year'));
 
         if ($_SESSION['user'] == 'admin') {
             include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_dns.html');

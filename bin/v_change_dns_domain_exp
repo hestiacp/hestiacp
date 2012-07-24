@@ -42,7 +42,6 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 update_object_value 'dns' 'DOMAIN' "$domain" '$EXP' "$exp"
 
 
-
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#

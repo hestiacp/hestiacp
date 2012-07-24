@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns domain
-# options: user domain ip [template] [exp] [soa] [ttl]
+# options: user domain ip [template] [ns1] [ns2] [ns3] [ns4]
 #
 # The function adds DNS zone with records defined in the template. If the exp
 # argument isn't stated, the expiration date value will be set to next year.
@@ -21,10 +21,11 @@ domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
 template=$4
-next_year=$(date +%F -d "+ 1 year")
-exp=${5-$next_year}
-soa=$6
-ttl=${7-14400}
+ns1=$5
+ns2=$6
+ns3=$7
+ns4=$8
+restart=$9
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -36,8 +37,8 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ip [template] [exp] [soa] [ttl]'
-validate_format 'user' 'domain' 'ip' 'exp' 'ttl'
+check_args '3' "$#" 'user domain ip [template] [ns1] [ns2] [ns3] [ns4]'
+validate_format 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -51,23 +52,42 @@ else
     is_dns_template_valid
 fi
 
+if [ ! -z "$ns1" ]; then
+    ns1=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns1'
+fi
+if [ ! -z "$ns2" ]; then
+    ns2=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns2'
+fi
+
+if [ ! -z "$ns3" ]; then
+    ns3=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns3'
+fi
+if [ ! -z "$ns4" ]; then
+    ns4=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns4'
+fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Defining variables
-i=1
-ns=$(get_user_value '$NS')
-for nameserver in ${ns//,/ };do
-    eval ns$i=$nameserver
-    (( ++i))
-done
-
-# Define soa
-if [ -z "$soa" ]; then
-    soa="$ns1"
+if [ -z $ns2 ]; then
+    i=1
+    ns=$(get_user_value '$NS')
+    for nameserver in ${ns//,/ };do
+        eval ns$i=$nameserver
+        (( ++i))
+    done
 fi
+soa="$ns1"
+exp=$(date +%F -d "+ 1 year")
+ttl=14400
+
 
 # Adding zone to dns dir
 cat $DNSTPL/$template.tpl |\
@@ -78,10 +98,6 @@ cat $DNSTPL/$template.tpl |\
         -e "s/%ns2%/$ns2/g" \
         -e "s/%ns3%/$ns3/g" \
         -e "s/%ns4%/$ns4/g" \
-        -e "s/%ns5%/$ns5/g" \
-        -e "s/%ns6%/$ns6/g" \
-        -e "s/%ns7%/$ns7/g" \
-        -e "s/%ns8%/$ns8/g" \
         -e "s/%time%/$TIME/g" \
         -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
 chmod 660 $USER_DATA/dns/$domain.conf
@@ -116,7 +132,9 @@ increase_user_value "$user" '$U_DNS_DOMAINS'
 increase_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Restart named
-$BIN/v_restart_dns "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_dns "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

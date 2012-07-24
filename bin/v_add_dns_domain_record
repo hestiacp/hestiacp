@@ -18,10 +18,10 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 record=$(idn -t --quiet -u "$3" )
-record=$(echo $record | tr '[:upper:]' '[:lower:]')
+record=$(echo "$record" | tr '[:upper:]' '[:lower:]')
 rtype=$(echo "$4"| tr '[:lower:]' '[:upper:]')
 dvalue=$(idn -t --quiet -u "$5" )
-dvalue=$(echo $dvalue | tr '[:upper:]' '[:lower:]')
+dvalue=$(echo "$dvalue" | tr '[:upper:]' '[:lower:]')
 priority=$6
 id=$7
 

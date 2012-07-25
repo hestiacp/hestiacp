@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns domain record
-# options: user domain record type value [priority] [id]
+# options: user domain record type value [priority] [id] [restart]
 #
 # The call is used for adding new DNS record. Complex records of TXT, MX and
 # SRV types can be used by a filling in the 'value' argument. The function also
@@ -24,7 +24,7 @@ dvalue=$(idn -t --quiet -u "$5" )
 dvalue=$(echo "$dvalue" | tr '[:upper:]' '[:lower:]')
 priority=$6
 id=$7
-
+restart=$8
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -36,7 +36,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'user domain record type value [priority] [id]'
+check_args '5' "$#" 'user domain record type value [priority] [id] [restart]'
 validate_format 'user' 'domain' 'record' 'rtype' 'dvalue'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -81,7 +81,9 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 increase_user_value "$user" '$U_DNS_RECORDS'
 
 # Restart named
-$BIN/v_restart_dns "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_dns "$EVENT"
+fi
 
 # Logging
 log_history "$EVENT"

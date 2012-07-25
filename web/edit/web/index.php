@@ -142,7 +142,7 @@ top_panel($user,$TAB);
             $v_aliases = str_replace(' ', "\n", $waliases);
             $result = array_diff($valiases, $aliases);
             foreach ($result as $alias) {
-                if (empty($_SESSION['error_msg'])) {
+                if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
                     $restart_web = 'yes';
                     $v_template = escapeshellarg($_POST['v_template']);
                     exec (VESTA_CMD."v_delete_web_domain_alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
@@ -152,9 +152,9 @@ top_panel($user,$TAB);
                         $_SESSION['error_msg'] = $error;
                     }
                     unset($output);
-                    exec (VESTA_CMD."v_list_dns_domain ".$v_username." '".$alias."' json", $output, $return_var);
-                    if ((empty($_SESSION['error_msg'])) && ($return_var == 0 )) {
-                        exec (VESTA_CMD."v_delete_dns_domain ".$v_username." '".$alias."'", $output, $return_var);
+
+                    if (empty($_SESSION['error_msg'])) {
+                        exec (VESTA_CMD."v_delete_dns_on_web_alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -168,7 +168,7 @@ top_panel($user,$TAB);
 
             $result = array_diff($aliases, $valiases);
             foreach ($result as $alias) {
-                if (empty($_SESSION['error_msg'])) {
+                if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
                     $restart_web = 'yes';
                     $v_template = escapeshellarg($_POST['v_template']);
                     exec (VESTA_CMD."v_add_web_domain_alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
@@ -178,9 +178,8 @@ top_panel($user,$TAB);
                         $_SESSION['error_msg'] = $error;
                     }
                     unset($output);
-                    exec (VESTA_CMD."v_list_dns_domain ".$v_username." '".$alias."' json", $output, $return_var);
-                    if ((empty($_SESSION['error_msg'])) && ($return_var == 0 )) {
-                        exec (VESTA_CMD."v_add_dns_domain ".$v_username." '".$alias."' ".$v_ip, $output, $return_var);
+                    if (empty($_SESSION['error_msg'])) {
+                        exec (VESTA_CMD."v_add_dns_on_web_alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';

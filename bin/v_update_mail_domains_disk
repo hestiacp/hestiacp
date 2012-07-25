@@ -58,7 +58,6 @@ done
 recalc_user_disk_usage
 
 # Logging
-log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

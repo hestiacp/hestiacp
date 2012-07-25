@@ -41,7 +41,6 @@
 
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">DNS support</td></tr>
             <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_dns" <?php if (empty($v_dns)) echo "checked=yes"; ?>></tr>
-
             <tr><td class="add-text" style="padding: 10px 0 0 2px;">Mail support</td></tr>
             <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_mail" <?php if (empty($v_mail)) echo "checked=yes"; ?>></tr>
             <tr><td class="add-text" style="padding: 10px 0 0 2px;"><a href="javascript:elementHideShow('advtable');" class="add-advanced">Advanced Options ⇢</a></td></tr>
@@ -52,14 +51,15 @@
                     <tr><td class="add-text" style="padding: 10px 0 0 2px;">Apache Template</td></tr>
                     <tr><td><select class="add-list" name="v_template">
                     <?php
-                        echo "<option value=''></option>";
                         foreach ($templates as $key => $value) {
-
                             echo "\t\t\t\t<option value=\"".$value."\"";
-                            if ((!empty($v_template)) && ( $key == $_POST['v_template'])){
+                            if ((!empty($v_template)) && ( $value == $_POST['v_template'])){
                                 echo ' selected' ;
                             }
-                            echo ">".$value."</option>\n";
+                            if ((empty($v_template)) && ( $value == $template)){
+                                echo ' selected' ;
+                            }
+                            echo "> ".$value." </option>\n";
                         }
                     ?>
                         </select></td></tr>

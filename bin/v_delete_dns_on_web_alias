@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: add dns domain or dns record based on web domain alias restart
+# info: delete dns domain or dns record based on web domain alias
 # options: user domain
 #
-# The function adds dns domain or dns record based on web domain alias.
+# The function deletes dns domain or dns record based on web domain alias.
 
 
 #----------------------------------------------------------#
@@ -48,24 +48,22 @@ get_domain_values 'web'
 
 # Check if it a simple domain
 if [ $(echo -e "${dom_alias//\./\n}" | wc -l) -le 2 ]; then
-    if [ ! -e "$USER_DATA/dns/$dom_alias.conf" ]; then
-        $BIN/v_add_dns_domain $user $dom_alias $IP '' '' '' '' '' $restart
+    if [ -e "$USER_DATA/dns/$dom_alias.conf" ]; then
+        $BIN/v_delete_dns_domain $user $dom_alias $IP $restart
     fi
 else
     # Check subdomain
     sub=$(echo "$dom_alias" | cut -f1 -d . -s)
-    dom=$(echo "$dom_alias" | sed -e "s/^$sub.//" )
-    if [ ! -e "$USER_DATA/dns/$dom.conf" ]; then
-        $BIN/v_add_dns_domain $user $dom $IP '' '' '' '' '' $restart
-        $BIN/v_add_dns_domain_record $user $dom "$sub" A $IP '' '' $restart
-    else
+    root=$(echo "$dom_alias" | sed -e "s/^$sub.//" )
+    if [ -e "$USER_DATA/dns/$root.conf" ]; then
         if [ "$sub" == '*' ]; then
-            rec=$(grep -w "RECORD='\*'" $USER_DATA/dns/$dom.conf)
+            rec=$(grep -w "RECORD='\*'" $USER_DATA/dns/$root.conf)
         else
-            rec=$(grep -w "RECORD='$sub'" $USER_DATA/dns/$dom.conf)
+            rec=$(grep -w "RECORD='$sub'" $USER_DATA/dns/$root.conf)
         fi
-        if [ -z "$rec" ]; then
-            $BIN/v_add_dns_domain_record $user $dom "$sub" A $IP '' '' $restart
+        if [ ! -z "$rec" ]; then
+            eval "$rec"
+            $BIN/v_delete_dns_domain_record $user "$root" "$ID"
         fi
     fi
 fi

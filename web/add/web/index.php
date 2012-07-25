@@ -100,15 +100,15 @@ top_panel($user,$TAB);
                         }
                     }
                     unset($output);
-                }
-                if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-                    exec (VESTA_CMD."v_add_dns_on_web_alias ".$user." ".$v_domain." 'no'", $output, $return_var);
-                    if ($return_var != 0) {
-                        $error = implode('<br>', $output);
-                        if (empty($error)) $error = 'Error: vesta did not return any output.';
-                        $_SESSION['error_msg'] = $error;
+                    if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
+                        exec (VESTA_CMD."v_add_dns_on_web_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            $_SESSION['error_msg'] = $error;
+                        }
+                        unset($output);
                     }
-                    unset($output);
                 }
             }
 
@@ -182,6 +182,16 @@ top_panel($user,$TAB);
                 unset($output);
             }
 
+            if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
+                exec (VESTA_CMD."v_restart_dns", $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                }
+                unset($output);
+            }
+
             if (empty($_SESSION['error_msg'])) {
                 exec (VESTA_CMD."v_restart_web", $output, $return_var);
                 if ($return_var != 0) {
@@ -203,6 +213,10 @@ top_panel($user,$TAB);
 
     exec (VESTA_CMD."v_list_user_ips ".$user." json", $output, $return_var);
     $ips = json_decode(implode('', $output), true);
+    unset($output);
+
+    exec (VESTA_CMD."v_get_user_value ".$user." 'TEMPLATE'", $output, $return_var);
+    $template = $output[0] ;
     unset($output);
 
     exec (VESTA_CMD."v_list_web_templates json", $output, $return_var);

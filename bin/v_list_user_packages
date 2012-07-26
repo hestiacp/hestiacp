@@ -71,9 +71,9 @@ shell_list_pkgs() {
 #----------------------------------------------------------#
 
 # Defining fields
-fields='$PACKAGE $TEMPLATE $WEB_DOMAINS $WEB_SSL $WEB_ALIASES $DATABASES
-    $MAIL_DOMAINS $MAIL_BOXES $MAIL_FORWARDERS $DNS_DOMAINS $DISK_QUOTA
-    $BANDWIDTH $NS $SHELL $BACKUPS'
+fields='$PACKAGE $TEMPLATE $WEB_DOMAINS $WEB_ALIASES $DNS_DOMAINS $DNS_RECORDS
+    $MAIL_DOMAINS $MAIL_ACCOUNTS $DATABASES $CRON_JOBS $DISK_QUOTA $BANDWIDTH
+    $NS $SHELL $BACKUPS $TIME $DATE'
 
 # Listing domains
 case $format in

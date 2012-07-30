@@ -1,0 +1,74 @@
+#!/bin/bash
+# info: adding user package
+# options: pkg_dir package [rewrite]
+#
+# The function adds new user package to the system.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+pkg_dir=$1
+package=$2
+rewrite=$3
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+# Functions
+is_package_new() {
+    if [ -e "$VESTA/data/packages/$package.pkg" ]; then
+        echo "Error: package $package already exists."
+        log_event "$E_EXISTS" "$EVENT"
+        exit $E_EXISTS
+    fi
+}
+
+is_package_consistent() {
+    source $pkg_dir/$package.pkg
+    validate_format_int $WEB_DOMAINS
+    validate_format_int $WEB_ALIASES
+    validate_format_int	$DNS_DOMAINS
+    validate_format_int $DNS_RECORDS
+    validate_format_int $MAIL_DOMAINS
+    validate_format_int $MAIL_ACCOUNTS
+    validate_format_int $DATABASES
+    validate_format_int $CRON_JOBS
+    validate_format_int $DISK_QUOTA
+    validate_format_int $BACKUPS
+    validate_format_shell $SHELL
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'pkg_dir package' 'rewrite'
+validate_format 'pkg_dir' 'package'
+if [ "$rewrite" != 'yes' ]; then
+    is_package_new
+fi
+is_package_valid "$pkg_dir"
+is_package_consistent
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+cp -f $pkg_dir/$package.pkg $VESTA/data/packages/
+chmod 644 $VESTA/data/packages/$package.pkg
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

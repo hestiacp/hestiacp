@@ -32,7 +32,8 @@ is_package_avalable() {
     DISK_QUOTA='0'
     BANDWIDTH='0'
 
-    pkg_data=$(cat $VESTA/data/packages/$package.pkg)
+    pkg_data=$(cat $VESTA/data/packages/$package.pkg |grep -v TIME |\
+        grep -v DATE)
     eval $pkg_data
 
     # Comparing user data with package

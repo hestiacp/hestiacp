@@ -37,7 +37,6 @@ foreach ($data as $key => $value) {
     <td class="data-dotted" width="830px" style="vertical-align:top;">
         <table width="830px"><tr>
             <td></td>
-            <td class="data-controls" width="84px"><img src="/images/update.png" width="8px" height="8px"><a href="/propagate/package/?package=<?php echo $key ?>"> propagate</a></td>
             <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/package/?package=<?php echo $key ?>"> edit</a></td>
             <td class="data-controls" width="70px">
                 <img src="/images/delete.png" width="7px" height="7px">
@@ -58,9 +57,9 @@ foreach ($data as $key => $value) {
                     <td class="counter-value"><?php echo $data[$key]['SHELL'] ?></td></tr>
 
                     <tr><td class="chart1" colspan=2 style="padding: 0 0 0 2px;">Bandwidth: <?php echo humanize_usage($data[$key]['BANDWIDTH']) ?>
-                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:100%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
+                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:0%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
                     <tr><td class="chart1" colspan=2 style="padding: 0 0 0 2px;">Disk: <?php echo humanize_usage($data[$key]['DISK_QUOTA']) ?>
-                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:100%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
+                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:0%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
                 </table>
             </td>
             <td style="vertical-align:top;" width="320">

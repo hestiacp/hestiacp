@@ -55,10 +55,10 @@ is_package_valid "$package"
 #----------------------------------------------------------#
 
 # Parsing package data
-package_data=$(cat $VESTA/data/packages/$package.pkg)
+pkg_data=$(cat $VESTA/data/packages/$package.pkg |grep -v TIME |grep -v DATE)
 
 # Checking shell
-shell_conf=$(echo "$package_data" | grep 'SHELL' | cut -f 2 -d \')
+shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
 shell=$(/usr/bin/chsh --list-shells | grep -w "$shell_conf" |head -n1)
 
 # Adding user
@@ -98,7 +98,7 @@ chmod -R a+x $HOMEDIR/$user
 
 # Checking quota
 if [ ! -z "$DISK_QUOTA" ] && [ "$DISK_QUOTA" != 'no' ]; then
-    DISK_QUOTA=$(echo "$package_data" | grep 'DISK_QUOTA' | cut -f 2 -d \')
+    DISK_QUOTA=$(echo "$pkg_data" | grep 'DISK_QUOTA' | cut -f 2 -d \')
     #$BIN/v_add_user_quota "$user" "$DISK_QUOTA"
 fi
 
@@ -169,7 +169,7 @@ fi
 echo "FNAME='$fname'
 LNAME='$lname'
 PACKAGE='$package'
-$package_data
+$pkg_data
 CONTACT='$email'
 CRON_REPORTS='yes'
 MD5='$(awk -v user=$user -F : 'user == $1 {print $2}' /etc/shadow)'

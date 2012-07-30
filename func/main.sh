@@ -121,7 +121,10 @@ gen_password() {
 
 # Package existance check
 is_package_valid() {
-    if [ ! -e "$VESTA/data/packages/$package.pkg" ]; then
+    if [ -z "$1" ]; then
+        pkg_dir="$VESTA/data/packages"
+    fi
+    if [ ! -e "$pkg_dir/$package.pkg" ]; then
         echo "Error: package $package not exist"
         log_event "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST

@@ -114,7 +114,7 @@ if ($_SESSION['user'] == 'admin') {
             }
 
             // Remove tmpdir 
-            exec ('rm -rf '.$tmdir, $output, $return_var);
+            exec ('rm -rf '.$tmpdir, $output, $return_var);
             unset($output);
 
             // Check output

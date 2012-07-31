@@ -2,7 +2,9 @@
 <tr class="data-add">
     <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
         <table class="data-col1">
-            <tr><td style="padding: 18 0 4 18;"></td></tr>
+            <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
+            <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
+            <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
         </table>
     </td>
     <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -75,7 +77,7 @@
 
 
             <tr><td style="padding: 24px 0 0 0;">
-                <input type="submit" name="ok" value="OK" class="add-button">
+                <input type="submit" name="save" value="Save" class="add-button">
                 </form>
                 <input type="button" class="add-button" value="Cancel" onClick="location.href='/list/package/'">
             </td></tr>

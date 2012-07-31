@@ -1,0 +1,54 @@
+#!/bin/bash
+# info: delete user package
+# options: package
+#
+# The function for deleting user package. It does not allow to delete pacakge
+# if it is in use.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+package=$1
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+# Functions
+is_package_in_use() {
+    check_package=$(grep "PACKAGE='$package'" $USER_DATA/*/user.conf)
+    if [ ! -z "$check_package" ]; then
+        echo "Error: package $package is in use"
+        log_event "$E_INUSE" "$EVENT"
+        exit $E_INUSE
+    fi
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'package'
+validate_format 'package'
+is_package_valid
+is_package_in_use
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting user package
+rm -f $VESTA/data/packages/$package.pkg
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+log_event "$OK" "$EVENT"
+
+exit

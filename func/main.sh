@@ -194,7 +194,7 @@ is_object_suspended() {
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
     fi
     if [ -z "$spnd" ]; then
-        echo "Error: $3 is not suspended"
+        echo "Error: $1 $3 is not suspended"
         log_event "$E_SUSPENDED" "$EVENT"
         exit $E_SUSPENDED
     fi
@@ -208,7 +208,7 @@ is_object_unsuspended() {
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
     fi
     if [ ! -z "$spnd" ]; then
-        echo "Error: $3 is suspended"
+        echo "Error: $1 $3 is already suspended"
         log_event "$E_UNSUSPENDED" "$EVENT"
         exit $E_UNSUSPENDED
     fi

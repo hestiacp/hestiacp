@@ -11,6 +11,11 @@ if ($_SESSION['user'] == 'admin') {
         $v_username = escapeshellarg($user);
         $v_domain = escapeshellarg($_GET['domain']);
         exec (VESTA_CMD."v_suspend_dns_domain ".$v_username." ".$v_domain, $output, $return_var);
+        if ($return_var != 0) {
+            $error = implode('<br>', $output);
+            if (empty($error)) $error = 'Error: vesta did not return any output.';
+            $_SESSION['error_msg'] = $error;
+        }
         unset($output);
         header("Location: /list/dns/");
         exit;
@@ -22,6 +27,11 @@ if ($_SESSION['user'] == 'admin') {
         $v_domain = escapeshellarg($_GET['domain']);
         $v_record_id = escapeshellarg($_GET['record_id']);
         exec (VESTA_CMD."v_suspend_dns_domain_record ".$v_username." ".$v_domain." ".$v_record_id, $output, $return_var);
+        if ($return_var != 0) {
+            $error = implode('<br>', $output);
+            if (empty($error)) $error = 'Error: vesta did not return any output.';
+            $_SESSION['error_msg'] = $error;
+        }
         unset($output);
         header("Location: /list/dns/?domain=".$_GET['domain']);
         exit;

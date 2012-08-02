@@ -11,6 +11,11 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
         $v_username = escapeshellarg($user);
         $v_domain = escapeshellarg($_GET['domain']);
         exec (VESTA_CMD."v_delete_dns_domain ".$v_username." ".$v_domain, $output, $return_var);
+        if ($return_var != 0) {
+            $error = implode('<br>', $output);
+            if (empty($error)) $error = 'Error: vesta did not return any output.';
+            $_SESSION['error_msg'] = $error;
+        }
         unset($output);
         header("Location: /list/dns/");
         exit;
@@ -22,6 +27,13 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
         $v_domain = escapeshellarg($_GET['domain']);
         $v_record_id = escapeshellarg($_GET['record_id']);
         exec (VESTA_CMD."v_delete_dns_domain_record ".$v_username." ".$v_domain." ".$v_record_id, $output, $return_var);
+        if ($return_var != 0) {
+            $error = implode('<br>', $output);
+            if (empty($error)) $error = 'Error: vesta did not return any output.';
+            $_SESSION['error_msg'] = $error;
+        }
+        unset($output);
+
         unset($output);
         header("Location: /list/dns/?domain=".$_GET['domain']);
         exit;

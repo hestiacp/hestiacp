@@ -1,3 +1,26 @@
+<?php
+    if (!empty($_SESSION['error_msg'])) {
+?>
+        <script type="text/javascript">
+            $(function() {
+                $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                $( "#dialog-message" ).dialog({
+                    modal: true,
+                    buttons: {
+                        Ok: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            });
+        </script>
+        <div id="dialog-message" title="Error">
+        <p><?php echo $_SESSION['error_msg'] ?>.</p>
+        </div>
+<?php
+        unset($_SESSION['error_msg']);
+    }
+?>
 <table class="sub-menu">
 <tr >
     <td style="padding: 19px 0 16px 22px">

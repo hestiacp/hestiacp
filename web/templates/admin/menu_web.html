@@ -1,9 +1,34 @@
+<?php
+    if (!empty($_SESSION['error_msg'])) {
+?>
+        <script type="text/javascript">
+            $(function() {
+                $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                $( "#dialog-message" ).dialog({
+                    modal: true,
+                    buttons: {
+                        Ok: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            });
+        </script>
+        <div id="dialog-message" title="Error">
+        <p><?php echo $_SESSION['error_msg'] ?>.</p>
+        </div>
+<?php
+        unset($_SESSION['error_msg']);
+    }
+?>
+<form action="/mass-domain/">
 <table class="sub-menu">
 <tr>
     <td width="142px" style="padding: 16px 0 16px 6px">
     <button style="width:120px; padding: 2px 0px 2px 0px;" onclick="location.href='/add/web/'">Add Domain</button>
-    <td><a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("vstobjects");'> toggle all </a>
-    <select style="margin:0 0 0 0px">
+    <td>
+<a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("vstobjects");'> toggle all </a>
+    <select style="margin:0 0 0 0px" name="action">
         <option>apply to selected</option>
         <option>rebuild</option>
         <option>suspend</option>

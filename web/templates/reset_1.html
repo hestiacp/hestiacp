@@ -1,5 +1,5 @@
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <title> VestaCP - Login </title>
+    <title> VestaCP - Reset Password </title>
     <style type="text/css">
     body {
         padding: 0;
@@ -31,6 +31,7 @@
     }
 
     .login-box {
+        width: 260px;
         text-align: left;
         vertical-align:top;
         padding: 0 0 10px 40px;
@@ -113,23 +114,19 @@
     <td>
     <table>
     <tr>
-        <td style="padding: 0 10 0 42;">
+        <td style="padding: 0 10px 0 42px;">
             <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" /></a>
         </td>
-        <td style="padding: 20px 0 0 0;"><form method="post" action="/login/" >
+        <td style="padding: 20px 0 0 0;"><form method="post" action="/reset/" >
             <table class="login-box">
             <tr>
+                <td style="padding: 6px 0 10px 0;">To reset your password, enter your username and we'll send you instructions on how to create a new password.</td>
+            </tr><tr>
                 <td><p class="login-text1">Username</p></td>
             </tr><tr>
-                <td><input tabindex="1" type="text" size="20px" style="width:200px;" name="user" class="loggin-input"></td>
+                <td><input tabindex="1" type="text" size="20px" style="width:200px" name="user" class="loggin-input"></td>
             </tr><tr>
-                <td><p class="login-text1">Password <a tabindex="5" class="forgot" href="/reset/" >(forgot password)</a></p></td>
-            </tr><tr>
-                <td><input tabindex="2" type="password" size="20px"  style="width:200px;" name="password" class="loggin-input"></td>
-            </tr><tr>
-                <td><p class="login-text2"><input tabindex="4" type="checkbox" style="margin: 0 8px 0 0" >Remember me</p></td>
-            </tr><tr>
-                <td><input tabindex="3" type="submit" value="Log In" class="loggin-button"></td>
+                <td style="padding: 20px 0 0 0;"><input tabindex="2" type="submit" value="Submit" class="loggin-button"></td>
             </tr>
             </table>
             </form>
@@ -138,7 +135,7 @@
     <td colspan=2>
         <table class="login-bottom">
             <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
-            <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
+            <tr><td><a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
         </table>
     </tr>
     </table>

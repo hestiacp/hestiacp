@@ -97,4 +97,21 @@ function get_percentage($used,$total) {
     return $percent;
 }
 
+function send_email($to,$subject,$mailtext,$from) {
+    $charset = "utf-8";
+    $to = '<'.$to.'>';
+    $boundary='--' . md5( uniqid("myboundary") );
+    $priorities = array( '1 (Highest)', '2 (High)', '3 (Normal)', '4 (Low)', '5 (Lowest)' );
+    $priority = $priorities[2];
+    $ctencoding = "8bit";
+    $sep = chr(13) . chr(10);
+    $disposition = "inline";
+    $subject = "=?$charset?B?".base64_encode($subject)."?=";
+    $header.="From: $from \nX-Priority: $priority\nCC: $cc\n";
+    $header.="Mime-Version: 1.0\nContent-Type: text/plain; charset=$charset \n";
+    $header.="Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
+    $message .= $mailtext;
+    mail($to, $subject, $message, $header);
+}
+
 ?>

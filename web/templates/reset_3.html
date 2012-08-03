@@ -1,5 +1,5 @@
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <title> VestaCP - Login </title>
+    <title> VestaCP - Reset Password </title>
     <style type="text/css">
     body {
         padding: 0;
@@ -116,20 +116,23 @@
         <td style="padding: 0 10 0 42;">
             <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" /></a>
         </td>
-        <td style="padding: 20px 0 0 0;"><form method="post" action="/login/" >
+        <td style="padding: 20px 0 0 0;"><form method="post">
             <table class="login-box">
             <tr>
-                <td><p class="login-text1">Username</p></td>
+                <td>
+                    <input type="hidden" name="action" value="confirm">
+                    <input type="hidden" name="user" value="<?php echo $_GET['user'];?>">
+                    <input type="hidden" name="code" value="<?php echo $_GET['code'];?>">
+                    <p class="login-text1">New Password</p>
+                    </td>
             </tr><tr>
-                <td><input tabindex="1" type="text" size="20px" style="width:200px;" name="user" class="loggin-input"></td>
+                <td><input tabindex="1" type="password" size="20px" style="width:200px;" name="password" class="loggin-input"></td>
             </tr><tr>
-                <td><p class="login-text1">Password <a tabindex="5" class="forgot" href="/reset/" >(forgot password)</a></p></td>
+                <td><p class="login-text1">Confirm Password <a tabindex="5" class="forgot" href="/reset/" ></a></p></td>
             </tr><tr>
-                <td><input tabindex="2" type="password" size="20px"  style="width:200px;" name="password" class="loggin-input"></td>
+                <td><input tabindex="2" type="password" size="20px"  style="width:200px;" name="password_confirm" class="loggin-input"></td>
             </tr><tr>
-                <td><p class="login-text2"><input tabindex="4" type="checkbox" style="margin: 0 8px 0 0" >Remember me</p></td>
-            </tr><tr>
-                <td><input tabindex="3" type="submit" value="Log In" class="loggin-button"></td>
+                <td style="padding: 20px 0 28px 0;"><input tabindex="3" type="submit" value="Reset" class="loggin-button"></td>
             </tr>
             </table>
             </form>

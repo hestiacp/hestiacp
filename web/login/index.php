@@ -19,7 +19,9 @@ if (isset($_SESSION['user'])) {
 } else {
     if (isset($_POST['user']) && isset($_POST['password'])) {
         $cmd="/usr/bin/sudo /usr/local/vesta/bin/";
-        $command="$cmd"."v_check_user_password '".$_POST['user']."' '".$_POST['password']."' '".$_SERVER["REMOTE_ADDR"]."'";
+        $v_user = escapeshellarg($_POST['user']);
+        $v_password = escapeshellarg($_POST['password']);
+        $command="$cmd"."v_check_user_password ".$v_user." ".$v_password." '".$_SERVER["REMOTE_ADDR"]."'";
         exec ($command, $output, $return_var);
         if ( $return_var > 0 ) {
             $ERROR = "<a class=\"error\">ERROR: Invalid username or password</a>";

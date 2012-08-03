@@ -47,7 +47,7 @@ if [ ! -z "$fname" ]; then
 fi
 
 is_user_free "$user"
-is_package_valid "$package"
+is_package_valid
 
 
 #----------------------------------------------------------#

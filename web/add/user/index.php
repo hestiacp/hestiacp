@@ -34,6 +34,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_email = escapeshellarg($_POST['v_email']);
         $v_fname = escapeshellarg($_POST['v_fname']);
         $v_lname = escapeshellarg($_POST['v_lname']);
+        if (empty($_POST['v_notify'])) $v_notify = 'off';
 
         // Check for errors
         if (!empty($errors[0])) {
@@ -52,6 +53,24 @@ if ($_SESSION['user'] == 'admin') {
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
                 $_SESSION['error_msg'] = $error;
             } else {
+                if (empty($v_notify)) {
+                    $to = $_POST['v_email'];
+                    $subject = "Welcome to Vesta Control Panel";
+                    $hostname = exec('hostname');
+                    $from = "Vesta Control Panel <noreply@".$hostname.">";
+                    if (!empty($_POST['v_fname'])) {
+                        $mailtext = "Hello ".$_POST['v_fname']." ".$_POST['v_lname'].",\n";
+                    } else {
+                        $mailtext = "Hello,\n";
+                    }
+                    $mailtext .= "Your account has been created successfully and is ready to use.\n\n";
+                    $mailtext .= "https://".$_SERVER['HTTP_HOST']."/login/\n";
+                    $mailtext .= "username: ".$_POST['v_username']."\n";
+                    $mailtext .= "password: ".$_POST['v_password']."\n\n";
+                    $mailtext .= "Have a nice day,\nThe VestaCP Team\n";
+                    send_email($to, $subject, $mailtext, $from);
+                }
+
                 $_SESSION['ok_msg'] = "OK: user <b>".$_POST[v_username]."</b> has been created successfully.";
                 unset($v_username);
                 unset($v_password);
@@ -62,7 +81,6 @@ if ($_SESSION['user'] == 'admin') {
             unset($output);
         }
     }
-
 
     exec (VESTA_CMD."v_list_user_packages json", $output, $return_var);
     check_error($return_var);

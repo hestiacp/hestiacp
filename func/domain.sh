@@ -52,8 +52,9 @@ is_domain_new() {
     if [ ! -z "$check_all" ]; then
         check_ownership=$(grep -w $dom $USER_DATA/*.conf)
         if [ ! -z "$check_ownership" ]; then
-            check_type=$(grep -w $dom $USER_DATA/$config_type.conf)
-            if [ ! -z "$check_type" ]; then
+            check_type1=$(grep -w "'$dom" $USER_DATA/$config_type.conf)
+            check_type2=$(grep -w ",$dom" $USER_DATA/$config_type.conf)
+            if [ ! -z "$check_type1" ] || [ ! -z "$check_type2" ]; then
                 echo "Error: domain $dom exist"
                 log_event "$E_EXISTS" "$EVENT"
                 exit $E_EXISTS

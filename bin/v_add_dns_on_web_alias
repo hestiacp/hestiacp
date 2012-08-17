@@ -75,8 +75,8 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Logging
-log_history "$EVENT"
-log_event "$OK" "$EVENT"
+# No Logging
+#log_history "$EVENT"
+#log_event "$OK" "$EVENT"
 
 exit

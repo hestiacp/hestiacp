@@ -55,7 +55,6 @@ echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$SUSPENDED' 'yes'
 
 # Logging
-log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

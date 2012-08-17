@@ -117,7 +117,7 @@ chown -R $user:$(groups $user| cut -f 3 -d ' ') $dir
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Logging
-log_event "$OK" "$EVENT"
+# No Logging
+#log_event "$OK" "$EVENT"
 
 exit

@@ -70,6 +70,11 @@ for domain in $(shell_list) ; do
     if [ -e "$WEBTPL/skel/document_errors/" ]; then
         cp -r $WEBTPL/skel/document_errors/ $HOMEDIR/$user/web/$domain/
     fi
+
+    touch /var/log/httpd/domains/$domain.bytes \
+          /var/log/httpd/domains/$domain.log \
+          /var/log/httpd/domains/$domain.error.log
+
     chmod 551 $HOMEDIR/$user/web/$domain
     chmod 751 $HOMEDIR/$user/web/$domain/private
     chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
@@ -132,9 +137,9 @@ for domain in $(shell_list) ; do
                 > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 
         stats_string="$BIN/v_update_web_domain_stat $user $domain"
-        check_stats_pipe=$(grep "$stats_string" $V_QUEUE/stats.pipe)
+        check_stats_pipe=$(grep "$stats_string" $VESTA/data/queue/stats.pipe)
         if [ -z "$check_stats_pipe" ]; then
-            echo "$stats_string" >> $V_QUEUE/stats.pipe
+            echo "$stats_string" >> $VESTA/data/queue/stats.pipe
         fi
 
         if [ ! -z "$STATS_USER" ]; then

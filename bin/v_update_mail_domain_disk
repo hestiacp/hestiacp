@@ -59,7 +59,6 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_diks"
 recalc_user_disk_usage
 
 # Logging
-log_history "$EVENT"
 log_event "$OK" "$EVENT"
 
 exit

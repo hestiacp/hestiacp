@@ -66,7 +66,7 @@ done
 # Recalculating user bandwidth
 recalc_user_bandwidth_usage
 
-# Logging
-log_event "$OK" "$EVENT"
+# No Logging
+#log_event "$OK" "$EVENT"
 
 exit

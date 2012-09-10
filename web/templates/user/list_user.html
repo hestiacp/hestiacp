@@ -1,150 +1,234 @@
-<table class='data'>
 
-<?php
-foreach ($data as $key => $value) {
-    ++$i;
-    if ($data[$key]['SUSPENDED'] == 'yes') {
-        $status = 'suspended';
-        $spnd_action = 'unsuspend' ;
-    } else {
-        $status = 'active';
-        $spnd_action = 'suspend' ;
-    }
-    ?>
-<script type="text/javascript">
-    $(function(){
-        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog({
-            modal: true,
-            autoOpen: false,
-            width: 360,
-            buttons: {
-                "Ok": function(event, ui) {
-                     location.href = '/<?php echo $spnd_action ?>/user/?user=<?php echo "$key" ?>';
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        $('#<?php echo $spnd_action ?>_link_<?php echo "$i" ?>').click(function(){
-            $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog('open');
-            return false;
-        });
-
-        $('#delete_dialog_<?php echo "$i" ?>').dialog({
-            modal: true,
-            autoOpen: false,
-            width: 360,
-            buttons: {
-                "Ok": function(event, ui) {
-                     location.href = '/delete/user/?user=<?php echo "$key" ?>';
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        $('#delete_link_<?php echo "$i" ?>').click(function(){
-            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
-            return false;
-        });
-    });
-</script>
-<tr class="data-row">
-    <td class="data-dotted" style="padding: 0px 10px 0px 0px">
-        <table class="data-col1">
-            <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object"></td></tr>
-            <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-            <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
-        </table>
-    </td>
-    <td class="data-dotted" width="830px" style="vertical-align:top;">
-        <table width="830px"><tr>
-            <td></td>
-            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/user/?user=<?php echo "$key" ?>"> edit</a></td>
-        </tr></table>
-
-        <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="username" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b><a class="fullname"><?php echo $data[$key]['FNAME']?> <?php echo $data[$key]['LNAME']?></a></td></tr>
-            <td style="vertical-align:top;"  width="240">
-                <table>
-                    <tr><td colspan=2 class="counter-name"  style="padding: 2px 0 0 2px;"><?php echo $data[$key]['CONTACT']?></td></tr>
-                    <tr><td colspan=2 class="counter-name"  style="padding: 0 0 18px 2px;">[<?php echo $data[$key]['PACKAGE']?>] package</td></tr>
-                    <tr><td class="chart1" colspan=2 style="padding: 0 0 0 3px;">Bandwidth: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
-                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
-                    <tr><td class="chart1" colspan=2 style="padding: 0 0 0 3px;">Disk: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
-                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;"><div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div></div></td></tr>
-                    <tr><td colspan=2>
-                        <table class="chart2"><tr>
-                            <td>
-                                Web: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
-                                Mail: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?><br>
-                            </td><td style="padding: 0px 10px 0px 8px">
-                                Databases: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?><br>
-                                User Dirs: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?><br>
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 0 8px 6px">
+                                            <div style="float:left">
+                                                <?php
+                                                    if ($user == 'admin') {
+                                                        echo "<button style=\"width:120px; padding: 2px 0px;\" onclick=\"location.href='/add/user/'\"> Add User </button>";
+                                                    } else {
+                                                        echo "<button style=\"width:120px; padding: 2px 0px;\" onclick=\"location.href='/add/web/'\"> Add Domain </button>";
+                                                    }
+                                                ?> 
+                                            </div>
+                                            <div style="text-align: right; float: right;">
+                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;">
+                                                <button> Search </button>
+                                            </div>
+                                            <div style="float:left; padding-left: 26px;">
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("vstobjects");'> toggle all </a>
+                                                <select style="margin:0 2px 0 0px;" >
+                                                    <option>apply to selected</option>
+                                                    <option>update counters</option>
+                                                </select>
+                                                <button style="width:27px;"> › </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
                             </td>
-                        </tr></table></td>
-                    </tr>
-                </table>
-            </td>
-            <td style="vertical-align:top;" width="320">
-                <table width="300">
-                    <tr><td class="counter-name" width="36%">Predefined Template:</td>
-                    <td class="counter-value"><?php echo $data[$key]['TEMPLATE'] ?></td></tr>
-                    <tr><td class="counter-name">Web Domains:</td>
-                    <td class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?> / <?php echo $data[$key]['WEB_DOMAINS'] ?></td></tr>
-                    <tr><td class="counter-name">Web SSL:</td>
-                    <td class="counter-value"><?php echo $data[$key]['U_WEB_SSL'] ?></td></tr>
-                    <tr><td class="counter-name">Web Aliases:</td>
-                    <td class="counter-value"><?php echo $data[$key]['WEB_ALIASES'] ?> per domain</td></tr>
-                    <tr><td class="counter-name">Dns Domains:</td>
-                    <td class="counter-value"><?php echo $data[$key]['U_DNS_DOMAINS'] ?> / <?php echo $data[$key]['DNS_DOMAINS'] ?></td></tr>
-                    <tr><td class="counter-name">Dns Records:</td>
-                    <td class="counter-value"><?php echo $data[$key]['DNS_RECORDS'] ?> per domain</td></tr>
-                    <tr><td class="counter-name">Name Servers:<br></td>
-                    <td class="counter-value"><?php echo str_replace(',', ', ',$data[$key]['NS']) ?></td></tr>
-                </table></td>
-            <td style="vertical-align:top;">
-                <table class="data-col4">
-                    <tr><td class="counter-name">Mail Domains:</td>
-                    <td class="counter-value"><?php echo $data[$key]['U_MAIL_DOMAINS'] ?> / <?php echo $data[$key]['MAIL_DOMAINS'] ?></td></tr>
-                    <tr><td class="counter-name">Mail Accounts:</td>
-                    <td class="counter-value"><?php echo $data[$key]['MAIL_ACCOUNTS'] ?> per domain</td></tr>
-                    <tr><td class="counter-name">Databases:</td>
-                    <td class="counter-value"><?php echo $data[$key]['U_DATABASES'] ?> / <?php echo $data[$key]['DATABASES'] ?></td></tr>
-                    <tr><td class="counter-name">Cron Jobs:</td>
-                    <td class="counter-value"><?php echo $data[$key]['U_CRON_JOBS'] ?> / <?php echo $data[$key]['CRON_JOBS'] ?></td></tr>
-                    <tr><td class="counter-name">Shell:</td>
-                    <td class="counter-value"><?php echo $data[$key]['SHELL'] ?></td></tr>
-                    <tr><td class="counter-name">Dedicated IP:</td>
-                    <td class="counter-value"><?php echo $data[$key]['IP_OWNED'] ?></td></tr>
-                    <tr><td class="counter-name">Backups:</td>
-                    <td class="counter-value"><?php echo $data[$key]['U_BACKUPS'] ?> / <?php echo $data[$key]['BACKUPS'] ?></td></tr>
-                </table>
-            </td>
-        </tr>
-        </table>
-    </td>
-</tr>
+                        </tr>
+                    </table>
 
-    <?php
-}
-?>
+                    <form id="vstobjects">
+                        <table class="data">
+                            <?php
+                                foreach ($data as $key => $value) {
+                                    ++$i;
+                                    if ($data[$key]['SUSPENDED'] == 'yes') {
+                                        $status = 'suspended';
+                                        $spnd_action = 'unsuspend' ;
+                                    } else {
+                                        $status = 'active';
+                                        $spnd_action = 'suspend' ;
+                                    }
+                                ?>
 
-</table>
-<?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?>
-<table class="data-count">
-<tr>
-    <td>→ 
-    <?php
-        if ( $i == 1) {
-            echo "1 user account ";
-        } else {
-            echo "$i user accounts ";
-        }
-    ?>
-    </td>
-</tr>
-</table>
-</form>
-<?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:70px\"><tr><td></td></tr></table>"; ?>
+                            <script type="text/javascript">
+                                $(function(){
+                                    $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog({
+                                        modal: true,
+                                        autoOpen: false,
+                                        width: 360,
+                                        buttons: {
+                                            "Ok": function(event, ui) {
+                                                 location.href = '/<?php echo $spnd_action ?>/user/?user=<?php echo "$key" ?>';
+                                            },
+                                            "Cancel": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                    $('#<?php echo $spnd_action ?>_link_<?php echo "$i" ?>').click(function(){
+                                        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog('open');
+                                        return false;
+                                    });
+                                    $('#delete_dialog_<?php echo "$i" ?>').dialog({
+                                        modal: true,
+                                        autoOpen: false,
+                                        width: 360,
+                                        buttons: {
+                                            "Ok": function(event, ui) {
+                                                 location.href = '/delete/user/?user=<?php echo "$key" ?>';
+                                            },
+                                            "Cancel": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                    $('#delete_link_<?php echo "$i" ?>').click(function(){
+                                        $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
+                                        return false;
+                                    });
+                                });
+                            </script>
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object"></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/user/?user=<?php echo "$key" ?>"> edit</a></td>
+                                        </tr>
+                                    </table>
+
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td colspan=3 class="username" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b><a class="fullname"><?php echo $data[$key]['FNAME']?> <?php echo $data[$key]['LNAME']?></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:top;"  width="240">
+                                                <table>
+                                                    <tr><td colspan=2 class="counter-name"  style="padding: 2px 0 0 2px;"><?php echo $data[$key]['CONTACT']?></td></tr>
+                                                    <tr><td colspan=2 class="counter-name"  style="padding: 0 0 18px 2px;">[<?php echo $data[$key]['PACKAGE']?>] package</td></tr>
+                                                    <tr>
+                                                        <td class="chart1" colspan=2 style="padding: 0 0 0 3px;">Bandwidth: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
+                                                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                                <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="chart1" colspan=2 style="padding: 0 0 0 3px;">Disk: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
+                                                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan=2>
+                                                            <table class="chart2">
+                                                                <tr>
+                                                                    <td>
+                                                                        Web: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
+                                                                        Mail: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?><br>
+                                                                    </td>
+                                                                    <td style="padding: 0px 10px 0px 8px">
+                                                                        Databases: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?><br>
+                                                                        User Dirs: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?><br>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;" width="320">
+                                                <table width="300">
+                                                    <tr>
+                                                        <td class="counter-name" width="36%">Template:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['TEMPLATE'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Web Domains:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?> / <?php echo $data[$key]['WEB_DOMAINS'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Web SSL:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['U_WEB_SSL'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Web Aliases:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['WEB_ALIASES'] ?> per domain</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Dns Domains:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['U_DNS_DOMAINS'] ?> / <?php echo $data[$key]['DNS_DOMAINS'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Dns Records:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['DNS_RECORDS'] ?> per domain</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Name Servers:<br></td>
+                                                        <td class="counter-value"><?php echo str_replace(',', ', ',$data[$key]['NS']) ?></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;">
+                                                <table class="data-col4">
+                                                    <tr>
+                                                        <td class="counter-name">Mail Domains:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['U_MAIL_DOMAINS'] ?> / <?php echo $data[$key]['MAIL_DOMAINS'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Mail Accounts:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['MAIL_ACCOUNTS'] ?> per domain</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Databases:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['U_DATABASES'] ?> / <?php echo $data[$key]['DATABASES'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Cron Jobs:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['U_CRON_JOBS'] ?> / <?php echo $data[$key]['CRON_JOBS'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Shell:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['SHELL'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Dedicated IP:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['IP_OWNED'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Backups:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['U_BACKUPS'] ?> / <?php echo $data[$key]['BACKUPS'] ?></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <?php
+                                }
+                            ?> 
+                        </table>
+
+                        <?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?>
+
+                        <table class="data-count">
+                            <tr>
+                                <td width="160px"></td>
+                                <td>
+                                    <?php
+                                        if ( $i == 1) {
+                                            echo "1 user account ";
+                                        } else {
+                                            echo "$i user accounts ";
+                                        }
+                                    ?> 
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+
+                    <?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:70px\"><tr><td></td></tr></table>"; ?>

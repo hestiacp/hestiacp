@@ -168,7 +168,6 @@ if ($_SESSION['user'] == 'admin') {
             $_SESSION['ok_msg'] = "OK: changes has been saved.";
         }
     }
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_user.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_user.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
@@ -240,19 +239,6 @@ if ($_SESSION['user'] == 'admin') {
             unset($output);
         }
 
-        // Change Name
-        if (($v_fname != $_POST['v_fname']) || ($v_lname != $_POST['v_lname']) && (empty($_SESSION['error_msg']))) {
-            $v_fname = escapeshellarg($_POST['v_fname']);
-            $v_lname = escapeshellarg($_POST['v_lname']);
-            exec (VESTA_CMD."v_change_user_name ".$v_username." ".$v_fname." ".$v_lname, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
-                $_SESSION['error_msg'] = $error;
-            }
-            unset($output);
-        }
-
         // Change NameServers
         if (($v_ns1 != $_POST['v_ns1']) || ($v_ns2 != $_POST['v_ns2']) || ($v_ns3 != $_POST['v_ns3']) || ($v_ns4 != $_POST['v_ns4']) && (empty($_SESSION['error_msg']))) {
             $v_ns1 = escapeshellarg($_POST['v_ns1']);
@@ -275,7 +261,6 @@ if ($_SESSION['user'] == 'admin') {
             $_SESSION['ok_msg'] = "OK: changes has been saved.";
         }
     }
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_user.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_user.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);

@@ -62,17 +62,17 @@ function humanize_usage($usage) {
                 if ( $usage > 1000 ) {
                     $usage = $usage / 1000 ;
                     $usage = number_format($usage, 2);
-                    $usage = $usage." Pb";
+                    $usage = $usage." pb";
                 } else {
                     $usage = number_format($usage, 2);
-                    $usage = $usage." Tb";
+                    $usage = $usage." tb";
                 }
         } else {
             $usage = number_format($usage, 2);
-            $usage = $usage." Gb";
+            $usage = $usage." gb";
         }
     } else {
-        $usage = $usage." Mb";
+        $usage = $usage." mb";
     }
     return $usage;
 }
@@ -114,4 +114,27 @@ function send_email($to,$subject,$mailtext,$from) {
     mail($to, $subject, $message, $header);
 }
 
+function display_error_block() {
+    if (!empty($_SESSION['error_msg'])) {
+        echo '
+                        <script type="text/javascript">
+                            $(function() {
+                                $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                                $( "#dialog-message" ).dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $( this ).dialog( "close" );
+                                        }
+                                    }
+                                });
+                            });
+                    </script>
+                    <div id="dialog-message" title="Error">
+                        <p>';
+        echo $_SESSION['error_msg'];
+        echo "</p>\n                        </div>\n";
+        unset($_SESSION['error_msg']);
+    }
+}
 ?>

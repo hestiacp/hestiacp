@@ -48,7 +48,7 @@ if ($_SESSION['user'] == 'admin') {
             $v_status =  'active';
         }
 
-        exec (VESTA_CMD."v_list_sys_users 'json'", $output, $return_var);
+        exec (VESTA_CMD."v_list_users 'json'", $output, $return_var);
         $users = json_decode(implode('', $output), true);
         unset($output);
 

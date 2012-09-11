@@ -1,122 +1,250 @@
-<script type="text/javascript">
-  function elementHideShow(elementToHideOrShow)
-    {
-      var el = document.getElementById(elementToHideOrShow);
-      if (el.style.display == "block") {
-        el.style.display = "none";
-      } else {
-        el.style.display = "block";
-      }
-    }
-    function randomString() {
-        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-        var string_length = 10;
-        var randomstring = '';
-        for (var i=0; i<string_length; i++) {
-          var rnum = Math.floor(Math.random() * chars.length);
-          randomstring += chars.substring(rnum,rnum+1);
-        }
-        document.getElementById('v_password').value = randomstring;
-    }
-</script>
-<table class='data'>
-<tr class="data-add">
-    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
-        <table class="data-col1">
-            <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
-            <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
-            <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
-        </table>
-    </td>
-    <td class="data-dotted" width="830px" style="vertical-align:top;">
-        <table width="830px"><tr>
-            <td></td>
-        </tr></table>
-        <form method="post" name="v_edit_user">
-        <table class="data-col2" width="830px">
-            <tr><td class="add-text" style="padding: 10 0 0 2px;">Domain</td></tr>
-            <tr><td><input type="text" size="20" class="add-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">IP address</td></tr>
-            <tr><td><select class="add-list" name="v_ip">
-            <?php
-                foreach ($ips as $key => $value) {
-                    echo "\t\t\t\t<option value=\"".$key."\"";
-                    $skey = "'".$key."'";
-                    if ((!empty($v_ip)) && ( $key == $v_ip ) || ( $skey == $v_ip )){
-                        echo ' selected';
-                    }
-                    echo ">".$key."</option>\n";
-                }
-            ?>
-                </select></td></tr>
 
-            <tr><td class="add-text" style="padding: 10 0 0 2px;">Aliases</td></tr>
-            <tr><td><textarea size="20" class="add-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Template</td></tr>
-            <tr><td><select class="add-list" name="v_template">
-            <?php
-                foreach ($templates as $key => $value) {
-                    echo "\t\t\t\t<option value=\"".$value."\"";
-                    $svalue = "'".$value."'";
-                    if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
-                        echo ' selected' ;
-                    }
-                    echo ">".$value."</option>\n";
-                }
-            ?>
-                </select></td></tr>
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 2px 16px 0;" ><a class="add-name"><b>Editing Domain</b></a>
+                                            <?php
+                                                if (!empty($_SESSION['error_msg'])) {
+                                                    echo "<a class=\"add-error\"> → ".$_SESSION['error_msg']."</a>";
+                                                } else {
+                                                    if (!empty($_SESSION['ok_msg'])) {
+                                                        echo "<a class=\"add-ok\"> → ".$_SESSION['ok_msg']."</a>";
+                                                    }
+                                                }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
 
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Error Logging</td></tr>
-            <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_elog" <?php if ($v_elog == 'yes') echo "checked=yes" ?>></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Nginx Support</td></tr>
-            <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_nginx" <?php if (!empty($v_nginx)) echo "checked=yes" ?> onclick="javascript:elementHideShow('nginxtable');"></tr>
-            <tr><td><table style="display:<?php if (empty($v_nginx)) { echo 'none';} else {echo 'block';}?> ;" id="nginxtable"><tr>
-                <tr><td class="add-text" style="padding: 9px 0 0 2px;">Nginx Supported Extentions</td></tr>
-                <tr><td><textarea size="20" class="add-textinput" name="v_nginx_ext"><?php if (!empty($v_nginx_ext)) { echo $v_nginx_ext;} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea></tr>
-            </td></tr></tr></table></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Support</td></tr>
-            <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"></tr>
-            <tr><td><table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable"><tr>
-                <tr><td class="add-text" style="padding: 9px 0 0 2px;">SSL HomeDirectory</td></tr>
-                <tr><td><select class="add-list" name="v_ssl_home">
-                    <option value='same' <?php if ($v_ssl_home == 'same') echo "selected";?> >public_html</option>
-                    <option value='single' <?php if ($v_ssl_home == 'single') echo "selected";?>>public_shtml</option>
-                </select></td></tr>
-                <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Certificate</td></tr>
-                <tr><td><textarea size="20" class="add-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo $v_ssl_crt; ?></textarea></td></tr>
-                <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Key</td></tr>
-                <tr><td><textarea size="20" class="add-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo $v_ssl_key; ?></textarea></td></tr>
-                <tr><td class="add-text" style="padding: 10px 0 0 2px;">SSL Certificate Authority <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span></td></tr>
-                <tr><td><textarea size="20" class="add-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo $v_ssl_ca; ?></textarea></td></tr>
-            </td></tr></tr></table></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics</td></tr>
-            <tr><td><select class="add-list" name="v_stats">
-            <?php
-                foreach ($stats as $key => $value) {
-                    $svalue = "'".$value."'";
-                    echo "\t\t\t\t<option value=\"".$value."\"";
-                    if (empty($v_stats)) $v_stats = 'none';
-                    if (( $value == $v_stats ) || ($svalue == $v_stats )){
-                        echo ' selected' ;
-                    }
-                    echo ">".$value."</option>\n";
-                }
-            ?>
-            </select></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistic Authorization</td></tr>
-            <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');"> </tr>
-            <tr><td><table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v_add_web_domain_stats_user"><tr>
-                <tr><td class="add-text" style="padding: 9px 0 0 2px;">Web Statistics Username</td></tr>
-                <tr><td><input type="text" size="20" class="add-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".$v_stats_user;  ?>></tr>
-                <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics Password <a href="javascript:randomString();" class="genpass">generate</a></td></tr>
-                <tr><td><input type="text" size="20" class="add-input" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".$v_stats_password;  ?> id="v_password"></tr>
-            </td></tr></tr></table>
-            <tr><td style="padding: 24px 0 0 0;">
-                <input type="submit" class="add-button" name="save" value="Save"></form>
-                <input type="button" class="add-button" value="Cancel" onClick="location.href='/list/web/'">
-            </td></tr>
-            </form>
-        </table>
-    </td>
-</tr>
-</table>
+                    <form id="vstobjects" name="v_edit_user" method="post">
+                        <script language="javascript">
+                            function elementHideShow(elementToHideOrShow){
+                                var el = document.getElementById(elementToHideOrShow);
+                                if (el.style.display == "block") {
+                                    el.style.display = "none";
+                                } else {
+                                    el.style.display = "block";
+                                }
+                            }
+                            function randomString() {
+                                var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+                                var string_length = 10;
+                                var randomstring = '';
+                                for (var i=0; i<string_length; i++) {
+                                  var rnum = Math.floor(Math.random() * chars.length);
+                                  randomstring += chars.substring(rnum,rnum+1);
+                                }
+                                document.getElementById('v_password').value = randomstring;
+                            }
+                        </script>
+                        <table class='data'>
+                            <tr class="data-add">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
+                                        <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
+                                        <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                                Domain
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                IP address
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="add-list" name="v_ip">
+                                                    <?php
+                                                        foreach ($ips as $key => $value) {
+                                                            echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                            $skey = "'".$key."'";
+                                                            if ((!empty($v_ip)) && ( $key == $v_ip ) || ( $skey == $v_ip )){
+                                                                echo ' selected';
+                                                            }
+                                                            echo ">".$key."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                                Aliases
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="add-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Template
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="add-list" name="v_template">
+                                                    <?php
+                                                        foreach ($templates as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            $svalue = "'".$value."'";
+                                                            if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
+                                                                echo ' selected' ;
+                                                            }
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?> 
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Error Logging
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="add-checkbox" name="v_elog" <?php if ($v_elog == 'yes') echo "checked=yes" ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Nginx Support
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="add-checkbox" name="v_nginx" <?php if (!empty($v_nginx)) echo "checked=yes" ?> onclick="javascript:elementHideShow('nginxtable');">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if (empty($v_nginx)) { echo 'none';} else {echo 'block';}?> ;" id="nginxtable">
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 9px 0 0 2px;">
+                                                            Nginx Supported Extentions
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="add-textinput" name="v_nginx_ext"><?php if (!empty($v_nginx_ext)) { echo $v_nginx_ext;} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                SSL Support
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="add-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 9px 0 0 2px;">
+                                                            SSL HomeDirectory
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="add-list" name="v_ssl_home">
+                                                                <option value='same' <?php if ($v_ssl_home == 'same') echo "selected";?>>
+                                                                     public_html
+                                                                </option>
+                                                                <option value='single' <?php if ($v_ssl_home == 'single') echo "selected";?>>
+                                                                    public_shtml
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                            SSL Certificate
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="add-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo $v_ssl_crt; ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                            SSL Key
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="add-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo $v_ssl_key; ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                            SSL Certificate Authority <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="add-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo $v_ssl_ca; ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics</td></tr>
+                                        <tr><td><select class="add-list" name="v_stats">
+                                        <?php
+                                            foreach ($stats as $key => $value) {
+                                                $svalue = "'".$value."'";
+                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                if (empty($v_stats)) $v_stats = 'none';
+                                                if (( $value == $v_stats ) || ($svalue == $v_stats )){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">".$value."</option>\n";
+                                            }
+                                        ?>
+                                        </select></td></tr>
+                                        <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistic Authorization</td></tr>
+                                        <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');"> </tr>
+                                        <tr><td><table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v_add_web_domain_stats_user"><tr>
+                                            <tr><td class="add-text" style="padding: 9px 0 0 2px;">Web Statistics Username</td></tr>
+                                            <tr><td><input type="text" size="20" class="add-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".$v_stats_user;  ?>></tr>
+                                            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics Password <a href="javascript:randomString();" class="genpass">generate</a></td></tr>
+                                            <tr><td><input type="text" size="20" class="add-input" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".$v_stats_password;  ?> id="v_password"></tr>
+                                        </td></tr></tr></table>
+                                        <tr><td style="padding: 24px 0 0 0;">
+                                            <input type="submit" class="button" name="save" value="Save"></form>
+                                            <input type="button" class="button" value="Cancel" onClick="location.href='/list/web/'">
+                                        </td></tr>
+                                        </form>
+                                    </table>
+                                </td>
+                            </tr>
+                            </table>
+                                                                                

@@ -509,10 +509,8 @@ top_panel($user,$TAB);
 
     }
 if ($_SESSION['user'] == 'admin') {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_web.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_web.html');
 } else {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_web.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_web.html');
 }
     unset($_SESSION['error_msg']);

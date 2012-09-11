@@ -229,10 +229,8 @@ top_panel($user,$TAB);
 
 // Are you admin?
 if ($_SESSION['user'] == 'admin') {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_web.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_web.html');
 } else {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_web.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/add_web.html');
 }
     unset($_SESSION['error_msg']);

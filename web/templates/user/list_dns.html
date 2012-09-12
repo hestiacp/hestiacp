@@ -1,108 +1,179 @@
-<table class='data'>
-
-<?php
-foreach ($data as $key => $value) {
-    ++$i;
-    if ($data[$key]['SUSPENDED'] == 'yes') {
-        $status = 'suspended';
-        $spnd_action = 'unsuspend' ;
-    } else {
-        $status = 'active';
-        $spnd_action = 'suspend' ;
-    }
-    ?>
-<script type="text/javascript">
-    $(function(){
-        $('#delete_dialog_<?php echo "$i" ?>').dialog({
-            modal: true,
-            autoOpen: false,
-            width: 360,
-            buttons: {
-                "Ok": function(event, ui) {
-                     location.href = '/delete/dns/?domain=<?php echo "$key" ?>';
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        $('#delete_link_<?php echo "$i" ?>').click(function(){
-            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
-            return false;
-        });
-    });
-</script>
-
-<tr class="data-row">
-    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
-        <table class="data-col1">
-            <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
-            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-            <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
-
-        </table>
-    </td>
-    <td class="data-dotted" width="830px" style="vertical-align:top;">
-        <table width="830px"><tr>
-            <td></td>
-            <td class="data-controls" width="96px"><img src="/images/more.png" width="8px" height="8px"><a href="/list/dns/?domain=<?php echo $key ?>"> list records</a></td>
-            <td class="data-controls" width="92px"><img src="/images/add.png" width="8px" height="8px"><a href="/add/dns/?domain=<?php echo $key ?>"> add record</a></td>
-            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/dns/?domain=<?php echo $key ?>"> edit</a></td>
-            <td class="data-controls" width="70px">
-                <img src="/images/delete.png" width="7px" height="7px">
-                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
-                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
-                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> domain?</p>
-                </div>
-            </td>
-        </tr></table>
-        <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b></td></tr>
-            <tr>
-                <td style="vertical-align:top;" >
-                    <table>
-                        <tr><td class="counter-name" style="padding: 2px 0 0 2px;"><?php echo $data[$key]['IP'] ?></td>
-                        <tr><td class="counter-name" style="padding: 0 0 20px 2px">[<?php echo $data[$key]['TPL'] ?>] template</td></tr>
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 0 8px 6px">
+                                            <div style="float:left">
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/dns/'"> Add DNS Domain </button>
+                                            </div>
+                                            <div style="text-align: right; float: right;">
+                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;">
+                                                <button> Search </button>
+                                            </div>
+                                            <div style="float:left; padding-left: 26px;">
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("vstobjects");'> toggle all </a>
+                                                <select style="margin:0 2px 0 0px;" >
+                                                    <option>apply to selected</option>
+                                                    <option>rebuild</option>
+                                                    <option>update counters</option>
+                                                    <option>unsuspend</option>
+                                                    <option>delete</option>
+                                                </select>
+                                                <button style="width:27px;"> › </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                     </table>
-                </td>
-                <td style="vertical-align:top;" width="250">
-                    <table>
-                        <tr><td class="counter-name">SOA:</td><td class="counter-value"><?php echo $data[$key]['SOA'] ?></td></tr>
-                        <tr><td class="counter-name">TTL:</td><td class="counter-value"><?php echo $data[$key]['TTL'] ?></td></tr>
-                    </table>
-                </td>
-                <td rowspan=4 style="vertical-align:top;" width="300">
-                    <table>
-                        <tr><td class="counter-name">Expire:</td><td class="counter-value"><?php echo $data[$key]['EXP'] ?></td></tr>
-                        <tr><td class="counter-name">Records:</td><td class="counter-value"><?php echo $data[$key]['RECORDS'] ?></td></tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </td>
-</tr>
 
+                    <form id="vstobjects">
+                        <table class="data">
+                            <?php
+                                foreach ($data as $key => $value) {
+                                    ++$i;
+                                    if ($data[$key]['SUSPENDED'] == 'yes') {
+                                        $status = 'suspended';
+                                        $spnd_action = 'unsuspend' ;
+                                    } else {
+                                        $status = 'active';
+                                        $spnd_action = 'suspend' ;
+                                    }
+                            ?>
 
-    <?php
-}
-?>
-</table>
-<?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?>
+                            <script type="text/javascript">
+                                $(function(){
+                                    $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog({
+                                        modal: true,
+                                        autoOpen: false,
+                                        width: 360,
+                                        buttons: {
+                                            "Ok": function(event, ui) {
+                                                 location.href = '/<?php echo $spnd_action ?>/dns/?domain=<?php echo "$key" ?>';
+                                            },
+                                            "Cancel": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                    $('#<?php echo $spnd_action ?>_link_<?php echo "$i" ?>').click(function(){
+                                        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog('open');
+                                        return false;
+                                    });
+                                    $('#delete_dialog_<?php echo "$i" ?>').dialog({
+                                        modal: true,
+                                        autoOpen: false,
+                                        width: 360,
+                                        buttons: {
+                                            "Ok": function(event, ui) {
+                                                 location.href = '/delete/dns/?domain=<?php echo "$key" ?>';
+                                            },
+                                            "Cancel": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                    $('#delete_link_<?php echo "$i" ?>').click(function(){
+                                        $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
+                                        return false;
+                                    });
+                                });
+                            </script>
 
-<table class="data-count">
-<tr>
-    <td>→ 
-    <?php
-        if ( $i == 1) {
-            echo "1 user dns domain ";
-        } else {
-            echo "$i dns domains ";
-        }
-    ?>
-    </td>
-</tr>
-</table>
-</form>
-<?php if ($i == 0) echo "<table class=\"data-spacer\" style=\"height:279px\"><tr><td></td></tr></table>"; ?>
-<?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:157px\"><tr><td></td></tr></table>"; ?>
-<?php if ($i == 2) echo "<table class=\"data-spacer\" style=\"height:25px\"><tr><td></td></tr></table>"; ?>
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                            <td class="data-controls" width="96px"><img src="/images/more.png" width="8px" height="8px"><a href="/list/dns/?domain=<?php echo $key ?>"> list records</a></td>
+                                            <td class="data-controls" width="92px"><img src="/images/add.png" width="8px" height="8px"><a href="/add/dns/?domain=<?php echo $key ?>"> add record</a></td>
+                                            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/dns/?domain=<?php echo $key ?>"> edit</a></td>
+                                            <td class="data-controls" width="70px">
+                                                <img src="/images/delete.png" width="7px" height="7px">
+                                                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
+                                                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
+                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> domain?</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo $key ?></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:top;" >
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name" style="padding: 2px 0 0 2px;">
+                                                            <?php echo $data[$key]['IP'] ?>
+                                                        </td>
+                                                    <tr>
+                                                        <td class="counter-name" style="padding: 0 0 20px 2px">
+                                                            [<?php echo $data[$key]['TPL'] ?>] template
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;" width="250">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name">SOA:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['SOA'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">TTL:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['TTL'] ?></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td rowspan=4 style="vertical-align:top;" width="300">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name">Expire:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['EXP'] ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">Records:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['RECORDS'] ?></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <?php
+                                }
+                            ?>
+                        </table>
+
+                        <?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?>
+
+                        <table class="data-count">
+                            <tr>
+                                <td width="160px"></td>
+                                <td>
+                                    <?php
+                                        if ( $i == 1) {
+                                            echo "1 user dns domain ";
+                                        } else {
+                                            echo "$i dns domains ";
+                                        }
+                                    ?> 
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+
+                    <?php if ($i == 0) echo "<table class=\"data-spacer\" style=\"height:279px\"><tr><td></td></tr></table>"; ?>
+                    <?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:157px\"><tr><td></td></tr></table>"; ?>
+                    <?php if ($i == 2) echo "<table class=\"data-spacer\" style=\"height:25px\"><tr><td></td></tr></table>"; ?>

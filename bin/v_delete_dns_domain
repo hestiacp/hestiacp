@@ -50,7 +50,7 @@ rm -f $HOMEDIR/$user/conf/dns/$domain.db
 #----------------------------------------------------------#
 
 # Deleting domain
-sed -i "/$user\/conf\/dns\/$domain.db\"/d" /etc/named.conf                                                                                                                              
+sed -i "/DOMAIN='$domain'/ d" $USER_DATA/dns.conf
 rm -f $USER_DATA/dns/$domain.conf
 
 # Decreasing domain value

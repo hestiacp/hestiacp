@@ -150,23 +150,17 @@ top_panel($user,$TAB);
             $v_ns4 = $nameservers[3];
             unset($output);
         }
-
         if (empty($v_ttl)) $v_ttl = 14400;
         if (empty($v_exp)) $v_exp = date('Y-m-d', strtotime('+1 year'));
-
         if ($_SESSION['user'] == 'admin') {
-            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_dns.html');
             include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_dns.html');
         } else {
-            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_dns.html');
             include($_SERVER['DOCUMENT_ROOT'].'/templates/user/add_dns.html');
         }
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);
     } else {
         $v_domain = $_GET['domain'];
-
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_dns_rec.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_dns_rec.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);

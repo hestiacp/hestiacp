@@ -140,10 +140,8 @@ top_panel($user,$TAB);
 
         }
         if ($_SESSION['user'] == 'admin') {
-            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_dns.html');
             include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_dns.html');
         } else {
-            include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_dns.html');
             include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_dns.html');
         }
         unset($_SESSION['error_msg']);
@@ -200,7 +198,6 @@ top_panel($user,$TAB);
             }
 
         }
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_dns_rec.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_dns_rec.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);

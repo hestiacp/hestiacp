@@ -20,8 +20,6 @@ if ($_SESSION['user'] == 'admin') {
         $data = json_decode(implode('', $output), true);
         $data = array_reverse($data);
         unset($output);
-
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_mail.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_mail.html');
     } else {
         exec (VESTA_CMD."v_list_mail_accounts '".$user."' '".$_GET['domain']."' 'json'", $output, $return_var);
@@ -29,7 +27,6 @@ if ($_SESSION['user'] == 'admin') {
         $data = json_decode(implode('', $output), true);
         $data = array_reverse($data);
         unset($output);
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_mail_acc.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_mail_acc.html');
     }
 } else {
@@ -41,7 +38,6 @@ if ($_SESSION['user'] == 'admin') {
         $data = array_reverse($data);
         unset($output);
 
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/user/menu_mail.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_mail.html');
     } else {
         exec (VESTA_CMD."v_list_mail_accounts '".$user."' '".$_GET['domain']."' 'json'", $output, $return_var);
@@ -49,10 +45,8 @@ if ($_SESSION['user'] == 'admin') {
         $data = json_decode(implode('', $output), true);
         $data = array_reverse($data);
         unset($output);
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/user/menu_mail_acc.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_mail_acc.html');
     }
-
 }
 
 // Footer

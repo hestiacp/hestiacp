@@ -163,13 +163,11 @@ top_panel($user,$TAB);
 
     if ((empty($_GET['domain'])) && (empty($_POST['domain'])))  {
         $v_domain = $_GET['domain'];
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_mail.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_mail.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);
     } else {
         $v_domain = $_GET['domain'];
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_mail_acc.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_mail_acc.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);

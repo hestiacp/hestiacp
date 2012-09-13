@@ -163,7 +163,6 @@ top_panel($user,$TAB);
                 $_SESSION['ok_msg'] = "OK: changes has been saved.";
             }
         }
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_mail.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_mail.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);
@@ -359,7 +358,6 @@ top_panel($user,$TAB);
             }
 
         }
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_mail_acc.html');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_mail_acc.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);

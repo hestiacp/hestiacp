@@ -68,7 +68,6 @@ top_panel($user,$TAB);
         }
     }
 
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_db.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_db.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);

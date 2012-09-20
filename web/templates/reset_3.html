@@ -1,151 +1,185 @@
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <title> VestaCP - Reset Password </title>
-    <style type="text/css">
-    body {
-        padding: 0;
-        margin: 0;
-        margin-left: auto;
-        margin-right: auto;
-        background-image: url(/images/b.png);
-        font-family: Arial, sans-serif;
-    }
+<html>
+    <head>
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+        <title> Vesta - Reset Password </title>
+        <style type="text/css">
+            body {
+                padding: 0;
+                margin: 0;
+                margin-left: auto;
+                margin-right: auto;
+                background-image: url(/images/b.png);
+                font-family: Arial, sans-serif;
+            }
 
-    .forgot {
-        color: #484243;
-        font-family: Arial, sans-serif;
-        font-size: 8pt;
-        padding: 0 10px 0 0;
-    }
+            .forgot {
+                color: #484243;
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                padding: 0 10px 0 0;
+            }
 
-    .login {
-        margin: 80px 0 80px 0;
-        padding: 0;
-        border-top: 1px solid #cccccc;
-        border-left: 1px solid #cccccc;
-        border-right: 1px solid #cccccc;
-        background: #ebe9dc;
-        text-align: left;
-        vertical-align:top;
-        width: 500px;
-        box-shadow: 0 0 8px 8px #d7d7d7;
-    }
+            .forgot:hover {
+                color: #7fa1cb;
+            }
 
-    .login-box {
-        text-align: left;
-        vertical-align:top;
-        padding: 0 0 10px 40px;
-    }
+            .login {
+                margin: 80px 0 80px 0;
+                padding: 0;
+                border-top: 1px solid #cccccc;
+                border-left: 1px solid #cccccc;
+                border-right: 1px solid #cccccc;
+                background: #ebe9dc;
+                text-align: left;
+                vertical-align:top;
+                width: 500px;
+                box-shadow: 0 0 2px 2px #d7d7d7;
+            }
 
-    .login-text1 {
-        padding: 10px 0 0 2px;
-        color: #433832;
-        font-family: Arial, sans-serif;
-        font-size: 12pt;
-    }
-    .login-text1 a {
-        padding: 0 6px;
-        font-family: Arial, sans-serif;
-        font-size: 10pt;
-        text-shadow: none;
-    }
-    .login-text2 {
-        padding: 12px 0 10px 0;
-        color: #484243;
-    }
+            .login-box {
+                text-align: left;
+                vertical-align:top;
+                padding: 0 0 10px 40px;
+            }
 
-    .login-bottom {
-        color: #574F51;
-        text-align: right;
-        width: 500px;
-        height: 50px;
-        background: #484243;
-        padding: 0 8px 0 0;
-        margin: 0;
-    }
-    .vestacp{
-        font-size: 8pt;
-        color: #CCCCB4;
-        text-align: right;
-        padding: 20px 0 0 0;
-    }
-    .error {
-        font-size: 10pt;
-        color: #DE6C5D;
-    }
-    .loggin-input {
-        color: #555;
-        background-color: #FFFFFF;
-        border: 1px solid #999999;
-        border-radius: 3px 3px 3px 3px;
-        color: #555555;
-        font-family: Arial,sans-serif;
-        font-size: 14pt;
-        padding: 4px;
-        width: 360px;
-    }
+            .login-text1 {
+                padding: 10px 0 0 2px;
+                color: #433832;
+                font-family: Arial, sans-serif;
+                font-size: 12pt;
+            }
 
-    .loggin-button {
-        padding: 4px;
-        margin: 0 6px 0 0;
-        cursor: pointer;
-        color: #333333;
-        background-color: #f6f6f6;
-        border: 1px solid #ACACAC;
-        border-radius: 3px 3px 3px 3px;
-        font-size: 12px;
-        padding: 3px 16px;
-        width: 105px;
-    }
+            .login-text1 a {
+                padding: 0 6px;
+                font-family: Arial, sans-serif;
+                font-size: 10pt;
+                text-shadow: none;
+            }
 
-    .loggin-button:hover {
-        background-color: #f0f0f0;
-    }
+            .login-text2 {
+                padding: 12px 0 10px 0;
+                color: #484243;
+            }
 
-    .loggin-button:active {
-        background-color: #EBE9DC;
-    }
-    </style>
-</head>
-<body>
-<center>
-<table class="login">
-<tr>
-    <td>
-    <table>
-    <tr>
-        <td style="padding: 0 10 0 42;">
-            <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" /></a>
-        </td>
-        <td style="padding: 20px 0 0 0;"><form method="post">
-            <table class="login-box">
-            <tr>
-                <td>
-                    <input type="hidden" name="action" value="confirm">
-                    <input type="hidden" name="user" value="<?php echo $_GET['user'];?>">
-                    <input type="hidden" name="code" value="<?php echo $_GET['code'];?>">
-                    <p class="login-text1">New Password</p>
+            .login-bottom {
+                color: #574F51;
+                text-align: right;
+                width: 500px;
+                height: 50px;
+                background: #484243;
+                padding: 0 8px 0 0;
+                margin: 0;
+            }
+
+            .vestacp{
+                font-size: 8pt;
+                color: #CCCCB4;
+                text-align: right;
+                padding: 20px 0 0 0;
+            }
+
+            .error {
+                font-size: 10pt;
+                color: #DE6C5D;
+            }
+
+            .login-input {
+                color: #555;
+                background-color: #FFFFFF;
+                border: 1px solid #999999;
+                border-radius: 3px 3px 3px 3px;
+                color: #555555;
+                font-family: Arial,sans-serif;
+                font-size: 14pt;
+                padding: 4px;
+                width: 360px;
+            }
+
+            .login-input:hover {
+                border: 1px solid #e5a907;
+            }
+
+            .login-button {
+                padding: 4px;
+                margin: 0 6px 0 0;
+                cursor: pointer;
+                color: #333333;
+                background-color: #f6f6f6;
+                border: 1px solid #ACACAC;
+                border-radius: 3px 3px 3px 3px;
+                font-size: 12px;
+                padding: 3px 16px;
+                width: 105px;
+            }
+
+            .login-button:hover {
+                background-color: #f0f0f0;
+            }
+
+            .login-button:active {
+                background-color: #EBE9DC;
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+            <table class="login">
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td style="padding: 0 10 0 42;">
+                                    <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" /></a>
+                                </td>
+                                <td style="padding: 20px 0 0 0;">
+                                    <form method="post">
+                                        <table class="login-box">
+                                            <tr>
+                                                <td>
+                                                    <input type="hidden" name="action" value="confirm">
+                                                    <input type="hidden" name="user" value="<?php echo $_GET['user'];?>">
+                                                    <input type="hidden" name="code" value="<?php echo $_GET['code'];?>">
+                                                    <p class="login-text1">New Password</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input tabindex="1" type="password" size="20px" style="width:200px;" name="password" class="login-input">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p class="login-text1">
+                                                        Confirm Password <a tabindex="5" class="forgot" href="/reset/" ></a>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input tabindex="2" type="password" size="20px"  style="width:200px;" name="password_confirm" class="login-input">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 20px 0 28px 0;">
+                                                    <input tabindex="3" type="submit" value="Reset" class="login-button">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan=2>
+                                    <table class="login-bottom">
+                                        <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
+                                        <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
-            </tr><tr>
-                <td><input tabindex="1" type="password" size="20px" style="width:200px;" name="password" class="loggin-input"></td>
-            </tr><tr>
-                <td><p class="login-text1">Confirm Password <a tabindex="5" class="forgot" href="/reset/" ></a></p></td>
-            </tr><tr>
-                <td><input tabindex="2" type="password" size="20px"  style="width:200px;" name="password_confirm" class="loggin-input"></td>
-            </tr><tr>
-                <td style="padding: 20px 0 28px 0;"><input tabindex="3" type="submit" value="Reset" class="loggin-button"></td>
-            </tr>
+                </tr>
             </table>
-            </form>
-        </td>
-    </tr><tr>
-    <td colspan=2>
-        <table class="login-bottom">
-            <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
-            <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
-        </table>
-    </tr>
-    </table>
-</tr></table>
-</center>
-</body>
+        </center>
+    </body>
 </html>

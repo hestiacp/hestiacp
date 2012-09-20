@@ -13,10 +13,14 @@
             }
 
             .forgot {
-                color: #484243;
+                color: #34536A;
                 font-family: Arial, sans-serif;
                 font-size: 8pt;
                 padding: 0 10px 0 0;
+            }
+
+            .forgot:hover {
+                color: #7fa1cb;
             }
 
             .login {
@@ -79,7 +83,7 @@
                 color: #DE6C5D;
             }
 
-            .loggin-input {
+            .login-input {
                 color: #555;
                 background-color: #FFFFFF;
                 border: 1px solid #999999;
@@ -91,7 +95,11 @@
                 width: 360px;
             }
 
-            .loggin-button {
+            .login-input:hover {
+                border: 1px solid #e5a907;
+            }
+
+            .login-button {
                 padding: 4px;
                 margin: 0 6px 0 0;
                 cursor: pointer;
@@ -104,11 +112,11 @@
                 width: 105px;
             }
 
-            .loggin-button:hover {
+            .login-button:hover {
                 background-color: #f0f0f0;
             }
 
-            .loggin-button:active {
+            .login-button:active {
                 background-color: #EBE9DC;
             }
         </style>
@@ -133,17 +141,17 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input tabindex="1" type="text" size="20px" style="width:200px;" name="user" class="loggin-input">
+                                                <input tabindex="1" type="text" size="20px" style="width:200px;" name="user" class="login-input">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <p class="login-text1">Password <a tabindex="5" class="forgot" href="/reset/" >(forgot password)</a></p>
+                                                <p class="login-text1">Password <a tabindex="5" class="forgot" href="/reset/" >forgot passwor</a></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input tabindex="2" type="password" size="20px"  style="width:200px;" name="password" class="loggin-input">
+                                                <input tabindex="2" type="password" size="20px"  style="width:200px;" name="password" class="login-input">
                                             </td>
                                         </tr>
                                         <tr>
@@ -153,7 +161,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input tabindex="3" type="submit" value="Log In" class="loggin-button">
+                                                <input tabindex="3" type="submit" value="Log In" class="login-button">
                                             </td>
                                         </tr>
                                     </table>
@@ -163,12 +171,8 @@
                         <tr>
                             <td colspan=2>
                                 <table class="login-bottom">
-                                    <tr>
-                                        <td>.<?php if (isset($ERROR)) echo $ERROR ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td>
-                                    </tr>
+                                    <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
+                                    <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
                                 </table>
                             </td>
                         </tr>

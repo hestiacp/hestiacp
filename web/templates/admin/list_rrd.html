@@ -1,46 +1,71 @@
-<table class='data'>
 
-<?php
-if (empty($_GET['period'])) {
-    $period='daily';
-} else {
-    $period=$_GET['period'];
-}
-
-foreach ($data as $key => $value) {
-?>
-
-<tr class="data-row">
-    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
-        <table class="data-col1">
-            <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
-            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-            <tr><td class="data-active"><b>active</b></td></tr>
-        </table>
-    </td>
-    <td class="data-dotted" width="830px" style="vertical-align:top;">
-        <table width="830px"><tr>
-            <td></td>
-            <td class="data-controls" width="80px"><img src="/images/download.png" width="8px" height="8px"><a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank"> download</a></td>
-        </tr></table>
-
-        <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="domain" style="padding: 0 0 4 4;"><b><?php echo $data[$key]['TITLE'] ?></b></td></tr>
-            <tr>
-                <td style="vertical-align:top;" width="630px">
-                    <table width="630px">
-                	<td style="background: #7a766d;" width="630px" height="250px"><img style="padding: 0 0 0 30;" src="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>"></td>
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 0 8px 16px">
+                                            <div style="float:left">
+                                                <a class="add" <?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo "style='color: #34536A'" ?> href="?period=daily">Daily</a>
+                                                <a class="add" <?php if ($_GET['period'] == 'weekly') echo "style='color: #34536A'" ?> href="?period=weekly">Weekly</a>
+                                                <a class="add" <?php if ($_GET['period'] == 'monthly') echo "style='color: #34536A'" ?> href="?period=monthly">Monthly</a>
+                                                <a class="add" <?php if ($_GET['period'] == 'yearly') echo "style='color: #34536A'" ?> href="?period=yearly">Yearly</a>
+                                            </div>
+                                            <div style="text-align: right; float: right;">
+                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;">
+                                                <button> Search </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                     </table>
-                </td>
-                <td style="vertical-align:top;">
-                </td>
-            </tr>
-        </table>
-    </td>
-</tr>
 
+                    <form id="vstobjects">
+                        <table class='data'>
+                            <?php
+                                if (empty($_GET['period'])) {
+                                    $period='daily';
+                                } else {
+                                    $period=$_GET['period'];
+                                }
+                                foreach ($data as $key => $value) {
+                            ?>
 
-    <?php
-}
-?>
-</table>
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td class="data-active"><b>active</b></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                            <td class="data-controls" width="80px"><img src="/images/download.png" width="8px" height="8px"><a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank"> download</a></td>
+                                        </tr>
+                                    </table>
+                                    <table class="data-col2" width="830px">
+                                        <tr><td colspan=3 class="domain" style="padding: 0 0 4 4;"><b><?php echo $data[$key]['TITLE'] ?></b></td></tr>
+                                        <tr>
+                                            <td style="vertical-align:top;" width="630px">
+                                                <table width="630px">
+                                                    </tr>
+                                                        <td style="background: #7a766d;" width="630px" height="250px">
+                                                            <img style="padding: 0 0 0 30;" src="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        <?php
+                            }
+                        ?> 
+                    </table>
+                </form>

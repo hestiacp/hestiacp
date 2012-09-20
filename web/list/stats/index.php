@@ -12,17 +12,11 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-//if ($_SESSION['user'] == 'admin') {
-
-    exec (VESTA_CMD."v_list_user_stats $user json", $output, $return_var);
-    check_error($return_var);
-    $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data);
-    unset($output);
-
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_stats.html');
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_stats.html');
-//}
+exec (VESTA_CMD."v_list_user_stats $user json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
+$data = array_reverse($data);
+unset($output);
+include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_stats.html');
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

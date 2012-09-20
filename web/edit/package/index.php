@@ -181,7 +181,6 @@ if ($_SESSION['user'] == 'admin') {
         }
     }
 
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_package.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_package.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);

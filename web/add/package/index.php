@@ -155,7 +155,6 @@ if ($_SESSION['user'] == 'admin') {
     if (empty($v_ns2)) $v_ns2 = 'ns2.example.ltd';
 
 
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_package.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_package.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);

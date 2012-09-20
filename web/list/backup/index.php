@@ -19,8 +19,6 @@ top_panel($user,$TAB);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data);
     unset($output);
-
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_backup.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_backup.html');
 //}
 

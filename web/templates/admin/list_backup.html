@@ -1,135 +1,243 @@
-<table class='data'>
 
-<?php
-foreach ($data as $key => $value) {
-    ++$i;
-    $web = 'no';
-    $dns = 'no';
-    $mail = 'no';
-    $db = 'no';
-
-    if (!empty($data[$key]['WEB'])) $web = 'yes ¨';
-    if (!empty($data[$key]['DNS'])) $dns = 'yes ¨';
-    if (!empty($data[$key]['MAIL'])) $mail = 'yes ¨';
-    if (!empty($data[$key]['DB'])) $db = 'yes ¨';
-?>
-<script type="text/javascript">
-    $(function(){
-        $('#restore_dialog_<?php echo "$i" ?>').dialog({
-            modal: true,
-            autoOpen: false,
-            width: 360,
-            buttons: {
-                "Ok": function(event, ui) {
-                    $(this).dialog("close");
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        $('#restore_link_<?php echo "$i" ?>').click(function(){
-            $('#restore_dialog_<?php echo "$i" ?>').dialog('open');
-            return false;
-        });
-
-        $('#delete_dialog_<?php echo "$i" ?>').dialog({
-            modal: true,
-            autoOpen: false,
-            width: 360,
-            buttons: {
-                "Ok": function(event, ui) {
-                     location.href = '/delete/backup/?backup=<?php echo "$key" ?>';
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        $('#delete_link_<?php echo "$i" ?>').click(function(){
-            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
-            return false;
-        });
-
-    });
-</script>
-<tr class="data-row">
-    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
-        <table class="data-col1">
-            <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
-            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-            <tr><td class="data-active"><b>active</b></td></tr>
-        </table>
-    </td>
-    <td class="data-dotted" width="830px" style="vertical-align:top;">
-        <table width="830px"><tr>
-            <td></td>
-            <td class="data-controls" width="80px"><img src="/images/download.png" width="8px" height="8px"><a href="/download/backup/?backup=<?php echo $key ?>" target="_blank"> download</a></td>
-            <td class="data-controls" width="80px">
-                <img src="/images/restore.png" width="6px" height="8px">
-                <a href="#" id="restore_link_<?php echo "$i"?>"> restore</a>
-                <div id="restore_dialog_<?php echo "$i" ?>" title="Confirmation">
-                    <p class="counter-value">Are you sure you want to restore <b><?php echo "$key" ?></b> backup?</p>
-                </div>
-            </td>
-            <td class="data-controls" width="70px">
-                <img src="/images/delete.png" width="7px" height="7px">
-                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
-                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
-                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> backup?</p>
-                </div>
-            </td>
-        </tr></table>
-
-        <table class="data-col2" width="830px">
-            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b></td></tr>
-            <tr>
-                <td style="vertical-align:top;" >
-                    <table>
-                        <tr><td class="counter-name" style="padding: 2px 0 0 0"> <?php echo $data[$key]['TYPE'] ?></td></tr>
-                        <tr><td class="chart1">Run Time: <?php echo humanize_time($data[$key]['RUNTIME']) ?> </td></tr>
-                        <tr><td class="chart1">Backup Size: <?php echo humanize_usage($data[$key]['SIZE']) ?> </td></tr>
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 0 8px 6px">
+                                            <div style="float:left">
+                                                <button style="width:120px; padding: 2px 0px;" > Create Backup </button>
+                                            </div>
+                                            <div style="text-align: right; float: right;">
+                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;">
+                                                <button> Search </button>
+                                            </div>
+                                            <div style="float:left; padding-left: 26px;">
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("vstobjects");'> toggle all </a>
+                                                <select style="margin:0 2px 0 0px;" >
+                                                    <option>apply to selected</option>
+                                                    <option>rebuild</option>
+                                                    <option>update counters</option>
+                                                    <option>suspend</option>
+                                                    <option>unsuspend</option>
+                                                    <option>delete</option>
+                                                </select>
+                                                <button style="width:27px;"> › </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                     </table>
-                </td>
-                <td style="vertical-align:top;" width="250">
-                    <table>
-                        <tr><td class="counter-name" width="48">SYS: </td><td><a class="counter-value" title="<?php echo $data[$key]['VESTA'] ?>"> <?php echo $data[$key]['VESTA'] ?></a></td></tr>
-                        <tr><td class="counter-name" width="48">WEB: </td><td><a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['WEB']) ?>"> <?php echo $web ?></a></td></tr>
-                        <tr><td class="counter-name" width="48">DNS: </td><td><a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['DNS']) ?>"> <?php echo $dns ?></a></td></tr>
-                    </table>
-                </td>
-                <td rowspan=4 style="vertical-align:top;" width="300">
-                    <table>
-                        <tr><td class="counter-name" width="48">MAIL:</td><td><a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['MAIL']) ?>"> <?php echo $mail ?></a></td></tr>
-                        <tr><td class="counter-name" width="48">DB: </td> <td><a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['DB']) ?>"><?php echo $db ?></a></td></tr>
-                        <tr><td class="counter-name" width="48">CRON:</td><td><a class="counter-value" title="<?php echo $data[$key]['CRON'] ?>"> <?php echo $data[$key]['CRON'] ?></td></tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </td>
-</tr>
 
+                    <form id="vstobjects">
+                        <table class="data">
 
-    <?php
-}
-?>
-</table>
-<?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?>
-<table class="data-count">
-<tr>
-    <td>→ 
-    <?php
-        if ( $i == 1) {
-            echo "1 backup archive ";
-        } else {
-            echo "$i backup archives ";
-        }
-    ?>
-    </td>
-</tr>
-</table>
-</form>
-<?php if ($i == 0) echo "<table class=\"data-spacer\" style=\"height:279px\"><tr><td></td></tr></table>"; ?>
-<?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:153px\"><tr><td></td></tr></table>"; ?>
-<?php if ($i == 2) echo "<table class=\"data-spacer\" style=\"height:17px\"><tr><td></td></tr></table>"; ?>
+                            <?php
+                                foreach ($data as $key => $value) {
+                                    ++$i;
+                                    $web = 'no';
+                                    $dns = 'no';
+                                    $mail = 'no';
+                                    $db = 'no';
+
+                                    if (!empty($data[$key]['WEB'])) $web = 'yes ¨';
+                                    if (!empty($data[$key]['DNS'])) $dns = 'yes ¨';
+                                    if (!empty($data[$key]['MAIL'])) $mail = 'yes ¨';
+                                    if (!empty($data[$key]['DB'])) $db = 'yes ¨';
+                            ?>
+
+                            <script type="text/javascript">
+                                $(function(){
+                                    $('#restore_dialog_<?php echo "$i" ?>').dialog({
+                                        modal: true,
+                                        autoOpen: false,
+                                        width: 360,
+                                        buttons: {
+                                            "Ok": function(event, ui) {
+                                                $(this).dialog("close");
+                                            },
+                                            "Cancel": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                    $('#restore_link_<?php echo "$i" ?>').click(function(){
+                                        $('#restore_dialog_<?php echo "$i" ?>').dialog('open');
+                                        return false;
+                                    });
+
+                                    $('#delete_dialog_<?php echo "$i" ?>').dialog({
+                                        modal: true,
+                                        autoOpen: false,
+                                        width: 360,
+                                        buttons: {
+                                            "Ok": function(event, ui) {
+                                                 location.href = '/delete/backup/?backup=<?php echo "$key" ?>';
+                                            },
+                                            "Cancel": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                    $('#delete_link_<?php echo "$i" ?>').click(function(){
+                                        $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
+                                        return false;
+                                    });
+                                });
+                            </script>
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td class="data-active"><b>active</b></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                            <td class="data-controls" width="80px"><img src="/images/download.png" width="8px" height="8px"><a href="/download/backup/?backup=<?php echo $key ?>" target="_blank"> download</a></td>
+                                            <td class="data-controls" width="80px">
+                                                <img src="/images/restore.png" width="6px" height="8px">
+                                                <a href="#" id="restore_link_<?php echo "$i"?>"> restore</a>
+                                                <div id="restore_dialog_<?php echo "$i" ?>" title="Confirmation">
+                                                    <p class="counter-value">Are you sure you want to restore <b><?php echo "$key" ?></b> backup?</p>
+                                                </div>
+                                            </td>
+                                            <td class="data-controls" width="70px">
+                                                <img src="/images/delete.png" width="7px" height="7px">
+                                                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
+                                                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
+                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> backup?</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo $key ?></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:top;" >
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name" style="padding: 2px 0 0 0">
+        	                                            <?php echo $data[$key]['TYPE'] ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="chart1">
+                                                            Run Time: <?php echo humanize_time($data[$key]['RUNTIME']) ?> 
+                                                        </td>
+	                                            </tr>
+                                                    <tr>
+                                                        <td class="chart1">
+                                                            Backup Size: <?php echo humanize_usage($data[$key]['SIZE']) ?> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;" width="250">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name" width="48">
+                                                            SYS:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value" title="<?php echo $data[$key]['VESTA'] ?>">
+                                                                <?php echo $data[$key]['VESTA'] ?> 
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name" width="48">
+                                                            WEB:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['WEB']) ?>">
+                                                                <?php echo $web ?> 
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name" width="48">
+                                                            DNS: 
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['DNS']) ?>"> 
+                                                                <?php echo $dns ?> 
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td rowspan=4 style="vertical-align:top;" width="300">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name" width="48">
+                                                            MAIL:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['MAIL']) ?>"> 
+                                                                <?php echo $mail ?> 
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name" width="48">
+                                                            DB: 
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['DB']) ?>">
+                                                                <?php echo $db ?> 
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name" width="48">
+                                                            CRON:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value" title="<?php echo $data[$key]['CRON'] ?>">
+                                                                <?php echo $data[$key]['CRON'] ?> 
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <?php
+                                }
+                            ?> 
+    
+                        </table>
+
+                        <?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?> 
+
+                        <table class="data-count">
+                            <tr>
+                                <td width="160px"></td>
+                                <td>
+                                    <?php
+                                        if ( $i == 1) {
+                                            echo "1 backup archive ";
+                                        } else {
+                                            echo "$i backup archives ";
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+
+                    <?php if ($i == 0) echo "<table class=\"data-spacer\" style=\"height:279px\"><tr><td></td></tr></table>"; ?>
+                    <?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:153px\"><tr><td></td></tr></table>"; ?>
+                    <?php if ($i == 2) echo "<table class=\"data-spacer\" style=\"height:17px\"><tr><td></td></tr></table>"; ?>

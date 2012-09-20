@@ -1,7 +1,7 @@
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 12px 2px 16px 0;" ><a class="add-name"><b>Adding Mail Domain</b></a>
+                                        <td style="padding: 12px 2px 16px 0;" ><a class="add-name"><b>Adding Mail Account</b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<a class=\"add-error\"> → ".$_SESSION['error_msg']."</a>";
@@ -36,7 +36,7 @@
                                   var rnum = Math.floor(Math.random() * chars.length);
                                   randomstring += chars.substring(rnum,rnum+1);
                                 }
-                                document.v_add_user.v_password.value = randomstring;
+                                document.v_add_mail_acc.v_password.value = randomstring;
                               }
                         </script>
 

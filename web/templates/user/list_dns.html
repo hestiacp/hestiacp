@@ -42,23 +42,6 @@
 
                             <script type="text/javascript">
                                 $(function(){
-                                    $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog({
-                                        modal: true,
-                                        autoOpen: false,
-                                        width: 360,
-                                        buttons: {
-                                            "Ok": function(event, ui) {
-                                                 location.href = '/<?php echo $spnd_action ?>/dns/?domain=<?php echo "$key" ?>';
-                                            },
-                                            "Cancel": function() {
-                                                $(this).dialog("close");
-                                            }
-                                        }
-                                    });
-                                    $('#<?php echo $spnd_action ?>_link_<?php echo "$i" ?>').click(function(){
-                                        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog('open');
-                                        return false;
-                                    });
                                     $('#delete_dialog_<?php echo "$i" ?>').dialog({
                                         modal: true,
                                         autoOpen: false,

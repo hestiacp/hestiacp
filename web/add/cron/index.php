@@ -68,7 +68,6 @@ top_panel($user,$TAB);
     $db_types = json_decode(implode('', $output), true);
     unset($output);
 
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_add_cron.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_cron.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);

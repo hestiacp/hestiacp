@@ -1,126 +1,196 @@
-<table class='data'>
-
-<?php
-foreach ($data as $key => $value) {
-    ++$i;
-    if ($data[$key]['SUSPENDED'] == 'yes') {
-        $status = 'suspended';
-        $spnd_action = 'unsuspend' ;
-    } else {
-        $status = 'active';
-        $spnd_action = 'suspend';
-    }
-
-    if (empty($data[$key]['CATCHALL'])) {
-        $data[$key]['CATCHALL'] = 'null';
-    }
-    ?>
-
-<tr class="data-row">
-    <script type="text/javascript">
-    $(function(){
-        $('#delete_dialog_<?php echo "$i" ?>').dialog({
-            modal: true,
-            autoOpen: false,
-            width: 360,
-            buttons: {
-                "Ok": function(event, ui) {
-                     location.href = '/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>';
-                },
-                "Cancel": function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-        $('#delete_link_<?php echo "$i" ?>').click(function(){
-            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
-            return false;
-        });
-    });
-    </script>
-    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
-        <table class="data-col1">
-            <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
-            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-            <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
-
-        </table>
-    </td>
-    <td class="data-dotted" width="830px" style="vertical-align:top;">
-
-        <table width="830px"><tr>
-            <td></td>
-            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>"> edit</a></td>
-            <td class="data-controls" width="70px">
-                <img src="/images/delete.png" width="7px" height="7px">
-                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
-                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
-                    <p class="counter-value">Are you sure you want to delete cron job?</p>
-                </div>
-            </td>
-        </tr></table>
-
-        <table class="data-col2" width="800px">
-            <tr><td colspan=5 class="cron" style="padding: 0 0 0 4px;"><b><?php echo $data[$key]['CMD'] ?></b></td></tr>
-            <tr>
-                <td style="vertical-align:top;"  width="80px">
-                    <table>
-                        <tr><td class="cron-counter-name">Min</td></tr>
-                        <tr><td class="cron-counter-value"><?php echo $data[$key]['MIN'] ?></tr>
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 0 8px 6px">
+                                            <div style="float:left">
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/cron/'"> Add Cron Job </button>
+                                            </div>
+                                            <div style="text-align: right; float: right;">
+                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;">
+                                                <button> Search </button>
+                                            </div>
+                                            <div style="float:left; padding-left: 26px;">
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("vstobjects");'> toggle all </a>
+                                                <select style="margin:0 2px 0 0px;" >
+                                                    <option>apply to selected</option>
+                                                    <option>rebuild</option>
+                                                    <option>update counters</option>
+                                                    <option>suspend</option>
+                                                    <option>unsuspend</option>
+                                                    <option>delete</option>
+                                                </select>
+                                                <button style="width:27px;"> › </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                     </table>
-                </td>
-                <td style="vertical-align:top;"  width="80px">
-                    <table>
-                        <tr><td class="cron-counter-name">Hour</td></tr>
-                        <tr><td class="cron-counter-value"><?php echo $data[$key]['HOUR'] ?></tr>
-                    </table>
-                </td>
 
-                <td style="vertical-align:top;"  width="80px">
-                    <table>
-                        <tr><td class="cron-counter-name">Day</td></tr>
-                        <tr><td class="cron-counter-value"><?php echo $data[$key]['DAY'] ?></tr>
-                    </table>
-                </td>
+                    <form id="vstobjects">
+                        <table class='data'>
 
-                <td style="vertical-align:top;"  width="80px">
-                    <table>
-                        <tr><td class="cron-counter-name">Month</td></tr>
-                        <tr><td class="cron-counter-value"><?php echo $data[$key]['MONTH'] ?></tr>
-                    </table>
-                </td>
+                            <?php
+                                foreach ($data as $key => $value) {
+                                    ++$i;
+                                    if ($data[$key]['SUSPENDED'] == 'yes') {
+                                        $status = 'suspended';
+                                        $spnd_action = 'unsuspend' ;
+                                    } else {
+                                        $status = 'active';
+                                        $spnd_action = 'suspend';
+                                    }
+                            ?>
 
-                <td style="vertical-align:top;">
-                    <table>
-                        <tr><td class="cron-counter-name">Day of Week</td></tr>
-                        <tr><td class="cron-counter-value"><?php echo $data[$key]['WDAY'] ?></tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </td>
-</tr>
+                            <tr class="data-row">
+                                <script type="text/javascript">
+                                    $(function(){
+                                        $('#delete_dialog_<?php echo "$i" ?>').dialog({
+                                            modal: true,
+                                            autoOpen: false,
+                                            width: 360,
+                                            buttons: {
+                                                "Ok": function(event, ui) {
+                                                     location.href = '/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>';
+                                                },
+                                                "Cancel": function() {
+                                                    $(this).dialog("close");
+                                                }
+                                            }
+                                        });
+                                        $('#delete_link_<?php echo "$i" ?>').click(function(){
+                                            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
+                                            return false;
+                                        });
+                                    });
+                                </script>
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>"> edit</a></td>
+                                            <td class="data-controls" width="70px">
+                                                <img src="/images/delete.png" width="7px" height="7px">
+                                                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
+                                                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
+                                                    <p class="counter-value">Are you sure you want to delete cron job?</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
 
+                                    <table class="data-col2" width="800px">
+                                        <tr>
+                                            <td colspan=5 class="cron" style="padding: 0 0 0 4px;">
+                                                <b><?php echo $data[$key]['CMD'] ?></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:top;"  width="80px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="cron-counter-name">
+                                                            Min
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="cron-counter-value">
+                                                            <?php echo $data[$key]['MIN'] ?> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;"  width="80px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="cron-counter-name">
+                                                            Hour
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="cron-counter-value">
+                                                            <?php echo $data[$key]['HOUR'] ?> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;"  width="80px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="cron-counter-name">
+                                                            Day
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="cron-counter-value">
+                                                            <?php echo $data[$key]['DAY'] ?> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;"  width="80px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="cron-counter-name">
+                                                            Month
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="cron-counter-value">
+                                                            <?php echo $data[$key]['MONTH'] ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;">
+                                                <table>
+                                                    <tr>
+                                                        <td class="cron-counter-name">
+                                                            Day of Week
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="cron-counter-value">
+                                                            <?php echo $data[$key]['WDAY'] ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
 
-    <?php
-}
-?>
-</table>
-<?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?>
-<table class="data-count">
-<tr>
-    <td>→ 
-    <?php
-        if ( $i == 1) {
-            echo "1 cron job ";
-        } else {
-            echo "$i cron jobs ";
-        }
-    ?>
-    </td>
-</tr>
-</table>
-</form>
-<?php if ($i == 0) echo "<table class=\"data-spacer\" style=\"height:279px\"><tr><td></td></tr></table>"; ?>
-<?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:172px\"><tr><td></td></tr></table>"; ?>
-<?php if ($i == 2) echo "<table class=\"data-spacer\" style=\"height:55px\"><tr><td></td></tr></table>"; ?>
+                            <?php
+                                }
+                            ?>
+                        </table>
+
+                        <?php if ($i == 0) echo "<table class=\"data-null\"><tr><td></td></tr></table>"; ?> 
+
+                        <table class="data-count">
+                            <tr>
+                                <td width="160px"></td>
+                                <td>
+                                    <?php
+                                        if ( $i == 1) {
+                                            echo "1 cron job ";
+                                        } else {
+                                            echo "$i cron jobs ";
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+
+                    <?php if ($i == 0) echo "<table class=\"data-spacer\" style=\"height:279px\"><tr><td></td></tr></table>"; ?> 
+                    <?php if ($i == 1) echo "<table class=\"data-spacer\" style=\"height:172px\"><tr><td></td></tr></table>"; ?> 
+                    <?php if ($i == 2) echo "<table class=\"data-spacer\" style=\"height:55px\"><tr><td></td></tr></table>"; ?> 

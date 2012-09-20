@@ -1,57 +1,106 @@
-<script type="text/javascript">
-  function elementHideShow(elementToHideOrShow) {
-      var el = document.getElementById(elementToHideOrShow);
-      if (el.style.display == "block") {
-        el.style.display = "none";
-      } else {
-        el.style.display = "block";
-      }
-    }
 
-    function randomString() {
-      var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-      var string_length = 10;
-      var randomstring = '';
-      for (var i=0; i<string_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        randomstring += chars.substring(rnum,rnum+1);
-      }
-      document.v_add_user.v_password.value = randomstring;
-    }
-</script>
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 2px 16px 0;" ><a class="add-name"><b>Adding Cron Job</b></a>
+                                            <?php
+                                                if (!empty($_SESSION['error_msg'])) {
+                                                    echo "<a class=\"add-error\"> → ".$_SESSION['error_msg']."</a>";
+                                                } else {
+                                                    if (!empty($_SESSION['ok_msg'])) {
+                                                        echo "<a class=\"add-ok\"> → ".$_SESSION['ok_msg']."</a>";
+                                                    }
+                                                }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
 
-
-<table class='data'>
-<tr class="data-add">
-    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
-        <table class="data-col1">
-            <tr><td style="padding: 18 0 4 18;"></td></tr>
-        </table>
-    </td>
-    <td class="data-dotted" width="830px" style="vertical-align:top;">
-        <table width="830px"><tr>
-            <td></td>
-        </tr></table>
-        <table class="data-col2" width="600px">
-            <form method="post" name="v_add_user">
-            <tr><td class="add-text" style="padding: 10 0 0 2px;">Minute</td></tr>
-            <tr><td><input type="text" size="20" class="add-input" name="v_min" <?php if (!empty($v_min)) echo "value=".$v_min; ?>></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Hour</td></tr>
-            <tr><td></span><input type="text" size="20" class="add-input" name="v_hour" <?php if (!empty($v_hour)) echo "value=".$v_hour; ?>></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Day</td></tr>
-            <tr><td></span><input type="text" size="20" class="add-input" name="v_day" <?php if (!empty($v_day)) echo "value=".$v_day; ?>></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Month</td></tr>
-            <tr><td></span><input type="text" size="20" class="add-input" name="v_month" <?php if (!empty($v_month)) echo "value=".$v_month; ?>></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Day of Week</td></tr>
-            <tr><td></span><input type="text" size="20" class="add-input" name="v_wday" <?php if (!empty($v_wday)) echo "value=".$v_wday; ?>></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Command</td></tr>
-            <tr><td></span><input type="text" size="20" class="add-input" name="v_cmd" <?php if (!empty($v_cmd)) echo "value='".$v_cmd."'"; ?>></tr>
-
-            <tr><td style="padding: 24px 0 0 0;">
-                <input type="submit" name="ok" value="OK" class="add-button"></form>
-                <input type="button" class="add-button" value="Cancel" onClick="location.href='/list/cron/'">
-            </td></tr>
-        </table>
-    </td>
-</tr>
-</table>
+                    <form id="vstobjects" name="v_add_cron" method="post">
+                        <table class='data'>
+                            <tr class="data-add">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                    <table class="data-col2" width="600px">
+                                        <tr>
+                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                                Minute
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_min" <?php if (!empty($v_min)) echo "value=".$v_min; ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Hour
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_hour" <?php if (!empty($v_hour)) echo "value=".$v_hour; ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Day
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_day" <?php if (!empty($v_day)) echo "value=".$v_day; ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Month
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_month" <?php if (!empty($v_month)) echo "value=".$v_month; ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Day of Week
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_wday" <?php if (!empty($v_wday)) echo "value=".$v_wday; ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Command
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_cmd" <?php if (!empty($v_cmd)) echo "value='".$v_cmd."'"; ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 24px 0 0 0;">
+                                                <input type="submit" name="ok" value="OK" class="button">
+                                                <input type="button" class="button" value="Cancel" onclick="location.href='/list/cron/'">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>

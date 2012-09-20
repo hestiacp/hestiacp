@@ -48,7 +48,7 @@ if ($_SESSION['user'] == 'admin') {
             $v_status =  'active';
         }
 
-        exec (VESTA_CMD."v_list_users 'json'", $output, $return_var);
+        exec (VESTA_CMD."v_list_sys_users 'json'", $output, $return_var);
         $users = json_decode(implode('', $output), true);
         unset($output);
 
@@ -110,7 +110,6 @@ if ($_SESSION['user'] == 'admin') {
         }
     }
 
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_ip.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_ip.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);

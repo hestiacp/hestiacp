@@ -1,66 +1,128 @@
-<script type="text/javascript">
-  function elementHideShow(elementToHideOrShow)
-    {
-      var el = document.getElementById(elementToHideOrShow);
-      if (el.style.display == "block") {
-        el.style.display = "none";
-      } else {
-        el.style.display = "block";
-      }
-    }
-    function randomString() {
-        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-        var string_length = 10;
-        var randomstring = '';
-        for (var i=0; i<string_length; i++) {
-          var rnum = Math.floor(Math.random() * chars.length);
-          randomstring += chars.substring(rnum,rnum+1);
-        }
-        document.getElementById('v_password').value = randomstring;
-    }
-</script>
 
-<table class='data'>
-<tr class="data-add">
-    <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
-        <table class="data-col1">
-            <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
-            <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
-            <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
-        </table>
-    </td>
-    <td class="data-dotted" width="830px" style="vertical-align:top;">
-        <table width="830px"><tr>
-            <td></td>
-        </tr></table>
-        <table class="data-col2" width="600px">
-            <form method="post" name="v_add_user">
-            <tr><td class="add-text" style="padding: 10 0 0 2px;">IP</td></tr>
-            <tr><td><input type="text" size="20" class="add-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?> disabled> <input type="hidden" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>></td></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Netmask</td></tr>
-            <tr><td></span><input type="text" size="20" class="add-input" name="v_netmask" <?php if (!empty($v_netmask)) echo "value=".$v_netmask; ?> disabled></tr>
-            <tr><td class="add-text" style="padding: 10 0 0 2px;">Interface</td></tr>
-            <tr><td></span><input type="text" size="20" class="add-input" name="v_netmask" <?php if (!empty($v_interace)) echo "value=".$v_interace; ?> disabled></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Shared</td></tr>
-            <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?></tr>
-            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Assigned User</td></tr>
-            <tr><td><select class="add-list" name="v_owner">
-                <?php
-                    foreach ($users as $key => $value) {
-                        echo "\t\t\t\t<option value=\"".$value."\"";
-                        if ((!empty($v_owner)) && ( $value == $v_owner )) echo ' selected';
-                        echo ">".$value."</option>\n";
-                    }
-                ?>
-                </select></td></tr>
-            <tr><td class="add-text" style="padding: 10 0 0 2px;">Associated Domain <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span></td></tr>
-            <tr><td><input type="text" size="20" class="add-input" name="v_name" <?php if (!empty($v_name)) echo "value=".$v_name; ?>></td></tr>
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 2px 16px 0;" ><a class="add-name"><b>Editing IP Address</b></a>
+                                            <?php
+                                                if (!empty($_SESSION['error_msg'])) {
+                                                    echo "<a class=\"add-error\"> → ".$_SESSION['error_msg']."</a>";
+                                                } else {
+                                                    if (!empty($_SESSION['ok_msg'])) {
+                                                        echo "<a class=\"add-ok\"> → ".$_SESSION['ok_msg']."</a>";
+                                                    }
+                                                }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
 
-            <tr><td style="padding: 24px 0 0 0;">
-                <input type="submit" name="save" value="Save" class="add-button"></form>
-                <input type="button" class="add-button" value="Cancel" onClick="location.href='/list/ip/'">
-            </td></tr>
-        </table>
-    </td>
-</tr>
-</table>
+                    <form id="vstobjects" name="v_edit_ip" method="post">
+
+                        <script type="text/javascript">
+                            function elementHideShow(elementToHideOrShow) {
+                                var el = document.getElementById(elementToHideOrShow);
+                                if (el.style.display == "block") {
+                                    el.style.display = "none";
+                                } else {
+                                    el.style.display = "block";
+                                }
+                            }
+                        </script>
+
+                        <table class='data'>
+                            <tr class="data-add">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
+                                        <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
+                                        <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                    <table class="data-col2" width="600px">
+                                        <tr>
+                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                                IP
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?> disabled> <input type="hidden" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Netmask
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_netmask" <?php if (!empty($v_netmask)) echo "value=".$v_netmask; ?> disabled>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                                Interface
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_netmask" <?php if (!empty($v_interace)) echo "value=".$v_interace; ?> disabled>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Shared
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="add-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Assigned User
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="add-list" name="v_owner">
+                                                    <?php
+                                                        foreach ($users as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            if ((!empty($v_owner)) && ( $value == $v_owner )) echo ' selected';
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?> 
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                                Associated Domain <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="add-input" name="v_name" <?php if (!empty($v_name)) echo "value=".$v_name; ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 24px 0 0 0;">
+                                                <input type="submit" name="save" value="Save" class="button">
+                                                <input type="button" class="button" value="Cancel" onclick="location.href='/list/ip/'">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>

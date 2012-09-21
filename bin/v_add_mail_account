@@ -67,7 +67,7 @@ increase_user_value "$user" '$U_MAIL_ACCOUNTS'
 update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accounts"
 
 # Logging
-log_history "$EVENT"
+log_history "added mail account $account@$domain"
 log_event "$OK" "$EVENT"
 
 exit

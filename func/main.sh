@@ -57,13 +57,27 @@ log_event() {
 
 # Log user history
 log_history() {
+    cmd=$1
+    undo=${2-no}
+    log_user="$3"
+
+    if [ -z "$log_user" ]; then
+        log_user="$user"
+    fi
+
     touch $USER_DATA/history.log
     if [ '99' -lt "$(wc -l $USER_DATA/history.log |cut -f 1 -d ' ')" ]; then
         tail -n 99 $USER_DATA/history.log > $USER_DATA/history.log.mv
         mv -f $USER_DATA/history.log.mv $USER_DATA/history.log
         chmod 660 $USER_DATA/history.log
     fi
-    echo "$1 UNDO='$2'" >> $USER_DATA/history.log
+
+    curr_str=$(grep "ID=" $VESTA/data/users/$log_user/history.log |\
+        cut -f 2 -d \' | sort -n | tail -n1)
+    id="$((curr_str +1))"
+
+    HISTORY="ID='$id' DATE='$DATE' TIME='$TIME' CMD='$cmd' UNDO='$undo'"
+    echo "$HISTORY" >> $VESTA/data/users/$log_user/history.log
 }
 
 # Argument list checker

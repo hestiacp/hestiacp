@@ -73,7 +73,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
 $BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT"
+log_history "changed ssl home for $domain to $ssl_home"
 log_event "$OK" "$EVENT"
 
 exit

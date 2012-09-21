@@ -69,15 +69,14 @@ is_object_valid 'user' 'USER' "$user"
 conf=$USER_DATA/history.log
 
 # Defining fileds to select
-fields="\$DATE\$TIME \$CMD \$A1 \$A2 \$A3 \$A4 \$A5 \$A6 \$A7 \$A8 \$A9"
-fields="$fields \$TIME \$DATE"
+fields="\$ID \$DATE \$TIME \$CMD \$UNDO"
 
 # Listing domains
 case $format in 
     json)   json_list_history ;;
     plain)  nohead=1; shell_list ;;
-    shell)  fields="\$DATE \$TIME \$CMD \$A1 \$A2 \$A3 \$A4 \$A5 \$A6 \$A7"
-            shell_list ;;
+    shell)  fields='$ID~$DATE~$TIME~$CMD';
+            shell_list |column -t -s '~';;
     *)      check_args '1' '0' 'user [format]'
 esac
 

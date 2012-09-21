@@ -115,7 +115,7 @@ if [ "$dkim" = 'yes' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "added mail domain $domain"
 log_event "$OK" "$EVENT"
 
 exit

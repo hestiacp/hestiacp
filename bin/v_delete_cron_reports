@@ -48,7 +48,7 @@ sync_cron_jobs
 $BIN/v_restart_cron "$EVENT"
 
 # Logging
-log_history "$EVENT"
+log_history "disabled cron reporting"
 log_event "$OK" "$EVENT"
 
 exit

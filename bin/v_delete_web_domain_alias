@@ -102,7 +102,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "deleted alias $dom_alias on $domain"
 log_event "$OK" "$EVENT"
 
 exit

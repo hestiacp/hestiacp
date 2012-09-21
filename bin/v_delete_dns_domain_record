@@ -58,6 +58,7 @@ decrease_user_value "$user" '$U_DNS_RECORDS'
 $BIN/v_restart_dns "$EVENT"
 
 # Logging
+log_history "deleted dns record $id on $domain"
 log_event "$OK" "$EVENT"
 
 exit

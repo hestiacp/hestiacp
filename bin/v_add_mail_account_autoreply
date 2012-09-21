@@ -58,7 +58,7 @@ chmod 660 $USER_DATA/mail/$account@$domain.msg
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY' 'yes'
 
 # Logging
-log_history "$EVENT"
+log_history "added autoreply message on $account@$domain"
 log_event "$OK" "$EVENT"
 
 exit

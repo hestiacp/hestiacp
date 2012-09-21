@@ -51,7 +51,7 @@ sed -i "/*@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
 update_object_value 'mail' 'DOMAIN' "$domain" '$CATCHALL' ''
 
 # Logging
-log_history "$EVENT"
+log_history "delted catchall email on $domain"
 log_event "$OK" "$EVENT"
 
 exit

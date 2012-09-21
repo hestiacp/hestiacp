@@ -60,7 +60,7 @@ update_user_value "$user" '$NS' "$ns"
 #----------------------------------------------------------#
 
 # Logging
-log_history "$EVENT"
+log_history "changed user nameservers to $ns1, $ns2"
 log_event "$OK" "$EVENT"
 
 exit

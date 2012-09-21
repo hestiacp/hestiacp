@@ -54,6 +54,7 @@ update_ip_value '$STATUS' "$ip_status"
 #----------------------------------------------------------#
 
 # Logging
+log_history "changed $ip status to $ip_status" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

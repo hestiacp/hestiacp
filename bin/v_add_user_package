@@ -69,6 +69,7 @@ chmod 644 $VESTA/data/packages/$package.pkg
 #----------------------------------------------------------#
 
 # Logging
+log_history "added user package $package" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

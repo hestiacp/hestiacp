@@ -211,6 +211,7 @@ if [ "$user" != 'admin' ]; then
 fi
 
 # Logging
+log_history "added system user $user" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

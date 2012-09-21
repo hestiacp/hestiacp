@@ -67,7 +67,7 @@ echo "$account@$domain:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD' "$fwd"
 
 # Logging
-log_history "$EVENT"
+log_history "added forwarding from $account@$domain to $forward"
 log_event "$OK" "$EVENT"
 
 exit

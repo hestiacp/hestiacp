@@ -55,7 +55,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' ''
 
 
 # Logging
-log_history "$EVENT"
+log_history "disabled web stats password protection for $domain"
 log_event "$OK" "$EVENT"
 
 exit

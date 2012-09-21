@@ -62,7 +62,7 @@ sed -i "/ $domain$/d" $VESTA/data/queue/stats.pipe
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS' ''
 
 # Logging
-log_history "$EVENT"
+log_history "disabled web log analyzer for $domain"
 log_event "$OK" "$EVENT"
 
 exit

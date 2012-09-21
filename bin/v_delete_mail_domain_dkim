@@ -63,7 +63,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$DKIM' 'no'
 decrease_user_value "$user" '$U_MAIL_DKMI'
 
 # Logging
-log_history "$EVENT"
+log_history "disabled DKIM support on $domain"
 log_event "$OK" "$EVENT"
 
 exit

@@ -51,7 +51,7 @@ sed -i "/antispam/d" $HOMEDIR/$user/conf/mail/$domain/protection
 update_object_value 'mail' 'DOMAIN' "$domain" '$ANTISPAM' 'no'
 
 # Logging
-log_history "$EVENT"
+log_history "disabled antispam support for $domain"
 log_event "$OK" "$EVENT"
 
 exit

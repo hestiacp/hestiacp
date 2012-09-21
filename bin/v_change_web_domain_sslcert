@@ -73,7 +73,7 @@ fi
 $BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT"
+log_history "changed ssl certificate for $domain"
 log_event "$OK" "$EVENT"
 
 exit

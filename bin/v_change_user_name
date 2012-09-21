@@ -47,7 +47,7 @@ update_user_value "$user" '$LNAME' "$lname"
 #----------------------------------------------------------#
 
 # Logging
-log_history "$EVENT"
+log_history "changed user name to $fname $lname"
 log_event "$OK" "$EVENT"
 
 exit

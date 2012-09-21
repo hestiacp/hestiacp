@@ -107,6 +107,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+log_history "deleted system user $user" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

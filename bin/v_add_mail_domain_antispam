@@ -52,7 +52,7 @@ fi
 update_object_value 'mail' 'DOMAIN' "$domain" '$ANTISPAM' 'yes'
 
 # Logging
-log_history "$EVENT"
+log_history "enabled antispam on $domain"
 log_event "$OK" "$EVENT"
 
 exit

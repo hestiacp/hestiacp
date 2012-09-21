@@ -73,6 +73,7 @@ chmod 660 $VESTA/conf/$type.conf
 #----------------------------------------------------------#
 
 # Logging
+log_history "added $type database server $host" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

@@ -95,7 +95,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "changed nginx template for $domain to $template"
 log_event "$OK" "$EVENT"
 
 exit

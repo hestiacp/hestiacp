@@ -94,6 +94,7 @@ if [ "$web_restart" = 'yes' ]; then
 fi
 
 # Logging
+log_history "added system ip address $ip" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

@@ -76,7 +76,5 @@ fi
 #----------------------------------------------------------#
 
 # No Logging
-#log_history "$EVENT"
-#log_event "$OK" "$EVENT"
 
 exit

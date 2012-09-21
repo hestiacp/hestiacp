@@ -57,7 +57,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "changed soa record for $domain to $soa"
 log_event "$OK" "$EVENT"
 
 exit

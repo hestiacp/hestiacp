@@ -64,7 +64,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accounts"
 
 
 # Logging
-log_history "$EVENT"
+log_history "deleted $account@$domain mail account"
 log_event "$OK" "$EVENT"
 
 exit

@@ -137,7 +137,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "added dns domain $domain"
 log_event "$OK" "$EVENT"
 
 exit

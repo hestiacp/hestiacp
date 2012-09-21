@@ -47,7 +47,7 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$EXP' "$exp"
 #----------------------------------------------------------#
 
 # Logging
-log_history "$EVENT"
+log_history "changed whois expiriation date for $domain"
 log_event "$OK" "$EVENT"
 
 exit

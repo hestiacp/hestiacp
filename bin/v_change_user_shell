@@ -48,6 +48,7 @@ shell=$(basename $shell_path)
 update_user_value "$user" '$SHELL' "$shell"
 
 # Logging
+log_history "changed $user shell to $shell" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

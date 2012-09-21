@@ -75,7 +75,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$DKIM' 'yes'
 increase_user_value "$user" '$U_MAIL_DKMI'
 
 # Logging
-log_history "$EVENT"
+log_history "enabled DKIM support for $domain"
 log_event "$OK" "$EVENT"
 
 exit

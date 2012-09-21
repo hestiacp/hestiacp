@@ -71,7 +71,7 @@ update_domain_zone
 $BIN/v_restart_dns "$EVENT"
 
 # Logging
-log_history "$EVENT"
+log_history "changed dns record on $domain to $dvalue"
 log_event "$OK" "$EVENT"
 
 exit

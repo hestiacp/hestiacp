@@ -54,7 +54,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$CATCHALL' "$email"
 
 
 # Logging
-log_history "$EVENT"
+log_history "added $email as catchall email for $domain"
 log_event "$OK" "$EVENT"
 
 exit

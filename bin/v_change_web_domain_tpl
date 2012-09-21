@@ -104,7 +104,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "changed web domain template for $domain to $template" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

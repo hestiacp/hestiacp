@@ -103,7 +103,7 @@ if [ "$restart" != 'no' ]; then
     $BIN/v_restart_web "$EVENT"
 fi
 
-log_history "$EVENT"
+log_history "added $dom_alias as alias for $domain"
 log_event "$OK" "$EVENT"
 
 exit

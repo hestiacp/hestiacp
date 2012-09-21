@@ -59,6 +59,7 @@ decrease_dbhost_values
 decrease_user_value "$user" '$U_DATABASES'
 
 # Logging
+log_history "deleted $database database"
 log_event "$OK" "$EVENT"
 
 exit

@@ -95,7 +95,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "disabled ssl support for $domain"
 log_event "$OK" "$EVENT"
 
 exit

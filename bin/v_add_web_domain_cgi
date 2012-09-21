@@ -74,7 +74,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$CGI' 'yes'
 $BIN/v_restart_web "$EVENT"
 
 # Logging
-log_history "$EVENT"
+log_history "enabled cgi support for $domain"
 log_event "$OK" "$EVENT"
 
 exit

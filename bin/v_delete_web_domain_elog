@@ -91,7 +91,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "disabled error logging for $domain"
 log_event "$OK" "$EVENT"
 
 exit

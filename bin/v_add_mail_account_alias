@@ -62,7 +62,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
 
 # Logging
-log_history "$EVENT"
+log_history "added alias $malias to $account@$domain "
 log_event "$OK" "$EVENT"
 
 exit

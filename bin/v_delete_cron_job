@@ -56,7 +56,7 @@ decrease_user_value "$user" '$U_CRON_JOBS'
 $BIN/v_restart_cron "$EVENT"
 
 # Logging
-log_history "$EVENT"
+log_history "deleted cron job $job"
 log_event "$OK" "$EVENT"
 
 exit

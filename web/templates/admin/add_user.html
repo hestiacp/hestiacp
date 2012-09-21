@@ -59,12 +59,12 @@
                                         </tr>
                                         <tr>
                                             <td class="add-text" style="padding: 10px 0 0 2px;">
-                                                Password <a href="javascript:randomString();" class="genpass">generate</a>
+                                                Password <a href="javascript:randomString();" class="genpass" >generate</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_password"
+                                                <input type="text" size="20" class="add-input" name="v_password"  <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
                                             </td>
                                         </tr>
                                         <tr>

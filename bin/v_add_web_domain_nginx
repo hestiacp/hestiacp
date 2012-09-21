@@ -104,7 +104,8 @@ if [ "$restart" != 'no' ]; then
     $BIN/v_restart_web "$EVENT"
 fi
 
-log_history "$EVENT"
+log_history "enabled nginx support for $domain"
 log_event "$OK" "$EVENT"
 
 exit
+

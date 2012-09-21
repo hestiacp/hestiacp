@@ -64,7 +64,7 @@ aliases=$(echo "$aliases" |\
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
 
 # Logging
-log_history "$EVENT"
+log_history "deleted alias $malias on $account@$domain"
 log_event "$OK" "$EVENT"
 
 exit

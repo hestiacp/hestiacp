@@ -138,6 +138,7 @@ change_user_package
 #----------------------------------------------------------#
 
 # Logging
+log_history "changed $user package to $package" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

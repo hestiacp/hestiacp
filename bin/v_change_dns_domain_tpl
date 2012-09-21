@@ -78,7 +78,7 @@ update_domain_zone
 $BIN/v_restart_dns "$EVENT"
 
 # Logging
-log_history "$EVENT"
+log_history "changed dns template for $domain to $template" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

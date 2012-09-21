@@ -86,7 +86,7 @@ cat $WEBTPL/$type.tpl |\
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS' "$type"
 
 # Logging
-log_history "$EVENT"
+log_history "changed web log stats for $domain to $type"
 log_event "$OK" "$EVENT"
 
 # Build stats

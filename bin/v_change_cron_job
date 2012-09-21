@@ -67,7 +67,7 @@ sync_cron_jobs
 $BIN/v_restart_cron "$EVENT"
 
 # Logging
-log_history "$EVENT"
+log_history "changed cron job $job"
 log_event "$OK" "$EVENT"
 
 exit

@@ -47,7 +47,7 @@ U_BACKUPS=$(ls $BACKUP/|grep "^$user."|wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 
 # Logging
-log_history "$EVENT"
+log_history "deleted backup archive $backup"
 log_event "$OK" "$EVENT"
 
 exit

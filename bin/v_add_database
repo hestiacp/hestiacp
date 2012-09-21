@@ -80,7 +80,7 @@ echo "$str" >> $USER_DATA/db.conf
 chmod 660 $USER_DATA/db.conf
 
 # Logging
-log_history "$EVENT"
+log_history "added $type database $database"
 log_event "$OK" "$EVENT"
 
 exit

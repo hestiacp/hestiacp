@@ -53,7 +53,7 @@ fi
 update_object_value 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS' 'yes'
 
 # Logging
-log_history "$EVENT"
+log_history "enabled antivirus on $domain"
 log_event "$OK" "$EVENT"
 
 exit

@@ -43,6 +43,7 @@ is_apache_template_valid
 update_user_value "$user" '$TEMPLATE' "$template"
 
 # Logging
+log_history "changed $user template to $template" '' 'admin'
 log_event "$OK" "$EVENT"
 
 exit

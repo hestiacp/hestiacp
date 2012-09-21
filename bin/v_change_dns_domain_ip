@@ -59,7 +59,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "$EVENT"
+log_history "changed dns ip for $domain to $ip"
 log_event "$OK" "$EVENT"
 
 exit

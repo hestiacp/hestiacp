@@ -64,7 +64,7 @@ fi
 
 
 # Logging
-log_history "$EVENT"
+log_history "deleted dns domain $domain"
 log_event "$OK" "$EVENT"
 
 exit

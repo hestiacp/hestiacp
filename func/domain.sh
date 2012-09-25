@@ -367,6 +367,7 @@ upd_web_domain_values() {
     group="$user"
     email="$user@$domain"
     docroot="$HOMEDIR/$user/web/$domain/public_html"
+    sdocroot=$docroot
     if [ "$SSL_HOME" = 'single' ]; then
         sdocroot="$HOMEDIR/$user/web/$domain/public_shtml" ;
     fi

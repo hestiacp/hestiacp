@@ -18,7 +18,7 @@ source $VESTA/func/main.sh
 # Json function
 json_list_iface() {
     dev=$(cat /proc/net/dev |grep : |cut -f 1 -d : |tr -d ' ' |grep -v lo)
-    int_counter=$(echo "$interfaces" | wc -l)
+    int_counter=$(echo "$dev" | wc -l)
     i=1
     echo '['
     for interface in $dev; do

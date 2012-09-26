@@ -3,6 +3,7 @@
 error_reporting(NULL);
 ob_start();
 session_start();
+unset($_SESSION['error_msg']);
 
 $TAB = 'WEB';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

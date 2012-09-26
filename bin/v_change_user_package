@@ -45,7 +45,7 @@ is_package_avalable() {
        [[ "$CRON_JOBS" -lt "$U_CRON_JOBS" ]] ||\
        [[ "$DISK_QUOTA" -lt "$U_DISK" ]] ||\
        [[ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]]; then
-        echo "Error: Upgrade package"
+        echo "Error: Package not cover current usage"
         log_event "$E_LIMIT" "$EVENT"
         exit $E_LIMIT
     fi

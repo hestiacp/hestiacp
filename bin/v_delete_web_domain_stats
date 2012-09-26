@@ -56,7 +56,7 @@ rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 #----------------------------------------------------------#
 
 # Deleting pipe command
-sed -i "/ $domain$/d" $VESTA/data/queue/stats.pipe
+sed -i "/ $domain$/d" $VESTA/data/queue/webstats.pipe
 
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS' ''

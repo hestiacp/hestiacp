@@ -85,9 +85,8 @@ if [ "$rv" -ne '0' ]; then
 fi
 
 # Deleteing user pipes
-sed -i "/v_update_db_bases_disk $user$/d" $VESTA/data/queue/disk.pipe
-sed -i "/v_update_web_domains_traff $user$/d" $VESTA/data/queue/traffic.pipe
-sed -i "/v_update_web_domain_stat $user /d" $VESTA/data/queue/stats.pipe
+sed -i "/ $user$/d" $VESTA/data/queue/disk.pipe
+sed -i "/ $user$/d" $VESTA/data/queue/traffic.pipe
 
 # Removing system user
 /usr/sbin/userdel -f $user

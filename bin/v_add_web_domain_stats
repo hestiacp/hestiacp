@@ -72,7 +72,7 @@ cat $WEBTPL/$type.tpl |\
 
 # Schedule statistic processing
 echo "$BIN/v_update_web_domain_stat $user $domain" >> \
-    $VESTA/data/queue/stats.pipe
+    $VESTA/data/queue/webstats.pipe
 
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS' "$type"

@@ -43,7 +43,7 @@ case $queue in
     restart)    bash $VESTA/data/queue/restart.pipe;
                 rm $VESTA/data/queue/restart.pipe;
                 touch $VESTA/data/queue/restart.pipe;;
-    stats)      bash $VESTA/data/queue/stats.pipe;;
+    webstats)   bash $VESTA/data/queue/webstats.pipe;;
     backup)     bash $VESTA/data/queue/backup.pipe;;
     disk)       bash $VESTA/data/queue/disk.pipe;;
     traffic)    bash $VESTA/data/queue/traffic.pipe;;

@@ -74,7 +74,6 @@ top_panel($user,$TAB);
         }
     }
 
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_edit_cron.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_cron.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);

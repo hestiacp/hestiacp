@@ -1,24 +1,23 @@
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 12px 0 8px 6px">
+                                        <td style="padding: 12px 0 0 6px">
                                             <div style="float:left">
                                                 <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/cron/'"> Add Cron Job </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
-                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;">
-                                                <button> Search </button>
+                                                <form action="/search/" method="get" >
+                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;" name="q">
+                                                <input type="submit" name="search" value="Search" class="button" style="font-size: 12px;">
+                                                </form>
                                             </div>
                                             <div style="float:left; padding-left: 26px;">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("vstobjects");'> toggle all </a>
-                                                <select style="margin:0 2px 0 0px;" >
+                                                <form action="/bulk/cron/" method="post" id="objects">
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <select style="margin:0 2px 0 0px;" name="action">
                                                     <option>apply to selected</option>
-                                                    <option>rebuild</option>
-                                                    <option>update counters</option>
-                                                    <option>suspend</option>
-                                                    <option>unsuspend</option>
                                                     <option>delete</option>
                                                 </select>
-                                                <button style="width:27px;"> › </button>
+                                                <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px;">
                                             </div>
                                         </td>
                                     </tr>
@@ -27,7 +26,7 @@
                         </tr>
                     </table>
 
-                    <form id="vstobjects">
+                    <div id="vstobjects">
                         <table class='data'>
 
                             <?php
@@ -66,7 +65,7 @@
                                 </script>
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
-                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="object" ></td></tr>
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="job[]" value="<?php echo $data[$key]['JOB'] ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
                                     </table>
@@ -172,6 +171,7 @@
                                 }
                             ?>
                         </table>
+                        </form>
 
                         <table class="data-count">
                             <tr>
@@ -187,5 +187,5 @@
                                 </td>
                             </tr>
                         </table>
-                    </form>
+                    </div>
 

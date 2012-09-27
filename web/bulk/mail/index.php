@@ -53,7 +53,7 @@ if (empty($account)) {
     foreach ($domain as $value) {
         // Mail
         $value = escapeshellarg($value);
-        exec (VESTA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
+        exec (VESTA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
         $restart = 'yes';
     }
 } else {
@@ -61,7 +61,7 @@ if (empty($account)) {
         // Mail Account
         $value = escapeshellarg($value);
         $dom = escapeshellarg($domain);
-        exec (VESTA_CMD.$cmd." ".$user." ".$dom." ".$value." no", $output, $return_var);
+        exec (VESTA_CMD.$cmd." ".$user." ".$dom." ".$value, $output, $return_var);
         $restart = 'yes';
     }
 }

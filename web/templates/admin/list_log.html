@@ -1,12 +1,14 @@
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 12px 0 8px 16px">
+                                        <td style="padding: 12px 0 0 16px">
                                             <div style="float:left">
                                             </div>
                                             <div style="text-align: right; float: right;">
-                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;">
-                                                <button> Search </button>
+                                                <form action="/search/" method="get" >
+                                                <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;" name="q">
+                                                <input type="submit" name="search" value="Search" class="button" style="font-size: 12px;">
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -15,7 +17,7 @@
                         </tr>
                     </table>
 
-                    <form id="vstobjects">
+                    <div id="vstobjects">
                         <table class='data'>
 
                             <?php
@@ -66,4 +68,4 @@
                             </td>
                         </tr>
                     </table>
-                </form>
+                </div>

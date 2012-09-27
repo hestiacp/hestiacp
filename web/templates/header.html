@@ -11,6 +11,10 @@
                 background-image: url(/images/b.png);
             }
 
+            form {
+                margin: 0;
+            }
+
             .main {
                 background: #ffffff;
                 box-shadow: 0 0 2px 2px #d7d7d7;
@@ -219,7 +223,7 @@
                 font-size: 9pt;
                 font-family: Arial, sans-serif;
                 color: #555;
-                padding: 8px 0 0 0;
+                padding: 8px 0 4px 0;
                 margin: 0;
             }
 
@@ -567,6 +571,7 @@
             }
 
             .button {
+                filter:chroma(color=#000000);
                 cursor: pointer;
                 color: #333;
                 background-color: #fafafa;
@@ -625,9 +630,10 @@
             }
 
             #vstobjects{
-                padding-top: 186px;
+                padding-top: 192px;
                 width: 996px;
                 padding-left: 3px;
+                min-height: 370px;
             }
 
         </style>
@@ -651,7 +657,10 @@
                 }
 
                 #vstobjects{
-                    padding-top: 186px;
+                    padding-top: 192px;
+                    min-height: 370px;
+                    height: auto !important;
+                    height: 370px;
                     width: 996px;
                 }
 

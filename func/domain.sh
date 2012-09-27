@@ -46,15 +46,21 @@ is_dns_template_valid() {
 
 # Checking domain existance
 is_domain_new() {
-    config_type="$1"
+    type="$1"
     dom=${2-$domain}
-    check_all=$(grep -w $dom $VESTA/data/users/*/*.conf)
-    if [ ! -z "$check_all" ]; then
-        check_ownership=$(grep -w $dom $USER_DATA/*.conf)
-        if [ ! -z "$check_ownership" ]; then
-            check_type1=$(grep -w "'$dom" $USER_DATA/$config_type.conf)
-            check_type2=$(grep -w ",$dom" $USER_DATA/$config_type.conf)
-            if [ ! -z "$check_type1" ] || [ ! -z "$check_type2" ]; then
+    web="$(grep -w $dom $VESTA/data/users/*/web.conf)"
+    dns="$(grep DOMAIN='$dom' $VESTA/data/users/*/dns.conf)"
+    mail="$(grep DOMAIN='$dom' $VESTA/data/users/*/mail.conf)"
+
+    if [ -n "$web" ] || [ -n "$dns" ] || [ -n "$mail" ]; then
+        if [ ! -z "$(grep -w $dom $USER_DATA/*.conf)" ]; then
+            c1=$(grep "'$dom'" $USER_DATA/$type.conf)
+            c2=$(grep "'$dom," $USER_DATA/$type.conf)
+            c3=$(grep ",$dom," $USER_DATA/$type.conf)
+            c4=$(grep ",$dom'" $USER_DATA/$type.conf)
+
+            if [ -n "$c1" ] || [ -n "$c2" ] || [ -n "$c3" ] || [ -n "$c4" ]
+            then
                 echo "Error: domain $dom exist"
                 log_event "$E_EXISTS" "$EVENT"
                 exit $E_EXISTS

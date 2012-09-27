@@ -11,7 +11,6 @@
 
 # Argument defenition
 user=$1
-full=${2-no}
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -22,8 +21,8 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [full]'
-validate_format 'user' 'full'
+check_args '1' "$#" 'user'
+validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -31,18 +30,17 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+export PATH=$PATH:/usr/sbin
 
 # Get user variables
 source $USER_DATA/user.conf
 
 # Rebuild user
-shell=$(/usr/bin/chsh --list-shells | grep -w "$SHELL" |head -n1)
-/usr/sbin/adduser "$user" -s "$shell" -c "$CONTACT" -m -d "$HOMEDIR/$user" \
-    &>/dev/null
+shell=$(chsh --list-shells | grep -w "$SHELL" |head -n1)
+adduser "$user" -s "$shell" -c "$CONTACT" -m -d "$HOMEDIR/$user" &>/dev/null
 
-# Change password
-#/usr/sbin/usermod -p $MD5 $user
-shadow=/tmp/shadow
+# Update password
+shadow='/etc/shadow'
 shdw=$(grep ^$user: $shadow)
 shdw3=$(echo "$shdw" | cut -f3 -d :)
 shdw4=$(echo "$shdw" | cut -f4 -d :)
@@ -56,13 +54,11 @@ sed -i "/^$user:*/d" $shadow
 echo "$user:$MD5:$shdw3:$shdw4:$shdw5:$shdw6:$shdw7:$shdw8:$shdw9" >> $shadow
 chmod u-w $shadow
 
-# Change shell
-/usr/bin/chsh -s "$shell" "$user" &>/dev/null
-
 # Building directory tree
-mkdir -p $HOMEDIR/$user
-chmod -R a+x $HOMEDIR/$user
 mkdir -p $HOMEDIR/$user/conf
+chmod a+x $HOMEDIR/$user
+chmod a+x $HOMEDIR/$user/conf
+chown $user:$user $HOMEDIR/$user
 chown $user:$user $HOMEDIR/$user/conf
 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
@@ -73,9 +69,13 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     chmod 751 $HOMEDIR/$user/web
     chmod 777 $HOMEDIR/$user/tmp
     chown $user:$user $HOMEDIR/$user/web
-    if [ "$full" = 'yes' ]; then
-        $BIN/v_rebuild_web_domains $user
-    fi
+    $BIN/v_rebuild_web_domains $user
+fi
+
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    mkdir -p $HOMEDIR/$user/conf/dns
+    chmod 751 $HOMEDIR/$user/conf/dns
+    $BIN/v_rebuild_dns_domains $user
 fi
 
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
@@ -83,29 +83,16 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
     mkdir -p $HOMEDIR/$user/mail
     chmod 751 $HOMEDIR/$user/mail
     chmod 751 $HOMEDIR/$user/conf/mail
-    if [ "$full" = 'yes' ]; then
-        $BIN/v_rebuild_mail_domains $user
-    fi
+    $BIN/v_rebuild_mail_domains $user
 fi
 
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    mkdir -p $HOMEDIR/$user/conf/dns
-    chmod 751 $HOMEDIR/$user/conf/dns
-    if [ "$full" = 'yes' ]; then
-        $BIN/v_rebuild_dns_domains $user
-    fi
-fi
 
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-    if [ "$full" = 'yes' ]; then
-        $BIN/v_rebuild_databases $user
-    fi
+    $BIN/v_rebuild_databases $user
 fi
 
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    if [ "$full" = 'yes' ]; then
-        $BIN/v_rebuild_cron_jobs $user
-    fi
+    $BIN/v_rebuild_cron_jobs $user
 fi
 
 

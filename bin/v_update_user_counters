@@ -169,6 +169,11 @@ for user in $user_list; do
         fi
     done
 
+    # Checking backup
+    for backup_str in $(cat $USER_DATA/backup.conf); do
+        U_BACKUPS=$((U_BACKUPS +1))
+    done
+
     U_DISK=$DISK
     U_BANDWIDTH=$BANDWIDTH
     update_user_value "$user" '$SUSPENDED_USERS' "$SUSPENDED_USERS"

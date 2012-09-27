@@ -94,7 +94,7 @@ fi
 
 
 # Set permissions
-chmod -R a+x $HOMEDIR/$user
+chmod a+x $HOMEDIR/$user
 
 # Checking quota
 if [ ! -z "$DISK_QUOTA" ] && [ "$DISK_QUOTA" != 'no' ]; then

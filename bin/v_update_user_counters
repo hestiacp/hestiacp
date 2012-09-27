@@ -146,7 +146,6 @@ for user in $user_list; do
             SUSPENDED_MAIL=$((SUSPENDED_MAIL + 1))
         fi
     done
-    SUSPENDED_MAIL=0
     DISK=$((DISK + U_DISK_MAIL))
 
     # Checking db system
@@ -160,7 +159,7 @@ for user in $user_list; do
     done
     DISK=$((DISK + U_DISK_DB))
 
-    # Checking mail system
+    # Checking cron system
     for cron_str in $(cat $USER_DATA/cron.conf);do
         eval $cron_str
         U_CRON_JOBS=$((U_CRON_JOBS + 1))

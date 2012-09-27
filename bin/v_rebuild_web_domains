@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: rebuild dns domains
-# options: user
+# options: user [restart]
 #
 # The function rebuilds BIND configuration files for all dns domains.
 
@@ -11,6 +11,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -23,7 +24,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'user [restart]'
 validate_format 'user'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -271,7 +272,9 @@ update_user_value "$user" '$U_WEB_SSL' "$user_ssl"
 update_user_value "$user" '$U_WEB_ALIASES' "$user_aliases"
 
 # Restart web server
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

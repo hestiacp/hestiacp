@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unsuspend web domains
-# options: user
+# options: user [restart]
 #
 # The function of unsuspending all user's sites.
 
@@ -11,6 +11,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -22,7 +23,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'user [restart]'
 validate_format 'user'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -43,7 +44,9 @@ done
 #----------------------------------------------------------#
 
 # Restart web server
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

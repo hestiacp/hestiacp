@@ -12,6 +12,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -39,8 +40,8 @@ fi
 
 # Checking web system is enabled
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v_unsuspend_web_domains $user
-    $BIN/v_delete_web_domains $user
+    $BIN/v_unsuspend_web_domains $user $restart
+    $BIN/v_delete_web_domains $user $restart
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -49,8 +50,8 @@ fi
 
 # Checking dns system is enabled
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $BIN/v_unsuspend_dns_domains $user
-    $BIN/v_delete_dns_domains $user
+    $BIN/v_unsuspend_dns_domains $user $restart
+    $BIN/v_delete_dns_domains $user $restart
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv
@@ -60,7 +61,7 @@ fi
 # Checking mail system is enabled
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
     $BIN/v_unsuspend_mail_domains $user
-    #$BIN/v_delete_mail_domains $user
+    $BIN/v_delete_mail_domains $user
     rv="$?"
     if [ "$rv" -ne '0' ]; then
         exit $rv

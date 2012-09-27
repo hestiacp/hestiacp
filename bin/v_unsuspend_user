@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unsuspend user
-# options: user
+# options: user [restart]
 #
 # The function unsuspends user and all his objects.
 
@@ -11,6 +11,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -38,16 +39,18 @@ fi
 
 # Unsuspending web domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v_unsuspend_web_domains $user
+    $BIN/v_unsuspend_web_domains $user $restart
 fi
 
 # Unsuspending dns domains
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $BIN/v_unsuspend_dns_domains $user
+    $BIN/v_unsuspend_dns_domains $user $restart
 fi
 
 # Unsuspending mail domains
-# TBD
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    $BIN/v_unsuspend_mail_domains $user
+fi
 
 # Unsuspending datbabases
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
@@ -56,7 +59,7 @@ fi
 
 # Unsuspending cron jobs
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    $BIN/v_unsuspend_cron_jobs $user
+    $BIN/v_unsuspend_cron_jobs $user $restart
 fi
 
 
@@ -67,6 +70,12 @@ fi
 # Changing suspend value
 update_user_value "$user" '$SUSPENDED' 'no'
 decrease_user_value 'admin' '$SUSPENDED_USERS'
+
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+    $BIN/v_restart_dns "$EVENT"
+    $BIN/v_restart_cron "$EVENT"
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: rebuild cron jobs
-# options: user
+# options: user [restart]
 #
 # The function rebuilds system cron config file for specified user.
 
@@ -11,6 +11,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -21,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'user [restart]'
 validate_format 'user'
 is_system_enabled "$CRON_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -40,7 +41,9 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Restart crond
-$BIN/v_restart_cron "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_cron "$EVENT"
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

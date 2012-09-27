@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Suspending sys cron jobs
-# options: user
+# options: user [restart]
 #
 # The function suspends all user cron jobs.
 
@@ -11,6 +11,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -41,7 +42,9 @@ done
 #----------------------------------------------------------#
 
 # Restart crond
-$BIN/v_restart_cron "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_cron "$EVENT"
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

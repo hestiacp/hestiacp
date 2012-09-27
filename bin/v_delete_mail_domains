@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: unuspend sys cron
-# options: user [restart]
+# info: delete mail domains
+# options: user
 #
-# The function unsuspends all suspended cron jobs.
+# The function for deleting all users mail domains.
 
 
 #----------------------------------------------------------#
@@ -11,7 +11,6 @@
 
 # Argument defenition
 user=$1
-restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -22,8 +21,9 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [restart]'
+check_args '1' "$#" 'user'
 validate_format 'user'
+is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -31,20 +31,15 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Unsuspendning jobs
-for job in $(search_objects 'cron' 'SUSPENDED' 'yes' 'JOB'); do
-    $BIN/v_unsuspend_cron_job $user $job 'no'
+# Starting delete loop
+for domain in $(search_objects 'mail' 'SUSPENDED' "no" 'DOMAIN'); do
+    $BIN/v_delete_mail_domain "$user" "$domain"
 done
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Restart crond
-if [ "$restart" != 'no' ]; then
-    $BIN/v_restart_cron "$EVENT"
-fi
 
 # Logging
 log_event "$OK" "$EVENT"

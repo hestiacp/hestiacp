@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend user
-# options: user
+# options: user [restart]
 #
 # The function suspends a certain user and all his objects.
 
@@ -11,6 +11,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -21,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'user [restart]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -39,16 +40,18 @@ fi
 
 # Suspending web domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v_suspend_web_domains $user
+    $BIN/v_suspend_web_domains $user $restart
 fi
 
 # Suspending dns domains
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $BIN/v_suspend_dns_domains $user
+    $BIN/v_suspend_dns_domains $user $restart
 fi
 
 # Suspending mail domains
-# TBD
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    $BIN/v_suspend_mail_domains $user
+fi
 
 # Suspending datbabases
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
@@ -57,13 +60,20 @@ fi
 
 # Suspending cron jobs
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    $BIN/v_suspend_cron_jobs $user
+    $BIN/v_suspend_cron_jobs $user $restart
 fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Restart web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+    $BIN/v_restart_dns "$EVENT"
+    $BIN/v_restart_cron "$EVENT"
+fi
 
 # Changing suspend value
 update_user_value "$user" '$SUSPENDED' 'yes'

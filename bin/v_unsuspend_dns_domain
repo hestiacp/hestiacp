@@ -37,8 +37,9 @@ is_object_suspended 'dns' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Adding zone in named.conf
-echo "zone \"$domain\" { type master; file \"/etc/namedb/$domain.db\"; };" \
-    >> /etc/named.conf
+named="zone \"$domain_idn\" {type master; file"
+named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+echo "$named" >> /etc/named.conf
 
 #----------------------------------------------------------#
 #                       Vesta                              #

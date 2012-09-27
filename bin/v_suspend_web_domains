@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend web domains
-# options: user
+# options: user [restart]
 #
 # The function of suspending all user's sites. 
 
@@ -11,6 +11,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -22,8 +23,8 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [suspend_url]'
-validate_format 'user' 'url'
+check_args '1' "$#" 'user [restart]'
+validate_format 'user'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 
@@ -34,7 +35,7 @@ is_object_valid 'user' 'USER' "$user"
 
 # Starting suspend loop
 for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
-    $BIN/v_suspend_web_domain "$user" "$domain" "$url" 'no'
+    $BIN/v_suspend_web_domain "$user" "$domain" 'no'
 done
 
 #----------------------------------------------------------#
@@ -42,7 +43,9 @@ done
 #----------------------------------------------------------#
 
 # Restart web server
-$BIN/v_restart_web "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v_restart_web "$EVENT"
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

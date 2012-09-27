@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: rebuild system user
-# options: user [full]
+# options: user [restart]
 #
 # The function rebuilds system user account.
 
@@ -11,6 +11,7 @@
 
 # Argument defenition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -21,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'user [restart]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -69,13 +70,13 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     chmod 751 $HOMEDIR/$user/web
     chmod 777 $HOMEDIR/$user/tmp
     chown $user:$user $HOMEDIR/$user/web
-    $BIN/v_rebuild_web_domains $user
+    $BIN/v_rebuild_web_domains $user $restart
 fi
 
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
     mkdir -p $HOMEDIR/$user/conf/dns
     chmod 751 $HOMEDIR/$user/conf/dns
-    $BIN/v_rebuild_dns_domains $user
+    $BIN/v_rebuild_dns_domains $user $restart
 fi
 
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
@@ -92,7 +93,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
 fi
 
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    $BIN/v_rebuild_cron_jobs $user
+    $BIN/v_rebuild_cron_jobs $user $restart
 fi
 
 

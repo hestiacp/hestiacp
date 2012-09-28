@@ -1,7 +1,15 @@
+                                <?php
+                                    $back = getenv("HTTP_REFERER");
+                                    if (empty($back)) {
+                                        $back = "location.href='/list/cron/'";
+                                    } else {
+                                        $back = "javascript:history.back(1)";
+                                    }
+                                ?> 
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 10px 2px 0 0;" ><a class="add-name"><b>Adding Cron Job</b></a>
+                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Adding Cron Job</b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<a class=\"add-error\"> → ".$_SESSION['error_msg']."</a>";
@@ -96,7 +104,7 @@
                                         <tr>
                                             <td style="padding: 24px 0 0 0;">
                                                 <input type="submit" name="ok" value="OK" class="button">
-                                                <input type="button" class="button" value="Cancel" onclick="location.href='/list/cron/'">
+                                                <input type="button" class="button" value="Cancel" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

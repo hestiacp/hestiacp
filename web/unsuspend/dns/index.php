@@ -6,6 +6,9 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if ($_SESSION['user'] == 'admin') {
+    if (!empty($_GET['user'])) {
+        $user=$_GET['user'];
+    }
     // DNS domain
     if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
         $v_username = escapeshellarg($user);
@@ -17,6 +20,11 @@ if ($_SESSION['user'] == 'admin') {
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
+        $back=getenv("HTTP_REFERER");
+        if (!empty($back)) {
+            header("Location: ".$back);
+            exit;
+        }
         header("Location: /list/dns/");
         exit;
 
@@ -34,10 +42,21 @@ if ($_SESSION['user'] == 'admin') {
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
+        $back=getenv("HTTP_REFERER");
+        if (!empty($back)) {
+            header("Location: ".$back);
+            exit;
+        }
         header("Location: /list/dns/?domain=".$_GET['domain']);
         exit;
     }
 
 }
 
+$back=getenv("HTTP_REFERER");
+if (!empty($back)) {
+    header("Location: ".$back);
+    exit;
+}
 header("Location: /list/dns/");
+exit;

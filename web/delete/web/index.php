@@ -5,6 +5,11 @@ ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+    // Delete as someone else?
+    if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+        $user=$_GET['user'];
+    }
+
 if (!empty($_GET['domain'])) {
     $v_username = escapeshellarg($user);
     $v_domain = escapeshellarg($_GET['domain']);
@@ -45,4 +50,10 @@ if (!empty($_GET['domain'])) {
     }
 }
 
+$back=getenv("HTTP_REFERER");
+if (!empty($back)) {
+    header("Location: ".$back);
+    exit;
+}
 header("Location: /list/web/");
+exit;

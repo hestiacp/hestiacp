@@ -5,7 +5,11 @@ ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-//if ($_SESSION['user'] == 'admin') {
+    // Delete as someone else?
+    if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+        $user=$_GET['user'];
+    }
+
     // Mail domain
     if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
         $v_username = escapeshellarg($user);
@@ -17,6 +21,11 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
+        $back=getenv("HTTP_REFERER");
+        if (!empty($back)) {
+            header("Location: ".$back);
+            exit;
+        }
         header("Location: /list/mail/");
         exit;
     }
@@ -33,9 +42,20 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
                 $_SESSION['error_msg'] = $error;
         }
         unset($output);
+        $back=getenv("HTTP_REFERER");
+        if (!empty($back)) {
+            header("Location: ".$back);
+            exit;
+        }
         header("Location: /list/mail/?domain=".$_GET['domain']);
         exit;
     }
 //}
 
+$back=getenv("HTTP_REFERER");
+if (!empty($back)) {
+    header("Location: ".$back);
+    exit;
+}
 header("Location: /list/mail/");
+exit;

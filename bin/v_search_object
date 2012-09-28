@@ -1,0 +1,145 @@
+#!/bin/bash
+# info: search objects
+# options: object [format]
+#
+# The function that allows to find system objects.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+object=$1
+format=${2-shell}
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'object [format]'
+validate_format 'object'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+conf=$(mktemp)
+i=0
+OLD_IFS=$IFS
+IFS=$'\n'
+
+# User loop
+for user in $(ls $VESTA/data/users/); do
+    # Search query
+    search=$(grep "$object" \
+        $VESTA/data/users/$user/web.conf \
+        $VESTA/data/users/$user/dns.conf \
+        $VESTA/data/users/$user/mail.conf \
+        $VESTA/data/users/$user/db.conf)
+    
+    for row in $search; do
+        # Initialise variable
+        key=''
+        result=''
+        dom_alias=''
+        suspended=''
+	object_time=''
+        object_date=''
+
+        # Parsing result
+        type=$(echo $row |cut -f 1 -d : |cut -f 8 -d / |cut -f 1 -d \.)
+        data=$(echo $row |cut -f 2,3,4,5 -d :)
+        eval "$data"
+
+        # Check WEB domain
+        dom_alias=''
+        if [ "$type" = 'web' ]; then
+            if [ -n "$(echo $DOMAIN |grep $object)" ]; then
+                # Check domain alias
+                check_dom_alias="$(echo $ALIAS| tr ',' '\n' |grep $object)"
+                if [ ! -z "$check_dom_alias" ];then
+                    dom_alias=$(echo $check_dom_alias | tr ' ' ',')
+                fi
+                key="DOMAIN"
+                result="$DOMAIN"
+                suspended=$SUSPENDED
+                object_time=$TIME
+                object_date=$DATE
+                ((i ++))
+            fi
+        fi
+
+        # DNS
+        if [ "$type" = 'dns' ]; then
+            if [ -n "$(echo $DOMAIN |grep $object)" ]; then
+                key="DOMAIN"
+                result="$DOMAIN"
+                suspended=$SUSPENDED
+                object_time=$TIME
+                object_date=$DATE
+                ((i ++))
+            fi
+        fi
+
+        # MAIL
+        if [ "$type" = 'mail' ]; then
+            if [ -n "$(echo $DOMAIN |grep $object)" ]; then
+                key="DOMAIN"
+                result="$DOMAIN"
+                suspended=$SUSPENDED
+                object_time=$TIME
+                object_date=$DATE
+                ((i ++))
+            fi
+        fi
+
+        # DB
+        if [ "$type" = 'db' ]; then
+            if [ -n "$(echo $DB |grep $object)" ]; then
+                key="DATABASE"
+                result="$DB"
+                suspended=$SUSPENDED
+                object_time=$TIME
+                object_date=$DATE
+                ((i ++))
+            fi
+        fi
+
+        if [ ! -z "$result" ]; then
+            str="ID='$i' USER='$user' TYPE='$type' KEY='$key'"
+            str="$str RESULT='$result' ALIAS='$dom_alias'"
+            str="$str  SUSPENDED='$suspended' TIME='$object_time'"
+            str="$str DATE='$object_date'"
+            echo $str >> $conf
+        fi
+    done
+done
+IFS=$OLD_IFS
+
+# Defining fileds to select
+fields='$ID $USER $TYPE $KEY $RESULT $ALIAS $SUSPENDED $TIME $DATE'
+
+# Listing domains
+case $format in 
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  fields='$USER $TYPE $KEY $RESULT $ALIAS'; shell_list |column -t;;
+    *)      check_args '2' '0' 'object [format]'
+esac
+
+rm $conf
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+#log_event "$OK" "$EVENT"
+
+exit

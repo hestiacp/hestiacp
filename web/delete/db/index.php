@@ -5,7 +5,11 @@ ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-//if ($_SESSION['user'] == 'admin') {
+    // Delete as someone else?
+    if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+        $user=$_GET['user'];
+    }
+
     if (!empty($_GET['database'])) {
         $v_username = escapeshellarg($user);
         $v_database = escapeshellarg($_GET['database']);
@@ -20,4 +24,10 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 //}
 
+$back=getenv("HTTP_REFERER");
+if (!empty($back)) {
+    header("Location: ".$back);
+    exit;
+}
 header("Location: /list/db/");
+exit;

@@ -19,4 +19,10 @@ if ($_SESSION['user'] == 'admin') {
 
 }
 
+$back=getenv("HTTP_REFERER");
+if (!empty($back)) {
+    header("Location: ".$back);
+    exit;
+}
 header("Location: /list/ip/");
+exit;

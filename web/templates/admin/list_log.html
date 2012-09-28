@@ -7,7 +7,7 @@
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
                                                 <input type="text" size="30" style="padding: 3px 80px 3px 0; margin: 0 2px 0 0;" name="q">
-                                                <input type="submit" name="search" value="Search" class="button" style="font-size: 12px;">
+                                                <input type="submit" value="Search"class="button" style="font-size: 12px;">
                                                 </form>
                                             </div>
                                         </td>
@@ -28,7 +28,7 @@
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150px">
                                     <table class="data-col1" width="150">
-                                        <tr><td style="padding: 18 0 4 4;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+                                        <tr><td style="padding: 14 0 4 4;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
                                         <tr><td style="padding: 0 0 0 4;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
                                     </table>
                                 </td>

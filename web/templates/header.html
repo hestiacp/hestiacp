@@ -15,6 +15,10 @@
                 margin: 0;
             }
 
+            .hidden {
+                display: none;
+            }
+
             .main {
                 background: #ffffff;
                 box-shadow: 0 0 2px 2px #d7d7d7;
@@ -329,9 +333,18 @@
                 font-family: Arial, sans-serif;
                 padding: 2 5 0 5;
                 letter-spacing: 0.1em;
+                color: #34536A;
+                text-decoration: none;
+                cursor: pointer;
             }
 
             .data-controls:hover {
+                color: #ffffff;
+                background: #f79b44;
+            }
+
+            .data-controls:active {
+                color: #433832;
                 background: #f79b44;
             }
 
@@ -342,18 +355,20 @@
 
             .data-controls a:visited {
                 color: #34536A;
-                text-decoration: none;
             }
 
             .data-controls a:hover {
                 color: #ffffff;
-                text-decoration: none;
             }
 
             .data-controls a:active {
                 color: #433832;
-                text-decoration: none;
             }
+
+            .data-controls img {
+                border: 0px;
+            }
+
 
             .data-count {
                 background: #ebe9dc;
@@ -680,6 +695,7 @@
             </style>
         <![endif]-->
         <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
+        <script type="text/javascript" src="/js/events.js"></script>
         <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
         <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
         <script language="JavaScript">

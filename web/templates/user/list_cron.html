@@ -42,27 +42,6 @@
                             ?>
 
                             <tr class="data-row">
-                                <script type="text/javascript">
-                                    $(function(){
-                                        $('#delete_dialog_<?php echo "$i" ?>').dialog({
-                                            modal: true,
-                                            autoOpen: false,
-                                            width: 360,
-                                            buttons: {
-                                                "Ok": function(event, ui) {
-                                                     location.href = '/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>';
-                                                },
-                                                "Cancel": function() {
-                                                    $(this).dialog("close");
-                                                }
-                                            }
-                                        });
-                                        $('#delete_link_<?php echo "$i" ?>').click(function(){
-                                            $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
-                                            return false;
-                                        });
-                                    });
-                                </script>
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="job[]" value="<?php echo $data[$key]['JOB'] ?>" ></td></tr>
@@ -74,11 +53,12 @@
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>"> edit</a></td>
-                                            <td class="data-controls" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px">
-                                                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
-                                                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
+                                            <td class="data-controls" width="50px"><a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
+                                            <td class="data-controls do_delete" width="70px">
+                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
+                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
+                                                <input type="hidden" name="delete_url" value="/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
+                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
                                                     <p class="counter-value">Are you sure you want to delete cron job?</p>
                                                 </div>
                                             </td>

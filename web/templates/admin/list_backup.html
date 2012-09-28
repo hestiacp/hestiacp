@@ -44,46 +44,6 @@
                                     if (!empty($data[$key]['DB'])) $db = 'yes ¨';
                             ?>
 
-                            <script type="text/javascript">
-                                $(function(){
-                                    $('#restore_dialog_<?php echo "$i" ?>').dialog({
-                                        modal: true,
-                                        autoOpen: false,
-                                        width: 360,
-                                        buttons: {
-                                            "Ok": function(event, ui) {
-                                                $(this).dialog("close");
-                                            },
-                                            "Cancel": function() {
-                                                $(this).dialog("close");
-                                            }
-                                        }
-                                    });
-                                    $('#restore_link_<?php echo "$i" ?>').click(function(){
-                                        $('#restore_dialog_<?php echo "$i" ?>').dialog('open');
-                                        return false;
-                                    });
-
-                                    $('#delete_dialog_<?php echo "$i" ?>').dialog({
-                                        modal: true,
-                                        autoOpen: false,
-                                        width: 360,
-                                        buttons: {
-                                            "Ok": function(event, ui) {
-                                                 location.href = '/delete/backup/?backup=<?php echo "$key" ?>';
-                                            },
-                                            "Cancel": function() {
-                                                $(this).dialog("close");
-                                            }
-                                        }
-                                    });
-                                    $('#delete_link_<?php echo "$i" ?>').click(function(){
-                                        $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
-                                        return false;
-                                    });
-                                });
-                            </script>
-
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
@@ -96,19 +56,14 @@
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="80px"><img src="/images/download.png" width="8px" height="8px"><a href="/download/backup/?backup=<?php echo $key ?>" target="_blank"> download</a></td>
-                                            <td class="data-controls" width="80px">
-                                                <img src="/images/restore.png" width="6px" height="8px">
-                                                <a href="#" id="restore_link_<?php echo "$i"?>"> restore</a>
-                                                <div id="restore_dialog_<?php echo "$i" ?>" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to restore <b><?php echo "$key" ?></b> backup?</p>
-                                                </div>
-                                            </td>
-                                            <td class="data-controls" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px">
-                                                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
-                                                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> backup?</p>
+                                            <td class="data-controls" width="80px"><a href="/download/backup/?backup=<?php echo $key ?>" target="_blank"><img src="/images/download.png" width="8px" height="8px"> download</a></td>
+                                            <td class="data-controls" width="80px"><a href="#" id="restore_link_<?php echo "$i"?>"><img src="/images/restore.png" width="6px" height="8px"> restore</a></td>
+                                            <td class="data-controls do_delete" width="70px">
+                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
+                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
+                                                <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?php echo "$key" ?>" />
+                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
+                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> backup ?</p>
                                                 </div>
                                             </td>
                                         </tr>

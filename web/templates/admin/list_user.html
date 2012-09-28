@@ -56,45 +56,6 @@
                                     }
                                 ?>
 
-                            <script type="text/javascript">
-                                $(function(){
-                                    $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog({
-                                        modal: true,
-                                        autoOpen: false,
-                                        width: 360,
-                                        buttons: {
-                                            "Ok": function(event, ui) {
-                                                 location.href = '/<?php echo $spnd_action ?>/user/?user=<?php echo "$key" ?>';
-                                            },
-                                            "Cancel": function() {
-                                                $(this).dialog("close");
-                                            }
-                                        }
-                                    });
-                                    $('#<?php echo $spnd_action ?>_link_<?php echo "$i" ?>').click(function(){
-                                        $('#<?php echo $spnd_action ?>_dialog_<?php echo "$i" ?>').dialog('open');
-                                        return false;
-                                    });
-                                    $('#delete_dialog_<?php echo "$i" ?>').dialog({
-                                        modal: true,
-                                        autoOpen: false,
-                                        width: 360,
-                                        buttons: {
-                                            "Ok": function(event, ui) {
-                                                 location.href = '/delete/user/?user=<?php echo "$key" ?>';
-                                            },
-                                            "Cancel": function() {
-                                                $(this).dialog("close");
-                                            }
-                                        }
-                                    });
-                                    $('#delete_link_<?php echo "$i" ?>').click(function(){
-                                        $('#delete_dialog_<?php echo "$i" ?>').dialog('open');
-                                        return false;
-                                    });
-                                });
-                            </script>
-
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px">
                                     <table class="data-col1">
@@ -107,10 +68,10 @@
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="70px"><img src="/images/login-as.png" width="7px" height="8px">
+                                            <td class="data-controls" width="70px">
                                                 <?php
                                                     if ($key == $user) {
-                                                        echo "<a href=\"/logout/\">logout</a>";
+                                                        echo "<a href=\"/logout/\"><img src=\"/images/login-as.png\" width=\"7px\" height=\"8px\"> logout</a>";
                                                         if (!empty($_SESSION['look_alert'])) {
                                                 ?> 
                                                     <script type="text/javascript">
@@ -133,23 +94,25 @@
                                                             unset($_SESSION['look_alert']);
                                                         }
                                                     } else {
-                                                        echo "<a href=\"/login/?loginas=$key\">login as</a>";
+                                                        echo "<a href=\"/login/?loginas=$key\"><img src=\"/images/login-as.png\" width=\"7px\" height=\"8px\"> login as</a>";
                                                     }
                                                  ?>
                                             </td>
-                                            <td class="data-controls" width="50px"><img src="/images/edit.png" width="8px" height="8px"><a href="/edit/user/?user=<?php echo "$key" ?>"> edit</a></td>
-                                            <td class="data-controls" width="80px">
-                                                <img src="/images/suspend.png" width="7px" height="8px">
-                                                <a href="#" id="<?php echo $spnd_action ?>_link_<?php echo $i ?>"> <?php echo $spnd_action ?></a>
-                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <b><?php echo "$key" ?></b> user account?</p>
+                                            <td class="data-controls" width="50px"><a href="/edit/user/?user=<?php echo "$key" ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
+                                            <td class="data-controls do_<?php echo $spnd_action ?>" width="80px">
+                                                <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>">
+                                                <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo $spnd_action ?></a>
+                                                <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/user/?user=<?php echo $key ?>" />
+                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="Confirmation">
+                                                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <b><?php echo "$key" ?></b> user?</p>
                                                 </div>
                                             </td>
-                                            <td class="data-controls" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px">
-                                                <a href="#" id="delete_link_<?php echo $i ?>"> delete</a>
-                                                <div id="delete_dialog_<?php echo $i ?>" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> user account?</p>
+                                            <td class="data-controls do_delete" width="70px">
+                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
+                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
+                                                <input type="hidden" name="delete_url" value="/delete/user/?user=<?php echo $key ?>" />
+                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
+                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> user?</p>
                                                 </div>
                                             </td>
                                         </tr>

@@ -3,6 +3,7 @@
 error_reporting(NULL);
 session_start();
 $TAB = 'CRON';
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Header
@@ -19,7 +20,6 @@ if ($_SESSION['user'] == 'admin') {
     unset($output);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_cron.html');
 } else {
-
     exec (VESTA_CMD."v_list_cron_jobs $user json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data);

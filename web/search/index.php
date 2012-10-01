@@ -3,6 +3,7 @@
 error_reporting(NULL);
 session_start();
 $TAB = 'SEARCH';
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check query
@@ -30,9 +31,9 @@ if ($_SESSION['user'] == 'admin') {
     $data = json_decode(implode('', $output), true);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_search.html');
 } else {
-    exec (VESTA_CMD."v_list_web_domains $user json", $output, $return_var);
+    exec (VESTA_CMD."v_search_user_object ".$user." ".$q." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_web.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_search.html');
 }
 
 // Footer

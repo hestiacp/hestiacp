@@ -13,8 +13,10 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 // Panel
 top_panel($user,$TAB);
 
-// Are you admin?
-//if ($_SESSION['user'] == 'admin') {
+    // Edit as someone else?
+    if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+        $user=escapeshellarg($_GET['user']);
+    }
 
     // Check user argument?
     if (empty($_GET['job'])) {

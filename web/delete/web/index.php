@@ -50,10 +50,11 @@ if (!empty($_GET['domain'])) {
     }
 }
 
-$back=getenv("HTTP_REFERER");
+$back = $_SESSION['back'];
 if (!empty($back)) {
     header("Location: ".$back);
     exit;
 }
+
 header("Location: /list/web/");
 exit;

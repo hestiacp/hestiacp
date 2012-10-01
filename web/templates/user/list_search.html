@@ -48,72 +48,27 @@
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <?php
-                                                if ($data[$key]['USER'] != $user) {
-
-                                            ?> 
-                                            <td class="data-controls" width="70px">
-                                                <a href="/login/?loginas=<?php echo $data[$key]['USER'] ?>">
-                                                <img src="/images/login-as.png" width="8px" height="8px"> login as</a>
-                                            </td>
-                                            <?php
-                                                    }
-                                            ?> 
                                             <td class="data-controls" width="50px">
                                                 <?php
                                                     if ($data[$key]['KEY'] == 'RECORD') {
                                                         echo '<a href="/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'];
-                                                        echo '&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'].'">';
+                                                        echo '&record_id='.$data[$key]['LINK'].'">';
                                                     }
 
                                                     if ($data[$key]['KEY'] == 'ACCOUNT') {
                                                         echo '<a href="/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'];
-                                                        echo '&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'].'">';
+                                                        echo '&account='.$data[$key]['LINK'].'">';
                                                     }
 
                                                     if ($data[$key]['KEY'] == 'JOB') {
-                                                        echo '<a href="/edit/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'];
-                                                        echo '&user='.$data[$key]['USER'].'">';
+                                                        echo '<a href="/edit/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'">';
                                                     }
 
                                                     if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB')) {
-                                                        echo '<a href="/edit/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'];
-                                                        echo '&user='.$data[$key]['USER'].'">';
+                                                        echo '<a href="/edit/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'">';
                                                     }
                                                 ?> 
                                                 <img src="/images/edit.png" width="8px" height="8px"> edit</a>
-                                            </td>
-                                            <td class="data-controls do_<?php echo $spnd_action ?>" width="80px">
-                                                <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>">
-                                                <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo $spnd_action ?></a>
-                                                <?php
-                                                    if ($data[$key]['KEY'] == 'RECORD') {
-                                                        echo '<input type="hidden" name="'.$spnd_action.'_url" ';
-                                                        echo 'value="/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'];
-                                                        echo '&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'].'"  />';
-                                                    }
-
-                                                    if ($data[$key]['KEY'] == 'ACCOUNT') {
-                                                        echo '<input type="hidden" name="'.$spnd_action.'_url" ';
-                                                        echo 'value="/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'];
-                                                        echo '&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'].'"  />';
-                                                    }
-
-                                                    if ($data[$key]['KEY'] == 'JOB') {
-                                                        echo '<input type="hidden" name="'.$spnd_action.'_url" ';
-                                                        echo 'value="/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'];
-                                                        echo '&user='.$data[$key]['USER'].'"  />';
-                                                    }
-
-                                                    if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB')) {
-                                                        echo '<input type="hidden" name="'.$spnd_action.'_url" ';
-                                                        echo 'value="/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'];
-                                                        echo '&user='.$data[$key]['USER'].'"  />';
-                                                    }
-                                                ?> 
-                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <b><?php echo $data[$key]['RESULT'] ?></b> ?</p>
-                                                </div>
                                             </td>
                                             <td class="data-controls do_delete" width="70px">
                                                 <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
@@ -122,25 +77,23 @@
                                                     if ($data[$key]['KEY'] == 'RECORD') {
                                                         echo '<input type="hidden" name="delete_url" ';
                                                         echo 'value="/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'];
-                                                        echo '&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'].'"  />';
+                                                        echo '&record_id='.$data[$key]['LINK'].'" />';
                                                     }
 
                                                     if ($data[$key]['KEY'] == 'ACCOUNT') {
                                                         echo '<input type="hidden" name="delete_url" ';
                                                         echo 'value="/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'];
-                                                        echo '&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'].'"  />';
+                                                        echo '&account='.$data[$key]['LINK'].'" />';
                                                     }
 
                                                     if ($data[$key]['KEY'] == 'JOB') {
                                                         echo '<input type="hidden" name="delete_url" ';
-                                                        echo 'value="/delete/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'];
-                                                        echo '&user='.$data[$key]['USER'].'"  />';
+                                                        echo 'value="/delete/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'" />';
                                                     }
 
                                                     if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB')) {
                                                         echo '<input type="hidden" name="delete_url" ';
-                                                        echo 'value="/delete/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'];
-                                                        echo '&user='.$data[$key]['USER'].'"  />';
+                                                        echo 'value="/delete/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'" />';
                                                     }
                                                 ?> 
                                                 <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">

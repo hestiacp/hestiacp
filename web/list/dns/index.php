@@ -3,6 +3,7 @@
 error_reporting(NULL);
 session_start();
 $TAB = 'DNS';
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Header
@@ -13,7 +14,6 @@ top_panel($user,$TAB);
 
 // Data
 if ($_SESSION['user'] == 'admin') {
-
     if (empty($_GET['domain'])){
         exec (VESTA_CMD."v_list_dns_domains $user json", $output, $return_var);
         $data = json_decode(implode('', $output), true);

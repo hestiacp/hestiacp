@@ -3,6 +3,7 @@
 error_reporting(NULL);
 session_start();
 $TAB = 'BACKUP';
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Header

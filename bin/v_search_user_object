@@ -1,0 +1,258 @@
+#!/bin/bash
+# info: search objects
+# options: user object [format]
+#
+# The function that allows to find user objects.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+object=$2
+format=${3-shell}
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+# Json list function
+json_list_search() {
+    echo '{'
+    fileds_count=$(echo $fields| wc -w )
+    while read line; do
+        eval $line
+        if [ -n "$list_data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        IFS=' '
+        for field in $fields; do
+            eval value=\"$field\"
+            value=$(echo "$value"|sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+            if [ $i -eq 1 ]; then
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    list_data=1
+                fi
+            fi
+        done
+    done < $conf
+    if [ -n "$list_data" ]; then
+        echo -e '        }'
+    fi
+    echo -e '}'
+}
+
+# Shell list function
+shell_list_search() {
+    if [ -z "$nohead" ] ; then
+        echo "${fields//$/}"
+        for a in $fields; do
+            echo -e "------ \c"
+        done
+        echo
+    fi
+    while read line ; do
+        eval $line
+        eval echo "$fields" | sed -e "s/%quote%/'/g"
+    done < $conf
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'user object [format]'
+validate_format 'user' 'object'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+conf=$(mktemp)
+i=0
+OLD_IFS=$IFS
+IFS=$'\n'
+
+# Search query
+search=$(grep "$object" \
+    $VESTA/data/users/$user/web.conf \
+    $VESTA/data/users/$user/dns.conf \
+    $VESTA/data/users/$user/dns/*.conf \
+    $VESTA/data/users/$user/mail.conf \
+    $VESTA/data/users/$user/mail/*.conf \
+    $VESTA/data/users/$user/db.conf \
+    $VESTA/data/users/$user/cron.conf 2> /dev/null)
+    
+for row in $search; do
+    # Initialise variable
+    key=''
+    result=''
+    dom_alias=''
+    suspended=''
+    object_link=''
+    object_parent=''
+    object_time=''
+    object_date=''
+
+    # Parsing result
+    type=$(echo $row |cut -f 1 -d : |cut -f 8 -d /)
+    data=$(echo $row |cut -f 2,3,4,5 -d :)
+    eval "$data"
+
+    # Check WEB domain
+    if [ "$type" = 'web.conf' ]; then
+        if [ -n "$(echo $DOMAIN |grep $object)" ]; then
+            # Check domain alias
+            check_alias="$(echo $ALIAS| tr ',' '\n' |grep $object)"
+            if [ ! -z "$check_alias" ];then
+                object_alias=$(echo $check_alias | tr ' ' ',')
+            fi
+            key="DOMAIN"
+            result="$DOMAIN"
+            suspended=$SUSPENDED
+            object_time=$TIME
+            object_date=$DATE
+            ((i ++))
+        else
+            check_alias="$(echo $ALIAS| tr ',' '\n' |grep $object)"
+            if [ ! -z "$check_alias" ];then
+                key="DOMAIN"
+                result="$DOMAIN"
+                object_parent="$DOMAIN"
+                object_alias=$(echo $check_alias | tr ' ' ',')
+                suspended=$SUSPENDED
+                object_time=$TIME
+                object_date=$DATE
+                ((i ++))
+            fi
+        fi
+    fi
+
+    # DNS
+    if [ "$type" = 'dns.conf' ]; then
+        if [ -n "$(echo $DOMAIN |grep $object)" ]; then
+            key="DOMAIN"
+            result="$DOMAIN"
+            suspended=$SUSPENDED
+            object_time=$TIME
+            object_date=$DATE
+            ((i ++))
+        fi
+    fi
+
+    # DNS Records
+    if [ "$type" = 'dns' ]; then
+        if [ -n "$(echo $RECORD |grep $object)" ]; then
+            key="RECORD"
+            result="$RECORD.$DOMAIN"
+            suspended=$SUSPENDED
+            object_link=$ID
+            object_parent=$DOMAIN
+            object_time=$TIME
+            object_date=$DATE
+            ((i ++))
+            fi
+    fi
+
+    # MAIL
+    if [ "$type" = 'mail.conf' ]; then
+        if [ -n "$(echo $DOMAIN |grep $object)" ]; then
+            key="DOMAIN"
+            result="$DOMAIN"
+            suspended=$SUSPENDED
+            object_time=$TIME
+            object_date=$DATE
+            ((i ++))
+        fi
+    fi
+
+    # Mail Accounts
+    if [ "$type" = 'mail' ]; then
+        type='mail'
+            if [ -n "$(echo $ACCOUNT |grep $object)" ]; then
+            key="ACCOUNT"
+            dom="$(echo $row|cut -f 1 -d :|cut -f 9 -d /|sed -e "s/.conf//")"
+            result="$ACCOUNT@$dom"
+            suspended=$SUSPENDED
+            object_link=$ACCOUNT
+            object_parent=$dom
+            object_time=$TIME
+            object_date=$DATE
+            ((i ++))
+            fi
+    fi
+
+    # DB
+    if [ "$type" = 'db.conf' ]; then
+        if [ -n "$(echo $DB |grep $object)" ]; then
+            key="DATABASE"
+            result="$DB"
+            suspended=$SUSPENDED
+            object_time=$TIME
+            object_date=$DATE
+            ((i ++))
+        fi
+    fi
+
+    # Cron Jobs
+    if [ "$type" = 'cron.conf' ]; then
+        if [ -n "$(echo $CMD |grep $object)" ]; then
+            key="JOB"
+            result="$CMD"
+            suspended=$SUSPENDED
+            object_link=$JOB
+            object_parent=$JOB
+            object_time=$TIME
+            object_date=$DATE
+            ((i ++))
+        fi
+    fi
+
+    if [ ! -z "$result" ]; then
+        type=$(echo $type|cut -f1 -d \.)
+        str="ID='$i' USER='$user' TYPE='$type' KEY='$key'"
+        str="$str RESULT='$result' ALIAS='$dom_alias'"
+        str="$str LINK='$object_link' PARENT='$object_parent'"
+        str="$str SUSPENDED='$suspended' TIME='$object_time'"
+        str="$str DATE='$object_date'"
+        echo $str >> $conf
+    fi
+done
+
+IFS=$OLD_IFS
+
+# Defining fileds to select
+fields='$ID $USER $TYPE $KEY $RESULT $ALIAS $LINK $PARENT $SUSPENDED $TIME'
+fields="$fields \$DATE"
+
+# Listing domains
+case $format in
+    json)   json_list_search ;;
+    plain)  nohead=1; shell_list_search ;;
+    shell)  fields='$USER~$TYPE~$KEY~$RESULT~$ALIAS';
+            shell_list |column -t -s '~' ;;
+    *)      check_args '2' '0' 'user object [format]'
+esac
+
+rm $conf
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+#log_event "$OK" "$EVENT"
+
+exit

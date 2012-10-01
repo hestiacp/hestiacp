@@ -21,7 +21,7 @@ if ($_SESSION['user'] == 'admin') {
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
-        $back=getenv("HTTP_REFERER");
+        $back = $_SESSION['back'];
         if (!empty($back)) {
             header("Location: ".$back);
             exit;
@@ -42,7 +42,7 @@ if ($_SESSION['user'] == 'admin') {
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
-        $back=getenv("HTTP_REFERER");
+        $back = $_SESSION['back'];
         if (!empty($back)) {
             header("Location: ".$back);
             exit;
@@ -53,10 +53,11 @@ if ($_SESSION['user'] == 'admin') {
     }
 
 }
-$back=getenv("HTTP_REFERER");
+$back = $_SESSION['back'];
 if (!empty($back)) {
     header("Location: ".$back);
     exit;
 }
+
 header("Location: /list/dns/");
 exit;

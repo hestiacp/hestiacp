@@ -3,9 +3,8 @@
 // Init
 error_reporting(NULL);
 session_start();
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 $TAB = 'USER';
-
-// Inlcude functions
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Header

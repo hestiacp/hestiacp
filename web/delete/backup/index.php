@@ -24,10 +24,11 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 //}
 
-$back=getenv("HTTP_REFERER");
+$back = $_SESSION['back'];
 if (!empty($back)) {
     header("Location: ".$back);
     exit;
 }
+
 header("Location: /list/backup/");
 exit;

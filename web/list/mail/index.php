@@ -3,6 +3,7 @@
 error_reporting(NULL);
 session_start();
 $TAB = 'MAIL';
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Header
@@ -28,7 +29,6 @@ if ($_SESSION['user'] == 'admin') {
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_mail_acc.html');
     }
 } else {
-
     if (empty($_GET['domain'])){
         exec (VESTA_CMD."v_list_mail_domains $user json", $output, $return_var);
         $data = json_decode(implode('', $output), true);

@@ -18,10 +18,11 @@ if ($_SESSION['user'] == 'admin') {
     unset($output);
 }
 
-$back=getenv("HTTP_REFERER");
+$back = $_SESSION['back'];
 if (!empty($back)) {
     header("Location: ".$back);
     exit;
 }
+
 header("Location: /list/package/");
 exit;

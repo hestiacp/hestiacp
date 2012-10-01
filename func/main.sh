@@ -178,16 +178,16 @@ is_object_free() {
 is_object_valid() {
     if [ $2 = 'USER' ]; then
         if [ -d "$VESTA/data/users/$user" ]; then
-            object="OK"
+            sobject="OK"
         fi
     else
         if [ $2 = 'DBHOST' ]; then
-            object=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+            sobject=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
         else
-            object=$(grep "$2='$3'" $VESTA/data/users/$user/$1.conf)
+            sobject=$(grep "$2='$3'" $VESTA/data/users/$user/$1.conf)
         fi
     fi
-    if [ -z "$object" ]; then
+    if [ -z "$sobject" ]; then
         echo "Error: $3 not exist"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST

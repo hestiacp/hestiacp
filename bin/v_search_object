@@ -117,7 +117,7 @@ for user in $(ls $VESTA/data/users/); do
                 # Check domain alias
                 check_alias="$(echo $ALIAS| tr ',' '\n' |grep $object)"
                 if [ ! -z "$check_alias" ];then
-                    object_alias=$(echo $check_alias | tr ' ' ',')
+                    dom_alias=$(echo $check_alias | tr ' ' ',')
                 fi
                 key="DOMAIN"
                 result="$DOMAIN"
@@ -131,7 +131,7 @@ for user in $(ls $VESTA/data/users/); do
                     key="DOMAIN"
                     result="$DOMAIN"
                     object_parent="$DOMAIN"
-                    object_alias=$(echo $check_alias | tr ' ' ',')
+                    dom_alias=$(echo $check_alias | tr ' ' ',')
                     suspended=$SUSPENDED
                     object_time=$TIME
                     object_date=$DATE

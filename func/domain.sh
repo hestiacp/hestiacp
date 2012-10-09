@@ -384,6 +384,8 @@ upd_web_domain_values() {
     IFS=','
     server_alias=''
     alias_string=''
+    aliases_idn=''
+
     for dalias in $ALIAS; do
         dalias=$(idn -t --quiet -a $dalias)
         check_8k="$server_alias $dalias"

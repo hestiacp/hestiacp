@@ -26,8 +26,30 @@
                         </tr>
                     </table>
 
-                    <form id="vstobjects" name="v_edit_user" method="post">
+                    <form id="vstobjects" name="v_edit_web" method="post">
                         <script language="javascript">
+                            function WEBrandom() {
+                                var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+                                var string_length = 10;
+                                var webrandom = '';
+                                for (var i=0; i<string_length; i++) {
+                                    var rnum = Math.floor(Math.random() * chars.length);
+                                    webrandom += chars.substring(rnum,rnum+1);
+                                }
+                                document.v_edit_web.v_stats_password.value = webrandom;
+                            }
+
+                            function FTPrandom() {
+                                var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+                                var string_length = 10;
+                                var ftprandomstring = '';
+                                for (var i=0; i<string_length; i++) {
+                                    var rnum = Math.floor(Math.random() * chars.length);
+                                    ftprandomstring += chars.substring(rnum,rnum+1);
+                                }
+                                document.v_edit_web.v_ftp_password.value = ftprandomstring;
+                            }
+
                             function elementHideShow(elementToHideOrShow){
                                 var el = document.getElementById(elementToHideOrShow);
                                 if (el.style.display == "block") {
@@ -35,16 +57,6 @@
                                 } else {
                                     el.style.display = "block";
                                 }
-                            }
-                            function randomString() {
-                                var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                                var string_length = 10;
-                                var randomstring = '';
-                                for (var i=0; i<string_length; i++) {
-                                  var rnum = Math.floor(Math.random() * chars.length);
-                                  randomstring += chars.substring(rnum,rnum+1);
-                                }
-                                document.getElementById('v_password').value = randomstring;
                             }
                         </script>
                         <table class='data'>
@@ -106,16 +118,6 @@
                                         </tr>
                                         <tr>
                                             <td class="add-text" style="padding: 10px 0 0 2px;">
-                                                Error Logging
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" size="20" class="add-checkbox" name="v_elog" <?php if ($v_elog == 'yes') echo "checked=yes" ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
                                                 Nginx Support
                                             </td>
                                         </tr>
@@ -128,7 +130,7 @@
                                             <td>
                                                 <table style="display:<?php if (empty($v_nginx)) { echo 'none';} else {echo 'block';}?> ;" id="nginxtable">
                                                     <tr>
-                                                        <td class="add-text" style="padding: 9px 0 0 2px;">
+                                                        <td class="add-text" style="padding: 9px 0 0 0;">
                                                             Nginx Supported Extentions
                                                         </td>
                                                     </tr>
@@ -154,7 +156,7 @@
                                             <td>
                                                 <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                                     <tr>
-                                                        <td class="add-text" style="padding: 9px 0 0 2px;">
+                                                        <td class="add-text" style="padding: 9px 0 0 0;">
                                                             SSL HomeDirectory
                                                         </td>
                                                     </tr>
@@ -203,35 +205,127 @@
                                                 </table>
                                             </td>
                                         </tr>
-                                        <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics</td></tr>
-                                        <tr><td><select class="add-list" name="v_stats">
-                                        <?php
-                                            foreach ($stats as $key => $value) {
-                                                $svalue = "'".$value."'";
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
-                                                if (empty($v_stats)) $v_stats = 'none';
-                                                if (( $value == $v_stats ) || ($svalue == $v_stats )){
-                                                    echo ' selected' ;
-                                                }
-                                                echo ">".$value."</option>\n";
-                                            }
-                                        ?>
-                                        </select></td></tr>
-                                        <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistic Authorization</td></tr>
-                                        <tr><td><input type="checkbox" size="20" class="add-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');"> </tr>
-                                        <tr><td><table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v_add_web_domain_stats_user"><tr>
-                                            <tr><td class="add-text" style="padding: 9px 0 0 2px;">Web Statistics Username</td></tr>
-                                            <tr><td><input type="text" size="20" class="add-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".$v_stats_user;  ?>></tr>
-                                            <tr><td class="add-text" style="padding: 10px 0 0 2px;">Web Statistics Password <a href="javascript:randomString();" class="genpass">generate</a></td></tr>
-                                            <tr><td><input type="text" size="20" class="add-input" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".$v_stats_password;  ?> id="v_password"></tr>
-                                        </td></tr></tr></table>
-                                        <tr><td style="padding: 24px 0 0 0;">
-                                            <input type="submit" class="button" name="save" value="Save">
-                                            <input type="button" class="button" value="Cancel" onClick="<?php echo $back ?>">
-                                        </td></tr>
-                                        </form>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Web Statistics
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="add-list" name="v_stats">
+                                                    <?php
+                                                        foreach ($stats as $key => $value) {
+                                                            $svalue = "'".$value."'";
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            if (empty($v_stats)) $v_stats = 'none';
+                                                            if (( $value == $v_stats ) || ($svalue == $v_stats )){
+                                                                echo ' selected' ;
+                                                            }
+        	                                            echo ">".$value."</option>\n";
+                                                        }
+        	                                    ?> 
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Web Statistic Authorization
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="add-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v_add_web_domain_stats_user">
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 9px 0 0 2px;">
+                                                            Web Statistics Username
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="add-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".$v_stats_user;  ?>>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                            Web Statistics Password <a href="javascript:WEBrandom();" class="genpass">generate</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="add-input" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".$v_stats_password;  ?> id="v_password">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                Additional FTP Account
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="add-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('ftptable');">
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" id="ftptable" name="v_add_domain_ftp">
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 10px 0 0 0;">
+                                                            FTP Username
+                                                            <?php if (empty($v_ftp_user)) echo '<br><span style="font-size: 10pt; color:#555;">Prefix '.$user.'_ will be automaticaly added to username</span>' ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="add-input" name="v_ftp_user" <?php if (!empty($v_ftp_user)) echo "value=".$v_ftp_user;  ?>>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 10px 0 0 0;">
+                                                            FTP Password <a href="javascript:FTPrandom();" class="genpass" >generate</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text"  class="add-input" name="v_ftp_password" <?php if (!empty($v_ftp_password)) echo "value=".$v_ftp_password;  ?>>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                        if (empty($v_ftp_user)) {
+                                                            echo '';
+                                                     ?> 
+                                                    <tr>
+                                                        <td class="add-text" style="padding: 10px 0 0 0;">
+                                                             Send FTP credentials to email
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text"  class="add-input" name="v_ftp_email" <?php if (!empty($v_ftp_email)) echo "value=".$v_ftp_email;  ?>>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                        }
+                                                    ?> 
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 24px 0 0 0;">
+                                                <input type="submit" class="button" name="save" value="Save">
+                                                <input type="button" class="button" value="Cancel" onclick="<?php echo $back ?>">
+                                            </td>
+                                        </tr>
                                     </table>
                                 </td>
                             </tr>
-                            </table>
-                                                                                
+                        </table>
+                    </form>
+                                            

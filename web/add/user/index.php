@@ -36,6 +36,11 @@ if ($_SESSION['user'] == 'admin') {
         $v_lname = escapeshellarg($_POST['v_lname']);
         if (empty($_POST['v_notify'])) $v_notify = 'off';
 
+        // Validate email
+        if (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error_msg'] = 'Please enter valid email address.';
+        }
+
         // Check for errors
         if (!empty($errors[0])) {
             foreach ($errors as $i => $error) {
@@ -46,7 +51,9 @@ if ($_SESSION['user'] == 'admin') {
                 }
             }
             $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
-        } else {
+        }
+
+        if (empty($_SESSION['error_msg'])) {
             exec (VESTA_CMD."v_add_user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
@@ -67,7 +74,7 @@ if ($_SESSION['user'] == 'admin') {
                     $mailtext .= "https://".$_SERVER['HTTP_HOST']."/login/\n";
                     $mailtext .= "username: ".$_POST['v_username']."\n";
                     $mailtext .= "password: ".$_POST['v_password']."\n\n";
-                    $mailtext .= "Have a nice day,\nThe VestaCP Team\n";
+                    $mailtext .= "--\nVesta Control Panel\n";
                     send_email($to, $subject, $mailtext, $from);
                 }
 

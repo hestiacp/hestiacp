@@ -75,7 +75,7 @@ decrease_dbhost_values() {
     old_users="U_SYS_USERS='$U_SYS_USERS'"
     U_SYS_USERS=$(echo "$U_SYS_USERS" |\
         sed -e "s/,/\n/g"|\
-        sed -e "s/^$users$//g"|\
+        sed -e "s/^$user$//g"|\
         sed -e "/^$/d"|\
         sed -e ':a;N;$!ba;s/\n/,/g')
     new_users="U_SYS_USERS='$U_SYS_USERS'"

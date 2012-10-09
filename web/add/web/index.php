@@ -18,7 +18,20 @@ top_panel($user,$TAB);
         if (empty($_POST['v_ip'])) $errors[] = 'ip';
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))) $errors[] = 'ssl certificate';
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))) $errors[] = 'ssl key';
-        if ((!empty($_POST['v_aliases'])) || (!empty($_POST['v_elog'])) || (!empty($_POST['v_ssl'])) || (!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key'])) || (!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none') || (empty($_POST['v_nginx']))) $v_adv = 'yes';
+        if ((!empty($_POST['v_stats_user'])) && (empty($_POST['v_stats_password']))) $errors[] = 'stats user password';
+        if ((!empty($_POST['v_ftp_user'])) && (empty($_POST['v_ftp_password']))) $errors[] = 'ftp user password';
+
+        if ((!empty($_POST['v_aliases'])) && ($_POST['v_aliases'] != 'www.'.$_POST['v_domain'])) $v_adv = 'yes';
+        if ((!empty($_POST['v_ssl'])) || (!empty($_POST['v_elog']))) $v_adv = 'yes';
+        if ((!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key']))) $v_adv = 'yes';
+        if ((!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
+        if (empty($_POST['v_nginx'])) $v_adv = 'yes';
+        if (!empty($_POST['v_ftp'])) $v_adv = 'yes';
+
+        $v_nginx_ext = 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, ';
+        $v_nginx_ext .= 'doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, ';
+        $v_nginx_ext .= 'mpeg, flv, html, htm';
+        if ($_POST['v_nginx_ext'] != $v_nginx_ext) $v_adv = 'yes';
 
         // Protect input
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
@@ -38,7 +51,24 @@ top_panel($user,$TAB);
         $v_ssl_crt = $_POST['v_ssl_crt'];
         $v_ssl_key = $_POST['v_ssl_key'];
         $v_ssl_ca = $_POST['v_ssl_ca'];
+        $v_ssl_home = $data[$v_domain]['SSL_HOME'];
         $v_stats = escapeshellarg($_POST['v_stats']);
+        $v_stats_user = $data[$v_domain]['STATS_USER'];
+        $v_stats_password = $data[$v_domain]['STATS_PASSWORD'];
+        $v_nginx_ext = preg_replace("/\n/", " ", $_POST['v_nginx_ext']);
+        $v_nginx_ext = preg_replace("/,/", " ", $v_nginx_ext);
+        $v_nginx_ext = preg_replace('/\s+/', ' ',$v_nginx_ext);
+        $v_nginx_ext = trim($v_nginx_ext);
+        $v_nginx_ext = str_replace(' ', ", ", $v_nginx_ext);
+        $v_ftp = $_POST['v_ftp'];
+        $v_ftp_user = $_POST['v_ftp_user'];
+        $v_ftp_password = $_POST['v_ftp_password'];
+        $v_ftp_email = $_POST['v_ftp_email'];
+
+        // Validate email
+        if ((!empty($_POST['v_ftp_email'])) && (!filter_var($_POST['v_ftp_email'], FILTER_VALIDATE_EMAIL))) {
+            $_SESSION['error_msg'] = 'Please enter valid email address.';
+        }
 
         // Check for errors
         if (!empty($errors[0])) {
@@ -50,7 +80,9 @@ top_panel($user,$TAB);
                 }
             }
             $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
-        } else {
+        }
+
+        if (empty($_SESSION['error_msg'])) {
             // Add WEB
             exec (VESTA_CMD."v_add_web_domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." 'no'", $output, $return_var);
             if ($return_var != 0) {
@@ -90,43 +122,49 @@ top_panel($user,$TAB);
                 $valiases = trim($valiases);
                 $aliases = explode(" ", $valiases);
                 foreach ($aliases as $alias) {
-                    $alias = escapeshellarg($alias);
-                    if (empty($_SESSION['error_msg'])) {
-                        exec (VESTA_CMD."v_add_web_domain_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
-                        if ($return_var != 0) {
-                            $error = implode('<br>', $output);
-                            if (empty($error)) $error = 'Error: vesta did not return any output.';
-                            $_SESSION['error_msg'] = $error;
-                        }
-                    }
-                    unset($output);
-                    if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-                        exec (VESTA_CMD."v_add_dns_on_web_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
-                        if ($return_var != 0) {
-                            $error = implode('<br>', $output);
-                            if (empty($error)) $error = 'Error: vesta did not return any output.';
-                            $_SESSION['error_msg'] = $error;
+                    if ($alias == 'www.'.$_POST['v_domain']) {
+                        $www_alias = 'yes';
+                    } else {
+                        $alias = escapeshellarg($alias);
+                        if (empty($_SESSION['error_msg'])) {
+                            exec (VESTA_CMD."v_add_web_domain_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
+                            if ($return_var != 0) {
+                                $error = implode('<br>', $output);
+                                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                                $_SESSION['error_msg'] = $error;
+                            }
                         }
                         unset($output);
+                        if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
+                            exec (VESTA_CMD."v_add_dns_on_web_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
+                            if ($return_var != 0) {
+                                $error = implode('<br>', $output);
+                                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                                $_SESSION['error_msg'] = $error;
+                            }
+                            unset($output);
+                        }
                     }
                 }
             }
-
-            // Add ErrorLog
-            if ((!empty($_POST['v_elog'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_add_web_domain_elog ".$user." ".$v_domain." 'no'", $output, $return_var);
+            if ((empty($www_alias)) && (empty($_SESSION['error_msg']))) {
+                $alias =  preg_replace("/^www./i", "", $_POST['v_domain']);
+                $alias = 'www.'.$alias;
+                $alias = escapeshellarg($alias);
+                exec (VESTA_CMD."v_delete_web_domain_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
                     $_SESSION['error_msg'] = $error;
                 }
-                unset($output);
             }
+
 
             // Add Nginx
             if (($_POST['v_nginx'] == 'on') && (empty($_SESSION['error_msg']))) {
-                $nginx_ext = "'jpg,jpeg,gif,png,ico,css,zip,tgz,gz,rar,bz2,doc,xls,exe,pdf,ppt,txt,tar,wav,bmp,rtf,js,mp3,avi,mpeg,html,htm'";
-                exec (VESTA_CMD."v_add_web_domain_nginx ".$user." ".$v_domain." 'default' ".$nginx_ext." 'no'", $output, $return_var);
+                $ext = str_replace(' ', '', $v_nginx_ext);
+                $ext = escapeshellarg($ext);
+                exec (VESTA_CMD."v_add_web_domain_nginx ".$user." ".$v_domain." 'default' ".$ext." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -161,7 +199,8 @@ top_panel($user,$TAB);
                     fclose($fp);
                 }
 
-                exec (VESTA_CMD."v_add_web_domain_ssl ".$user." ".$v_domain." ".$tmpdir." 'same' 'no'", $output, $return_var);
+                $v_ssl_home = escapeshellarg($_POST['v_ssl_home']);
+                exec (VESTA_CMD."v_add_web_domain_ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -179,6 +218,52 @@ top_panel($user,$TAB);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
                     $_SESSION['error_msg'] = $error;
                 }
+                unset($output);
+
+                if ((!empty($_POST['v_stats_user'])) && (empty($_SESSION['error_msg']))) {
+                    $v_stats_user = escapeshellarg($_POST['v_stats_user']);
+                    $v_stats_password = escapeshellarg($_POST['v_stats_password']);
+                    exec (VESTA_CMD."v_add_web_domain_stats_user ".$user." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
+                    if ($return_var != 0) {
+                        $error = implode('<br>', $output);
+                        if (empty($error)) $error = 'Error: vesta did not return any output.';
+                        $_SESSION['error_msg'] = $error;
+                    }
+                    unset($v_stats_user);
+                    unset($v_stats_password);
+                    unset($output);
+                }
+            }
+
+
+            // Add FTP
+            if ((!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
+                $v_ftp_user = escapeshellarg($_POST['v_ftp_user']);
+                $v_ftp_password = escapeshellarg($_POST['v_ftp_password']);
+                exec (VESTA_CMD."v_add_web_domain_ftp ".$user." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                } else {
+                    if (!empty($v_ftp_email)) {
+                        $to = $_POST['v_ftp_email'];
+                        $subject = "FTP login credentials";
+                        $hostname = exec('hostname');
+                        $from = "Vesta Control Panel <noreply@".$hostname.">";
+                        $mailtext .= "Your ftp account has been created successfully and is ready to use.\n\n";
+                        $mailtext .= "ip: ".$_POST['v_ip']."\n";
+                        $mailtext .= "domain: ".$_POST['v_domain']."\n";
+                        $mailtext .= "username: ".$user."_".$_POST['v_ftp_user']."\n";
+                        $mailtext .= "password: ".$_POST['v_ftp_password']."\n\n";
+                        $mailtext .= "--\nVesta Control Panel\n";
+                        send_email($to, $subject, $mailtext, $from);
+                        unset($v_ftp_email);
+                    }
+                }
+                unset($v_ftp);
+                unset($v_ftp_user);
+                unset($v_ftp_password);
                 unset($output);
             }
 

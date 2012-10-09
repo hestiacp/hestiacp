@@ -123,12 +123,17 @@ if ($_SESSION['user'] == 'admin') {
 
         // Change contact email
         if (($v_email != $_POST['v_email']) && (empty($_SESSION['error_msg']))) {
-            $v_email = escapeshellarg($_POST['v_email']);
-            exec (VESTA_CMD."v_change_user_contact ".$v_username." ".$v_email, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
-                $_SESSION['error_msg'] = $error;
+            // Validate email
+            if (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['error_msg'] = 'Please enter valid email address.';
+            } else {
+                $v_email = escapeshellarg($_POST['v_email']);
+                exec (VESTA_CMD."v_change_user_contact ".$v_username." ".$v_email, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                }
             }
             unset($output);
         }

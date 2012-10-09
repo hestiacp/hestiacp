@@ -133,14 +133,14 @@ chown root:apache $conf
 # Changing file permissions
 chmod 660 $conf
 chmod 551 $HOMEDIR/$user/web/$domain
-chmod 751 $HOMEDIR/$user/web/$domain/private
-chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
-chmod 751 $HOMEDIR/$user/web/$domain/public_html
-chmod 751 $HOMEDIR/$user/web/$domain/public_shtml
-chmod 751 $HOMEDIR/$user/web/$domain/document_errors
-chmod -f -R 775 $HOMEDIR/$user/web/$domain/cgi-bin/*
-chmod -f -R 775 $HOMEDIR/$user/web/$domain/public_html/*
-chmod -f -R 775 $HOMEDIR/$user/web/$domain/document_errors/*
+chmod 771 $HOMEDIR/$user/web/$domain/private
+chmod 771 $HOMEDIR/$user/web/$domain/cgi-bin
+chmod 771 $HOMEDIR/$user/web/$domain/public_html
+chmod 771 $HOMEDIR/$user/web/$domain/public_shtml
+chmod 771 $HOMEDIR/$user/web/$domain/document_errors
+chmod -f -R 665 $HOMEDIR/$user/web/$domain/cgi-bin/*
+chmod -f -R 665 $HOMEDIR/$user/web/$domain/public_html/*
+chmod -f -R 665 $HOMEDIR/$user/web/$domain/document_errors/*
 chmod 551 $HOMEDIR/$user/web/$domain/stats
 chmod 551 $HOMEDIR/$user/web/$domain/logs
 chmod 640 /var/log/httpd/domains/$domain.*
@@ -169,9 +169,10 @@ increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Defining domain variables
 str="DOMAIN='$domain' IP='$ip' IP6='' ALIAS='$aliases' TPL='$template'"
-str="$str CGI='yes' ELOG='yes' SSL='no' SSL_HOME='single' NGINX=''"
-str="$str NGINX_EXT='' STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0'"
-str="$str U_BANDWIDTH='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+str="$str CGI='yes' ELOG='yes' SSL='no' SSL_HOME='same' FTP_USER=''"
+str="$str FTP_MD5='' NGINX='' NGINX_EXT='' STATS='' STATS_USER=''"
+str="$str STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0' SUSPENDED='no'"
+str="$str TIME='$TIME' DATE='$DATE'"
 
 # Registering domain
 echo "$str" >> $USER_DATA/web.conf

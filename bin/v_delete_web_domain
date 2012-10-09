@@ -87,6 +87,11 @@ if [ ! -z "$STATS" ] && [ "$STATS" != 'no' ]; then
     rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 fi
 
+# Deleting ftp account
+if [ ! -z "$FTP_USER" ]; then
+    /usr/sbin/userdel $FTP_USER
+fi
+
 # Deleting directory
 rm -rf $HOMEDIR/$user/web/$domain
 

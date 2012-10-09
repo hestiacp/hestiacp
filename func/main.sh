@@ -726,6 +726,8 @@ validate_format(){
             extentions)     validate_format_common "$arg" 'extentions' ;;
             fname)          validate_format_username "$arg" "$arg_name" ;;
             forward)        validate_format_email "$arg" ;;
+            ftp_password)   validate_format_password "$arg" ;;
+            ftp_user)       validate_format_username "$arg" "$arg_name" ;;
             host)           validate_format_domain "$arg" "$arg_name" ;;
             hour)           validate_format_mhdmw "$arg" $arg_name ;;
             id)             validate_format_int "$arg" ;;

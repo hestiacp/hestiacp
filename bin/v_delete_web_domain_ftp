@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list web domains
-# options: user [format]
+# info: delete webdomain ftp account.
+# options: user domain
 #
-# The function of obtaining the list of all user domains.
+# The function deletes additional ftp account.
 
 
 #----------------------------------------------------------#
@@ -11,45 +11,48 @@
 
 # Argument defenition
 user=$1
-format=${2-shell}
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
 
 # Includes
+source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
-validate_format 'user'
+check_args '2' "$#" 'user domain'
+validate_format 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$FTP_USER'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/web.conf
-
-# Defining fileds to select
-fields="\$DOMAIN \$IP \$IP6 \$U_DISK \$U_BANDWIDTH \$TPL \$ALIAS \$CGI"
-fields="$fields \$ELOG \$STATS \$STATS_USER \$SSL \$SSL_HOME \$FTP_USER"
-fields="$fields \$NGINX \$NGINX_EXT \$SUSPENDED \$TIME \$DATE"
-
-# Listing domains
-case $format in 
-    json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $DATE';
-            shell_list | column -t ;;
-    *)      check_args '1' '0' 'user [format]'
-esac
+# Adding user
+get_domain_values 'web'
+/usr/sbin/userdel $FTP_USER
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$FTP_USER' ''
+update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' ''
+
+# Logging
+log_history "deleted ftp account $FTP_USER for $domain"
+log_event "$OK" "$EVENT"
 
 exit

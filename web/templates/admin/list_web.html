@@ -50,6 +50,18 @@
                                     } else {
                                         $ssl_home = '';
                                     }
+                                    $web_stats='no';
+                                    if (!empty($data[$key]['STATS'])) {
+                                        $web_stats=$data[$key]['STATS'];
+                                    }
+                                    $ftp_user='no';
+                                    if (!empty($data[$key]['FTP_USER'])) {
+                                        $ftp_user=$data[$key]['FTP_USER'];
+                                    }
+                                    $nginx_support='no';
+                                    if (!empty($data[$key]['NGINX'])) {
+                                        $nginx_support='yes';
+                                    }
                                     if (strlen($data[$key]['NGINX_EXT']) > 16 ) {
                                         $nginx_ext_title = str_replace(',', ', ', $data[$key]['NGINX_EXT']);
                                         $nginx_ext = substr($data[$key]['NGINX_EXT'], 0, 16);
@@ -136,30 +148,10 @@
                                                     </tr>
                                                 </table>
                                             </td>
-                                            <td style="vertical-align:top;" width="250">
+                                            <td style="vertical-align:top;" width="300">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name">CGI Support:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['CGI'] ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">Error Log:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['ELOG'] ?></td>
-                                                    </tr>
-                                                <tr>
-                                                        <td class="counter-name">Web Statistics:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['STATS'] ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">Statistics Auth:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['STATS_AUTH'] ?></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td rowspan=4 style="vertical-align:top;" width="300">
-                                                <table width="300">
-                                                    <tr>
-                                                        <td class="counter-name" width="40%">SSL Support:</td>
+                                                        <td class="counter-name" width="110">SSL Support:</td>
                                                         <td class="counter-value"><?php echo $data[$key]['SSL'] ?></td>
                                                     </tr>
                                                     <tr>
@@ -167,12 +159,24 @@
                                                         <td class="counter-value"><?php echo $ssl_home ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name">Nginx Template:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['NGINX'] ?></td>
+                                                        <td class="counter-name">Nginx Support:</td>
+                                                        <td class="counter-value"><?php echo $nginx_support ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">Nginx Extentions:</td>
                                                         <td class="counter-value" <?php if (!empty($nginx_ext_title)) echo "title='".$nginx_ext_title."'" ?>><?php echo $nginx_ext ?></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td rowspan=4 style="vertical-align:top;" width="240">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name">Web Statistics: </td>
+                                                        <td class="counter-value"> <?php echo $web_stats ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name"> Additional FTP:</td>
+                                                        <td class="counter-value"> <?php echo $ftp_user ?></td>
                                                     </tr>
                                                 </table>
                                             </td>

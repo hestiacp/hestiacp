@@ -76,7 +76,7 @@ conf=$USER_DATA/web.conf
 
 # Defining fileds to select
 fields='$DOMAIN $IP $IP6 $U_DISK $U_BANDWIDTH $TPL $ALIAS $CGI $ELOG $STATS
- $STATS_USER $SSL $SSL_HOME $NGINX $NGINX_EXT $SUSPENDED $TIME $DATE'
+ $STATS_USER $SSL $SSL_HOME $FTP_USER $NGINX $NGINX_EXT $SUSPENDED $TIME $DATE'
 
 # Listing domains
 case $format in 

@@ -77,12 +77,11 @@ for domain in $(shell_list) ; do
           /var/log/httpd/domains/$domain.error.log
 
     chmod 551 $HOMEDIR/$user/web/$domain
-    chmod 751 $HOMEDIR/$user/web/$domain/private
-    chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
-    chmod 751 $HOMEDIR/$user/web/$domain/public_html
-    chmod 751 $HOMEDIR/$user/web/$domain/public_shtml
-    chmod 751 $HOMEDIR/$user/web/$domain/document_errors
-    chmod -f -R 775 $HOMEDIR/$user/web/$domain/document_errors/*
+    chmod 771 $HOMEDIR/$user/web/$domain/private
+    chmod 771 $HOMEDIR/$user/web/$domain/cgi-bin
+    chmod 771 $HOMEDIR/$user/web/$domain/public_html
+    chmod 771 $HOMEDIR/$user/web/$domain/public_shtml
+    chmod 771 $HOMEDIR/$user/web/$domain/document_errors
     chmod 551 $HOMEDIR/$user/web/$domain/stats
     chmod 551 $HOMEDIR/$user/web/$domain/logs
     chmod 640 /var/log/httpd/domains/$domain.*
@@ -208,6 +207,31 @@ for domain in $(shell_list) ; do
         suspended_web=$((suspended_web + 1))
     fi
     user_domains=$((user_domains + 1))
+
+    # Checking ftp
+    if [ ! -z "$FTP_USER" ]; then
+        if [ -z "$(grep ^$FTP_USER: /etc/passwd)" ]; then
+            /usr/sbin/adduser $FTP_USER -g $user -s /sbin/nologin -M \
+                -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
+
+            shadow='/etc/shadow'
+            shdw=$(grep "^$FTP_USER:" $shadow)
+            shdw3=$(echo "$shdw" | cut -f3 -d :)
+            shdw4=$(echo "$shdw" | cut -f4 -d :)
+            shdw5=$(echo "$shdw" | cut -f5 -d :)
+            shdw6=$(echo "$shdw" | cut -f6 -d :)
+            shdw7=$(echo "$shdw" | cut -f7 -d :)
+            shdw8=$(echo "$shdw" | cut -f8 -d :)
+            shdw9=$(echo "$shdw" | cut -f9 -d :)
+            chmod u+w $shadow
+            sed -i "/^$FTP_USER:*/d" $shadow
+            shdw_str="$FTP_USER:$FTP_MD5:$shdw3:$shdw4:$shdw5:$shdw6"
+            shdw_str="$shdw_str:$shdw7:$shdw8:$shdw9"
+            echo "$shdw_str" >> $shadow
+            chmod u-w $shadow
+        fi
+    fi
+
 done
 
 # Renaming tmp config

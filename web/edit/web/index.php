@@ -61,6 +61,8 @@ top_panel($user,$TAB);
         $v_stats = $data[$v_domain]['STATS'];
         $v_stats_user = $data[$v_domain]['STATS_USER'];
         if (!empty($v_stats_user)) $v_stats_password = "••••••••";
+        $v_ftp_user = $data[$v_domain]['FTP_USER'];
+        if (!empty($v_ftp_user)) $v_ftp_password = "••••••••";
         $v_suspended = $data[$v_domain]['SUSPENDED'];
         if ( $v_suspended == 'yes' ) {
             $v_status =  'suspended';
@@ -195,30 +197,6 @@ top_panel($user,$TAB);
                     unset($output);
                 }
             }
-        }
-
-        // Elog
-        if (($v_elog == 'yes') && (empty($_POST['v_elog'])) && (empty($_SESSION['error_msg']))) {
-            exec (VESTA_CMD."v_delete_web_domain_elog ".$v_username." ".$v_domain." 'no'", $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
-                $_SESSION['error_msg'] = $error;
-            }
-            unset($output);
-            $restart_web = 'yes';
-            $v_elog = 'no';
-        }
-        if (($v_elog == 'no') && (!empty($_POST['v_elog'])) && (empty($_SESSION['error_msg'])) ) {
-            exec (VESTA_CMD."v_add_web_domain_elog ".$v_username." ".$v_domain." 'no'", $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
-                $_SESSION['error_msg'] = $error;
-            }
-            unset($output);
-            $restart_web = 'yes';
-            $v_elog = 'yes';
         }
 
         // Nginx
@@ -487,6 +465,91 @@ top_panel($user,$TAB);
             }
         }
 
+        // FTP Account
+        if ((!empty($v_ftp_user)) && (empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
+            exec (VESTA_CMD."v_delete_web_domain_ftp ".$v_username." ".$v_domain, $output, $return_var);
+            if ($return_var != 0) {
+                $error = implode('<br>', $output);
+                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                $_SESSION['error_msg'] = $error;
+            }
+            unset($output);
+            $v_ftp= '';
+            $v_ftp_user = '';
+            $v_ftp_password = '';
+        }
+        if ((!empty($v_ftp_user)) && (!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
+            if (empty($_POST['v_ftp_user'])) $errors[] = 'ftp user';
+            if (empty($_POST['v_ftp_password'])) $errors[] = 'ftp password';
+            if (!empty($errors[0])) {
+                foreach ($errors as $i => $error) {
+                    if ( $i == 0 ) {
+                        $error_msg = $error;
+                    } else {
+                        $error_msg = $error_msg.", ".$error;
+                    }
+                }
+                $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
+            }
+            if (($v_ftp_user != $_POST['v_ftp_user']) || ($_POST['v_ftp_password'] != "••••••••" ) && (empty($_SESSION['error_msg']))) {
+                $v_ftp_user = preg_replace("/^".$user."_/", "", $_POST['v_ftp_user']);
+                $v_ftp_user = escapeshellarg($v_ftp_user);
+                $v_ftp_password = escapeshellarg($_POST['v_ftp_password']);
+                exec (VESTA_CMD."v_add_web_domain_ftp ".$v_username." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                }
+                unset($output);
+                $v_ftp_user =  $user."_".$_POST['v_ftp_user'];
+                $v_ftp_password = "••••••••";
+            }
+        }
+
+        if ((empty($v_ftp_user)) && (!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
+            if ((!empty($_POST['v_ftp_email'])) && (!filter_var($_POST['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = 'Please enter valid email address.';
+            if (empty($_POST['v_ftp_user'])) $errors[] = 'ftp username';
+            if (empty($_POST['v_ftp_password'])) $errors[] = 'ftp password';
+            if (!empty($errors[0])) {
+                foreach ($errors as $i => $error) {
+                    if ( $i == 0 ) {
+                        $error_msg = $error;
+                    } else {
+                        $error_msg = $error_msg.", ".$error;
+                    }
+                }
+                $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
+            }
+            if (empty($_SESSION['error_msg'])) {
+                $v_ftp_user = escapeshellarg($_POST['v_ftp_user']);
+                $v_ftp_password = escapeshellarg($_POST['v_ftp_password']);
+                exec (VESTA_CMD."v_add_web_domain_ftp ".$v_username." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    $_SESSION['error_msg'] = $error;
+                } else {
+                    if (!empty($_POST['v_ftp_email'])) {
+                        $to = $_POST['v_ftp_email'];
+                        $subject = "FTP login credentials";
+                        $hostname = exec('hostname');
+                        $from = "Vesta Control Panel <noreply@".$hostname.">";
+                        $mailtext .= "Your ftp account has been created successfully and is ready to use.\n\n";
+                        $mailtext .= "ip: ".$v_ip."\n";
+                        $mailtext .= "domain: ".$_GET['domain']."\n";
+                        $mailtext .= "username: ".$user."_".$_POST['v_ftp_user']."\n";
+                        $mailtext .= "password: ".$_POST['v_ftp_password']."\n\n";
+                        $mailtext .= "--\nVesta Control Panel\n";
+                        send_email($to, $subject, $mailtext, $from);
+                        unset($v_ftp_email);
+                    }
+                }
+                unset($output);
+                $v_ftp_user =  $user."_".$_POST['v_ftp_user'];
+                $v_ftp_password = "••••••••";
+            }
+        }
 
         // Restart web
         if (!empty($restart_web) && (empty($_SESSION['error_msg']))) {

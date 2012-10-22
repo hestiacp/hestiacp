@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$TAB = 'RESET PASSWORD';
 // 
 function send_email($to,$subject,$mailtext,$from) {
     $charset = "utf-8";
@@ -85,6 +85,7 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
     }
 }
 
+require_once '../templates/header.html';
 if (empty($_GET['action'])) {
     require_once '../templates/reset_1.html';
 } else {

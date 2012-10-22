@@ -5,6 +5,8 @@ if (isset($_GET['logout'])) {
     session_destroy();
 }
 
+$TAB = 'LOGIN';
+
 if (isset($_SESSION['user'])) {
     if ($_SESSION['user'] ==  'admin' && !empty($_GET['loginas'])) {
         if ($_GET['loginas'] == 'admin') {
@@ -38,6 +40,7 @@ if (isset($_SESSION['user'])) {
             }
         }
     }
+    require_once '../templates/header.html';
     require_once '../templates/login.html';
 }
 ?>

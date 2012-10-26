@@ -44,8 +44,8 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
         $mailtext .= "https://".$_SERVER['HTTP_HOST']."/reset/?action=confirm&user=".$user."&code=".$rkey."\n\n";
         $mailtext .= "Alternately, you may go to https://".$_SERVER['HTTP_HOST']."/reset/?action=code&user=".$user." and enter the following password reset code:\n";
         $mailtext .= $rkey."\n\n";
-        $mailtext .= "If you did not request a new password please ignore this letter and accept our apologies — we didn't intend to disturb you.\n";
-        $mailtext .= "Thanks,\nThe VestaCP Team\n";
+        $mailtext .= "If you did not request a new password please ignore this letter and accept our apologies — we didn't intend to disturb you.\n\n";
+        $mailtext .= "--\nVesta Control Panel\n";
         if (!empty($rkey)) send_email($to, $subject, $mailtext, $from);
         unset($output);
     }

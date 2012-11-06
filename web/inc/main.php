@@ -1,7 +1,4 @@
 <?php
-// Set timezone
-date_default_timezone_set('UTC');
-
 // Check user session
 if (!isset($_SESSION['user'])) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];

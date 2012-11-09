@@ -25,7 +25,7 @@ top_panel($user,$TAB);
     }
 
     $v_database = escapeshellarg($_GET['database']);
-    exec (VESTA_CMD."v_list_database ".$user." ".$v_database." 'json'", $output, $return_var);
+    exec (VESTA_CMD."v-list-database ".$user." ".$v_database." 'json'", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -55,7 +55,7 @@ top_panel($user,$TAB);
             // Change password
             if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
                 $v_password = escapeshellarg($_POST['v_password']);
-                exec (VESTA_CMD."v_change_database_password ".$v_username." ".$v_database." ".$v_password, $output, $return_var);
+                exec (VESTA_CMD."v-change-database-password ".$v_username." ".$v_database." ".$v_password, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';

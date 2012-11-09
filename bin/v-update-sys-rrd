@@ -1,0 +1,137 @@
+#!/bin/bash
+# info: update system rrd charts
+# options: none
+#
+# The script is wrapper for all rrd functions. It updates all 
+# v-update-sys-rrd_* at once.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system enviroment  as we run this script
+# mostly by cron wich do not read it by itself
+source /etc/profile
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+# Another workaround for cron enviroment
+PATH="$PATH:$BIN"
+export PATH
+
+# Checking rrddir
+if [ ! -d "$RRD" ]; then
+    mkdir -p $RRD
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking daily period
+if [ -e "$RRD/daily.rrd" ]; then
+    mtime=$(stat -c "%Y" $RRD/daily.rrd)
+    ctime=$(date +%s)
+    dtime=$((ctime - mtime))
+    # Update every 5 minute
+    if [ "$dtime" -gt '290' ]; then
+        touch $RRD/daily.rrd
+        periods="$periods daily"
+    fi
+else
+    touch $RRD/daily.rrd
+    periods="$periods daily"
+fi
+
+# Checking weekly period
+if [ -e "$RRD/weekly.rrd" ]; then
+    mtime=$(stat -c "%Y" $RRD/weekly.rrd)
+    ctime=$(date +%s)
+    dtime=$((ctime - mtime))
+    # Update every hour
+    if [ "$dtime" -gt '3590' ]; then
+        touch $RRD/weekly.rrd
+        periods="$periods weekly"
+    fi
+else
+    touch $RRD/weekly.rrd
+    periods="$periods weekly"
+fi
+
+# Checking monthly period
+if [ -e "$RRD/monthly.rrd" ]; then
+    mtime=$(stat -c "%Y" $RRD/monthly.rrd)
+    ctime=$(date +%s)
+    dtime=$((ctime - mtime))
+    # Update every 6 hours
+    if [ "$dtime" -gt '21590' ]; then
+        touch $RRD/monthly.rrd
+        periods="$periods monthly"
+    fi
+else
+    touch $RRD/monthly.rrd
+    periods="$periods monthly"
+fi
+
+# Checking yearly period
+if [ -e "$RRD/yearly.rrd" ]; then
+    mtime=$(stat -c "%Y" $RRD/yearly.rrd)
+    ctime=$(date +%s)
+    dtime=$((ctime - mtime))
+    # Update every 12 hours
+    if [ "$dtime" -gt '43190' ]; then
+        touch $RRD/yearly.rrd
+        periods="$periods yearly"
+    fi
+else
+    touch $RRD/yearly.rrd
+    periods="$periods yearly"
+fi
+
+
+# Updateing system stats
+for period in $periods; do
+
+    $BIN/v-update-sys-rrd-la $period
+    $BIN/v-update-sys-rrd-net $period
+    $BIN/v-update-sys-rrd-mem $period
+    $BIN/v-update-sys-rrd-ssh $period
+
+    # Updating web stats
+    if [ "$WEB_SYSTEM" = 'apache' ]; then
+        $BIN/v-update-sys-rrd-httpd $period
+    fi
+
+    if [ "$PROXY_SYSTEM" = 'nginx' ]; then
+        $BIN/v-update-sys-rrd-nginx $period
+    fi
+
+    # Updating ftp stats
+    if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
+        $BIN/v-update-sys-rrd-ftp $period
+    fi
+
+    # Updating db stats
+    if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+        for type in ${DB_SYSTEM//,/ }; do
+            # Switching on db type
+            case $type in
+                mysql) $BIN/v-update-sys-rrd-mysql $period ;;
+                pgsql) $BIN/v-update-sys-rrd-pgsql $period ;;
+            esac
+        done
+    fi
+done
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# No Logging
+#log_event "$OK" "$EVENT"
+
+exit

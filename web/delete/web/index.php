@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 if (!empty($_GET['domain'])) {
     $v_username = escapeshellarg($user);
     $v_domain = escapeshellarg($_GET['domain']);
-    exec (VESTA_CMD."v_delete_web_domain ".$v_username." ".$v_domain, $output, $return_var);
+    exec (VESTA_CMD."v-delete-web-domain ".$v_username." ".$v_domain, $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -23,9 +23,9 @@ if (!empty($_GET['domain'])) {
 
     // DNS
     if ($return_var == 0) {
-        exec (VESTA_CMD."v_list_dns_domain ".$v_username." ".$v_domain." json", $output, $lreturn_var);
+        exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain." json", $output, $lreturn_var);
         if ($lreturn_var == 0 ) {
-            exec (VESTA_CMD."v_delete_dns_domain ".$v_username." ".$v_domain, $output, $return_var);
+            exec (VESTA_CMD."v-delete-dns-domain ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -37,9 +37,9 @@ if (!empty($_GET['domain'])) {
 
     // Mail
     if ($return_var == 0) {
-        exec (VESTA_CMD."v_list_mail_domain ".$v_username." ".$v_domain." json", $output, $lreturn_var);
+        exec (VESTA_CMD."v-list-mail-domain ".$v_username." ".$v_domain." json", $output, $lreturn_var);
         if ($lreturn_var == 0 ) {
-            exec (VESTA_CMD."v_delete_mail_domain ".$v_username." ".$v_domain, $output, $return_var);
+            exec (VESTA_CMD."v-delete-mail-domain ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';

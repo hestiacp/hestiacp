@@ -27,7 +27,7 @@ top_panel($user,$TAB);
     // Check domain
     if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
         $v_domain = escapeshellarg($_GET['domain']);
-        exec (VESTA_CMD."v_list_mail_domain ".$user." ".$v_domain." json", $output, $return_var);
+        exec (VESTA_CMD."v-list-mail-domain ".$user." ".$v_domain." json", $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -57,7 +57,7 @@ top_panel($user,$TAB);
 
             // Antispam
             if (($v_antispam == 'yes') && (empty($_POST['v_antispam'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_delete_mail_domain_antispam ".$v_username." ".$v_domain, $output, $return_var);
+                exec (VESTA_CMD."v-delete-mail-domain-antispam ".$v_username." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -67,7 +67,7 @@ top_panel($user,$TAB);
                 unset($output);
             }
             if (($v_antispam == 'no') && (!empty($_POST['v_antispam'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_add_mail_domain_antispam ".$v_username." ".$v_domain, $output, $return_var);
+                exec (VESTA_CMD."v-add-mail-domain-antispam ".$v_username." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -79,7 +79,7 @@ top_panel($user,$TAB);
 
             // Antivirus
             if (($v_antivirus == 'yes') && (empty($_POST['v_antivirus'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_delete_mail_domain_antivirus ".$v_username." ".$v_domain, $output, $return_var);
+                exec (VESTA_CMD."v-delete-mail-domain-antivirus ".$v_username." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -89,7 +89,7 @@ top_panel($user,$TAB);
                 unset($output);
             }
             if (($v_antivirus == 'no') && (!empty($_POST['v_antivirus'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_add_mail_domain_antivirus ".$v_username." ".$v_domain, $output, $return_var);
+                exec (VESTA_CMD."v-add-mail-domain-antivirus ".$v_username." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -105,7 +105,7 @@ top_panel($user,$TAB);
 
             // DKIM
             if (($v_dkim == 'yes') && (empty($_POST['v_dkim'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_delete_mail_domain_dkim ".$v_username." ".$v_domain, $output, $return_var);
+                exec (VESTA_CMD."v-delete-mail-domain-dkim ".$v_username." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -115,7 +115,7 @@ top_panel($user,$TAB);
                 unset($output);
             }
             if (($v_dkim == 'no') && (!empty($_POST['v_dkim'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_add_mail_domain_dkim ".$v_username." ".$v_domain, $output, $return_var);
+                exec (VESTA_CMD."v-add-mail-domain-dkim ".$v_username." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -127,7 +127,7 @@ top_panel($user,$TAB);
 
             // Catchall
             if ((!empty($v_catchall)) && (empty($_POST['v_catchall'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_delete_mail_domain_catchall ".$v_username." ".$v_domain, $output, $return_var);
+                exec (VESTA_CMD."v-delete-mail-domain-catchall ".$v_username." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -140,7 +140,7 @@ top_panel($user,$TAB);
             if ((!empty($v_catchall)) && (!empty($_POST['v_catchall'])) && (empty($_SESSION['error_msg']))) {
                 if ($v_catchall != $_POST['v_catchall']) {
                     $v_catchall = escapeshellarg($_POST['v_catchall']);
-                    exec (VESTA_CMD."v_change_mail_domain_catchall ".$v_username." ".$v_domain." ".$v_catchall, $output, $return_var);
+                    exec (VESTA_CMD."v-change-mail-domain-catchall ".$v_username." ".$v_domain." ".$v_catchall, $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
                         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -152,7 +152,7 @@ top_panel($user,$TAB);
 
             if ((empty($v_catchall)) && (!empty($_POST['v_catchall'])) && (empty($_SESSION['error_msg']))) {
                 $v_catchall = escapeshellarg($_POST['v_catchall']);
-                exec (VESTA_CMD."v_add_mail_domain_catchall ".$v_username." ".$v_domain." ".$v_catchall, $output, $return_var);
+                exec (VESTA_CMD."v-add-mail-domain-catchall ".$v_username." ".$v_domain." ".$v_catchall, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -173,7 +173,7 @@ top_panel($user,$TAB);
         $v_username = $user;
         $v_domain = escapeshellarg($_GET['domain']);
         $v_account = escapeshellarg($_GET['account']);
-        exec (VESTA_CMD."v_list_mail_account ".$user." ".$v_domain." ".$v_account." 'json'", $output, $return_var);
+        exec (VESTA_CMD."v-list-mail-account ".$user." ".$v_domain." ".$v_account." 'json'", $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -192,7 +192,7 @@ top_panel($user,$TAB);
             $v_quota = $data[$v_account]['QUOTA'];
             $v_autoreply = $data[$v_account]['AUTOREPLY'];
             if ( $v_autoreply == 'yes' ) {
-                exec (VESTA_CMD."v_list_mail_account_autoreply ".$user." '".$v_domain."' '".$v_account."' json", $output, $return_var);
+                exec (VESTA_CMD."v-list-mail-account-autoreply ".$user." '".$v_domain."' '".$v_account."' json", $output, $return_var);
                 $autoreply_str = json_decode(implode('', $output), true);
                 unset($output);
                 $v_autoreply_message = $autoreply_str[$v_account]['MSG'];
@@ -215,7 +215,7 @@ top_panel($user,$TAB);
             // Password
             if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
                 $v_password = escapeshellarg($_POST['v_password']);
-                exec (VESTA_CMD."v_change_mail_account_password ".$v_username." ".$v_domain." ".$v_account." ".$v_password, $output, $return_var);
+                exec (VESTA_CMD."v-change-mail-account-password ".$v_username." ".$v_domain." ".$v_account." ".$v_password, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -232,7 +232,7 @@ top_panel($user,$TAB);
                 } else {
                     $v_quota = escapeshellarg($_POST['v_quota']);
                 }
-                exec (VESTA_CMD."v_change_mail_account_quota ".$v_username." ".$v_domain." ".$v_account." ".$v_quota, $output, $return_var);
+                exec (VESTA_CMD."v-change-mail-account-quota ".$v_username." ".$v_domain." ".$v_account." ".$v_quota, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -253,7 +253,7 @@ top_panel($user,$TAB);
                 $result = array_diff($valiases, $aliases);
                 foreach ($result as $alias) {
                     if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
-                        exec (VESTA_CMD."v_delete_mail_account_alias ".$v_username." ".$v_domain." ".$v_account." '".$alias."'", $output, $return_var);
+                        exec (VESTA_CMD."v-delete-mail-account-alias ".$v_username." ".$v_domain." ".$v_account." '".$alias."'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -265,7 +265,7 @@ top_panel($user,$TAB);
                 $result = array_diff($aliases, $valiases);
                 foreach ($result as $alias) {
                     if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
-                        exec (VESTA_CMD."v_add_mail_account_alias ".$v_username." ".$v_domain." ".$v_account." '".$alias."'", $output, $return_var);
+                        exec (VESTA_CMD."v-add-mail-account-alias ".$v_username." ".$v_domain." ".$v_account." '".$alias."'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -287,7 +287,7 @@ top_panel($user,$TAB);
                 $result = array_diff($vfwd, $fwd);
                 foreach ($result as $forward) {
                     if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
-                        exec (VESTA_CMD."v_delete_mail_account_forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
+                        exec (VESTA_CMD."v-delete-mail-account-forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -299,7 +299,7 @@ top_panel($user,$TAB);
                 $result = array_diff($fwd, $vfwd);
                 foreach ($result as $forward) {
                     if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
-                        exec (VESTA_CMD."v_add_mail_account_forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
+                        exec (VESTA_CMD."v-add-mail-account-forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -312,7 +312,7 @@ top_panel($user,$TAB);
 
             // Autoreply
             if (($v_autoreply == 'yes') && (empty($_POST['v_autoreply'])) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_delete_mail_account_autoreply ".$v_username." ".$v_domain." ".$v_account, $output, $return_var);
+                exec (VESTA_CMD."v-delete-mail-account-autoreply ".$v_username." ".$v_domain." ".$v_account, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -326,7 +326,7 @@ top_panel($user,$TAB);
                 if ( $v_autoreply_message != str_replace("\r\n", "\n", $_POST['v_autoreply_message'])) {
                     $v_autoreply_message = str_replace("\r\n", "\n", $_POST['v_autoreply_message']);
                     $v_autoreply_message = escapeshellarg($v_autoreply_message);
-                    exec (VESTA_CMD."v_add_mail_account_autoreply ".$v_username." ".$v_domain." ".$v_account." ".$v_autoreply_message, $output, $return_var);
+                    exec (VESTA_CMD."v-add-mail-account-autoreply ".$v_username." ".$v_domain." ".$v_account." ".$v_autoreply_message, $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
                         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -342,7 +342,7 @@ top_panel($user,$TAB);
                 if (empty($_SESSION['error_msg'])) {
                     $v_autoreply_message = str_replace("\r\n", "\n", $_POST['v_autoreply_message']);
                     $v_autoreply_message = escapeshellarg($v_autoreply_message);
-                    exec (VESTA_CMD."v_add_mail_account_autoreply ".$v_username." ".$v_domain." ".$v_account." ".$v_autoreply_message, $output, $return_var);
+                    exec (VESTA_CMD."v-add-mail-account-autoreply ".$v_username." ".$v_domain." ".$v_account." ".$v_autoreply_message, $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
                         if (empty($error)) $error = 'Error: vesta did not return any output.';

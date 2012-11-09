@@ -43,7 +43,7 @@ top_panel($user,$TAB);
             // Add Database
             $v_type = escapeshellarg($_POST['v_type']);
             $v_charset = escapeshellarg($_POST['v_charset']);
-            exec (VESTA_CMD."v_add_database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." 'default' ".$v_charset, $output, $return_var);
+            exec (VESTA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." 'default' ".$v_charset, $output, $return_var);
             $v_type = $_POST['v_type'];
             $v_charset = $_POST['v_charset'];
             if ($return_var != 0) {
@@ -63,7 +63,7 @@ top_panel($user,$TAB);
             }
         }
     }
-    exec (VESTA_CMD."v_list_database_types 'json'", $output, $return_var);
+    exec (VESTA_CMD."v-list-database-types 'json'", $output, $return_var);
     $db_types = json_decode(implode('', $output), true);
     unset($output);
 

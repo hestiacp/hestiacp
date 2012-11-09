@@ -13,21 +13,21 @@ $action = $_POST['action'];
 if ($_SESSION['user'] == 'admin') {
     if (empty($account)) {
         switch ($action) {
-            case 'delete': $cmd='v_delete_mail_domain';
+            case 'delete': $cmd='v-delete-mail-domain';
                 break;
-            case 'suspend': $cmd='v_suspend_mail_domain';
+            case 'suspend': $cmd='v-suspend-mail-domain';
                 break;
-            case 'unsuspend': $cmd='v_unsuspend_mail_domain';
+            case 'unsuspend': $cmd='v-unsuspend-mail-domain';
                 break;
             default: header("Location: /list/mail/"); exit;
         }
     } else {
         switch ($action) {
-            case 'delete': $cmd='v_delete_mail_account';
+            case 'delete': $cmd='v-delete-mail-account';
                 break;
-            case 'suspend': $cmd='v_suspend_mail_account';
+            case 'suspend': $cmd='v-suspend-mail-account';
                 break;
-            case 'unsuspend': $cmd='v_unsuspend_mail_account';
+            case 'unsuspend': $cmd='v-unsuspend-mail-account';
                 break;
             default: header("Location: /list/mail/?domain=".$domain); exit;
         }
@@ -35,13 +35,13 @@ if ($_SESSION['user'] == 'admin') {
 } else {
     if (empty($account)) {
         switch ($action) {
-            case 'delete': $cmd='v_delete_mail_domain';
+            case 'delete': $cmd='v-delete-mail-domain';
                 break;
             default: header("Location: /list/mail/"); exit;
         }
     } else {
         switch ($action) {
-            case 'delete': $cmd='v_delete_mail_account';
+            case 'delete': $cmd='v-delete-mail-account';
                 break;
             default: header("Location: /list/mail/?domain=".$domain); exit;
         }

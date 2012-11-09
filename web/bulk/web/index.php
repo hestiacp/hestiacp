@@ -11,25 +11,25 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'delete': $cmd='v_delete_web_domain';
-                        $cmd_dns='v_delete_dns_domain';
-                        $cmd_mail='v_delete_mail_domain';
+        case 'delete': $cmd='v-delete-web-domain';
+                        $cmd_dns='v-delete-dns-domain';
+                        $cmd_mail='v-delete-mail-domain';
             break;
-        case 'suspend': $cmd='v_suspend_web_domain';
-                        $cmd_dns='v_suspend_dns_domain';
-                        $cmd_mail='v_suspend_mail_domain';
+        case 'suspend': $cmd='v-suspend-web-domain';
+                        $cmd_dns='v-suspend-dns-domain';
+                        $cmd_mail='v-suspend-mail-domain';
             break;
-        case 'unsuspend': $cmd='v_unsuspend_web_domain';
-                        $cmd_dns='v_unsuspend_dns_domain';
-                        $cmd_mail='v_unsuspend_mail_domain';
+        case 'unsuspend': $cmd='v-unsuspend-web-domain';
+                        $cmd_dns='v-unsuspend-dns-domain';
+                        $cmd_mail='v-unsuspend-mail-domain';
             break;
         default: header("Location: /list/web/"); exit;
     }
 } else {
     switch ($action) {
-        case 'delete': $cmd='v_delete_web_domain';
-                        $cmd_dns='v_delete_dns_domain';
-                        $cmd_mail='v_delete_mail_domain';
+        case 'delete': $cmd='v-delete-web-domain';
+                        $cmd_dns='v-delete-dns-domain';
+                        $cmd_mail='v-delete-mail-domain';
             break;
         default: header("Location: /list/web/"); exit;
     }
@@ -43,7 +43,7 @@ foreach ($domain as $value) {
 
     // DNS
     if ($return_var == 0) {
-        exec (VESTA_CMD."v_list_dns_domain ".$user." ".$value." json", $output, $lreturn_var);
+        exec (VESTA_CMD."v-list-dns-domain ".$user." ".$value." json", $output, $lreturn_var);
         if ($lreturn_var == 0 ) {
             exec (VESTA_CMD.$cmd_dns." ".$user." ".$value." no", $output, $return_var);
             $restart_dns = 'yes';
@@ -52,7 +52,7 @@ foreach ($domain as $value) {
 
     // Mail
     if ($return_var == 0) {
-        exec (VESTA_CMD."v_list_mail_domain ".$user." ".$value." json", $output, $lreturn_var);
+        exec (VESTA_CMD."v-list-mail-domain ".$user." ".$value." json", $output, $lreturn_var);
         if ($lreturn_var == 0 ) {
             exec (VESTA_CMD.$cmd_mail." ".$user." ".$value." no", $output, $return_var);
         }
@@ -60,11 +60,11 @@ foreach ($domain as $value) {
 }
 
 if (!empty($restart_web)) {
-    exec (VESTA_CMD."v_restart_web", $output, $return_var);
+    exec (VESTA_CMD."v-restart-web", $output, $return_var);
 }
 
 if (!empty($restart_dns)) {
-    exec (VESTA_CMD."v_restart_dns", $output, $return_var);
+    exec (VESTA_CMD."v-restart-dns", $output, $return_var);
 }
 
 header("Location: /list/web/");

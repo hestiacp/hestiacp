@@ -1,0 +1,53 @@
+#!/bin/bash
+# info: delete web domains
+# options: user [restart]
+#
+# The function deteles all user's webdomains.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+restart=$2
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'user [restart]'
+validate_format 'user'
+is_system_enabled "$WEB_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Starting delete loop
+for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
+    $BIN/v-delete-web-domain "$user" "$domain" 'no'
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restart web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web "$EVENT"
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

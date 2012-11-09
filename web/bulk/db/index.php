@@ -11,17 +11,17 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'delete': $cmd='v_delete_database';
+        case 'delete': $cmd='v-delete-database';
             break;
-        case 'suspend': $cmd='v_suspend_database';
+        case 'suspend': $cmd='v-suspend-database';
             break;
-        case 'unsuspend': $cmd='v_unsuspend_database';
+        case 'unsuspend': $cmd='v-unsuspend-database';
             break;
         default: header("Location: /list/db/"); exit;
     }
 } else {
     switch ($action) {
-        case 'delete': $cmd='v_delete_database';
+        case 'delete': $cmd='v-delete-database';
             break;
         default: header("Location: /list/db/"); exit;
     }

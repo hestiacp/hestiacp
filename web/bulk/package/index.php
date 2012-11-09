@@ -11,7 +11,7 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'delete': $cmd='v_delete_user_package';
+        case 'delete': $cmd='v-delete-user-package';
             break;
         default: header("Location: /list/package/"); exit;
     }

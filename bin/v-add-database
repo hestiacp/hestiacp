@@ -1,0 +1,86 @@
+#!/bin/bash
+# info: add database
+# options: user database dbuser dbpass type [host] [charset]
+#
+# The function creates the database concatenating username  and user_db.
+# Supported yypes of databases you can get using v-list-sys-config script.
+# If the host isn't stated and there are few hosts configured on the server,
+# then the host will be defined by one of three algorithms. "First" will choose
+# the first host in the list. "Random" will chose the host by a chance.
+# "Weight" will distribute new database through hosts evenly. Algorithm and
+# types of supported databases is designated in the main configuration file.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+database="$user"_"$2"
+dbuser="$user"_"$3"
+dbpass=$4
+type=$5
+host=$6
+charset=${7-UTF8}
+charset=$(echo "$charset" |tr '[:lower:]' '[:upper:]')
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/db.sh
+
+# Hiding password
+A4='******'
+EVENT="DATE='$DATE' TIME='$TIME' CMD='$SCRIPT' A1='$A1' A2='$A2' A3='$A3'"
+EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '5' "$#" 'user database dbuser dbpass type [host] [charset]'
+validate_format 'user' 'database' 'dbuser' 'dbpass' 'charset'
+is_system_enabled "$DB_SYSTEM"
+is_type_valid "$DB_SYSTEM" "$type"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_free 'db' 'DB' "$database"
+get_next_dbhost
+is_object_valid "../../../conf/$type" 'HOST' "$host"
+is_object_unsuspended "../../../conf/$type" 'HOST' "$host"
+is_charset_valid
+is_package_full 'DATABASES'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Switching on db type
+case $type in
+    mysql) add_mysql_database ;;
+    pgsql) add_pgsql_database ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Increasing counters
+increase_dbhost_values
+increase_user_value "$user" '$U_DATABASES'
+
+# Adding db to db conf
+str="DB='$database' DBUSER='$dbuser' MD5='$md5' HOST='$host' TYPE='$type'"
+str="$str CHARSET='$charset' U_DISK='0' SUSPENDED='no' TIME='$TIME'"
+str="$str DATE='$DATE'"
+echo "$str" >> $USER_DATA/db.conf
+chmod 660 $USER_DATA/db.conf
+
+# Logging
+log_history "added $type database $database"
+log_event "$OK" "$EVENT"
+
+exit

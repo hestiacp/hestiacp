@@ -1,0 +1,47 @@
+#!/bin/bash
+# info: update databases disk usage
+# options: user
+#
+# The function recalculates disk usage for all user databases.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'user'
+validate_format 'user'
+is_system_enabled "$DB_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Starting update loop
+for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
+    $BIN/v-update-database-disk "$user" "$database"
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

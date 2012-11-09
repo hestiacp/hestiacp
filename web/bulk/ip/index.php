@@ -11,7 +11,7 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'delete': $cmd='v_delete_sys_ip';
+        case 'delete': $cmd='v-delete-sys-ip';
             break;
         default: header("Location: /list/ip/"); exit;
     }

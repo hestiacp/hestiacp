@@ -1,0 +1,95 @@
+#!/bin/bash
+# info: change web domain statistics
+# options: user domain type
+#
+# The function of deleting site's system of statistics. Its type is
+# automatically chooses from client's configuration file.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+type=$3
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'user domain type'
+validate_format 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM"
+is_type_valid "$STATS_SYSTEM" "$type"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining statistic type
+get_domain_values 'web'
+
+# Comparing stats types
+if [ "$STATS" == $type ]; then
+    log_event "$OK" "$EVENT"
+    exit 0
+fi
+
+# Defining statistic dir
+stats_dir="$HOMEDIR/$user/web/$domain/stats"
+
+# Deleting dir content
+rm -rf $stats_dir/*
+
+# Deleting config
+rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+
+# Preparing domain values for the template substitution
+upd_web_domain_values
+
+# Adding statistic config
+cat $WEBTPL/$type.tpl |\
+    sed -e "s/%ip%/$ip/g" \
+        -e "s/%web_port%/$WEB_PORT/g" \
+        -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
+        -e "s/%proxy_port%/$PROXY_PORT/g" \
+        -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+        -e "s/%domain_idn%/$domain_idn/g" \
+        -e "s/%domain%/$domain/g" \
+        -e "s/%user%/$user/g" \
+        -e "s/%home%/${HOMEDIR////\/}/g" \
+        -e "s/%alias%/${aliases//,/ }/g" \
+        -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
+    > $HOMEDIR/$user/conf/web/$type.$domain.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$STATS' "$type"
+
+# Logging
+log_history "changed web log stats for $domain to $type"
+log_event "$OK" "$EVENT"
+
+# Build stats
+exec $BIN/v-update-web-domain-stat $user $domain
+
+exit

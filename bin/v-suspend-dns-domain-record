@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: suspend dns domain record
+# options: user domain id [restart]
+#
+# The function suspends a certain domain record.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+id=$3
+restart="$4"
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'user domain id [restart]'
+validate_format 'user' 'domain' 'id'
+is_system_enabled "$DNS_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+is_object_valid "dns/$domain" 'ID' "$id"
+is_object_unsuspended "dns/$domain" 'ID' "$id"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
+eval $line
+sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
+
+# Adding record
+dns_rec="ID='$id' RECORD='$RECORD' TYPE='$TYPE' PRIORITY='$PRIORITY'"
+dns_rec="$dns_rec VALUE='$VALUE' SUSPENDED='yes' TIME='$TIME' DATE='$DATE'"
+echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
+
+# Sorting records
+sort_dns_records
+
+# Updating zone
+update_domain_zone
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns "$EVENT"
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

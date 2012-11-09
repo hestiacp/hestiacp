@@ -13,21 +13,21 @@ $action = $_POST['action'];
 if ($_SESSION['user'] == 'admin') {
     if (empty($record)) {
         switch ($action) {
-            case 'delete': $cmd='v_delete_dns_domain';
+            case 'delete': $cmd='v-delete-dns-domain';
                 break;
-            case 'suspend': $cmd='v_suspend_dns_domain';
+            case 'suspend': $cmd='v-suspend-dns-domain';
                 break;
-            case 'unsuspend': $cmd='v_unsuspend_dns_domain';
+            case 'unsuspend': $cmd='v-unsuspend-dns-domain';
                 break;
             default: header("Location: /list/dns/"); exit;
         }
     } else {
         switch ($action) {
-            case 'delete': $cmd='v_delete_dns_domain_record';
+            case 'delete': $cmd='v-delete-dns-domain-record';
                 break;
-            case 'suspend': $cmd='v_suspend_dns_domain_record';
+            case 'suspend': $cmd='v-suspend-dns-domain-record';
                 break;
-            case 'unsuspend': $cmd='v_unsuspend_dns_domain_record';
+            case 'unsuspend': $cmd='v-unsuspend-dns-domain-record';
                 break;
             default: header("Location: /list/dns/?domain=".$domain); exit;
         }
@@ -35,13 +35,13 @@ if ($_SESSION['user'] == 'admin') {
 } else {
     if (empty($record)) {
         switch ($action) {
-            case 'delete': $cmd='v_delete_dns_domain';
+            case 'delete': $cmd='v-delete-dns-domain';
                 break;
             default: header("Location: /list/dns/"); exit;
         }
     } else {
         switch ($action) {
-            case 'delete': $cmd='v_delete_dns_domain_record';
+            case 'delete': $cmd='v-delete-dns-domain-record';
                 break;
             default: header("Location: /list/dns/?domain=".$domain); exit;
         }
@@ -67,7 +67,7 @@ if (empty($record)) {
 }
 
 if (!empty($restart)) {
-    exec (VESTA_CMD."v_restart_dns", $output, $return_var);
+    exec (VESTA_CMD."v-restart-dns", $output, $return_var);
 }
 
 if (empty($record)) { 

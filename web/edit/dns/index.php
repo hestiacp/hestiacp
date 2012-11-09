@@ -27,7 +27,7 @@ top_panel($user,$TAB);
     // Check domain
     if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
         $v_domain = escapeshellarg($_GET['domain']);
-        exec (VESTA_CMD."v_list_dns_domain ".$user." ".$v_domain." json", $output, $return_var);
+        exec (VESTA_CMD."v-list-dns-domain ".$user." ".$v_domain." json", $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -52,7 +52,7 @@ top_panel($user,$TAB);
                 $v_status =  'active';
             }
 
-            exec (VESTA_CMD."v_list_dns_templates json", $output, $return_var);
+            exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
             $templates = json_decode(implode('', $output), true);
             unset($output);
         }
@@ -64,7 +64,7 @@ top_panel($user,$TAB);
             // IP
             if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
                 $v_ip = escapeshellarg($_POST['v_ip']);
-                exec (VESTA_CMD."v_change_dns_domain_ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-change-dns-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -77,7 +77,7 @@ top_panel($user,$TAB);
             // Template
             if (( $_SESSION['user'] == 'admin') && ($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
                 $v_template = escapeshellarg($_POST['v_template']);
-                exec (VESTA_CMD."v_change_dns_domain_tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-change-dns-domain-tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -90,7 +90,7 @@ top_panel($user,$TAB);
             // SOA
             if (($v_soa != $_POST['v_soa']) && (empty($_SESSION['error_msg']))) {
                 $v_soa = escapeshellarg($_POST['v_soa']);
-                exec (VESTA_CMD."v_change_dns_domain_soa ".$v_username." ".$v_domain." ".$v_soa." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-change-dns-domain-soa ".$v_username." ".$v_domain." ".$v_soa." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -103,7 +103,7 @@ top_panel($user,$TAB);
             // EXP
             if (($v_exp != $_POST['v_exp']) && (empty($_SESSION['error_msg']))) {
                 $v_exp = escapeshellarg($_POST['v_exp']);
-                exec (VESTA_CMD."v_change_dns_domain_exp ".$v_username." ".$v_domain." ".$v_exp." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-change-dns-domain-exp ".$v_username." ".$v_domain." ".$v_exp." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -116,7 +116,7 @@ top_panel($user,$TAB);
             // TTL
             if (($v_ttl != $_POST['v_ttl']) && (empty($_SESSION['error_msg']))) {
                 $v_ttl = escapeshellarg($_POST['v_ttl']);
-                exec (VESTA_CMD."v_change_dns_domain_ttl ".$v_username." ".$v_domain." ".$v_ttl." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-change-dns-domain-ttl ".$v_username." ".$v_domain." ".$v_ttl." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -128,7 +128,7 @@ top_panel($user,$TAB);
     
             // Restart dns
             if (!empty($restart_dns) && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_restart_dns", $output, $return_var);
+                exec (VESTA_CMD."v-restart-dns", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -151,7 +151,7 @@ top_panel($user,$TAB);
     } else {
         $v_domain = escapeshellarg($_GET['domain']);
         $v_record_id = escapeshellarg($_GET['record_id']);
-        exec (VESTA_CMD."v_list_dns_domain_records ".$user." ".$v_domain." 'json'", $output, $return_var);
+        exec (VESTA_CMD."v-list-dns-domain-records ".$user." ".$v_domain." 'json'", $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -184,7 +184,7 @@ top_panel($user,$TAB);
             if (($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) && (empty($_SESSION['error_msg']))) {
                 $v_val = escapeshellarg($_POST['v_val']);
                 $v_priority = escapeshellarg($_POST['v_priority']);
-                exec (VESTA_CMD."v_change_dns_domain_record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
+                exec (VESTA_CMD."v-change-dns-domain-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';

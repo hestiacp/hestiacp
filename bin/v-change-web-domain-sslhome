@@ -1,0 +1,79 @@
+#!/bin/bash
+# info: changing domain ssl home
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+ssl_home=$3
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'user domain ssl_home'
+validate_format 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get domain values
+get_domain_values 'web'
+old_ssl_home=$SSL_HOME
+SSL_HOME=$ssl_home
+tpl_file="$WEBTPL/apache_$TPL.stpl"
+conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+
+# Parsing tpl_option
+case $SSL_HOME in
+    single) new="$HOMEDIR/$user/web/$domain/public_shtml" ;
+            old="$HOMEDIR/$user/web/$domain/public_html" ;;
+    same)   new="$HOMEDIR/$user/web/$domain/public_html" ;
+            old="$HOMEDIR/$user/web/$domain/public_shtml" ;;
+    *)      check_args '3' "2" 'user domain sslhome'
+esac
+
+# Changing sslhome directory
+replace_web_config
+
+# Checking nginx config
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+    conf="$HOMEDIR/$user/conf/web//snginx.conf"
+    replace_web_config
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
+
+# Restart web server
+$BIN/v-restart-web "$EVENT"
+
+# Logging
+log_history "changed ssl home for $domain to $ssl_home"
+log_event "$OK" "$EVENT"
+
+exit

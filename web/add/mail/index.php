@@ -52,7 +52,7 @@ top_panel($user,$TAB);
         } else {
 
             // Add mail domain
-            exec (VESTA_CMD."v_add_mail_domain ".$user." ".$v_domain." ".$v_antispam." ".$v_antivirus." ".$v_dkim, $output, $return_var);
+            exec (VESTA_CMD."v-add-mail-domain ".$user." ".$v_domain." ".$v_antispam." ".$v_antivirus." ".$v_dkim, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -98,7 +98,7 @@ top_panel($user,$TAB);
             $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
         } else {
             // Add Mail Account
-            exec (VESTA_CMD."v_add_mail_account ".$user." ".$v_domain." ".$v_account." ".$v_password." ".$v_quota, $output, $return_var);
+            exec (VESTA_CMD."v-add-mail-account ".$user." ".$v_domain." ".$v_account." ".$v_password." ".$v_quota, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -115,7 +115,7 @@ top_panel($user,$TAB);
                 foreach ($aliases as $alias) {
                     $alias = escapeshellarg($alias);
                     if (empty($_SESSION['error_msg'])) {
-                        exec (VESTA_CMD."v_add_mail_account_alias ".$user." ".$v_domain." ".$v_account." ".$alias, $output, $return_var);
+                        exec (VESTA_CMD."v-add-mail-account-alias ".$user." ".$v_domain." ".$v_account." ".$alias, $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -136,7 +136,7 @@ top_panel($user,$TAB);
                 foreach ($fwd as $forward) {
                     $forward = escapeshellarg($forward);
                     if (empty($_SESSION['error_msg'])) {
-                        exec (VESTA_CMD."v_add_mail_account_forward ".$user." ".$v_domain." ".$v_account." ".$forward, $output, $return_var);
+                        exec (VESTA_CMD."v-add-mail-account-forward ".$user." ".$v_domain." ".$v_account." ".$forward, $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
                             if (empty($error)) $error = 'Error: vesta did not return any output.';

@@ -1,0 +1,84 @@
+#!/bin/bash
+# info: change dns domain template
+# options: user domain
+#
+# The function for changing the template of records. By updating old records
+# will be removed and new records will be generated in accordance with
+# parameters of new template.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+template=$3
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'user domain template'
+validate_format 'user' 'domain' 'template'
+is_system_enabled "$DNS_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+is_dns_template_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining variables
+ip=$(get_object_value 'dns' 'DOMAIN' "$domain" '$IP')
+
+i=1
+ns=$(get_user_value '$NS')
+for nameserver in ${ns//,/ };do
+    eval ns$i=$nameserver
+    (( ++i))
+done
+
+# Changing tpl
+update_object_value 'dns' 'DOMAIN' "$domain" '$TPL' "$template"
+
+# Adding zone to dns dir
+cat $DNSTPL/$template.tpl |\
+    sed -e "s/%ip%/$ip/g" \
+        -e "s/%domain_idn%/$domain_idn/g" \
+        -e "s/%domain%/$domain/g" \
+        -e "s/%ns1%/$ns1/g" \
+        -e "s/%ns2%/$ns2/g" \
+        -e "s/%ns3%/$ns3/g" \
+        -e "s/%ns4%/$ns4/g" \
+        -e "s/%time%/$TIME/g" \
+        -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+
+# Updating zone
+update_domain_zone
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restart named
+$BIN/v-restart-dns "$EVENT"
+
+# Logging
+log_history "changed dns template for $domain to $template" '' 'admin'
+log_event "$OK" "$EVENT"
+
+exit

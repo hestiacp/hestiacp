@@ -22,7 +22,7 @@ function send_email($to,$subject,$mailtext,$from) {
 if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
     $v_user = escapeshellarg($_POST['user']);
     $user = $_POST['user'];
-    $cmd="/usr/bin/sudo /usr/local/vesta/bin/v_list_user";
+    $cmd="/usr/bin/sudo /usr/local/vesta/bin/v-list-user";
     exec ($cmd." ".$v_user." json", $output, $return_var);
     if ( $return_var == 0 ) {
         $data = json_decode(implode('', $output), true);
@@ -59,13 +59,13 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
         $v_user = escapeshellarg($_POST['user']);
         $user = $_POST['user'];
         $v_password = escapeshellarg($_POST['password']);
-        $cmd="/usr/bin/sudo /usr/local/vesta/bin/v_list_user";
+        $cmd="/usr/bin/sudo /usr/local/vesta/bin/v-list-user";
         exec ($cmd." ".$v_user." json", $output, $return_var);
         if ( $return_var == 0 ) {
             $data = json_decode(implode('', $output), true);
             $rkey = $data[$user]['RKEY'];
             if ($rkey == $_POST['code']) {
-                $cmd="/usr/bin/sudo /usr/local/vesta/bin/v_change_user_password";
+                $cmd="/usr/bin/sudo /usr/local/vesta/bin/v-change-user-password";
                 exec ($cmd." ".$v_user." ".$v_password, $output, $return_var);
                 if ( $return_var > 0 ) {
                     $ERROR = "<a class=\"error\">ERROR: Internal error</a>";

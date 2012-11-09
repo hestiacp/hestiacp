@@ -46,7 +46,7 @@ top_panel($user,$TAB);
         } else {
 
             // Add DNS
-            exec (VESTA_CMD."v_add_dns_domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$ns4, $output, $return_var);
+            exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$ns4, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -57,7 +57,7 @@ top_panel($user,$TAB);
             // Change Expiriation date
             if ((!empty($_POST['v_exp'])) && ($_POST['v_exp'] != date('Y-m-d', strtotime('+1 year')))) {
                 $v_exp = escapeshellarg($_POST['v_exp']);
-                exec (VESTA_CMD."v_change_dns_domain_exp ".$user." ".$v_domain." ".$v_exp, $output, $return_var);
+                exec (VESTA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -69,7 +69,7 @@ top_panel($user,$TAB);
             // Change TTL
             if ((!empty($_POST['v_ttl'])) && ($_POST['v_ttl'] != '14400')) {
                 $v_ttl = escapeshellarg($_POST['v_ttl']);
-                exec (VESTA_CMD."v_change_dns_domain_ttl ".$user." ".$v_domain." ".$v_ttl, $output, $return_var);
+                exec (VESTA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -113,7 +113,7 @@ top_panel($user,$TAB);
             $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
         } else {
             // Add DNS Record
-            exec (VESTA_CMD."v_add_dns_domain_record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
+            exec (VESTA_CMD."v-add-dns-domain-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
             $v_type = $_POST['v_type'];
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
@@ -133,16 +133,16 @@ top_panel($user,$TAB);
 
 
     if ((empty($_GET['domain'])) && (empty($_POST['domain'])))  {
-        exec (VESTA_CMD."v_get_user_value ".$user." 'TEMPLATE'", $output, $return_var);
+        exec (VESTA_CMD."v-get-user-value ".$user." 'TEMPLATE'", $output, $return_var);
         $template = $output[0] ;
         unset($output);
 
-        exec (VESTA_CMD."v_list_dns_templates json", $output, $return_var);
+        exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
         $templates = json_decode(implode('', $output), true);
         unset($output);
 
         if ((empty($v_ns1)) && (empty($v_ns2))) {
-            exec (VESTA_CMD."v_list_user_ns ".$user." json", $output, $return_var);
+            exec (VESTA_CMD."v-list-user-ns ".$user." json", $output, $return_var);
             $nameservers = json_decode(implode('', $output), true);
             $v_ns1 = $nameservers[0];
             $v_ns2 = $nameservers[1];

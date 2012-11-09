@@ -12,7 +12,7 @@ if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['database'])) {
         $v_username = escapeshellarg($user);
         $v_database = escapeshellarg($_GET['database']);
-        exec (VESTA_CMD."v_unsuspend_database ".$v_username." ".$v_database, $output, $return_var);
+        exec (VESTA_CMD."v-unsuspend-database ".$v_username." ".$v_database, $output, $return_var);
         unset($output);
     }
 }

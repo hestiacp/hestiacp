@@ -1,0 +1,87 @@
+#!/bin/bash
+# info: add log analyzer to generate domain statitics
+# options: user domain type
+#
+# The call is used for enabling log analyzer system to a domain.  At this time
+# two types of these system is supported - awstats and webalizer. For viewing
+# the domain statistics use http://domain.tld/vstats/ link. Access this page
+# is not protected by default. If you want to secure it with passwords you
+# should use v-add-web-domain_stat_auth script.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+type=$3
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'user domain type'
+validate_format 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM"
+is_type_valid "$STATS_SYSTEM" "$type"
+is_object_valid 'user' 'USER' "$user" "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_empty 'web' 'DOMAIN' "$domain" '$STATS'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Parse aliases
+get_domain_values 'web'
+
+# Preparing domain values for the template substitution
+upd_web_domain_values
+
+# Adding statistic config
+cat $WEBTPL/$type.tpl |\
+    sed -e "s/%ip%/$ip/g" \
+        -e "s/%web_port%/$WEB_PORT/g" \
+        -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
+        -e "s/%proxy_port%/$PROXY_PORT/g" \
+        -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+        -e "s/%domain_idn%/$domain_idn/g" \
+        -e "s/%domain%/$domain/g" \
+        -e "s/%user%/$user/g" \
+        -e "s/%home%/${HOMEDIR////\/}/g" \
+        -e "s/%alias%/${aliases//,/ }/g" \
+        -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
+    > $HOMEDIR/$user/conf/web/$type.$domain.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Schedule statistic processing
+echo "$BIN/v-update-web-domain-stat $user $domain" >> \
+    $VESTA/data/queue/webstats.pipe
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$STATS' "$type"
+
+# Logging
+log_history "enabled web log analyzer for $domain"
+log_event "$OK" "$EVENT"
+
+# Build stats
+exec $BIN/v-update-web-domain-stat $user $domain
+
+exit

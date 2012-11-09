@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: unsuspend user
+# options: user [restart]
+#
+# The function unsuspends user and all his objects.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+restart=$2
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'user'
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
+if [ "$user" = 'admin' ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting '!' in front of the password
+/usr/sbin/usermod --unlock $user
+
+# Unsuspending web domains
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-web-domains $user $restart
+fi
+
+# Unsuspending dns domains
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-dns-domains $user $restart
+fi
+
+# Unsuspending mail domains
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-mail-domains $user
+fi
+
+# Unsuspending datbabases
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-databases $user
+fi
+
+# Unsuspending cron jobs
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-cron-jobs $user $restart
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Changing suspend value
+update_user_value "$user" '$SUSPENDED' 'no'
+decrease_user_value 'admin' '$SUSPENDED_USERS'
+
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-dns "$EVENT"
+    $BIN/v-restart-cron "$EVENT"
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

@@ -1,0 +1,54 @@
+#!/bin/bash
+# info: add cron reports
+# opions: user
+#
+# The script for enabling reports on cron tasks and administrative
+# notifications.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'user'
+validate_format 'user'
+is_system_enabled "$CRON_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Changing user report value
+update_user_value "$user" '$CRON_REPORTS' 'yes'
+
+# Sync system cron with user
+sync_cron_jobs
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restart crond
+$BIN/v-restart-cron "$EVENT"
+
+# Logging
+log_history "enabled cron reporting"
+log_event "$OK" "$EVENT"
+
+exit

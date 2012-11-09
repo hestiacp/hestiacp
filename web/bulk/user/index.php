@@ -11,31 +11,31 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'delete': $cmd='v_delete_user'; $restart = 'no';
+        case 'delete': $cmd='v-delete-user'; $restart = 'no';
             break;
-        case 'suspend': $cmd='v_suspend_user'; $restart = 'no';
+        case 'suspend': $cmd='v-suspend-user'; $restart = 'no';
             break;
-        case 'unsuspend': $cmd='v_unsuspend_user'; $restart = 'no';
+        case 'unsuspend': $cmd='v-unsuspend-user'; $restart = 'no';
             break;
-        case 'update counters': $cmd='v_update_user_counters';
+        case 'update counters': $cmd='v-update-user-counters';
             break;
-        case 'rebuild': $cmd='v_rebuild_user'; $restart = 'no';
+        case 'rebuild': $cmd='v-rebuild-user'; $restart = 'no';
             break;
-        case 'rebuild web': $cmd='v_rebuild_web_domains'; $restart = 'no';
+        case 'rebuild web': $cmd='v-rebuild-web-domains'; $restart = 'no';
             break;
-        case 'rebuild dns': $cmd='v_rebuild_dns_domains'; $restart = 'no';
+        case 'rebuild dns': $cmd='v-rebuild-dns-domains'; $restart = 'no';
             break;
-        case 'rebuild mail': $cmd='v_rebuild_mail_domains';
+        case 'rebuild mail': $cmd='v-rebuild-mail-domains';
             break;
-        case 'rebuild db': $cmd='v_rebuild_databases';
+        case 'rebuild db': $cmd='v-rebuild-databases';
             break;
-        case 'rebuild cron': $cmd='v_rebuild_cron_jobs';
+        case 'rebuild cron': $cmd='v-rebuild-cron-jobs';
             break;
         default: header("Location: /list/user/"); exit;
     }
 } else {
     switch ($action) {
-        case 'update counters': $cmd='v_update_user_counters';
+        case 'update counters': $cmd='v-update-user-counters';
             break;
         default: header("Location: /list/user/"); exit;
     }
@@ -48,9 +48,9 @@ foreach ($user as $value) {
 }
 
 if ((!empty($restart)) && (!empty($changes))) {
-    exec (VESTA_CMD."v_restart_web", $output, $return_var);
-    exec (VESTA_CMD."v_restart_dns", $output, $return_var);
-    exec (VESTA_CMD."v_restart_cron", $output, $return_var);
+    exec (VESTA_CMD."v-restart-web", $output, $return_var);
+    exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+    exec (VESTA_CMD."v-restart-cron", $output, $return_var);
 }
 
 header("Location: /list/user/");

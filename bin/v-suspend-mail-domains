@@ -1,0 +1,48 @@
+#!/bin/bash
+# info: suspend mail domains
+# options: user
+#
+# The function suspends all user's MAIL domains.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'user'
+validate_format 'user'
+is_system_enabled "$MAIL_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Starting suspend loop
+for domain in $(search_objects 'mail' 'SUSPENDED' "no" 'DOMAIN'); do
+    $BIN/v-suspend-mail-domain "$user" "$domain"
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

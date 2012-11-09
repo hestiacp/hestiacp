@@ -1,0 +1,70 @@
+#!/bin/bash
+# info: delete dns domain
+# options: user domain
+#
+# The function for deleting DNS domain. By deleting it all records will also be
+# deleted.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+restart="$3"
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'user domain'
+validate_format 'user' 'domain'
+is_system_enabled "$DNS_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
+
+# Deleting domain in named.conf
+sed -i "/\/$domain.db\"/d" /etc/named.conf
+rm -f $HOMEDIR/$user/conf/dns/$domain.db
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Deleting domain
+sed -i "/DOMAIN='$domain'/ d" $USER_DATA/dns.conf
+rm -f $USER_DATA/dns/$domain.conf
+
+# Decreasing domain value
+decrease_user_value "$user" '$U_DNS_DOMAINS'
+decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
+
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns "$EVENT"
+fi
+
+
+# Logging
+log_history "deleted dns domain $domain"
+log_event "$OK" "$EVENT"
+
+exit

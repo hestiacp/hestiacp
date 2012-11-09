@@ -54,7 +54,7 @@ if ($_SESSION['user'] == 'admin') {
         }
 
         if (empty($_SESSION['error_msg'])) {
-            exec (VESTA_CMD."v_add_user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
+            exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -89,7 +89,7 @@ if ($_SESSION['user'] == 'admin') {
         }
     }
 
-    exec (VESTA_CMD."v_list_user_packages json", $output, $return_var);
+    exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
     check_error($return_var);
     $data = json_decode(implode('', $output), true);
     unset($output);

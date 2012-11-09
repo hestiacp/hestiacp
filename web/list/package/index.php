@@ -14,7 +14,7 @@ top_panel($user,$TAB);
 
 // Data
 if ($_SESSION['user'] == 'admin') {
-    exec (VESTA_CMD."v_list_user_packages json", $output, $return_var);
+    exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data);
     unset($output);

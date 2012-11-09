@@ -27,11 +27,11 @@ top_panel($user,$TAB);
 // Data
 if ($_SESSION['user'] == 'admin') {
     $q = escapeshellarg($q);
-    exec (VESTA_CMD."v_search_object ".$q." json", $output, $return_var);
+    exec (VESTA_CMD."v-search-object ".$q." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_search.html');
 } else {
-    exec (VESTA_CMD."v_search_user_object ".$user." ".$q." json", $output, $return_var);
+    exec (VESTA_CMD."v-search-user-object ".$user." ".$q." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_search.html');
 }

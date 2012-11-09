@@ -43,7 +43,7 @@ top_panel($user,$TAB);
             $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
         } else {
             // Add Cron Job
-            exec (VESTA_CMD."v_add_cron_job ".$user." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
+            exec (VESTA_CMD."v-add-cron-job ".$user." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
             $v_type = $_POST['v_type'];
             $v_charset = $_POST['v_charset'];
             if ($return_var != 0) {
@@ -64,7 +64,7 @@ top_panel($user,$TAB);
             }
         }
     }
-    exec (VESTA_CMD."v_list_database_types 'json'", $output, $return_var);
+    exec (VESTA_CMD."v-list-database-types 'json'", $output, $return_var);
     $db_types = json_decode(implode('', $output), true);
     unset($output);
 

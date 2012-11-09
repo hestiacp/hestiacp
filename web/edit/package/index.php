@@ -23,7 +23,7 @@ if ($_SESSION['user'] == 'admin') {
     }
 
     $v_package = escapeshellarg($_GET['package']);
-    exec (VESTA_CMD."v_list_user_package ".$v_package." 'json'", $output, $return_var);
+    exec (VESTA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -57,12 +57,12 @@ if ($_SESSION['user'] == 'admin') {
         $v_status =  'active';
 
 
-        exec (VESTA_CMD."v_list_web_templates json", $output, $return_var);
+        exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
         check_error($return_var);
         $templates = json_decode(implode('', $output), true);
         unset($output);
 
-        exec (VESTA_CMD."v_list_sys_shells json", $output, $return_var);
+        exec (VESTA_CMD."v-list-sys-shells json", $output, $return_var);
         check_error($return_var);
         $shells = json_decode(implode('', $output), true);
         unset($output);
@@ -153,7 +153,7 @@ if ($_SESSION['user'] == 'admin') {
 
                 // Rewrite package
                 if (empty($_SESSION['error_msg'])) {
-                    exec (VESTA_CMD."v_add_user_package ".$tmpdir." ".$v_package." 'yes'", $output, $return_var);
+                    exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package." 'yes'", $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
                         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -167,7 +167,7 @@ if ($_SESSION['user'] == 'admin') {
                 unset($output);
 
                 // Propogate new package
-                exec (VESTA_CMD."v_update_user_package ".$v_package." 'json'", $output, $return_var);
+                exec (VESTA_CMD."v-update-user-package ".$v_package." 'json'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';

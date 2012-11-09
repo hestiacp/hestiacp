@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
     if (!empty($_GET['backup'])) {
         $v_username = escapeshellarg($user);
         $v_backup = escapeshellarg($_GET['backup']);
-        exec (VESTA_CMD."v_delete_user_backup ".$v_username." ".$v_backup, $output, $return_var);
+        exec (VESTA_CMD."v-delete-user-backup ".$v_username." ".$v_backup, $output, $return_var);
     }
     if ($return_var != 0) {
         $error = implode('<br>', $output);

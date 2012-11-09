@@ -24,7 +24,7 @@ if ($_SESSION['user'] == 'admin') {
 
     // Check user
     $v_username = escapeshellarg($_GET['user']);
-    exec (VESTA_CMD."v_list_user ".$v_username." json", $output, $return_var);
+    exec (VESTA_CMD."v-list-user ".$v_username." json", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -55,15 +55,15 @@ if ($_SESSION['user'] == 'admin') {
         $v_time = $data[$v_username]['TIME'];
         $v_date = $data[$v_username]['DATE'];
 
-        exec (VESTA_CMD."v_list_user_packages json", $output, $return_var);
+        exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
         $packages = json_decode(implode('', $output), true);
         unset($output);
 
-        exec (VESTA_CMD."v_list_web_templates json", $output, $return_var);
+        exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
         $templates = json_decode(implode('', $output), true);
         unset($output);
 
-        exec (VESTA_CMD."v_list_sys_shells json", $output, $return_var);
+        exec (VESTA_CMD."v-list-sys-shells json", $output, $return_var);
         $shells = json_decode(implode('', $output), true);
         unset($output);
     }
@@ -75,7 +75,7 @@ if ($_SESSION['user'] == 'admin') {
         // Change password
         if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
             $v_password = escapeshellarg($_POST['v_password']);
-            exec (VESTA_CMD."v_change_user_password ".$v_username." ".$v_password, $output, $return_var);
+            exec (VESTA_CMD."v-change-user-password ".$v_username." ".$v_password, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -88,7 +88,7 @@ if ($_SESSION['user'] == 'admin') {
         // Change package
         if (($v_package != $_POST['v_package']) && (empty($_SESSION['error_msg']))) {
             $v_package = escapeshellarg($_POST['v_package']);
-            exec (VESTA_CMD."v_change_user_package ".$v_username." ".$v_package, $output, $return_var);
+            exec (VESTA_CMD."v-change-user-package ".$v_username." ".$v_package, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -100,7 +100,7 @@ if ($_SESSION['user'] == 'admin') {
         // Change template
         if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
             $v_template = escapeshellarg($_POST['v_template']);
-            exec (VESTA_CMD."v_change_user_template ".$v_username." ".$v_template, $output, $return_var);
+            exec (VESTA_CMD."v-change-user-template ".$v_username." ".$v_template, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -112,7 +112,7 @@ if ($_SESSION['user'] == 'admin') {
         // Change shell
         if (($v_shell != $_POST['v_shell']) && (empty($_SESSION['error_msg']))) {
             $v_shell = escapeshellarg($_POST['v_shell']);
-            exec (VESTA_CMD."v_change_user_shell ".$v_username." ".$v_shell, $output, $return_var);
+            exec (VESTA_CMD."v-change-user-shell ".$v_username." ".$v_shell, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -128,7 +128,7 @@ if ($_SESSION['user'] == 'admin') {
                 $_SESSION['error_msg'] = 'Please enter valid email address.';
             } else {
                 $v_email = escapeshellarg($_POST['v_email']);
-                exec (VESTA_CMD."v_change_user_contact ".$v_username." ".$v_email, $output, $return_var);
+                exec (VESTA_CMD."v-change-user-contact ".$v_username." ".$v_email, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -142,7 +142,7 @@ if ($_SESSION['user'] == 'admin') {
         if (($v_fname != $_POST['v_fname']) || ($v_lname != $_POST['v_lname']) && (empty($_SESSION['error_msg']))) {
             $v_fname = escapeshellarg($_POST['v_fname']);
             $v_lname = escapeshellarg($_POST['v_lname']);
-            exec (VESTA_CMD."v_change_user_name ".$v_username." ".$v_fname." ".$v_lname, $output, $return_var);
+            exec (VESTA_CMD."v-change-user-name ".$v_username." ".$v_fname." ".$v_lname, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -157,7 +157,7 @@ if ($_SESSION['user'] == 'admin') {
             $v_ns2 = escapeshellarg($_POST['v_ns2']);
             $v_ns3 = escapeshellarg($_POST['v_ns3']);
             $v_ns4 = escapeshellarg($_POST['v_ns4']);
-            $ns_cmd = VESTA_CMD."v_change_user_ns ".$v_username." ".$v_ns1." ".$v_ns2;
+            $ns_cmd = VESTA_CMD."v-change-user-ns ".$v_username." ".$v_ns1." ".$v_ns2;
             if (!empty($_POST['v_ns3'])) $ns_cmd = $ns_cmd." ".$v_ns3;
             if (!empty($_POST['v_ns4'])) $ns_cmd = $ns_cmd." ".$v_ns4;
             exec ($ns_cmd, $output, $return_var);
@@ -185,7 +185,7 @@ if ($_SESSION['user'] == 'admin') {
 
     // Check user
     $v_username = escapeshellarg($_GET['user']);
-    exec (VESTA_CMD."v_list_user ".$v_username." json", $output, $return_var);
+    exec (VESTA_CMD."v-list-user ".$v_username." json", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -222,7 +222,7 @@ if ($_SESSION['user'] == 'admin') {
         // Change password
         if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
             $v_password = escapeshellarg($_POST['v_password']);
-            exec (VESTA_CMD."v_change_user_password ".$v_username." ".$v_password, $output, $return_var);
+            exec (VESTA_CMD."v-change-user-password ".$v_username." ".$v_password, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -235,7 +235,7 @@ if ($_SESSION['user'] == 'admin') {
         // Change contact email
         if (($v_email != $_POST['v_email']) && (empty($_SESSION['error_msg']))) {
             $v_email = escapeshellarg($_POST['v_email']);
-            exec (VESTA_CMD."v_change_user_contact ".$v_username." ".$v_email, $output, $return_var);
+            exec (VESTA_CMD."v-change-user-contact ".$v_username." ".$v_email, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -250,7 +250,7 @@ if ($_SESSION['user'] == 'admin') {
             $v_ns2 = escapeshellarg($_POST['v_ns2']);
             $v_ns3 = escapeshellarg($_POST['v_ns3']);
             $v_ns4 = escapeshellarg($_POST['v_ns4']);
-            $ns_cmd = VESTA_CMD."v_change_user_ns ".$v_username." ".$v_ns1." ".$v_ns2;
+            $ns_cmd = VESTA_CMD."v-change-user-ns ".$v_username." ".$v_ns1." ".$v_ns2;
             if (!empty($_POST['v_ns3'])) $ns_cmd = $ns_cmd." ".$v_ns3;
             if (!empty($_POST['v_ns4'])) $ns_cmd = $ns_cmd." ".$v_ns4;
             exec ($ns_cmd, $output, $return_var);

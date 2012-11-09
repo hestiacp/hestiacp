@@ -1,0 +1,111 @@
+#!/bin/bash
+# info: add webdomain nginx support
+# options: user domain [template] [extentions] [restart]
+#
+# The function enables nginx support for a domain. It can significantly improve
+# website speed.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+template=$3
+default_extentions="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,\
+exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm"
+extentions=${4-$default_extentions}
+restart="$5"
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'user domain [template] [extentions] [restart]'
+validate_format 'user' 'domain' 'extentions'
+is_system_enabled "$PROXY_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_empty 'web' 'DOMAIN' "$domain" '$NGINX'
+if [ ! -z "$template" ]; then
+    validate_format 'template'
+    is_nginx_template_valid
+else
+    template=$(get_user_value '$TEMPLATE')
+    is_nginx_template_valid
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining domain parameters
+get_domain_values 'web'
+NGINX="$template"
+NGINX_EXT="$extentions"
+tpl_file="$WEBTPL/nginx_$NGINX.tpl"
+conf="$HOMEDIR/$user/conf/web/nginx.conf"
+
+# Preparing domain values for the template substitution
+upd_web_domain_values
+add_web_config
+
+# Set permission and ownership
+chown root:nginx $conf
+chmod 640 $conf
+
+# Checking main vesta httpd config
+main_conf='/etc/nginx/conf.d/vesta_users.conf'
+main_conf_check=$(grep "$conf" $main_conf )
+if [ -z "$main_conf_check" ]; then
+    echo "include $conf;" >>$main_conf
+fi
+
+# Checking ssl
+if [ "$SSL" = 'yes' ]; then
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+    conf="$HOMEDIR/$user/conf/web/snginx.conf"
+    add_web_config
+
+    chown root:nginx $conf
+    chmod 640 $conf
+
+    main_conf='/etc/nginx/conf.d/vesta_users.conf'
+    main_conf_check=$(grep "$conf" $main_conf )
+    if [ -z "$main_conf_check" ]; then
+        echo "include $conf;" >>$main_conf
+    fi
+fi
+
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$NGINX' "$NGINX"
+update_object_value 'web' 'DOMAIN' "$domain" '$NGINX_EXT' "$extentions"
+
+# Restart web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web "$EVENT"
+fi
+
+log_history "enabled nginx support for $domain"
+log_event "$OK" "$EVENT"
+
+exit
+

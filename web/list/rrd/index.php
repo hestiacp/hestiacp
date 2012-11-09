@@ -14,7 +14,7 @@ top_panel($user,$TAB);
 
 // Data
 if ($_SESSION['user'] == 'admin') {
-    exec (VESTA_CMD."v_list_sys_rrd json", $output, $return_var);
+    exec (VESTA_CMD."v-list-sys-rrd json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     unset($output);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_rrd.html');

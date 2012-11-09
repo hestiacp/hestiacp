@@ -1,0 +1,73 @@
+#!/bin/bash
+# info: change cron job
+# options: user job min hour day month wday command
+#
+# The function is used for changing existing job. It fully replace job
+# parameters with new one but with same id.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+job=$2
+min=$3
+hour=$4
+day=$5
+month=$6
+wday=$7
+command=$8
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '7' "$#" 'user job min hour day month wday command'
+validate_format 'user' 'job' 'min' 'hour' 'day' 'month' 'wday' 'command' 
+is_system_enabled $CRON_SYSTEM
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'cron' 'JOB' "$job"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Concatenating cron string
+command=$(echo $command | sed -e "s/'/%quote%/g" -e "s/:/%dots%/g")
+str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
+str="$str CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+
+# Deleting old job
+sed -i "/JOB='$job' /d" $USER_DATA/cron.conf
+
+# Adding new
+echo "$str" >> $USER_DATA/cron.conf
+
+# Sorting jobs by id
+sort_cron_jobs
+
+# Sync system cron with user
+sync_cron_jobs
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restart crond
+$BIN/v-restart-cron "$EVENT"
+
+# Logging
+log_history "changed cron job $job"
+log_event "$OK" "$EVENT"
+
+exit

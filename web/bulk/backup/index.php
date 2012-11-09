@@ -10,7 +10,7 @@ $backup = $_POST['backup'];
 $action = $_POST['action'];
 
 switch ($action) {
-    case 'delete': $cmd='v_delete_user_backup';
+    case 'delete': $cmd='v-delete-user-backup';
         break;
     default: header("Location: /list/backup/"); exit;
 }

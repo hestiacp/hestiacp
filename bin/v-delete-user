@@ -1,0 +1,113 @@
+#!/bin/bash
+# info: delete user
+# options: user
+#
+# This function deletes a certain user and all his resourses such as domains,
+# databases, cron jobs, etc.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+restart=$2
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/db.sh
+source $VESTA/func/ip.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'user'
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+if [ "$user" = 'admin' ]; then
+    exit
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking web system is enabled
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-web-domains $user $restart
+    $BIN/v-delete-web-domains $user $restart
+    rv="$?"
+    if [ "$rv" -ne '0' ]; then
+        exit $rv
+    fi
+fi
+
+# Checking dns system is enabled
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-dns-domains $user $restart
+    $BIN/v-delete-dns-domains $user $restart
+    rv="$?"
+    if [ "$rv" -ne '0' ]; then
+        exit $rv
+    fi
+fi
+
+# Checking mail system is enabled
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-mail-domains $user
+    $BIN/v-delete-mail-domains $user
+    rv="$?"
+    if [ "$rv" -ne '0' ]; then
+        exit $rv
+    fi
+fi
+
+# Checking db system is enabled
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-databases $user
+    $BIN/v-delete-databases $user
+    rv="$?"
+    if [ "$rv" -ne '0' ]; then
+        exit $rv
+    fi
+fi
+
+# Checking ip
+$BIN/v-delete-user-ips "$user"
+rv="$?"
+if [ "$rv" -ne '0' ]; then
+    exit $rv
+fi
+
+# Deleteing user pipes
+sed -i "/ $user$/d" $VESTA/data/queue/disk.pipe
+sed -i "/ $user$/d" $VESTA/data/queue/traffic.pipe
+
+# Removing system user
+/usr/sbin/userdel -f $user
+rm -rf $HOMEDIR/$user
+rm -f /var/spool/mail/$user
+rm -f /var/spool/cron/$user
+rm -rf $USER_DATA
+
+# Updating admin counter
+if [ "$user" != 'admin' ]; then
+    decrease_user_value 'admin' '$U_USERS'
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_history "deleted system user $user" '' 'admin'
+log_event "$OK" "$EVENT"
+
+exit

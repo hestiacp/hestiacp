@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: unuspend cron job
+# options: user job [restart]
+#
+# The function unsuspen certain cron job.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+job=$2
+restart="${3-yes}"
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'user job [restart]'
+validate_format 'user' 'job' 'restart'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'cron' 'JOB' "$job"
+is_object_suspended 'cron' 'JOB' "$job"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Unsuspending job
+update_object_value 'cron' 'JOB' "$job" '$SUSPENDED' 'no'
+decrease_user_value "$user" '$SUSPENDED_CRON'
+
+# Sync system cron with user
+sync_cron_jobs
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restart crond
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-cron "$EVENT"
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

@@ -15,13 +15,13 @@ top_panel($user,$TAB);
 // Data
 if ($_SESSION['user'] == 'admin') {
     if (empty($_GET['domain'])){
-        exec (VESTA_CMD."v_list_dns_domains $user json", $output, $return_var);
+        exec (VESTA_CMD."v-list-dns-domains $user json", $output, $return_var);
         $data = json_decode(implode('', $output), true);
         $data = array_reverse($data);
         unset($output);
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_dns.html');
     } else {
-        exec (VESTA_CMD."v_list_dns_domain_records '".$user."' '".$_GET['domain']."' 'json'", $output, $return_var);
+        exec (VESTA_CMD."v-list-dns-domain-records '".$user."' '".$_GET['domain']."' 'json'", $output, $return_var);
         $data = json_decode(implode('', $output), true);
         $data = array_reverse($data);
         unset($output);
@@ -29,13 +29,13 @@ if ($_SESSION['user'] == 'admin') {
     }
 } else {
     if (empty($_GET['domain'])){
-        exec (VESTA_CMD."v_list_dns_domains $user json", $output, $return_var);
+        exec (VESTA_CMD."v-list-dns-domains $user json", $output, $return_var);
         $data = json_decode(implode('', $output), true);
         $data = array_reverse($data);
         unset($output);
         include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_dns.html');
     } else {
-        exec (VESTA_CMD."v_list_dns_domain_records '".$user."' '".$_GET['domain']."' 'json'", $output, $return_var);
+        exec (VESTA_CMD."v-list-dns-domain-records '".$user."' '".$_GET['domain']."' 'json'", $output, $return_var);
         $data = json_decode(implode('', $output), true);
         $data = array_reverse($data);
         unset($output);

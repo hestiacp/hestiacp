@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
     if (!empty($_GET['database'])) {
         $v_username = escapeshellarg($user);
         $v_database = escapeshellarg($_GET['database']);
-        exec (VESTA_CMD."v_delete_database ".$v_username." ".$v_database, $output, $return_var);
+        exec (VESTA_CMD."v-delete-database ".$v_username." ".$v_database, $output, $return_var);
     }
     if ($return_var != 0) {
         $error = implode('<br>', $output);

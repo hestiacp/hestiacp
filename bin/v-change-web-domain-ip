@@ -1,0 +1,96 @@
+#!/bin/bash
+# info: change web domain ip address
+# options: user domain ip [restart]
+#
+# The call is used for changing the site ip address. The ip change will be
+# performed for a virtual apache host and for a configuration nginx file both.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+ip=$3
+restart=$4
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/ip.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'user domain ip [restart]'
+validate_format 'user' 'domain' 'ip'
+is_system_enabled "$WEB_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_ip_valid
+is_ip_avalable
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Define variable for replace
+get_domain_values 'web'
+tpl_file="$WEBTPL/apache_$TPL.tpl"
+conf="$HOMEDIR/$user/conf/web/httpd.conf"
+old=$IP
+new=$ip
+replace_web_config
+
+# Checking ssl
+if [ "$SSL" = 'yes' ]; then
+    tpl_file="$WEBTPL/apache_$TPL.stpl"
+    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+    replace_web_config
+fi
+
+# Checking nginx
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$WEBTPL/nginx_$NGINX.tpl"
+    conf="$HOMEDIR/$user/conf/web/nginx.conf"
+    replace_web_config
+fi
+
+# Checking nginx
+if [ "$SSL" = 'yes' ] && [ ! -z "$NGINX" ]; then 
+    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+    conf="$HOMEDIR/$user/conf/web/snginx.conf"
+    replace_web_config
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Update counters
+increase_ip_value "$new"
+decrease_ip_value "$old"
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$ip"
+
+# Restart web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web "$EVENT"
+fi
+
+# Logging
+log_history "changed web domain $domain ip to $ip"
+log_event "$OK" "$EVENT"
+
+exit

@@ -1,0 +1,100 @@
+#!/bin/bash
+# info: add system ip address
+# options: ip mask [interface] [user] [ip_status] [ip_name]
+#
+# The function adds ip address into a system. It also creates rc scripts. You
+# can specify ip name which will be used as root domain for temporary aliases.
+# For example, if you set a1.myhosting.com as name, each new domain created on
+# this  ip will automaticaly receive alias $domain.a1.myhosting.com. Of course
+# you must have wildcard record *.a1.myhosting.com pointed to ip. This feature 
+# is very handy when customer wants to test domain before dns migration.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+ip=$1
+mask=$2
+interface="${3-eth0}"
+user="${4-admin}"
+ip_status="${5-shared}"     # can be dedicated as well   
+ip_name=$6
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/ip.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'ip mask [interface] [user] [ip_status] [ip_name]'
+validate_format 'ip' 'mask' 'interface' 'user' 'ip_status'
+is_ip_free
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+if [ ! -z "$ip_name" ] ; then
+    validate_format 'ip_name'
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get full interface name
+get_ip_iface
+
+# Defining config paths
+conf='/etc/httpd/conf.d/vesta.conf'
+nconf='/etc/nginx/conf.d/vesta_ip.conf'
+iconf='/etc/sysconfig/network-scripts/ifcfg'
+rconf='/etc/httpd/conf.d/rpaf.conf'
+
+# Adding ip
+/sbin/ifconfig "$iface" "$ip" netmask "$mask"
+
+# Adding startup script
+create_ip_startup
+
+# Adding vesta ip
+create_vesta_ip
+
+# Namehosting support
+namehost_ip_support
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Updating user counters
+increase_user_value "$user" '$IP_OWNED'
+if [ "$user" = 'admin' ]; then
+    if [ "$ip_status" = 'shared' ]; then
+        for user in $(ls $VESTA/data/users); do
+            increase_user_value "$user" '$IP_AVAIL'
+        done
+    else
+        increase_user_value 'admin' '$IP_AVAIL'
+    fi
+else
+    increase_user_value "$user" '$IP_AVAIL'
+    increase_user_value 'admin' '$IP_AVAIL'
+fi
+
+# Restart web server
+if [ "$web_restart" = 'yes' ]; then
+    $BIN/v-restart-web "$EVENT"
+fi
+
+# Logging
+log_history "added system ip address $ip" '' 'admin'
+log_event "$OK" "$EVENT"
+
+exit

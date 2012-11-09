@@ -12,7 +12,7 @@ if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['job'])) {
         $v_username = escapeshellarg($user);
         $v_job = escapeshellarg($_GET['job']);
-        exec (VESTA_CMD."v_unsuspend_cron_job ".$v_username." ".$v_job, $output, $return_var);
+        exec (VESTA_CMD."v-unsuspend-cron-job ".$v_username." ".$v_job, $output, $return_var);
     }
     if ($return_var != 0) {
         $error = implode('<br>', $output);

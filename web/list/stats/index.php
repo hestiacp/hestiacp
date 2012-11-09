@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-exec (VESTA_CMD."v_list_user_stats $user json", $output, $return_var);
+exec (VESTA_CMD."v-list-user-stats $user json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 $data = array_reverse($data);
 unset($output);

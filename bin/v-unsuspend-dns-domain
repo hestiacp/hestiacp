@@ -1,0 +1,62 @@
+#!/bin/bash
+# info: unsuspend dns domain
+# options: user domain
+#
+# The function unsuspends a certain user's domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+restart="$3"
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'user domain'
+validate_format 'user' 'domain'
+is_system_enabled "$DNS_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_suspended 'dns' 'DOMAIN' "$domain"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Adding zone in named.conf
+named="zone \"$domain_idn\" {type master; file"
+named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+echo "$named" >> /etc/named.conf
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Unsuspending domain in config
+update_object_value 'dns' 'DOMAIN' "$domain" '$SUSPENDED' 'no'
+decrease_user_value "$user" '$SUSPENDED_DNS'
+sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/dns/$domain.conf
+
+
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns "$EVENT"
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

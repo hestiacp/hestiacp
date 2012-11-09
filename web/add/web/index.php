@@ -84,7 +84,7 @@ top_panel($user,$TAB);
 
         if (empty($_SESSION['error_msg'])) {
             // Add WEB
-            exec (VESTA_CMD."v_add_web_domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." 'no'", $output, $return_var);
+            exec (VESTA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." 'no'", $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -94,7 +94,7 @@ top_panel($user,$TAB);
         
             // Add DNS
             if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_add_dns_domain ".$user." ".$v_domain." ".$v_ip, $output, $return_var);
+                exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -105,7 +105,7 @@ top_panel($user,$TAB);
 
             // Add Mail
             if (($_POST['v_mail'] == 'on') && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_add_mail_domain ".$user." ".$v_domain, $output, $return_var);
+                exec (VESTA_CMD."v-add-mail-domain ".$user." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -127,7 +127,7 @@ top_panel($user,$TAB);
                     } else {
                         $alias = escapeshellarg($alias);
                         if (empty($_SESSION['error_msg'])) {
-                            exec (VESTA_CMD."v_add_web_domain_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
+                            exec (VESTA_CMD."v-add-web-domain-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
                             if ($return_var != 0) {
                                 $error = implode('<br>', $output);
                                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -136,7 +136,7 @@ top_panel($user,$TAB);
                         }
                         unset($output);
                         if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-                            exec (VESTA_CMD."v_add_dns_on_web_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
+                            exec (VESTA_CMD."v-add-dns-on-web-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
                             if ($return_var != 0) {
                                 $error = implode('<br>', $output);
                                 if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -151,7 +151,7 @@ top_panel($user,$TAB);
                 $alias =  preg_replace("/^www./i", "", $_POST['v_domain']);
                 $alias = 'www.'.$alias;
                 $alias = escapeshellarg($alias);
-                exec (VESTA_CMD."v_delete_web_domain_alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-delete-web-domain-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -164,7 +164,7 @@ top_panel($user,$TAB);
             if (($_POST['v_nginx'] == 'on') && (empty($_SESSION['error_msg']))) {
                 $ext = str_replace(' ', '', $v_nginx_ext);
                 $ext = escapeshellarg($ext);
-                exec (VESTA_CMD."v_add_web_domain_nginx ".$user." ".$v_domain." 'default' ".$ext." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-add-web-domain-nginx ".$user." ".$v_domain." 'default' ".$ext." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -200,7 +200,7 @@ top_panel($user,$TAB);
                 }
 
                 $v_ssl_home = escapeshellarg($_POST['v_ssl_home']);
-                exec (VESTA_CMD."v_add_web_domain_ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-add-web-domain-ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -212,7 +212,7 @@ top_panel($user,$TAB);
             // Add WebStats
             if ((!empty($_POST['v_stats'])) && ($_POST['v_stats'] != 'none' ) && (empty($_SESSION['error_msg']))) {
                 $v_stats = escapeshellarg($_POST['v_stats']);
-                exec (VESTA_CMD."v_add_web_domain_stats ".$user." ".$v_domain." ".$v_stats, $output, $return_var);
+                exec (VESTA_CMD."v-add-web-domain-stats ".$user." ".$v_domain." ".$v_stats, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -223,7 +223,7 @@ top_panel($user,$TAB);
                 if ((!empty($_POST['v_stats_user'])) && (empty($_SESSION['error_msg']))) {
                     $v_stats_user = escapeshellarg($_POST['v_stats_user']);
                     $v_stats_password = escapeshellarg($_POST['v_stats_password']);
-                    exec (VESTA_CMD."v_add_web_domain_stats_user ".$user." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
+                    exec (VESTA_CMD."v-add-web-domain-stats-user ".$user." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
                         if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -240,7 +240,7 @@ top_panel($user,$TAB);
             if ((!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
                 $v_ftp_user = escapeshellarg($_POST['v_ftp_user']);
                 $v_ftp_password = escapeshellarg($_POST['v_ftp_password']);
-                exec (VESTA_CMD."v_add_web_domain_ftp ".$user." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
+                exec (VESTA_CMD."v-add-web-domain-ftp ".$user." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -268,7 +268,7 @@ top_panel($user,$TAB);
             }
 
             if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-                exec (VESTA_CMD."v_restart_dns", $output, $return_var);
+                exec (VESTA_CMD."v-restart-dns", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -278,7 +278,7 @@ top_panel($user,$TAB);
             }
 
             if (empty($_SESSION['error_msg'])) {
-                exec (VESTA_CMD."v_restart_web", $output, $return_var);
+                exec (VESTA_CMD."v-restart-web", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = 'Error: vesta did not return any output.';
@@ -296,19 +296,19 @@ top_panel($user,$TAB);
         }
     }
 
-    exec (VESTA_CMD."v_list_user_ips ".$user." json", $output, $return_var);
+    exec (VESTA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
     $ips = json_decode(implode('', $output), true);
     unset($output);
 
-    exec (VESTA_CMD."v_get_user_value ".$user." 'TEMPLATE'", $output, $return_var);
+    exec (VESTA_CMD."v-get-user-value ".$user." 'TEMPLATE'", $output, $return_var);
     $template = $output[0] ;
     unset($output);
 
-    exec (VESTA_CMD."v_list_web_templates json", $output, $return_var);
+    exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
     $templates = json_decode(implode('', $output), true);
     unset($output);
 
-    exec (VESTA_CMD."v_list_web_stats json", $output, $return_var);
+    exec (VESTA_CMD."v-list-web-stats json", $output, $return_var);
     $stats = json_decode(implode('', $output), true);
     unset($output);
 

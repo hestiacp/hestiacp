@@ -1,0 +1,92 @@
+#!/bin/bash
+# info: add dns domain record
+# options: user domain record type value [priority] [id] [restart]
+#
+# The call is used for adding new DNS record. Complex records of TXT, MX and
+# SRV types can be used by a filling in the 'value' argument. The function also
+# gets an id parameter for definition of certain record identifier or for the
+# regulation of records.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+domain_idn=$(idn -t --quiet -a "$domain")
+record=$(idn -t --quiet -u "$3" )
+record=$(echo "$record" | tr '[:upper:]' '[:lower:]')
+rtype=$(echo "$4"| tr '[:lower:]' '[:upper:]')
+dvalue=$(idn -t --quiet -u "$5" )
+dvalue=$(echo "$dvalue" | tr '[:upper:]' '[:lower:]')
+priority=$6
+id=$7
+restart=$8
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '5' "$#" 'user domain record type value [priority] [id] [restart]'
+validate_format 'user' 'domain' 'record' 'rtype' 'dvalue'
+is_system_enabled "$DNS_SYSTEM"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+is_package_full 'DNS_RECORDS'
+get_next_dnsrecord
+validate_format 'id'
+is_object_free "dns/$domain" 'ID' "$id"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
+    priority=''
+fi
+
+# Adding record
+zone="$USER_DATA/dns/$domain.conf"
+dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
+dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+echo "$dns_rec" >> $zone
+chmod 660 $zone
+
+# Sorting records
+sort_dns_records 
+
+# Updating zone
+update_domain_zone
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Upddate counters
+records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f1 -d ' ')"
+update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+increase_user_value "$user" '$U_DNS_RECORDS'
+
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns "$EVENT"
+fi
+
+# Logging
+log_history "added $rtype dns record $record for $domain"
+log_event "$OK" "$EVENT"
+
+exit

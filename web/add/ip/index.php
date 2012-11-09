@@ -52,7 +52,7 @@ if ($_SESSION['user'] == 'admin') {
             // Add IP
             $v_interface = escapeshellarg($_POST['v_interface']);
             $v_owner = $_POST['v_owner'];
-            exec (VESTA_CMD."v_add_sys_ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." '".$ip_status."' ".$v_name, $output, $return_var);
+            exec (VESTA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." '".$ip_status."' ".$v_name, $output, $return_var);
             $v_owner = $_POST['v_owner'];
             $v_interface = $_POST['v_interface'];
             if ($return_var != 0) {
@@ -70,11 +70,11 @@ if ($_SESSION['user'] == 'admin') {
             }
         }
     }
-    exec (VESTA_CMD."v_list_sys_interfaces 'json'", $output, $return_var);
+    exec (VESTA_CMD."v-list-sys-interfaces 'json'", $output, $return_var);
     $interfaces = json_decode(implode('', $output), true);
     unset($output);
 
-    exec (VESTA_CMD."v_list_sys_users 'json'", $output, $return_var);
+    exec (VESTA_CMD."v-list-sys-users 'json'", $output, $return_var);
     $users = json_decode(implode('', $output), true);
     unset($output);
 

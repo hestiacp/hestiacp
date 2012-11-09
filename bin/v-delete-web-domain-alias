@@ -1,0 +1,108 @@
+#!/bin/bash
+# info: delete web domain alias
+# options: user domain alias [restart]
+#
+# The function of deleting the alias domain (parked domain). By this call
+# default www aliase can be removed as well.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain" )
+dom_alias=$(idn -t --quiet -u "$3" )
+dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
+restart="$4"
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'user domain dom_alias [restart]'
+validate_format 'user' 'domain' 'dom_alias'
+is_system_enabled 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+get_domain_values 'web'
+if [ -z "$(echo $ALIAS | tr ',' '\n' | grep ^$dom_alias$)" ]; then
+    echo "Error: alias $dom_alias not exist"
+    log_event "$E_NOTEXIST" "$EVENT"
+    exit $E_NOTEXIST
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining new alias string
+ALIAS=$(echo "$ALIAS" |\
+    sed -e "s/,/\n/g"|\
+    sed -e "s/^$dom_alias$//g"|\
+    sed -e "/^$/d"|\
+    sed -e ':a;N;$!ba;s/\n/,/g')
+tpl_file="$WEBTPL/apache_$TPL.tpl"
+conf="$HOMEDIR/$user/conf/web/httpd.conf"
+
+# Preparing domain values for the template substitution
+upd_web_domain_values
+
+# Recreating vhost
+del_web_config
+add_web_config
+
+if [ "$SSL" = 'yes' ]; then
+    tpl_file="$WEBTPL/apache_$TPL.stpl"
+    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+    del_web_config
+    add_web_config
+fi
+
+# Checking nginx
+if [ ! -z "$NGINX" ]; then
+    tpl_file="$WEBTPL/nginx_$NGINX.tpl"
+    conf="$HOMEDIR/$user/conf/web/nginx.conf"
+    del_web_config
+    add_web_config
+
+    if [ "$SSL" = 'yes' ]; then
+        tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+        conf="$HOMEDIR/$user/conf/web/snginx.conf"
+        del_web_config
+        add_web_config
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$ALIAS' "$ALIAS"
+
+# Update counters
+decrease_user_value "$user" '$U_WEB_ALIASES'
+
+# Restart web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web "$EVENT"
+fi
+
+# Logging
+log_history "deleted alias $dom_alias on $domain"
+log_event "$OK" "$EVENT"
+
+exit

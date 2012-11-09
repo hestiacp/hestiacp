@@ -26,7 +26,7 @@ function check_error($return_var){
 
 function top_panel($user, $TAB) {
     global $panel;
-    $command = VESTA_CMD."v_list_user '".$user."' 'json'";
+    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
         header("Location: /error/");

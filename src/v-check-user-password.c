@@ -3,7 +3,7 @@
 /*                                                                         */
 /*  This program compare user pasword from input with /etc/shadow          */
 /*  To compile run:                                                        */
-/*  "gcc -lcrypt v_check_user_password.c -o v-check-user-password"         */
+/*  "gcc -lcrypt v-check-user-password.c -o v-check-user-password"         */
 /*                                                                         */
 /*  Thanks to: bogolt, richie and burus                                    */
 /*                                                                         */

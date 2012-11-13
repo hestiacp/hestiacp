@@ -556,7 +556,7 @@ validate_format_email() {
 
 # Username
 validate_format_username() {
-    if ! [[ "$1" =~ ^[0-Z]+(\.[0-Z]+)?$ ]] || [[ "${#1}" -gt 28 ]]; then
+    if ! [[ "$1" =~ ^[0-z]+(\.[0-z]+)?$ ]] || [[ "${#1}" -gt 28 ]]; then
         echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID

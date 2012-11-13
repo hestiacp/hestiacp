@@ -30,6 +30,7 @@ function top_panel($user, $TAB) {
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
         header("Location: /error/");
+        exit;
     }
     $panel = json_decode(implode('', $output), true);
     unset($output);

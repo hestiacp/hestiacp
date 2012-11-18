@@ -46,7 +46,7 @@ vesta_ip_list=$(ls $VESTA/data/ips/)
 conf='/etc/httpd/conf.d/vesta.conf'
 nconf='/etc/nginx/conf.d/vesta_ip.conf'
 iconf='/etc/sysconfig/network-scripts/ifcfg'
-rconf='/etc/httpd/conf.d/rpaf.conf'
+rconf='/etc/httpd/conf.d/mod_extract_forwarded.conf'
 
 # Comparing each ip
 for ip in $ip_list; do

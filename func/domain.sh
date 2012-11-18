@@ -325,7 +325,7 @@ namehost_ip_support() {
              -e "s/%web_port%/$WEB_PORT/g" \
             -e "s/%proxy_port%/$PROXY_PORT/g" >>$nconf
 
-            ips=$(grep 'RPAFproxy_ips' $rconf)
+            ips=$(grep 'MEFaccept ' $rconf |grep -v '#'| head -n1)
             sed -i "s/$ips/$ips $ip/g" $rconf
         fi
         web_restart='yes'

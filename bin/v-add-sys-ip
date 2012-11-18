@@ -54,7 +54,7 @@ get_ip_iface
 conf='/etc/httpd/conf.d/vesta.conf'
 nconf='/etc/nginx/conf.d/vesta_ip.conf'
 iconf='/etc/sysconfig/network-scripts/ifcfg'
-rconf='/etc/httpd/conf.d/rpaf.conf'
+rconf='/etc/httpd/conf.d/mod_extract_forwarded.conf'
 
 # Adding ip
 /sbin/ifconfig "$iface" "$ip" netmask "$mask"

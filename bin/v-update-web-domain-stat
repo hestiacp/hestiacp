@@ -64,11 +64,9 @@ build_awstats() {
     wwwroot="/usr/share/awstats/wwwroot"
     opts="-config=$domain -staticlinks -update -output"
     month=$(date "+%Y-%m")
-    output='alldomains allhosts lasthosts unknownip allemails lastemails
-        allemailr lastemailr alllogins lastlogins allrobots lastrobots
-        urldetail urldetail:filter urlentry urlentry:filter urlexit
-        urlexit:filter osdetail browserdetail unknownbrowser unknownos
-        refererse refererpages keyphrases keywords errors404 allextraX'
+    output='alldomains allhosts lasthosts unknownip allrobots lastrobots
+        urldetail urlentry urlexit osdetail browserdetail unknownbrowser
+        unknownos refererse refererpages keyphrases keywords errors404'
 
     # Checking statistics directory
     if [ ! -e "$dir/$month" ]; then
@@ -124,7 +122,6 @@ build_awstats() {
     done
     cat $WEBTPL/awstats_nav.tpl | sed -e "s/%select_month%/$select_m/" >\
         $dir/nav.html
-
 }
 
 # Switching on statistics type

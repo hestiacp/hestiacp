@@ -85,6 +85,7 @@ fi
 if [ ! -z "$STATS" ] && [ "$STATS" != 'no' ]; then
     sed -i "/ $domain$/d" $VESTA/data/queue/webstats.pipe
     rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+    rm -f /etc/awstats/$STATS.$domain.conf
 fi
 
 # Deleting ftp account

@@ -48,6 +48,7 @@ stats_dir="$HOMEDIR/$user/web/$domain/stats"
 rm -rf $stats_dir/*
 
 # Deleting config
+rm -f /etc/awstats/$STATS.$domain.conf
 rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 
 

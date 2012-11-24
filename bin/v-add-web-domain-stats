@@ -65,6 +65,10 @@ cat $WEBTPL/$type.tpl |\
         -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
     > $HOMEDIR/$user/conf/web/$type.$domain.conf
 
+if [ "$type" == 'awstats' ]; then
+    ln -s $HOMEDIR/$user/conf/web/$type.$domain.conf /etc/awstats/
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

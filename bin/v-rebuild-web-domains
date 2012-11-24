@@ -136,6 +136,12 @@ for domain in $(shell_list) ; do
                 -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
                 > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 
+        if [ "$STATS" == 'awstats' ]; then
+            if [ ! -e "/etc/awstats/$STATS.$domain.conf" ]; then
+                ln -s $HOMEDIR/$user/conf/web/$STATS.$domain.conf /etc/awstats/
+            fi
+        fi
+
         webstats="$BIN/v-update-web-domain-stat $user $domain"
         check_webstats=$(grep "$webstats" $VESTA/data/queue/webstats.pipe)
         if [ -z "$check_webstats" ]; then

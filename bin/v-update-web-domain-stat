@@ -60,46 +60,70 @@ build_webalizer() {
 }
 
 build_awstats() {
-    awstats="/var/www/awstats"
-    awstats_options="-config=$config -staticlinks -update -output"
+    awstats="/usr/share/awstats/wwwroot/cgi-bin/awstats.pl"
+    wwwroot="/usr/share/awstats/wwwroot"
+    opts="-config=$domain -staticlinks -update -output"
     month=$(date "+%Y-%m")
-    output='alldomains allhosts lasthosts unknownip allrobots lastrobots
-            session urldetail urlentry urlexit osdetail unknownos
-            browserdetail unknownbrowser refererse refererpages keyphrases
-            keywords errors404'
+    output='alldomains allhosts lasthosts unknownip allemails lastemails
+        allemailr lastemailr alllogins lastlogins allrobots lastrobots
+        urldetail urldetail:filter urlentry urlentry:filter urlexit
+        urlexit:filter osdetail browserdetail unknownbrowser unknownos
+        refererse refererpages keyphrases keywords errors404 allextraX'
 
     # Checking statistics directory
     if [ ! -e "$dir/$month" ]; then
         mkdir -p $dir/$month
     fi
 
+    # Logo check
+    if [ ! -e "$dir/logo.png" ]; then
+        cp -r $VESTA/web/images/logo.png $dir/
+    fi
+
     # Icon directory check
     if [ ! -e "$dir/icon" ]; then
-        cp -r $awstats/icon $dir/
+        cp -r $wwwroot/icon $dir/
     fi
 
     # Creating main awstats page
-    $awstats/awstats.pl $awstats_options |\
-        sed -e "s%awstats.$config.%%g"  > $dir/$month/index.html
+    $awstats $opts | sed -e "s%awstats.$domain.%%g" > $dir/$month/index.html
 
     # Creating suplemental awstats pages
     for format in $output; do
-        $awstats/awstats.pl $awstats_options=$format |\
-            sed -e "s%awstats.$config.%%g" > $dir/$month/$format.html
+        $awstats $opts=$format |\
+            sed -e "s%awstats.$domain.%%g" > $dir/$month/$format.html
     done
 
     # Creating index page
-    cat  $WEBTPL/awstats_index.tpl | sed -e "s/%month%/$month/g" \
-         > $dir/index.html
+    cat $WEBTPL/awstats_index.tpl | sed -e "s/%month%/$month/g" >\
+        $dir/index.html
 
     # Creating navigation page
     months=$(find $dir -type d | sed -e "s%$dir/%%g" -e "s%$dir%%g" |\
-            grep -v icon | sort -r )
+        grep -v icon | sort -r )
     for link in $months; do
-        select_m="$select_m\t    <option value=\"$link\">$link<\/option>\n"
+        year=$(echo $link |cut -f 1 -d \-)
+        month=$(echo $link |cut -f 2 -d \-)
+        case "$month" in
+            1) month='January';;
+            2) month='February';;
+            3) month='March';;
+            4) month='April';;
+            5) month='May';;
+            6) month='June';;
+            7) month='July';;
+            8) month='August';;
+            9) month='September';;
+            10) month='October';;
+            11) month='November';;
+            12) month='December';;
+        esac
+        echo $month
+
+        select_m="$select_m<option value=$link>$month $year<\/option>\n"
     done
-    cat $WEBTPL/awstats_nav.tpl | sed -e "s/%select_month%/$select_m/" \
-         > $dir/nav.html
+    cat $WEBTPL/awstats_nav.tpl | sed -e "s/%select_month%/$select_m/" >\
+        $dir/nav.html
 
 }
 

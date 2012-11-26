@@ -48,7 +48,7 @@ mkdir $HOMEDIR/$user/conf/mail/$domain
 touch $HOMEDIR/$user/conf/mail/$domain/aliases
 touch $HOMEDIR/$user/conf/mail/$domain/protection
 touch $HOMEDIR/$user/conf/mail/$domain/passwd
-chown -R root:mail $HOMEDIR/$user/conf/mail/$domain
+chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain
 chmod 770 $HOMEDIR/$user/conf/mail/$domain
 chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
 mkdir $HOMEDIR/$user/mail/$domain

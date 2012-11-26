@@ -61,8 +61,8 @@ for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     touch $HOMEDIR/$user/conf/mail/$domain/aliases
     touch $HOMEDIR/$user/conf/mail/$domain/protection
     touch $HOMEDIR/$user/conf/mail/$domain/passwd
-    chown -R root:mail $HOMEDIR/$user/conf/mail/$domain
-    chown -R root:mail /etc/exim/domains/$domain
+    chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain
+    chown -R dovecot:mail /etc/exim/domains/$domain
     chmod 770 $HOMEDIR/$user/conf/mail/$domain
     chmod 660 $HOMEDIR/$user/conf/mail/$domain*
     chmod 660 /etc/exim/domains/$domain

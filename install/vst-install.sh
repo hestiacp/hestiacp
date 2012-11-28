@@ -1,0 +1,549 @@
+#!/bin/bash
+# Vesta installer
+
+# Define Variables
+email=$1
+RHOST='r.vestacp.com'
+CHOST='c.vestacp.com'
+
+REPO='cmmnt'
+VERSION='0.9.7'
+YUM_REPO='/etc/yum.repos.d/vesta.repo'
+arch=$(uname -i)
+
+rpms="nginx httpd httpd-devel.$arch mod_ssl mod_ruid2 mod_extract_forwarded
+    webalizer awstats mysql mysql-server php php-bcmath php-cli php-common
+    php-devel.$arch php-gd php-imap php-mbstring php-mcrypt php-mysql
+    php-pdo php-soap php-tidy php-xml php-xmlrpc phpMyAdmin exim dovecot
+    clamd spamassassin roundcubemail bind bind-utils bind-libs vsftpd
+    rrdtool vesta vesta-nginx vesta-php"
+
+# Am I root?
+if [ "x$(id -u)" != 'x0' ]; then
+    echo 'Error: this script can only be executed by root'
+    exit 1
+fi
+
+# Check supported version
+if [ ! -e '/etc/redhat-release' ]; then
+    echo 'Error: sorry, we currently support RHEL and CentOS only'
+    exit 1
+fi
+
+os=$(cut -f 1 -d ' ' /etc/redhat-release)
+if [ $os !=  'CentOS' ] && [ $os != 'Red' ]; then
+    echo 'Error: sorry, we currently support RHEL and CentOS only'
+fi
+release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
+
+# Are you sure ?
+if [ -z $1 ]; then
+    echo
+    echo
+    echo
+    echo
+    echo
+    echo '         ***********************************************************'
+    echo
+    echo '             _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|     '
+    echo '             _|      _|  _|        _|            _|      _|    _|   '
+    echo '             _|      _|  _|_|_|      _|_|        _|      _|_|_|_|   '
+    echo '               _|  _|    _|              _|      _|      _|    _|   '
+    echo '                 _|      _|_|_|_|  _|_|_|        _|      _|    _|   '
+    echo
+    echo
+    echo
+    echo
+    echo
+    echo
+    echo
+    echo
+    echo '         ***********************************************************'
+    echo
+    echo
+    read -n 1 -p 'Do you want to install Vesta Control Panel? [y/n]): ' answer
+    if [ "$answer" != 'y'  ] && [ "$answer" != 'Y'  ]; then
+        echo 'Goodbye'
+        exit 1
+    fi
+    echo
+
+    # Check email
+    read -p 'Please enter valid email address: ' email
+fi
+
+# Validate email
+local_part=$(echo $email | cut  -s -f1 -d\@)
+remote_host=$(echo $email | cut -s -f2 -d\@)
+mx_failed=1
+if [ ! -z "$remote_host" ] && [ ! -z "$local_part" ]; then
+    /usr/bin/host -t mx "$remote_host" &> /dev/null
+    mx_failed="$?"
+fi
+
+if [ "$mx_failed" -eq 1 ]; then
+    echo "Error: email $email is not valid"
+    exit 1
+fi
+
+echo
+echo
+echo
+echo
+echo 'Installation will take about 15 minutes ...'
+echo
+sleep 2
+
+# Check wget
+if [ ! -e '/usr/bin/wget' ]; then
+    yum -y install wget
+    if [ $? -ne 0 ]; then
+        echo "Error: can't install wget"
+        exit 1
+    fi
+fi
+
+# Check repo availability
+wget "$RHOST/$REPO/vesta.conf" -O /dev/null
+if [ $? -ne 0 ]; then
+    echo "Error: no access to $REPO repository"
+    exit 1
+fi
+
+# Check installed packages
+tmpfile=$(mktemp -p /tmp)
+rpm -qa > $tmpfile
+for rpm in $rpms; do 
+    if [ ! -z "$(grep ^$rpm. $tmpfile)" ]; then
+        conflicts="$rpm $conflicts"
+    fi
+done
+rm -f $tmpfile
+
+if [ ! -z "$conflicts" ]; then
+    echo
+    echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
+    echo
+    echo 'Following rpm packages aleady installed:'
+    echo "$conflicts"
+    echo
+    echo
+    echo 'It is recommended to remove them before proceeding.'
+    echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
+    echo
+    read -n 1 -p  'Do you really want to continue? [y/n]: ' answer
+    if [ "$answer" != 'y'  ] && [ "$answer" != 'Y'  ]; then
+        exit 1
+    fi
+    echo 
+    echo "Ok, let's try..."
+    sleep 1
+fi
+
+# Password generator
+gen_pass() {
+    MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+    LENGTH=10
+    while [ ${n:=1} -le $LENGTH ]; do
+        PASS="$PASS${MATRIX:$(($RANDOM%${#MATRIX})):1}"
+        let n+=1
+    done
+    echo "$PASS"
+}
+
+# Update system
+yum -y update
+
+# Return code check
+if [ $? -ne 0 ]; then
+    echo 'Error: yum update failed'
+    exit 1
+fi
+
+# Install additional packages
+yum -y install screen mc libpng libjpeg curl curl libmcrypt \
+    libmcrypt mhash mhash freetype openssl flex libxml2 \
+    ImageMagick sqlite sqlite GeoIP GeoIP-data GeoIP pcre pcre \
+    sudo bc mailx lsof ntp
+
+# Return code check
+if [ $? -ne 0 ]; then
+    echo 'Error: yum install failed'
+    exit 1
+fi
+
+# Install EPEL repo
+if [ ! -e '/etc/yum.repos.d/epel.repo' ]; then
+    if [ "$release" -eq '5' ]; then
+        epel="5/i386/epel-release-5-4.noarch.rpm"
+    fi
+
+    if [ "$release" -eq '6' ]; then
+        epel="6/i386/epel-release-6-7.noarch.rpm"
+    fi
+
+    rpm -ivh http://dl.fedoraproject.org/pub/epel/$epel
+    if [ $? -ne 0 ]; then
+        echo "Error: can't install EPEL repository"
+        exit 1
+    fi
+fi
+
+# Install remi repo
+if [ ! -e '/etc/yum.repos.d/remi.repo' ]; then
+    if [ "$release" -eq '5' ]; then
+        remi="remi-release-5.rpm"
+    fi
+
+    if [ "$release" -eq '6' ]; then
+        remi="remi-release-6.rpm"
+    fi
+
+    rpm -ivh http://rpms.famillecollet.com/enterprise/$remi
+    if [ $? -ne 0 ]; then
+        echo "Error: can't install remi repository"
+        exit 1
+    fi
+fi
+
+# Install vesta repo
+echo "[vesta]
+name=Vesta - $REPO
+baseurl=http://$RHOST/$REPO/$release/\$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-VESTA" > $YUM_REPO
+wget $CHOST/GPG.txt -O /etc/pki/rpm-gpg/RPM-GPG-KEY-VESTA
+
+# Checking if old MySQL stuff exists
+if [ -e '/var/lib/mysql' ]; then
+    mv -f /var/lib/mysql /var/lib/mysql_old
+fi
+if [ -e '/etc/my.cnf' ]; then 
+    mv -f /etc/my.cnf /etc/my.cnf_old
+fi
+if [ -e '/root/.my.cnf' ]; then
+    mv -f /root/.my.cnf
+fi
+
+# Vesta packages
+yum -y --enablerepo=remi install $rpms
+
+# Return code check
+if [ $? -ne 0 ]; then
+    echo 'Error: yum install failed'
+    exit 1
+fi
+
+# Configuring run levels
+chkconfig iptables off
+if [ -e /etc/init.d/sendmail ]; then
+    chkconfig sendmail off
+fi
+if [ -e /etc/init.d/postfix ]; then
+    chkconfig postfix off
+fi
+chkconfig vesta on
+chkconfig httpd on
+chkconfig nginx on
+chkconfig mysqld on
+chkconfig vsftpd on
+chkconfig named on
+chkconfig exim on
+chkconfig clamd on
+chkconfig spamassassin on
+chkconfig dovecot on
+
+# Make dirs more visible
+echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
+
+# Vesta does not support SELINUX for now
+if [ -e '/etc/sysconfig/selinux' ]; then
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+    setenforce 0
+fi
+if [ -e '/etc/selinux/config' ]; then
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    setenforce 0
+fi
+
+# Vesta use own webalizer routine
+rm -f /etc/cron.daily/00webalizer
+
+# NTP Synchronization
+echo '#!/bin/sh' > /etc/cron.daily/ntpdate
+echo '/sbin/ntpdate -s pool.ntp.org' >> /etc/cron.daily/ntpdate
+chmod 775 /etc/cron.daily/ntpdate
+/sbin/ntpdate -s pool.ntp.org
+
+# Vesta Environment
+echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh
+chmod 755 /etc/profile.d/vesta.sh
+source /etc/profile.d/vesta.sh
+echo 'PATH=$PATH:/usr/local/vesta/bin' >> /root/.bash_profile
+echo 'export PATH' >> /root/.bash_profile
+source /root/.bash_profile
+mkdir -p $VESTA/conf
+mkdir -p $VESTA/log
+mkdir -p $VESTA/data
+mkdir -p $VESTA/ssl
+chmod 770 $VESTA/conf
+
+wget $RHOST/$REPO/vesta.conf -O $VESTA/conf/vesta.conf
+wget $CHOST/$VERSION/sudoers.conf -O /etc/sudoers
+wget $CHOST/$VERSION/vesta.log -O /etc/logrotate.d/vesta
+
+sed -i "s/umask 022/umask 002/g" /etc/profile
+
+# Create backup directory
+adduser backup
+ln -s /home/backup /backup
+chmod a+x /backup
+
+# Configuring data templates
+cd /usr/local/vesta/data
+mkdir ips
+mkdir queue
+mkdir users
+touch queue/backup.pipe
+touch queue/disk.pipe
+touch queue/webstats.pipe
+touch queue/restart.pipe
+touch queue/traffic.pipe
+chmod 750 users
+chmod 750 ips
+chmod -R 750 queue
+wget $CHOST/$VERSION/packages.tar.gz -O packages.tar.gz
+tar -xzf packages.tar.gz
+rm -f packages.tar.gz
+cd /usr/local/vesta/data
+wget $CHOST/$VERSION/templates.tar.gz -O templates.tar.gz
+tar -xzf templates.tar.gz
+rm -f templates.tar.gz
+chmod -R 755 /usr/local/vesta/data/templates
+
+cp templates/web/skel/public_html/index.html /var/www/html/
+sed -i 's/%domain%/It worked!/g' /var/www/html/index.html
+
+# Configuring ssl keys
+cd /usr/local/vesta/ssl
+wget $CHOST/$VERSION/certificate.crt -O certificate.crt
+wget $CHOST/$VERSION/certificate.key -O certificate.key
+
+# Adding admin user
+vpass=$(gen_pass)
+$VESTA/bin/v-add-user admin $vpass $email default System Administrator
+if [ $? -ne 0 ]; then
+    echo "Error: can't create admin user"
+    exit 1
+fi
+
+# Set shell
+$VESTA/bin/v-change-user-shell admin bash
+
+# Apache
+wget $CHOST/$VERSION/httpd.conf -O /etc/httpd/conf/httpd.conf
+wget $CHOST/$VERSION/httpd-status.conf -O /etc/httpd/conf.d/status.conf
+wget $CHOST/$VERSION/httpd-ssl.conf -O /etc/httpd/conf.d/ssl.conf
+wget $CHOST/$VERSION/httpd.log -O /etc/logrotate.d/httpd
+echo "MEFaccept 127.0.0.1" >> /etc/httpd/conf.d/mod_extract_forwarded.conf
+echo > /etc/httpd/conf.d/proxy_ajp.conf
+echo > /etc/httpd/conf.d/vesta.conf
+touch /var/log/httpd/access_log
+touch /var/log/httpd/error_log
+touch /var/log/httpd/suexec.log
+mkdir -p /var/log/httpd/domains
+chmod a+x /var/log/httpd
+chmod 640 /var/log/httpd/access_log
+chmod 640 /var/log/httpd/error_log
+chmod 640 /var/log/httpd/suexec.log
+chmod 751 /var/log/httpd/domains
+
+# Nginx
+wget $CHOST/$VERSION/nginx.conf -O /etc/nginx/nginx.conf
+wget $CHOST/$VERSION/nginx-status.conf -O /etc/nginx/conf.d/status.conf
+rm -f /etc/nginx/conf.d/default.conf
+rm -f /etc/nginx/conf.d/example_ssl.conf
+touch /etc/nginx/conf.d/vesta_ip.conf
+touch /etc/nginx/conf.d/vesta_users.conf
+
+# VsFTP
+wget $CHOST/$VERSION/vsftpd.conf -O /etc/vsftpd/vsftpd.conf
+
+# MySQL
+mpass=$(gen_pass)
+wget $CHOST/$VERSION/mysql.cnf -O /etc/my.cnf
+service mysqld start
+mysqladmin -u root password $mpass
+echo -e "[client]\npassword='$mpass'\n" >/root/.my.cnf
+$VESTA/bin/v-add-database-server mysql localhost 3306 root $mpass
+$VESTA/bin/v-add-database admin default default $(gen_pass) mysql
+
+# Bind
+wget $CHOST/$VERSION/named.conf -O /etc/named.conf
+chown root:named /etc/named.conf
+chmod 640 /etc/named.conf
+
+# Exim
+wget $CHOST/$VERSION/exim.conf -O /etc/exim/exim.conf
+wget $CHOST/$VERSION/dnsbl.conf -O /etc/exim/dnsbl.conf
+wget $CHOST/$VERSION/spam-blocks.conf -O /etc/exim/spam-blocks.conf
+wget $CHOST/$VERSION/clamd.conf -O /etc/clamd.conf
+mkdir /etc/exim/domains
+chmod 640 /etc/exim/exim.conf
+gpasswd -a clam exim
+gpasswd -a exim mail
+gpasswd -a clam mail
+gpasswd -a dovecot mail
+/usr/bin/freshclam
+
+# Dovecot config
+if [ "$release" -eq '5' ]; then
+    wget $CHOST/$VERSION/dovecot.conf -O /etc/dovecot.conf
+else
+    wget $CHOST/$VERSION/dovecot.tar.gz -O  /etc/dovecot.tar.gz
+    rm -rf /etc/dovecot
+    cd /etc/
+    tar -xzf dovecot.tar.gz
+    rm -f dovecot.tar.gz
+fi
+
+# PMA
+wget $CHOST/$VERSION/httpd-pma.conf -O /etc/httpd/conf.d/phpMyAdmin.conf
+wget $CHOST/$VERSION/pma.conf -O /etc/phpMyAdmin/config.inc.php
+sed -i "s/%blowfish_secret%/$(gen_pass)/g" /etc/phpMyAdmin/config.inc.php
+
+# Roundcube setup
+wget $CHOST/$VERSION/httpd-webmail.conf -O /etc/httpd/conf.d/roundcubemail.conf
+wget $CHOST/$VERSION/roundcube-main.conf -O /etc/roundcubemail/main.inc.php
+wget $CHOST/$VERSION/roundcube-db.conf -O /etc/roundcubemail/db.inc.php
+
+r="$(gen_pass)"
+mysql -e "CREATE DATABASE roundcube"
+mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
+sed -i "s/%password%/$r/g" /etc/roundcubemail/db.inc.php
+mysql roundcube < /usr/share/doc/roundcubemail-*/SQL/mysql.initial.sql
+
+# Configuring ip
+$VESTA/bin/v-update-sys-ip
+
+# Get main ip
+main_ip=$(ifconfig |grep 'inet addr:' |grep -v 127.0.0.1 |head -n1 |\
+    cut -f2 -d: | cut -f1 -d ' ')
+
+# Add default web domain on main ip
+$VESTA/bin/v-add-web-domain admin default.domain $main_ip
+
+# Add default dns domain on main ip
+$VESTA/bin/v-add-dns-domain admin default.domain $main_ip
+
+# Add default mail domain
+$VESTA/bin/v-add-mail-domain admin default.domain
+
+# Configuring crond
+command='sudo /usr/local/vesta/bin/v-update-sys-queue disk'
+$VESTA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
+command='sudo /usr/local/vesta/bin/v-update-sys-queue traffic'
+$VESTA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
+command='sudo /usr/local/vesta/bin/v-update-sys-queue webstats'
+$VESTA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "$command"
+command='sudo /usr/local/vesta/bin/v-update-sys-queue backup'
+$VESTA/bin/v-add-cron-job 'admin' '*/30' '*' '*' '*' '*' "$command"
+command='sudo /usr/local/vesta/bin/v-backup-users'
+$VESTA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "$command"
+command='sudo /usr/local/vesta/bin/v-update-user-stats'
+$VESTA/bin/v-add-cron-job 'admin' '20' '00' '01' '*' '*' "$command"
+command='sudo /usr/local/vesta/bin/v-update-sys-rrd'
+$VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+
+# Creating symlink
+ln -s /usr/local/vesta/log /var/log/vesta
+
+# Stop unused services
+services='iptables sendmail postfix'
+for srv in $services; do
+    service $srv status > /dev/null
+    if [ $? -eq 0 ]; then
+        service $srv stop
+    fi
+done
+
+# Start system service
+services='vesta httpd nginx vsftpd exim dovecot clamd spamassassin named crond'
+for srv in $services; do
+    service $srv status > /dev/null
+    if [ $? -gt 0 ]; then
+        service $srv start
+    else
+        service $srv restart
+    fi
+done
+
+# Change sendmail client
+rm -f /etc/alternatives/mta
+ln -s /usr/sbin/sendmail.exim /etc/alternatives/mta
+
+# Build inititall rrd images
+$VESTA/bin/v-update-sys-rrd
+
+# Send notification to vestacp.com
+wget vestacp.com/notify/?$REPO -O /dev/null
+
+# Get server ip
+vst_ip=$(wget vestacp.com/what-is-my-ip/ -O - 2>/dev/null)
+if [ -z "$vst_ip" ]; then
+    vst_ip=$main_ip
+fi
+
+# Send email
+echo -e "Congratulations, you have just successfully installed \
+the Vesta Control Panel
+
+You can login in Vesta with following credentials:
+    username: admin
+    password: $vpass
+    https://$vst_ip:8083
+
+We hope that you enjoy your installation of Vesta. Please \
+feel free to contact us anytime if you have any questions.
+Thank you.
+
+--
+Sincerely yours
+vestacp.com team
+" > $tmpfile
+
+cat $tmpfile | mail -s "Vesta Control Panel" $email
+rm -f $tmpfile
+
+# Congrats
+echo
+echo
+echo '         ***********************************************************'
+echo
+echo '             _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|     '
+echo '             _|      _|  _|        _|            _|      _|    _|   '
+echo '             _|      _|  _|_|_|      _|_|        _|      _|_|_|_|   '
+echo '               _|  _|    _|              _|      _|      _|    _|   '
+echo '                 _|      _|_|_|_|  _|_|_|        _|      _|    _|   '
+echo
+echo '           Congratulations, you have just successfully installed'
+echo '           the Vesta Control Panel!'
+echo
+echo '           Now you can login in Vesta with following credentials:'
+echo '               username: admin'
+echo "               password: $vpass"
+echo "               https://$vst_ip:8083/"
+echo
+echo
+echo '           Thank you for using our product.'
+echo
+echo '         ***********************************************************'
+echo
+echo
+
+# Tricky way to get new PATH variable
+cd
+bash
+
+# EOF

@@ -2,7 +2,6 @@
 # Vesta installer
 
 # Define Variables
-email=$1
 RHOST='r.vestacp.com'
 CHOST='c.vestacp.com'
 
@@ -36,8 +35,39 @@ if [ $os !=  'CentOS' ] && [ $os != 'Red' ]; then
 fi
 release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
 
+help() {
+    echo "usage: $0 [OPTIONS]
+   -e, --email                Define email address
+   -h, --help                 Print this help and exit
+   -f, --force                Force installation"
+    exit 1
+}
+
+# Translating argument to --gnu-long-options
+for arg; do
+    delim=""
+    case "$arg" in
+        --help)         args="${args}-h " ;;
+        --force)        args="${args}-f " ;;
+        --email)        args="${args}-e " ;;
+        *)              [[ "${arg:0:1}" == "-" ]] || delim="\""
+                        args="${args}${delim}${arg}${delim} ";;
+    esac
+done
+eval set -- "$args"
+
+# Getopt
+while getopts "hfe:" Option; do
+    case $Option in
+        h) help ;;                        # Help
+        e) email=$OPTARG ;;               # Contact email
+        f) force=yes ;;                   # Force install
+        *) help ;;                        # Default
+    esac
+done
+
 # Are you sure ?
-if [ -z $1 ]; then
+if [ -z $email ]; then
     echo
     echo
     echo
@@ -120,24 +150,21 @@ for rpm in $rpms; do
 done
 rm -f $tmpfile
 
-if [ ! -z "$conflicts" ]; then
+if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
     echo
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
     echo 'Following rpm packages aleady installed:'
     echo "$conflicts"
     echo
+    echo 'It is highly recommended to remove them before proceeding.'
     echo
-    echo 'It is recommended to remove them before proceeding.'
+    echo 'If you want to force installation run this script with -f option:'
+    echo "Example: bash $0 --force"
+    echo
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
-    read -n 1 -p  'Do you really want to continue? [y/n]: ' answer
-    if [ "$answer" != 'y'  ] && [ "$answer" != 'Y'  ]; then
-        exit 1
-    fi
-    echo 
-    echo "Ok, let's try..."
-    sleep 1
+    exit 1
 fi
 
 # Password generator
@@ -289,8 +316,24 @@ mkdir -p $VESTA/data
 mkdir -p $VESTA/ssl
 chmod 770 $VESTA/conf
 
+# Make backup directory
+vst_backups="/root/vst_install_backups/$(date +%s)"
+mkdir -p $vst_backups
+mkdir -p $vst_backups/nginx
+mkdir -p $vst_backups/httpd
+mkdir -p $vst_backups/mysql
+mkdir -p $vst_backups/exim
+mkdir -p $vst_backups/dovecot
+mkdir -p $vst_backups/clamd
+mkdir -p $vst_backups/vsftpd
+mkdir -p $vst_backups/named
+
 wget $RHOST/$REPO/vesta.conf -O $VESTA/conf/vesta.conf
+if [ -e '/etc/sudoers' ]; then
+    mv /etc/sudoers $vst_backups/
+fi
 wget $CHOST/$VERSION/sudoers.conf -O /etc/sudoers
+chmod 0440 /etc/sudoers
 wget $CHOST/$VERSION/vesta.log -O /etc/logrotate.d/vesta
 
 sed -i "s/umask 022/umask 002/g" /etc/profile
@@ -342,6 +385,15 @@ fi
 $VESTA/bin/v-change-user-shell admin bash
 
 # Apache
+if [ -e '/etc/httpd/conf/httpd.conf' ]; then
+    mv /etc/httpd/conf/httpd.conf $vst_backups/httpd/
+fi
+if [ -e '/etc/httpd/conf.d/ssl.conf' ]; then
+    mv /etc/httpd/conf.d/ssl.conf $vst_backups/httpd/
+fi
+if [ -e '/etc/httpd/conf.d/proxy_ajp.conf' ]; then
+    mv /etc/httpd/conf.d/proxy_ajp.conf $vst_backups/httpd/
+fi
 wget $CHOST/$VERSION/httpd.conf -O /etc/httpd/conf/httpd.conf
 wget $CHOST/$VERSION/httpd-status.conf -O /etc/httpd/conf.d/status.conf
 wget $CHOST/$VERSION/httpd-ssl.conf -O /etc/httpd/conf.d/ssl.conf
@@ -360,17 +412,35 @@ chmod 640 /var/log/httpd/suexec.log
 chmod 751 /var/log/httpd/domains
 
 # Nginx
+if [ -e '/etc/nginx/nginx.conf' ]; then
+    mv /etc/nginx/nginx.conf $vst_backups/nginx/
+fi
+if [ -f '/etc/nginx/conf.d/default.conf' ]; then
+    mv /etc/nginx/conf.d/default.conf $vst_backups/nginx/
+fi
+if [ -e '/etc/nginx/conf.d/example_ssl.conf' ]; then
+    mv /etc/nginx/conf.d/example_ssl.conf $vst_backups/nginx/
+fi
+
 wget $CHOST/$VERSION/nginx.conf -O /etc/nginx/nginx.conf
 wget $CHOST/$VERSION/nginx-status.conf -O /etc/nginx/conf.d/status.conf
-rm -f /etc/nginx/conf.d/default.conf
-rm -f /etc/nginx/conf.d/example_ssl.conf
 touch /etc/nginx/conf.d/vesta_ip.conf
 touch /etc/nginx/conf.d/vesta_users.conf
 
 # VsFTP
+if [ -e '/etc/vsftpd/vsftpd.conf' ]; then
+    mv /etc/vsftpd/vsftpd.conf $vst_backups/vsftpd/
+fi
 wget $CHOST/$VERSION/vsftpd.conf -O /etc/vsftpd/vsftpd.conf
 
 # MySQL
+if [ -e '/etc/my.cnf' ]; then
+    mv /etc/my.cnf $vst_backups/mysql/
+fi
+
+if [ -e '/root/.my.cnf' ]; then
+    mv /root/.my.cnf $vst_backups/mysql/
+fi
 mpass=$(gen_pass)
 wget $CHOST/$VERSION/mysql.cnf -O /etc/my.cnf
 service mysqld start
@@ -380,11 +450,20 @@ $VESTA/bin/v-add-database-server mysql localhost 3306 root $mpass
 $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 
 # Bind
+if [ -e '/etc/named.conf' ]; then
+    mv /etc/named.conf $vst_backups/named/
+fi
 wget $CHOST/$VERSION/named.conf -O /etc/named.conf
 chown root:named /etc/named.conf
 chmod 640 /etc/named.conf
 
 # Exim
+if [ -e '/etc/exim/exim.conf' ]; then
+    mv /etc/exim/exim.conf $vst_backups/exim/
+fi
+if [ -e '/etc/clamd.conf' ]; then
+    mv /etc/clamd.conf $vst_backups/clamd/
+fi
 wget $CHOST/$VERSION/exim.conf -O /etc/exim/exim.conf
 wget $CHOST/$VERSION/dnsbl.conf -O /etc/exim/dnsbl.conf
 wget $CHOST/$VERSION/spam-blocks.conf -O /etc/exim/spam-blocks.conf
@@ -399,10 +478,16 @@ gpasswd -a dovecot mail
 
 # Dovecot config
 if [ "$release" -eq '5' ]; then
+    if -e [ '/etc/dovecot.conf' ]; then
+        mv /etc/dovecot.conf $vst_backups/dovecot/
+    fi
     wget $CHOST/$VERSION/dovecot.conf -O /etc/dovecot.conf
+    
 else
+    if [ -e '/etc/dovecot' ]; then
+        mv /etc/dovecot/* $vst_backups/dovecot/
+    fi
     wget $CHOST/$VERSION/dovecot.tar.gz -O  /etc/dovecot.tar.gz
-    rm -rf /etc/dovecot
     cd /etc/
     tar -xzf dovecot.tar.gz
     rm -f dovecot.tar.gz

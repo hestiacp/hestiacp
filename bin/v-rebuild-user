@@ -68,7 +68,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     mkdir -p $HOMEDIR/$user/tmp
     chmod 751 $HOMEDIR/$user/conf/web
     chmod 751 $HOMEDIR/$user/web
-    chmod 777 $HOMEDIR/$user/tmp
+    chmod 771 $HOMEDIR/$user/tmp
     chown $user:$user $HOMEDIR/$user/web
     $BIN/v-rebuild-web-domains $user $restart
 fi

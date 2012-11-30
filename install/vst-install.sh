@@ -10,12 +10,15 @@ VERSION='0.9.7'
 YUM_REPO='/etc/yum.repos.d/vesta.repo'
 arch=$(uname -i)
 
+tools="screen mc libpng libjpeg curl curl libmcrypt libmcrypt mhash mhash
+    freetype openssl flex libxml2 ImageMagick sqlite sqlite pcre pcre sudo bc
+    mailx lsof ntp tar whois telnet rsync"
+
 rpms="nginx httpd httpd-devel.$arch mod_ssl mod_ruid2 mod_extract_forwarded
     webalizer awstats mysql mysql-server php php-bcmath php-cli php-common
-    php-devel.$arch php-gd php-imap php-mbstring php-mcrypt php-mysql
-    php-pdo php-soap php-tidy php-xml php-xmlrpc phpMyAdmin exim dovecot
-    clamd spamassassin roundcubemail bind bind-utils bind-libs vsftpd
-    rrdtool vesta vesta-nginx vesta-php"
+    php-gd php-imap php-mbstring php-mcrypt php-mysql php-pdo php-soap php-tidy
+    php-xml php-xmlrpc phpMyAdmin exim dovecot clamd spamassassin roundcubemail
+    bind bind-utils bind-libs vsftpd rrdtool GeoIP vesta vesta-nginx vesta-php"
 
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then
@@ -180,20 +183,13 @@ gen_pass() {
 
 # Update system
 yum -y update
-
-# Return code check
 if [ $? -ne 0 ]; then
     echo 'Error: yum update failed'
     exit 1
 fi
 
 # Install additional packages
-yum -y install screen mc libpng libjpeg curl curl libmcrypt \
-    libmcrypt mhash mhash freetype openssl flex libxml2 \
-    ImageMagick sqlite sqlite GeoIP GeoIP-data GeoIP pcre pcre \
-    sudo bc mailx lsof ntp
-
-# Return code check
+yum -y install $tools
 if [ $? -ne 0 ]; then
     echo 'Error: yum install failed'
     exit 1
@@ -255,8 +251,6 @@ fi
 
 # Vesta packages
 yum -y --enablerepo=remi install $rpms
-
-# Return code check
 if [ $? -ne 0 ]; then
     echo 'Error: yum install failed'
     exit 1

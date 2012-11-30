@@ -8,17 +8,21 @@
 
 How to install
 ----------------------------
-# Connect to your server as root via SSH
+Connect to your server as root via SSH
 ```bash
 ssh root@your.server
 ```
 
-# Download installation script
+Download installation script
+```bash
+curl -O http://vestacp.com/pub/vst-install.sh
+```
+or download it using wget
 ```bash
 wget http://vestacp.com/pub/vst-install.sh
 ```
 
-#Run it
+Run it
 ```bash
 bash vst-install.sh
 ```

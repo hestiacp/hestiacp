@@ -461,7 +461,7 @@ unsuspend_mysql_database() {
     query="GRANT ALL ON $database.* FROM '$DBUSER'@'%'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="GRANT ALL ON $database.* FROM '$DBUSER'@'localhost'"
+    query="GRANT ALL ON $database.* TO '$DBUSER'@'localhost'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 }
 

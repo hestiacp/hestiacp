@@ -376,7 +376,8 @@ local_backup(){
     fi
 
     # Checking disk space
-    disk_usage=$(df $BACKUP | awk '{print $5}'|tail -n1|cut -f 1 -d '%')
+    disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
+
     if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
         echo "Error: Not enough disk space"
         log_event "$E_DISK" "$EVENT"

@@ -388,7 +388,7 @@ local_backup(){
     cd $tmpdir
     tar -cf $BACKUP/$user.$DATE.tar .
     chmod 640 $BACKUP/$user.$DATE.tar
-    chown nginx:$user $BACKUP/$user.$DATE.tar
+    chown nginx:admin $BACKUP/$user.$DATE.tar
     localbackup='yes'
     echo
 

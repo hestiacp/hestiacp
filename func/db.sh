@@ -512,6 +512,7 @@ get_mysql_disk_usage() {
     if [ "$usage" == 'NULL' ] || [ "${usage:0:1}" -eq '0' ]; then
         usage=1
     fi
+    export LC_ALL=C
     usage=$(printf "%0.f\n"  $usage)
 }
 

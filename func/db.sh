@@ -102,17 +102,19 @@ add_mysql_database() {
         exit $E_DB
     fi
 
-    query="CREATE DATABASE $database CHARACTER SET $charset"
+
+    query="CREATE DATABASE \`$database\` CHARACTER SET $charset"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="GRANT ALL ON $database.* TO '$dbuser'@'%' IDENTIFIED BY '$dbpass'"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
-
-    query="GRANT ALL ON $database.* TO '$dbuser'@'localhost'
+    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
         IDENTIFIED BY '$dbpass'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="SHOW GRANTS FOR '$dbuser'"
+    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+        IDENTIFIED BY '$dbpass'"
+    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+
+    query="SHOW GRANTS FOR \`$dbuser\`"
     md5=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query")
     md5=$(echo "$md5" |grep 'PASSWORD' |tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
 }
@@ -215,10 +217,11 @@ change_mysql_password() {
         exit $E_DB
     fi
 
-    query="GRANT ALL ON $database.* TO '$DBUSER'@'%' IDENTIFIED BY '$dbpass'"
+    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
+        IDENTIFIED BY '$dbpass'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="GRANT ALL ON $database.* TO '$DBUSER'@'localhost'
+    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
         IDENTIFIED BY '$dbpass'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
@@ -271,13 +274,13 @@ delete_mysql_database() {
         exit $E_DB
     fi
 
-    query="DROP DATABASE $database"
+    query="DROP DATABASE \`$database\`"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="REVOKE ALL ON $database.* FROM '$DBUSER'@'%'"
+    query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="REVOKE ALL ON $database.* FROM '$DBUSER'@'localhost'"
+    query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
     if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
@@ -409,12 +412,11 @@ suspend_mysql_database() {
         exit $E_DB
     fi
 
-    query="REVOKE ALL ON $database.* FROM '$DBUSER'@'%'"
+    query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="REVOKE ALL ON $database.* FROM '$DBUSER'@'localhost'"
+    query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
-
 }
 
 # Suspend PostgreSQL database
@@ -458,10 +460,10 @@ unsuspend_mysql_database() {
         exit $E_DB
     fi
 
-    query="GRANT ALL ON $database.* FROM '$DBUSER'@'%'"
+    query="GRANT ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="GRANT ALL ON $database.* TO '$DBUSER'@'localhost'"
+    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 }
 
@@ -507,7 +509,7 @@ get_mysql_disk_usage() {
     fi
 
     query="SELECT SUM( data_length + index_length ) / 1024 / 1024 \"Size\"
-        FROM information_schema.TABLES WHERE table_schema='$database'"
+        FROM information_schema.TABLES WHERE table_schema=\`$database\`"
     usage=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |tail -n1)
     if [ "$usage" == 'NULL' ] || [ "${usage:0:1}" -eq '0' ]; then
         usage=1
@@ -566,13 +568,13 @@ rebuild_mysql_database() {
         exit $E_DB
     fi
 
-    query="CREATE DATABASE $database CHARACTER SET $CHARSET"
+    query="CREATE DATABASE \`$database\` CHARACTER SET $CHARSET"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="GRANT ALL ON $database.* TO '$DBUSER'@'%'"
+    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
-    query="GRANT ALL ON $database.* TO '$DBUSER'@'localhost'"
+    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
 
     query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER';"

@@ -436,7 +436,12 @@ if [ -e '/root/.my.cnf' ]; then
     mv /root/.my.cnf $vst_backups/mysql/
 fi
 mpass=$(gen_pass)
-wget $CHOST/$VERSION/mysql.cnf -O /etc/my.cnf
+server_memory="$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])"
+if [ "$server_memory" -gt '1000000' ]; then
+    wget $CHOST/$VERSION/mysql.cnf -O /etc/my.cnf
+else
+    wget $CHOST/$VERSION/mysql-512.cnf -O /etc/my.cnf
+fi
 service mysqld start
 mysqladmin -u root password $mpass
 echo -e "[client]\npassword='$mpass'\n" >/root/.my.cnf

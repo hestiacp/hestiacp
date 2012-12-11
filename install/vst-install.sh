@@ -575,6 +575,11 @@ wget vestacp.com/notify/?$REPO -O /dev/null
 
 # Get server ip
 vst_ip=$(wget vestacp.com/what-is-my-ip/ -O - 2>/dev/null)
+if [ ! -z "$vst_ip" ] && [ "$vst_ip" != "$main_ip" ]; then
+    # Assign passive ip address
+    echo "pasv_address=54.246.111.50" >> /etc/vsftpd/vsftpd.conf
+fi
+
 if [ -z "$vst_ip" ]; then
     vst_ip=$main_ip
 fi

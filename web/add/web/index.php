@@ -182,6 +182,7 @@ top_panel($user,$TAB);
                 if (!empty($_POST['v_ssl_crt'])) {
                     $fp = fopen($tmpdir."/".$_POST['v_domain'].".crt", 'w');
                     fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_crt']));
+                    fwrite($fp, "\n");
                     fclose($fp);
                 }
 
@@ -189,6 +190,7 @@ top_panel($user,$TAB);
                 if (!empty($_POST['v_ssl_key'])) {
                     $fp = fopen($tmpdir."/".$_POST['v_domain'].".key", 'w');
                     fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_key']));
+                    fwrite($fp, "\n");
                     fclose($fp);
                 }
 
@@ -196,6 +198,7 @@ top_panel($user,$TAB);
                 if (!empty($_POST['v_ssl_ca'])) {
                     $fp = fopen($tmpdir."/".$_POST['v_domain'].".ca", 'w');
                     fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_ca']));
+                    fwrite($fp, "\n");
                     fclose($fp);
                 }
 

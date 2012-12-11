@@ -15,7 +15,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-ip=$1
+ip=${1// /}
 mask=$2
 interface="${3-eth0}"
 user="${4-admin}"

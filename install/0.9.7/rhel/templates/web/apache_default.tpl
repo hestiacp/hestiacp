@@ -14,12 +14,10 @@
     <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes %cgi_option%
-        php_admin_value sendmail_path '/usr/sbin/sendmail -t -i -f %email%'
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    php_admin_value open_basedir none
 
     <IfModule mod_ruid2.c>
         RMode config

@@ -19,7 +19,6 @@
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    php_admin_value open_basedir none
     SSLEngine on
     SSLVerifyClient none
     SSLCertificateFile %ssl_crt%

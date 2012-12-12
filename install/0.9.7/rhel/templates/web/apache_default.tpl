@@ -14,9 +14,6 @@
     <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes %cgi_option%
-        php_admin_value upload_tmp_dir %home%/%user%/tmp
-        php_admin_flag safe_mode off
-        php_admin_value session.save_path %home%/%user%/tmp
         php_admin_value sendmail_path '/usr/sbin/sendmail -t -i -f %email%'
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>

@@ -78,6 +78,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     chmod 751 $HOMEDIR/$user/web
     chmod 771 $HOMEDIR/$user/tmp
     chown $user:$user $HOMEDIR/$user/web
+    chown $user:$user $HOMEDIR/$user/tmp
 fi
 
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then

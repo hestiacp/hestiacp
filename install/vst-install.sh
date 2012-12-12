@@ -293,9 +293,9 @@ rm -f /etc/cron.daily/00webalizer
 
 # NTP Synchronization
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
-echo '/sbin/ntpdate -s pool.ntp.org' >> /etc/cron.daily/ntpdate
+echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
 chmod 775 /etc/cron.daily/ntpdate
-/sbin/ntpdate -s pool.ntp.org
+ntpdate -s pool.ntp.org
 
 # Vesta Environment
 echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh

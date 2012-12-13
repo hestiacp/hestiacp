@@ -509,7 +509,7 @@ get_mysql_disk_usage() {
     fi
 
     query="SELECT SUM( data_length + index_length ) / 1024 / 1024 \"Size\"
-        FROM information_schema.TABLES WHERE table_schema=\`$database\`"
+        FROM information_schema.TABLES WHERE table_schema='$database'"
     usage=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |tail -n1)
     if [ "$usage" == 'NULL' ] || [ "${usage:0:1}" -eq '0' ]; then
         usage=1

@@ -39,11 +39,15 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Get old ip
+get_domain_values 'dns'
+old=$IP
+
 # Changing ip
 update_object_value 'dns' 'DOMAIN' "$domain" '$IP' "$ip"
 
 # Changing records
-sed -i "s/$old_ip/$ip/g" $USER_DATA/dns/$domain.conf
+sed -i "s/$old/$ip/g" $USER_DATA/dns/$domain.conf
 
 # Updating zone
 update_domain_zone

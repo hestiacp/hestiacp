@@ -259,13 +259,13 @@ is_web_domain_cert_valid() {
         crt=$(openssl verify $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
     else
         crt=$(openssl verify -untrusted $ssl_dir/$domain.ca \
-	    $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
+        $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
     fi
-    if [ -z "$crt" ]; then
-        echo "Error: certificate is not valid"
-        log_event "$E_INVALID" "$EVENT"
-        exit $E_INVALID
-    fi
+    #if [ -z "$crt" ]; then
+    #    echo "Error: certificate is not valid"
+    #    log_event "$E_INVALID" "$EVENT"
+    #    exit $E_INVALID
+    #fi
 
     openssl rsa -in "$ssl_dir/$domain.key" -check &>/dev/null
     if [ "$?" -ne 0 ]; then

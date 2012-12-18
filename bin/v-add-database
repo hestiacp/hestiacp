@@ -50,7 +50,7 @@ is_object_free 'db' 'DB' "$database"
 get_next_dbhost
 is_object_valid "../../../conf/$type" 'HOST' "$host"
 is_object_unsuspended "../../../conf/$type" 'HOST' "$host"
-is_charset_valid
+#is_charset_valid
 is_package_full 'DATABASES'
 
 #----------------------------------------------------------#

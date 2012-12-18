@@ -55,7 +55,7 @@ esac
 # Concatentating db host string
 case $type in
     mysql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass' PORT='$port'";
-           str="$str CHARSETS='$charsets' MAX_DB='$max_db' U_SYS_USERS='' ";
+           str="$str CHARSETS='$charsets' MAX_DB='$max_db' U_SYS_USERS=''";
            str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'";;
     pgsql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass' PORT='$port'";
            str="$str CHARSETS='$charsets' TPL='$template' MAX_DB='$max_db'";

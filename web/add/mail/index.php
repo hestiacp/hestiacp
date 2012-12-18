@@ -61,7 +61,7 @@ top_panel($user,$TAB);
             unset($output);
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: domain <b>".$_POST[v_domain]."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: domain <a href='/list/mail/?domain=".$_POST[v_domain]."'><b>".$_POST[v_domain]."</b></a> has been created successfully.";
                 unset($v_domain);
             }
         }
@@ -149,7 +149,7 @@ top_panel($user,$TAB);
 
             unset($output);
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: account <b>".$_POST['v_account']."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: account <a href='/edit/mail/?account=".$_POST['v_account']."&domain=".$_POST[v_domain]."'><b>".$_POST['v_account']."@".$_POST[v_domain]."</b></a> has been created successfully.";
                 unset($v_account);
                 unset($v_password);
                 unset($v_password);

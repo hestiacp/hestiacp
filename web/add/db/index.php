@@ -53,7 +53,7 @@ top_panel($user,$TAB);
                 unset($v_password);
                 unset($output);
             } else {
-                $_SESSION['ok_msg'] = "OK: database <b>".$user."_".$_POST['v_database']."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: database <a href='/edit/db/?database=".$user."_".$_POST['v_database']."'><b>".$user."_".$_POST['v_database']."</b></a> has been created successfully.";
                 unset($v_database);
                 unset($v_dbuser);
                 unset($v_password);

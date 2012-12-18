@@ -62,7 +62,7 @@ if ($_SESSION['user'] == 'admin') {
                 unset($v_password);
                 unset($output);
             } else {
-                $_SESSION['ok_msg'] = "OK: ip <b>".$_POST['v_ip']."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: ip <a href='/edit/ip/?ip=".$_POST['v_ip']."'><b>".$_POST['v_ip']."</b></a> has been created successfully.";
                 unset($v_ip);
                 unset($v_netmask);
                 unset($v_name);

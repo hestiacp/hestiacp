@@ -79,7 +79,7 @@ top_panel($user,$TAB);
             }
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: domain <b>".$_POST[v_domain]."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: domain <a href='/list/dns/?domain=".$_POST[v_domain]."'><b>".$_POST[v_domain]."</b></a> has been created successfully.";
                 unset($v_domain);
             }
         }
@@ -122,7 +122,7 @@ top_panel($user,$TAB);
             }
             unset($output);
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: record <b>".$_POST[v_rec]."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: record <b>".$_POST[v_rec].".".$_POST[v_domain]."</b> has been created successfully.";
                 unset($v_domain);
                 unset($v_rec);
                 unset($v_val);

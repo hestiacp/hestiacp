@@ -78,7 +78,7 @@ if ($_SESSION['user'] == 'admin') {
                     send_email($to, $subject, $mailtext, $from);
                 }
 
-                $_SESSION['ok_msg'] = "OK: user <b>".$_POST[v_username]."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: user <a href='/edit/user/?user=".$_POST[v_username]."'><b>".$_POST[v_username]."</b></a> has been created successfully.";
                 unset($v_username);
                 unset($v_password);
                 unset($v_email);

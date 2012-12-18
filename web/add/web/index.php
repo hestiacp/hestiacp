@@ -287,7 +287,7 @@ top_panel($user,$TAB);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
-                $_SESSION['ok_msg'] = "OK: domain <b>".$_POST[v_domain]."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: domain <a href='/edit/web/?domain=".$_POST[v_domain]."'><b>".$_POST[v_domain]."</b></a> has been created successfully.";
                 unset($v_domain);
                 unset($v_aliases);
                 unset($v_ssl);

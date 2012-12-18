@@ -12,10 +12,10 @@
                                         <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Editing Domain</b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<a class=\"add-error\"> → ".$_SESSION['error_msg']."</a>";
+                                                    echo "<span class=\"add-error\"> → ".$_SESSION['error_msg']."</span>";
                                                 } else {
                                                     if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<a class=\"add-ok\"> → ".$_SESSION['ok_msg']."</a>";
+                                                        echo "<span class=\"add-ok\"> → ".$_SESSION['ok_msg']."</span>";
                                                     }
                                                 }
                                             ?>

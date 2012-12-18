@@ -119,7 +119,7 @@ if ($_SESSION['user'] == 'admin') {
 
             // Check output
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: package <b>".$_POST['v_package']."</b> has been created successfully.";
+                $_SESSION['ok_msg'] = "OK: package <a href='/edit/package/?package=".$_POST['v_package']."'><b>".$_POST['v_package']."</b></a> has been created successfully.";
                 unset($v_package);
             }
 

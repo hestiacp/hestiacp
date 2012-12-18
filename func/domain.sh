@@ -249,42 +249,59 @@ get_domain_values() {
 
 # SSL certificate verification
 is_web_domain_cert_valid() {
-    if [ ! -e "$ssl_dir/$domain.crt" ] || [ ! -e "$ssl_dir/$domain.key" ]; then
-        echo "Error: $ssl_dir/$domain.[crt|key] not found"
+    if [ ! -e "$ssl_dir/$domain.crt" ]; then
+        echo "Error: $ssl_dir/$domain.crt not found"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
 
-    if [ ! -e "$ssl_dir/$domain.ca" ]; then
-        crt=$(openssl verify $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
-    else
-        crt=$(openssl verify -untrusted $ssl_dir/$domain.ca \
-        $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
+    if [ ! -e "$ssl_dir/$domain.key" ]; then
+        echo "Error: $ssl_dir/$domain.key not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
     fi
-    #if [ -z "$crt" ]; then
-    #    echo "Error: certificate is not valid"
-    #    log_event "$E_INVALID" "$EVENT"
-    #    exit $E_INVALID
-    #fi
 
-    openssl rsa -in "$ssl_dir/$domain.key" -check &>/dev/null
-    if [ "$?" -ne 0 ]; then
+    crt_vrf=$(openssl verify $ssl_dir/$domain.crt 2>&1)
+    if [ ! -z "$(echo $crt_vrf | grep 'unable to load')" ]; then
+        echo "Error: certificate is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+
+    if [ ! -z "$(echo $crt_vrf | grep 'unable to get local issuer')" ]; then
+        if [ ! -e "$ssl_dir/$domain.ca" ]; then
+            echo "Error: certificate authority not found"
+            log_event "$E_NOTEXIST" "$EVENT"
+            exit $E_NOTEXIST
+        fi
+    fi
+
+    if [ -e "$ssl_dir/$domain.ca" ]; then
+        ca_vrf=$(openssl verify $ssl_dir/$domain.ca 2>/dev/null |grep 'OK')
+        if [ -z "$ca_vrf" ]; then
+            echo "Error: ssl certificate authority is not valid"
+            log_event "$E_INVALID" "$EVENT"
+            exit $E_INVALID
+        fi
+
+        crt_vrf=$(openssl verify -untrusted $ssl_dir/$domain.ca \
+            $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
+        if [ -z "$crt_vrf" ]; then
+            echo "Error: root or/and intermediate cerificate not found"
+            log_event "$E_NOTEXIST" "$EVENT"
+            exit $E_NOTEXIST
+        fi
+    fi
+
+    key_vrf=$(grep 'RSA PRIVATE KEY' $ssl_dir/$domain.key | wc -l)
+    if [ "$key_vrf" -ne 2 ]; then
         echo "Error: ssl key is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
 
-    if [ -e "$ssl_dir/$domain.ca" ]; then
-        ca=$(openssl verify $ssl_dir/$domain.ca 2>/dev/null |grep 'OK')
-        if [ -z "$ca" ]; then
-            echo "Error: ssl certificate authority is not valid"
-            log_event "$E_INVALID" "$EVENT"
-            exit $E_INVALID
-        fi
-    fi
-
     openssl s_server -quiet -cert $ssl_dir/$domain.crt \
-        -key $ssl_dir/$domain.key &
+        -key $ssl_dir/$domain.key >> /dev/null 2>&1 &
     pid=$!
     sleep 0.5
     disown &> /dev/null

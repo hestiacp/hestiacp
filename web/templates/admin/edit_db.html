@@ -12,10 +12,10 @@
                                         <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Editing Database</b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<span class=\"add-error\"> → ".$_SESSION['error_msg']."</span>";
+                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
                                                 } else {
                                                     if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<span class=\"add-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                                                     }
                                                 }
                                             ?>
@@ -65,63 +65,63 @@
                                     </table>
                                     <table class="data-col2" width="600px">
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Database
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_database" <?php if (!empty($v_database)) echo "value=".$v_database; ?> disabled>
+                                                <input type="text" size="20" class="vst-input" name="v_database" <?php if (!empty($v_database)) echo "value=".$v_database; ?> disabled>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Username
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_dbuser" <?php if (!empty($v_dbuser)) echo "value=".$v_dbuser; ?> disabled>
+                                                <input type="text" size="20" class="vst-input" name="v_dbuser" <?php if (!empty($v_dbuser)) echo "value=".$v_dbuser; ?> disabled>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Password <a href="javascript:randomString();" class="genpass">generate</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_password"  <?php if (!empty($v_password)) echo "value=".$v_password; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_password"  <?php if (!empty($v_password)) echo "value=".$v_password; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Type
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_type" <?php if (!empty($v_type)) echo "value=".$v_type; ?> disabled>
+                                                <input type="text" size="20" class="vst-input" name="v_type" <?php if (!empty($v_type)) echo "value=".$v_type; ?> disabled>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Host
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_host" <?php if (!empty($v_host)) echo "value=".$v_host; ?> disabled>
+                                                <input type="text" size="20" class="vst-input" name="v_host" <?php if (!empty($v_host)) echo "value=".$v_host; ?> disabled>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Charset
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_charset" <?php if (!empty($v_charset)) echo "value=".$v_charset; ?> disabled>
+                                                <input type="text" size="20" class="vst-input" name="v_charset" <?php if (!empty($v_charset)) echo "value=".$v_charset; ?> disabled>
                                             </td>
                                         </tr>
                                         <tr>

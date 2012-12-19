@@ -12,10 +12,10 @@
                                         <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Editing User</b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<span class=\"add-error\"> → ".$_SESSION['error_msg']."</span>";
+                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
                                                 } else {
                                                     if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<span class=\"add-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                                                     }
                                                 }
                                             ?>
@@ -57,43 +57,43 @@
 
                                     <table class="data-col2" width="830px">
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Username
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_user" <?php if (!empty($v_username)) echo "value=".$v_username;  ?> disabled> <input type="hidden" name="v_username" <?php if (!empty($v_username)) echo "value=".$v_username;  ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_user" <?php if (!empty($v_username)) echo "value=".$v_username;  ?> disabled> <input type="hidden" name="v_username" <?php if (!empty($v_username)) echo "value=".$v_username;  ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Password <a href="javascript:randomString();" class="genpass">generate</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Email
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_email" <?php if (!empty($v_email)) echo "value=".$v_email; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_email" <?php if (!empty($v_email)) echo "value=".$v_email; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;" >
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;" >
                                                 Package
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="add-list" name="v_package">
+                                                <select class="vst-list" name="v_package">
                                                     <?php
                                                         foreach ($packages as $key => $value) {
                                                             echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
@@ -108,33 +108,33 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Frist Name
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".$v_fname; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".$v_fname; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Last Name
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;" >
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;" >
                                                 Default Template
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="add-list" name="v_template">
+                                                <select class="vst-list" name="v_template">
                                                     <?php
                                                         foreach ($templates as $key => $value) {
                                                             echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
@@ -149,13 +149,13 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;" >
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;" >
                                                 Shell
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="add-list" name="v_shell">
+                                                <select class="vst-list" name="v_shell">
                                                     <?php
                                                         foreach ($shells as $key => $value) {
                                                             echo "\t\t\t\t<option value=\"".$value."\"";
@@ -170,28 +170,28 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Default Name Servers
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".$v_ns1; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".$v_ns1; ?>>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".$v_ns2; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".$v_ns2; ?>>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".$v_ns3; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".$v_ns3; ?>>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>>
                                             </td>
                                         </tr>
                                         <tr>

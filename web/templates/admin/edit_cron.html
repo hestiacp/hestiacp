@@ -13,10 +13,10 @@
                                         <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Editing Cron Job</b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<span class=\"add-error\"> → ".$_SESSION['error_msg']."</span>";
+                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
                                                 } else {
                                                     if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<span class=\"add-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                                                     }
                                                 }
                                             ?>
@@ -46,63 +46,63 @@
 
                                     <table class="data-col2" width="600px">
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Minute
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_min" <?php if (!empty($v_min)) echo "value=".$v_min; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_min" <?php if (!empty($v_min)) echo "value=".$v_min; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Hour
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_hour" <?php if (!empty($v_hour)) echo "value=".$v_hour; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_hour" <?php if (!empty($v_hour)) echo "value=".$v_hour; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Day
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_day" <?php if (!empty($v_day)) echo "value=".$v_day; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_day" <?php if (!empty($v_day)) echo "value=".$v_day; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Month
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_month" <?php if (!empty($v_month)) echo "value=".$v_month; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_month" <?php if (!empty($v_month)) echo "value=".$v_month; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Day of Week
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_wday" <?php if (!empty($v_wday)) echo "value=".$v_wday; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_wday" <?php if (!empty($v_wday)) echo "value=".$v_wday; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Command
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_cmd" <?php if (!empty($v_cmd)) echo "value='".$v_cmd."'"; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_cmd" <?php if (!empty($v_cmd)) echo "value='".$v_cmd."'"; ?>>
                                             </td>
                                         </tr>
                                         <tr>

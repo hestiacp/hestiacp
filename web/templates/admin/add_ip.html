@@ -13,10 +13,10 @@
                                         <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Adding IP Address</b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<span class=\"add-error\"> → ".$_SESSION['error_msg']."</span>";
+                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
                                                 } else {
                                                     if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<span class=\"add-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                                                     }
                                                 }
                                             ?>
@@ -54,33 +54,33 @@
                                     </table>
                                     <table class="data-col2" width="600px">
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 IP
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Netmask
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_netmask" <?php if (!empty($v_netmask)) echo "value=".$v_netmask; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_netmask" <?php if (!empty($v_netmask)) echo "value=".$v_netmask; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Interface
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="add-list" name="v_interface">
+                                                <select class="vst-list" name="v_interface">
                                                     <?php
                                                         foreach ($interfaces as $key => $value) {
                                                             echo "\t\t\t\t<option value=\"".$value."\"";
@@ -92,26 +92,26 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 Shared
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="checkbox" size="20" class="add-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');">
+                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <table style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
                                                     <tr>
-                                                        <td class="add-text" style="padding: 0 0 0 2px;">
+                                                        <td class="vst-text" style="padding: 0 0 0 2px;">
                                                             Assigned User
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <select class="add-list" name="v_owner">
+                                                            <select class="vst-list" name="v_owner">
                                                                 <?php
                                                                     foreach ($users as $key => $value) {
                                                                         echo "\t\t\t\t<option value=\"".$value."\"";
@@ -126,13 +126,13 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Associated Domain <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_name" <?php if (!empty($v_name)) echo "value=".$v_name; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_name" <?php if (!empty($v_name)) echo "value=".$v_name; ?>>
                                             </td>
                                         </tr>
                                         <tr>

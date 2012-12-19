@@ -12,10 +12,10 @@
                                         <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Adding DNS Domain</b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<span class=\"add-error\"> → ".$_SESSION['error_msg']."</span>";
+                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
                                                 } else {
                                                     if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<span class=\"add-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                                                     }
                                                 }
                                             ?>
@@ -53,76 +53,76 @@
                                     </table>
                                     <table class="data-col2" width="600px">
                                         <tr>
-                                            <td class="add-text" style="padding: 10 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10 0 0 2px;">
                                                 Domain
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 IP address
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="add-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 2px;">
-                                                <a href="javascript:elementHideShow('advtable');" class="add-advanced">Advanced Options</a>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced">Advanced Options</a>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="add-text" style="padding: 10px 0 0 0px;">
+                                            <td class="vst-text" style="padding: 10px 0 0 0px;">
                                                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                                     <tr>
-                                                        <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                             Domain Expiriation <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(YYYY-MM-DD)</span>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="add-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".$v_exp; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".$v_exp; ?>>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                             TTL
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="add-input" name="v_ttl" <?php if (!empty($v_ttl)) echo "value=".$v_ttl; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_ttl" <?php if (!empty($v_ttl)) echo "value=".$v_ttl; ?>>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="add-text" style="padding: 10px 0 0 2px;">
+                                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                             Name Servers
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="add-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".$v_ns1; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".$v_ns1; ?>>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="add-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".$v_ns2; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".$v_ns2; ?>>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="add-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".$v_ns3; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".$v_ns3; ?>>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="add-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>>
                                                         </td>
                                                     </tr>
                                                 </table>

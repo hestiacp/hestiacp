@@ -37,7 +37,7 @@
         AssignUserID %user% %group%
     </IfModule>
 
-    Include %home%/%user%/conf/httpd.%domain%.conf*
+    Include %home%/%user%/conf/web/httpd.%domain%.conf*
 
 </VirtualHost>
 

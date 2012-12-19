@@ -14,7 +14,7 @@ tools="screen mc libpng libjpeg curl curl libmcrypt libmcrypt mhash mhash
     freetype openssl flex libxml2 ImageMagick sqlite sqlite pcre pcre sudo bc
     mailx lsof ntp tar whois telnet rsync"
 
-rpms="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded ftp
+rpms="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid ftp
     webalizer awstats mysql mysql-server php php-bcmath php-cli php-common
     php-gd php-imap php-mbstring php-mcrypt php-mysql php-pdo php-soap php-tidy
     php-xml php-xmlrpc phpMyAdmin exim dovecot clamd spamassassin roundcubemail

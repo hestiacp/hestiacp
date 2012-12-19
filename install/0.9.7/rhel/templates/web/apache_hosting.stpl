@@ -43,7 +43,7 @@
         AssignUserID %user% %group%
     </IfModule>
 
-    Include %home%/%user%/conf/shttpd.%domain%.conf*
+    Include %home%/%user%/conf/web/shttpd.%domain%.conf*
 
 </VirtualHost>
 

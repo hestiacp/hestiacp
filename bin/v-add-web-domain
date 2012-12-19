@@ -134,7 +134,7 @@ chown root:apache $conf
 chmod 660 $conf
 chmod 551 $HOMEDIR/$user/web/$domain
 chmod 771 $HOMEDIR/$user/web/$domain/private
-chmod 771 $HOMEDIR/$user/web/$domain/cgi-bin
+chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
 chmod 771 $HOMEDIR/$user/web/$domain/public_html
 chmod 771 $HOMEDIR/$user/web/$domain/public_shtml
 chmod 771 $HOMEDIR/$user/web/$domain/document_errors

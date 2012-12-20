@@ -55,7 +55,7 @@ fi
 if [ "$period" = 'daily' ]; then
     loadavg=$(cat /proc/loadavg )
     la=$(echo "$loadavg"|cut -f 2 -d ' ')
-    pr=$(echo "$loadavg"|cut -f 4 -d ' '|cut -f 2 -d /)
+    pr=$(ps auxh |wc -l)
 
     # Updating rrd database
     rrdtool update $RRD/la/la.rrd N:${la//./}:$pr

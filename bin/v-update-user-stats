@@ -44,11 +44,32 @@ else
     user_list="$user"
 fi
 
+# Reset overal statistics
+TOTAL_IP_OWNED=0
+TOTAL_U_DISK=0
+TOTAL_U_DISK_DIRS=0
+TOTAL_U_DISK_WEB=0
+TOTAL_U_DISK_MAIL=0
+TOTAL_U_DISK_DB=0
+TOTAL_U_BANDWIDTH=0
+TOTAL_U_WEB_DOMAINS=0
+TOTAL_U_WEB_SSL=0
+TOTAL_U_WEB_ALIASES=0
+TOTAL_U_DNS_DOMAINS=0
+TOTAL_U_DNS_RECORDS=0
+TOTAL_U_MAIL_DOMAINS=0
+TOTAL_U_MAIL_DKIM=0
+TOTAL_U_MAIL_ACCOUNTS=0
+TOTAL_U_DATABASES=0
+TOTAL_U_CRON_JOBS=0
+TOTAL_U_BACKUPS=0
+
 # Updating user stats
 for user in $user_list; do 
     USER_DATA=$VESTA/data/users/$user
     source $USER_DATA/user.conf
-    DATE=$(date -d "$(date +'%m/01' -d "+ 1 month") -1day" +%F)
+    next_month=$(date +'%m/01' -d '+ 1 month')
+    DATE=$(date -d "$next_month -1day" +%F)
 
     # Compiling report string
     s="DATE='$DATE' TIME='$TIME' PACKAGE='$PACKAGE' IP_OWNED='$IP_OWNED'" 
@@ -80,7 +101,62 @@ for user in $user_list; do
         echo "$s" >$stats
         chmod 660 $stats
     fi
+
+    # Increase overall counters
+    TOTAL_IP_OWNED=$((TOTAL_IP_OWNED + IP_OWNED))
+    TOTAL_U_DISK=$((TOTAL_U_DISK + U_DISK))
+    TOTAL_U_DISK_DIRS=$((TOTAL_U_DISK_DIRS + U_DISK_DIRS))
+    TOTAL_U_DISK_WEB=$((TOTAL_U_DISK_WEB + U_DISK_WEB))
+    TOTAL_U_DISK_MAIL=$((TOTAL_U_DISK_MAIL + U_DISK_MAIL))
+    TOTAL_U_DISK_DB=$((TOTAL_U_DISK_DB + U_DISK_DB))
+    TOTAL_U_BANDWIDTH=$((TOTAL_U_BANDWIDTH + U_BANDWIDTH))
+    TOTAL_U_WEB_DOMAINS=$((TOTAL_U_WEB_DOMAINS + U_WEB_DOMAINS))
+    TOTAL_U_WEB_SSL=$((TOTAL_U_WEB_SSL + U_WEB_SSL))
+    TOTAL_U_WEB_ALIASES=$((TOTAL_U_WEB_ALIASES + U_WEB_ALIASES))
+    TOTAL_U_DNS_DOMAINS=$((TOTAL_U_DNS_DOMAINS + U_DNS_DOMAINS))
+    TOTAL_U_DNS_RECORDS=$((TOTAL_U_DNS_RECORDS + U_DNS_RECORDS))
+    TOTAL_U_MAIL_DOMAINS=$((TOTAL_U_MAIL_DOMAINS + U_MAIL_DOMAINS))
+    TOTAL_U_MAIL_DKIM=$((TOTAL_U_MAIL_DKIM + U_MAIL_DKIM))
+    TOTAL_U_MAIL_ACCOUNTS=$((TOTAL_U_MAIL_ACCOUNTS + U_MAIL_ACCOUNTS))
+    TOTAL_U_DATABASES=$((TOTAL_U_DATABASES + U_DATABASES))
+    TOTAL_U_CRON_JOBS=$((TOTAL_U_CRON_JOBS + U_CRON_JOBS))
+    TOTAL_U_BACKUPS=$((TOTAL_U_BACKUPS + U_BACKUPS))
+
 done
+
+# Updating overall stats
+stats="$VESTA/data/users/admin/overall_stats.log"
+
+s="DATE='$DATE' TIME='$TIME' PACKAGE='default' IP_OWNED='$TOTAL_IP_OWNED'" 
+s="$s DISK_QUOTA='0' U_DISK='$TOTAL_U_DISK' U_DISK_DIRS='$TOTAL_U_DISK_DIRS'"
+s="$s U_DISK_WEB='$TOTAL_U_DISK_WEB' U_DISK_MAIL='$TOTAL_U_DISK_MAIL'" 
+s="$s U_DISK_DB='$TOTAL_U_DISK_DB' BANDWIDTH='0'"
+s="$s U_BANDWIDTH='$TOTAL_U_BANDWIDTH' U_WEB_DOMAINS='$TOTAL_U_WEB_DOMAINS'"
+s="$s U_WEB_SSL='$TOTAL_U_WEB_SSL' U_WEB_ALIASES='$TOTAL_U_WEB_ALIASES'"
+s="$s U_DNS_DOMAINS='$TOTAL_U_DNS_DOMAINS'"
+s="$s U_DNS_RECORDS='$TOTAL_U_DNS_RECORDS'"
+s="$s U_MAIL_DOMAINS='$TOTAL_U_MAIL_DOMAINS' U_MAIL_DKIM='$TOTAL_U_MAIL_DKIM'"
+s="$s U_MAIL_ACCOUNTS='$TOTAL_U_MAIL_ACCOUNTS'"
+s="$s  U_DATABASES='$TOTAL_U_DATABASES'"
+s="$s U_CRON_JOBS='$TOTAL_U_CRON_JOBS' U_BACKUPS='$TOTAL_U_BACKUPS'"
+
+if [ -e "$stats" ]; then
+    # Checking dublicates
+    check_month=$(grep -n "DATE='$DATE'" $stats|cut -f 1 -d :)
+    if [ -z "$check_month" ]; then
+        # Updating as there no dublicates
+        echo "$s" >> $stats
+        chmod 660 $stats
+    else
+        # Replacing string with new data
+        sed -i "$check_month s/.*/$s/" $stats
+    fi
+else
+    # Creating stats log
+    echo "$s" >$stats
+    chmod 660 $stats
+fi
+
 
 
 #----------------------------------------------------------#

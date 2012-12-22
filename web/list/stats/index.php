@@ -13,11 +13,33 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-exec (VESTA_CMD."v-list-user-stats $user json", $output, $return_var);
-$data = json_decode(implode('', $output), true);
-$data = array_reverse($data);
-unset($output);
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_stats.html');
+if ($_SESSION['user'] == 'admin') {
+
+    if (empty($_GET['user'])) {
+        exec (VESTA_CMD."v-list-users-stats json", $output, $return_var);
+        $data = json_decode(implode('', $output), true);
+        $data = array_reverse($data);
+        unset($output);
+    } else {
+        $v_user = escapeshellarg($_GET['user']);
+        exec (VESTA_CMD."v-list-user-stats $v_user json", $output, $return_var);
+        $data = json_decode(implode('', $output), true);
+        $data = array_reverse($data);
+        unset($output);
+    }
+
+    exec (VESTA_CMD."v-list-sys-users 'json'", $output, $return_var);
+    $users = json_decode(implode('', $output), true);
+    unset($output);
+
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_stats.html');
+} else {
+    exec (VESTA_CMD."v-list-user-stats $user json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    $data = array_reverse($data);
+    unset($output);
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_stats.html');
+}
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

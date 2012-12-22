@@ -1,0 +1,55 @@
+#!/bin/bash
+# info: list overall user stats
+# options: [format]
+#
+# The function for listing overall user statistics
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '0' "$#" '[format]'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf=$VESTA/data/users/admin/overall_stats.log
+
+# Defining fileds to select
+fields="\$DATE \$TIME \$PACKAGE \$IP_OWNED \$DISK_QUOTA \$U_DISK \$U_DISK_DIRS"
+fields="$fields \$U_DISK_WEB \$U_DISK_MAIL \$U_DISK_DB \$BANDWIDTH"
+fields="$fields \$U_BANDWIDTH \$U_WEB_DOMAINS \$U_WEB_SSL \$U_WEB_ALIASES"
+fields="$fields \$U_DNS_DOMAINS \$U_DNS_RECORDS \$U_MAIL_DOMAINS \$U_MAIL_DKIM"
+fields="$fields \$U_MAIL_ACCOUNTS \$U_DATABASES \$U_CRON_JOBS \$U_BACKUPS"
+
+# Listing domains
+case $format in 
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  fields='$DATE $U_DISK $U_BANDWIDTH $U_WEB_DOMAINS $U_DATABASES';
+            fields="$fields \$U_DATABASES"
+            shell_list | column -t ;;
+    *)      check_args '1' '0' '[format]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

@@ -3,24 +3,6 @@
                                     <tr>
                                         <td style="padding: 12px 0 0 16px">
                                             <div style="float:left">
-                                                <form action="/list/stats/" method="get" id="objects">
-                                                <a class="vst" <?php if (empty($_GET['user'])) echo "style='color: #34536A'"; ?> href='/list/stats/'>Overall Statistics</a>
-                                                <span style="padding: 0 8px;"></span>
-                                                <select style="margin:0 2px 0 0px;" name="user">
-                                                    <option value=''>show per user</option>
-                                                <?php
-                                                    foreach ($users as $key => $value) {
-                                                        echo "\t\t\t\t<option value=\"".$value."\"";
-                                                        if ((!empty($v_user)) && ( $value == $_GET['user'])){
-                                                            echo ' selected';
-                                                        }
-                                                        echo ">".$value."</option>\n";
-                                                    }
-                                                ?> 
-                                                </select>
-                                                <input type="submit" name="list" value="›" class="button" style="width: 37px;font-size: 12px; height: 24px;">
-                                            </form>
-
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >

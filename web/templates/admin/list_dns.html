@@ -111,7 +111,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">Expire:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['EXP'] ?></td>
+                                                        <td class="counter-value"><?php echo date("Y M d", strtotime($data[$key]['EXP'])) ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">Records:</td>

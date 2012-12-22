@@ -17,18 +17,18 @@
                                     </tr>
                                 </table>
                                 <table class="nav">
-                                    <tr id="nav-block">
-                                        <td class="logotd" style="padding: 24px 0px 0px 4px; float: left;">
+                                    <tr>
+                                        <td class="logo">
                                             <img src="/images/logo.png" width="124px" height="46px" alt="Vesta logo">
                                         </td>
-                                        <td>
+                                        <td class="nav-<?php if($TAB == 'USER' ) echo 's' ?>block">
                                             <a class="nav-<?php if($TAB == 'USER' ) echo 's' ?>link" href="/list/user/"><b>USER</b></a>
                                             <p class="counters">
                                                 users: <? echo $panel[$user]['U_USERS'] ?><br>
                                                 suspended: <? echo $panel[$user]['SUSPENDED_USERS']?> 
                                             </p>
                                         </td>
-                                        <td>
+                                        <td class="nav-<?php if($TAB == 'WEB' ) echo 's' ?>block">
                                             <a class="nav-<?php if($TAB == 'WEB' ) echo 's' ?>link" href="/list/web/"><b>WEB</b></a>
                                             <p class="counters">
                                                 domains: <? echo $panel[$user]['U_WEB_DOMAINS']?><br>
@@ -36,7 +36,7 @@
                                                 suspended: <? echo $panel[$user]['SUSPENDED_WEB']?> 
                                             </p>
                                         </td>
-                                        <td>
+                                        <td class="nav-<?php if($TAB == 'DNS' ) echo 's' ?>block">
                                             <a class="nav-<?php if($TAB == 'DNS' ) echo 's' ?>link" href="/list/dns/"><b>DNS</b></a>
                                             <p class="counters">
                                                 domains: <? echo $panel[$user]['U_DNS_DOMAINS']?><br>
@@ -44,7 +44,7 @@
                                                 suspended: <? echo $panel[$user]['SUSPENDED_DNS']?> 
                                             </p>
                                         </td>
-                                        <td>
+                                        <td class="nav-<?php if($TAB == 'MAIL' ) echo 's' ?>block">
                                             <a class="nav-<?php if($TAB == 'MAIL' ) echo 's' ?>link" href="/list/mail/"><b>MAIL</b></a>
                                             <p class="counters">
                                                 domains: <? echo $panel[$user]['U_MAIL_DOMAINS']?><br>
@@ -52,21 +52,21 @@
                                                 suspended: <? echo $panel[$user]['SUSPENDED_MAIL']?> 
                                             </p>
                                         </td>
-                                        <td>
+                                        <td class="nav-<?php if($TAB == 'DB' ) echo 's' ?>block">
                                             <a class="nav-<?php if($TAB == 'DB' ) echo 's' ?>link" href="/list/db/"><b>DB</b></a>
                                             <p class="counters">
                                                 databases: <? echo $panel[$user]['U_DATABASES']?><br>
                                                 suspended: <? echo $panel[$user]['SUSPENDED_DB']?> 
                                             </p>
                                         </td>
-                                        <td>
+                                        <td class="nav-<?php if($TAB == 'CRON' ) echo 's' ?>block">
                                             <a class="nav-<?php if($TAB == 'CRON' ) echo 's' ?>link" href="/list/cron/"><b>CRON</b></a>
                                             <p class="counters">
                                                 jobs: <? echo $panel[$user]['U_CRON_JOBS']?><br>
                                                 suspended: <? echo $panel[$user]['SUSPENDED_CRON']?> 
                                             </p>
                                         </td>
-                                        <td>
+                                        <td class="nav-<?php if($TAB == 'BACKUP' ) echo 's' ?>block">
                                             <a class="nav-<?php if($TAB == 'BACKUP' ) echo 's' ?>link" href="/list/backup/"><b>BACKUP</b></a>
                                             <p class="counters">
                                                 backups: <? echo $panel[$user]['U_BACKUPS']?><br> 

@@ -13,7 +13,7 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-if ($_SESSION['user'] == 'admin') {
+if ($user == 'admin') {
 
     if (empty($_GET['user'])) {
         exec (VESTA_CMD."v-list-users-stats json", $output, $return_var);

@@ -170,7 +170,7 @@ if ($_SESSION['user'] == 'admin') {
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = "OK: changes has been saved.";
+            $_SESSION['ok_msg'] = _('OK: changes has been saved.');
         }
     }
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_user.html');
@@ -263,7 +263,7 @@ if ($_SESSION['user'] == 'admin') {
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = "OK: changes has been saved.";
+            $_SESSION['ok_msg'] = _('OK: changes has been saved.');
         }
     }
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_user.html');

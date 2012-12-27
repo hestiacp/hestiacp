@@ -65,7 +65,7 @@ top_panel($user,$TAB);
                 unset($output);
             }
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: changes has been saved.";
+                $_SESSION['ok_msg'] = _('OK: changes has been saved.');
             }
         }
     }

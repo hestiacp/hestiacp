@@ -70,22 +70,22 @@ if ($_SESSION['user'] == 'admin') {
         // Action
         if (!empty($_POST['save'])) {
             // Check input
-            if (empty($_POST['v_package'])) $errors[] = 'package';
-            if (empty($_POST['v_template'])) $errors[] = 'template';
-            if (empty($_POST['v_shell'])) $errrors[] = 'shell';
-            if (!isset($_POST['v_web_domains'])) $errors[] = 'web domains';
-            if (!isset($_POST['v_web_aliases'])) $errors[] = 'web aliases';
-            if (!isset($_POST['v_dns_domains'])) $errors[] = 'dns domains';
-            if (!isset($_POST['v_dns_records'])) $errors[] = 'dns records';
-            if (!isset($_POST['v_mail_domains'])) $errors[] = 'mail domains';
-            if (!isset($_POST['v_mail_accounts'])) $errors[] = 'mail accounts';
-            if (!isset($_POST['v_databases'])) $errors[] = 'databases';
-            if (!isset($_POST['v_cron_jobs'])) $errors[] = 'cron jobs';
-            if (!isset($_POST['v_backups'])) $errors[] = 'backups';
-            if (!isset($_POST['v_disk_quota'])) $errors[] = 'quota';
-            if (!isset($_POST['v_bandwidth'])) $errors[] = 'bandwidth';
-            if (empty($_POST['v_ns1'])) $errors[] = 'ns1';
-            if (empty($_POST['v_ns2'])) $errors[] = 'ns2';
+            if (empty($_POST['v_package'])) $errors[] = _('package');
+            if (empty($_POST['v_template'])) $errors[] = _('template');
+            if (empty($_POST['v_shell'])) $errrors[] = _('shell');
+            if (!isset($_POST['v_web_domains'])) $errors[] = _('web domains');
+            if (!isset($_POST['v_web_aliases'])) $errors[] = _('web aliases');
+            if (!isset($_POST['v_dns_domains'])) $errors[] = _('dns domains');
+            if (!isset($_POST['v_dns_records'])) $errors[] = _('dns records');
+            if (!isset($_POST['v_mail_domains'])) $errors[] = _('mail domains');
+            if (!isset($_POST['v_mail_accounts'])) $errors[] = _('mail accounts');
+            if (!isset($_POST['v_databases'])) $errors[] = _('databases');
+            if (!isset($_POST['v_cron_jobs'])) $errors[] = _('cron jobs');
+            if (!isset($_POST['v_backups'])) $errors[] = _('backups');
+            if (!isset($_POST['v_disk_quota'])) $errors[] = _('quota');
+            if (!isset($_POST['v_bandwidth'])) $errors[] = _('bandwidth');
+            if (empty($_POST['v_ns1'])) $errors[] = _('ns1');
+            if (empty($_POST['v_ns2'])) $errors[] = _('ns2');
 
             // Protect input
             $v_package = escapeshellarg($_POST['v_package']);
@@ -175,7 +175,7 @@ if ($_SESSION['user'] == 'admin') {
                 }
 
                 if (empty($_SESSION['error_msg'])) {
-                    $_SESSION['ok_msg'] = "OK: changes has been saved.";
+                    $_SESSION['ok_msg'] = _('OK: changes has been saved.');
                 }
             }
         }

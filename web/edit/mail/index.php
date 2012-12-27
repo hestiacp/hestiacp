@@ -100,7 +100,7 @@ top_panel($user,$TAB);
             }
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: changes has been saved.";
+                $_SESSION['ok_msg'] = _('OK: changes has been saved.');
             }
 
             // DKIM
@@ -162,7 +162,7 @@ top_panel($user,$TAB);
             }
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: changes has been saved.";
+                $_SESSION['ok_msg'] = _('OK: changes has been saved.');
             }
         }
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_mail.html');
@@ -356,7 +356,7 @@ top_panel($user,$TAB);
 
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: changes has been saved.";
+                $_SESSION['ok_msg'] = _('OK: changes has been saved.');
             }
 
         }

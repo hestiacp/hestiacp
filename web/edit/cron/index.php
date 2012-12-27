@@ -71,7 +71,7 @@ top_panel($user,$TAB);
                 $v_cmd = $_POST['v_cmd'];
             }
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: changes has been saved.";
+                $_SESSION['ok_msg'] = _("OK: changes has been saved.");
             }
         }
     }

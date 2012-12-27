@@ -1,5 +1,10 @@
 <?php
+
 session_start();
+
+define('NO_AUTH_REQUIRED',true);
+
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if (isset($_GET['logout'])) {
     session_destroy();
@@ -26,7 +31,7 @@ if (isset($_SESSION['user'])) {
         $command="$cmd"."v-check-user-password ".$v_user." ".$v_password." '".$_SERVER["REMOTE_ADDR"]."'";
         exec ($command, $output, $return_var);
         if ( $return_var > 0 ) {
-            $ERROR = "<a class=\"error\">ERROR: Invalid username or password</a>";
+            $ERROR = "<a class=\"error\">"._('ERROR: Invalid username or password')."</a>";
         } else {
             $_SESSION['user'] = $_POST['user'];
             if ($_POST['user'] == 'root') $_SESSION['user'] = 'admin';

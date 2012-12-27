@@ -417,8 +417,8 @@ top_panel($user,$TAB);
             $v_stats_password = '';
         }
         if ((empty($v_stats_user)) && (!empty($_POST['v_stats_auth'])) && (empty($_SESSION['error_msg']))) {
-            if (empty($_POST['v_stats_user'])) $errors[] = 'stats username';
-            if (empty($_POST['v_stats_password'])) $errors[] = 'stats password';
+            if (empty($_POST['v_stats_user'])) $errors[] = _('stats username');
+            if (empty($_POST['v_stats_password'])) $errors[] = _('stats password');
             if (!empty($errors[0])) {
                 foreach ($errors as $i => $error) {
                     if ( $i == 0 ) {
@@ -442,8 +442,8 @@ top_panel($user,$TAB);
             }
         }
         if ((!empty($v_stats_user)) && (!empty($_POST['v_stats_auth'])) && (empty($_SESSION['error_msg']))) {
-            if (empty($_POST['v_stats_user'])) $errors[] = 'stats user';
-            if (empty($_POST['v_stats_password'])) $errors[] = 'stats password';
+            if (empty($_POST['v_stats_user'])) $errors[] = _('stats user');
+            if (empty($_POST['v_stats_password'])) $errors[] = _('stats password');
             if (!empty($errors[0])) {
                 foreach ($errors as $i => $error) {
                     if ( $i == 0 ) {
@@ -482,8 +482,8 @@ top_panel($user,$TAB);
             $v_ftp_password = '';
         }
         if ((!empty($v_ftp_user)) && (!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
-            if (empty($_POST['v_ftp_user'])) $errors[] = 'ftp user';
-            if (empty($_POST['v_ftp_password'])) $errors[] = 'ftp password';
+            if (empty($_POST['v_ftp_user'])) $errors[] = _('ftp user');
+            if (empty($_POST['v_ftp_password'])) $errors[] = _('ftp user password');
             if (!empty($errors[0])) {
                 foreach ($errors as $i => $error) {
                     if ( $i == 0 ) {
@@ -512,8 +512,8 @@ top_panel($user,$TAB);
 
         if ((empty($v_ftp_user)) && (!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
             if ((!empty($_POST['v_ftp_email'])) && (!filter_var($_POST['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = _('Please enter valid email address.');
-            if (empty($_POST['v_ftp_user'])) $errors[] = 'ftp username';
-            if (empty($_POST['v_ftp_password'])) $errors[] = 'ftp password';
+            if (empty($_POST['v_ftp_user'])) $errors[] = 'ftp user';
+            if (empty($_POST['v_ftp_password'])) $errors[] = 'ftp user password';
             if (!empty($errors[0])) {
                 foreach ($errors as $i => $error) {
                     if ( $i == 0 ) {
@@ -535,14 +535,10 @@ top_panel($user,$TAB);
                 } else {
                     if (!empty($_POST['v_ftp_email'])) {
                         $to = $_POST['v_ftp_email'];
-                        $subject = "FTP login credentials";
+                        $subject = _("FTP login credentials");
                         $hostname = exec('hostname');
-                        $from = "Vesta Control Panel <noreply@".$hostname.">";
-                        $mailtext .= "Your ftp account has been created successfully and is ready to use.\n\n";
-                        $mailtext .= "hostname: ".$_GET['domain']."\n";
-                        $mailtext .= "username: ".$user."_".$_POST['v_ftp_user']."\n";
-                        $mailtext .= "password: ".$_POST['v_ftp_password']."\n\n";
-                        $mailtext .= "--\nVesta Control Panel\n";
+                        $from = _('MAIL_FROM',$hostname);
+                        $mailtext .= _('FTP_ACCOUNT_READY',$_GET['domain'],$user,$_POST['v_ftp_user'],$_POST['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
                         unset($v_ftp_email);
                     }
@@ -574,7 +570,7 @@ top_panel($user,$TAB);
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = "OK: changes has been saved.";
+            $_SESSION['ok_msg'] = _('OK: changes has been saved.');
         }
 
     }

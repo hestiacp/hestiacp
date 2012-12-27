@@ -5,7 +5,7 @@
                         <table>
                             <tr>
                                 <td style="padding: 0 10 0 42;">
-                                    <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" /></a>
+                                    <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="<?php print _('Vesta Control Panel');?>" /></a>
                                 </td>
                                 <td style="padding: 20px 0 0 0;">
                                     <form method="post">
@@ -15,7 +15,7 @@
                                                     <input type="hidden" name="action" value="confirm" >
                                                     <input type="hidden" name="user" value="<?php echo $_GET['user'];?>" >
                                                     <input type="hidden" name="code" value="<?php echo $_GET['code'];?>" >
-                                                    New Password
+                                                    <?php print _('New Password');?>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -25,7 +25,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0 0 2px;">
-                                                    Confirm Password
+                                                    <?php print _('Confirm Password');?>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -39,7 +39,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding: 0 0 12px 0;">
-                                                    <input tabindex="3" type="submit" value="Reset" class="button">
+                                                    <input tabindex="3" type="submit" value="<?php print _('Reset');?>" class="button">
                                                 </td>
                                             </tr>
                                         </table>
@@ -50,7 +50,7 @@
                                 <td colspan=2>
                                     <table class="login-bottom">
                                         <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
-                                        <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
+                                        <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a> | <a tabindex="6" class="vestacp" href="http://chto.su"><?php print _('Translation by ZonD80');?></a></td></tr>
                                     </table>
                                 </td>
                             </tr>

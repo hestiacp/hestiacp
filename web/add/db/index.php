@@ -16,11 +16,11 @@ top_panel($user,$TAB);
 //if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
-        if (empty($_POST['v_database'])) $errors[] = 'database';
-        if (empty($_POST['v_dbuser'])) $errors[] = 'username';
-        if (empty($_POST['v_password'])) $errors[] = 'password';
-        if (empty($_POST['v_type'])) $errors[] = 'type';
-        if (empty($_POST['v_charset'])) $errors[] = 'charset';
+        if (empty($_POST['v_database'])) $errors[] = _('database');
+        if (empty($_POST['v_dbuser'])) $errors[] = _('username');
+        if (empty($_POST['v_password'])) $errors[] = _('password');
+        if (empty($_POST['v_type'])) $errors[] = _('type');
+        if (empty($_POST['v_charset'])) $errors[] = _('charset');
 
         // Protect input
         $v_database = escapeshellarg($_POST['v_database']);
@@ -38,7 +38,7 @@ top_panel($user,$TAB);
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
+            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
         } else {
             // Add Database
             $v_type = escapeshellarg($_POST['v_type']);
@@ -48,12 +48,12 @@ top_panel($user,$TAB);
             $v_charset = $_POST['v_charset'];
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
                 unset($v_password);
                 unset($output);
             } else {
-                $_SESSION['ok_msg'] = "OK: database <a href='/edit/db/?database=".$user."_".$_POST['v_database']."'><b>".$user."_".$_POST['v_database']."</b></a> has been created successfully.";
+                $_SESSION['ok_msg'] = _('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);
                 unset($v_database);
                 unset($v_dbuser);
                 unset($v_password);

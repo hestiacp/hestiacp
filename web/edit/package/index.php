@@ -26,7 +26,7 @@ if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = 'Error: vesta did not return any output.';
+        if (empty($error)) $error = _('Error: vesta did not return any output.');
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -122,7 +122,7 @@ if ($_SESSION['user'] == 'admin') {
                         $error_msg = $error_msg.", ".$error;
                     }
                 }
-                $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
+                $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
             } else {
                 exec ('mktemp -d', $output, $return_var);
                 $tmpdir = $output[0];
@@ -156,7 +156,7 @@ if ($_SESSION['user'] == 'admin') {
                     exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package." 'yes'", $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
-                        if (empty($error)) $error = 'Error: vesta did not return any output.';
+                        if (empty($error)) $error = _('Error: vesta did not return any output.');
                         $_SESSION['error_msg'] = $error;
                     }
                     unset($output);
@@ -170,7 +170,7 @@ if ($_SESSION['user'] == 'admin') {
                 exec (VESTA_CMD."v-update-user-package ".$v_package." 'json'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    if (empty($error)) $error = _('Error: vesta did not return any output.');
                     $_SESSION['error_msg'] = $error;
                 }
 

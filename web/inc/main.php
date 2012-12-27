@@ -1,4 +1,25 @@
 <?php
+
+// need to be moved to user settings
+define('LANGUAGE','ru');
+
+require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.LANGUAGE.'.php');
+
+
+// works like sprintf if more than one arguments called
+function _() {
+    global $LANG;
+    $args = func_get_args();
+    $key = $args[0];
+    if (!isset($LANG[$key])) $text=$key; else
+        $text=$LANG[$key];
+
+    if (count($args)>1) { $args[0] = $text;
+        return call_user_func_array("sprintf",$args);
+    }
+    else return $text;
+}
+
 // Check user session
 if (!isset($_SESSION['user'])) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
@@ -45,9 +66,9 @@ function humanize_time($usage) {
     if ( $usage > 60 ) {
         $usage = $usage / 60;
         $usage = number_format($usage, 2);
-        $usage = $usage." Hour.";
+        $usage = $usage." "._('Hour').".";
     } else {
-        $usage = $usage." Min.";
+        $usage = $usage." "._('Min').".";
     }
     return $usage;
 }
@@ -60,17 +81,17 @@ function humanize_usage($usage) {
                 if ( $usage > 1000 ) {
                     $usage = $usage / 1000 ;
                     $usage = number_format($usage, 2);
-                    $usage = $usage." pb";
+                    $usage = $usage." "._('pb');
                 } else {
                     $usage = number_format($usage, 2);
-                    $usage = $usage." tb";
+                    $usage = $usage." "._('tb');
                 }
         } else {
             $usage = number_format($usage, 2);
-            $usage = $usage." gb";
+            $usage = $usage." "._('gb');
         }
     } else {
-        $usage = $usage." mb";
+        $usage = $usage." "._('mb');
     }
     return $usage;
 }
@@ -128,7 +149,7 @@ function display_error_block() {
                                 });
                             });
                     </script>
-                    <div id="dialog-message" title="Error">
+                    <div id="dialog-message" title="'._('Error').'">
                         <p>';
         echo $_SESSION['error_msg'];
         echo "</p>\n                        </div>\n";

@@ -17,7 +17,7 @@ if ($_SESSION['user'] == 'admin') {
     }
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = 'Error: vesta did not return any output.';
+        if (empty($error)) $error = _('Error: vesta did not return any output.');
             $_SESSION['error_msg'] = $error;
     }
     unset($output);

@@ -16,11 +16,10 @@ top_panel($user,$TAB);
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
-        if (empty($_POST['v_ip'])) $errors[] = 'ip address';
-        if (empty($_POST['v_netmask'])) $errors[] = 'netmask';
-        if (empty($_POST['v_interface'])) $errors[] = 'interface';
-        if (empty($_POST['v_owner'])) $errors[] = 'assigned used';
-        if (empty($_POST['v_interface'])) $errors[] = 'interface';
+        if (empty($_POST['v_ip'])) $errors[] = _('ip address');
+        if (empty($_POST['v_netmask'])) $errors[] = _('netmask');
+        if (empty($_POST['v_interface'])) $errors[] = _('interface');
+        if (empty($_POST['v_owner'])) $errors[] = _('assigned user');
 
         // Protect input
         $v_ip = escapeshellarg($_POST['v_ip']);
@@ -47,7 +46,7 @@ if ($_SESSION['user'] == 'admin') {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
+            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
         } else {
             // Add IP
             $v_interface = escapeshellarg($_POST['v_interface']);
@@ -57,12 +56,12 @@ if ($_SESSION['user'] == 'admin') {
             $v_interface = $_POST['v_interface'];
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
                 unset($v_password);
                 unset($output);
             } else {
-                $_SESSION['ok_msg'] = "OK: ip <a href='/edit/ip/?ip=".$_POST['v_ip']."'><b>".$_POST['v_ip']."</b></a> has been created successfully.";
+                $_SESSION['ok_msg'] = _('IP_CREATED_OK',$_POST['v_ip'],$_POST['v_ip']);
                 unset($v_ip);
                 unset($v_netmask);
                 unset($v_name);

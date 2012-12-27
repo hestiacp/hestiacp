@@ -14,7 +14,7 @@ tools="screen mc libpng libjpeg curl curl libmcrypt libmcrypt mhash mhash
     freetype openssl flex libxml2 ImageMagick sqlite sqlite pcre pcre sudo bc
     mailx lsof ntp tar whois telnet rsync"
 
-rpms="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded ftp
+rpms="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid ftp
     webalizer awstats mysql mysql-server php php-bcmath php-cli php-common
     php-gd php-imap php-mbstring php-mcrypt php-mysql php-pdo php-soap php-tidy
     php-xml php-xmlrpc phpMyAdmin exim dovecot clamd spamassassin roundcubemail
@@ -198,11 +198,11 @@ fi
 # Install EPEL repo
 if [ ! -e '/etc/yum.repos.d/epel.repo' ]; then
     if [ "$release" -eq '5' ]; then
-        epel="5/i386/epel-release-5-4.noarch.rpm"
+        epel="5/$arch/epel-release-5-4.noarch.rpm"
     fi
 
     if [ "$release" -eq '6' ]; then
-        epel="6/i386/epel-release-6-7.noarch.rpm"
+        epel="6/$arch/epel-release-6-8.noarch.rpm"
     fi
 
     rpm -ivh http://dl.fedoraproject.org/pub/epel/$epel

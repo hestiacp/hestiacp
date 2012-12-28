@@ -1,6 +1,6 @@
 <?php
 // Check user session
-if (!isset($_SESSION['user'])) {
+if ((!isset($_SESSION['user'])) && (!isset($api_mode))) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;

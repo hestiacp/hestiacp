@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update httpd rrd
-# options: period
+# options: PERIOD
 #
 # The function is for updating apache rrd database and graphic.
 

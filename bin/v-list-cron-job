@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list cron job
-# options: user job [format]
+# options: USER JOB [FORMAT]
 #
 # The function of obtaining cron job settings.
 
@@ -62,7 +62,7 @@ shell_list_job() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user job [format]'
+check_args '2' "$#" 'USER JOB [FORMAT]'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -80,7 +80,7 @@ case $format in
     json)   json_list_job ;;
     plain)  nohead=1; shell_list_job ;;
     shell)  shell_list_job |column -t ;;
-    *)      check_args '2' '0' 'user job [format]'
+    *)      check_args '2' '0' 'USER JOB [FORMAT]'
 esac
 
 

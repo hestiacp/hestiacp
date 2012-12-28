@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system ip address
-# options: ip mask [interface] [user] [ip_status] [ip_name]
+# options: IP MASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME]
 #
 # The function adds ip address into a system. It also creates rc scripts. You
 # can specify ip name which will be used as root domain for temporary aliases.
@@ -33,7 +33,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'ip mask [interface] [user] [ip_status] [ip_name]'
+check_args '2' "$#" 'IP MASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME]'
 validate_format 'ip' 'mask' 'interface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"

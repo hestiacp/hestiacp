@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: adding user package
-# options: pkg_dir package [rewrite]
+# options: PKG_DIR PACKAGE [REWRITE]
 #
 # The function adds new user package to the system.
 
@@ -47,7 +47,7 @@ is_package_consistent() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'pkg_dir package' 'rewrite'
+check_args '2' "$#" 'PKG_DIR PACKAGE' 'rewrite'
 validate_format 'pkg_dir' 'package'
 if [ "$rewrite" != 'yes' ]; then
     is_package_new

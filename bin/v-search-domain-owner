@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: search domain owner
-# options: domain [type]
+# options: DOMAIN [TYPE]
 #
 # The function that allows to find user objects.
 
@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'domain [type]'
+check_args '1' "$#" 'DOMAIN [TYPE]'
 
 
 #----------------------------------------------------------#

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add password protection to web domain statistics
-# options: user domain stats_user stats_password
+# options: USER DOMAIN STATS_USER STATS_PASSWORD
 #
 # The call is used for securing the web statistics page.
 
@@ -30,7 +30,7 @@ EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'user domain stats_user stats_pass'
+check_args '4' "$#" 'USER DOMAIN STATS_USER STATS_PASS'
 validate_format 'user' 'domain' 'stats_user' 'stats_pass'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: rebuild system user
-# options: user [restart]
+# options: USER [RESTART]
 #
 # The function rebuilds system user account.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [restart]'
+check_args '1' "$#" 'USER [RESTART]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

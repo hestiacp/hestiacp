@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list web domain
-# options: user domain [format]
+# options: USER DOMAIN [FORMAT]
 #
 # The function of obtaining the list of domain parameters. This call, just as
 # all v_list_* calls, supports 3 formats - json, shell and plain.
@@ -60,7 +60,7 @@ shell_list_domain() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [format]'
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 
@@ -79,7 +79,7 @@ case $format in
     json)   json_list_domain ;;
     plain)  nohead=1; shell_list_domain ;;
     shell)  shell_list_domain |column -t ;;
-    *)      check_args '2' '0' 'user domain [format]'
+    *)      check_args '2' '0' 'USER DOMAIN [FORMAT]'
 esac
 
 

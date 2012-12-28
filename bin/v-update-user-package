@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update user package
-# options: pacakge
+# options: PACAKGE
 #
 # The function propogates package to connected users.
 
@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'package'
+check_args '1' "$#" 'PACKAGE'
 validate_format 'package'
 is_package_valid
 

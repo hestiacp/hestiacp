@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system users
-# options: [format]
+# options: [FORMAT]
 #
 # The function for obtainig the list of all server's users.
 

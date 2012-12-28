@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update vesta after rpm update
-# options: version
+# options: VERSION
 #
 # The function is runs as rpm update trigger. It pulls shell script from vesta
 # server and runs it.
@@ -27,7 +27,7 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'version'
+check_args '1' "$#" 'VERSION'
 
 
 #----------------------------------------------------------#

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list dns template
-# options: template [format]
+# options: TEMPLATE [FORMAT]
 #
 # The function for obtaining the DNS template parameters.
 
@@ -73,7 +73,7 @@ shell_list_dns() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'template [format]'
+check_args '1' "$#" 'TEMPLATE [FORMAT]'
 validate_format 'template'
 is_dns_template_valid
 
@@ -91,7 +91,7 @@ case $format in
     json)   json_list_dns ;;
     plain)  nohead=1; shell_list_dns ;;
     shell)  shell_list_dns | column -t ;;
-    *)      check_args '1' '0' 'template [format]';;
+    *)      check_args '1' '0' 'TEMPLATE [FORMAT]';;
 esac
 
 

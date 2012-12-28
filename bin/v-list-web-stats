@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list web statistics
-# options: [format]
+# options: [FORMAT]
 #
 # The function for obtaining the list of web statistics analyzer.
 
@@ -55,7 +55,7 @@ case $format in
     json)   json_list_st ;;
     plain)  nohead=1; shell_list_st ;;
     shell)  shell_list_st ;;
-    *)      check_args '1' '0' '[format]' ;;
+    *)      check_args '1' '0' '[FORMAT]' ;;
 esac
 
 

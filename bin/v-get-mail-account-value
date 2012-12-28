@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: get mail account value
-# options: user domain account key
+# options: USER DOMAIN ACCOUNT KEY
 #
 # The function for getting a certain mail account parameter.
 
@@ -24,7 +24,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain key'
+check_args '3' "$#" 'USER DOMAIN KEY'
 validate_format 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"

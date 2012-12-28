@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: backup system user with all its objects
-# options: user
+# options: USER
 #
 # The call is used for backing up user with all its domains and databases.
 
@@ -23,7 +23,7 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'USER'
 validate_format 'user'
 is_system_enabled "$BACKUP_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

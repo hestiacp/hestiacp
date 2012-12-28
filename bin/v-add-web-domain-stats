@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add log analyzer to generate domain statitics
-# options: user domain type
+# options: USER DOMAIN TYPE
 #
 # The call is used for enabling log analyzer system to a domain.  At this time
 # two types of these system is supported - awstats and webalizer. For viewing
@@ -29,7 +29,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain type'
+check_args '3' "$#" 'USER DOMAIN TYPE'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_type_valid "$STATS_SYSTEM" "$type"

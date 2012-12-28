@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update system rrd charts
-# options: none
+# options: NONE
 #
 # The script is wrapper for all rrd functions. It updates all 
 # v-update-sys-rrd_* at once.

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list mail domains
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function of obtaining the list of all user domains.
 
@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
+check_args '1' "$#" 'USER [FORMAT]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -41,7 +41,7 @@ case $format in
     plain)  nohead=1; shell_list ;;
     shell) fields='$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK $DATE';
             shell_list | column -t ;;
-    *)      check_args '1' '0' 'user [format]'
+    *)      check_args '1' '0' 'USER [FORMAT]'
 esac
 
 

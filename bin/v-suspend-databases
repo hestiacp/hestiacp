@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend databases
-# options: user
+# options: USER
 #
 # The function for suspending of all databases of a single user.
 
@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'USER'
 validate_format 'user'
 is_system_enabled "$DB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

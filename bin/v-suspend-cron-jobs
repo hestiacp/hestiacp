@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Suspending sys cron jobs
-# options: user [restart]
+# options: USER [RESTART]
 #
 # The function suspends all user cron jobs.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'USER'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 

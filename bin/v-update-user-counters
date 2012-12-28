@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update user usage counters
-# options: user
+# options: USER
 #
 # Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
 
@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '0' "$#" 'user'
+check_args '0' "$#" 'USER'
 if [ ! -z "$user" ]; then
     validate_format 'user'
     is_object_valid 'user' 'USER' "$user"

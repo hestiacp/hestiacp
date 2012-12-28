@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list web templates
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function for obtaining the list of apache templates available to a user.
 
@@ -57,7 +57,7 @@ case $format in
     json)   json_list_wtpl ;;
     plain)  nohead=1; shell_list_wtpl ;;
     shell)  shell_list_wtpl ;;
-    *)      check_args '1' '0' '[format]'
+    *)      check_args '1' '0' '[FORMAT]'
 esac
 
 

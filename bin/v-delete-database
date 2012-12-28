@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete database
-# options: user database
+# options: USER DATABASE
 #
 # The function for deleting the database. If database user have access to
 # another database, he will not be deleted.
@@ -24,7 +24,7 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user database'
+check_args '2' "$#" 'USER DATABASE'
 validate_format 'user' 'database'
 is_system_enabled "$DB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete user
-# options: user
+# options: USER
 #
 # This function deletes a certain user and all his resourses such as domains,
 # databases, cron jobs, etc.
@@ -26,7 +26,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'USER'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

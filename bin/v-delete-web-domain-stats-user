@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: disable webdomain stats  authentication support
-# options: user domain
+# options: USER DOMAIN
 #
 # The function removes authentication of statistics system. If the script is
 # called without naming a certain user, all users will be removed. After
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain'
+check_args '2' "$#" 'USER DOMAIN'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

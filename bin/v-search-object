@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: search objects
-# options: object [format]
+# options: OBJECT [FORMAT]
 #
 # The function that allows to find system objects.
 
@@ -70,7 +70,7 @@ shell_list_search() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'object [format]'
+check_args '1' "$#" 'OBJECT [FORMAT]'
 validate_format 'object'
 
 
@@ -243,7 +243,7 @@ case $format in
     plain)  nohead=1; shell_list_search ;;
     shell)  fields='$USER~$TYPE~$KEY~$RESULT~$ALIAS';
             shell_list |column -t -s '~' ;;
-    *)      check_args '1' '0' 'object [format]'
+    *)      check_args '1' '0' 'OBJECT [FORMAT]'
 esac
 
 rm $conf

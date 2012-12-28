@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change user package
-# options: user package [force]
+# options: USER PACKAGE [FORCE]
 #
 # The function changes user's hosting package.
 
@@ -116,7 +116,7 @@ DATE='$DATE'" > $USER_DATA/user.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user package [force]'
+check_args '2' "$#" 'USER PACKAGE [FORCE]'
 validate_format 'user' 'package'
 is_object_valid 'user' 'USER' "$user"
 is_package_valid

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update user statistics
-# options: user
+# options: USER
 #
 # Function logs user parameters into statistics database.
 
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '0' "$#" 'user'
+check_args '0' "$#" 'USER'
 if [ ! -z "$user" ]; then
     validate_format 'user'
     is_object_valid 'user' 'USER' "$user"

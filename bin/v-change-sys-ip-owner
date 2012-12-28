@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change ip owner
-# options: ip user
+# options: IP USER
 #
 # The function of changing ip address ownership.
 
@@ -22,7 +22,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'ip user'
+check_args '2' "$#" 'IP USER'
 validate_format 'ip' 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

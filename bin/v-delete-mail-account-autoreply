@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete mail account autoreply message
-# options: user domain account alias
+# options: USER DOMAIN ACCOUNT ALIAS
 #
 # The function delete email account autoreply.
 
@@ -27,7 +27,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain account'
+check_args '3' "$#" 'USER DOMAIN ACCOUNT'
 validate_format 'user' 'domain' 'account'
 is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

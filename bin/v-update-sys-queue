@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update system queue
-# options: pipe
+# options: PIPE
 #
 # This function is responsible queue processing. Restarts of services,
 # scheduled backups, web log parsing and other heavy resource consuming
@@ -31,7 +31,7 @@ PATH=$PATH:$BIN
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'queue'
+check_args '1' "$#" 'QUEUE'
 
 
 #----------------------------------------------------------#
@@ -47,7 +47,7 @@ case $queue in
     backup)     bash $VESTA/data/queue/backup.pipe;;
     disk)       bash $VESTA/data/queue/disk.pipe;;
     traffic)    bash $VESTA/data/queue/traffic.pipe;;
-    *)          check_args '1' '0' 'queue'
+    *)          check_args '1' '0' 'QUEUE'
 esac
 
 

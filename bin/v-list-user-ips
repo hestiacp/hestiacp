@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user ips
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function for obtainig the list of available ip addresses.
 
@@ -93,7 +93,7 @@ shell_list_user_ips() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
+check_args '1' "$#" 'USER [FORMAT]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -110,7 +110,7 @@ case $format in
     json)   json_list_user_ips ;;
     plain)  nohead=1; shell_list_user_ips ;;
     shell)  shell_list_user_ips | column -t ;;
-    *)      check_args '1' '0' 'user [format]' ;;
+    *)      check_args '1' '0' 'USER [FORMAT]' ;;
 esac
 
 

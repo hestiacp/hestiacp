@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: get dns domain value
-# options: user domain key
+# options: USER DOMAIN KEY
 #
 # The function for getting a certain DNS domain parameter.
 
@@ -23,7 +23,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain key'
+check_args '3' "$#" 'USER DOMAIN KEY'
 validate_format 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"

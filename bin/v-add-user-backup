@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: schedule user backup creation
-# options: user
+# options: USER
 #
 # The function for scheduling user backup creation.
 
@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'USER'
 validate_format 'user'
 is_system_enabled "$BACKUP_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

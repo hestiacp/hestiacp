@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list web domains and alias key
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function for obtaining the list of domains with SSL parameter displayed.
 # This call was arranged for filling in the lack of information by applying
@@ -23,7 +23,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
+check_args '1' "$#" 'USER [FORMAT]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -43,7 +43,7 @@ case $format in
     json)   json_list ;;
     plain)  nohead=1; shell_list ;;
     shell)  shell_list | column -t ;;
-    *)      check_args '1' "0" 'user [format]'
+    *)      check_args '1' "0" 'USER [FORMAT]'
 esac
 
 

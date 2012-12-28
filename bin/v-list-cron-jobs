@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user cron jobs
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function for obtaining the list of all users cron jobs.
 
@@ -70,7 +70,7 @@ shell_list_cron() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
+check_args '1' "$#" 'USER [FORMAT]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -95,7 +95,7 @@ case $format in
             shell_list_cron ;;
     shell)  fields='$JOB~$SUSPENDED~$MIN~$HOUR~$DAY~$MONTH~$WDAY~$CMD';
             shell_list_cron |column -t -s '~';;
-    *)      check_args '1' '0' 'user [format]' ;;
+    *)      check_args '1' '0' 'USER [FORMAT]' ;;
 esac
 
 

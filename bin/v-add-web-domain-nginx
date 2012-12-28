@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add webdomain nginx support
-# options: user domain [template] [extentions] [restart]
+# options: USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]
 #
 # The function enables nginx support for a domain. It can significantly improve
 # website speed.
@@ -30,7 +30,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [template] [extentions] [restart]'
+check_args '2' "$#" 'USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]'
 validate_format 'user' 'domain' 'extentions'
 is_system_enabled "$PROXY_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

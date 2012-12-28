@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update MySQL rrd
-# options: period
+# options: PERIOD
 #
 # The function is for updating mysql rrd database and graphic.
 

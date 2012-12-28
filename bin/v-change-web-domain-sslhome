@@ -21,7 +21,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ssl_home'
+check_args '3' "$#" 'USER DOMAIN SSL_HOME'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -48,7 +48,7 @@ case $SSL_HOME in
             old="$HOMEDIR/$user/web/$domain/public_html" ;;
     same)   new="$HOMEDIR/$user/web/$domain/public_html" ;
             old="$HOMEDIR/$user/web/$domain/public_shtml" ;;
-    *)      check_args '3' "2" 'user domain sslhome'
+    *)      check_args '3' "2" 'USER DOMAIN SSLHOME'
 esac
 
 # Changing sslhome directory

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: restart cron service
-# options: none
+# options: NONE
 #
 # The function tells crond service to reread its configuration files.
 

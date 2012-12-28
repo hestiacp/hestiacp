@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change user full name
-# options: user fname lname
+# options: USER FNAME LNAME
 #
 # The function allow to change user's full name.
 
@@ -23,7 +23,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user fname lname'
+check_args '3' "$#" 'USER FNAME LNAME'
 validate_format 'user' 'fname' 'lname'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

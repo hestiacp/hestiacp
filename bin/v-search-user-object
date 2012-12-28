@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: search objects
-# options: user object [format]
+# options: USER OBJECT [FORMAT]
 #
 # The function that allows to find user objects.
 
@@ -71,7 +71,7 @@ shell_list_search() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user object [format]'
+check_args '2' "$#" 'USER OBJECT [FORMAT]'
 validate_format 'user' 'object'
 is_object_valid 'user' 'USER' "$user"
 
@@ -243,7 +243,7 @@ case $format in
     plain)  nohead=1; shell_list_search ;;
     shell)  fields='$USER~$TYPE~$KEY~$RESULT~$ALIAS';
             shell_list |column -t -s '~' ;;
-    *)      check_args '2' '0' 'user object [format]'
+    *)      check_args '2' '0' 'USER OBJECT [FORMAT]'
 esac
 
 rm $conf

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add mail domain catchall account
-# options: user domain email
+# options: USER DOMAIN EMAIL
 #
 # The function enables catchall account for incomming emails. 
 
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain email'
+check_args '3' "$#" 'USER DOMAIN EMAIL'
 validate_format 'user' 'domain' 'email'
 is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

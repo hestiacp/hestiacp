@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete system ip
-# options: ip
+# options: IP
 #
 # The function for deleting a system ip. It does not allow to delete first ip
 # on interface and do not allow to delete ip which is used by a web domain.
@@ -24,7 +24,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'ip'
+check_args '1' "$#" 'IP'
 validate_format 'ip'
 is_ip_valid "$ip"
 is_ip_key_empty '$U_WEB_DOMAINS'

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: restore user
-# options: user backup
+# options: USER BACKUP
 #
 # The function for resotring user from backup.
 

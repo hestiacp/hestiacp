@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete cron job
-# options: user job
+# options: USER JOB
 #
 # The function deletes cron job.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user job'
+check_args '2' "$#" 'USER JOB'
 validate_format 'user' 'job'
 is_system_enabled "$CRON_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

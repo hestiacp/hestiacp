@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change domain ssl certificate
-# options: user domain ssl_dir
+# options: USER DOMAIN SSL_DIR
 #
 # The function changes SSL domain certificate and the key. If ca file present
 # it will be replaced as well.
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ssl_dir'
+check_args '3' "$#" 'USER DOMAIN SSL_DIR'
 validate_format 'user' 'domain' 'ssl_dir'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

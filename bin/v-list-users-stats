@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list overall user stats
-# options: [format]
+# options: [FORMAT]
 #
 # The function for listing overall user statistics
 
@@ -20,7 +20,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '0' "$#" '[format]'
+check_args '0' "$#" '[FORMAT]'
 
 
 #----------------------------------------------------------#
@@ -44,7 +44,7 @@ case $format in
     shell)  fields='$DATE $U_DISK $U_BANDWIDTH $U_WEB_DOMAINS $U_DATABASES';
             fields="$fields \$U_DATABASES"
             shell_list | column -t ;;
-    *)      check_args '1' '0' '[format]'
+    *)      check_args '1' '0' '[FORMAT]'
 esac
 
 

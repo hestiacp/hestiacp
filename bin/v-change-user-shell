@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change user shell
-# options: user shell
+# options: USER SHELL
 #
 # The function changes system shell of a user. Shell gives abilty to use ssh.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user shell'
+check_args '2' "$#" 'USER SHELL'
 validate_format 'user' 'shell'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

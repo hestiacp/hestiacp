@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list dns domain records
-# options: user domain [format]
+# options: USER DOMAIN [FORMAT]
 #
 # The function for getting all DNS domain records.
 
@@ -74,7 +74,7 @@ shell_list_dns() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [format]'
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 validate_format 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
@@ -94,7 +94,7 @@ case $format in
     plain)  nohead=1; shell_list_dns ;;
     shell)  fields='$ID $RECORD $TYPE $VALUE';
             shell_list_dns | column -t ;;
-    *)      check_args '2' '0' 'user domain [format]'
+    *)      check_args '2' '0' 'USER DOMAIN [FORMAT]'
 esac
 
 

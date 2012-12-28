@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cgi support for domain
-# options: user domain
+# options: USER DOMAIN
 #
 # The function switches on cgi support by adding +ExecCGI directive into
 # webserver configuration file. The use of this function is provided for
@@ -27,7 +27,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain'
+check_args '2' "$#" 'USER DOMAIN'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

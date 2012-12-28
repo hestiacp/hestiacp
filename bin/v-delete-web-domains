@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete web domains
-# options: user [restart]
+# options: USER [RESTART]
 #
 # The function deteles all user's webdomains.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [restart]'
+check_args '1' "$#" 'USER [RESTART]'
 validate_format 'user'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

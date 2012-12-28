@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list database
-# options: user database [format]
+# options: USER DATABASE [FORMAT]
 #
 # The function for obtaining of all database's parameters.
 
@@ -58,7 +58,7 @@ shell_list_db() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user database [format]'
+check_args '2' "$#" 'USER DATABASE [FORMAT]'
 validate_format 'user' 'database'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
@@ -78,7 +78,7 @@ case $format in
     json)   json_list_db ;;
     plain)  shell_list_db ;;
     shell)  shell_list_db | column -t ;;
-    *)      check_args '2' '0' 'user database [format]'
+    *)      check_args '2' '0' 'USER DATABASE [FORMAT]'
 esac
 
 

@@ -65,23 +65,15 @@
                                 </table>
                                 <table class="data-col2" width="600px">
                                     <tr>
-                                        <td class="vst-text" style="padding: 10 0 0 2px;">
-                                            Domain
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" size="20" class="vst-input" name="v_domain" <?php echo "value=".$v_domain;  ?> disabled ><input type="hidden" name="v_domain" <?php echo "value=".$v_domain;  ?>>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td class="vst-text" style="padding: 10px 0 0 2px;">
                                             Account
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text" size="20" class="vst-input" name="v_account" <?php if (!empty($v_account)) echo "value=".$v_account; ?> disabled >  <input type="hidden" name="v_account" <?php if (!empty($v_account)) echo "value=".$v_account; ?> >
+                                            <input type="text" size="20" class="vst-input" name="v_email" <?php if (!empty($v_account)) echo "value=".$_GET['account']."@".$_GET['domain']; ?> disabled >
+                                            <input type="hidden" name="v_domain" <?php echo "value=".$v_domain; ?>>
+                                            <input type="hidden" name="v_account" <?php if (!empty($v_account)) echo "value=".$v_account; ?> >
                                         </td>
                                     </tr>
                                     <tr>

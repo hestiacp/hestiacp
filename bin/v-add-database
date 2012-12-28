@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add database
-# options: user database dbuser dbpass type [host] [charset]
+# options: USER DATABASE DBUSER DBPASS TYPE [HOST] [CHARSET]
 #
 # The function creates the database concatenating username  and user_db.
 # Supported yypes of databases you can get using v-list-sys-config script.
@@ -40,7 +40,7 @@ EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'user database dbuser dbpass type [host] [charset]'
+check_args '5' "$#" 'USER DATABASE DBUSER DBPASS TYPE [HOST] [CHARSET]'
 validate_format 'user' 'database' 'dbuser' 'dbpass' 'charset'
 is_system_enabled "$DB_SYSTEM"
 is_type_valid "$DB_SYSTEM" "$type"

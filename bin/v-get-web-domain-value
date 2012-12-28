@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: get web domain value
-# options: user domain key
+# options: USER DOMAIN KEY
 #
 # The function is intended for obtaining a domain value by the key. This call
 # is useful for arranging composite queries. The answer is displayed only in
@@ -27,7 +27,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain key'
+check_args '3' "$#" 'USER DOMAIN KEY'
 validate_format 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

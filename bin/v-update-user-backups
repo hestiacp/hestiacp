@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update user backups
-# options: user
+# options: USER
 #
 # The function rescan backup directory and updates backup database.
 
@@ -174,7 +174,7 @@ check_ftp_connection(){
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'USER'
 is_system_enabled "$BACKUP_SYSTEM"
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"

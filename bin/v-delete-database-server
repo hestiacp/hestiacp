@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete database server
-# options: type host
+# options: TYPE HOST
 #
 # The function for deleting the database host from vesta configuration. It will
 # be deleted if there are no databases created on it only.
@@ -24,7 +24,7 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" "type host"
+check_args '2' "$#" 'TYPE HOST'
 validate_format 'type' 'host'
 is_system_enabled "$DB_SYSTEM"
 is_type_valid "$DB_SYSTEM" "$type"

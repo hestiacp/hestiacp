@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain record
-# options: user domain id value [priority]
+# options: USER DOMAIN ID VALUE [PRIORITY]
 #
 # The function for changing DNS record.
 
@@ -29,7 +29,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'user domain id value [priority]'
+check_args '4' "$#" 'USER DOMAIN ID VALUE [PRIORITY]'
 validate_format 'user' 'domain' 'id' 'dvalue'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

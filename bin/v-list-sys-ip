@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system ip
-# options: ip [format]
+# options: IP [FORMAT]
 #
 # The function for getting the list of system ip parameters.
 
@@ -63,7 +63,7 @@ shell_list_ip() {
 #----------------------------------------------------------#
 
 # Checking args
-check_args '1' "$#" 'ip [format]'
+check_args '1' "$#" 'IP [FORMAT]'
 validate_format 'ip'
 is_ip_valid
 
@@ -81,7 +81,7 @@ case $format in
     json)   json_list_ip ;;
     plain)  shell_list_ip ;;
     shell)  shell_list_ip | column -t ;;
-    *)      check_args '1' '0' 'ip [format]'
+    *)      check_args '1' '0' 'IP [FORMAT]'
 esac
 
 

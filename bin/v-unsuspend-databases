@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unsuspend databases
-# options: user
+# options: USER
 #
 # The function for unsuspending all user's databases.
 
@@ -22,7 +22,7 @@ source $VESTA/func/db.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'USER'
 validate_format 'user'
 is_system_enabled "$DB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

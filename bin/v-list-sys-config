@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system config
-# options: [format]
+# options: [FORMAT]
 #
 # The function for obtaining the list of system parameters.
 

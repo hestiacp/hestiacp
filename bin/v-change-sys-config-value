@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change sysconfig value
-# options: key value
+# options: KEY VALUE
 #
 # The function is for changing main config settings such as COMPANY_NAME or
 # COMPANY_EMAIL and so on.
@@ -23,7 +23,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'key value'
+check_args '2' "$#" 'KEY VALUE'
 validate_format 'key'
 check_ckey=$(grep "^$key='" $VESTA/conf/vesta.conf)
 if [ -z "$check_ckey" ]; then

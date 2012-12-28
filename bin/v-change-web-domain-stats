@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change web domain statistics
-# options: user domain type
+# options: USER DOMAIN TYPE
 #
 # The function of deleting site's system of statistics. Its type is
 # automatically chooses from client's configuration file.
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain type'
+check_args '3' "$#" 'USER DOMAIN TYPE'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_type_valid "$STATS_SYSTEM" "$type"

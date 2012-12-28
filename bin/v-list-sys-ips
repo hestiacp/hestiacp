@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system ips
-# options: [format]
+# options: [FORMAT]
 #
 # The function for obtaining the list of system ip's.
 
@@ -83,7 +83,7 @@ case $format in
     plain)  nohead=1; shell_list_ips ;;
     shell)  fields='$IP $NETMASK $OWNER $STATUS $U_WEB_DOMAINS';
             shell_list_ips | column -t ;;
-    *)      check_args '1' '0' '[format]'
+    *)      check_args '1' '0' '[FORMAT]'
 esac
 
 

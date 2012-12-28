@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend cron job
-# options: user job [restart]
+# options: USER JOB [RESTART]
 #
 # The function suspends a certain job of the cron scheduler.
 
@@ -23,7 +23,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user job [restart]'
+check_args '2' "$#" 'USER JOB [RESTART]'
 validate_format 'user' 'job'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'cron' 'JOB' "$job"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list mail account autoreply
-# options: user domain account [format]
+# options: USER DOMAIN ACCOUNT [FORMAT]
 #
 # The function of obtainin mail account autoreply message.
 
@@ -39,7 +39,7 @@ shell_list_msg() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [format]'
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
@@ -61,7 +61,7 @@ case $format in
     json)   json_list_msg ;;
     plain)  nohead=1; shell_list_msg ;;
     shell)  shell_list_msg ;;
-    *)      check_args '1' '0' '[format]'
+    *)      check_args '1' '0' '[FORMAT]'
 esac
 
 

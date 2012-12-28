@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list mail domain accounts
-# options: user domain [format]
+# options: USER DOMAIN [FORMAT]
 #
 # The function of obtaining the list of all user domains.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [format]'
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 validate_format 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
@@ -43,7 +43,7 @@ case $format in
     plain) nohead=1; shell_list ;;
     shell) fields='$ACCOUNT $AUTOREPLY $QUOTA $U_DISK $SUSPENDED $TIME $DATE';
            shell_list | column -t ;;
-    *)     check_args '1' '0' 'user [format]'
+    *)     check_args '1' '0' 'USER [FORMAT]'
 esac
 
 

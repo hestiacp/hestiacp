@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: listing nginx templates
-# options: [format]
+# options: [FORMAT]
 #
 # The function for obtaining the list of nginx templates available to a user.
 
@@ -56,7 +56,7 @@ case $format in
     json)   json_list_wtpl ;;
     plain)  nohead=1; shell_list_wtpl ;;
     shell)  shell_list_wtpl ;;
-    *)      check_args '1' '0' '[format]'
+    *)      check_args '1' '0' '[FORMAT]'
 esac
 
 

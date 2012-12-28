@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list database server
-# options: type host [format]
+# options: TYPE HOST [FORMAT]
 #
 # The function for obtaining database server parameters.
 
@@ -58,7 +58,7 @@ shell_list_dbhost() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'type host [format]'
+check_args '2' "$#" 'TYPE HOST [FORMAT]'
 validate_format 'host'
 is_object_valid "../../conf/$type" 'HOST' "$host"
 
@@ -77,7 +77,7 @@ case $format in
     json)   json_list_dbhost ;;
     plain)  nohead=1; shell_list_dbhost ;;
     shell)  shell_list_dbhost | column -t;;
-    *)      check_args '2' '0' 'type host [format]'
+    *)      check_args '2' '0' 'TYPE HOST [FORMAT]'
 esac
 
 

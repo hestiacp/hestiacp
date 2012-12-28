@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete web domain cgi support
-# options: user domain
+# options: USER DOMAIN
 #
 # The function for deleting cgi support (adds -ExecCGI directive into
 # configuration file). It is recommended to apply this function only for a
@@ -27,7 +27,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain'
+check_args '2' "$#" 'USER DOMAIN'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

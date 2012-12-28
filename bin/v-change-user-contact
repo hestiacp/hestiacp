@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change user contact email
-# options: user email
+# options: USER EMAIL
 #
 # The function for changing of e-mail associated with a certain user.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user email'
+check_args '2' "$#" 'USER EMAIL'
 validate_format 'user' 'email'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

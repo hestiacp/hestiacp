@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete dns record
-# options: user domain id
+# options: USER DOMAIN ID
 #
 # The function for deleting a certain record of DNS zone.
 
@@ -25,7 +25,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain id'
+check_args '3' "$#" 'USER DOMAIN ID'
 validate_format 'user' 'domain' 'id'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

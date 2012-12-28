@@ -9,6 +9,7 @@
                 margin-left: auto;
                 margin-right: auto;
                 background-image: url(/images/b.png);
+                font-family: Arial, sans-serif;
             }
 
             form {
@@ -31,6 +32,7 @@
             ?> 
             }
 
+
             .top {
                 background: #555;
                 color: #cce4f0;
@@ -38,31 +40,136 @@
                 margin-left: auto;
                 margin-right: auto;
                 width: 990px;
-                font-family: Arial, sans-serif;
                 font-size: 10pt;
                 text-align: left;
                 line-height: 1.2em;
-                border-bottom: 2px solid white;
+                border: 0px;
+                border-collapse:collapse;
             }
 
             .top-link {
                 text-decoration: none;
-                color: #e6e6e6;
+                color: #e0e0e0;
             }
 
             .top-link:hover {
-                text-decoration: underline;
                 color: white;
             }
 
             .top-link:active{
-                text-decoration: underline;
                 color: #f5edb6;
             }
 
-            .top-slink {
+            .top-selected-link {
                 text-decoration: none;
                 color: #f5edb6;
+            }
+
+            .top-logout {
+                text-decoration: none;
+                color: #e6e6e6;
+                padding: 0 0 0 2px;
+                border: noner;
+            }
+
+            .top-logout:hover {
+                color: white;
+            }
+
+            .nav-logo {
+                float:left;
+                height:100px;
+                width:159px;
+                background: #ebe9dc;
+            }
+
+            .nav-lnk {
+                text-decoration: none;
+                color: #555;
+                float:left;
+            }
+
+            .nav-lnk:hover {
+                color: #333;
+            }
+
+            .nav-lnk:active {
+                color: #ccc;
+            }
+
+            .nav-block {
+                margin: 0 2px 0 0;
+                height:100px;
+                width: 116px;
+                float:left;
+                cursor: pointer;
+            }
+
+            .nav-block:hover {
+                background: #fafafa;
+            }
+
+            .nav-selected-block {
+                margin: 0 2px 0 0;
+                color: #80a7cc;
+                height: 100px;
+                width: 116px;
+                float: left;
+                background: #fafafa;
+                cursor: pointer;
+            }
+
+            .nav-selected-block:hover {
+                background: #fafafa;
+            }
+
+            .nav-header {
+                padding: 13px 0 0 6px;
+                margin: 0;
+                letter-spacing: -1.0px;
+                font-size: 16pt;
+                font-weight: bold;
+            }
+
+            .nav-selected-header {
+                padding: 13px 0 0 6px;
+                margin: 0;
+                letter-spacing: -1.0px;
+                font-size: 16pt;
+                font-weight: bold;
+            }
+
+            .nav-counters {
+                padding: 6px 0 5px 6px;
+                margin: 0;
+                height: 58px;
+                line-height: 1.4em;
+                letter-spacing: 0.1px;
+                font-size: 9pt;
+                color: #555;
+            }
+
+            .sub-menu {
+                margin-left: auto;
+                margin-right: auto;
+                width: 990px;
+                height: 54px;
+                font-size: 10pt;
+                text-align: left;
+                vertical-align:top;
+                padding: 0px 10px 0px 0;
+                background: none repeat scroll 0% 0% white;
+            }
+
+            .select-controls {
+                color: #6A6A6A;
+                font-size: 8pt;
+                letter-spacing: 0.1em;
+                text-decoration: none;
+            }
+
+            .select-controls:hover {
+                text-decoration: underline;
             }
 
             .bottom {
@@ -73,7 +180,6 @@
                 margin-left: auto;
                 margin-right: auto;
                 width: 990px;
-                font-family: Arial, sans-serif;
                 font-size: 8pt;
                 text-align: center;
                 vertical-align:top;
@@ -97,124 +203,9 @@
                 color: #7fa1cb;
             }
 
-            .nav {
-                background: #ebe9dc;
-                margin-left: auto;
-                margin-right: auto;
-                width: 990px;
-                text-align: left;
-                vertical-align:top;
-                padding: 0;
-                border-bottom: 8px solid #F7F6ED;
-            }
-
-            .logo {
-                width: 147px !important;
-                padding: 0 0 0 4px;
-            }
-
-            .nav-block {
-                vertical-align:top;
-                margin: 0;
-                text-align: left;
-                display: inline;
-                list-style: none outside none;
-                float: left;
-                padding: 16px 4px 2px 10px;
-                width: 102px;
-                line-height: 1.0em;
-                font-size: 9pt;
-                font-family: Arial, sans-serif;
-                color: #2d2d2d;
-                border-left:1px dotted #ebe9dc;
-                border-right:1px dotted #ebe9dc;
-            }
-
-            .nav-block:hover {
-                background: #fafafa;
-                border-left:1px dotted #ccc;
-                border-right:1px dotted #ccc;
-            }
-
-            .nav-sblock {
-                vertical-align:top;
-                margin: 0;
-                text-align: left;
-                display: inline;
-                list-style: none outside none;
-                float: left;
-                padding: 16px 4px 2px 10px;
-                width: 102px;
-                line-height: 1.0em;
-                font-size: 9pt;
-                font-family: Arial, sans-serif;
-                color: #2d2d2d;
-                background: #fafafa;
-                border-left:1px dotted #fafafa;
-                border-right:1px dotted #fafafa;
-
-            }
-
-            .nav-link {
-                letter-spacing: -1.0px;
-                font-size: 16pt;
-                color: #555;
-                font-family: Arial, sans-serif;
-                text-decoration: none;
-            }
-
-            .nav-link:hover {
-                color: #333;
-                text-decoration: underline;
-
-            }
-
-            .nav-link:active {
-                color: #ccc;
-                text-decoration: underline;
-            }
-
-            .nav-slink {
-                letter-spacing: -1.0px;
-                font-size: 16pt;
-                color: #7fa1cb;
-                font-family: Arial, sans-serif;
-                text-decoration: none;
-            }
-
-            .nav-slink:active {
-                color: #ccc;
-                text-decoration: underline;
-            }
-
-            .sub-menu {
-                margin-left: auto;
-                margin-right: auto;
-                width: 990px;
-                font-family: Arial, sans-serif;
-                font-size: 10pt;
-                text-align: left;
-                vertical-align:top;
-                padding: 0px 10px 0px 0;
-                background: none repeat scroll 0% 0% white;
-            }
-
-            .select-controls {
-                color: #6A6A6A;
-                font-size: 8pt;
-                font-family: Arial, sans-serif;
-                letter-spacing: 0.1em;
-                text-decoration: none;
-            }
-
-            .select-controls:hover {
-                text-decoration: underline;
-            }
-
             .vst {
                 padding: 0 8px 0 0;
                 margin: 0;
-                font-family: Arial, sans-serif;
                 text-decoration: none;
                 color: #8B99A2;
                 font-size: 12pt;
@@ -228,23 +219,12 @@
                 color: #34536A;
             }
 
-            .counters {
-                height: 58px;
-                line-height: 1.4em;
-                font-size: 9pt;
-                font-family: Arial, sans-serif;
-                color: #555;
-                padding: 8px 0 4px 0;
-                margin: 0;
-            }
-
             .data {
                 border-collapse:collapse;
                 margin-left: auto;
                 margin-right: auto;
                 width: 990px;
                 color: #e5a907;
-                font-family: Arial, serif;
                 font-size: 12pt;
                 text-align: left;
                 vertical-align:top;
@@ -314,13 +294,11 @@
                 padding: 0 0 0 18;
                 letter-spacing: 0.3em;
                 font-size: 8pt;
-                font-family: Arial;
                 color: #6A6A6A
             }
 
             .data-active {
                 font-size: 8pt;
-                font-family: Arial;
                 letter-spacing: 0.1em;
                 color: #9ba68c;
                 padding: 0 0 13 18;
@@ -328,7 +306,6 @@
 
             .data-suspended {
                 font-size: 8pt;
-                font-family: Arial;
                 letter-spacing: 0.1em;
                 color: #de6c5d;
                 padding: 0 0 13 18;
@@ -337,7 +314,6 @@
             .data-controls {
                 border-left: 1px solid #E6E6E6;
                 font-size: 8pt;
-                font-family: Arial, sans-serif;
                 padding: 2 5 0 5;
                 letter-spacing: 0.1em;
                 color: #34536A;
@@ -381,51 +357,43 @@
                 background: #ebe9dc;
                 color: #555;
                 font-size: 8pt;
-                font-family: Arial;
                 margin: 18px 0 0 0;
                 text-align:right;
                 padding: 0 16px 0 0;
             }
 
             .chart1 {
-                font-family: Arial, sans-serif;
                 font-size: 10pt;
             }
 
             .chart2 {
                 color: #484243;
-                font-family: Arial, sans-serif;
                 font-size: 8pt;
             }
 
             .username {
                 color: #555555;
-                font-family: Arial, sans-serif;
                 font-size: 16pt;
                 line-height: 1.2em;
             }
 
             .domain {
                 color: #555555;
-                font-family: Arial, sans-serif;
                 font-size: 16pt;
                 line-height: 0.8em;
             }
 
             .cron {
                 color: #555555;
-                font-family: Arial, sans-serif;
                 font-size: 18px;
             }
 
             .log {
                 color: #555555;
-                font-family: Arial, sans-serif;
                 font-size: 12pt;
             }
 
             .aliases {
-                font-family: Arial;
                 font-size: 12pt;
                 color: #99a7af;
                 padding: 0 0 0 8px;
@@ -434,12 +402,10 @@
             .nginx-ext {
                 color: black;
                 vertical-align:top;
-                font-family: Arial, sans-serif;
                 font-size: 10pt;
             }
 
             .fullname {
-                font-family: Arial;
                 font-size: 18px;
                 color: #99a7af;
                 padding: 0 0 0 8px;
@@ -448,7 +414,6 @@
             .counter-name {
                 vertical-align:top;
                 line-height: 1.2em;
-                font-family: Arial, sans-serif;
                 font-size: 10pt;
                 color: #484243;
                 color: #5c5455;
@@ -457,7 +422,6 @@
             .cron-counter-name {
                 vertical-align:top;
                 line-height: 0.8em;
-                font-family: Arial, sans-serif;
                 font-size: 8pt;
                 padding: 4 0 0 0;
                 color: #484243;
@@ -467,7 +431,6 @@
             .counter-value {
                 vertical-align:top;
                 line-height: 1.2em;
-                font-family: Arial, sans-serif;
                 font-size: 10pt;
                 color: black;
                 padding: 0 0 0 4px;
@@ -475,7 +438,6 @@
 
             .log-counter-value {
                 vertical-align:top;
-                font-family: Arial, sans-serif;
                 font-size: 12pt;
                 color: #484243;
             }
@@ -483,20 +445,17 @@
             .cron-counter-value {
                 vertical-align:top;
                 line-height: 1.2em;
-                font-family: Arial, sans-serif;
                 font-size: 12pt;
                 color: #484243;
             }
 
             .name {
-                font-family: Arial;
                 font-size: 16pt;
                 color: #777;
                 padding: 0 0 0 10px;
             }
 
             .vst-ok {
-                font-family: Arial;
                 font-size: 18px;
                 color: #62a358;
                 padding: 0 0 0 6px;
@@ -512,14 +471,12 @@
             }
 
             .vst-error {
-                font-family: Arial;
                 font-size: 18px;
                 color: #de6c5d;
                 padding: 0 0 0 6px;
             }
 
             .vst-text {
-                font-family: Arial, sans-serif;
                 font-size: 12pt;
             }
 
@@ -528,7 +485,6 @@
                 border: 1px solid #999999;
                 border-radius: 3px 3px 3px 3px;
                 color: #555555;
-                font-family: Arial,sans-serif;
                 font-size: 18px;
                 padding: 6px;
                 width: 360px;
@@ -548,7 +504,6 @@
                 border: 1px solid #999999;
                 border-radius: 3px 3px 3px 3px;
                 color: #555555;
-                font-family: Arial,sans-serif;
                 font-size: 14pt;
                 padding: 6px;
                 width: 360px;
@@ -628,7 +583,6 @@
             .genpass {
                 color: #34536a;
                 font-size: 8pt;
-                font-family: Arial, sans-serif;
                 padding: 0 5px 0 8px;
                 letter-spacing: 0.1em;
                 text-decoration: underline;
@@ -641,7 +595,6 @@
             .vst-advanced {
                 color: #34536a;
                 font-size: 10pt;
-                font-family: Arial, sans-serif;
                 letter-spacing: 0.1em;
                 text-decoration: none;
                 border-bottom: 1px solid #f79b44;
@@ -657,6 +610,8 @@
                 position: fixed;
                 border: none;
                 top: -3px;
+                border-bottom: 2px solid #ebe9dc;
+                background-color: #fff;
             }
 
             *html .fixed{
@@ -665,14 +620,13 @@
             }
 
             #vstobjects{
-                padding-top: 192px;
+                padding-top: 188px;
                 width: 996px;
                 padding-left: 3px;
                 min-height: 370px;
             }
 
             .login {
-                font-family: Arial, sans-serif;
                 margin: 80px 0 80px 0;
                 padding: 0;
                 border-top: 1px solid #cccccc;
@@ -726,10 +680,6 @@
                     vertical-align: baseline;
                 }
 
-                .top {
-                    border-top: 5px solid white;
-                }
-
                 .fixed {
                     margin-top: -3px;
                 }
@@ -739,24 +689,11 @@
                 }
 
                 #vstobjects{
-                    padding-top: 192px;
+                    padding-top: 188px;
                     min-height: 370px;
                     height: auto !important;
                     height: 370px;
                     width: 996px;
-                }
-
-                #nav-block td {
-                    display: inline;
-                    list-style: none outside none;
-                    float: left;
-                    height: 94px;
-                    padding: 20px 11px 12px 13px;
-                    line-height: 1.0em;
-                    font-size: 9pt;
-                    font-family: Arial, sans-serif;
-                    color: #2d2d2d;
-                    background: url(/images/transparent-image.png) no-repeat;
                 }
 
             </style>

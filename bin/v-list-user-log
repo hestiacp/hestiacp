@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user log
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function of obtaining the list of 100 last users commands.
 
@@ -56,7 +56,7 @@ json_list_history() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
+check_args '1' "$#" 'USER [FORMAT]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -77,7 +77,7 @@ case $format in
     plain)  nohead=1; shell_list ;;
     shell)  fields='$ID~$DATE~$TIME~$CMD';
             shell_list |column -t -s '~';;
-    *)      check_args '1' '0' 'user [format]'
+    *)      check_args '1' '0' 'USER [FORMAT]'
 esac
 
 

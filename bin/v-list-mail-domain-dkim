@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list mail domain dkim
-# options: user domain [format]
+# options: USER DOMAIN [FORMAT]
 #
 # The function of obtaining domain dkim files.
 
@@ -41,7 +41,7 @@ shell_list_ssl() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [format]'
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 
@@ -62,7 +62,7 @@ case $format in
     json)   json_list_ssl ;;
     plain)  nohead=1; shell_list_ssl ;;
     shell)  shell_list_ssl ;;
-    *)      check_args '1' '0' '[format]'
+    *)      check_args '1' '0' '[FORMAT]'
 esac
 
 

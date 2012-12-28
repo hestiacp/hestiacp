@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add ftp account for web domain.
-# options: user domain ftp_user ftp_password
+# options: USER DOMAIN FTP_USER FTP_PASSWORD
 #
 # The function creates addutional ftp account for web domain.
 
@@ -30,7 +30,7 @@ EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'user domain ftp_user ftp_password'
+check_args '4' "$#" 'USER DOMAIN FTP_USER FTP_PASSWORD'
 validate_format 'user' 'domain' 'ftp_user' 'ftp_password'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system user
-# options: user password email [package] [fname] [lname]
+# options: USER PASSWORD EMAIL [PACKAGE] [FNAME] [LNAME]
 #
 # The function creates new user account.
 
@@ -40,7 +40,7 @@ is_user_free() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user password email [package] [fname] [lname]'
+check_args '3' "$#" 'USER PASSWORD EMAIL [PACKAGE] [FNAME] [LNAME]'
 validate_format 'user' 'password' 'email' 'package'
 if [ ! -z "$fname" ]; then
     validate_format 'fname' 'lname'

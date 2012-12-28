@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete user backup
-# options: user nackup
+# options: USER NACKUP
 #
 # The function deletes user backup.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user backup'
+check_args '2' "$#" 'USER BACKUP'
 validate_format 'user' 'backup'
 is_system_enabled "$BACKUP_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

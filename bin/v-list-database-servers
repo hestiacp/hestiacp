@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list database servers
-# options: type [format]
+# options: TYPE [FORMAT]
 #
 # The function for obtaining the list of all hosts of the same databases' type.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 # Checking args
-check_args '1' "$#" 'type [format]'
+check_args '1' "$#" 'TYPE [FORMAT]'
 
 
 #----------------------------------------------------------#
@@ -40,7 +40,7 @@ case $format in
     plain)  nohead=1; shell_list;;
     shell)  fields='$HOST $PORT $MAX_DB $U_DB_BASES $SUSPENDED $DATE';
             shell_list | column -t ;;
-    *)      check_args '2' '0' 'type [format]'
+    *)      check_args '2' '0' 'TYPE [FORMAT]'
 esac
 
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns domain record
-# options: user domain record type value [priority] [id] [restart]
+# options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART]
 #
 # The call is used for adding new DNS record. Complex records of TXT, MX and
 # SRV types can be used by a filling in the 'value' argument. The function also
@@ -36,7 +36,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'user domain record type value [priority] [id] [restart]'
+check_args '5' "$#" 'USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART]'
 validate_format 'user' 'domain' 'record' 'rtype' 'dvalue'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

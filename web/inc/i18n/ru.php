@@ -144,6 +144,8 @@ $LANG = array(
     'IP Addresses'=>'IP адреса',
     'RRD Graphics'=>'Графики',
     'jobs'=>'Задания',
-    'Reset Code'=>'Код сброса'
+    'Reset Code'=>'Код сброса',
+    'disk'=>'Место',
+    'traffic'=>'Трафик',
 
 );

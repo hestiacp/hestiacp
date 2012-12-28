@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update mail domain disk usage
-# options: user domain
+# options: USER DOMAIN
 #
 # The function updates domain disk usage.
 
@@ -24,7 +24,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain'
+check_args '2' "$#" 'USER DOMAIN'
 validate_format 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

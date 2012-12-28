@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add new database server
-# options: type host port dbuser dbpass [max_db] [charsets] [template]
+# options: TYPE HOST PORT DBUSER DBPASS [MAX_DB] [CHARSETS] [TEMPLATE]
 #
 # The function add new database server to the server pool. It supports local
 # and remote database servers, which is useful for clusters. By adding a host
@@ -36,7 +36,7 @@ max_db=${6-500}
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='type host port dbuser dbpass [max_db] [charsets] [tpl]'
+args_usage='TYPE HOST PORT DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
 check_args '5' "$#" "$args_usage"
 validate_format 'host' 'port' 'dbuser' 'dbpass' 'max_db' 'charsets' 'template'
 is_system_enabled "$DB_SYSTEM"

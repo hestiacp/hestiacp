@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user packages
-# options: [format]
+# options: [FORMAT]
 #
 # The function for obtaining the list of available hosting packages.
 
@@ -80,7 +80,7 @@ case $format in
     json)   json_list_pkgs ;;
     plain)  nohead=1; shell_list_pkgs ;;
     shell)  shell_list_pkgs | column -t ;;
-    *)      check_args '1' '0' '[format]'
+    *)      check_args '1' '0' '[FORMAT]'
 esac
 
 

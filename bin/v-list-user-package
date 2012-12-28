@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user package
-# options: package [format]
+# options: PACKAGE [FORMAT]
 #
 # The function for getting the list of system ip parameters.
 
@@ -62,7 +62,7 @@ shell_list_package() {
 #----------------------------------------------------------#
 
 # Checking args
-check_args '1' "$#" 'package [format]'
+check_args '1' "$#" 'PACKAGE [FORMAT]'
 validate_format 'package'
 is_package_valid
 
@@ -81,7 +81,7 @@ case $format in
     json)   json_list_package ;;
     plain)  shell_list_package ;;
     shell)  shell_list_package | column -t ;;
-    *)      check_args '1' '0' 'ip [format]'
+    *)      check_args '1' '0' 'IP [FORMAT]'
 esac
 
 

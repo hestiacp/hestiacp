@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change user nameservers
-# options: user ns1 ns2 [ns3] [ns4]
+# options: USER NS1 NS2 [NS3] [NS4]
 #
 # The function for changing default nameservers for speciefic user.
 
@@ -26,7 +26,7 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 # Checking args
-check_args '3' "$#" 'user ns1 ns2 [ns3] [ns4]'
+check_args '3' "$#" 'USER NS1 NS2 [NS3] [NS4]'
 
 # Checking argument format
 validate_format 'user' 'ns1' 'ns2' 

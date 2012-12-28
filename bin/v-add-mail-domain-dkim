@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add mail domain dkim support
-# options: user domain [dkim_size]
+# options: USER DOMAIN [DKIM_SIZE]
 #
 # The function adds DKIM signature to outgoing domain emails.
 
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user domain [dkim_size]'
+check_args '2' "$#" 'USER DOMAIN [DKIM_SIZE]'
 validate_format 'user' 'domain' 'dkim_size'
 is_system_enabled "$MAIL_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

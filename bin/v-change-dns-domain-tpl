@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain template
-# options: user domain
+# options: USER DOMAIN
 #
 # The function for changing the template of records. By updating old records
 # will be removed and new records will be generated in accordance with
@@ -27,7 +27,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain template'
+check_args '3' "$#" 'USER DOMAIN TEMPLATE'
 validate_format 'user' 'domain' 'template'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns domain
-# options: user domain ip [template] [ns1] [ns2] [ns3] [ns4] [restart]
+# options: USER DOMAIN IP [TEMPLATE] [NS1] [NS2] [NS3] [NS4] [RESTART]
 #
 # The function adds DNS zone with records defined in the template. If the exp
 # argument isn't stated, the expiration date value will be set to next year.
@@ -37,7 +37,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ip [template] [ns1] [ns2] [ns3] [ns4]'
+check_args '3' "$#" 'USER DOMAIN IP [TEMPLATE] [NS1] [NS2] [NS3] [NS4]'
 validate_format 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update system ip
-# options: [user] [ip_status]
+# options: [USER] [IP_STATUS]
 #
 # The function scans configured ip in the system and register them with vesta
 # internal database. This call is intended for use on vps servers, where ip is
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '0' "$#" '[user] [ip_status]'
+check_args '0' "$#" '[USER] [IP_STATUS]'
 validate_format 'user' 'ip_status'
 is_object_valid 'user' 'USER' "$user" "$user"
 

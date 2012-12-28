@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list mail domain account
-# options: user domain account [format]
+# options: USER DOMAIN ACCOUNT [FORMAT]
 #
 # The function of obtaining the list of account parameters.
 
@@ -62,7 +62,7 @@ shell_list_account() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain account [format]'
+check_args '3' "$#" 'USER DOMAIN ACCOUNT [FORMAT]'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
@@ -83,7 +83,7 @@ case $format in
     json)   json_list_account ;;
     plain)  nohead=1; shell_list_account ;;
     shell)  shell_list_account |column -t ;;
-    *)      check_args '2' '0' 'user domain account [format]'
+    *)      check_args '2' '0' 'USER DOMAIN ACCOUNT [FORMAT]'
 esac
 
 

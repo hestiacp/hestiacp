@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update user disk usage
-# options: user
+# options: USER
 #
 # The functions recalculates disk usage and updates database.
 
@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user'
+check_args '1' "$#" 'USER'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 

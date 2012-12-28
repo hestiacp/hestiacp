@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system rrd charts
-# options: [format]
+# options: [FORMAT]
 #
 # List available rrd graphics, its titles and paths.
 

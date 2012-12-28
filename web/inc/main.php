@@ -21,7 +21,7 @@ function _() {
 }
 
 // Check user session
-if (!isset($_SESSION['user'])&&!defined('NO_AUTH_REQUIRED')) {
+if ((!isset($_SESSION['user'])) && (!isset($api_mode))&&!defined('NO_AUTH_REQUIRED')) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
@@ -66,9 +66,9 @@ function humanize_time($usage) {
     if ( $usage > 60 ) {
         $usage = $usage / 60;
         $usage = number_format($usage, 2);
-        $usage = $usage." "._('Hour').".";
+        $usage = $usage." Hour.";
     } else {
-        $usage = $usage." "._('Min').".";
+        $usage = $usage." Min.";
     }
     return $usage;
 }
@@ -81,17 +81,17 @@ function humanize_usage($usage) {
                 if ( $usage > 1000 ) {
                     $usage = $usage / 1000 ;
                     $usage = number_format($usage, 2);
-                    $usage = $usage." "._('pb');
+                    $usage = $usage." pb";
                 } else {
                     $usage = number_format($usage, 2);
-                    $usage = $usage." "._('tb');
+                    $usage = $usage." tb";
                 }
         } else {
             $usage = number_format($usage, 2);
-            $usage = $usage." "._('gb');
+            $usage = $usage." gb";
         }
     } else {
-        $usage = $usage." "._('mb');
+        $usage = $usage." mb";
     }
     return $usage;
 }
@@ -149,7 +149,7 @@ function display_error_block() {
                                 });
                             });
                     </script>
-                    <div id="dialog-message" title="'._('Error').'">
+                    <div id="dialog-message" title="Error">
                         <p>';
         echo $_SESSION['error_msg'];
         echo "</p>\n                        </div>\n";

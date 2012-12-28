@@ -1,0 +1,55 @@
+#!/bin/bash
+# info: search domain owner
+# options: DOMAIN [TYPE]
+#
+# The function that allows to find user objects.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+domain=$(idn -t --quiet -u "$1" )
+type=${2-any}
+
+# Includes
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'DOMAIN [TYPE]'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Define conf 
+case $type in
+    web)    conf="$VESTA/data/users/*/web.conf" ;;
+    dns)    conf="$VESTA/data/users/*/dns.conf" ;;
+    mail)   conf="$VESTA/data/users/*/mail.conf" ;;
+    *)      conf="$VESTA/data/users/*/*.conf"
+esac
+
+
+owner=$(grep "DOMAIN='$domain'" $conf | head -n 1 | cut -f7 -d '/')
+if [ -z "$owner" ]; then
+    exit $E_NOTEXIST
+fi
+
+echo $owner
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+#log_event "$OK" "$EVENT"
+
+exit

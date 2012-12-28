@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change ip status
-# options: ip ip_status
+# options: IP IP_STATUS
 #
 # The function of changing an ip address's status.
 
@@ -22,7 +22,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'ip ip_status'
+check_args '2' "$#" 'IP IP_STATUS'
 validate_format 'ip' 'ip_status'
 is_ip_valid
 if [ "$ip_status" = "$(get_ip_value '$STATUS')" ]; then

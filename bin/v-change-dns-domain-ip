@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain ip address
-# options: user domain ip
+# options: USER DOMAIN IP
 #
 # The function for changing the main ip of DNS zone.
 
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ip'
+check_args '3' "$#" 'USER DOMAIN IP'
 validate_format 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

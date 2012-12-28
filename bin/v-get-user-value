@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: get user value
-# options: user key
+# options: USER KEY
 #
 # The function for obtaining certain user's parameters.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'user key'
+check_args '2' "$#" 'USER KEY'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 

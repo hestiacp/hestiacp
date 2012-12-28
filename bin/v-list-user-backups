@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user backups
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function for obtainig the list of available user backups.
 
@@ -20,7 +20,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
+check_args '1' "$#" 'USER [FORMAT]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -45,7 +45,7 @@ case $format in
     plain)  nohead=1; shell_list ;;
     shell)  fields='$BACKUP $TYPE $SIZE $RUNTIME $TIME $DATE';
             shell_list |column -t;;
-    *)      check_args '1' '0' '[format]' ;;
+    *)      check_args '1' '0' '[FORMAT]' ;;
 esac
 
 

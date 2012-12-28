@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete user package
-# options: package
+# options: PACKAGE
 #
 # The function for deleting user package. It does not allow to delete pacakge
 # if it is in use.
@@ -31,7 +31,7 @@ is_package_in_use() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'package'
+check_args '1' "$#" 'PACKAGE'
 validate_format 'package'
 is_package_valid
 is_package_in_use

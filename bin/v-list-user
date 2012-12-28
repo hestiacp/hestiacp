@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system user
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function for obtainig the list of all user's parameters.
 
@@ -59,7 +59,7 @@ shell_list_user() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
+check_args '1' "$#" 'USER [FORMAT]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 

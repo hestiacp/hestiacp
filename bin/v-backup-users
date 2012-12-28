@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: backup all users
-# options: none
+# options: NONE
 #
 # The function backups all system users.
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain ttl
-# options: user domain ttl
+# options: USER DOMAIN TTL
 #
 # The function for chaning the time to live TTL parameter for all records.
 
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain ttl'
+check_args '3' "$#" 'USER DOMAIN TTL'
 validate_format 'user' 'domain' 'ttl'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system users
-# options: [format]
+# options: [FORMAT]
 #
 # The function for obtaining the list of system users without
 # detailed information.
@@ -54,7 +54,7 @@ case $format in
     json)   json_list_users ;;
     plain)  nohead=1; shell_list_users ;;
     shell)  shell_list_users ;;
-    *)      check_args '1' '0' '[format]' ;;
+    *)      check_args '1' '0' '[FORMAT]' ;;
 esac
 
 

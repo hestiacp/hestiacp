@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change cron job
-# options: user job min hour day month wday command
+# options: USER JOB MIN HOUR DAY MONTH WDAY COMMAND
 #
 # The function is used for changing existing job. It fully replace job
 # parameters with new one but with same id.
@@ -29,7 +29,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '7' "$#" 'user job min hour day month wday command'
+check_args '7' "$#" 'USER JOB MIN HOUR DAY MONTH WDAY COMMAND'
 validate_format 'user' 'job' 'min' 'hour' 'day' 'month' 'wday' 'command' 
 is_system_enabled $CRON_SYSTEM
 is_object_valid 'user' 'USER' "$user"

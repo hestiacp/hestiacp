@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete dns domain or dns record based on web domain alias
-# options: user domain
+# options: USER DOMAIN
 #
 # The function deletes dns domain or dns record based on web domain alias.
 
@@ -29,7 +29,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain alias'
+check_args '3' "$#" 'USER DOMAIN ALIAS'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM"
 is_system_enabled "$DNS_SYSTEM"

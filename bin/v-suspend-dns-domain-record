@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: suspend dns domain record
-# options: user domain id [restart]
+# options: USER DOMAIN ID [RESTART]
 #
 # The function suspends a certain domain record.
 
@@ -26,7 +26,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'user domain id [restart]'
+check_args '3' "$#" 'USER DOMAIN ID [RESTART]'
 validate_format 'user' 'domain' 'id'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"

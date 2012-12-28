@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user stats
-# options: user [format]
+# options: USER [FORMAT]
 #
 # The function for listing user statistics
 
@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'user [format]'
+check_args '1' "$#" 'USER [FORMAT]'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -47,7 +47,7 @@ case $format in
     shell)  fields='$DATE $PACKAGE $U_DISK $U_BANDWIDTH $U_WEB_DOMAINS';
             fields="$fields \$U_DATABASES"
             shell_list | column -t ;;
-    *)      check_args '1' '0' 'user [format]'
+    *)      check_args '1' '0' 'USER [FORMAT]'
 esac
 
 

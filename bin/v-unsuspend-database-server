@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unsuspend database server
-# options: type host
+# options: TYPE HOST
 #
 # The function for unsuspending a database server.
 
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'type host'
+check_args '2' "$#" 'TYPE HOST'
 validate_format 'type' 'host'
 is_system_enabled "$DB_SYSTEM"
 is_object_valid "../../conf/$type" 'HOST' "$host"

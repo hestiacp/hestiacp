@@ -132,15 +132,6 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
         // Change password
         if ( $v_hash == $n_hash ) {
             exec (VESTA_CMD."v-change-mail-account-password '".$v_user."' ".$v_domain." ".$v_account." ".$new, $output, $return_var);
-            $fp = fopen('/tmp/vst.log', 'w');
-            fwrite($fp, "Owner: ".$v_user."\n");
-            fwrite($fp, "Hash:  ".$v_hash."\n");
-            fwrite($fp, "New:   ".$n_hash."\n");
-            fwrite($fp, "Salt : ".$salt[2]."\n");
-            fwrite($fp, "Password: ".$password."\n");
-            fwrite($fp, "Return:   ".$return_var."\n");
-            fclose($fp);
-
             if ($return_var == 0) {
                 echo "ok";
                 exit;

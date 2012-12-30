@@ -162,6 +162,15 @@
                                                     <option value=eucjpms <?php if ((!empty($v_charset)) && ( $v_charset == 'eucjpms')) echo 'selected';?> >eucjpms</option>
                                                 </select>
                                             </td>
+                                        <tr>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                Send credentials to <?php echo $panel[$user]['CONTACT'] ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_notify" <?php if (empty($v_notify)) echo "checked=yes"; ?>>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td style="padding: 24px 0 0 0;">

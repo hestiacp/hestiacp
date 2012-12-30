@@ -28,6 +28,7 @@ top_panel($user,$TAB);
         $v_password = escapeshellarg($_POST['v_password']);
         $v_type = $_POST['v_type'];
         $v_charset = $_POST['v_charset'];
+        if (empty($_POST['v_notify'])) $v_notify = 'off';
 
         // Check for errors
         if (!empty($errors[0])) {
@@ -53,6 +54,25 @@ top_panel($user,$TAB);
                 unset($v_password);
                 unset($output);
             } else {
+                if (empty($v_notify)) {
+                    list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"]);
+                    if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpMyAdmin/";
+                    if ($_POST['v_type'] == 'pgsql') $db_admin_link = "http://".$http_host."/phpPgAdmin/";
+
+                    $to = $panel[$user]['CONTACT'];
+                    $subject = "Database Credentials";
+                    $hostname = exec('hostname');
+                    $from = "Vesta Control Panel <noreply@".$hostname.">";
+                    $mailtext = "Hello ".$panel[$user]['FNAME']." ".$panel[$user]['LNAME'].",\n";
+                    $mailtext .= "your ".$_POST['v_type']." database has been created successfully.\n\n";
+                    $mailtext .= "database: ".$user."_".$_POST['v_database']."\n";
+                    $mailtext .= "username: ".$user."_".$_POST['v_dbuser']."\n";
+                    $mailtext .= "password: ".$_POST['v_password']."\n\n";
+                    $mailtext .= $db_admin_link."\n\n";
+
+                    $mailtext .= "--\nVesta Control Panel\n";
+                    send_email($to, $subject, $mailtext, $from);
+                }
                 $_SESSION['ok_msg'] = "OK: database <a href='/edit/db/?database=".$user."_".$_POST['v_database']."'><b>".$user."_".$_POST['v_database']."</b></a> has been created successfully.";
                 unset($v_database);
                 unset($v_dbuser);

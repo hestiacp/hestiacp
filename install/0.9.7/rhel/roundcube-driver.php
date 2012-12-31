@@ -25,25 +25,31 @@ class rcube_vesta_password
             $vesta_port = '8083';
         }
 
-        $request  = 'email='.$_SESSION['username'].'&';
-        $request .= 'password='.$curpass.'&';
-        $request .= 'new='.$passwd.'&';
+        $postvars = array(
+          'email' => $_SESSION['username'],
+          'password' => $curpass,
+          'new' => $passwd
+        );
+
+        $postdata = http_build_query($postvars);
+
+        $send  = 'POST /reset/mail/ HTTP/1.1' . PHP_EOL;
+        $send .= 'Host: ' . $vesta_host . PHP_EOL;
+        $send .= 'User-Agent: PHP Script' . PHP_EOL;
+        $send .= 'Content-length: ' . strlen($postdata) . PHP_EOL;
+        $send .= 'Content-type: application/x-www-form-urlencoded' . PHP_EOL;
+        $send .= 'Connection: close' . PHP_EOL;
+        $send .= PHP_EOL;
+        $send .= $postdata . PHP_EOL . PHP_EOL;
+
+        $fp = fsockopen('ssl://' . $vesta_host, $vesta_port);
+        fputs($fp, $send);
+        $result = fread($fp, 2048);
+        fclose($fp);
 
 
-        $context = stream_context_create(array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => 'Content-Type: application/x-www-form-urlencoded' . PHP_EOL,
-                'content' => $request,
-            ),
-        ));
-
-        $result = file_get_contents(
-            $file = "https://".$vesta_host.":".$vesta_port."/reset/mail/?",
-            $use_include_path = false,
-            $context);
-
-        if ($result == 'ok'){
+        if(strpos($result, 'ok') && !strpos($html, 'error'))
+        {
             return PASSWORD_SUCCESS;
         }
         else {

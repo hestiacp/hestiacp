@@ -68,7 +68,7 @@ TOTAL_U_BACKUPS=0
 for user in $user_list; do 
     USER_DATA=$VESTA/data/users/$user
     source $USER_DATA/user.conf
-    next_month=$(date +'%m/01' -d '+ 1 month')
+    next_month=$(date +'%m/01/%y' -d '+ 1 month')
     DATE=$(date -d "$next_month -1day" +%F)
 
     # Compiling report string

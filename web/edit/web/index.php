@@ -505,7 +505,7 @@ top_panel($user,$TAB);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
-                $v_ftp_user =  $user."_".$_POST['v_ftp_user'];
+                $v_ftp_user =  $_POST['v_ftp_user'];
                 $v_ftp_password = "••••••••";
             }
         }

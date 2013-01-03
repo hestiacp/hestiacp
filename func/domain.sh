@@ -48,27 +48,117 @@ is_dns_template_valid() {
 is_domain_new() {
     type="$1"
     dom=${2-$domain}
-    web="$(grep -w $dom $VESTA/data/users/*/web.conf)"
-    dns="$(grep DOMAIN='$dom' $VESTA/data/users/*/dns.conf)"
-    mail="$(grep DOMAIN='$dom' $VESTA/data/users/*/mail.conf)"
 
-    if [ -n "$web" ] || [ -n "$dns" ] || [ -n "$mail" ]; then
-        if [ ! -z "$(grep -w $dom $USER_DATA/*.conf)" ]; then
-            c1=$(grep "'$dom'" $USER_DATA/$type.conf)
-            c2=$(grep "'$dom," $USER_DATA/$type.conf)
-            c3=$(grep ",$dom," $USER_DATA/$type.conf)
-            c4=$(grep ",$dom'" $USER_DATA/$type.conf)
+    web=$(grep "DOMAIN='$dom'" $VESTA/data/users/*/web.conf)
+    dns=$(grep "DOMAIN='$dom'" $VESTA/data/users/*/dns.conf)
+    mail=$(grep "DOMAIN='$dom'" $VESTA/data/users/*/mail.conf)
 
-            if [ -n "$c1" ] || [ -n "$c2" ] || [ -n "$c3" ] || [ -n "$c4" ]
-            then
+    # Check web domain
+    if [ ! -z "$web" ] && [ "$type" == 'web' ]; then
+        echo "Error: domain $dom exist"
+        log_event "$E_EXISTS" "$EVENT"
+        exit $E_EXISTS
+    fi
+    if [ ! -z "$web" ]; then
+        web_user=$(echo "$web" |cut -f 7 -d /)
+        if [ "$web_user" != "$user" ]; then
+            echo "Error: domain $dom exist"
+            log_event "$E_EXISTS" "$EVENT"
+            exit $E_EXISTS
+        fi
+    fi
+
+    # Check dns domain
+    if [ ! -z "$dns" ] && [ "$type" == 'dns' ]; then
+        echo "Error: domain $dom exist"
+        log_event "$E_EXISTS" "$EVENT"
+        exit $E_EXISTS
+    fi
+    if [ ! -z "$dns" ]; then
+        dns_user=$(echo "$dns" |cut -f 7 -d /)
+        if [ "$dns_user" != "$user" ]; then
+            echo "Error: domain $dom exist"
+            log_event "$E_EXISTS" "$EVENT"
+            exit $E_EXISTS
+        fi
+    fi
+
+    # Check mail domain
+    if [ ! -z "$mail" ] && [ "$type" == 'mail' ]; then
+        echo "Error: domain $dom exist"
+        log_event "$E_EXISTS" "$EVENT"
+        exit $E_EXISTS
+    fi
+    if [ ! -z "$mail" ]; then
+        mail_user=$(echo "$mail" |cut -f 7 -d /)
+        if [ "$mail_user" != "$user" ]; then
+            echo "Error: domain $dom exist"
+            log_event "$E_EXISTS" "$EVENT"
+            exit $E_EXISTS
+        fi
+    fi
+
+    # Check web aliases
+    web_alias=$(grep -w $dom $VESTA/data/users/*/web.conf)
+    if [ ! -z "$web_alias" ]; then
+        c1=$(grep "'$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c2=$(grep "'$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c3=$(grep ",$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c4=$(grep ",$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        if [ ! -z "$c1" ] && [ "$type" != "web"  ]; then
+            echo "Error: domain $dom exist"
+            log_event "$E_EXISTS" "$EVENT"
+            exit $E_EXISTS
+        fi
+        if [ ! -z "$c1" ]; then
+            c1_user=$(echo "$c1" |cut -f 7 -d /)
+            if [ "$c1_user" != "$user" ]; then
                 echo "Error: domain $dom exist"
                 log_event "$E_EXISTS" "$EVENT"
                 exit $E_EXISTS
             fi
-        else
+        fi
+
+        if [ ! -z "$c2" ] && [ "$type" != "web"  ]; then
             echo "Error: domain $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
+        fi
+        if [ ! -z "$c2" ]; then
+            c2_user=$(echo "$c2" |cut -f 7 -d /)
+            if [ "$c2_user" != "$user" ]; then
+                echo "Error: domain $dom exist"
+                log_event "$E_EXISTS" "$EVENT"
+                exit $E_EXISTS
+            fi
+        fi
+
+        if [ ! -z "$c3" ] && [ "$type" != "web"  ]; then
+            echo "Error: domain $dom exist"
+            log_event "$E_EXISTS" "$EVENT"
+            exit $E_EXISTS
+        fi
+        if [ ! -z "$c3" ]; then
+            c3_user=$(echo "$c3" |cut -f 7 -d /)
+            if [ "$c3_user" != "$user" ]; then
+                echo "Error: domain $dom exist"
+                log_event "$E_EXISTS" "$EVENT"
+                exit $E_EXISTS
+            fi
+        fi
+
+        if [ ! -z "$c4" ] && [ "$type" != "web"  ]; then
+            echo "Error: domain $dom exist"
+            log_event "$E_EXISTS" "$EVENT"
+            exit $E_EXISTS
+        fi
+        if [ ! -z "$c4" ]; then
+            c1_user=$(echo "$c4" |cut -f 7 -d /)
+            if [ "$c4_user" != "$user" ]; then
+                echo "Error: domain $dom exist"
+                log_event "$E_EXISTS" "$EVENT"
+                exit $E_EXISTS
+            fi
         fi
     fi
 }

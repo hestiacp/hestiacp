@@ -49,15 +49,21 @@ get_domain_values 'web'
 # Check if it a simple domain
 if [ $(echo -e "${dom_alias//\./\n}" | wc -l) -le 2 ]; then
     if [ ! -e "$USER_DATA/dns/$dom_alias.conf" ]; then
-        $BIN/v-add-dns-domain $user $dom_alias $IP '' '' '' '' '' $restart
+        $BIN/v-add-dns-domain \
+            $user $dom_alias $IP '' '' '' '' '' $restart > /dev/null
     fi
 else
     # Check subdomain
     sub=$(echo "$dom_alias" | cut -f1 -d . -s)
     dom=$(echo "$dom_alias" | sed -e "s/^$sub.//" )
     if [ ! -e "$USER_DATA/dns/$dom.conf" ]; then
-        $BIN/v-add-dns-domain $user $dom $IP '' '' '' '' '' $restart
-        $BIN/v-add-dns-domain-record $user $dom "$sub" A $IP '' '' $restart
+        $BIN/v-add-dns-domain \
+            $user $dom $IP '' '' '' '' '' $restart > /dev/null
+
+        if [ $? -eq 0 ]; then
+            $BIN/v-add-dns-domain-record \
+                $user $dom "$sub" A $IP '' '' $restart
+        fi
     else
         if [ "$sub" == '*' ]; then
             rec=$(grep -w "RECORD='\*'" $USER_DATA/dns/$dom.conf)
@@ -65,7 +71,8 @@ else
             rec=$(grep -w "RECORD='$sub'" $USER_DATA/dns/$dom.conf)
         fi
         if [ -z "$rec" ]; then
-            $BIN/v-add-dns-domain-record $user $dom "$sub" A $IP '' '' $restart
+            $BIN/v-add-dns-domain-record \
+                 $user $dom "$sub" A $IP '' '' $restart > /dev/null
         fi
     fi
 fi

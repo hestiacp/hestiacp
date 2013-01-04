@@ -10,9 +10,9 @@ VERSION='0.9.7'
 YUM_REPO='/etc/yum.repos.d/vesta.repo'
 arch=$(uname -i)
 
-tools="screen mc libpng libjpeg curl curl libmcrypt libmcrypt mhash mhash
-    freetype openssl flex libxml2 ImageMagick sqlite sqlite pcre pcre sudo bc
-    mailx lsof ntp tar whois telnet rsync"
+tools="screen mc libpng libjpeg curl libmcrypt mhash zip unzip freetype ntp
+    openssl flex libxml2 ImageMagick sqlite pcre sudo bc jwhois mailx lsof
+    tar telnet rsync"
 
 rpms="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid ftp
     webalizer awstats mysql mysql-server php php-bcmath php-cli php-common
@@ -40,6 +40,7 @@ release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
 
 help() {
     echo "usage: $0 [OPTIONS]
+   -d, --disable-remi         Disable remi
    -e, --email                Define email address
    -h, --help                 Print this help and exit
    -f, --force                Force installation"
@@ -51,6 +52,7 @@ for arg; do
     delim=""
     case "$arg" in
         --help)         args="${args}-h " ;;
+        --disable-remi) args="${args}-d " ;;
         --force)        args="${args}-f " ;;
         --email)        args="${args}-e " ;;
         *)              [[ "${arg:0:1}" == "-" ]] || delim="\""
@@ -60,8 +62,9 @@ done
 eval set -- "$args"
 
 # Getopt
-while getopts "hfe:" Option; do
+while getopts "dhfe:" Option; do
     case $Option in
+        d) disable_remi='yes' ;;          # Disable remi repo
         h) help ;;                        # Help
         e) email=$OPTARG ;;               # Contact email
         f) force=yes ;;                   # Force install
@@ -249,8 +252,12 @@ if [ -e '/root/.my.cnf' ]; then
     mv -f /root/.my.cnf
 fi
 
-# Vesta packages
-yum -y --enablerepo=remi install $rpms
+# Install Vesta packages
+if [ -z "$disable_remi" ]; then 
+    yum -y --enablerepo=remi install $rpms
+else
+    yum -y install $rpms
+fi
 if [ $? -ne 0 ]; then
     echo 'Error: yum install failed'
     exit 1
@@ -501,6 +508,8 @@ sed -i "s/%blowfish_secret%/$(gen_pass)/g" /etc/phpMyAdmin/config.inc.php
 wget $CHOST/$VERSION/httpd-webmail.conf -O /etc/httpd/conf.d/roundcubemail.conf
 wget $CHOST/$VERSION/roundcube-main.conf -O /etc/roundcubemail/main.inc.php
 wget $CHOST/$VERSION/roundcube-db.conf -O /etc/roundcubemail/db.inc.php
+wget $CHOST/$VERSION/roundcube-driver.php -O /usr/share/roundcubemail/plugins/password/vesta.php
+wget $CHOST/$VERSION/roundcube-pw.conf -O /usr/share/roundcubemail/plugins/password/config.inc.php
 
 r="$(gen_pass)"
 mysql -e "CREATE DATABASE roundcube"

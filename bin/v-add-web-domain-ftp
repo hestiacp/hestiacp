@@ -43,8 +43,14 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get domain values
 get_domain_values 'web'
+check_ftp_user=$(grep "^$ftp_user:" /etc/passwd)
+if [ ! -z "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
+    echo "Error: ftp user $ftp_user already exists"
+    log_event "$E_EXISTS $EVENT"
+    exit $E_EXISTS
+fi
+
 if [ ! -z "$FTP_USER" ]; then
     /usr/sbin/userdel $FTP_USER
 fi

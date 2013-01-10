@@ -64,7 +64,7 @@ log_history() {
 
     touch $log
     if [ '99' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then
-        tail -n 99 $log > $log.moved
+        tail -n 49 $log > $log.moved
         mv -f $log.moved $log
         chmod 660 $log
     fi

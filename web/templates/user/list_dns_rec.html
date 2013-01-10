@@ -1,5 +1,4 @@
-
-                                <table class="sub-menu" style="background: white;">
+<table class="sub-menu" style="background: white;">
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
@@ -28,6 +27,15 @@
                     </table>
 
                     <div id="vstobjects">
+                        <div style="height:10px; font-size:0;"></div>
+                        <table class="data" style="background: #ebe9dc;">
+                            <tr>
+                                <td style="padding: 8px 2px 8px 0;">
+                                    <a class="name" style="color: #555; font-size: 10pt;"><b>Listing  <?php echo $_GET['domain'] ?></b></a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="height:10px; font-size:0;"></div>
                         <table class="data">
                             <?php
                                 foreach ($data as $key => $value) {
@@ -95,4 +103,3 @@
                             </tr>
                         </table>
                     </div>
-

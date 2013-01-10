@@ -52,7 +52,7 @@
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="96px"><a href="/list/dns/?domain=<?php echo $key ?>"><img src="/images/more.png" width="8px" height="8px"> list records</a></td>
+                                            <td class="data-controls" width="108px"><a href="/list/dns/?domain=<?php echo $key ?>"><img src="/images/more.png" width="8px" height="8px"> list <?php echo $data[$key]['RECORDS'] ?> records</a></td>
                                             <td class="data-controls" width="92px"><a href="/add/dns/?domain=<?php echo $key ?>"><img src="/images/add.png" width="8px" height="8px"> add record</a></td>
                                             <td class="data-controls" width="50px"><a href="/edit/dns/?domain=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
                                             <td class="data-controls do_delete" width="70px">
@@ -134,4 +134,3 @@
                             </tr>
                         </table>
                     </div>
-

@@ -412,6 +412,9 @@ chmod 640 /var/log/httpd/error_log
 chmod 640 /var/log/httpd/suexec.log
 chmod 751 /var/log/httpd/domains
 
+# Enable short_open_tag in php config
+sed -i 's/short_open_tag = Off/short_open_tag = On/g' /etc/php.ini
+
 # Nginx
 if [ -e '/etc/nginx/nginx.conf' ]; then
     mv /etc/nginx/nginx.conf $vst_backups/nginx/

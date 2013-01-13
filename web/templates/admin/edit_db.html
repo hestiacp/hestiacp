@@ -9,7 +9,7 @@
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Editing Database</b></a>
+                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b><?php print _('Editing Database');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -66,7 +66,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Database
+                                                <?php print _('Database');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -76,7 +76,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Username
+                                                <?php print _('Username');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -86,7 +86,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Password <a href="javascript:randomString();" class="genpass">generate</a>
+                                                <?php print _('Password');?> <a href="javascript:randomString();" class="genpass"><?php print _('generate');?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -96,7 +96,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Type
+                                                <?php print _('Type');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -106,7 +106,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Host
+                                                <?php print _('Host');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -116,7 +116,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Charset
+                                                <?php print _('Charset');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -126,8 +126,8 @@
                                         </tr>
                                         <tr>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="submit" name="save" value="Save" class="button">
-                                                <input type="button" class="button" value="Back" onclick="<?php echo $back ?>">
+                                                <input type="submit" name="save" value="<?php print _('Save');?>" class="button">
+                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

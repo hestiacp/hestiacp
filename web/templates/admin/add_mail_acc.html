@@ -10,7 +10,7 @@
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Adding Mail Account</b></a>
+                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b><?php print _('Adding Mail Account');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -65,7 +65,7 @@
                                 <table class="data-col2" width="600px">
                                     <tr>
                                         <td class="vst-text" style="padding: 10 0 0 2px;">
-                                            Domain
+                                            <?php print _('Domain');?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -75,7 +75,7 @@
                                     </tr>
                                     <tr>
                                         <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                            Account
+                                            <?php print _('Account');?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -85,7 +85,7 @@
                                     </tr>
                                     <tr>
                                         <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                            Password <a href="javascript:randomString();" class="genpass">generate</a>
+                                            <?php print _('Password');?> <a href="javascript:randomString();" class="genpass"><?php print _('generate');?></a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -95,7 +95,7 @@
                                     </tr>
                                     <tr>
                                         <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                            <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> Advanced Options</a>
+                                            <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print _('Advanced options');?></a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -103,7 +103,7 @@
                                             <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                                 <tr>
                                                     <td class="vst-text" style="padding: 0 0 0 2px;">
-                                                        Quota <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(in megabytes)</span>
+                                                        <?php print _('Quota');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print _('in megabytes');?>)</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -113,7 +113,7 @@
                                                 </tr>
                                             <tr>
                                                 <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                    Aliases <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(use local-part)</span>
+                                                    <?php print _('Aliases');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print _('use local-part');?>)</span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -123,7 +123,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                    Forward to <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(email address or addresses)</span>
+                                                    <?php print _('Forward to');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print _('one or more email addresses');?>)</span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -136,8 +136,8 @@
                                 </tr>
                                 <tr>
                                     <td style="padding: 24px 0 0 0;">
-                                        <input type="submit" name="ok_acc" value="Add" class="button">
-                                        <input type="button" class="button" value="Back" onclick="<?php echo $back ?>">
+                                        <input type="submit" name="ok_acc" value="<?php print _('Add');?>" class="button">
+                                        <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                     </td>
                                 </tr>
                             </table>

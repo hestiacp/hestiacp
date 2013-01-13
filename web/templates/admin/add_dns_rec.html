@@ -10,7 +10,7 @@
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Adding DNS Record</b></a>
+                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b><?php print _('Adding DNS Record'); ?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -44,7 +44,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Domain
+                                                <?php print _('Domain');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -54,7 +54,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Record
+                                                <?php print _('Record');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -64,7 +64,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Type
+                                                <?php print _('Type');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -87,7 +87,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                IP or Value
+                                                <?php print _('IP or Value');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -97,7 +97,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Priority <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span>
+                                                <?php print _('Priority');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print _('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -107,8 +107,8 @@
                                         </tr>
                                         <tr>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="submit" name="ok_rec" value="Add" class="button">
-                                                <input type="button" class="button" value="Back" onclick="<?php echo $back ?>">
+                                                <input type="submit" name="ok_rec" value="<?php print _('Add');?>" class="button">
+                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

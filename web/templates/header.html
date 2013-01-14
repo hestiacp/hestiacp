@@ -22,7 +22,10 @@
 
             .main {
                 background: #ffffff;
+                padding: 0 0 12px 0;
                 box-shadow: 0 0 2px 2px #d7d7d7;
+                border-bottom: 1px solid #cccccc;
+                border-left: 1px solid #cccccc;
                 border-right: 1px solid #cccccc;
             <?php
             if (!empty($_SESSION['look'])) {
@@ -34,8 +37,8 @@
 
 
             .top {
-                background: #444;
-                color: #cce4f0;
+                background: #ebe9dc;
+                color: #825117;
                 padding: 0;
                 margin-left: auto;
                 margin-right: auto;
@@ -49,20 +52,20 @@
 
             .top-link {
                 text-decoration: none;
-                color: #e0e0e0;
+                color: #323232;
             }
 
             .top-link:hover {
-                color: white;
+                color: #174f82;
             }
 
             .top-link:active{
-                color: #f5edb6;
+                color: #ccc;
             }
 
             .top-selected-link {
                 text-decoration: none;
-                color: #f5edb6;
+                color: #174f82;
             }
 
             .top-logout {
@@ -78,14 +81,15 @@
 
             .nav-logo {
                 float:left;
-                height:100px;
-                width:159px;
-                background: #ebe9dc;
+                height:104px;
+                width:161px;
+                margin: 0 0px 0 0;
+                border-bottom: 3px solid #d6d6d6;
             }
 
             .nav-lnk {
                 text-decoration: none;
-                color: #444;
+                color: #323232;
                 float:left;
             }
 
@@ -94,33 +98,36 @@
             }
 
             .nav-block {
-                margin: 0 2px 0 0;
-                height:100px;
-                width: 116px;
+                margin: 0 0px 0 0;
+                height:104px;
+                width: 118px;
                 float:left;
                 cursor: pointer;
+                border-bottom: 3px solid #d6d6d6;
+
             }
 
             .nav-block:hover {
-                background: #fafafa;
+                border-bottom: 3px solid #f79b44;
             }
 
             .nav-selected-block {
-                margin: 0 2px 0 0;
-                color: #80a7cc;
-                height: 100px;
-                width: 116px;
+                margin: 0;
+                color: #174f82;
+                height: 104px;
+                width: 118px;
                 float: left;
-                background: #fafafa;
+                background: #fff;
+                border-bottom: 3px solid #777;
                 cursor: pointer;
             }
 
             .nav-selected-block:hover {
-                background: #fafafa;
+                border-bottom: 3px solid #f79b44;
             }
 
             .nav-header {
-                padding: 13px 0 0 6px;
+                padding: 16px 0 0 6px;
                 margin: 0;
                 letter-spacing: -1.0px;
                 font-size: 16pt;
@@ -128,7 +135,7 @@
             }
 
             .nav-selected-header {
-                padding: 13px 0 0 6px;
+                padding: 16px 0 0 6px;
                 margin: 0;
                 letter-spacing: -1.0px;
                 font-size: 16pt;
@@ -203,7 +210,7 @@
                 padding: 0 8px 0 0;
                 margin: 0;
                 text-decoration: none;
-                color: #8B99A2;
+                color: #777;
                 font-size: 12pt;
             }
 
@@ -212,7 +219,7 @@
             }
 
             .vst:active {
-                color: #34536A;
+                color: #174f82;
             }
 
             .data {
@@ -242,7 +249,7 @@
                 margin: 0;
                 width: 990px;
                 height: 10px;
-                border-top:1px dotted #dce8f5;
+                border-top:1px dotted #ccc;
             }
 
             .data-spacer {
@@ -258,7 +265,7 @@
             .data-dotted {
                 text-align: left;
                 vertical-align:top;
-                border-top:1px dotted #dce8f5;
+                border-top:1px dotted #ccc;
                 padding: 0 0 26px 0;
                 margin: 0;
             }
@@ -296,7 +303,7 @@
             .data-active {
                 font-size: 8pt;
                 letter-spacing: 0.1em;
-                color: #9ba68c;
+                color: #81a64f;
                 padding: 0 0 13 18;
             }
 
@@ -308,11 +315,11 @@
             }
 
             .data-controls {
-                border-left: 1px solid #E6E6E6;
+                border-left: 1px solid #ccc;
                 font-size: 8pt;
                 padding: 2 5 0 5;
                 letter-spacing: 0.1em;
-                color: #34536A;
+                color: #174f82;
                 text-decoration: none;
                 cursor: pointer;
             }
@@ -328,12 +335,12 @@
             }
 
             .data-controls a:link {
-                color: #34536A;
+                color: #174f82;
                 text-decoration: none;
             }
 
             .data-controls a:visited {
-                color: #34536A;
+                color: #174f82;
             }
 
             .data-controls a:hover {
@@ -368,24 +375,24 @@
             }
 
             .username {
-                color: #555;
+                color: #323232;
                 font-size: 16pt;
                 line-height: 1.2em;
             }
 
             .domain {
-                color: #555;
+                color: #323232;
                 font-size: 16pt;
                 line-height: 0.8em;
             }
 
             .cron {
-                color: #555;
+                color: #323232;
                 font-size: 18px;
             }
 
             .log {
-                color: #555;
+                color: #323232;
                 font-size: 12pt;
             }
 
@@ -489,7 +496,7 @@
             }
 
             .vst-textinput:hover {
-                border: 1px solid #e5a907;
+                border: 1px solid #f79b44;
             }
 
             .vst-textinput:disabled {
@@ -508,7 +515,7 @@
             }
 
             .vst-input:hover {
-                border: 1px solid #e5a907;
+                border: 1px solid #f79b44;
             }
 
             .vst-input:disabled {
@@ -524,7 +531,7 @@
             }
 
             .vst-list:hover {
-                border: 1px solid #e5a907;
+                border: 1px solid #f79b44;
             }
 
             .vst-checkbox {
@@ -533,7 +540,7 @@
             }
 
             .vst-checkbox:hover {
-                border: 1px solid #e5a907;
+                border: 1px solid #f79b44;
             }
 
             button {
@@ -607,7 +614,7 @@
                 position: fixed;
                 border: none;
                 top: -3px;
-                border-bottom: 2px solid #ebe9dc;
+                border-bottom: 1px solid #ccc;
                 background-color: #fff;
             }
 
@@ -686,7 +693,7 @@
                 }
 
                 #vstobjects{
-                    padding-top: 188px;
+                    padding-top: 187px;
                     min-height: 370px;
                     height: auto !important;
                     height: 370px;

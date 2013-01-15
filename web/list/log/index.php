@@ -18,7 +18,6 @@ $data = json_decode(implode('', $output), true);
 $data = array_reverse($data);
 unset($output);
 
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/menu_log.html');
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_log.html');
 
 // Footer

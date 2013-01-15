@@ -61,7 +61,7 @@ top_panel($user,$TAB);
             unset($output);
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = _("DOMAIN_MAIL_CREATED_OK",$_POST[v_domain],$_POST[v_domain]);
+                $_SESSION['ok_msg'] = _("DOMAIN_MAIL_CREATED_OK",$_POST['v_domain'],$_POST['v_domain']);
                 unset($v_domain);
             }
         }
@@ -162,7 +162,7 @@ top_panel($user,$TAB);
 
 
     if ((empty($_GET['domain'])) && (empty($_POST['domain'])))  {
-        $v_domain = $_GET['domain'];
+        $v_domain = (isset($_GET['domain'])?$_GET['domain']:'');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_mail.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);

@@ -3,7 +3,7 @@
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <button style="width:120px; padding: 2px 0px;" > Create Backup </button>
+                                                <button style="width:120px; padding: 2px 0px;" > <?php print _('Create Backup');?> </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
@@ -13,10 +13,10 @@
                                             </div>
                                             <div style="float:left; padding-left: 26px;">
                                                 <form action="/bulk/backup/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
-                                                    <option>apply to selected</option>
-                                                    <option>delete</option>
+                                                    <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
                                             </div>
@@ -49,21 +49,21 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="backup[]" value="<?php echo $key ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-active"><b>active</b></td></tr>
+                                        <tr><td class="data-active"><b><?php print _('active');?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="80px"><a href="/download/backup/?backup=<?php echo $key ?>" target="_blank"><img src="/images/download.png" width="8px" height="8px"> download</a></td>
-                                            <td class="data-controls" width="80px"><a href="#" id="restore_link_<?php echo "$i"?>"><img src="/images/restore.png" width="6px" height="8px"> restore</a></td>
+                                            <td class="data-controls" width="80px"><a href="/download/backup/?backup=<?php echo $key ?>" target="_blank"><img src="/images/download.png" width="8px" height="8px"> <?php print _('download');?></a></td>
+                                            <td class="data-controls" width="80px"><a href="#" id="restore_link_<?php echo "$i"?>"><img src="/images/restore.png" width="6px" height="8px"> <?php print _('restore');?></a></td>
                                             <td class="data-controls do_delete" width="70px">
                                                 <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
+                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
                                                 <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?php echo "$key" ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> backup ?</p>
+                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                    <p class="counter-value"><?php print _('BACKUP_DELETE_CONFIRMATION',$key);?></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -85,12 +85,12 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="chart1">
-                                                            Run Time: <?php echo humanize_time($data[$key]['RUNTIME']) ?> 
+                                                            <?php print _('Run Time');?>: <?php echo humanize_time($data[$key]['RUNTIME']) ?>
                                                         </td>
 	                                            </tr>
                                                     <tr>
                                                         <td class="chart1">
-                                                            Backup Size: <?php echo humanize_usage($data[$key]['SIZE']) ?> 
+                                                            <?php print _('Backup Size');?>: <?php echo humanize_usage($data[$key]['SIZE']) ?>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -99,7 +99,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" width="48">
-                                                            SYS:
+                                                            <?php print _('SYS');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value" title="<?php echo $data[$key]['VESTA'] ?>">
@@ -109,7 +109,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name" width="48">
-                                                            WEB:
+                                                            <?php print _('WEB');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['WEB']) ?>">
@@ -119,7 +119,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name" width="48">
-                                                            DNS: 
+                                                            <?php print _('DNS');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['DNS']) ?>"> 
@@ -133,7 +133,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" width="48">
-                                                            MAIL:
+                                                            <?php print _('MAIL');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['MAIL']) ?>"> 
@@ -143,7 +143,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name" width="48">
-                                                            DB: 
+                                                            <?php print _('DB');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['DB']) ?>">
@@ -153,7 +153,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name" width="48">
-                                                            CRON:
+                                                            <?php print _('CRON');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value" title="<?php echo $data[$key]['CRON'] ?>">
@@ -181,9 +181,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo "1 backup archive ";
+                                            echo _('one archive');
                                         } else {
-                                            echo "$i backup archives ";
+                                            echo _('%s archives',$i);
                                         }
                                     ?>
                                 </td>

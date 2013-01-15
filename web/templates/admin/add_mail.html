@@ -79,7 +79,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if ($v_dkim == 'yes') echo "checked=yes"; ?>>
+                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>>
                                             </td>
                                         </tr>
                                         <tr>

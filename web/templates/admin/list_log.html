@@ -7,7 +7,7 @@
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                         </td>
@@ -60,9 +60,9 @@
                             <td>
                                 <?php
                                     if ( $i == 1) {
-                                        echo "1 log record ";
+                                        echo _('one log record');
                                     } else {
-                                        echo "$i log records ";
+                                        echo _('%s log records',$i);
                                     }
                                 ?>
                             </td>

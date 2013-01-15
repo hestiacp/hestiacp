@@ -60,7 +60,7 @@ VE.callbacks.click.do_suspend = function(evt, elm) {
      var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
      var url = $('input[name="suspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
-     VE.helpers.createConfirmationDialog(dialog_elm, 'Confirm SUSPEND', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, 'Confirm action', url);
 }
 
 /*
@@ -70,7 +70,7 @@ VE.callbacks.click.do_unsuspend = function(evt, elm) {
      var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
      var url = $('input[name="unsuspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
-     VE.helpers.createConfirmationDialog(dialog_elm, 'Confirm UNSUSPEND', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, 'Confirm action', url);
 }
 
 /*
@@ -80,7 +80,7 @@ VE.callbacks.click.do_delete = function(evt, elm) {
      var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
      var url = $('input[name="delete_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-delete');
-     VE.helpers.createConfirmationDialog(dialog_elm, 'Confirm DELETE', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, 'Confirm action', url);
 }
 
 

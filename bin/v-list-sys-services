@@ -39,16 +39,15 @@ get_srv_state() {
         # Get pid date
         if [ ! -z $pid ] && [ -e "/proc/$pid/cmdline" ]; then
             mtime=$(stat -c "%Y" /proc/$pid/cmdline)
-            ptime=$(date -d @$mtime +%T)
-            pdate=$(date -d @$mtime +%F)
+            rtime=$((ctime - mtime))
+            rtime=$((rtime  / 60))
         fi
     else
         # Service is stopped
         state='stopped'
         mem=0
         cpu=0
-        ptime="$TIME"
-        pdate="$DATE"
+        rtime="0"
     fi
 }
 
@@ -59,139 +58,123 @@ get_srv_state() {
 
 # Save current proccess list
 tmp_file=$(mktemp)
-ps aux | awk '{print $2" "$3}' | cut -f 1 -d '.' > $tmp_file
+if [ "$format" = 'json' ]; then
+    ps aux | awk '{print $2" "$3}' | tr -d '.' > $tmp_file
+else
+    ps aux | awk '{print $2" "$3}' | cut -f 1 -d '.' > $tmp_file
+fi
+
+# Get current time
+ctime=$(date +%s)
 
 # Proxy
 service=$PROXY_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     get_srv_state $service
+    str="NAME='$service' SYSTEM='reverse proxy' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
 fi
-str="NAME='$service' SYSTEM='proxy' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # Web
 service=$WEB_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     if [ "$service" == 'apache' ]; then
         service='httpd'
     fi
     get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='web server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
+
 fi
-str="$str\nNAME='$service' SYSTEM='web' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # DNS
 service=$DNS_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     if [ "$service" == 'bind' ]; then
         service='named'
     fi
     get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='dns server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
 fi
-str="$str\nNAME='$service' SYSTEM='dns' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # MAIL
 service=$MAIL_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='mail server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
 fi
-str="$str\nNAME='$service' SYSTEM='mail' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # IMAP
 service=$IMAP_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='pop/imap server' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
-str="$str\nNAME='$service' SYSTEM='imap' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # ANTIVIRUS
 service=$ANTIVIRUS_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     if [ "$ANTIVIRUS_SYSTEM" = 'clamav' ]; then
         service='clamd'
     fi
     get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='email antivirus' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
-str="$str\nNAME='$service' SYSTEM='antivirus' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # ANTISPAM
 service=$ANTISPAM_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     get_srv_state $service spamd
+    str="$str\nNAME='$service' SYSTEM='email antispam' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
-str="$str\nNAME='$service' SYSTEM='antispam' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # DB
 service=$DB_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     for db in ${DB_SYSTEM//,/ }; do
         service="$db"
         if [ "$service" == 'mysql' ] && [ ! -e "/etc/init.d/$service" ]; then
             service='mysqld'
         fi
         get_srv_state $service
-        str="$str\nNAME='$service' SYSTEM='db' STATE='$state' CPU='$cpu'"
-        str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
+        str="$str\nNAME='$service' SYSTEM='database server' STATE='$state'"
+        str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
     done
-else
-    str="$str\nNAME='$service' SYSTEM='db' STATE='$state' CPU='$cpu''"
-    str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 fi
 
 # FTP
 service=$FTP_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='ftp server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
 fi
-str="$str\nNAME='$service' SYSTEM='ftp' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # CRON
 service=$CRON_SYSTEM
-spnd='yes'
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    spnd='no'
     get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='job scheduler' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
-str="$str\nNAME='$service' SYSTEM='ftp' STATE='$state' CPU='$cpu'"
-str="$str MEM='$mem' SUSPENDED='$spnd' TIME='$ptime' DATE='$pdate'"
 
 # Defining config
-
 echo -e "$str" > $tmp_file
 conf=$tmp_file
 
 # Defining fileds to select
-fields="\$NAME \$SYSTEM \$STATE \$CPU \$MEM \$SUSPENDED \$TIME \$DATE"
+fields="\$NAME \$SYSTEM \$STATE \$CPU \$MEM \$RTIME"
 
 # Listing services
 case $format in 
     json)   json_list ;;
     plain)  nohead=1; shell_list ;;
-    shell)  fields='$NAME $STATE $CPU $MEM $SUSPENDED $TIME $DATE'
+    shell)  fields='$NAME $STATE $CPU $MEM $RTIME'
             shell_list | column -t ;;
     *)      check_args '1' '0' 'USER [FORMAT]'
 esac

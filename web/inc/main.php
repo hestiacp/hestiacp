@@ -44,10 +44,28 @@ function top_panel($user, $TAB) {
 function humanize_time($usage) {
     if ( $usage > 60 ) {
         $usage = $usage / 60;
-        $usage = number_format($usage, 2);
-        $usage = $usage." Hour.";
+        if ( $usage > 24 ) {
+             $usage = $usage / 24;
+            $usage = number_format($usage, 0);
+            if ( $usage == 1 ) {
+                $usage = $usage." day";
+            } else {
+                $usage = $usage." days";
+            }
+        } else {
+            $usage = number_format($usage, 0);
+            if ( $usage == 1 ) {
+                $usage = $usage." hour";
+            } else {
+                $usage = $usage." hours";
+            }
+        }
     } else {
-        $usage = $usage." Min.";
+        if ( $usage == 1 ) {
+            $usage = $usage." minute";
+        } else {
+            $usage = $usage." minutes";
+        }
     }
     return $usage;
 }

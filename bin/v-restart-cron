@@ -12,7 +12,6 @@
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
-EVENT=${1-$EVENT}
 
 
 #----------------------------------------------------------#
@@ -21,11 +20,10 @@ EVENT=${1-$EVENT}
 
 # Parsing config / or just source config
 if [ "$CRON_SYSTEM" = 'crond' ]; then
-    /etc/init.d/crond 'reload' &>/dev/null
+    /etc/init.d/crond 'reload' >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        /etc/init.d/crond 'restart' &>/dev/null
+        /etc/init.d/crond 'restart' >/dev/null 2>&1
         if [ $? -ne 0 ]; then
-            log_event "$E_RESTART" "$EVENT"
             exit $E_RESTART
         fi
     fi

@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list system config
+# info: list system services
 # options: [FORMAT]
 #
-# The function for obtaining the list of system parameters.
+# The function for obtaining the list of configured system services.
 
 
 #----------------------------------------------------------#

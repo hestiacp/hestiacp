@@ -340,6 +340,8 @@ $LANG = array(
     'SERVICE_ACTION_FAILED'=>'Error: Oparaion "%s" for service "%s" has been failed',
     'Memory Usage'=>'Memory Usage',
     'Bandwidth Usage'=>'Bandwidth Usage',
+    'IP Address'=>'IP Address',
+    'Accounts'=>'Accounts',
 );
 
 /*error_reporting(E_ALL);

@@ -66,7 +66,8 @@ if (!empty($_POST['ok'])) {
                 $_SESSION['error_msg'] = $error;
                 unset($v_password);
                 unset($output);
-            } else {
+            }
+            else {
             if (empty($v_notify)) {
                 list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"]);
                 if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpMyAdmin/";
@@ -92,6 +93,7 @@ if (!empty($_POST['ok'])) {
             unset($output);
         }
     }
+}
 }
 exec (VESTA_CMD."v-list-database-types 'json'", $output, $return_var);
 $db_types = json_decode(implode('', $output), true);

@@ -46,14 +46,14 @@ function humanize_time($usage) {
         $usage = $usage / 60;
         if ( $usage > 24 ) {
              $usage = $usage / 24;
-            $usage = number_format($usage, 0);
+            $usage = number_format($usage);
             if ( $usage == 1 ) {
                 $usage = $usage." day";
             } else {
                 $usage = $usage." days";
             }
         } else {
-            $usage = number_format($usage, 0);
+            $usage = number_format($usage);
             if ( $usage == 1 ) {
                 $usage = $usage." hour";
             } else {

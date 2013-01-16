@@ -143,7 +143,7 @@ fi
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     touch $USER_DATA/db.conf
     chmod 660 $USER_DATA/db.conf
-    echo "v_update_datbases_disk $user" >> $VESTA/data/queue/disk.pipe
+    echo "v-update-datbases-disk $user" >> $VESTA/data/queue/disk.pipe
 fi
 
 if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then

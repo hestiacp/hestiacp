@@ -22,14 +22,13 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_type'])) $errors[] = _('type');
     if (empty($_POST['v_charset'])) $errors[] = _('charset');
 
-    // Protect input
-    $v_database = escapeshellarg($_POST['v_database']);
-    $v_dbuser = escapeshellarg($_POST['v_dbuser']);
-    $v_password = escapeshellarg($_POST['v_password']);
-    $v_type = $_POST['v_type'];
-    $v_charset = $_POST['v_charset'];
-
-    if (empty($_POST['v_notify'])) $v_notify = 'off';
+        // Protect input
+        $v_database = escapeshellarg($_POST['v_database']);
+        $v_dbuser = escapeshellarg($_POST['v_dbuser']);
+        $v_password = escapeshellarg($_POST['v_password']);
+        $v_type = $_POST['v_type'];
+        $v_charset = $_POST['v_charset'];
+        if (empty($_POST['v_notify'])) $v_notify = 'off';
 
     // Check for errors
     if (!empty($errors[0])) {
@@ -55,6 +54,19 @@ if (!empty($_POST['ok'])) {
             unset($v_password);
             unset($output);
         } else {
+            // Add Database
+            $v_type = escapeshellarg($_POST['v_type']);
+            $v_charset = escapeshellarg($_POST['v_charset']);
+            exec (VESTA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." 'default' ".$v_charset, $output, $return_var);
+            $v_type = $_POST['v_type'];
+            $v_charset = $_POST['v_charset'];
+            if ($return_var != 0) {
+                $error = implode('<br>', $output);
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                $_SESSION['error_msg'] = $error;
+                unset($v_password);
+                unset($output);
+            } else {
             if (empty($v_notify)) {
                 list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"]);
                 if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpMyAdmin/";
@@ -69,6 +81,7 @@ if (!empty($_POST['ok'])) {
 
                 $mailtext .= "--\n"._('Vesta Control Panel')."\n";
                 send_email($to, $subject, $mailtext, $from);
+                
             }
             $_SESSION['ok_msg'] = _('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);
             unset($v_database);
@@ -91,3 +104,4 @@ unset($_SESSION['ok_msg']);
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
+?>

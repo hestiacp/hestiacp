@@ -29,6 +29,9 @@ check_args '0' "$#" '[FORMAT]'
 
 # Defining config
 conf=$VESTA/data/users/admin/overall_stats.log
+if [ ! -e "$conf" ]; then
+    touch $conf
+fi
 
 # Defining fileds to select
 fields="\$DATE \$TIME \$PACKAGE \$IP_OWNED \$DISK_QUOTA \$U_DISK \$U_DISK_DIRS"

@@ -1,0 +1,152 @@
+
+                                <table class="sub-menu" style="background: white;">
+                                    <tr>
+                                        <td style="padding: 12px 0 8px 6px">
+                                            <div style="text-align: right; float: right;">
+                                                <form action="/search/" method="get" >
+                                                <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
+                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                </form>
+                                            </div>
+                                            <div style="float:left; padding-left: 0px;">
+                                                <form action="/bulk/service/" method="post" id="objects">
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <select style="margin:0 2px 0 0px;" name="action">
+                                                    <option>apply to selected</option>
+                                                    <option>stop</option>
+                                                    <option>start</option>
+                                                    <option>restart</option>
+                                                </select>
+                                                <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
+                                            </div>
+                                            <?php
+                                                if (!empty($_SESSION['error_srv'])) {
+                                            ?>
+                                            <div>
+                                                <script type="text/javascript">
+                                                    $(function() {
+                                                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                                                        $( "#dialog-message" ).dialog({
+                                                            modal: true,
+                                                            buttons: {
+                                                                Ok: function() {
+                                                                    $( this ).dialog( "close" );
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                                <div id="dialog-message" title="Error">
+                                                    <p><?php echo $_SESSION['error_srv'] ?></p>
+                                                </div>
+                                            </div>
+                                            <?php
+                                                    unset($_SESSION['error_srv']);
+                                                }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div id="vstobjects">
+                        <table class='data'>
+
+                           <?php
+                                foreach ($data as $key => $value) {
+                                    ++$i;
+                                    if ($data[$key]['STATE'] == 'running') {
+                                        $status = 'active';
+                                        $action = 'stop';
+                                    } else {
+                                        $status = 'suspended';
+                                        $action = 'start';
+                                    }
+
+                                    $cpu = $data[$key]['CPU'] / 10;
+                                    $cpu = number_format($cpu, 1);
+                                    if ($cpu == '0.0')  $cpu = 0;
+                                ?>
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="service[]" value="<?php echo $key ?>" ></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $data[$key]['STATE'] ?></b></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <table width="830px">
+                                        <tr>
+                                            <td></td>
+                                            <td class="data-controls" width="68px"><a href="/restart/service/?srv=<?php echo $key ?>"><img src="/images/reload.png" width="6px" height="7px"> restart</a></td>
+                                            <td class="data-controls" width="48px"><a href="/<?php echo $action ?>/service/?srv=<?php echo $key ?>"><img src="/images/<?php echo $action ?>.png" width="7px" height="7px"> <?php echo $action ?></a></td>
+                                        </tr>
+                                    </table>
+
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td colspan=4 class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo $key ?></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:top;" width="200px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name" style="padding: 2px 0 0 0">
+                                                            <?php echo $data[$key]['SYSTEM'] ?> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;" width="150px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name">
+                                                            CPU:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value"> <?php echo $cpu ?>%</a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;" width="180px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name">
+                                                            Memory:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value"><?php echo $data[$key]['MEM'] ?> mb</a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;" >
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name">
+                                                            Run Time:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value"><?php echo humanize_time($data[$key]['RTIME']) ?> </a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <?php
+                                }
+                            ?> 
+                        </table>
+                        </form>
+
+                    </div>

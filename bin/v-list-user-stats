@@ -32,6 +32,9 @@ is_object_valid 'user' 'USER' "$user"
 
 # Defining config
 conf=$USER_DATA/stats.log
+if [ ! -e "$conf" ]; then
+    touch $conf
+fi
 
 # Defining fileds to select
 fields="\$DATE \$TIME \$PACKAGE \$IP_OWNED \$DISK_QUOTA \$U_DISK \$U_DISK_DIRS"

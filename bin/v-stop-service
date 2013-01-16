@@ -1,31 +1,36 @@
 #!/bin/bash
-# info: restart cron service
-# options: NONE
+# info: stop service
+# options: service
 #
-# The function tells crond service to reread its configuration files.
+# The function stops system service.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Argument defenition
+service=$1
+
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'SERVICE'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing config / or just source config
-if [ "$CRON_SYSTEM" = 'crond' ]; then
-    /etc/init.d/crond 'reload' >/dev/null 2>&1
+if [ -x "/etc/init.d/$service" ]; then
+    /etc/init.d/$service stop >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        /etc/init.d/crond 'restart' >/dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
+        exit $E_RESTART
     fi
 fi
 

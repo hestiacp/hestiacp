@@ -12,11 +12,12 @@
     CustomLog /var/log/httpd/domains/%domain%.log combined
     %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %docroot%>
-        AllowOverride AuthConfig FileInfo Indexes Limit
-        Options +Includes -Indexes %cgi_option%
-        php_admin_flag engine off
+        AllowOverride All
+        Options +Includes -Indexes +ExecCGI
         Action phpcgi-script /cgi-bin/php
-        AddHandler phpcgi-script .php
+        <Files *.php>
+            SetHandler phpcgi-script
+        </Files>
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All

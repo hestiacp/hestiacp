@@ -12,10 +12,11 @@
     CustomLog /var/log/httpd/domains/%domain%.log combined
     %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %docroot%>
-        AllowOverride AuthConfig FileInfo Indexes Limit
-        Options +Includes -Indexes %cgi_option%
-        php_admin_flag engine off
-        AddHandler fcgid-script .php
+        AllowOverride All
+        Options +Includes -Indexes +ExecCGI
+        <Files *.php>
+          SetHandler fcgid-script
+        </Files>
         FCGIWrapper %home%/%user%/web/%domain%/cgi-bin/fcgi-starter .php
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>

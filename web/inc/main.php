@@ -65,10 +65,28 @@ function top_panel($user, $TAB) {
 function humanize_time($usage) {
     if ( $usage > 60 ) {
         $usage = $usage / 60;
-        $usage = number_format($usage, 2);
-        $usage = $usage." Hour.";
+        if ( $usage > 24 ) {
+             $usage = $usage / 24;
+            $usage = number_format($usage, 0);
+            if ( $usage == 1 ) {
+                $usage = $usage." "._('day');
+            } else {
+                $usage = $usage." "._('days');
+            }
+        } else {
+            $usage = number_format($usage, 0);
+            if ( $usage == 1 ) {
+                $usage = $usage." "._('hour');
+            } else {
+                $usage = $usage." "._('hours');
+            }
+        }
     } else {
-        $usage = $usage." Min.";
+        if ( $usage == 1 ) {
+            $usage = $usage." "._('minute');
+        } else {
+            $usage = $usage." "._('minutes');
+        }
     }
     return $usage;
 }
@@ -81,17 +99,17 @@ function humanize_usage($usage) {
                 if ( $usage > 1000 ) {
                     $usage = $usage / 1000 ;
                     $usage = number_format($usage, 2);
-                    $usage = $usage." pb";
+                    $usage = $usage." "._('pb');
                 } else {
                     $usage = number_format($usage, 2);
-                    $usage = $usage." tb";
+                    $usage = $usage." "._('tb');
                 }
         } else {
             $usage = number_format($usage, 2);
-            $usage = $usage." gb";
+            $usage = $usage." "._('gb');
         }
     } else {
-        $usage = $usage." mb";
+        $usage = $usage." "._('mb');
     }
     return $usage;
 }

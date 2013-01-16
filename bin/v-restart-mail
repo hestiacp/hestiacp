@@ -12,18 +12,17 @@
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
-EVENT=${1-$EVENT}
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 if [ "$MAIL_SYSTEM" = 'exim' ]; then
-    /etc/init.d/exim reload &>/dev/null
+    /etc/init.d/exim reload  >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        /etc/init.d/exim restart &>/dev/null
+        /etc/init.d/exim restart >/dev/null 2>&1
         if [ $? -ne 0 ]; then
-            log_event "$E_RESTART" "$EVENT"
             exit $E_RESTART
         fi
     fi

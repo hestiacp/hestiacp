@@ -3,12 +3,12 @@
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <a class="name" style="padding: 0;"><b>Search Results</b></a>
+                                                <a class="name" style="padding: 0;"><b><?php print _('Search Results');?></b></a>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get">
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                         </td>
@@ -41,7 +41,7 @@
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150px">
                                     <table class="data-col1" width="150">
                                         <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -72,7 +72,7 @@
                                             </td>
                                             <td class="data-controls do_delete" width="70px">
                                                 <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
+                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
                                                 <?php
                                                     if ($data[$key]['KEY'] == 'RECORD') {
                                                         echo '<input type="hidden" name="delete_url" ';
@@ -97,7 +97,7 @@
                                                     }
                                                 ?> 
                                                 <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo $data[$key]['RESULT'] ?></b> ?</p>
+                                                    <p class="counter-value"><?php print _('ARE_YOU_FUCKING_SURE',_('delete'),$data[$key]['RESULT']);?></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -110,7 +110,7 @@
                                             <table>
                                                 <tr>
                                                     <td class="counter-name">
-                                                        Object:
+                                                        <?php print _('Object');?>:
                                                     </td>
                                                     <td class="counter-value">
                                                         <?php echo $object ?>  
@@ -122,7 +122,7 @@
                                             <table>
                                                 <tr>
                                                     <td class="counter-name">
-                                                        Owner:
+                                                        <?php print _('Owner');?>:
                                                     </td>
                                                     <td class="counter-value">
                                                         <?php echo $data[$key]['USER'] ?> 
@@ -134,10 +134,10 @@
                                             <table >
                                                 <tr>
                                                     <td class="counter-name">
-                                                        Status:
+                                                        <?php print _('Status');?>:
                                                     </td>
                                                     <td class="counter-value" style="padding: 0 0 0 8px;">
-                                                        <?php echo $status ?> 
+                                                        <?php echo _($status); ?>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -159,9 +159,9 @@
                             <td>
                                 <?php
                                     if ( $i == 1){
-                                        echo "1 object ";
+                                        echo _('one object');
                                     } else {
-                                        echo "$i objects ";
+                                        echo _('%s objects',$i);
                                     }
                                 ?>
                             </td>

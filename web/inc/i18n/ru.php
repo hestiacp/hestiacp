@@ -47,7 +47,6 @@ $LANG = array(
     'DOMAIN_MAIL_CREATED_OK'=>'Успех: почта для домена <a href="/list/mail/?domain=%s"><b>%s</b></a> подключена успешно',
     'account'=>'аккаунт',
     'Account'=>'Аккаунт',
-    'password'=>'пароль',
     'MAIL_ACCOUNT_CREATED_OK'=>'Успех: почтовый аккаунт <a href="/edit/mail/?account=%s&domain=%s"><b>%s@%s</b></a> успешно создан.',
     'package'=>'пакет',
     'template'=>'шаблон',
@@ -113,8 +112,8 @@ $LANG = array(
     'GO_BACK_LINK'=>'Попробуйте вернуться на <a href="/">главную страницу</a> или вернитесь на <a href="javascript:history.go(-1)">предыдущую страницу</a>',
     'ERROR: Invalid username or password'=>'Ошибка: Неверный логин или пароль',
     'ERROR: Invalid username or code'=>'Ошибка: Неверный логин или код сброса пароля',
-    'MAIL_RESET_SUBJECT'=>'Password Reset at %s',
-    'PASSWORD_RESET_REQUEST'=>"Вы недавно запросили смену пароля.\nЧтобы произвести смену пароля, пройдите по этой ссылки:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nВы также можете пойти по ссылке https://%s/reset/?action=code&user=%s и ввести следующий код для сброса пароля:\n%s\n\nЕсли вы не создавали запрос на сброс пароля, пожалуйста проигнорируйте это письмо и примите наши извиниения.\n\n--\nПанель управления Vesta\n",
+    'MAIL_RESET_SUBJECT'=>'Сброс пароля %s',
+    'PASSWORD_RESET_REQUEST'=>"Вы недавно запросили смену пароля.\nЧтобы произвести смену пароля, пройдите по этой ссылке:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nВы также можете пойти по ссылке https://%s/reset/?action=code&user=%s и ввести следующий код для сброса пароля:\n%s\n\nЕсли вы не создавали запрос на сброс пароля, пожалуйста проигнорируйте это письмо и примите наши извиниения.\n\n--\nПанель управления Vesta\n",
     'ERROR: Passwords not match'=>'Ошибка: Пароли не совпадают',
     'Adding Cron Job'=>'Добавление cron задания',
     'Minute'=>'Минута',
@@ -219,6 +218,7 @@ $LANG = array(
     'Apache template'=>'Шаблон веб-сервера Apache',
     'Nginx Support'=>'Поддержка веб-сервера Nginx',
     'Nginx Extentions'=>'Расширения Nginx',
+    'Nginx Template'=>'Шаблон для Nginx',
     'Statistics Authorization'=>'Доступ к статистике',
     'Additional FTP Account'=>'Дополнительный FTP-аккаунт',
     'Editing Cron Job'=>'Редактирование cron-задания',
@@ -244,8 +244,12 @@ $LANG = array(
     'download'=>'скачать',
     'Owner'=>'Владелец',
     'restore'=>'восстановить',
+    'restart'=>'перезапустить',
+    'CPU'=>'Процессор',
+    'Memory'=>'Память',
+    'stop'=>'остановить',
+    'Run Time'=>'Время запуска',
     'BACKUP_DELETE_CONFIRMATION'=>'Вы уверены, что хотите удалить <b>%s</b> бэкап?',
-    'Run Time'=>'Время Запуска',
     'Backup Size'=>'Размер Бэкапа',
     'SYS'=>'Системное',
     'one archive'=>'один архив',
@@ -258,7 +262,7 @@ $LANG = array(
     'CRON_ACTION_CONFIRMATION'=>'Вы уверены, что хотите <b>%s</b> cron-задание?',
     'Confirmation'=>'Подтверждение',
     'one cron job'=>'одно cron-задание',
-    '%s cron jobs'=>'%s cron-заданий',
+    '%s cron jobs'=>'%s cron-заданя(ий)',
     'Add Database'=>'Добавить БД',
     'open %s'=>'открыть %s',
     'DATABASE_ACTION_CONFIRMATION'=>'Вы уверены, что хотите <b>%s</b> базу данных <b>%s</b>?',
@@ -329,7 +333,16 @@ $LANG = array(
     '%s accounts'=>'%s аккаунта(ов)',
     'Add Domain for hosting'=>'Добавить Домен для хостинга',
     'open webstats'=>'открыть ститистику',
+    'Error Log'=>'Лог Ошибок',
+    'CGI Support'=>'Поддержка CGI',
+    'Statistics Auth'=>'Авторизация Статистики',
+    'running'=>'работает',
+    'SERVICE_ACTION_FAILED'=>'Ошибка: Операция "%s" для сервиса "%s" не удалась',
+    'Load Average'=>'Нагрузка',
+    'Memory Usage'=>'Использование Памяти',
+    'Bandwidth Usage'=>'Использование Сети',
+    
 );
 
-error_reporting(E_ALL);
-ini_set('display_errors',true);
+/*error_reporting(E_ALL);
+ini_set('display_errors',true);*/

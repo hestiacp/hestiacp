@@ -1,3 +1,162 @@
+<<<<<<< HEAD
+#!/bin/bash
+# info: rebuild system user
+# options: USER [RESTART]
+#
+# The function rebuilds system user account.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+restart=$2
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [RESTART]'
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+export PATH=$PATH:/usr/sbin
+
+# Get user variables
+source $USER_DATA/user.conf
+
+# Rebuild user
+shell=$(chsh --list-shells | grep -w "$SHELL" |head -n1)
+adduser "$user" -s "$shell" -c "$CONTACT" -m -d "$HOMEDIR/$user" &>/dev/null
+
+# Update password
+shadow='/etc/shadow'
+shdw=$(grep ^$user: $shadow)
+shdw3=$(echo "$shdw" | cut -f3 -d :)
+shdw4=$(echo "$shdw" | cut -f4 -d :)
+shdw5=$(echo "$shdw" | cut -f5 -d :)
+shdw6=$(echo "$shdw" | cut -f6 -d :)
+shdw7=$(echo "$shdw" | cut -f7 -d :)
+shdw8=$(echo "$shdw" | cut -f8 -d :)
+shdw9=$(echo "$shdw" | cut -f9 -d :)
+chmod u+w $shadow
+sed -i "/^$user:*/d" $shadow
+echo "$user:$MD5:$shdw3:$shdw4:$shdw5:$shdw6:$shdw7:$shdw8:$shdw9" >> $shadow
+chmod u-w $shadow
+
+# Building directory tree
+mkdir -p $HOMEDIR/$user/conf
+chmod a+x $HOMEDIR/$user
+chmod a+x $HOMEDIR/$user/conf
+chown $user:$user $HOMEDIR/$user
+chown $user:$user $HOMEDIR/$user/conf
+
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    mkdir -p $HOMEDIR/$user/conf/web
+    mkdir -p $HOMEDIR/$user/web
+    mkdir -p $HOMEDIR/$user/tmp
+    chmod 751 $HOMEDIR/$user/conf/web
+    chmod 751 $HOMEDIR/$user/web
+    chmod 771 $HOMEDIR/$user/tmp
+    chown $user:$user $HOMEDIR/$user/web
+    $BIN/v-rebuild-web-domains $user $restart
+fi
+
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    mkdir -p $HOMEDIR/$user/conf/dns
+    chmod 751 $HOMEDIR/$user/conf/dns
+    $BIN/v-rebuild-dns-domains $user $restart
+fi
+
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    mkdir -p $HOMEDIR/$user/conf/mail
+    mkdir -p $HOMEDIR/$user/mail
+    chmod 751 $HOMEDIR/$user/mail
+    chmod 751 $HOMEDIR/$user/conf/mail
+    $BIN/v-rebuild-mail-domains $user
+fi
+
+
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    $BIN/v-rebuild-databases $user
+fi
+
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    $BIN/v-rebuild-cron-jobs $user $restart
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Creating configuration files and pipes
+chmod 770 $USER_DATA
+touch $USER_DATA/backup.conf
+chmod 660 $USER_DATA/backup.conf
+touch $USER_DATA/history.log
+chmod 660 $USER_DATA/history.log
+touch $USER_DATA/stats.log
+chmod 660 $USER_DATA/stats.log
+
+sed -i "/ $user$/d" $VESTA/data/queue/disk.pipe
+echo "v-update-user-disk $user" >> $VESTA/data/queue/disk.pipe
+
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    mkdir -p $USER_DATA/ssl
+    chmod 770 $USER_DATA/ssl
+    touch $USER_DATA/web.conf
+    chmod 660 $USER_DATA/web.conf
+    if [ "$(grep -w $user $VESTA/data/queue/traffic.pipe)" ]; then
+        echo "$BIN/v-update-web-domains-traff $user" \
+            >> $VESTA/data/queue/traffic.pipe
+    fi
+    echo "v-update-web-domains-disk $user" >> $VESTA/data/queue/disk.pipe
+fi
+
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    mkdir -p $USER_DATA/dns
+    chmod 770 $USER_DATA/dns
+    touch $USER_DATA/dns.conf
+    chmod 660 $USER_DATA/dns.conf
+fi
+
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    mkdir -p $USER_DATA/mail
+    chmod 770 $USER_DATA/mail
+    touch $USER_DATA/mail.conf
+    chmod 660 $USER_DATA/mail.conf
+    echo "v-update-mail-domains-disk $user" >> $VESTA/data/queue/disk.pipe
+fi
+
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    touch $USER_DATA/db.conf
+    chmod 660 $USER_DATA/db.conf
+    echo "v-update-datbases-disk $user" >> $VESTA/data/queue/disk.pipe
+fi
+
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    touch $USER_DATA/cron.conf
+    chmod 660 $USER_DATA/cron.conf
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit
+=======
 #!/bin/bash
 # info: rebuild system user
 # options: USER [RESTART]
@@ -155,3 +314,4 @@ fi
 log_event "$OK" "$EVENT"
 
 exit
+>>>>>>> e81fb6c7307a777644ccaaf4dd15c5ac51b84ebc

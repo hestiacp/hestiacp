@@ -5,17 +5,17 @@
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                             <div style="float:left; padding-left: 0px;">
                                                 <form action="/bulk/service/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
-                                                    <option>apply to selected</option>
-                                                    <option>stop</option>
-                                                    <option>start</option>
-                                                    <option>restart</option>
+                                                    <option><?php print _('apply to selected');?></option>
+                                                    <option<?php print _('stop');?>></option>
+                                                    <option><?php print _('start');?></option>
+                                                    <option><?php print _('restart');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
                                             </div>
@@ -74,15 +74,15 @@
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="service[]" value="<?php echo $key ?>" ></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $data[$key]['STATE'] ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($data[$key]['STATE']); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="68px"><a href="/restart/service/?srv=<?php echo $key ?>"><img src="/images/reload.png" width="6px" height="7px"> restart</a></td>
-                                            <td class="data-controls" width="48px"><a href="/<?php echo $action ?>/service/?srv=<?php echo $key ?>"><img src="/images/<?php echo $action ?>.png" width="7px" height="7px"> <?php echo $action ?></a></td>
+                                            <td class="data-controls" width="68px"><a href="/restart/service/?srv=<?php echo $key ?>"><img src="/images/reload.png" width="6px" height="7px"> <?php print _('restart');?></a></td>
+                                            <td class="data-controls" width="48px"><a href="/<?php echo $action ?>/service/?srv=<?php echo $key ?>"><img src="/images/<?php echo $action ?>.png" width="7px" height="7px"> <?php echo _($action); ?></a></td>
                                         </tr>
                                     </table>
 
@@ -106,7 +106,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            CPU:
+                                                            <?php print _('CPU');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value"> <?php echo $cpu ?>%</a>
@@ -118,10 +118,10 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Memory:
+                                                            <?php print _('Memory');?>:
                                                         </td>
                                                         <td>
-                                                            <a class="counter-value"><?php echo $data[$key]['MEM'] ?> mb</a>
+                                                            <a class="counter-value"><?php echo $data[$key]['MEM'] ?> <?php print _('mb');?></a>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -130,7 +130,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Run Time:
+                                                            <?php print _('Run Time');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value"><?php echo humanize_time($data[$key]['RTIME']) ?> </a>

@@ -9,7 +9,7 @@
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Editing Mail Domain</b></a>
+                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b><?php print _('Editing Mail Domain');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -33,7 +33,7 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
                                         <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
-                                        <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
+                                        <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo _($v_status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -45,7 +45,7 @@
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Domain
+                                                <?php print _('Domain');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -55,7 +55,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                AntiSpam Support
+                                                <?php print _('AntiSpam Support');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -65,7 +65,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                AntiVirus Support
+                                                <?php print _('AntiVirus Support');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -75,7 +75,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                DKIM Support
+                                                <?php print _('DKIM Support');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -85,7 +85,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Catchall Email
+                                                <?php print _('Catchall email');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -95,8 +95,8 @@
                                         </tr>
                                         <tr>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="submit" class="button" name="save" value="Save">
-                                                <input type="button" class="button" value="Back" onclick="<?php echo $back ?>">
+                                                <input type="submit" class="button" name="save" value="<?php print _('Save');?>">
+                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

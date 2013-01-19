@@ -1,24 +1,23 @@
-
-                                <table class="sub-menu" style="background: white;">
+<table class="sub-menu" style="background: white;">
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/mail/?domain=<?php echo $_GET['domain'] ?>'"> Add Mail Account </button>
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/mail/?domain=<?php echo $_GET['domain'] ?>'"> <?php print _('Add Mail Account');?> </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get">
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                             <div style="float:left; padding-left: 26px;">
                                                 <form action="/bulk/mail/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
-                                                    <option>apply to selected</option>
-                                                    <option>suspend</option>
-                                                    <option>unsuspend</option>
-                                                    <option>delete</option>
+                                                    <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('suspend');?></option>
+                                                    <option><?php print _('unsuspend');?></option>
+                                                    <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
                                             </div>
@@ -34,7 +33,7 @@
                         <table class="data" style="background: #ebe9dc;">
                             <tr>
                                 <td style="padding: 8px 2px 8px 0;">
-                                    <a class="name" style="color: #555; font-size: 10pt;"><b>Listing  <?php echo $_GET['domain'] ?></b></a>
+                                    <a class="name" style="color: #555; font-size: 10pt;"><b><?php print _('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
                                 </td>
                             </tr>
                         </table>
@@ -57,28 +56,28 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="account[]" value="<?php echo $key?>" ><input type="hidden" name="domain" value="<?php echo $_GET['domain'] ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
+                                            <td class="data-controls" width="50px"><a href="/edit/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
                                             <td class="data-controls do_<?php echo $spnd_action ?>" width="80px">
                                                 <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>">
-                                                <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo $spnd_action ?></a>
+                                                <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo _($spnd_action); ?></a>
                                                 <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" />
-                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <b><?php echo $key ?></b> account?</p>
+                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
+                                                    <p class="counter-value"><?php print _('MAIL_ACCOUNT_ACTION_CONFIRMATION',_($spnd_action),$key);?></p>
                                                 </div>
                                             </td>
                                             <td class="data-controls do_delete" width="70px">
                                                 <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
+                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
                                                 <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo $key ?></b> account?</p>
+                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                    <p class="counter-value"><?php print _('MAIL_ACCOUNT_ACTION_CONFIRMATION',_('delete'),$key);?></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -95,7 +94,7 @@
                                                     </td>
                                                 <tr>
                                                     <td class="chart1" style="padding: 0 0 2px 0">
-                                                        Disk: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
+                                                        <?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
                                                         <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                             <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                         </div>
@@ -107,7 +106,7 @@
                                             <table>
                                                 <tr>
                                                     <td class="counter-name">
-                                                        Quota:
+                                                        <?php print _('Quota');?>:
                                                     </td>
                                                     <td class="counter-value">
                                                         <?php echo $data[$key]['QUOTA'] ?>
@@ -115,7 +114,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Autoreply:
+                                                            <?php print _('Autoreply');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['AUTOREPLY'] ?>
@@ -127,7 +126,7 @@
                                             <table width="350">
                                                 <tr>
                                                     <td class="counter-name">
-                                                        Forward:
+                                                        <?php print _('Forward to');?>:
                                                     </td>
                                                     <td class="counter-value" style="padding: 0 0 0 8px;" >
                                                         <?php echo str_replace(',', ', ', $data[$key]['FWD']) ?> 
@@ -152,13 +151,12 @@
                             <td>
                                 <?php
                                     if ( $i == 1) {
-                                        echo "1 mail account ";
+                                        echo _('one mail account');
                                     } else {
-                                        echo "$i mail accounts ";
+                                        echo _('%s mail accounts',$i);
                                     }
                                 ?>
                             </td>
                         </tr>
                     </table>
                 </div>
-

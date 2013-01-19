@@ -1,6 +1,27 @@
 <?php
+
+// need to be moved to user settings
+define('LANGUAGE','ru');
+
+require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.LANGUAGE.'.php');
+
+
+// works like sprintf if more than one arguments called
+function _() {
+    global $LANG;
+    $args = func_get_args();
+    $key = $args[0];
+    if (!isset($LANG[$key])) $text=$key; else
+        $text=$LANG[$key];
+
+    if (count($args)>1) { $args[0] = $text;
+        return call_user_func_array("sprintf",$args);
+    }
+    else return $text;
+}
+
 // Check user session
-if ((!isset($_SESSION['user'])) && (!isset($api_mode))) {
+if ((!isset($_SESSION['user'])) && (!isset($api_mode))&&!defined('NO_AUTH_REQUIRED')) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
@@ -48,23 +69,23 @@ function humanize_time($usage) {
              $usage = $usage / 24;
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." day";
+                $usage = $usage." "._('day');
             } else {
-                $usage = $usage." days";
+                $usage = $usage." "._('days');
             }
         } else {
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." hour";
+                $usage = $usage." "._('hour');
             } else {
-                $usage = $usage." hours";
+                $usage = $usage." "._('hours');
             }
         }
     } else {
         if ( $usage == 1 ) {
-            $usage = $usage." minute";
+            $usage = $usage." "._('minute');
         } else {
-            $usage = $usage." minutes";
+            $usage = $usage." "._('minutes');
         }
     }
     return $usage;
@@ -78,17 +99,17 @@ function humanize_usage($usage) {
                 if ( $usage > 1000 ) {
                     $usage = $usage / 1000 ;
                     $usage = number_format($usage, 2);
-                    $usage = $usage." pb";
+                    $usage = $usage." "._('pb');
                 } else {
                     $usage = number_format($usage, 2);
-                    $usage = $usage." tb";
+                    $usage = $usage." "._('tb');
                 }
         } else {
             $usage = number_format($usage, 2);
-            $usage = $usage." gb";
+            $usage = $usage." "._('gb');
         }
     } else {
-        $usage = $usage." mb";
+        $usage = $usage." "._('mb');
     }
     return $usage;
 }

@@ -2,7 +2,7 @@
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/cron/'"> Add Cron Job </button>
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/cron/'"> <?php print _('Add Cron Job');?> </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
@@ -12,12 +12,12 @@
                                             </div>
                                             <div style="float:left; padding-left: 26px;">
                                                 <form action="/bulk/cron/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
-                                                    <option>apply to selected</option>
-                                                    <option>suspend</option>
-                                                    <option>unsuspend</option>
-                                                    <option>delete</option>
+                                                    <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('suspend');?></option>
+                                                    <option><?php print _('unsuspend');?></option>
+                                                    <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
                                             </div>
@@ -48,28 +48,28 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="job[]" value="<?php echo $data[$key]['JOB'] ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
+                                            <td class="data-controls" width="50px"><a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
                                             <td class="data-controls do_<?php echo $spnd_action ?>" width="80px">
                                                 <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>">
-                                                <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo $spnd_action ?></a>
+                                                <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo _($spnd_action); ?></a>
                                                 <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
-                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> cron job?</p>
+                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
+                                                    <p class="counter-value"><?php print _('CRON_ACTION_CONFIRMATION',_($spnd_action));?></p>
                                                 </div>
                                             </td>
                                             <td class="data-controls do_delete" width="70px">
                                                 <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
+                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
                                                 <input type="hidden" name="delete_url" value="/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete cron job?</p>
+                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                    <p class="counter-value"><?php print _('CRON_ACTION_CONFIRMATION',_('delete'));?></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -86,7 +86,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            Min
+                                                            <?php print _('Min');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -100,7 +100,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            Hour
+                                                            <?php print _('Hour');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -114,7 +114,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            Day
+                                                            <?php print _('Day');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -128,7 +128,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            Month
+                                                            <?php print _('Month');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -142,7 +142,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            Day of Week
+                                                            <?php print _('Day of week');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -169,9 +169,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo "1 cron job ";
+                                            echo _('one cron job');
                                         } else {
-                                            echo "$i cron jobs ";
+                                            echo _('%s cron jobs',$i);
                                         }
                                     ?>
                                 </td>

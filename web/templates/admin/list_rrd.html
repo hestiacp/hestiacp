@@ -3,15 +3,15 @@
                                     <tr>
                                         <td style="padding: 12px 0 0 16px">
                                             <div style="float:left">
-                                                <a class="vst" <?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo "style='color: #174f82'" ?> href="?period=daily">Daily</a>
-                                                <a class="vst" <?php if ($_GET['period'] == 'weekly') echo "style='color: #174f82'" ?> href="?period=weekly">Weekly</a>
-                                                <a class="vst" <?php if ($_GET['period'] == 'monthly') echo "style='color: #174f82'" ?> href="?period=monthly">Monthly</a>
-                                                <a class="vst" <?php if ($_GET['period'] == 'yearly') echo "style='color: #174f82'" ?> href="?period=yearly">Yearly</a>
+                                                <a class="vst" <?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo "style='color: #174f82'" ?> href="?period=daily"><?php print _('Daily');?></a>
+                                                <a class="vst" <?php if ($_GET['period'] == 'weekly') echo "style='color: #174f82'" ?> href="?period=weekly"><?php print _('Weekly');?></a>
+                                                <a class="vst" <?php if ($_GET['period'] == 'monthly') echo "style='color: #174f82'" ?> href="?period=monthly"><?php print _('Monthly');?></a>
+                                                <a class="vst" <?php if ($_GET['period'] == 'yearly') echo "style='color: #174f82'" ?> href="?period=yearly"><?php print _('Yearly');?></a>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                         </td>
@@ -43,11 +43,11 @@
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="80px"><a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank"><img src="/images/download.png" width="8px" height="8px"> download</a></td>
+                                            <td class="data-controls" width="80px"><a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank"><img src="/images/download.png" width="8px" height="8px"> <?php print _('download');?></a></td>
                                         </tr>
                                     </table>
                                     <table class="data-col2" width="830px">
-                                        <tr><td colspan=3 class="domain" style="padding: 0 0 4 4;"><b><?php echo $data[$key]['TITLE'] ?></b></td></tr>
+                                        <tr><td colspan=3 class="domain" style="padding: 0 0 4 4;"><b><?php echo _($data[$key]['TITLE']); ?></b></td></tr>
                                         <tr>
                                             <td style="vertical-align:top;" width="630px">
                                                 <table width="630px">

@@ -1,24 +1,23 @@
-
-                                <table class="sub-menu" style="background: white;">
+                               <table class="sub-menu" style="background: white;">
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/dns/?domain=<?php echo $_GET['domain'] ?>'"> Add DNS Record </button>
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/dns/?domain=<?php echo $_GET['domain'] ?>'"> <?php print _('Add DNS Record');?> </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get">
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                             <div style="float:left; padding-left: 26px;">
                                                 <form action="/bulk/dns/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
-                                                    <option>apply to selected</option>
-                                                    <option>suspend</option>
-                                                    <option>unsuspend</option>
-                                                    <option>delete</option>
+                                                    <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('suspend');?></option>
+                                                    <option><?php print _('unsuspend');?></option>
+                                                    <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
                                             </div>
@@ -28,89 +27,89 @@
                             </td>
                         </tr>
                     </table>
+<div id="vstobjects">
+    <div style="height:10px; font-size:0;"></div>
+    <table class="data" style="background: #ebe9dc;">
+        <tr>
+            <td style="padding: 8px 2px 8px 0;">
+                <a class="name" style="color: #555; font-size: 10pt;"><b><?php print _('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
+            </td>
+        </tr>
+    </table>
+    <div style="height:10px; font-size:0;"></div>
+    <table class="data">
+        <?php
 
-                    <div id="vstobjects">
-                        <div style="height:10px; font-size:0;"></div>
-                        <table class="data" style="background: #ebe9dc;">
-                            <tr>
-                                <td style="padding: 8px 2px 8px 0;">
-                                    <a class="name" style="color: #555; font-size: 10pt;"><b>Listing  <?php echo $_GET['domain'] ?></b></a>
-                                </td>
-                            </tr>
-                        </table>
-                        <div style="height:10px; font-size:0;"></div>
-                        <table class="data">
-                            <?php
                                 foreach ($data as $key => $value) {
-                                    ++$i;
-                                    if ($data[$key]['SUSPENDED'] == 'yes') {
-                                        $status = 'suspended';
-                                        $spnd_action = 'unsuspend' ;
-                                    } else {
-                                        $status = 'active';
-                                        $spnd_action = 'suspend' ;
-                                    }
-                            ?>
+        ++$i;
+        if ($data[$key]['SUSPENDED'] == 'yes') {
+        $status = 'suspended';
+        $spnd_action = 'unsuspend' ;
+        } else {
+        $status = 'active';
+        $spnd_action = 'suspend' ;
+        }
+        ?>
 
-                            <tr class="data-row">
-                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
-                                    <table class="data-col1">
-                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="record[]" value="<?php echo $data[$key]['ID']?>" > <input type="hidden" name="domain" value="<?php echo $_GET['domain'] ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <table width="830px">
-                                    <tr>
-                                            <td></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
-                                            <td class="data-controls do_<?php echo $spnd_action ?>" width="80px">
-                                                <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>">
-                                                <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo $spnd_action ?></a>
-                                                <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" />
-                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to <?php echo $spnd_action ?> <span style="color: #34536A;"><b><?php echo $data[$key]['RECORD'] ?></b></span> record?</p>
-                                                </div>
-                                            </td>
-                                            <td class="data-controls do_delete" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
-                                                <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete <span style="color: #34536A;"><b><?php echo $data[$key]['RECORD'] ?></b></span> record?</p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                </table>
-                                <table class="data-col5" width="780px">
-                                    <tr>
-                                        <td class="log" style="padding: 0 0 0 4px;" width="200"><b><?php echo $data[$key]['RECORD'] ?></b></td>
-                                        <td class="log-counter-value" width="80"><?php echo $data[$key]['TYPE'] ?></td>
-                                        <td class="log-counter-value" width="80"><?php echo $data[$key]['PRIORITY'] ?></td>
-                                        <td class="log-counter-value" ><?php echo $data[$key]['VALUE'] ?></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <?php
+        <tr class="data-row">
+            <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                <table class="data-col1">
+                    <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="record[]" value="<?php echo $data[$key]['ID']?>" > <input type="hidden" name="domain" value="<?php echo $_GET['domain'] ?>" ></td></tr>
+                    <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                    <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
+                </table>
+            </td>
+            <td class="data-dotted" width="830px" style="vertical-align:top;">
+                <table width="830px">
+                    <tr>
+                        <td></td>
+                        <td class="data-controls" width="50px"><a href="/edit/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
+                        <td class="data-controls do_<?php echo $spnd_action ?>" width="80px">
+                            <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>">
+                            <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo _($spnd_action); ?></a>
+                            <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" />
+                            <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
+                                <p class="counter-value"><?php print _('RECORD_ACTION_CONFIRMATION',_($spnd_action),$data[$key]['RECORD']);?></p>
+                            </div>
+                        </td>
+                        <td class="data-controls do_delete" width="70px">
+                            <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
+                            <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
+                            <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" />
+                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                <p class="counter-value"><?php print _('RECORD_ACTION_CONFIRMATION',_('delete'),$data[$key]['RECORD']);?></p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <table class="data-col5" width="780px">
+                    <tr>
+                        <td class="log" style="padding: 0 0 0 4px;" width="200"><b><?php echo $data[$key]['RECORD'] ?></b></td>
+                        <td class="log-counter-value" width="80"><?php echo $data[$key]['TYPE'] ?></td>
+                        <td class="log-counter-value" width="80"><?php echo $data[$key]['PRIORITY'] ?></td>
+                        <td class="log-counter-value" ><?php echo $data[$key]['VALUE'] ?></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <?php
                             }
-                        ?> 
-                    </table>
-                    </form>
+                        ?>
+    </table>
+    </form>
 
-                    <table class="data-count">
-                        <tr>
-                            <td width="160px">
-                            <td>
-                                <?php
+    <table class="data-count">
+        <tr>
+            <td width="160px">
+            <td>
+                <?php
                                     if ( $i == 1) {
-                                        echo "1 dns record ";
+                                        echo _('one DNS record');
                                     } else {
-                                        echo "$i dns records ";
+                                        echo _('%s DNS records',$i);
                                     }
-                                ?> 
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                                ?>
+            </td>
+        </tr>
+    </table>
+</div>

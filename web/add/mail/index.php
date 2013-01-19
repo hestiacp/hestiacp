@@ -16,7 +16,7 @@ top_panel($user,$TAB);
 //if ($_SESSION['user'] == 'admin') {
     // Mail Domain
     if (!empty($_POST['ok'])) {
-        if (empty($_POST['v_domain'])) $errors[] = 'domain';
+        if (empty($_POST['v_domain'])) $errors[] = _('domain');
         if (!empty($_POST['v_antispam'])) {
             $v_antispam = 'yes';
         } else {
@@ -48,20 +48,20 @@ top_panel($user,$TAB);
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
+            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
         } else {
 
             // Add mail domain
             exec (VESTA_CMD."v-add-mail-domain ".$user." ".$v_domain." ".$v_antispam." ".$v_antivirus." ".$v_dkim, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: domain <a href='/list/mail/?domain=".$_POST[v_domain]."'><b>".$_POST[v_domain]."</b></a> has been created successfully.";
+                $_SESSION['ok_msg'] = _("DOMAIN_MAIL_CREATED_OK",$_POST['v_domain'],$_POST['v_domain']);
                 unset($v_domain);
             }
         }
@@ -71,9 +71,9 @@ top_panel($user,$TAB);
     // Mail Account
     if (!empty($_POST['ok_acc'])) {
         // Check input
-        if (empty($_POST['v_domain'])) $errors[] = 'domain';
-        if (empty($_POST['v_account'])) $errors[] = 'account';
-        if (empty($_POST['v_password'])) $errors[] = 'password';
+        if (empty($_POST['v_domain'])) $errors[] = _('domain');
+        if (empty($_POST['v_account'])) $errors[] = _('account');
+        if (empty($_POST['v_password'])) $errors[] = _('password');
 
         // Protect input
         $v_domain = escapeshellarg($_POST['v_domain']);
@@ -95,13 +95,13 @@ top_panel($user,$TAB);
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
+            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
         } else {
             // Add Mail Account
             exec (VESTA_CMD."v-add-mail-account ".$user." ".$v_domain." ".$v_account." ".$v_password." ".$v_quota, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
 
@@ -118,7 +118,7 @@ top_panel($user,$TAB);
                         exec (VESTA_CMD."v-add-mail-account-alias ".$user." ".$v_domain." ".$v_account." ".$alias, $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
-                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            if (empty($error)) $error = _('Error: vesta did not return any output.');
                             $_SESSION['error_msg'] = $error;
                         }
                     }
@@ -139,7 +139,7 @@ top_panel($user,$TAB);
                         exec (VESTA_CMD."v-add-mail-account-forward ".$user." ".$v_domain." ".$v_account." ".$forward, $output, $return_var);
                         if ($return_var != 0) {
                             $error = implode('<br>', $output);
-                            if (empty($error)) $error = 'Error: vesta did not return any output.';
+                            if (empty($error)) $error = _('Error: vesta did not return any output.');
                             $_SESSION['error_msg'] = $error;
                         }
                     }
@@ -149,7 +149,7 @@ top_panel($user,$TAB);
 
             unset($output);
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: account <a href='/edit/mail/?account=".$_POST['v_account']."&domain=".$_POST[v_domain]."'><b>".$_POST['v_account']."@".$_POST[v_domain]."</b></a> has been created successfully.";
+                $_SESSION['ok_msg'] = _('MAIL_ACCOUNT_CREATED_OK',$_POST['v_account'],$_POST[v_domain],$_POST['v_account'],$_POST[v_domain]);
                 unset($v_account);
                 unset($v_password);
                 unset($v_password);
@@ -162,7 +162,7 @@ top_panel($user,$TAB);
 
 
     if ((empty($_GET['domain'])) && (empty($_POST['domain'])))  {
-        $v_domain = $_GET['domain'];
+        $v_domain = (isset($_GET['domain'])?$_GET['domain']:'');
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_mail.html');
         unset($_SESSION['error_msg']);
         unset($_SESSION['ok_msg']);

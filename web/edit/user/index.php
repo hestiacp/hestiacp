@@ -27,7 +27,7 @@ if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD."v-list-user ".$v_username." json", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = 'Error: vesta did not return any output.';
+        if (empty($error)) $error = _('Error: vesta did not return any output.');
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -78,7 +78,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-password ".$v_username." ".$v_password, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             $v_password = "••••••••";
@@ -91,7 +91,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-package ".$v_username." ".$v_package, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -103,7 +103,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-template ".$v_username." ".$v_template, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -115,7 +115,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-shell ".$v_username." ".$v_shell, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -125,13 +125,13 @@ if ($_SESSION['user'] == 'admin') {
         if (($v_email != $_POST['v_email']) && (empty($_SESSION['error_msg']))) {
             // Validate email
             if (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL)) {
-                $_SESSION['error_msg'] = 'Please enter valid email address.';
+                $_SESSION['error_msg'] = _('Please enter valid email address.');
             } else {
                 $v_email = escapeshellarg($_POST['v_email']);
                 exec (VESTA_CMD."v-change-user-contact ".$v_username." ".$v_email, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    if (empty($error)) $error = _('Error: vesta did not return any output.');
                     $_SESSION['error_msg'] = $error;
                 }
             }
@@ -145,7 +145,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-name ".$v_username." ".$v_fname." ".$v_lname, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -163,14 +163,14 @@ if ($_SESSION['user'] == 'admin') {
             exec ($ns_cmd, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = "OK: changes has been saved.";
+            $_SESSION['ok_msg'] = _('OK: changes has been saved.');
         }
     }
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_user.html');
@@ -188,7 +188,7 @@ if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD."v-list-user ".$v_username." json", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = 'Error: vesta did not return any output.';
+        if (empty($error)) $error = _('Error: vesta did not return any output.');
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -225,7 +225,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-password ".$v_username." ".$v_password, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             $v_password = "••••••••";
@@ -238,7 +238,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-contact ".$v_username." ".$v_email, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -256,14 +256,14 @@ if ($_SESSION['user'] == 'admin') {
             exec ($ns_cmd, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = 'Error: vesta did not return any output.';
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = "OK: changes has been saved.";
+            $_SESSION['ok_msg'] = _('OK: changes has been saved.');
         }
     }
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_user.html');

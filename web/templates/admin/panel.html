@@ -1,112 +1,112 @@
-    <center>
-        <table class="main">
-            <tr>
-                <td>
-                    <table class="fixed" >
-                        <tr>
-                            <td>
-                                <table class="top">
-                                    <tr>
-                                        <td width="179px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'PACKAGE' ) echo 'selected-' ?>link" href="/list/package/"><b>Packages</a></b></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'IP' ) echo 'selected-' ?>link" href="/list/ip/"><b>IP Adresses</a></b></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'RRD' ) echo 'selected-' ?>link" href="/list/rrd/"><b>RRD Graphics</a></b></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'STATS' ) echo 'selected-' ?>link" href="/list/stats/"><b>Statistics</a></b></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'LOG' ) echo 'selected-' ?>link" href="/list/log/"><b>History Log</a></b></td>
-                                        <td width="227px" style="border-bottom: 1px solid #d6d6d6; height: 26px; padding: 0 24px 0 0; text-align: right;"><b><?php if($user != $_SESSION['user']) echo 'admin / ' ?><?php echo $user ?></b><a class="top-link" style="padding: 0 0 0 6" href="/logout/">Log out</a></td>
-                                    </tr>
-                                    <tr>
+<center>
+    <table class="main">
+        <tr>
+            <td>
+                <table class="fixed" >
+                    <tr>
+                        <td>
+                            <table class="top">
+                                <tr>
+                                    <td width="179px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'PACKAGE' ) echo 'selected-' ?>link" href="/list/package/"><b><?php print _('Packages');?></a></b></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'IP' ) echo 'selected-' ?>link" href="/list/ip/"><b><?php print _('IP Addresses');?></a></b></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'RRD' ) echo 'selected-' ?>link" href="/list/rrd/"><b><?php print _('RRD Graphics');?></a></b></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'STATS' ) echo 'selected-' ?>link" href="/list/stats/"><b><?php print _('Statistics');?></a></b></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'LOG' ) echo 'selected-' ?>link" href="/list/log/"><b><?php print _('History Log');?></a></b></td>
+                                    <td width="227px" style="border-bottom: 1px solid #d6d6d6; height: 26px; padding: 0 24px 0 0; text-align: right;"><b><?php if($user != $_SESSION['user']) echo 'admin / ' ?><?php echo $user ?></b><a class="top-link" style="padding: 0 0 0 6" href="/logout/"><?php print _('Log out');?></a></td>
+                                </tr>
+                                <tr>
                                         <td colspan="7" style="background: #fff;">
 
                                             <span class="nav-logo">
                                                 <img style="margin: 22px 0 0 4px;" src="/images/logo.png">
                                             </span>
 
-                                            <a class="nav-lnk" href="/list/user/">
+                                        <a class="nav-lnk" href="/list/user/">
                                             <span class="nav-<?php if($TAB == 'USER' ) echo 'selected-' ?>block">
                                                 <p class="nav-<?php if($TAB == 'USER' ) echo 'selected-' ?>header">
-                                                    USER
+                                                    <?php print _('USER');?>
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
-                                                    users: <? echo $panel[$user]['U_USERS'] ?><br>
-                                                    suspended: <? echo $panel[$user]['SUSPENDED_USERS']?>
+                                                    <?php print _('users');?>: <? echo $panel[$user]['U_USERS'] ?><br>
+                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_USERS']?>
                                                 </p>
                                             </span>
-                                            </a>
+                                        </a>
 
-                                            <a class="nav-lnk" href="/list/web/">
+                                        <a class="nav-lnk" href="/list/web/">
                                             <span class="nav-<?php if($TAB == 'WEB' ) echo 'selected-' ?>block">
                                                 <p class="nav-<?php if($TAB == 'WEB' ) echo 'selected-' ?>header">
-                                                    WEB
+                                                    <?php print _('WEB');?>
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
-                                                    domains: <? echo $panel[$user]['U_WEB_DOMAINS']?><br>
-                                                    aliases: <? echo $panel[$user]['U_WEB_ALIASES']?><br>
-                                                    suspended: <? echo $panel[$user]['SUSPENDED_WEB']?>
+                                                    <?php print _('domains');?>: <? echo $panel[$user]['U_WEB_DOMAINS']?><br>
+                                                    <?php print _('aliases');?>: <? echo $panel[$user]['U_WEB_ALIASES']?><br>
+                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_WEB']?>
                                                 </p>
                                             </span>
-                                            </a>
+                                        </a>
 
-                                            <a class="nav-lnk" href="/list/dns/">
+                                        <a class="nav-lnk" href="/list/dns/">
                                             <span class="nav-<?php if($TAB == 'DNS' ) echo 'selected-' ?>block">
                                                 <p class="nav-<?php if($TAB == 'DNS' ) echo 'selected-' ?>header">
-                                                    DNS
+                                                    <?php print _('DNS');?>
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
-                                                    domains: <? echo $panel[$user]['U_DNS_DOMAINS']?><br>
-                                                    records: <? echo $panel[$user]['U_DNS_RECORDS']?><br>
-                                                    suspended: <? echo $panel[$user]['SUSPENDED_DNS']?>
+                                                    <?php print _('domains');?>: <? echo $panel[$user]['U_DNS_DOMAINS']?><br>
+                                                    <?php print _('records');?>: <? echo $panel[$user]['U_DNS_RECORDS']?><br>
+                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_DNS']?>
                                                 </p>
                                             </span>
-                                            </a>
+                                        </a>
 
-                                            <a class="nav-lnk" href="/list/mail/">
+                                        <a class="nav-lnk" href="/list/mail/">
                                             <span class="nav-<?php if($TAB == 'MAIL' ) echo 'selected-' ?>block">
                                                 <p class="nav-<?php if($TAB == 'MAIL' ) echo 'selected-' ?>header">
-                                                    MAIL
+                                                    <?php print _('MAIL');?>
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
-                                                    domains: <? echo $panel[$user]['U_MAIL_DOMAINS']?><br>
-                                                    accounts: <? echo $panel[$user]['U_MAIL_ACCOUNTS']?><br>
-                                                    suspended: <? echo $panel[$user]['SUSPENDED_MAIL']?>
+                                                    <?php print _('domains');?>: <? echo $panel[$user]['U_MAIL_DOMAINS']?><br>
+                                                    <?php print _('accounts');?>: <? echo $panel[$user]['U_MAIL_ACCOUNTS']?><br>
+                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_MAIL']?>
                                                 </p>
                                             </span>
-                                            </a>
+                                        </a>
 
-                                            <a class="nav-lnk" href="/list/db/">
+                                        <a class="nav-lnk" href="/list/db/">
                                             <span class="nav-<?php if($TAB == 'DB' ) echo 'selected-' ?>block">
                                                 <p class="nav-<?php if($TAB == 'DB' ) echo 'selected-' ?>header">
-                                                    DB
+                                                    <?php print _('DB');?>
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
-                                                    databases: <? echo $panel[$user]['U_DATABASES']?><br>
-                                                    suspended: <? echo $panel[$user]['SUSPENDED_DB']?>
+                                                    <?php print _('databases');?>: <? echo $panel[$user]['U_DATABASES']?><br>
+                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_DB']?>
                                                 </p>
                                             </span>
-                                            </a>
+                                        </a>
 
-                                            <a class="nav-lnk" href="/list/cron/">
+                                        <a class="nav-lnk" href="/list/cron/">
                                             <span class="nav-<?php if($TAB == 'CRON' ) echo 'selected-' ?>block">
                                                 <p class="nav-<?php if($TAB == 'CRON' ) echo 'selected-' ?>header">
-                                                    CRON
+                                                    <?php print _('CRON');?>
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
-                                                    jobs: <? echo $panel[$user]['U_CRON_JOBS']?><br>
-                                                    suspended: <? echo $panel[$user]['SUSPENDED_CRON']?>
+                                                    <?php print _('jobs');?>: <? echo $panel[$user]['U_CRON_JOBS']?><br>
+                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_CRON']?>
                                                 </p>
                                             </span>
-                                            </a>
+                                        </a>
 
-                                            <a class="nav-lnk" href="/list/backup/">
+                                        <a class="nav-lnk" href="/list/backup/">
                                             <span class="nav-<?php if($TAB == 'BACKUP' ) echo 'selected-' ?>block">
                                                 <p class="nav-<?php if($TAB == 'BACKUP' ) echo 'selected-' ?>header">
-                                                    BACKUP
+                                                    <?php print _('BACKUP');?>
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
-                                                    backups: <? echo $panel[$user]['U_BACKUPS']?><br>
+                                                    <?php print _('backups');?>: <? echo $panel[$user]['U_BACKUPS']?><br>
                                                 </p>
                                             </span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>

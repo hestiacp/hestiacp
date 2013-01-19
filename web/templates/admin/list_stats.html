@@ -4,10 +4,10 @@
                                         <td style="padding: 12px 0 0 16px">
                                             <div style="float:left">
                                                 <form action="/list/stats/" method="get" id="objects">
-                                                <a class="vst" <?php if (empty($_GET['user'])) echo "style='color: #174f82'"; ?> href='/list/stats/'>Overall Statistics</a>
+                                                <a class="vst" <?php if (empty($_GET['user'])) echo "style='color: #174f82'"; ?> href='/list/stats/'><?php print _('Overall Statistics');?></a>
                                                 <span style="padding: 0 8px;"></span>
                                                 <select style="margin:0 2px 0 0px;" name="user">
-                                                    <option value=''>show per user</option>
+                                                    <option value=''><?php print _('show per user');?></option>
                                                 <?php
                                                     foreach ($users as $key => $value) {
                                                         echo "\t\t\t\t<option value=\"".$value."\"";
@@ -25,7 +25,7 @@
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                         </td>
@@ -67,12 +67,12 @@
                                                 <table>
                                                     <tr>
                                                         <td colspan=2 class="counter-name"  style="padding: 2px 0px 6px 2px;">
-                                                            [<?php echo $data[$key]['PACKAGE']?>] package
+                                                            [<?php echo $data[$key]['PACKAGE']?>] <?php print _('package');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="chart1" colspan=2 style="padding: 0 0 0 2px;">
-                                                            Bandwidth: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
+                                                            <?php print _('Bandwidth');?>: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
@@ -80,7 +80,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="chart1" colspan=2 style="padding: 0 0 0 2px;">
-                                                            Disk: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
+                                                            <?php print _('Disk');?>: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
@@ -91,12 +91,12 @@
                                                             <table class="chart2">
                                                                 <tr>
                                                                     <td>
-                                                                        Web: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
-                                                                        Mail: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?><br>
+                                                                        <?php print _('Hosting');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
+                                                                        <?php print _('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?><br>
                                                                     </td>
                                                                     <td style="padding: 0px 10px 0px 8px">
-                                                                        Databases: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?><br>
-                                                                        User Dirs: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?><br>
+                                                                        <?php print _('Databases');?>: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?><br>
+                                                                        <?php print _('User Directories');?>: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?><br>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -108,7 +108,7 @@
                                                 <table width="280">
                                                     <tr>
                                                         <td class="counter-name" width="37%">
-                                                            Web Domains:
+                                                            <?php print _('Web Domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_WEB_DOMAINS'] ?> 
@@ -116,7 +116,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Web SSL:
+                                                            <?php print _('Web SSL Domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_WEB_SSL'] ?> 
@@ -124,7 +124,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Web Aliases:
+                                                            <?php print _('Web Aliases');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_WEB_ALIASES'] ?> 
@@ -132,7 +132,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Dns Domains:
+                                                            <?php print _('DNS domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_DNS_DOMAINS'] ?> 
@@ -140,7 +140,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Dns Records:
+                                                            <?php print _('DNS records');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_DNS_RECORDS'] ?>
@@ -152,7 +152,7 @@
                                                 <table class="data-col4" width="250">
                                                     <tr>
                                                         <td class="counter-name" width="43%">
-                                                            Mail Domains:
+                                                            <?php print _('Mail domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_MAIL_DOMAINS'] ?>
@@ -160,7 +160,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Mail Accounts:
+                                                            <?php print _('Mail Accounts');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_MAIL_ACCOUNTS'] ?> 
@@ -168,7 +168,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Databases:
+                                                            <?php print _('Databases');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_DATABASES'] ?> 
@@ -176,7 +176,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Cron Jobs:
+                                                            <?php print _('Cron Jobs');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_CRON_JOBS'] ?>
@@ -184,7 +184,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Dedicated IP:
+                                                            <?php print _('IP Adresses');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['IP_OWNED'] ?> 
@@ -209,9 +209,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo "1 month ";
+                                            echo _('one month');
                                         } else {
-                                            echo "$i months ";
+                                            echo _('%s months',$i);
                                         }
                                     ?>
                                 </td>

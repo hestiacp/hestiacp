@@ -20,22 +20,22 @@ top_panel($user,$TAB);
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
-        if (empty($_POST['v_package'])) $errors[] = 'package';
-        if (empty($_POST['v_template'])) $errors[] = 'template';
-        if (empty($_POST['v_shell'])) $errrors[] = 'shell';
-        if (!isset($_POST['v_web_domains'])) $errors[] = 'web domains';
-        if (!isset($_POST['v_web_aliases'])) $errors[] = 'web aliases';
-        if (!isset($_POST['v_dns_domains'])) $errors[] = 'dns domains';
-        if (!isset($_POST['v_dns_records'])) $errors[] = 'dns records';
-        if (!isset($_POST['v_mail_domains'])) $errors[] = 'mail domains';
-        if (!isset($_POST['v_mail_accounts'])) $errors[] = 'mail accounts';
-        if (!isset($_POST['v_databases'])) $errors[] = 'databases';
-        if (!isset($_POST['v_cron_jobs'])) $errors[] = 'cron jobs';
-        if (!isset($_POST['v_backups'])) $errors[] = 'backups';
-        if (!isset($_POST['v_disk_quota'])) $errors[] = 'quota';
-        if (!isset($_POST['v_bandwidth'])) $errors[] = 'bandwidth';
-        if (empty($_POST['v_ns1'])) $errors[] = 'ns1';
-        if (empty($_POST['v_ns2'])) $errors[] = 'ns2';
+        if (empty($_POST['v_package'])) $errors[] = _('package');
+        if (empty($_POST['v_template'])) $errors[] = _('template');
+        if (empty($_POST['v_shell'])) $errrors[] = _('shell');
+        if (!isset($_POST['v_web_domains'])) $errors[] = _('web domains');
+        if (!isset($_POST['v_web_aliases'])) $errors[] = _('web aliases');
+        if (!isset($_POST['v_dns_domains'])) $errors[] = _('dns domains');
+        if (!isset($_POST['v_dns_records'])) $errors[] = _('dns records');
+        if (!isset($_POST['v_mail_domains'])) $errors[] = _('mail domains');
+        if (!isset($_POST['v_mail_accounts'])) $errors[] = _('mail accounts');
+        if (!isset($_POST['v_databases'])) $errors[] = _('databases');
+        if (!isset($_POST['v_cron_jobs'])) $errors[] = _('cron jobs');
+        if (!isset($_POST['v_backups'])) $errors[] = _('backups');
+        if (!isset($_POST['v_disk_quota'])) $errors[] = _('quota');
+        if (!isset($_POST['v_bandwidth'])) $errors[] = _('bandwidth');
+        if (empty($_POST['v_ns1'])) $errors[] = _('ns1');
+        if (empty($_POST['v_ns2'])) $errors[] = _('ns2');
 
 
         // Protect input
@@ -73,7 +73,7 @@ if ($_SESSION['user'] == 'admin') {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = "Error: field ".$error_msg." can not be blank.";
+            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
         } else {
             exec ('mktemp -d', $output, $return_var);
             $tmpdir = $output[0];
@@ -107,7 +107,7 @@ if ($_SESSION['user'] == 'admin') {
                 exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    if (empty($error)) $error = _('Error: vesta did not return any output.');
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -119,7 +119,7 @@ if ($_SESSION['user'] == 'admin') {
 
             // Check output
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: package <a href='/edit/package/?package=".$_POST['v_package']."'><b>".$_POST['v_package']."</b></a> has been created successfully.";
+                $_SESSION['ok_msg'] = _('PACKAGE_CREATED_OK',$_POST['v_package'],$_POST['v_package']);
                 unset($v_package);
             }
 

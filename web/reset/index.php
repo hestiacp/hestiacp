@@ -1,23 +1,12 @@
 <?php
 session_start();
+
+define('NO_AUTH_REQUIRED',true);
+
 $TAB = 'RESET PASSWORD';
-// 
-function send_email($to,$subject,$mailtext,$from) {
-    $charset = "utf-8";
-    $to = '<'.$to.'>';
-    $boundary='--' . md5( uniqid("myboundary") );
-    $priorities = array( '1 (Highest)', '2 (High)', '3 (Normal)', '4 (Low)', '5 (Lowest)' );
-    $priority = $priorities[2];
-    $ctencoding = "8bit";
-    $sep = chr(13) . chr(10);
-    $disposition = "inline";
-    $subject = "=?$charset?B?".base64_encode($subject)."?=";
-    $header.="From: $from \nX-Priority: $priority\nCC: $cc\n";
-    $header.="Mime-Version: 1.0\nContent-Type: text/plain; charset=$charset \n";
-    $header.="Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
-    $message .= $mailtext;
-    mail($to, $subject, $message, $header);
-}
+//
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+
 
 if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
     $v_user = escapeshellarg($_POST['user']);
@@ -31,21 +20,15 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
         $lname = $data[$user]['LNAME'];
         $contact = $data[$user]['CONTACT'];
         $to = $data[$user]['CONTACT'];
-        $subject = 'Password Reset '.date("Y-m-d H:i:s");
+        $subject = _('MAIL_RESET_SUBJECT',date("Y-m-d H:i:s"));
         $hostname = exec('hostname');
-        $from = "Vesta Control Panel <noreply@".$hostname.">";
+        $from = _('MAIL_FROM',$hostname);
         if (!empty($fname)) {
-            $mailtext = "Hello ".$fname." ".$lname.",\n";
+            $mailtext = _('GREETINGS_GORDON_FREEMAN',$fname,$lname);
         } else {
-            $mailtext = "Hello,\n";
+            $mailtext = _('GREETINGS');
         }
-        $mailtext .= "You recently asked to reset your control panel password. ";
-        $mailtext .= "To complete your request, please follow this link:\n";
-        $mailtext .= "https://".$_SERVER['HTTP_HOST']."/reset/?action=confirm&user=".$user."&code=".$rkey."\n\n";
-        $mailtext .= "Alternately, you may go to https://".$_SERVER['HTTP_HOST']."/reset/?action=code&user=".$user." and enter the following password reset code:\n";
-        $mailtext .= $rkey."\n\n";
-        $mailtext .= "If you did not request a new password please ignore this letter and accept our apologies — we didn't intend to disturb you.\n\n";
-        $mailtext .= "--\nVesta Control Panel\n";
+        $mailtext .= _('PASSWORD_RESET_REQUEST',$_SERVER['HTTP_HOST'],$user,$rkey,$_SERVER['HTTP_HOST'],$user,$rkey);
         if (!empty($rkey)) send_email($to, $subject, $mailtext, $from);
         unset($output);
     }
@@ -68,20 +51,20 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
                 $cmd="/usr/bin/sudo /usr/local/vesta/bin/v-change-user-password";
                 exec ($cmd." ".$v_user." ".$v_password, $output, $return_var);
                 if ( $return_var > 0 ) {
-                    $ERROR = "<a class=\"error\">ERROR: Internal error</a>";
+                    $ERROR = "<a class=\"error\">"._('An internal error occurred')."</a>";
                 } else {
                     $_SESSION['user'] = $_POST['user'];
                     header("Location: /");
                     exit;
                 }
             } else {
-                $ERROR = "<a class=\"error\">ERROR: Invalid username or code</a>";
+                $ERROR = "<a class=\"error\">"._('ERROR: Invalid username or code')."</a>";
             }
         } else {
-            $ERROR = "<a class=\"error\">ERROR: Invalid username or code</a>";
+            $ERROR = "<a class=\"error\">"._('ERROR: Invalid username or code')."</a>";
         }
     } else {
-        $ERROR = "<a class=\"error\">ERROR: Passwords not match</a>";
+        $ERROR = "<a class=\"error\">"._('ERROR: Passwords not match')."</a>";
     }
 }
 

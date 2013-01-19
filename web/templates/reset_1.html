@@ -5,19 +5,19 @@
                         <table>
                             <tr>
                                 <td style="padding: 0 10px 0 42px;">
-                                    <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" /></a>
+                                    <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="<?php print _('Vesta Control Panel');?>" /></a>
                                 </td>
                                 <td style="padding: 10px 0 0 0;">
                                     <form method="post" action="/reset/" >
                                         <table class="login-box">
                                             <tr>
                                             <td style="padding: 12px 0 0 2px;">
-                                                To reset your password, enter your username and we'll send you instructions on how to create a new password.
+                                                <?php print _('RESET_NOTICE');?>
                                             </td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0 0 2px;">
-                                                    Username
+                                                    <?php print _('Username');?>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -27,7 +27,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding: 20px 0 12px 0;">
-                                                    <input tabindex="2" type="submit" value="Submit" class="button">
+                                                    <input tabindex="2" type="submit" value="<?php print _('Submit');?>" class="button">
                                                 </td>
                                             </tr>
                                         </table>
@@ -38,7 +38,7 @@
                                 <td colspan=2>
                                     <table class="login-bottom">
                                         <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
-                                        <tr><td><a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
+                                        <tr><td><a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a> | <a tabindex="6" class="vestacp" href="http://chto.su"><?php print _('Translation by ZonD80');?></a></td></tr>
                                     </table>
                                 </td>
                             </tr>

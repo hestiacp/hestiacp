@@ -20,13 +20,13 @@ if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD.$cmd, $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data);
-    display_error_block;
+    display_error_block();
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_user.html');
 } else {
     exec (VESTA_CMD."v-list-user ".$user." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data);
-    display_error_block;
+    display_error_block();
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_user.html');
 }
 

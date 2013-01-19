@@ -3,20 +3,20 @@
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/ip/'"> Add IP </button>
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/ip/'"> <?php print _('Add IP');?> </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="Search" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                             <div style="float:left; padding-left: 26px;">
                                                 <form action="/bulk/ip/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
-                                                    <option>apply to selected</option>
-                                                    <option>delete</option>
+                                                    <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
                                             </div>
@@ -40,20 +40,20 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="ip[]" value="<?php echo $key ?>"></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-active"><b>active</b></td></tr>
+                                        <tr><td class="data-active"><b><?php print _('active');?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/ip/?ip=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
+                                            <td class="data-controls" width="50px"><a href="/edit/ip/?ip=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
                                             <td class="data-controls do_delete" width="70px">
                                                 <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
+                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
                                                 <input type="hidden" name="delete_url" value="/delete/ip/?ip=<?php echo "$key" ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> ip?</p>
+                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                    <p class="counter-value"><?php print _('IP_DELETE_CONFIRMATION',$key);?></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -84,7 +84,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Web Domains: 
+                                                            <?php print _('Web Domains');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?></a>
@@ -92,7 +92,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Status: 
+                                                            <?php print _('Status');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value"> <?php echo $data[$key]['STATUS'] ?></a>
@@ -104,7 +104,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" colspan="2" >
-                                                            Sys Users: <a style="padding: 0 0 0 26" class="nginx-ext"><?php echo str_replace(',', ', ', $data[$key]['U_SYS_USERS']) ?>
+                                                            <?php print _('Users');?>: <a style="padding: 0 0 0 26" class="nginx-ext"><?php echo str_replace(',', ', ', $data[$key]['U_SYS_USERS']) ?>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -126,9 +126,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo "1 ip address ";
+                                            echo _('one IP address');
                                         } else {
-                                            echo "$i ip addresses ";
+                                            echo _('%s IP addresses',$i);
                                         }
                                     ?>
                                 </td>

@@ -10,7 +10,7 @@
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Adding IP Address</b></a>
+                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b><?php print _('Adding IP Adress');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -65,7 +65,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Netmask
+                                                <?php print _('Netmask');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -75,7 +75,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Interface
+                                                <?php print _('Interface');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -93,7 +93,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Shared
+                                                <?php print _('Shared');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -106,7 +106,7 @@
                                                 <table style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
                                                     <tr>
                                                         <td class="vst-text" style="padding: 0 0 0 2px;">
-                                                            Assigned User
+                                                            <?php print _('Assigned user');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -127,7 +127,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Associated Domain <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(optional)</span>
+                                                <?php print _('Assigned domain');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print _('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -137,8 +137,8 @@
                                         </tr>
                                         <tr>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="submit" name="ok" value="Add" class="button">
-                                                <input type="button" class="button" value="Back" onclick="<?php echo $back ?>">
+                                                <input type="submit" name="ok" value="<?php print _('Add');?>" class="button">
+                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

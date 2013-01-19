@@ -28,7 +28,7 @@ top_panel($user,$TAB);
     exec (VESTA_CMD."v-list-database ".$user." ".$v_database." 'json'", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = 'Error: vesta did not return any output.';
+        if (empty($error)) $error = _('Error: vesta did not return any output.');
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -58,14 +58,14 @@ top_panel($user,$TAB);
                 exec (VESTA_CMD."v-change-database-password ".$v_username." ".$v_database." ".$v_password, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = 'Error: vesta did not return any output.';
+                    if (empty($error)) $error = _('Error: vesta did not return any output.');
                     $_SESSION['error_msg'] = $error;
                 }
                 $v_password = "••••••••";
                 unset($output);
             }
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = "OK: changes has been saved.";
+                $_SESSION['ok_msg'] = _('OK: changes has been saved.');
             }
         }
     }

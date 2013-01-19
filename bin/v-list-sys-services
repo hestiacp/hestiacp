@@ -1,3 +1,193 @@
+<<<<<<< HEAD
+#!/bin/bash
+# info: list system config
+# options: [FORMAT]
+#
+# The function for obtaining the list of system parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+get_srv_state() {
+    srv=$1
+    proc_name=${2-$1}
+
+    # Check service status
+    /etc/init.d/$srv status > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        state='running'
+
+        # Calculate cpu and memory usage
+        cpu=0
+        mem=0
+        for pid in $(/sbin/pidof $proc_name); do
+            pid_mem=$(pmap -x $pid | tail -n1 | awk '{print $3}')
+            pid_cpu=$(grep "^$pid " $tmp_file | cut -f 2 -d ' ')
+            cpu=$((cpu + pid_cpu))
+            mem=$((mem + pid_mem))
+        done
+        mem=$((mem / 1024))
+
+        # Get pid date
+        if [ ! -z $pid ] && [ -e "/proc/$pid/cmdline" ]; then
+            mtime=$(stat -c "%Y" /proc/$pid/cmdline)
+            rtime=$((ctime - mtime))
+            rtime=$((rtime  / 60))
+        fi
+    else
+        # Service is stopped
+        state='stopped'
+        mem=0
+        cpu=0
+        rtime="0"
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Save current proccess list
+tmp_file=$(mktemp)
+if [ "$format" = 'json' ]; then
+    ps aux | awk '{print $2" "$3}' | tr -d '.' > $tmp_file
+else
+    ps aux | awk '{print $2" "$3}' | cut -f 1 -d '.' > $tmp_file
+fi
+
+# Get current time
+ctime=$(date +%s)
+
+# Proxy
+service=$PROXY_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    get_srv_state $service
+    str="NAME='$service' SYSTEM='reverse proxy' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
+fi
+
+# Web
+service=$WEB_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    if [ "$service" == 'apache' ]; then
+        service='httpd'
+    fi
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='web server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
+
+fi
+
+# DNS
+service=$DNS_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    if [ "$service" == 'bind' ]; then
+        service='named'
+    fi
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='dns server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
+fi
+
+# MAIL
+service=$MAIL_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='mail server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
+fi
+
+# IMAP
+service=$IMAP_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='pop/imap server' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+fi
+
+# ANTIVIRUS
+service=$ANTIVIRUS_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    if [ "$ANTIVIRUS_SYSTEM" = 'clamav' ]; then
+        service='clamd'
+    fi
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='email antivirus' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+fi
+
+# ANTISPAM
+service=$ANTISPAM_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    get_srv_state $service spamd
+    str="$str\nNAME='$service' SYSTEM='email antispam' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+fi
+
+# DB
+service=$DB_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    for db in ${DB_SYSTEM//,/ }; do
+        service="$db"
+        if [ "$service" == 'mysql' ] && [ ! -e "/etc/init.d/$service" ]; then
+            service='mysqld'
+        fi
+        get_srv_state $service
+        str="$str\nNAME='$service' SYSTEM='database server' STATE='$state'"
+        str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+    done
+fi
+
+# FTP
+service=$FTP_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='ftp server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
+fi
+
+# CRON
+service=$CRON_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='job scheduler' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+fi
+
+# Defining config
+echo -e "$str" > $tmp_file
+conf=$tmp_file
+
+# Defining fileds to select
+fields="\$NAME \$SYSTEM \$STATE \$CPU \$MEM \$RTIME"
+
+# Listing services
+case $format in 
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  fields='$NAME $STATE $CPU $MEM $RTIME'
+            shell_list | column -t ;;
+    *)      check_args '1' '0' 'USER [FORMAT]'
+esac
+
+rm -f $tmp_file
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit
+=======
 #!/bin/bash
 # info: list system services
 # options: [FORMAT]
@@ -186,3 +376,4 @@ rm -f $tmp_file
 #----------------------------------------------------------#
 
 exit
+>>>>>>> 6bd00c9e5ea0ba53c998291dec65f9d20a9ce49b

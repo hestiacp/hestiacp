@@ -10,7 +10,7 @@
 
                                 <table class="sub-menu" style="background: white;">
                                     <tr>
-                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b>Editing Cron Job</b></a>
+                                        <td style="padding: 10px 2px 10px 0;" ><a class="name"><b><?php print _('Editing Cron Job');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -47,7 +47,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                Minute
+                                                <?php print _('Minute');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -57,7 +57,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Hour
+                                                <?php print _('Hour');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -67,7 +67,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Day
+                                                <?php print _('Day');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -77,7 +77,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Month
+                                                <?php print _('Month');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -87,7 +87,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Day of Week
+                                                <?php print _('Day Of Week');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -97,7 +97,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                Command
+                                                <?php print _('Command');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -107,8 +107,8 @@
                                         </tr>
                                         <tr>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="submit" name="save" value="Save" class="button">
-                                                <input type="button" class="button" value="Back" onclick="<?php echo $back ?>">
+                                                <input type="submit" name="save" value="<?php print _('Save');?>" class="button">
+                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

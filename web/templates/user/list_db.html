@@ -3,7 +3,7 @@
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/db/'"> Add Database </button>
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/db/'"> <?php print _('Add Database');?> </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
@@ -13,10 +13,10 @@
                                             </div>
                                             <div style="float:left; padding-left: 26px;">
                                                 <form action="/bulk/db/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
-                                                    <option>apply to selected</option>
-                                                    <option>delete</option>
+                                                    <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
                                             </div>
@@ -50,21 +50,21 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="database[]" value="<?php echo $key ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $status ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <table width="830px">
                                         <tr>
                                             <td></td>
-                                            <td class="data-controls" width="128px"><a href="<?php echo $db_admin_link; ?>" target="_blank"><img src="/images/new_window.png" width="8px" height="8px"> open <?php echo $db_admin ?> </a></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/db/?database=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
+                                            <td class="data-controls" width="128px"><a href="<?php echo $db_admin_link; ?>" target="_blank"><img src="/images/new_window.png" width="8px" height="8px"> <?php print _('open %s',$db_admin);?> </a></td>
+                                            <td class="data-controls" width="50px"><a href="/edit/db/?database=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
                                             <td class="data-controls do_delete" width="70px">
                                                 <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
                                                 <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
                                                 <input type="hidden" name="delete_url" value="/delete/db/?database=<?php echo "$key" ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                    <p class="counter-value">Are you sure you want to delete <b><?php echo "$key" ?></b> database?</p>
+                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                    <p class="counter-value"><?php print _('DATABASE_ACTION_CONFIRMATION',_('delete'),$key);?></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -80,11 +80,11 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 2px 0 4px 2px">
-                                                            [<?php echo $data[$key]['TYPE'] ?>] database
+                                                            [<?php echo $data[$key]['TYPE'] ?>] <?php print _('database');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="chart1" style="padding: 0px 0 0px 2px">Disk: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
+                                                        <td class="chart1" style="padding: 0px 0 0px 2px"><?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
@@ -96,7 +96,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            User:
+                                                            <?php print _('User');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['DBUSER'] ?> 
@@ -104,7 +104,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Host:
+                                                            <?php print _('Host');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['HOST'] ?> 
@@ -116,7 +116,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            Charset:
+                                                            <?php print _('Charset');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['CHARSET'] ?> 
@@ -140,9 +140,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo "1 database ";
+                                            echo _('one database');
                                         } else {
-                                            echo "$i databases ";
+                                            echo _('%s databases',$i);
                                         }
                                     ?>
                                 </td>

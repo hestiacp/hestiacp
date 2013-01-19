@@ -17,7 +17,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
         exec (VESTA_CMD."v-delete-dns-domain ".$v_username." ".$v_domain, $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
-            if (empty($error)) $error = 'Error: vesta did not return any output.';
+            if (empty($error)) $error = _('Error: vesta did not return any output.');
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
@@ -39,7 +39,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
         exec (VESTA_CMD."v-delete-dns-domain-record ".$v_username." ".$v_domain." ".$v_record_id, $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
-            if (empty($error)) $error = 'Error: vesta did not return any output.';
+            if (empty($error)) $error = _('Error: vesta did not return any output.');
             $_SESSION['error_msg'] = $error;
         }
         unset($output);

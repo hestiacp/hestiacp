@@ -5,9 +5,9 @@
                                             <div style="float:left">
                                                 <?php
                                                     if ($user == 'admin') {
-                                                        echo "<button style=\"width:120px; padding: 2px 0px;\" onclick=\"location.href='/add/user/'\"> <?php print _('Add User');?> </button>";
+                                                        echo "<button style=\"width:120px; padding: 2px 0px;\" onclick=\"location.href='/add/user/'\">" . _('Add User') . "</button>";
                                                     } else {
-                                                        echo "<button style=\"width:120px; padding: 2px 0px;\" onclick=\"location.href='/add/web/'\"> <?php print _('Add Domain');?> </button>";
+                                                        echo "<button style=\"width:120px; padding: 2px 0px;\" onclick=\"location.href='/add/web/'\">" . _('Add Domain') . "</button>";
                                                     }
                                                 ?> 
                                             </div>
@@ -60,63 +60,82 @@
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px">
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="user[]" value="<?php echo $key ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a><td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <table width="830px">
-                                        <tr>
-                                            <td></td>
-                                            <td class="data-controls" width="70px">
-                                                <?php
-                                                    if ($key == $user) {
-                                                        echo "<a href=\"/logout/\"><img src=\"/images/login-as.png\" width=\"7px\" height=\"8px\"> ". _('logout')."</a>";
-                                                        if (!empty($_SESSION['look_alert'])) {
-                                                ?> 
-                                                    <script type="text/javascript">
-                                                        $(function() {
-                                                            $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                                                            $( "#dialog-message" ).dialog({
-                                                                modal: true,
-                                                                buttons: {
-                                                                    Ok: function() {
-                                                                        $( this ).dialog( "close" );
-                                                                    }
+
+                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
+                                        <span class="data-controls do_delete">
+                                            <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
+                                            <?php print _('delete');?> 
+                                            <input type="hidden" name="delete_url" value="/delete/user/?user=<?php echo $key ?>" />
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                <p class="counter-value"><?php print _('USER_ACTION_CONFIRMATION',_('delete'),$key);?></p>
+                                            </div>
+                                        </span>
+                                    </a>
+
+                                    <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
+                                        <span class="data-controls do_<?php echo $spnd_action ?>">
+                                            <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>"> 
+                                            <?php echo _($spnd_action); ?>
+                                            <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/user/?user=<?php echo $key ?>" />
+                                            <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
+                                                <p class="counter-value"><?php print _('USER_ACTION_CONFIRMATION',_($spnd_action),$key);?></p>
+                                            </div>
+                                        </span>
+                                    </a>
+
+                                    <a href="/edit/user/?user=<?php echo "$key" ?>">
+                                        <span class="data-controls">
+                                            <img src="/images/edit.png" width="8px" height="8px">
+                                            <?php print _('edit');?> 
+                                        </span>
+                                    </a>
+
+                                    <?php
+                                        if ($key == $user) {
+                                    ?> 
+                                    <a href="/logout/">
+                                        <span class="data-controls">
+                                            <img src="/images/login-as.png" width="7px" height="8px">
+                                            <?php print _('logout') ?> 
+                                    <?php
+                                        if (!empty($_SESSION['look_alert'])) {
+                                    ?> 
+                                                <script type="text/javascript">
+                                                    $(function() {
+                                                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                                                        $( "#dialog-message" ).dialog({
+                                                            modal: true,
+                                                            buttons: {
+                                                                Ok: function() {
+                                                                    $( this ).dialog( "close" );
                                                                 }
-                                                            });
+                                                            }
                                                         });
-                                                    </script>
-                                                    <div id="dialog-message" title="Wellcome">
-                                                        <p><?php print _('LOGGED_IN_AS',$key);?></p>
-                                                    </div>
-                                                <?php
-                                                            unset($_SESSION['look_alert']);
-                                                        }
-                                                    } else {
-                                                        echo "<a href=\"/login/?loginas=$key\"><img src=\"/images/login-as.png\" width=\"7px\" height=\"8px\"> <?php print _('login as');?></a>";
-                                                    }
-                                                 ?>
-                                            </td>
-                                            <td class="data-controls" width="50px"><a href="/edit/user/?user=<?php echo "$key" ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
-                                            <td class="data-controls do_<?php echo $spnd_action ?>" width="80px">
-                                                <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>">
-                                                <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>"> <?php echo _($spnd_action); ?></a>
-                                                <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/user/?user=<?php echo $key ?>" />
-                                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
-                                                    <p class="counter-value"><?php print _('USER_ACTION_CONFIRMATION',_($spnd_action),$key);?></p>
+                                                    });
+                                                </script>
+                                                <div id="dialog-message" title="Wellcome">
+                                                    <p><?php print _('LOGGED_IN_AS',$key);?></p>
                                                 </div>
-                                            </td>
-                                            <td class="data-controls do_delete" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
-                                                <input type="hidden" name="delete_url" value="/delete/user/?user=<?php echo $key ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                    <p class="counter-value"><?php print _('USER_ACTION_CONFIRMATION',_('delete'),$key);?></p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <?php
+                                            unset($_SESSION['look_alert']);
+                                            }
+                                        } else {
+                                    ?>
+                                    <a href="/login/?loginas=<?php echo $key; ?>">
+                                        <span class="data-controls">
+                                            <img src="/images/login-as.png" width="7px" height="8px">
+                                            <?php print _('login as') ." ".$key ?> 
+                                    <?php
+                                        }
+                                     ?> 
+                                        </span>
+                                    </a>
+
 
                                     <table class="data-col2" width="830px">
                                         <tr>
@@ -146,7 +165,7 @@
                                                             <table class="chart2">
                                                                 <tr>
                                                                     <td>
-                                                                        <?php print _('Hosting');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
+                                                                        <?php print _('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
                                                                         <?php print _('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?><br>
                                                                     </td>
                                                                     <td style="padding: 0px 10px 0px 8px">
@@ -239,7 +258,7 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('one account');
+                                            echo _('1 account');
                                         } else {
                                             echo _('%s accounts',$i);
                                         }

@@ -72,8 +72,7 @@
                                         $nginx_ext_title = '';
                                         $nginx_ext = str_replace(',', ', ', $data[$key]['NGINX_EXT']);
                                     }
-                                ?>
-
+                                ?> 
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
@@ -85,8 +84,8 @@
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <a id="delete_link_<?php echo $i ?>" class="do_delete">
                                         <span class="data-controls do_delete">
-                                            <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                             <?php print _('delete');?>
+                                            <img src="/images/delete.png" width="7px" height="7px">
+                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/web/?domain=<?php echo $key ?>" />
                                             <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
                                                 <p class="counter-value"><?php print _('DOMAIN_ACTION_CONFIRMATION',_('delete'),$key);?></p>
@@ -95,8 +94,8 @@
                                     </a>
                                     <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
                                         <span class="data-controls do_<?php echo $spnd_action ?>" >
-                                            <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>">
-                                            <?php echo _($spnd_action); ?>
+                                            <img src="/images/suspend.png" width="7px" height="8px">
+                                            <?php echo _($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/web/?domain=<?php echo $key ?>" />
                                             <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
                                                 <p class="counter-value"><?php print _('DOMAIN_ACTION_CONFIRMATION',_($spnd_action),$key);?></p>
@@ -106,7 +105,7 @@
                                     <a href="/edit/web/?domain=<?php echo $key ?>">
                                         <span class="data-controls">
                                             <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print _('edit');?>
+                                            <?php print _('edit');?> 
                                         </span>
                                     </a>
                                     <?php
@@ -115,13 +114,12 @@
                                     <a href="http://<?php echo $key ?>/vstats/"  target="_blank">
                                         <span class="data-controls">
                                             <img src="/images/new_window.png" width="8px" height="8px">
-                                            <?php print _('open webstats');?>
+                                            <?php print _('open webstats');?> 
                                         </span>
                                     </a>
                                     <?php
                                             }
                                      ?> 
-
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
@@ -137,19 +135,19 @@
                                                         </td>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 0 0 8px 2px">
-                                                            [<?php echo $data[$key]['TPL'] ?>] <?php print _('template');?>
+                                                            [<?php echo $data[$key]['TPL'] ?>] <?php print _('template');?> 
                                                         </td>
-                                                </tr>
+                                                    </tr>
                                                     <tr>
                                                         <td class="chart1" style="padding: 0 0 0 2px">
-                                                            <?php print _('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>
+                                                            <?php print _('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="chart1" style="padding: 0 0 0 2px"><?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
+                                                        <td class="chart1" style="padding: 0 0 0 2px"><?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                         </div>

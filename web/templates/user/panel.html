@@ -1,41 +1,37 @@
     <center>
-        <table class="main">
-            <tr>
-                <td>
-                    <table class="fixed" >
-                        <tr>
-                            <td>
-                                <table class="top">
-                                    <tr>
-<td width="174px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
-                                        <td width="118px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'STATS' ) echo 'selected-' ?>link" href="/list/stats/"><b><?php print _('Statistics');?></a></b></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'LOG' ) echo 'selected-' ?>link" href="/list/log/"><b><?php print _('History Log');?></a></b></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
-                                        <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
-                                        <td width="228px" style="border-bottom: 1px solid #d6d6d6; height: 26px; padding: 0 24px 0 0; text-align: right;"><b><?php if($user != $_SESSION['user']) echo 'admin / ' ?><?php echo $user ?></b><a class="top-link" style="padding: 0 0 0 6" href="/logout/"><?php print _('Log out');?></a></td>
-                                   
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7" style="background: #fff;">
-
-                                            <span class="nav-logo">
-                                                <img style="margin: 22px 0 0 4px;" src="/images/logo.png">
-                                            </span>
-
-                                            <a class="nav-lnk" href="/list/user/">
-                                            <span class="nav-<?php if($TAB == 'USER' ) echo 'selected-' ?>block">
-                                                <p class="nav-<?php if($TAB == 'USER' ) echo 'selected-' ?>header">
-                                                    <?php print _('USER');?>
-                                                </p>
-                                                <p class="nav-counters" style="decoration: none;">
-                                                    <?php print _('disk');?>: <? echo humanize_usage($panel[$user]['U_DISK']) ?> <br>
-                                                    <?php print _('traffic');?>: <? echo humanize_usage($panel[$user]['U_BANDWIDTH']) ?><br>
-                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED']?>
-                                                </p>
-                                            </span>
-                                            </a>
-
+    <table class="main">
+        <tr>
+            <td>
+                <table class="fixed" >
+                    <tr>
+                        <td>
+                            <table class="top">
+                                <tr>
+                                <td width="174px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
+                                    <td width="118px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'STATS' ) echo 'selected-' ?>link" href="/list/stats/"><b><?php print _('Statistics');?></a></b></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'LOG' ) echo 'selected-' ?>link" href="/list/log/"><b><?php print _('History Log');?></a></b></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
+                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
+                                    <td width="228px" style="border-bottom: 1px solid #d6d6d6; height: 26px; padding: 0 24px 0 0; text-align: right;"><b><?php if($user != $_SESSION['user']) echo 'admin / ' ?><?php echo $user ?></b><a class="top-link" style="padding: 0 0 0 6" href="/logout/"><?php print _('Log out');?></a></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="background: #fff;">
+                                        <span class="nav-logo">
+                                            <img style="margin: 22px 0 0 4px;" src="/images/logo.png">
+                                        </span>
+                                        <a class="nav-lnk" href="/list/user/">
+                                        <span class="nav-<?php if($TAB == 'USER' ) echo 'selected-' ?>block">
+                                            <p class="nav-<?php if($TAB == 'USER' ) echo 'selected-' ?>header">
+                                                <?php print _('USER');?> 
+                                            </p>
+                                            <p class="nav-counters" style="decoration: none;">
+                                                <?php print _('disk');?>: <? echo humanize_usage($panel[$user]['U_DISK']) ?> <br>
+                                                <?php print _('traffic');?>: <? echo humanize_usage($panel[$user]['U_BANDWIDTH']) ?><br>
+                                                <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED']?>
+                                            </p>
+                                        </span>
+                                        </a>
                                             <a class="nav-lnk" href="/list/web/">
                                             <span class="nav-<?php if($TAB == 'WEB' ) echo 'selected-' ?>block">
                                                 <p class="nav-<?php if($TAB == 'WEB' ) echo 'selected-' ?>header">

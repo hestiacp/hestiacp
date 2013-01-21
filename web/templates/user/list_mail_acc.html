@@ -1,4 +1,4 @@
-<table class="sub-menu" style="background: white;">
+                                <table class="sub-menu" style="background: white;">
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
@@ -53,100 +53,100 @@
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="account[]" value="<?php echo $key?>" ><input type="hidden" name="domain" value="<?php echo $_GET['domain'] ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <table width="830px">
+                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
+                                        <span class="data-controls do_delete">
+                                            <img src="/images/delete.png" width="7px" height="7px">
+                                            <?php print _('delete');?> 
+                                            <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" />
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                <p class="counter-value"><?php print _('MAIL_ACCOUNT_ACTION_CONFIRMATION',_('delete'),$key);?></p>
+                                            </div>
+                                        </span>
+                                    </a>
+                                    <a href="/edit/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>">
+                                        <span class="data-controls" width="50px">
+                                            <img src="/images/edit.png" width="8px" height="8px">
+                                            <?php print _('edit');?> 
+                                        </span>
+                                    </a>
+                                    <table class="data-col2" width="830px">
+                                        <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key."@".$_GET['domain'] ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
                                         <tr>
-                                            <td></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
-                                            <td class="data-controls do_delete" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
-                                                <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                    <p class="counter-value"><?php print _('MAIL_ACCOUNT_ACTION_CONFIRMATION',_('delete'),$key);?></p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                </table>
-
-                                <table class="data-col2" width="830px">
-                                    <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key."@".$_GET['domain'] ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
-                                    <tr>
-                                        <td style="vertical-align:top;" >
-                                            <table>
-                                                <tr>
-                                                    <td class="counter-name" style="padding: 4px 0 0 0;">
-                                                        <?php echo $data[$key]['IP'] ?>
-                                                    </td>
-                                                <tr>
-                                                    <td class="chart1" style="padding: 0 0 2px 0">
-                                                        <?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
-                                                        <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
-                                                            <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td style="vertical-align:top;" width="200">
-                                            <table>
-                                                <tr>
-                                                    <td class="counter-name">
-                                                        <?php print _('Quota');?>:
-                                                    </td>
-                                                    <td class="counter-value">
-                                                        <?php echo $data[$key]['QUOTA'] ?>
-                                                    </td>
+                                            <td style="vertical-align:top;" >
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name" style="padding: 4px 0 0 0;">
+                                                            <?php echo $data[$key]['IP'] ?> 
+                                                        </td>
+                                                    <tr>
+                                                        <td class="chart1" style="padding: 0 0 2px 0">
+                                                            <?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                            </div>
+                                                        </td>
                                                     </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;" width="200">
+                                                <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Autoreply');?>:
+                                                            <?php print _('Quota');?>:
                                                         </td>
                                                         <td class="counter-value">
-                                                            <?php echo $data[$key]['AUTOREPLY'] ?>
+                                                            <?php echo $data[$key]['QUOTA'] ?> 
+                                                        </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="counter-name">
+                                                                <?php print _('Autoreply');?>:
+                                                            </td>
+                                                            <td class="counter-value">
+                                                                <?php echo _($data[$key]['AUTOREPLY']) ?> 
+                                                            </td>
+                                                        </tr>
+                                                </table>
+                                            </td>
+                                            <td rowspan=4 style="vertical-align:top;" width="350">
+                                                <table width="350">
+                                                    <tr>
+                                                        <td class="counter-name">
+                                                            <?php print _('Forward to');?>:
+                                                        </td>
+                                                        <td class="counter-value" style="padding: 0 0 0 8px;" >
+                                                            <?php echo str_replace(',', ', ', $data[$key]['FWD']) ?> 
                                                         </td>
                                                     </tr>
-                                            </table>
-                                        </td>
-                                        <td rowspan=4 style="vertical-align:top;" width="350">
-                                            <table width="350">
-                                                <tr>
-                                                    <td class="counter-name">
-                                                        <?php print _('Forward to');?>:
-                                                    </td>
-                                                    <td class="counter-value" style="padding: 0 0 0 8px;" >
-                                                        <?php echo str_replace(',', ', ', $data[$key]['FWD']) ?> 
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <?php
+                                }
+                            ?> 
+                        </table>
+                        </form>
 
-                        <?php
-                            }
-                        ?>
-                    </table>
-                    </form>
-
-                    <table class="data-count">
-                        <tr>
-                            <td width="160px"></td>
-                            <td>
-                                <?php
-                                    if ( $i == 1) {
-                                        echo _('one mail account');
-                                    } else {
-                                        echo _('%s mail accounts',$i);
-                                    }
-                                ?>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                        <table class="data-count">
+                            <tr>
+                                <td width="160px"></td>
+                                <td>
+                                    <?php
+                                        if ( $i == 1) {
+                                            echo _('1 mail account');
+                                        } else {
+                                            echo _('%s mail accounts',$i);
+                                        }
+                                    ?> 
+                                </td>
+                            </tr>
+                        </table>
+                    </div>

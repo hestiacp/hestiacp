@@ -82,9 +82,13 @@
                                                 <input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>>
                                             </td>
                                         </tr>
+                                    </table>
+                                    <table class="data-col2">
                                         <tr>
-                                            <td style="padding: 24px 0 0 0;">
+                                            <td style="padding: 24px 0 0 0;" width="116px">
                                                 <input type="submit" name="ok" value="<?php print _('Add');?>" class="button">
+                                            </td>
+                                            <td style="padding: 24px 0 0 0;">
                                                 <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>

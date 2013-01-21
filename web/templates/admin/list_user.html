@@ -54,8 +54,7 @@
                                         $status = 'active';
                                         $spnd_action = 'suspend' ;
                                     }
-                                ?>
-
+                                ?> 
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px">
                                     <table class="data-col1">
@@ -68,7 +67,7 @@
 
                                     <a id="delete_link_<?php echo $i ?>" class="do_delete">
                                         <span class="data-controls do_delete">
-                                            <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
+                                            <img src="/images/delete.png" width="7px" height="7px">
                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/user/?user=<?php echo $key ?>" />
                                             <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
@@ -79,8 +78,8 @@
 
                                     <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
                                         <span class="data-controls do_<?php echo $spnd_action ?>">
-                                            <img src="/images/suspend.png" width="7px" height="8px" class="do_<?php echo $spnd_action ?>"> 
-                                            <?php echo _($spnd_action); ?>
+                                            <img src="/images/suspend.png" width="7px" height="8px">
+                                            <?php echo _($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/user/?user=<?php echo $key ?>" />
                                             <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
                                                 <p class="counter-value"><?php print _('USER_ACTION_CONFIRMATION',_($spnd_action),$key);?></p>
@@ -125,7 +124,7 @@
                                             unset($_SESSION['look_alert']);
                                             }
                                         } else {
-                                    ?>
+                                    ?> 
                                     <a href="/login/?loginas=<?php echo $key; ?>">
                                         <span class="data-controls">
                                             <img src="/images/login-as.png" width="7px" height="8px">
@@ -135,7 +134,6 @@
                                      ?> 
                                         </span>
                                     </a>
-
 
                                     <table class="data-col2" width="830px">
                                         <tr>

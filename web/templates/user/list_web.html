@@ -16,8 +16,6 @@
                                                 <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
                                                     <option><?php print _('apply to selected');?></option>
-                                                    <option><?php print _('suspend');?></option>
-                                                    <option><?php print _('unsuspend');?></option>
                                                     <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px;font-size: 12px; height: 24px;">
@@ -85,7 +83,7 @@
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <a id="delete_link_<?php echo $i ?>" class="do_delete">
                                         <span class="data-controls do_delete">
-                                            <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
+                                            <img src="/images/delete.png" width="7px" height="7px">
                                              <?php print _('delete');?>
                                             <input type="hidden" name="delete_url" value="/delete/web/?domain=<?php echo $key ?>" />
                                             <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
@@ -127,19 +125,19 @@
                                                         </td>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 0 0 8px 2px">
-                                                            [<?php echo $data[$key]['TPL'] ?>] <?php print _('template');?>
+                                                            [<?php echo $data[$key]['TPL'] ?>] <?php print _('template');?> 
                                                         </td>
                                                 </tr>
                                                     <tr>
                                                         <td class="chart1" style="padding: 0 0 0 2px">
-                                                            <?php print _('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>
+                                                            <?php print _('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="chart1" style="padding: 0 0 0 2px"><?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
+                                                        <td class="chart1" style="padding: 0 0 0 2px"><?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                         </div>

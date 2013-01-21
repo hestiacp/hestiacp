@@ -66,7 +66,8 @@ cat $WEBTPL/$type.tpl |\
     > $HOMEDIR/$user/conf/web/$type.$domain.conf
 
 if [ "$type" == 'awstats' ]; then
-    ln -s $HOMEDIR/$user/conf/web/$type.$domain.conf /etc/awstats/
+    ln -s $HOMEDIR/$user/conf/web/$type.$domain.conf \
+        /etc/awstats/$type.$domain_idn.conf
 fi
 
 

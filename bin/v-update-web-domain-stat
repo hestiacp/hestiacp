@@ -62,7 +62,7 @@ build_webalizer() {
 build_awstats() {
     awstats="/usr/share/awstats/wwwroot/cgi-bin/awstats.pl"
     wwwroot="/usr/share/awstats/wwwroot"
-    opts="-config=$domain -staticlinks -update -output"
+    opts="-config=$domain_idn -staticlinks -update -output"
     month=$(date "+%Y-%m")
     output='alldomains allhosts lasthosts unknownip allrobots lastrobots
         urldetail urlentry urlexit osdetail browserdetail unknownbrowser

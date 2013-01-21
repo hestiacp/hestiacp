@@ -63,9 +63,9 @@
                             <tr class="data-add">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
-                                        <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
+                                        <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo strftime("%d %b %Y", strtotime($v_date))?></a></td></tr>
                                         <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
-                                        <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
+                                        <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo _($v_status) ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -178,7 +178,7 @@
                                                 <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                                     <tr>
                                                         <td class="vst-text" style="padding: 9px 0 0 0;">
-                                                            <?php print _('SSH Home Directory');?>
+                                                            <?php print _('SSL Home Directory');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -228,7 +228,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Statisitcs');?>
+                                                <?php print _('Web Statistics');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -242,15 +242,15 @@
                                                             if (( $value == $v_stats ) || ($svalue == $v_stats )){
                                                                 echo ' selected' ;
                                                             }
-        	                                            echo ">".$value."</option>\n";
+                                                        echo ">". _($value) ."</option>\n";
                                                         }
-        	                                    ?> 
+                                                ?> 
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Statistic Authorization');?>
+                                                <?php print _('Statistics Authorization');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -300,7 +300,7 @@
                                                     <tr>
                                                         <td class="vst-text" style="padding: 10px 0 0 0;">
                                                             <?php print _('Username');?>
-                                                            <?php if (empty($v_ftp_user)) echo '<br><span style="font-size: 10pt; color:#555;">Prefix '.$user.'_ will be automaticaly added to username</span>' ?> 
+                                                            <?php if (empty($v_ftp_user)) echo '<br><span style="font-size: 10pt; color:#555;">' . _('FTP_PREFIX_WILL_BE_ADDED',$user."_") . '</span>' ?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -324,7 +324,7 @@
                                                      ?> 
                                                     <tr>
                                                         <td class="vst-text" style="padding: 10px 0 0 0;">
-                                                            <?php print _('SEND_CREDENTIALS_NOTICE');?>
+                                                            <?php print _('SEND_FTP_CREDENTIALS');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -338,9 +338,13 @@
                                                 </table>
                                             </td>
                                         </tr>
+                                    </table>
+                                    <table class="data-col2">
                                         <tr>
-                                            <td style="padding: 24px 0 0 0;">
+                                            <td style="padding: 24px 0 0 0;" width="116px">
                                                 <input type="submit" class="button" name="save" value="<?php print _('Save');?>">
+                                            </td>
+                                            <td style="padding: 24px 0 0 0;">
                                                 <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
@@ -349,4 +353,4 @@
                             </tr>
                         </table>
                     </form>
-                                            
+

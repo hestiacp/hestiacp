@@ -29,6 +29,12 @@
 
                     <form id="vstobjects" name="v_add_user" method="post">
                         <script type="text/javascript">
+                            $(function() {
+                                $("#v_email").change(function() {
+                                    document.getElementById('v_notify').value = document.getElementById('v_email').value;
+                                });
+                            });
+
                             function randomString() {
                                 var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
                                 var string_length = 10;
@@ -83,7 +89,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_email" <?php if (!empty($v_email)) echo "value=".$v_email; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_email" id='v_email' <?php if (!empty($v_email)) echo "value=".$v_email; ?>>
                                             </td>
                                         </tr>
                                         <tr>
@@ -133,16 +139,21 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_notify" <?php if (empty($v_notify)) echo "checked=yes"; ?>>
+                                                <input type="text"  class="vst-input" name="v_notify" id="v_notify" <?php if (!empty($v_notify)) echo "value=".$v_notify; ?>>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td style="padding: 24px 0 0 0;">
-                                                <input type="submit" name="ok" value="<?php print _('Add');?>" class="button">
-                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
-                                            </td>
-                                        </tr>
+
                                     </table>
+                                <table class="data-col2">
+                                    <tr>
+                                        <td style="padding: 24px 0 0 0;" width="116px">
+                                            <input type="submit" name="ok" value="<?php print _('Add');?>" class="button">
+                                        </td>
+                                        <td style="padding: 24px 0 0 0;">
+                                            <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
+                                        </td>
+                                    </tr>
+                                </table>
                                 </td>
                             </tr>
                         </table>

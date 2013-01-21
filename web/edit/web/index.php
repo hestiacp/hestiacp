@@ -14,6 +14,8 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 // Panel
 top_panel($user,$TAB);
 
+$lang = 'ru_RU.utf8';
+setlocale(LC_ALL, $lang);
 
 // Check user argument?
 if (empty($_GET['domain'])) {
@@ -85,7 +87,9 @@ if ($return_var != 0) {
     unset($output);
 }
 
+
 // Action
+$v_ftp_email = $panel[$user]['CONTACT'];
 if (!empty($_POST['save'])) {
     $v_domain = escapeshellarg($_POST['v_domain']);
 
@@ -567,7 +571,7 @@ if (!empty($_POST['save'])) {
                     $subject = _("FTP login credentials");
                     $hostname = exec('hostname');
                     $from = _('MAIL_FROM',$hostname);
-                    $mailtext .= _('FTP_ACCOUNT_READY',$_GET['domain'],$user."_".$_POST['v_ftp_user'],$_POST['v_ftp_password']);
+                    $mailtext .= _('FTP_ACCOUNT_READY',$_GET['v_domain'],$user,$_POST['v_ftp_user'],$_POST['v_ftp_password']);
                     send_email($to, $subject, $mailtext, $from);
                     unset($v_ftp_email);
                 }

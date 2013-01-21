@@ -11,7 +11,7 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 
 // Panel
 top_panel($user,$TAB);
-
+$v_ftp_email = $panel[$user]['CONTACT'];
     if (!empty($_POST['ok'])) {
         // Check input
         if (empty($_POST['v_domain'])) $errors[] = _('domain');
@@ -91,7 +91,7 @@ top_panel($user,$TAB);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
-        
+
             // Add DNS
             if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
                 exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip, $output, $return_var);
@@ -256,7 +256,7 @@ top_panel($user,$TAB);
                         $from = _('MAIL_FROM',$hostname);
                         $mailtext .= _('FTP_ACCOUNT_READY',$_POST['v_domain'],$user,$_POST['v_ftp_user'],$_POST['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
-                        unset($v_ftp_email);
+                        //unset($v_ftp_email);
                     }
                 }
                 unset($v_ftp);
@@ -283,7 +283,7 @@ top_panel($user,$TAB);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
-                $_SESSION['ok_msg'] = _('HOSTING_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
+                $_SESSION['ok_msg'] = _('WEB_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
                 unset($v_domain);
                 unset($v_aliases);
                 unset($v_ssl);

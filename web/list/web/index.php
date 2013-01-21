@@ -9,6 +9,9 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Header
 include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 
+$lang = 'ru_RU.utf8';
+setlocale(LC_ALL, $lang);
+
 // Panel
 top_panel($user,$TAB);
 

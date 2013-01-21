@@ -34,7 +34,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_email = escapeshellarg($_POST['v_email']);
         $v_fname = escapeshellarg($_POST['v_fname']);
         $v_lname = escapeshellarg($_POST['v_lname']);
-        if (empty($_POST['v_notify'])) $v_notify = 'off';
+        $v_notify = $_POST['v_notify'];
 
         // Validate email
         if (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL)) {
@@ -60,8 +60,8 @@ if ($_SESSION['user'] == 'admin') {
                 if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             } else {
-                if (empty($v_notify)) {
-                    $to = $_POST['v_email'];
+                if (!empty($v_notify)) {
+                    $to = $_POST['v_notify'];
                     $subject = _("Welcome to Vesta Control Panel");
                     $hostname = exec('hostname');
                     $from = _('MAIL_FROM',$hostname);
@@ -80,6 +80,7 @@ if ($_SESSION['user'] == 'admin') {
                 unset($v_email);
                 unset($v_fname);
                 unset($v_lname);
+                unset($v_notify);
             }
             unset($output);
         }

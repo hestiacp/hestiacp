@@ -3,10 +3,10 @@
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/web/'"> <?php print _('Add Domain for hosting');?> </button>
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/web/'"> <?php print _('Add Web Domain');?> </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
-                                                <form action="/search/" method="get">
+                                                <form action="/search/" method="get" >
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
                                                 <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
@@ -16,6 +16,8 @@
                                                 <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
                                                     <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('suspend');?></option>
+                                                    <option><?php print _('unsuspend');?></option>
                                                     <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px;font-size: 12px; height: 24px;">
@@ -48,6 +50,18 @@
                                     } else {
                                         $ssl_home = '';
                                     }
+                                    $web_stats='no';
+                                    if (!empty($data[$key]['STATS'])) {
+                                        $web_stats=$data[$key]['STATS'];
+                                    }
+                                    $ftp_user='no';
+                                    if (!empty($data[$key]['FTP_USER'])) {
+                                        $ftp_user=$data[$key]['FTP_USER'];
+                                    }
+                                    $nginx_support='no';
+                                    if (!empty($data[$key]['NGINX'])) {
+                                        $nginx_support='yes';
+                                    }
                                     if (strlen($data[$key]['NGINX_EXT']) > 16 ) {
                                         $nginx_ext_title = str_replace(',', ', ', $data[$key]['NGINX_EXT']);
                                         $nginx_ext = substr($data[$key]['NGINX_EXT'], 0, 16);
@@ -63,33 +77,40 @@
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
-                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="domain[]" value="<?php echo "$key" ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="domain[]" value="<?php echo $key ?>" ></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <table width="830px">
-                                        <tr>
-                                            <td></td>
-                                            <?php
-                                                if (!empty($data[$key]['STATS'])) {
-                                                    echo '                                                <td class="data-controls" width="114px">';
-                                                    echo "<a href='http://".$key."/vstats/' target='_blank'>";
-        	                                    echo '<img src="/images/new_window.png" width="8px" height="8px"> '._('open webstats').' </a></td>';
-                                                }
-                                             ?> 
-                                            <td class="data-controls" width="50px"><a href="/edit/web/?domain=<?php echo "$key" ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
-                                            <td class="data-controls do_delete" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
-                                                <input type="hidden" name="delete_url" value="/delete/web/?domain=<?php echo $key ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                    <p class="counter-value"><?php print _('DOMAIN_ACTION_CONFIRMATION',_('delete'),$key);?></p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
+                                        <span class="data-controls do_delete">
+                                            <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
+                                             <?php print _('delete');?>
+                                            <input type="hidden" name="delete_url" value="/delete/web/?domain=<?php echo $key ?>" />
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                <p class="counter-value"><?php print _('DOMAIN_ACTION_CONFIRMATION',_('delete'),$key);?></p>
+                                            </div>
+                                        </span>
+                                    </a>
+                                    <a href="/edit/web/?domain=<?php echo $key ?>">
+                                        <span class="data-controls">
+                                            <img src="/images/edit.png" width="8px" height="8px">
+                                            <?php print _('edit');?>
+                                        </span>
+                                    </a>
+                                    <?php
+                                        if (!empty($data[$key]['STATS'])) {
+                                    ?> 
+                                    <a href="http://<?php echo $key ?>/vstats/"  target="_blank">
+                                        <span class="data-controls">
+                                            <img src="/images/new_window.png" width="8px" height="8px">
+                                            <?php print _('open webstats');?>
+                                        </span>
+                                    </a>
+                                    <?php
+                                            }
+                                     ?> 
 
                                     <table class="data-col2" width="830px">
                                         <tr>
@@ -126,43 +147,35 @@
                                                     </tr>
                                                 </table>
                                             </td>
-                                            <td style="vertical-align:top;" width="250">
+                                            <td style="vertical-align:top;" width="300">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('CGI Support');?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['CGI'] ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print _('Error Log');?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['ELOG'] ?></td>
-                                                    </tr>
-                                                <tr>
-                                                        <td class="counter-name"><?php print _('Statistics');?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['STATS'] ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print _('Statistics Auth');?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['STATS_AUTH'] ?></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td rowspan=4 style="vertical-align:top;" width="300">
-                                                <table width="300">
-                                                    <tr>
-                                                        <td class="counter-name" width="40%"><?php print _('SSL Support');?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['SSL'] ?></td>
+                                                        <td class="counter-name" width="110"><?php print _('SSL Support');?>:</td>
+                                                        <td class="counter-value"><?php print _($data[$key]['SSL']) ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name"><?php print _('SSL Home Directory');?>:</td>
                                                         <td class="counter-value"><?php echo $ssl_home ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('Nginx Template');?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['NGINX'] ?></td>
+                                                        <td class="counter-name"><?php print _('Nginx Support');?>:</td>
+                                                        <td class="counter-value"><?php print _($nginx_support) ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name"><?php print _('Nginx Extentions');?>:</td>
                                                         <td class="counter-value" <?php if (!empty($nginx_ext_title)) echo "title='".$nginx_ext_title."'" ?>><?php echo $nginx_ext ?></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td rowspan=4 style="vertical-align:top;" width="240">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name"><?php print _('Web Statistics');?>: </td>
+                                                        <td class="counter-value"> <?php print _($web_stats) ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name"> <?php print _('Additional FTP Account');?>:</td>
+                                                        <td class="counter-value"> <?php print _($ftp_user) ?></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -182,7 +195,7 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('one domain');
+                                            echo _('1 domain');
                                         } else {
                                             echo _('%s domains',$i);
                                         }
@@ -191,4 +204,3 @@
                             </tr>
                         </table>
                     </div>
-

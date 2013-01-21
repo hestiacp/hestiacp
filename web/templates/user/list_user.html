@@ -3,13 +3,7 @@
                                     <tr>
                                         <td style="padding: 12px 0 8px 6px">
                                             <div style="float:left">
-                                                <?php
-                                                    if ($user == 'admin') {
-                                                        echo "<button style=\"width:120px; padding: 2px 0px;\" onclick=\"location.href='/add/user/'\"> <?php print _('Add User');?> </button>";
-                                                    } else {
-                                                        echo "<button style=\"width:120px; padding: 2px 0px;\" onclick=\"location.href='/add/web/'\"> <?php print _('Add Domain');?> </button>";
-                                                    }
-                                                ?> 
+                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/web/'"> <?php print _('Add Web Domain') ?> </button>
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get">
@@ -22,7 +16,16 @@
                                                 <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
                                                     <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('rebuild');?></option>
+                                                    <option><?php print _('rebuild web');?></option>
+                                                    <option><?php print _('rebuild DNS');?></option>
+                                                    <option><?php print _('rebuild mail');?></option>
+                                                    <option><?php print _('rebuild db');?></option>
+                                                    <option><?php print _('rebuild cron');?></option>
                                                     <option><?php print _('update counters');?></option>
+                                                    <option><?php print _('suspend');?></option>
+                                                    <option><?php print _('unsuspend');?></option>
+                                                    <option><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; height: 24px;font-size: 12px;">
                                             </div>
@@ -51,17 +54,19 @@
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px">
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="user[]" value="<?php echo $key ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a><td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <table width="830px">
-                                        <tr>
-                                            <td></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/user/?user=<?php echo "$key" ?>"><img src="/images/edit.png" width="8px" height="8px"> edit</a></td>
-                                        </tr>
-                                    </table>
+
+                                    <a href="/edit/user/?user=<?php echo "$key" ?>">
+                                        <span class="data-controls">
+                                            <img src="/images/edit.png" width="8px" height="8px">
+                                            <?php print _('edit');?> 
+                                        </span>
+                                    </a>
+
 
                                     <table class="data-col2" width="830px">
                                         <tr>
@@ -184,7 +189,7 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('one account');
+                                            echo _('1 account');
                                         } else {
                                             echo _('%s accounts',$i);
                                         }
@@ -193,4 +198,3 @@
                             </tr>
                         </table>
                     </div>
-

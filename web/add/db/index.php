@@ -22,9 +22,23 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_type'])) $errors[] = _('type');
     if (empty($_POST['v_charset'])) $errors[] = _('charset');
 
+    // Check for errors
+    if (empty($errors[0])) {
+        foreach ($errors as $i => $error) {
+            if ( $i == 0 ) {
+                $error_msg = $error;
+            } else {
+                $error_msg = $error_msg.", ".$error;
+            }
+        }
+        $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
+    }
+
     // Validate email
-    if (!filter_var($_POST['v_db_email'], FILTER_VALIDATE_EMAIL)) {
-        $_SESSION['error_msg'] = _('Please enter valid email address.');
+    if (!empty($_POST['v_db_email'])) {
+        if (!filter_var($_POST['v_db_email'], FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error_msg'] = _('Please enter valid email address.');
+        }
     }
 
     // Protect input
@@ -35,17 +49,8 @@ if (!empty($_POST['ok'])) {
     $v_charset = $_POST['v_charset'];
     $v_db_email = $_POST['v_db_email'];
 
-    // Check for errors
-    if (!empty($errors[0])) {
-        foreach ($errors as $i => $error) {
-            if ( $i == 0 ) {
-                $error_msg = $error;
-            } else {
-                $error_msg = $error_msg.", ".$error;
-            }
-        }
-        $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
-    } else {
+
+    if (empty($_SESSION['error_msg'])) {
         // Add Database
         $v_type = escapeshellarg($_POST['v_type']);
         $v_charset = escapeshellarg($_POST['v_charset']);

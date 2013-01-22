@@ -49,26 +49,33 @@
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="database[]" value="<?php echo $key ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <table width="830px">
-                                        <tr>
-                                            <td></td>
-                                            <td class="data-controls" width="128px"><a href="<?php echo $db_admin_link; ?>" target="_blank"><img src="/images/new_window.png" width="8px" height="8px"> <?php print _('open %s',$db_admin);?> </a></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/db/?database=<?php echo $key ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
-                                            <td class="data-controls do_delete" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> delete</a>
-                                                <input type="hidden" name="delete_url" value="/delete/db/?database=<?php echo "$key" ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                    <p class="counter-value"><?php print _('DATABASE_ACTION_CONFIRMATION',_('delete'),$key);?></p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
+                                        <span class="data-controls do_delete">
+                                            <img src="/images/delete.png" width="7px" height="7px">
+                                            <?php echo _('delete') ?> 
+                                            <input type="hidden" name="delete_url" value="/delete/db/?database=<?php echo "$key" ?>" />
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                <p class="counter-value"><?php print _('DATABASE_ACTION_CONFIRMATION',_('delete'),$key);?></p>
+                                            </div>
+                                        </span>
+                                    </a>
+                                    <a href="/edit/db/?database=<?php echo $key ?>">
+                                        <span class="data-controls" width="50px">
+                                            <img src="/images/edit.png" width="8px" height="8px">
+                                            <?php print _('edit');?> 
+                                        </span>
+                                    </a>
+                                    <a href="<?php echo $db_admin_link; ?>" target="_blank">
+                                        <span class="data-controls" width="128px">
+                                            <img src="/images/new_window.png" width="8px" height="8px">
+                                            <?php print _('open %s',$db_admin);?> 
+                                        </span>
+                                    </a>
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
@@ -140,7 +147,7 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('one database');
+                                            echo _('1 database');
                                         } else {
                                             echo _('%s databases',$i);
                                         }

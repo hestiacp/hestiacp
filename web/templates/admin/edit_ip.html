@@ -43,9 +43,9 @@
                             <tr class="data-add">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
-                                        <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo date("d M Y", strtotime($v_date))?></a></td></tr>
+                                        <tr><td style="padding: 24px 0 2px 4px;"><a class="data-date" ?><?php echo strftime("%d %b %Y", strtotime($v_date))?></a></td></tr>
                                         <tr><td style="padding: 0 0 6px 4px;"><a class="data-date" ?><?php echo $v_time?></a></td></tr>
-                                        <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
+                                        <tr><td style="padding: 0 0 0 21px;" class="data-<?php echo $v_status ?>"><b><?php echo _($v_status) ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -57,7 +57,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                IP
+                                                <?php print _('IP address'); ?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -67,7 +67,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Netmask');?>
+                                                <?php print _('Netmask');?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -77,7 +77,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print _('Interface');?>
+                                                <?php print _('Interface'); ?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -87,7 +87,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Shared');?>
+                                                <?php print _('Shared'); ?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -97,7 +97,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Assigned user');?>
+                                                <?php print _('Assigned user'); ?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -123,9 +123,13 @@
                                                 <input type="text" size="20" class="vst-input" name="v_name" <?php if (!empty($v_name)) echo "value=".$v_name; ?>>
                                             </td>
                                         </tr>
+                                    </table>
+                                    <table class="data-col2">
                                         <tr>
+                                            <td style="padding: 24px 0 0 0;" width="116px">
+                                                <input type="submit" class="button" name="save" value="<?php print _('Save');?>">
+                                            </td>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="submit" name="save" value="<?php print _('Save');?>" class="button">
                                                 <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>

@@ -16,34 +16,24 @@ $lang = 'ru_RU.utf8';
 setlocale(LC_ALL, $lang);
 
 // Data
-if ($_SESSION['user'] == 'admin') {
-
-    if (empty($_GET['domain'])){
-        exec (VESTA_CMD."v-list-mail-domains $user json", $output, $return_var);
-        $data = json_decode(implode('', $output), true);
-        $data = array_reverse($data);
-        unset($output);
+if (empty($_GET['domain'])){
+    exec (VESTA_CMD."v-list-mail-domains $user json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    $data = array_reverse($data);
+    unset($output);
+    if ($_SESSION['user'] == 'admin') {
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_mail.html');
     } else {
-        exec (VESTA_CMD."v-list-mail-accounts '".$user."' '".$_GET['domain']."' 'json'", $output, $return_var);
-        $data = json_decode(implode('', $output), true);
-        $data = array_reverse($data);
-        unset($output);
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_mail_acc.html');
+        include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_mail.html');
     }
 } else {
-    if (empty($_GET['domain'])){
-        exec (VESTA_CMD."v-list-mail-domains $user json", $output, $return_var);
-        $data = json_decode(implode('', $output), true);
-        $data = array_reverse($data);
-        unset($output);
-
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_mail.html');
+    exec (VESTA_CMD."v-list-mail-domains $user json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    $data = array_reverse($data);
+    unset($output);
+    if ($_SESSION['user'] == 'admin') {
+        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_mail_acc.html');
     } else {
-        exec (VESTA_CMD."v-list-mail-accounts '".$user."' '".$_GET['domain']."' 'json'", $output, $return_var);
-        $data = json_decode(implode('', $output), true);
-        $data = array_reverse($data);
-        unset($output);
         include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_mail_acc.html');
     }
 }

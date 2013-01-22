@@ -12,9 +12,11 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 // Panel
 top_panel($user,$TAB);
 
+$lang = 'ru_RU.utf8';
+setlocale(LC_ALL, $lang);
+
 // Data
 if ($user == 'admin') {
-
     if (empty($_GET['user'])) {
         exec (VESTA_CMD."v-list-users-stats json", $output, $return_var);
         $data = json_decode(implode('', $output), true);

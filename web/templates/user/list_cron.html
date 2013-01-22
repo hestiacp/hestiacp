@@ -12,7 +12,7 @@
                                             </div>
                                             <div style="float:left; padding-left: 26px;">
                                                 <form action="/bulk/cron/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> toggle all </a>
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
                                                     <option><?php print _('apply to selected');?></option>
                                                     <option><?php print _('delete');?></option>
@@ -39,32 +39,33 @@
                                         $status = 'active';
                                         $spnd_action = 'suspend';
                                     }
-                            ?>
+                            ?> 
 
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="job[]" value="<?php echo $data[$key]['JOB'] ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <table width="830px">
-                                        <tr>
-                                            <td></td>
-                                            <td class="data-controls" width="50px"><a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>"><img src="/images/edit.png" width="8px" height="8px"> <?php print _('edit');?></a></td>
-                                            <td class="data-controls do_delete" width="70px">
-                                                <img src="/images/delete.png" width="7px" height="7px" class="do_delete">
-                                                <a id="delete_link_<?php echo $i ?>" class="do_delete"> <?php print _('delete');?></a>
-                                                <input type="hidden" name="delete_url" value="/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
-                                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                    <p class="counter-value"><?php print _('CRON_ACTION_CONFIRMATION',_('delete'));?></p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-
+                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
+                                        <span class="data-controls do_delete">
+                                            <img src="/images/delete.png" width="7px" height="7px">
+                                            <?php print _('delete');?> 
+                                            <input type="hidden" name="delete_url" value="/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
+                                                <p class="counter-value"><?php print _('CRON_ACTION_CONFIRMATION',_('delete'));?></p>
+                                            </div>
+                                        </span>
+                                    </a>
+                                    <a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>">
+                                        <span class="data-controls">
+                                            <img src="/images/edit.png" width="8px" height="8px">
+                                            <?php print _('edit');?> 
+                                        </span>
+                                    </a>
                                     <table class="data-col2" width="800px">
                                         <tr>
                                             <td colspan=5 class="cron" style="padding: 0 0 0 4px;">
@@ -76,7 +77,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            <?php print _('Min');?>
+                                                            <?php print _('Min');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -90,7 +91,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            <?php print _('Hour');?>
+                                                            <?php print _('Hour');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -104,7 +105,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            <?php print _('Day');?>
+                                                            <?php print _('Day');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -118,12 +119,12 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            <?php print _('Month');?>
+                                                            <?php print _('Month');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="cron-counter-value">
-                                                            <?php echo $data[$key]['MONTH'] ?>
+                                                            <?php echo $data[$key]['MONTH'] ?> 
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -132,12 +133,12 @@
                                                 <table>
                                                     <tr>
                                                         <td class="cron-counter-name">
-                                                            <?php print _('Day of week');?>
+                                                            <?php print _('Day of week');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="cron-counter-value">
-                                                            <?php echo $data[$key]['WDAY'] ?>
+                                                            <?php echo $data[$key]['WDAY'] ?> 
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -149,9 +150,9 @@
 
                             <?php
                                 }
-                            ?>
+                            ?> 
                         </table>
-                        </form>
+                        </from>
 
                         <table class="data-count">
                             <tr>
@@ -159,11 +160,11 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('one cron job');
+                                            echo _('1 cron job');
                                         } else {
                                             echo _('%s cron jobs',$i);
                                         }
-                                    ?>
+                                    ?> 
                                 </td>
                             </tr>
                         </table>

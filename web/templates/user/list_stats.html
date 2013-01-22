@@ -3,6 +3,7 @@
                                     <tr>
                                         <td style="padding: 12px 0 0 16px">
                                             <div style="float:left">
+
                                             </div>
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
@@ -28,7 +29,7 @@
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150px">
                                     <table class="data-col1" width="150">
-                                        <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($key))?></a></td></tr>
+                                        <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($key))?></a></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -41,7 +42,7 @@
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td colspan=3 class="username" style="padding: 10 0 0 4px;">
-                                                <b><?php echo date("M Y", strtotime($key))?></b>
+                                                <b><?php echo strftime("%b %Y", strtotime($key))?></b>
                                             </td>
                                         </tr>
                                         <tr>
@@ -73,7 +74,7 @@
                                                             <table class="chart2">
                                                                 <tr>
                                                                     <td>
-                                                                        <?php print _('Hosting');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
+                                                                        <?php print _('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
                                                                         <?php print _('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?><br>
                                                                     </td>
                                                                     <td style="padding: 0px 10px 0px 8px">
@@ -133,8 +134,8 @@
                                             <td style="vertical-align:top;" width="250">
                                                 <table class="data-col4" width="250">
                                                     <tr>
-                                                        <td class="counter-name" width="43%">
-                                                            <?php print _('Mail domains');?>:
+                                                        <td class="counter-name" width="50%">
+                                                            <?php print _('Mail Domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_MAIL_DOMAINS'] ?>
@@ -166,7 +167,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('IP Adresses');?>:
+                                                            <?php print _('IP Addresses');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['IP_OWNED'] ?> 
@@ -191,7 +192,7 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('one month');
+                                            echo _('1 month');
                                         } else {
                                             echo _('%s months',$i);
                                         }

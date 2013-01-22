@@ -16,15 +16,12 @@ setlocale(LC_ALL, $lang);
 top_panel($user,$TAB);
 
 // Data
+exec (VESTA_CMD."v-list-web-domains $user json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
+$data = array_reverse($data);
 if ($_SESSION['user'] == 'admin') {
-    exec (VESTA_CMD."v-list-web-domains $user json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_web.html');
 } else {
-    exec (VESTA_CMD."v-list-web-domains $user json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_web.html');
 }
 

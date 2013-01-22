@@ -28,7 +28,6 @@
                                             <p class="nav-counters" style="decoration: none;">
                                                 <?php print _('disk');?>: <? echo humanize_usage($panel[$user]['U_DISK']) ?> <br>
                                                 <?php print _('traffic');?>: <? echo humanize_usage($panel[$user]['U_BANDWIDTH']) ?><br>
-                                                <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED']?>
                                             </p>
                                         </span>
                                         </a>
@@ -40,7 +39,7 @@
                                                 <p class="nav-counters" style="decoration: none;">
                                                     <?php print _('domains');?>: <? echo $panel[$user]['U_WEB_DOMAINS']?><br>
                                                     <?php print _('aliases');?>: <? echo $panel[$user]['U_WEB_ALIASES']?><br>
-                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_WEB']?>
+                                                    <?php print _('spnd');?>: <? echo $panel[$user]['SUSPENDED_WEB']?>
                                                 </p>
                                             </span>
                                             </a>
@@ -53,7 +52,7 @@
                                                 <p class="nav-counters" style="decoration: none;">
                                                     <?php print _('domains');?>: <? echo $panel[$user]['U_DNS_DOMAINS']?><br>
                                                     <?php print _('records');?>: <? echo $panel[$user]['U_DNS_RECORDS']?><br>
-                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_DNS']?>
+                                                    <?php print _('spnd');?>: <? echo $panel[$user]['SUSPENDED_DNS']?>
                                                 </p>
                                             </span>
                                             </a>
@@ -66,7 +65,7 @@
                                                 <p class="nav-counters" style="decoration: none;">
                                                     <?php print _('domains');?>: <? echo $panel[$user]['U_MAIL_DOMAINS']?><br>
                                                     <?php print _('accounts');?>: <? echo $panel[$user]['U_MAIL_ACCOUNTS']?><br>
-                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_MAIL']?>
+                                                    <?php print _('spnd');?>: <? echo $panel[$user]['SUSPENDED_MAIL']?>
                                                 </p>
                                             </span>
                                             </a>
@@ -78,7 +77,7 @@
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
                                                     <?php print _('databases');?>: <? echo $panel[$user]['U_DATABASES']?><br>
-                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_DB']?>
+                                                    <?php print _('spnd');?>: <? echo $panel[$user]['SUSPENDED_DB']?>
                                                 </p>
                                             </span>
                                             </a>
@@ -90,7 +89,7 @@
                                                 </p>
                                                 <p class="nav-counters" style="decoration: none;">
                                                     <?php print _('jobs');?>: <? echo $panel[$user]['U_CRON_JOBS']?><br>
-                                                    <?php print _('suspended');?>: <? echo $panel[$user]['SUSPENDED_CRON']?>
+                                                    <?php print _('spnd');?>: <? echo $panel[$user]['SUSPENDED_CRON']?>
                                                 </p>
                                             </span>
                                             </a>

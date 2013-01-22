@@ -35,17 +35,17 @@
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150px">
                                     <table class="data-col1" width="150">
-                                        <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo date("d M Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+                                        <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <table width="830px">
-                                        <tr>
-                                            <td></td>
-                                            <td class="data-controls" width="80px"><a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank"><img src="/images/download.png" width="8px" height="8px"> <?php print _('download');?></a></td>
-                                        </tr>
-                                    </table>
+                                    <a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank">
+                                        <span class="data-controls" width="80px">
+                                            <img src="/images/download.png" width="8px" height="8px">
+                                            <?php print _('download');?> 
+                                        </span>
+                                    </a>
                                     <table class="data-col2" width="830px">
                                         <tr><td colspan=3 class="domain" style="padding: 0 0 4 4;"><b><?php echo _($data[$key]['TITLE']); ?></b></td></tr>
                                         <tr>

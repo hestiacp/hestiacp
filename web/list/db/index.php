@@ -16,17 +16,14 @@ $lang = 'ru_RU.utf8';
 setlocale(LC_ALL, $lang);
 
 // Data
+exec (VESTA_CMD."v-list-databases $user json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
+$data = array_reverse($data);
+unset($output);
+
 if ($_SESSION['user'] == 'admin') {
-    exec (VESTA_CMD."v-list-databases $user json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data);
-    unset($output);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_db.html');
 } else {
-    exec (VESTA_CMD."v-list-databases $user json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data);
-    unset($output);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_db.html');
 }
 

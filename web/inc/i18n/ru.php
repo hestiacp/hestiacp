@@ -37,6 +37,8 @@ $LANG = array(
     'charset' => 'кодировка',
     'edit' => 'редактировать',
     'DATABASE_CREATED_OK' => 'База данных <a href="/edit/db/?database=%s"><b>%s</b></a> успешно создана.',
+    'User' => 'Пользователь',
+    'Host' => 'Хост',
     'domain' => 'домен',
     'ip' => 'IP',
     'DOMAIN_CREATED_OK' => 'Домен <a href="/list/dns/?domain=%s"><b>%s</b></a> успешно создан.',
@@ -192,8 +194,7 @@ $LANG = array(
     'Disk' => 'Диск',
     'traffic' => 'трафик',
     'Database Credentials' => 'Данные для доступа к БД',
-    'DATABASE_READY'=>"Здравствуйте %s %s,\nВаша %s база данных создана успешно.\n\nИмя БД: %s_%s\nПользователь: %s_%s\nПароль: %s\n\n",
-    'Send credentials to' => 'Отправить данные для доступа к ',
+    'DATABASE_READY'=>"База данных создана успешно.\n\nИмя БД: %s_%s\nПользователь: %s_%s\nПароль: %s\n\n",
     'Adding DNS Record' => 'Добавление DNS записи',
     'Record' => 'Запись / Поддомен',
     'IP or Value' => 'IP-адрес или значение',
@@ -349,7 +350,6 @@ $LANG = array(
     'Load Average' => 'Нагрузка',
     'Memory Usage' => 'Использование Памяти',
     'Bandwidth Usage' => 'Использование Сети',
-    
 );
 
 /*error_reporting(E_ALL);

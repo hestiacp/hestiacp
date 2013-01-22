@@ -8,11 +8,9 @@
 if (!defined('LANGUAGE')) die('Direct access not allowed');
 
 $LANG = array(
-    'yes' => 'да',
-    'no' => 'нет',
-    'none' => 'нет',
     'yes' => 'yes',
     'no' => 'no',
+    'none' => 'нет',
     'Hour' => 'Hour',
     'Min' => 'Min',
     'pb' => 'pb',
@@ -192,7 +190,6 @@ $LANG = array(
     'traffic' => 'traffic',
     'Database Credentials' => 'Database Credentials',
     'DATABASE_READY'=>"Hello, %s %s,\nDatabase %s has been created successfully.\n\nDatabase: %s_%s\nUser: %s_%s\nPassword: %s\n\n",
-    'Send credentials to' => 'Send credentials to',
     'Adding DNS Record' => 'Adding DNS Record',
     'Record' => 'Record / Subdomain',
     'IP or Value' => 'IP-address or Valie',

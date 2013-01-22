@@ -49,9 +49,9 @@ is_domain_new() {
     type="$1"
     dom=${2-$domain}
 
-    web=$(grep -H "DOMAIN='$dom'" $VESTA/data/users/*/web.conf)
-    dns=$(grep -H "DOMAIN='$dom'" $VESTA/data/users/*/dns.conf)
-    mail=$(grep -H "DOMAIN='$dom'" $VESTA/data/users/*/mail.conf)
+    web=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/web.conf)
+    dns=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/dns.conf)
+    mail=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/mail.conf)
 
     # Check web domain
     if [ ! -z "$web" ] && [ "$type" == 'web' ]; then

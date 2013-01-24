@@ -5,7 +5,6 @@ define('LANGUAGE','ru');
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.LANGUAGE.'.php');
 
-
 // works like sprintf if more than one arguments called
 function _() {
     global $LANG;

@@ -108,6 +108,27 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;" >
+                                                <?php print _('Language');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_language">
+                                                    <?php
+                                                        foreach ($languages as $key => $value) {
+                                                            echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
+                                                            $svalue = "'".$value."'";
+                                                            if (( $value == $v_language ) || ( $svalue == $v_language)){
+                                                                echo 'selected' ;
+                                                            }
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?> 
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                 <?php print _('First Name');?>
                                             </td>

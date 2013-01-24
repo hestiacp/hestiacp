@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: change user language
+# options: USER LANGUAGE
+#
+# The function for changing language.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+language=$2
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+is_language_valid() {
+    if [ ! -e "$VESTA/web/inc/i18n/$language.php" ]; then
+        echo "Error: language $language not exist"
+        log_event "$E_NOTEXIST $EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER LANGUAGE'
+validate_format 'user' 'language'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_language_valid $language
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Change language
+if [ -z "$(grep LANGUAGE $USER_DATA/user.conf)" ]; then
+    echo "adding LANG"
+    sed -i "s/^TIME/LANGUAGE='$language'\nTIME/g" $USER_DATA/user.conf
+else
+    update_user_value "$user" '$LANGUAGE' "$language"
+    echo "changinx LANG"
+fi
+
+exit
+# Changing user contact email
+old_email=$(get_user_value '$CONTACT')
+update_user_value "$user" '$CONTACT' "$email"
+pw_str=$(grep -n "^$user:" /etc/passwd)
+str=$(echo "$pw_str" | cut -f 1 -d :)
+sed -i "$str s/$old_email/$email/g" /etc/passwd
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_history "changed contact email to $email"
+log_event "$OK" "$EVENT"
+
+exit

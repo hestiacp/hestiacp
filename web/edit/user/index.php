@@ -40,6 +40,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_email = $data[$v_username]['CONTACT'];
         $v_template = $data[$v_username]['TEMPLATE'];
         $v_package = $data[$v_username]['PACKAGE'];
+        $v_language = $data[$v_username]['LANGUAGE'];
         $v_fname = $data[$v_username]['FNAME'];
         $v_lname = $data[$v_username]['LNAME'];
         $v_shell = $data[$v_username]['SHELL'];
@@ -60,6 +61,10 @@ if ($_SESSION['user'] == 'admin') {
 
         exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
         $packages = json_decode(implode('', $output), true);
+        unset($output);
+
+        exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+        $languages = json_decode(implode('', $output), true);
         unset($output);
 
         exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
@@ -92,6 +97,18 @@ if ($_SESSION['user'] == 'admin') {
         if (($v_package != $_POST['v_package']) && (empty($_SESSION['error_msg']))) {
             $v_package = escapeshellarg($_POST['v_package']);
             exec (VESTA_CMD."v-change-user-package ".$v_username." ".$v_package, $output, $return_var);
+            if ($return_var != 0) {
+                $error = implode('<br>', $output);
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                $_SESSION['error_msg'] = $error;
+            }
+            unset($output);
+        }
+
+        // Change language
+        if (($v_language != $_POST['v_language']) && (empty($_SESSION['error_msg']))) {
+            $v_language = escapeshellarg($_POST['v_language']);
+            exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = _('Error: vesta did not return any output.');
@@ -201,6 +218,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_email = $data[$v_username]['CONTACT'];
         $v_fname = $data[$v_username]['FNAME'];
         $v_lname = $data[$v_username]['LNAME'];
+        $v_language = $data[$v_username]['LANGUAGE'];
         $v_ns = $data[$v_username]['NS'];
         $nameservers = explode(", ", $v_ns);
         $v_ns1 = $nameservers[0];
@@ -215,6 +233,10 @@ if ($_SESSION['user'] == 'admin') {
         }
         $v_time = $data[$v_username]['TIME'];
         $v_date = $data[$v_username]['DATE'];
+
+        exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+        $languages = json_decode(implode('', $output), true);
+        unset($output);
 
     }
 
@@ -232,6 +254,18 @@ if ($_SESSION['user'] == 'admin') {
                 $_SESSION['error_msg'] = $error;
             }
             $v_password = "••••••••";
+            unset($output);
+        }
+
+        // Change language
+        if (($v_language != $_POST['v_language']) && (empty($_SESSION['error_msg']))) {
+            $v_language = escapeshellarg($_POST['v_language']);
+            exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
+            if ($return_var != 0) {
+                $error = implode('<br>', $output);
+                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                $_SESSION['error_msg'] = $error;
+            }
             unset($output);
         }
 

@@ -84,7 +84,8 @@ fields="$fields \$U_USERS \$U_DISK \$U_DISK_DIRS \$U_DISK_WEB \$U_DISK_MAIL"
 fields="$fields \$U_DISK_DB \$U_BANDWIDTH \$U_WEB_DOMAINS \$U_WEB_SSL"
 fields="$fields \$U_WEB_ALIASES \$U_DNS_DOMAINS \$U_DNS_RECORDS"
 fields="$fields \$U_MAIL_DOMAINS \$U_MAIL_DKIM \$U_MAIL_ACCOUNTS"
-fields="$fields \$U_DATABASES \$U_CRON_JOBS \$U_BACKUPS \$TIME \$DATE"
+fields="$fields \$U_DATABASES \$U_CRON_JOBS \$U_BACKUPS \$LANGUAGE"
+fields="$fields \$TIME \$DATE"
 
 # Listing domains
 case $format in 

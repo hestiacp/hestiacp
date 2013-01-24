@@ -361,7 +361,9 @@ $LANG = array(
     'shared' => 'общий',
     'dedicated' => 'выделенный',
     'Domains' => 'Домены',
-    'IP address' => 'IP адрес'
+    'IP address' => 'IP адрес',
+    'Welcome' => 'Добро пожаловать',
+    'Language' => 'Язык'
 );
 
 /*error_reporting(E_ALL);

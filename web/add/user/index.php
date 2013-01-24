@@ -30,8 +30,9 @@ if ($_SESSION['user'] == 'admin') {
         // Protect input
         $v_username = escapeshellarg($_POST['v_username']);
         $v_password = escapeshellarg($_POST['v_password']);
-        $v_package = escapeshellarg($_POST['v_package']);
         $v_email = escapeshellarg($_POST['v_email']);
+        $v_package = escapeshellarg($_POST['v_package']);
+        $v_language = escapeshellarg($_POST['v_language']);
         $v_fname = escapeshellarg($_POST['v_fname']);
         $v_lname = escapeshellarg($_POST['v_lname']);
         $v_notify = $_POST['v_notify'];
@@ -60,6 +61,7 @@ if ($_SESSION['user'] == 'admin') {
                 if (empty($error)) $error = _('Error: vesta did not return any output.');
                 $_SESSION['error_msg'] = $error;
             } else {
+                exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
                 if (!empty($v_notify)) {
                     $to = $_POST['v_notify'];
                     $subject = _("Welcome to Vesta Control Panel");
@@ -89,6 +91,10 @@ if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
     check_error($return_var);
     $data = json_decode(implode('', $output), true);
+    unset($output);
+
+    exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+    $languages = json_decode(implode('', $output), true);
     unset($output);
 
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_user.html');

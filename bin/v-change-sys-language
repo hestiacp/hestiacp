@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: change sys language
+# options: LANGUAGE
+#
+# The function for changing system language.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+language=$1
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+is_language_valid() {
+    if [ ! -e "$VESTA/web/inc/i18n/$language.php" ]; then
+        echo "Error: language $language not exist"
+        log_event "$E_NOTEXIST $EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'LANGUAGE'
+validate_format 'language'
+is_language_valid $language
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Change language
+if [ -z "$(grep LANGUAGE $VESTA/conf/vesta.conf)" ]; then
+    echo "LANGUAGE='$language'" >> $VESTA/conf/vesta.conf
+else
+    sed -i "s/LANGUAGE=.*/LANGUAGE='$language'/g" $VESTA/conf/vesta.conf
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

@@ -554,9 +554,18 @@ validate_format_email() {
     fi
 }
 
+# Name
+validate_format_name() {
+    if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+        echo "Error: $2 $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
 # Username
 validate_format_username() {
-    if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+    if ! [[ "$1" =~ ^[a-zA-Z0-9]+([\.|_|-][a-zA-Z0-9]+)?$ ]]; then
         echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
@@ -710,7 +719,7 @@ validate_format(){
             antivirus)      validate_format_boolean "$arg" 'antivirus' ;;
             autoreply)      validate_format_autoreply "$arg" ;;
             backup)         validate_format_date "$arg" ;;
-            charset)        validate_format_username "$arg" "$arg_name" ;;
+            charset)        validate_format_name "$arg" "$arg_name" ;;
             charsets)       validate_format_common "$arg" 'charsets' ;;
             database)       validate_format_database "$arg" 'database';;
             day)            validate_format_mhdmw "$arg" $arg_name ;;
@@ -724,7 +733,7 @@ validate_format(){
             email)          validate_format_email "$arg" ;;
             exp)            validate_format_date "$arg" ;;
             extentions)     validate_format_common "$arg" 'extentions' ;;
-            fname)          validate_format_username "$arg" "$arg_name" ;;
+            fname)          validate_format_name "$arg" "$arg_name" ;;
             forward)        validate_format_email "$arg" ;;
             ftp_password)   validate_format_password "$arg" ;;
             ftp_user)       validate_format_username "$arg" "$arg_name" ;;
@@ -737,7 +746,7 @@ validate_format(){
             ip_status)      validate_format_ip_status "$arg" ;;
             job)            validate_format_int "$arg" ;;
             key)            validate_format_username "$arg" "$arg_name" ;;
-            lname)          validate_format_username "$arg" "$arg_name" ;;
+            lname)          validate_format_name "$arg" "$arg_name" ;;
             malias)         validate_format_username "$arg" "$arg_name" ;;
             mask)           validate_format_ip "$arg" ;;
             max_db)         validate_format_int "$arg" ;;
@@ -747,7 +756,7 @@ validate_format(){
             ns2)            validate_format_domain "$arg" ;;
             ns3)            validate_format_domain "$arg" ;;
             ns4)            validate_format_domain "$arg" ;;
-            package)        validate_format_username "$arg" "$arg_name" ;;
+            package)        validate_format_name "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" ;;
             quota)          validate_format_int "$arg" ;;
@@ -758,7 +767,7 @@ validate_format(){
             soa)            validate_format_domain "$arg" ;;
             stats_pass)     validate_format_password "$arg" ;;
             stats_user)     validate_format_username "$arg" "$arg_name" ;;
-            template)       validate_format_username "$arg" "$arg_name" ;;
+            template)       validate_format_name "$arg" "$arg_name" ;;
             ttl)            validate_format_int "$arg" ;;
             user)           validate_format_username "$arg" "$arg_name" ;;
             wday)           validate_format_mhdmw "$arg" $arg_name ;;

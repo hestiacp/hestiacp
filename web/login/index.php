@@ -2,7 +2,6 @@
 session_start();
 
 define('NO_AUTH_REQUIRED',true);
-define('NO_LANG', true);
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
@@ -12,14 +11,10 @@ if (isset($_GET['logout'])) {
 
 $TAB = 'LOGIN';
 
-exec (VESTA_CMD."v-list-sys-config json", $output, $return_var);
 if ($return_var != 0) {
     header("Location: /error/");
     exit;
 }
-$data = json_decode(implode('', $output), true);
-unset($output);
-//$LANGUAGE = $data['config']['LANGUAGE'];
 
 if (isset($_SESSION['user'])) {
     if ($_SESSION['user'] ==  'admin' && !empty($_GET['loginas'])) {

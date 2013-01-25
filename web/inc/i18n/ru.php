@@ -7,7 +7,7 @@
 
 if (!defined('LANGUAGE')) die('Direct access not allowed');
 
-$LANG = array(
+$LANG['ru'] = array(
     'yes' => 'да',
     'no' => 'нет',
     'none' => 'нет',

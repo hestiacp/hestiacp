@@ -64,15 +64,15 @@ if ($_SESSION['user'] == 'admin') {
                 exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
                 if (!empty($v_notify)) {
                     $to = $_POST['v_notify'];
-                    $subject = _("Welcome to Vesta Control Panel");
+                    $subject = _translate($v_language,"Welcome to Vesta Control Panel");
                     $hostname = exec('hostname');
-                    $from = _('MAIL_FROM',$hostname);
+                    $from = _translate($v_language,'MAIL_FROM',$hostname);
                     if (!empty($_POST['v_fname'])) {
-                        $mailtext = _('GREETINGS_GORDON_FREEMAN',$_POST['v_fname'],$_POST['v_lname']);
+                        $mailtext = _translate($v_language,'GREETINGS_GORDON_FREEMAN',$_POST['v_fname'],$_POST['v_lname']);
                     } else {
-                        $mailtext = _('GREETINGS');
+                        $mailtext = _translate($v_language,'GREETINGS');
                     }
-                    $mailtext .= _('ACCOUNT_READY',$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
+                    $mailtext .= _translate($v_language,'ACCOUNT_READY',$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
                     send_email($to, $subject, $mailtext, $from);
                 }
 

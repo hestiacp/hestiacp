@@ -38,7 +38,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         exec (VESTA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
         $data = json_decode(implode('', $output), true);
         $_SESSION['language'] = $data[$_POST['user']]['LANGUAGE'];
-        if (empty($_SESSION['language'])) $_SESSION['language'] = $LANGUAGE;
+        if (empty($_SESSION['language'])) $_SESSION['language'] = 'en';
         $_SESSION['user'] = $_POST['user'];
         if ($_POST['user'] == 'root') $_SESSION['user'] = 'admin';
         if (!empty($_SESSION['request_uri'])) {

@@ -58,8 +58,8 @@
                                         </table>
                                     </td>
                                     <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                        <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                            <span class="data-controls do_delete">
+                                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                            <span class="do_delete">
                                                 <img src="/images/delete.png" width="7px" height="7px">
                                                 <?php print _('delete');?>
                                                 <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" />
@@ -68,8 +68,8 @@
                                                 </div>
                                             </span>
                                         </a>
-                                        <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
-                                            <span class="data-controls do_<?php echo $spnd_action ?>">
+                                        <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="data-controls do_<?php echo $spnd_action ?>">
+                                            <span class="do_<?php echo $spnd_action ?>">
                                                 <img src="/images/suspend.png" width="7px" height="8px">
                                                 <?php echo _($spnd_action); ?> 
                                                 <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" />
@@ -78,8 +78,8 @@
                                                 </div>
                                             </span>
                                         </a>
-                                        <a href="/edit/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>">
-                                            <span class="data-controls">
+                                        <a href="/edit/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" class="data-controls">
+                                            <span>
                                                 <img src="/images/edit.png" width="8px" height="8px">
                                                 <?php print _('edit');?> 
                                             </span>
@@ -106,9 +106,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('1 DNS record');
+                                            echo _('1 record');
                                         } else {
-                                            echo _('%s DNS records',$i);
+                                            echo _('%s records',$i);
                                         }
                                     ?> 
                                 </td>

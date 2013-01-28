@@ -50,15 +50,12 @@
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-
-                                    <a href="/edit/user/?user=<?php echo "$key" ?>">
-                                        <span class="data-controls">
+                                    <a href="/edit/user/?user=<?php echo "$key" ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
                                             <?php print _('edit');?> 
                                         </span>
                                     </a>
-
-
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td colspan=3 class="username" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b><a class="fullname"><?php echo $data[$key]['FNAME']?> <?php echo $data[$key]['LNAME']?></a></td>
@@ -111,7 +108,7 @@
                                                         <td class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?> / <?php echo $data[$key]['WEB_DOMAINS'] ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('Web SSL Domains');?>:</td>
+                                                        <td class="counter-name"><?php print _('SSL Domains');?>:</td>
                                                         <td class="counter-value"><?php echo $data[$key]['U_WEB_SSL'] ?></td>
                                                     </tr>
                                                     <tr>
@@ -123,7 +120,7 @@
                                                         <td class="counter-value"><?php echo $data[$key]['U_DNS_DOMAINS'] ?> / <?php echo $data[$key]['DNS_DOMAINS'] ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('DNS records count');?>:</td>
+                                                        <td class="counter-name"><?php print _('DNS records');?>:</td>
                                                         <td class="counter-value"><?php echo $data[$key]['DNS_RECORDS'] ?> <?php print _('per domain');?></td>
                                                     </tr>
                                                     <tr>

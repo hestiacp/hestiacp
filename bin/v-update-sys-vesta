@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: update vesta after rpm update
-# options: VERSION
+# info: update vesta package/configs
+# options: PACKAGE [VERSION]
 #
-# The function is runs as rpm update trigger. It pulls shell script from vesta
+# The function runs as rpm update trigger. It pulls shell script from vesta
 # server and runs it.
 
 
@@ -11,8 +11,9 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-version=$1
-updates=''
+package=$1
+version=$2
+release=$3
 
 # Importing system enviroment
 source /etc/profile
@@ -27,79 +28,27 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'VERSION'
+check_args '1' "$#" 'PACKAGE [VERSION] [RELEASE]'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Compare versions
-if [ "$version" != "$VERSION" ]; then
-    # Downloading version tree
-    upd_host="yum.vestacp.com"
-    wget -O "/tmp/versions" http://$V_UPD_HOST/upd_scripts/version_tree.txt \
-        &>/dev/null
+# Clean yum chache
+yum -q clean all
 
-    # Checking download result
-    if [ "$?" -ne "0" ]; then
-        echo "Error: version tree update failed"
+# Define yum cmd
+yum="yum -q -y --noplugins --disablerepo=* --enablerepo=vesta"
+
+# Update vesta package
+if [ -z "$version" ]; then
+    $yum update $package > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Error: $package update failed"
         log_event "$E_UPDATE" "$EVENT"
         exit $E_UPDATE
     fi
-
-    # Deviding version
-    v1=$(echo "$version" |cut -f 1 -d '.')
-    v2=$(echo "$version" |cut -f 2 -d '.')
-    v3=$(echo "$version" |cut -f 3 -d '.')
-    V1=$(echo "$VERSION" |cut -f 1 -d '.')
-    V2=$(echo "$VERSION" |cut -f 2 -d '.')
-    V3=$(echo "$VERSION" |cut -f 3 -d '.')
-
-
-    # Checking difference between versions
-    # Too nested tests, sory about complexity
-    if [ "$V1" -lt "$v1" ]; then
-        for ver in $(seq $V1 $v1); do
-            updates="$updates $(grep "^$ver." /tmp/versions|grep ":1$"|\
-                cut -f 1 -d :)"
-        done
-    else
-        if [ "$V2" -lt "$v2" ]; then
-            for ver in $(seq $V2 $v2); do
-                updates="$updates $(grep "^$v1.$ver." /tmp/versions |\
-                    grep ":1$"|cut -f 1 -d :)"
-            done
-        else
-            V4=$((V3 + 1))
-            for ver in $(seq $V4 $v3); do
-                updates="$updates $(grep "^$v1.$v2.$ver" /tmp/versions |\
-                    grep ":1$"|cut -f 1 -d :)"
-            done
-        fi
-    fi
-
-    # Executing update scripts
-    if [ ! -z "$updates" ]; then
-        mkdir $BIN/updates &>/dev/null
-
-        for update in $updates; do
-            wget -O $BIN/updates/$update.sh \
-                http://$V_UPD_HOST/upd_scripts/$update.sh &>/dev/null
-
-            # Checking download result
-            if [ "$?" -ne "0" ]; then
-                echo "Error: version tree update failed"
-                log_event "$E_UPDATE" "$EVENT"
-                exit $E_UPDATE
-            fi
-            bash  $BIN/updates/$update.sh
-        done
-        rm -rf $BIN/updates
-    fi
-
-    # Updating config version
-    sed -i "s/VERSION='$VERSION'/VERSION='$version'/g" $VESTA/conf/vesta.conf
 fi
 
 

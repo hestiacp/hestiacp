@@ -5,22 +5,20 @@
                                             <div style="text-align: right; float: right;">
                                                 <form action="/search/" method="get" >
                                                 <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
+                                                <input type="submit" value="<?php print _('Search') ?>" class="button" style="font-size: 12px; height: 24px;">
                                                 </form>
                                             </div>
                                             <div style="float:left; padding-left: 0px;">
-                                                <form action="/bulk/service/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <form action="/bulk/vesta/" method="post" id="objects">
+                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all') ?></a>
                                                 <select style="margin:0 2px 0 0px;" name="action">
-                                                    <option><?php print _('apply to selected');?></option>
-                                                    <option<?php print _('stop');?>></option>
-                                                    <option><?php print _('start');?></option>
-                                                    <option><?php print _('restart');?></option>
+                                                    <option><?php print _('apply to selected') ?></option>
+                                                    <option><?php print _('update') ?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
                                             </div>
                                             <?php
-                                                if (!empty($_SESSION['error_srv'])) {
+                                                if (!empty($_SESSION['error_upd'])) {
                                             ?>
                                             <div>
                                                 <script type="text/javascript">
@@ -37,11 +35,11 @@
                                                     });
                                                 </script>
                                                 <div id="dialog-message" title="Error">
-                                                    <p><?php echo $_SESSION['error_srv'] ?></p>
+                                                    <p><?php echo $_SESSION['error_upd'] ?></p>
                                                 </div>
                                             </div>
                                             <?php
-                                                    unset($_SESSION['error_srv']);
+                                                    unset($_SESSION['error_upd']);
                                                 }
                                             ?>
                                         </td>
@@ -57,39 +55,36 @@
                            <?php
                                 foreach ($data as $key => $value) {
                                     ++$i;
-                                    if ($data[$key]['STATE'] == 'running') {
+                                    if ($data[$key]['UPDATED'] == 'yes') {
                                         $status = 'active';
-                                        $action = 'stop';
+                                        $upd_status = _('updated');
                                     } else {
                                         $status = 'suspended';
-                                        $action = 'start';
+                                        $upd_status = _('outdated');
                                     }
-
-                                    $cpu = $data[$key]['CPU'] / 10;
-                                    $cpu = number_format($cpu, 1);
-                                    if ($cpu == '0.0')  $cpu = 0;
                                 ?>
 
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
-                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="service[]" value="<?php echo $key ?>" ></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($data[$key]['STATE']); ?></b></td></tr>
+                                        <tr><td style="padding: 18 0 6 18;"><input type="checkbox" name="pkg[]" value="<?php echo $key ?>" ></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $upd_status ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <a href="/restart/service/?srv=<?php echo $key ?>" class="data-controls">
+                                    <?php
+                                        if ($data[$key]['UPDATED'] == 'no') {
+                                    ?>
+                                    <a href="/update/vesta/?pkg=<?php echo $key ?>" class="data-controls">
                                         <span>
-                                            <img src="/images/reload.png" width="6px" height="7px">
-                                            <?php print _('restart'); ?> 
+                                            <img src="/images/update.png" width="6px" height="7px">
+                                            <?php print _('update') ?>
                                         </span>
                                     </a>
-                                    <a href="/<?php echo $action ?>/service/?srv=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/<?php echo $action ?>.png" width="7px" height="7px">
-                                            <?php print _($action); ?> 
-                                        </span>
-                                    </a>
+                                    <?php
+                                        }
+                                    ?>
+                                    <div style="height:20px; width:20px; float:right;"></div>
 
                                     <table class="data-col2" width="830px">
                                         <tr>
@@ -102,19 +97,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 2px 0 0 0">
-                                                            <?php echo _($data[$key]['SYSTEM']) ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td style="vertical-align:top;" width="150px">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print _('CPU');?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value"> <?php echo $cpu ?>%</a>
+                                                            <?php echo _($data[$key]['DESCR']) ?> 
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -123,10 +106,22 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Memory');?>:
+                                                            <?php print _('Version') ?>:
                                                         </td>
                                                         <td>
-                                                            <a class="counter-value"><?php echo $data[$key]['MEM'] ?> <?php print _('mb');?></a>
+                                                            <a class="counter-value"> <?php echo $data[$key]['VERSION'] ?></a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="vertical-align:top;" width="170px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="counter-name">
+                                                            <?php print _('Release') ?>:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value"><?php echo $data[$key]['RELEASE'] ?></a>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -135,10 +130,10 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Uptime');?>:
+                                                            <?php print _('Architecture') ?>:
                                                         </td>
                                                         <td>
-                                                            <a class="counter-value"><?php echo humanize_time($data[$key]['RTIME']) ?> </a>
+                                                            <a class="counter-value"><?php echo $data[$key]['ARCH'] ?> </a>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -153,5 +148,4 @@
                             ?> 
                         </table>
                         </form>
-
                     </div>

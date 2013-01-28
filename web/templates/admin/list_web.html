@@ -82,8 +82,8 @@
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                        <span class="data-controls do_delete">
+                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                        <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
                                              <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/web/?domain=<?php echo $key ?>" />
@@ -92,8 +92,8 @@
                                             </div>
                                         </span>
                                     </a>
-                                    <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
-                                        <span class="data-controls do_<?php echo $spnd_action ?>" >
+                                    <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="data-controls do_<?php echo $spnd_action ?>">
+                                        <span class="do_<?php echo $spnd_action ?>">
                                             <img src="/images/suspend.png" width="7px" height="8px">
                                             <?php echo _($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/web/?domain=<?php echo $key ?>" />
@@ -102,8 +102,8 @@
                                             </div>
                                         </span>
                                     </a>
-                                    <a href="/edit/web/?domain=<?php echo $key ?>">
-                                        <span class="data-controls">
+                                    <a href="/edit/web/?domain=<?php echo $key ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
                                             <?php print _('edit');?> 
                                         </span>
@@ -111,8 +111,8 @@
                                     <?php
                                         if (!empty($data[$key]['STATS'])) {
                                     ?> 
-                                    <a href="http://<?php echo $key ?>/vstats/"  target="_blank">
-                                        <span class="data-controls">
+                                    <a href="http://<?php echo $key ?>/vstats/"  target="_blank" class="data-controls">
+                                        <span>
                                             <img src="/images/new_window.png" width="8px" height="8px">
                                             <?php print _('open webstats');?> 
                                         </span>

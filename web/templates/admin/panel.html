@@ -7,18 +7,41 @@
                         <td>
                             <table class="top">
                                 <tr>
-                                    <td width="179px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"></td>
-                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'PACKAGE' ) echo 'selected-' ?>link" href="/list/package/"><b><?php print _('Packages');?></a></b></td>
-                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'IP' ) echo 'selected-' ?>link" href="/list/ip/"><b><?php print _('IP Addresses');?></a></b></td>
-                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'RRD' ) echo 'selected-' ?>link" href="/list/rrd/"><b><?php print _('RRD Graphics');?></a></b></td>
-                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'STATS' ) echo 'selected-' ?>link" href="/list/stats/"><b><?php print _('Statistics');?></a></b></td>
-                                    <td width="120px" style="border-bottom: 1px solid #d6d6d6; height: 26px;"><a class="top-<?php if($TAB == 'LOG' ) echo 'selected-' ?>link" href="/list/log/"><b><?php print _('History Log');?></a></b></td>
-                                    <td width="227px" style="border-bottom: 1px solid #d6d6d6; height: 26px; padding: 0 24px 0 0; text-align: right;"><b><?php if($user != $_SESSION['user']) echo 'admin / ' ?><?php echo $user ?></b><a class="top-link" style="padding: 0 0 0 6" href="/logout/"><?php print _('Log out');?></a></td>
+                                    <td style="border-bottom: 1px solid #c4c4c4; height: 26px; border-left: 1px solid #c4c4c4; padding: 0 0 0 0px">
+                                        <b><a class="top-<?php if($TAB == 'PACKAGE' ) echo 'selected-' ?>link" href="/list/package/">
+                                            <?php print _('Packages') ?>
+                                        </a></b>
+                                        <b><a class="top-<?php if($TAB == 'IP' ) echo 'selected-' ?>link" href="/list/ip/">
+                                            <?php print _('IP') ?>
+                                        </a></b>
+                                        <b><a class="top-<?php if($TAB == 'RRD' ) echo 'selected-' ?>link" href="/list/rrd/">
+                                            <?php print _('Graphics') ?>
+                                        </a></b>
+                                        <b><a class="top-<?php if($TAB == 'STATS' ) echo 'selected-' ?>link" href="/list/stats/">
+                                            <?php print _('Statistics') ?>
+                                        </a></b>
+                                        <b><a class="top-<?php if($TAB == 'LOG' ) echo 'selected-' ?>link" href="/list/log/">
+                                            <?php print _('Log') ?>
+                                        </a></b>
+                                        <b><a class="top-<?php if($TAB == 'SERVICES' ) echo 'selected-' ?>link" href="/list/services/">
+                                            <?php print _('Services') ?>
+                                        </a></b>
+
+                                        <b><a class="top-<?php if($TAB == 'UPDATES' ) echo 'selected-' ?>link" href="/list/updates/">
+                                            <?php print _('Updates') ?>
+                                        </a></b>
+                                    </td>
+                                    <td style="border-bottom: 1px solid #c4c4c4; height: 26px; text-align: right; border-right: 1px solid #c4c4c4; padding: 0 24px 0 0px; weight:120px">
+                                        <b><?php if($user != $_SESSION['user']) echo 'admin / ' ?><?php echo $user ?></b>
+                                        <a class="top-link" style="padding: 5px 0px 5px 2px; border:0px" href="/logout/">
+                                            <?php print _('Log out') ?> 
+                                        </a>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="7" style="background: #fff;">
                                         <span class="nav-logo">
-                                            <img style="margin: 22px 0 0 4px;" src="/images/logo.png">
+                                            <img style="margin: 28px 0 0 6px;" src="/images/logo.png">
                                         </span>
                                         <a class="nav-lnk" href="/list/user/">
                                             <span class="nav-<?php if($TAB == 'USER' ) echo 'selected-' ?>block">

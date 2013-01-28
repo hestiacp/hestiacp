@@ -1,9 +1,8 @@
 <?php
-// Init
-error_reporting(NULL);
 session_start();
 $TAB = 'RRD';
-$_SESSION['back'] = $_SERVER['REQUEST_URI'];
+
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Header
@@ -12,9 +11,6 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 // Panel
 top_panel($user,$TAB);
 
-$lang = 'ru_RU.utf8';
-setlocale(LC_ALL, $lang);
-
 // Data
 if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD."v-list-sys-rrd json", $output, $return_var);
@@ -22,6 +18,9 @@ if ($_SESSION['user'] == 'admin') {
     unset($output);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_rrd.html');
 }
+
+// Back uri
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

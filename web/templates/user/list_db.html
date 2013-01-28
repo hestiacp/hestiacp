@@ -30,7 +30,7 @@
                     <div id="vstobjects">
                         <table class='data'>
                             <?php
-                                list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"]);
+                                list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
                                 foreach ($data as $key => $value) {
                                     ++$i;
                                     if ($data[$key]['SUSPENDED'] == 'yes') {
@@ -54,8 +54,8 @@
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                        <span class="data-controls do_delete">
+                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                        <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
                                             <?php echo _('delete') ?> 
                                             <input type="hidden" name="delete_url" value="/delete/db/?database=<?php echo "$key" ?>" />
@@ -64,14 +64,14 @@
                                             </div>
                                         </span>
                                     </a>
-                                    <a href="/edit/db/?database=<?php echo $key ?>">
-                                        <span class="data-controls" width="50px">
+                                    <a href="/edit/db/?database=<?php echo $key ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
                                             <?php print _('edit');?> 
                                         </span>
                                     </a>
-                                    <a href="<?php echo $db_admin_link; ?>" target="_blank">
-                                        <span class="data-controls" width="128px">
+                                    <a href="<?php echo $db_admin_link; ?>" target="_blank" class="data-controls">
+                                        <span>
                                             <img src="/images/new_window.png" width="8px" height="8px">
                                             <?php print _('open %s',$db_admin);?> 
                                         </span>

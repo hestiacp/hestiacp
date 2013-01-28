@@ -1,0 +1,107 @@
+#!/bin/bash
+# info: list system updates
+# options: [FORMAT]
+#
+# The function checks available updates for vesta packages.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Remove upd_flag
+rm -f $VESTA/web/.update
+
+# Create tmp file
+tmp_file=$(mktemp)
+
+# Check latest version
+wget -q -T 1 -t 1  http://c.vestacp.com/latest.txt -O $tmp_file
+
+# Define rpm query format
+rpm_format="VERSION='%{VERSION}'"
+rpm_format="$rpm_format RELEASE='%{RELEASE}'"
+rpm_format="$rpm_format ARCH='%{ARCH}'"
+rpm_format="$rpm_format UTIME='%{INSTALLTIME}'\n"
+
+# Check vesta version
+eval $(rpm --queryformat="$rpm_format" -q vesta)
+DATE=$(date -d @$UTIME +%F)
+TIME=$(date -d @$UTIME +%T)
+latest=$(grep vesta $tmp_file)
+UPDATED='yes'
+if [ ! -z "$latest" ] && [ "$latest" != "vesta-$VERSION-$RELEASE" ]; then
+    UPDATED='no'
+    set_upd_flag='yes'
+fi
+str="NAME='vesta' VERSION='$VERSION' RELEASE='$RELEASE' ARCH='$ARCH'"
+str="$str UPDATED='$UPDATED' DESCR='core package' TIME='$TIME' DATE='$DATE'"
+
+# Check vesta-php version
+eval $(rpm --queryformat="$rpm_format" -q vesta-php)
+DATE=$(date -d @$UTIME +%F)
+TIME=$(date -d @$UTIME +%T)
+latest=$(grep php $tmp_file)
+UPDATED='yes'
+if [ ! -z "$latest" ] && [ "$latest" != "php-$VERSION-$RELEASE" ]; then
+    UPDATED='no'
+    set_upd_flag='yes'
+fi
+str="$str\nNAME='vesta-php' VERSION='$VERSION' RELEASE='$RELEASE' ARCH='$ARCH'"
+str="$str UPDATED='$UPDATED' DESCR='php interpreter' TIME='$TIME'"
+str="$str DATE='$DATE'"
+
+# Check vesta-nginx version
+eval $(rpm --queryformat="$rpm_format" -q vesta-nginx)
+DATE=$(date -d @$UTIME +%F)
+TIME=$(date -d @$UTIME +%T)
+latest=$(grep nginx $tmp_file)
+UPDATED='yes'
+if [ ! -z "$latest" ] && [ "$latest" != "nginx-$VERSION-$RELEASE" ]; then
+    UPDATED='no'
+    set_upd_flag='yes'
+fi
+str="$str\nNAME='vesta-nginx' VERSION='$VERSION' RELEASE='$RELEASE'"
+str="$str ARCH='$ARCH' UPDATED='$UPDATED' DESCR='internal web server'"
+str="$str TIME='$TIME' DATE='$DATE'"
+
+# Create flag if updates avaiable
+if [ "$set_upd_flag" == 'yes' ]; then
+    touch $VESTA/web/.update
+    chmod a+r $VESTA/web/.update
+fi
+
+# Defining config
+echo -e "$str" > $tmp_file
+conf=$tmp_file
+
+# Defining fileds to select
+fields="\$NAME \$VERSION \$RELEASE \$ARCH \$UPDATED \$DESCR \$TIME \$DATE"
+
+# Listing services
+case $format in
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  fields='$NAME $VERSION $RELEASE $ARCH $UPDATED $TIME $DATE'
+            shell_list | column -t ;;
+    *)      check_args '1' '0' 'USER [FORMAT]'
+esac
+
+rm -f $tmp_file
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

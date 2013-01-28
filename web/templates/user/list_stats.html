@@ -29,7 +29,7 @@
                             <tr class="data-row">
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150px">
                                     <table class="data-col1" width="150">
-                                        <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($key))?></a></td></tr>
+                                        <tr><td style="padding: 24 0 4 0;"><a class="data-date"><?php echo strftime("%d %b %Y", strtotime($key))?></a></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -99,7 +99,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Web SSL Domains');?>:
+                                                            <?php print _('SSL Domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['U_WEB_SSL'] ?> 

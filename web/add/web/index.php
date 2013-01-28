@@ -79,7 +79,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         }
 
         if (empty($_SESSION['error_msg'])) {
@@ -87,7 +87,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
             exec (VESTA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." 'no'", $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                if (empty($error)) $error = _('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -97,7 +97,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -108,7 +108,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-add-mail-domain ".$user." ".$v_domain, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -130,7 +130,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                             exec (VESTA_CMD."v-add-web-domain-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
                             if ($return_var != 0) {
                                 $error = implode('<br>', $output);
-                                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                                if (empty($error)) $error = _('Error code:',$return_var);
                                 $_SESSION['error_msg'] = $error;
                             }
                         }
@@ -139,7 +139,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                             exec (VESTA_CMD."v-add-dns-on-web-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
                             if ($return_var != 0) {
                                 $error = implode('<br>', $output);
-                                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                                if (empty($error)) $error = _('Error code:',$return_var);
                                 $_SESSION['error_msg'] = $error;
                             }
                             unset($output);
@@ -154,7 +154,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-delete-web-domain-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
             }
@@ -167,7 +167,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-add-web-domain-nginx ".$user." ".$v_domain." 'default' ".$ext." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -206,7 +206,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-add-web-domain-ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -218,7 +218,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-add-web-domain-stats ".$user." ".$v_domain." ".$v_stats, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -229,7 +229,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                     exec (VESTA_CMD."v-add-web-domain-stats-user ".$user." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
-                        if (empty($error)) $error = _('Error: vesta did not return any output.');
+                        if (empty($error)) $error = _('Error code:',$return_var);
                         $_SESSION['error_msg'] = $error;
                     }
                     unset($v_stats_user);
@@ -246,7 +246,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-add-web-domain-ftp ".$user." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 } else {
                     if (!empty($v_ftp_email)) {
@@ -269,7 +269,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-restart-dns", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -279,7 +279,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                 exec (VESTA_CMD."v-restart-web", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);

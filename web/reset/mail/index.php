@@ -1,7 +1,7 @@
 <?php
 // Init
+define('NO_AUTH_REQUIRED',true);
 error_reporting(NULL);
-$api_mode = true;
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 

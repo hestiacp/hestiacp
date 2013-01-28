@@ -23,7 +23,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_charset'])) $errors[] = _('charset');
 
     // Check for errors
-    if (empty($errors[0])) {
+    if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
                 $error_msg = $error;
@@ -31,7 +31,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
     }
 
     // Validate email
@@ -59,7 +59,7 @@ if (!empty($_POST['ok'])) {
         $v_charset = $_POST['v_charset'];
         if ($return_var != 0) {
             $error = implode('<br>', $output);
-            if (empty($error)) $error = _('Error: vesta did not return any output.');
+            if (empty($error)) $error = _('Error code:',$return_var);
             $_SESSION['error_msg'] = $error;
             unset($v_password);
             unset($output);
@@ -72,9 +72,7 @@ if (!empty($_POST['ok'])) {
             $subject = _("Database Credentials");
             $hostname = exec('hostname');
             $from = _('MAIL_FROM',$hostname);
-            $mailtext = _('DATABASE_READY',$user,$_POST['v_database'],$user,$_POST['v_dbuser'],$_POST['v_password']);
-            $mailtext .= $db_admin_link."\n\n";
-            $mailtext .= "--\n"._('Vesta Control Panel')."\n";
+            $mailtext = _('DATABASE_READY',$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
             send_email($to, $subject, $mailtext, $from);
         }
         $_SESSION['ok_msg'] = _('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);

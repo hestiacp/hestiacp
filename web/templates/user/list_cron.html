@@ -50,8 +50,8 @@
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                        <span class="data-controls do_delete">
+                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                        <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
@@ -60,8 +60,8 @@
                                             </div>
                                         </span>
                                     </a>
-                                    <a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>">
-                                        <span class="data-controls">
+                                    <a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
                                             <?php print _('edit');?> 
                                         </span>

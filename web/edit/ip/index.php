@@ -29,7 +29,7 @@ if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD."v-list-sys-ip ".$v_ip." 'json'", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = _('Error: vesta did not return any output.');
+        if (empty($error)) $error = _('Error code:',$return_var);
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -65,7 +65,7 @@ if ($_SESSION['user'] == 'admin') {
                 exec (VESTA_CMD."v-change-sys-ip-status ".$v_ip." 'dedicated'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -75,7 +75,7 @@ if ($_SESSION['user'] == 'admin') {
                 exec (VESTA_CMD."v-change-sys-ip-status ".$v_ip." 'shared'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -88,7 +88,7 @@ if ($_SESSION['user'] == 'admin') {
                 exec (VESTA_CMD."v-change-sys-ip-owner ".$v_ip." ".$v_owner, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 $v_owner = $_POST['v_owner'];
@@ -101,14 +101,14 @@ if ($_SESSION['user'] == 'admin') {
                 exec (VESTA_CMD."v-change-sys-ip-name ".$v_ip." ".$v_name, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error: vesta did not return any output.');
+                    if (empty($error)) $error = _('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
             }
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = _('OK: changes has been saved.');
+                $_SESSION['ok_msg'] = _('Changes has been saved.');
             }
         }
     }

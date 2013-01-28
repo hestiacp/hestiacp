@@ -3,7 +3,6 @@
         <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
         <title>Vesta - <?php echo "$TAB"; ?> </title>
         <style type="text/css">
-
             body {
                 margin: 0;
                 margin-left: auto;
@@ -40,19 +39,19 @@
                 background: #ebe9dc;
                 color: #825117;
                 padding: 0;
-                margin-left: auto;
-                margin-right: auto;
+                margin: 0;
                 width: 990px;
                 font-size: 10pt;
                 text-align: left;
-                line-height: 1.2em;
                 border: 0px;
                 border-collapse:collapse;
             }
 
             .top-link {
+                padding: 5px 22px;
                 text-decoration: none;
                 color: #323232;
+                border-right: 1px solid #c4c4c4;
             }
 
             .top-link:hover {
@@ -64,8 +63,11 @@
             }
 
             .top-selected-link {
+                padding: 5px 22px;
                 text-decoration: none;
                 color: #174f82;
+                background: #fff;
+                border-right: 1px solid #c4c4c4;
             }
 
             .top-logout {
@@ -81,9 +83,9 @@
 
             .nav-logo {
                 float:left;
-                height:105px;
+                height:109px;
                 width:161px;
-                margin: 0 0px 0 0;
+                margin: 0;
                 border-bottom: 2px solid #d6d6d6;
             }
 
@@ -98,8 +100,8 @@
             }
 
             .nav-block {
-                margin: 0 0px 0 0;
-                height:105px;
+                margin: 0;
+                height:109px;
                 width: 118px;
                 float:left;
                 cursor: pointer;
@@ -108,14 +110,14 @@
             }
 
             .nav-block:hover {
-                height:103px;
+                height:107px;
                 border-bottom: 4px solid #f79b44;
             }
 
             .nav-selected-block {
                 margin: 0;
                 color: #174f82;
-                height: 103px;
+                height: 107px;
                 width: 118px;
                 float: left;
                 background: #fff;
@@ -124,12 +126,12 @@
             }
 
             .nav-selected-block:hover {
-                height:103px;
+                height:107px;
                 border-bottom: 4px solid #f79b44;
             }
 
             .nav-header {
-                padding: 16px 0 0 6px;
+                padding: 14px 0 0 6px;
                 margin: 0;
                 letter-spacing: -1.0px;
                 font-size: 16pt;
@@ -137,7 +139,7 @@
             }
 
             .nav-selected-header {
-                padding: 16px 0 0 6px;
+                padding: 14px 0 0 6px;
                 margin: 0;
                 letter-spacing: -1.0px;
                 font-size: 16pt;
@@ -145,11 +147,10 @@
             }
 
             .nav-counters {
-                padding: 6px 0 5px 6px;
+                padding: 1px 0 0 6px;
                 margin: 0;
                 height: 58px;
                 line-height: 1.4em;
-                letter-spacing: 0.1px;
                 font-size: 9pt;
                 color: #555;
             }
@@ -180,8 +181,8 @@
             .bottom {
                 background: #ebe9dc;
                 color: #555;
-                margin: 30 0 0 0;
-                padding: 4 20 8 0;
+                margin: 30px 0 0 0;
+                padding: 4px 20px 8px 0;
                 margin-left: auto;
                 margin-right: auto;
                 width: 990px;
@@ -266,7 +267,7 @@
             .data-add {
                 margin: 0;
                 background-color: #f7f6ed;
-                border-bottom: 1px dotted #ccc;
+                border-bottom: 1px solid #ccc;
             }
 
             .data-dotted {
@@ -292,6 +293,9 @@
                 overflow: hidden;
             }
 
+            .data-col2 a:visited {
+                color: green;
+            }
             .data-col5 {
                 table-layout: fixed;
                 text-align: left;
@@ -341,7 +345,6 @@
             .data-controls img {
                 border: 0px;
             }
-
 
             .data-count {
                 background: #ebe9dc;
@@ -611,7 +614,7 @@
             }
 
             #vstobjects{
-                padding-top: 188px;
+                padding-top: 192px;
                 width: 996px;
                 padding-left: 3px;
                 min-height: 370px;
@@ -633,13 +636,13 @@
             .login-box {
                 text-align: left;
                 vertical-align:top;
-                padding: 0 0 10px 40px;
                 color: #323232;
             }
 
             .login-bottom {
                 color: #ebe9dc;
                 text-align: right;
+                vertical-align:top;
                 width: 500px;
                 height: 50px;
                 background: #ebe9dc;
@@ -680,16 +683,17 @@
                 }
 
                 #vstobjects{
-                    padding-top: 187px;
+                    padding-top: 192px;
                     min-height: 557px;
                     height: auto !important;
                     height: 557px;
                     width: 996px;
                 }
 
+
                 .nav-block {
-                    margin: 0 0px 0 0;
-                    height:105px;
+                    margin: 0;
+                    height:109px;
                     width: 118px;
                     float:left;
                     cursor: pointer;
@@ -697,14 +701,14 @@
                 }
 
                 .nav-block:hover {
-                    height:105px;
+                    height:109px;
                     border-bottom: 4px solid #f79b44;
                 }
 
                 .nav-selected-block {
                     margin: 0;
                     color: #174f82;
-                    height: 105px;
+                    height: 109px;
                     width: 118px;
                     float: left;
                     background: #fff;
@@ -713,7 +717,7 @@
                 }
 
                 .nav-selected-block:hover {
-                    height:105px;
+                    height:109px;
                     border-bottom: 4px solid #f79b44;
                 }
 

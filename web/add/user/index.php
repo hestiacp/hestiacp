@@ -1,6 +1,5 @@
 <?php
 // Init
-error_reporting(NULL);
 ob_start();
 session_start();
 $TAB = 'USER';
@@ -51,32 +50,32 @@ if ($_SESSION['user'] == 'admin') {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         }
 
         if (empty($_SESSION['error_msg'])) {
             exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                if (empty($error)) $error = _('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             } else {
                 exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
                 if (!empty($v_notify)) {
                     $to = $_POST['v_notify'];
-                    $subject = _translate($v_language,"Welcome to Vesta Control Panel");
+                    $subject = _translate($_POST['v_language'],"Welcome to Vesta Control Panel");
                     $hostname = exec('hostname');
-                    $from = _translate($v_language,'MAIL_FROM',$hostname);
+                    $from = _translate($_POST['v_language'],'MAIL_FROM',$hostname);
                     if (!empty($_POST['v_fname'])) {
-                        $mailtext = _translate($v_language,'GREETINGS_GORDON_FREEMAN',$_POST['v_fname'],$_POST['v_lname']);
+                        $mailtext = _translate($_POST['v_language'],'GREETINGS_GORDON_FREEMAN',$_POST['v_fname'],$_POST['v_lname']);
                     } else {
-                        $mailtext = _translate($v_language,'GREETINGS');
+                        $mailtext = _translate($_POST['v_language'],'GREETINGS');
                     }
-                    $mailtext .= _translate($v_language,'ACCOUNT_READY',$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
+                    $mailtext .= _translate($_POST['v_language'],'ACCOUNT_READY',$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
                     send_email($to, $subject, $mailtext, $from);
                 }
 
-                $_SESSION['ok_msg'] = _('ACCOUNT_CREATED_OK',$_POST[v_username],$_POST[v_username]);
+                $_SESSION['ok_msg'] = _('USER_CREATED_OK',$_POST[v_username],$_POST[v_username]);
                 unset($v_username);
                 unset($v_password);
                 unset($v_email);

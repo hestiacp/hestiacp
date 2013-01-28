@@ -46,7 +46,7 @@ if ($_SESSION['user'] == 'admin') {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
             // Add IP
             $v_interface = escapeshellarg($_POST['v_interface']);
@@ -56,7 +56,7 @@ if ($_SESSION['user'] == 'admin') {
             $v_interface = $_POST['v_interface'];
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                if (empty($error)) $error = _('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
                 unset($v_password);
                 unset($output);

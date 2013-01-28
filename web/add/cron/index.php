@@ -1,6 +1,6 @@
 <?php
 // Init
-//error_reporting(NULL);
+error_reporting(NULL);
 ob_start();
 session_start();
 $TAB = 'CRON';
@@ -40,7 +40,7 @@ top_panel($user,$TAB);
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
             // Add Cron Job
             exec (VESTA_CMD."v-add-cron-job ".$user." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
@@ -48,12 +48,12 @@ top_panel($user,$TAB);
             $v_charset = $_POST['v_charset'];
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                if (empty($error)) $error = _('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
                 unset($v_password);
                 unset($output);
             } else {
-                $_SESSION['ok_msg'] = _("OK: cron job has been created successfully.");
+                $_SESSION['ok_msg'] = _('CRON_CREATED_OK');
                 unset($v_min);
                 unset($v_hour);
                 unset($v_day);

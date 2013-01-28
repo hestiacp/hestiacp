@@ -24,7 +24,7 @@
                                                     <option><?php print _('apply to selected');?></option>
                                                     <option><?php print _('rebuild');?></option>
                                                     <option><?php print _('rebuild web');?></option>
-                                                    <option><?php print _('rebuild DNS');?></option>
+                                                    <option><?php print _('rebuild dns');?></option>
                                                     <option><?php print _('rebuild mail');?></option>
                                                     <option><?php print _('rebuild db');?></option>
                                                     <option><?php print _('rebuild cron');?></option>
@@ -64,9 +64,8 @@
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-
-                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                        <span class="data-controls do_delete">
+                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                        <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/user/?user=<?php echo $key ?>" />
@@ -75,9 +74,8 @@
                                             </div>
                                         </span>
                                     </a>
-
-                                    <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
-                                        <span class="data-controls do_<?php echo $spnd_action ?>">
+                                    <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="data-controls do_<?php echo $spnd_action ?>">
+                                        <span class="do_<?php echo $spnd_action ?>">
                                             <img src="/images/suspend.png" width="7px" height="8px">
                                             <?php echo _($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/user/?user=<?php echo $key ?>" />
@@ -86,23 +84,21 @@
                                             </div>
                                         </span>
                                     </a>
-
-                                    <a href="/edit/user/?user=<?php echo "$key" ?>">
-                                        <span class="data-controls">
+                                    <a href="/edit/user/?user=<?php echo $key; ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print _('edit');?> 
+                                            <?php print _('edit'); ?> 
                                         </span>
                                     </a>
-
                                     <?php
                                         if ($key == $user) {
                                     ?> 
-                                    <a href="/logout/">
-                                        <span class="data-controls">
+                                    <a href="/logout" class="data-controls">
+                                        <span>
                                             <img src="/images/login-as.png" width="7px" height="8px">
-                                            <?php print _('logout') ?> 
+                                            <?php print _('logout'); ?> 
                                     <?php
-                                        if (!empty($_SESSION['look_alert'])) {
+                                            if (!empty($_SESSION['look_alert'])) {
                                     ?> 
                                                 <script type="text/javascript">
                                                     $(function() {
@@ -121,14 +117,14 @@
                                                     <p><?php print _('LOGGED_IN_AS',$key);?></p>
                                                 </div>
                                     <?php
-                                            unset($_SESSION['look_alert']);
+                                                unset($_SESSION['look_alert']);
                                             }
                                         } else {
                                     ?> 
-                                    <a href="/login/?loginas=<?php echo $key; ?>">
-                                        <span class="data-controls">
+                                    <a href="/login/?loginas=<?php echo $key; ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/login-as.png" width="7px" height="8px">
-                                            <?php print _('login as') ." ".$key ?> 
+                                            <?php print _('login as') ." ".$key; ?> 
                                     <?php
                                         }
                                      ?> 
@@ -187,7 +183,7 @@
                                                         <td class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?> / <?php echo $data[$key]['WEB_DOMAINS'] ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('Web SSL Domains');?>:</td>
+                                                        <td class="counter-name"><?php print _('SSL Domains');?>:</td>
                                                         <td class="counter-value"><?php echo $data[$key]['U_WEB_SSL'] ?></td>
                                                     </tr>
                                                     <tr>
@@ -199,7 +195,7 @@
                                                         <td class="counter-value"><?php echo $data[$key]['U_DNS_DOMAINS'] ?> / <?php echo $data[$key]['DNS_DOMAINS'] ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('DNS records count');?>:</td>
+                                                        <td class="counter-name"><?php print _('DNS records');?>:</td>
                                                         <td class="counter-value"><?php echo $data[$key]['DNS_RECORDS'] ?> <?php print _('per domain');?></td>
                                                     </tr>
                                                     <tr>

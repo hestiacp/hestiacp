@@ -48,20 +48,20 @@ top_panel($user,$TAB);
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
 
             // Add mail domain
             exec (VESTA_CMD."v-add-mail-domain ".$user." ".$v_domain." ".$v_antispam." ".$v_antivirus." ".$v_dkim, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                if (empty($error)) $error = _('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
 
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = _("DOMAIN_MAIL_CREATED_OK",$_POST['v_domain'],$_POST['v_domain']);
+                $_SESSION['ok_msg'] = _('MAIL_DOMAIN_CREATED_OK',$_POST['v_domain'],$_POST['v_domain']);
                 unset($v_domain);
             }
         }
@@ -95,13 +95,13 @@ top_panel($user,$TAB);
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Error: field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
             // Add Mail Account
             exec (VESTA_CMD."v-add-mail-account ".$user." ".$v_domain." ".$v_account." ".$v_password." ".$v_quota, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                if (empty($error)) $error = _('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
 

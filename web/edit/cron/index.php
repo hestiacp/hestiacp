@@ -31,7 +31,7 @@ $v_job = escapeshellarg($_GET['job']);
 exec (VESTA_CMD."v-list-cron-job ".$user." ".$v_job." 'json'", $output, $return_var);
 if ($return_var != 0) {
     $error = implode('<br>', $output);
-    if (empty($error)) $error = _('Error: vesta did not return any output.');
+    if (empty($error)) $error = _('Error code:',$return_var);
     $_SESSION['error_msg'] = $error;
 } else {
     $data = json_decode(implode('', $output), true);
@@ -67,14 +67,14 @@ if ($return_var != 0) {
             exec (VESTA_CMD."v-change-cron-job ".$v_username." ".$v_job." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error: vesta did not return any output.');
+                if (empty($error)) $error = _('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
             $v_cmd = $_POST['v_cmd'];
         }
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _("OK: changes has been saved.");
+            $_SESSION['ok_msg'] = _("Changes has been saved.");
         }
     }
 }

@@ -30,7 +30,7 @@
                     <div id="vstobjects">
                         <table class="data">
                             <?php
-                                list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"]);
+                                list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
                                 foreach ($data as $key => $value) {
                                     ++$i;
                                     if ($data[$key]['SUSPENDED'] == 'yes') {
@@ -53,51 +53,50 @@
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                        <span class="data-controls do_delete">
+                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                        <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $key ?>" />
                                             <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('MAIL_ACTION_CONFIRMATION',_('delete'),$key);?></p>
+                                                <p class="counter-value"><?php print _('DOMAIN_ACTION_CONFIRMATION',_('delete'),$key);?></p>
                                             </div>
                                         </span>
                                     </a>
-                                    <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
-                                        <span class="data-controls do_<?php echo $spnd_action ?>">
+                                    <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="data-controls do_<?php echo $spnd_action ?>">
+                                        <span class="do_<?php echo $spnd_action ?>">
                                             <img src="/images/suspend.png" width="7px" height="8px">
                                             <?php echo _($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/mail/?domain=<?php echo $key ?>" />
                                             <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('MAIL_ACTION_CONFIRMATION',_($spnd_action),$key);?></p>
+                                                <p class="counter-value"><?php print _('DOMAIN_ACTION_CONFIRMATION',_($spnd_action),$key);?></p>
                                             </div>
                                         </span>
                                     </a>
-                                    <a href="/edit/mail/?domain=<?php echo $key ?>">
-                                        <span class="data-controls">
+                                    <a href="/edit/mail/?domain=<?php echo $key ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
                                             <?php print _('edit');?> 
                                         </span>
                                     </a>
-                                    <a href="<?php echo "http://".$http_host."/webmail/"; ?>" target="_blank">
-                                        <span class="data-controls"><img src="/images/new_window.png" width="8px" height="8px">
+                                    <a href="<?php echo "http://".$http_host."/webmail/"; ?>" target="_blank" class="data-controls">
+                                        <span>
+                                            <img src="/images/new_window.png" width="8px" height="8px">
                                             <?php print _('open webmail');?> 
                                         </span>
                                     </a>
-                                    <a href="/add/mail/?domain=<?php echo $key ?>">
-                                        <span class="data-controls">
+                                    <a href="/add/mail/?domain=<?php echo $key ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/add.png" width="8px" height="8px">
                                             <?php print _('add account');?> 
                                         </span>
                                     </a>
-                                    <a href="?domain=<?php echo $key ?>">
-                                        <span class="data-controls">
+                                    <a href="?domain=<?php echo $key ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/more.png" width="8px" height="8px">
-                                            <?php print _('LIST_MAIL_ACCOUNTS',$data[$key]['RECORDS']); ?> 
+                                            <?php print _('list accounts',$data[$key]['ACCOUNTS']); ?> 
                                         </span>
                                     </a>
-
-
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td colspan=3 class="domain" style="padding: 0 0 0 4px;">

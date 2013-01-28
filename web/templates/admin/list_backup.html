@@ -53,8 +53,8 @@
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                        <span class="data-controls do_delete" width="70px">
+                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                        <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?php echo "$key" ?>" />
@@ -63,19 +63,18 @@
                                             </div>
                                         </span>
                                     </a>
-                                    <a href="#" id="restore_link_<?php echo "$i"?>">
-                                        <span class="data-controls">
+                                    <a href="#" id="restore_link_<?php echo "$i"?>" class="data-controls">
+                                        <span>
                                             <img src="/images/restore.png" width="6px" height="8px">
                                             <?php print _('restore');?> 
                                         </span>
                                     </a>
-                                    <a href="/download/backup/?backup=<?php echo $key ?>" target="_blank">
-                                        <span class="data-controls">
+                                    <a href="/download/backup/?backup=<?php echo $key ?>" target="_blank" class="data-controls">
+                                        <span>
                                             <img src="/images/download.png" width="8px" height="8px">
                                             <?php print _('download');?> 
                                         </span>
                                     </a>
-
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td colspan=3 class="domain" style="padding: 0 0 0 4px;">

@@ -48,8 +48,8 @@
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
-                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                        <span class="data-controls do_delete">
+                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                        <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?php echo $key ?>" />
@@ -58,20 +58,20 @@
                                             </div>
                                         </span>
                                     </a>
-                                    <a href="/edit/dns/?domain=<?php echo $key ?>">
-                                        <span class="data-controls" >
+                                    <a href="/edit/dns/?domain=<?php echo $key ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
                                             <?php print _('edit');?> 
                                         </span>
                                     </a>
-                                    <a href="/add/dns/?domain=<?php echo $key ?>">
-                                        <span class="data-controls" >
+                                    <a href="/add/dns/?domain=<?php echo $key ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/add.png" width="8px" height="8px">
                                             <?php print _('add record');?> 
                                         </span>
                                     </a>
-                                    <a href="/list/dns/?domain=<?php echo $key ?>">
-                                        <span class="data-controls" >
+                                    <a href="/list/dns/?domain=<?php echo $key ?>" class="data-controls">
+                                        <span>
                                             <img src="/images/more.png" width="8px" height="8px">
                                             <?php print _('LIST_DOMAIN_RECORDS',$data[$key]['RECORDS']); ?> 
                                         </span>
@@ -99,11 +99,11 @@
                                             <td style="vertical-align:top;" width="250">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name">SOA:</td>
+                                                        <td class="counter-name"><?php print _('SOA') ?>:</td>
                                                         <td class="counter-value"><?php echo $data[$key]['SOA'] ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name">TTL:</td>
+                                                        <td class="counter-name"><?php print _('TTL') ?>:</td>
                                                         <td class="counter-value"><?php echo $data[$key]['TTL'] ?></td>
                                                     </tr>
                                                 </table>

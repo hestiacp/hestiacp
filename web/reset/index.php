@@ -1,12 +1,10 @@
 <?php
 session_start();
-
 define('NO_AUTH_REQUIRED',true);
-
 $TAB = 'RESET PASSWORD';
-//
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// Main include
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
     $v_user = escapeshellarg($_POST['user']);
@@ -58,20 +56,38 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
                     exit;
                 }
             } else {
-                $ERROR = "<a class=\"error\">"._('ERROR: Invalid username or code')."</a>";
+                $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
             }
         } else {
-            $ERROR = "<a class=\"error\">"._('ERROR: Invalid username or code')."</a>";
+            $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
         }
     } else {
-        $ERROR = "<a class=\"error\">"._('ERROR: Passwords not match')."</a>";
+        $ERROR = "<a class=\"error\">"._('Passwords not match')."</a>";
     }
 }
 
-require_once '../templates/header.html';
+
 if (empty($_GET['action'])) {
+    // Set system language
+    exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    if (!empty( $data['config']['LANGUAGE'])) {
+        $_SESSION['language'] = $data['config']['LANGUAGE'];
+    } else {
+        $_SESSION['language'] = 'en';
+    }
+    require_once '../templates/header.html';
     require_once '../templates/reset_1.html';
 } else {
+    // Set system language
+    exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    if (!empty( $data['config']['LANGUAGE'])) {
+        $_SESSION['language'] = $data['config']['LANGUAGE'];
+    } else {
+        $_SESSION['language'] = 'en';
+    }
+    require_once '../templates/header.html';
     if ($_GET['action'] == 'code' ) {
         require_once '../templates/reset_2.html';
     }

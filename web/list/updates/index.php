@@ -1,6 +1,6 @@
 <?php
 session_start();
-$TAB = 'IP';
+$TAB = 'UPDATES';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
@@ -13,11 +13,10 @@ top_panel($user,$TAB);
 
 // Data
 if ($_SESSION['user'] == 'admin') {
-    exec (VESTA_CMD."v-list-sys-ips json", $output, $return_var);
+    exec (VESTA_CMD."v-list-sys-vesta-updates json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data);
     unset($output);
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_ip.html');
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_updates.html');
 }
 
 // Back uri

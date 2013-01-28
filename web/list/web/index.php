@@ -1,16 +1,12 @@
 <?php
-// Init
-error_reporting(NULL);
 session_start();
 $TAB = 'WEB';
-$_SESSION['back'] = $_SERVER['REQUEST_URI'];
+
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Header
 include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-$lang = 'ru_RU.utf8';
-setlocale(LC_ALL, $lang);
 
 // Panel
 top_panel($user,$TAB);
@@ -24,6 +20,9 @@ if ($_SESSION['user'] == 'admin') {
 } else {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_web.html');
 }
+
+// Back uri
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

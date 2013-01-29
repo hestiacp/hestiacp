@@ -371,7 +371,7 @@ is_web_domain_cert_valid() {
         fi
     fi
 
-    key_vrf=$(grep 'RSA PRIVATE KEY' $ssl_dir/$domain.key | wc -l)
+    key_vrf=$(grep 'PRIVATE KEY' $ssl_dir/$domain.key | wc -l)
     if [ "$key_vrf" -ne 2 ]; then
         echo "Error: ssl key is not valid"
         log_event "$E_INVALID" "$EVENT"

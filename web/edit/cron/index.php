@@ -13,9 +13,6 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 // Panel
 top_panel($user,$TAB);
 
-$lang = 'ru_RU.utf8';
-setlocale(LC_ALL, $lang);
-
 // Edit as someone else?
 if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);

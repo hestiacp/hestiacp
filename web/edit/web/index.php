@@ -14,9 +14,6 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 // Panel
 top_panel($user,$TAB);
 
-$lang = 'ru_RU.utf8';
-setlocale(LC_ALL, $lang);
-
 // Check user argument?
 if (empty($_GET['domain'])) {
     header("Location: /list/web/");
@@ -27,7 +24,6 @@ if (empty($_GET['domain'])) {
 if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);
 }
-
 
 // Check domain
 $v_domain = escapeshellarg($_GET['domain']);

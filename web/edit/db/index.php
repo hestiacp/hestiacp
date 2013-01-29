@@ -13,9 +13,6 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 // Panel
 top_panel($user,$TAB);
 
-$lang = 'ru_RU.utf8';
-setlocale(LC_ALL, $lang);
-
 if (empty($_GET['database'])) {
     header("Location: /list/db/");
     exit;

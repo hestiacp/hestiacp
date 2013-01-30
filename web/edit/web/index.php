@@ -102,6 +102,7 @@ if (!empty($_POST['save'])) {
         unset($output);
         exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain." json", $output, $return_var);
         if ((empty($_SESSION['error_msg'])) && ($return_var == 0 )) {
+            unset($output);
             exec (VESTA_CMD."v-change-dns-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);

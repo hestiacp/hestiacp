@@ -27,7 +27,7 @@
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    php_admin_value open_basedir %home%/%user%/web:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp:/usr/share/roundcubemail/:/usr/share/phpMyAdmin
+    php_admin_value open_basedir %home%/%user%/web:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp:/usr/share:
     <IfModule mod_ruid2.c>
         RMode config
         RUidGid %user% %group%

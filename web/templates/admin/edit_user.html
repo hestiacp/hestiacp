@@ -122,6 +122,9 @@
                                                             if (( $value == $v_language ) || ( $svalue == $v_language)){
                                                                 echo 'selected' ;
                                                             }
+                                                            if (( $value == 'en' ) && (empty($v_language))){
+                                                                echo 'selected' ;
+                                                            }
                                                             echo ">".$value."</option>\n";
                                                         }
                                                     ?> 

@@ -56,8 +56,8 @@ if [ ! -z "$FTP_USER" ]; then
 fi
 
 # Adding user
-/usr/sbin/adduser $ftp_user -g $user -s /sbin/nologin -M \
-    -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
+/usr/sbin/adduser -o -u $(id -u $user) -g $user -s /sbin/nologin -M \
+    -d "$HOMEDIR/$user/web/$domain" $ftp_user > /dev/null 2>&1
 echo "$ftp_password" | /usr/bin/passwd "$ftp_user" --stdin &>/dev/null
 ftp_md5="$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)"
 

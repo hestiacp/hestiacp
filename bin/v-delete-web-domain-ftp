@@ -38,9 +38,9 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$FTP_USER'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding user
+# Deleting ftp user
 get_domain_values 'web'
-/usr/sbin/userdel $FTP_USER
+/usr/sbin/userdel -f  $FTP_USER >> /dev/null 2>&1
 
 
 #----------------------------------------------------------#

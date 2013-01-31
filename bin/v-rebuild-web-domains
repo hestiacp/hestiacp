@@ -219,8 +219,8 @@ for domain in $(shell_list) ; do
     # Checking ftp
     if [ ! -z "$FTP_USER" ]; then
         if [ -z "$(grep ^$FTP_USER: /etc/passwd)" ]; then
-            /usr/sbin/adduser $FTP_USER -g $user -s /sbin/nologin -M \
-                -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
+            /usr/sbin/adduser -o -u $(id -u $user) -g $user -s /sbin/nologin \
+                -M -d "$HOMEDIR/$user/web/$domain" $FTP_USER > /dev/null 2>&1
 
             shadow='/etc/shadow'
             shdw=$(grep "^$FTP_USER:" $shadow)

@@ -90,7 +90,7 @@ fi
 
 # Deleting ftp account
 if [ ! -z "$FTP_USER" ]; then
-    /usr/sbin/userdel $FTP_USER
+    /usr/sbin/userdel -f $FTP_USER >> /dev/null 2>&1
 fi
 
 # Deleting directory

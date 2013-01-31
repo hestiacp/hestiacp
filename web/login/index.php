@@ -33,6 +33,18 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." '".$_SERVER["REMOTE_ADDR"]."'",  $output, $return_var);
     if ( $return_var > 0 ) {
         $ERROR = "<a class=\"error\">"._('Invalid username or password')."</a>";
+        // Set system language
+        exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
+        $data = json_decode(implode('', $output), true);
+        if (!empty( $data['config']['LANGUAGE'])) {
+            $_SESSION['language'] = $data['config']['LANGUAGE'];
+        } else {
+            $_SESSION['language'] = 'en';
+        }
+
+        require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
+        require_once('../templates/header.html');
+        require_once('../templates/login.html');
     } else {
         unset($output);
         exec (VESTA_CMD . "v-list-user ".$v_user." json", $output, $return_var);

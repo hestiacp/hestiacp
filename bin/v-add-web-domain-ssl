@@ -55,6 +55,7 @@ cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key
 cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.pem
 if [ -e "$ssl_dir/$domain.ca" ]; then
     cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
+    echo >> $USER_DATA/ssl/$domain.pem
     cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
 fi
 chmod 660 $USER_DATA/ssl/$domain.*

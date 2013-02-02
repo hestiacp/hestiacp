@@ -64,8 +64,8 @@ for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain
     chown -R dovecot:mail /etc/exim/domains/$domain
     chmod 770 $HOMEDIR/$user/conf/mail/$domain
-    chmod 660 $HOMEDIR/$user/conf/mail/$domain*
-    chmod 660 /etc/exim/domains/$domain
+    chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
+    chmod 770 /etc/exim/domains/$domain
 
     # Adding antispam protection
     if [ "$ANTISPAM" = 'yes' ]; then

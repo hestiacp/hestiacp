@@ -4,16 +4,16 @@
     %alias_string%
     ServerAdmin %email%
     DocumentRoot %docroot%
-    %cgi%ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
+    ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
     Alias /vstats/ %home%/%user%/web/%domain%/stats/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/
     SuexecUserGroup %user% %group%
     CustomLog /var/log/httpd/domains/%domain%.bytes bytes
     CustomLog /var/log/httpd/domains/%domain%.log combined
-    %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
+    ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %docroot%>
         AllowOverride AuthConfig FileInfo Indexes Limit
-        Options +Includes -Indexes %cgi_option%
+        Options +Includes -Indexes +ExecCGI
         php_admin_value upload_tmp_dir %home%/%user%/tmp
         php_admin_value upload_max_filesize 10M
         php_admin_value max_execution_time 20

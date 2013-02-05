@@ -50,6 +50,7 @@ is_package_full 'WEB_ALIASES'
 get_domain_values 'web'
 tpl_file="$WEBTPL/apache_$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
+ip=$(get_real_ip $IP)
 
 # Parsing domain aliases
 if [ -z "$ALIAS" ]; then

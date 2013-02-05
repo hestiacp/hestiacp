@@ -1,8 +1,7 @@
 # Validationg ip address
 is_ip_valid() {
-    #check_ifc=$(/sbin/ifconfig |grep "inet addr:$ip")
-    #if [ ! -e "$VESTA/data/ips/$ip" ] || [ -z "$check_ifc" ]; then
-    if [ ! -e "$VESTA/data/ips/$ip" ] ; then
+    check_nat=$(grep "^NAT='$ip'" $VESTA/data/ips/* 2>/dev/null)
+    if [ ! -e "$VESTA/data/ips/$ip" ] && [ -z "$check_nat" ] ; then
         echo "Error: IP $ip not exist"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
@@ -11,7 +10,13 @@ is_ip_valid() {
 
 # Check if ip availabile for user
 is_ip_avalable() {
-    ip_data=$(cat $VESTA/data/ips/$ip)
+    if [ -e "$VESTA/data/ips/$ip" ]; then
+        ip_data=$(cat $VESTA/data/ips/$ip)
+    else
+        nated_ip=$(grep "^NAT='$ip'" $VESTA/data/ips/*)
+        nated_ip=$(echo "$nated_ip" | cut -f 1 -d : | cut -f 7 -d /)
+        ip_data=$(cat $VESTA/data/ips/$nated_ip)
+    fi
     owner=$(echo "$ip_data"|grep OWNER= | cut -f 2 -d \')
     status=$(echo "$ip_data"|grep STATUS= | cut -f 2 -d \')
     shared=no
@@ -90,7 +95,7 @@ update_ip_value() {
 
 # Get ip name
 get_ip_name() {
-    grep "NAME=" $VESTA/data/ips/$ip |cut -f 2 -d \'
+    grep "NAME=" $VESTA/data/ips/$ip | cut -f 2 -d \'
 }
 
 # Increase ip value
@@ -192,6 +197,7 @@ create_vesta_ip() {
     ip_data="$ip_data\nU_WEB_DOMAINS='0'"
     ip_data="$ip_data\nINTERFACE='$interface'"
     ip_data="$ip_data\nNETMASK='$mask'"
+    ip_data="$ip_data\nNAT='$nat_ip'"
     ip_data="$ip_data\nTIME='$TIME'"
     ip_data="$ip_data\nDATE='$DATE'"
     echo -e "$ip_data" >$VESTA/data/ips/$ip
@@ -204,4 +210,13 @@ create_ip_startup() {
     ip_data="$ip_data\nBOOTPROTO=static\nONBOOT=yes\nIPADDR=$ip"
     ip_data="$ip_data\nNETMASK=$mask"
     echo -e "$ip_data" > $iconf-$iface
+}
+
+get_real_ip() {
+    if [ -e "$VESTA/data/ips/$1" ]; then
+        echo $1
+    else
+        nated_ip=$(grep "^NAT='$1'" $VESTA/data/ips/*)
+        echo "$nated_ip" | cut -f 1 -d : | cut -f 7 -d /
+    fi
 }

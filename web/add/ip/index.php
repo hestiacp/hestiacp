@@ -25,6 +25,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_ip = escapeshellarg($_POST['v_ip']);
         $v_netmask = escapeshellarg($_POST['v_netmask']);
         $v_name = escapeshellarg($_POST['v_name']);
+        $v_nat = escapeshellarg($_POST['v_nat']);
 
         $v_interface = $_POST['v_interface'];
         $v_shared = $_POST['v_shared'];
@@ -51,7 +52,7 @@ if ($_SESSION['user'] == 'admin') {
             // Add IP
             $v_interface = escapeshellarg($_POST['v_interface']);
             $v_owner = $_POST['v_owner'];
-            exec (VESTA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." '".$ip_status."' ".$v_name, $output, $return_var);
+            exec (VESTA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." '".$ip_status."' ".$v_name." ".$v_nat, $output, $return_var);
             $v_owner = $_POST['v_owner'];
             $v_interface = $_POST['v_interface'];
             if ($return_var != 0) {
@@ -65,6 +66,7 @@ if ($_SESSION['user'] == 'admin') {
                 unset($v_ip);
                 unset($v_netmask);
                 unset($v_name);
+                unset($v_nat);
                 unset($output);
             }
         }

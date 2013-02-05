@@ -61,9 +61,15 @@ shell_list_ips() {
     fi
 
     for IP in $ip_list; do
-        ip_data=$(cat $VESTA/data/ips/$IP)
-        eval $ip_data
-        eval echo "$fields"
+        source $VESTA/data/ips/$IP
+        for field in $fields; do
+            eval value=$field
+            if [ -z "$value" ]; then
+                value='NULL'
+            fi
+            echo -n "$value "
+        done
+        echo
     done
 }
 
@@ -75,13 +81,13 @@ shell_list_ips() {
 # Defining fileds to select
 conf=$VESTA/data/ips/*
 fields="\$IP \$OWNER \$STATUS \$NAME \$U_SYS_USERS \$U_WEB_DOMAINS"
-fields="$fields \$INTERFACE \$NETMASK \$TIME \$DATE"
+fields="$fields \$INTERFACE \$NETMASK \$NAT \$TIME \$DATE"
 
 # Listing ip addresses
 case $format in 
     json)   json_list_ips ;;
     plain)  nohead=1; shell_list_ips ;;
-    shell)  fields='$IP $NETMASK $OWNER $STATUS $U_WEB_DOMAINS';
+    shell)  fields='$IP $NETMASK $NAT $OWNER $U_WEB_DOMAINS';
             shell_list_ips | column -t ;;
     *)      check_args '1' '0' '[FORMAT]'
 esac

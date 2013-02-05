@@ -60,14 +60,12 @@ for domain in $(shell_list) ; do
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/stats \
         $HOMEDIR/$user/web/$domain/logs
-    if [ ! -e "$HOMEDIR/$user/web/$domain/logs/$domain.log" ]; then
-        ln -s /var/log/httpd/domains/$domain.error.log \
-            $HOMEDIR/$user/web/$domain/logs/$domain.log
-    fi
-    if [ ! -e "$HOMEDIR/$user/web/$domain/logs/$domain.error.log" ]; then
-        ln -s /var/log/httpd/domains/$domain.error.log \
-            $HOMEDIR/$user/web/$domain/logs/$domain.error.log
-    fi
+
+    ln -f -s /var/log/httpd/domains/$domain.log \
+        $HOMEDIR/$user/web/$domain/logs/$domain.log
+    ln -f -s /var/log/httpd/domains/$domain.error.log \
+        $HOMEDIR/$user/web/$domain/logs/$domain.error.log
+
     if [ -e "$WEBTPL/skel/document_errors/" ]; then
         cp -r $WEBTPL/skel/document_errors/ $HOMEDIR/$user/web/$domain/
     fi
@@ -98,6 +96,7 @@ for domain in $(shell_list) ; do
     # Parsing domain values
     domain_idn=$(idn -t --quiet -a "$domain")
     get_domain_values 'web'
+    ip=$(get_real_ip $IP)
 
     # Preparing domain values for the template substitution
     upd_web_domain_values
@@ -209,7 +208,7 @@ for domain in $(shell_list) ; do
             chown root:nginx $conf
             chmod 640 $conf
         fi
-	ngix_change='yes'
+        ngix_change='yes'
     fi
     if [ "$SUSPENDED" = 'yes' ]; then
         suspended_web=$((suspended_web + 1))

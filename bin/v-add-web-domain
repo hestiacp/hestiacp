@@ -57,8 +57,11 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining domain aliases
+# Define real ip in case of NAT
 IP=$ip
+ip=$(get_real_ip $ip)
+
+# Defining domain aliases
 ip_name=$(get_ip_name)
 ip_name_idn=$(idn -t --quiet -a "$ip_name")
 domain_alias="www.$domain"
@@ -81,15 +84,12 @@ email="$user@$domain"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
 tpl_file="$WEBTPL/apache_$template.tpl"
-elog=''
-cgi=''
-cgi_option='+ExecCGI'
 
 # Adding domain to the httpd.conf
 add_web_config
 
 # Building directory tree
-mkdir $HOMEDIR/$user/web/$domain \
+mkdir -p $HOMEDIR/$user/web/$domain \
       $HOMEDIR/$user/web/$domain/public_html \
       $HOMEDIR/$user/web/$domain/public_shtml \
       $HOMEDIR/$user/web/$domain/document_errors \
@@ -104,7 +104,7 @@ touch /var/log/httpd/domains/$domain.bytes \
       /var/log/httpd/domains/$domain.error.log
 
 # Adding symlink for logs
-ln -s /var/log/httpd/domains/$domain.*log $HOMEDIR/$user/web/$domain/logs/
+ln -f -s /var/log/httpd/domains/$domain.*log $HOMEDIR/$user/web/$domain/logs/
 
 # Adding domain skeleton
 if [ -e "$WEBTPL/skel/public_html/" ]; then
@@ -168,9 +168,9 @@ increase_user_value "$user" '$U_WEB_DOMAINS'
 increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Defining domain variables
-str="DOMAIN='$domain' IP='$ip' IP6='' ALIAS='$aliases' TPL='$template'"
-str="$str CGI='yes' ELOG='yes' SSL='no' SSL_HOME='same' FTP_USER=''"
-str="$str FTP_MD5='' NGINX='' NGINX_EXT='' STATS='' STATS_USER=''"
+str="DOMAIN='$domain' IP='$IP' IP6='' ALIAS='$aliases' TPL='$template'"
+str="$str SSL='no' SSL_HOME='same' FTP_USER='' FTP_MD5=''"
+str="$str NGINX='' NGINX_EXT='' STATS='' STATS_USER=''"
 str="$str STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0' SUSPENDED='no'"
 str="$str TIME='$TIME' DATE='$DATE'"
 

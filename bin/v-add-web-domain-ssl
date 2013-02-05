@@ -65,6 +65,7 @@ get_domain_values 'web'
 conf="$HOMEDIR/$user/conf/web/shttpd.conf"
 tpl_file="$WEBTPL/apache_$TPL.stpl"
 SSL_HOME="$ssl_home"
+ip=$(get_real_ip $IP)
 
 # Preparing domain values for the template substitution
 upd_web_domain_values

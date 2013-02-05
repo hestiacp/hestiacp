@@ -24,7 +24,10 @@ source $VESTA/func/ip.sh
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP IP_NAME'
-validate_format 'ip' 'ip_name'
+validate_format 'ip'
+if [ ! -z "$ip_name" ]; then
+    validate_format 'ip_name'
+fi
 is_ip_valid
 
 

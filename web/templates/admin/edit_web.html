@@ -95,12 +95,14 @@
                                                 <select class="vst-list" name="v_ip">
                                                     <?php
                                                         foreach ($ips as $key => $value) {
-                                                            echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
-                                                            $skey = "'".$key."'";
-                                                            if ((!empty($v_ip)) && ( $key == $v_ip ) || ( $skey == $v_ip )){
+                                                            $display_ip = $key;
+                                                            if (!empty($value['NAT'])) $display_ip = $value['NAT'];
+                                                            $skey = "'".$display_ip."'";
+                                                            echo "\n\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".$display_ip."\"";
+                                                            if ((!empty($v_ip)) && ( $display_ip == $v_ip ) || ( $skey == $v_ip )){
                                                                 echo ' selected';
                                                             }
-                                                            echo ">".$key."</option>\n";
+                                                            echo ">".$display_ip."</option>\n";
                                                         }
                                                     ?>
                                                 </select>

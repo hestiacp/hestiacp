@@ -74,7 +74,7 @@ conf=$VESTA/data/ips/$IP
 
 # Defining fileds to select
 fields='$IP $OWNER $STATUS $NAME $U_SYS_USERS $U_WEB_DOMAINS $INTERFACE
-    $NETMASK $TIME $DATE'
+    $NETMASK $NAT $TIME $DATE'
 
 # Listing ip
 case $format in 

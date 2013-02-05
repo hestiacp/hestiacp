@@ -45,6 +45,7 @@ get_domain_values 'web'
 tpl_file="$WEBTPL/apache_$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
 SUSPENDED='yes'
+ip=$(get_real_ip $IP)
 
 # Preparing domain values for the template substitution
 upd_web_domain_values

@@ -24,6 +24,7 @@ restart="$5"
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
+source $VESTA/func/ip.sh
 
 
 #----------------------------------------------------------#
@@ -57,6 +58,7 @@ NGINX="$template"
 NGINX_EXT="$extentions"
 tpl_file="$WEBTPL/nginx_$NGINX.tpl"
 conf="$HOMEDIR/$user/conf/web/nginx.conf"
+ip=$(get_real_ip $IP)
 
 # Preparing domain values for the template substitution
 upd_web_domain_values

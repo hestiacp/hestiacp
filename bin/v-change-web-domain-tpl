@@ -43,6 +43,7 @@ is_apache_template_valid
 
 # Parsing domain values
 get_domain_values 'web'
+ip=$(get_real_ip $IP)
 
 # Deleting domain
 tpl_file="$WEBTPL/apache_$TPL.tpl"
@@ -60,13 +61,6 @@ fi
 # Defining variables for new vhost config
 upd_web_domain_values
 tpl_file="$WEBTPL/apache_$template.tpl"
-
-# Checking error log
-if [ "$ELOG" = 'no' ]; then
-    elog='#'
-else
-    elog=''
-fi
 
 # Adding domain to the httpd.conf
 add_web_config

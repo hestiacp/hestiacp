@@ -45,9 +45,10 @@ is_ip_avalable
 
 # Define variable for replace
 get_domain_values 'web'
+ip=$(get_real_ip $ip)
 tpl_file="$WEBTPL/apache_$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
-old=$IP
+old=$(get_real_ip $IP)
 new=$ip
 replace_web_config
 
@@ -82,7 +83,7 @@ increase_ip_value "$new"
 decrease_ip_value "$old"
 
 # Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$ip"
+update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$3"
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
@@ -90,7 +91,7 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_history "changed web domain $domain ip to $ip"
+log_history "changed web domain $domain ip to $3"
 log_event "$OK" "$EVENT"
 
 exit

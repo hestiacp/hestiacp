@@ -36,6 +36,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
+ip=$(get_real_ip $IP)
 if [ -z "$(echo $ALIAS | tr ',' '\n' | grep ^$dom_alias$)" ]; then
     echo "Error: alias $dom_alias not exist"
     log_event "$E_NOTEXIST" "$EVENT"

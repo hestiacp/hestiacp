@@ -752,6 +752,7 @@ validate_format(){
             max_db)         validate_format_int "$arg" ;;
             min)            validate_format_mhdmw "$arg" $arg_name ;;
             month)          validate_format_mhdmw "$arg" $arg_name ;;
+            nat_ip)         validate_format_ip "$arg" ;;
             ns1)            validate_format_domain "$arg" ;;
             ns2)            validate_format_domain "$arg" ;;
             ns3)            validate_format_domain "$arg" ;;

@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list web domains
-# options: USER [FORMAT]
+# info: change ip nat address
+# options: IP NAT_IP
 #
-# The function of obtaining the list of all user domains.
+# The function for changing nat ip associated with ip.
 
 
 #----------------------------------------------------------#
@@ -10,46 +10,45 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-user=$1
-format=${2-shell}
+ip=$1
+nat_ip=$2
 
 # Includes
+source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/func/ip.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
-is_object_valid 'user' 'USER' "$user"
+check_args '2' "$#" 'IP NAT_IP'
+validate_format 'ip'
+if [ ! -z "$nat_ip" ]; then
+    validate_format 'nat_ip'
+fi
+is_ip_valid
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/web.conf
-
-# Defining fileds to select
-fields="\$DOMAIN \$IP \$IP6 \$U_DISK \$U_BANDWIDTH \$TPL \$ALIAS"
-fields="$fields \$STATS \$STATS_USER \$SSL \$SSL_HOME \$FTP_USER"
-fields="$fields \$NGINX \$NGINX_EXT \$SUSPENDED \$TIME \$DATE"
-
-# Listing domains
-case $format in 
-    json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $DATE';
-            shell_list | column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]'
-esac
+# Changing nat ip
+if [ -z "$(grep NAT= $VESTA/data/ips/$ip)" ]; then
+    sed -i "s/^TIME/NAT='$nat_ip'\nTIME/g" $VESTA/data/ips/$ip
+else
+    update_ip_value '$NAT' "$nat_ip"
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Logging
+log_history "changed associated nat address on $ip to $nat_ip" '' 'admin'
+log_event "$OK" "$EVENT"
 
 exit

@@ -256,9 +256,9 @@ add_web_config() {
             -e "s/%ssl_ca_str%/${ssl_ca_str////\/}/g" \
             -e "s/%ssl_ca%/${ssl_ca////\/}/g" \
             -e "s/%nginx_extentions%/${NGINX_EXT//,/|}/g" \
-            -e "s/%elog%/$elog/g" \
-            -e "s/%cgi%/$cgi/g" \
-            -e "s/%cgi_option%/$cgi_option/g" \
+            -e "s/%elog%//g" \
+            -e "s/%cgi%//g" \
+            -e "s/%cgi_option%/+ExecCGI/g" \
     >> $conf
 }
 
@@ -464,7 +464,6 @@ namehost_ip_disable() {
 
 # Update web domain values
 upd_web_domain_values() {
-    ip=$IP
     group="$user"
     email="$user@$domain"
     docroot="$HOMEDIR/$user/web/$domain/public_html"

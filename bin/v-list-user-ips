@@ -79,10 +79,24 @@ shell_list_user_ips() {
     for IP in $(ls $VESTA/data/ips/); do
         source $VESTA/data/ips/$IP
         if [ "$OWNER" = "$user" ]; then
-            eval echo "$fields"
+            for field in $fields; do
+                eval value=$field
+                if [ -z "$value" ]; then
+                    value='NULL'
+                fi
+                echo -n "$value "
+            done
+            echo
         else
             if  [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
-                eval echo "$fields"
+                for field in $fields; do
+                    eval value=$field
+                    if [ -z "$value" ]; then
+                        value='NULL'
+                    fi
+                    echo -n "$value "
+                done
+                echo
             fi
         fi
     done
@@ -103,10 +117,10 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Defining fileds to select
-fields='$IP $OWNER $STATUS $NAME'
+fields='$IP $OWNER $STATUS $NAME $NAT'
 
 # Listing ips
-case $format in 
+case $format in
     json)   json_list_user_ips ;;
     plain)  nohead=1; shell_list_user_ips ;;
     shell)  shell_list_user_ips | column -t ;;

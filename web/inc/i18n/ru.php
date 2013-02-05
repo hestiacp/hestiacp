@@ -259,6 +259,7 @@ $LANG['ru'] = array(
     'Shared' => 'Общий',
     'Assigned user' => 'Назначить пользователю',
     'Assigned domain' => 'Домен',
+    'NAT IP association' => 'Ассоциированный NAT IP',
     'shell' => 'ssh доступ',
     'web domains' => 'веб домены',
     'web aliases' => 'алиасы хостов',
@@ -359,6 +360,7 @@ $LANG['ru'] = array(
     'Field "%s" can not be blank.' => 'Поле "%s" не может быть пустым.',
     'Error code:' => 'Код ошибки: %s',
     'SERVICE_ACTION_FAILED' => 'Не удалось "%s" "%s"',
+    'IP address is in use' => 'IP адрес используется',
 
     'Welcome to Vesta Control Panel' => 'Добро пожаловать в панель управления Vesta',
     'MAIL_FROM' => 'Vesta Control Panel <noreply@%s>',

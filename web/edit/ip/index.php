@@ -36,6 +36,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_netmask = $data[$v_ip]['NETMASK'];
         $v_interace = $data[$v_ip]['INTERFACE'];
         $v_name = $data[$v_ip]['NAME'];
+        $v_nat = $data[$v_ip]['NAT'];
         $v_ipstatus = $data[$v_ip]['STATUS'];
         if ($v_ipstatus == 'dedicated') $v_dedicated = 'yes';
         $v_owner = $data[$v_ip]['OWNER'];
@@ -96,6 +97,18 @@ if ($_SESSION['user'] == 'admin') {
             if (($v_name != $_POST['v_name']) && (empty($_SESSION['error_msg']))) {
                 $v_name = escapeshellarg($_POST['v_name']);
                 exec (VESTA_CMD."v-change-sys-ip-name ".$v_ip." ".$v_name, $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = _('Error code:',$return_var);
+                    $_SESSION['error_msg'] = $error;
+                }
+                unset($output);
+            }
+
+            // Change Nat
+            if (($v_nat != $_POST['v_nat']) && (empty($_SESSION['error_msg']))) {
+                $v_nat = escapeshellarg($_POST['v_nat']);
+                exec (VESTA_CMD."v-change-sys-ip-nat ".$v_ip." ".$v_nat, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = _('Error code:',$return_var);

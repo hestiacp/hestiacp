@@ -46,6 +46,7 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 tpl_file="$WEBTPL/apache_$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
+ip=$(get_real_ip $IP)
 
 # Deleting domain
 del_web_config
@@ -146,7 +147,7 @@ if [ -z "$last_nginx" ]; then
 fi
 
 # Decrease counters
-decrease_ip_value "$IP"
+decrease_ip_value "$ip"
 decrease_user_value "$user" '$U_WEB_DOMAINS'
 decrease_user_value "$user" '$U_WEB_ALIASES' "$aliases"
 if [ "$SSL" = 'yes' ]; then

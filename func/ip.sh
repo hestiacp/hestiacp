@@ -1,6 +1,6 @@
 # Validationg ip address
 is_ip_valid() {
-    check_nat=$(grep "^NAT='$ip'" $VESTA/data/ips/* 2>/dev/null)
+    check_nat=$(grep -H "^NAT='$ip'" $VESTA/data/ips/* 2>/dev/null)
     if [ ! -e "$VESTA/data/ips/$ip" ] && [ -z "$check_nat" ] ; then
         echo "Error: IP $ip not exist"
         log_event "$E_NOTEXIST" "$EVENT"
@@ -13,7 +13,7 @@ is_ip_avalable() {
     if [ -e "$VESTA/data/ips/$ip" ]; then
         ip_data=$(cat $VESTA/data/ips/$ip)
     else
-        nated_ip=$(grep "^NAT='$ip'" $VESTA/data/ips/*)
+        nated_ip=$(grep -H "^NAT='$ip'" $VESTA/data/ips/*)
         nated_ip=$(echo "$nated_ip" | cut -f 1 -d : | cut -f 7 -d /)
         ip_data=$(cat $VESTA/data/ips/$nated_ip)
     fi
@@ -216,7 +216,7 @@ get_real_ip() {
     if [ -e "$VESTA/data/ips/$1" ]; then
         echo $1
     else
-        nated_ip=$(grep "^NAT='$1'" $VESTA/data/ips/*)
+        nated_ip=$(grep -H "^NAT='$1'" $VESTA/data/ips/*)
         echo "$nated_ip" | cut -f 1 -d : | cut -f 7 -d /
     fi
 }

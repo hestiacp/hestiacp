@@ -40,6 +40,7 @@
                                         $status = 'active';
                                         $spnd_action = 'suspend' ;
                                     }
+                                    if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
                                     if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
                                     if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "http://".$http_host."/phpMyAdmin/";
                                     if ($data[$key]['TYPE'] == 'pgsql') $db_admin = "phpPgAdmin";

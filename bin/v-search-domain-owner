@@ -37,7 +37,7 @@ case $type in
 esac
 
 
-owner=$(grep "DOMAIN='$domain'" $conf | head -n 1 | cut -f7 -d '/')
+owner=$(grep -H "DOMAIN='$domain'" $conf | head -n 1 | cut -f7 -d '/')
 if [ -z "$owner" ]; then
     exit $E_NOTEXIST
 fi

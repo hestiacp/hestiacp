@@ -608,9 +608,9 @@ chmod 750 $VESTA/conf
 chmod 750 $VESTA/data/users
 chmod 750 $VESTA/data/ips
 chmod -R 750 $VESTA/data/queue
-ln -f -s /usr/local/vesta/log /var/log/vesta
+ln -s /usr/local/vesta/log /var/log/vesta
 adduser backup
-ln -f -s /home/backup /backup
+ln -s /home/backup /backup
 chmod a+x /backup
 
 # vesta.conf

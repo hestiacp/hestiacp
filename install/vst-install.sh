@@ -483,7 +483,7 @@ service nginx start
 # Vsftpd configuration
 wget $CHOST/$VERSION/vsftpd.conf -O /etc/vsftpd/vsftpd.conf
 chkconfig vsftpd on
-service vsftpf start
+service vsftpd start
 
 # MySQL configuration
 mpass=$(gen_pass)
@@ -573,7 +573,7 @@ wget $CHOST/$VERSION/httpd-webmail.conf -O /etc/httpd/conf.d/roundcubemail.conf
 wget $CHOST/$VERSION/roundcube-main.conf -O /etc/roundcubemail/main.inc.php
 wget $CHOST/$VERSION/roundcube-db.conf -O /etc/roundcubemail/db.inc.php
 wget $CHOST/$VERSION/roundcube-driver.php -O \
-    /usr/share/roundcubemail/plugins/password/drivers/vesta.php
+    /usr/share/roundcubemail/plugins/password/vesta.php
 wget $CHOST/$VERSION/roundcube-pw.conf -O \
     /usr/share/roundcubemail/plugins/password/config.inc.php
 r="$(gen_pass)"
@@ -669,6 +669,7 @@ vst_ip=$(wget vestacp.com/what-is-my-ip/ -O - 2>/dev/null)
 if [ ! -z "$vst_ip" ] && [ "$vst_ip" != "$main_ip" ]; then
     # Assign passive ip address
     echo "pasv_address=$vst_ip" >> /etc/vsftpd/vsftpd.conf
+    service vsftpd restart
 fi
 if [ -z "$vst_ip" ]; then
     vst_ip=$main_ip

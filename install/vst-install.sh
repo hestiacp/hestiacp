@@ -131,8 +131,11 @@ if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
 fi
 
 # Check server type
-if [ "$memory" -lt '350000' ]; then
+if [ "$memory" -lt '350000' ] && [ -z "$force" ]; then
     echo "Error: not enought memory to install Vesta Control Panel."
+    echo -e "\nMinimum RAM requried: 350Mb"
+    echo 'If you want to force installation run this script with -f option:'
+    echo "Example: bash $0 --force"
     exit 1
 fi
 srv_type='micro'

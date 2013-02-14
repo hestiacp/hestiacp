@@ -52,7 +52,7 @@ if [ ! -z "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
 fi
 
 if [ ! -z "$FTP_USER" ]; then
-    /usr/sbin/userdel $FTP_USER
+    /usr/sbin/userdel -f $FTP_USER
 fi
 
 # Adding user

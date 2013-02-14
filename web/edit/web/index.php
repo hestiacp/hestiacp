@@ -469,7 +469,7 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // FTP Account
+    // Delete FTP Account
     if ((!empty($v_ftp_user)) && (empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-web-domain-ftp ".$v_username." ".$v_domain, $output, $return_var);
         if ($return_var != 0) {
@@ -482,6 +482,8 @@ if (!empty($_POST['save'])) {
         $v_ftp_user = '';
         $v_ftp_password = '';
     }
+
+    // Change FTP Account
     if ((!empty($v_ftp_user)) && (!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
         if (empty($_POST['v_ftp_user'])) $errors[] = _('ftp user');
         if (empty($_POST['v_ftp_password'])) $errors[] = _('ftp user password');
@@ -507,39 +509,12 @@ if (!empty($_POST['save'])) {
             }
             unset($output);
             $v_ftp= '';
-            $v_ftp_user = '';
-            $v_ftp_password = '';
-        }
-        if ((!empty($v_ftp_user)) && (!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
-            if (empty($_POST['v_ftp_user'])) $errors[] = _('ftp user');
-            if (empty($_POST['v_ftp_password'])) $errors[] = _('ftp user password');
-            if (!empty($errors[0])) {
-                foreach ($errors as $i => $error) {
-                    if ( $i == 0 ) {
-                        $error_msg = $error;
-                    } else {
-                        $error_msg = $error_msg.", ".$error;
-                    }
-                }
-                $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
-            }
-            if (($v_ftp_user != $_POST['v_ftp_user']) || ($_POST['v_ftp_password'] != "••••••••" ) && (empty($_SESSION['error_msg']))) {
-                $v_ftp_user = preg_replace("/^".$user."_/", "", $_POST['v_ftp_user']);
-                $v_ftp_user = escapeshellarg($v_ftp_user);
-                $v_ftp_password = escapeshellarg($_POST['v_ftp_password']);
-                exec (VESTA_CMD."v-add-web-domain-ftp ".$v_username." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
-                if ($return_var != 0) {
-                    $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error code:',$return_var);
-                    $_SESSION['error_msg'] = $error;
-                }
-                unset($output);
-                $v_ftp_user =  $_POST['v_ftp_user'];
-                $v_ftp_password = "••••••••";
-            }
+            $v_ftp_user = $user."_".preg_replace("/^".$user."_/", "", $_POST['v_ftp_user']);
+            $v_ftp_password = "••••••••";
         }
     }
 
+    // Add FTP Account
     if ((empty($v_ftp_user)) && (!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
         if ((!empty($_POST['v_ftp_email'])) && (!filter_var($_POST['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = _('Please enter valid email address.');
         if (empty($_POST['v_ftp_user'])) $errors[] = 'ftp user';
@@ -578,6 +553,7 @@ if (!empty($_POST['save'])) {
             $v_ftp_password = "••••••••";
         }
     }
+
 
     // Restart web
     if (!empty($restart_web) && (empty($_SESSION['error_msg']))) {

@@ -565,7 +565,7 @@ validate_format_name() {
 
 # Username
 validate_format_username() {
-    if ! [[ "$1" =~ ^[a-zA-Z0-9]+([\.|_|-][a-zA-Z0-9]+)?$ ]]; then
+    if ! [[ "$1" =~ ^[a-zA-Z0-9][-|\.|_|a-zA-Z0-9]{0,28}[a-zA-Z0-9]$ ]]; then
         echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID

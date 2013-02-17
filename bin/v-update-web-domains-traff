@@ -33,6 +33,11 @@ is_object_valid 'user' 'USER' "$user" "$user"
 #----------------------------------------------------------#
 
 for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
+    # Reset BW counter on the start of the month
+    if [ "$(date +%d)" = '01' ]; then
+        update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' '0'
+    fi
+
     log_file="/var/log/httpd/domains/$domain.bytes"
     bytes=0
 

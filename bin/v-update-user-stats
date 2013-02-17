@@ -65,7 +65,7 @@ TOTAL_U_CRON_JOBS=0
 TOTAL_U_BACKUPS=0
 
 # Updating user stats
-for user in $user_list; do 
+for user in $user_list; do
     USER_DATA=$VESTA/data/users/$user
     source $USER_DATA/user.conf
     next_month=$(date +'%m/01/%y' -d '+ 1 month')

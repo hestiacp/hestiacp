@@ -61,6 +61,11 @@ echo > $log_file
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Reset counter on the start of the month
+if [ "$(date +%d)" = '01' ]; then
+    update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' '0'
+fi
+
 # Parsing old value
 get_domain_values 'web'
 

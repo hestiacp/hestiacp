@@ -47,8 +47,7 @@ class rcube_vesta_password
         $result = fread($fp, 2048);
         fclose($fp);
 
-
-        if(strpos($result, 'ok') && !strpos($html, 'error'))
+        if(strpos($result, 'ok') && !strpos($result, 'error'))
         {
             return PASSWORD_SUCCESS;
         }

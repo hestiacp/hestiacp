@@ -1,0 +1,86 @@
+#!/bin/bash
+# info: add web/dns/mail domain
+# options: USER DOMAIN [IP]
+#
+# The function adds web/dns/mail domain to a server.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+ip=$3
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/ip.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [IP]'
+validate_format 'user' 'domain'
+if [ ! -z "$ip" ]; then
+    validate_format 'ip'
+fi
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get ip if it wasn't defined
+if [ -z "$ip" ]; then
+    ip=$(grep -H "OWNER='$user'" $VESTA/data/ips/* 2>/dev/null|head -n1)
+    ip=$(echo "$ip" | cut -f 7 -d / | cut -f 1 -d :)
+    if [ -z "$ip" ]; then
+        # Check shared ips
+        admin_ips=$(grep -H "OWNER='admin'" $VESTA/data/ips/* 2>/dev/null)
+        admin_ips=$(echo "$admin_ips" | cut -f 7 -d / | cut -f 1 -d :)
+        for admin_ip in $admin_ips; do
+            if [ -z "$ip" ]; then
+                shared=$(grep "STATUS='shared'" $VESTA/data/ips/$admin_ip)
+                if [ ! -z "$shared" ]; then
+                    ip=$admin_ip
+                fi
+            fi
+        done
+    fi
+fi
+
+# Web dmain
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    $BIN/v-add-web-domain $user $domain $ip
+    retun_code=$?
+fi
+
+# DNS domain
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    if [ "$retun_code" -eq 0 ]; then
+        $BIN/v-add-dns-domain $user $domain $ip
+        retun_code=$?
+    fi
+fi
+
+# Mail domain
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    if [ "$retun_code" -eq 0 ]; then
+        $BIN/v-add-mail-domain $user $domain
+        retun_code=$?
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit $retun_code

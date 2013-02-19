@@ -132,9 +132,21 @@
                                             <td rowspan=4 style="vertical-align:top;" width="300">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name" colspan="2" >
-                                                            <?php print _('Users');?>: <a style="padding: 0 0 0 26" class="nginx-ext"><?php echo str_replace(',', ', ', $data[$key]['U_SYS_USERS']) ?> 
+                                                        <td class="counter-name">
+                                                            <?php print _('Owner');?>:
                                                         </td>
+                                                        <td>
+                                                            <a class="counter-value"> <?php echo _($data[$key]['OWNER']) ?></a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">
+                                                            <?php print _('Users');?>:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value"> <?php echo str_replace(',', ', ', $data[$key]['U_SYS_USERS']) ?></a>
+                                                        </td>
+
                                                     </tr>
                                                 </table>
                                             </td>

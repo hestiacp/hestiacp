@@ -181,6 +181,7 @@ $LANG['ru'] = array(
     'Status' => 'Статус',
     'shared' => 'общий',
     'dedicated' => 'выделенный',
+    'Owner' => 'Владелец',
     'Users' => 'Пользователи',
     'Load Average' => 'Общая нагрузка',
     'Memory Usage' => 'Использование памяти',

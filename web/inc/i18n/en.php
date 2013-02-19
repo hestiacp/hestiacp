@@ -180,6 +180,7 @@ $LANG['en'] = array(
     'Status'  => 'Status',
     'shared'  => 'shared',
     'dedicated'  => 'dedicated',
+    'Owner' => 'Owner',
     'Users'  => 'Users',
     'Load Average'  => 'Load Average',
     'Memory Usage'  => 'Memory Usage',

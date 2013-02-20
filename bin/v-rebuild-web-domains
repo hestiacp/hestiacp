@@ -66,7 +66,7 @@ for domain in $(shell_list) ; do
     ln -f -s /var/log/httpd/domains/$domain.error.log \
         $HOMEDIR/$user/web/$domain/logs/$domain.error.log
 
-    if [ -e "$WEBTPL/skel/document_errors/" ]; then
+    if [ ! -e "$WEBTPL/skel/document_errors/" ]; then
         cp -r $WEBTPL/skel/document_errors/ $HOMEDIR/$user/web/$domain/
     fi
 

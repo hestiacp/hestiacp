@@ -75,11 +75,11 @@ for domain in $(shell_list) ; do
           /var/log/httpd/domains/$domain.error.log
 
     chmod 551 $HOMEDIR/$user/web/$domain
-    chmod 771 $HOMEDIR/$user/web/$domain/private
+    chmod 751 $HOMEDIR/$user/web/$domain/private
     chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
-    chmod 771 $HOMEDIR/$user/web/$domain/public_html
-    chmod 771 $HOMEDIR/$user/web/$domain/public_shtml
-    chmod 771 $HOMEDIR/$user/web/$domain/document_errors
+    chmod 751 $HOMEDIR/$user/web/$domain/public_html
+    chmod 751 $HOMEDIR/$user/web/$domain/public_shtml
+    chmod 751 $HOMEDIR/$user/web/$domain/document_errors
     chmod 551 $HOMEDIR/$user/web/$domain/stats
     chmod 551 $HOMEDIR/$user/web/$domain/logs
     chmod 640 /var/log/httpd/domains/$domain.*

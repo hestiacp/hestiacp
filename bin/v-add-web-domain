@@ -133,11 +133,11 @@ chown root:apache $conf
 # Changing file permissions
 chmod 660 $conf
 chmod 551 $HOMEDIR/$user/web/$domain
-chmod 771 $HOMEDIR/$user/web/$domain/private
+chmod 751 $HOMEDIR/$user/web/$domain/private
 chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
-chmod 771 $HOMEDIR/$user/web/$domain/public_html
-chmod 771 $HOMEDIR/$user/web/$domain/public_shtml
-chmod 771 $HOMEDIR/$user/web/$domain/document_errors
+chmod 751 $HOMEDIR/$user/web/$domain/public_html
+chmod 751 $HOMEDIR/$user/web/$domain/public_shtml
+chmod 751 $HOMEDIR/$user/web/$domain/document_errors
 chmod -f -R 665 $HOMEDIR/$user/web/$domain/cgi-bin/*
 chmod -f -R 665 $HOMEDIR/$user/web/$domain/public_html/*
 chmod -f -R 665 $HOMEDIR/$user/web/$domain/document_errors/*

@@ -46,11 +46,17 @@ user="$(get_ip_value '$OWNER')"
 ip_status="$(get_ip_value '$STATUS')"
 
 # Deleting interface
-get_current_interface
-/sbin/ifconfig "$interface" down
-
-# Deleting startup script
-rm -f $iconf-$interface
+interface=$(/sbin/ifconfig |grep -B1 "addr:$ip "|head -n 1 |cut -f 1 -d ' ')
+if [ ! -z "$interface" ] && [ -z "$(echo $interface|cut -s -f2 -d :)" ]; then
+    echo "Error: Main IP on interface"
+    log_event "$E_FORBIDEN" "$EVENT"
+    exit $E_FORBIDEN
+fi
+if [ ! -z "$interface" ]; then
+    /sbin/ifconfig "$interface" down
+    iconf='/etc/sysconfig/network-scripts/ifcfg'
+    rm -f $iconf-$interface
+fi
 
 # Deleting vesta ip
 rm -f $VESTA/data/ips/$ip

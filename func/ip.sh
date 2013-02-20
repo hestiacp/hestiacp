@@ -172,22 +172,6 @@ get_ip_value() {
     echo "$value"
 }
 
-# Get current ip interface
-get_current_interface() {
-    i=$(/sbin/ifconfig |grep -B1 "addr:$ip "|head -n 1 |cut -f 1 -d ' ')
-    if [ -z "$i" ]; then
-        echo "Error: interface for ip $ip not found"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
-    fi
-    if [ -z "$(echo $i | cut -s -f 2 -d :)" ]; then
-        echo "Error: Main IP on interface"
-        log_event "$E_FORBIDEN" "$EVENT"
-        exit $E_FORBIDEN
-    fi
-    interface="$i"
-}
-
 # Create ip vesta configuration
 create_vesta_ip() {
     ip_data="OWNER='$user'"

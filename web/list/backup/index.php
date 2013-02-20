@@ -14,7 +14,7 @@ top_panel($user,$TAB);
 // Data
 exec (VESTA_CMD."v-list-user-backups $user json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
-$data = array_reverse($data);
+$data = array_reverse($data,true);
 unset($output);
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_backup.html');
 

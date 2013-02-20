@@ -14,7 +14,7 @@ top_panel($user,$TAB);
 // Data
 exec (VESTA_CMD."v-list-web-domains $user json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
-$data = array_reverse($data);
+$data = array_reverse($data,true);
 if ($_SESSION['user'] == 'admin') {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_web.html');
 } else {

@@ -61,7 +61,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     $BIN/v-add-web-domain $user $domain $ip
     retun_code=$?
     if [ "$PROXY_SYSTEM" = 'nginx' ] && [ "$retun_code" -eq 0 ]; then
-        $BIN/v-add-web-domain-nginx $user
+        $BIN/v-add-web-domain-nginx $user $domain
     fi
 fi
 

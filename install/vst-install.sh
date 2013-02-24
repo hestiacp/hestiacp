@@ -550,6 +550,7 @@ service dovecot start
 # ClamAV configuration
 if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     wget $CHOST/$VERSION/clamd.conf -O /etc/clamd.conf
+    wget $CHOST/$VERSION/freshclam.conf -O /etc/freshclam.conf
     gpasswd -a clam exim
     gpasswd -a clam mail
     /usr/bin/freshclam

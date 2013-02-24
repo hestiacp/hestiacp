@@ -77,6 +77,7 @@ $LANG['en'] = array(
     'restart'  => 'restart',
     'update'  => 'update',
     'generate'  => 'generate',
+    'reread  IP' => 'reread IP',
 
     'Adding User'  => 'Adding User',
     'Editing User'  => 'Editing User',

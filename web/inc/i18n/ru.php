@@ -78,6 +78,7 @@ $LANG['ru'] = array(
     'restart' => 'перезапустить',
     'update' => 'обновить',
     'generate' => 'сгенерировать',
+    'reread  IP' => 'перечитать IP',
 
     'Adding User' => 'Добавление аккаунта',
     'Editing User' => 'Редактирование аккаунта',
@@ -88,7 +89,7 @@ $LANG['ru'] = array(
     'Adding DNS Record' => 'Добавление DNS записи',
     'Editing DNS Record' => 'Редактирование DNS записи',
     'Adding Mail Domain' => 'Добавление почтового домена',
-    'Editing Mail Domain' => 'Редактирование почты для домена',
+    'Editing Mail Domain' => 'Редактирование почтового домена',
     'Adding Mail Account' => 'Добавление почтового аккаунта',
     'Editing Mail Account' => 'Редактирование почтового акканунта',
     'Adding database' => 'Добавление базы данных',

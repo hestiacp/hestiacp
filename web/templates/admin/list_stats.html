@@ -1,12 +1,11 @@
-
-                                <table class="sub-menu" style="background: white;">
+                                <table class="submenu">
                                     <tr>
-                                        <td style="padding: 12px 0 0 16px">
-                                            <div style="float:left">
+                                        <td style="padding: 2px 0 0 6px">
+                                            <div class="submenu-button-block">
                                                 <form action="/list/stats/" method="get" id="objects">
                                                 <a class="vst" <?php if (empty($_GET['user'])) echo "style='color: #174f82'"; ?> href='/list/stats/'><?php print _('Overall Statistics');?></a>
-                                                <span style="padding: 0 8px;"></span>
-                                                <select style="margin:0 2px 0 0px;" name="user">
+                                                <div class="submenu-select-block">
+                                                <select class="submenu-select-dropdown" name="user">
                                                     <option value=''><?php print _('show per user');?></option>
                                                 <?php
                                                     foreach ($users as $key => $value) {
@@ -18,14 +17,16 @@
                                                     }
                                                 ?> 
                                                 </select>
+                                            </div>
+
                                                 <input type="submit" name="list" value="›" class="button" style="width: 37px;font-size: 12px; height: 24px;">
                                             </form>
 
                                             </div>
-                                            <div style="text-align: right; float: right;">
-                                                <form action="/search/" method="get" >
-                                                <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
+                                            <div class="submenu-search-block">
+                                                <form action="/search/" method="get">
+                                                    <input type="text" name="q" class="submenu-search-field">
+                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                         </td>

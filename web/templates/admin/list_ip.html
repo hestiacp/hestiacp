@@ -1,25 +1,24 @@
-
-                                <table class="sub-menu" style="background: white;">
+                                <table class="submenu">
                                     <tr>
-                                        <td style="padding: 12px 0 8px 6px">
-                                            <div style="float:left">
-                                                <button style="width:120px; padding: 2px 0px;" onclick="location.href='/add/ip/'"> <?php print _('Add IP');?> </button>
+                                        <td style="padding: 2px 0 0 6px">
+                                            <div class="submenu-button-block">
+                                                <button class="submenu-button" onclick="location.href='/add/ip/'"> <?php print _('Add IP');?> </button>
                                             </div>
-                                            <div style="text-align: right; float: right;">
-                                                <form action="/search/" method="get" >
-                                                <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
+                                            <div class="submenu-search-block">
+                                                <form action="/search/" method="get">
+                                                    <input type="text" name="q" class="submenu-search-field">
+                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
-                                            <div style="float:left; padding-left: 26px;">
+                                            <div class="submenu-select-block">
                                                 <form action="/bulk/ip/" method="post" id="objects">
-                                                <a style="padding: 0 4px 0 12px" class="select-controls" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
-                                                <select style="margin:0 2px 0 0px;" name="action">
+                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <select class="submenu-select-dropdown" name="action">
                                                     <option><?php print _('apply to selected');?></option>
-                                                    <option><?php print _('reread  IP');?></option>
+                                                    <option><?php print _('reread IP');?></option>
                                                     <option><?php print _('delete');?></option>
                                                 </select>
-                                                <input type="submit" name="ok" value="›" class="button" style="width: 37px; font-size: 12px; height: 24px;">
+                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {

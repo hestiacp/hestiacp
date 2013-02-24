@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html>
     <head>
         <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
@@ -9,7 +10,7 @@
                 margin-left: auto;
                 margin-right: auto;
                 background-image: url(/images/b.png);
-                font-family: Arial, sans-serif;
+                font-family:Arial, Helvetica, sans-serif;
             }
 
             form {
@@ -27,19 +28,21 @@
                 border-bottom: 1px solid #cccccc;
                 border-left: 1px solid #cccccc;
                 border-right: 1px solid #cccccc;
+            }
+
             <?php
             if (!empty($_SESSION['look'])) {
-                echo "    border-left: 2px solid #f79b44;\n";
+                echo "            .main {";
+                echo "                border-left: 2px solid #f79b44;\n";
                 echo "                border-right: 2px solid #f79b44;\n";
+                echo "            }";
             }
             ?> 
-            }
-
 
             .top {
-                background: #ebe9dc;
                 color: #825117;
                 padding: 0;
+                font-family: Arial, Helvetica, sans-serif;
                 margin: 0;
                 width: 990px;
                 font-size: 10pt;
@@ -48,8 +51,26 @@
                 border-collapse:collapse;
             }
 
+            .top thead td {
+                background: #ebe9dc;
+                border-bottom: 1px solid #c4c4c4;
+                border-right: 1px solid #c4c4c4;
+                height: 25px;
+                text-align: right;
+                padding: 0 24px 0 0px;
+                weight:120px;
+            }
+
+            .top thead td:first-child{
+                border-left: 1px solid #c4c4c4;
+                border-right:none;
+                text-align:left;
+                padding: 0 0 0 0;
+                width:auto;
+            }
+
             .top-link {
-                padding: 5px 22px;
+                padding: 5px 22px 4px;
                 text-decoration: none;
                 color: #323232;
                 border-right: 1px solid #c4c4c4;
@@ -154,12 +175,14 @@
                 line-height: 1.4em;
                 font-size: 9pt;
                 color: #555;
+                decoration: none;
             }
 
-            .sub-menu {
+            .submenu {
                 margin-left: auto;
                 margin-right: auto;
                 width: 990px;
+                font-family:Arial, Helvetica, sans-serif;
                 height: 54px;
                 font-size: 10pt;
                 text-align: left;
@@ -168,15 +191,86 @@
                 background: none repeat scroll 0% 0% white;
             }
 
-            .select-controls {
-                color: #6A6A6A;
-                font-size: 8pt;
-                letter-spacing: 0.1em;
-                text-decoration: none;
+            .submenu td {
+                vertical-align: middle;
             }
 
-            .select-controls:hover {
+            .submenu-button-block {
+                float: left;
+            }
+
+            .submenu-button {
+                width: 120px;
+                height: 24px;
+                cursor: pointer;
+                color: #333;
+                background-color: #fafafa;
+                border: 1px solid #acacac;
+                border-radius: 3px 3px 3px 3px;
+                font-size: 12px;
+                font-family:Arial, Helvetica, sans-serif;
+            }
+
+            @-moz-document url-prefix() {
+                .submenu-button {
+                    padding-bottom: 2px;
+                }
+            }
+
+            .submenu-button:hover {
+                background-color: #f0f0f0;
+            }
+
+            .submenu-button:active {
+                background-color: #e6e6e6;
+            }
+
+            .submenu-select-block {
+                float:left;
+                padding-left: 28px;
+            }
+
+            .submenu-select-link {
+                color: #6A6A6A;
+                display: block;
+                float: left;
+                font-size: 8pt;
+                letter-spacing: 0.1em;
+                margin: 6px 6px 0 0;
+                text-decoration: none;
+                padding: 0 4px 0 12px
+            }
+
+            .submenu-select-link:hover {
                 text-decoration: underline;
+            }
+
+            .submenu-select-dropdown {
+                font-family:Arial, Helvetica, sans-serif;
+                color: #333333;
+                display: block;
+                float: left;
+                height: 24px;
+                margin: 0 4px 0 0;
+                min-width: 138px;
+            }
+
+            .submenu-search-block {
+                text-align: right;
+                float: right;
+            }
+
+            .submenu-search-field {
+                border: 1px solid #acacac;
+                border-radius: 3px 3px 3px 3px;
+                color: #333;
+                font-size: 14px;
+                background-color: #fff;
+                float: left;
+                padding: 0px 3px 0px 3px;
+                height: 22px;
+                width: 250px;
+                margin: 0 4px 0 0;
             }
 
             .bottom {
@@ -216,6 +310,7 @@
                 text-decoration: none;
                 color: #777;
                 font-size: 12pt;
+                float: left;
             }
 
             .vst:hover {
@@ -231,6 +326,7 @@
                 margin-left: auto;
                 margin-right: auto;
                 width: 990px;
+                font-family:Arial, Helvetica, sans-serif;
                 color: #e5a907;
                 font-size: 12pt;
                 text-align: left;
@@ -285,7 +381,15 @@
 
             .data-col1 {
                 text-align: left;
-                padding: 0;
+                padding:0;
+            }
+
+            .data-col1 tr td {
+                padding:0 0 0 20px;
+            }
+
+            .data-col1 tr:first-child td {
+                padding:23px 0 0 20px;
             }
 
             .data-col2 {
@@ -297,6 +401,7 @@
             .data-col2 a:visited {
                 color: green;
             }
+
             .data-col5 {
                 table-layout: fixed;
                 text-align: left;
@@ -357,6 +462,7 @@
             }
 
             .chart1 {
+                color:#000;
                 font-size: 10pt;
             }
 
@@ -502,7 +608,7 @@
                 font-size: 14pt;
                 padding: 5px;
                 width: 360px;
-                height: 36px;
+                height: 30px;
             }
 
             .vst-input:hover {
@@ -514,15 +620,17 @@
             }
 
             .vst-list {
-                padding: 5px;
+                font-family:Arial, Helvetica, sans-serif;
                 font-size: 12pt;
                 color: #555;
-                border-radius: 3px 3px 3px 3px;
-                border: 1px solid #999999;
+                height: 30px;
+                width: 120px;
             }
 
-            .vst-list:hover {
-                border: 1px solid #f79b44;
+            @-moz-document url-prefix() {
+                .vst-list {
+                    padding-top: 2px;
+                }
             }
 
             .vst-checkbox {
@@ -534,27 +642,6 @@
                 border: 1px solid #f79b44;
             }
 
-            button {
-                cursor: pointer;
-                color: #333;
-                background-color: #fafafa;
-                border: 1px solid #ACACAC;
-                border-radius: 3px 3px 3px 3px;
-                font-size: 12px;
-                font-family: Arial, sans-serif;
-                padding: 2px 16px;
-                width: 108px;
-                height: 24px;
-            }
-
-            button:hover {
-                background-color: #f0f0f0;
-            }
-
-            button:active {
-                background-color: #e6e6e6;
-            }
-
             .button {
                 filter:chroma(color=#000000);
                 cursor: pointer;
@@ -563,10 +650,9 @@
                 border: 1px solid #ACACAC;
                 border-radius: 3px 3px 3px 3px;
                 font-size: 14px;
-                font-family: Arial, sans-serif;
                 padding: 2px 16px;
                 width: 108px;
-                height: 32px;
+                height: 34px;
             }
 
             .button:hover {
@@ -601,8 +687,6 @@
                 color: #7fa1cb;
             }
 
-
-            /* fixed header */
             .fixed{
                 position: fixed;
                 border: none;
@@ -613,7 +697,10 @@
 
             *html .fixed{
                 position:absolute;
-                position:fixed; _position:absolute; top:0; _top:expression( eval(document.body.scrollTop) + 'px' );
+                position:fixed;
+                _position:absolute;
+                top:0;
+                _top:expression( eval(document.body.scrollTop) + 'px' );
             }
 
             #vstobjects{
@@ -624,6 +711,7 @@
             }
 
             .login {
+                font-family:Arial, Helvetica, sans-serif;
                 margin: 80px 0 80px 0;
                 padding: 0;
                 border-top: 1px solid #cccccc;
@@ -664,7 +752,6 @@
                 font-size: 10pt;
                 color: #dE6c5d;
             }
-
         </style>
         <!--[if IE]>
             <style type="text/css">
@@ -678,7 +765,7 @@
                 }
 
                 .fixed {
-                    margin-top: -3px;
+                    margin-top: 0px;
                 }
 
                 .vst-advanced {
@@ -686,13 +773,12 @@
                 }
 
                 #vstobjects{
-                    padding-top: 192px;
-                    min-height: 557px;
+                    padding-top: 195px;
+                    min-height: 370px;
                     height: auto !important;
-                    height: 557px;
+                    height: 370px;
                     width: 996px;
                 }
-
 
                 .nav-block {
                     margin: 0;
@@ -723,10 +809,33 @@
                     height:109px;
                     border-bottom: 4px solid #f79b44;
                 }
-
-
             </style>
         <![endif]-->
+        <!--[if IE 7]>
+            <style type="text/css">
+                .data-col1 a {
+                    white-space: nowrap;
+                }
+
+                .submenu-button-block {
+                    width: 120px;
+                }
+
+                .submenu-search-block {
+                    width:369px;
+                }
+
+                .submenu-select-block {
+                    width:239px;
+                }
+
+                .submenu-select-dropdown {
+                    position: relative;
+                    top: 2px;
+                }
+            </style>
+        <![endif]-->
+
         <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
         <script type="text/javascript" src="/js/events.js"></script>
         <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>

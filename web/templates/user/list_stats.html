@@ -1,14 +1,10 @@
-
-                                <table class="sub-menu" style="background: white;">
+                                <table class="submenu">
                                     <tr>
-                                        <td style="padding: 12px 0 0 16px">
-                                            <div style="float:left">
-
-                                            </div>
-                                            <div style="text-align: right; float: right;">
-                                                <form action="/search/" method="get" >
-                                                <input type="text" name="q" style="margin: 2px 2px 0px 0px; width: 250px; padding: 3px;" size="30">
-                                                <input type="submit" value="<?php print _('Search');?>" class="button" style="font-size: 12px; height: 24px;">
+                                        <td style="padding: 2px 0 0 6px">
+                                            <div class="submenu-search-block">
+                                                <form action="/search/" method="get">
+                                                    <input type="text" name="q" class="submenu-search-field">
+                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                         </td>

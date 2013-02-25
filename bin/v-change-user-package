@@ -133,6 +133,10 @@ fi
 # Changing user package
 change_user_package
 
+# Update user shell
+shell_path=$(/usr/bin/chsh --list-shells | grep -w "$SHELL" |head -n1)
+/usr/bin/chsh -s "$shell_path" "$user" &>/dev/null
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

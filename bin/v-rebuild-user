@@ -40,6 +40,10 @@ source $USER_DATA/user.conf
 shell=$(chsh --list-shells | grep -w "$SHELL" |head -n1)
 adduser "$user" -s "$shell" -c "$CONTACT" -m -d "$HOMEDIR/$user" &>/dev/null
 
+# Update user shell
+shell_path=$(/usr/bin/chsh --list-shells | grep -w "$SHELL" |head -n1)
+/usr/bin/chsh -s "$shell_path" "$user" &>/dev/null
+
 # Update password
 shadow='/etc/shadow'
 shdw=$(grep ^$user: $shadow)

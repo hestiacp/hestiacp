@@ -56,6 +56,9 @@ for nameserver in ${ns//,/ };do
     i=$((i + 1))
 done
 
+# Remove old user's zone
+sed -i "/\/$user\/conf\/dns/d" /etc/named.conf
+
 # Starting loop
 for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
     # Defining variables
@@ -89,13 +92,13 @@ for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
     # Bind config check
     nconf='/etc/named.conf'
     if [ "$SUSPENDED" = 'yes' ]; then
-	rm_string=$(grep -n /etc/namedb/$domain.db $nconf | cut -d : -f 1)
+        rm_string=$(grep -n /etc/namedb/$domain.db $nconf | cut -d : -f 1)
         if [ ! -z "$rm_string" ]; then
             sed -i "$rm_string d" $nconf
         fi
         suspended_dns=$((suspended_dns + 1))
     else
-	if [ -z "$(grep /$domain.db $nconf)" ]; then
+        if [ -z "$(grep /$domain.db $nconf)" ]; then
             named="zone \"$domain_idn\" {type master; file"
             named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
             echo "$named" >> /etc/named.conf

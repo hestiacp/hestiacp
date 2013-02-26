@@ -515,6 +515,7 @@ if [ "$srv_type" = 'micro' ] ||  [ "$srv_type" = 'small' ]; then
 fi
 wget $CHOST/$VERSION/dnsbl.conf -O /etc/exim/dnsbl.conf
 wget $CHOST/$VERSION/spam-blocks.conf -O /etc/exim/spam-blocks.conf
+touch /etc/exim/white-blocks.conf
 rm -rf /etc/exim/domains
 mkdir -p /etc/exim/domains
 chmod 640 /etc/exim/exim.conf

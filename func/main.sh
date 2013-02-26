@@ -110,7 +110,7 @@ is_package_full() {
     esac
     limit=$(grep "^$1=" $USER_DATA/user.conf | cut -f 2 -d \' )
     if [ "$used" -ge "$limit" ]; then
-	echo "Error: Limit reached / Upgrade package"
+        echo "Error: Limit reached / Upgrade package"
         log_event "$E_LIMIT" "$EVENT"
         exit $E_LIMIT
     fi

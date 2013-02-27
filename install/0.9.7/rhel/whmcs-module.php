@@ -1,4 +1,6 @@
 <?php
+// This module sponsered by our good friends from wexcloud.com
+
 
 function vesta_ConfigOptions() {
 
@@ -272,7 +274,7 @@ function vesta_ChangePackage($params) {
 
 function vesta_ClientArea($params) {
 
-    $code = '<form action="https://'.$params["serverhostname"].'/login/" method="post" target="_blank">
+    $code = '<form action="https://'.$params["serverhostname"].':8083/login/" method="post" target="_blank">
 <input type="hidden" name="user" value="'.$params["username"].'" />
 <input type="hidden" name="password" value="'.$params["password"].'" />
 <input type="submit" value="Login to Control Panel" />
@@ -284,7 +286,7 @@ function vesta_ClientArea($params) {
 
 function vesta_AdminLink($params) {
 
-    $code = '<form action="https://'.$params["serverhostname"].'/login/" method="post" target="_blank">
+    $code = '<form action="https://'.$params["serverhostname"].':8083/login/" method="post" target="_blank">
 <input type="hidden" name="user" value="'.$params["serverusername"].'" />
 <input type="hidden" name="password" value="'.$params["serverpassword"].'" />
 <input type="submit" value="Login to Control Panel" />
@@ -295,7 +297,7 @@ function vesta_AdminLink($params) {
 
 function vesta_LoginLink($params) {
 
-    echo "<a href=\"https://".$params["serverhostname"]."/login/\" target=\"_blank\" style=\"color:#cc0000\">control panel</a>";
+    echo "<a href=\"https://".$params["serverhostname"].":8083/login/\" target=\"_blank\" style=\"color:#cc0000\">control panel</a>";
 
 }
 

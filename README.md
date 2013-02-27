@@ -17,10 +17,6 @@ Download installation script
 ```bash
 curl -O http://vestacp.com/pub/vst-install.sh
 ```
-or download it using wget
-```bash
-wget http://vestacp.com/pub/vst-install.sh
-```
 
 Run it
 ```bash

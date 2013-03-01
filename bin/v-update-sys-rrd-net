@@ -36,7 +36,8 @@ if [ ! -d "$RRD/net" ]; then
 fi
 
 # Parsing network interfaces
-ifaces=$(cat /proc/net/dev |grep : |cut -f 1 -d : |sed -e "s/ //g")
+ndev=$(cat /proc/net/dev)
+ifaces=$(echo "$ndev" |grep : |cut -f 1 -d : |sed -e "s/ //g")
 
 # Parsing excludes
 for exclude in $(echo ${RRD_IFACE_EXCLUDE//,/ }); do
@@ -62,9 +63,9 @@ for iface in $ifaces; do
 
     # Parsing device stats
     if [ "$period" = 'daily' ]; then
-        raw_iface=$(grep "$iface:" /proc/net/dev |sed -e "s/:/ /")
-        rx=$(echo "$raw_iface" |awk '{print $2}')
-        tx=$(echo "$raw_iface" |awk '{print $10}')
+        x=$(echo "$ndev" |sed -e "s/^ *//" |grep "^$iface:" |sed -e "s/:/ /")
+        rx=$(echo "$x" |awk '{print $2}')
+        tx=$(echo "$x" |awk '{print $10}')
 
         # Updating rrd database
         rrdtool update $RRD/net/$iface.rrd N:$rx:$tx

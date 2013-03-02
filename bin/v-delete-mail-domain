@@ -42,7 +42,7 @@ get_domain_values 'mail'
 accounts=$(wc -l $USER_DATA/mail/$domain.conf|cut -f 1 -d ' ')
 
 rm -f /etc/exim/domains/$domain
-rm -rf $HOMEDIR/$user/conf/$domain
+rm -rf $HOMEDIR/$user/conf/mail/$domain
 rm -rf $HOMEDIR/$user/mail/$domain
 
 

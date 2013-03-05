@@ -15,12 +15,12 @@ release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     php php-bcmath php-cli php-common php-gd php-imap php-mbstring php-mcrypt
-    php-mysql php-pdo php-soap php-tidy php-xml php-xmlrpc phpMyAdmin awstats
-    webalizer vsftpd mysql mysql-server exim dovecot clamd spamassassin curl
-    roundcubemail bind bind-utils bind-libs mc screen ftp libpng libjpeg
-    libmcrypt mhash zip unzip openssl flex rssh libxml2 ImageMagick sqlite
-    pcre sudo bc jwhois mailx lsof tar telnet rsync rrdtool GeoIP freetype
-    ntp openssh-clients vesta vesta-nginx vesta-php"
+    php-mysql php-pdo php-soap php-tidy php-xml php-xmlrpc php-pecl-apc
+    phpMyAdmin awstats webalizer vsftpd mysql mysql-server exim dovecot clamd
+    spamassassin curl roundcubemail bind bind-utils bind-libs mc screen ftp
+    libpng libjpeg libmcrypt mhash zip unzip openssl flex rssh libxml2
+    ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rsync
+    rrdtool GeoIP freetype ntp openssh-clients vesta vesta-nginx vesta-php"
 
 
 help() {

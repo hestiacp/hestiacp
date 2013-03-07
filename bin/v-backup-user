@@ -18,6 +18,9 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/func/db.sh
 
+subj="Backup $user failed"
+email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f 2 -d \')
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,6 +39,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
     echo
     sleep 60
     if [ "$i" -ge "15" ]; then
+        echo "LoadAverage $i is above threshold" | mail -s "$subj" $email
         echo "Error: LA is too high"
         log_event "$E_LA" "$EVENT"
         exit $E_LA
@@ -53,15 +57,16 @@ start_time=$(date '+%s')
 
 # Creating temporary random directory
 tmpdir=$(mktemp -p $BACKUP -d)
+if [ "$?" -ne 0 ]; then
+    echo "Can't create tmp dir $tmpdir" | mail -s "$subj" $email
+    echo "Error: can't create tmp dir"
+    log_event "$E_NOTEXIST" "$EVENT"
+fi
 
 # Prinitng status
 echo "$(date "+%F %T") System backup for user $user"
 echo "TMPDIR is $tmpdir"
 echo
-
-# Addding backup and vesta version
-echo "1.0" > $tmpdir/backup_version
-echo "$VERSION" > $tmpdir/vesta_version
 
 # Vesta
 echo "-- VESTA --"
@@ -123,7 +128,7 @@ then
     # Parsing unsuspeneded domains
     conf="$USER_DATA/web.conf"
     for domain in $(search_objects 'web' 'SUSPENDED' "*" 'DOMAIN'); do
-	check_exl=$(echo "$WEB"|grep -w $domain)
+        check_exl=$(echo "$WEB"|grep -w $domain)
         if [ -z "$check_exl" ]; then
             web_list="$web_list $domain"
         fi
@@ -208,7 +213,7 @@ then
 
     # Parsing unsuspeneded domains
     for domain in $(search_objects 'dns' 'SUSPENDED' "*" 'DOMAIN'); do
-	check_exl=$(echo "$DNS"|grep -w $domain)
+        check_exl=$(echo "$DNS"|grep -w $domain)
         if [ -z "$check_exl" ]; then
             dns_list="$dns_list $domain"
         fi
@@ -243,7 +248,7 @@ then
     # Parsing unsuspeneded domains
     conf="$USER_DATA/mail.conf"
     for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
-	check_exl=$(echo "$MAIL"|grep -w $domain)
+        check_exl=$(echo "$MAIL"|grep -w $domain)
         if [ -z "$check_exl" ]; then
             mail_list="$mail_list $domain"
         fi
@@ -252,7 +257,6 @@ then
 
     for domain in $mail_list; do
         echo -e "$(date "+%F %T") $domain"
-        #mkdir -p $tmpdir/mail/$domain/accounts
         mkdir -p $tmpdir/mail/$domain/conf
         mkdir -p $tmpdir/mail/$domain/vesta
 
@@ -290,7 +294,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
 
     # Parsing unsuspeneded domains
     for database in $(search_objects 'db' 'SUSPENDED' "*" 'DB'); do
-	check_exl=$(echo "$DB"|grep -w $database)
+        check_exl=$(echo "$DB"|grep -w $database)
         if [ -z "$check_exl" ]; then
             db_list="$db_list $database"
         fi
@@ -379,6 +383,8 @@ local_backup(){
     disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
 
     if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
+        rm -rf $tmpdir
+        echo "Not enough disk space to run backup" | mail -s "$subj" $email
         echo "Error: Not enough disk space"
         log_event "$E_DISK" "$EVENT"
         exit $E_DISK
@@ -417,6 +423,8 @@ ftp_backup(){
     source $VESTA/conf/ftp.backup.conf
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
         [ -z "$BPATH" ]; then
+        rm -rf $tmpdir
+        echo "Can't parse ftp backup configuration" | mail -s "$subj" $email
         echo "Error: Parsing error"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
@@ -432,6 +440,8 @@ ftp_backup(){
              ls $ftmpdir
              rm $ftmpdir"
     if [ ! -z "$(ftpc "$command")" ] ; then
+        rm -rf $tmpdir
+        echo "Can't login to ftp://$USERNAME@$HOST" | mail -s "$subj" $email
         echo "Error: FTP error"
         log_event "$E_FTP" "$EVENT"
         exit $E_FTP
@@ -453,12 +463,12 @@ ftp_backup(){
     # Uploading backup archive
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-	ftpc "put $user.$DATE.tar"
+        ftpc "put $user.$DATE.tar"
     else
-	cd $tmpdir
+        cd $tmpdir
         tar -cf $BACKUP/$user.$DATE.tar .
         cd $BACKUP/
-	ftpc "put $user.$DATE.tar"
+        ftpc "put $user.$DATE.tar"
         rm -f $user.$DATE.tar
     fi
     echo

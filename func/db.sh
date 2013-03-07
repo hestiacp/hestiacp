@@ -330,6 +330,8 @@ dump_mysql_database() {
     host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
     eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+        rm -rf $tmpdir
+        echo "Can't parse mysql config" | mail -s "$subj" $email
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
@@ -338,12 +340,21 @@ dump_mysql_database() {
     query='SELECT VERSION()'
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
     if [ '0' -ne "$?" ]; then
+        rm -rf $tmpdir
+        echo "Can't connect to mysql server $HOST" | mail -s "$subj" $email
         echo "Error: Connection failed"
         log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
     mysqldump -h $HOST -u $USER -p$PASSWORD -P$PORT -r $dump $database
+    if [ '0' -ne "$?" ]; then
+        rm -rf $tmpdir
+        echo "Can't dump mysql database $database" | mail -s "$subj" $email
+        echo "Error: dump $database failed"
+        log_event  "$E_DB $EVENT"
+        exit $E_DB
+    fi
 
     query="SHOW GRANTS FOR '$DBUSER'@'localhost'"
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |\
@@ -360,6 +371,8 @@ dump_pgsql_database() {
     eval $host_str
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
+        rm -rf $tmpdir
+        echo "Can't parse pgsql config" | mail -s "$subj" $email
         echo "Error: postgresql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
@@ -368,6 +381,8 @@ dump_pgsql_database() {
     query='SELECT VERSION()'
     psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
     if [ '0' -ne "$?" ];  then
+        rm -rf $tmpdir
+        echo "Can't connect to pgsql server $HOST" | mail -s "$subj" $email
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
         exit $E_DB
@@ -375,6 +390,14 @@ dump_pgsql_database() {
 
     pg_dump -h $HOST -U $USER -p $PORT -c -d -O -x -i -f $dump $database \
         2> /dev/null
+
+    if [ '0' -ne "$?" ]; then
+        rm -rf $tmpdir
+        echo "Can't dump pgsql database $database" | mail -s "$subj" $email
+        echo "Error: dump $database failed"
+        log_event  "$E_DB $EVENT"
+        exit $E_DB
+    fi
 
     query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
     md5=$(psql -h $HOST -U $USER -p $PORT -c "$query"|head -n1|cut -f 2 -d \ )

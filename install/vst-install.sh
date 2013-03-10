@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Vesta installer v.03
 
 #----------------------------------------------------------#
@@ -412,6 +413,9 @@ fi
 #                     Configure system                     #
 #----------------------------------------------------------#
 
+# Set writable permission on tmp directory
+chmod 777 /tmp
+
 # Disabling SELinux
 if [ -e '/etc/sysconfig/selinux' ]; then
     sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
@@ -472,6 +476,10 @@ chmod 640 /var/log/httpd/suexec.log
 chmod 751 /var/log/httpd/domains
 chkconfig httpd on
 service httpd start
+if [ "$?" -ne 0 ]; then
+    echo "Error: httpd start failed"
+    exit
+fi
 
 # Nginx configuration
 wget $CHOST/$VERSION/nginx.conf -O /etc/nginx/nginx.conf
@@ -482,21 +490,34 @@ rm -f /etc/nginx/conf.d/vesta_users.conf
 touch /etc/nginx/conf.d/vesta_users.conf
 chkconfig nginx on
 service nginx start
+if [ "$?" -ne 0 ]; then
+    echo "Error: nginx start failed"
+    exit
+fi
 
 # Vsftpd configuration
 wget $CHOST/$VERSION/vsftpd.conf -O /etc/vsftpd/vsftpd.conf
 chkconfig vsftpd on
 service vsftpd start
+if [ "$?" -ne 0 ]; then
+    echo "Error: vsftpd start failed"
+    exit
+fi
 
 # MySQL configuration
 mpass=$(gen_pass)
-if [ "$srv_type" ='micro' ]; then
+if [ "$srv_type" = 'micro' ]; then
     wget $CHOST/$VERSION/mysql-512.cnf -O /etc/my.cnf
 else
     wget $CHOST/$VERSION/mysql.cnf -O /etc/my.cnf
 fi
 chkconfig mysqld on
 service mysqld start
+if [ "$?" -ne 0 ]; then
+    echo "Error: mysqld start failed"
+    exit
+fi
+
 mysqladmin -u root password $mpass
 echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
 
@@ -506,6 +527,10 @@ chown root:named /etc/named.conf
 chmod 640 /etc/named.conf
 chkconfig named on
 service named start
+if [ "$?" -ne 0 ]; then
+    echo "Error: named start failed"
+    exit
+fi
 
 # Exim
 wget $CHOST/$VERSION/exim.conf -O /etc/exim/exim.conf
@@ -532,6 +557,10 @@ rm -f /etc/alternatives/mta
 ln -s /usr/sbin/sendmail.exim /etc/alternatives/mta
 chkconfig exim on
 service exim start
+if [ "$?" -ne 0 ]; then
+    echo "Error: exim start failed"
+    exit
+fi
 
 # Dovecot configuration
 if [ "$release" -eq '5' ]; then
@@ -547,6 +576,10 @@ fi
 gpasswd -a dovecot mail
 chkconfig dovecot on
 service dovecot start
+if [ "$?" -ne 0 ]; then
+    echo "Error: dovecot start failed"
+    exit
+fi
 
 # ClamAV configuration
 if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
@@ -557,12 +590,22 @@ if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     /usr/bin/freshclam
     chkconfig clamd on
     service clamd start
+    if [ "$?" -ne 0 ]; then
+        echo "Error: clamd start failed"
+    exit
+fi
+
 fi
 
 # SpamAssassin configuration
 if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     chkconfig spamassassin on
     service spamassassin start
+    if [ "$?" -ne 0 ]; then
+        echo "Error: spamassassin start failed"
+    exit
+fi
+
 fi
 
 # php configuration
@@ -712,6 +755,10 @@ $VESTA/bin/v-update-sys-rrd
 # Start system service
 chkconfig vesta on
 service vesta start
+if [ "$?" -ne 0 ]; then
+    echo "Error: vesta start failed"
+    exit
+fi
 
 # Send notification to vestacp.com
 wget vestacp.com/notify/?$REPO -O /dev/null

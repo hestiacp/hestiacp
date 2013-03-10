@@ -1,4 +1,4 @@
-/var/log/httpd/domains/*log /var/log/httpd/domains/*log {
+/var/log/httpd/*log /var/log/httpd/domains/*log {
     missingok
     notifempty
     sharedscripts

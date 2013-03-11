@@ -18,7 +18,7 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/func/db.sh
 
-subj="Backup $user failed"
+subj="Backup for user $user failed"
 email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f 2 -d \')
 
 
@@ -196,7 +196,7 @@ then
         # Packing data folders
         cd $HOMEDIR/$user/web/$domain
         domain_direcotries=$(ls |grep -v logs)
-        tar -cf $tmpdir/web/$domain/domain_data.tar $domain_direcotries
+        tar -cpf $tmpdir/web/$domain/domain_data.tar $domain_direcotries
 
         if [ ! -z "$BACKUP_GZIP" ]; then
             gzip -$BACKUP_GZIP $tmpdir/web/$domain/domain_data.tar

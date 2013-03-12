@@ -716,6 +716,9 @@ main_ip=$(ifconfig |grep 'inet addr:' |grep -v 127.0.0.1 |head -n1 | \
 # Get remote ip
 vst_ip=$(wget vestacp.com/what-is-my-ip/ -O - 2>/dev/null)
 if [ ! -z "$vst_ip" ] && [ "$vst_ip" != "$main_ip" ]; then
+    # Set NAT association
+    $VESTA/bin/v-change-sys-ip-nat $main_ip $vst_ip
+
     # Assign passive ip address
     echo "pasv_address=$vst_ip" >> /etc/vsftpd/vsftpd.conf
     service vsftpd restart
@@ -724,11 +727,11 @@ if [ -z "$vst_ip" ]; then
     vst_ip=$main_ip
 fi
 
-# Add default web domain on main ip
-$VESTA/bin/v-add-web-domain admin default.domain $main_ip
+# Add default web domain
+$VESTA/bin/v-add-web-domain admin default.domain $vst_ip
 
-# Add default dns domain on main ip
-$VESTA/bin/v-add-dns-domain admin default.domain $main_ip
+# Add default dns domain
+$VESTA/bin/v-add-dns-domain admin default.domain $vst_ip
 
 # Add default mail domain
 $VESTA/bin/v-add-mail-domain admin default.domain

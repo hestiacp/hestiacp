@@ -24,8 +24,13 @@ source $VESTA/func/main.sh
 
 for user in $(ls $VESTA/data/users); do
     check_suspend=$(grep "SUSPENDED='no'" $VESTA/data/users/$user/user.conf)
+    log=$VESTA/log/backup.log
     if [ ! -z "$check_suspend" ]; then
-        $BIN/v-backup-user $user >> $VESTA/log/backup.log 2>&1
+        echo -e "================================" >> $log
+        echo -e "$user" >> $log
+        echo -e "--------------------------------\n" >> $log
+        $BIN/v-backup-user $user >> $log 2>&1
+        echo -e "\n--------------------------------\n\n" >> $log
     fi
 done
 

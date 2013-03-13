@@ -158,6 +158,18 @@ is_backup_enabled() {
     fi
 }
 
+# Check user backup settings
+is_backup_scheduled() {
+    if [ -e "$VESTA/data/queue/backup.pipe" ]; then
+        check_backup=$(grep " $user " $VESTA/data/queue/backup.pipe)
+        if [ ! -z "$check_backup" ]; then
+            echo "Error: backup is already scheduled"
+            log_event "$E_EXISTS" "$EVENT"
+            exit $E_EXISTS
+        fi
+    fi
+}
+
 # Check if object is free and can be created
 is_object_free() {
     if [ $2 = 'USER' ]; then

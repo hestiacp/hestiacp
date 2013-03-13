@@ -744,7 +744,7 @@ $VESTA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
 command='sudo /usr/local/vesta/bin/v-update-sys-queue webstats'
 $VESTA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "$command"
 command='sudo /usr/local/vesta/bin/v-update-sys-queue backup'
-$VESTA/bin/v-add-cron-job 'admin' '*/30' '*' '*' '*' '*' "$command"
+$VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 command='sudo /usr/local/vesta/bin/v-backup-users'
 $VESTA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "$command"
 command='sudo /usr/local/vesta/bin/v-update-user-stats'

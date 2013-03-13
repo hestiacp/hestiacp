@@ -331,7 +331,7 @@ dump_mysql_database() {
     eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
         rm -rf $tmpdir
-        echo "Can't parse mysql config" | mail -s "$subj" $email
+        echo "Can't parse mysql config" | $mail -s "$subj" $email
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
@@ -341,7 +341,7 @@ dump_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
-        echo "Can't connect to mysql server $HOST" | mail -s "$subj" $email
+        echo "Can't connect to mysql server $HOST" | $mail -s "$subj" $email
         echo "Error: Connection failed"
         log_event  "$E_DB $EVENT"
         exit $E_DB
@@ -350,7 +350,7 @@ dump_mysql_database() {
     mysqldump -h $HOST -u $USER -p$PASSWORD -P$PORT -r $dump $database
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
-        echo "Can't dump mysql database $database" | mail -s "$subj" $email
+        echo "Can't dump mysql database $database" | $mail -s "$subj" $email
         echo "Error: dump $database failed"
         log_event  "$E_DB $EVENT"
         exit $E_DB
@@ -372,7 +372,7 @@ dump_pgsql_database() {
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         rm -rf $tmpdir
-        echo "Can't parse pgsql config" | mail -s "$subj" $email
+        echo "Can't parse pgsql config" | $mail -s "$subj" $email
         echo "Error: postgresql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
@@ -382,7 +382,7 @@ dump_pgsql_database() {
     psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
     if [ '0' -ne "$?" ];  then
         rm -rf $tmpdir
-        echo "Can't connect to pgsql server $HOST" | mail -s "$subj" $email
+        echo "Can't connect to pgsql server $HOST" | $mail -s "$subj" $email
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
         exit $E_DB
@@ -393,7 +393,7 @@ dump_pgsql_database() {
 
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
-        echo "Can't dump pgsql database $database" | mail -s "$subj" $email
+        echo "Can't dump pgsql database $database" | $mail -s "$subj" $email
         echo "Error: dump $database failed"
         log_event  "$E_DB $EVENT"
         exit $E_DB

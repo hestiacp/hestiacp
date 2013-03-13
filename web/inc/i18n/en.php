@@ -145,6 +145,7 @@ $LANG['en'] = array(
     'SSH Access'  => 'SSH Access',
     'IP Addresses'  => 'IP Addresses',
     'Backups'  => 'Backups',
+    'Backup System'  => 'Backup System',
     'template'  => 'template',
     'SSL Support'  => 'SSL Support',
     'SSL Home Directory'  => 'SSL Home',
@@ -362,6 +363,8 @@ $LANG['en'] = array(
     'Error code:'  => 'Error code: %s',
     'SERVICE_ACTION_FAILED'  => '"%s" "%s" failed',
     'IP address is in use' => 'IP address is in use',
+    'BACKUP_SCHEDULED'  => 'Task has been added to the queue. You will receive an email notification when your backup is ready for download.',
+    'BACKUP_EXISTS'  => 'An existing backup is already running. Please wait for that backup to finish.',
 
     'Welcome to Vesta Control Panel'  => 'Welcome to Vesta Control Panel',
     'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',

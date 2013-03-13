@@ -146,6 +146,7 @@ $LANG['ru'] = array(
     'SSH Access' => 'Доступ по SSH',
     'IP Addresses' => 'IP адреса',
     'Backups' => 'Резервные копии',
+    'Backup System'  => 'Система резервного копирования',
     'template' => 'шаблон',
     'SSL Support' => 'Поддержка SSL',
     'SSL Home Directory' => 'Директория SSL',
@@ -363,6 +364,8 @@ $LANG['ru'] = array(
     'Error code:' => 'Код ошибки: %s',
     'SERVICE_ACTION_FAILED' => 'Не удалось "%s" "%s"',
     'IP address is in use' => 'IP адрес используется',
+    'BACKUP_SCHEDULED'  => 'Задание успешно добавлено в очередь. После завершения вы получите полный отчет по почте.',
+    'BACKUP_EXISTS'  => 'Резервное копирование уже выполняется, полжалуйста дождитесь окончания.',
 
     'Welcome to Vesta Control Panel' => 'Добро пожаловать в панель управления Vesta',
     'MAIL_FROM' => 'Vesta Control Panel <noreply@%s>',

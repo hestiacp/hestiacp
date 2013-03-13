@@ -32,6 +32,11 @@ PATH=$PATH:$BIN
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'QUEUE'
+b_task=$(ps auxf |grep -v "grep" |grep "$VESTA/bin/v-update-sys-queue backup")
+b_task=$(echo "$b_task" |grep -v sudo |wc -l)
+if [ "$b_task" -gt 2 ]; then
+    exit
+fi
 
 
 #----------------------------------------------------------#
@@ -44,7 +49,7 @@ case $queue in
                 rm $VESTA/data/queue/restart.pipe;
                 touch $VESTA/data/queue/restart.pipe;;
     webstats)   bash $VESTA/data/queue/webstats.pipe > /dev/null 2>&1 ;;
-    backup)     bash $VESTA/data/queue/backup.pipe;;
+    backup)     bash $VESTA/data/queue/backup.pipe > /dev/null 2>&1 ;;
     disk)       bash $VESTA/data/queue/disk.pipe;;
     traffic)    bash $VESTA/data/queue/traffic.pipe;;
     *)          check_args '1' '0' 'QUEUE'

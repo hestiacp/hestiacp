@@ -26,6 +26,7 @@ validate_format 'user'
 is_system_enabled "$BACKUP_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_backup_enabled
+is_backup_scheduled
 
 
 #----------------------------------------------------------#
@@ -33,7 +34,7 @@ is_backup_enabled
 #----------------------------------------------------------#
 
 # Adding backup to pipe
-echo "$user" >> $VESTA/data/queue/backup.pipe
+echo "$BIN/v-backup-user $user yes" >> $VESTA/data/queue/backup.pipe
 
 
 #----------------------------------------------------------#

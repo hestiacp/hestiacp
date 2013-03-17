@@ -502,7 +502,6 @@ ftp_backup(){
     # Checking ftp permission
     ftmpdir=$(mktemp -u -p $BPATH)
     command="mkdir $ftmpdir
-             ls $ftmpdir
              rm $ftmpdir"
     if [ ! -z "$(ftpc "$command")" ] ; then
         rm -rf $tmpdir

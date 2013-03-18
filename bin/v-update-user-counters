@@ -80,8 +80,8 @@ for user in $user_list; do
 
     # Checking users
     if [ "$user" = 'admin' ]; then
-        SUSPENDED_USERS=$(grep "SUSPENDED='yes'" $VESTA/data/users/*/user.conf)
-	SUSPENDED_USERS=$(echo "$SUSPENDED_USERS" |wc -l)
+        spnd=$(grep "SUSPENDED='yes'" $VESTA/data/users/*/user.conf | wc -l)
+        SUSPENDED_USERS=$spnd
         U_USERS=$(ls $VESTA/data/users/|wc -l)
     fi
 

@@ -36,6 +36,12 @@ is_backup_enabled
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Set backup directory if undefined
+if [ -z "$BACKUP" ]; then
+    BACKUP=/home/backup/
+fi
+mkdir -p $BACKUP
+
 # Get current time
 start_time=$(date '+%s')
 
@@ -471,22 +477,34 @@ local_backup(){
 
 # Defining ftp command function
 ftpc() {
-    ftp -n $HOST $PORT <<EOF
+    ftp -n $HOST $FTP_PORT <<EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
     binary
-    cd $BPATH
     $1
+    $2
+    $3
     quit
 EOF
 }
 
 # Defining ftp storage function
-ftp_backup(){
+ftp_backup() {
     # Checking config
+    if [ ! -e "$VESTA/conf/ftp.backup.conf" ]; then
+        ftp_conf_error="Can't open  $VESTA/conf/ftp.backup.conf"
+        echo "$ftp_conf_error" | $mail -s "$subj" $email
+        echo "Error: $VESTA/conf/ftp.backup.conf does not exist"
+        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+
+    # Parse config
     source $VESTA/conf/ftp.backup.conf
-    if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
-        [ -z "$BPATH" ]; then
+
+    # Checking variables
+    if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
         rm -rf $tmpdir
         echo "Can't parse ftp backup configuration" | $mail -s "$subj" $email
         echo "Error: Parsing error"
@@ -499,21 +517,31 @@ ftp_backup(){
     echo -e "$(date "+%F %T") FTP ftp://$HOST$BPATH/$user.$DATE.tar"
     msg="$msg\n$(date "+%F %T") FTP ftp://$HOST$BPATH/$user.$DATE.tar"
 
-    # Checking ftp permission
-    ftmpdir=$(mktemp -u -p $BPATH)
-    command="mkdir $ftmpdir
-             rm $ftmpdir"
-    if [ ! -z "$(ftpc "$command")" ] ; then
+    # Checking ftp connection
+    if [ ! -z "$(ftpc)" ]; then
         rm -rf $tmpdir
         echo "Can't login to ftp://$USERNAME@$HOST" | $mail -s "$subj" $email
-        echo "Error: FTP error"
+        echo "Error: can't login to ftp"
+        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        log_event "$E_FTP" "$EVENT"
+        exit $E_FTP
+    fi
+
+    # Check ftp permissions
+    ftpc "mkdir $BPATH" > /dev/null 2>&1
+    ftmpdir=$(mktemp -u -p "$BPATH")
+    ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir")
+    if [ ! -z "$ftp_result" ] ; then
+        rm -rf $tmpdir
+        echo "Can't create ftp backup folder" | $mail -s "$subj" $email
+        echo "Error: cant's create ftp folder"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_FTP" "$EVENT"
         exit $E_FTP
     fi
 
     # Checking retention
-    backup_list=$(ftpc "ls" |awk '{print $9}' |grep "^$user\.")
+    backup_list=$(ftpc "cd $BPATH" "ls" |awk '{print $9}' |grep "^$user\.")
     backups_count=$(echo "$backup_list" | wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS + 1))
@@ -522,19 +550,19 @@ ftp_backup(){
             deprecated="$deprecated $backup"
             echo -e "$(date "+%F %T") Deleted old ftp backup: $backup_date"
             msg="$msg\n$(date "+%F %T") Deleted old ftp backup: $backup_date"
-            ftpc "delete $backup"
+            ftpc "cd $BPATH" "delete $backup"
         done
     fi
 
     # Uploading backup archive
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        ftpc "put $user.$DATE.tar"
+        ftpc "cd $BPATH" "put $user.$DATE.tar"
     else
         cd $tmpdir
         tar -cf $BACKUP/$user.$DATE.tar .
         cd $BACKUP/
-        ftpc "put $user.$DATE.tar"
+        ftpc "cd $BPATH" "put $user.$DATE.tar"
         rm -f $user.$DATE.tar
     fi
 }

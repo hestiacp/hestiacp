@@ -91,6 +91,7 @@ sed -i "/ $user$/d" $VESTA/data/queue/traffic.pipe
 
 # Removing system user
 /usr/sbin/userdel -f $user
+chattr -i $HOMEDIR/$user/conf
 rm -rf $HOMEDIR/$user
 rm -f /var/spool/mail/$user
 rm -f /var/spool/cron/$user

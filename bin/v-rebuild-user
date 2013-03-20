@@ -65,6 +65,7 @@ chmod a+x $HOMEDIR/$user
 chmod a+x $HOMEDIR/$user/conf
 chown $user:$user $HOMEDIR/$user
 chown root:root $HOMEDIR/$user/conf
+chattr +i $HOMEDIR/$user/conf
 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     mkdir -p $HOMEDIR/$user/conf/web

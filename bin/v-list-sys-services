@@ -37,8 +37,8 @@ get_srv_state() {
         mem=$((mem / 1024))
 
         # Get pid date
-        if [ ! -z $pid ] && [ -e "/proc/$pid/cmdline" ]; then
-            mtime=$(stat -c "%Y" /proc/$pid/cmdline)
+        if [ ! -z $pid ] && [ -e "/proc/$pid" ]; then
+            mtime=$(stat -c "%Y" /proc/$pid)
             rtime=$((ctime - mtime))
             rtime=$((rtime  / 60))
         fi

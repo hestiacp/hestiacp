@@ -520,6 +520,10 @@ fi
 
 mysqladmin -u root password $mpass
 echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
+mysql -e "DELETE FROM mysql.user WHERE User=''"
+mysql -e "DROP DATABASE test"
+mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+mysql -e "FLUSH PRIVILEGES"
 
 # Bind configuration
 wget $CHOST/$VERSION/named.conf -O /etc/named.conf

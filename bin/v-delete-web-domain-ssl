@@ -70,11 +70,10 @@ update_object_value 'web' 'DOMAIN' "$domain" '$SSL' 'no'
 
 # Checking last ssl domain
 ssl_dom=$(grep "SSL='yes'" $USER_DATA/web.conf)
-main_conf='/etc/httpd/conf.d/vesta.conf'
-conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+conf='/etc/httpd/conf.d/vesta.conf'
 if [ -z "$ssl_dom" ]; then
-    sed -i "/Include ${conf////\/}/d" $main_conf
-    rm -f $conf
+    sed -i "/.*\/$user\/.*shttpd.conf/d" $conf
+    rm -f $HOMEDIR/$user/conf/web/shttpd.conf
 fi
 
 # Checking last nginx domain
@@ -82,7 +81,7 @@ conf='/etc/nginx/conf.d/vesta_users.conf'
 last_nginx=$(grep -v "NGINX=''" $USER_DATA/web.conf)
 last_snginx=$(echo "$last_nginx" | grep "SSL='yes'")
 if [ -z "$last_snginx" ]; then
-    sed -i "/$user\/conf\/web\/snginx.conf/d" $conf
+    sed -i "/.*\/$user\/.*snginx.conf/d" $conf
     rm -f $HOMEDIR/$user/conf/web/snginx.conf
 fi
 

@@ -111,38 +111,32 @@ rm -f /var/log/httpd/domains/$domain.error*
 sed -i "/DOMAIN='$domain'/ d" $USER_DATA/web.conf
 
 # Checking last ssl domain
+conf='/etc/httpd/conf.d/vesta.conf'
 ssl_dom=$(grep "SSL='yes'" $USER_DATA/web.conf | wc -l)
 if [ "$ssl_dom" -eq '0' ]; then
-    sed -i "s/ Include /#Include /" $HOMEDIR/$user/conf/web/httpd.conf
+    sed -i "/.*\/$user\/.*shttpd.conf/d" $conf
+    rm -f $HOMEDIR/$user/conf/web/shttpd.conf
 fi
 
 # Checking last domain
 domains=$(wc -l $USER_DATA/web.conf|cut -f 1 -d ' ')
 if [ "$domains" -eq '0' ]; then
-    conf='/etc/httpd/conf.d/vesta.conf'
-    line=$(grep -n "$HOMEDIR/$user/conf/web/httpd.conf" $conf | cut -f 1 -d : )
-    if [ ! -z "$line" ]; then
-        sed -i "$line d" $conf
-    fi
+    sed -i "/.*\/$user\/.*httpd.conf/d" $conf
+    rm -f $HOMEDIR/$user/conf/web/httpd.conf
 fi
 
-# Checking last nginx domain
+# Checking last ssl nginx domain
 conf='/etc/nginx/conf.d/vesta_users.conf'
-last_nginx=$(grep -v "NGINX=''" $USER_DATA/web.conf)
 last_snginx=$(echo "$last_nginx" | grep "SSL='yes'")
 if [ -z "$last_snginx" ]; then
-    sline=$(grep -n "$HOMEDIR/$user/conf/web/snginx.conf" $conf |cut -f 1 -d :)
-    if [ ! -z "$sline" ]; then
-        sed -i "$sline d" $conf
-    fi
+    sed -i "/.*\/$user\/.*snginx.conf/d" $conf
     rm -f $HOMEDIR/$user/conf/web/snginx.conf
 fi
 
+# Checking last nginx domain
+last_nginx=$(grep -v "NGINX=''" $USER_DATA/web.conf)
 if [ -z "$last_nginx" ]; then
-    line=$(grep -n "$HOMEDIR/$user/conf/web/nginx.conf" $conf | cut -f 1 -d : )
-    if [ ! -z "$line" ]; then
-        sed -i "$line d" $conf
-    fi
+    sed -i "/.*\/$user\/.*nginx.conf/d" $conf
     rm -f $HOMEDIR/$user/conf/web/nginx.conf
 fi
 

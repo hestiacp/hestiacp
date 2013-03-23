@@ -39,17 +39,17 @@ user_domains=0
 user_ssl=0
 user_aliases=0
 suspended_web=0
+conf=$USER_DATA/web.conf
+fields='$DOMAIN'
+nohead=1
+domain_counter=0
 
 # Clean up old config
 rm -f $HOMEDIR/$user/conf/tmp_*.conf
 
-# Defining config
-conf=$USER_DATA/web.conf
-fields='$DOMAIN'
-nohead=1
-
 # Starting loop
-for domain in $(shell_list) ; do
+for domain in $(shell_list); do
+    ((++ domain_counter))
 
     # Rebuilding directories
     mkdir -p $HOMEDIR/$user/web/$domain \
@@ -241,56 +241,69 @@ for domain in $(shell_list) ; do
 
 done
 
-# Renaming tmp config
-tmp_conf="$HOMEDIR/$user/conf/web/tmp_httpd.conf"
-conf="$HOMEDIR/$user/conf/web/httpd.conf"
-if [ -e "$tmp_conf" ]; then
-    mv $tmp_conf $conf
-fi
+# Config path
+httpd_conf='/etc/httpd/conf.d/vesta.conf'
+nginx_conf='/etc/nginx/conf.d/vesta_users.conf'
 
-# Checking include in main httpd.conf
-main_conf='/etc/httpd/conf.d/vesta.conf'
-main_conf_check=$(grep "$conf" $main_conf )
-if [ ! -z "$domain" ] && [ -z "$main_conf_check" ]; then
-    echo "Include $conf" >>$main_conf
-fi
+# Checking if there is at least 1 domain
+if [ "$domain_counter" -lt 1 ]; then
 
-# Checking ssl 
-if [ "$ssl_change" = 'yes' ]; then
-    tmp_conf="$HOMEDIR/$user/conf/web/tmp_shttpd.conf"
-    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
-    mv $tmp_conf $conf
-
-    # Checking include in main httpd.conf
-    main_conf_check=$(grep "$conf" $main_conf )
-    if [ -z "$main_conf_check" ]; then
-        echo "Include $conf" >>$main_conf
+    # Deleting web configs
+    rm -f $HOMEDIR/$user/conf/web/*
+    sed -i "/.*\/$user\/.*httpd.conf/d" $httpd_conf
+    if [ -e "$nginx_conf" ]; then
+        sed -i "/.*\/$user\/.*nginx.conf/d" $nginx_conf
     fi
-fi
 
-# Checking nginx
-if [ "$ngix_change" = 'yes' ]; then
-    nginx_conf='/etc/nginx/conf.d/vesta_users.conf'
-    tmp_conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
-    conf="$HOMEDIR/$user/conf/web/nginx.conf"
+else
+
+    # Renaming tmp config
+    tmp_conf="$HOMEDIR/$user/conf/web/tmp_httpd.conf"
+    conf="$HOMEDIR/$user/conf/web/httpd.conf"
     mv $tmp_conf $conf
 
-    nginx_conf_check=$(grep "$conf" $nginx_conf )
-    if [ -z "$nginx_conf_check" ]; then
-        echo "include $conf;" >>$nginx_conf
+    # Checking httpd.conf include
+    httpd_include=$(grep "$conf" $httpd_conf )
+    if [ -z "$httpd_include" ]; then
+        echo "Include $conf" >> $httpd_conf
+    fi
+
+    # Checking ssl
+    if [ "$ssl_change" = 'yes' ]; then
+        tmp_conf="$HOMEDIR/$user/conf/web/tmp_shttpd.conf"
+        conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+        mv $tmp_conf $conf
+    fi
+
+    # Checking ssl include
+    httpd_include=$(grep "$conf" $httpd_conf )
+    if [ -z "$httpd_include" ]; then
+        echo "Include $conf" >> $httpd_conf
+    fi
+
+    # Checking nginx
+    if [ "$ngix_change" = 'yes' ]; then
+        tmp_conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
+        conf="$HOMEDIR/$user/conf/web/nginx.conf"
+        mv $tmp_conf $conf
+    fi
+    nginx_include=$(grep "$conf" $nginx_conf )
+    if [ -z "$nginx_include" ]; then
+        echo "include $conf;" >> $nginx_conf
     fi
 
     # Checking ssl for nginx
-    if [ "$ssl_change" = 'yes' ]; then
+    if [ "$ngix_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
         tmp_conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
         conf="$HOMEDIR/$user/conf/web/snginx.conf"
         mv $tmp_conf $conf
-        nginx_conf_check=$(grep "$conf" $nginx_conf )
-        if [ -z "$nginx_conf_check" ]; then
-            echo "include $conf;" >>$nginx_conf
+        nginx_include=$(grep "$conf" $nginx_conf )
+        if [ -z "$nginx_include" ]; then
+            echo "include $conf;" >> $nginx_conf
         fi
     fi
 fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

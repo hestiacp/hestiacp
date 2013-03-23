@@ -37,16 +37,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 user_domains=0
 user_records=0
 suspended_dns=0
-
-# Checking dns folder
-if [ ! -d "$USER_DATA/dns" ]; then
-    rm -f $USER_DATA/dns
-    mkdir $USER_DATA/dns
-fi
-
-# Defining config and fie
 conf="$USER_DATA/dns.conf"
-
 
 # Defining user name servers
 ns=$(get_user_value '$NS')
@@ -108,6 +99,7 @@ for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
     records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
     user_records=$((user_records + records))
     update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+
 done
 
 

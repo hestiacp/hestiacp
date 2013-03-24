@@ -335,7 +335,7 @@ then
 fi
 
 
-# DatbaBases
+# DataBases
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
     echo "-- DB --"
     msg="$msg\n-- DB --"
@@ -351,19 +351,20 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
     db_list=$(echo "$db_list" | sed -e "s/  */\ /g" -e "s/^ //")
 
     i=0
+    conf="$USER_DATA/db.conf"
     for database in $db_list; do
         ((i ++))
+        get_database_values
+
         echo -e "$(date "+%F %T") $TYPE $database"
         msg="$msg\n$(date "+%F %T") $TYPE $database"
 
         mkdir -p $tmpdir/db/$database/conf
         mkdir -p $tmpdir/db/$database/vesta
 
-        conf="$USER_DATA/db.conf"
         cd $tmpdir/db/$database/
         grep "DB='$database'" $conf > vesta/db.conf
 
-        get_database_values
         dump="$tmpdir/db/$database/$database.$TYPE.sql"
         grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
         case $TYPE in
@@ -413,6 +414,34 @@ then
     echo
     msg="$msg\n"
 fi
+
+# User Directories
+echo "-- User Directories --"
+msg="$msg\n-- User Directories --"
+mkdir $tmpdir/user_dirs
+user_dirs=$(ls $HOMEDIR/$user | \
+    grep -v conf | \
+    grep -v web | \
+    grep -v dns | \
+    grep -v mail | \
+    grep -v tmp)
+i=0
+for user_dir in $user_dirs; do
+    ((i ++))
+    echo -e "$(date "+%F %T") $user_dir"
+    msg="$msg\n$(date "+%F %T") $user_dir"
+    cp -pr $HOMEDIR/$user/$user_dir $tmpdir/user_dirs/
+done
+if [ "$i" -eq 1 ]; then
+    echo -e "$(date "+%F %T") $i user directory"
+    msg="$msg\n$(date "+%F %T") $i directory"
+else
+    echo -e "$(date "+%F %T") $i directories"
+    msg="$msg\n$(date "+%F %T") $i directories"
+fi
+echo
+msg="$msg\n"
+
 
 # Get backup size
 size="$(du -shm $tmpdir | cut -f 1)"

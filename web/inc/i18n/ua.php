@@ -35,6 +35,7 @@ $LANG['ua'] = array(
     'Add Database' => 'Додати БД',
     'Add Cron Job' => 'Додати задание',
     'Create Backup' => 'Створити архів',
+    'Restore All'  => 'Відновити все',
     'Add Package' => 'Додати пакет',
     'Add IP' => 'Додати IP',
     'Search' => 'Пошук',

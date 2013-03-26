@@ -16,6 +16,7 @@ user=$1
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
+source $VESTA/func/rebuild.sh
 
 
 #----------------------------------------------------------#
@@ -48,120 +49,7 @@ fi
 
 # Starting loop
 for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
-    # Defining variables
-    get_domain_values 'mail'
-
-    # Rebuilding config structure
-    rm -f /etc/exim/domains/$domain
-    mkdir -p $HOMEDIR/$user/conf/mail/$domain
-    ln -s $HOMEDIR/$user/conf/mail/$domain /etc/exim/domains/
-    rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
-    rm -f $HOMEDIR/$user/conf/mail/$domain/protection
-    rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
-    touch $HOMEDIR/$user/conf/mail/$domain/aliases
-    touch $HOMEDIR/$user/conf/mail/$domain/protection
-    touch $HOMEDIR/$user/conf/mail/$domain/passwd
-    chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain
-    chown -R dovecot:mail /etc/exim/domains/$domain
-    chmod 770 $HOMEDIR/$user/conf/mail/$domain
-    chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-    chmod 770 /etc/exim/domains/$domain
-
-    # Adding antispam protection
-    if [ "$ANTISPAM" = 'yes' ]; then
-        echo 'antispam' >> $HOMEDIR/$user/conf/mail/$domain/protection
-    fi
-
-    # Adding antivirus protection
-    if [ "$ANTIVIRUS" = 'yes' ]; then
-        echo 'antivirus' >> $HOMEDIR/$user/conf/mail/$domain/protection
-    fi
-
-    # Adding dkim
-    if [ "$DKIM" = 'yes' ]; then
-        U_MAIL_DKMI=$((U_MAIL_DKMI + 1))
-        pem="$USER_DATA/mail/$domain.pem"
-        pub="$USER_DATA/mail/$domain.pub"
-        openssl genrsa -out $pem 512 &>/dev/null
-        openssl rsa -pubout -in $pem -out $pub &>/dev/null
-        chmod 660 $USER_DATA/mail/$domain.*
-
-        cp $pem $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-        chown root:mail $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-        chmod 660 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-
-        # Deleting old dkim records
-        records=$($BIN/v-list-dns-domain-records $user $domain plain)
-        dkim_records=$(echo "$records" |grep -w '_domainkey'|cut -f 1 -d ' ')
-        for id in $dkim_records; do
-            $BIN/v-delete-dns-domain-record $user $domain $id
-        done
-
-        # Adding dkim dns records
-        check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
-        if [ "$?" -eq 0 ]; then
-            p=$(cat $pub|grep -v ' KEY---'|tr -d '\n')
-            record='_domainkey'
-            policy="\"t=y; o=~;\""
-            $BIN/v-add-dns-domain-record $user $domain $record TXT "$policy"
-
-            record='mail._domainkey'
-            slct="\"k=rsa\; p=$p\""
-            $BIN/v-add-dns-domain-record $user $domain $record TXT "$slct"
-        fi
-    fi
-
-    # Removing symbolic link
-    if [ "$SUSPENDED" = 'yes' ]; then
-        SUSPENDED_MAIL=$((SUSPENDED_MAIL +1))
-        rm -f /etc/exim/domains/$domain
-    fi
-
-    if [ ! -e $HOMEDIR/$user/mail/$domain ]; then
-        mkdir $HOMEDIR/$user/mail/$domain
-    fi
-    chown $user:mail $HOMEDIR/$user/mail/$domain
-    chmod 770 $HOMEDIR/$user/mail/$domain
-
-    dom_aliases=$HOMEDIR/$user/conf/mail/$domain/aliases
-    if [ ! -z "$CATCHALL" ]; then
-        echo "*@$domain:$CATCHALL" >> $dom_aliases
-    fi
-
-    # Rebuild domain accounts
-    accs=0
-    dom_diks=0
-    if [ -e "$USER_DATA/mail/$domain.conf" ]; then
-        accounts=$(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT')
-    else
-        accounts=''
-    fi
-
-    for account in $accounts; do
-        (( ++accs))
-        dom_diks=$((dom_diks + U_DISK))
-        object=$(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
-        eval "$object"
-        if [ "$SUSPENDED" = 'yes' ]; then
-            MD5='SUSPENDED'
-        fi
-
-        str="$account:$MD5:$user:mail::$HOMEDIR/$user:$QUOTA"
-        echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
-
-        for malias in ${ALIAS//,/ }; do
-            echo "$malias@$domain:$account@$domain" >> $dom_aliases
-        done
-        if [ ! -z "$FWD" ]; then
-            echo "$account@$domain:$FWD" >> $dom_aliases
-        fi
-
-    done
-    update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accs"
-    update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_diks"
-    U_MAIL_ACCOUNTS=$((U_MAIL_ACCOUNTS + accs))
-    U_DISK_MAIL=$((U_DISK_MAIL + dom_diks))
-    U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
+    rebuild_mail_domain_conf
 done
 
 

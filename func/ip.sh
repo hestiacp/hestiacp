@@ -1,8 +1,9 @@
 # Validationg ip address
 is_ip_valid() {
-    check_nat=$(grep -H "^NAT='$ip'" $VESTA/data/ips/* 2>/dev/null)
-    if [ ! -e "$VESTA/data/ips/$ip" ] && [ -z "$check_nat" ] ; then
-        echo "Error: IP $ip not exist"
+    userip=${1-$ip}
+    check_nat=$(grep -H "^NAT='$userip'" $VESTA/data/ips/* 2>/dev/null)
+    if [ ! -e "$VESTA/data/ips/$userip" ] && [ -z "$check_nat" ] ; then
+        echo "Error: IP $userip not exist"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
@@ -10,10 +11,11 @@ is_ip_valid() {
 
 # Check if ip availabile for user
 is_ip_avalable() {
-    if [ -e "$VESTA/data/ips/$ip" ]; then
-        ip_data=$(cat $VESTA/data/ips/$ip)
+    userip=${1-$ip}
+    if [ -e "$VESTA/data/ips/$userip" ]; then
+        ip_data=$(cat $VESTA/data/ips/$userip)
     else
-        nated_ip=$(grep -H "^NAT='$ip'" $VESTA/data/ips/*)
+        nated_ip=$(grep -H "^NAT='$userip'" $VESTA/data/ips/* 2>/dev/null)
         nated_ip=$(echo "$nated_ip" | cut -f 1 -d : | cut -f 7 -d /)
         ip_data=$(cat $VESTA/data/ips/$nated_ip)
     fi
@@ -24,7 +26,7 @@ is_ip_avalable() {
         shared='yes'
     fi
     if [ "$owner" != "$user" ] && [ "$shared" != 'yes' ]; then
-        echo "Error: User $user don't have permission to use $ip"
+        echo "Error: User $user don't have permission to use $userip"
         log_event "$E_FORBIDEN" "$EVENT"
         exit $E_FORBIDEN
     fi
@@ -196,6 +198,7 @@ create_ip_startup() {
     echo -e "$ip_data" > $iconf-$iface
 }
 
+# Get real ip address
 get_real_ip() {
     if [ -e "$VESTA/data/ips/$1" ]; then
         echo $1
@@ -203,4 +206,24 @@ get_real_ip() {
         nated_ip=$(grep -H "^NAT='$1'" $VESTA/data/ips/*)
         echo "$nated_ip" | cut -f 1 -d : | cut -f 7 -d /
     fi
+}
+
+# Get user ip
+get_user_ip(){
+    ip=$(grep -H "OWNER='$1'" $VESTA/data/ips/* 2>/dev/null | head -n1)
+    ip=$(echo "$ip" | cut -f 7 -d / | cut -f 1 -d :)
+
+    if [ -z "$ip" ]; then
+        admin_ips=$(grep -H "OWNER='admin'" $VESTA/data/ips/* 2>/dev/null)
+        admin_ips=$(echo "$admin_ips" | cut -f 7 -d / | cut -f 1 -d :)
+        for admin_ip in $admin_ips; do
+            if [ -z "$ip" ]; then
+                shared=$(grep "STATUS='shared'" $VESTA/data/ips/$admin_ip)
+                if [ ! -z "$shared" ]; then
+                    ip=$admin_ip
+                fi
+            fi
+        done
+    fi
+    echo "$ip"
 }

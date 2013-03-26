@@ -69,7 +69,7 @@ is_object_valid "../../conf/$type" 'HOST' "$host"
 
 # Defining fileds to select
 conf=$VESTA/conf/$type.conf
-fields='$HOST $PORT $CHARSETS $MAX_DB $U_SYS_USERS $U_DB_BASES $TPL $SUSPENDED'
+fields='$HOST $CHARSETS $MAX_DB $U_SYS_USERS $U_DB_BASES $TPL $SUSPENDED'
 fields="$fields \$TIME \$DATE"
 
 # Listing database

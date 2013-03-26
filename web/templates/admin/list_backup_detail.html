@@ -1,0 +1,282 @@
+                               <table class="submenu">
+                                    <tr>
+                                        <td style="padding: 2px 0 0 6px">
+                                            <div class="submenu-button-block">
+                                                <button class="submenu-button" onclick="location.href='/add/backup/'"> <?php print _('Restore All');?> </button>
+                                            </div>
+                                            <div class="submenu-search-block">
+                                                <form action="/search/" method="get">
+                                                    <input type="text" name="q" class="submenu-search-field">
+                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                </form>
+                                            </div>
+                                            <div class="submenu-select-block">
+                                                <form action="/bulk/backup/" method="post" id="objects">
+                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <select class="submenu-select-dropdown" name="action">
+                                                    <option><?php print _('apply to selected');?></option>
+                                                    <option><?php print _('delete');?></option>
+                                                </select>
+                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
+                                            </div>
+                                            <?php
+                                                if (!empty($_SESSION['backup_msg'])) {
+                                            ?>
+                                            <div>
+                                                <script type="text/javascript">
+                                                    $(function() {
+                                                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                                                        $( "#dialog-message" ).dialog({
+                                                            modal: true,
+                                                            buttons: {
+                                                                Ok: function() {
+                                                                    $( this ).dialog( "close" );
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                                <div id="dialog-message" title="<?php print _('Backup System') ?>">
+                                                    <p><?php echo $_SESSION['backup_msg'] ?></p>
+                                                </div>
+                                            </div>
+                                            <?php
+                                                    unset($_SESSION['backup_msg']);
+                                                }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div id="vstobjects">
+                        <div style="height:10px; font-size:0;"></div>
+                        <table class="data" style="background: #ebe9dc;">
+                            <tr>
+                                <td style="padding: 8px 2px 8px 0;">
+                                    <a class="name" style="color: #555; font-size: 10pt;"><b><?php print _('Listing');?>  <?php echo $_GET['backup'] ?> </b></a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="height:10px; font-size:0;"></div>
+                        <table class="data">
+
+                            <?php
+                                $backup = $_GET['backup'];
+                                if (!empty($data[$backup]['VESTA'])) {
+                            ?> 
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="backup[]" value="<?php echo $key ?>" ></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <a href="#" id="restore_link_<?php echo "$i"?>" class="data-controls">
+                                        <span>
+                                            <img src="/images/restore.png" width="6px" height="8px">
+                                            <?php print _('restore');?> 
+                                        </span>
+                                    </a>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td class="cron" style="width: 170px; font-size: 14px;">
+                                                <?php echo _('sys') ?>
+                                            </td>
+                                            <td class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo _('user data') ?></b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <?php
+                                }
+                            ?> 
+
+
+                            <?php
+                                $web = explode(',',$data[$backup]['WEB']);
+                                foreach ($web as $key) {
+                            ?> 
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="backup[]" value="<?php echo $key ?>" ></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <a href="#" id="restore_link_<?php echo "$i"?>" class="data-controls">
+                                        <span>
+                                            <img src="/images/restore.png" width="6px" height="8px">
+                                            <?php print _('restore');?> 
+                                        </span>
+                                    </a>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td class="cron" style="width: 170px; font-size: 14px;">
+                                                <?php echo 'web ' . _('domain') ?>
+                                            </td>
+                                            <td class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo $key ?></b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <?php
+                                }
+                            ?> 
+
+                            <?php
+                                $dns = explode(',',$data[$backup]['DNS']);
+                                foreach ($dns as $key) {
+                            ?> 
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="backup[]" value="<?php echo $key ?>" ></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <a href="#" id="restore_link_<?php echo "$i"?>" class="data-controls">
+                                        <span>
+                                            <img src="/images/restore.png" width="6px" height="8px">
+                                            <?php print _('restore');?> 
+                                        </span>
+                                    </a>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td class="cron" style="width: 170px; font-size: 14px;">
+                                                <?php echo 'dns ' . _('domain') ?>
+                                            </td>
+                                            <td class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo $key ?></b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <?php
+                                }
+                            ?> 
+
+                            <?php
+                                $mail = explode(',',$data[$backup]['MAIL']);
+                                foreach ($mail as $key) {
+                            ?> 
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="backup[]" value="<?php echo $key ?>" ></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <a href="#" id="restore_link_<?php echo "$i"?>" class="data-controls">
+                                        <span>
+                                            <img src="/images/restore.png" width="6px" height="8px">
+                                            <?php print _('restore');?> 
+                                        </span>
+                                    </a>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td class="cron" style="width: 170px; font-size: 14px;">
+                                                <?php echo 'mail ' . _('domain') ?>
+                                            </td>
+                                            <td class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo $key ?></b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <?php
+                                }
+                            ?> 
+
+                            <?php
+                                $db = explode(',',$data[$backup]['DB']);
+                                foreach ($db as $key) {
+                            ?> 
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="backup[]" value="<?php echo $key ?>" ></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <a href="#" id="restore_link_<?php echo "$i"?>" class="data-controls">
+                                        <span>
+                                            <img src="/images/restore.png" width="6px" height="8px">
+                                            <?php print _('restore');?> 
+                                        </span>
+                                    </a>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td class="cron" style="width: 170px; font-size: 14px;">
+                                                <?php echo _('database') ?>
+                                            </td>
+                                            <td class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo $key ?></b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <?php
+                                }
+                            ?> 
+
+                            <?php
+                                $backup = $_GET['backup'];
+                                if (!empty($data[$backup]['CRON'])) {
+                            ?> 
+
+                            <tr class="data-row">
+                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
+                                    <table class="data-col1">
+                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="backup[]" value="<?php echo $key ?>" ></td></tr>
+                                    </table>
+                                </td>
+                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                    <a href="#" id="restore_link_<?php echo "$i"?>" class="data-controls">
+                                        <span>
+                                            <img src="/images/restore.png" width="6px" height="8px">
+                                            <?php print _('restore');?> 
+                                        </span>
+                                    </a>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td class="cron" style="width: 170px; font-size: 14px;">
+                                                <?php echo _('cron') ?>
+                                            </td>
+                                            <td class="domain" style="padding: 0 0 0 4px;">
+                                                <b><?php echo 'cron ' . _('records') ?></b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <?php
+                                }
+                            ?> 
+
+
+                        </table>
+                        </form>
+
+                    </div>
+

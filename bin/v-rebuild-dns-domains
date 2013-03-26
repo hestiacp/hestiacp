@@ -17,6 +17,7 @@ restart=$2
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
+source $VESTA/func/rebuild.sh
 
 
 #----------------------------------------------------------#
@@ -52,54 +53,7 @@ sed -i "/\/$user\/conf\/dns/d" /etc/named.conf
 
 # Starting loop
 for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
-    # Defining variables
-    get_domain_values 'dns'
-    domain_idn=$(idn -t --quiet -a "$domain")
-
-    # Checking zone file
-    if [ ! -e "$USER_DATA/dns/$domain.conf" ]; then
-        cat $DNSTPL/$TPL.tpl |\
-            sed -e "s/%ip%/$IP/g" \
-                -e "s/%domain_idn%/$domain_idn/g" \
-                -e "s/%domain%/$domain/g" \
-                -e "s/%ns1%/$ns1/g" \
-                -e "s/%ns2%/$ns2/g" \
-                -e "s/%ns3%/$ns3/g" \
-                -e "s/%ns4%/$ns4/g" \
-                -e "s/%time%/$TIME/g" \
-                -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
-    fi
-
-    # Sorting records
-    sort_dns_records
-
-    # Updating zone
-    update_domain_zone
-
-    # Set file permissions
-    chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
-    chown root:named $HOMEDIR/$user/conf/dns/$domain.db
-
-    # Bind config check
-    nconf='/etc/named.conf'
-    if [ "$SUSPENDED" = 'yes' ]; then
-        rm_string=$(grep -n /etc/namedb/$domain.db $nconf | cut -d : -f 1)
-        if [ ! -z "$rm_string" ]; then
-            sed -i "$rm_string d" $nconf
-        fi
-        suspended_dns=$((suspended_dns + 1))
-    else
-        if [ -z "$(grep /$domain.db $nconf)" ]; then
-            named="zone \"$domain_idn\" {type master; file"
-            named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
-            echo "$named" >> /etc/named.conf
-        fi
-    fi
-    user_domains=$((user_domains + 1))
-    records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
-    user_records=$((user_records + records))
-    update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
-
+    rebuild_dns_domain_conf
 done
 
 

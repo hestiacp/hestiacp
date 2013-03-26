@@ -54,9 +54,9 @@ else
     email=$(grep CONTACT $VESTA/data/users/admin/user.conf | cut -f 2 -d \')
 fi
 if [ -e "$VESTA/web/inc/mail-wrapper.php" ]; then
-    mail="$VESTA/web/inc/mail-wrapper.php"
+    send_mail="$VESTA/web/inc/mail-wrapper.php"
 else
-    mail=$(which mail)
+    send_mail=$(which mail)
 fi
 
 # Check load average
@@ -67,7 +67,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
     echo
     sleep 60
     if [ "$i" -ge "15" ]; then
-        echo "LoadAverage $i is above threshold" | $mail -s "$subj" $email
+        echo "LoadAverage $i is above threshold" | $send_mail -s "$subj" $email
         echo "Error: LA is too high"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_LA" "$EVENT"
@@ -79,9 +79,10 @@ done
 # Creating temporary directory
 tmpdir=$(mktemp -p $BACKUP -d)
 if [ "$?" -ne 0 ]; then
-    echo "Can't create tmp dir $tmpdir" | $mail -s "$subj" $email
+    echo "Can't create tmp dir $tmpdir" | $send_mail -s "$subj" $email
     echo "Error: can't create tmp dir"
     log_event "$E_NOTEXIST" "$EVENT"
+    exit $E_NOTEXIST
 fi
 
 # Backingup system configs
@@ -316,7 +317,7 @@ then
         cd $HOMEDIR/$user/mail/$domain
         accounts=$(ls)
         if [ ! -z "$accounts" ]; then
-            tar -cf $tmpdir/mail/$domain/accounts.tar  $accounts
+            tar -cpf $tmpdir/mail/$domain/accounts.tar  $accounts
         fi
 
         if [ ! -z "$BACKUP_GZIP" ] && [ ! -z $accounts ]; then
@@ -484,7 +485,8 @@ local_backup(){
 
     if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
         rm -rf $tmpdir
-        echo "Not enough disk space to run backup" | $mail -s "$subj" $email
+        echo "Not enough disk space to run backup" |\
+            $send_mail -s "$subj" $email
         echo "Error: Not enough disk space"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_DISK" "$EVENT"
@@ -522,7 +524,7 @@ ftp_backup() {
     # Checking config
     if [ ! -e "$VESTA/conf/ftp.backup.conf" ]; then
         ftp_conf_error="Can't open  $VESTA/conf/ftp.backup.conf"
-        echo "$ftp_conf_error" | $mail -s "$subj" $email
+        echo "$ftp_conf_error" | $send_mail -s "$subj" $email
         echo "Error: $VESTA/conf/ftp.backup.conf does not exist"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_NOTEXIST" "$EVENT"
@@ -535,7 +537,8 @@ ftp_backup() {
     # Checking variables
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
         rm -rf $tmpdir
-        echo "Can't parse ftp backup configuration" | $mail -s "$subj" $email
+        echo "Can't parse ftp backup configuration" |\
+            $send_mail -s "$subj" $email
         echo "Error: Parsing error"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_PARSING" "$EVENT"
@@ -549,7 +552,8 @@ ftp_backup() {
     # Checking ftp connection
     if [ ! -z "$(ftpc)" ]; then
         rm -rf $tmpdir
-        echo "Can't login to ftp://$USERNAME@$HOST" | $mail -s "$subj" $email
+        echo "Can't login to ftp://$USERNAME@$HOST" |\
+            $send_mail -s "$subj" $email
         echo "Error: can't login to ftp"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_FTP" "$EVENT"
@@ -562,7 +566,8 @@ ftp_backup() {
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir")
     if [ ! -z "$ftp_result" ] ; then
         rm -rf $tmpdir
-        echo "Can't create ftp backup folder" | $mail -s "$subj" $email
+        echo "Can't create ftp backup folder" |\
+            $send_mail -s "$subj" $email
         echo "Error: cant's create ftp folder"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_FTP" "$EVENT"
@@ -660,7 +665,7 @@ sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
 if [ "$notify" != 'no' ]; then
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
-    echo -e "$msg" | $mail -s "$subj" $email
+    echo -e "$msg" | $send_mail -s "$subj" $email
 fi
 
 # Logging

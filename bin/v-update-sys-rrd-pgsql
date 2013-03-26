@@ -75,11 +75,10 @@ for host in $hosts; do
         done
 
         export PGPASSWORD="$PASSWORD"
-        sql="psql -h $HOST -U $USER -p $PORT -c"
+        sql="psql -h $HOST -U $USER -c"
 
         # Checking empty vars
-        if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]
-        then
+        if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
             echo "Error: config is broken"
             log_event "$E_PARSING" "$EVENT"
             exit $E_PARSING

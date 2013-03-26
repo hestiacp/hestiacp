@@ -19,7 +19,7 @@ get_next_dbhost() {
                 old_weight='100'
                 for db in $host_str; do
                     eval $db
-                    let weight="$U_DB_BASES * 100 / $MAX_DB" &>/dev/null
+                    let weight="$U_DB_BASES * 100 / $MAX_DB" >/dev/null 2>&1
                     if [ "$old_weight" -gt "$weight" ]; then
                         host="$HOST"
                         old_weight="$weight"
@@ -88,14 +88,14 @@ decrease_dbhost_values() {
 add_mysql_database() {
     host_str=$(grep "HOST='$host'" $VESTA/conf/mysql.conf)
     eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
     query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
         log_event  "$E_DB $EVENT"
@@ -104,18 +104,18 @@ add_mysql_database() {
 
 
     query="CREATE DATABASE \`$database\` CHARACTER SET $charset"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
         IDENTIFIED BY '$dbpass'"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
         IDENTIFIED BY '$dbpass'"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="SHOW GRANTS FOR \`$dbuser\`"
-    md5=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query")
+    md5=$(mysql -h $HOST -u $USER -p$PASSWORD -e "$query")
     md5=$(echo "$md5" |grep 'PASSWORD' |tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
 }
 
@@ -131,7 +131,7 @@ add_pgsql_database() {
     fi
 
     query='SELECT VERSION()'
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
@@ -139,7 +139,7 @@ add_pgsql_database() {
     fi
 
     query="CREATE ROLE $dbuser WITH LOGIN PASSWORD '$dbpass'"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
     query="CREATE DATABASE $database OWNER $dbuser"
     if [ "$TPL" = 'template0' ]; then
@@ -147,16 +147,16 @@ add_pgsql_database() {
     else
         query="$query TEMPLATE $TPL"
     fi
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
     query="GRANT ALL PRIVILEGES ON DATABASE $database TO $dbuser"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
     query="GRANT CONNECT ON DATABASE template1 to $dbuser"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
     query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser';"
-    md5=$(psql -h $HOST -U $USER -p $PORT -c "$query"|grep md5|cut -f 2 -d \ )
+    md5=$(psql -h $HOST -U $USER -c "$query"|grep md5|cut -f 2 -d \ )
 }
 
 # Check if database host do not exist in config 
@@ -174,7 +174,7 @@ is_dbhost_new() {
 # Check MySQL database host
 is_mysql_host_alive() {
     query='SELECT VERSION()'
-    mysql -h $host -u $dbuser -p$dbpass -P $port -e "$query" &> /dev/null
+    mysql -h $host -u $dbuser -p$dbpass -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection to $host failed"
         log_event "$E_DB" "$EVENT"
@@ -185,7 +185,7 @@ is_mysql_host_alive() {
 # Check PostgreSQL database host
 is_pgsql_host_alive() {
     export PGPASSWORD="$dbpass"
-    psql -h $host -U $dbuser -p $port -c "SELECT VERSION()" &> /dev/null
+    psql -h $host -U $dbuser -c "SELECT VERSION()" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection to $host failed"
         log_event "$E_DB" "$EVENT"
@@ -203,14 +203,14 @@ get_database_values() {
 change_mysql_password() {
     host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
     eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
     query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
         log_event "$E_DB $EVENT"
@@ -219,14 +219,14 @@ change_mysql_password() {
 
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
         IDENTIFIED BY '$dbpass'"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
         IDENTIFIED BY '$dbpass'"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="SHOW GRANTS FOR '$DBUSER'"
-    md5=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query")
+    md5=$(mysql -h $HOST -u $USER -p$PASSWORD -e "$query")
     md5=$(echo "$md5" |grep 'PASSWORD' |tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
 }
 
@@ -242,7 +242,7 @@ change_pgsql_password() {
     fi
 
     query='SELECT VERSION()'
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
@@ -250,24 +250,24 @@ change_pgsql_password() {
     fi
 
     query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
     query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
-    md5=$(psql -h $HOST -U $USER -p $PORT -c "$query"|grep md5|cut -f 2 -d \ )
+    md5=$(psql -h $HOST -U $USER -c "$query"|grep md5|cut -f 2 -d \ )
 }
 
 # Delete MySQL database
 delete_mysql_database() {
     host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
     eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
     query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
         log_event  "$E_DB $EVENT"
@@ -275,20 +275,20 @@ delete_mysql_database() {
     fi
 
     query="DROP DATABASE \`$database\`"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
         query="DROP USER '$DBUSER'@'%'"
-        mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+        mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
         query="DROP USER '$DBUSER'@'localhost'"
-        mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+        mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     fi
 }
 
@@ -304,7 +304,7 @@ delete_pgsql_database() {
     fi
 
     query='SELECT VERSION()'
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
@@ -312,16 +312,16 @@ delete_pgsql_database() {
     fi
 
     query="REVOKE ALL PRIVILEGES ON DATABASE $database FROM $DBUSER"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
     query="DROP DATABASE $database"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
     if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
         query="REVOKE CONNECT ON DATABASE template1 FROM $db_user"
-        psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+        psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
         query="DROP ROLE $db_user"
-        psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+        psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     fi
 }
 
@@ -329,39 +329,41 @@ delete_pgsql_database() {
 dump_mysql_database() {
     host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
     eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         rm -rf $tmpdir
-        echo "Can't parse mysql config" | $mail -s "$subj" $email
+        echo "Can't parse mysql config" | $send_mail -s "$subj" $email
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
     query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
-        echo "Can't connect to mysql server $HOST" | $mail -s "$subj" $email
+        echo "Can't connect to mysql server $HOST" |\
+            $send_mail -s "$subj" $email
         echo "Error: Connection failed"
         log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
-    mysqldump -h $HOST -u $USER -p$PASSWORD -P$PORT -r $dump $database
+    mysqldump -h $HOST -u $USER -p$PASSWORD -r $dump $database
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
-        echo "Can't dump mysql database $database" | $mail -s "$subj" $email
+        echo "Can't dump mysql database $database" |\
+            $send_mail -s "$subj" $email
         echo "Error: dump $database failed"
         log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
     query="SHOW GRANTS FOR '$DBUSER'@'localhost'"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |\
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" |\
         grep -v "Grants for" > $grants
 
     query="SHOW GRANTS FOR '$DBUSER'@'%'"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |\
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" |\
         grep -v "Grants for" > $grants
 }
 
@@ -372,35 +374,38 @@ dump_pgsql_database() {
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         rm -rf $tmpdir
-        echo "Can't parse pgsql config" | $mail -s "$subj" $email
+        echo "Can't parse pgsql config" |\
+            $send_mail -s "$subj" $email
         echo "Error: postgresql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
     query='SELECT VERSION()'
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         rm -rf $tmpdir
-        echo "Can't connect to pgsql server $HOST" | $mail -s "$subj" $email
+        echo "Can't connect to pgsql server $HOST" |\
+            $send_mail -s "$subj" $email
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
-    pg_dump -h $HOST -U $USER -p $PORT -c -d -O -x -i -f $dump $database \
+    pg_dump -h $HOST -U $USER -c -d -O -x -i -f $dump $database \
         2> /dev/null
 
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
-        echo "Can't dump pgsql database $database" | $mail -s "$subj" $email
+        echo "Can't dump pgsql database $database" |\
+            $send_mail -s "$subj" $email
         echo "Error: dump $database failed"
         log_event  "$E_DB $EVENT"
         exit $E_DB
     fi
 
     query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
-    md5=$(psql -h $HOST -U $USER -p $PORT -c "$query"|head -n1|cut -f 2 -d \ )
+    md5=$(psql -h $HOST -U $USER -c "$query" | head -n1 | cut -f 2 -d \ )
     pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER';"
     gr_str="GRANT ALL PRIVILEGES ON DATABASE $database to '$DBUSER'"
     echo -e "$pw_str\n$gr_str" >> $grants
@@ -421,14 +426,14 @@ is_dbhost_free() {
 suspend_mysql_database() {
     host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
     eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
     query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
         log_event  "$E_DB $EVENT"
@@ -436,10 +441,10 @@ suspend_mysql_database() {
     fi
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 }
 
 # Suspend PostgreSQL database
@@ -454,7 +459,7 @@ suspend_pgsql_database() {
     fi
 
     query='SELECT VERSION()'
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
@@ -462,21 +467,21 @@ suspend_pgsql_database() {
     fi
 
     query="REVOKE ALL PRIVILEGES ON $database FROM $DBUSER"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 }
 
 # Unsuspend MySQL database
 unsuspend_mysql_database() {
     host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
     eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
     query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
         log_event  "$E_DB $EVENT"
@@ -484,10 +489,10 @@ unsuspend_mysql_database() {
     fi
 
     query="GRANT ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 }
 
 # Unsuspend PostgreSQL database
@@ -502,7 +507,7 @@ unsuspend_pgsql_database() {
     fi
 
     query='SELECT VERSION()'
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
@@ -510,21 +515,21 @@ unsuspend_pgsql_database() {
     fi
 
     query="GRANT ALL PRIVILEGES ON DATABASE $database TO $DBUSER"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 }
 
 # Get MySQL disk usage
 get_mysql_disk_usage() {
     host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
     eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$EVENT"
         exit $E_PARSING
     fi
 
     query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
         log_event  "$E_DB $EVENT"
@@ -533,7 +538,7 @@ get_mysql_disk_usage() {
 
     query="SELECT SUM( data_length + index_length ) / 1024 / 1024 \"Size\"
         FROM information_schema.TABLES WHERE table_schema='$database'"
-    usage=$(mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" |tail -n1)
+    usage=$(mysql -h $HOST -u $USER -p$PASSWORD -e "$query" |tail -n1)
     if [ "$usage" == 'NULL' ] || [ "${usage:0:1}" -eq '0' ]; then
         usage=1
     fi
@@ -553,7 +558,7 @@ get_pgsql_disk_usage() {
     fi
 
     query='SELECT VERSION()'
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
         log_event "$E_DB" "$EVENT"
@@ -561,7 +566,7 @@ get_pgsql_disk_usage() {
     fi
 
     query="SELECT pg_database_size('$database');"
-    usage=$(psql -h $HOST -U $USER -p $PORT -c "$query")
+    usage=$(psql -h $HOST -U $USER -c "$query")
     usage=$(echo "$usage" | grep -v "-" | grep -v 'row' | sed -e "/^$/d")
     usage=$(echo "$usage" | grep -v "pg_database_size" | awk '{print $1}')
     if [ -z "$usage" ]; then
@@ -573,73 +578,3 @@ get_pgsql_disk_usage() {
     fi
 }
 
-# Rebuild MySQL database
-rebuild_mysql_database() {
-    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
-    eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]; then
-        echo "Error: mysql config parsing failed"
-        log_event "$E_PARSING" "$EVENT"
-        exit $E_PARSING
-    fi
-
-    query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
-    if [ '0' -ne "$?" ]; then
-        echo "Error: Connection failed"
-        log_event  "$E_DB $EVENT"
-        exit $E_DB
-    fi
-
-    query="CREATE DATABASE \`$database\` CHARACTER SET $CHARSET"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
-
-    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
-
-    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
-
-    query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER';"
-    mysql -h $HOST -u $USER -p$PASSWORD -P $PORT -e "$query" &> /dev/null
-}
-
-# Rebuild PostgreSQL database
-rebuild_pgsql_database() {
-    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
-    eval $host_str
-    export PGPASSWORD="$PASSWORD"
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
-        echo "Error: postgresql config parsing failed"
-        log_event "$E_PARSING" "$EVENT"
-        exit $E_PARSING
-    fi
-
-    query='SELECT VERSION()'
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
-    if [ '0' -ne "$?" ];  then
-        echo "Error: Connection failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
-    fi
-
-    query="CREATE ROLE $DBUSER"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
-
-    query="UPDATE pg_authid SET rolpassword='$MD5' WHERE rolname='$DBUSER'"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
-
-    query="CREATE DATABASE $database OWNER $DBUSER"
-    if [ "$TPL" = 'template0' ]; then
-        query="$query ENCODING '$CHARSET' TEMPLATE $TPL"
-    else
-        query="$query TEMPLATE $TPL"
-    fi
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
-
-    query="GRANT ALL PRIVILEGES ON DATABASE $database TO $DBUSER"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
-
-    query="GRANT CONNECT ON DATABASE template1 to $dbuser"
-    psql -h $HOST -U $USER -p $PORT -c "$query" &> /dev/null
-}

@@ -73,11 +73,10 @@ for host in $hosts; do
         for key in $host_str; do
             eval ${key%%=*}=${key#*=}
         done
-        sql="mysql -h $HOST -u $USER -p$PASSWORD -P$PORT -e"
+        sql="mysql -h $HOST -u $USER -p$PASSWORD -e"
 
         # Checking empty vars
-        if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $PORT ]
-        then
+        if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
             echo "Error: config is broken"
             log_event "$E_PARSING" "$EVENT"
             exit $E_PARSING

@@ -16,6 +16,7 @@ user=$1
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/db.sh
+source $VESTA/func/rebuild.sh
 
 
 #----------------------------------------------------------#
@@ -34,12 +35,16 @@ is_object_valid 'user' 'USER' "$user"
 
 # Starting rebuild loop
 for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
+
+    # Get database values
     get_database_values
+
     # Switching on db type
     case $TYPE in
         mysql) rebuild_mysql_database ;;
         pgsql) rebuild_pgsql_database ;;
     esac
+
 done
 
 

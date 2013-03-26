@@ -46,7 +46,7 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_package_full 'DNS_RECORDS'
 get_next_dnsrecord
 validate_format 'id'
-is_object_free "dns/$domain" 'ID' "$id"
+is_object_new "dns/$domain" 'ID' "$id"
 
 
 #----------------------------------------------------------#

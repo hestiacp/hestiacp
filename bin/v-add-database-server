@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add new database server
-# options: TYPE HOST PORT DBUSER DBPASS [MAX_DB] [CHARSETS] [TEMPLATE]
+# options: TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TEMPLATE]
 #
 # The function add new database server to the server pool. It supports local
 # and remote database servers, which is useful for clusters. By adding a host
@@ -16,10 +16,9 @@
 # Argument defenition
 type=$1
 host=$2
-port=$3
-dbuser=$4
-dbpass=$5
-A5='******'
+dbuser=$3
+dbpass=$4
+A4='******'
 charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
 template=${8-template1}
 
@@ -36,9 +35,9 @@ max_db=${6-500}
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='TYPE HOST PORT DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
+args_usage='TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
 check_args '5' "$#" "$args_usage"
-validate_format 'host' 'port' 'dbuser' 'dbpass' 'max_db' 'charsets' 'template'
+validate_format 'host' 'dbuser' 'dbpass' 'max_db' 'charsets' 'template'
 is_system_enabled "$DB_SYSTEM"
 is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
@@ -54,10 +53,10 @@ esac
 
 # Concatentating db host string
 case $type in
-    mysql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass' PORT='$port'";
+    mysql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'";
            str="$str CHARSETS='$charsets' MAX_DB='$max_db' U_SYS_USERS=''";
            str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'";;
-    pgsql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass' PORT='$port'";
+    pgsql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'";
            str="$str CHARSETS='$charsets' TPL='$template' MAX_DB='$max_db'";
            str="$str U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no'";
            str="$str TIME='$TIME' DATE='$DATE'";;

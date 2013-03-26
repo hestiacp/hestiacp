@@ -31,14 +31,14 @@ check_args '1' "$#" 'TYPE [FORMAT]'
 
 # Defining fileds to select
 conf=$VESTA/conf/$type.conf
-fields='$HOST $PORT $CHARSETS $MAX_DB $U_SYS_USERS $U_DB_BASES $TPL $SUSPENDED'
+fields='$HOST $CHARSETS $MAX_DB $U_SYS_USERS $U_DB_BASES $TPL $SUSPENDED'
 fields="$fields \$TIME \$DATE"
 
 # Listing database
 case $format in 
     json)   json_list ;;
     plain)  nohead=1; shell_list;;
-    shell)  fields='$HOST $PORT $MAX_DB $U_DB_BASES $SUSPENDED $DATE';
+    shell)  fields='$HOST $MAX_DB $U_DB_BASES $SUSPENDED $DATE';
             shell_list | column -t ;;
     *)      check_args '2' '0' 'TYPE [FORMAT]'
 esac

@@ -1,0 +1,107 @@
+#!/bin/bash
+# info: list user backup
+# options: USER BACKUP [FORMAT]
+#
+# The function of obtaining the list of backup parameters. This call, just as
+# all v_list_* calls, supports 3 formats - json, shell and plain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+backup=$2
+format=${3-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json function
+json_list_backup() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    line=$(grep "BACKUP='$backup'" $conf)
+
+    # Print top bracket
+    echo '{'
+
+    # Assing key=value
+    eval $line
+
+    # Starting output loop
+    for field in $fields; do
+        # Parsing key=value
+        eval value=$field
+
+        # Checking first field
+        if [ "$i" -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ "$fileds_count" -eq "$i" ]; then
+                echo -e "\t\t\"${field//$/}\": \"$value\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"$value\","
+            fi
+        fi
+        # Updating iterator
+        (( ++i))
+    done
+
+    # If there was any output
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+    # Printing bottom json bracket
+    echo -e "}"
+}
+
+# Shell function
+shell_list_backup() {
+    line=$(grep "BACKUP='$backup'" $conf)
+
+    # Parsing key=value
+    eval $line
+
+    # Print result line
+    for field in $fields; do
+        eval key="$field"
+        echo "${field//$/}: $key "
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER BACKUP [FORMAT]'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'backup' 'BACKUP' "$backup"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config and fields to select
+conf=$USER_DATA/backup.conf
+
+fields="\$BACKUP \$TYPE \$SIZE \$VESTA \$PAM \$WEB \$DNS \$DB"
+fields="$fields \$MAIL \$CRON \$RUNTIME \$TIME \$DATE"
+
+# Listing backup
+case $format in 
+    json)   json_list_backup ;;
+    plain)  nohead=1; shell_list_backup ;;
+    shell)  shell_list_backup |column -t ;;
+    *)      check_args '2' '0' 'USER BACKUP [FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

@@ -170,8 +170,8 @@ is_backup_scheduled() {
     fi
 }
 
-# Check if object is free and can be created
-is_object_free() {
+# Check if object is new
+is_object_new() {
     if [ $2 = 'USER' ]; then
         if [ -d "$USER_DATA" ]; then
             object="OK"
@@ -588,7 +588,7 @@ validate_format_username() {
 validate_format_domain() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [[ "$1" =~ "^[0-9]+$" ]]; then
-        echo "Error: domain $1 is not valid"
+        echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
@@ -687,10 +687,10 @@ validate_format_dvalue() {
         validate_format_ip "$1"
     fi
     if [ "$rtype" = 'NS' ]; then
-        validate_format_domain "$1"
+        validate_format_domain "$1" 'ns_record'
     fi
     if [ "$rtype" = 'MX' ]; then
-        validate_format_domain "$1"
+        validate_format_domain "$1" 'mx_record'
         validate_format_int "$priority"
     fi
 
@@ -730,7 +730,7 @@ validate_format(){
             antispam)       validate_format_boolean "$arg" 'antispam' ;;
             antivirus)      validate_format_boolean "$arg" 'antivirus' ;;
             autoreply)      validate_format_autoreply "$arg" ;;
-            backup)         validate_format_date "$arg" ;;
+            backup)         validate_format_domain "$arg" 'backup' ;;
             charset)        validate_format_name "$arg" "$arg_name" ;;
             charsets)       validate_format_common "$arg" 'charsets' ;;
             database)       validate_format_database "$arg" 'database';;
@@ -739,8 +739,8 @@ validate_format(){
             dbuser)         validate_format_database "$arg" 'db_user';;
             dkim)           validate_format_boolean "$arg" 'dkim' ;;
             dkim_size)      validate_format_key_size "$arg" ;;
-            domain)         validate_format_domain "$arg" ;;
-            dom_alias)      validate_format_domain_alias "$arg" ;;
+            domain)         validate_format_domain "$arg" 'domain';;
+            dom_alias)      validate_format_domain_alias "$arg" 'alias';;
             dvalue)         validate_format_dvalue "$arg";;
             email)          validate_format_email "$arg" ;;
             exp)            validate_format_date "$arg" ;;
@@ -749,12 +749,12 @@ validate_format(){
             forward)        validate_format_email "$arg" ;;
             ftp_password)   validate_format_password "$arg" ;;
             ftp_user)       validate_format_username "$arg" "$arg_name" ;;
-            host)           validate_format_domain "$arg" "$arg_name" ;;
+            host)           validate_format_domain "$arg" "$arg_name" 'host';;
             hour)           validate_format_mhdmw "$arg" $arg_name ;;
             id)             validate_format_int "$arg" ;;
             interface)      validate_format_interface "$arg" ;;
             ip)             validate_format_ip "$arg" ;;
-            ip_name)        validate_format_domain "$arg" ;;
+            ip_name)        validate_format_domain "$arg" 'domain';;
             ip_status)      validate_format_ip_status "$arg" ;;
             job)            validate_format_int "$arg" ;;
             key)            validate_format_username "$arg" "$arg_name" ;;
@@ -765,10 +765,10 @@ validate_format(){
             min)            validate_format_mhdmw "$arg" $arg_name ;;
             month)          validate_format_mhdmw "$arg" $arg_name ;;
             nat_ip)         validate_format_ip "$arg" ;;
-            ns1)            validate_format_domain "$arg" ;;
-            ns2)            validate_format_domain "$arg" ;;
-            ns3)            validate_format_domain "$arg" ;;
-            ns4)            validate_format_domain "$arg" ;;
+            ns1)            validate_format_domain "$arg" 'name_server';;
+            ns2)            validate_format_domain "$arg" 'name_server';;
+            ns3)            validate_format_domain "$arg" 'name_server';;
+            ns4)            validate_format_domain "$arg" 'name_server';;
             package)        validate_format_name "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" ;;
@@ -777,7 +777,7 @@ validate_format(){
             record)         validate_format_common "$arg" 'record';;
             rtype)          validate_format_dns_type "$arg" ;;
             shell)          validate_format_shell "$arg" ;;
-            soa)            validate_format_domain "$arg" ;;
+            soa)            validate_format_domain "$arg" 'soa_record';;
             stats_pass)     validate_format_password "$arg" ;;
             stats_user)     validate_format_username "$arg" "$arg_name" ;;
             template)       validate_format_name "$arg" "$arg_name" ;;

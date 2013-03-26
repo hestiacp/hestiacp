@@ -40,7 +40,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'CRON_JOBS'
 get_next_cronjob
 validate_format 'job'
-is_object_free 'cron' 'JOB' "$job"
+is_object_new 'cron' 'JOB' "$job"
 
 
 #----------------------------------------------------------#

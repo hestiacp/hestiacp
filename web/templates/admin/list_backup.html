@@ -87,10 +87,10 @@
                                             </div>
                                         </span>
                                     </a>
-                                    <a href="#" id="restore_link_<?php echo "$i"?>" class="data-controls">
+                                    <a href="/list/backup/?backup=<?php echo $key ?>" class="data-controls">
                                         <span>
-                                            <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print _('restore');?> 
+                                            <img src="/images/more.png" width="8px" height="8px">
+                                            <?php print _('configure restore settings') ?>
                                         </span>
                                     </a>
                                     <a href="/download/backup/?backup=<?php echo $key ?>" target="_blank" class="data-controls">

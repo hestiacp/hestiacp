@@ -6,7 +6,7 @@
                                                 <a class="vst" <?php if (empty($_GET['user'])) echo "style='color: #174f82'"; ?> href='/list/stats/'><?php print _('Overall Statistics');?></a>
                                                 <div class="submenu-select-block">
                                                 <select class="submenu-select-dropdown" name="user">
-                                                    <option value=''><?php print _('show per user');?></option>
+                                                    <option value=""><?php print _('show per user');?></option>
                                                 <?php
                                                     foreach ($users as $key => $value) {
                                                         echo "\t\t\t\t<option value=\"".$value."\"";

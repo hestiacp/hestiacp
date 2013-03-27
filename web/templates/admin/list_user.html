@@ -21,17 +21,17 @@
                                                 <form action="/bulk/user/" method="post" id="objects">
                                                 <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select class="submenu-select-dropdown" name="action">
-                                                    <option><?php print _('apply to selected');?></option>
-                                                    <option><?php print _('rebuild');?></option>
-                                                    <option><?php print _('rebuild web');?></option>
-                                                    <option><?php print _('rebuild dns');?></option>
-                                                    <option><?php print _('rebuild mail');?></option>
-                                                    <option><?php print _('rebuild db');?></option>
-                                                    <option><?php print _('rebuild cron');?></option>
-                                                    <option><?php print _('update counters');?></option>
-                                                    <option><?php print _('suspend');?></option>
-                                                    <option><?php print _('unsuspend');?></option>
-                                                    <option><?php print _('delete');?></option>
+                                                    <option value=""><?php print _('apply to selected');?></option>
+                                                    <option value="rebuild"><?php print _('rebuild');?></option>
+                                                    <option value="rebuild web"><?php print _('rebuild web');?></option>
+                                                    <option value="rebuild dns"><?php print _('rebuild dns');?></option>
+                                                    <option value="rebuild mail"><?php print _('rebuild mail');?></option>
+                                                    <option value="rebuild db"><?php print _('rebuild db');?></option>
+                                                    <option value="rebuild cron"><?php print _('rebuild cron');?></option>
+                                                    <option value="update counters"><?php print _('update counters');?></option>
+                                                    <option value="suspend"><?php print _('suspend');?></option>
+                                                    <option value="unsuspend"><?php print _('unsuspend');?></option>
+                                                    <option value="delete"><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>

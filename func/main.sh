@@ -161,9 +161,9 @@ is_backup_enabled() {
 # Check user backup settings
 is_backup_scheduled() {
     if [ -e "$VESTA/data/queue/backup.pipe" ]; then
-        check_backup=$(grep " $user " $VESTA/data/queue/backup.pipe)
-        if [ ! -z "$check_backup" ]; then
-            echo "Error: backup is already scheduled"
+        check_q=$(grep " $user " $VESTA/data/queue/backup.pipe | grep $1)
+        if [ ! -z "$check_q" ]; then
+            echo "Error: $1 is already scheduled"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi

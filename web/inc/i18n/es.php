@@ -366,6 +366,8 @@ $LANG['es'] = array(
     'IP address is in use' => 'La IP esta en uso',
     'BACKUP_SCHEDULED'  => "La tarea se ha añadido a la cola. Usted recibirá un correo de notificación cuando el respaldo de seguridad este listo para su descarga.",
     'BACKUP_EXISTS'  => "Se esta realizando una copia de seguridad en este momento.Por favor espere a que esta termine.",
+    'RESTORE_SCHEDULED'  => "La tarea se ha añadido a la cola. Usted recibirá un correo de notificación cuando el respaldo de seguridad este listo para su descarga.",
+    'RESTORE_EXISTS'  => "Una tarea se está ejecutando. Por favor espere a que esta termine.",
 
     'Welcome to Vesta Control Panel'  => 'Bienvenido al Panel de Control Vesta',
     'MAIL_FROM'  => 'Panel de Control Vesta <noreply@%s>',

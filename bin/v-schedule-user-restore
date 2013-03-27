@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list user backups
-# options: USER [FORMAT]
+# info: schedule user backup restoration
+# options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR]
 #
-# The function for obtainig the list of available user backups.
+# The function for scheduling user backup restoration.
 
 
 #----------------------------------------------------------#
@@ -11,46 +11,46 @@
 
 # Argument defenition
 user=$1
-format=${2-shell}
+backup=$2
+web=$3
+dns=$4
+mail=$5
+db=$6
+cron=$7
+udir=$8
 
 # Includes
+source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [FORMAT]'
+check_args '2' "$#" 'USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR]'
 validate_format 'user'
+is_system_enabled "$BACKUP_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
+is_backup_enabled
+is_backup_scheduled 'restore'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking config
-conf=$USER_DATA/backup.conf
-if [ ! -e "$conf" ]; then
-    touch $conf
-fi
-
-# Defining fileds to select
-fields="\$BACKUP \$TYPE \$SIZE \$WEB \$DNS \$DB \$MAIL \$CRON \$UDIR"
-fields="$fields \$RUNTIME \$TIME \$DATE"
-
-# Listing domains
-case $format in 
-    json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$BACKUP $TYPE $SIZE $RUNTIME $TIME $DATE';
-            shell_list |column -t;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
-esac
+# Adding restore task to  the queue
+options="'$web' '$dns' '$mail' '$db' '$cron' '$udir'"
+echo "$BIN/v-restore-user $user $backup $options  yes" \
+    >> $VESTA/data/queue/backup.pipe
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
 
 exit

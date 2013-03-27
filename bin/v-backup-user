@@ -402,7 +402,7 @@ then
     cron_record=$(wc -l $USER_DATA/cron.conf|cut -f 1 -d ' ')
 
     if [ -e "/var/spool/cron/$user" ]; then
-        cron_list='yes'
+        cron_list="$cron_record"
         cp /var/spool/cron/$user $tmpdir/cron/
     fi
     if [ "$cron_record" -eq 1 ]; then
@@ -417,22 +417,28 @@ then
 fi
 
 # User Directories
-echo "-- User Directories --"
-msg="$msg\n-- User Directories --"
-mkdir $tmpdir/user_dirs
-user_dirs=$(ls $HOMEDIR/$user | \
+echo "-- User Dir --"
+msg="$msg\n-- User Dir --"
+mkdir $tmpdir/user_dir
+user_dir=$(ls $HOMEDIR/$user | \
     grep -v conf | \
     grep -v web | \
     grep -v dns | \
     grep -v mail | \
     grep -v tmp)
 i=0
-for user_dir in $user_dirs; do
+for udir in $user_dir; do
+    udir_list="$udir_list $udir"
     ((i ++))
-    echo -e "$(date "+%F %T") $user_dir"
-    msg="$msg\n$(date "+%F %T") $user_dir"
-    cp -pr $HOMEDIR/$user/$user_dir $tmpdir/user_dirs/
+    echo -e "$(date "+%F %T") $udir"
+    msg="$msg\n$(date "+%F %T") $udir"
+    cp -pr $HOMEDIR/$user/$udir $tmpdir/user_dir/
+    cd $tmpdir/user_dir/
+    tar -czpf $udir.tar.gz $udir
+    rm -rf $udir
 done
+udir_list=$(echo "$udir_list" | sed -e "s/  */\ /g" -e "s/^ //")
+
 if [ "$i" -eq 1 ]; then
     echo -e "$(date "+%F %T") $i user directory"
     msg="$msg\n$(date "+%F %T") $i directory"
@@ -508,7 +514,7 @@ local_backup(){
 
 # Defining ftp command function
 ftpc() {
-    ftp -n $HOST $FTP_PORT <<EOF
+    ftp -n $HOST <<EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
     binary
@@ -648,18 +654,18 @@ done
 # Concatenating string
 backup_str="BACKUP='$user.$DATE.tar'"
 backup_str="$backup_str TYPE='$BACKUP_SYSTEM' SIZE='$size'"
-backup_str="$backup_str VESTA='yes'"
 backup_str="$backup_str WEB='${web_list// /,}'"
 backup_str="$backup_str DNS='${dns_list// /,}'"
 backup_str="$backup_str MAIL='${mail_list// /,}'"
 backup_str="$backup_str DB='${db_list// /,}'"
 backup_str="$backup_str CRON='$cron_list'"
+backup_str="$backup_str UDIR='${udir_list// /,}'"
 backup_str="$backup_str RUNTIME='$run_time' TIME='$TIME' DATE='$DATE'"
 echo "$backup_str" >> $USER_DATA/backup.conf
 chmod 660 $USER_DATA/backup.conf
 
 # Clean backup queue
-sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+sed -i "/v-backup-user $user /d" $VESTA/data/queue/backup.pipe
 
 # Send notification
 if [ "$notify" != 'no' ]; then

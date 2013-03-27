@@ -88,8 +88,8 @@ is_object_valid 'backup' 'BACKUP' "$backup"
 # Defining config and fields to select
 conf=$USER_DATA/backup.conf
 
-fields="\$BACKUP \$TYPE \$SIZE \$VESTA \$PAM \$WEB \$DNS \$DB"
-fields="$fields \$MAIL \$CRON \$RUNTIME \$TIME \$DATE"
+fields="\$BACKUP \$TYPE \$SIZE \$WEB \$DNS \$DB \$MAIL \$CRON \$UDIR"
+fields="$fields \$RUNTIME \$TIME \$DATE"
 
 # Listing backup
 case $format in 

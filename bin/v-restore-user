@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: restore user
-# options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIRS] [NOTIFY]
+# options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]
 #
 # The function for resotring user from backup.
 
@@ -17,7 +17,7 @@ dns=$4
 mail=$5
 db=$6
 cron=$7
-u_dirs=$8
+udir=$8
 notify=${9-no}
 
 # Define backup dir
@@ -47,7 +47,7 @@ is_backup_valid() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIRS] [NOTIFY]'
+args='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
 check_args '2' "$#" $args
 validate_format 'user' 'backup'
 is_object_valid 'user' 'USER' "$user"
@@ -574,7 +574,7 @@ if [ "$cron" != 'no' ]; then
     echo -e "$(date "+%F %T") $db"
     msg="$msg\n$(date "+%F %T") $db"
 
-    # unpack db container
+    # unpack cron container
     tar xf $BACKUP/$backup -C $tmpdir ./cron
     if [ "$?" -ne 0 ]; then
         echo "Error: can't unpack cron contaner"
@@ -593,8 +593,67 @@ if [ "$cron" != 'no' ]; then
     msg="$msg\n"
 fi
 
+# Restore user directories
+if [ "$udir" != 'no' ]; then
+    echo "-- USER DIR --"
+    msg="$msg\n-- USER DIR --"
+
+    # unpack user dir container
+    if [ ! -z "$(tar -tf $BACKUP/$backup |grep './user_dir')" ]; then
+
+        # Create user dir list
+        udir_list=$(tar -tf $BACKUP/$backup | grep "^./user_dir" |\
+            grep tar.gz | cut -f 3 -d '/' | sed -e "s/.tar.gz//")
+
+        if [ ! -z "$udir" ]; then
+            udir_include_list=$(mktemp)
+            for udir_include in ${udir//,/ }; do
+                echo "^$udir_include$" >> $udir_include_list
+            done
+            udir_list=$(echo "$udir_list" | egrep -f $udir_include_list )
+            rm -f $udir_include_list
+        fi
+
+        for user_dir in $udir_list; do
+            echo -e "$(date "+%F %T") $user_dir"
+            msg="$msg\n$(date "+%F %T") $user_dir"
+
+            # unpack user_dir container
+            tar xf $BACKUP/$backup -C $tmpdir ./user_dir/$user_dir.tar.gz
+            if [ "$?" -ne 0 ]; then
+                echo "Error: can't unpack $user_dir user dir contaner"
+                echo "Can't unpack $user_dir user dir contaner" |\
+                    $send_mail -s "$subj" $email
+                rm -rf $tmpdir
+                exit $E_PARSING
+            fi
+
+            tar xzf $tmpdir/user_dir/$user_dir.tar.gz -C $HOMEDIR/$user
+            if [ "$?" -ne 0 ]; then
+                echo "Error: can't unpack $user_dir user dir contaner"
+                echo "Can't unpack $user_dir user dir contaner" |\
+                    $send_mail -s "$subj" $email
+                rm -rf $tmpdir
+                exit $E_PARSING
+            fi
+        done
+    fi
+    echo
+    msg="$msg\n"
+fi
+
 # Remove temporary data
 rm -rf $tmpdir
+
+# Clean restore queue
+sed -i "/v-restore-user $user /d" $VESTA/data/queue/backup.pipe
+
+# Send notification
+if [ "$notify" != 'no' ]; then
+    subj="$user → restore has been completed"
+    email=$(get_user_value '$CONTACT')
+    echo -e "$msg" | $send_mail -s "$subj" $email
+fi
 
 
 #----------------------------------------------------------#

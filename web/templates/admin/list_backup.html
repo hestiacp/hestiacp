@@ -2,7 +2,7 @@
                                     <tr>
                                         <td style="padding: 2px 0 0 6px">
                                             <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/add/backup/'"> <?php print _('Create Backup');?> </button>
+                                                <button class="submenu-button" onclick="location.href='/schedule/backup/'"> <?php print _('Create Backup');?> </button>
                                             </div>
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
@@ -14,8 +14,8 @@
                                                 <form action="/bulk/backup/" method="post" id="objects">
                                                 <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
                                                 <select class="submenu-select-dropdown" name="action">
-                                                    <option><?php print _('apply to selected');?></option>
-                                                    <option><?php print _('delete');?></option>
+                                                    <option value=""><?php print _('apply to selected');?></option>
+                                                    <option value="delete"><?php print _('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>
@@ -61,11 +61,16 @@
                                     $dns = _('no');
                                     $mail = _('no');
                                     $db = _('no');
+                                    $cron = _('no');
+                                    $udir = _('no');
 
                                     if (!empty($data[$key]['WEB'])) $web = _('yes').' ¨';
                                     if (!empty($data[$key]['DNS'])) $dns = _('yes').' ¨';
                                     if (!empty($data[$key]['MAIL'])) $mail = _('yes').' ¨';
                                     if (!empty($data[$key]['DB'])) $db = _('yes').' ¨';
+                                    if (!empty($data[$key]['CRON'])) $cron = _('yes').' ¨';
+                                    if (!empty($data[$key]['UDIR'])) $udir = _('yes').' ¨';
+
                             ?> 
 
                             <tr class="data-row">
@@ -129,16 +134,6 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" width="48">
-                                                            <?php print _('SYS');?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value" title="<?php echo $data[$key]['VESTA'] ?>">
-                                                                <?php echo _($data[$key]['VESTA']) ?> 
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name" width="48">
                                                             <?php print _('WEB');?>:
                                                         </td>
                                                         <td>
@@ -157,10 +152,6 @@
                                                             </a>
                                                         </td>
                                                     </tr>
-                                                </table>
-                                            </td>
-                                            <td rowspan=4 style="vertical-align:top;" width="300">
-                                                <table>
                                                     <tr>
                                                         <td class="counter-name" width="48">
                                                             <?php print _('MAIL');?>:
@@ -171,8 +162,12 @@
                                                             </a>
                                                         </td>
                                                     </tr>
+                                                </table>
+                                            </td>
+                                            <td rowspan=4 style="vertical-align:top;" width="300">
+                                                <table>
                                                     <tr>
-                                                        <td class="counter-name" width="48">
+                                                        <td class="counter-name" width="90">
                                                             <?php print _('DB');?>:
                                                         </td>
                                                         <td>
@@ -182,15 +177,26 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name" width="48">
+                                                        <td class="counter-name" width="90">
                                                             <?php print _('CRON');?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value" title="<?php echo $data[$key]['CRON'] ?>">
-                                                                <?php echo _($data[$key]['CRON']) ?> 
+                                                                <?php echo $cron ?> 
                                                             </a>
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td class="counter-name" width="90">
+                                                            <?php print _('USER DIRS');?>:
+                                                        </td>
+                                                        <td>
+                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['UDIR']) ?>">
+                                                                <?php echo $udir ?> 
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
                                                 </table>
                                             </td>
                                         </tr>

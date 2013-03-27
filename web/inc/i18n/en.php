@@ -367,6 +367,9 @@ $LANG['en'] = array(
     'IP address is in use' => 'IP address is in use',
     'BACKUP_SCHEDULED'  => 'Task has been added to the queue. You will receive an email notification when your backup is ready for download.',
     'BACKUP_EXISTS'  => 'An existing backup is already running. Please wait for that backup to finish.',
+    'RESTORE_SCHEDULED'  => 'Task has been added to the queue. You will receive an email notification when your backup is ready for download.',
+    'RESTORE_EXISTS'  => 'An existing restoration task is already running. Please wait for it to finish before launching it again.',
+
 
     'Welcome to Vesta Control Panel'  => 'Welcome to Vesta Control Panel',
     'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',

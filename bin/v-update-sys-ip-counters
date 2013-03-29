@@ -1,0 +1,65 @@
+#!/bin/bash
+# info: update IP usage counters
+# options: IP
+#
+# Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+ip=$1
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/ip.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '0' "$#" 'IP'
+if [ ! -z "$ip" ]; then
+    validate_format 'ip'
+    is_ip_valid
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Creating user_list
+if [ -z "$ip" ]; then
+    ip_list=$(ls $VESTA/data/ips)
+else
+    ip_list="$ip"
+fi
+
+# Updating user stats
+for ip in $ip_list; do
+
+    # Calculate usage
+    ip_usage=$(grep -H $ip $VESTA/data/users/*/web.conf)
+    web_domains=$(echo "$ip_usage"| wc -l)
+    sys_users=$(echo "$ip_usage" | cut -f7 -d/ | sort -u |\
+        tr '\n' ',' | sed -e "s/,$//g")
+
+    # Update counters
+    update_ip_value '$U_WEB_DOMAINS' "$web_domains"
+    update_ip_value '$U_SYS_USERS' "$sys_users"
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

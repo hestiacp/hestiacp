@@ -1,0 +1,95 @@
+#!/bin/bash
+# info: add backup ftp host
+# options: HOST USERNAME PASSWORD [PATH]
+#
+# The function adds ftp host for system backups
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+host=$1
+ftp_user=$2
+ftp_password=$3
+ftp_path=${4-/backup}
+A3='******'
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+# Defining ftp command function
+ftpc() {
+    ftp -n $host <<EOF
+    quote USER $ftp_user
+    quote PASS $ftp_password
+    binary
+    $1
+    $2
+    $3
+    quit
+EOF
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" "HOST USERNAME PASSWORD [PATH]"
+validate_format 'host' 'ftp_user' 'ftp_password'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking network connection
+if [ ! -z "$(ftpc)" ]; then
+    echo "Error: can't login to ftp"
+    log_event "$E_FTP" "$EVENT"
+    exit $E_FTP
+fi
+
+# Checking write permissions
+ftpc "mkdir $ftp_path" > /dev/null 2>&1
+ftmpdir=$(mktemp -u -p "$ftp_path")
+ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir")
+if [ ! -z "$ftp_result" ] ; then
+    rm -rf $tmpdir
+    echo "Error: can't create temp folder on the ftp"
+    log_event "$E_FTP" "$EVENT"
+    exit $E_FTP
+fi
+
+# Adding backup host
+echo "HOST='$host'
+USERNAME='$ftp_user'
+PASSWORD='$ftp_password'
+TIME='$TIME'
+DATE='$DATE'" > $VESTA/conf/ftp.backup.conf
+chmod 660 $VESTA/conf/ftp.backup.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Update vesta.conf
+if [ -z "$(grep LANGUAGE $VESTA/conf/vesta.conf)" ]; then
+    echo "BACKUP_SYSTEM='ftp'" >> $VESTA/conf/vesta.conf
+else
+    bckp=$(echo "$BACKUP_SYSTEM,ftp" |\
+        sed -e "s/,/\n/g"|\
+        sort -r -u |\
+        sed -e "/^$/d"|\
+        sed -e ':a;N;$!ba;s/\n/,/g')
+    sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

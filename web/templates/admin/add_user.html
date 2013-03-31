@@ -105,6 +105,10 @@
                                                             echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
                                                             if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
                                                                 echo 'selected' ;
+                                                            } else {
+                                                                if ( $key == 'default'){
+                                                                    echo 'selected' ;
+                                                                }
                                                             }
                                                             echo ">".$key."</option>\n";
                                                         }

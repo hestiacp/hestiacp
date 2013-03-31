@@ -51,12 +51,12 @@ touch $HOMEDIR/$user/conf/mail/$domain/passwd
 chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain
 chmod 770 $HOMEDIR/$user/conf/mail/$domain
 chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-mkdir $HOMEDIR/$user/mail/$domain
-chown $user:mail $HOMEDIR/$user/mail/$domain
-chmod 770 $HOMEDIR/$user/mail/$domain
+mkdir $HOMEDIR/$user/mail/$domain_idn
+chown $user:mail $HOMEDIR/$user/mail/$domain_idn
+chmod 770 $HOMEDIR/$user/mail/$domain_idn
 
 # Adding symlink
-ln -s $HOMEDIR/$user/conf/mail/$domain /etc/exim/domains/
+ln -s $HOMEDIR/$user/conf/mail/$domain /etc/exim/domains/$domain_idn
 
 # Adding antispam protection
 if [ "$antispam" = 'yes' ]; then

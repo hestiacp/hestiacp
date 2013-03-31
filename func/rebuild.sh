@@ -1,3 +1,136 @@
+# User account rebuild
+rebuild_user_conf() {
+
+    # Get user variables
+    source $USER_DATA/user.conf
+
+    # Creating user data files
+    chmod 770 $USER_DATA
+    chmod 660 $USER_DATA/user.conf
+    touch $USER_DATA/backup.conf
+    chmod 660 $USER_DATA/backup.conf
+    touch $USER_DATA/history.log
+    chmod 660 $USER_DATA/history.log
+    touch $USER_DATA/stats.log
+    chmod 660 $USER_DATA/stats.log
+
+    # Rebuild user
+    shell=$(chsh --list-shells | grep -w "$SHELL" | head -n1)
+    /usr/sbin/adduser "$user" -s "$shell" -c "$CONTACT" \
+        -m -d "$HOMEDIR/$user" > /dev/null 2>&1
+
+    # Update user shell
+    shell_path=$(/usr/bin/chsh --list-shells | grep -w "$SHELL" |head -n1)
+    /usr/bin/chsh -s "$shell_path" "$user" &>/dev/null
+
+    # Update password
+    shadow=$(grep ^$user: /etc/shadow)
+    shdw3=$(echo "$shadow" | cut -f3 -d :)
+    shdw4=$(echo "$shadow" | cut -f4 -d :)
+    shdw5=$(echo "$shadow" | cut -f5 -d :)
+    shdw6=$(echo "$shadow" | cut -f6 -d :)
+    shdw7=$(echo "$shadow" | cut -f7 -d :)
+    shdw8=$(echo "$shadow" | cut -f8 -d :)
+    shdw9=$(echo "$shadow" | cut -f9 -d :)
+    shadow_str="$user:$MD5:$shdw3:$shdw4:$shdw5:$shdw6"
+    shadow_str="$shadow_str:$shdw7:$shdw8:$shdw9"
+
+    chmod u+w /etc/shadow
+    sed -i "/^$user:*/d" /etc/shadow
+    echo "$shadow_str" >> /etc/shadow
+    chmod u-w /etc/shadow
+
+    # Building directory tree
+    mkdir -p $HOMEDIR/$user/conf
+    chmod a+x $HOMEDIR/$user
+    chmod a+x $HOMEDIR/$user/conf
+    chown $user:$user $HOMEDIR/$user
+    chown root:root $HOMEDIR/$user/conf
+
+    # Update disk pipe
+    sed -i "/ $user$/d" $VESTA/data/queue/disk.pipe
+    echo "$BIN/v-update-user-disk $user" >> $VESTA/data/queue/disk.pipe
+
+    # WEB
+    if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+        mkdir -p $USER_DATA/ssl
+        chmod 770 $USER_DATA/ssl
+        touch $USER_DATA/web.conf
+        chmod 660 $USER_DATA/web.conf
+        if [ "$(grep -w $user $VESTA/data/queue/traffic.pipe)" ]; then
+            echo "$BIN/v-update-web-domains-traff $user" \
+                >> $VESTA/data/queue/traffic.pipe
+        fi
+        echo "$BIN/v-update-web-domains-disk $user" \
+            >> $VESTA/data/queue/disk.pipe
+
+        mkdir -p $HOMEDIR/$user/conf/web
+        mkdir -p $HOMEDIR/$user/web
+        mkdir -p $HOMEDIR/$user/tmp
+        chmod 751 $HOMEDIR/$user/conf/web
+        chmod 751 $HOMEDIR/$user/web
+        chmod 771 $HOMEDIR/$user/tmp
+        chown $user:$user $HOMEDIR/$user/web
+        if [ -z "$create_user" ]; then
+            $BIN/v-rebuild-web-domains $user $restart
+        fi
+    fi
+
+    # DNS
+    if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+        mkdir -p $USER_DATA/dns
+        chmod 770 $USER_DATA/dns
+        touch $USER_DATA/dns.conf
+        chmod 660 $USER_DATA/dns.conf
+
+        mkdir -p $HOMEDIR/$user/conf/dns
+        chmod 751 $HOMEDIR/$user/conf/dns
+        if [ -z "$create_user" ]; then
+            $BIN/v-rebuild-dns-domains $user $restart
+        fi
+    fi
+
+    if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+        mkdir -p $USER_DATA/mail
+        chmod 770 $USER_DATA/mail
+        touch $USER_DATA/mail.conf
+        chmod 660 $USER_DATA/mail.conf
+        echo "$BIN/v-update-mail-domains-disk $user" \
+            >> $VESTA/data/queue/disk.pipe
+
+        mkdir -p $HOMEDIR/$user/conf/mail
+        mkdir -p $HOMEDIR/$user/mail
+        chmod 751 $HOMEDIR/$user/mail
+        chmod 751 $HOMEDIR/$user/conf/mail
+        if [ -z "$create_user" ]; then
+            $BIN/v-rebuild-mail-domains $user
+        fi
+    fi
+
+
+    if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+        touch $USER_DATA/db.conf
+        chmod 660 $USER_DATA/db.conf
+        echo "$BIN/v-update-databases-disk $user" >> $VESTA/data/queue/disk.pipe
+
+        if [ -z "$create_user" ]; then
+            $BIN/v-rebuild-databases $user
+        fi
+    fi
+
+    if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+        touch $USER_DATA/cron.conf
+        chmod 660 $USER_DATA/cron.conf
+
+        if [ -z "$create_user" ]; then
+            $BIN/v-rebuild-cron-jobs $user $restart
+        fi
+    fi
+
+    # Set immutable flag
+    chattr +i $HOMEDIR/$user/conf
+}
+
 # WEB domain rebuild
 rebuild_web_domain_conf() {
 
@@ -174,21 +307,22 @@ rebuild_web_domain_conf() {
             /usr/sbin/adduser -o -u $(id -u $user) -g $user -s /sbin/nologin \
                 -M -d "$HOMEDIR/$user/web/$domain" $FTP_USER > /dev/null 2>&1
 
-            shadow='/etc/shadow'
-            shdw=$(grep "^$FTP_USER:" $shadow)
-            shdw3=$(echo "$shdw" | cut -f3 -d :)
-            shdw4=$(echo "$shdw" | cut -f4 -d :)
-            shdw5=$(echo "$shdw" | cut -f5 -d :)
-            shdw6=$(echo "$shdw" | cut -f6 -d :)
-            shdw7=$(echo "$shdw" | cut -f7 -d :)
-            shdw8=$(echo "$shdw" | cut -f8 -d :)
-            shdw9=$(echo "$shdw" | cut -f9 -d :)
-            chmod u+w $shadow
-            sed -i "/^$FTP_USER:*/d" $shadow
-            shdw_str="$FTP_USER:$FTP_MD5:$shdw3:$shdw4:$shdw5:$shdw6"
-            shdw_str="$shdw_str:$shdw7:$shdw8:$shdw9"
-            echo "$shdw_str" >> $shadow
-            chmod u-w $shadow
+            # Update password
+            shadow=$(grep "^$FTP_USER:" /etc/shadow)
+            shdw3=$(echo "$shadow" | cut -f3 -d :)
+            shdw4=$(echo "$shadow" | cut -f4 -d :)
+            shdw5=$(echo "$shadow" | cut -f5 -d :)
+            shdw6=$(echo "$shadow" | cut -f6 -d :)
+            shdw7=$(echo "$shadow" | cut -f7 -d :)
+            shdw8=$(echo "$shadow" | cut -f8 -d :)
+            shdw9=$(echo "$shadow" | cut -f9 -d :)
+            shadow_str="$FTP_USER:$FTP_MD5:$shdw3:$shdw4:$shdw5:$shdw6"
+            shadow_str="$shadow_str:$shdw7:$shdw8:$shdw9"
+
+            chmod u+w /etc/shadow
+            sed -i "/^$FTP_USER:*/d" /etc/shadow
+            echo "$shadow_str" >> /etc/shadow
+            chmod u-w /etc/shadow
         fi
     fi
 }
@@ -248,13 +382,15 @@ rebuild_dns_domain_conf() {
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
 
+    domain_idn=$(idn -t --quiet -a "$domain")
+
     # Get domain values
     get_domain_values 'mail'
 
     # Rebuilding config structure
-    rm -f /etc/exim/domains/$domain
+    rm -f /etc/exim/domains/$domain_idn
     mkdir -p $HOMEDIR/$user/conf/mail/$domain
-    ln -s $HOMEDIR/$user/conf/mail/$domain /etc/exim/domains/
+    ln -s $HOMEDIR/$user/conf/mail/$domain /etc/exim/domains/$domain_idn
     rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
     rm -f $HOMEDIR/$user/conf/mail/$domain/protection
     rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
@@ -262,10 +398,10 @@ rebuild_mail_domain_conf() {
     touch $HOMEDIR/$user/conf/mail/$domain/protection
     touch $HOMEDIR/$user/conf/mail/$domain/passwd
     chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain
-    chown -R dovecot:mail /etc/exim/domains/$domain
+    chown -R dovecot:mail /etc/exim/domains/$domain_idn
     chmod 770 $HOMEDIR/$user/conf/mail/$domain
     chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-    chmod 770 /etc/exim/domains/$domain
+    chmod 770 /etc/exim/domains/$domain_idn
 
     # Adding antispam protection
     if [ "$ANTISPAM" = 'yes' ]; then
@@ -314,14 +450,14 @@ rebuild_mail_domain_conf() {
     # Removing symbolic link
     if [ "$SUSPENDED" = 'yes' ]; then
         SUSPENDED_MAIL=$((SUSPENDED_MAIL +1))
-        rm -f /etc/exim/domains/$domain
+        rm -f /etc/exim/domains/$domain_idn
     fi
 
-    if [ ! -e $HOMEDIR/$user/mail/$domain ]; then
-        mkdir $HOMEDIR/$user/mail/$domain
+    if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
+        mkdir $HOMEDIR/$user/mail/$domain_idn
     fi
-    chown $user:mail $HOMEDIR/$user/mail/$domain
-    chmod 770 $HOMEDIR/$user/mail/$domain
+    chown $user:mail $HOMEDIR/$user/mail/$domain_idn
+    chmod 770 $HOMEDIR/$user/mail/$domain_idn
 
     dom_aliases=$HOMEDIR/$user/conf/mail/$domain/aliases
     if [ ! -z "$CATCHALL" ]; then
@@ -401,6 +537,9 @@ rebuild_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 
     query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER';"
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
+
+    query="FLUSH PRIVILEGES;"
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 }
 

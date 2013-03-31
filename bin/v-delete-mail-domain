@@ -13,6 +13,7 @@
 # Argument defenition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -41,9 +42,9 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 get_domain_values 'mail'
 accounts=$(wc -l $USER_DATA/mail/$domain.conf|cut -f 1 -d ' ')
 
-rm -f /etc/exim/domains/$domain
+rm -f /etc/exim/domains/$domain_idn
 rm -rf $HOMEDIR/$user/conf/mail/$domain
-rm -rf $HOMEDIR/$user/mail/$domain
+rm -rf $HOMEDIR/$user/mail/$domain_idn
 
 
 #----------------------------------------------------------#

@@ -29,16 +29,16 @@ is_package_new() {
 
 is_package_consistent() {
     source $pkg_dir/$package.pkg
-    validate_format_int $WEB_DOMAINS
-    validate_format_int $WEB_ALIASES
-    validate_format_int	$DNS_DOMAINS
-    validate_format_int $DNS_RECORDS
-    validate_format_int $MAIL_DOMAINS
-    validate_format_int $MAIL_ACCOUNTS
-    validate_format_int $DATABASES
-    validate_format_int $CRON_JOBS
-    validate_format_int $DISK_QUOTA
-    validate_format_int $BACKUPS
+    validate_format_int $WEB_DOMAINS 'WEB_DOMAINS'
+    validate_format_int $WEB_ALIASES 'WEB_ALIASES'
+    validate_format_int $DNS_DOMAINS 'DNS_DOMAINS'
+    validate_format_int $DNS_RECORDS 'DNS_RECORDS'
+    validate_format_int $MAIL_DOMAINS 'MAIL_DOMAINS'
+    validate_format_int $MAIL_ACCOUNTS 'MAIL_ACCOUNTS'
+    validate_format_int $DATABASES 'DATABASES'
+    validate_format_int $CRON_JOBS 'CRON_JOBS'
+    validate_format_int $DISK_QUOTA 'DISK_QUOTA'
+    validate_format_int $BACKUPS 'BACKUPS'
     validate_format_shell $SHELL
 }
 

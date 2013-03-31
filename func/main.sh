@@ -510,7 +510,7 @@ validate_format_password() {
 # Integer
 validate_format_int() {
     if ! [[ "$1" =~ ^[0-9]+$ ]] ; then 
-        echo "Error: int $1 is not valid"
+        echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
@@ -700,7 +700,7 @@ validate_format_dvalue() {
     fi
     if [ "$rtype" = 'MX' ]; then
         validate_format_domain "$1" 'mx_record'
-        validate_format_int "$priority"
+        validate_format_int "$priority" 'priority_record'
     fi
 
 }
@@ -760,17 +760,17 @@ validate_format(){
             ftp_user)       validate_format_username "$arg" "$arg_name" ;;
             host)           validate_format_domain "$arg" "$arg_name" 'host';;
             hour)           validate_format_mhdmw "$arg" $arg_name ;;
-            id)             validate_format_int "$arg" ;;
+            id)             validate_format_int "$arg" 'id' ;;
             interface)      validate_format_interface "$arg" ;;
             ip)             validate_format_ip "$arg" ;;
             ip_name)        validate_format_domain "$arg" 'domain';;
             ip_status)      validate_format_ip_status "$arg" ;;
-            job)            validate_format_int "$arg" ;;
+            job)            validate_format_int "$arg" 'job' ;;
             key)            validate_format_username "$arg" "$arg_name" ;;
             lname)          validate_format_name "$arg" "$arg_name" ;;
             malias)         validate_format_username "$arg" "$arg_name" ;;
             mask)           validate_format_ip "$arg" ;;
-            max_db)         validate_format_int "$arg" ;;
+            max_db)         validate_format_int "$arg" 'max db';;
             min)            validate_format_mhdmw "$arg" $arg_name ;;
             month)          validate_format_mhdmw "$arg" $arg_name ;;
             nat_ip)         validate_format_ip "$arg" ;;
@@ -780,8 +780,8 @@ validate_format(){
             ns4)            validate_format_domain "$arg" 'name_server';;
             package)        validate_format_name "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
-            port)           validate_format_int "$arg" ;;
-            quota)          validate_format_int "$arg" ;;
+            port)           validate_format_int "$arg" 'port' ;;
+            quota)          validate_format_int "$arg" 'quota' ;;
             restart)        validate_format_boolean "$arg" 'restart' ;;
             record)         validate_format_common "$arg" 'record';;
             rtype)          validate_format_dns_type "$arg" ;;
@@ -790,7 +790,7 @@ validate_format(){
             stats_pass)     validate_format_password "$arg" ;;
             stats_user)     validate_format_username "$arg" "$arg_name" ;;
             template)       validate_format_name "$arg" "$arg_name" ;;
-            ttl)            validate_format_int "$arg" ;;
+            ttl)            validate_format_int "$arg" 'ttl';;
             user)           validate_format_username "$arg" "$arg_name" ;;
             wday)           validate_format_mhdmw "$arg" $arg_name ;;
         esac

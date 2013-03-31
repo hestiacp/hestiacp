@@ -300,6 +300,7 @@ then
         msg="$msg\n$(date "+%F %T") $domain"
         mkdir -p $tmpdir/mail/$domain/conf
         mkdir -p $tmpdir/mail/$domain/vesta
+        domain_idn=$(idn -t --quiet -a "$domain")
 
         # Creating exim config
         cd $tmpdir/mail/$domain/
@@ -314,7 +315,7 @@ then
         fi
 
         # Packing mailboxes
-        cd $HOMEDIR/$user/mail/$domain
+        cd $HOMEDIR/$user/mail/$domain_idn
         accounts=$(ls)
         if [ ! -z "$accounts" ]; then
             tar -cpf $tmpdir/mail/$domain/accounts.tar  $accounts
@@ -336,7 +337,7 @@ then
 fi
 
 
-# DataBases
+# Databases
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
     echo "-- DB --"
     msg="$msg\n-- DB --"
@@ -553,7 +554,6 @@ ftp_backup() {
 
     # Debug info
     echo -e "$(date "+%F %T") FTP ftp://$HOST$BPATH/$user.$DATE.tar"
-    msg="$msg\n$(date "+%F %T") FTP ftp://$HOST$BPATH/$user.$DATE.tar"
 
     # Checking ftp connection
     if [ ! -z "$(ftpc)" ]; then

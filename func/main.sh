@@ -148,6 +148,15 @@ is_type_valid() {
     fi
 }
 
+# Check if backup is available for user
+is_backup_available() {
+    if [ "$user" != "$(echo $backup | cut -f 1 -d '.')" ]; then
+        echo "Error: User $user don't have permission to use $backup"
+        log_event "$E_FORBIDEN" "$EVENT"
+        exit $E_FORBIDEN
+    fi
+}
+
 # Check user backup settings
 is_backup_enabled() {
     BACKUPS=$(grep "^BACKUPS=" $USER_DATA/user.conf | cut -f2 -d \')

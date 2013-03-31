@@ -50,27 +50,41 @@ is_backup_valid() {
 args='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
 check_args '2' "$#" $args
 validate_format 'user' 'backup'
-is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_backup_valid
+is_backup_available
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Set notification email and subject
-if [ "$notify" != 'no' ]; then
-    subj="$user → restore failed"
-    email=$(get_user_value '$CONTACT')
-else
-    subj="$user → restore failed"
-    email=$(grep CONTACT $VESTA/data/users/admin/user.conf | cut -f 2 -d \')
-fi
+# Define email wrapper
 if [ -e "$VESTA/web/inc/mail-wrapper.php" ]; then
     send_mail="$VESTA/web/inc/mail-wrapper.php"
 else
     send_mail=$(which mail)
+fi
+
+
+# Check user
+check_user=$(is_object_valid 'user' 'USER' "$user")
+if [ -z "$check_user" ]; then
+    is_object_unsuspended 'user' 'USER' "$user"
+
+    if [ "$notify" != 'no' ]; then
+        subj="$user → restore failed"
+        email=$(get_user_value '$CONTACT')
+    else
+        subj="$user → restore failed"
+        email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f2 -d \')
+    fi
+else
+    # Set flag for user creation
+    create_user="yes"
+
+    # Set notification email and subject
+    subj="$user → restore failed"
+    email=$(grep CONTACT $VESTA/data/users/admin/user.conf | cut -f2 -d \')
 fi
 
 # Check disk usage
@@ -92,7 +106,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
     echo
     sleep 60
     if [ "$i" -ge "15" ]; then
-        echo "LoadAverage $i is above threshold" | $send_mail -s "$subj" $email
+        echo "LoadAverage $i is above threshold" |$send_mail -s "$subj" $email
         echo "Error: LA is too high"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_LA" "$EVENT"
@@ -110,11 +124,51 @@ if [ "$?" -ne 0 ]; then
     exit $E_NOTEXIST
 fi
 
+# User
+if [ "$create_user" = 'yes' ]; then
+    echo "-- USER --"
+    msg="$msg\n-- USER --"
+
+    echo -e "$(date "+%F %T") $user"
+    msg="$msg\n$(date "+%F %T") $user"
+
+    # unpack user container
+    tar xf $BACKUP/$backup -C $tmpdir ./vesta
+    if [ "$?" -ne 0 ]; then
+        echo "Error: can't unpack user contaner"
+        echo "Can't unpack user contaner" | $send_mail -s "$subj" $email
+        rm -rf $tmpdir
+        exit $E_PARSING
+    fi
+
+    # Restore cron records
+    mkdir $USER_DATA
+    cp $tmpdir/vesta/user.conf $USER_DATA/
+
+    # Rebuild cron
+    rebuild_user_conf
+
+    echo
+    msg="$msg\n"
+fi
 
 # WEB
 if [ "$web" != 'no' ]; then
     echo "-- WEB --"
     msg="$msg\n-- WEB --"
+
+    # Unpack pam container
+    tar xf $BACKUP/$backup -C $tmpdir ./pam
+    if [ "$?" -ne 0 ]; then
+        echo "Error: can't unpack PAM contaner"
+        echo "Can't unpack PAM contaner" | $send_mail -s "$subj" $email
+        rm -rf $tmpdir
+        exit $E_PARSING
+    fi
+
+    # Get user id
+    old_uid=$(cut -f 3 -d : $tmpdir/pam/passwd)
+    new_uid=$(grep "^$user:" /etc/passwd | cut -f 3 -d :)
 
     # Create domain list
     domain_list=$(tar -tf $BACKUP/$backup | grep "^./web" |\
@@ -238,6 +292,14 @@ if [ "$web" != 'no' ]; then
                 fi
             fi
 
+            # Convert ftp user
+            FTP_USER=$(echo "$FTP_USER"  | cut -f 2,3,4,5,6,7 -d '_')
+            FTP_USER="${user}_${FTP_USER}"
+
+            # Convert stats user
+            STATS_USER=$(echo "$STATS_USER"  | cut -f 2,3,4,5,6,7 -d '_')
+            STATS_USER="${user}_${STATS_USER}"
+
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
             str="$str FTP_USER='$FTP_USER' FTP_MD5='$FTP_MD5' NGINX='$NGINX'"
@@ -309,7 +371,16 @@ if [ "$web" != 'no' ]; then
             rm -rf $tmpdir
             exit $E_PARSING
         fi
+
+        # ReChown files if uid differs
+        if [ "$old_uid" -ne "$new_uid" ]; then
+            find $HOMEDIR/$user/web/$domain/ -user $old_uid \
+                -exec chown -h $user:$user {} \;
+        fi
     done
+
+    # Restart WEB
+    $BIN/v-restart-web "$EVENT"
     echo
     msg="$msg\n"
 fi
@@ -416,6 +487,9 @@ if [ "$dns" != 'no' ]; then
         # Rebuild dns config
         rebuild_dns_domain_conf
     done
+
+    # Restart DNS
+    $BIN/v-restart-dns "$EVENT"
     echo
     msg="$msg\n"
 fi
@@ -424,6 +498,19 @@ fi
 if [ "$mail" != 'no' ]; then
     echo "-- MAIL --"
     msg="$msg\n-- MAIL --"
+
+    # Unpack pam container
+    tar xf $BACKUP/$backup -C $tmpdir ./pam
+    if [ "$?" -ne 0 ]; then
+        echo "Error: can't unpack PAM contaner"
+        echo "Can't unpack PAM contaner" | $send_mail -s "$subj" $email
+        rm -rf $tmpdir
+        exit $E_PARSING
+    fi
+
+    # Get user id
+    old_uid=$(cut -f 3 -d : $tmpdir/pam/passwd)
+    new_uid=$(grep "^$user:" /etc/passwd | cut -f 3 -d :)
 
     # Create domain list
     domain_list=$(tar -tf $BACKUP/$backup | grep "^./mail" |\
@@ -452,6 +539,8 @@ if [ "$mail" != 'no' ]; then
         fi
 
         # Restore domain config
+        domain_idn=$(idn -t --quiet -a "$domain")
+
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
         if [ -z "$check_config" ]; then
 
@@ -491,7 +580,7 @@ if [ "$mail" != 'no' ]; then
         # Restore emails
         if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
             tar -xzpf $tmpdir/mail/$domain/accounts.tar.gz \
-                -C $HOMEDIR/$user/mail/$domain/
+                -C $HOMEDIR/$user/mail/$domain_idn/
             if [ "$?" -ne 0 ]; then
                 echo "Error: can't unpack $domain mail account tarball"
                 echo "Can't unpack $domain mail account tarball" |\
@@ -499,6 +588,13 @@ if [ "$mail" != 'no' ]; then
                 rm -rf $tmpdir
                 exit $E_PARSING
             fi
+
+            # ReChown files if uid differs
+            if [ "$old_uid" -ne "$new_uid" ]; then
+                find $HOMEDIR/$user/mail/$domain_idn -user $old_uid \
+                    -exec chown -h $user:mail {} \;
+            fi
+
         fi
     done
     echo
@@ -523,8 +619,6 @@ if [ "$db" != 'no' ]; then
     fi
 
     for db in $db_list; do
-        echo -e "$(date "+%F %T") $db"
-        msg="$msg\n$(date "+%F %T") $db"
 
         # unpack db container
         tar xf $BACKUP/$backup -C $tmpdir ./db/$db
@@ -540,13 +634,23 @@ if [ "$db" != 'no' ]; then
         check_config=$(grep "DB='$db'" $USER_DATA/db.conf)
         if [ -z "$check_config" ]; then
 
-            # Parse domain config
+            # Parse database config
             eval $(cat $tmpdir/db/$db/vesta/db.conf)
-            str="DB='$db' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
+
+            # Convert database & database user
+            DB=$(echo "$DB"  | cut -f 2,3,4,5,6,7 -d '_')
+            DB="${user}_${DB}"
+            DBUSER=$(echo "$DBUSER"  | cut -f 2,3,4,5,6,7 -d '_')
+            DBUSER="${user}_${DBUSER}"
+
+            str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
             str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
             str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
             echo $str >> $USER_DATA/db.conf
         fi
+
+        echo -e "$(date "+%F %T") $DB"
+        msg="$msg\n$(date "+%F %T") $DB"
 
         # Unzip database dump
         gzip -d $tmpdir/db/$db/$db.*.sql.gz
@@ -571,9 +675,6 @@ if [ "$cron" != 'no' ]; then
     echo "-- CRON --"
     msg="$msg\n-- CRON --"
 
-    echo -e "$(date "+%F %T") $db"
-    msg="$msg\n$(date "+%F %T") $db"
-
     # unpack cron container
     tar xf $BACKUP/$backup -C $tmpdir ./cron
     if [ "$?" -ne 0 ]; then
@@ -583,12 +684,23 @@ if [ "$cron" != 'no' ]; then
         exit $E_PARSING
     fi
 
+    cron_record=$(wc -l $tmpdir/cron/cron.conf |cut -f 1 -d' ')
+    if [ "$cron_record" -eq 1 ]; then
+        echo -e "$(date "+%F %T") $cron_record record"
+        msg="$msg\n$(date "+%F %T") $cron_record record"
+    else
+        echo -e "$(date "+%F %T") $cron_record records"
+        msg="$msg\n$(date "+%F %T") $cron_record records"
+    fi
+
     # Restore cron records
     cp $tmpdir/cron/cron.conf $USER_DATA/cron.conf
 
     # Rebuild cron
     sync_cron_jobs
 
+    # Restart cron
+    $BIN/v-restart-cron "$EVENT"
     echo
     msg="$msg\n"
 fi
@@ -600,6 +712,19 @@ if [ "$udir" != 'no' ]; then
 
     # unpack user dir container
     if [ ! -z "$(tar -tf $BACKUP/$backup |grep './user_dir')" ]; then
+
+        # Unpack pam container
+        tar xf $BACKUP/$backup -C $tmpdir ./pam
+        if [ "$?" -ne 0 ]; then
+            echo "Error: can't unpack PAM contaner"
+            echo "Can't unpack PAM contaner" | $send_mail -s "$subj" $email
+            rm -rf $tmpdir
+            exit $E_PARSING
+        fi
+
+        # Get user id
+        old_uid=$(cut -f 3 -d : $tmpdir/pam/passwd)
+        new_uid=$(grep "^$user:" /etc/passwd | cut -f 3 -d :)
 
         # Create user dir list
         udir_list=$(tar -tf $BACKUP/$backup | grep "^./user_dir" |\
@@ -636,6 +761,12 @@ if [ "$udir" != 'no' ]; then
                 rm -rf $tmpdir
                 exit $E_PARSING
             fi
+
+            # ReChown files if uid differs
+            if [ "$old_uid" -ne "$new_uid" ]; then
+                find $HOMEDIR/$user/$user_dir -user $old_uid \
+                    -exec chown -h $user:$user {} \;
+            fi
         done
     fi
     echo
@@ -662,6 +793,7 @@ fi
 
 # Update user counters
 $BIN/v-update-user-counters $user
+$BIN/v-update-sys-ip-counters
 
 # Logging
 log_event "$OK" "$EVENT"

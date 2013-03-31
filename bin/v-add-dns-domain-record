@@ -25,6 +25,9 @@ dvalue=$(echo "$dvalue" | tr '[:upper:]' '[:lower:]')
 priority=$6
 id=$7
 restart=$8
+if [ -z "$priority" ]; then
+    priority=10
+fi
 
 # Includes
 source $VESTA/conf/vesta.conf

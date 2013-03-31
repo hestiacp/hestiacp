@@ -363,6 +363,7 @@ $LANG['ru'] = array(
     'Passwords not match' => 'Пароли не совпадают',
     'Please enter valid email address.' => 'Пожалуйста, введите реальный email адрес.',
     'Field "%s" can not be blank.' => 'Поле "%s" не может быть пустым.',
+    'Password is too short.'  => 'Пароль слишком короткий. Используйте не менее 6 символов.',
     'Error code:' => 'Код ошибки: %s',
     'SERVICE_ACTION_FAILED' => 'Не удалось "%s" "%s"',
     'IP address is in use' => 'IP адрес используется',

@@ -70,6 +70,22 @@ $v_ftp_email = $panel[$user]['CONTACT'];
             $_SESSION['error_msg'] = _('Please enter valid email address.');
         }
 
+        // Check ftp password length
+        if (empty($_SESSION['error_msg'])) {
+            if (!empty($_POST['v_ftp_user']) {
+                $pw_len = strlen($_POST['v_ftp_password']);
+                if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
+            }
+        }
+
+        // Check stats password length
+        if (empty($_SESSION['error_msg'])) {
+            if (!empty($_POST['v_stats_user']) {
+                $pw_len = strlen($_POST['v_stats_password']);
+                if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
+            }
+        }
+
         // Check for errors
         if (!empty($errors[0])) {
             foreach ($errors as $i => $error) {

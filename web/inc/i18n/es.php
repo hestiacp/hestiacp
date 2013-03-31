@@ -361,6 +361,7 @@ $LANG['es'] = array(
     'Passwords not match'  => 'Las contraseñas no coinciden',
     'Please enter valid email address.'  => 'Por favor ingrese un correo válido.',
     'Field "%s" can not be blank.'  => 'El campo "%s" no puede estar en blanco.',
+    'Password is too short.'  => "La contraseña es demasiado corta (mínima es de 6 caracteres)",
     'Error code:'  => 'Código de Error:',
     'SERVICE_ACTION_FAILED'  => '"%s" "%s" fallo',
     'IP address is in use' => 'La IP esta en uso',

@@ -362,6 +362,7 @@ $LANG['en'] = array(
     'Passwords not match'  => 'Passwords not match',
     'Please enter valid email address.'  => 'Please enter valid email address.',
     'Field "%s" can not be blank.'  => 'Field "%s" can not be blank.',
+    'Password is too short.'  => 'Password is too short (minimum is 6 characters)',
     'Error code:'  => 'Error code: %s',
     'SERVICE_ACTION_FAILED'  => '"%s" "%s" failed',
     'IP address is in use' => 'IP address is in use',

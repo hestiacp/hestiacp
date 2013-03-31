@@ -53,6 +53,12 @@ if ($_SESSION['user'] == 'admin') {
             $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         }
 
+        // Check password length
+        if (empty($_SESSION['error_msg'])) {
+            $pw_len = strlen($_POST['v_password']);
+            if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
+        }
+
         if (empty($_SESSION['error_msg'])) {
             exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
             if ($return_var != 0) {

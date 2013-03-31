@@ -49,6 +49,11 @@ if (!empty($_POST['ok'])) {
     $v_charset = $_POST['v_charset'];
     $v_db_email = $_POST['v_db_email'];
 
+    // Check password length
+    if (empty($_SESSION['error_msg'])) {
+        $pw_len = strlen($_POST['v_password']);
+        if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
+    }
 
     if (empty($_SESSION['error_msg'])) {
         // Add Database

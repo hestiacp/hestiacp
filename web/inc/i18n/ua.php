@@ -363,6 +363,7 @@ $LANG['ua'] = array(
     'Passwords not match' => 'Паролі не збігаються',
     'Please enter valid email address.' => 'Будь-ласка, введіть реальну email адресу.',
     'Field "%s" can not be blank.' => 'Поле "%s" не може бути пустим.',
+    'Password is too short.'  => 'Пароль занадто короткий. Використовуйте не менше 6 символів.',
     'Error code:' => 'Код помилки: %s',
     'SERVICE_ACTION_FAILED' => 'Не вдалось "%s" "%s"',
     'IP address is in use' => 'IP адреса використовується',

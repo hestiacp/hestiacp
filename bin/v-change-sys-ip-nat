@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change ip nat address
-# options: IP NAT_IP
+# options: IP NAT_IP [RESTART]
 #
 # The function for changing nat ip associated with ip.
 
@@ -12,6 +12,7 @@
 # Argument defenition
 ip=$1
 nat_ip=$2
+restart=$3
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -23,7 +24,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP NAT_IP'
+check_args '2' "$#" 'IP NAT_IP [RESTART]'
 validate_format 'ip'
 if [ ! -z "$nat_ip" ]; then
     validate_format 'nat_ip'
@@ -42,10 +43,31 @@ else
     update_ip_value '$NAT' "$nat_ip"
 fi
 
+# Change vsftpd config
+if [ "$FTP_SYSTEM" = 'vsftpd' ]; then
+    conf="/etc/vsftpd/vsftpd.conf"
+    if [ -z "$(grep pasv_address $conf)" ]; then
+        if [ ! -z "$nat_ip" ]; then
+            echo "pasv_address=$nat_ip" >> $conf
+        fi
+    else
+        if [ ! -z "$nat_ip" ]; then
+            sed -i "s/pasv_address=.*/pasv_address='$nat_ip'/g" $conf
+        else
+            sed -i "/pasv_address/d" $conf
+        fi
+    fi
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Restart ftp server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-ftp "$EVENT"
+fi
 
 # Logging
 log_history "changed associated nat address on $ip to $nat_ip" '' 'admin'

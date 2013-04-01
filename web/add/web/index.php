@@ -72,7 +72,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
 
         // Check ftp password length
         if (empty($_SESSION['error_msg'])) {
-            if (!empty($_POST['v_ftp_user']) {
+            if (!empty($_POST['v_ftp_user'])) {
                 $pw_len = strlen($_POST['v_ftp_password']);
                 if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
             }
@@ -80,7 +80,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
 
         // Check stats password length
         if (empty($_SESSION['error_msg'])) {
-            if (!empty($_POST['v_stats_user']) {
+            if (!empty($_POST['v_stats_user'])) {
                 $pw_len = strlen($_POST['v_stats_password']);
                 if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
             }

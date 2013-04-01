@@ -212,7 +212,7 @@ fi
 #----------------------------------------------------------#
 # Let's start
 echo -e "\n\n\n\nInstallation will take about 15 minutes ...\n"
-sleep 2
+sleep 5
 
 # Update system
 yum -y update
@@ -255,13 +255,23 @@ if [ ! -e '/etc/yum.repos.d/remi.repo' ]; then
     fi
 fi
 
+# Install nginx repo
+if [ ! -e '/etc/yum.repos.d/nginx.repo' ]; then
+    echo "[nginx]" > /etc/yum.repos.d/nginx.repo
+    echo "name=nginx repo" >> /etc/yum.repos.d/nginx.repo
+    echo "baseurl=http://nginx.org/packages/centos/$release/\$basearch/" \
+        >> /etc/yum.repos.d/nginx.repo
+    echo "gpgcheck=0" >> /etc/yum.repos.d/nginx.repo
+    echo "enabled=1" >> /etc/yum.repos.d/nginx.repo
+fi
+
 # Install vesta repo
-echo "[vesta]
-name=Vesta - $REPO
-baseurl=http://$RHOST/$REPO/$release/\$basearch/
-enabled=1
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-VESTA" > $YUM_REPO
+echo "[vesta]" > $YUM_REPO
+echo "name=Vesta - $REPO" >> $YUM_REPO
+echo "baseurl=http://$RHOST/$REPO/$release/\$basearch/" >> $YUM_REPO
+echo "enabled=1" >> $YUM_REPO
+echo "gpgcheck=1" >> $YUM_REPO
+echo "gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-VESTA" >> $YUM_REPO
 wget $CHOST/GPG.txt -O /etc/pki/rpm-gpg/RPM-GPG-KEY-VESTA
 
 

@@ -793,6 +793,7 @@ fi
 
 # Update user counters
 $BIN/v-update-user-counters $user
+$BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging

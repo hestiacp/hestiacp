@@ -68,6 +68,7 @@ fi
 echo "HOST='$host'
 USERNAME='$ftp_user'
 PASSWORD='$ftp_password'
+BPATH='$ftp_path'
 TIME='$TIME'
 DATE='$DATE'" > $VESTA/conf/ftp.backup.conf
 chmod 660 $VESTA/conf/ftp.backup.conf

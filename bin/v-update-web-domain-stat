@@ -93,7 +93,7 @@ build_awstats() {
     done
 
     # Creating index page
-    cat $WEBTPL/awstats_index.tpl | sed -e "s/%month%/$month/g" >\
+    cat $WEBTPL/awstats/index.tpl | sed -e "s/%month%/$month/g" >\
         $dir/index.html
 
     # Creating navigation page
@@ -120,7 +120,7 @@ build_awstats() {
 
         select_m="$select_m<option value=$link>$month $year<\/option>\n"
     done
-    cat $WEBTPL/awstats_nav.tpl | sed -e "s/%select_month%/$select_m/" >\
+    cat $WEBTPL/awstats/nav.tpl | sed -e "s/%select_month%/$select_m/" >\
         $dir/nav.html
 }
 

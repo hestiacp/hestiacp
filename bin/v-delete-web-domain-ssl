@@ -42,14 +42,14 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
 # Parsing domain values
 get_domain_values 'web'
 conf="$HOMEDIR/$user/conf/web/shttpd.conf"
-tpl_file="$WEBTPL/apache_$TPL.stpl"
+tpl_file="$WEBTPL/apache/$TPL.stpl"
 
 # Deleting domain
 del_web_config
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     del_web_config
 fi

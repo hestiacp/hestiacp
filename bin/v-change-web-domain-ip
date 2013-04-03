@@ -46,7 +46,7 @@ is_ip_avalable
 # Define variable for replace
 get_domain_values 'web'
 ip=$(get_real_ip $ip)
-tpl_file="$WEBTPL/apache_$TPL.tpl"
+tpl_file="$WEBTPL/apache/$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
 old=$(get_real_ip $IP)
 new=$ip
@@ -54,21 +54,21 @@ replace_web_config
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/apache_$TPL.stpl"
+    tpl_file="$WEBTPL/apache/$TPL.stpl"
     conf="$HOMEDIR/$user/conf/web/shttpd.conf"
     replace_web_config
 fi
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/nginx_$NGINX.tpl"
+    tpl_file="$WEBTPL/nginx/$NGINX.tpl"
     conf="$HOMEDIR/$user/conf/web/nginx.conf"
     replace_web_config
 fi
 
 # Checking nginx
 if [ "$SSL" = 'yes' ] && [ ! -z "$NGINX" ]; then 
-    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     replace_web_config
 fi

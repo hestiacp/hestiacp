@@ -56,7 +56,7 @@ fi
 get_domain_values 'web'
 NGINX="$template"
 NGINX_EXT="$extentions"
-tpl_file="$WEBTPL/nginx_$NGINX.tpl"
+tpl_file="$WEBTPL/nginx/$NGINX.tpl"
 conf="$HOMEDIR/$user/conf/web/nginx.conf"
 ip=$(get_real_ip $IP)
 
@@ -77,7 +77,7 @@ fi
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
     conf="$HOMEDIR/$user/conf/web/snginx.conf"
     add_web_config
 

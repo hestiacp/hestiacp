@@ -40,7 +40,7 @@ is_object_suspended 'web' 'DOMAIN' "$domain"
 
 # Parsing domain values
 get_domain_values 'web'
-tpl_file="$WEBTPL/apache_$TPL.tpl"
+tpl_file="$WEBTPL/apache/$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
 SUSPENDED='no'
 ip=$(get_real_ip $IP)
@@ -54,7 +54,7 @@ add_web_config
 
 # Check ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/apache_$TPL.stpl"
+    tpl_file="$WEBTPL/apache/$TPL.stpl"
     conf="$HOMEDIR/$user/conf/web/shttpd.conf"
     del_web_config
     add_web_config
@@ -62,13 +62,13 @@ fi
 
 # Checking nginx
 if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/nginx_$NGINX.tpl"
+    tpl_file="$WEBTPL/nginx/$NGINX.tpl"
     conf="$HOMEDIR/$user/conf/web/nginx.conf"
     del_web_config
     add_web_config
 
     if [ "$SSL" = 'yes' ]; then
-        tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+        tpl_file="$WEBTPL/nginx/$NGINX.stpl"
         conf="$HOMEDIR/$user/conf/web/snginx.conf"
         del_web_config
         add_web_config

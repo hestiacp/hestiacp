@@ -1,11 +1,11 @@
 # Web template check
 is_apache_template_valid() {
-    t="$WEBTPL/apache_$template.tpl"
-    s="$WEBTPL/apache_$template.stpl"
+    t="$WEBTPL/apache/$template.tpl"
+    s="$WEBTPL/apache/$template.stpl"
     if [ ! -e $t ] || [ ! -e $s ]; then
         template='default'
-        t="$WEBTPL/apache_$template.tpl"
-        s="$WEBTPL/apache_$template.stpl"
+        t="$WEBTPL/apache/$template.tpl"
+        s="$WEBTPL/apache/$template.stpl"
         if [ ! -e $t ] || [ ! -e $s ]; then
             echo "Error: template $template not found"
             log_event "$E_NOTEXIST" "$EVENT"
@@ -16,12 +16,12 @@ is_apache_template_valid() {
 
 # Nginx template check
 is_nginx_template_valid() {
-    t="$WEBTPL/nginx_$template.tpl"
-    s="$WEBTPL/nginx_$template.stpl"
+    t="$WEBTPL/nginx/$template.tpl"
+    s="$WEBTPL/nginx/$template.stpl"
     if [ ! -e $t ] || [ ! -e $s ]; then
         template='default'
-        t="$WEBTPL/nginx_$template.tpl"
-        s="$WEBTPL/nginx_$template.stpl"
+        t="$WEBTPL/nginx/$template.tpl"
+        s="$WEBTPL/nginx/$template.stpl"
         if [ ! -e $t ] || [ ! -e $s ]; then
             echo "Error: nginx $template not found"
             log_event "$E_NOTEXIST" "$EVENT"
@@ -416,7 +416,7 @@ namehost_ip_support() {
         sed -i "$conf_ins i Listen $ip:$WEB_PORT" $conf
 
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-            cat $WEBTPL/ngingx.ip.tpl | sed -e "s/%ip%/$ip/g" \
+            cat $WEBTPL/nginx/ip.tpl | sed -e "s/%ip%/$ip/g" \
              -e "s/%web_port%/$WEB_PORT/g" \
             -e "s/%proxy_port%/$PROXY_PORT/g" >>$nconf
 
@@ -434,8 +434,8 @@ namehost_ip_disable() {
         sed -i "/Listen $ip:/d" $conf
 
         if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-            tpl_ln=$(wc -l $WEBTPL/ngingx.ip.tpl | cut -f 1 -d ' ')
-            ip_line=$(grep -n "%ip%" $WEBTPL/ngingx.ip.tpl |head -n1 |\
+            tpl_ln=$(wc -l $WEBTPL/nginx/ip.tpl | cut -f 1 -d ' ')
+            ip_line=$(grep -n "%ip%" $WEBTPL/nginx/ip.tpl |head -n1 |\
                 cut -f 1 -d :)
             conf_line=$(grep -n -w $ip $nconf|head -n1|cut -f 1 -d :)
             if [ -z "$tpl_ln" ] || [ -z "$ip_line" ] || [ -z "$conf_line" ]

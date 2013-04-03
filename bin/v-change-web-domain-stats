@@ -63,7 +63,7 @@ rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 upd_web_domain_values
 
 # Adding statistic config
-cat $WEBTPL/$type.tpl |\
+cat $WEBTPL/$type/$type.tpl |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%web_port%/$WEB_PORT/g" \
         -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \

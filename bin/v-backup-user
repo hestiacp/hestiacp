@@ -169,14 +169,14 @@ then
         # Apache config
         if [ "$WEB_SYSTEM" = 'apache' ]; then
             # Parsing httpd.conf
-            tpl_file="$WEBTPL/apache_$TPL.tpl"
+            tpl_file="$WEBTPL/apache/$TPL.tpl"
             conf="$HOMEDIR/$user/conf/web/httpd.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/httpd.conf
 
             # SSL check
             if [ "$SSL" = 'yes' ]; then
-                tpl_file="$WEBTPL/apache_$TPL.stpl"
+                tpl_file="$WEBTPL/apache/$TPL.stpl"
                 conf="$HOMEDIR/$user/conf/web/shttpd.conf"
                 get_web_config_brds
                 sed -n "$top_line,$bottom_line p" $conf > conf/shttpd.conf
@@ -185,14 +185,14 @@ then
 
         # Nginx config
         if [ ! -z "$NGINX" ] ; then
-            tpl_file="$WEBTPL/nginx_$NGINX.tpl"
+            tpl_file="$WEBTPL/nginx/$NGINX.tpl"
             conf="$HOMEDIR/$user/conf/web/nginx.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/nginx.conf
 
             # SSL check
             if [ "$SSL" = 'yes' ] ; then
-                tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+                tpl_file="$WEBTPL/nginx/$NGINX.stpl"
                 conf="$HOMEDIR/$user/conf/web/snginx.conf"
                 get_web_config_brds
                 sed -n "$top_line,$bottom_line p" $conf > conf/snginx.conf

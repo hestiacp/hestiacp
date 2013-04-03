@@ -51,7 +51,7 @@ get_domain_values 'web'
 upd_web_domain_values
 
 # Adding statistic config
-cat $WEBTPL/$type.tpl |\
+cat $WEBTPL/$type/$type.tpl |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%web_port%/$WEB_PORT/g" \
         -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \

@@ -190,15 +190,15 @@ rebuild_web_domain_conf() {
 
 
     # Adding tmp_httpd.conf
-    tpl_file="$WEBTPL/apache_$TPL.tpl"
+    tpl_file="$WEBTPL/apache/$TPL.tpl"
     conf="$HOMEDIR/$user/conf/web/tmp_httpd.conf"
     add_web_config
     chown root:apache $conf
     chmod 640 $conf
 
     # Running template trigger
-    if [ -x $WEBTPL/apache_$TPL.sh ]; then
-        $WEBTPL/apache_$TPL.sh $user $domain $ip $HOMEDIR $docroot
+    if [ -x $WEBTPL/apache/$TPL.sh ]; then
+        $WEBTPL/apache/$TPL.sh $user $domain $ip $HOMEDIR $docroot
     fi
 
     # Checking aliases
@@ -209,7 +209,7 @@ rebuild_web_domain_conf() {
 
     # Checking stats
     if [ ! -z "$STATS" ]; then
-        cat $WEBTPL/$STATS.tpl |\
+        cat $WEBTPL/$STATS/$STATS.tpl |\
             sed -e "s/%ip%/$ip/g" \
                 -e "s/%web_port%/$WEB_PORT/g" \
                 -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
@@ -254,7 +254,7 @@ rebuild_web_domain_conf() {
     if [ "$SSL" = 'yes' ]; then
         # Adding domain to the shttpd.conf
         conf="$HOMEDIR/$user/conf/web/tmp_shttpd.conf"
-        tpl_file="$WEBTPL/apache_$TPL.stpl"
+        tpl_file="$WEBTPL/apache/$TPL.stpl"
         add_web_config
         chown root:apache $conf
         chmod 640 $conf
@@ -271,8 +271,8 @@ rebuild_web_domain_conf() {
         fi
 
         # Running template trigger
-        if [ -x $WEBTPL/apache_$TPL.sh ]; then
-            $WEBTPL/apache_$TPL.sh $user $domain $ip $HOMEDIR $sdocroot
+        if [ -x $WEBTPL/apache/$TPL.sh ]; then
+            $WEBTPL/apache/$TPL.sh $user $domain $ip $HOMEDIR $sdocroot
         fi
 
         user_ssl=$((user_ssl + 1))
@@ -281,14 +281,14 @@ rebuild_web_domain_conf() {
 
     # Checking nginx
     if [ ! -z "$NGINX" ]; then
-        tpl_file="$WEBTPL/nginx_$NGINX.tpl"
+        tpl_file="$WEBTPL/nginx/$NGINX.tpl"
         conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
         add_web_config
         chown root:nginx $conf
         chmod 640 $conf
 
         if [ "$SSL" = 'yes' ]; then
-            tpl_file="$WEBTPL/nginx_$NGINX.stpl"
+            tpl_file="$WEBTPL/nginx/$NGINX.stpl"
             conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
             add_web_config
             chown root:nginx $conf

@@ -83,7 +83,7 @@ group="$user"
 email="$user@$domain"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
-tpl_file="$WEBTPL/apache_$template.tpl"
+tpl_file="$WEBTPL/apache/$template.tpl"
 
 # Adding domain to the httpd.conf
 add_web_config
@@ -146,8 +146,8 @@ chmod 551 $HOMEDIR/$user/web/$domain/logs
 chmod 640 /var/log/httpd/domains/$domain.*
 
 # Running template trigger
-if [ -x $WEBTPL/apache_$template.sh ]; then
-    $WEBTPL/apache_$template.sh $user $domain $ip $HOMEDIR $docroot
+if [ -x $WEBTPL/apache/$template.sh ]; then
+    $WEBTPL/apache/$template.sh $user $domain $ip $HOMEDIR $docroot
 fi
 
 # Checking main vesta httpd config

@@ -47,40 +47,40 @@ get_domain_values 'web'
 ip=$(get_real_ip $IP)
 
 # Deleting domain
-tpl_file="$WEBTPL/apache_$TPL.tpl"
+tpl_file="$WEBTPL/apache/$TPL.tpl"
 old_tpl=$TPL
 conf="$HOMEDIR/$user/conf/web/httpd.conf"
 del_web_config
 
 # Deleting ssl vhost
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/apache_$TPL.stpl"
+    tpl_file="$WEBTPL/apache/$TPL.stpl"
     conf="$HOMEDIR/$user/conf/web/shttpd.conf"
     del_web_config
 fi
 
 # Defining variables for new vhost config
 upd_web_domain_values
-tpl_file="$WEBTPL/apache_$template.tpl"
+tpl_file="$WEBTPL/apache/$template.tpl"
 
 # Adding domain to the httpd.conf
 add_web_config
 
 # Running template trigger
-if [ -x $WEBTPL/apache_$template.sh ]; then
-    $WEBTPL/apache_$template.sh $user $domain $ip $HOMEDIR $docroot
+if [ -x $WEBTPL/apache/$template.sh ]; then
+    $WEBTPL/apache/$template.sh $user $domain $ip $HOMEDIR $docroot
 fi
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
     conf="$HOMEDIR/$user/conf/web/shttpd.conf"
-    tpl_file="$WEBTPL/apache_$template.stpl"
+    tpl_file="$WEBTPL/apache/$template.stpl"
 
     add_web_config
 
     # Running template trigger
-    if [ -x $WEBTPL/apache_$template.sh ]; then
-        $WEBTPL/apache_$template.sh \
+    if [ -x $WEBTPL/apache/$template.sh ]; then
+        $WEBTPL/apache/$template.sh \
             "$user" "$domain" "$ip" "$HOMEDIR" "$sdocroot"
     fi
 fi

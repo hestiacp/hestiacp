@@ -69,7 +69,6 @@ echo "$password" | /usr/bin/passwd "$user" --stdin &>/dev/null
 
 # Building directory tree
 mkdir $HOMEDIR/$user/conf
-chattr +i $HOMEDIR/$user/conf
 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     mkdir $HOMEDIR/$user/conf/web
@@ -97,6 +96,7 @@ fi
 
 # Set permissions
 chmod a+x $HOMEDIR/$user
+chattr +i $HOMEDIR/$user/conf
 
 # Checking quota
 if [ ! -z "$DISK_QUOTA" ] && [ "$DISK_QUOTA" != 'no' ]; then

@@ -41,6 +41,9 @@ rebuild_user_conf() {
     chmod u-w /etc/shadow
 
     # Building directory tree
+    if [ -e "$HOMEDIR/$user/conf" ]; then
+        chattr -i $HOMEDIR/$user/conf
+    fi
     mkdir -p $HOMEDIR/$user/conf
     chmod a+x $HOMEDIR/$user
     chmod a+x $HOMEDIR/$user/conf

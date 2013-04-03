@@ -4,31 +4,35 @@
     %alias_string%
     ServerAdmin %email%
     DocumentRoot %sdocroot%
-    ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
+    %cgi%ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
     Alias /vstats/ %home%/%user%/web/%domain%/stats/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/
     SuexecUserGroup %user% %group%
     CustomLog /var/log/httpd/domains/%domain%.bytes bytes
     CustomLog /var/log/httpd/domains/%domain%.log combined
-    ErrorLog /var/log/httpd/domains/%domain%.error.log
+    %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %sdocroot%>
-        SSLRequireSSL
         AllowOverride All
-        Options +Includes -Indexes +ExecCGI
-        <Files *.php>
-          SetHandler fcgid-script
-        </Files>
-        FCGIWrapper %home%/%user%/web/%domain%/cgi-bin/fcgi-starter .php
+        SSLRequireSSL
+        Options +Includes -Indexes %cgi_option%
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    php_admin_value open_basedir none
     SSLEngine on
     SSLVerifyClient none
     SSLCertificateFile %ssl_crt%
     SSLCertificateKeyFile %ssl_key%
     %ssl_ca_str%SSLCertificateChainFile %ssl_ca%
+
+    <IfModule mod_ruid2.c>
+        RMode config
+        RUidGid %user% %group%
+        RGroups apache
+    </IfModule>
+    <IfModule itk.c>
+        AssignUserID %user% %group%
+    </IfModule>
 
     Include %home%/%user%/conf/web/shttpd.%domain%.conf*
 

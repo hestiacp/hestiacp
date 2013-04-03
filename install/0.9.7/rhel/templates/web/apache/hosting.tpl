@@ -1,20 +1,19 @@
-<VirtualHost %ip%:%web_ssl_port%>
+<VirtualHost %ip%:%web_port%>
 
     ServerName %domain_idn%
     %alias_string%
     ServerAdmin %email%
-    DocumentRoot %sdocroot%
-    ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
+    DocumentRoot %docroot%
+    %cgi%ScriptAlias /cgi-bin/ %home%/%user%/web/%domain%/cgi-bin/
     Alias /vstats/ %home%/%user%/web/%domain%/stats/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/
     SuexecUserGroup %user% %group%
     CustomLog /var/log/httpd/domains/%domain%.bytes bytes
     CustomLog /var/log/httpd/domains/%domain%.log combined
-    ErrorLog /var/log/httpd/domains/%domain%.error.log
-    <Directory %sdocroot%>
+    %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
+    <Directory %docroot%>
         AllowOverride AuthConfig FileInfo Indexes Limit
-        SSLRequireSSL
-        Options +Includes -Indexes +ExecCGI
+        Options +Includes -Indexes %cgi_option%
         php_admin_value upload_tmp_dir %home%/%user%/tmp
         php_admin_value upload_max_filesize 10M
         php_admin_value max_execution_time 20
@@ -29,11 +28,6 @@
         AllowOverride All
     </Directory>
     php_admin_value open_basedir %home%/%user%/web:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp:/usr/share:/etc/phpMyAdmin:/etc/roundcubemail:
-    SSLEngine on
-    SSLVerifyClient none
-    SSLCertificateFile %ssl_crt%
-    SSLCertificateKeyFile %ssl_key%
-    %ssl_ca_str%SSLCertificateChainFile %ssl_ca%
     <IfModule mod_ruid2.c>
         RMode config
         RUidGid %user% %group%
@@ -43,7 +37,7 @@
         AssignUserID %user% %group%
     </IfModule>
 
-    Include %home%/%user%/conf/web/shttpd.%domain%.conf*
+    Include %home%/%user%/conf/web/httpd.%domain%.conf*
 
 </VirtualHost>
 

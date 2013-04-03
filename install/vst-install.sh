@@ -717,7 +717,7 @@ fi
 $VESTA/bin/v-change-user-shell admin bash
 
 # Configure mysql host
-$VESTA/bin/v-add-database-server mysql localhost 3306 root $mpass
+$VESTA/bin/v-add-database-server mysql localhost root $mpass
 $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 
 # Configuring system ips
@@ -798,7 +798,8 @@ Sincerely yours
 vestacp.com team
 " > $tmpfile
 
-cat $tmpfile | mail -s "Vesta Control Panel" $email
+send_mail="$VESTA/web/inc/mail-wrapper.php"
+cat $tmpfile | $send_mail -s "Vesta Control Panel" $email
 rm -f $tmpfile
 
 # Congrats

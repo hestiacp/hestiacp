@@ -45,9 +45,12 @@ bytes=0
 
 # Parsing log
 while read line; do
-    if [[ '-' != "$line" ]] && [[ 0 -lt "$line" ]]; then
+
+    if  [[ "$line" =~ ^[0-9]+$ ]]; then
+        line=${line#0}
         bytes=$(($bytes + $line))
     fi
+
 done < $log_file
 
 # Converting to Mb

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add backup ftp host
-# options: HOST USERNAME PASSWORD [PATH]
+# options: HOST USERNAME PASSWORD [PATH] [PORT]
 #
 # The function adds ftp host for system backups
 
@@ -14,6 +14,7 @@ host=$1
 ftp_user=$2
 ftp_password=$3
 ftp_path=${4-/backup}
+ftp_port=${5-21}
 A3='******'
 
 # Includes
@@ -22,7 +23,7 @@ source $VESTA/func/main.sh
 
 # Defining ftp command function
 ftpc() {
-    ftp -n $host <<EOF
+    ftp -n $host $ftp_port <<EOF
     quote USER $ftp_user
     quote PASS $ftp_password
     binary
@@ -38,7 +39,7 @@ EOF
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" "HOST USERNAME PASSWORD [PATH]"
+check_args '3' "$#" "HOST USERNAME PASSWORD [PATH] [PORT]"
 validate_format 'host' 'ftp_user' 'ftp_password'
 
 
@@ -69,6 +70,7 @@ echo "HOST='$host'
 USERNAME='$ftp_user'
 PASSWORD='$ftp_password'
 BPATH='$ftp_path'
+PORT='$ftp_port'
 TIME='$TIME'
 DATE='$DATE'" > $VESTA/conf/ftp.backup.conf
 chmod 660 $VESTA/conf/ftp.backup.conf

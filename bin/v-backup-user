@@ -515,7 +515,7 @@ local_backup(){
 
 # Defining ftp command function
 ftpc() {
-    ftp -n $HOST <<EOF
+    ftp -n $HOST $PORT <<EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
     binary
@@ -541,6 +541,11 @@ ftp_backup() {
     # Parse config
     source $VESTA/conf/ftp.backup.conf
 
+    # Set default port
+    if [ -z "$(grep 'PORT=' $VESTA/conf/ftp.backup.conf)" ]; then
+        PORT='21'
+    fi
+
     # Checking variables
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
         rm -rf $tmpdir
@@ -552,6 +557,7 @@ ftp_backup() {
         exit $E_PARSING
     fi
 
+
     # Debug info
     echo -e "$(date "+%F %T") FTP ftp://$HOST$BPATH/$user.$DATE.tar"
 
@@ -560,7 +566,7 @@ ftp_backup() {
         rm -rf $tmpdir
         echo "Can't login to ftp://$USERNAME@$HOST" |\
             $send_mail -s "$subj" $email
-        echo "Error: can't login to ftp"
+        echo "Error: can't login to ftp ftp://$USERNAME@$HOST"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_FTP" "$EVENT"
         exit $E_FTP

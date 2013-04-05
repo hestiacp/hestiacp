@@ -69,7 +69,7 @@ if [ ! -e "$VESTA/conf/ftp.backup.conf" ]; then
 fi
 
 # Defining fileds to select
-fields='$HOST $USERNAME $TIME $DATE'
+fields='$HOST $USERNAME $PORT $TIME $DATE'
 
 # Listing database
 case $format in 

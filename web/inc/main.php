@@ -65,8 +65,15 @@ if (isset($_SESSION['language'])) {
     switch ($_SESSION['language']) {
         case 'ru':
             setlocale(LC_ALL, 'ru_RU.utf8');
+            break;
+        case 'ua':
+            setlocale(LC_ALL, 'uk_UA.utf8');
+            break;
+        case 'es':
+            setlocale(LC_ALL, 'es_ES.utf8');
+            break;
         default:
-            setlocale(LC_ALL, 'en_EN.utf8');
+            setlocale(LC_ALL, 'en_US.utf8');
     }
 }
 

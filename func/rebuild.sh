@@ -228,7 +228,7 @@ rebuild_web_domain_conf() {
 
         if [ "$STATS" == 'awstats' ]; then
             if [ ! -e "/etc/awstats/$STATS.$domain_idn.conf" ]; then
-                ln -s $HOMEDIR/$user/conf/web/$STATS.$domain.conf \
+                ln -f -s $HOMEDIR/$user/conf/web/$STATS.$domain.conf \
                     /etc/awstats/$STATS.$domain_idn.conf
             fi
         fi

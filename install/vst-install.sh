@@ -672,6 +672,10 @@ chmod 750 $VESTA/data/users
 chmod 750 $VESTA/data/ips
 chmod -R 750 $VESTA/data/queue
 ln -s /usr/local/vesta/log /var/log/vesta
+touch /var/log/vesta/system.log
+touch /var/log/vesta/nginx-error.log
+touch /var/log/vesta/auth.log
+chmod 660 /var/log/vesta/*
 adduser backup
 ln -s /home/backup /backup
 chmod a+x /backup

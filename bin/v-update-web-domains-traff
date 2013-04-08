@@ -45,7 +45,9 @@ for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
     while read line; do
         if  [[ "$line" =~ ^[0-9]+$ ]]; then
             line=${line#0}
-            bytes=$(($bytes + $line))
+            if [ ! -z "$line" ]; then
+                bytes=$(($bytes + $line))
+            fi
         fi
     done < $log_file
 

@@ -56,7 +56,7 @@ fi
 
 # Deleting old certificate
 tmpdir=$(mktemp -p $HOMEDIR/$user/web/$domain/private -d)
-rm -f $HOMEDIR/$user/conf/ssl.$domain.*
+rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
 mv $USER_DATA/ssl/$domain.* $tmpdir
 chown -R $user:$user $tmpdir
 

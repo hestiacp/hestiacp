@@ -48,8 +48,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_new 'db' 'DB' "$database"
 get_next_dbhost
-is_object_valid "../../../conf/$type" 'HOST' "$host"
-is_object_unsuspended "../../../conf/$type" 'HOST' "$host"
+is_object_valid "../../../conf/$type" 'DBHOST' "$host"
+is_object_unsuspended "../../../conf/$type" 'DBHOST' "$host"
 #is_charset_valid
 is_package_full 'DATABASES'
 

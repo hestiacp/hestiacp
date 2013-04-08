@@ -647,6 +647,8 @@ if [ "$db" != 'no' ]; then
             str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
             str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
             echo $str >> $USER_DATA/db.conf
+        else
+            eval $(grep "DB='$db'" $USER_DATA/db.conf)
         fi
 
         echo -e "$(date "+%F %T") $DB"

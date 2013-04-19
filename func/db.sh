@@ -392,7 +392,7 @@ dump_pgsql_database() {
         exit $E_DB
     fi
 
-    pg_dump -h $HOST -U $USER -c -d -O -x -i -f $dump $database \
+    pg_dump -h $HOST -U $USER -c --inserts -O -x -i -f $dump $database \
         2> /dev/null
 
     if [ '0' -ne "$?" ]; then

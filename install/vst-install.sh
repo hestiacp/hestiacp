@@ -290,6 +290,7 @@ mkdir -p $vst_backups/clamd
 mkdir -p $vst_backups/vsftpd
 mkdir -p $vst_backups/named
 mkdir -p $vst_backups/vesta/admin
+mkdir -p $vst_backups/home
 
 # Backup sudoers
 if [ -e '/etc/sudoers' ]; then
@@ -710,7 +711,10 @@ wget $CHOST/$VERSION/certificate.key -O certificate.key
 
 # Adding admin user
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
+    chattr -i /home/admin/conf > /dev/null 2>&1
     userdel -f admin
+    mv -f /home/admin  $vst_backups/home/
+    rm -f /tmp/sess_*
 fi
 vpass=$(gen_pass)
 $VESTA/bin/v-add-user admin $vpass $email default System Administrator
@@ -719,6 +723,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 $VESTA/bin/v-change-user-shell admin bash
+$VESTA/bin/v-change-user-language admin en
 
 # Configure mysql host
 $VESTA/bin/v-add-database-server mysql localhost root $mpass

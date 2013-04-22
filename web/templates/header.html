@@ -70,8 +70,8 @@
             }
 
             .top-link:active{
-                color: #ccc;
-                background: #999;
+                color: #fff;
+                background: #f79b44;
             }
 
             .top-selected-link {
@@ -94,7 +94,12 @@
             }
 
             .top-logout:hover {
-                color: white;
+                color: #;
+            }
+
+            .top-logout:active {
+                color: #fff;
+                background-color: #f79b44;
             }
 
             .nav-logo {
@@ -194,7 +199,7 @@
             }
 
             .submenu-button {
-                width: 120px;
+                width: 130px;
                 height: 24px;
                 cursor: pointer;
                 color: #333;
@@ -217,12 +222,14 @@
             }
 
             .submenu-button:active {
-                background-color: #e6e6e6;
+                color: #fff;
+                border: 1px solid #f79b44;
+                background-color: #f79b44;
             }
 
             .submenu-select-block {
                 float:left;
-                padding-left: 28px;
+                padding-left: 18px;
             }
 
             .submenu-select-link {
@@ -237,6 +244,12 @@
             }
 
             .submenu-select-link:hover {
+                text-decoration: underline;
+            }
+
+            .submenu-select-link:active {
+                color: #fff;
+                background-color: #f79b44;
                 text-decoration: underline;
             }
 
@@ -300,7 +313,7 @@
             }
 
             .vst {
-                padding: 0 8px 0 0;
+                padding: 0 4px 0 4px;
                 margin: 0;
                 text-decoration: none;
                 color: #999;
@@ -313,7 +326,26 @@
             }
 
             .vst:active {
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .vst-selected {
+                padding: 0 4px 0 4px;
+                margin: 0;
+                text-decoration: none;
                 color: #174f82;
+                font-size: 12pt;
+                float: left;
+            }
+
+            .vst-selected:hover {
+                text-decoration: underline;
+            }
+
+            .vst-selected:active {
+                color: #fff;
+                background-color: #f79b44;
             }
 
             .data {
@@ -656,13 +688,15 @@
             }
 
             .button:active {
-                background-color: #e6e6e6;
+                color: #fff;
+                border: 1px solid #f79b44;
+                background-color: #f79b44;
             }
 
             .genpass {
                 color: #34536a;
                 font-size: 8pt;
-                padding: 0 5px 0 8px;
+                padding: 0 5px;
                 letter-spacing: 0.1em;
                 text-decoration: underline;
             }
@@ -671,16 +705,27 @@
                 color: #7fa1cb;
             }
 
+            .genpass:active {
+                background-color: #f79b44;
+                color: #fff;
+            }
+
             .vst-advanced {
                 color: #34536a;
                 font-size: 10pt;
                 letter-spacing: 0.1em;
                 text-decoration: none;
+                padding: 0 2px;
                 border-bottom: 1px solid #f79b44;
             }
 
             .vst-advanced:hover {
                 color: #7fa1cb;
+            }
+
+            .vst-advanced:active {
+                color: #fff;
+                background-color: #f79b44;
             }
 
             .fixed{

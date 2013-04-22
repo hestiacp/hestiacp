@@ -3,7 +3,7 @@
                                         <td style="padding: 2px 0 0 6px">
                                             <div class="submenu-button-block">
                                                 <form action="/list/stats/" method="get" id="objects">
-                                                <a class="vst" <?php if (empty($_GET['user'])) echo "style='color: #174f82'"; ?> href='/list/stats/'><?php print _('Overall Statistics');?></a>
+                                                <a class="vst<?php if (empty($_GET['user'])) echo "-selected"; ?>" href='/list/stats/'><?php print _('Overall Statistics');?></a>
                                                 <div class="submenu-select-block">
                                                 <select class="submenu-select-dropdown" name="user">
                                                     <option value=""><?php print _('show per user');?></option>

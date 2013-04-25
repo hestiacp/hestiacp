@@ -63,6 +63,9 @@ $i = 0;
 
 if (isset($_SESSION['language'])) {
     switch ($_SESSION['language']) {
+        case 'ro':
+            setlocale(LC_ALL, 'ro_RO.utf8');
+            break;
         case 'ru':
             setlocale(LC_ALL, 'ru_RU.utf8');
             break;

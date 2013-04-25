@@ -24,7 +24,7 @@ if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD."v-list-user ".$v_username." json", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = _('Error code:',$return_var);
+        if (empty($error)) $error = __('Error code:',$return_var);
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -80,7 +80,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-password ".$v_username." ".$v_password, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_password = "••••••••";
@@ -93,7 +93,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-package ".$v_username." ".$v_package, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -105,7 +105,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             } else {
                 if ($_GET['user'] == 'admin')  $_SESSION['language'] = $_POST['v_language'];
@@ -119,7 +119,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-template ".$v_username." ".$v_template, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -131,7 +131,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-shell ".$v_username." ".$v_shell, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -141,13 +141,13 @@ if ($_SESSION['user'] == 'admin') {
         if (($v_email != $_POST['v_email']) && (empty($_SESSION['error_msg']))) {
             // Validate email
             if (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL)) {
-                $_SESSION['error_msg'] = _('Please enter valid email address.');
+                $_SESSION['error_msg'] = __('Please enter valid email address.');
             } else {
                 $v_email = escapeshellarg($_POST['v_email']);
                 exec (VESTA_CMD."v-change-user-contact ".$v_username." ".$v_email, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error code:',$return_var);
+                    if (empty($error)) $error = __('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
             }
@@ -161,7 +161,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-name ".$v_username." ".$v_fname." ".$v_lname, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -179,14 +179,14 @@ if ($_SESSION['user'] == 'admin') {
             exec ($ns_cmd, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _('Changes has been saved.');
+            $_SESSION['ok_msg'] = __('Changes has been saved.');
         }
     }
     // Panel
@@ -207,7 +207,7 @@ if ($_SESSION['user'] == 'admin') {
     exec (VESTA_CMD."v-list-user ".$v_username." json", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = _('Error code:',$return_var);
+        if (empty($error)) $error = __('Error code:',$return_var);
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -249,7 +249,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-password ".$v_username." ".$v_password, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_password = "••••••••";
@@ -262,7 +262,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             } else {
                 $_SESSION['language'] = $_POST['v_language'];
@@ -276,7 +276,7 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-contact ".$v_username." ".$v_email, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -294,14 +294,14 @@ if ($_SESSION['user'] == 'admin') {
             exec ($ns_cmd, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _('Changes has been saved.');
+            $_SESSION['ok_msg'] = __('Changes has been saved.');
         }
     }
     // Panel

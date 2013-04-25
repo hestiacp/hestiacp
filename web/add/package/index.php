@@ -20,22 +20,22 @@ top_panel($user,$TAB);
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
-        if (empty($_POST['v_package'])) $errors[] = _('package');
-        if (empty($_POST['v_template'])) $errors[] = _('template');
-        if (empty($_POST['v_shell'])) $errrors[] = _('shell');
-        if (!isset($_POST['v_web_domains'])) $errors[] = _('web domains');
-        if (!isset($_POST['v_web_aliases'])) $errors[] = _('web aliases');
-        if (!isset($_POST['v_dns_domains'])) $errors[] = _('dns domains');
-        if (!isset($_POST['v_dns_records'])) $errors[] = _('dns records');
-        if (!isset($_POST['v_mail_domains'])) $errors[] = _('mail domains');
-        if (!isset($_POST['v_mail_accounts'])) $errors[] = _('mail accounts');
-        if (!isset($_POST['v_databases'])) $errors[] = _('databases');
-        if (!isset($_POST['v_cron_jobs'])) $errors[] = _('cron jobs');
-        if (!isset($_POST['v_backups'])) $errors[] = _('backups');
-        if (!isset($_POST['v_disk_quota'])) $errors[] = _('quota');
-        if (!isset($_POST['v_bandwidth'])) $errors[] = _('bandwidth');
-        if (empty($_POST['v_ns1'])) $errors[] = _('ns1');
-        if (empty($_POST['v_ns2'])) $errors[] = _('ns2');
+        if (empty($_POST['v_package'])) $errors[] = __('package');
+        if (empty($_POST['v_template'])) $errors[] = __('template');
+        if (empty($_POST['v_shell'])) $errrors[] = __('shell');
+        if (!isset($_POST['v_web_domains'])) $errors[] = __('web domains');
+        if (!isset($_POST['v_web_aliases'])) $errors[] = __('web aliases');
+        if (!isset($_POST['v_dns_domains'])) $errors[] = __('dns domains');
+        if (!isset($_POST['v_dns_records'])) $errors[] = __('dns records');
+        if (!isset($_POST['v_mail_domains'])) $errors[] = __('mail domains');
+        if (!isset($_POST['v_mail_accounts'])) $errors[] = __('mail accounts');
+        if (!isset($_POST['v_databases'])) $errors[] = __('databases');
+        if (!isset($_POST['v_cron_jobs'])) $errors[] = __('cron jobs');
+        if (!isset($_POST['v_backups'])) $errors[] = __('backups');
+        if (!isset($_POST['v_disk_quota'])) $errors[] = __('quota');
+        if (!isset($_POST['v_bandwidth'])) $errors[] = __('bandwidth');
+        if (empty($_POST['v_ns1'])) $errors[] = __('ns1');
+        if (empty($_POST['v_ns2'])) $errors[] = __('ns2');
 
 
         // Protect input
@@ -73,7 +73,7 @@ if ($_SESSION['user'] == 'admin') {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
         } else {
             exec ('mktemp -d', $output, $return_var);
             $tmpdir = $output[0];
@@ -107,7 +107,7 @@ if ($_SESSION['user'] == 'admin') {
                 exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error code:',$return_var);
+                    if (empty($error)) $error = __('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -119,7 +119,7 @@ if ($_SESSION['user'] == 'admin') {
 
             // Check output
             if (empty($_SESSION['error_msg'])) {
-                $_SESSION['ok_msg'] = _('PACKAGE_CREATED_OK',$_POST['v_package'],$_POST['v_package']);
+                $_SESSION['ok_msg'] = __('PACKAGE_CREATED_OK',$_POST['v_package'],$_POST['v_package']);
                 unset($v_package);
             }
 

@@ -2,22 +2,22 @@
                                     <tr>
                                         <td style="padding: 2px 0 0 6px">
                                             <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/add/web/'"> <?php print _('Add Web Domain');?> </button>
+                                                <button class="submenu-button" onclick="location.href='/add/web/'"> <?php print __('Add Web Domain');?> </button>
                                             </div>
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
                                                     <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                             <div class="submenu-select-block">
                                                 <form action="/bulk/web/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
                                                 <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print _('apply to selected');?></option>
-                                                    <option value="suspend"><?php print _('suspend');?></option>
-                                                    <option value="unsuspend"><?php print _('unsuspend');?></option>
-                                                    <option value="delete"><?php print _('delete');?></option>
+                                                    <option value=""><?php print __('apply to selected');?></option>
+                                                    <option value="suspend"><?php print __('suspend');?></option>
+                                                    <option value="unsuspend"><?php print __('unsuspend');?></option>
+                                                    <option value="delete"><?php print __('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>
@@ -79,34 +79,34 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="domain[]" value="<?php echo $key ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                                         <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
-                                             <?php print _('delete');?> 
+                                             <?php print __('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/web/?domain=<?php echo $key ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('DELETE_DOMAIN_CONFIRMATION',$key);?></p>
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                                <p class="counter-value"><?php print __('DELETE_DOMAIN_CONFIRMATION',$key);?></p>
                                             </div>
                                         </span>
                                     </a>
                                     <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="data-controls do_<?php echo $spnd_action ?>">
                                         <span class="do_<?php echo $spnd_action ?>">
                                             <img src="/images/suspend.png" width="7px" height="8px">
-                                            <?php echo _($spnd_action); ?> 
+                                            <?php echo __($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/web/?domain=<?php echo $key ?>" />
-                                            <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _($spnd_confirmation,$key);?></p>
+                                            <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print __('Confirmation');?>">
+                                                <p class="counter-value"><?php print __($spnd_confirmation,$key);?></p>
                                             </div>
                                         </span>
                                     </a>
                                     <a href="/edit/web/?domain=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print _('edit');?> 
+                                            <?php print __('edit');?> 
                                         </span>
                                     </a>
                                     <?php
@@ -115,7 +115,7 @@
                                     <a href="http://<?php echo $key ?>/vstats/"  target="_blank" class="data-controls">
                                         <span>
                                             <img src="/images/new_window.png" width="8px" height="8px">
-                                            <?php print _('open webstats');?> 
+                                            <?php print __('open webstats');?> 
                                         </span>
                                     </a>
                                     <?php
@@ -136,19 +136,19 @@
                                                         </td>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 0 0 8px 2px">
-                                                            [<?php echo $data[$key]['TPL'] ?>] <?php print _('template');?> 
+                                                            [<?php echo $data[$key]['TPL'] ?>] <?php print __('template');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="chart1" style="padding: 0 0 0 2px">
-                                                            <?php print _('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?> 
+                                                            <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="chart1" style="padding: 0 0 0 2px"><?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                        <td class="chart1" style="padding: 0 0 0 2px"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                         </div>
@@ -159,19 +159,19 @@
                                             <td style="vertical-align:top;" width="300">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name" width="110"><?php print _('SSL Support');?>:</td>
-                                                        <td class="counter-value"><?php print _($data[$key]['SSL']) ?></td>
+                                                        <td class="counter-name" width="110"><?php print __('SSL Support');?>:</td>
+                                                        <td class="counter-value"><?php print __($data[$key]['SSL']) ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('SSL Home Directory');?>:</td>
+                                                        <td class="counter-name"><?php print __('SSL Home Directory');?>:</td>
                                                         <td class="counter-value"><?php echo $ssl_home ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('Nginx Support');?>:</td>
-                                                        <td class="counter-value"><?php print _($nginx_support) ?></td>
+                                                        <td class="counter-name"><?php print __('Nginx Support');?>:</td>
+                                                        <td class="counter-value"><?php print __($nginx_support) ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('Nginx Extentions');?>:</td>
+                                                        <td class="counter-name"><?php print __('Nginx Extentions');?>:</td>
                                                         <td class="counter-value" <?php if (!empty($nginx_ext_title)) echo "title='".$nginx_ext_title."'" ?>><?php echo $nginx_ext ?></td>
                                                     </tr>
                                                 </table>
@@ -179,12 +179,12 @@
                                             <td rowspan=4 style="vertical-align:top;" width="240">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name"><?php print _('Web Statistics');?>: </td>
-                                                        <td class="counter-value"> <?php print _($web_stats) ?></td>
+                                                        <td class="counter-name"><?php print __('Web Statistics');?>: </td>
+                                                        <td class="counter-value"> <?php print __($web_stats) ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"> <?php print _('Additional FTP Account');?>:</td>
-                                                        <td class="counter-value"> <?php print _($ftp_user) ?></td>
+                                                        <td class="counter-name"> <?php print __('Additional FTP Account');?>:</td>
+                                                        <td class="counter-value"> <?php print __($ftp_user) ?></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -204,9 +204,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('1 domain');
+                                            echo __('1 domain');
                                         } else {
-                                            echo _('%s domains',$i);
+                                            echo __('%s domains',$i);
                                         }
                                     ?> 
                                 </td>

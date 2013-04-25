@@ -16,11 +16,11 @@ $v_db_email = $panel[$user]['CONTACT'];
 
 if (!empty($_POST['ok'])) {
     // Check input
-    if (empty($_POST['v_database'])) $errors[] = _('database');
-    if (empty($_POST['v_dbuser'])) $errors[] = _('username');
-    if (empty($_POST['v_password'])) $errors[] = _('password');
-    if (empty($_POST['v_type'])) $errors[] = _('type');
-    if (empty($_POST['v_charset'])) $errors[] = _('charset');
+    if (empty($_POST['v_database'])) $errors[] = __('database');
+    if (empty($_POST['v_dbuser'])) $errors[] = __('username');
+    if (empty($_POST['v_password'])) $errors[] = __('password');
+    if (empty($_POST['v_type'])) $errors[] = __('type');
+    if (empty($_POST['v_charset'])) $errors[] = __('charset');
 
     // Check for errors
     if (!empty($errors[0])) {
@@ -31,13 +31,13 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
 
     // Validate email
     if (!empty($_POST['v_db_email'])) {
         if (!filter_var($_POST['v_db_email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error_msg'] = _('Please enter valid email address.');
+            $_SESSION['error_msg'] = __('Please enter valid email address.');
         }
     }
 
@@ -52,7 +52,7 @@ if (!empty($_POST['ok'])) {
     // Check password length
     if (empty($_SESSION['error_msg'])) {
         $pw_len = strlen($_POST['v_password']);
-        if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
+        if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
     }
 
     if (empty($_SESSION['error_msg'])) {
@@ -64,7 +64,7 @@ if (!empty($_POST['ok'])) {
         $v_charset = $_POST['v_charset'];
         if ($return_var != 0) {
             $error = implode('<br>', $output);
-            if (empty($error)) $error = _('Error code:',$return_var);
+            if (empty($error)) $error = __('Error code:',$return_var);
             $_SESSION['error_msg'] = $error;
             unset($v_password);
             unset($output);
@@ -74,13 +74,13 @@ if (!empty($_POST['ok'])) {
             if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpMyAdmin/";
             if ($_POST['v_type'] == 'pgsql') $db_admin_link = "http://".$http_host."/phpPgAdmin/";
             $to = $v_db_email;
-            $subject = _("Database Credentials");
+            $subject = __("Database Credentials");
             $hostname = exec('hostname');
-            $from = _('MAIL_FROM',$hostname);
-            $mailtext = _('DATABASE_READY',$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
+            $from = __('MAIL_FROM',$hostname);
+            $mailtext = __('DATABASE_READY',$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
             send_email($to, $subject, $mailtext, $from);
         }
-        $_SESSION['ok_msg'] = _('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);
+        $_SESSION['ok_msg'] = __('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);
         unset($v_database);
         unset($v_dbuser);
         unset($v_password);

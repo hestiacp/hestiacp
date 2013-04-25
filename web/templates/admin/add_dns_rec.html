@@ -10,7 +10,7 @@
 
                                 <table class="submenu">
                                     <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print _('Adding DNS Record'); ?></b></a>
+                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Adding DNS Record'); ?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -44,7 +44,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print _('Domain');?>
+                                                <?php print __('Domain');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -54,7 +54,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Record');?>
+                                                <?php print __('Record');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -64,7 +64,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Type');?>
+                                                <?php print __('Type');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -87,7 +87,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('IP or Value');?>
+                                                <?php print __('IP or Value');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -97,7 +97,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Priority');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print _('optional');?>)</span>
+                                                <?php print __('Priority');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -109,10 +109,10 @@
                                     <table class="data-col2">
                                         <tr>
                                             <td style="padding: 24px 0 0 0;" width="116px">
-                                                <input type="submit" name="ok_rec" value="<?php print _('Add');?>" class="button">
+                                                <input type="submit" name="ok_rec" value="<?php print __('Add');?>" class="button">
                                             </td>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
+                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

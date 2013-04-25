@@ -2,20 +2,20 @@
                                     <tr>
                                         <td style="padding: 2px 0 0 6px">
                                             <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/schedule/restore/'"> <?php print _('Restore All');?> </button>
+                                                <button class="submenu-button" onclick="location.href='/schedule/restore/'"> <?php print __('Restore All');?> </button>
                                             </div>
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
                                                     <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                             <div class="submenu-select-block">
                                                 <form action="/bulk/restore/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
                                                 <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print _('apply to selected');?></option>
-                                                    <option value="restore"><?php print _('restore');?></option>
+                                                    <option value=""><?php print __('apply to selected');?></option>
+                                                    <option value="restore"><?php print __('restore');?></option>
                                                 </select>
                                                 <input type="hidden" name="backup" value="<?php echo $_GET['backup'] ?>">
                                                 <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
@@ -37,7 +37,7 @@
                                                         });
                                                     });
                                                 </script>
-                                                <div id="dialog-message" title="<?php print _('Backup System') ?>">
+                                                <div id="dialog-message" title="<?php print __('Backup System') ?>">
                                                     <p><?php echo $_SESSION['restore_msg'] ?></p>
                                                 </div>
                                             </div>
@@ -57,7 +57,7 @@
                         <table class="data" style="background: #ebe9dc;">
                             <tr>
                                 <td style="padding: 8px 2px 8px 0;">
-                                    <a class="name" style="color: #555; font-size: 10pt;"><b><?php print _('Listing');?>  <?php echo $_GET['backup'] ?> </b></a>
+                                    <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['backup'] ?> </b></a>
                                 </td>
                             </tr>
                         </table>
@@ -82,13 +82,13 @@
                                     <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=web&object=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print _('restore');?> 
+                                            <?php print __('restore');?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo 'web ' . _('domain') ?> 
+                                                <?php echo 'web ' . __('domain') ?> 
                                             </td>
                                             <td class="domain" style="padding: 0 0 0 4px;">
                                                 <b><?php echo $key ?></b>
@@ -119,13 +119,13 @@
                                     <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=dns&object=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print _('restore');?> 
+                                            <?php print __('restore');?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo 'dns ' . _('domain') ?>
+                                                <?php echo 'dns ' . __('domain') ?>
                                             </td>
                                             <td class="domain" style="padding: 0 0 0 4px;">
                                                 <b><?php echo $key ?></b>
@@ -156,13 +156,13 @@
                                     <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=mail&object=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print _('restore');?> 
+                                            <?php print __('restore');?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo 'mail ' . _('domain') ?>
+                                                <?php echo 'mail ' . __('domain') ?>
                                             </td>
                                             <td class="domain" style="padding: 0 0 0 4px;">
                                                 <b><?php echo $key ?></b>
@@ -193,13 +193,13 @@
                                     <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=db&object=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print _('restore');?> 
+                                            <?php print __('restore');?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo _('database') ?>
+                                                <?php echo __('database') ?>
                                             </td>
                                             <td class="domain" style="padding: 0 0 0 4px;">
                                                 <b><?php echo $key ?></b>
@@ -230,16 +230,16 @@
                                     <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=cron&object=records" class="data-controls">
                                         <span>
                                             <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print _('restore');?> 
+                                            <?php print __('restore');?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo _('cron') ?>
+                                                <?php echo __('cron') ?>
                                             </td>
                                             <td class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo 'cron ' . _('records') ?></b>
+                                                <b><?php echo 'cron ' . __('records') ?></b>
                                             </td>
                                         </tr>
                                     </table>
@@ -267,13 +267,13 @@
                                     <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=udir&object=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print _('restore');?> 
+                                            <?php print __('restore');?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
                                         <tr>
                                             <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo _('user dir') ?>
+                                                <?php echo __('user dir') ?>
                                             </td>
                                             <td class="domain" style="padding: 0 0 0 4px;">
                                                 <b><?php echo $key ?></b>

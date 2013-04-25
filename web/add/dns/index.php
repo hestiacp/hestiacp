@@ -14,8 +14,8 @@ top_panel($user,$TAB);
 
 if (!empty($_POST['ok'])) {
     // Check input
-    if (empty($_POST['v_domain'])) $errors[] = _('domain');
-    if (empty($_POST['v_ip'])) $errors[] = _('ip');
+    if (empty($_POST['v_domain'])) $errors[] = __('domain');
+    if (empty($_POST['v_ip'])) $errors[] = __('ip');
 
     // Protect input
     $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
@@ -41,13 +41,13 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     } else {
         // Add DNS
         exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$ns4, $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
-            if (empty($error)) $error = _('Error code:',$return_var);
+            if (empty($error)) $error = __('Error code:',$return_var);
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
@@ -58,7 +58,7 @@ if (!empty($_POST['ok'])) {
             exec (VESTA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -70,14 +70,14 @@ if (!empty($_POST['ok'])) {
             exec (VESTA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _('DNS_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
+            $_SESSION['ok_msg'] = __('DNS_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
             unset($v_domain);
         }
     }
@@ -107,19 +107,19 @@ if (!empty($_POST['ok_rec'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     } else {
         // Add DNS Record
         exec (VESTA_CMD."v-add-dns-domain-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
         $v_type = $_POST['v_type'];
         if ($return_var != 0) {
             $error = implode('<br>', $output);
-            if (empty($error)) $error = _('Error code:',$return_var);
+            if (empty($error)) $error = __('Error code:',$return_var);
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _('DNS_RECORD_CREATED_OK',$_POST[v_rec],$_POST[v_domain]);
+            $_SESSION['ok_msg'] = __('DNS_RECORD_CREATED_OK',$_POST[v_rec],$_POST[v_domain]);
             unset($v_domain);
             unset($v_rec);
             unset($v_val);

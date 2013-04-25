@@ -12,7 +12,7 @@ if ($_SESSION['user'] == 'admin') {
     }
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = _('SERVICE_ACTION_FAILED',_('stop'),$v_service);
+        if (empty($error)) $error = __('SERVICE_ACTION_FAILED',__('stop'),$v_service);
             $_SESSION['error_srv'] = $error;
     }
     unset($output);

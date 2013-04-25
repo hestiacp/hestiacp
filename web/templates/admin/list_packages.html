@@ -2,20 +2,20 @@
                                     <tr>
                                         <td style="padding: 2px 0 0 6px">
                                             <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/add/package/'"> <?php print _('Add Package');?> </button>
+                                                <button class="submenu-button" onclick="location.href='/add/package/'"> <?php print __('Add Package');?> </button>
                                             </div>
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
                                                     <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                             <div class="submenu-select-block">
                                                 <form action="/bulk/package/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
                                                 <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print _('apply to selected');?></option>
-                                                    <option value="delete"><?php print _('delete');?></option>
+                                                    <option value=""><?php print __('apply to selected');?></option>
+                                                    <option value="delete"><?php print __('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>
@@ -45,10 +45,10 @@
                                     <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                                         <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px" >
-                                            <?php print _('delete');?> 
+                                            <?php print __('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/package/?package=<?php echo "$key" ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('DELETE_PACKAGE_CONFIRMATION',$key);?></p>
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                                <p class="counter-value"><?php print __('DELETE_PACKAGE_CONFIRMATION',$key);?></p>
                                             </div>
                                         </span>
                                     </a>
@@ -56,7 +56,7 @@
                                     <a href="/edit/package/?package=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
-                                        <?php print _('edit');?> 
+                                        <?php print __('edit');?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
@@ -70,7 +70,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 4px 0px 0px 0;" >
-                                                            <?php print _('Template');?>:
+                                                            <?php print __('Template');?>:
                                                         </td>
                                                         <td class="counter-value" style="padding: 4px 0 0 6px;">
                                                             <?php echo $data[$key]['TEMPLATE'] ?> 
@@ -78,7 +78,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 0px 0px 6px 0;">
-                                                            <?php print _('SSH Access');?>:
+                                                            <?php print __('SSH Access');?>:
                                                         </td>
                                                         <td class="counter-value" width="58px">
                                                             <?php echo $data[$key]['SHELL'] ?> 
@@ -86,7 +86,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="chart1" colspan=2 style="padding: 0 0 0 2px;">
-                                                            <?php print _('Bandwidth');?>: <?php echo humanize_usage($data[$key]['BANDWIDTH']) ?> 
+                                                            <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['BANDWIDTH']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:0%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
@@ -94,7 +94,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="chart1" colspan=2 style="padding: 0 0 0 2px;">
-                                                            <?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['DISK_QUOTA']) ?> 
+                                                            <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['DISK_QUOTA']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:0%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
@@ -106,7 +106,7 @@
                                                 <table width="300">
                                                     <tr>
                                                         <td class="counter-name" width="37%">
-                                                            <?php print _('Web Domains');?>:
+                                                            <?php print __('Web Domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['WEB_DOMAINS'] ?> 
@@ -114,15 +114,15 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Web Aliases');?>:
+                                                            <?php print __('Web Aliases');?>:
                                                         </td>
                                                         <td class="counter-value">
-                                                            <?php echo $data[$key]['WEB_ALIASES'] ?> <?php print _('per domain');?> 
+                                                            <?php echo $data[$key]['WEB_ALIASES'] ?> <?php print __('per domain');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('DNS domains');?>:
+                                                            <?php print __('DNS domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['DNS_DOMAINS'] ?> 
@@ -130,15 +130,15 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('DNS records');?>:
+                                                            <?php print __('DNS records');?>:
                                                         </td>
                                                         <td class="counter-value">
-                                                            <?php echo $data[$key]['DNS_RECORDS'] ?> <?php print _('per domain');?> 
+                                                            <?php echo $data[$key]['DNS_RECORDS'] ?> <?php print __('per domain');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Name Servers');?>:
+                                                            <?php print __('Name Servers');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo str_replace(',', ', ',$data[$key]['NS']) ?> 
@@ -150,7 +150,7 @@
                                                 <table class="data-col4" width="280">
                                                     <tr>
                                                         <td class="counter-name" width="48%">
-                                                            <?php print _('Mail Domains');?>:
+                                                            <?php print __('Mail Domains');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['MAIL_DOMAINS'] ?> 
@@ -158,15 +158,15 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Mail Accounts');?>:
+                                                            <?php print __('Mail Accounts');?>:
                                                         </td>
                                                         <td class="counter-value">
-                                                            <?php echo $data[$key]['MAIL_ACCOUNTS'] ?> <?php print _('per domain');?> 
+                                                            <?php echo $data[$key]['MAIL_ACCOUNTS'] ?> <?php print __('per domain');?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Databases');?>:
+                                                            <?php print __('Databases');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['DATABASES'] ?> 
@@ -174,7 +174,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Cron Jobs');?>:
+                                                            <?php print __('Cron Jobs');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['CRON_JOBS'] ?> 
@@ -182,7 +182,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Backups');?>:
+                                                            <?php print __('Backups');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['BACKUPS'] ?> 
@@ -207,9 +207,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('1 package');
+                                            echo __('1 package');
                                         } else {
-                                            echo _('%s packages',$i);
+                                            echo __('%s packages',$i);
                                         }
                                     ?> 
                                 </td>

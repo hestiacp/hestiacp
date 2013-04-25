@@ -19,12 +19,12 @@ top_panel($user,$TAB);
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
-        if (empty($_POST['v_username'])) $errors[] = _('user');
-        if (empty($_POST['v_password'])) $errors[] = _('password');
-        if (empty($_POST['v_package'])) $errrors[] = _('package');
-        if (empty($_POST['v_email'])) $errors[] = _('email');
-        if (empty($_POST['v_fname'])) $errors[] = _('first name');
-        if (empty($_POST['v_lname'])) $errors[] = _('last name');
+        if (empty($_POST['v_username'])) $errors[] = __('user');
+        if (empty($_POST['v_password'])) $errors[] = __('password');
+        if (empty($_POST['v_package'])) $errrors[] = __('package');
+        if (empty($_POST['v_email'])) $errors[] = __('email');
+        if (empty($_POST['v_fname'])) $errors[] = __('first name');
+        if (empty($_POST['v_lname'])) $errors[] = __('last name');
 
         // Protect input
         $v_username = escapeshellarg($_POST['v_username']);
@@ -38,7 +38,7 @@ if ($_SESSION['user'] == 'admin') {
 
         // Validate email
         if (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error_msg'] = _('Please enter valid email address.');
+            $_SESSION['error_msg'] = __('Please enter valid email address.');
         }
 
         // Check for errors
@@ -50,20 +50,20 @@ if ($_SESSION['user'] == 'admin') {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
         }
 
         // Check password length
         if (empty($_SESSION['error_msg'])) {
             $pw_len = strlen($_POST['v_password']);
-            if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
+            if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
         }
 
         if (empty($_SESSION['error_msg'])) {
             exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             } else {
                 exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
@@ -81,7 +81,7 @@ if ($_SESSION['user'] == 'admin') {
                     send_email($to, $subject, $mailtext, $from);
                 }
 
-                $_SESSION['ok_msg'] = _('USER_CREATED_OK',$_POST[v_username],$_POST[v_username]);
+                $_SESSION['ok_msg'] = __('USER_CREATED_OK',$_POST[v_username],$_POST[v_username]);
                 unset($v_username);
                 unset($v_password);
                 unset($v_email);

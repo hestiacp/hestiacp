@@ -18,15 +18,15 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
         $lname = $data[$user]['LNAME'];
         $contact = $data[$user]['CONTACT'];
         $to = $data[$user]['CONTACT'];
-        $subject = _('MAIL_RESET_SUBJECT',date("Y-m-d H:i:s"));
+        $subject = __('MAIL_RESET_SUBJECT',date("Y-m-d H:i:s"));
         $hostname = exec('hostname');
-        $from = _('MAIL_FROM',$hostname);
+        $from = __('MAIL_FROM',$hostname);
         if (!empty($fname)) {
-            $mailtext = _('GREETINGS_GORDON_FREEMAN',$fname,$lname);
+            $mailtext = __('GREETINGS_GORDON_FREEMAN',$fname,$lname);
         } else {
-            $mailtext = _('GREETINGS');
+            $mailtext = __('GREETINGS');
         }
-        $mailtext .= _('PASSWORD_RESET_REQUEST',$_SERVER['HTTP_HOST'],$user,$rkey,$_SERVER['HTTP_HOST'],$user,$rkey);
+        $mailtext .= __('PASSWORD_RESET_REQUEST',$_SERVER['HTTP_HOST'],$user,$rkey,$_SERVER['HTTP_HOST'],$user,$rkey);
         if (!empty($rkey)) send_email($to, $subject, $mailtext, $from);
         unset($output);
     }
@@ -49,20 +49,20 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
                 $cmd="/usr/bin/sudo /usr/local/vesta/bin/v-change-user-password";
                 exec ($cmd." ".$v_user." ".$v_password, $output, $return_var);
                 if ( $return_var > 0 ) {
-                    $ERROR = "<a class=\"error\">"._('An internal error occurred')."</a>";
+                    $ERROR = "<a class=\"error\">".__('An internal error occurred')."</a>";
                 } else {
                     $_SESSION['user'] = $_POST['user'];
                     header("Location: /");
                     exit;
                 }
             } else {
-                $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
+                $ERROR = "<a class=\"error\">".__('Invalid username or code')."</a>";
             }
         } else {
-            $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
+            $ERROR = "<a class=\"error\">".__('Invalid username or code')."</a>";
         }
     } else {
-        $ERROR = "<a class=\"error\">"._('Passwords not match')."</a>";
+        $ERROR = "<a class=\"error\">".__('Passwords not match')."</a>";
     }
 }
 

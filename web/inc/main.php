@@ -18,7 +18,7 @@ if (isset($_SESSION['user'])) {
  * @return string Translated string
  * @see _translate()
  */
-function _() {
+function __() {
    $args = func_get_args();
    array_unshift($args,$_SESSION['language']);
    return call_user_func_array("_translate",$args);
@@ -120,23 +120,23 @@ function humanize_time($usage) {
              $usage = $usage / 24;
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." "._('day');
+                $usage = $usage." ".__('day');
             } else {
-                $usage = $usage." "._('days');
+                $usage = $usage." ".__('days');
             }
         } else {
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." "._('hour');
+                $usage = $usage." ".__('hour');
             } else {
-                $usage = $usage." "._('hours');
+                $usage = $usage." ".__('hours');
             }
         }
     } else {
         if ( $usage == 1 ) {
-            $usage = $usage." "._('minute');
+            $usage = $usage." ".__('minute');
         } else {
-            $usage = $usage." "._('minutes');
+            $usage = $usage." ".__('minutes');
         }
     }
     return $usage;
@@ -150,17 +150,17 @@ function humanize_usage($usage) {
                 if ( $usage > 1000 ) {
                     $usage = $usage / 1000 ;
                     $usage = number_format($usage, 2);
-                    $usage = $usage." "._('pb');
+                    $usage = $usage." ".__('pb');
                 } else {
                     $usage = number_format($usage, 2);
-                    $usage = $usage." "._('tb');
+                    $usage = $usage." ".__('tb');
                 }
         } else {
             $usage = number_format($usage, 2);
-            $usage = $usage." "._('gb');
+            $usage = $usage." ".__('gb');
         }
     } else {
-        $usage = $usage." "._('mb');
+        $usage = $usage." ".__('mb');
     }
     return $usage;
 }

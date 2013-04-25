@@ -10,7 +10,7 @@
 
                                 <table class="submenu">
                                     <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print _('Adding Mail Domain');?></b></a>
+                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Adding Mail Domain');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -44,7 +44,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print _('Domain');?>
+                                                <?php print __('Domain');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -54,7 +54,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('AntiSpam Support');?>
+                                                <?php print __('AntiSpam Support');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -64,7 +64,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('AntiVirus Support');?>
+                                                <?php print __('AntiVirus Support');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -74,7 +74,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('DKIM Support');?>
+                                                <?php print __('DKIM Support');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -86,10 +86,10 @@
                                     <table class="data-col2">
                                         <tr>
                                             <td style="padding: 24px 0 0 0;" width="116px">
-                                                <input type="submit" name="ok" value="<?php print _('Add');?>" class="button">
+                                                <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                                             </td>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
+                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

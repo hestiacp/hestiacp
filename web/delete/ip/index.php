@@ -12,8 +12,8 @@ if ($_SESSION['user'] == 'admin') {
     }
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = _('Error: vesta did not return any output.');
-        if ($return_var == 4) $error = _('IP address is in use');
+        if (empty($error)) $error = __('Error: vesta did not return any output.');
+        if ($return_var == 4) $error = __('IP address is in use');
         $_SESSION['error_msg'] = $error;
     }
     unset($output);

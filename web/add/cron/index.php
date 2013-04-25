@@ -16,12 +16,12 @@ top_panel($user,$TAB);
 //if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
-        if (empty($_POST['v_min'])) $errors[] = _('minute');
-        if (empty($_POST['v_hour'])) $errors[] = _('hour');
-        if (empty($_POST['v_day'])) $errors[] = _('day');
-        if (empty($_POST['v_month'])) $errors[] = _('month');
-        if (empty($_POST['v_wday'])) $errors[] = _('day of week');
-        if (empty($_POST['v_cmd'])) $errors[] = _('cmd');
+        if (empty($_POST['v_min'])) $errors[] = __('minute');
+        if (empty($_POST['v_hour'])) $errors[] = __('hour');
+        if (empty($_POST['v_day'])) $errors[] = __('day');
+        if (empty($_POST['v_month'])) $errors[] = __('month');
+        if (empty($_POST['v_wday'])) $errors[] = __('day of week');
+        if (empty($_POST['v_cmd'])) $errors[] = __('cmd');
 
         // Protect input
         $v_min = escapeshellarg($_POST['v_min']);
@@ -40,7 +40,7 @@ top_panel($user,$TAB);
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
         } else {
             // Add Cron Job
             exec (VESTA_CMD."v-add-cron-job ".$user." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
@@ -48,12 +48,12 @@ top_panel($user,$TAB);
             $v_charset = $_POST['v_charset'];
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
                 unset($v_password);
                 unset($output);
             } else {
-                $_SESSION['ok_msg'] = _('CRON_CREATED_OK');
+                $_SESSION['ok_msg'] = __('CRON_CREATED_OK');
                 unset($v_min);
                 unset($v_hour);
                 unset($v_day);

@@ -10,7 +10,7 @@
 
                                 <table class="submenu">
                                     <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print _('Adding DNS Domain');?></b></a>
+                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Adding DNS Domain');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -55,7 +55,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print _('Domain');?>
+                                                <?php print __('Domain');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -65,7 +65,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('IP address');?>
+                                                <?php print __('IP address');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -75,7 +75,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print _('Advanced options');?></a>
+                                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print __('Advanced options');?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -83,7 +83,7 @@
                                                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                                     <tr>
                                                         <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                            <?php print _('Expiration Date');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print _('YYYY-MM-DD');?>)</span>
+                                                            <?php print __('Expiration Date');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('YYYY-MM-DD');?>)</span>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -103,7 +103,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                            <?php print _('Name servers');?>
+                                                            <?php print __('Name servers');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -133,10 +133,10 @@
                                     <table class="data-col2">
                                         <tr>
                                             <td style="padding: 24px 0 0 0;" width="116px">
-                                                <input type="submit" name="ok" value="<?php print _('Add');?>" class="button">
+                                                <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                                             </td>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
+                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

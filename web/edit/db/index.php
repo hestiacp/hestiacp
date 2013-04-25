@@ -27,7 +27,7 @@ $v_database = escapeshellarg($_GET['database']);
 exec (VESTA_CMD."v-list-database ".$user." ".$v_database." 'json'", $output, $return_var);
 if ($return_var != 0) {
     $error = implode('<br>', $output);
-    if (empty($error)) $error = _('Error code:',$return_var);
+    if (empty($error)) $error = __('Error code:',$return_var);
     $_SESSION['error_msg'] = $error;
 } else {
     $data = json_decode(implode('', $output), true);
@@ -57,14 +57,14 @@ if ($return_var != 0) {
             exec (VESTA_CMD."v-change-database-password ".$v_username." ".$v_database." ".$v_password, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_password = "••••••••";
             unset($output);
         }
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _('Changes has been saved.');
+            $_SESSION['ok_msg'] = __('Changes has been saved.');
         }
     }
 }

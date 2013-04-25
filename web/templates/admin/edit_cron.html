@@ -10,7 +10,7 @@
 
                                 <table class="submenu">
                                     <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print _('Editing Cron Job');?></b></a>
+                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Editing Cron Job');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -38,7 +38,7 @@
                                                 <a class="data-date" ?><?php echo $v_time?></a>
                                             </td>
                                         </tr>
-                                        <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo _($v_status) ?></b></td></tr>
+                                        <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -51,7 +51,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print _('Minute');?>
+                                                <?php print __('Minute');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -61,7 +61,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Hour');?>
+                                                <?php print __('Hour');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -71,7 +71,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Day');?>
+                                                <?php print __('Day');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -81,7 +81,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Month');?>
+                                                <?php print __('Month');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -91,7 +91,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Day of week');?>
+                                                <?php print __('Day of week');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -101,7 +101,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Command');?>
+                                                <?php print __('Command');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -113,10 +113,10 @@
                                     <table class="data-col2">
                                         <tr>
                                             <td style="padding: 24px 0 0 0;" width="116px">
-                                                <input type="submit" class="button" name="save" value="<?php print _('Save');?>">
+                                                <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                             </td>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
+                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

@@ -4,15 +4,15 @@
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
                                                     <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                             <div class="submenu-button-block">
                                                 <form action="/bulk/vesta/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
                                                 <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print _('apply to selected') ?></option>
-                                                    <option value="update"><?php print _('update') ?></option>
+                                                    <option value=""><?php print __('apply to selected') ?></option>
+                                                    <option value="update"><?php print __('update') ?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>
@@ -56,10 +56,10 @@
                                     ++$i;
                                     if ($data[$key]['UPDATED'] == 'yes') {
                                         $status = 'active';
-                                        $upd_status = _('updated');
+                                        $upd_status = __('updated');
                                     } else {
                                         $status = 'suspended';
-                                        $upd_status = _('outdated');
+                                        $upd_status = __('outdated');
                                     }
                                 ?>
 
@@ -77,7 +77,7 @@
                                     <a href="/update/vesta/?pkg=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/update.png" width="6px" height="7px">
-                                            <?php print _('update') ?>
+                                            <?php print __('update') ?>
                                         </span>
                                     </a>
                                     <?php
@@ -96,7 +96,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 2px 0 0 0">
-                                                            <?php echo _($data[$key]['DESCR']) ?> 
+                                                            <?php echo __($data[$key]['DESCR']) ?> 
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -105,7 +105,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Version') ?>:
+                                                            <?php print __('Version') ?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value"> <?php echo $data[$key]['VERSION'] ?></a>
@@ -117,7 +117,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Release') ?>:
+                                                            <?php print __('Release') ?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value"><?php echo $data[$key]['RELEASE'] ?></a>
@@ -129,7 +129,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Architecture') ?>:
+                                                            <?php print __('Architecture') ?>:
                                                         </td>
                                                         <td>
                                                             <a class="counter-value"><?php echo $data[$key]['ARCH'] ?> </a>

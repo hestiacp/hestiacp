@@ -9,7 +9,7 @@
 
                                 <table class="submenu">
                                     <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print _('Editing IP Address');?></b></a>
+                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Editing IP Address');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -49,7 +49,7 @@
                                                 <a class="data-date" ?><?php echo $v_time?></a>
                                             </td>
                                         </tr>
-                                        <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo _($v_status) ?></b></td></tr>
+                                        <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -61,7 +61,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print _('IP address'); ?> 
+                                                <?php print __('IP address'); ?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -71,7 +71,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Netmask');?> 
+                                                <?php print __('Netmask');?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -81,7 +81,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print _('Interface'); ?> 
+                                                <?php print __('Interface'); ?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -91,7 +91,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Shared'); ?> 
+                                                <?php print __('Shared'); ?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -101,7 +101,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Assigned user'); ?> 
+                                                <?php print __('Assigned user'); ?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -119,7 +119,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print _('Assigned domain');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print _('optional');?>)</span>
+                                                <?php print __('Assigned domain');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -129,7 +129,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print _('NAT IP association');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print _('optional');?>)</span>
+                                                <?php print __('NAT IP association');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -142,10 +142,10 @@
                                     <table class="data-col2">
                                         <tr>
                                             <td style="padding: 24px 0 0 0;" width="116px">
-                                                <input type="submit" class="button" name="save" value="<?php print _('Save');?>">
+                                                <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                             </td>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
+                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

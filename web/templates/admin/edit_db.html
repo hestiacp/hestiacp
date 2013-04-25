@@ -9,7 +9,7 @@
 
                                 <table class="submenu">
                                     <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print _('Editing Database');?></b></a>
+                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Editing Database');?></b></a>
                                             <?php
                                                 if (!empty($_SESSION['error_msg'])) {
                                                     echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -58,7 +58,7 @@
                                                 <a class="data-date" ?><?php echo $v_time?></a>
                                             </td>
                                         </tr>
-                                        <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo _($v_status) ?></b></td></tr>
+                                        <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -70,7 +70,7 @@
                                     <table class="data-col2" width="600px">
                                         <tr>
                                             <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print _('Database');?>
+                                                <?php print __('Database');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -80,7 +80,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('User');?>
+                                                <?php print __('User');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -90,7 +90,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print _('Password');?> <a href="javascript:randomString();" class="genpass"><?php print _('generate');?></a>
+                                                <?php print __('Password');?> <a href="javascript:randomString();" class="genpass"><?php print __('generate');?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -100,7 +100,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print _('Type');?>
+                                                <?php print __('Type');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -110,7 +110,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print _('Host');?>
+                                                <?php print __('Host');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -120,7 +120,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print _('Charset');?>
+                                                <?php print __('Charset');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -132,10 +132,10 @@
                                     <table class="data-col2">
                                         <tr>
                                             <td style="padding: 24px 0 0 0;" width="116px">
-                                                <input type="submit" class="button" name="save" value="<?php print _('Save');?>">
+                                                <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                             </td>
                                             <td style="padding: 24px 0 0 0;">
-                                                <input type="button" class="button" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
+                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>

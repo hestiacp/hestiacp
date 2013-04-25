@@ -2,20 +2,20 @@
                                     <tr>
                                         <td style="padding: 2px 0 0 6px">
                                             <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/add/db/'"> <?php print _('Add Database');?> </button>
+                                                <button class="submenu-button" onclick="location.href='/add/db/'"> <?php print __('Add Database');?> </button>
                                             </div>
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
                                                     <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                             <div class="submenu-select-block">
                                                 <form action="/bulk/db/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
                                                 <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print _('apply to selected');?></option>
-                                                    <option value="delete"><?php print _('delete');?></option>
+                                                    <option value=""><?php print __('apply to selected');?></option>
+                                                    <option value="delete"><?php print __('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>
@@ -50,30 +50,30 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="database[]" value="<?php echo $key ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                                         <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
-                                            <?php echo _('delete') ?> 
+                                            <?php echo __('delete') ?> 
                                             <input type="hidden" name="delete_url" value="/delete/db/?database=<?php echo "$key" ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('DELETE_DATABASE_CONFIRMATION',$key);?></p>
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                                <p class="counter-value"><?php print __('DELETE_DATABASE_CONFIRMATION',$key);?></p>
                                             </div>
                                         </span>
                                     </a>
                                     <a href="/edit/db/?database=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print _('edit');?> 
+                                            <?php print __('edit');?> 
                                         </span>
                                     </a>
                                     <a href="<?php echo $db_admin_link; ?>" target="_blank" class="data-controls">
                                         <span>
                                             <img src="/images/new_window.png" width="8px" height="8px">
-                                            <?php print _('open %s',$db_admin);?> 
+                                            <?php print __('open %s',$db_admin);?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
@@ -87,11 +87,11 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name" style="padding: 2px 0 4px 2px">
-                                                            [<?php echo $data[$key]['TYPE'] ?>] <?php print _('database');?>
+                                                            [<?php echo $data[$key]['TYPE'] ?>] <?php print __('database');?>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="chart1" style="padding: 0px 0 0px 2px"><?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                        <td class="chart1" style="padding: 0px 0 0px 2px"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
@@ -103,7 +103,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('User');?>:
+                                                            <?php print __('User');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['DBUSER'] ?> 
@@ -111,7 +111,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Host');?>:
+                                                            <?php print __('Host');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['HOST'] ?> 
@@ -123,7 +123,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Charset');?>:
+                                                            <?php print __('Charset');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['CHARSET'] ?> 
@@ -147,9 +147,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('1 database');
+                                            echo __('1 database');
                                         } else {
-                                            echo _('%s databases',$i);
+                                            echo __('%s databases',$i);
                                         }
                                     ?>
                                 </td>

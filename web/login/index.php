@@ -32,7 +32,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     $v_password = escapeshellarg($_POST['password']);
     exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." '".$_SERVER["REMOTE_ADDR"]."'",  $output, $return_var);
     if ( $return_var > 0 ) {
-        $ERROR = "<a class=\"error\">"._('Invalid username or password')."</a>";
+        $ERROR = "<a class=\"error\">".__('Invalid username or password')."</a>";
         // Set system language
         exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
         $data = json_decode(implode('', $output), true);

@@ -4,7 +4,7 @@
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
                                                     <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                         </td>
@@ -53,9 +53,9 @@
                             <td>
                                 <?php
                                     if ( $i == 1) {
-                                        echo _('one log record');
+                                        echo __('one log record');
                                     } else {
-                                        echo _('%s log records',$i);
+                                        echo __('%s log records',$i);
                                     }
                                 ?>
                             </td>

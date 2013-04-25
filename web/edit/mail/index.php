@@ -30,7 +30,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
     exec (VESTA_CMD."v-list-mail-domain ".$user." ".$v_domain." json", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = _('Error code:',$return_var);
+        if (empty($error)) $error = __('Error code:',$return_var);
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -59,7 +59,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-delete-mail-domain-antispam ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_antispam = 'no';
@@ -69,7 +69,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-add-mail-domain-antispam ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_antispam = 'yes';
@@ -80,7 +80,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-delete-mail-domain-antivirus ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_antivirus = 'no';
@@ -90,14 +90,14 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-add-mail-domain-antivirus ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_antivirus = 'yes';
             unset($output);
         }
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _('Changes has been saved.');
+            $_SESSION['ok_msg'] = __('Changes has been saved.');
         }
 
         // DKIM
@@ -105,7 +105,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-delete-mail-domain-dkim ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_dkim = 'no';
@@ -115,7 +115,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-add-mail-domain-dkim ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_dkim = 'yes';
@@ -127,7 +127,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-delete-mail-domain-catchall ".$v_username." ".$v_domain, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_catchall = '';
@@ -139,7 +139,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
                 exec (VESTA_CMD."v-change-mail-domain-catchall ".$v_username." ".$v_domain." ".$v_catchall, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error code:',$return_var);
+                    if (empty($error)) $error = __('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -150,13 +150,13 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-add-mail-domain-catchall ".$v_username." ".$v_domain." ".$v_catchall, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
         }
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _('Changes has been saved.');
+            $_SESSION['ok_msg'] = __('Changes has been saved.');
         }
     }
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_mail.html');
@@ -169,7 +169,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
     exec (VESTA_CMD."v-list-mail-account ".$user." ".$v_domain." ".$v_account." 'json'", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = _('Error code:',$return_var);
+        if (empty($error)) $error = __('Error code:',$return_var);
         $_SESSION['error_msg'] = $error;
     } else {
         $data = json_decode(implode('', $output), true);
@@ -210,7 +210,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-change-mail-account-password ".$v_username." ".$v_domain." ".$v_account." ".$v_password, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             $v_password = "••••••••";
@@ -227,7 +227,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-change-mail-account-quota ".$v_username." ".$v_domain." ".$v_account." ".$v_quota, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -247,7 +247,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
                     exec (VESTA_CMD."v-delete-mail-account-alias ".$v_username." ".$v_domain." ".$v_account." '".$alias."'", $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
-                        if (empty($error)) $error = _('Error code:',$return_var);
+                        if (empty($error)) $error = __('Error code:',$return_var);
                         $_SESSION['error_msg'] = $error;
                     }
                     unset($output);
@@ -259,7 +259,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
                     exec (VESTA_CMD."v-add-mail-account-alias ".$v_username." ".$v_domain." ".$v_account." '".$alias."'", $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
-                        if (empty($error)) $error = _('Error code:',$return_var);
+                        if (empty($error)) $error = __('Error code:',$return_var);
                         $_SESSION['error_msg'] = $error;
                     }
                     unset($output);
@@ -280,7 +280,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
                     exec (VESTA_CMD."v-delete-mail-account-forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
-                        if (empty($error)) $error = _('Error code:',$return_var);
+                        if (empty($error)) $error = __('Error code:',$return_var);
                         $_SESSION['error_msg'] = $error;
                     }
                     unset($output);
@@ -292,7 +292,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
                     exec (VESTA_CMD."v-add-mail-account-forward ".$v_username." ".$v_domain." ".$v_account." '".$forward."'", $output, $return_var);
                     if ($return_var != 0) {
                         $error = implode('<br>', $output);
-                        if (empty($error)) $error = _('Error code:',$return_var);
+                        if (empty($error)) $error = __('Error code:',$return_var);
                         $_SESSION['error_msg'] = $error;
                     }
                     unset($output);
@@ -305,7 +305,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             exec (VESTA_CMD."v-delete-mail-account-autoreply ".$v_username." ".$v_domain." ".$v_account, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
             unset($output);
@@ -319,7 +319,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
                 exec (VESTA_CMD."v-add-mail-account-autoreply ".$v_username." ".$v_domain." ".$v_account." ".$v_autoreply_message, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error code:',$return_var);
+                    if (empty($error)) $error = __('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -327,14 +327,14 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
             }
         }
             if (($v_autoreply == 'no') && (!empty($_POST['v_autoreply'])) && (empty($_SESSION['error_msg']))) {
-            if (empty($_POST['v_autoreply_message'])) $_SESSION['error_msg'] = $_SESSION['error_msg'] = _('Field "%s" can not be blank.','atoreply');
+            if (empty($_POST['v_autoreply_message'])) $_SESSION['error_msg'] = $_SESSION['error_msg'] = __('Field "%s" can not be blank.','atoreply');
             if (empty($_SESSION['error_msg'])) {
                 $v_autoreply_message = str_replace("\r\n", "\n", $_POST['v_autoreply_message']);
                 $v_autoreply_message = escapeshellarg($v_autoreply_message);
                 exec (VESTA_CMD."v-add-mail-account-autoreply ".$v_username." ".$v_domain." ".$v_account." ".$v_autoreply_message, $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
-                    if (empty($error)) $error = _('Error code:',$return_var);
+                    if (empty($error)) $error = __('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
                 unset($output);
@@ -344,7 +344,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
         }
 
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['ok_msg'] = _('Changes has been saved.');
+            $_SESSION['ok_msg'] = __('Changes has been saved.');
         }
     }
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_mail_acc.html');

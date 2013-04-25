@@ -2,22 +2,22 @@
                                     <tr>
                                         <td style="padding: 2px 0 0 6px">
                                             <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/add/mail/?domain=<?php echo $_GET['domain'] ?>'"> <?php print _('Add Mail Account');?> </button>
+                                                <button class="submenu-button" onclick="location.href='/add/mail/?domain=<?php echo $_GET['domain'] ?>'"> <?php print __('Add Mail Account');?> </button>
                                             </div>
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
                                                     <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                             <div class="submenu-select-block">
                                                 <form action="/bulk/mail/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print _('toggle all');?> </a>
+                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
                                                 <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print _('apply to selected');?></option>
-                                                    <option value="suspend"><?php print _('suspend');?></option>
-                                                    <option value="unsuspend"><?php print _('unsuspend');?></option>
-                                                    <option value="delete"><?php print _('delete');?></option>
+                                                    <option value=""><?php print __('apply to selected');?></option>
+                                                    <option value="suspend"><?php print __('suspend');?></option>
+                                                    <option value="unsuspend"><?php print __('unsuspend');?></option>
+                                                    <option value="delete"><?php print __('delete');?></option>
                                                 </select>
                                                 <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>
@@ -33,7 +33,7 @@
                         <table class="data" style="background: #ebe9dc;">
                             <tr>
                                 <td style="padding: 8px 2px 8px 0;">
-                                    <a class="name" style="color: #555; font-size: 10pt;"><b><?php print _('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
+                                    <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
                                 </td>
                             </tr>
                         </table>
@@ -58,34 +58,34 @@
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" name="account[]" value="<?php echo $key?>" ><input type="hidden" name="domain" value="<?php echo $_GET['domain'] ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
                                     <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                                         <span class="do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
-                                            <?php print _('delete');?> 
+                                            <?php print __('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('DELETE_MAIL_ACCOUNT_CONFIRMATION',$key);?></p>
+                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                                <p class="counter-value"><?php print __('DELETE_MAIL_ACCOUNT_CONFIRMATION',$key);?></p>
                                             </div>
                                         </span>
                                     </a>
                                     <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="data-controls do_<?php echo $spnd_action ?>">
                                         <span class="do_<?php echo $spnd_action ?>">
                                             <img src="/images/suspend.png" width="7px" height="8px">
-                                            <?php echo _($spnd_action); ?> 
+                                            <?php echo __($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" />
-                                            <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _($spnd_confirmation,$key);?></p>
+                                            <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print __('Confirmation');?>">
+                                                <p class="counter-value"><?php print __($spnd_confirmation,$key);?></p>
                                             </div>
                                         </span>
                                     </a>
                                     <a href="/edit/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" class="data-controls">
                                         <span>
                                             <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print _('edit');?> 
+                                            <?php print __('edit');?> 
                                         </span>
                                     </a>
                                     <table class="data-col2" width="830px">
@@ -98,7 +98,7 @@
                                                         </td>
                                                     <tr>
                                                         <td class="chart1" style="padding: 0 0 2px 0">
-                                                            <?php print _('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                            <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
                                                             <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
                                                                 <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
@@ -110,7 +110,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Quota');?>:
+                                                            <?php print __('Quota');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['QUOTA'] ?> 
@@ -118,10 +118,10 @@
                                                         </tr>
                                                         <tr>
                                                             <td class="counter-name">
-                                                                <?php print _('Autoreply');?>:
+                                                                <?php print __('Autoreply');?>:
                                                             </td>
                                                             <td class="counter-value">
-                                                                <?php echo _($data[$key]['AUTOREPLY']) ?> 
+                                                                <?php echo __($data[$key]['AUTOREPLY']) ?> 
                                                             </td>
                                                         </tr>
                                                 </table>
@@ -130,7 +130,7 @@
                                                 <table width="350">
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Forward to');?>:
+                                                            <?php print __('Forward to');?>:
                                                         </td>
                                                         <td class="counter-value" style="padding: 0 0 0 8px;" >
                                                             <?php echo str_replace(',', ', ', $data[$key]['FWD']) ?> 
@@ -154,9 +154,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1) {
-                                            echo _('1 mail account');
+                                            echo __('1 mail account');
                                         } else {
-                                            echo _('%s mail accounts',$i);
+                                            echo __('%s mail accounts',$i);
                                         }
                                     ?> 
                                 </td>

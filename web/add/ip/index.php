@@ -16,10 +16,10 @@ top_panel($user,$TAB);
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_POST['ok'])) {
         // Check input
-        if (empty($_POST['v_ip'])) $errors[] = _('ip address');
-        if (empty($_POST['v_netmask'])) $errors[] = _('netmask');
-        if (empty($_POST['v_interface'])) $errors[] = _('interface');
-        if (empty($_POST['v_owner'])) $errors[] = _('assigned user');
+        if (empty($_POST['v_ip'])) $errors[] = __('ip address');
+        if (empty($_POST['v_netmask'])) $errors[] = __('netmask');
+        if (empty($_POST['v_interface'])) $errors[] = __('interface');
+        if (empty($_POST['v_owner'])) $errors[] = __('assigned user');
 
         // Protect input
         $v_ip = escapeshellarg($_POST['v_ip']);
@@ -47,7 +47,7 @@ if ($_SESSION['user'] == 'admin') {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
         } else {
             // Add IP
             $v_interface = escapeshellarg($_POST['v_interface']);
@@ -57,12 +57,12 @@ if ($_SESSION['user'] == 'admin') {
             $v_interface = $_POST['v_interface'];
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
-                if (empty($error)) $error = _('Error code:',$return_var);
+                if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
                 unset($v_password);
                 unset($output);
             } else {
-                $_SESSION['ok_msg'] = _('IP_CREATED_OK',$_POST['v_ip'],$_POST['v_ip']);
+                $_SESSION['ok_msg'] = __('IP_CREATED_OK',$_POST['v_ip'],$_POST['v_ip']);
                 unset($v_ip);
                 unset($v_netmask);
                 unset($v_name);

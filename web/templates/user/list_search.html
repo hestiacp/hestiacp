@@ -2,12 +2,12 @@
                                     <tr>
                                         <td style="padding: 2px 0 0 6px">
                                             <div style="submenu-button-block">
-                                                <a style="float:left; font-size: 16pt; color: #555;"><b><?php print _('Search Results');?></b></a>
+                                                <a style="float:left; font-size: 16pt; color: #555;"><b><?php print __('Search Results');?></b></a>
                                             </div>
                                             <div class="submenu-search-block">
                                                 <form action="/search/" method="get">
                                                     <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print _('Search');?>" class="submenu-button" style="width: 96px;">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                                                 </form>
                                             </div>
                                         </td>
@@ -40,7 +40,7 @@
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150px">
                                     <table class="data-col1" width="150">
                                         <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo _($status); ?></b></td></tr>
+                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                                     </table>
                                 </td>
                                 <td class="data-dotted" width="830px" style="vertical-align:top;">
@@ -69,10 +69,10 @@
                                     <a id="delete_link_<?php echo $i ?>" class="do_delete">
                                         <span class="data-controls do_delete">
                                             <img src="/images/delete.png" width="7px" height="7px">
-                                            <?php print _('delete');?> 
+                                            <?php print __('delete');?> 
                                             <input type="hidden" name="delete_url" value="<?php echo $delete_lnk; ?>" />
                                             <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                <p class="counter-value"><?php print _($cnfrm,$data[$key]['RESULT']);?></p>
+                                                <p class="counter-value"><?php print __($cnfrm,$data[$key]['RESULT']);?></p>
                                             </div>
                                         </span>
                                     </a>
@@ -97,7 +97,7 @@
                                     <a href="<?php echo $edit_lnk; ?>">
                                         <span class="data-controls">
                                             <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print _('edit'); ?> 
+                                            <?php print __('edit'); ?> 
                                         </span>
                                     </a>
 
@@ -108,7 +108,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Object');?>:
+                                                            <?php print __('Object');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $object ?> 
@@ -120,7 +120,7 @@
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Owner');?>:
+                                                            <?php print __('Owner');?>:
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['USER'] ?> 
@@ -132,10 +132,10 @@
                                                 <table >
                                                     <tr>
                                                         <td class="counter-name">
-                                                            <?php print _('Status');?>:
+                                                            <?php print __('Status');?>:
                                                         </td>
                                                         <td class="counter-value" style="padding: 0 0 0 8px;">
-                                                            <?php echo _($status); ?> 
+                                                            <?php echo __($status); ?> 
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -156,9 +156,9 @@
                                 <td>
                                     <?php
                                         if ( $i == 1){
-                                            echo _('1 object');
+                                            echo __('1 object');
                                         } else {
-                                            echo _('%s objects',$i);
+                                            echo __('%s objects',$i);
                                         }
                                     ?> 
                                 </td>

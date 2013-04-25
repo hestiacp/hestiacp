@@ -36,10 +36,12 @@
                                     ++$i;
                                     if ($data[$key]['SUSPENDED'] == 'yes') {
                                         $status = 'suspended';
-                                        $spnd_action = 'unsuspend' ;
+                                        $spnd_action = 'unsuspend';
+                                        $spnd_confirmation = 'UNSUSPEND_CRON_CONFIRMATION' ;
                                     } else {
                                         $status = 'active';
                                         $spnd_action = 'suspend';
+                                        $spnd_confirmation = 'SUSPEND_CRON_CONFIRMATION' ;
                                     }
                             ?> 
 
@@ -58,7 +60,7 @@
                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
                                             <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('CRON_ACTION_CONFIRMATION',_('delete'));?></p>
+                                                <p class="counter-value"><?php print _('DELETE_CRON_CONFIRMATION');?></p>
                                             </div>
                                         </span>
                                     </a>
@@ -68,7 +70,7 @@
                                             <?php echo _($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
                                             <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('CRON_ACTION_CONFIRMATION',_($spnd_action));?></p>
+                                                <p class="counter-value"><?php print _($spnd_confirmation);?></p>
                                             </div>
                                         </span>
                                     </a>

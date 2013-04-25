@@ -50,9 +50,11 @@
                                     if ($data[$key]['SUSPENDED'] == 'yes') {
                                         $status = 'suspended';
                                         $spnd_action = 'unsuspend' ;
+                                        $spnd_confirmation = 'UNSUSPEND_USER_CONFIRMATION' ;
                                     } else {
                                         $status = 'active';
                                         $spnd_action = 'suspend' ;
+                                        $spnd_confirmation = 'SUSPEND_USER_CONFIRMATION' ;
                                     }
                                 ?> 
                             <tr class="data-row">
@@ -70,7 +72,7 @@
                                             <?php print _('delete');?> 
                                             <input type="hidden" name="delete_url" value="/delete/user/?user=<?php echo $key ?>" />
                                             <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('USER_ACTION_CONFIRMATION',_('delete'),$key);?></p>
+                                                <p class="counter-value"><?php print _('DELETE_USER_CONFIRMATION',$key);?></p>
                                             </div>
                                         </span>
                                     </a>
@@ -80,7 +82,7 @@
                                             <?php echo _($spnd_action); ?> 
                                             <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/user/?user=<?php echo $key ?>" />
                                             <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print _('Confirmation');?>">
-                                                <p class="counter-value"><?php print _('USER_ACTION_CONFIRMATION',_($spnd_action),$key);?></p>
+                                                <p class="counter-value"><?php print _($spnd_confirmation,$key);?></p>
                                             </div>
                                         </span>
                                     </a>

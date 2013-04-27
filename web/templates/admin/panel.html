@@ -11,15 +11,15 @@
                                         <td>
                                             <b><a class="top-<?php if($TAB == 'PACKAGE' ) echo 'selected-' ?>link" href="/list/package/"> <?php print __('Packages') ?> </a></b>
                                             <b><a class="top-<?php if($TAB == 'IP' ) echo 'selected-' ?>link" href="/list/ip/"> <?php print __('IP') ?> </a></b>
-                                            <b><a class="top-<?php if($TAB == 'RRD' ) echo 'selected-' ?>link" href="/list/rrd/"> <?php print __('Graphics') ?> </a></b>
+                                            <b><a class="top-<?php if($TAB == 'RRD' ) echo 'selected-' ?>link" href="/list/rrd/"> <?php print __('Graphs') ?> </a></b>
                                             <b><a class="top-<?php if($TAB == 'STATS' ) echo 'selected-' ?>link" href="/list/stats/"> <?php print __('Statistics') ?> </a></b>
                                             <b><a class="top-<?php if($TAB == 'LOG' ) echo 'selected-' ?>link" href="/list/log/"> <?php print __('Log') ?> </a></b>
                                             <b><a class="top-<?php if($TAB == 'SERVICES' ) echo 'selected-' ?>link" href="/list/services/"> <?php print __('Services') ?>  </a></b>
                                             <b><a class="top-<?php if($TAB == 'UPDATES' ) echo 'selected-' ?>link" href="/list/updates/"> <?php print __('Updates') ?> </a></b>
                                         </td>
                                         <td>
-                                            <b><?php echo $user ?></b>
-                                            <a class="top-logout" style="padding: 5px 0px 5px 2px; border:0px" href="/logout/"> <?php print __('Log out') ?> </a>
+                                            <b><a class="top-user" href="/edit/user/?user=<?php echo $user; ?>"><?php echo $user ?></a></b>
+                                            <a class="top-logout" href="/logout/"> <?php print __('Log out') ?> </a>
                                         </td>
                                     </tr>
                                 </thead>

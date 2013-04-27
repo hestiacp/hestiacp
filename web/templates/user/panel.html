@@ -13,8 +13,8 @@
                                             <b><a class="top-<?php if($TAB == 'LOG' ) echo 'selected-' ?>link" href="/list/log/"> <?php print __('Log') ?> </a></b>
                                         </td>
                                         <td>
-                                            <b><?php if(($_SESSION['user'] == 'admin') && ($user != 'admin')) echo 'admin / ' ?><?php echo $user ?></b>
-                                            <a class="top-logout" style="padding: 5px 0px 5px 2px; border:0px" href="/logout/"> <?php print __('Log out') ?> </a>
+                                            <b><a class="top-user" href="/edit/user/?user=<?php echo $user; ?>"><?php if(($_SESSION['user'] == 'admin') && ($user != 'admin')) echo 'admin / ' ?><?php echo $user ?></a></b>
+                                            <a class="top-logout" href="/logout/"> <?php print __('Log out') ?> </a>
                                         </td>
                                     </tr>
                                 </thead>

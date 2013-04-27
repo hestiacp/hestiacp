@@ -5,6 +5,8 @@
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
 #----------------------------------------------------------#
+PATH=$PATH:/sbin
+export $PATH
 RHOST='r.vestacp.com'
 CHOST='c.vestacp.com'
 REPO='cmmnt'

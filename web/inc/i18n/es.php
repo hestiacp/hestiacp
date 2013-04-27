@@ -7,7 +7,7 @@
 $LANG['es'] = array(
     'Packages'  => 'Planes',
     'IP'  => 'IP',
-    'Graphics'  => 'Gráficos',
+    'Graphs'  => 'Gráficos',
     'Statistics'  => 'Estadísticas',
     'Log'  => 'Mensajes',
     'Services'  => 'Servicios',

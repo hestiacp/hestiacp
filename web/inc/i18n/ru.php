@@ -9,7 +9,7 @@ $LANG['ru'] = array(
 
     'Packages' => 'Пакеты',
     'IP' => 'IP',
-    'Graphics' => 'Графики',
+    'Graphs' => 'Графики',
     'Statistics' => 'Статистика',
     'Log' => 'Журнал',
     'Services' => 'Службы',

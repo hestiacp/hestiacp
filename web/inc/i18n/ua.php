@@ -9,7 +9,7 @@ $LANG['ua'] = array(
  
     'Packages' => 'Пакети',
     'IP' => 'IP',
-    'Graphics' => 'Графіки',
+    'Graphs' => 'Графіки',
     'Statistics' => 'Статистика',
     'Log' => 'Журнал',
     'Services' => 'Служби',

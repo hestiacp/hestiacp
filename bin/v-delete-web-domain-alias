@@ -55,8 +55,8 @@ ALIAS=$(echo "$ALIAS" |\
     sed -e "s/^$dom_alias$//g"|\
     sed -e "/^$/d"|\
     sed -e ':a;N;$!ba;s/\n/,/g')
-tpl_file="$WEBTPL/apache/$TPL.tpl"
-conf="$HOMEDIR/$user/conf/web/httpd.conf"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
@@ -66,22 +66,22 @@ del_web_config
 add_web_config
 
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/apache/$TPL.stpl"
-    conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+    conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
     del_web_config
     add_web_config
 fi
 
-# Checking nginx
-if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/nginx/$NGINX.tpl"
-    conf="$HOMEDIR/$user/conf/web/nginx.conf"
+# Checking proxy
+if [ ! -z "$PROXY" ]; then
+    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
+    conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
     del_web_config
     add_web_config
 
     if [ "$SSL" = 'yes' ]; then
-        tpl_file="$WEBTPL/nginx/$NGINX.stpl"
-        conf="$HOMEDIR/$user/conf/web/snginx.conf"
+        tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+        conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
         del_web_config
         add_web_config
     fi
@@ -100,7 +100,8 @@ decrease_user_value "$user" '$U_WEB_ALIASES'
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-web
+    $BIN/v-restart-proxy
 fi
 
 # Logging

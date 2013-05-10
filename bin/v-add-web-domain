@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add web domain
-# options: USER DOMAIN IP [TEMPLATE] [RESTART]
+# options: USER DOMAIN IP [RESTART]
 #
 # The function adds virtual host to a server. In cases when a template is
 # undefined in the script, the template "default" will be used. The alias of
@@ -21,8 +21,7 @@ domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
-template=$4
-restart=$5
+restart=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -35,7 +34,7 @@ source $VESTA/func/ip.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN IP [TEMPLATE] [RESTART]'
+check_args '3' "$#" 'USER DOMAIN IP [RESTART]'
 validate_format 'user' 'domain' 'ip'
 is_system_enabled "$WEB_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -44,13 +43,9 @@ is_domain_new 'web'
 is_ip_valid
 is_ip_avalable
 is_package_full 'WEB_DOMAINS'
-if [ ! -z "$template" ]; then
-    validate_format 'template'
-    is_apache_template_valid
-else
-    template=$(get_user_value '$TEMPLATE')
-    is_apache_template_valid
-fi
+
+template=$(get_user_value '$WEB_TEMPLATE')
+is_web_template_valid
 
 
 #----------------------------------------------------------#
@@ -82,10 +77,10 @@ fi
 group="$user"
 email="$user@$domain"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
-conf="$HOMEDIR/$user/conf/web/httpd.conf"
-tpl_file="$WEBTPL/apache/$template.tpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$template.tpl"
+conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
 
-# Adding domain to the httpd.conf
+# Adding web config
 add_web_config
 
 # Building directory tree
@@ -99,12 +94,13 @@ mkdir -p $HOMEDIR/$user/web/$domain \
       $HOMEDIR/$user/web/$domain/logs
 
 # Adding domain logs
-touch /var/log/httpd/domains/$domain.bytes \
-      /var/log/httpd/domains/$domain.log \
-      /var/log/httpd/domains/$domain.error.log
+touch /var/log/$WEB_SYSTEM/domains/$domain.bytes \
+      /var/log/$WEB_SYSTEM/domains/$domain.log \
+      /var/log/$WEB_SYSTEM/domains/$domain.error.log
 
 # Adding symlink for logs
-ln -f -s /var/log/httpd/domains/$domain.*log $HOMEDIR/$user/web/$domain/logs/
+ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.*log \
+    $HOMEDIR/$user/web/$domain/logs/
 
 # Adding domain skeleton
 if [ -e "$WEBTPL/skel/public_html/" ]; then
@@ -127,11 +123,11 @@ done
 
 # Changing file owner
 chown -R $user:$user $HOMEDIR/$user/web/$domain
-chown root:$user /var/log/httpd/domains/$domain.*
-chown root:apache $conf
+chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
+chown root:$user $conf
 
 # Changing file permissions
-chmod 660 $conf
+chmod 640 $conf
 chmod 551 $HOMEDIR/$user/web/$domain
 chmod 751 $HOMEDIR/$user/web/$domain/private
 chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
@@ -143,18 +139,17 @@ chmod -f -R 665 $HOMEDIR/$user/web/$domain/public_html/*
 chmod -f -R 665 $HOMEDIR/$user/web/$domain/document_errors/*
 chmod 551 $HOMEDIR/$user/web/$domain/stats
 chmod 551 $HOMEDIR/$user/web/$domain/logs
-chmod 640 /var/log/httpd/domains/$domain.*
+chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
 # Running template trigger
-if [ -x $WEBTPL/apache/$template.sh ]; then
-    $WEBTPL/apache/$template.sh $user $domain $ip $HOMEDIR $docroot
+if [ -x $WEBTPL/$WEB_SYSTEM/$template.sh ]; then
+    $WEBTPL/$WEB_SYSTEM/$template.sh $user $domain $ip $HOMEDIR $docroot
 fi
 
-# Checking main vesta httpd config
-main_conf='/etc/httpd/conf.d/vesta.conf'
-main_conf_check=$(grep "$conf" $main_conf )
-if [ -z "$main_conf_check" ]; then
-    echo "Include $conf" >>$main_conf
+# Checking web config
+web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+if [ -z "$(grep $conf $web_conf)" ]; then
+    echo "Include $conf" >> $web_conf
 fi
 
 
@@ -170,7 +165,7 @@ increase_user_value "$user" '$U_WEB_ALIASES'
 # Defining domain variables
 str="DOMAIN='$domain' IP='$IP' IP6='' ALIAS='$aliases' TPL='$template'"
 str="$str SSL='no' SSL_HOME='same' FTP_USER='' FTP_MD5=''"
-str="$str NGINX='' NGINX_EXT='' STATS='' STATS_USER=''"
+str="$str PROXY='' PROXY_EXT='' STATS='' STATS_USER=''"
 str="$str STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0' SUSPENDED='no'"
 str="$str TIME='$TIME' DATE='$DATE'"
 
@@ -180,7 +175,7 @@ chmod 660 $USER_DATA/web.conf
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-web
 fi
 
 # Logging

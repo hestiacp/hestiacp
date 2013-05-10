@@ -44,7 +44,8 @@ done
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-web
+    $BIN/v-restart-proxy
 fi
 
 # Logging

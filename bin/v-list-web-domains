@@ -36,7 +36,7 @@ conf=$USER_DATA/web.conf
 # Defining fileds to select
 fields="\$DOMAIN \$IP \$IP6 \$U_DISK \$U_BANDWIDTH \$TPL \$ALIAS"
 fields="$fields \$STATS \$STATS_USER \$SSL \$SSL_HOME \$FTP_USER"
-fields="$fields \$NGINX \$NGINX_EXT \$SUSPENDED \$TIME \$DATE"
+fields="$fields \$PROXY \$PROXY_EXT \$SUSPENDED \$TIME \$DATE"
 
 # Listing domains
 case $format in 

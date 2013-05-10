@@ -55,9 +55,19 @@ if [ ! -z "$FTP_USER" ]; then
     /usr/sbin/userdel -f $FTP_USER
 fi
 
+# Define shell
+shell='/sbin/nologin'
+if [ -e "/usr/bin/rssh" ]; then
+    shell='/usr/bin/rssh'
+fi
+
 # Adding user
-/usr/sbin/adduser -o -u $(id -u $user) -g $user -s /sbin/nologin -M \
-    -d "$HOMEDIR/$user/web/$domain" $ftp_user > /dev/null 2>&1
+/usr/sbin/adduser -o -u $(id -u $user) \
+    -g $user \
+    -s $shell \
+    -M -d "$HOMEDIR/$user/web/$domain" \
+    $ftp_user > /dev/null 2>&1
+
 echo "$ftp_password" | /usr/bin/passwd "$ftp_user" --stdin &>/dev/null
 ftp_md5="$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)"
 

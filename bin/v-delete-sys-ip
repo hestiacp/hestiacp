@@ -35,34 +35,43 @@ is_ip_key_empty '$U_SYS_USERS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config paths
-conf='/etc/httpd/conf.d/vesta.conf'
-nconf='/etc/nginx/conf.d/vesta_ip.conf'
-iconf='/etc/sysconfig/network-scripts/ifcfg'
-rconf='/etc/httpd/conf.d/mod_extract_forwarded.conf'
-
 # Get ip owner
 user="$(get_ip_value '$OWNER')"
 ip_status="$(get_ip_value '$STATUS')"
 
 # Deleting interface
-interface=$(/sbin/ifconfig |grep -B1 "addr:$ip "|head -n 1 |cut -f 1 -d ' ')
-if [ ! -z "$interface" ] && [ -z "$(echo $interface|cut -s -f2 -d :)" ]; then
-    echo "Error: Main IP on interface"
+interface=$(/sbin/ifconfig | grep -B1 "dr:$ip " | head -n1 | cut -f1 -d \ )
+if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
+    echo "Error: can't delete main IP address"
     log_event "$E_FORBIDEN" "$EVENT"
     exit $E_FORBIDEN
 fi
 if [ ! -z "$interface" ]; then
-    /sbin/ifconfig "$interface" down
-    iconf='/etc/sysconfig/network-scripts/ifcfg'
-    rm -f $iconf-$interface
+    /sbin/ifconfig $interface down
+    rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
 fi
 
 # Deleting vesta ip
 rm -f $VESTA/data/ips/$ip
 
-# Deleting namehosting support
-namehost_ip_disable
+# Disable virtual ip hosting support
+web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+if [ ! -z "$WEB_SYSTEM" ]; then
+    sed -i "/NameVirtualHost $ip:/d" $web_conf
+    sed -i "/Listen $ip:/d" $web_conf
+fi
+
+# Deleting proxy config
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    rm -f /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+
+    fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
+    if [ -e "$fw_conf" ]; then
+        ips=$(grep 'MEFaccept 127.0.0.1' $fw_conf)
+        new_ips=$(echo "$ips" | sed -e "s/$ip//" )
+        sed -i "s/$ips/$new_ips/g" $fw_conf
+    fi
+fi
 
 
 #----------------------------------------------------------#
@@ -89,12 +98,11 @@ fi
 
 
 # Adding task to the vesta pipe
-if [ "$web_restart" = 'yes' ]; then
-    $BIN/v-restart-web "$EVENT"
-fi
+$BIN/v-restart-web
+$BIN/v-restart-proxy
 
 # Logging
-log_history "delted system ip address $ip" '' 'admin'
+log_history "deleted system ip address $ip"
 log_event "$OK" "$EVENT"
 
 exit

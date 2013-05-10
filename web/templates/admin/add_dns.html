@@ -83,29 +83,6 @@
                                                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                                     <tr>
                                                         <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                            <?php print __('Template');?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <select class="vst-list" name="v_template">
-                                                                <?php
-                                                                    foreach ($templates as $key => $value) {
-                                                                        echo "\n\t\t\t\t\t\\t\t\t\t<option value=\"".$value."\"";
-                                                                        if ((!empty($v_template)) && ( $value == $_POST['v_template'])){
-                                                                            echo ' selected' ;
-                                                                        }
-                                                                        if ((empty($v_template)) && ( $value == $template)){
-                                                                            echo ' selected' ;
-                                                                        }
-                                                                        echo ">".$value."</option>\n";
-                                                                    }
-                                                                ?> 
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
                                                             <?php print __('Expiration Date');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('YYYY-MM-DD');?>)</span>
                                                         </td>
                                                     </tr>

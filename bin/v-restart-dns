@@ -18,10 +18,15 @@ source $VESTA/func/main.sh
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$DNS_SYSTEM" = 'bind' ]; then
-    /etc/init.d/named reload >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        /etc/init.d/named restart >/dev/null 2>&1
+if [ ! -z "$DNS_SYSTEM" ]; then
+    /etc/init.d/$DNS_SYSTEM status >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        /etc/init.d/$DNS_SYSTEM reload >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            exit $E_RESTART
+        fi
+    else
+        /etc/init.d/$DNS_SYSTEM start >/dev/null 2>&1
         if [ $? -ne 0 ]; then
             exit $E_RESTART
         fi

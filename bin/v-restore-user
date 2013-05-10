@@ -244,21 +244,11 @@ if [ "$web" != 'no' ]; then
                 echo "$IP" > $tmpdir/ip_mapping.$domain
             fi
 
-            # Check apache template
-            check_tpl=$(is_apache_template_valid)
-            if [ ! -z "$check_tpl" ]; then
-                templates=$(ls -t $VESTA/data/templates/web/ |\
-                    grep 'apache' |\
-                    grep '\.tpl' |\
-                    cut -f 2 -d '_' |\
-                    cut -f 1 -d  '.')
-                if [ ! -z "$(echo $templates |grep default)" ]; then
-                    TPL=$(echo "$templates" |grep default |head -n1)
-                else
-                    TPL=$("$templates" |head -n1)
-                fi
-
-                if [ -z "$TPL" ]; then
+            # Check web template
+            check_tpl=$(is_web_template_valid)
+            if [ ! -e "$WEBTPL/$WEB_SYSTEM/$TPL.tpl" ]; then
+                TPL="default"
+                if [ ! -e "$WEBTPL/$WEB_SYSTEM/$TPL.tpl" ]; then
                     echo "Error: no avaiable web template"
                     echo "No available web template" |\
                         $send_mail -s "$subj" $email
@@ -267,24 +257,13 @@ if [ "$web" != 'no' ]; then
                 fi
             fi
 
-            # Check nginx template
-            if [ ! -z "$NGINX" ]; then
-                check_tpl=$(is_nginx_template_valid)
-                if [ ! -z "$check_tpl" ]; then
-                    templates=$(ls -t $VESTA/data/templates/web/ |\
-                        grep 'nginx' |\
-                        grep '\.tpl' |\
-                        cut -f 2 -d '_' |\
-                        cut -f 1 -d  '.')
-                    if [ ! -z "$(echo $templates |grep default)" ]; then
-                        NGINX=$(echo "$templates" |grep default |head -n1)
-                    else
-                        NGINX=$("$templates" |head -n1)
-                    fi
-
-                    if [ -z "$NGINX" ]; then
-                        echo "Error: no avaiable nginx template"
-                        echo "No available nginx tpl" |\
+            # Check proxy template
+            if [ ! -z "$PROXY" ]; then
+                if [ ! -e "$WEBTPL/$PROXY_SYSTEM/$TPL.tpl" ]; then
+                    PROXY="default"
+                    if [ ! -e "$WEBTPL/$PROXY_SYSTEM/$TPL.tpl" ]; then
+                        echo "Error: no avaiable proxy template"
+                        echo "No available proxy tpl" |\
                             $send_mail -s "$subj" $email
                         log_event "$E_NOTEXIST" "$EVENT"
                         exit $E_NOTEXIST
@@ -302,8 +281,8 @@ if [ "$web" != 'no' ]; then
 
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
-            str="$str FTP_USER='$FTP_USER' FTP_MD5='$FTP_MD5' NGINX='$NGINX'"
-            str="$str NGINX_EXT='$NGINX_EXT' STATS='$STATS'"
+            str="$str FTP_USER='$FTP_USER' FTP_MD5='$FTP_MD5' PROXY='$PROXY'"
+            str="$str PROXY_EXT='$PROXY_EXT' STATS='$STATS'"
             str="$str STATS_USER='$STATS_USER' STATS_CRYPT='$STATS_CRYPT'"
             str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' SUSPENDED='no'"
             str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
@@ -312,51 +291,51 @@ if [ "$web" != 'no' ]; then
             # Rebuild web config
             rebuild_web_domain_conf
 
-            # Adding apache virtualhost
-            httpd_conf='/etc/httpd/conf.d/vesta.conf'
-            tmp_conf="$HOMEDIR/$user/conf/web/tmp_httpd.conf"
-            conf="$HOMEDIR/$user/conf/web/httpd.conf"
+            # Adding vhost
+            web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+            tmp_conf="$HOMEDIR/$user/conf/web/tmp_$WEB_SYSTEM.conf"
+            conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
             cat $tmp_conf >> $conf
             rm -f $tmp_conf
-            httpd_include=$(grep "$conf" $httpd_conf )
-            if [ -z "$httpd_include" ]; then
-                echo "Include $conf" >> $httpd_conf
+            web_include=$(grep "$conf" $web_conf)
+            if [ -z "$web_include" ]; then
+                echo "Include $conf" >> $web_conf
             fi
 
-            # Adding ssl apache virtuualhost
+            # Adding SSL vhost
             if [ "$ssl_change" = 'yes' ]; then
-                tmp_conf="$HOMEDIR/$user/conf/web/tmp_shttpd.conf"
-                conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+                tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$WEB_SYSTEM.conf"
+                conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
                 cat $tmp_conf >> $conf
                 rm -f $tmp_conf
             fi
-            httpd_include=$(grep "$conf" $httpd_conf )
-            if [ -z "$httpd_include" ]; then
-                echo "Include $conf" >> $httpd_conf
+            ssl_include=$(grep "$conf" $web_conf)
+            if [ -z "$ssl_include" ]; then
+                echo "Include $conf" >> $web_conf
             fi
 
-            # Adding nginx virtualhost
-            nginx_conf='/etc/nginx/conf.d/vesta_users.conf'
-            if [ "$ngix_change" = 'yes' ]; then
-                tmp_conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
-                conf="$HOMEDIR/$user/conf/web/nginx.conf"
+            # Adding proxy vhost
+            proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
+            if [ "$proxy_change" = 'yes' ]; then
+                tmp_conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
+                conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
                 cat $tmp_conf >> $conf
                 rm -f $tmp_conf
             fi
-            nginx_include=$(grep "$conf" $nginx_conf )
-            if [ -z "$nginx_include" ]; then
-                echo "include $conf;" >> $nginx_conf
+            proxy_include=$(grep "$conf" $proxy_conf)
+            if [ -z "$proxy_include" ]; then
+                echo "include $conf;" >> $proxy_conf
             fi
 
-            # Adding ssl nginx virtualhost
-            if [ "$ngix_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
-                tmp_conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
-                conf="$HOMEDIR/$user/conf/web/snginx.conf"
+            # Adding SSL proxy vhost
+            if [ "$proxy_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
+                tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
+                conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
                 cat $tmp_conf >> $conf
                 rm -f $tmp_conf
-                nginx_include=$(grep "$conf" $nginx_conf )
-                if [ -z "$nginx_include" ]; then
-                    echo "include $conf;" >> $nginx_conf
+                proxy_include=$(grep "$conf" $proxy_conf)
+                if [ -z "$proxy_include" ]; then
+                    echo "include $conf;" >> $proxy_conf
                 fi
             fi
         fi
@@ -380,7 +359,8 @@ if [ "$web" != 'no' ]; then
     done
 
     # Restart WEB
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-web
+    $BIN/v-restart-proxy
     echo
     msg="$msg\n"
 fi

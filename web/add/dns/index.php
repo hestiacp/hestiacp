@@ -21,11 +21,6 @@ if (!empty($_POST['ok'])) {
     $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
     $v_domain = escapeshellarg($v_domain);
     $v_ip = escapeshellarg($_POST['v_ip']);
-    if ($_SESSION['user'] == 'admin') {
-        $v_template = escapeshellarg($_POST['v_template']);
-    } else {
-        $v_template = "''";
-    }
 
     if (!empty($_POST['v_ns1'])) $v_ns1 = escapeshellarg($_POST['v_ns1']);
     if (!empty($_POST['v_ns2'])) $v_ns2 = escapeshellarg($_POST['v_ns2']);
@@ -44,7 +39,7 @@ if (!empty($_POST['ok'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     } else {
         // Add DNS
-        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$ns4, $output, $return_var);
+        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$ns4, $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = __('Error code:',$return_var);
@@ -128,15 +123,7 @@ if (!empty($_POST['ok_rec'])) {
     }
 }
 
-
 if ((empty($_GET['domain'])) && (empty($_POST['domain'])))  {
-    exec (VESTA_CMD."v-get-user-value ".$user." 'TEMPLATE'", $output, $return_var);
-    $template = $output[0] ;
-    unset($output);
-    exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
-    $templates = json_decode(implode('', $output), true);
-    unset($output);
-
     if ((empty($v_ns1)) && (empty($v_ns2))) {
         exec (VESTA_CMD."v-list-user-ns ".$user." json", $output, $return_var);
         $nameservers = json_decode(implode('', $output), true);

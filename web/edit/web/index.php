@@ -54,8 +54,9 @@ if ($return_var != 0) {
         $v_ssl_ca = $ssl_str[$v_domain]['CA'];
     }
     $v_ssl_home = $data[$v_domain]['SSL_HOME'];
-    $v_nginx = $data[$v_domain]['NGINX'];
-    $v_nginx_ext = str_replace(',', ', ', $data[$v_domain]['NGINX_EXT']);
+    $v_proxy = $data[$v_domain]['PROXY'];
+    $v_proxy_template = $data[$v_domain]['PROXY'];
+    $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
     $v_stats = $data[$v_domain]['STATS'];
     $v_stats_user = $data[$v_domain]['STATS_USER'];
     if (!empty($v_stats_user)) $v_stats_password = "••••••••";
@@ -76,6 +77,10 @@ if ($return_var != 0) {
 
     exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
     $templates = json_decode(implode('', $output), true);
+    unset($output);
+
+    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    $proxy_templates = json_decode(implode('', $output), true);
     unset($output);
 
     exec (VESTA_CMD."v-list-web-stats json", $output, $return_var);
@@ -200,56 +205,56 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Nginx
-    if ((!empty($v_nginx)) && (empty($_POST['v_nginx'])) && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-delete-web-domain-nginx ".$v_username." ".$v_domain." 'no'", $output, $return_var);
+    // Proxy
+    if ((!empty($v_proxy)) && (empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
+        exec (VESTA_CMD."v-delete-web-domain-proxy ".$v_username." ".$v_domain." 'no'", $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = __('Error code:',$return_var);
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
-        unset($v_nginx);
-        $restart_web = 'yes';
+        unset($v_proxy);
+        $restart_proxy = 'yes';
     }
-    if ((!empty($v_nginx)) && (!empty($_POST['v_nginx'])) && (empty($_SESSION['error_msg']))) {
-        $ext = preg_replace("/\n/", " ", $_POST['v_nginx_ext']);
+    if ((!empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
+        $ext = preg_replace("/\n/", " ", $_POST['v_proxy_ext']);
         $ext = preg_replace("/,/", " ", $ext);
         $ext = preg_replace('/\s+/', ' ',$ext);
         $ext = trim($ext);
         $ext = str_replace(' ', ", ", $ext);
-        if ( $v_nginx_ext != $ext ) {
+        if (( $v_proxy_template != $_POST['v_proxy_template']) ||  ($v_proxy_ext != $ext)) {
             $ext = str_replace(', ', ",", $ext);
-            exec (VESTA_CMD."v-change-web-domain-nginx-tpl ".$v_username." ".$v_domain." 'default' ".escapeshellarg($ext)." 'no'", $output, $return_var);
+            exec (VESTA_CMD."v-change-web-domain-proxy-tpl ".$v_username." ".$v_domain." ".escapeshellarg($_POST['v_proxy_template'])." ".escapeshellarg($ext)." 'no'", $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
-            $v_nginx_ext = str_replace(',', ', ', $ext);
+            $v_proxy_template = $_POST['v_proxy_template'];
+            $v_proxy_ext = str_replace(',', ', ', $ext);
             unset($output);
-            $restart_web = 'yes';
+            $restart_proxy = 'yes';
         }
     }
-    if ((empty($v_nginx)) && (!empty($_POST['v_nginx'])) && (empty($_SESSION['error_msg']))) {
-        $nginx_ext = "'jpg,jpeg,gif,png,ico,css,zip,tgz,gz,rar,bz2,doc,xls,exe,pdf,ppt,txt,tar,wav,bmp,rtf,js,mp3,avi,mpeg,html,htm'";
-        if (!empty($_POST['v_nginx_ext'])) {
-            $ext = preg_replace("/\n/", " ", $_POST['v_nginx_ext']);
+    if ((empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
+        $v_proxy_template = $_POST['v_proxy_template'];
+        if (!empty($_POST['v_proxy_ext'])) {
+            $ext = preg_replace("/\n/", " ", $_POST['v_proxy_ext']);
             $ext = preg_replace("/,/", " ", $ext);
             $ext = preg_replace('/\s+/', ' ',$ext);
             $ext = trim($ext);
             $ext = str_replace(' ', ",", $ext);
-            $v_nginx_ext = str_replace(',', ', ', $ext);
+            $v_proxy_ext = str_replace(',', ', ', $ext);
         }
-        exec (VESTA_CMD."v-add-web-domain-nginx ".$v_username." ".$v_domain." 'default' ".escapeshellarg($ext)." 'no'", $output, $return_var);
+        exec (VESTA_CMD."v-add-web-domain-proxy ".$v_username." ".$v_domain." ".escapeshellarg($v_proxy_template)." ".escapeshellarg($ext)." 'no'", $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = __('Error code:',$return_var);
             $_SESSION['error_msg'] = $error;
         }
         unset($output);
-        $v_nginx = 'default';
-        $restart_web = 'yes';
+        $restart_proxy = 'yes';
     }
 
     // SSL

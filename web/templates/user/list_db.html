@@ -86,20 +86,15 @@
                                             <td style="vertical-align:top;" >
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name" style="padding: 2px 0 4px 2px">
-                                                            [<?php echo $data[$key]['TYPE'] ?>] <?php print __('database');?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="chart1" style="padding: 0px 0 0px 2px"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                        <td class="chart1" style="padding: 10px 0 0px 2px"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                            <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
+                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 </table>
                                             </td>
-                                            <td style="vertical-align:top;" width="250">
+                                            <td style="vertical-align:top;" width="260">
                                                 <table>
                                                     <tr>
                                                         <td class="counter-name">
@@ -127,6 +122,14 @@
                                                         </td>
                                                         <td class="counter-value">
                                                             <?php echo $data[$key]['CHARSET'] ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">
+                                                            <?php print __('Type');?>:
+                                                        </td>
+                                                        <td class="counter-value">
+                                                            <?php echo $data[$key]['TYPE'] ?> 
                                                         </td>
                                                     </tr>
                                                 </table>

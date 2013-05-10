@@ -45,8 +45,8 @@
                                     <table class="data-col1">
                                         <tr>
                                             <td style="padding: 24px 0 2px 18px;">
-                                                <a class="data-date" ?><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
-                                                <a class="data-date" ?><?php echo $v_time?></a>
+                                                <a class="data-date"><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
+                                                <a class="data-date"><?php echo $v_time?></a>
                                             </td>
                                         </tr>
                                         <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo __($v_status); ?></b></td></tr>
@@ -153,27 +153,6 @@
                                         <tr>
                                             <td>
                                                 <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;" >
-                                                <?php print __('Default Template');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_template">
-                                                    <?php
-                                                        foreach ($templates as $key => $value) {
-                                                            echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
-                                                            $svalue = "'".$value."'";
-                                                            if (( $value == $v_template ) || ($svalue == $v_template )){
-                                                                echo 'selected' ;
-                                                            }
-                                                            echo ">".$value."</option>\n";
-                                                        }
-                                                    ?> 
-                                                </select>
                                             </td>
                                         </tr>
                                         <tr>

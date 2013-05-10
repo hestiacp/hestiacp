@@ -86,6 +86,11 @@
                 color: #174f82;
             }
 
+            .top-selected-link:active {
+                color: #fff;
+                background-color: #f79b44;
+            }
+
             .top-user {
                 padding: 0 2px 0 0;
                 text-decoration: none;
@@ -131,7 +136,7 @@
             }
 
             .nav-lnk:active {
-                color: #ccc;
+                color: #f79b44;
             }
 
             .nav-block {
@@ -163,6 +168,10 @@
             .nav-selected-block:hover {
                 height:107px;
                 border-bottom: 4px solid #f79b44;
+            }
+
+            .nav-selected-block:active {
+                color: #f79b44;
             }
 
             .nav-header {
@@ -556,10 +565,12 @@
             }
 
             .counter-name {
+                white-space: nowrap;
                 vertical-align:top;
-                line-height: 1.2em;
+                line-height: 1.3em;
                 font-size: 10pt;
                 color: #505050;
+                padding: 0 4px 0 0;
             }
 
             .cron-counter-name {
@@ -902,8 +913,8 @@
                     top: 2px;
                 }
             </style>
+            <link rel="stylesheet" type="text/css" href="/css/ie.css" />
         <![endif]-->
-
         <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
         <script type="text/javascript" src="/js/events.js"></script>
         <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>

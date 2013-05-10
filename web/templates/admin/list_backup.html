@@ -64,12 +64,12 @@
                                     $cron = __('no');
                                     $udir = __('no');
 
-                                    if (!empty($data[$key]['WEB'])) $web = __('yes').' ¨';
-                                    if (!empty($data[$key]['DNS'])) $dns = __('yes').' ¨';
-                                    if (!empty($data[$key]['MAIL'])) $mail = __('yes').' ¨';
-                                    if (!empty($data[$key]['DB'])) $db = __('yes').' ¨';
-                                    if (!empty($data[$key]['CRON'])) $cron = __('yes').' ¨';
-                                    if (!empty($data[$key]['UDIR'])) $udir = __('yes').' ¨';
+                                    if (!empty($data[$key]['WEB'])) $web = __('yes');
+                                    if (!empty($data[$key]['DNS'])) $dns = __('yes');
+                                    if (!empty($data[$key]['MAIL'])) $mail = __('yes');
+                                    if (!empty($data[$key]['DB'])) $db = __('yes');
+                                    if (!empty($data[$key]['CRON'])) $cron = __('yes');
+                                    if (!empty($data[$key]['UDIR'])) $udir = __('yes');
 
                             ?> 
 
@@ -114,18 +114,10 @@
                                             <td style="vertical-align:top;" >
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name" style="padding: 2px 0 0 0">
-                                                            <?php echo __($data[$key]['TYPE']) ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="chart1">
-                                                            <?php print __('Run Time');?>: <?php echo humanize_time($data[$key]['RUNTIME']) ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="chart1">
-                                                            <?php print __('Backup Size');?>: <?php echo humanize_usage($data[$key]['SIZE']) ?>
+                                                        <td class="chart1" style="padding: 10px 0 0px 2px"><?php print __('Backup Size');?>: <?php echo humanize_usage($data[$key]['SIZE']) ?>
+                                                            <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
+                                                                <div style="width:<?php echo get_percentage($data[$key]['SIZE'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -133,32 +125,20 @@
                                             <td style="vertical-align:top;" width="250">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name" width="48">
-                                                            <?php print __('WEB');?>:
+                                                        <td class="counter-name">
+                                                            <?php print __('Type');?>:
                                                         </td>
-                                                        <td>
+                                                        <td class="counter-value">
+                                                            <?php echo $data[$key]['TYPE'] ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name">
+                                                            <?php print __('Consistent');?>:
+                                                        </td>
+                                                        <td class="counter-value">
                                                             <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['WEB']) ?>">
-                                                                <?php echo $web ?> 
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name" width="48">
-                                                            <?php print __('DNS');?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['DNS']) ?>"> 
-                                                                <?php echo $dns ?> 
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name" width="48">
-                                                            <?php print __('MAIL');?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['MAIL']) ?>"> 
-                                                                <?php echo $mail ?> 
+                                                                <?php print __($web) ?> 
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -167,36 +147,13 @@
                                             <td rowspan=4 style="vertical-align:top;" width="300">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name" width="90">
-                                                            <?php print __('DB');?>:
+                                                        <td class="counter-name">
+                                                            <?php print __('Run Time');?>:
                                                         </td>
-                                                        <td>
-                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['DB']) ?>">
-                                                                <?php echo $db ?> 
-                                                            </a>
+                                                        <td class="counter-value">
+                                                            <?php echo humanize_time($data[$key]['RUNTIME']) ?> 
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="counter-name" width="90">
-                                                            <?php print __('CRON');?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value" title="<?php echo $data[$key]['CRON'] ?>">
-                                                                <?php echo $cron ?> 
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name" width="90">
-                                                            <?php print __('USER DIRS');?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['UDIR']) ?>">
-                                                                <?php echo $udir ?> 
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-
                                                 </table>
                                             </td>
                                         </tr>

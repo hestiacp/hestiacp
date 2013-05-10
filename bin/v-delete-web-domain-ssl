@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: delete web domain ssl support
+# info: delete web domain SSL support
 # options: USER DOMAIN
 #
 # The function disable https support and deletes SSL certificates.
@@ -41,16 +41,16 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
 
 # Parsing domain values
 get_domain_values 'web'
-conf="$HOMEDIR/$user/conf/web/shttpd.conf"
-tpl_file="$WEBTPL/apache/$TPL.stpl"
+conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
 
 # Deleting domain
 del_web_config
 
-# Checking nginx
-if [ ! -z "$NGINX" ]; then
-    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
-    conf="$HOMEDIR/$user/conf/web/snginx.conf"
+# Checking proxy
+if [ ! -z "$PROXY" ]; then
+    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
     del_web_config
 fi
 
@@ -68,21 +68,22 @@ chown -R $user:$user $tmpdir
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL' 'no'
 
-# Checking last ssl domain
+# Checking last SSL domain
 ssl_dom=$(grep "SSL='yes'" $USER_DATA/web.conf)
-conf='/etc/httpd/conf.d/vesta.conf'
+conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
 if [ -z "$ssl_dom" ]; then
-    sed -i "/.*\/$user\/.*shttpd.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/shttpd.conf
+    sed -i "/.*\/$user\/.*s$WEB_SYSTEM.conf/d" $conf
+    rm -f $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf
+
 fi
 
-# Checking last nginx domain
-conf='/etc/nginx/conf.d/vesta_users.conf'
-last_nginx=$(grep -v "NGINX=''" $USER_DATA/web.conf)
-last_snginx=$(echo "$last_nginx" | grep "SSL='yes'")
-if [ -z "$last_snginx" ]; then
-    sed -i "/.*\/$user\/.*snginx.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/snginx.conf
+# Checking proxy
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
+    if [ -z "$ssl_dom" ]; then
+        sed -i "/.*\/$user\/.*s$PROXY_SYSTEM.conf/d" $conf
+        rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
+    fi
 fi
 
 # Decreasing domain value
@@ -90,7 +91,8 @@ decrease_user_value "$user" '$U_WEB_SSL'
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-web
+    $BIN/v-restart-proxy
 fi
 
 # Logging

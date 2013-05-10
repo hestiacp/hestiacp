@@ -166,36 +166,33 @@ then
         conf="$USER_DATA/web.conf"
         grep "DOMAIN='$domain'" $conf > vesta/web.conf
 
-        # Apache config
-        if [ "$WEB_SYSTEM" = 'apache' ]; then
-            # Parsing httpd.conf
-            tpl_file="$WEBTPL/apache/$TPL.tpl"
-            conf="$HOMEDIR/$user/conf/web/httpd.conf"
-            get_web_config_brds
-            sed -n "$top_line,$bottom_line p" $conf > conf/httpd.conf
+        # WEB config
+        tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+        conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+        get_web_config_brds
+        sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
 
-            # SSL check
-            if [ "$SSL" = 'yes' ]; then
-                tpl_file="$WEBTPL/apache/$TPL.stpl"
-                conf="$HOMEDIR/$user/conf/web/shttpd.conf"
-                get_web_config_brds
-                sed -n "$top_line,$bottom_line p" $conf > conf/shttpd.conf
-            fi
+        # SSL check
+        if [ "$SSL" = 'yes' ]; then
+            tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+            conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+            get_web_config_brds
+            sed -n "$top_line,$bottom_line p" $conf > conf/s$WEB_SYSTEM.conf
         fi
 
-        # Nginx config
-        if [ ! -z "$NGINX" ] ; then
-            tpl_file="$WEBTPL/nginx/$NGINX.tpl"
-            conf="$HOMEDIR/$user/conf/web/nginx.conf"
+        # Proxy config
+        if [ ! -z "$PROXY" ]; then
+            tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
+            conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
             get_web_config_brds
-            sed -n "$top_line,$bottom_line p" $conf > conf/nginx.conf
+            sed -n "$top_line,$bottom_line p" $conf > conf/$PROXY_SYSTEM.conf
 
-            # SSL check
-            if [ "$SSL" = 'yes' ] ; then
-                tpl_file="$WEBTPL/nginx/$NGINX.stpl"
-                conf="$HOMEDIR/$user/conf/web/snginx.conf"
-                get_web_config_brds
-                sed -n "$top_line,$bottom_line p" $conf > conf/snginx.conf
+        # SSL proxy config
+        if [ ! -z "$PROXY" ] && [ "$SSL" = 'yes' ] ; then
+            tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+            get_web_config_brds
+            sed -n "$top_line,$bottom_line p" $conf > conf/s$PROXY_SYSTEM.conf
             fi
         fi
 

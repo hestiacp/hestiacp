@@ -19,7 +19,7 @@ ip=${1// /}
 mask=$2
 interface="${3-eth0}"
 user="${4-admin}"
-ip_status="${5-shared}"     # can be dedicated as well   
+ip_status="${5-shared}" # status can be dedicated
 ip_name=$6
 nat_ip=$7
 
@@ -50,27 +50,64 @@ fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-# Get full interface name
 get_ip_iface
+sys_ip_check=$(/sbin/ifconfig | grep "addr:$ip ")
+if [ -z "$sys_ip_check" ]; then
+    /sbin/ifconfig "$iface" "$ip" netmask "$mask"
 
-# Defining config paths
-conf='/etc/httpd/conf.d/vesta.conf'
-nconf='/etc/nginx/conf.d/vesta_ip.conf'
-iconf='/etc/sysconfig/network-scripts/ifcfg'
-rconf='/etc/httpd/conf.d/mod_extract_forwarded.conf'
-
-# Adding ip
-/sbin/ifconfig "$iface" "$ip" netmask "$mask"
-
-# Adding startup script
-create_ip_startup
+    # Adding startup script
+    sys_ip="# Added by vesta"
+    sys_ip="$sys_ip\nDEVICE=$iface"
+    sys_ip="$sys_ip\nBOOTPROTO=static"
+    sys_ip="$sys_ip\nONBOOT=yes"
+    sys_ip="$sys_ip\nIPADDR=$ip"
+    sys_ip="$sys_ip\nNETMASK=$mask"
+    echo -e $sys_ip > /etc/sysconfig/network-scripts/ifcfg-$iface
+fi
 
 # Adding vesta ip
-create_vesta_ip
+echo "OWNER='$user'
+STATUS='$ip_status'
+NAME='$ip_name'
+U_SYS_USERS=''
+U_WEB_DOMAINS='0'
+INTERFACE='$interface'
+NETMASK='$mask'
+NAT='$nat_ip'
+TIME='$TIME'
+DATE='$DATE'" > $VESTA/data/ips/$ip
+chmod 660 $VESTA/data/ips/$ip
 
-# Namehosting support
-namehost_ip_support
+# WEB support
+web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+if [ "$WEB_SYSTEM" = 'httpd' ]; then
+    conf_ins='1'
+    conf_line=$(grep -n NameVirtual $web_conf | tail -n1 | cut -f1 -d:)
+    if [ ! -z "$conf_line" ]; then
+        conf_ins=$((conf_line + 1))
+    fi
+    if [ "$WEB_SSL" = 'mod_ssl' ]; then
+        sed -i "$conf_ins i NameVirtualHost $ip:$WEB_SSL_PORT" $web_conf
+        sed -i "$conf_ins i Listen $ip:$WEB_SSL_PORT" $web_conf
+    fi
+    sed -i "$conf_ins i NameVirtualHost $ip:$WEB_PORT" $web_conf
+    sed -i "$conf_ins i Listen $ip:$WEB_PORT" $web_conf
+fi
+
+# Proxy support
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    cat $WEBTPL/$PROXY_SYSTEM/proxy_ip.tpl |\
+        sed -e "s/%ip%/$ip/g" \
+            -e "s/%web_port%/$WEB_PORT/g" \
+            -e "s/%proxy_port%/$PROXY_PORT/g" \
+        > /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+
+    fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
+    if [ -e "$fw_conf" ]; then
+        ips=$(grep 'MEFaccept ' $fw_conf | grep -v '#' | head -n1)
+        sed -i "s/$ips/$ips $ip/g" $fw_conf
+    fi
+fi
 
 
 #----------------------------------------------------------#
@@ -93,9 +130,8 @@ else
 fi
 
 # Restart web server
-if [ "$web_restart" = 'yes' ]; then
-    $BIN/v-restart-web "$EVENT"
-fi
+$BIN/v-restart-web
+$BIN/v-restart-proxy
 
 # Logging
 log_history "added system ip address $ip" '' 'admin'

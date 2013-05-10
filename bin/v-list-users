@@ -73,11 +73,11 @@ shell_list_users() {
 #----------------------------------------------------------#
 
 # Defining fileds to select
-fields="\$USER \$FNAME \$LNAME \$PACKAGE \$TEMPLATE \$WEB_DOMAINS"
-fields="$fields \$WEB_ALIASES \$DNS_DOMAINS \$DNS_RECORDS \$MAIL_DOMAINS"
-fields="$fields \$MAIL_ACCOUNTS \$DATABASES \$CRON_JOBS \$DISK_QUOTA"
-fields="$fields \$BANDWIDTH \$NS \$SHELL \$BACKUPS \$CONTACT"
-fields="$fields \$CRON_REPORTS \$RKEY \$SUSPENDED \$SUSPENDED_USERS"
+fields="\$USER \$FNAME \$LNAME \$PACKAGE \$WEB_TEMPLATE \$PROXY_TEMPLATE"
+fields="$fields \$DNS_TEMPLATE \$WEB_DOMAINS \$WEB_ALIASES \$DNS_DOMAINS"
+fields="$fields \$DNS_RECORDS \$MAIL_DOMAINS \$MAIL_ACCOUNTS \$DATABASES"
+fields="$fields \$CRON_JOBS \$DISK_QUOTA \$BANDWIDTH \$NS \$SHELL \$BACKUPS"
+fields="$fields \$CONTACT \$CRON_REPORTS \$RKEY \$SUSPENDED \$SUSPENDED_USERS"
 fields="$fields \$SUSPENDED_WEB \$SUSPENDED_DNS \$SUSPENDED_MAIL"
 fields="$fields \$SUSPENDED_DB \$SUSPENDED_CRON \$IP_AVAIL \$IP_OWNED"
 fields="$fields \$U_USERS \$U_DISK \$U_DISK_DIRS \$U_DISK_WEB \$U_DISK_MAIL"

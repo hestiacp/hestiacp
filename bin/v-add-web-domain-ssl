@@ -41,7 +41,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_empty 'web' 'DOMAIN' "$domain" '$SSL'
-#is_ip_owner
 is_web_domain_cert_valid
 
 
@@ -62,18 +61,18 @@ chmod 660 $USER_DATA/ssl/$domain.*
 
 # Parsing domain values
 get_domain_values 'web'
-conf="$HOMEDIR/$user/conf/web/shttpd.conf"
-tpl_file="$WEBTPL/apache/$TPL.stpl"
+conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
 SSL_HOME="$ssl_home"
 ip=$(get_real_ip $IP)
 
 # Preparing domain values for the template substitution
 upd_web_domain_values
 
-# Adding domain to the shttpd.conf
+# Adding domain to the web config
 add_web_config
 
-chown root:apache $conf
+chown root:$user $conf
 chmod 640 $conf
 
 # Adding certificate to user dir
@@ -85,32 +84,29 @@ if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
 fi
 
 # Running template trigger
-if [ -x $WEBTPL/apache/$template.sh ]; then
-    $WEBTPL/apache/$template.sh $user $domain $ip $HOMEDIR $sdocroot
+if [ -x $WEBTPL/$WEB_SYSTEM/$template.sh ]; then
+    $WEBTPL/$WEB_SYSTEM/$template.sh $user $domain $ip $HOMEDIR $sdocroot
 fi
 
-# Checking main vesta httpd config
-main_conf='/etc/httpd/conf.d/vesta.conf'
-main_conf_check=$(grep "$conf" $main_conf )
-if [ -z "$main_conf_check" ]; then
-    echo "Include $conf" >> $main_conf
+# Checking web config
+web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+if [ -z "$(grep "$conf" $web_conf)" ]; then
+    echo "Include $conf" >> $web_conf
 fi
 
-# Checking  nginx
-if [ ! -z "$NGINX" ]; then
-    # Adding domain to the snginx.conf
-    conf="$HOMEDIR/$user/conf/web/snginx.conf"
-    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
+# Checking proxy
+if [ ! -z "$PROXY" ]; then
+    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
     add_web_config
 
-    chown root:nginx $conf
+    chown root:$user $conf
     chmod 640 $conf
 
-    # Checking vesta nginx config
-    main_conf='/etc/nginx/conf.d/vesta_users.conf'
-    main_conf_check=$(grep "$conf" $main_conf )
-    if [ -z "$main_conf_check" ]; then
-        echo "include $conf;" >>$main_conf
+    # Checking proxy config
+    proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
+    if [ -z "$(grep "$conf" $proxy_conf )" ]; then
+        echo "include $conf;" >> $proxy_conf
     fi
 fi
 

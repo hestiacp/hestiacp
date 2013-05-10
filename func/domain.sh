@@ -1,46 +1,32 @@
 # Web template check
-is_apache_template_valid() {
-    t="$WEBTPL/apache/$template.tpl"
-    s="$WEBTPL/apache/$template.stpl"
+is_web_template_valid() {
+    t="$WEBTPL/$WEB_SYSTEM/$template.tpl"
+    s="$WEBTPL/$WEB_SYSTEM/$template.stpl"
     if [ ! -e $t ] || [ ! -e $s ]; then
-        template='default'
-        t="$WEBTPL/apache/$template.tpl"
-        s="$WEBTPL/apache/$template.stpl"
-        if [ ! -e $t ] || [ ! -e $s ]; then
-            echo "Error: template $template not found"
-            log_event "$E_NOTEXIST" "$EVENT"
-            exit $E_NOTEXIST
-        fi
+        echo "Error: web template $template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
-# Nginx template check
-is_nginx_template_valid() {
-    t="$WEBTPL/nginx/$template.tpl"
-    s="$WEBTPL/nginx/$template.stpl"
+# Proxy template check
+is_proxy_template_valid() {
+    t="$WEBTPL/$PROXY_SYSTEM/$template.tpl"
+    s="$WEBTPL/$PROXY_SYSTEM/$template.stpl"
     if [ ! -e $t ] || [ ! -e $s ]; then
-        template='default'
-        t="$WEBTPL/nginx/$template.tpl"
-        s="$WEBTPL/nginx/$template.stpl"
-        if [ ! -e $t ] || [ ! -e $s ]; then
-            echo "Error: nginx $template not found"
-            log_event "$E_NOTEXIST" "$EVENT"
-            exit $E_NOTEXIST
-        fi
+        echo "Error: proxy template $template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
 # DNS template check
 is_dns_template_valid() {
-    tpl="$DNSTPL/$template.tpl"
-    if [ ! -e $tpl ]; then
-        template='default'
-        tpl="$DNSTPL/$template.tpl"
-        if [ ! -e $tpl ]; then
-            echo "Error: template not found"
-            log_event "$E_NOTEXIST" "$EVENT"
-            exit $E_NOTEXIST
-        fi
+    t="$DNSTPL/$template.tpl"
+    if [ ! -e $t ]; then
+        echo "Error: dns template $template not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
     fi
 }
 
@@ -239,6 +225,7 @@ add_web_config() {
             -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
             -e "s/%proxy_port%/$PROXY_PORT/g" \
             -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+            -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
             -e "s/%domain_idn%/$domain_idn/g" \
             -e "s/%domain%/$domain/g" \
             -e "s/%user%/$user/g" \
@@ -255,10 +242,6 @@ add_web_config() {
             -e "s/%ssl_pem%/${ssl_pem////\/}/g" \
             -e "s/%ssl_ca_str%/${ssl_ca_str////\/}/g" \
             -e "s/%ssl_ca%/${ssl_ca////\/}/g" \
-            -e "s/%nginx_extentions%/${NGINX_EXT//,/|}/g" \
-            -e "s/%elog%//g" \
-            -e "s/%cgi%//g" \
-            -e "s/%cgi_option%/+ExecCGI/g" \
     >> $conf
 }
 
@@ -395,71 +378,6 @@ is_web_domain_cert_valid() {
 del_web_config() {
     get_web_config_brds || exit $?
     sed -i "$top_line,$bottom_line d" $conf
-}
-
-# Add ip virtual hosting support
-namehost_ip_support() {
-    if [ "$WEB_SYSTEM" = 'apache' ]; then
-        conf_line=$(grep -n "NameVirtual" $conf|tail -n 1|cut -f 1 -d ':')
-        if [ ! -z "$conf_line" ]; then
-            conf_ins=$((conf_line + 1))
-        else
-            conf_ins='1'
-        fi
-
-        if [ "$WEB_SSL" = 'mod_ssl' ]; then
-            sed -i "$conf_ins i NameVirtualHost $ip:$WEB_SSL_PORT" $conf
-            sed -i "$conf_ins i Listen $ip:$WEB_SSL_PORT" $conf
-        fi
-
-        sed -i "$conf_ins i NameVirtualHost $ip:$WEB_PORT" $conf
-        sed -i "$conf_ins i Listen $ip:$WEB_PORT" $conf
-
-        if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-            cat $WEBTPL/nginx/ip.tpl | sed -e "s/%ip%/$ip/g" \
-             -e "s/%web_port%/$WEB_PORT/g" \
-            -e "s/%proxy_port%/$PROXY_PORT/g" >>$nconf
-
-            ips=$(grep 'MEFaccept ' $rconf |grep -v '#'| head -n1)
-            sed -i "s/$ips/$ips $ip/g" $rconf
-        fi
-        web_restart='yes'
-    fi
-}
-
-# Disable virtual ip hosting support
-namehost_ip_disable() {
-    if [ "$WEB_SYSTEM" = 'apache' ]; then
-        sed -i "/NameVirtualHost $ip:/d" $conf
-        sed -i "/Listen $ip:/d" $conf
-
-        if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-            tpl_ln=$(wc -l $WEBTPL/nginx/ip.tpl | cut -f 1 -d ' ')
-            ip_line=$(grep -n "%ip%" $WEBTPL/nginx/ip.tpl |head -n1 |\
-                cut -f 1 -d :)
-            conf_line=$(grep -n -w $ip $nconf|head -n1|cut -f 1 -d :)
-            if [ -z "$tpl_ln" ] || [ -z "$ip_line" ] || [ -z "$conf_line" ]
-            then
-                echo "Error: nginx config paring error"
-                log_event "$E_PARSING" "$EVENT"
-                exit $E_PARSING
-            fi
-            up_line=$((ip_line - 1))
-            first_line=$((conf_line - up_line))
-            last_line=$((conf_line - ip_line + tpl_ln))
-
-            if [ -z "$first_line" ] || [ -z "$last_line" ]; then
-                echo "Error: nginx config paring error"
-                log_event "$E_PARSING" "$EVENT"
-                exit $E_PARSING
-            fi
-            sed -i "$first_line,$last_line d" $nconf
-            ips=$(grep 'RPAFproxy_ips' $rconf)
-            new_ips=$(echo "$ips"|sed -e "s/$ip//")
-            sed -i "s/$ips/$new_ips/g" $rconf
-        fi
-        web_restart='yes'
-    fi
 }
 
 # Update web domain values

@@ -54,19 +54,65 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Default Template');?>
+                                                <?php print __('Web Template');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="vst-list" name="v_template">
+                                                <select class="vst-list" name="v_web_template">
                                                     <?php
-                                                        foreach ($templates as $key => $value) {
+                                                        foreach ($web_templates as $key => $value) {
                                                             echo "\t\t\t\t<option value=\"".$value."\"";
-                                                            if ((!empty($v_template)) && ( $value == $v_template)){
+                                                            if ((!empty($v_web_template)) && ( $value == $v_web_template)){
                                                                 echo 'selected' ;
                                                             }
-                                                            if ((!empty($v_template)) && ( $value == $_POST['v_template'])){
+                                                            if ((!empty($v_web_template)) && ( $value == $_POST['v_web_template'])){
+                                                                echo 'selected' ;
+                                                            }
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?> 
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                <?php print __('Proxy Template');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_proxy_template">
+                                                    <?php
+                                                        foreach ($proxy_templates as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template)){
+                                                                echo 'selected' ;
+                                                            }
+                                                            if ((!empty($v_proxy_template)) && ( $value == $_POST['v_proxy_template'])){
+                                                                echo 'selected' ;
+                                                            }
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?> 
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                <?php print __('DNS Template');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_dns_template">
+                                                    <?php
+                                                        foreach ($dns_templates as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            if ((!empty($v_dns_template)) && ( $value == $v_dns_template)){
+                                                                echo 'selected' ;
+                                                            }
+                                                            if ((!empty($v_dns_template)) && ( $value == $_POST['v_dns_template'])){
                                                                 echo 'selected' ;
                                                             }
                                                             echo ">".$value."</option>\n";

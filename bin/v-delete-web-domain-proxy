@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: deleting web domain nginx configuration
+# info: deleting web domain proxy configuration
 # options: USER DOMAIN
 #
-# The function of deleting the virtualhost nginx configuration.
+# The function of deleting the virtualhost proxy configuration.
 
 
 #----------------------------------------------------------#
@@ -32,7 +32,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_value_exist 'web' 'DOMAIN' "$domain" '$NGINX'
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$PROXY'
 
 
 #----------------------------------------------------------#
@@ -41,14 +41,14 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$NGINX'
 
 # Defining domain parameters
 get_domain_values 'web'
-tpl_file="$WEBTPL/nginx/$NGINX.tpl"
-conf="$HOMEDIR/$user/conf/web/nginx.conf"
+tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
+conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
 del_web_config
 
-# Checking ssl
+# Checking SSL
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
-    conf="$HOMEDIR/$user/conf/web/snginx.conf"
+    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
     del_web_config
 fi
 
@@ -58,30 +58,32 @@ fi
 #----------------------------------------------------------#
 
 # Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$NGINX' ''
-update_object_value 'web' 'DOMAIN' "$domain" '$NGINX_EXT' ''
+update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' ''
+update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' ''
 
-# Checking last nginx domain
-conf='/etc/nginx/conf.d/vesta_users.conf'
-last_nginx=$(grep -v "NGINX=''" $USER_DATA/web.conf)
-last_snginx=$(echo "$last_nginx" | grep "SSL='yes'")
-if [ -z "$last_snginx" ]; then
-    sed -i "/$user\/conf\/web\/snginx.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/snginx.conf
+
+# Checking last SSL proxy
+conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
+last_sproxy=$(grep "SSL='yes'" $USER_DATA/web.conf)
+if [ -z "$last_sproxy" ]; then
+    sed -i "/.*\/$user\/.*s$PROXY_SYSTEM.conf/d" $conf
+    rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
 fi
 
-if [ -z "$last_nginx" ]; then
-    sed -i "/$user\/conf\/web\/nginx.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/nginx.conf
+# Checking last proxy
+last_proxy=$(grep -v "PROXY=''" $USER_DATA/web.conf)
+if [ -z "$last_proxy" ]; then
+    sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
+    rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
 fi
 
-# Restart web server
+# Restart proxy server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-proxy
 fi
 
 # Logging
-log_history "disabled nginx support for $domain"
+log_history "disabled proxy support for $domain"
 log_event "$OK" "$EVENT"
 
 exit

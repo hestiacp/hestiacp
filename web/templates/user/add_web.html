@@ -143,7 +143,7 @@
                                 </table>
                                 <table class="data-col2" width="600px" style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                     <tr>
-                                        <td class="vst-text" style="padding: 10 0 0 2px;">
+                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
                                             <?php print __('Aliases');?>
                                         </td>
                                     </tr>
@@ -154,25 +154,25 @@
                                     </tr>
                                     <tr>
                                         <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                            <?php print __('Nginx Support');?>
+                                            <?php print __('Proxy Support');?>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="checkbox" size="20" class="vst-checkbox" name="v_nginx" <?php if ($v_nginx !== 'off') echo "checked=yes" ?> onclick="javascript:elementHideShow('nginxtable');">
+                                            <input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if ($v_proxy !== 'off') echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <table style="display:<?php if ($v_nginx == 'off') { echo 'none';} else {echo 'block';}?>;" id="nginxtable" >
+                                            <table style="display:<?php if ($v_proxy == 'off') { echo 'none';} else {echo 'block';}?>;" id="proxytable" >
                                                 <tr>
                                                     <td class="vst-text" style="padding: 9px 0 0 0;">
-                                                        <?php print __('Nginx Extentions');?>
+                                                        <?php print __('Proxy Extentions');?>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <textarea size="20" class="vst-textinput" name="v_nginx_ext"><?php if (!empty($v_nginx_ext)) { echo $v_nginx_ext;} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
+                                                        <textarea size="20" class="vst-textinput" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo $v_proxy_ext;} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
                                                     </td>
                                                 </tr>
                                             </table>

@@ -85,10 +85,10 @@
                                                             <?php echo $data[$key]['IP'] ?> 
                                                         </td>
                                                     <tr>
-                                                        <td class="chart1" style="padding: 0 0 2px 0">
+                                                        <td class="chart1" style="padding: 2px 0 2px 0">
                                                             <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                            <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
+                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
                                                         </td>
                                                     </tr>

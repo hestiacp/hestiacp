@@ -102,12 +102,12 @@ for period in $periods; do
     $BIN/v-update-sys-rrd-ssh $period
 
     # Updating web stats
-    if [ "$WEB_SYSTEM" = 'apache' ]; then
-        $BIN/v-update-sys-rrd-httpd $period
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        $BIN/v-update-sys-rrd-$WEB_SYSTEM $period
     fi
 
-    if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-        $BIN/v-update-sys-rrd-nginx $period
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-update-sys-rrd-$PROXY_SYSTEM $period
     fi
 
     # Updating ftp stats

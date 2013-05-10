@@ -2,7 +2,7 @@
 # info: list web templates
 # options: USER [FORMAT]
 #
-# The function for obtaining the list of apache templates available to a user.
+# The function for obtaining the list of web templates available to a user.
 
 
 #----------------------------------------------------------#
@@ -13,11 +13,12 @@
 format=${1-shell}
 
 # Includes
+source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 
 # Json function
 json_list_wtpl() {
-    templates=$(ls -t $WEBTPL/apache | cut -f 1 -d  '.' |sort -u )
+    templates=$(ls -t $WEBTPL/$WEB_SYSTEM | cut -f 1 -d  '.' |sort -u )
     t_counter=$(echo "$templates" | wc -w)
     i=1
     echo '['
@@ -34,7 +35,7 @@ json_list_wtpl() {
 
 # Shell function
 shell_list_wtpl() {
-    templates=$(ls -t $WEBTPL/apache | cut -f 1 -d  '.' |sort -u )
+    templates=$(ls -t $WEBTPL/$WEB_SYSTEM | cut -f 1 -d  '.' |sort -u )
     if [ -z "$nohead" ]; then
         echo "Templates"
         echo "----------"

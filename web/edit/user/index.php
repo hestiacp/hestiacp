@@ -32,7 +32,6 @@ if ($_SESSION['user'] == 'admin') {
         $v_username = $_GET['user'];
         $v_password = "••••••••";
         $v_email = $data[$v_username]['CONTACT'];
-        $v_template = $data[$v_username]['TEMPLATE'];
         $v_package = $data[$v_username]['PACKAGE'];
         $v_language = $data[$v_username]['LANGUAGE'];
         $v_fname = $data[$v_username]['FNAME'];
@@ -59,10 +58,6 @@ if ($_SESSION['user'] == 'admin') {
 
         exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
         $languages = json_decode(implode('', $output), true);
-        unset($output);
-
-        exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
-        $templates = json_decode(implode('', $output), true);
         unset($output);
 
         exec (VESTA_CMD."v-list-sys-shells json", $output, $return_var);
@@ -109,18 +104,6 @@ if ($_SESSION['user'] == 'admin') {
                 $_SESSION['error_msg'] = $error;
             } else {
                 if ($_GET['user'] == 'admin')  $_SESSION['language'] = $_POST['v_language'];
-            }
-            unset($output);
-        }
-
-        // Change template
-        if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
-            $v_template = escapeshellarg($_POST['v_template']);
-            exec (VESTA_CMD."v-change-user-template ".$v_username." ".$v_template, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
             }
             unset($output);
         }

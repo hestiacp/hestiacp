@@ -156,14 +156,14 @@ rebuild_web_domain_conf() {
         $HOMEDIR/$user/web/$domain/logs
 
     # Create domain logs
-    touch /var/log/httpd/domains/$domain.bytes \
-          /var/log/httpd/domains/$domain.log \
-          /var/log/httpd/domains/$domain.error.log
+    touch /var/log/$WEB_SYSTEM/domains/$domain.bytes \
+          /var/log/$WEB_SYSTEM/domains/$domain.log \
+          /var/log/$WEB_SYSTEM/domains/$domain.error.log
 
     # Create symlinks
     cd $HOMEDIR/$user/web/$domain/logs/
-    ln -f -s /var/log/httpd/domains/$domain.log .
-    ln -f -s /var/log/httpd/domains/$domain.error.log .
+    ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.log .
+    ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.error.log .
     cd - > /dev/null
 
     # Propagate html skeleton
@@ -180,7 +180,7 @@ rebuild_web_domain_conf() {
     chmod 751 $HOMEDIR/$user/web/$domain/document_errors
     chmod 551 $HOMEDIR/$user/web/$domain/stats
     chmod 551 $HOMEDIR/$user/web/$domain/logs
-    chmod 640 /var/log/httpd/domains/$domain.*
+    chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
     # Set ownership
     chown $user:$user $HOMEDIR/$user/web/$domain
@@ -189,19 +189,18 @@ rebuild_web_domain_conf() {
     chown $user:$user $HOMEDIR/$user/web/$domain/public_html
     chown $user:$user $HOMEDIR/$user/web/$domain/public_shtml
     chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
-    chown root:$user /var/log/httpd/domains/$domain.*
+    chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
-
-    # Adding tmp_httpd.conf
-    tpl_file="$WEBTPL/apache/$TPL.tpl"
-    conf="$HOMEDIR/$user/conf/web/tmp_httpd.conf"
+    # Adding tmp conf
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+    conf="$HOMEDIR/$user/conf/web/tmp_$WEB_SYSTEM.conf"
     add_web_config
-    chown root:apache $conf
+    chown root:$user $conf
     chmod 640 $conf
 
     # Running template trigger
-    if [ -x $WEBTPL/apache/$TPL.sh ]; then
-        $WEBTPL/apache/$TPL.sh $user $domain $ip $HOMEDIR $docroot
+    if [ -x $WEBTPL/$WEB_SYSTEM/$TPL.sh ]; then
+        $WEBTPL/$WEB_SYSTEM/$TPL.sh $user $domain $ip $HOMEDIR $docroot
     fi
 
     # Checking aliases
@@ -253,13 +252,13 @@ rebuild_web_domain_conf() {
         fi
     fi
 
-    # Checking ssl
+    # Checking SSL
     if [ "$SSL" = 'yes' ]; then
-        # Adding domain to the shttpd.conf
-        conf="$HOMEDIR/$user/conf/web/tmp_shttpd.conf"
-        tpl_file="$WEBTPL/apache/$TPL.stpl"
+        # Adding domain to the web conf
+        conf="$HOMEDIR/$user/conf/web/tmp_s$WEB_SYSTEM.conf"
+        tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
         add_web_config
-        chown root:apache $conf
+        chown root:$user $conf
         chmod 640 $conf
 
         cp -f $USER_DATA/ssl/$domain.crt \
@@ -274,30 +273,30 @@ rebuild_web_domain_conf() {
         fi
 
         # Running template trigger
-        if [ -x $WEBTPL/apache/$TPL.sh ]; then
-            $WEBTPL/apache/$TPL.sh $user $domain $ip $HOMEDIR $sdocroot
+        if [ -x $WEBTPL/$WEB_SYSTEM/$TPL.sh ]; then
+            $WEBTPL/$WEB_SYSTEM/$TPL.sh $user $domain $ip $HOMEDIR $sdocroot
         fi
 
         user_ssl=$((user_ssl + 1))
         ssl_change='yes'
     fi
 
-    # Checking nginx
-    if [ ! -z "$NGINX" ]; then
-        tpl_file="$WEBTPL/nginx/$NGINX.tpl"
-        conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
+    # Checking proxy
+    if [ ! -z "$PROXY" ]; then
+        tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
+        conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
         add_web_config
-        chown root:nginx $conf
+        chown root:$user $conf
         chmod 640 $conf
 
         if [ "$SSL" = 'yes' ]; then
-            tpl_file="$WEBTPL/nginx/$NGINX.stpl"
-            conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
+            tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+            conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
             add_web_config
-            chown root:nginx $conf
+            chown root:$user $conf
             chmod 640 $conf
         fi
-        ngix_change='yes'
+        proxy_change='yes'
     fi
     if [ "$SUSPENDED" = 'yes' ]; then
         suspended_web=$((suspended_web + 1))

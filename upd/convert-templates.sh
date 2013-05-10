@@ -1,29 +1,71 @@
 #!/bin/bash
 
-# Define data path
-TPL='/usr/local/vesta/data/templates/web'
+# Rename web system service
+sed -i "s/apache/httpd/g" /usr/local/vesta/conf/vesta.conf
 
-# Check for new template structure
+# Rename dns system service
+sed -i "s/bind/named/g" /usr/local/vesta/conf/vesta.conf
+
+# Rename nginx config
+mv /etc/nginx/conf.d/vesta_users.conf /etc/nginx/conf.d/vesta.conf 2>/dev/null
+rm -f /etc/nginx/conf.d/vesta_ip.conf 2>/dev/null
+
+# Update user packages
+PKG=/usr/local/vesta/data/packages
+for package in $(ls $PKG); do
+    default=$(grep "^TEMPLATE='" $PKG/$package | cut -f2 -d \')
+    if [ ! -z "$default" ]; then
+        tpl="WEB_TEMPLATE='$default'"
+        tpl="$tpl\nPROXY_TEMPLATE='default'"
+        tpl="$tpl\nDNS_TEMPLATE='default'"
+        sed -i "s/^TEMPLATE=.*/$tpl/g" $PKG/$package
+    fi
+done
+
+# Update users
+USR=/usr/local/vesta/data/users
+for user in $(ls $USR); do
+    default=$(grep "^TEMPLATE='" $USR/$user/user.conf | cut -f2 -d \')
+    if [ ! -z "$default" ]; then
+        tpl="WEB_TEMPLATE='$default'"
+        tpl="$tpl\nPROXY_TEMPLATE='default'"
+        tpl="$tpl\nDNS_TEMPLATE='default'"
+        sed -i "s/^TEMPLATE=.*/$tpl/g" $USR/$user/user.conf
+    fi
+done
+
+# Rename NGINX to PROXY key
+sed -i "s/NGINX/PROXY/g" /usr/local/vesta/data/users/*/web.conf
+
+# Check template structure
+TPL='/usr/local/vesta/data/templates/web'
 if [ -e "$TPL/apache" ]; then
-    exit
+    mv $TPL/apache $TPL/httpd
 fi
 
 # Remove unused email template
-rm -f $TPL/email_reset_password.tpl
-
-# Apache
-mkdir -p $TPL/apache
-if [ ! -z "$(ls $TPL/| grep apache_)" ];then
-    mv $TPL/apache_* $TPL/apache/
-    for template in $(ls $TPL/apache/); do
-        new_name=$(echo $template |sed -e "s/apache_//")
-        mv -f $TPL/apache/$template $TPL/apache/$new_name
-    done
+if [ -e $TPL/email_reset_password.tpl ]; then
+    rm -f $TPL/email_reset_password.tpl
 fi
 
-# Nginx
-mkdir -p $TPL/nginx
+# Update httpd templates
+if [ ! -z "$(ls $TPL | grep apache_)" ]; then
+    mkdir -p $TPL/httpd
+    mv $TPL/apache_* $TPL/httpd/
+    for template in $(ls $TPL/httpd); do
+        new_name=$(echo $template | sed -e "s/apache_//")
+        mv -f $TPL/httpd/$template $TPL/httpd/$new_name
+    done
+fi
+if [ -e "$TPL/httpd" ]; then
+    sed -i -e "s/%elog%//g" \
+        -e "s/%cgi%//g" \
+        -e "s/%cgi_option%/+ExecCGI/g" $TPL/httpd/*
+fi
+
+# Update nginx templates
 if [ ! -z "$(ls $TPL/| grep nginx_)" ];then
+    mkdir -p $TPL/nginx
     mv $TPL/nginx_* $TPL/nginx/
     for template in $(ls $TPL/nginx/); do
         new_name=$(echo $template |sed -e "s/nginx_//")
@@ -31,21 +73,38 @@ if [ ! -z "$(ls $TPL/| grep nginx_)" ];then
     done
 fi
 if [ -e "$TPL/ngingx.ip.tpl" ]; then
-    mv $TPL/ngingx.ip.tpl $TPL/nginx/ip.tpl
+    mv $TPL/ngingx.ip.tpl $TPL/nginx/proxy_ip.tpl
+fi
+if [ -e "$TPL/nginx/ip.tpl" ]; then
+    mv $TPL/nginx/ip.tpl $TPL/nginx/proxy_ip.tpl
+fi
+if [ -e "$TPL/nginx" ]; then
+    sed -i -e "s/%elog%//g" \
+        -e "s/nginx_extentions/proxy_extentions/g" $TPL/nginx/*
 fi
 
-# Awstats
-mkdir -p $TPL/awstats
+# Move Awstats templates
 if [ -e "$TPL/awstats.tpl" ]; then
+    mkdir -p $TPL/awstats
     mv $TPL/awstats.tpl $TPL/awstats
     mv $TPL/awstats_index.tpl $TPL/awstats/index.tpl
     mv $TPL/awstats_nav.tpl $TPL/awstats/nav.tpl
 fi
 
-# Webalizer
-mkdir -p $TPL/webalizer
+# Move Webalizer templates
 if [ -e "$TPL/webalizer.tpl" ]; then
+    mkdir -p $TPL/webalizer
     mv $TPL/webalizer.tpl $TPL/webalizer
 fi
+
+# Update proxy ip configuration
+for ip in $(ls /usr/local/vesta/data/ips); do
+    cat $TPL/nginx/proxy_ip.tpl |\
+        sed -e "s/%ip%/$ip/g" \
+            -e "s/%web_port%/8080/g" \
+            -e "s/%proxy_port%/80/g" \
+        > /etc/nginx/conf.d/$ip.conf
+done
+
 
 exit

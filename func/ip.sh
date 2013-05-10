@@ -45,9 +45,7 @@ is_ip_owner() {
 
 # Check if ip address is free
 is_ip_free() {
-    list=$(/sbin/ifconfig |grep 'inet addr:' |cut -f 2 -d : |cut -f 1 -d ' ')
-    ip_check=$(echo "$list" |grep -w "$ip")
-    if [ -n "$ip_check" ] || [ -e "$VESTA/data/ips/$ip" ]; then
+    if [ -e "$VESTA/data/ips/$ip" ]; then
         echo "Error: IP exist"
         log_event "$E_EXISTS" "$EVENT"
         exit  $E_EXISTS
@@ -172,30 +170,6 @@ get_ip_value() {
     eval $string
     eval value="$key"
     echo "$value"
-}
-
-# Create ip vesta configuration
-create_vesta_ip() {
-    ip_data="OWNER='$user'"
-    ip_data="$ip_data\nSTATUS='$ip_status'"
-    ip_data="$ip_data\nNAME='$ip_name'"
-    ip_data="$ip_data\nU_SYS_USERS=''"
-    ip_data="$ip_data\nU_WEB_DOMAINS='0'"
-    ip_data="$ip_data\nINTERFACE='$interface'"
-    ip_data="$ip_data\nNETMASK='$mask'"
-    ip_data="$ip_data\nNAT='$nat_ip'"
-    ip_data="$ip_data\nTIME='$TIME'"
-    ip_data="$ip_data\nDATE='$DATE'"
-    echo -e "$ip_data" >$VESTA/data/ips/$ip
-    chmod 660 $VESTA/data/ips/$ip
-}
-
-# Create ip address startup configuration
-create_ip_startup() {
-    ip_data="# Added by vesta $SCRIPT\nDEVICE=$iface"
-    ip_data="$ip_data\nBOOTPROTO=static\nONBOOT=yes\nIPADDR=$ip"
-    ip_data="$ip_data\nNETMASK=$mask"
-    echo -e "$ip_data" > $iconf-$iface
 }
 
 # Get real ip address

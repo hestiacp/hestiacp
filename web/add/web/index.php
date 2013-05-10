@@ -25,26 +25,21 @@ $v_ftp_email = $panel[$user]['CONTACT'];
         if ((!empty($_POST['v_ssl'])) || (!empty($_POST['v_elog']))) $v_adv = 'yes';
         if ((!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key']))) $v_adv = 'yes';
         if ((!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
-        if (empty($_POST['v_nginx'])) $v_adv = 'yes';
+        if (empty($_POST['v_proxy'])) $v_adv = 'yes';
         if (!empty($_POST['v_ftp'])) $v_adv = 'yes';
 
-        $v_nginx_ext = 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, ';
-        $v_nginx_ext .= 'doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, ';
-        $v_nginx_ext .= 'mpeg, flv, html, htm';
-        if ($_POST['v_nginx_ext'] != $v_nginx_ext) $v_adv = 'yes';
+        $v_proxy_ext = 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, ';
+        $v_proxy_ext .= 'doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, ';
+        $v_proxy_ext .= 'mpeg, flv, html, htm';
+        if ($_POST['v_proxy_ext'] != $v_proxy_ext) $v_adv = 'yes';
 
         // Protect input
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
         $v_domain = escapeshellarg($v_domain);
         $v_ip = escapeshellarg($_POST['v_ip']);
-        if ($_SESSION['user'] == 'admin') {
-            $v_template = escapeshellarg($_POST['v_template']);
-        } else {
-            $v_template = "''";
-        }
         if (empty($_POST['v_dns'])) $v_dns = 'off';
         if (empty($_POST['v_mail'])) $v_mail = 'off';
-        if (empty($_POST['v_nginx'])) $v_nginx = 'off';
+        if (empty($_POST['v_proxy'])) $v_proxy = 'off';
         $v_aliases = $_POST['v_aliases'];
         $v_elog = $_POST['v_elog'];
         $v_ssl = $_POST['v_ssl'];
@@ -55,11 +50,11 @@ $v_ftp_email = $panel[$user]['CONTACT'];
         $v_stats = escapeshellarg($_POST['v_stats']);
         $v_stats_user = $data[$v_domain]['STATS_USER'];
         $v_stats_password = $data[$v_domain]['STATS_PASSWORD'];
-        $v_nginx_ext = preg_replace("/\n/", " ", $_POST['v_nginx_ext']);
-        $v_nginx_ext = preg_replace("/,/", " ", $v_nginx_ext);
-        $v_nginx_ext = preg_replace('/\s+/', ' ',$v_nginx_ext);
-        $v_nginx_ext = trim($v_nginx_ext);
-        $v_nginx_ext = str_replace(' ', ", ", $v_nginx_ext);
+        $v_proxy_ext = preg_replace("/\n/", " ", $_POST['v_proxy_ext']);
+        $v_proxy_ext = preg_replace("/,/", " ", $v_proxy_ext);
+        $v_proxy_ext = preg_replace('/\s+/', ' ',$v_proxy_ext);
+        $v_proxy_ext = trim($v_proxy_ext);
+        $v_proxy_ext = str_replace(' ', ", ", $v_proxy_ext);
         $v_ftp = $_POST['v_ftp'];
         $v_ftp_user = $_POST['v_ftp_user'];
         $v_ftp_password = $_POST['v_ftp_password'];
@@ -100,7 +95,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
 
         if (empty($_SESSION['error_msg'])) {
             // Add WEB
-            exec (VESTA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." ".$v_template." 'no'", $output, $return_var);
+            exec (VESTA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = __('Error code:',$return_var);
@@ -176,11 +171,11 @@ $v_ftp_email = $panel[$user]['CONTACT'];
             }
 
 
-            // Add Nginx
-            if (($_POST['v_nginx'] == 'on') && (empty($_SESSION['error_msg']))) {
-                $ext = str_replace(' ', '', $v_nginx_ext);
+            // Add proxy
+            if (($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
+                $ext = str_replace(' ', '', $v_proxy_ext);
                 $ext = escapeshellarg($ext);
-                exec (VESTA_CMD."v-add-web-domain-nginx ".$user." ".$v_domain." 'default' ".$ext." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-add-web-domain-proxy ".$user." ".$v_domain." ".$ext." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = __('Error code:',$return_var);
@@ -272,7 +267,6 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                         $from = __('MAIL_FROM',$hostname);
                         $mailtext .= __('FTP_ACCOUNT_READY',$_POST['v_domain'],$user,$_POST['v_ftp_user'],$_POST['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
-                        //unset($v_ftp_email);
                     }
                 }
                 unset($v_ftp);
@@ -298,6 +292,18 @@ $v_ftp_email = $panel[$user]['CONTACT'];
                     if (empty($error)) $error = __('Error code:',$return_var);
                     $_SESSION['error_msg'] = $error;
                 }
+            }
+
+            if (empty($_SESSION['error_msg'])) {
+                exec (VESTA_CMD."v-restart-proxy", $output, $return_var);
+                if ($return_var != 0) {
+                    $error = implode('<br>', $output);
+                    if (empty($error)) $error = __('Error code:',$return_var);
+                    $_SESSION['error_msg'] = $error;
+                }
+            }
+
+            if (empty($_SESSION['error_msg'])) {
                 unset($output);
                 $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
                 unset($v_domain);
@@ -312,14 +318,6 @@ $v_ftp_email = $panel[$user]['CONTACT'];
 
     exec (VESTA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
     $ips = json_decode(implode('', $output), true);
-    unset($output);
-
-    exec (VESTA_CMD."v-get-user-value ".$user." 'TEMPLATE'", $output, $return_var);
-    $template = $output[0] ;
-    unset($output);
-
-    exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
-    $templates = json_decode(implode('', $output), true);
     unset($output);
 
     exec (VESTA_CMD."v-list-web-stats json", $output, $return_var);

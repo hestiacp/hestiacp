@@ -70,7 +70,8 @@ fi
 #----------------------------------------------------------#
 
 # Restart web server
-$BIN/v-restart-web "$EVENT"
+$BIN/v-restart-web
+$BIN/v-restart-proxy
 
 # Logging
 log_history "changed ssl certificate for $domain"

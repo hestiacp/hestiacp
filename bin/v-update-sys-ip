@@ -16,10 +16,8 @@ user=${1-admin}
 ip_status=${2-shared}
 
 # Includes
-source $VESTA/conf/vesta.conf    # include for internal func
+source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
-source $VESTA/func/ip.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
@@ -35,40 +33,15 @@ is_object_valid 'user' 'USER' "$user" "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get ip list
 ip_list=$(/sbin/ifconfig | grep 'inet addr:' | cut -f 2 -d : | \
     cut -f 1 -d ' '| grep -v 127.0.0.1)
 
-# Get vesta registered ip list
-vesta_ip_list=$(ls $VESTA/data/ips/)
-
-# Defining config paths
-conf='/etc/httpd/conf.d/vesta.conf'
-nconf='/etc/nginx/conf.d/vesta_ip.conf'
-iconf='/etc/sysconfig/network-scripts/ifcfg'
-rconf='/etc/httpd/conf.d/mod_extract_forwarded.conf'
-
-# Comparing each ip
 for ip in $ip_list; do
-    check_ip=$(echo $vesta_ip_list | grep -w "$ip")
-
-    # Checking ip registered
-    if [ -z "$check_ip" ]; then
-        # Parsing additional params
-        iface=$(/sbin/ifconfig |grep -B1 -w $ip |head -n 1 |cut -f 1 -d ' ')
+    if [ ! -e "$VESTA/data/ips/$ip" ]; then
+        iface=$(/sbin/ifconfig |grep -B1 -w $ip |head -n1 |cut -f1 -d ' ')
         interface=$(echo "$iface" | cut -f 1 -d :)
         mask=$(/sbin/ifconfig |grep -w $ip |awk -F "Mask:" '{print $2}')
-
-        # Adding vesta ip
-        create_vesta_ip
-
-        # Adding namehosting support
-        namehost_ip_support
-
-        # Creating startup script
-        if [ ! -e "$iconf-$iface" ]; then
-            create_vesta_ip
-        fi
+        $BIN/v-add-sys-ip $ip $mask $interface
     fi
 
     # TBD: revers comparation
@@ -78,16 +51,5 @@ done
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Updating user conf
-increase_user_value "$user" '$IP_OWNED'
-
-# Restart web server
-if [ "$web_restart" = 'yes' ]; then
-    $BIN/v-restart-web "$EVENT"
-fi
-
-# Logging
-log_event "$OK" "$EVENT"
 
 exit

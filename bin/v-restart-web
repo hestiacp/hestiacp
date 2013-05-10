@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: restart web services
+# info: restart web server
 # options: NONE
 #
 # The function reloads web server configuration.
@@ -18,35 +18,19 @@ source $VESTA/func/main.sh
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$WEB_SYSTEM" = 'apache' ]; then
-    /etc/init.d/httpd status >/dev/null 2>&1
+if [ ! -z "$WEB_SYSTEM" ]; then
+    /etc/init.d/$WEB_SYSTEM status >/dev/null 2>&1
     if [ $? -eq 0 ]; then
-        /etc/init.d/httpd graceful >/dev/null 2>&1
+        /etc/init.d/$WEB_SYSTEM reload >/dev/null 2>&1
         if [ $? -ne 0 ]; then
             exit $E_RESTART
         fi
     else
-        /etc/init.d/httpd start >/dev/null 2>&1
+        /etc/init.d/$WEB_SYSTEM start >/dev/null 2>&1
         if [ $? -ne 0 ]; then
             exit $E_RESTART
         fi
     fi
-fi
-
-if [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    /etc/init.d/nginx status >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        /etc/init.d/nginx reload >/dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
-    else
-        /etc/init.d/nginx start >/dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
-    fi
-
 fi
 
 

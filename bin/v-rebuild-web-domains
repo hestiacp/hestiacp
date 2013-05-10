@@ -55,64 +55,60 @@ for domain in $(shell_list); do
 done
 
 # Config path
-httpd_conf='/etc/httpd/conf.d/vesta.conf'
-nginx_conf='/etc/nginx/conf.d/vesta_users.conf'
+web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
 
 # Checking if there is at least 1 domain
 if [ "$domain_counter" -lt 1 ]; then
-
     # Deleting web configs
     rm -f $HOMEDIR/$user/conf/web/*
-    sed -i "/.*\/$user\/.*httpd.conf/d" $httpd_conf
-    if [ -e "$nginx_conf" ]; then
-        sed -i "/.*\/$user\/.*nginx.conf/d" $nginx_conf
+    sed -i "/.*\/$user\/.*$WEB_SYSTEM.conf/d" $web_conf
+    if [ -e "$proxy_conf" ]; then
+        sed -i "/.*\/$user\/.*$WEB_SYSTEM.conf/d" $proxy_conf
     fi
 
 else
-
     # Renaming tmp config
-    tmp_conf="$HOMEDIR/$user/conf/web/tmp_httpd.conf"
-    conf="$HOMEDIR/$user/conf/web/httpd.conf"
+    tmp_conf="$HOMEDIR/$user/conf/web/tmp_$WEB_SYSTEM.conf"
+    conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
     mv $tmp_conf $conf
 
-    # Checking httpd.conf include
-    httpd_include=$(grep "$conf" $httpd_conf )
-    if [ -z "$httpd_include" ]; then
-        echo "Include $conf" >> $httpd_conf
+    # Checking include
+    web_include=$(grep "$conf" $web_conf )
+    if [ -z "$web_include" ]; then
+        echo "Include $conf" >> $web_conf
     fi
 
-    # Checking ssl
+    # Checking SSL
     if [ "$ssl_change" = 'yes' ]; then
-        tmp_conf="$HOMEDIR/$user/conf/web/tmp_shttpd.conf"
-        conf="$HOMEDIR/$user/conf/web/shttpd.conf"
+        tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$WEB_SYSTEM.conf"
+        conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
         mv $tmp_conf $conf
     fi
-
-    # Checking ssl include
-    httpd_include=$(grep "$conf" $httpd_conf )
-    if [ -z "$httpd_include" ]; then
-        echo "Include $conf" >> $httpd_conf
+    ssl_include=$(grep "$conf" $web_conf )
+    if [ -z "$ssl_include" ]; then
+        echo "Include $conf" >> $web_conf
     fi
 
-    # Checking nginx
-    if [ "$ngix_change" = 'yes' ]; then
-        tmp_conf="$HOMEDIR/$user/conf/web/tmp_nginx.conf"
-        conf="$HOMEDIR/$user/conf/web/nginx.conf"
+    # Checking proxy
+    if [ "$proxy_change" = 'yes' ]; then
+        tmp_conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
+        conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
         mv $tmp_conf $conf
     fi
-    nginx_include=$(grep "$conf" $nginx_conf )
-    if [ -z "$nginx_include" ]; then
-        echo "include $conf;" >> $nginx_conf
+    proxy_include=$(grep "$conf" $proxy_conf )
+    if [ -z "$proxy_include" ]; then
+        echo "include $conf;" >> $proxy_conf
     fi
 
-    # Checking ssl for nginx
-    if [ "$ngix_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
-        tmp_conf="$HOMEDIR/$user/conf/web/tmp_snginx.conf"
-        conf="$HOMEDIR/$user/conf/web/snginx.conf"
+    # Checking SSL proxy
+    if [ "$proxy_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
+        tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
+        conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
         mv $tmp_conf $conf
-        nginx_include=$(grep "$conf" $nginx_conf )
-        if [ -z "$nginx_include" ]; then
-            echo "include $conf;" >> $nginx_conf
+        proxy_include=$(grep "$conf" $proxy_conf )
+        if [ -z "$proxy_include" ]; then
+            echo "include $conf;" >> $proxy_conf
         fi
     fi
 fi
@@ -130,7 +126,8 @@ update_user_value "$user" '$U_WEB_ALIASES' "$user_aliases"
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-web
+    $BIN/v-restart-proxy
 fi
 
 # Logging

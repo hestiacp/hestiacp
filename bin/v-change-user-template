@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change user default template
-# options: USER TEMPLATE
+# options: USER TYPE TEMPLATE
 #
 # The function changes default user web template.
 
@@ -11,7 +11,8 @@
 
 # Argument defenition
 user=$1
-template=$2
+type=$(echo "$2" | tr '[:lower:]' '[:upper:]')
+template=$3
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -23,27 +24,33 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER TEMPLATE'
+check_args '3' "$#" 'USER TYPE TEMPLATE'
 validate_format 'user' 'template'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_apache_template_valid
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
+case $type in 
+    WEB) is_web_template_valid;
+        update_user_value "$user" '$WEB_TEMPLATE' "$template";;
+    PROXY) is_proxy_template_valid;
+        update_user_value "$user" '$PROXY_TEMPLATE' "$template";;
+    DNS) is_dns_template_valid;
+        update_user_value "$user" '$DNS_TEMPLATE' "$template";;
+    *) check_args '1' '0' 'USER TYPE TEMPLATE'
+esac
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Changing user shell
-update_user_value "$user" '$TEMPLATE' "$template"
-
 # Logging
-log_history "changed $user template to $template" '' 'admin'
+log_history "changed $type template to $template"
 log_event "$OK" "$EVENT"
 
 exit

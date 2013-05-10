@@ -1,9 +1,9 @@
 #!/bin/bash
-# info: add webdomain nginx support
+# info: add webdomain proxy support
 # options: USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]
 #
-# The function enables nginx support for a domain. It can significantly improve
-# website speed.
+# The function enables proxy support for a domain. This can significantly
+# improve website speed.
 
 
 #----------------------------------------------------------#
@@ -38,14 +38,11 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_value_empty 'web' 'DOMAIN' "$domain" '$NGINX'
-if [ ! -z "$template" ]; then
-    validate_format 'template'
-    is_nginx_template_valid
-else
-    template=$(get_user_value '$TEMPLATE')
-    is_nginx_template_valid
+is_object_value_empty 'web' 'DOMAIN' "$domain" '$PROXY'
+if [ -z $template ]; then
+    template=$(get_user_value '$PROXY_TEMPLATE')
 fi
+is_proxy_template_valid
 
 
 #----------------------------------------------------------#
@@ -54,10 +51,10 @@ fi
 
 # Defining domain parameters
 get_domain_values 'web'
-NGINX="$template"
-NGINX_EXT="$extentions"
-tpl_file="$WEBTPL/nginx/$NGINX.tpl"
-conf="$HOMEDIR/$user/conf/web/nginx.conf"
+PROXY="$template"
+PROXY_EXT="$extentions"
+tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
+conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
 ip=$(get_real_ip $IP)
 
 # Preparing domain values for the template substitution
@@ -65,32 +62,29 @@ upd_web_domain_values
 add_web_config
 
 # Set permission and ownership
-chown root:nginx $conf
+chown root:$user $conf
 chmod 640 $conf
 
-# Checking main vesta httpd config
-main_conf='/etc/nginx/conf.d/vesta_users.conf'
-main_conf_check=$(grep "$conf" $main_conf )
-if [ -z "$main_conf_check" ]; then
-    echo "include $conf;" >>$main_conf
+# Checking proxy config
+proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
+if [ -z "$(grep "$conf" $proxy_conf)" ]; then
+    echo "include $conf;" >> $proxy_conf
 fi
 
 # Checking ssl
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
-    conf="$HOMEDIR/$user/conf/web/snginx.conf"
+    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
     add_web_config
 
-    chown root:nginx $conf
+    chown root:$user $conf
     chmod 640 $conf
 
-    main_conf='/etc/nginx/conf.d/vesta_users.conf'
-    main_conf_check=$(grep "$conf" $main_conf )
-    if [ -z "$main_conf_check" ]; then
-        echo "include $conf;" >>$main_conf
+    proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
+    if [ -z "$(grep "$conf" $proxy_conf)" ]; then
+        echo "include $conf;" >> $proxy_conf
     fi
 fi
-
 
 
 #----------------------------------------------------------#
@@ -98,16 +92,15 @@ fi
 #----------------------------------------------------------#
 
 # Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$NGINX' "$NGINX"
-update_object_value 'web' 'DOMAIN' "$domain" '$NGINX_EXT' "$extentions"
+update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' "$PROXY"
+update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-proxy "$EVENT"
 fi
 
-log_history "enabled nginx support for $domain"
+log_history "enabled proxy support for $domain"
 log_event "$OK" "$EVENT"
 
 exit
-

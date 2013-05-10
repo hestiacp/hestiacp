@@ -33,7 +33,9 @@ if ($_SESSION['user'] == 'admin') {
         unset($output);
 
         $v_package = $_GET['package'];
-        $v_template = $data[$v_package]['TEMPLATE'];
+        $v_web_template = $data[$v_package]['WEB_TEMPLATE'];
+        $v_proxy_template = $data[$v_package]['PROXY_TEMPLATE'];
+        $v_dns_template = $data[$v_package]['DNS_TEMPLATE'];
         $v_web_domains = $data[$v_package]['WEB_DOMAINS'];
         $v_web_aliases = $data[$v_package]['WEB_ALIASES'];
         $v_dns_domains = $data[$v_package]['DNS_DOMAINS'];
@@ -59,7 +61,17 @@ if ($_SESSION['user'] == 'admin') {
 
         exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
         check_error($return_var);
-        $templates = json_decode(implode('', $output), true);
+        $web_templates = json_decode(implode('', $output), true);
+        unset($output);
+
+        exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+        check_error($return_var);
+        $proxy_templates = json_decode(implode('', $output), true);
+        unset($output);
+
+        exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
+        check_error($return_var);
+        $dns_templates = json_decode(implode('', $output), true);
         unset($output);
 
         exec (VESTA_CMD."v-list-sys-shells json", $output, $return_var);
@@ -71,7 +83,9 @@ if ($_SESSION['user'] == 'admin') {
         if (!empty($_POST['save'])) {
             // Check input
             if (empty($_POST['v_package'])) $errors[] = __('package');
-            if (empty($_POST['v_template'])) $errors[] = __('template');
+            if (empty($_POST['v_web_template'])) $errors[] = __('web template');
+            if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+            if (empty($_POST['v_dns_template'])) $errors[] = __('dns template');
             if (empty($_POST['v_shell'])) $errrors[] = __('shell');
             if (!isset($_POST['v_web_domains'])) $errors[] = __('web domains');
             if (!isset($_POST['v_web_aliases'])) $errors[] = __('web aliases');
@@ -89,7 +103,9 @@ if ($_SESSION['user'] == 'admin') {
 
             // Protect input
             $v_package = escapeshellarg($_POST['v_package']);
-            $v_template = escapeshellarg($_POST['v_template']);
+            $v_web_template = escapeshellarg($_POST['v_web_template']);
+            $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
+            $v_dns_template = escapeshellarg($_POST['v_dns_template']);
             $v_shell = escapeshellarg($_POST['v_shell']);
             $v_web_domains = escapeshellarg($_POST['v_web_domains']);
             $v_web_aliases = escapeshellarg($_POST['v_web_aliases']);
@@ -129,7 +145,9 @@ if ($_SESSION['user'] == 'admin') {
                 unset($output);
 
                 // Create package
-                $pkg = "TEMPLATE=".$v_template."\n";
+                $pkg = "WEB_TEMPLATE=".$v_web_template."\n";
+                $pkg .= "PROXY_TEMPLATE=".$v_proxy_template."\n";
+                $pkg .= "DNS_TEMPLATE=".$v_dns_template."\n";
                 $pkg .= "WEB_DOMAINS=".$v_web_domains."\n";
                 $pkg .= "WEB_ALIASES=".$v_web_aliases."\n";
                 $pkg .= "DNS_DOMAINS=".$v_dns_domains."\n";

@@ -103,34 +103,30 @@
                                                         <td class="counter-name" style="padding: 2px 0 0 2px;">
                                                             <?php echo $data[$key]['IP'] ?> 
                                                         </td>
-                                                    <tr>
-                                                        <td class="counter-name" style="padding: 0 0 20px 2px">
-                                                            [<?php echo $data[$key]['TPL'] ?>] <?php print __('template');?> 
-                                                        </td>
                                                     </tr>
                                                 </table>
                                             </td>
-                                            <td style="vertical-align:top;" width="250">
+                                            <td style="vertical-align:top;" width="270">
                                                 <table>
+                                                    <tr>
+                                                        <td class="counter-name"><?php print __('Template') ?>:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['TPL'] ?></td>
+                                                    </tr>
                                                     <tr>
                                                         <td class="counter-name"><?php print __('SOA') ?>:</td>
                                                         <td class="counter-value"><?php echo $data[$key]['SOA'] ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print __('TTL') ?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['TTL'] ?></td>
                                                     </tr>
                                                 </table>
                                             </td>
                                             <td rowspan=4 style="vertical-align:top;" width="300">
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name"><?php print __('Expire');?>:</td>
-                                                        <td class="counter-value"><?php echo strftime("%d %b %Y", strtotime($data[$key]['EXP'])) ?></td>
+                                                        <td class="counter-name"><?php print __('TTL') ?>:</td>
+                                                        <td class="counter-value"><?php echo $data[$key]['TTL'] ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="counter-name"><?php print __('Records');?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['RECORDS'] ?></td>
+                                                        <td class="counter-name"><?php print __('Expire');?>:</td>
+                                                        <td class="counter-value"><?php echo strftime("%d %b %Y", strtotime($data[$key]['EXP'])) ?></td>
                                                     </tr>
                                                 </table>
                                             </td>

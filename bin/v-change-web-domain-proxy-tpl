@@ -1,9 +1,8 @@
 #!/bin/bash
-# info: change web domain nginx template
+# info: change web domain proxy template
 # options: USER DOMAIN TEMPLATE [EXTENTIONS] [RESTART]
 #
-# The function changes template of nginx.conf configuration file. The content
-# of webdomain directories remains untouched.
+# The function changes proxy template
 
 
 #----------------------------------------------------------#
@@ -39,8 +38,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_value_exist 'web' 'DOMAIN' "$domain" '$NGINX'
-is_nginx_template_valid
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$PROXY'
+is_proxy_template_valid
 
 
 #----------------------------------------------------------#
@@ -49,36 +48,29 @@ is_nginx_template_valid
 
 # Parsing domain values
 get_domain_values 'web'
-tpl_file="$WEBTPL/nginx/$NGINX.tpl"
-conf="$HOMEDIR/$user/conf/web/nginx.conf"
+tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
+conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
 ip=$(get_real_ip $IP)
 
 # Delete old vhost
 del_web_config
 
-# Checking ssl
-if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
-    conf="$HOMEDIR/$user/conf/web/snginx.conf"
-    del_web_config
-fi
-
 # Add new vhost
-NGINX="$template"
-NGINX_EXT="$extentions"
-tpl_file="$WEBTPL/nginx/$NGINX.tpl"
-conf="$HOMEDIR/$user/conf/web/nginx.conf"
+PROXY="$template"
+PROXY_EXT="$extentions"
 upd_web_domain_values
 add_web_config
-chown root:nginx $conf
+chown root:$user $conf
 chmod 640 $conf
 
-# Checking ssl
+# Checking SSL
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/nginx/$NGINX.stpl"
-    conf="$HOMEDIR/$user/conf/web/snginx.conf"
+    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+    del_web_config
+
     add_web_config
-    chown root:nginx $conf
+    chown root:$user $conf
     chmod 640 $conf
 fi
 
@@ -88,16 +80,16 @@ fi
 #----------------------------------------------------------#
 
 # Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$NGINX' "$NGINX"
-update_object_value 'web' 'DOMAIN' "$domain" '$NGINX_EXT' "$extentions"
+update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' "$PROXY"
+update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 
 # Restart web
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-proxy
 fi
 
 # Logging
-log_history "changed nginx template for $domain to $template"
+log_history "changed proxy template for $domain to $template"
 log_event "$OK" "$EVENT"
 
 exit

@@ -209,7 +209,7 @@ is_object_valid() {
         fi
     fi
     if [ -z "$sobject" ]; then
-        echo "Error: $3 not exist"
+        echo "Error: $2 $3 not exist"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
@@ -684,7 +684,7 @@ validate_format_mhdmw() {
     fi
 }
 
-# Nginx static extention or DNS record
+# proxy extention or DNS record
 validate_format_common() {
     exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [ 200 -le ${#1} ]; then

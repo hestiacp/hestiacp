@@ -58,7 +58,7 @@ else
     dom=$(echo "$dom_alias" | sed -e "s/^$sub.//" )
     if [ ! -e "$USER_DATA/dns/$dom.conf" ]; then
         $BIN/v-add-dns-domain \
-            $user $dom $IP '' '' '' '' '' $restart > /dev/null
+            $user $dom $IP '' '' '' '' $restart > /dev/null
 
         if [ $? -eq 0 ]; then
             $BIN/v-add-dns-domain-record \

@@ -1,10 +1,15 @@
                                 <table class="submenu">
                                     <tr>
                                         <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-button-block">
+                                            <div class="submenu-search-block">
+                                                <form action="/search/" method="get">
+                                                    <input type="text" name="q" class="submenu-search-field">
+                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                                                </form>
+                                            </div>
+                                            <div class="submenu-select-block" style="padding-left:8px;">
                                                 <form action="/list/stats/" method="get" id="objects">
-                                                <a class="vst<?php if (empty($_GET['user'])) echo "-selected"; ?>" href='/list/stats/'><?php print __('Overall Statistics');?></a>
-                                                <div class="submenu-select-block">
+                                                <a class="vst<?php if (empty($_GET['user'])) echo "-selected"; ?>" style="padding: 0 12px 0 0;" href='/list/stats/'><?php print __('Overall Statistics');?></a> 
                                                 <select class="submenu-select-dropdown" name="user">
                                                     <option value=""><?php print __('show per user');?></option>
                                                 <?php
@@ -17,18 +22,9 @@
                                                     }
                                                 ?> 
                                                 </select>
+                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                                             </div>
 
-                                                <input type="submit" name="list" value="›" class="button" style="width: 37px;font-size: 12px; height: 24px;">
-                                            </form>
-
-                                            </div>
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
                                         </td>
                                     </tr>
                                 </table>
@@ -62,23 +58,18 @@
                                             <td style="vertical-align:top;" >
                                                 <table>
                                                     <tr>
-                                                        <td colspan=2 class="counter-name"  style="padding: 2px 0px 6px 2px;">
-                                                            [<?php echo $data[$key]['PACKAGE']?>] <?php print __('package');?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="chart1" colspan=2 style="padding: 0 0 0 2px;">
+                                                        <td class="chart1" colspan=2 style="padding: 4px 0 0 2px;">
                                                             <?php print __('Bandwidth');?>: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
-                                                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                            <div style="width:160px; height:7px; font-size:0;background-color:#c7d5b3;">
+                                                                <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:7px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="chart1" colspan=2 style="padding: 0 0 0 2px;">
                                                             <?php print __('Disk');?>: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
-                                                            <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                            <div style="width:160px; height:7px; font-size:0;background-color:#c7d5b3;">
+                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:7px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -87,12 +78,18 @@
                                                             <table class="chart2">
                                                                 <tr>
                                                                     <td>
-                                                                        <?php print __('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?><br>
-                                                                        <?php print __('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?><br>
+                                                                        <?php print __('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?>
                                                                     </td>
-                                                                    <td style="padding: 0px 10px 0px 8px">
-                                                                        <?php print __('Databases');?>: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?><br>
-                                                                        <?php print __('User Directories');?>: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?><br>
+                                                                    <td style="padding: 0px 0px 0px 4px">
+                                                                        <?php print __('Databases');?>: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <?php print __('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?>
+                                                                    </td>
+                                                                    <td style="padding: 0px 0px 0px 4px">
+                                                                        <?php print __('User Directories');?>: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?>
                                                                     </td>
                                                                 </tr>
                                                             </table>

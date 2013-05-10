@@ -494,12 +494,10 @@ if [ "$?" -ne 0 ]; then
 fi
 
 # Nginx configuration
+rm -f /etc/nginx/conf.d/*.conf
 wget $CHOST/$VERSION/nginx.conf -O /etc/nginx/nginx.conf
 wget $CHOST/$VERSION/nginx-status.conf -O /etc/nginx/conf.d/status.conf
-rm -f /etc/nginx/conf.d/vesta_ip.conf
-touch /etc/nginx/conf.d/vesta_ip.conf
-rm -f /etc/nginx/conf.d/vesta_users.conf
-touch /etc/nginx/conf.d/vesta_users.conf
+touch /etc/nginx/conf.d/vesta.conf
 chkconfig nginx on
 service nginx start
 if [ "$?" -ne 0 ]; then

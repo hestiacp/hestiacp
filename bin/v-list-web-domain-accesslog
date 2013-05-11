@@ -12,7 +12,7 @@
 # Argument defenition
 user=$1
 domain=$2
-lines=${3-30}
+lines=${3-70}
 
 # Includes
 source $VESTA/conf/vesta.conf

@@ -310,6 +310,7 @@ $LANG['ro'] = array(
     'stats password' => 'parola de utilizator statistici',
     'ftp user password' => 'parola de FTP',
     'ftp user' => 'cont FTP',
+    'Last 70 lines of %s.%s.log' => 'Ultimele 70 linii de %s.%s.log',
     'Download AccessLog' => 'Descarcă AccessLog',
     'Download ErrorLog' => 'Descarcă ErrorLog',
 

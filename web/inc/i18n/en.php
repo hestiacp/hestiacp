@@ -309,6 +309,7 @@ $LANG['en'] = array(
     'stats password'  => 'stats password',
     'ftp user password'  => 'ftp user password',
     'ftp user'  => 'ftp user',
+    'Last 70 lines of %s.%s.log' => 'Last 70 lines of %s.%s.log',
     'Download AccessLog' => 'Download AccessLog',
     'Download ErrorLog' => 'Download ErrorLog',
 

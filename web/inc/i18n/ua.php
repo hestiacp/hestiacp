@@ -310,6 +310,7 @@ $LANG['ua'] = array(
     'stats password' => 'пароль користувача статистики',
     'ftp user password' => 'пароль для доступу до FTP',
     'ftp user' => 'користувач FTP',
+    'Last 70 lines of %s.%s.log' => 'Останні 70 ліній файла %s.%s.log',
     'Download AccessLog' => 'Завантажити AccessLog',
     'Download ErrorLog' => 'Завантажити ErrorLog',
 

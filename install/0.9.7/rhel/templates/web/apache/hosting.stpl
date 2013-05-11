@@ -12,7 +12,7 @@
     CustomLog /var/log/httpd/domains/%domain%.log combined
     %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %sdocroot%>
-        AllowOverride AuthConfig FileInfo Indexes Limit
+        AllowOverride All
         SSLRequireSSL
         Options +Includes -Indexes %cgi_option%
         php_admin_value upload_tmp_dir %home%/%user%/tmp

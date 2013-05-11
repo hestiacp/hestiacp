@@ -12,7 +12,7 @@
     CustomLog /var/log/httpd/domains/%domain%.log combined
     %elog%ErrorLog /var/log/httpd/domains/%domain%.error.log
     <Directory %docroot%>
-        AllowOverride AuthConfig FileInfo Indexes Limit
+        AllowOverride All
         Options +Includes -Indexes %cgi_option%
         php_admin_value upload_tmp_dir %home%/%user%/tmp
         php_admin_value upload_max_filesize 10M

@@ -109,6 +109,13 @@
                                             <?php print __('edit');?> 
                                         </span>
                                     </a>
+                                    <a href="/list/web-log/?domain=<?php echo $key ?>&type=access"  target="_blank" class="data-controls">
+                                        <span>
+                                            <img src="/images/new_window.png" width="8px" height="8px">
+                                            <?php print __('view logs');?> 
+                                        </span>
+                                    </a>
+
                                     <?php
                                         if (!empty($data[$key]['STATS'])) {
                                     ?> 

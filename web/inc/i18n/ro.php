@@ -66,6 +66,7 @@ $LANG['ro'] = array(
     'logout' => 'logout',
     'edit' => 'edita',
     'open webstats' => 'deschide raportul de analiză',
+    'view logs'  => 'vizualiza loguri',
     'list records' => 'arată inregistrarile: %s',
     'add record' => 'adaugă înregistrare',
     'list accounts' => 'arata conturi: %s',
@@ -309,6 +310,8 @@ $LANG['ro'] = array(
     'stats password' => 'parola de utilizator statistici',
     'ftp user password' => 'parola de FTP',
     'ftp user' => 'cont FTP',
+    'Download AccessLog' => 'Descarcă AccessLog',
+    'Download ErrorLog' => 'Descarcă ErrorLog',
 
     '1 account' => '1 utilizator',
     '%s accounts' => '%s utilizatori',

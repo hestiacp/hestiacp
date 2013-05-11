@@ -66,6 +66,7 @@ $LANG['ua'] = array(
     'logout' => 'вийти',
     'edit' => 'редагувати',
     'open webstats' => 'відкрити звіт веб-аналітики',
+    'view logs'  => 'переглянути логи',
     'list records' => 'показати записи: %s',
     'add record' => 'додати запис',
     'list accounts' => 'показати акаунти: %s',
@@ -309,7 +310,9 @@ $LANG['ua'] = array(
     'stats password' => 'пароль користувача статистики',
     'ftp user password' => 'пароль для доступу до FTP',
     'ftp user' => 'користувач FTP',
- 
+    'Download AccessLog' => 'Завантажити AccessLog',
+    'Download ErrorLog' => 'Завантажити ErrorLog',
+
     '1 account' => ' користувач на сторінці: 1',
     '%s accounts' => 'користувачів на сторінці: %s',
     '1 domain' => 'домен на сторінці: 1',

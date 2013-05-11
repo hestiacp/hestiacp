@@ -1,0 +1,49 @@
+#!/bin/bash
+# info: list web domain access log
+# options: USER DOMAIN [LINES]
+#
+# The function of obtaining raw access web domain logs.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+lines=${3-30}
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Check number of output lines
+if [ "$lines" -gt '3000' ]; then
+    read_cmd="cat"
+else
+    read_cmd="tail -n $lines"
+fi
+
+$read_cmd /var/log/$WEB_SYSTEM/domains/$domain.log
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

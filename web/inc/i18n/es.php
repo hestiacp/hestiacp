@@ -64,6 +64,7 @@ $LANG['es'] = array(
     'logout'  => 'salir',
     'edit'  => 'editar',
     'open webstats'  => 'abrir webstats',
+    'view logs'  => 'ver los logs',
     'list records'  => 'listar los %s registros',
     'add record'  => 'añadir registro',
     'list accounts'  => 'listar %s cuentas',
@@ -307,6 +308,8 @@ $LANG['es'] = array(
     'stats password'  => 'contraseña estadísticas',
     'ftp user password'  => 'contraseña usuario ftp',
     'ftp user'  => 'usuario ftp',
+    'Download AccessLog' => 'Descargar AccessLog',
+    'Download ErrorLog' => 'Descargar ErrorLog',
 
    '1 account'  => '1 cuenta',
     '%s accounts'  => '%s cuentas',

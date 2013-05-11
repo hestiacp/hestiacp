@@ -66,6 +66,7 @@ $LANG['ru'] = array(
     'logout' => 'выйти',
     'edit' => 'редактировать',
     'open webstats' => 'открыть отчет веб-аналитики',
+    'view logs'  => 'просмотреть логи',
     'list records' => 'показать записи: %s',
     'add record' => 'добавить запись',
     'list accounts' => 'показать аккаунты: %s',
@@ -309,6 +310,8 @@ $LANG['ru'] = array(
     'stats password' => 'пароль пользователя статистики',
     'ftp user password' => 'пароль для доступа к FTP',
     'ftp user' => 'пользователь FTP',
+    'Download AccessLog' => 'Скачать AccessLog',
+    'Download ErrorLog' => 'Скачать ErrorLog',
 
     '1 account' => ' пользователей на странице: 1',
     '%s accounts' => 'пользователей на странице: %s',

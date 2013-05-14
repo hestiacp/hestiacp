@@ -39,7 +39,7 @@ if (!empty($_POST['ok'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     } else {
         // Add DNS
-        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$ns4, $output, $return_var);
+        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4, $output, $return_var);
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             if (empty($error)) $error = __('Error code:',$return_var);

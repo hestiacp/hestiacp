@@ -175,7 +175,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
             if (($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
                 $ext = str_replace(' ', '', $v_proxy_ext);
                 $ext = escapeshellarg($ext);
-                exec (VESTA_CMD."v-add-web-domain-proxy ".$user." ".$v_domain." ".$ext." 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-add-web-domain-proxy ".$user." ".$v_domain." '' ".$ext." 'no'", $output, $return_var);
                 if ($return_var != 0) {
                     $error = implode('<br>', $output);
                     if (empty($error)) $error = __('Error code:',$return_var);

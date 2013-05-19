@@ -195,8 +195,26 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
             $restart_dns = 'yes';
             unset($output);
         }
+
+        if (($_GET['record_id'] != $_POST['v_record_id']) && (empty($_SESSION['error_msg']))) {
+            $v_old_record_id = escapeshellarg($_GET['record_id']);
+            exec (VESTA_CMD."v-change-dns-domain-record-id ".$v_username." ".$v_domain." ".$v_old_record_id." ".$v_record_id, $output, $return_var);
+            if ($return_var != 0) {
+                $error = implode('<br>', $output);
+                if (empty($error)) $error = __('Error code:',$return_var);
+                $_SESSION['error_msg'] = $error;
+            }
+            unset($output);
+        }
+
+
         if (empty($_SESSION['error_msg'])) {
             $_SESSION['ok_msg'] = __('Changes has been saved.');
+        }
+
+        if ($_GET['record_id'] != $_POST['v_record_id']) {
+            header("Location: /edit/dns/?domain=".$_GET['domain']."&record_id=".$_POST['v_record_id']);
+            exit;
         }
     }
 

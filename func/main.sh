@@ -784,6 +784,7 @@ validate_format(){
             min)            validate_format_mhdmw "$arg" $arg_name ;;
             month)          validate_format_mhdmw "$arg" $arg_name ;;
             nat_ip)         validate_format_ip "$arg" ;;
+            newid)          validate_format_int "$arg" 'id' ;;
             ns1)            validate_format_domain "$arg" 'name_server';;
             ns2)            validate_format_domain "$arg" 'name_server';;
             ns3)            validate_format_domain "$arg" 'name_server';;

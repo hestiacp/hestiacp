@@ -167,15 +167,19 @@ if (!empty($_POST['save'])) {
                 unset($output);
 
                 if (empty($_SESSION['error_msg'])) {
-                    exec (VESTA_CMD."v-delete-dns-on-web-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
-                    if ($return_var != 0) {
-                        $error = implode('<br>', $output);
-                        if (empty($error)) $error = __('Error code:',$return_var);
-                        $_SESSION['error_msg'] = $error;
+                    exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain, $output, $return_var);
+                    unset($output);
+                    if ($return_var == 0) {
+                        exec (VESTA_CMD."v-delete-dns-on-web-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = __('Error code:',$return_var);
+                            $_SESSION['error_msg'] = $error;
+                        }
+                        $restart_dns = 'yes';
                     }
-                    $restart_dns = 'yes';
+                    unset($output);
                 }
-                unset($output);
             }
         }
 
@@ -192,13 +196,17 @@ if (!empty($_POST['save'])) {
                 }
                 unset($output);
                 if (empty($_SESSION['error_msg'])) {
-                    exec (VESTA_CMD."v-add-dns-on-web-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
-                    if ($return_var != 0) {
-                        $error = implode('<br>', $output);
-                        if (empty($error)) $error = __('Error code:',$return_var);
-                        $_SESSION['error_msg'] = $error;
+                    exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain, $output, $return_var);
+                    unset($output);
+                    if ($return_var == 0) {
+                        exec (VESTA_CMD."v-add-dns-on-web-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
+                        if ($return_var != 0) {
+                            $error = implode('<br>', $output);
+                            if (empty($error)) $error = __('Error code:',$return_var);
+                            $_SESSION['error_msg'] = $error;
+                        }
+                        $restart_dns = 'yes';
                     }
-                    $restart_dns = 'yes';
                 }
                 unset($output);
             }

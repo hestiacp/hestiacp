@@ -10,7 +10,7 @@
                 margin-left: auto;
                 margin-right: auto;
                 font-family: Arial, Helvetica, sans-serif;
-                background-color: #e9e9e9;
+                background-color: #e5e5e5;
             }
 
             form {
@@ -24,7 +24,7 @@
             .main {
                 background-color: #ffffff;
                 padding: 0 0 18px 0;
-                box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+                box-shadow: 0 2px 4px rgba(100, 100, 100, 0.3);
             }
 
             .top {
@@ -497,11 +497,11 @@
 
             .data-controls:hover {
                 color: #fff;
-                background-color: #999;
+                background-color: #f79b44;
             }
 
             .data-controls:active {
-                background-color: #f79b44;
+                background-color: #999
             }
 
             .data-controls img {
@@ -938,5 +938,24 @@
                 }
             }
         </script>
+        <script language="JavaScript">
+            $('document').ready(function() {
+                $('#vstobjects').bind('click', function(evt) { // observe change event on whole div#vstobjects
+                    var elm = evt.target; // grab element on which user clicked
+                    var parent = $(elm).hasClass('data-row') ? $(elm) : $(elm).parents('.data-row'); // check if outer element is row container and get it
+                    if (!$(parent).hasClass('selected')) {
+                        parent.addClass('selected'); // add class
+                        parent.find('.ch-toggle').attr('checked', true);
+                        // another actions on checked row
+                    }
+                    else {
+                        parent.removeClass('selected'); // remove class
+                        parent.find('.ch-toggle').attr('checked', false);
+                        // another actions on unchecked row
+                    }
+                });
+            });
+        </script>
+
     </head>
     <body>

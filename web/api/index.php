@@ -41,10 +41,14 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
 
     // Run query
     exec (VESTA_CMD.$cmd." ".$arg1." ".$arg2." ".$arg3." ".$arg4." ".$arg5." ".$arg6." ".$arg7." ".$arg8." ".$arg9, $output, $return_var);
-    if (($return_var == 0) && (empty($output))) {
-        echo 'OK';
+    if ((!empty($_POST['returncode'])) && ($_POST['returncode'] == 'yes')) {
+        echo $return_var;
     } else {
-        echo implode("\n",$output);
+        if (($return_var == 0) && (empty($output))) {
+            echo "OK";
+        } else {
+            echo implode("\n",$output)."\n";
+        }
     }
 }
 

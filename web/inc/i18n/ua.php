@@ -81,7 +81,7 @@ $LANG['ua'] = array(
     'restart' => 'перевиконати',
     'update' => 'оновити',
     'generate' => 'згенерувати',
-    'reread  IP' => 'оновити IP',
+    'reread IP' => 'оновити IP',
  
     'Adding User' => 'Додавання акаунту',
     'Editing User' => 'Редагування акаунту',

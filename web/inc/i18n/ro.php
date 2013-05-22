@@ -81,7 +81,7 @@ $LANG['ro'] = array(
     'restart' => 'repornește',
     'update' => 'actualiza',
     'generate' => 'genera',
-    'reread  IP' => 'recitește IP',
+    'reread IP' => 'recitește IP',
 
     'Adding User' => 'Adăugare utilizator',
     'Editing User' => 'Editare utilizatorul',

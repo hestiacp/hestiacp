@@ -81,7 +81,7 @@ $LANG['ru'] = array(
     'restart' => 'перезапустить',
     'update' => 'обновить',
     'generate' => 'сгенерировать',
-    'reread  IP' => 'перечитать IP',
+    'reread IP' => 'перечитать IP',
 
     'Adding User' => 'Добавление аккаунта',
     'Editing User' => 'Редактирование аккаунта',

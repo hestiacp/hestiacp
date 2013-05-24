@@ -38,7 +38,7 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
 if [ -z "$(echo $fwd | grep -w $forward)" ]; then
-    echo "Error: forward $forward is not exist"
+    echo "Error: forward $forward doesn't exist"
     log_event "$E_NOTEXIST $EVENT"
     exit $E_NOTEXIST
 fi

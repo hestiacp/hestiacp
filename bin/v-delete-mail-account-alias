@@ -38,7 +38,7 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
 if [ -z "$(echo $aliases | grep -w $malias)" ]; then
-    echo "Error: alias $malias is not exist"
+    echo "Error: alias $malias doesn't exist"
     log_event "$E_NOTEXIST $EVENT"
     exit $E_NOTEXIST
 fi

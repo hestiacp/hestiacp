@@ -36,7 +36,7 @@ source $VESTA/func/rebuild.sh
 # Check backup function
 is_backup_valid() {
     if [ ! -e "$BACKUP/$backup" ]; then
-        echo "Error: backup not exist"
+        echo "Error: backup doesn't exist"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi

@@ -525,8 +525,8 @@ rebuild_mysql_database() {
             echo "Database connection to MySQL host $HOST failed" |\
                 $send_mail -s "$subj" $email
         fi
-        log_event  "$E_DB $EVENT"
-        exit $E_DB
+        log_event  "$E_CONNECT $EVENT"
+        exit $E_CONNECT
     fi
 
     query="CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET"
@@ -568,8 +568,8 @@ rebuild_pgsql_database() {
             echo "Database connection to PostgreSQL host $HOST failed" |\
                 $send_mail -s "$subj" $email
         fi
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     query="CREATE ROLE $DBUSER"

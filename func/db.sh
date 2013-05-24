@@ -98,8 +98,8 @@ add_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_DB $EVENT"
-        exit $E_DB
+        log_event  "$E_CONNECT $EVENT"
+        exit $E_CONNECT
     fi
 
 
@@ -134,8 +134,8 @@ add_pgsql_database() {
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     query="CREATE ROLE $dbuser WITH LOGIN PASSWORD '$dbpass'"
@@ -177,8 +177,8 @@ is_mysql_host_alive() {
     mysql -h $host -u $dbuser -p$dbpass -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection to $host failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 }
 
@@ -188,8 +188,8 @@ is_pgsql_host_alive() {
     psql -h $host -U $dbuser -c "SELECT VERSION()" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection to $host failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 }
 
@@ -213,8 +213,8 @@ change_mysql_password() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event "$E_DB $EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT $EVENT"
+        exit $E_CONNECT
     fi
 
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
@@ -245,8 +245,8 @@ change_pgsql_password() {
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
@@ -270,8 +270,8 @@ delete_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_DB $EVENT"
-        exit $E_DB
+        log_event  "$E_CONNECT $EVENT"
+        exit $E_CONNECT
     fi
 
     query="DROP DATABASE \`$database\`"
@@ -307,8 +307,8 @@ delete_pgsql_database() {
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     query="REVOKE ALL PRIVILEGES ON DATABASE $database FROM $DBUSER"
@@ -344,8 +344,8 @@ dump_mysql_database() {
         echo "Can't connect to mysql server $HOST" |\
             $send_mail -s "$subj" $email
         echo "Error: Connection failed"
-        log_event  "$E_DB $EVENT"
-        exit $E_DB
+        log_event  "$E_CONNECT $EVENT"
+        exit $E_CONNECT
     fi
 
     mysqldump -h $HOST -u $USER -p$PASSWORD -r $dump $database
@@ -388,8 +388,8 @@ dump_pgsql_database() {
         echo "Can't connect to pgsql server $HOST" |\
             $send_mail -s "$subj" $email
         echo "Error: Connection failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     pg_dump -h $HOST -U $USER -c --inserts -O -x -i -f $dump $database \
@@ -436,8 +436,8 @@ suspend_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_DB $EVENT"
-        exit $E_DB
+        log_event  "$E_CONNECT $EVENT"
+        exit $E_CONNECT
     fi
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
@@ -462,8 +462,8 @@ suspend_pgsql_database() {
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     query="REVOKE ALL PRIVILEGES ON $database FROM $DBUSER"
@@ -484,8 +484,8 @@ unsuspend_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_DB $EVENT"
-        exit $E_DB
+        log_event  "$E_CONNECT $EVENT"
+        exit $E_CONNECT
     fi
 
     query="GRANT ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
@@ -510,8 +510,8 @@ unsuspend_pgsql_database() {
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     query="GRANT ALL PRIVILEGES ON DATABASE $database TO $DBUSER"
@@ -532,8 +532,8 @@ get_mysql_disk_usage() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_DB $EVENT"
-        exit $E_DB
+        log_event  "$E_CONNECT $EVENT"
+        exit $E_CONNECT
     fi
 
     query="SELECT SUM( data_length + index_length ) / 1024 / 1024 \"Size\"
@@ -561,8 +561,8 @@ get_pgsql_disk_usage() {
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
-        log_event "$E_DB" "$EVENT"
-        exit $E_DB
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     query="SELECT pg_database_size('$database');"

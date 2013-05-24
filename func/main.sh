@@ -43,8 +43,8 @@ E_DISABLED=11
 E_PARSING=12
 E_DISK=13
 E_LA=14
-E_FTP=15
-E_SSH=16
+E_CONNECT=15
+E_FTP=16
 E_DB=17
 E_RRD=18
 E_UPDATE=19
@@ -133,7 +133,7 @@ is_package_valid() {
         pkg_dir="$VESTA/data/packages"
     fi
     if [ ! -e "$pkg_dir/$package.pkg" ]; then
-        echo "Error: package $package not exist"
+        echo "Error: package $package doesn't exist"
         log_event "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi
@@ -209,7 +209,7 @@ is_object_valid() {
         fi
     fi
     if [ -z "$sobject" ]; then
-        echo "Error: $2 $3 not exist"
+        echo "Error: $2 $3 doesn't exist"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
@@ -261,7 +261,7 @@ is_object_value_exist() {
     eval $str
     eval value=$4
     if [ -z "$value" ] || [ "$value" = 'no' ]; then
-        echo "Error: ${4//$}=$value (not exist)"
+        echo "Error: ${4//$}=$value (doesn't exist)"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi

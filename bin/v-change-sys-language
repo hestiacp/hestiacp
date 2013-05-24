@@ -19,7 +19,7 @@ source $VESTA/func/main.sh
 
 is_language_valid() {
     if [ ! -e "$VESTA/web/inc/i18n/$language.php" ]; then
-        echo "Error: language $language not exist"
+        echo "Error: language file $language doesn't exist"
         log_event "$E_NOTEXIST $EVENT"
         exit $E_NOTEXIST
     fi

@@ -50,8 +50,8 @@ validate_format 'host' 'ftp_user' 'ftp_password'
 # Checking network connection
 if [ ! -z "$(ftpc)" ]; then
     echo "Error: can't login to ftp"
-    log_event "$E_FTP" "$EVENT"
-    exit $E_FTP
+    log_event "$E_CONNECT" "$EVENT"
+    exit $E_CONNECT
 fi
 
 # Checking write permissions

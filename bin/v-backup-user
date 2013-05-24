@@ -529,7 +529,7 @@ ftp_backup() {
     if [ ! -e "$VESTA/conf/ftp.backup.conf" ]; then
         ftp_conf_error="Can't open  $VESTA/conf/ftp.backup.conf"
         echo "$ftp_conf_error" | $send_mail -s "$subj" $email
-        echo "Error: $VESTA/conf/ftp.backup.conf does not exist"
+        echo "Error: $VESTA/conf/ftp.backup.conf doesn't exist"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
@@ -565,8 +565,8 @@ ftp_backup() {
             $send_mail -s "$subj" $email
         echo "Error: can't login to ftp ftp://$USERNAME@$HOST"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_FTP" "$EVENT"
-        exit $E_FTP
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
     fi
 
     # Check ftp permissions

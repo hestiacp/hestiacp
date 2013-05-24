@@ -43,7 +43,7 @@
                                 <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150">
                                     <table class="data-col1">
                                         <tr><td style="padding: 18 0 4 18;"><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo "$key" ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status) ?></b></td></tr>
                                     </table>
                                 </td>
@@ -86,8 +86,13 @@
                                             <td style="vertical-align:top;" >
                                                 <table>
                                                     <tr>
-                                                        <td class="counter-name" style="padding: 2px 0 0 2px;">
+                                                        <td class="counter-name" style="padding: 0 0 0 2px;">
                                                             <?php echo $data[$key]['IP'] ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="counter-name" style="padding: 0 0 0 2px;">
+                                                            <?php print $data[$key]['SRC'] ?> 
                                                         </td>
                                                     </tr>
                                                 </table>

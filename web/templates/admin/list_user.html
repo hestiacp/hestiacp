@@ -140,7 +140,7 @@
                                         <tr>
                                             <td style="vertical-align:top;"  width="260">
                                                 <table>
-                                                    <tr><td colspan=2 class="counter-name"  style="padding: 2px 0 0 2px;"><?php echo $data[$key]['CONTACT']?></td></tr>
+                                                    <tr><td colspan=2 class="counter-name"  style="padding: 0 0 0 2px;"><?php echo $data[$key]['CONTACT']?></td></tr>
                                                     <tr><td colspan=2 class="counter-name"  style="padding: 0 0 8px 2px;">[<?php echo $data[$key]['PACKAGE']?>] <?php print __('package');?></td></tr>
                                                     <tr>
                                                         <td class="chart1" colspan=2 style="padding: 0 0 0 3px;"><?php print __('Bandwidth');?>: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Check version
+source /usr/local/vesta/conf/vesta.conf
+if [ "$VERSION" != '0.9.7' ]; then
+    exit
+fi
+
 # Rename web system service
 sed -i "s/apache/httpd/g" /usr/local/vesta/conf/vesta.conf
 
@@ -106,5 +112,33 @@ for ip in $(ls /usr/local/vesta/data/ips); do
         > /etc/nginx/conf.d/$ip.conf
 done
 
+# Remove broken symlink protection
+sed -i '/Symlinks protection/d' /etc/nginx/nginx.conf
+sed -i '/disable_symlinks.*/d' /etc/nginx/nginx.conf
+
+# Add improved symlink protection
+if [ -e "$TPL/nginx" ]; then
+    for tpl in $(ls $TPL/nginx |grep -v proxy_ip.tpl); do
+        check_symlink=$(grep disable_symlinks $TPL/nginx/$tpl)
+        if [ -z "$check_symlink" ]; then
+            insert='disable_symlinks if_not_owner from=%docroot%;'
+            sed -i "s/include %/$insert\n\ninclude %/" $TPL/nginx/$tpl
+            triggered='yes'
+        fi
+    done
+
+    if [ "$triggered" = 'yes' ]; then
+        # Rebuild web domains
+        for user in $(ls $VESTA/data/users); do
+            v-rebuild-web-domains $user no
+        done
+
+        # Restart proxy
+        v-restart-proxy
+    fi
+fi
+
+# Update version
+sed -i 's/0.9.7/0.9.8/' /usr/local/vesta/conf/vesta.conf
 
 exit

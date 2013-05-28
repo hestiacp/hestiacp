@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: rebuild dns domains
-# options: USER [RESTART]
+# info: insert dns domain
+# options: USER DATA [SRC] [FLUSH]
 #
-# The function rebuilds DNS configuration files.
+# The function inserts raw record to the dns.conf
 
 
 #----------------------------------------------------------#
@@ -11,21 +11,21 @@
 
 # Argument defenition
 user=$1
-restart=$2
+data=$2
+src=$3
+flush=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/func/rebuild.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [RESTART]'
-validate_format 'user'
+check_args '2' "$#" 'USER DATA [SRC]'
+validate_format 'user' 'data'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -35,41 +35,26 @@ is_object_unsuspended 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-user_domains=0
-user_records=0
-suspended_dns=0
-conf="$USER_DATA/dns.conf"
+# Prepare values for the insert
+eval $data
+dns_rec="DOMAIN='$DOMAIN' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
+dns_rec="$dns_rec SOA='$SOA' SRC='$src' RECORDS='$RECORDS'"
+dns_rec="$dns_rec SUSPENDED='$SUSPENDED' TIME='$TIME' DATE='$DATE'"
+sed -i "/DOMAIN='$DOMAIN'/d" $USER_DATA/dns.conf 2> /dev/null
+echo "$dns_rec" >> $USER_DATA/dns.conf
+chmod 660 $USER_DATA/dns.conf
 
-# Defining user name servers
-ns=$(get_user_value '$NS')
-i=1
-for nameserver in ${ns//,/ };do
-    eval ns$i="$nameserver"
-    i=$((i + 1))
-done
-
-# Remove old user's zone
-sed -i "/\/$user\/conf\/dns/d" /etc/named.conf
-
-# Starting loop
-for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
-    rebuild_dns_domain_conf
-done
+# Flush dns records
+if [ "$flush" != 'no' ]; then
+    rm -f $USER_DATA/dns/$DOMAIN.conf
+    touch $USER_DATA/dns/$DOMAIN.conf
+    chmod 660 $USER_DATA/dns/$DOMAIN.conf
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Updating counters
-update_user_value "$user" '$U_DNS_DOMAINS' "$user_domains"
-update_user_value "$user" '$U_DNS_RECORDS' "$user_records"
-update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
-
-# Restart named
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
-fi
 
 # Logging
 log_event "$OK" "$EVENT"

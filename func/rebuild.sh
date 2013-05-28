@@ -429,10 +429,10 @@ rebuild_mail_domain_conf() {
         chmod 660 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 
         # Deleting old dkim records
-        records=$($BIN/v-list-dns-domain-records $user $domain plain)
+        records=$($BIN/v-list-dns-records $user $domain plain)
         dkim_records=$(echo "$records" |grep -w '_domainkey'|cut -f 1 -d ' ')
         for id in $dkim_records; do
-            $BIN/v-delete-dns-domain-record $user $domain $id
+            $BIN/v-delete-dns-record $user $domain $id
         done
 
         # Adding dkim dns records
@@ -441,11 +441,11 @@ rebuild_mail_domain_conf() {
             p=$(cat $pub|grep -v ' KEY---'|tr -d '\n')
             record='_domainkey'
             policy="\"t=y; o=~;\""
-            $BIN/v-add-dns-domain-record $user $domain $record TXT "$policy"
+            $BIN/v-add-dns-record $user $domain $record TXT "$policy"
 
             record='mail._domainkey'
             slct="\"k=rsa\; p=$p\""
-            $BIN/v-add-dns-domain-record $user $domain $record TXT "$slct"
+            $BIN/v-add-dns-record $user $domain $record TXT "$slct"
         fi
     fi
 

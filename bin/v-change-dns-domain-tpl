@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain template
-# options: USER DOMAIN
+# options: USER DOMAIN TEMPLATE [RESTART]
 #
 # The function for changing the template of records. By updating old records
 # will be removed and new records will be generated in accordance with
@@ -16,6 +16,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 template=$3
+restart=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -27,7 +28,7 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN TEMPLATE'
+check_args '3' "$#" 'USER DOMAIN TEMPLATE [RESTART]'
 validate_format 'user' 'domain' 'template'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
@@ -69,13 +70,21 @@ cat $DNSTPL/$template.tpl |\
 # Updating zone
 update_domain_zone
 
+# dns-cluster
+if [ ! -z "$DNS_CLUSTER" ]; then
+    cmd="v-add-remote-dns-domain $user $domain"
+    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
 # Restart named
-$BIN/v-restart-dns "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns
+fi
 
 # Logging
 log_history "changed dns template for $domain to $template" '' 'admin'

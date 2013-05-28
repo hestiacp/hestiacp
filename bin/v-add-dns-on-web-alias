@@ -61,7 +61,7 @@ else
             $user $dom $IP '' '' '' '' $restart > /dev/null
 
         if [ $? -eq 0 ]; then
-            $BIN/v-add-dns-domain-record \
+            $BIN/v-add-dns-record \
                 $user $dom "$sub" A $IP '' '' $restart
         fi
     else
@@ -71,7 +71,7 @@ else
             rec=$(grep -w "RECORD='$sub'" $USER_DATA/dns/$dom.conf)
         fi
         if [ -z "$rec" ]; then
-            $BIN/v-add-dns-domain-record \
+            $BIN/v-add-dns-record \
                  $user $dom "$sub" A $IP '' '' $restart > /dev/null
         fi
     fi

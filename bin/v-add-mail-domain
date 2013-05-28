@@ -85,11 +85,11 @@ if [ "$dkim" = 'yes' ]; then
         p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
         record='_domainkey'
         policy="\"t=y; o=~;\""
-        $BIN/v-add-dns-domain-record $user $domain $record TXT "$policy"
+        $BIN/v-add-dns-record $user $domain $record TXT "$policy"
 
         record='mail._domainkey'
         selector="\"k=rsa\; p=$p\""
-        $BIN/v-add-dns-domain-record $user $domain $record TXT "$selector"
+        $BIN/v-add-dns-record $user $domain $record TXT "$selector"
     fi
 fi
 

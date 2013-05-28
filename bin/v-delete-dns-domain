@@ -41,8 +41,14 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
 
 # Deleting domain in named.conf
-sed -i "/\/$domain.db\"/d" /etc/named.conf
+sed -i "/\/$user\/conf\/dns\/$domain.db\"/d" /etc/named.conf
 rm -f $HOMEDIR/$user/conf/dns/$domain.db
+
+# dns-cluster
+if [ ! -z "$DNS_CLUSTER" ]; then
+    cmd="v-delete-remote-dns-domain $user $domain"
+    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+fi
 
 
 #----------------------------------------------------------#
@@ -61,7 +67,6 @@ decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns "$EVENT"
 fi
-
 
 # Logging
 log_history "deleted dns domain $domain"

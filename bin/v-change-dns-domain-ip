@@ -52,6 +52,12 @@ sed -i "s/$old/$ip/g" $USER_DATA/dns/$domain.conf
 # Updating zone
 update_domain_zone
 
+# dns-cluster
+if [ ! -z "$DNS_CLUSTER" ]; then
+    cmd="v-add-remote-dns-domain $user $domain"
+    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
@@ -59,7 +65,7 @@ update_domain_zone
 
 # Restart named
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
+    $BIN/v-restart-dns
 fi
 
 # Logging

@@ -3,7 +3,7 @@
 # options: USER DOMAIN SOA
 #
 # The function for changing SOA record. This type of records can not be
-# modified by v-change-dns-domain-record call.
+# modified by v-change-dns-record call.
 
 
 #----------------------------------------------------------#
@@ -45,6 +45,12 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$SOA' "$soa"
 
 # Updating zone
 update_domain_zone
+
+# dns-cluster
+if [ ! -z "$DNS_CLUSTER" ]; then
+    cmd="v-change-remote-dns-domain-soa $user $domain"
+    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+fi
 
 
 #----------------------------------------------------------#

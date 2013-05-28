@@ -1,0 +1,63 @@
+send_api_cmd() {
+    if [ -z $PORT ]; then
+        PORT=8083
+    fi
+    if [ -z $USER ]; then
+        USER=admin
+    fi
+
+    auth="user=$USER&password=$PASSWORD&returncode=yes"
+    cmd="cmd=$1"
+    args="arg1=$2&arg2=$3&arg3=$4&arg4=$5&arg5=$6&arg6=$7&arg7=$8&arg8=$9"
+    answer=$(curl -s -k --data "$auth&$cmd&$args" https://$HOST:$PORT/api/)
+    if [ "$answer" != '0' ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+send_ssh_cmd() {
+    if [ -z $PORT ]; then
+        PORT=22
+    fi
+    if [ -z $USER ]; then
+        USER=admin
+    fi
+    if [ -z "$IDENTITY_FILE" ] && [ "$USER" = 'root' ]; then
+        IDENTITY_FILE="/root/.ssh/id_rsa"
+    fi
+    if [ -z "$IDENTITY_FILE" ]; then
+        IDENTITY_FILE="/home/$USER/.ssh/id_rsa"
+    fi
+
+    if [ "$USER" = 'root' ]; then
+        args="$VESTA/bin/$1 \"$2\" \"$3\" \"$4\" \"$5\""
+    else
+        args="sudo $VESTA/bin/$1 \"$2\" \"$3\" \"$4\" \"$5\""
+    fi
+    ssh -i $IDENTITY_FILE $USER@$HOST -p $PORT "$args" > /dev/null 2>&1
+    if [ "$?" -ne '0' ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+scp_cmd() {
+    if [ -z $PORT ]; then
+        PORT=22
+    fi
+    if [ -z $USER ]; then
+        USER=admin
+    fi
+    if [ -z "$IDENTITY_FILE" ]; then
+        IDENTITY_FILE="/home/admin/.ssh/id_rsa"
+    fi
+    scp -P $PORT -i $IDENTITY_FILE $1 $USER@$HOST:$2 > /dev/null 2>&1
+    if [ "$?" -ne '0' ]; then
+        return 1
+    else
+        return 0
+    fi
+}

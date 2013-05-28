@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: change dns domain record id
-# options: USER DOMAIN ID NEWID
+# info: delete dns domains based on SRC field
+# options: USER SRC [RESTART]
 #
-# The function for changing internal record id.
+# The function for deleting DNS domains related to a certain host.
 
 
 #----------------------------------------------------------#
@@ -11,46 +11,32 @@
 
 # Argument defenition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
-id=$3
-newid=$4
+src=$2
+restart=$3
 
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'USER DOMAIN ID NEWID'
-validate_format 'user' 'domain' 'id' 'newid'
+check_args '2' "$#" 'USER SRC [RESTART]'
+validate_format 'user' 'src'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'dns' 'DOMAIN' "$domain"
-is_object_unsuspended 'dns' 'DOMAIN' "$domain"
-is_object_valid "dns/$domain" 'ID' "$id"
-is_object_new "dns/$domain" 'ID' "$newid"
-
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Change id
-sed -i "s/^ID='$id'/ID='$newid'/" $USER_DATA/dns/$domain.conf
-
-# Sorting records
-sort_dns_records
-
-# Updating zone
-update_domain_zone
+# Starting delete loop
+for domain in $(search_objects 'dns' 'SRC' "$src" 'DOMAIN'); do
+    $BIN/v-delete-dns-domain "$user" "$domain" 'no'
+done
 
 
 #----------------------------------------------------------#
@@ -58,10 +44,11 @@ update_domain_zone
 #----------------------------------------------------------#
 
 # Restart named
-$BIN/v-restart-dns "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns "$EVENT"
+fi
 
 # Logging
-log_history "changed dns record id on $domain"
 log_event "$OK" "$EVENT"
 
 exit

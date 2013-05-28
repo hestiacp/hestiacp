@@ -23,11 +23,11 @@ if ($_SESSION['user'] == 'admin') {
         }
     } else {
         switch ($action) {
-            case 'delete': $cmd='v-delete-dns-domain-record';
+            case 'delete': $cmd='v-delete-dns-record';
                 break;
-            case 'suspend': $cmd='v-suspend-dns-domain-record';
+            case 'suspend': $cmd='v-suspend-dns-record';
                 break;
-            case 'unsuspend': $cmd='v-unsuspend-dns-domain-record';
+            case 'unsuspend': $cmd='v-unsuspend-dns-record';
                 break;
             default: header("Location: /list/dns/?domain=".$domain); exit;
         }
@@ -41,7 +41,7 @@ if ($_SESSION['user'] == 'admin') {
         }
     } else {
         switch ($action) {
-            case 'delete': $cmd='v-delete-dns-domain-record';
+            case 'delete': $cmd='v-delete-dns-record';
                 break;
             default: header("Location: /list/dns/?domain=".$domain); exit;
         }

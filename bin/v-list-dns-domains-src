@@ -38,7 +38,7 @@ fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SRC $RECORDS $SUSPENDED $TIME $DATE'
 case $format in 
     json)   json_list ;;
     plain)  nohead=1; shell_list ;;
-    shell)  fields='$DOMAIN $IP $TPL $TTL $EXP $DATE';
+    shell)  fields='$DOMAIN $IP $SRC $DATE';
             shell_list| column -t ;;
     *)      check_args '1' '0' 'USER [FORMAT]';;
 esac

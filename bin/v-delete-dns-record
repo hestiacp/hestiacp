@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: rebuild dns domains
-# options: USER [RESTART]
+# info: delete dns record
+# options: USER DOMAIN ID [RESTART]
 #
-# The function rebuilds DNS configuration files.
+# The function for deleting a certain record of DNS zone.
 
 
 #----------------------------------------------------------#
@@ -11,67 +11,63 @@
 
 # Argument defenition
 user=$1
-restart=$2
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+id=$3
+restart=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
-source $VESTA/func/rebuild.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [RESTART]'
-validate_format 'user'
-is_system_enabled "$DNS_SYSTEM"
+check_args '3' "$#" 'USER DOMAIN ID [RESTART]'
+validate_format 'user' 'domain' 'id'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+is_object_valid "dns/$domain" 'ID' "$id"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-user_domains=0
-user_records=0
-suspended_dns=0
-conf="$USER_DATA/dns.conf"
+# Deleting record
+sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
 
-# Defining user name servers
-ns=$(get_user_value '$NS')
-i=1
-for nameserver in ${ns//,/ };do
-    eval ns$i="$nameserver"
-    i=$((i + 1))
-done
+# Updating zone
+update_domain_zone
 
-# Remove old user's zone
-sed -i "/\/$user\/conf\/dns/d" /etc/named.conf
-
-# Starting loop
-for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
-    rebuild_dns_domain_conf
-done
+# dns-cluster
+if [ ! -z "$DNS_CLUSTER" ]; then
+    cmd="v-delete-remote-dns-record $user $domain $id"
+    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Updating counters
-update_user_value "$user" '$U_DNS_DOMAINS' "$user_domains"
-update_user_value "$user" '$U_DNS_RECORDS' "$user_records"
-update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
+# Upddate counters
+records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f1 -d ' ')"
+update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+decrease_user_value "$user" '$U_DNS_RECORDS'
 
 # Restart named
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
+    $BIN/v-restart-dns
 fi
 
 # Logging
+log_history "deleted dns record $id on $domain"
 log_event "$OK" "$EVENT"
 
 exit

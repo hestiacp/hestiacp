@@ -2,7 +2,7 @@
 # info: rebuild dns domains
 # options: USER [RESTART]
 #
-# The function rebuilds BIND configuration files for all dns domains.
+# The function rebuilds web configuration files.
 
 
 #----------------------------------------------------------#

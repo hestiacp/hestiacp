@@ -152,7 +152,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
 } else {
     $v_domain = escapeshellarg($_GET['domain']);
     $v_record_id = escapeshellarg($_GET['record_id']);
-    exec (VESTA_CMD."v-list-dns-domain-records ".$user." ".$v_domain." 'json'", $output, $return_var);
+    exec (VESTA_CMD."v-list-dns-records ".$user." ".$v_domain." 'json'", $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) $error = __('Error code:',$return_var);
@@ -184,7 +184,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
         if (($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) && (empty($_SESSION['error_msg']))) {
             $v_val = escapeshellarg($_POST['v_val']);
             $v_priority = escapeshellarg($_POST['v_priority']);
-            exec (VESTA_CMD."v-change-dns-domain-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
+            exec (VESTA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = __('Error code:',$return_var);
@@ -198,7 +198,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
 
         if (($_GET['record_id'] != $_POST['v_record_id']) && (empty($_SESSION['error_msg']))) {
             $v_old_record_id = escapeshellarg($_GET['record_id']);
-            exec (VESTA_CMD."v-change-dns-domain-record-id ".$v_username." ".$v_domain." ".$v_old_record_id." ".$v_record_id, $output, $return_var);
+            exec (VESTA_CMD."v-change-dns-record-id ".$v_username." ".$v_domain." ".$v_old_record_id." ".$v_record_id, $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = __('Error code:',$return_var);

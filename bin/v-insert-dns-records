@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list dns domains
-# options: USER [FORMAT]
+# info: inserts dns records
+# options: USER DOMAIN DATA_FILE
 #
-# The function for obtaining all DNS domains of a user.
+# The function copy dns record to the domain conf
 
 
 #----------------------------------------------------------#
@@ -11,9 +11,11 @@
 
 # Argument defenition
 user=$1
-format=${2-shell}
+domain=$2
+data_file=$3
 
 # Includes
+source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 
 
@@ -21,31 +23,30 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+check_args '3' "$#" 'USER DOMAIN DATAFILE'
+validate_format 'user' 'domain' 'data_file'
+is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config and fields
-conf=$USER_DATA/dns.conf
-fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SRC $RECORDS $SUSPENDED $TIME $DATE'
-
-# Listing domains
-case $format in 
-    json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$DOMAIN $IP $TPL $TTL $EXP $DATE';
-            shell_list| column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]';;
-esac
+# Insert values
+if [ -e "$data_file" ]; then
+    mv -f $data_file $USER_DATA/dns/$domain.conf
+    chmod 660 $USER_DATA/dns/$domain.conf
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
 
 exit

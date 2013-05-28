@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: change dns domain record
-# options: USER DOMAIN ID VALUE [PRIORITY]
+# info: change dns domain record id
+# options: USER DOMAIN ID NEWID [RESTART]
 #
-# The function for changing DNS record.
+# The function for changing internal record id.
 
 
 #----------------------------------------------------------#
@@ -15,9 +15,8 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 id=$3
-dvalue=$(idn -t --quiet -u "$4" )
-dvalue=$(echo $dvalue | tr '[:upper:]' '[:lower:]')
-priority=$5
+newid=$4
+restart=$5
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -29,32 +28,23 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'USER DOMAIN ID VALUE [PRIORITY]'
-validate_format 'user' 'domain' 'id' 'dvalue'
+check_args '4' "$#" 'USER DOMAIN ID NEWID [RESTART]'
+validate_format 'user' 'domain' 'id' 'newid'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_object_valid "dns/$domain" 'ID' "$id"
+is_object_new "dns/$domain" 'ID' "$newid"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting old record
-line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
-eval $line
-if [ "$TYPE" != 'MX' ] && [ "$TYPE" != 'SRV' ]; then
-    priority=''
-fi
-sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
-
-# Adding record
-dns_rec="ID='$id' RECORD='$RECORD' TYPE='$TYPE' PRIORITY='$priority'"
-dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
-echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
+# Change id
+sed -i "s/^ID='$id'/ID='$newid'/" $USER_DATA/dns/$domain.conf
 
 # Sorting records
 sort_dns_records
@@ -62,16 +52,24 @@ sort_dns_records
 # Updating zone
 update_domain_zone
 
+# dns-cluster
+if [ ! -z "$DNS_CLUSTER" ]; then
+    cmd="v-add-remote-dns-domain $user $domain"
+    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
 # Restart named
-$BIN/v-restart-dns "$EVENT"
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns
+fi
 
 # Logging
-log_history "changed dns record on $domain to $dvalue"
+log_history "changed dns record id on $domain"
 log_event "$OK" "$EVENT"
 
 exit

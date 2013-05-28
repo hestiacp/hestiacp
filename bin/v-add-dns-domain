@@ -128,6 +128,12 @@ update_domain_zone
 chmod 640 $conf
 chown root:named $conf
 
+# dns-cluster
+if [ ! -z "$DNS_CLUSTER" ]; then
+    cmd="v-add-remote-dns-domain $user $domain"
+    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
@@ -139,7 +145,7 @@ increase_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Restart named
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
+    $BIN/v-restart-dns
 fi
 
 # Logging

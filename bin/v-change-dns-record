@@ -1,11 +1,8 @@
 #!/bin/bash
-# info: add dns domain record
-# options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART]
+# info: change dns domain record
+# options: USER DOMAIN ID VALUE [PRIORITY] [RESTART]
 #
-# The call is used for adding new DNS record. Complex records of TXT, MX and
-# SRV types can be used by a filling in the 'value' argument. The function also
-# gets an id parameter for definition of certain record identifier or for the
-# regulation of records.
+# The function for changing DNS record.
 
 
 #----------------------------------------------------------#
@@ -17,17 +14,11 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
-record=$(idn -t --quiet -u "$3" )
-record=$(echo "$record" | tr '[:upper:]' '[:lower:]')
-rtype=$(echo "$4"| tr '[:lower:]' '[:upper:]')
-dvalue=$(idn -t --quiet -u "$5" )
-dvalue=$(echo "$dvalue" | tr '[:upper:]' '[:lower:]')
-priority=$6
-id=$7
-restart=$8
-if [ -z "$priority" ]; then
-    priority=10
-fi
+id=$3
+dvalue=$(idn -t --quiet -u "$4" )
+dvalue=$(echo $dvalue | tr '[:upper:]' '[:lower:]')
+priority=$5
+restart=$6
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -39,57 +30,57 @@ source $VESTA/func/domain.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART]'
-validate_format 'user' 'domain' 'record' 'rtype' 'dvalue'
+check_args '4' "$#" 'USER DOMAIN ID VALUE [PRIORITY] [RESTART]'
+validate_format 'user' 'domain' 'id' 'dvalue'
 is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
-is_package_full 'DNS_RECORDS'
-get_next_dnsrecord
-validate_format 'id'
-is_object_new "dns/$domain" 'ID' "$id"
+is_object_valid "dns/$domain" 'ID' "$id"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
+# Deleting old record
+line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
+eval $line
+if [ "$TYPE" != 'MX' ] && [ "$TYPE" != 'SRV' ]; then
     priority=''
 fi
+sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
 
 # Adding record
-zone="$USER_DATA/dns/$domain.conf"
-dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
+dns_rec="ID='$id' RECORD='$RECORD' TYPE='$TYPE' PRIORITY='$priority'"
 dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
-echo "$dns_rec" >> $zone
-chmod 660 $zone
+echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
 
 # Sorting records
-sort_dns_records 
+sort_dns_records
 
 # Updating zone
 update_domain_zone
+
+# dns-cluster
+if [ ! -z "$DNS_CLUSTER" ]; then
+    cmd="v-add-remote-dns-domain $user $domain"
+    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Upddate counters
-records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f1 -d ' ')"
-update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
-increase_user_value "$user" '$U_DNS_RECORDS'
-
 # Restart named
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
+    $BIN/v-restart-dns
 fi
 
 # Logging
-log_history "added $rtype dns record $record for $domain"
+log_history "changed dns record on $domain to $dvalue"
 log_event "$OK" "$EVENT"
 
 exit

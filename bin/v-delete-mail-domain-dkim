@@ -46,10 +46,10 @@ rm -f $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 # Checking dns domain
 check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
 if [ "$?" -eq 0 ]; then
-    records=$($BIN/v-list-dns-domain-records $user $domain plain)
+    records=$($BIN/v-list-dns-records $user $domain plain)
     dkim_records=$(echo "$records" |grep -w '_domainkey' | cut -f 1 -d ' ')
     for id in $dkim_records; do
-        $BIN/v-delete-dns-domain-record $user $domain $id
+        $BIN/v-delete-dns-record $user $domain $id
     done
 fi
 

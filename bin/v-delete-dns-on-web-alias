@@ -63,7 +63,7 @@ else
         fi
         if [ ! -z "$rec" ]; then
             eval "$rec"
-            $BIN/v-delete-dns-domain-record $user "$root" "$ID"
+            $BIN/v-delete-dns-record $user "$root" "$ID"
         fi
     fi
 fi

@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: delete dns record
-# options: USER DOMAIN ID
+# info: insert dns record
+# options: USER DOMAIN DATA
 #
-# The function for deleting a certain record of DNS zone.
+# The function inserts raw dns record to the domain conf
 
 
 #----------------------------------------------------------#
@@ -11,54 +11,39 @@
 
 # Argument defenition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
-id=$3
+domain=$2
+data=$3
 
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN ID'
-validate_format 'user' 'domain' 'id'
+check_args '3' "$#" 'USER DOMAIN DATA'
+validate_format 'user' 'domain' 'data'
+is_system_enabled "$DNS_SYSTEM"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
-is_object_unsuspended 'dns' 'DOMAIN' "$domain"
-is_object_valid "dns/$domain" 'ID' "$id"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting record
-sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
-
-# Updating zone
-update_domain_zone
+# Insert values
+echo "$data" >> $USER_DATA/dns/$domain.conf
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Upddate counters
-records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f1 -d ' ')"
-update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
-decrease_user_value "$user" '$U_DNS_RECORDS'
-
-# Restart named
-$BIN/v-restart-dns "$EVENT"
-
 # Logging
-log_history "deleted dns record $id on $domain"
 log_event "$OK" "$EVENT"
 
 exit

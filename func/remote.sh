@@ -61,3 +61,49 @@ scp_cmd() {
         return 0
     fi
 }
+
+is_dnshost_new() {
+    if [ -e "$VESTA/conf/dns-cluster.conf" ]; then
+        check_host=$(grep "HOST='$host'" $VESTA/conf/dns-cluster.conf)
+        if [ ! -z "$check_host" ]; then
+            echo "Error: dns host $host exists"
+            log_event "$E_EXISTS" "$EVENT"
+            exit $E_EXISTS
+        fi
+    fi
+}
+
+is_dnshost_alive() {
+    HOST=$host
+    PORT=$port
+    USER=$user
+    PASSWORD=$password
+
+    # Switch on connection type
+    case $type in
+        ssh) send_cmd="send_ssh_cmd" ;;
+        *)  send_cmd="send_api_cmd" ;;
+    esac
+
+    # Check host connection
+    $send_cmd v-list-sys-config
+    if [ $? -ne 0 ]; then
+        echo "Error: $type connection to $HOST failed"
+        log_event "$E_CONNECT $EVENT"
+        exit $E_CONNECT
+    fi
+
+    # Check recipient dns user
+    if [ -z "$DNS_USER" ]; then
+        DNS_USER='dns-cluster'
+    fi
+    if [ ! -z "$verbose" ]; then
+        echo "DNS_USER: $DNS_USER"
+    fi
+    $send_cmd v-list-user $DNS_USER
+    if [ $? -ne 0 ]; then
+        echo "Error: dns user $DNS_USER doesn't exist"
+        log_event "$E_NOTEXIST $EVENT"
+        exit $E_NOTEXIST
+    fi
+}

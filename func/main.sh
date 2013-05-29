@@ -87,7 +87,7 @@ check_args() {
 # Subsystem checker
 is_system_enabled() {
     if [ -z "$1" ] || [ "$1" = no ]; then
-        echo "Error: subsystem disabled"
+        echo "Error: $2 is disabled in the vesta.conf"
         log_event "$E_DISABLED" "$EVENT"
         exit $E_DISABLED
     fi

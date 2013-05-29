@@ -1,0 +1,74 @@
+#!/bin/bash
+# info: add new remote dns host
+# options: HOST PORT USER PASSWORD [TYPE] [DNS_USER]
+#
+# The function adds remote dns server to the dns cluster.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+host=$1
+port=$2
+user=$3
+password=$4
+type=${5-api}
+dns_user=${6-dns-cluster}
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+source $VESTA/func/remote.sh
+
+# Hiding passwords
+A4='******'
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='HOST PORT USER PASSWORD [TYPE] [DNS_USER]'
+check_args '4' "$#" "$args_usage"
+validate_format 'host' 'port' 'user' 'password' 'type' 'dns_user'
+is_system_enabled "$DNS_SYSTEM"
+is_dnshost_new
+is_dnshost_alive
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Concatentating db host string
+str="HOST='$host' USER='$user' PASSWORD='$password' DNS_USER='$dns_user'"
+str="$str TYPE='$type' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+
+# Adding host to dns-cluster.conf
+echo "$str" >> $VESTA/conf/dns-cluster.conf
+chmod 660 $VESTA/conf/dns-cluster.conf
+
+# Enabling DNS_CLUSTER
+if [ -z "$(grep DNS_CLUSTER $VESTA/conf/vesta.conf)" ]; then
+    sed -i "s/^STATS_/DNS_CLUSTER='yes'\nSTATS_/g" $VESTA/conf/vesta.conf
+else
+    sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $VESTA/conf/vesta.conf
+fi
+
+# Sync current zones
+$BIN/v-sync-dns-cluster
+return_code=$?
+if [ "$return_code" -ne 0 ]; then
+    exit $return_code
+fi
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

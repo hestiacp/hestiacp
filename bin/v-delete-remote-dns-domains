@@ -1,7 +1,7 @@
 #!/bin/bash
-# info: synchronize dns domains
-#
-# The function synchronize all dns domains.
+# info: delete remote dns domains
+# options: [HOST]
+# The function deletes remote dns domains.
 
 
 #----------------------------------------------------------#
@@ -9,7 +9,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-verbose=$1
+host=$1
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -44,8 +44,14 @@ fi
 old_ifs="$IFS"
 IFS=$'\n'
 
+if [ -z $host ]; then
+    hosts=$(cat $VESTA/conf/dns-cluster.conf)
+else
+    hosts=$(grep "HOST='$host'" $VESTA/conf/dns-cluster.conf)
+fi
+
 # Starting cluster loop
-for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
+for cluster_str in $hosts; do
 
     # Get host values
     eval $cluster_str
@@ -89,17 +95,6 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
         exit $E_NOTEXIST
     fi
 
-    # Check dns exceptions
-    if [ -z "$DNS_CLUSTER_IGNORE" ]; then
-        DNS_CLUSTER_IGNORE='dns-cluster'
-    fi
-
-    # Create userlist
-    user_list=$(ls $VESTA/data/users)
-    for exception in $(echo -e "${DNS_CLUSTER_IGNORE//,/\n}"); do 
-        user_list=$(echo "$user_list" | grep -v "^$exception$")
-    done
-
     # Clean source records
     $send_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME no
     if [ $? -ne 0 ]; then
@@ -107,37 +102,6 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
         log_event "$E_CONNECT $EVENT"
         exit $E_CONNECT
     fi
-
-    # Clean queue
-    rm -f $VESTA/data/queue/dns-cluster.pipe
-    touch $VESTA/data/queue/dns-cluster.pipe
-    chmod 660 $VESTA/data/queue/dns-cluster.pipe
-
-    # Start user loop
-    for user in $user_list; do
-
-        # Sync domain
-        for str in $(cat $VESTA/data/users/$user/dns.conf); do
-            eval $str
-            if [ ! -z "$verbose" ]; then
-                echo "DOMAIN: $DOMAIN"
-            fi
-            $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME
-
-            # Sync record
-            if [ "$TYPE" = 'ssh' ]; then
-                tmp=$(mktemp -u)
-                scp_cmd $USER_DATA/$user/dns/$DOMAIN.conf $tmp
-                $send_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp
-            else
-                for str in $(cat $USER_DATA/$user/dns/$DOMAIN.conf); do
-                    str=$(echo "$str" | sed 's/"/\\"/g')
-                    $send_cmd v-insert-dns-record \
-                        $DNS_USER $DOMAIN "$str"
-                done
-            fi
-        done
-    done
 
     # Rebuild dns zones
     $send_cmd v-rebuild-dns-domains $DNS_USER

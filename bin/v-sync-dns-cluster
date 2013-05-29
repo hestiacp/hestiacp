@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: synchronize dns domains
-#
+# options: HOST
 # The function synchronize all dns domains.
 
 
@@ -9,7 +9,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-verbose=$1
+host=$1
+verbose=$2
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -44,8 +45,17 @@ fi
 old_ifs="$IFS"
 IFS=$'\n'
 
+if [ -z $host ]; then
+    hosts=$(cat $VESTA/conf/dns-cluster.conf)
+    rm -f $VESTA/data/queue/dns-cluster.pipe
+    touch $VESTA/data/queue/dns-cluster.pipe
+    chmod 660 $VESTA/data/queue/dns-cluster.pipe
+else
+    hosts=$(grep "HOST='$host'" $VESTA/conf/dns-cluster.conf)
+fi
+
 # Starting cluster loop
-for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
+for cluster_str in $hosts; do
 
     # Get host values
     eval $cluster_str
@@ -107,11 +117,6 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
         log_event "$E_CONNECT $EVENT"
         exit $E_CONNECT
     fi
-
-    # Clean queue
-    rm -f $VESTA/data/queue/dns-cluster.pipe
-    touch $VESTA/data/queue/dns-cluster.pipe
-    chmod 660 $VESTA/data/queue/dns-cluster.pipe
 
     # Start user loop
     for user in $user_list; do

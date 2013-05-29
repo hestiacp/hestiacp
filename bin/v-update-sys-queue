@@ -53,7 +53,7 @@ case $queue in
     backup)         bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
     disk)           bash $VESTA/data/queue/$queue.pipe ;;
     traffic)        bash $VESTA/data/queue/$queue.pipe ;;
-    dns-cluster)    bash $VESTA/data/queue/$queue.pipe ;;
+    dns-cluster)    bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
     *)              check_args '1' '0' 'QUEUE' ;;
 esac
 

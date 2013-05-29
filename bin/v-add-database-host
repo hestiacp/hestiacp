@@ -18,7 +18,7 @@ type=$1
 host=$2
 dbuser=$3
 dbpass=$4
-A4='******'
+max_db=${6-500}
 charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
 template=${8-template1}
 
@@ -28,7 +28,7 @@ source $VESTA/func/main.sh
 source $VESTA/func/db.sh
 
 # Hiding password
-max_db=${6-500}
+A4='******'
 
 
 #----------------------------------------------------------#

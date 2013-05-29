@@ -26,7 +26,7 @@ source $VESTA/func/db.sh
 
 check_args '2' "$#" 'TYPE HOST'
 validate_format 'type' 'host'
-is_system_enabled "$DB_SYSTEM"
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_type_valid "$DB_SYSTEM" "$type"
 is_object_valid "../../conf/$type" 'HOST' "$host"
 is_dbhost_free

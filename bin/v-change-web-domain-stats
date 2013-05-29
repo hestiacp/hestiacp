@@ -28,7 +28,7 @@ source $VESTA/func/domain.sh
 
 check_args '3' "$#" 'USER DOMAIN TYPE'
 validate_format 'user' 'domain'
-is_system_enabled "$WEB_SYSTEM"
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_type_valid "$STATS_SYSTEM" "$type"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

@@ -29,7 +29,7 @@ source $VESTA/func/domain.sh
 
 check_args '3' "$#" 'USER DOMAIN ACCOUNT'
 validate_format 'user' 'domain' 'account'
-is_system_enabled "$MAIL_SYSTEM"
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"

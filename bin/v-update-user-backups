@@ -175,7 +175,7 @@ check_ftp_connection(){
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER'
-is_system_enabled "$BACKUP_SYSTEM"
+is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')

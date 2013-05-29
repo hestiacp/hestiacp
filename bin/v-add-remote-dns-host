@@ -33,7 +33,7 @@ A4='******'
 args_usage='HOST PORT USER PASSWORD [TYPE] [DNS_USER]'
 check_args '4' "$#" "$args_usage"
 validate_format 'host' 'port' 'user' 'password' 'type' 'dns_user'
-is_system_enabled "$DNS_SYSTEM"
+is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_dnshost_new
 is_dnshost_alive
 

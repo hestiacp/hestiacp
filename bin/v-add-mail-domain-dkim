@@ -28,7 +28,7 @@ source $VESTA/func/domain.sh
 
 check_args '2' "$#" 'USER DOMAIN [DKIM_SIZE]'
 validate_format 'user' 'domain' 'dkim_size'
-is_system_enabled "$MAIL_SYSTEM"
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"

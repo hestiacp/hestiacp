@@ -34,7 +34,7 @@ A7="$command"
 
 check_args '7' "$#" 'USER MIN HOUR DAY MONTH WDAY COMMAND [JOB]'
 validate_format 'user' 'min' 'hour' 'day' 'month' 'wday' 'command'
-is_system_enabled $CRON_SYSTEM
+is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'CRON_JOBS'

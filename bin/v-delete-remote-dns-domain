@@ -25,7 +25,7 @@ source $VESTA/func/remote.sh
 
 check_args '2' "$#" 'USER DOMAIN'
 validate_format 'user' 'domain'
-is_system_enabled "$DNS_CLUSTER"
+is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 
 if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
     echo "Error: dns-cluster.conf doesn't exist"

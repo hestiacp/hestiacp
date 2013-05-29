@@ -32,7 +32,7 @@ EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
 
 check_args '4' "$#" 'USER DOMAIN STATS_USER STATS_PASS'
 validate_format 'user' 'domain' 'stats_user' 'stats_pass'
-is_system_enabled "$WEB_SYSTEM"
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"

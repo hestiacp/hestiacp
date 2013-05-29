@@ -38,7 +38,7 @@ A4='******'
 args_usage='TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
 check_args '4' "$#" "$args_usage"
 validate_format 'host' 'dbuser' 'dbpass' 'max_db' 'charsets' 'template'
-is_system_enabled "$DB_SYSTEM"
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
 case $type in

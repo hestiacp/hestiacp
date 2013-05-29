@@ -26,7 +26,7 @@ source $VESTA/func/remote.sh
 
 check_args '3' "$#" 'USER DOMAIN ID'
 validate_format 'user' 'domain' 'id'
-is_system_enabled "$DNS_CLUSTER"
+is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_valid "dns/$domain" 'ID' "$id"

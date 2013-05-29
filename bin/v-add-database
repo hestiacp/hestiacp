@@ -42,7 +42,7 @@ EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
 
 check_args '5' "$#" 'USER DATABASE DBUSER DBPASS TYPE [HOST] [CHARSET]'
 validate_format 'user' 'database' 'dbuser' 'dbpass' 'charset'
-is_system_enabled "$DB_SYSTEM"
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_type_valid "$DB_SYSTEM" "$type"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

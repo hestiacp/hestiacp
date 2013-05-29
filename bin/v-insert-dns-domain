@@ -26,7 +26,7 @@ source $VESTA/func/main.sh
 
 check_args '2' "$#" 'USER DATA [SRC]'
 validate_format 'user' 'data'
-is_system_enabled "$DNS_SYSTEM"
+is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 

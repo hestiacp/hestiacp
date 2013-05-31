@@ -19,14 +19,9 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 if [ ! -z "$MAIL_SYSTEM" ]; then
-    /etc/init.d/$MAIL_SYSTEM status >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        /etc/init.d/$MAIL_SYSTEM reload >/dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
-    else
-        /etc/init.d/$MAIL_SYSTEM start >/dev/null 2>&1
+    /etc/init.d/$MAIL_SYSTEM reload >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        /etc/init.d/$MAIL_SYSTEM restart >/dev/null 2>&1
         if [ $? -ne 0 ]; then
             exit $E_RESTART
         fi

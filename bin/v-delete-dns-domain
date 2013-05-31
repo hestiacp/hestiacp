@@ -46,7 +46,7 @@ rm -f $HOMEDIR/$user/conf/dns/$domain.db
 
 # dns-cluster
 if [ ! -z "$DNS_CLUSTER" ]; then
-    cmd="v-delete-remote-dns-domain $user $domain"
+    cmd="$BIN/v-delete-remote-dns-domain $user $domain"
     echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
 fi
 

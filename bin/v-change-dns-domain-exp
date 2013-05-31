@@ -43,7 +43,7 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$EXP' "$exp"
 
 # dns-cluster
 if [ ! -z "$DNS_CLUSTER" ]; then
-    cmd="v-change-remote-dns-domain-exp $user $domain"
+    cmd="$BIN/v-change-remote-dns-domain-exp $user $domain"
     echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
 fi
 

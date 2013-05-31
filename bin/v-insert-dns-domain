@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: insert dns domain
-# options: USER DATA [SRC] [FLUSH]
+# options: USER DATA [SRC] [FLUSH] [RESTART]
 #
 # The function inserts raw record to the dns.conf
 
@@ -14,6 +14,7 @@ user=$1
 data=$2
 src=$3
 flush=$4
+restart=$5
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -24,7 +25,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DATA [SRC]'
+check_args '2' "$#" 'USER DATA [SRC] [RESTART]'
 validate_format 'user' 'data'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -55,6 +56,11 @@ fi
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns $restart
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

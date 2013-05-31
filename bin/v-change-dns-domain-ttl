@@ -47,7 +47,7 @@ update_domain_zone
 
 # dns-cluster
 if [ ! -z "$DNS_CLUSTER" ]; then
-    cmd="v-change-remote-dns-domain-ttl $user $domain"
+    cmd="$BIN/v-change-remote-dns-domain-ttl $user $domain"
     echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
 fi
 

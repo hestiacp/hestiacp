@@ -212,7 +212,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
             $_SESSION['ok_msg'] = __('Changes has been saved.');
         }
 
-        if ($_GET['record_id'] != $_POST['v_record_id']) {
+        if ((empty($_SESSION['error_msg'])) && ($_GET['record_id'] != $_POST['v_record_id'])) {
             header("Location: /edit/dns/?domain=".$_GET['domain']."&record_id=".$_POST['v_record_id']);
             exit;
         }

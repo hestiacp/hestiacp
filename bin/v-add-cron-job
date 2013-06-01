@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cron job
-# options: USER MIN HOUR DAY MONTH WDAY COMMAND [JOB]
+# options: USER MIN HOUR DAY MONTH WDAY COMMAND [JOB] [RESTART]
 #
 # The function adds a job to cron daemon. When executing commands, any output
 # is  mailed to user's email if parameter REPORTS is set to 'yes'.
@@ -19,6 +19,7 @@ month=$5
 wday=$6
 command=$(echo $7 | sed -e "s/'/%quote%/g")
 job=$8
+restart=$9
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -32,7 +33,7 @@ A7="$command"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '7' "$#" 'USER MIN HOUR DAY MONTH WDAY COMMAND [JOB]'
+check_args '7' "$#" 'USER MIN HOUR DAY MONTH WDAY COMMAND [JOB] [RESTART]'
 validate_format 'user' 'min' 'hour' 'day' 'month' 'wday' 'command'
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -72,7 +73,7 @@ sync_cron_jobs
 increase_user_value $user '$U_CRON_JOBS'
 
 # Restart crond
-$BIN/v-restart-cron "$EVENT"
+$BIN/v-restart-cron
 
 # Logging
 log_history "added cron job $job"

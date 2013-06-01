@@ -86,7 +86,7 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
     fi
 
     # Sync domain
-    $send_cmd v-delete-dns-record $DNS_USER $domain $id 'no'
+    $send_cmd v-delete-dns-record $DNS_USER $domain $id 'scheduled'
 
 done
 

@@ -469,7 +469,7 @@ if [ "$dns" != 'no' ]; then
     done
 
     # Restart DNS
-    $BIN/v-restart-dns "$EVENT"
+    $BIN/v-restart-dns
     echo
     msg="$msg\n"
 fi
@@ -682,7 +682,7 @@ if [ "$cron" != 'no' ]; then
     sync_cron_jobs
 
     # Restart cron
-    $BIN/v-restart-cron "$EVENT"
+    $BIN/v-restart-cron
     echo
     msg="$msg\n"
 fi

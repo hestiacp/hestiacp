@@ -96,7 +96,7 @@ for cluster_str in $hosts; do
     fi
 
     # Clean source records
-    $send_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME no
+    $send_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME 'no'
     if [ $? -ne 0 ]; then
         echo "Error: $TYPE connection to $HOST failed (cleanup)"
         log_event "$E_CONNECT $EVENT"
@@ -104,7 +104,7 @@ for cluster_str in $hosts; do
     fi
 
     # Rebuild dns zones
-    $send_cmd v-rebuild-dns-domains $DNS_USER
+    $send_cmd v-rebuild-dns-domains $DNS_USER 'scheduled'
     if [ $? -ne 0 ]; then
         echo "Error: $TYPE connection to $HOST failed (rebuild)"
         log_event "$E_CONNECT $EVENT"

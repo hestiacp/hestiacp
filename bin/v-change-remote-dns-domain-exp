@@ -94,7 +94,7 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
     # Sync domain
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     eval $str
-    $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'no'
+    $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'scheduled'
 
 done
 

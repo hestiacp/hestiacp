@@ -42,7 +42,7 @@ done
 #----------------------------------------------------------#
 
 # Restart named
-$BIN/v-restart-dns "$EVENT"
+$BIN/v-restart-dns
 
 # Logging
 log_event "$OK" "$EVENT"

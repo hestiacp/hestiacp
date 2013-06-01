@@ -18,6 +18,17 @@ source $VESTA/func/main.sh
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Schedule restart
+if [ "$1" = 'scheduled' ]; then
+    echo "$BIN/$SCRIPT now" >> $VESTA/data/queue/restart.pipe
+    exit
+fi
+if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
+    echo "$BIN/$SCRIPT now" >> $VESTA/data/queue/restart.pipe
+    exit
+fi
+
+# Restart system
 if [ ! -z "$CRON_SYSTEM" ]; then
     /etc/init.d/$CRON_SYSTEM reload >/dev/null 2>&1
     if [ $? -ne 0 ]; then
@@ -26,6 +37,11 @@ if [ ! -z "$CRON_SYSTEM" ]; then
             exit $E_RESTART
         fi
     fi
+fi
+
+# Update restart queue
+if [ -e "$VESTA/data/queue/restart.pipe" ]; then
+    sed -i "/$SCRIPT/d" $VESTA/data/queue/restart.pipe
 fi
 
 

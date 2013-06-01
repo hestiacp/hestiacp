@@ -97,7 +97,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-proxy "$EVENT"
+    $BIN/v-restart-proxy
 fi
 
 log_history "enabled proxy support for $domain"

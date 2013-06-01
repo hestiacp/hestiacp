@@ -48,7 +48,7 @@ sync_cron_jobs
 
 # Restart crond
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-cron "$EVENT"
+    $BIN/v-restart-cron
 fi
 
 # Logging

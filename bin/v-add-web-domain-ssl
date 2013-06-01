@@ -124,7 +124,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$SSL' "yes"
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
+    $BIN/v-restart-web
 fi
 
 # Logging

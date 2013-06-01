@@ -45,7 +45,7 @@ done
 
 # Restart named
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
+    $BIN/v-restart-dns
 fi
 
 # Logging

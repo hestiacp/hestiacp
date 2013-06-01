@@ -53,7 +53,7 @@ sync_cron_jobs
 decrease_user_value "$user" '$U_CRON_JOBS'
 
 # Restart crond
-$BIN/v-restart-cron "$EVENT"
+$BIN/v-restart-cron
 
 # Logging
 log_history "deleted cron job $job"

@@ -53,9 +53,9 @@ sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/dns/$domain.conf
 
 
 # Restart named
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
-fi
+#if [ "$restart" != 'no' ]; then
+#    $BIN/v-restart-dns
+#fi
 
 # Logging
 log_event "$OK" "$EVENT"

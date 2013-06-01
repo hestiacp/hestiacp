@@ -70,9 +70,9 @@ fi
 
 # Restart web server
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web "$EVENT"
-    $BIN/v-restart-dns "$EVENT"
-    $BIN/v-restart-cron "$EVENT"
+    $BIN/v-restart-web
+    $BIN/v-restart-dns
+    $BIN/v-restart-cron
 fi
 
 # Changing suspend value

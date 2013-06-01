@@ -64,7 +64,7 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Restart crond
-$BIN/v-restart-cron "$EVENT"
+$BIN/v-restart-cron
 
 # Logging
 log_history "changed cron job $job"

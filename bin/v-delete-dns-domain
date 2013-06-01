@@ -65,7 +65,7 @@ decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Restart named
 if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
+    $BIN/v-restart-dns $restart
 fi
 
 # Logging

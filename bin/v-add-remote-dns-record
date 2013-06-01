@@ -96,10 +96,10 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
     # Sync record
     str=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
     str=$(echo "$str" | sed 's/"/\\"/g')
-    $send_cmd v-insert-dns-record $DNS_USER $domain "$str"
+    $send_cmd v-insert-dns-record $DNS_USER $domain "$str" 'no'
 
     # Rebuild dns zone
-    $send_cmd v-rebuild-dns-domain $DNS_USER $domain no
+    $send_cmd v-rebuild-dns-domain $DNS_USER $domain 'scheduled'
     if [ $? -ne 0 ]; then
         echo "Error: $TYPE connection to $HOST failed (rebuild)"
         log_event "$E_CONNECT $EVENT"

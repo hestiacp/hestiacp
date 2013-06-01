@@ -43,9 +43,9 @@ done
 #----------------------------------------------------------#
 
 # Restart dns server
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns "$EVENT"
-fi
+#if [ "$restart" != 'no' ]; then
+#    $BIN/v-restart-dns
+#fi
 
 # Logging
 log_event "$OK" "$EVENT"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: inserts dns records
-# options: USER DOMAIN DATA_FILE
+# options: USER DOMAIN DATA_FILE [RESTART]
 #
 # The function copy dns record to the domain conf
 
@@ -13,6 +13,7 @@
 user=$1
 domain=$2
 data_file=$3
+restart=$4
 
 # Includes
 source $VESTA/conf/vesta.conf
@@ -23,7 +24,7 @@ source $VESTA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN DATAFILE'
+check_args '3' "$#" 'USER DOMAIN DATAFILE [RESTART]'
 validate_format 'user' 'domain' 'data_file'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -45,6 +46,11 @@ fi
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Restart named
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

@@ -57,6 +57,17 @@ else
     sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $VESTA/conf/vesta.conf
 fi
 
+# Enabling restart queue
+HOST=$host
+PORT=$port
+USER=$user
+PASSWORD=$password
+case $type in
+    ssh) send_cmd="send_ssh_cmd" ;;
+    *)  send_cmd="send_api_cmd" ;;
+esac
+$send_cmd v-add-cron-restart-job
+
 # Sync current zones
 $BIN/v-sync-dns-cluster $host
 return_code=$?
@@ -64,7 +75,7 @@ if [ "$return_code" -ne 0 ]; then
     exit $return_code
 fi
 
-# Add cron job
+# Add dns-cluster cron job
 cmd="sudo /usr/local/vesta/bin/v-update-sys-queue dns-cluster"
 check_cron=$(grep "$cmd" $VESTA/data/users/admin/cron.conf 2> /dev/null)
 if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then

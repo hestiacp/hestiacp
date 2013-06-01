@@ -34,6 +34,14 @@ is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 # Deleting domains
 $BIN/v-delete-remote-dns-domains $host >>/dev/null 2>&1
 
+# Disabling restart queue
+eval $(grep $host $VESTA/conf/dns-cluster)
+case $TYPE in
+    ssh) send_cmd="send_ssh_cmd" ;;
+    *)  send_cmd="send_api_cmd" ;;
+esac
+$send_cmd v-add-cron-restart-job
+
 # Deleting server
 sed -i "/HOST='$host' /d" $VESTA/conf/dns-cluster.conf
 

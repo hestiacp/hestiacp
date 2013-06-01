@@ -1,0 +1,49 @@
+#!/bin/bash
+# info: list remote dns host
+# options: [FORMAT]
+#
+# The function for obtaining the list of remote dns host.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Check config
+conf=$VESTA/conf/dns-cluster.conf
+if [ ! -e "$conf" ]; then
+    exit
+fi
+
+# Defining fileds to select
+fields='$HOST $USER $DNS_USER $TYPE $TIME $DATE'
+
+case $format in
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  shell_list| column -t ;;
+    *)      check_args '1' '0' 'USER [FORMAT]';;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

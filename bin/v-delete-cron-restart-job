@@ -1,0 +1,44 @@
+#!/bin/bash
+# info: delete restart job
+# opions: NONE
+#
+# The script for disabling restart cron tasks
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Add cron job
+cmd="sudo /usr/local/vesta/bin/v-update-sys-queue restart"
+check_cron=$(grep "$cmd" $VESTA/data/users/admin/cron.conf 2> /dev/null)
+if [ ! -z "$check_cron" ]; then
+    eval $check_cron
+    $BIN/v-delete-cron-job admin "$JOB"
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

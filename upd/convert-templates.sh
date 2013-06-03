@@ -134,7 +134,7 @@ if [ -e "$TPL/nginx" ]; then
         done
 
         # Restart proxy
-        v-restart-proxy
+        /usr/local/vesta/bin/v-restart-proxy
     fi
 fi
 

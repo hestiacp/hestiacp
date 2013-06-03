@@ -122,7 +122,7 @@ if [ -e "$TPL/nginx" ]; then
         check_symlink=$(grep disable_symlinks $TPL/nginx/$tpl)
         if [ -z "$check_symlink" ]; then
             insert='disable_symlinks if_not_owner from=%docroot%;'
-            sed -i "s/include %/$insert\n\ninclude %/" $TPL/nginx/$tpl
+            sed -i "s/include %/$insert\n\n    include %/" $TPL/nginx/$tpl
             triggered='yes'
         fi
     done

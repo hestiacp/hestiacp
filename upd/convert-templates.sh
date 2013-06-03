@@ -117,7 +117,8 @@ sed -i '/Symlinks protection/d' /etc/nginx/nginx.conf
 sed -i '/disable_symlinks.*/d' /etc/nginx/nginx.conf
 
 # Add improved symlink protection
-if [ -e "$TPL/nginx" ]; then
+nginx_version=$(rpm -q nginx| grep nginx-1| cut -f 2 -d .)
+if [ -e "/tmp/nginx" ] && [[ "$nginx_version" -gt '0' ]]; then
     for tpl in $(ls $TPL/nginx |grep -v proxy_ip.tpl); do
         check_symlink=$(grep disable_symlinks $TPL/nginx/$tpl)
         if [ -z "$check_symlink" ]; then

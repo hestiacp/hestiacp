@@ -130,7 +130,7 @@ if [ -e "$TPL/nginx" ]; then
     if [ "$triggered" = 'yes' ]; then
         # Rebuild web domains
         for user in $(ls $VESTA/data/users); do
-            v-rebuild-web-domains $user no
+            /usr/local/vesta/bin/v-rebuild-web-domains $user no
         done
 
         # Restart proxy

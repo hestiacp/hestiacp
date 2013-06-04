@@ -95,10 +95,10 @@ else
         tmp_conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
         conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
         mv $tmp_conf $conf
-    fi
-    proxy_include=$(grep "$conf" $proxy_conf )
-    if [ -z "$proxy_include" ]; then
-        echo "include $conf;" >> $proxy_conf
+        proxy_include=$(grep "$conf" $proxy_conf )
+        if [ -z "$proxy_include" ]; then
+            echo "include $conf;" >> $proxy_conf
+        fi
     fi
 
     # Checking SSL proxy

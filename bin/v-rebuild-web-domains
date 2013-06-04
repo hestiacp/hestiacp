@@ -68,6 +68,12 @@ if [ "$domain_counter" -lt 1 ]; then
     fi
 
 else
+    # Clean web configs
+    sed -i "/.*\/$user\/.*.conf/d" $web_conf
+    if [ ! -z  "$PROXY_SYSTEM" ]; then
+        sed -i "/.*\/$user\/.*.conf/d" $proxy_conf
+    fi
+
     # Renaming tmp config
     tmp_conf="$HOMEDIR/$user/conf/web/tmp_$WEB_SYSTEM.conf"
     conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"

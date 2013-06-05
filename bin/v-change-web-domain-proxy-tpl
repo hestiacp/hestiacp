@@ -58,6 +58,7 @@ del_web_config
 # Add new vhost
 PROXY="$template"
 PROXY_EXT="$extentions"
+tpl_file="$WEBTPL/$PROXY_SYSTEM/$template.tpl"
 upd_web_domain_values
 add_web_config
 chown root:$user $conf

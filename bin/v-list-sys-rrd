@@ -88,9 +88,9 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     rrd_types="$rrd_types db"
 fi
 
-if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    rrd_types="$rrd_types mail"
-fi
+#if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+#    rrd_types="$rrd_types mail"
+#fi
 
 if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
     rrd_types="$rrd_types ftp"

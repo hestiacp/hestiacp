@@ -9,7 +9,7 @@ export PATH=$PATH:/sbin
 RHOST='r.vestacp.com'
 CHOST='c.vestacp.com'
 REPO='cmmnt'
-VERSION='0.9.7'
+VERSION='0.9.8/rhel'
 YUM_REPO='/etc/yum.repos.d/vesta.repo'
 arch=$(uname -i)
 os=$(cut -f 1 -d ' ' /etc/redhat-release)
@@ -634,7 +634,7 @@ sed -i "s/%blowfish_secret%/$(gen_pass)/g" /etc/phpMyAdmin/config.inc.php
 # Roundcube configuration
 wget $CHOST/$VERSION/httpd-webmail.conf -O /etc/httpd/conf.d/roundcubemail.conf
 wget $CHOST/$VERSION/roundcube-main.conf -O /etc/roundcubemail/main.inc.php
-wget $CHOST/$VERSION/roundcube-db.conf -O /etc/roundcubemail/db.inc.php
+wget $CHOST/D$VERSION/roundcube-db.conf -O /etc/roundcubemail/db.inc.php
 wget $CHOST/$VERSION/roundcube-driver.php -O \
     /usr/share/roundcubemail/plugins/password/drivers/vesta.php
 wget $CHOST/$VERSION/roundcube-pw.conf -O \
@@ -700,7 +700,7 @@ chmod -R 755 /usr/local/vesta/data/templates
 cp templates/web/skel/public_html/index.html /var/www/html/
 sed -i 's/%domain%/It worked!/g' /var/www/html/index.html
 if [ "$srv_type" = 'micro' ]; then
-    rm -f /usr/local/vesta/data/templates/web/apache_phpfcgid.*
+    rm -f /usr/local/vesta/data/templates/web/httpd/phpfcgid.*
 fi
 
 # Default SSL keys
@@ -725,7 +725,7 @@ $VESTA/bin/v-change-user-shell admin bash
 $VESTA/bin/v-change-user-language admin en
 
 # Configure mysql host
-$VESTA/bin/v-add-database-server mysql localhost root $mpass
+$VESTA/bin/v-add-database-host mysql localhost root $mpass
 $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 
 # Configuring system ips

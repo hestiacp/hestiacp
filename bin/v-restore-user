@@ -288,6 +288,14 @@ if [ "$web" != 'no' ]; then
             str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
             echo $str >> $USER_DATA/web.conf
 
+            # Copy ssl certificate
+            if [ "$SSL" = 'yes' ]; then
+                for crt in $(ls $tmpdir/web/$domain/conf |grep ssl); do
+                    crt=$(echo "$crt" |sed "s/ssl.//")
+                    cp -f $tmpdir/web/$domain/conf/ssl.$crt $USER_DATA/ssl/$crt
+                done
+            fi
+
             # Rebuild web config
             rebuild_web_domain_conf
 
@@ -303,7 +311,7 @@ if [ "$web" != 'no' ]; then
             fi
 
             # Adding SSL vhost
-            if [ "$ssl_change" = 'yes' ]; then
+            if [ "$SSL" = 'yes' ]; then
                 tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$WEB_SYSTEM.conf"
                 conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
                 cat $tmp_conf >> $conf
@@ -316,7 +324,7 @@ if [ "$web" != 'no' ]; then
 
             # Adding proxy vhost
             proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
-            if [ "$proxy_change" = 'yes' ]; then
+            if [ ! -z "$PROXY" ]; then
                 tmp_conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
                 conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
                 cat $tmp_conf >> $conf
@@ -328,7 +336,7 @@ if [ "$web" != 'no' ]; then
             fi
 
             # Adding SSL proxy vhost
-            if [ "$proxy_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
+            if [ ! -z "$PROXY" ] && [ "$SSL" = 'yes' ]; then
                 tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
                 conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
                 cat $tmp_conf >> $conf

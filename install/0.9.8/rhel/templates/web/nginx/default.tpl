@@ -1,11 +1,11 @@
 server {
     listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
-    %elog%error_log  /var/log/httpd/domains/%domain%.error.log error;
+    error_log  /var/log/httpd/domains/%domain%.error.log error;
 
     location / {
         proxy_pass      http://%ip%:%web_port%;
-        location ~* ^.+\.(%nginx_extentions%)$ {
+        location ~* ^.+\.(%proxy_extentions%)$ {
             root           %docroot%;
             access_log     /var/log/httpd/domains/%domain%.log combined;
             access_log     /var/log/httpd/domains/%domain%.bytes bytes;

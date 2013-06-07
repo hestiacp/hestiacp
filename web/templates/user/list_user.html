@@ -41,14 +41,14 @@
                                 ?>
 
                             <tr class="data-row">
-                                <td class="data-dotted" style="padding: 0px 10px 0px 0px">
+                                <td class="data-dotted" width="150">
                                     <table class="data-col1">
-                                        <tr><td style="padding: 18 0 4 18;"><input type="checkbox" class="ch-toggle" name="user[]" value="<?php echo $key ?>" ></td></tr>
+                                        <tr><td><input type="checkbox" class="ch-toggle" name="user[]" value="<?php echo $key ?>" ></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a><td></tr>
                                         <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                                     </table>
                                 </td>
-                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                <td class="data-dotted" width="830px">
                                     <a href="/edit/user/?user=<?php echo "$key" ?>" class="data-controls">
                                         <span>
                                             <img src="/images/edit.png" width="8px" height="8px">

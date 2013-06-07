@@ -32,13 +32,13 @@
                             ?>
 
                             <tr class="data-row">
-                                <td class="data-dotted" style="padding: 0px 10px 0px 0px" width="150px">
+                                <td class="data-dotted" width="150px">
                                     <table class="data-col1" width="150">
                                         <tr><td style="padding: 24 0 4px 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
                                         <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
                                     </table>
                                 </td>
-                                <td class="data-dotted" width="830px" style="vertical-align:top;">
+                                <td class="data-dotted" width="830px">
                                     <a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank" class="data-controls">
                                         <span>
                                             <img src="/images/download.png" width="8px" height="8px">

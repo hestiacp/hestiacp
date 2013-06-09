@@ -49,7 +49,7 @@ done
 IFS=$OLDIFS
 
 # Updating disk value in config
-update_user_value "$user" '$U_DIR_DISK' "$disk_usage"
+update_user_value "$user" '$U_DISK_DIRS' "$disk_usage"
 
 
 #----------------------------------------------------------#

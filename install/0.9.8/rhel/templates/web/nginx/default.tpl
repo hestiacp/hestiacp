@@ -28,8 +28,6 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    disable_symlinks if_not_owner from=%docroot%;
-
     include %home%/%user%/conf/web/nginx.%domain%.conf*;
 }
 

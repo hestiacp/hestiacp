@@ -5,16 +5,7 @@ server {
 
     location / {
         proxy_pass      http://%ip%:%web_port%;
-
-        proxy_cache cache;
-        proxy_cache_valid 10m;
-        proxy_cache_valid 404 1m;
-        proxy_no_cache $no_cache;
-        proxy_cache_bypass $no_cache;
-        proxy_cache_bypass $cookie_session $http_x_update;
-
         location ~* ^.+\.(%proxy_extentions%)$ {
-            proxy_cache    off;
             root           %docroot%;
             access_log     /var/log/httpd/domains/%domain%.log combined;
             access_log     /var/log/httpd/domains/%domain%.bytes bytes;
@@ -37,5 +28,8 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/nginx.%domain%.conf*;
+    disable_symlinks if_not_owner from=%docroot%;
+
+    include %home%/%user%/conf/web/nginx.%domain%.conf*;
 }
+

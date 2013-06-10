@@ -86,6 +86,11 @@ if [ "$SSL" = 'yes' ]; then
     fi
 fi
 
+# Running template trigger
+if [ -x $WEBTPL/$PROXY_SYSTEM/$template.sh ]; then
+    $WEBTPL/$PROXY_SYSTEM/$template.sh $user $domain $ip $HOMEDIR $docroot
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

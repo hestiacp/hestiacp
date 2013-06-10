@@ -303,6 +303,11 @@ rebuild_web_domain_conf() {
     fi
     user_domains=$((user_domains + 1))
 
+    # Running template trigger
+    if [ -x $WEBTPL/$PROXY_SYSTEM/$PROXY.sh ]; then
+        $WEBTPL/$PROXY_SYSTEM/$PROXY.sh $user $domain $ip $HOMEDIR $docroot
+    fi
+
     # Checking ftp
     if [ ! -z "$FTP_USER" ]; then
         if [ -z "$(grep ^$FTP_USER: /etc/passwd)" ]; then

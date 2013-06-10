@@ -116,29 +116,6 @@ done
 sed -i '/Symlinks protection/d' /etc/nginx/nginx.conf
 sed -i '/disable_symlinks.*/d' /etc/nginx/nginx.conf
 
-# Add improved symlink protection
-nginx_version=$(rpm -q nginx| grep nginx-1| cut -f 2 -d .)
-if [ -e "/tmp/nginx" ] && [[ "$nginx_version" -gt '0' ]]; then
-    for tpl in $(ls $TPL/nginx |grep -v proxy_ip.tpl); do
-        check_symlink=$(grep disable_symlinks $TPL/nginx/$tpl)
-        if [ -z "$check_symlink" ]; then
-            insert='disable_symlinks if_not_owner from=%home%\/%user%;'
-            sed -i "s/include %/$insert\n\n    include %/" $TPL/nginx/$tpl
-            triggered='yes'
-        fi
-    done
-
-    if [ "$triggered" = 'yes' ]; then
-        # Rebuild web domains
-        for user in $(ls $VESTA/data/users); do
-            /usr/local/vesta/bin/v-rebuild-web-domains $user no
-        done
-
-        # Restart proxy
-        /usr/local/vesta/bin/v-restart-proxy
-    fi
-fi
-
 # Update version
 sed -i 's/0.9.7/0.9.8/' /usr/local/vesta/conf/vesta.conf
 

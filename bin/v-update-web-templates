@@ -1,0 +1,58 @@
+#!/bin/bash
+# info: updates web templates
+# options: [RESTART]
+#
+# The function for obtaining updated pack of web templates.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+restart=$1
+
+# Includes
+source $VESTA/conf/vesta.conf
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get new archive
+tmpdir=$(mktemp -d --dry-run)
+mkdir $tmpdir
+cd $tmpdir
+wget http://c.vestacp.com/0.9.8/rhel/templates.tar.gz -q
+if [ "$?" -ne 0 ]; then
+    echo "Error: can't download template.tar.gz"
+    log_event "$E_CONNECT" "$EVENT"
+    rm -rf $tmpdir
+    exit $E_CONNECT
+fi
+
+# Update templates
+tar -xzpf templates.tar.gz -C $VESTA/data/ templates/web
+
+# Rebuild web domains
+for user in $($BIN/v-list-sys-users plain); do
+    $BIN/v-rebuild-web-domains $user no
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restart web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web
+    $BIN/v-restart-proxy
+fi
+
+# Delete tmpdir
+rm -rf $tmpdir
+
+exit

@@ -47,7 +47,7 @@ if [ -z "$ip" ]; then
     fi
 fi
 
-# Web dmain
+# Web domain
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     $BIN/v-add-web-domain $user $domain $ip
     retun_code=$?

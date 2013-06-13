@@ -1,9 +1,9 @@
 [Vesta Control Panel](http://vestacp.com/)
 ==================================================
 
-* Vesta is the open source hosting control panel.
-* Vesta is the clean and focused interface without the clutter.
-* Vesta is the latest very innovative technologies.
+* Vesta is an open source hosting control panel.
+* Vesta has a clean and focused interface without the clutter.
+* Vesta has the latest of very innovative technologies.
 
 
 How to install
@@ -13,7 +13,7 @@ Connect to your server as root via SSH
 ssh root@your.server
 ```
 
-Download installation script
+Download the installation script
 ```bash
 curl -O http://vestacp.com/pub/vst-install.sh
 ```

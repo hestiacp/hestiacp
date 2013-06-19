@@ -70,7 +70,7 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 # Checking proxy
-if [ ! -z "$PROXY" ]; then
+if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
     tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
     conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
     del_web_config
@@ -125,19 +125,22 @@ if [ "$domains" -eq '0' ]; then
     rm -f $HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf
 fi
 
-# Checking last SSL proxy
-conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
-last_sproxy=$(grep "SSL='yes'" $USER_DATA/web.conf)
-if [ -z "$last_sproxy" ]; then
-    sed -i "/.*\/$user\/.*s$PROXY_SYSTEM.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
-fi
+# Proxy
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    # Checking last SSL proxy
+    conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
+    last_sproxy=$(grep "SSL='yes'" $USER_DATA/web.conf)
+    if [ -z "$last_sproxy" ]; then
+        sed -i "/.*\/$user\/.*s$PROXY_SYSTEM.conf/d" $conf
+        rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
+    fi
 
-# Checking last proxy
-last_proxy=$(grep -v "PROXY=''" $USER_DATA/web.conf)
-if [ -z "$last_proxy" ]; then
-    sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
+    # Checking last proxy
+    last_proxy=$(grep -v "PROXY=''" $USER_DATA/web.conf)
+    if [ -z "$last_proxy" ]; then
+        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
+        rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
+    fi
 fi
 
 # Decrease counters

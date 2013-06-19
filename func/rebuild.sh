@@ -282,7 +282,7 @@ rebuild_web_domain_conf() {
     fi
 
     # Checking proxy
-    if [ ! -z "$PROXY" ]; then
+    if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
         tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
         conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
         add_web_config

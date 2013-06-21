@@ -254,6 +254,7 @@ rebuild_web_domain_conf() {
 
     # Checking SSL
     if [ "$SSL" = 'yes' ]; then
+
         # Adding domain to the web conf
         conf="$HOMEDIR/$user/conf/web/tmp_s$WEB_SYSTEM.conf"
         tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
@@ -288,16 +289,21 @@ rebuild_web_domain_conf() {
         add_web_config
         chown root:$user $conf
         chmod 640 $conf
-
-        if [ "$SSL" = 'yes' ]; then
-            tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
-            conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
-            add_web_config
-            chown root:$user $conf
-            chmod 640 $conf
-        fi
         proxy_change='yes'
     fi
+
+    if [ ! -z "$PROXY_SYSTEM" ] && [ "$SSL" = 'yes' ]; then
+        tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+        if [ -z "$PROXY" ]; then
+            tpl_file="$WEBTPL/$PROXY_SYSTEM/default.stpl"
+        fi
+        conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
+        add_web_config
+        chown root:$user $conf
+        chmod 640 $conf
+        proxy_change='yes'
+    fi
+
     if [ "$SUSPENDED" = 'yes' ]; then
         suspended_web=$((suspended_web + 1))
     fi

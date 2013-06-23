@@ -44,11 +44,9 @@ is_language_valid $language
 
 # Change language
 if [ -z "$(grep LANGUAGE $USER_DATA/user.conf)" ]; then
-    echo "adding LANG"
     sed -i "s/^TIME/LANGUAGE='$language'\nTIME/g" $USER_DATA/user.conf
 else
     update_user_value "$user" '$LANGUAGE' "$language"
-    echo "changinx LANG"
 fi
 
 exit

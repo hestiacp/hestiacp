@@ -43,7 +43,8 @@ is_object_value_empty 'web' 'DOMAIN' "$domain" '$FTP_USER'
 # Adding user
 /usr/sbin/adduser $ftp_user -g $user -s /sbin/nologin -M \
     -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
-echo "$ftp_password" | /usr/bin/passwd "$ftp_user" --stdin &>/dev/null
+echo "$ftp_user:$ftp_password" | /usr/sbin/chpasswd
+
 ftp_md5="$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)"
 
 

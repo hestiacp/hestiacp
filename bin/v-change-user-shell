@@ -33,7 +33,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Get shell full path
-shell_path=$(/usr/bin/chsh --list-shells | grep -w "$shell" |head -n1)
+shell_path=$(grep -w "$shell" /etc/shells | head -n1)
 
 # Changing passwd file
 /usr/bin/chsh -s "$shell_path" "$user" &>/dev/null

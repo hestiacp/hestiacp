@@ -43,9 +43,19 @@ else
     update_ip_value '$NAT' "$nat_ip"
 fi
 
-# Change vsftpd config
+# Check ftp system
 if [ "$FTP_SYSTEM" = 'vsftpd' ]; then
-    conf="/etc/vsftpd/vsftpd.conf"
+
+    # Find configuration
+    if [ -e '/etc/vsftpd/vsftpd.conf' ]; then
+        conf='/etc/vsftpd/vsftpd.conf'
+    fi
+
+    if [ -e '/etc/vsftpd.conf' ]; then
+        conf='/etc/vsftpd.conf'
+    fi
+
+    # Update config
     if [ -z "$(grep pasv_address $conf)" ]; then
         if [ ! -z "$nat_ip" ]; then
             echo "pasv_address=$nat_ip" >> $conf

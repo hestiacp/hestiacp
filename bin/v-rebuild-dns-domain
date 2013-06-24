@@ -50,8 +50,17 @@ for nameserver in ${ns//,/ };do
     i=$((i + 1))
 done
 
+# Get dns config path
+if [ -e '/etc/named.conf' ]; then
+    dns_conf='/etc/named.conf'
+fi
+
+if [ -e '/etc/bind/named.conf' ]; then
+    dns_conf='/etc/bin/named.conf'
+fi
+
 # Remove old user's zone
-sed -i "/\/$user\/conf\/dns/d" /etc/named.conf
+sed -i "/\/$user\/conf\/dns/d" $dns_conf
 
 # Starting loop
 rebuild_dns_domain_conf

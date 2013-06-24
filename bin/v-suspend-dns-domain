@@ -36,9 +36,6 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting domain from named.conf
-#sed -i "/\/$domain.db\"/d" /etc/named.conf
-
 
 #----------------------------------------------------------#
 #                       Vesta                              #

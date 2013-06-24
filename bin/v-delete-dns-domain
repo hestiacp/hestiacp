@@ -40,8 +40,17 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
 
+# Get dns config path
+if [ -e '/etc/named.conf' ]; then
+    dns_conf='/etc/named.conf'
+fi
+
+if [ -e '/etc/bind/named.conf' ]; then
+    dns_conf='/etc/bin/named.conf'
+fi
+
 # Deleting domain in named.conf
-sed -i "/\/$user\/conf\/dns\/$domain.db\"/d" /etc/named.conf
+sed -i "/\/$user\/conf\/dns\/$domain.db\"/d" $dns_conf
 rm -f $HOMEDIR/$user/conf/dns/$domain.db
 
 # dns-cluster

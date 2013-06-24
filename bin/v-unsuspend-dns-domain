@@ -36,10 +36,6 @@ is_object_suspended 'dns' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding zone in named.conf
-#named="zone \"$domain_idn\" {type master; file"
-#named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
-#echo "$named" >> /etc/named.conf
 
 
 #----------------------------------------------------------#

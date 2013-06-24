@@ -39,7 +39,7 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Deleting symbolic link
-rm -f /etc/exim/domains/$domain
+rm -f /etc/$MAIL_SYSTEM/domains/$domain
 
 
 #----------------------------------------------------------#

@@ -56,7 +56,7 @@ chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 chmod 770 $HOMEDIR/$user/mail/$domain_idn
 
 # Adding symlink
-ln -s $HOMEDIR/$user/conf/mail/$domain /etc/exim/domains/$domain_idn
+ln -s $HOMEDIR/$user/conf/mail/$domain /etc/$MAIL_SYSTEM/domains/$domain_idn
 
 # Adding antispam protection
 if [ "$antispam" = 'yes' ]; then

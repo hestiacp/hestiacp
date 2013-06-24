@@ -38,7 +38,7 @@ is_object_suspended 'mail' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Add symbolic link
-ln -s $HOMEDIR/$user/conf/mail/$domain /etc/exim/domains/
+ln -s $HOMEDIR/$user/conf/mail/$domain /etc/$MAIL_SYSTEM/domains/
 
 
 #----------------------------------------------------------#

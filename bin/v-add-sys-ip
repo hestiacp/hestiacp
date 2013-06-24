@@ -19,7 +19,7 @@ ip=${1// /}
 mask=$2
 interface="${3-eth0}"
 user="${4-admin}"
-ip_status="${5-shared}" # status can be dedicated
+ip_status="${5-shared}"
 ip_name=$6
 nat_ip=$7
 
@@ -53,16 +53,29 @@ fi
 get_ip_iface
 sys_ip_check=$(/sbin/ifconfig | grep "addr:$ip ")
 if [ -z "$sys_ip_check" ]; then
+    # Adding sys ip
     /sbin/ifconfig "$iface" "$ip" netmask "$mask"
 
-    # Adding startup script
-    sys_ip="# Added by vesta"
-    sys_ip="$sys_ip\nDEVICE=$iface"
-    sys_ip="$sys_ip\nBOOTPROTO=static"
-    sys_ip="$sys_ip\nONBOOT=yes"
-    sys_ip="$sys_ip\nIPADDR=$ip"
-    sys_ip="$sys_ip\nNETMASK=$mask"
-    echo -e $sys_ip > /etc/sysconfig/network-scripts/ifcfg-$iface
+    # Adding RHEL/CentOS/Fedora startup script
+    if [ -e "/etc/redhat-release" ]; then
+        sys_ip="# Added by vesta"
+        sys_ip="$sys_ip\nDEVICE=$iface"
+        sys_ip="$sys_ip\nBOOTPROTO=static"
+        sys_ip="$sys_ip\nONBOOT=yes"
+        sys_ip="$sys_ip\nIPADDR=$ip"
+        sys_ip="$sys_ip\nNETMASK=$mask"
+        echo -e $sys_ip > /etc/sysconfig/network-scripts/ifcfg-$iface
+    fi
+
+    # Adding Debian/Ubuntu startup script
+    if [ -e "/etc/debian_version" ]; then
+        sys_ip="# Added by vesta"
+        sys_ip="$sys_ip\nauto $iface"
+        sys_ip="$sys_ip\niface $iface inet static"
+        sys_ip="$sys_ip\naddress $ip"
+        sys_ip="$sys_ip\netmask $mask"
+        echo -e $sys_ip >> /etc/network/interfaces
+    fi
 fi
 
 # Adding vesta ip
@@ -79,19 +92,18 @@ DATE='$DATE'" > $VESTA/data/ips/$ip
 chmod 660 $VESTA/data/ips/$ip
 
 # WEB support
-web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
-if [ "$WEB_SYSTEM" = 'httpd' ]; then
-    conf_ins='1'
-    conf_line=$(grep -n NameVirtual $web_conf | tail -n1 | cut -f1 -d:)
-    if [ ! -z "$conf_line" ]; then
-        conf_ins=$((conf_line + 1))
+if [ ! -z "$WEB_SYSTEM" ]; then
+    web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
+
+    if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
+        echo "NameVirtualHost $ip:$WEB_PORT" >  $web_conf
+        echo "Listen $ip:$WEB_PORT" >> $web_conf
     fi
+
     if [ "$WEB_SSL" = 'mod_ssl' ]; then
-        sed -i "$conf_ins i NameVirtualHost $ip:$WEB_SSL_PORT" $web_conf
-        sed -i "$conf_ins i Listen $ip:$WEB_SSL_PORT" $web_conf
+        echo "NameVirtualHost $ip:$WEB_SSL_PORT" >> $web_conf
+        echo "Listen $ip:$WEB_SSL_PORT" >> $web_conf
     fi
-    sed -i "$conf_ins i NameVirtualHost $ip:$WEB_PORT" $web_conf
-    sed -i "$conf_ins i Listen $ip:$WEB_PORT" $web_conf
 fi
 
 # Proxy support
@@ -102,10 +114,19 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
             -e "s/%proxy_port%/$PROXY_PORT/g" \
         > /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 
+    # mod_extract_forwarded
     fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
     if [ -e "$fw_conf" ]; then
         ips=$(grep 'MEFaccept ' $fw_conf | grep -v '#' | head -n1)
         sed -i "s/$ips/$ips $ip/g" $fw_conf
+    fi
+
+    # mod_rpaf
+    rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+    if [ -e "$rpaf_conf" ]; then
+        rpaf_str=$(grep RPAFproxy_ips $rpaf_conf)
+        rpaf_str="$rpaf_str $ip"
+        sed -i "s/.*RPAFproxy_ips.*/$rpaf_str/" $rpaf_conf
     fi
 fi
 

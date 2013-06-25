@@ -221,8 +221,10 @@ sort_dns_records() {
 add_web_config() {
     cat $tpl_file | \
         sed -e "s/%ip%/$ip/g" \
+            -e "s/%web_system%/$WEB_SYSTEM/g" \
             -e "s/%web_port%/$WEB_PORT/g" \
             -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
+            -e "s/%proxy_system%/$PROXY_SYSTEM/g" \
             -e "s/%proxy_port%/$PROXY_PORT/g" \
             -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
             -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \

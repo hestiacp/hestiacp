@@ -473,16 +473,22 @@ sort_cron_jobs() {
 # Sync cronjobs with system cron
 sync_cron_jobs() {
     source $USER_DATA/user.conf
-    rm -f /var/spool/cron/$user
+
+    if [ -e "/var/spool/cron/crontabs" ]; then
+        sys_cron="/var/spool/cron/crontabs/$user"
+    else
+        sys_cron="/var/spool/cron/$user"
+    fi
+    rm -f $sys_cron
     if [ "$CRON_REPORTS" = 'yes' ]; then
-        echo "MAILTO=$CONTACT" > /var/spool/cron/$user
+        echo "MAILTO=$CONTACT" > $sys_cron
     fi
     while read line; do
         eval $line
         if [ "$SUSPENDED" = 'no' ]; then
             echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" |\
                 sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
-                >> /var/spool/cron/$user
+                >> $sys_cron
         fi
     done < $USER_DATA/cron.conf
 }

@@ -58,6 +58,12 @@ done
 web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
 proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
 
+# Touch vesta configs
+touch $web_conf
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    touch $proxy_conf
+fi
+
 # Checking if there is at least 1 domain
 if [ "$domain_counter" -lt 1 ]; then
     # Deleting web configs

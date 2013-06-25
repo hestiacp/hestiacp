@@ -71,8 +71,8 @@ if (!empty($_POST['ok'])) {
         }
         if ((!empty($v_db_email)) && ($return_var == 0)) {
             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"]);
-            if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpMyAdmin/";
-            if ($_POST['v_type'] == 'pgsql') $db_admin_link = "http://".$http_host."/phpPgAdmin/";
+            if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpmyadmin/";
+            if ($_POST['v_type'] == 'pgsql') $db_admin_link = "http://".$http_host."/phppgadmin/";
             $to = $v_db_email;
             $subject = __("Database Credentials");
             $hostname = exec('hostname');

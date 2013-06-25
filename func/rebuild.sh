@@ -371,19 +371,27 @@ rebuild_dns_domain_conf() {
     chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
     chown root:named $HOMEDIR/$user/conf/dns/$domain.db
 
+    # Get dns config path
+    if [ -e '/etc/named.conf' ]; then
+        dns_conf='/etc/named.conf'
+    fi
+
+    if [ -e '/etc/bind/named.conf' ]; then
+        dns_conf='/etc/bind/named.conf'
+    fi
+
     # Bind config check
-    nconf='/etc/named.conf'
     if [ "$SUSPENDED" = 'yes' ]; then
-        rm_string=$(grep -n /etc/namedb/$domain.db $nconf | cut -d : -f 1)
+        rm_string=$(grep -n /etc/namedb/$domain.db $dns_conf | cut -d : -f 1)
         if [ ! -z "$rm_string" ]; then
-            sed -i "$rm_string d" $nconf
+            sed -i "$rm_string d" $dns_conf
         fi
         suspended_dns=$((suspended_dns + 1))
     else
-        if [ -z "$(grep /$domain.db $nconf)" ]; then
+        if [ -z "$(grep /$domain.db $dns_conf)" ]; then
             named="zone \"$domain_idn\" {type master; file"
             named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
-            echo "$named" >> /etc/named.conf
+            echo "$named" >> $dns_conf
         fi
     fi
     user_domains=$((user_domains + 1))

@@ -69,11 +69,11 @@ if [ -z "$sys_ip_check" ]; then
 
     # Adding Debian/Ubuntu startup script
     if [ -e "/etc/debian_version" ]; then
-        sys_ip="# Added by vesta"
+        sys_ip="\n# Added by vesta"
         sys_ip="$sys_ip\nauto $iface"
         sys_ip="$sys_ip\niface $iface inet static"
         sys_ip="$sys_ip\naddress $ip"
-        sys_ip="$sys_ip\netmask $mask"
+        sys_ip="$sys_ip\nnetmask $mask"
         echo -e $sys_ip >> /etc/network/interfaces
     fi
 fi

@@ -48,29 +48,51 @@ if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
 fi
 if [ ! -z "$interface" ]; then
     /sbin/ifconfig $interface down
-    rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
+
+    # Deleting startup conf on RHEL/CentOS/Fedora
+    if [ -e "/etc/sysconfig/network-scripts/ifcfg-$interface" ]; then
+        rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
+    fi
+
+    # Deleting startup conf on Debian/Ubuntu
+    if [ -e "/etc/network/interfaces" ]; then
+        ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
+        if [ ! -z "$ip_str" ]; then
+            first_str=$((ip_str - 3))
+            last_str=$((ip_str + 1))
+            sed -i "$first_str,$last_str d" /etc/network/interfaces
+        fi
+    fi
 fi
 
 # Deleting vesta ip
 rm -f $VESTA/data/ips/$ip
 
-# Disable virtual ip hosting support
-web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+# Deleting web config
 if [ ! -z "$WEB_SYSTEM" ]; then
-    sed -i "/NameVirtualHost $ip:/d" $web_conf
-    sed -i "/Listen $ip:/d" $web_conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/$ip.conf
 fi
 
 # Deleting proxy config
 if [ ! -z "$PROXY_SYSTEM" ]; then
     rm -f /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 
+    # mod_extract_forwarded
     fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
     if [ -e "$fw_conf" ]; then
         ips=$(grep 'MEFaccept 127.0.0.1' $fw_conf)
         new_ips=$(echo "$ips" | sed -e "s/$ip//" )
         sed -i "s/$ips/$new_ips/g" $fw_conf
     fi
+
+    # mod_rpaf
+    rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+    if [ -e "$rpaf_conf" ]; then
+        ips=$(grep RPAFproxy_ips $rpaf_conf)
+        new_ips=$(echo "$rpaf_str" | sed -e "s/$ip//")
+        sed -i "s/$ips/$new_ips/g" $rpaf_conf
+    fi
+
 fi
 
 

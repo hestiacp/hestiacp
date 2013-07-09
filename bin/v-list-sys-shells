@@ -17,7 +17,7 @@ source $VESTA/func/main.sh
 
 # Json function
 json_list_sh() {
-    shells=$(cat /etc/shells)
+    shells=$(grep -v '#' /etc/shells)
     sh_counter=$(echo "$shells" | wc -l)
     i=1
     echo '['
@@ -35,7 +35,7 @@ json_list_sh() {
 
 # Shell function
 shell_list_sh() {
-    shells=$(cat /etc/shells)
+    shells=$(grep -v '#' /etc/shells)
     if [ -z "$nohead" ]; then
         echo "SHELLS"
         echo "----------"

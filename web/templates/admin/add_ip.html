@@ -1,164 +1,160 @@
-
-                                <?php
-                                    $back = $_SESSION['back'];
-                                    if (empty($back)) {
-                                        $back = "location.href='/list/ip/'";
-                                    } else {
-                                        $back = "location.href='".$back."'";
-                                    }
-                                ?>
-
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Adding IP address');?></b></a>
-                                            <?php
-                                                if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                                                } else {
-                                                    if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                                    }
-                                                }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <form id="vstobjects" name="v_add_ip" method="post">
-                        <script type="text/javascript">
-                            function elementHideShow(elementToHideOrShow) {
-                                var el = document.getElementById(elementToHideOrShow);
-                                if (el.style.display == "block") {
-                                    el.style.display = "none";
-                                } else {
-                                    el.style.display = "block";
+            <?php
+                $back = $_SESSION['back'];
+                if (empty($back)) {
+                    $back = "location.href='/list/ip/'";
+                } else {
+                    $back = "location.href='".$back."'";
+                }
+            ?>
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 16px 8px;" ><a class="name"><b><?php print __('Adding IP address');?></b></a>
+                        <?php
+                            if (!empty($_SESSION['error_msg'])) {
+                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                            } else {
+                                if (!empty($_SESSION['ok_msg'])) {
+                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                                 }
                             }
-                        </script>
+                        ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                        <table class='data'>
-                            <tr class="data-add">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td></td></tr>
-                                    </table>
+        <form id="vstobjects" name="v_add_ip" method="post">
+            <script type="text/javascript">
+                function elementHideShow(elementToHideOrShow) {
+                    var el = document.getElementById(elementToHideOrShow);
+                    if (el.style.display == "block") {
+                        el.style.display = "none";
+                    } else {
+                        el.style.display = "block";
+                    }
+                }
+            </script>
+
+            <table class='data'>
+                <tr class="data-add">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <table width="830px">
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <table class="data-col2" width="600px">
+                            <tr>
+                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                    <?php print __('IP address') ?> 
                                 </td>
-                                <td class="data-dotted" width="830px">
-                                    <table width="830px">
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('Netmask');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_netmask" <?php if (!empty($v_netmask)) echo "value=".$v_netmask; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10 0 0 2px;">
+                                    <?php print __('Interface');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_interface">
+                                        <?php
+                                            foreach ($interfaces as $key => $value) {
+                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                if ((!empty($v_interface)) && ( $value == $v_interface )) echo ' selected';
+                                                echo ">".$value."</option>\n";
+                                            }
+                                        ?> 
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('Shared');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
                                         <tr>
-                                            <td></td>
-                                        </tr>
-                                    </table>
-                                    <table class="data-col2" width="600px">
-                                        <tr>
-                                            <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print __('IP address') ?> 
+                                            <td class="vst-text" style="padding: 0 0 0 2px;">
+                                                <?php print __('Assigned user');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Netmask');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_netmask" <?php if (!empty($v_netmask)) echo "value=".$v_netmask; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print __('Interface');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_interface">
+                                                <select class="vst-list" name="v_owner">
                                                     <?php
-                                                        foreach ($interfaces as $key => $value) {
+                                                        foreach ($users as $key => $value) {
                                                             echo "\t\t\t\t<option value=\"".$value."\"";
-                                                            if ((!empty($v_interface)) && ( $value == $v_interface )) echo ' selected';
+                                                            if ((!empty($v_owner)) && ( $value == $v_owner )) echo ' selected';
                                                             echo ">".$value."</option>\n";
                                                         }
-                                                    ?> 
+                                                    ?>
                                                 </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Shared');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <table style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
-                                                    <tr>
-                                                        <td class="vst-text" style="padding: 0 0 0 2px;">
-                                                            <?php print __('Assigned user');?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <select class="vst-list" name="v_owner">
-                                                                <?php
-                                                                    foreach ($users as $key => $value) {
-                                                                        echo "\t\t\t\t<option value=\"".$value."\"";
-                                                                        if ((!empty($v_owner)) && ( $value == $v_owner )) echo ' selected';
-                                                                        echo ">".$value."</option>\n";
-                                                                    }
-                                                                ?>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print __('Assigned domain');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_name" <?php if (!empty($v_name)) echo "value=".$v_name; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                <?php print __('NAT IP association');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_nat" <?php if (!empty($v_nat)) echo "value=".$v_nat; ?>>
-                                            </td>
-                                        </tr>
-
-
-                                    </table>
-                                    <table class="data-col2">
-                                        <tr>
-                                            <td style="padding: 24px 0 0 0;" width="116px">
-                                                <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
-                                            </td>
-                                            <td style="padding: 24px 0 0 0;">
-                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10 0 0 2px;">
+                                    <?php print __('Assigned domain');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_name" <?php if (!empty($v_name)) echo "value=".$v_name; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10 0 0 2px;">
+                                    <?php print __('NAT IP association');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_nat" <?php if (!empty($v_nat)) echo "value=".$v_nat; ?>>
+                                </td>
+                            </tr>
+
+
                         </table>
-                    </from>
+                        <table class="data-col2">
+                            <tr>
+                                <td style="padding: 24px 0 0 0;" width="116px">
+                                    <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
+                                </td>
+                                <td style="padding: 24px 0 0 0;">
+                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </from>

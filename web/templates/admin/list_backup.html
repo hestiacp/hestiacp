@@ -1,186 +1,184 @@
-                               <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/schedule/backup/'"> <?php print __('Create Backup');?> </button>
-                                            </div>
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                            <div class="submenu-select-block">
-                                                <form action="/bulk/backup/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                                                <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print __('apply to selected');?></option>
-                                                    <option value="delete"><?php print __('delete');?></option>
-                                                </select>
-                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
-                                            </div>
-                                            <?php
-                                                if (!empty($_SESSION['backup_msg'])) {
-                                            ?>
-                                            <div>
-                                                <script type="text/javascript">
-                                                    $(function() {
-                                                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                                                        $( "#dialog-message" ).dialog({
-                                                            modal: true,
-                                                            buttons: {
-                                                                Ok: function() {
-                                                                    $( this ).dialog( "close" );
-                                                                }
-                                                            }
-                                                        });
-                                                    });
-                                                </script>
-                                                <div id="dialog-message" title="<?php print __('Backup System') ?>">
-                                                    <p><?php echo $_SESSION['backup_msg'] ?></p>
-                                                </div>
-                                            </div>
-                                            <?php
-                                                    unset($_SESSION['backup_msg']);
-                                                }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <div id="vstobjects">
-                        <table class="data">
-
-                            <?php
-                                foreach ($data as $key => $value) {
-                                    ++$i;
-                                    $web = __('no');
-                                    $dns = __('no');
-                                    $mail = __('no');
-                                    $db = __('no');
-                                    $cron = __('no');
-                                    $udir = __('no');
-
-                                    if (!empty($data[$key]['WEB'])) $web = __('yes');
-                                    if (!empty($data[$key]['DNS'])) $dns = __('yes');
-                                    if (!empty($data[$key]['MAIL'])) $mail = __('yes');
-                                    if (!empty($data[$key]['DB'])) $db = __('yes');
-                                    if (!empty($data[$key]['CRON'])) $cron = __('yes');
-                                    if (!empty($data[$key]['UDIR'])) $udir = __('yes');
-
-                            ?> 
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="backup[]" value="<?php echo $key ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
-                                        <tr><td class="data-active"><b><?php print __('active');?></b></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                                        <span class="do_delete">
-                                            <img src="/images/delete.png" width="7px" height="7px">
-                                            <?php print __('delete');?> 
-                                            <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?php echo "$key" ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                                <p class="counter-value"><?php print __('DELETE_BACKUP_CONFIRMATION',$key);?></p>
-                                            </div>
-                                        </span>
-                                    </a>
-                                    <a href="/list/backup/?backup=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/more.png" width="8px" height="8px">
-                                            <?php print __('configure restore settings') ?>
-                                        </span>
-                                    </a>
-                                    <a href="/download/backup/?backup=<?php echo $key ?>" target="_blank" class="data-controls">
-                                        <span>
-                                            <img src="/images/download.png" width="8px" height="8px">
-                                            <?php print __('download');?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align:top;" >
-                                                <table>
-                                                    <tr>
-                                                        <td class="chart1" style="padding: 10px 0 0px 2px"><?php print __('Backup Size');?>: <?php echo humanize_usage($data[$key]['SIZE']) ?>
-                                                            <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['SIZE'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td style="vertical-align:top;" width="250">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Type');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['TYPE'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Consistent');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['WEB']) ?>">
-                                                                <?php print __($web) ?> 
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td rowspan=4 style="vertical-align:top;" width="300">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Run Time');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo humanize_time($data[$key]['RUNTIME']) ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <?php
-                                }
-                            ?> 
-
-                        </table>
-                        </form>
-
-                        <table class="data-count">
-                            <tr>
-                                <td width="160px"></td>
-                                <td>
-                                    <?php
-                                        if ( $i == 1) {
-                                            echo __('one archive');
-                                        } else {
-                                            echo __('%s archives',$i);
+           <table class="submenu">
+                <tr>
+                    <td style="padding: 12px 8px">
+                        <div class="submenu-button-block">
+                            <button class="submenu-button" onclick="location.href='/schedule/backup/'"> <?php print __('Create Backup');?> </button>
+                        </div>
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            </form>
+                        </div>
+                        <div class="submenu-select-block">
+                            <form action="/bulk/backup/" method="post" id="objects">
+                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
+                            <select class="submenu-select-dropdown" name="action">
+                                <option value=""><?php print __('apply to selected');?></option>
+                                <option value="delete"><?php print __('delete');?></option>
+                            </select>
+                            <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
+                        </div>
+                        <?php
+                            if (!empty($_SESSION['backup_msg'])) {
+                        ?> 
+                        <div>
+                            <script type="text/javascript">
+                                $(function() {
+                                    $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                                    $( "#dialog-message" ).dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Ok: function() {
+                                                $( this ).dialog( "close" );
+                                            }
                                         }
-                                    ?>
+                                    });
+                                });
+                            </script>
+                            <div id="dialog-message" title="<?php print __('Backup System') ?>">
+                                <p><?php echo $_SESSION['backup_msg'] ?></p>
+                            </div>
+                        </div>
+                        <?php
+                                unset($_SESSION['backup_msg']);
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="vstobjects">
+            <table class="data">
+
+                <?php
+                    foreach ($data as $key => $value) {
+                        ++$i;
+                        $web = __('no');
+                        $dns = __('no');
+                        $mail = __('no');
+                        $db = __('no');
+                        $cron = __('no');
+                        $udir = __('no');
+
+                        if (!empty($data[$key]['WEB'])) $web = __('yes');
+                        if (!empty($data[$key]['DNS'])) $dns = __('yes');
+                        if (!empty($data[$key]['MAIL'])) $mail = __('yes');
+                        if (!empty($data[$key]['DB'])) $db = __('yes');
+                        if (!empty($data[$key]['CRON'])) $cron = __('yes');
+                        if (!empty($data[$key]['UDIR'])) $udir = __('yes');
+
+                ?> 
+
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="backup[]" value="<?php echo $key ?>" ></td></tr>
+                            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></td></tr>
+                            <tr><td class="data-active"><b><?php print __('active');?></b></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                            <span class="do_delete">
+                                <img src="/images/delete.png" width="7px" height="7px">
+                                <?php print __('delete');?> 
+                                <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?php echo "$key" ?>" />
+                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                    <p class="counter-value"><?php print __('DELETE_BACKUP_CONFIRMATION',$key);?></p>
+                                </div>
+                            </span>
+                        </a>
+                        <a href="/list/backup/?backup=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/more.png" width="8px" height="8px">
+                                <?php print __('configure restore settings') ?>
+                            </span>
+                        </a>
+                        <a href="/download/backup/?backup=<?php echo $key ?>" target="_blank" class="data-controls">
+                            <span>
+                                <img src="/images/download.png" width="8px" height="8px">
+                                <?php print __('download');?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top;" >
+                                    <table>
+                                        <tr>
+                                            <td class="chart1" style="padding: 10px 0 0px 2px"><?php print __('Backup Size');?>: <?php echo humanize_usage($data[$key]['SIZE']) ?>
+                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['SIZE'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="250">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Type');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['TYPE'] ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Consistent');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['WEB']) ?>">
+                                                    <?php print __($web) ?> 
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td rowspan=4 style="vertical-align:top;" width="300">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Run Time');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo humanize_time($data[$key]['RUNTIME']) ?> 
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </td>
+                </tr>
+
+                <?php
+                    }
+                ?> 
+
+            </table>
+            </form>
+
+            <table class="data-count">
+                <tr>
+                    <td width="168px"></td>
+                    <td>
+                        <?php
+                            if ( $i == 1) {
+                                echo __('one archive');
+                            } else {
+                                echo __('%s archives',$i);
+                            }
+                        ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
 

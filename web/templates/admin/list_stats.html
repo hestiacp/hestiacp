@@ -1,214 +1,211 @@
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                            <div class="submenu-select-block" style="padding-left:8px;">
-                                                <form action="/list/stats/" method="get" id="objects">
-                                                <a class="vst<?php if (empty($_GET['user'])) echo "-selected"; ?>" style="padding: 0 12px 0 0;" href='/list/stats/'><?php print __('Overall Statistics');?></a> 
-                                                <select class="submenu-select-dropdown" name="user">
-                                                    <option value=""><?php print __('show per user');?></option>
-                                                <?php
-                                                    foreach ($users as $key => $value) {
-                                                        echo "\t\t\t\t<option value=\"".$value."\"";
-                                                        if ((!empty($v_user)) && ( $value == $_GET['user'])){
-                                                            echo ' selected';
-                                                        }
-                                                        echo ">".$value."</option>\n";
-                                                    }
-                                                ?> 
-                                                </select>
-                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
-                                            </div>
-
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <div id="vstobjects">
-                        <table class='data'>
-
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 12px 8px">
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            </form>
+                        </div>
+                        <div class="submenu-select-block" style="padding-left:8px;">
+                            <form action="/list/stats/" method="get" id="objects">
+                            <a class="vst<?php if (empty($_GET['user'])) echo "-selected"; ?>" style="padding: 0 12px 0 0;" href='/list/stats/'><?php print __('Overall Statistics');?></a> 
+                            <select class="submenu-select-dropdown" name="user">
+                                <option value=""><?php print __('show per user');?></option>
                             <?php
-                                foreach ($data as $key => $value) {
-                                    ++$i;
-                            ?>
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150px">
-                                    <table class="data-col1" width="150">
-                                        <tr><td style="padding: 24 0 4 0;"><a class="data-date" ><?php echo strftime("%d %b %Y", strtotime($key))?></a></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <div style="height:20px; width:20px;"></div>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td colspan=3 class="username" style="padding: 10 0 0 4px;">
-                                                <b><?php echo strftime("%b %Y", strtotime($key))?></b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align:top;" >
-                                                <table>
-                                                    <tr>
-                                                        <td class="chart1" colspan=2 style="padding: 4px 0 0 2px;">
-                                                            <?php print __('Bandwidth');?>: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
-                                                            <div style="width:160px; height:7px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:7px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="chart1" colspan=2 style="padding: 0 0 0 2px;">
-                                                            <?php print __('Disk');?>: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
-                                                            <div style="width:160px; height:7px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:7px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan=2>
-                                                            <table class="chart2">
-                                                                <tr>
-                                                                    <td>
-                                                                        <?php print __('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?>
-                                                                    </td>
-                                                                    <td style="padding: 0px 0px 0px 4px">
-                                                                        <?php print __('Databases');?>: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <?php print __('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?>
-                                                                    </td>
-                                                                    <td style="padding: 0px 0px 0px 4px">
-                                                                        <?php print __('User Directories');?>: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?>
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td style="vertical-align:top;" width="280">
-                                                <table width="280">
-                                                    <tr>
-                                                        <td class="counter-name" width="37%">
-                                                            <?php print __('Web Domains');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_WEB_DOMAINS'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('SSL Domains');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_WEB_SSL'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Web Aliases');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_WEB_ALIASES'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('DNS domains');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_DNS_DOMAINS'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('DNS records');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_DNS_RECORDS'] ?>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td style="vertical-align:top;" width="250">
-                                                <table class="data-col4" width="250">
-                                                    <tr>
-                                                        <td class="counter-name" width="50%">
-                                                            <?php print __('Mail Domains');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_MAIL_DOMAINS'] ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Mail Accounts');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_MAIL_ACCOUNTS'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Databases');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_DATABASES'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Cron Jobs');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['U_CRON_JOBS'] ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('IP Addresses');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['IP_OWNED'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <?php
+                                foreach ($users as $key => $value) {
+                                    echo "\t\t\t\t<option value=\"".$value."\"";
+                                    if ((!empty($v_user)) && ( $value == $_GET['user'])){
+                                        echo ' selected';
+                                    }
+                                    echo ">".$value."</option>\n";
                                 }
                             ?> 
+                            </select>
+                            <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
+        <div id="vstobjects">
+            <table class='data'>
+
+                <?php
+                    foreach ($data as $key => $value) {
+                        ++$i;
+                ?>
+
+                <tr class="data-row">
+                    <td class="data-dotted" width="150px">
+                        <table class="data-col1" width="150">
+                            <tr><td style="padding: 24 0 4 0;"><a class="data-date" ><?php echo strftime("%d %b %Y", strtotime($key))?></a></td></tr>
                         </table>
-
-                        <table class="data-count">
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <div style="height:20px; width:20px;"></div>
+                        <table class="data-col2" width="830px">
                             <tr>
-                                <td width="160px"></td>
-                                <td>
-                                    <?php
-                                        if ( $i == 1) {
-                                            echo __('1 month');
-                                        } else {
-                                            echo __('%s months',$i);
-                                        }
-                                    ?>
+                                <td colspan=3 class="username" style="padding: 10 0 0 4px;">
+                                    <b><?php echo strftime("%b %Y", strtotime($key))?></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top;" >
+                                    <table>
+                                        <tr>
+                                            <td class="chart1" colspan=2 style="padding: 4px 0 0 2px;">
+                                                <?php print __('Bandwidth');?>: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
+                                                <div style="width:160px; height:7px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:7px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="chart1" colspan=2 style="padding: 0 0 0 2px;">
+                                                <?php print __('Disk');?>: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
+                                                <div style="width:160px; height:7px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:7px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan=2>
+                                                <table class="chart2">
+                                                    <tr>
+                                                        <td>
+                                                            <?php print __('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?>
+                                                        </td>
+                                                        <td style="padding: 0px 0px 0px 4px">
+                                                            <?php print __('Databases');?>: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <?php print __('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?>
+                                                        </td>
+                                                        <td style="padding: 0px 0px 0px 4px">
+                                                            <?php print __('User Directories');?>: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="280">
+                                    <table width="280">
+                                        <tr>
+                                            <td class="counter-name" width="37%">
+                                                <?php print __('Web Domains');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_WEB_DOMAINS'] ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('SSL Domains');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_WEB_SSL'] ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Web Aliases');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_WEB_ALIASES'] ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('DNS domains');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_DNS_DOMAINS'] ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('DNS records');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_DNS_RECORDS'] ?>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="250">
+                                    <table class="data-col4" width="250">
+                                        <tr>
+                                            <td class="counter-name" width="50%">
+                                                <?php print __('Mail Domains');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_MAIL_DOMAINS'] ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Mail Accounts');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_MAIL_ACCOUNTS'] ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Databases');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_DATABASES'] ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Cron Jobs');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['U_CRON_JOBS'] ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('IP Addresses');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['IP_OWNED'] ?> 
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </td>
+                </tr>
+
+                <?php
+                    }
+                ?> 
+
+            </table>
+
+            <table class="data-count">
+                <tr>
+                    <td width="168px"></td>
+                    <td>
+                        <?php
+                            if ( $i == 1) {
+                                echo __('1 month');
+                            } else {
+                                echo __('%s months',$i);
+                            }
+                        ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
 

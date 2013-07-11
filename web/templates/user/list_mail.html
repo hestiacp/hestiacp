@@ -1,171 +1,169 @@
-                               <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/add/mail/'"> <?php print __('Add Mail Domain');?> </button>
-                                            </div>
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                            <div class="submenu-select-block">
-                                                <form action="/bulk/mail/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                                                    <select class="submenu-select-dropdown" name="action">
-                                                        <option value=""><?php print __('apply to selected');?></option>
-                                                        <option value="delete"><?php print __('delete');?></option>
-                                                    </select>
-                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                <table class="submenu">
+                    <tr>
+                        <td style="padding: 12px 8px">
+                            <div class="submenu-button-block">
+                                <button class="submenu-button" onclick="location.href='/add/mail/'"> <?php print __('Add Mail Domain');?> </button>
+                            </div>
+                            <div class="submenu-search-block">
+                                <form action="/search/" method="get">
+                                <input type="text" name="q" class="submenu-search-field">
+                                <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                                </form>
+                            </div>
+                        <div class="submenu-select-block">
+                            <form action="/bulk/mail/" method="post" id="objects">
+                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
+                            <select class="submenu-select-dropdown" name="action">
+                                <option value=""><?php print __('apply to selected');?></option>
+                                <option value="delete"><?php print __('delete');?></option>
+                            </select>
+                            <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                    <div id="vstobjects">
-                        <table class="data">
-                            <?php
-                                list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
-                                foreach ($data as $key => $value) {
-                                    ++$i;
-                                    if ($data[$key]['SUSPENDED'] == 'yes') {
-                                        $status = 'suspended';
-                                        $spnd_action = 'unsuspend' ;
-                                    } else {
-                                        $status = 'active';
-                                        $spnd_action = 'suspend' ;
-                                    }
-                                    if (empty($data[$key]['CATCHALL'])) {
-                                        $data[$key]['CATCHALL'] = '/dev/null';
-                                    }
-                            ?> 
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo "$key" ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                                        <span class="do_delete">
-                                            <img src="/images/delete.png" width="7px" height="7px">
-                                            <?php print __('delete');?> 
-                                            <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $key ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                                <p class="counter-value"><?php print __('DELETE_DOMAIN_CONFIRMATION',$key);?></p>
-                                            </div>
-                                        </span>
-                                    </a>
-                                    <a href="/edit/mail/?domain=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print __('edit');?> 
-                                        </span>
-                                    </a>
-                                    <a href="<?php echo "http://".$http_host."/webmail/"; ?>" target="_blank" class="data-controls">
-                                        <span>
-                                            <img src="/images/new_window.png" width="8px" height="8px">
-                                            <?php print __('open webmail');?> 
-                                        </span>
-                                    </a>
-                                    <a href="/add/mail/?domain=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/add.png" width="8px" height="8px">
-                                            <?php print __('add account');?> 
-                                        </span>
-                                    </a>
-                                    <a href="?domain=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/more.png" width="8px" height="8px">
-                                            <?php print __('list accounts',$data[$key]['ACCOUNTS']); ?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align:top;" >
-                                                <table>
-                                                    <tr>
-                                                        <td class="chart1" style="padding: 10px 0 2px 0">
-                                                            <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                            <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td style="vertical-align:top;" width="260">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('AntiVirus Support');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo __($data[$key]['ANTIVIRUS']) ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('AntiSpam Support');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo __($data[$key]['ANTISPAM']) ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td rowspan=4 style="vertical-align:top;" width="300">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('DKIM Support');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo __($data[$key]['DKIM']) ?> 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Catchall email');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['CATCHALL'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <?php
-                                }
-                            ?> 
+        <div id="vstobjects">
+            <table class="data">
+                <?php
+                    list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
+                    foreach ($data as $key => $value) {
+                        ++$i;
+                        if ($data[$key]['SUSPENDED'] == 'yes') {
+                            $status = 'suspended';
+                            $spnd_action = 'unsuspend' ;
+                        } else {
+                            $status = 'active';
+                            $spnd_action = 'suspend' ;
+                        }
+                        if (empty($data[$key]['CATCHALL'])) {
+                            $data[$key]['CATCHALL'] = '/dev/null';
+                        }
+                ?> 
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo "$key" ?>" ></td></tr>
+                            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
+                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                         </table>
-                        </form>
-                        <table class="data-count">
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                            <span class="do_delete">
+                                <img src="/images/delete.png" width="7px" height="7px">
+                                <?php print __('delete');?> 
+                                <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $key ?>" />
+                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                    <p class="counter-value"><?php print __('DELETE_DOMAIN_CONFIRMATION',$key);?></p>
+                                </div>
+                            </span>
+                        </a>
+                        <a href="/edit/mail/?domain=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/edit.png" width="8px" height="8px">
+                                <?php print __('edit');?> 
+                            </span>
+                        </a>
+                        <a href="<?php echo "http://".$http_host."/webmail/"; ?>" target="_blank" class="data-controls">
+                            <span>
+                                <img src="/images/new_window.png" width="8px" height="8px">
+                                <?php print __('open webmail');?> 
+                            </span>
+                        </a>
+                        <a href="/add/mail/?domain=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/add.png" width="8px" height="8px">
+                                <?php print __('add account');?> 
+                            </span>
+                        </a>
+                        <a href="?domain=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/more.png" width="8px" height="8px">
+                                <?php print __('list accounts',$data[$key]['ACCOUNTS']); ?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
                             <tr>
-                                <td width="160px"></td>
-                                <td>
-                                    <?php
-                                        if ( $i == 1) {
-                                            echo __('1 domain');
-                                        } else {
-                                            echo __('%s domains',$i);
-                                        }
-                                    ?> 
+                                <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top;" >
+                                    <table>
+                                        <tr>
+                                            <td class="chart1" style="padding: 10px 0 2px 0">
+                                                <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="260">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('AntiVirus Support');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo __($data[$key]['ANTIVIRUS']) ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('AntiSpam Support');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo __($data[$key]['ANTISPAM']) ?> 
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td rowspan=4 style="vertical-align:top;" width="300">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('DKIM Support');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo __($data[$key]['DKIM']) ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Catchall email');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['CATCHALL'] ?> 
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </td>
+                </tr>
+                <?php
+                    }
+                ?> 
+            </table>
+            </form>
+            <table class="data-count">
+                <tr>
+                    <td width="160px"></td>
+                    <td>
+                        <?php
+                            if ( $i == 1) {
+                                echo __('1 domain');
+                            } else {
+                                echo __('%s domains',$i);
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>

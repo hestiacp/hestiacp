@@ -1,110 +1,108 @@
-                                <?php
-                                    $back = $_SESSION['back'];
-                                    if (empty($back)) {
-                                        $back = "location.href='/list/dns/'";
-                                    } else {
-                                        $back = "location.href='".$back."'";
-                                    }
-                                ?>
+            <?php
+                $back = $_SESSION['back'];
+                if (empty($back)) {
+                    $back = "location.href='/list/dns/'";
+                } else {
+                    $back = "location.href='".$back."'";
+                }
+            ?> 
 
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Editing DNS Domain');?></b></a>
-                                            <?php
-                                                if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<a class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                                                } else {
-                                                    if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<a class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                                    }
-                                                }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 16px 8px;" ><a class="name"><b><?php print __('Editing DNS Domain');?></b></a>
+                        <?php
+                            if (!empty($_SESSION['error_msg'])) {
+                                echo "<a class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                            } else {
+                                if (!empty($_SESSION['ok_msg'])) {
+                                    echo "<a class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                }
+                            }
+                        ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                    <form id="vstobjects" name="v_edit_dns" method="post">
-                        <table class='data'>
-                            <tr class="data-add">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr>
-                                            <td style="padding: 24px 0 2px 18px;">
-                                                <a class="data-date" ?><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
-                                                <a class="data-date" ?><?php echo $v_time?></a>
-                                            </td>
-                                        </tr>
-                                        <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
-                                    </table>
+        <form id="vstobjects" name="v_edit_dns" method="post">
+            <table class='data'>
+                <tr class="data-add">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr>
+                                <td>
+                                    <a class="data-date" ?><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
+                                    <a class="data-date" ?><?php echo $v_time?></a>
                                 </td>
-                                <td class="data-dotted" width="830px">
-                                    <table width="830px">
-                                        <tr>
-                                            <td></td>
-                                        </tr>
-                                    </table>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print __('Domain');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('IP Address');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip;  ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Expiration Date');?><span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('YYYY-MM-DD');?>)</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".$v_exp; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                SOA
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_soa" <?php if (!empty($v_soa)) echo "value=".$v_soa; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                TTL
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ttl" <?php if (!empty($v_ttl)) echo "value=".$v_ttl; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding: 24px 0 0 0;">
-                                                <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
-                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
-                                            </td>
-                                        </tr>
-                                    </table>
+                            </tr>
+                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <table width="830px">
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                    <?php print __('Domain');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('IP Address');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip;  ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('Expiration Date');?><span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('YYYY-MM-DD');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".$v_exp; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    SOA
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_soa" <?php if (!empty($v_soa)) echo "value=".$v_soa; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    TTL
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ttl" <?php if (!empty($v_ttl)) echo "value=".$v_ttl; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 24px 0 0 0;">
+                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
-                    </form>
+                    </td>
+                </tr>
+            </table>
+        </form>

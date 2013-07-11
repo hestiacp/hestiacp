@@ -1,188 +1,184 @@
+            <?php
+                $back = $_SESSION['back'];
+                if (empty($back)) {
+                    $back = "location.href='/list/user/'";
+                } else {
+                    $back = "location.href='".$back."'";
+                }
+            ?> 
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 16px 8px;" ><a class="name"><b><?php print __('Adding User');?></b></a>
+                        <?php
+                            if (!empty($_SESSION['error_msg'])) {
+                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                            } else {
+                                if (!empty($_SESSION['ok_msg'])) {
+                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                }
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                                <?php
-                                    $back = $_SESSION['back'];
-                                    if (empty($back)) {
-                                        $back = "location.href='/list/user/'";
-                                    } else {
-                                        $back = "location.href='".$back."'";
-                                    }
-                                ?>
+        <form id="vstobjects" name="v_add_user" method="post">
+            <script type="text/javascript">
+                $(function() {
+                    $("#v_email").change(function() {
+                        document.getElementById('v_notify').value = document.getElementById('v_email').value;
+                    });
+                });
 
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Adding User');?></b></a>
-                                            <?php
-                                                if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                function randomString() {
+                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+                    var string_length = 10;
+                    var randomstring = '';
+                    for (var i=0; i<string_length; i++) {
+                        var rnum = Math.floor(Math.random() * chars.length);
+                        randomstring += chars.substring(rnum,rnum+1);
+                    }
+                    document.v_add_user.v_password.value = randomstring;
+                }
+            </script>
+
+            <table class="data">
+                <tr class="data-add">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <table width="830px">
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </table>
+
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                    <?php print __('Username');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_username" <?php if (!empty($v_username)) echo "value=".$v_username;  ?> >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('Password');?> <a href="javascript:randomString();" class="genpass" ><?php print __('generate');?></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_password"  <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('Email');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' <?php if (!empty($v_email)) echo "value=".$v_email; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;" name="v_package">
+                                    <?php print __('Package');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_package">
+                                        <?php
+                                            foreach ($data as $key => $value) {
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
+                                                    echo 'selected' ;
                                                 } else {
-                                                    if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                                    if ( $key == 'default'){
+                                                        echo 'selected' ;
                                                     }
                                                 }
-                                            ?> 
-                                        </td>
-                                    </tr>
-                                </table>
+                                                echo ">".$key."</option>\n";
+                                            }
+                                        ?> 
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;" >
+                                    <?php print __('Language');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_language">
+                                        <?php
+                                            foreach ($languages as $key => $value) {
+                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
+                                                $svalue = "'".$value."'";
+                                                if (( $value == $v_language ) || ( $svalue == $v_language)){
+                                                    echo 'selected' ;
+                                                }
+                                                if (( $value == 'en' ) && (empty($v_language))){
+                                                    echo 'selected' ;
+                                                }
+                                                echo ">".$value."</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('First Name');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".$v_fname; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('Last Name');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('Send login credentials to email address');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text"  class="vst-input" name="v_notify" id="v_notify" <?php if (!empty($v_notify)) echo "value=".$v_notify; ?>>
+                                </td>
+                            </tr>
+
+                        </table>
+                    <table class="data-col2">
+                        <tr>
+                            <td style="padding: 24px 0 0 0;" width="116px">
+                                <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
+                            </td>
+                            <td style="padding: 24px 0 0 0;">
+                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                             </td>
                         </tr>
                     </table>
-
-                    <form id="vstobjects" name="v_add_user" method="post">
-                        <script type="text/javascript">
-                            $(function() {
-                                $("#v_email").change(function() {
-                                    document.getElementById('v_notify').value = document.getElementById('v_email').value;
-                                });
-                            });
-
-                            function randomString() {
-                                var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                                var string_length = 10;
-                                var randomstring = '';
-                                for (var i=0; i<string_length; i++) {
-                                    var rnum = Math.floor(Math.random() * chars.length);
-                                    randomstring += chars.substring(rnum,rnum+1);
-                                }
-                                document.v_add_user.v_password.value = randomstring;
-                            }
-                        </script>
-
-                        <table class="data">
-                            <tr class="data-add">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <table width="830px">
-                                        <tr>
-                                            <td></td>
-                                        </tr>
-                                    </table>
-
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                                <?php print __('Username');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_username" <?php if (!empty($v_username)) echo "value=".$v_username;  ?> >
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Password');?> <a href="javascript:randomString();" class="genpass" ><?php print __('generate');?></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_password"  <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Email');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_email" id='v_email' <?php if (!empty($v_email)) echo "value=".$v_email; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;" name="v_package">
-                                                <?php print __('Package');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_package">
-                                                    <?php
-                                                        foreach ($data as $key => $value) {
-                                                            echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
-                                                            if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
-                                                                echo 'selected' ;
-                                                            } else {
-                                                                if ( $key == 'default'){
-                                                                    echo 'selected' ;
-                                                                }
-                                                            }
-                                                            echo ">".$key."</option>\n";
-                                                        }
-                                                    ?> 
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;" >
-                                                <?php print __('Language');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_language">
-                                                    <?php
-                                                        foreach ($languages as $key => $value) {
-                                                            echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
-                                                            $svalue = "'".$value."'";
-                                                            if (( $value == $v_language ) || ( $svalue == $v_language)){
-                                                                echo 'selected' ;
-                                                            }
-                                                            if (( $value == 'en' ) && (empty($v_language))){
-                                                                echo 'selected' ;
-                                                            }
-                                                            echo ">".$value."</option>\n";
-                                                        }
-                                                    ?>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('First Name');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".$v_fname; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Last Name');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Send login credentials to email address');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text"  class="vst-input" name="v_notify" id="v_notify" <?php if (!empty($v_notify)) echo "value=".$v_notify; ?>>
-                                            </td>
-                                        </tr>
-
-                                    </table>
-                                <table class="data-col2">
-                                    <tr>
-                                        <td style="padding: 24px 0 0 0;" width="116px">
-                                            <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
-                                        </td>
-                                        <td style="padding: 24px 0 0 0;">
-                                            <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
-                                        </td>
-                                    </tr>
-                                </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
+                    </td>
+                </tr>
+            </table>
+        </form>

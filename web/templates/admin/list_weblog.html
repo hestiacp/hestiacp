@@ -5,121 +5,121 @@
     <title>Web Log Manager</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <style type="text/css">
-            body {
-                margin: 0;
-                margin-left: auto;
-                margin-right: auto;
-                font-family: Arial, Helvetica, sans-serif;
-                padding: 0 0 0 8px;
-            }
+body {
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0 0 0 8px;
+}
 
-            .main {
-                background-color: #ffffff;
-                padding: 0 0 18px 0;
-                box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
-            }
+.main {
+    background-color: #ffffff;
+    padding: 0 0 18px 0;
+    box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+}
 
-            .top {
-                color: #ffd76e;
-                padding: 0;
-                font-family: Arial, Helvetica, sans-serif;
-                margin: 0;
-                font-size: 10pt;
-                text-align: left;
-                border: 0px;
-                border-collapse:collapse;
+.top {
+    color: #ffd76e;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    font-size: 10pt;
+    text-align: left;
+    border: 0px;
+    border-collapse:collapse;
 
-            }
+}
 
-            .top thead td {
-                background-color: #505050;
-                border-bottom: 1px solid #fff;
-                height: 25px;
-                text-align: right;
-                padding: 0 24px 0 0px;
-                weight:120px;
-            }
+.top thead td {
+    background-color: #505050;
+    border-bottom: 1px solid #fff;
+    height: 25px;
+    text-align: right;
+    padding: 0 24px 0 0px;
+    weight:120px;
+}
 
-            .top thead td:first-child{
-                border-left: 1px solid #fff;
-                border-right:none;
-                text-align:left;
-                padding: 0 0 0 0;
-                width:auto;
-            }
+.top thead td:first-child{
+    border-left: 1px solid #fff;
+    border-right:none;
+    text-align:left;
+    padding: 0 0 0 0;
+    width:auto;
+}
 
-            .top-link {
-                padding: 5px 22px 4px;
-                text-decoration: none;
-                color: #fff;
-                border-right: 1px solid #fff;
-            }
+.top-link {
+    padding: 5px 22px 4px;
+    text-decoration: none;
+    color: #fff;
+    border-right: 1px solid #fff;
+}
 
-            .top-link:hover {
-                color: #fff;
-                background-color: #999;
-            }
+.top-link:hover {
+    color: #fff;
+    background-color: #999;
+}
 
-            .top-link:active{
-                color: #fff;
-                background-color: #f79b44;
-            }
+.top-link:active{
+    color: #fff;
+    background-color: #f79b44;
+}
 
-            .top-selected-link {
-                padding: 5px 22px;
-                text-decoration: none;
-                color: #555;
-                background-color: #fff;
-                border-right: 1px solid #fff;
-            }
+.top-selected-link {
+    padding: 5px 22px;
+    text-decoration: none;
+    color: #555;
+    background-color: #fff;
+    border-right: 1px solid #fff;
+}
 
-            .top-selected-link:hover {
-                color: #174f82;
-            }
+.top-selected-link:hover {
+    color: #174f82;
+}
 
-            .top-selected-link:active {
-                color: #fff;
-                background-color: #f79b44;
-            }
+.top-selected-link:active {
+    color: #fff;
+    background-color: #f79b44;
+}
 
-            .top-user {
-                padding: 0 2px 0 0;
-                text-decoration: none;
-                color: #ffd76e;
-            }
+.top-user {
+    padding: 0 2px 0 0;
+    text-decoration: none;
+    color: #ffd76e;
+}
 
-            .top-user:hover {
-                color: #fff;
-            }
+.top-user:hover {
+    color: #fff;
+}
 
-            .top-user:active{
-                color: #fff;
-                background-color: #f79b44;
-            }
+.top-user:active{
+    color: #fff;
+    background-color: #f79b44;
+}
     </style>
 </head>
 <body>
 <table class="top">
     <thead>
         <tr>
-            <td>
-                <b><a class="top-<?php if($_GET['type'] == 'access' ) echo 'selected-' ?>link" href="/list/web-log/?domain=<?php echo $_GET['domain']."&type=access"?>">
-                    <?php print __('AccessLog') ?> 
-                </a></b>
+<td>
+    <b><a class="top-<?php if($_GET['type'] == 'access' ) echo 'selected-' ?>link" href="/list/web-log/?domain=<?php echo $_GET['domain']."&type=access"?>">
+        <?php print __('AccessLog') ?> 
+    </a></b>
 
-                <b><a class="top-<?php if($_GET['type'] == 'error' ) echo 'selected-' ?>link" href="/list/web-log/?domain=<?php echo $_GET['domain']."&type=error"?>">
-                    <?php print __('ErrorLog') ?> 
-                </a></b>
+    <b><a class="top-<?php if($_GET['type'] == 'error' ) echo 'selected-' ?>link" href="/list/web-log/?domain=<?php echo $_GET['domain']."&type=error"?>">
+        <?php print __('ErrorLog') ?> 
+    </a></b>
 
-                <b><a class="top-link" href="/download/web-log/?domain=<?php echo $_GET['domain']."&type=access"?>">
-                    <?php print __('Download AccessLog') ?>
-                </a></b>
+    <b><a class="top-link" href="/download/web-log/?domain=<?php echo $_GET['domain']."&type=access"?>">
+        <?php print __('Download AccessLog') ?>
+    </a></b>
 
-                <b><a class="top-link" href="/download/web-log/?domain=<?php echo $_GET['domain']."&type=error"?>">
-                    <?php print __('Download ErrorLog') ?>
-                </a></b>
+    <b><a class="top-link" href="/download/web-log/?domain=<?php echo $_GET['domain']."&type=error"?>">
+        <?php print __('Download ErrorLog') ?>
+    </a></b>
 
-            </td>
+</td>
         </tr>
     </thead>
 </table>

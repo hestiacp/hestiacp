@@ -1,151 +1,147 @@
-
-                                <?php
-                                    $back = $_SESSION['back'];
-                                    if (empty($back)) {
-                                        $back = "location.href='/list/mail/?domain=".$v_domain."'";
-                                    } else {
-                                        $back = "location.href='".$back."'";
-                                    }
-                                ?>
-
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Adding Mail Account');?></b></a>
-                                            <?php
-                                                if (!empty($_SESSION['error_msg'])) {
-                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                                                } else {
-                                                    if (!empty($_SESSION['ok_msg'])) {
-                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                                    }
-                                                }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <form id="vstobjects" name="v_add_mail_acc" method="post">
-                        <script type="text/javascript">
-                            function elementHideShow(elementToHideOrShow) {
-                                var el = document.getElementById(elementToHideOrShow);
-                                if (el.style.display == "block") {
-                                    el.style.display = "none";
-                                } else {
-                                    el.style.display = "block";
+            <?php
+                $back = $_SESSION['back'];
+                if (empty($back)) {
+                    $back = "location.href='/list/mail/?domain=".$v_domain."'";
+                } else {
+                    $back = "location.href='".$back."'";
+                }
+            ?>
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 16px 8px;" ><a class="name"><b><?php print __('Adding Mail Account');?></b></a>
+                        <?php
+                            if (!empty($_SESSION['error_msg'])) {
+                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                            } else {
+                                if (!empty($_SESSION['ok_msg'])) {
+                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                                 }
                             }
-                            function randomString() {
-                                var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                                var string_length = 10;
-                                var randomstring = '';
-                                for (var i=0; i<string_length; i++) {
-                                  var rnum = Math.floor(Math.random() * chars.length);
-                                  randomstring += chars.substring(rnum,rnum+1);
-                                }
-                                document.v_add_mail_acc.v_password.value = randomstring;
-                              }
-                        </script>
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                        <table class='data'>
-                        <tr class="data-add">
-                            <td class="data-dotted" width="150">
-                                <table class="data-col1">
-                                    <tr><td></td></tr>
-                                </table>
+        <form id="vstobjects" name="v_add_mail_acc" method="post">
+            <script type="text/javascript">
+                function elementHideShow(elementToHideOrShow) {
+                    var el = document.getElementById(elementToHideOrShow);
+                    if (el.style.display == "block") {
+                        el.style.display = "none";
+                    } else {
+                        el.style.display = "block";
+                    }
+                }
+                function randomString() {
+                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+                    var string_length = 10;
+                    var randomstring = '';
+                    for (var i=0; i<string_length; i++) {
+                      var rnum = Math.floor(Math.random() * chars.length);
+                      randomstring += chars.substring(rnum,rnum+1);
+                    }
+                    document.v_add_mail_acc.v_password.value = randomstring;
+                  }
+            </script>
+
+            <table class='data'>
+            <tr class="data-add">
+                <td class="data-dotted" width="150">
+                    <table class="data-col1">
+                        <tr><td></td></tr>
+                    </table>
+                </td>
+                <td class="data-dotted" width="830px">
+                    <table width="830px">
+                        <tr>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <table class="data-col2" width="600px">
+                        <tr>
+                            <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                <?php print __('Domain');?>
                             </td>
-                            <td class="data-dotted" width="830px">
-                                <table width="830px">
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" size="20" class="vst-input" name="v_domain" <?php echo "value=".$v_domain;  ?> disabled ><input type="hidden" name="v_domain" <?php echo "value=".$v_domain;  ?>>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <?php print __('Account');?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" size="20" class="vst-input" name="v_account" <?php if (!empty($v_account)) echo "value=".$v_account; ?>>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <?php print __('Password');?> <a href="javascript:randomString();" class="genpass"><?php print __('generate');?></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" size="20" class="vst-input" name="v_password">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print __('Advanced options');?></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vst-text" style="padding: 9px 0 0 0px;">
+                                <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                     <tr>
-                                        <td></td>
-                                    </tr>
-                                </table>
-                                <table class="data-col2" width="600px">
-                                    <tr>
-                                        <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                            <?php print __('Domain');?>
+                                        <td class="vst-text" style="padding: 0 0 0 2px;">
+                                            <?php print __('Quota');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('in megabytes');?>)</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text" size="20" class="vst-input" name="v_domain" <?php echo "value=".$v_domain;  ?> disabled ><input type="hidden" name="v_domain" <?php echo "value=".$v_domain;  ?>>
+                                            <input type="text" size="20" class="vst-input" name="v_quota" <?php if (!empty($v_quota)) echo "value=".$v_quota; ?>>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                            <?php print __('Account');?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" size="20" class="vst-input" name="v_account" <?php if (!empty($v_account)) echo "value=".$v_account; ?>>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                            <?php print __('Password');?> <a href="javascript:randomString();" class="genpass"><?php print __('generate');?></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" size="20" class="vst-input" name="v_password">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                            <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print __('Advanced options');?></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="vst-text" style="padding: 9px 0 0 0px;">
-                                            <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
-                                                <tr>
-                                                    <td class="vst-text" style="padding: 0 0 0 2px;">
-                                                        <?php print __('Quota');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('in megabytes');?>)</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" size="20" class="vst-input" name="v_quota" <?php if (!empty($v_quota)) echo "value=".$v_quota; ?>>
-                                                    </td>
-                                                </tr>
-                                            <tr>
-                                                <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                    <?php print __('Aliases');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('use local-part');?>)</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="vst-text" style="padding: 10 0 0 2px;">
-                                                    <?php print __('Forward to');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('one or more email addresses');?>)</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <textarea size="20" class="vst-textinput" name="v_fwd"><?php if (!empty($v_fwd)) echo $v_fwd;  ?></textarea>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                <tr>
+                                    <td class="vst-text" style="padding: 10 0 0 2px;">
+                                        <?php print __('Aliases');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('use local-part');?>)</span>
                                     </td>
                                 </tr>
-                            </table>
-                            <table class="data-col2">
                                 <tr>
-                                    <td style="padding: 24px 0 0 0;" width="116px">
-                                        <input type="submit" name="ok_acc" value="<?php print __('Add');?>" class="button">
+                                    <td>
+                                        <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
                                     </td>
-                                    <td style="padding: 24px 0 0 0;">
-                                        <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </tr>
+                                <tr>
+                                    <td class="vst-text" style="padding: 10 0 0 2px;">
+                                        <?php print __('Forward to');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('one or more email addresses');?>)</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <textarea size="20" class="vst-textinput" name="v_fwd"><?php if (!empty($v_fwd)) echo $v_fwd;  ?></textarea>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
-            </table>
+                </table>
+                <table class="data-col2">
+                    <tr>
+                        <td style="padding: 24px 0 0 0;" width="116px">
+                            <input type="submit" name="ok_acc" value="<?php print __('Add');?>" class="button">
+                        </td>
+                        <td style="padding: 24px 0 0 0;">
+                            <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+</table>
         </form>

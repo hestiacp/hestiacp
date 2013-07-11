@@ -1,153 +1,150 @@
-                               <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/add/mail/?domain=<?php echo $_GET['domain'] ?>'"> <?php print __('Add Mail Account');?> </button>
-                                            </div>
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                            <div class="submenu-select-block">
-                                                <form action="/bulk/mail/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                                                <select class="submenu-select-dropdown" name="action">
-                                                    <option value="apply to selected"><?php print __('apply to selected');?></option>
-                                                    <option value="delete"><?php print __('delete');?></option>
-                                                </select>
-                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+           <table class="submenu">
+                <tr>
+                    <td style="padding: 12px 8px">
+                        <div class="submenu-button-block">
+                            <button class="submenu-button" onclick="location.href='/add/mail/?domain=<?php echo $_GET['domain'] ?>'"> <?php print __('Add Mail Account');?> </button>
+                        </div>
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                                <input type="text" name="q" class="submenu-search-field">
+                                <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            </form>
+                        </div>
+                        <div class="submenu-select-block">
+                            <form action="/bulk/mail/" method="post" id="objects">
+                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
+                            <select class="submenu-select-dropdown" name="action">
+                                <option value="apply to selected"><?php print __('apply to selected');?></option>
+                                <option value="delete"><?php print __('delete');?></option>
+                            </select>
+                            <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
+        <div id="vstobjects">
+            <div style="height:10px; font-size:0;"></div>
+            <table class="data" style="background: #ebe9dc;">
+                <tr>
+                    <td style="padding: 8px 2px 8px 0;">
+                        <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
+                    </td>
+                </tr>
+            </table>
+            <div style="height:10px; font-size:0;"></div>
+            <table class="data">
+                <?php
+                    foreach ($data as $key => $value) {
+                        ++$i;
+                        if ($data[$key]['SUSPENDED'] == 'yes') {
+                            $status = 'suspended';
+                            $spnd_action = 'unsuspend' ;
+                        } else {
+                            $status = 'active';
+                            $spnd_action = 'suspend';
+                        }
+                ?>
 
-                    <div id="vstobjects">
-                        <div style="height:10px; font-size:0;"></div>
-                        <table class="data" style="background: #ebe9dc;">
-                            <tr>
-                                <td style="padding: 8px 2px 8px 0;">
-                                    <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
-                                </td>
-                            </tr>
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="account[]" value="<?php echo $key?>" ><input type="hidden" name="domain" value="<?php echo $_GET['domain'] ?>" ></td></tr>
+                            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
+                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                         </table>
-                        <div style="height:10px; font-size:0;"></div>
-                        <table class="data">
-                            <?php
-                                foreach ($data as $key => $value) {
-                                    ++$i;
-                                    if ($data[$key]['SUSPENDED'] == 'yes') {
-                                        $status = 'suspended';
-                                        $spnd_action = 'unsuspend' ;
-                                    } else {
-                                        $status = 'active';
-                                        $spnd_action = 'suspend';
-                                    }
-                            ?>
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="account[]" value="<?php echo $key?>" ><input type="hidden" name="domain" value="<?php echo $_GET['domain'] ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                            <span class="do_delete">
+                                <img src="/images/delete.png" width="7px" height="7px">
+                                <?php print __('delete');?> 
+                                <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" />
+                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                    <p class="counter-value"><?php print __('DELETE_MAIL_ACCOUNT_CONFIRMATION',$key);?></p>
+                                </div>
+                            </span>
+                        </a>
+                        <a href="/edit/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/edit.png" width="8px" height="8px">
+                                <?php print __('edit');?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
+                            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key."@".$_GET['domain'] ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
+                            <tr>
+                                <td style="vertical-align:top;" >
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name" style="padding: 4px 0 0 0;">
+                                                <?php echo $data[$key]['IP'] ?> 
+                                            </td>
+                                        <tr>
+                                            <td class="chart1" style="padding: 2px 0 2px 0">
+                                                <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </table>
                                 </td>
-                                <td class="data-dotted" width="830px">
-                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                                        <span class="do_delete">
-                                            <img src="/images/delete.png" width="7px" height="7px">
-                                            <?php print __('delete');?> 
-                                            <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                                <p class="counter-value"><?php print __('DELETE_MAIL_ACCOUNT_CONFIRMATION',$key);?></p>
-                                            </div>
-                                        </span>
-                                    </a>
-                                    <a href="/edit/mail/?domain=<?php echo $_GET['domain'] ?>&account=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print __('edit');?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key."@".$_GET['domain'] ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
+                                <td style="vertical-align:top;" width="200">
+                                    <table>
                                         <tr>
-                                            <td style="vertical-align:top;" >
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name" style="padding: 4px 0 0 0;">
-                                                            <?php echo $data[$key]['IP'] ?> 
-                                                        </td>
-                                                    <tr>
-                                                        <td class="chart1" style="padding: 2px 0 2px 0">
-                                                            <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                            <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td class="counter-name">
+                                                <?php print __('Quota');?>:
                                             </td>
-                                            <td style="vertical-align:top;" width="200">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Quota');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['QUOTA'] ?> 
-                                                        </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="counter-name">
-                                                                <?php print __('Autoreply');?>:
-                                                            </td>
-                                                            <td class="counter-value">
-                                                                <?php echo __($data[$key]['AUTOREPLY']) ?> 
-                                                            </td>
-                                                        </tr>
-                                                </table>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['QUOTA'] ?> 
                                             </td>
-                                            <td rowspan=4 style="vertical-align:top;" width="350">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Forward to');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo str_replace(',', ', ', $data[$key]['FWD']) ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            </tr>
+                                            <tr>
+                                                <td class="counter-name">
+                                                    <?php print __('Autoreply');?>:
+                                                </td>
+                                                <td class="counter-value">
+                                                    <?php echo __($data[$key]['AUTOREPLY']) ?> 
+                                                </td>
+                                            </tr>
+                                    </table>
+                                </td>
+                                <td rowspan=4 style="vertical-align:top;" width="350">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Forward to');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo str_replace(',', ', ', $data[$key]['FWD']) ?> 
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
-                            <?php
-                                }
-                            ?> 
                         </table>
-                        </form>
+                    </td>
+                </tr>
+                <?php
+                    }
+                ?> 
+            </table>
+            </form>
 
-                        <table class="data-count">
-                            <tr>
-                                <td width="160px"></td>
-                                <td>
-                                    <?php
-                                        if ( $i == 1) {
-                                            echo __('1 mail account');
-                                        } else {
-                                            echo __('%s mail accounts',$i);
-                                        }
-                                    ?> 
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+            <table class="data-count">
+                <tr>
+                    <td width="160px"></td>
+                    <td>
+                        <?php
+                            if ( $i == 1) {
+                                echo __('1 mail account');
+                            } else {
+                                echo __('%s mail accounts',$i);
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>

@@ -1,296 +1,294 @@
-                               <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/schedule/restore/'"> <?php print __('Restore All');?> </button>
-                                            </div>
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                            <div class="submenu-select-block">
-                                                <form action="/bulk/restore/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                                                <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print __('apply to selected');?></option>
-                                                    <option value="restore"><?php print __('restore');?></option>
-                                                </select>
-                                                <input type="hidden" name="backup" value="<?php echo $_GET['backup'] ?>">
-                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
-                                            </div>
-                                            <?php
-                                                if (!empty($_SESSION['restore_msg'])) {
-                                            ?>
-                                            <div>
-                                                <script type="text/javascript">
-                                                    $(function() {
-                                                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                                                        $( "#dialog-message" ).dialog({
-                                                            modal: true,
-                                                            buttons: {
-                                                                Ok: function() {
-                                                                    $( this ).dialog( "close" );
-                                                                }
-                                                            }
-                                                        });
-                                                    });
-                                                </script>
-                                                <div id="dialog-message" title="<?php print __('Backup System') ?>">
-                                                    <p><?php echo $_SESSION['restore_msg'] ?></p>
-                                                </div>
-                                            </div>
-                                            <?php
-                                                    unset($_SESSION['restore_msg']);
-                                                }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+           <table class="submenu">
+                <tr>
+                    <td style="padding: 12px 8px">
+                        <div class="submenu-button-block">
+                            <button class="submenu-button" onclick="location.href='/schedule/restore/'"> <?php print __('Restore All');?> </button>
+                        </div>
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            </form>
+                        </div>
+                        <div class="submenu-select-block">
+                            <form action="/bulk/restore/" method="post" id="objects">
+                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
+                            <select class="submenu-select-dropdown" name="action">
+                                <option value=""><?php print __('apply to selected');?></option>
+                                <option value="restore"><?php print __('restore');?></option>
+                            </select>
+                            <input type="hidden" name="backup" value="<?php echo $_GET['backup'] ?>">
+                            <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
+                        </div>
+                        <?php
+                            if (!empty($_SESSION['restore_msg'])) {
+                        ?> 
+                        <div>
+                            <script type="text/javascript">
+                                $(function() {
+                                    $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                                    $( "#dialog-message" ).dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Ok: function() {
+                                                $( this ).dialog( "close" );
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
+                            <div id="dialog-message" title="<?php print __('Backup System') ?>">
+                                <p><?php echo $_SESSION['restore_msg'] ?></p>
+                            </div>
+                        </div>
+                        <?php
+                                unset($_SESSION['restore_msg']);
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                    <div id="vstobjects">
-                        <div style="height:10px; font-size:0;"></div>
-                        <table class="data" style="background: #ebe9dc;">
+        <div id="vstobjects">
+            <div style="height:10px; font-size:0;"></div>
+            <table class="data" style="background: #ebe9dc;">
+                <tr>
+                    <td style="padding: 8px 2px 8px 0;">
+                        <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['backup'] ?> </b></a>
+                    </td>
+                </tr>
+            </table>
+            <div style="height:10px; font-size:0;"></div>
+            <table class="data">
+
+
+                <?php
+                    $backup = $_GET['backup'];
+                    $web = explode(',',$data[$backup]['WEB']);
+                    foreach ($web as $key) {
+                        if (!empty($key)) {
+                ?> 
+
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="web[]" value="<?php echo $key ?>" ></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=web&object=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/restore.png" width="6px" height="8px">
+                                <?php print __('restore');?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
                             <tr>
-                                <td style="padding: 8px 2px 8px 0;">
-                                    <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['backup'] ?> </b></a>
+                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                    <?php echo 'web ' . __('domain') ?> 
+                                </td>
+                                <td class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b>
                                 </td>
                             </tr>
                         </table>
-                        <div style="height:10px; font-size:0;"></div>
-                        <table class="data">
+                    </td>
+                </tr>
 
+                <?php
+                        }
+                    }
+                ?> 
 
-                            <?php
-                                $backup = $_GET['backup'];
-                                $web = explode(',',$data[$backup]['WEB']);
-                                foreach ($web as $key) {
-                                    if (!empty($key)) {
-                            ?> 
+                <?php
+                    $dns = explode(',',$data[$backup]['DNS']);
+                    foreach ($dns as $key) {
+                        if (!empty($key)) {
+                ?> 
 
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="web[]" value="<?php echo $key ?>" ></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=web&object=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print __('restore');?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo 'web ' . __('domain') ?> 
-                                            </td>
-                                            <td class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <?php
-                                    }
-                                }
-                            ?> 
-
-                            <?php
-                                $dns = explode(',',$data[$backup]['DNS']);
-                                foreach ($dns as $key) {
-                                    if (!empty($key)) {
-                            ?> 
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="dns[]" value="<?php echo $key ?>" ></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=dns&object=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print __('restore');?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo 'dns ' . __('domain') ?>
-                                            </td>
-                                            <td class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <?php
-                                    }
-                                }
-                            ?> 
-
-                            <?php
-                                $mail = explode(',',$data[$backup]['MAIL']);
-                                foreach ($mail as $key) {
-                                    if (!empty($key)) {
-                            ?> 
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="mail[]" value="<?php echo $key ?>" ></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=mail&object=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print __('restore');?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo 'mail ' . __('domain') ?>
-                                            </td>
-                                            <td class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <?php
-                                    }
-                                }
-                            ?> 
-
-                            <?php
-                                $db = explode(',',$data[$backup]['DB']);
-                                foreach ($db as $key) {
-                                    if (!empty($key)) {
-                            ?> 
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="db[]" value="<?php echo $key ?>" ></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=db&object=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print __('restore');?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo __('database') ?>
-                                            </td>
-                                            <td class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <?php
-                                    }
-                                }
-                            ?> 
-
-                            <?php
-                                $backup = $_GET['backup'];
-                                if (!empty($data[$backup]['CRON'])) {
-                                    if (!empty($key)) {
-                            ?> 
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="cron[]" value="<?php echo 'yes' ?>" ></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=cron&object=records" class="data-controls">
-                                        <span>
-                                            <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print __('restore');?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo __('cron') ?>
-                                            </td>
-                                            <td class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo 'cron ' . __('records') ?></b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <?php
-                                    }
-                                }
-                            ?> 
-
-                            <?php
-                                $udir = explode(',',$data[$backup]['UDIR']);
-                                foreach ($udir as $key) {
-                                    if (!empty($key)) {
-                            ?> 
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="udir[]" value="<?php echo $key ?>" ></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=udir&object=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/restore.png" width="6px" height="8px">
-                                            <?php print __('restore');?> 
-                                        </span>
-                                    </a>
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td class="cron" style="width: 170px; font-size: 14px;">
-                                                <?php echo __('user dir') ?>
-                                            </td>
-                                            <td class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                            <?php
-                                    }
-                                }
-                            ?> 
-
-
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="dns[]" value="<?php echo $key ?>" ></td></tr>
                         </table>
-                        </form>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=dns&object=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/restore.png" width="6px" height="8px">
+                                <?php print __('restore');?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                    <?php echo 'dns ' . __('domain') ?>
+                                </td>
+                                <td class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
 
-                    </div>
+                <?php
+                        }
+                    }
+                ?> 
+
+                <?php
+                    $mail = explode(',',$data[$backup]['MAIL']);
+                    foreach ($mail as $key) {
+                        if (!empty($key)) {
+                ?> 
+
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="mail[]" value="<?php echo $key ?>" ></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=mail&object=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/restore.png" width="6px" height="8px">
+                                <?php print __('restore');?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                    <?php echo 'mail ' . __('domain') ?>
+                                </td>
+                                <td class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <?php
+                        }
+                    }
+                ?> 
+
+                <?php
+                    $db = explode(',',$data[$backup]['DB']);
+                    foreach ($db as $key) {
+                        if (!empty($key)) {
+                ?> 
+
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="db[]" value="<?php echo $key ?>" ></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=db&object=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/restore.png" width="6px" height="8px">
+                                <?php print __('restore');?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                    <?php echo __('database') ?>
+                                </td>
+                                <td class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <?php
+                        }
+                    }
+                ?> 
+
+                <?php
+                    $backup = $_GET['backup'];
+                    if (!empty($data[$backup]['CRON'])) {
+                        if (!empty($key)) {
+                ?> 
+
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="cron[]" value="<?php echo 'yes' ?>" ></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=cron&object=records" class="data-controls">
+                            <span>
+                                <img src="/images/restore.png" width="6px" height="8px">
+                                <?php print __('restore');?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                    <?php echo __('cron') ?>
+                                </td>
+                                <td class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo 'cron ' . __('records') ?></b>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <?php
+                        }
+                    }
+                ?> 
+
+                <?php
+                    $udir = explode(',',$data[$backup]['UDIR']);
+                    foreach ($udir as $key) {
+                        if (!empty($key)) {
+                ?> 
+
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="udir[]" value="<?php echo $key ?>" ></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=udir&object=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/restore.png" width="6px" height="8px">
+                                <?php print __('restore');?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                    <?php echo __('user dir') ?>
+                                </td>
+                                <td class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <?php
+                        }
+                    }
+                ?> 
+
+
+            </table>
+            </form>
+
+        </div>
 

@@ -1,216 +1,214 @@
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-button-block">
-                                                <button class="submenu-button" onclick="location.href='/add/web/'"> <?php print __('Add Web Domain');?> </button>
-                                            </div>
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                            <div class="submenu-select-block">
-                                                <form action="/bulk/web/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                                                <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print __('apply to selected');?></option>
-                                                    <option value="delete"><?php print __('delete');?></option>
-                                                </select>
-                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 12px 8px">
+                        <div class="submenu-button-block">
+                            <button class="submenu-button" onclick="location.href='/add/web/'"> <?php print __('Add Web Domain');?> </button>
+                        </div>
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            </form>
+                        </div>
+                        <div class="submenu-select-block">
+                            <form action="/bulk/web/" method="post" id="objects">
+                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
+                            <select class="submenu-select-dropdown" name="action">
+                                <option value=""><?php print __('apply to selected');?></option>
+                                <option value="delete"><?php print __('delete');?></option>
+                            </select>
+                            <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                    <div id="vstobjects">
-                        <table class='data'>
-                            <?php
-                                foreach ($data as $key => $value) {
-                                    ++$i;
-                                    if ($data[$key]['SUSPENDED'] == 'yes') {
-                                        $status = 'suspended';
-                                        $spnd_action = 'unsuspend' ;
-                                        $spnd_confirmation = 'UNSUSPEND_DOMAIN_CONFIRMATION' ;
-                                    } else {
-                                        $status = 'active';
-                                        $spnd_action = 'suspend' ;
-                                        $spnd_confirmation = 'SUSPEND_DOMAIN_CONFIRMATION' ;
-                                    }
-                                    if (!empty($data[$key]['SSL_HOME'])) {
-                                        if ($data[$key]['SSL_HOME'] == 'same') {
-                                            $ssl_home = 'public_html';
-                                        } else {
-                                            $ssl_home = 'public_shtml';
-                                        }
-                                    } else {
-                                        $ssl_home = '';
-                                    }
-                                    $web_stats='no';
-                                    if (!empty($data[$key]['STATS'])) {
-                                        $web_stats=$data[$key]['STATS'];
-                                    }
-                                    $ftp_user='no';
-                                    if (!empty($data[$key]['FTP_USER'])) {
-                                        $ftp_user=$data[$key]['FTP_USER'];
-                                    }
-                                    $proxy_support='no';
-                                    if (!empty($data[$key]['PROXY'])) {
-                                        $proxy_support='yes';
-                                    }
-                                    if (strlen($data[$key]['PROXY_EXT']) > 16 ) {
-                                        $proxy_ext_title = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
-                                        $proxy_ext = substr($data[$key]['PROXY_EXT'], 0, 16);
-                                        $proxy_ext = trim($proxy_ext, ",");
-                                        $proxy_ext = str_replace(',', ', ', $proxy_ext);
-                                        $proxy_ext = $proxy_ext.", ...";
-                                    } else {
-                                        $proxy_ext_title = '';
-                                        $proxy_ext = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
-                                    }
-                                ?> 
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo $key ?>" ></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                                        <span class="do_delete">
-                                            <img src="/images/delete.png" width="7px" height="7px">
-                                             <?php print __('delete');?> 
-                                            <input type="hidden" name="delete_url" value="/delete/web/?domain=<?php echo $key ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                                <p class="counter-value"><?php print __('DELETE_DOMAIN_CONFIRMATION',$key);?></p>
-                                            </div>
-                                        </span>
-                                    </a>
-                                    <a href="/edit/web/?domain=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print __('edit');?> 
-                                        </span>
-                                    </a>
-                                    <a href="/list/web-log/?domain=<?php echo $key ?>&type=access"  target="_blank" class="data-controls">
-                                        <span>
-                                            <img src="/images/new_window.png" width="8px" height="8px">
-                                            <?php print __('view logs');?> 
-                                        </span>
-                                    </a>
-                                    <?php
-                                        if (!empty($data[$key]['STATS'])) {
-                                    ?> 
-                                    <a href="http://<?php echo $key ?>/vstats/"  target="_blank" class="data-controls">
-                                        <span>
-                                            <img src="/images/new_window.png" width="8px" height="8px">
-                                            <?php print __('open webstats');?> 
-                                        </span>
-                                    </a>
-                                    <?php
-                                            }
-                                     ?> 
-                                    <table class="data-col2" width="830px">
-                                        <tr>
-                                            <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b> <a class="aliases" style="padding: 0 30px 0 8px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align:top;" >
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name" style="padding: 0 0 0 2px;">
-                                                            <?php echo $data[$key]['IP'] ?> 
-                                                        </td>
-                                                    <tr>
-                                                    <tr>
-                                                        <td class="chart1" style="padding: 4px 0 0 2px">
-                                                            <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?> 
-                                                            <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="chart1" style="padding: 2px 0 0 2px"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                            <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                                <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                        </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td style="vertical-align:top;" width="260">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print __('Web Template');?>:</td>
-                                                        <td class="counter-value"><?php print __($data[$key]['TPL']) ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print __('SSL Support');?>:</td>
-                                                        <td class="counter-value"><?php print $data[$key]['SSL'] ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print __('SSL Home Directory');?>:</td>
-                                                        <td class="counter-value"><?php print $ssl_home ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print __('Web Statistics');?>: </td>
-                                                        <td class="counter-value"> <?php print __($web_stats) ?></td>
-                                                    </tr>
-
-                                                </table>
-                                            </td>
-                                            <td rowspan=4 style="vertical-align:top;" width="300">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print __('Proxy Support');?>:</td>
-                                                        <td class="counter-value"><?php print __($proxy_support);?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-name"><?php print __('Proxy Template');?>:</td>
-                                                        <td class="counter-value"><?php echo $data[$key]['PROXY'];?></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td class="counter-name"><?php print __('Proxy Extentions');?>:</td>
-                                                        <td class="counter-value" <?php if (!empty($proxy_ext_title)) echo "title='".$proxy_ext_title."'" ?>><?php echo $proxy_ext ?></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td class="counter-name"> <?php print __('Additional FTP Account');?>:</td>
-                                                        <td class="counter-value"> <?php print __($ftp_user) ?></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <?php
+        <div id="vstobjects">
+            <table class='data'>
+                <?php
+                    foreach ($data as $key => $value) {
+                        ++$i;
+                        if ($data[$key]['SUSPENDED'] == 'yes') {
+                            $status = 'suspended';
+                            $spnd_action = 'unsuspend' ;
+                            $spnd_confirmation = 'UNSUSPEND_DOMAIN_CONFIRMATION' ;
+                        } else {
+                            $status = 'active';
+                            $spnd_action = 'suspend' ;
+                            $spnd_confirmation = 'SUSPEND_DOMAIN_CONFIRMATION' ;
+                        }
+                        if (!empty($data[$key]['SSL_HOME'])) {
+                            if ($data[$key]['SSL_HOME'] == 'same') {
+                                $ssl_home = 'public_html';
+                            } else {
+                                $ssl_home = 'public_shtml';
+                            }
+                        } else {
+                            $ssl_home = '';
+                        }
+                        $web_stats='no';
+                        if (!empty($data[$key]['STATS'])) {
+                            $web_stats=$data[$key]['STATS'];
+                        }
+                        $ftp_user='no';
+                        if (!empty($data[$key]['FTP_USER'])) {
+                            $ftp_user=$data[$key]['FTP_USER'];
+                        }
+                        $proxy_support='no';
+                        if (!empty($data[$key]['PROXY'])) {
+                            $proxy_support='yes';
+                        }
+                        if (strlen($data[$key]['PROXY_EXT']) > 16 ) {
+                            $proxy_ext_title = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
+                            $proxy_ext = substr($data[$key]['PROXY_EXT'], 0, 16);
+                            $proxy_ext = trim($proxy_ext, ",");
+                            $proxy_ext = str_replace(',', ', ', $proxy_ext);
+                            $proxy_ext = $proxy_ext.", ...";
+                        } else {
+                            $proxy_ext_title = '';
+                            $proxy_ext = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
+                        }
+                    ?> 
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo $key ?>" ></td></tr>
+                            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
+                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                            <span class="do_delete">
+                                <img src="/images/delete.png" width="7px" height="7px">
+                                 <?php print __('delete');?> 
+                                <input type="hidden" name="delete_url" value="/delete/web/?domain=<?php echo $key ?>" />
+                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                    <p class="counter-value"><?php print __('DELETE_DOMAIN_CONFIRMATION',$key);?></p>
+                                </div>
+                            </span>
+                        </a>
+                        <a href="/edit/web/?domain=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/edit.png" width="8px" height="8px">
+                                <?php print __('edit');?> 
+                            </span>
+                        </a>
+                        <a href="/list/web-log/?domain=<?php echo $key ?>&type=access"  target="_blank" class="data-controls">
+                            <span>
+                                <img src="/images/new_window.png" width="8px" height="8px">
+                                <?php print __('view logs');?> 
+                            </span>
+                        </a>
+                        <?php
+                            if (!empty($data[$key]['STATS'])) {
+                        ?> 
+                        <a href="http://<?php echo $key ?>/vstats/"  target="_blank" class="data-controls">
+                            <span>
+                                <img src="/images/new_window.png" width="8px" height="8px">
+                                <?php print __('open webstats');?> 
+                            </span>
+                        </a>
+                        <?php
                                 }
-                            ?> 
-                        </table>
-                        </form>
-
-                        <table class="data-count">
+                         ?> 
+                        <table class="data-col2" width="830px">
                             <tr>
-                                <td width="160px">
-                                <td>
-                                    <?php
-                                        if ( $i == 1) {
-                                            echo __('1 domain');
-                                        } else {
-                                            echo __('%s domains',$i);
-                                        }
-                                    ?> 
+                                <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b> <a class="aliases" style="padding: 0 30px 0 8px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top;" >
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name" style="padding: 0 0 0 2px;">
+                                                <?php echo $data[$key]['IP'] ?> 
+                                            </td>
+                                        <tr>
+                                        <tr>
+                                            <td class="chart1" style="padding: 4px 0 0 2px">
+                                                <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?> 
+                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="chart1" style="padding: 2px 0 0 2px"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                            </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="260">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Web Template');?>:</td>
+                                            <td class="counter-value"><?php print __($data[$key]['TPL']) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('SSL Support');?>:</td>
+                                            <td class="counter-value"><?php print $data[$key]['SSL'] ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('SSL Home Directory');?>:</td>
+                                            <td class="counter-value"><?php print $ssl_home ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Web Statistics');?>: </td>
+                                            <td class="counter-value"> <?php print __($web_stats) ?></td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+                                <td rowspan=4 style="vertical-align:top;" width="300">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Proxy Support');?>:</td>
+                                            <td class="counter-value"><?php print __($proxy_support);?></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Proxy Template');?>:</td>
+                                            <td class="counter-value"><?php echo $data[$key]['PROXY'];?></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Proxy Extentions');?>:</td>
+                                            <td class="counter-value" <?php if (!empty($proxy_ext_title)) echo "title='".$proxy_ext_title."'" ?>><?php echo $proxy_ext ?></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="counter-name"> <?php print __('Additional FTP Account');?>:</td>
+                                            <td class="counter-value"> <?php print __($ftp_user) ?></td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </td>
+                </tr>
+                <?php
+                    }
+                ?> 
+            </table>
+            </form>
+
+            <table class="data-count">
+                <tr>
+                    <td width="160px">
+                    <td>
+                        <?php
+                            if ( $i == 1) {
+                                echo __('1 domain');
+                            } else {
+                                echo __('%s domains',$i);
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>

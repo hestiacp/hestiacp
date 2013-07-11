@@ -1,64 +1,62 @@
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 12px 8px">
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                    <div id="vstobjects">
-                        <table class='data'>
+        <div id="vstobjects">
+            <table class='data'>
 
-                            <?php
-                                foreach ($data as $key => $value) {
-                                    ++$i;
-                            ?>
+                <?php
+                    foreach ($data as $key => $value) {
+                        ++$i;
+                ?>
 
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150px">
-                                    <table class="data-col1" width="150">
-                                        <tr><td style="padding: 14 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo  strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-                                        <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <div style="height:20px; width:20px;"></div>
-                                <table class="data-col5" width="720px">
-                                    <tr>
-                                        <td class="username" style="padding: 0 0 20 0" >
-                                            <?php echo $data[$key]['CMD'] ?>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-
-                        <?php
-                            }
-                        ?> 
-
-                    </table>
-
-                    <table class="data-count">
+                <tr class="data-row">
+                    <td class="data-dotted" width="150px">
+                        <table class="data-col1" width="150">
+                            <tr><td style="padding: 14 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo  strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+                            <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <div style="height:20px; width:20px;"></div>
+                    <table class="data-col5" width="720px">
                         <tr>
-                            <td width="160px"></td>
-                            <td>
-                                <?php
-                                    if ( $i == 1) {
-                                        echo __('one log record');
-                                    } else {
-                                        echo __('%s log records',$i);
-                                    }
-                                ?>
+                            <td class="username" style="padding: 0 0 20 0" >
+                                <?php echo $data[$key]['CMD'] ?>
                             </td>
                         </tr>
                     </table>
-                </div>
+                </td>
+            </tr>
+
+            <?php
+                }
+            ?> 
+
+        </table>
+
+        <table class="data-count">
+            <tr>
+                <td width="168px"></td>
+                <td>
+                    <?php
+                        if ( $i == 1) {
+                            echo __('one log record');
+                        } else {
+                            echo __('%s log records',$i);
+                        }
+                    ?>
+                </td>
+            </tr>
+        </table>
+    </div>

@@ -1,214 +1,212 @@
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div style="submenu-button-block">
-                                                <a style="float:left; font-size: 16pt; color: #555;"><b><?php print __('Search Results');?></b></a>
-                                            </div>
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 12px 8px">
+                        <div style="submenu-button-block">
+                            <a style="float:left; font-size: 16pt; color: #555;"><b><?php print __('Search Results');?></b></a>
+                        </div>
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                    <div id="vstobjects">
-                        <table class="data">
-                            <?php
-                                foreach ($data as $key => $value) {
-                                    ++$i;
-                                    if ($data[$key]['SUSPENDED'] == 'yes') {
-                                        $status = 'suspended';
-                                        $spnd_action = 'unsuspend' ;
-                                    } else {
-                                        $status = 'active';
-                                        $spnd_action = 'suspend';
-                                    }
-                                    if ($data[$key]['TYPE'] == 'db') {
-                                        $object = 'database';
-                                    } else {
-                                        $object = strtolower($data[$key]['TYPE']." ".$data[$key]['KEY']);
-                                    }
-                            ?>
+        <div id="vstobjects">
+            <table class="data">
+                <?php
+                    foreach ($data as $key => $value) {
+                        ++$i;
+                        if ($data[$key]['SUSPENDED'] == 'yes') {
+                            $status = 'suspended';
+                            $spnd_action = 'unsuspend' ;
+                        } else {
+                            $status = 'active';
+                            $spnd_action = 'suspend';
+                        }
+                        if ($data[$key]['TYPE'] == 'db') {
+                            $object = 'database';
+                        } else {
+                            $object = strtolower($data[$key]['TYPE']." ".$data[$key]['KEY']);
+                        }
+                ?>
 
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150px">
-                                    <table class="data-col1" width="150">
-                                        <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
+                <tr class="data-row">
+                    <td class="data-dotted" width="150px">
+                        <table class="data-col1" width="150">
+                            <tr><td style="padding: 24 0 4 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <?php
+                            if ($data[$key]['KEY'] == 'RECORD') {
+                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'RECORD_ACTION_CONFIRMATION';
+                            }
+                            if ($data[$key]['KEY'] == 'ACCOUNT') {
+                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'USER_ACTION_CONFIRMATION';
+                            }
+                            if ($data[$key]['KEY'] == 'JOB') {
+                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'CRON_ACTION_CONFIRMATION';
+                            }
+                            if ($data[$key]['KEY'] == 'DATABASE') {
+                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'DATABASE_ACTION_CONFIRMATION';
+                            }
+                            if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
+                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'DOMAIN_ACTION_CONFIRMATION';
+                            }
+                        ?> 
+                        <a id="delete_link_<?php echo $i ?>" class="do_delete">
+                            <span class="data-controls do_delete">
+                                <img src="/images/delete.png" width="7px" height="7px">
+                                <?php print __('delete');?> 
+                                <input type="hidden" name="delete_url" value="<?php echo $delete_lnk; ?>" />
+                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
+                                    <p class="counter-value"><?php print __($cnfrm,__('delete'),$data[$key]['RESULT']);?></p>
+                                </div>
+                            </span>
+                        </a>
+
+                        <?php
+
+                            if ($data[$key]['KEY'] == 'RECORD') {
+                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'RECORD_ACTION_CONFIRMATION';
+                            }
+                            if ($data[$key]['KEY'] == 'ACCOUNT') {
+                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'USER_ACTION_CONFIRMATION';
+                            }
+                            if ($data[$key]['KEY'] == 'JOB') {
+                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'CRON_ACTION_CONFIRMATION';
+                            }
+                            if ($data[$key]['KEY'] == 'DATABASE') {
+                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'DATABASE_ACTION_CONFIRMATION';
+                            }
+                            if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
+                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                                $cnfrm = 'DOMAIN_ACTION_CONFIRMATION';
+                            }
+                        ?> 
+                        <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
+                            <span class="data-controls do_<?php echo $spnd_action ?>">
+                                <img src="/images/suspend.png" width="7px" height="8px">
+                                <?php echo __($spnd_action); ?> 
+                                <input type="hidden" name="<?php echo $spnd_action ?>_url" value="<?php echo $spnd_lnk ?>" />
+                                <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print __('Confirmation');?>">
+                                    <p class="counter-value"><?php print __($cnfrm,__($spnd_action),$data[$key]['RESULT']);?></p>
+                                </div>
+                            </span>
+                        </a>
+
+                        <?php
+                            if ($data[$key]['KEY'] == 'RECORD') {
+                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                            }
+                            if ($data[$key]['KEY'] == 'ACCOUNT') {
+                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                            }
+                            if ($data[$key]['KEY'] == 'JOB') {
+                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                            }
+                            if ($data[$key]['KEY'] == 'DATABASE') {
+                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                            }
+                            if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
+                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                            }
+                        ?> 
+                        <a href="<?php echo $edit_lnk; ?>">
+                            <span class="data-controls">
+                                <img src="/images/edit.png" width="8px" height="8px">
+                                <?php print __('edit'); ?> 
+                            </span>
+                        </a>
+
+                        <?php
+                            if ($data[$key]['USER'] != $user) {
+                        ?> 
+                        <a href="/login/?loginas=<?php echo $data[$key]['USER'] ?>">
+                            <span class="data-controls">
+                                <img src="/images/login-as.png" width="8px" height="8px">
+                                <?php print __('login as'). ' ' . $data[$key]['USER'];?> 
+                            </span>
+                        </a>
+                        <?php
+                            }
+                        ?> 
+
+                        <table class="data-col2" width="830px">
+                            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $data[$key]['RESULT'] ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
+                            <tr>
+                                <td style="vertical-align:top;" >
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Object');?>:
+                                            </td>
+                                            <td class="counter-value">
+                                                <?php echo $object ?> 
+                                            </td>
+                                        </tr>
                                     </table>
                                 </td>
-                                <td class="data-dotted" width="830px">
-                                    <?php
-                                        if ($data[$key]['KEY'] == 'RECORD') {
-                                            $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'RECORD_ACTION_CONFIRMATION';
-                                        }
-                                        if ($data[$key]['KEY'] == 'ACCOUNT') {
-                                            $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'USER_ACTION_CONFIRMATION';
-                                        }
-                                        if ($data[$key]['KEY'] == 'JOB') {
-                                            $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'CRON_ACTION_CONFIRMATION';
-                                        }
-                                        if ($data[$key]['KEY'] == 'DATABASE') {
-                                            $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'DATABASE_ACTION_CONFIRMATION';
-                                        }
-                                        if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
-                                            $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'DOMAIN_ACTION_CONFIRMATION';
-                                        }
-                                    ?> 
-                                    <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                                        <span class="data-controls do_delete">
-                                            <img src="/images/delete.png" width="7px" height="7px">
-                                            <?php print __('delete');?> 
-                                            <input type="hidden" name="delete_url" value="<?php echo $delete_lnk; ?>" />
-                                            <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                                <p class="counter-value"><?php print __($cnfrm,__('delete'),$data[$key]['RESULT']);?></p>
-                                            </div>
-                                        </span>
-                                    </a>
-
-                                    <?php
-
-                                        if ($data[$key]['KEY'] == 'RECORD') {
-                                            $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'RECORD_ACTION_CONFIRMATION';
-                                        }
-                                        if ($data[$key]['KEY'] == 'ACCOUNT') {
-                                            $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'USER_ACTION_CONFIRMATION';
-                                        }
-                                        if ($data[$key]['KEY'] == 'JOB') {
-                                            $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'CRON_ACTION_CONFIRMATION';
-                                        }
-                                        if ($data[$key]['KEY'] == 'DATABASE') {
-                                            $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'DATABASE_ACTION_CONFIRMATION';
-                                        }
-                                        if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
-                                            $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                            $cnfrm = 'DOMAIN_ACTION_CONFIRMATION';
-                                        }
-                                    ?> 
-                                    <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
-                                        <span class="data-controls do_<?php echo $spnd_action ?>">
-                                            <img src="/images/suspend.png" width="7px" height="8px">
-                                            <?php echo __($spnd_action); ?> 
-                                            <input type="hidden" name="<?php echo $spnd_action ?>_url" value="<?php echo $spnd_lnk ?>" />
-                                            <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print __('Confirmation');?>">
-                                                <p class="counter-value"><?php print __($cnfrm,__($spnd_action),$data[$key]['RESULT']);?></p>
-                                            </div>
-                                        </span>
-                                    </a>
-
-                                    <?php
-                                        if ($data[$key]['KEY'] == 'RECORD') {
-                                            $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                        }
-                                        if ($data[$key]['KEY'] == 'ACCOUNT') {
-                                            $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                        }
-                                        if ($data[$key]['KEY'] == 'JOB') {
-                                            $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                        }
-                                        if ($data[$key]['KEY'] == 'DATABASE') {
-                                            $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                        }
-                                        if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
-                                            $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                        }
-                                    ?> 
-                                    <a href="<?php echo $edit_lnk; ?>">
-                                        <span class="data-controls">
-                                            <img src="/images/edit.png" width="8px" height="8px">
-                                            <?php print __('edit'); ?> 
-                                        </span>
-                                    </a>
-
-                                    <?php
-                                        if ($data[$key]['USER'] != $user) {
-                                    ?> 
-                                    <a href="/login/?loginas=<?php echo $data[$key]['USER'] ?>">
-                                        <span class="data-controls">
-                                            <img src="/images/login-as.png" width="8px" height="8px">
-                                            <?php print __('login as'). ' ' . $data[$key]['USER'];?> 
-                                        </span>
-                                    </a>
-                                    <?php
-                                        }
-                                    ?> 
-
-                                    <table class="data-col2" width="830px">
-                                        <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $data[$key]['RESULT'] ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
+                                <td style="vertical-align:top;" width="200">
+                                    <table>
                                         <tr>
-                                            <td style="vertical-align:top;" >
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Object');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $object ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td class="counter-name">
+                                                <?php print __('Owner');?>:
                                             </td>
-                                            <td style="vertical-align:top;" width="200">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Owner');?>:
-                                                        </td>
-                                                        <td class="counter-value">
-                                                            <?php echo $data[$key]['USER'] ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['USER'] ?> 
                                             </td>
-                                            <td style="vertical-align:top;" width="350">
-                                                <table >
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Status');?>:
-                                                        </td>
-                                                        <td class="counter-value" style="padding: 0 0 0 8px;">
-                                                            <?php echo __($status); ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="350">
+                                    <table >
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Status');?>:
+                                            </td>
+                                            <td class="counter-value" style="padding: 0 0 0 8px;">
+                                                <?php echo __($status); ?> 
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
-                            <?php
-                                }
-                            ?> 
                         </table>
-                        </form>
+                    </td>
+                </tr>
+                <?php
+                    }
+                ?> 
+            </table>
+            </form>
 
-                        <table class="data-count">
-                            <tr>
-                                <td width="160px"></td>
-                                <td>
-                                    <?php
-                                        if ( $i == 1){
-                                            echo __('1 object');
-                                        } else {
-                                            echo __('%s objects',$i);
-                                        }
-                                    ?> 
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+            <table class="data-count">
+                <tr>
+                    <td width="168px"></td>
+                    <td>
+                        <?php
+                            if ( $i == 1){
+                                echo __('1 object');
+                            } else {
+                                echo __('%s objects',$i);
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>

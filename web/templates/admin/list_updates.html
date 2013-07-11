@@ -1,150 +1,148 @@
-                                <table class="submenu">
-                                    <tr>
-                                        <td style="padding: 2px 0 0 6px">
-                                            <div class="submenu-search-block">
-                                                <form action="/search/" method="get">
-                                                    <input type="text" name="q" class="submenu-search-field">
-                                                    <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
-                                                </form>
-                                            </div>
-                                            <div class="submenu-button-block">
-                                                <form action="/bulk/vesta/" method="post" id="objects">
-                                                <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                                                <select class="submenu-select-dropdown" name="action">
-                                                    <option value=""><?php print __('apply to selected') ?></option>
-                                                    <option value="update"><?php print __('update') ?></option>
-                                                </select>
-                                                <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
-                                            </div>
-                                            <?php
-                                                if (!empty($_SESSION['error_upd'])) {
-                                            ?>
-                                            <div>
-                                                <script type="text/javascript">
-                                                    $(function() {
-                                                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                                                        $( "#dialog-message" ).dialog({
-                                                            modal: true,
-                                                            buttons: {
-                                                                Ok: function() {
-                                                                    $( this ).dialog( "close" );
-                                                                }
-                                                            }
-                                                        });
-                                                    });
-                                                </script>
-                                                <div id="dialog-message" title="Error">
-                                                    <p><?php echo $_SESSION['error_upd'] ?></p>
-                                                </div>
-                                            </div>
-                                            <?php
-                                                    unset($_SESSION['error_upd']);
-                                                }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <div id="vstobjects">
-                        <table class='data'>
-
-                           <?php
-                                foreach ($data as $key => $value) {
-                                    ++$i;
-                                    if ($data[$key]['UPDATED'] == 'yes') {
-                                        $status = 'active';
-                                        $upd_status = __('updated');
-                                    } else {
-                                        $status = 'suspended';
-                                        $upd_status = __('outdated');
-                                    }
-                                ?>
-
-                            <tr class="data-row">
-                                <td class="data-dotted" width="150">
-                                    <table class="data-col1">
-                                        <tr><td style="padding: 18 0 6 18;"><input type="checkbox" class="ch-toggle" name="pkg[]" value="<?php echo $key ?>" ></td></tr>
-                                        <tr><td class="data-<?php echo $status ?>"><b><?php echo $upd_status ?></b></td></tr>
-                                    </table>
-                                </td>
-                                <td class="data-dotted" width="830px">
-                                    <?php
-                                        if ($data[$key]['UPDATED'] == 'no') {
-                                    ?>
-                                    <a href="/update/vesta/?pkg=<?php echo $key ?>" class="data-controls">
-                                        <span>
-                                            <img src="/images/update.png" width="6px" height="7px">
-                                            <?php print __('update') ?>
-                                        </span>
-                                    </a>
-                                    <?php
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 12px 8px">
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            </form>
+                        </div>
+                        <div class="submenu-button-block">
+                            <form action="/bulk/vesta/" method="post" id="objects">
+                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
+                            <select class="submenu-select-dropdown" name="action">
+                                <option value=""><?php print __('apply to selected') ?></option>
+                                <option value="update"><?php print __('update') ?></option>
+                            </select>
+                            <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
+                        </div>
+                        <?php
+                            if (!empty($_SESSION['error_upd'])) {
+                        ?> 
+                        <div>
+                            <script type="text/javascript">
+                                $(function() {
+                                    $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                                    $( "#dialog-message" ).dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Ok: function() {
+                                                $( this ).dialog( "close" );
+                                            }
                                         }
-                                    ?>
-                                    <div style="height:20px; width:20px; float:right;"></div>
+                                    });
+                                });
+                            </script>
+                            <div id="dialog-message" title="Error">
+                                <p><?php echo $_SESSION['error_upd'] ?></p>
+                            </div>
+                        </div>
+                        <?php
+                                unset($_SESSION['error_upd']);
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-                                    <table class="data-col2" width="830px">
+        <div id="vstobjects">
+            <table class='data'>
+
+               <?php
+                    foreach ($data as $key => $value) {
+                        ++$i;
+                        if ($data[$key]['UPDATED'] == 'yes') {
+                            $status = 'active';
+                            $upd_status = __('updated');
+                        } else {
+                            $status = 'suspended';
+                            $upd_status = __('outdated');
+                        }
+                    ?>
+
+                <tr class="data-row">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td style="padding: 18 0 6 18;"><input type="checkbox" class="ch-toggle" name="pkg[]" value="<?php echo $key ?>" ></td></tr>
+                            <tr><td class="data-<?php echo $status ?>"><b><?php echo $upd_status ?></b></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <?php
+                            if ($data[$key]['UPDATED'] == 'no') {
+                        ?>
+                        <a href="/update/vesta/?pkg=<?php echo $key ?>" class="data-controls">
+                            <span>
+                                <img src="/images/update.png" width="6px" height="7px">
+                                <?php print __('update') ?>
+                            </span>
+                        </a>
+                        <?php
+                            }
+                        ?>
+                        <div style="height:20px; width:20px; float:right;"></div>
+
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td colspan=4 class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $key ?></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top;" width="200px">
+                                    <table>
                                         <tr>
-                                            <td colspan=4 class="domain" style="padding: 0 0 0 4px;">
-                                                <b><?php echo $key ?></b>
+                                            <td class="counter-name" style="padding: 2px 0 0 0">
+                                                <?php echo __($data[$key]['DESCR']) ?> 
                                             </td>
                                         </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="180px">
+                                    <table>
                                         <tr>
-                                            <td style="vertical-align:top;" width="200px">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name" style="padding: 2px 0 0 0">
-                                                            <?php echo __($data[$key]['DESCR']) ?> 
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td class="counter-name">
+                                                <?php print __('Version') ?>:
                                             </td>
-                                            <td style="vertical-align:top;" width="180px">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Version') ?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value"> <?php echo $data[$key]['VERSION'] ?></a>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td>
+                                                <a class="counter-value"> <?php echo $data[$key]['VERSION'] ?></a>
                                             </td>
-                                            <td style="vertical-align:top;" width="170px">
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Release') ?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value"><?php echo $data[$key]['RELEASE'] ?></a>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="170px">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Release') ?>:
                                             </td>
-                                            <td style="vertical-align:top;" >
-                                                <table>
-                                                    <tr>
-                                                        <td class="counter-name">
-                                                            <?php print __('Architecture') ?>:
-                                                        </td>
-                                                        <td>
-                                                            <a class="counter-value"><?php echo $data[$key]['ARCH'] ?> </a>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td>
+                                                <a class="counter-value"><?php echo $data[$key]['RELEASE'] ?></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" >
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Architecture') ?>:
+                                            </td>
+                                            <td>
+                                                <a class="counter-value"><?php echo $data[$key]['ARCH'] ?> </a>
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
-
-                            <?php
-                                }
-                            ?> 
                         </table>
-                        </form>
-                    </div>
+                    </td>
+                </tr>
+
+                <?php
+                    }
+                ?> 
+            </table>
+            </form>
+        </div>

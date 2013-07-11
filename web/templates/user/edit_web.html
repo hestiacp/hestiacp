@@ -1,339 +1,343 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/web/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?>
+                                <?php
+                                    $back = $_SESSION['back'];
+                                    if (empty($back)) {
+                                        $back = "location.href='/list/web/'";
+                                    } else {
+                                        $back = "location.href='".$back."'";
+                                    }
+                                ?>
 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 16px 8px;" ><a class="name"><b><?php print __('Editing Domain');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                <table class="submenu">
+                                    <tr>
+                                        <td style="padding: 0 2px 0 0;" ><a class="name"><b><?php print __('Editing Domain');?></b></a>
+                                            <?php
+                                                if (!empty($_SESSION['error_msg'])) {
+                                                    echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                                                } else {
+                                                    if (!empty($_SESSION['ok_msg'])) {
+                                                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                                    }
+                                                }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <form id="vstobjects" name="v_edit_web" method="post">
+                        <script language="javascript">
+                            function WEBrandom() {
+                                var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+                                var string_length = 10;
+                                var webrandom = '';
+                                for (var i=0; i<string_length; i++) {
+                                    var rnum = Math.floor(Math.random() * chars.length);
+                                    webrandom += chars.substring(rnum,rnum+1);
+                                }
+                                document.v_edit_web.v_stats_password.value = webrandom;
+                            }
+
+                            function FTPrandom() {
+                                var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+                                var string_length = 10;
+                                var ftprandomstring = '';
+                                for (var i=0; i<string_length; i++) {
+                                    var rnum = Math.floor(Math.random() * chars.length);
+                                    ftprandomstring += chars.substring(rnum,rnum+1);
+                                }
+                                document.v_edit_web.v_ftp_password.value = ftprandomstring;
+                            }
+
+                            function elementHideShow(elementToHideOrShow){
+                                var el = document.getElementById(elementToHideOrShow);
+                                if (el.style.display == "block") {
+                                    el.style.display = "none";
+                                } else {
+                                    el.style.display = "block";
                                 }
                             }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <form id="vstobjects" name="v_edit_web" method="post">
-            <script language="javascript">
-                function WEBrandom() {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var webrandom = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        webrandom += chars.substring(rnum,rnum+1);
-                    }
-                    document.v_edit_web.v_stats_password.value = webrandom;
-                }
-
-                function FTPrandom() {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var ftprandomstring = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        ftprandomstring += chars.substring(rnum,rnum+1);
-                    }
-                    document.v_edit_web.v_ftp_password.value = ftprandomstring;
-                }
-
-                function elementHideShow(elementToHideOrShow){
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-            </script>
-            <table class='data'>
-                <tr class="data-add">
-                    <td class="data-dotted" width="150">
-                        <table class="data-col1">
-                            <tr>
-                                <td>
-                                    <a class="data-date" ?><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
-                                    <a class="data-date" ?><?php echo $v_time?></a>
-                                </td>
-                            </tr>
-                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted" width="830px">
-                        <table width="830px">
-                            <tr>
-                                <td></td>
-                            </tr>
-                        </table>
-                        <table class="data-col2" width="830px">
-                            <tr>
-                                <td class="vst-text" style="padding: 20px 0 0 2px;">
-                                    <?php print __('Domain');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('IP Address');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_ip">
-                                        <?php
-                                            foreach ($ips as $key => $value) {
-                                                $display_ip = $key;
-                                                if (!empty($value['NAT'])) $display_ip = $value['NAT'];
-                                                $skey = "'".$display_ip."'";
-                                                echo "\n\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".$display_ip."\"";
-                                                if ((!empty($v_ip)) && ( $display_ip == $v_ip ) || ( $skey == $v_ip )){
-                                                    echo ' selected';
-                                                }
-                                                echo ">".$display_ip."</option>\n";
-                                            }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('Aliases');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('Proxy Support');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
+                        </script>
+                        <table class='data'>
+                            <tr class="data-add">
+                                <td class="data-dotted" width="150">
+                                    <table class="data-col1">
                                         <tr>
-                                            <td class="vst-text" style="padding: 9px 0 0 0;">
-                                                <?php print __('Proxy Extensions');?>
+                                            <td style="padding: 24px 0 2px 18px;">
+                                                <a class="data-date" ?><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
+                                                <a class="data-date" ?><?php echo $v_time?></a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <textarea size="20" class="vst-textinput" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo $v_proxy_ext;} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
-                                            </td>
-                                        </tr>
+                                        <tr><td style="padding: 0 0 0 18px;" class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
                                     </table>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('SSL Support');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
+                                <td class="data-dotted" width="830px">
+                                    <table width="830px">
                                         <tr>
-                                            <td class="vst-text" style="padding: 9px 0 0 0;">
-                                                <?php print __('SSL Home Directory');?>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                    <table class="data-col2" width="830px">
+                                        <tr>
+                                            <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                                <?php print __('Domain');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="vst-list" name="v_ssl_home">
-                                                    <option value='same' <?php if ($v_ssl_home == 'same') echo "selected";?>>
-                                                         public_html
-                                                    </option>
-                                                    <option value='single' <?php if ($v_ssl_home == 'single') echo "selected";?>>
-                                                        public_shtml
-                                                    </option>
+                                                <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                <?php print __('IP Address');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_ip">
+                                                    <?php
+                                                        foreach ($ips as $key => $value) {
+                                                            $display_ip = $key;
+                                                            if (!empty($value['NAT'])) $display_ip = $value['NAT'];
+                                                            $skey = "'".$display_ip."'";
+                                                            echo "\n\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".$display_ip."\"";
+                                                            if ((!empty($v_ip)) && ( $display_ip == $v_ip ) || ( $skey == $v_ip )){
+                                                                echo ' selected';
+                                                            }
+                                                            echo ">".$display_ip."</option>\n";
+                                                        }
+                                                    ?>
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('SSL Certificate');?>
+                                                <?php print __('Aliases');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo $v_ssl_crt; ?></textarea>
+                                                <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('SSL Key');?>
+                                                <?php print __('Proxy Support');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo $v_ssl_key; ?></textarea>
+                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 9px 0 0 0;">
+                                                            <?php print __('Proxy Extensions');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo $v_proxy_ext;} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('SSL Certificate Authority / Intermediate');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
+                                                <?php print __('SSL Support');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo $v_ssl_ca; ?></textarea>
+                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 9px 0 0 0;">
+                                                            <?php print __('SSL Home Directory');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="vst-list" name="v_ssl_home">
+                                                                <option value='same' <?php if ($v_ssl_home == 'same') echo "selected";?>>
+                                                                     public_html
+                                                                </option>
+                                                                <option value='single' <?php if ($v_ssl_home == 'single') echo "selected";?>>
+                                                                    public_shtml
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                            <?php print __('SSL Certificate');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo $v_ssl_crt; ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                            <?php print __('SSL Key');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo $v_ssl_key; ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                            <?php print __('SSL Certificate Authority / Intermediate');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo $v_ssl_ca; ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                <?php print __('Web Statistics');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_stats">
+                                                    <?php
+                                                        foreach ($stats as $key => $value) {
+                                                            $svalue = "'".$value."'";
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            if (empty($v_stats)) $v_stats = 'none';
+                                                            if (( $value == $v_stats ) || ($svalue == $v_stats )){
+                                                                echo ' selected' ;
+                                                            }
+                                                        echo ">". __($value) ."</option>\n";
+                                                        }
+                                                ?> 
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                <?php print __('Statistics Authorization');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 9px 0 0 2px;">
+                                                            <?php print __('Username');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".$v_stats_user;  ?>>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                            <?php print __('Password');?> <a href="javascript:WEBrandom();" class="genpass"><?php print __('generate');?></a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".$v_stats_password;  ?> id="v_password">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                                <?php print __('Additional FTP Account');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('ftptable');">
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" id="ftptable" name="v_add_domain_ftp">
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 10px 0 0 0;">
+                                                            <?php print __('Username');?>
+                                                            <?php if (empty($v_ftp_user)) echo '<br><span style="font-size: 10pt; color:#777;">' . __('Prefix will be automaticaly added to username',$user."_") . '</span>' ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_ftp_user" <?php if (!empty($v_ftp_user)) echo "value=".$v_ftp_user;  ?>>
+															<small class="ftp_username_hint"></small>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 10px 0 0 0;">
+                                                            <?php print __('Password');?> <a href="javascript:FTPrandom();" class="genpass" ><?php print __('generate');?></a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text"  class="vst-input" name="v_ftp_password" <?php if (!empty($v_ftp_password)) echo "value=".$v_ftp_password;  ?>>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                        if (empty($v_ftp_user)) {
+                                                            echo '';
+                                                     ?> 
+                                                    <tr>
+                                                        <td class="vst-text" style="padding: 10px 0 0 0;">
+                                                            <?php print __('Send FTP credentials to email');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text"  class="vst-input" name="v_ftp_email" <?php if (!empty($v_ftp_email)) echo "value=".$v_ftp_email;  ?>>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                        }
+                                                    ?> 
+                                                </table>
                                             </td>
                                         </tr>
                                     </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('Web Statistics');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_stats">
-                                        <?php
-                                            foreach ($stats as $key => $value) {
-                                                $svalue = "'".$value."'";
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
-                                                if (empty($v_stats)) $v_stats = 'none';
-                                                if (( $value == $v_stats ) || ($svalue == $v_stats )){
-                                                    echo ' selected' ;
-                                                }
-                                            echo ">". __($value) ."</option>\n";
-                                            }
-                                    ?> 
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('Statistics Authorization');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
+                                    <table class="data-col2">
                                         <tr>
-                                            <td class="vst-text" style="padding: 9px 0 0 2px;">
-                                                <?php print __('Username');?>
+                                            <td style="padding: 24px 0 0 0;" width="116px">
+                                                <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                            </td>
+                                            <td style="padding: 24px 0 0 0;">
+                                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".$v_stats_user;  ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Password');?> <a href="javascript:WEBrandom();" class="genpass"><?php print __('generate');?></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".$v_stats_password;  ?> id="v_password">
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('Additional FTP Account');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('ftptable');">
-                                    </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" id="ftptable" name="v_add_domain_ftp">
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 0;">
-                                                <?php print __('Username');?>
-                                                <?php if (empty($v_ftp_user)) echo '<br><span style="font-size: 10pt; color:#777;">' . __('Prefix will be automaticaly added to username',$user."_") . '</span>' ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ftp_user" <?php if (!empty($v_ftp_user)) echo "value=".$v_ftp_user;  ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 0;">
-                                                <?php print __('Password');?> <a href="javascript:FTPrandom();" class="genpass" ><?php print __('generate');?></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text"  class="vst-input" name="v_ftp_password" <?php if (!empty($v_ftp_password)) echo "value=".$v_ftp_password;  ?>>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                            if (empty($v_ftp_user)) {
-                                                echo '';
-                                         ?> 
-                                        <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 0;">
-                                                <?php print __('Send FTP credentials to email');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text"  class="vst-input" name="v_ftp_email" <?php if (!empty($v_ftp_email)) echo "value=".$v_ftp_email;  ?>>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                            }
-                                        ?> 
                                     </table>
                                 </td>
                             </tr>
                         </table>
-                        <table class="data-col2">
-                            <tr>
-                                <td style="padding: 24px 0 0 0;" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
-                                </td>
-                                <td style="padding: 24px 0 0 0;">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </form>
+                    </form>
 
+<script type="text/javascript" src="/js/pages/edit.web.js"></script>

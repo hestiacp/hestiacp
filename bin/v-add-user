@@ -218,6 +218,11 @@ if [ "$user" != 'admin' ]; then
     increase_user_value 'admin' '$U_USERS'
 fi
 
+# Run template trigger
+if [ -x "$VESTA/data/packages/$package.sh" ]; then
+    $VESTA/data/packages/$package.sh "$user" "$email" "$fname" "$lname"
+fi
+
 # Logging
 log_history "added system user $user" '' 'admin'
 log_event "$OK" "$EVENT"

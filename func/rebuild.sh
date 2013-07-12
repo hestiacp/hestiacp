@@ -14,6 +14,11 @@ rebuild_user_conf() {
     touch $USER_DATA/stats.log
     chmod 660 $USER_DATA/stats.log
 
+    # Run template trigger
+    if [ -x "$VESTA/data/packages/$PACKAGE.sh" ]; then
+        $VESTA/data/packages/$package.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
+    fi
+
     # Rebuild user
     shell=$(chsh --list-shells | grep -w "$SHELL" | head -n1)
     /usr/sbin/adduser "$user" -s "$shell" -c "$CONTACT" \

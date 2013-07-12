@@ -139,6 +139,11 @@ change_user_package
 shell_path=$(/usr/bin/chsh --list-shells | grep -w "$SHELL" |head -n1)
 /usr/bin/chsh -s "$shell_path" "$user" &>/dev/null
 
+# Run template trigger
+if [ -x "$VESTA/data/packages/$package.sh" ]; then
+    $VESTA/data/packages/$package.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

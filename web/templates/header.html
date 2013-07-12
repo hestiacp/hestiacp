@@ -4,9 +4,900 @@
         <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
         <title>Vesta - <?php echo "$TAB"; ?> </title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-        <link type="text/css" href="/css/main.css" rel="stylesheet" />
+        <style type="text/css">
+            body {
+                margin: 0;
+                margin-left: auto;
+                margin-right: auto;
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: #e5e5e5;
+            }
+
+            form {
+                margin: 0;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            .main {
+                background-color: #ffffff;
+                padding: 0 0 18px 0;
+                box-shadow: 0 2px 4px rgba(100, 100, 100, 0.3);
+            }
+
+            .top {
+                color: #ffd76e;
+                padding: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 0;
+                width: 990px;
+                font-size: 10pt;
+                text-align: left;
+                border: 0px;
+                border-collapse:collapse;
+
+            }
+
+            .top thead td {
+                background-color: #505050;
+                border-bottom: 1px solid #fff;
+                height: 25px;
+                text-align: right;
+                padding: 0 24px 0 0px;
+                weight:120px;
+            }
+
+            .top thead td:first-child{
+                border-left: 1px solid #fff;
+                border-right:none;
+                text-align:left;
+                padding: 0 0 0 0;
+                width:auto;
+            }
+
+            .top-link {
+                padding: 5px 22px 4px;
+                text-decoration: none;
+                color: #fff;
+                border-right: 1px solid #fff;
+            }
+
+            .top-link:hover {
+                color: #fff;
+                background-color: #999;
+            }
+
+            .top-link:active{
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .top-selected-link {
+                padding: 5px 22px;
+                text-decoration: none;
+                color: #555;
+                background-color: #fff;
+                border-right: 1px solid #fff;
+            }
+
+            .top-selected-link:hover {
+                color: #174f82;
+            }
+
+            .top-selected-link:active {
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .top-user {
+                padding: 0 2px 0 0;
+                text-decoration: none;
+                color: #ffd76e;
+            }
+
+            .top-user:hover {
+                color: #fff;
+            }
+
+            .top-user:active{
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .top-logout {
+                text-decoration: none;
+                color: #d3d3d3;
+                border: noner;
+            }
+
+            .top-logout:hover {
+                color: #fff;
+            }
+
+            .top-logout:active {
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .nav-logo {
+                float:left;
+                height:110px;
+                width:161px;
+                margin: 0;
+                border-bottom: 1px solid #e3e3e3;
+            }
+
+            .nav-lnk {
+                text-decoration: none;
+                color: #323232;
+                float:left;
+            }
+
+            .nav-lnk:active {
+                color: #f79b44;
+            }
+
+            .nav-block {
+                margin: 0;
+                height:110px;
+                width: 118px;
+                float:left;
+                cursor: pointer;
+                border-bottom: 1px solid #e3e3e3;
+
+            }
+
+            .nav-block:hover {
+                height:107px;
+                border-bottom: 4px solid #f79b44;
+            }
+
+            .nav-selected-block {
+                margin: 0;
+                color: #174f82;
+                height: 107px;
+                width: 118px;
+                float: left;
+                background-color: #fff;
+                border-bottom: 4px solid #777;
+                cursor: pointer;
+            }
+
+            .nav-selected-block:hover {
+                height:107px;
+                border-bottom: 4px solid #f79b44;
+            }
+
+            .nav-selected-block:active {
+                color: #f79b44;
+            }
+
+            .nav-header {
+                padding: 14px 0 0 6px;
+                margin: 0;
+                letter-spacing: -1.0px;
+                font-size: 16pt;
+                font-weight: bold;
+            }
+
+            .nav-selected-header {
+                padding: 14px 0 0 6px;
+                margin: 0;
+                letter-spacing: -1.0px;
+                font-size: 16pt;
+                font-weight: bold;
+            }
+
+            .nav-counters {
+                padding: 1px 0 0 6px;
+                margin: 0;
+                height: 58px;
+                line-height: 1.4em;
+                font-size: 9pt;
+                color: #555;
+                decoration: none;
+            }
+
+            .submenu {
+                margin-left: auto;
+                margin-right: auto;
+                width: 990px;
+                font-family:Arial, Helvetica, sans-serif;
+                height: 54px;
+                font-size: 10pt;
+                text-align: left;
+                vertical-align:top;
+                padding: 0px 10px 0px 0;
+                background-color: none repeat scroll 0% 0% white;
+            }
+
+            .submenu td {
+                vertical-align: middle;
+            }
+
+            .submenu-button-block {
+                float: left;
+            }
+
+            .submenu-button {
+                width: 130px;
+                height: 24px;
+                cursor: pointer;
+                color: #333;
+                background-color: #fafafa;
+                border: 1px solid #999;
+                border-radius: 3px 3px 3px 3px;
+                padding: 0;
+                font-size: 12px;
+                font-family:Arial, Helvetica, sans-serif;
+            }
+
+            @-moz-document url-prefix() {
+                .submenu-button {
+                    padding-bottom: 2px;
+                }
+            }
+
+            .submenu-button:hover {
+                background-color: #f0f0f0;
+            }
+
+            .submenu-button:active {
+                color: #fff;
+                border: 1px solid #f79b44;
+                background-color: #f79b44;
+            }
+
+            .submenu-select-block {
+                float:left;
+                padding-left: 18px;
+            }
+
+            .submenu-select-link {
+                color: #6A6A6A;
+                display: block;
+                float: left;
+                font-size: 8pt;
+                letter-spacing: 0.1em;
+                margin: 6px 6px 0 0;
+                text-decoration: none;
+                padding: 0 4px 0 12px
+            }
+
+            .submenu-select-link:hover {
+                text-decoration: underline;
+            }
+
+            .submenu-select-link:active {
+                color: #fff;
+                background-color: #f79b44;
+                text-decoration: underline;
+            }
+
+            .submenu-select-dropdown {
+                font-family:Arial, Helvetica, sans-serif;
+                color: #333333;
+                display: block;
+                float: left;
+                height: 24px;
+                margin: 0 4px 0 0;
+                min-width: 138px;
+            }
+
+            .submenu-search-block {
+                text-align: right;
+                float: right;
+            }
+
+            .submenu-search-field {
+                border: 1px solid #d3d3d3;
+                border-radius: 3px 3px 3px 3px;
+                color: #333;
+                font-size: 14px;
+                background-color: #fff;
+                float: left;
+                padding: 0px 3px 0px 3px;
+                height: 22px;
+                width: 250px;
+                margin: 0 4px 0 0;
+            }
+
+            .bottom {
+                background-color: #ebe9dc;
+                color: #555;
+                margin: 30px 0 0 0;
+                padding: 4px 20px 8px 0;
+                margin-left: auto;
+                margin-right: auto;
+                width: 990px;
+                font-size: 8pt;
+                text-align: center;
+                vertical-align:top;
+                line-height: 0.8em;
+                border-top: 4px solid #d3d3d3;
+            }
+
+            .bottom a:link {
+                font-size: 8pt;
+                text-decoration: none;
+                color: #555;
+            }
+
+            .bottom a:visited {
+                text-decoration: none;
+                color: #555;
+            }
+
+            .bottom a:hover {
+                text-decoration: underline;
+                color: #7fa1cb;
+            }
+
+            .vst {
+                padding: 0 4px 0 4px;
+                margin: 0;
+                text-decoration: none;
+                color: #999;
+                font-size: 12pt;
+                float: left;
+            }
+
+            .vst:hover {
+                text-decoration: underline;
+            }
+
+            .vst:active {
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .vst-selected {
+                padding: 0 4px 0 4px;
+                margin: 0;
+                text-decoration: none;
+                color: #174f82;
+                font-size: 12pt;
+                float: left;
+            }
+
+            .vst-selected:hover {
+                text-decoration: underline;
+            }
+
+            .vst-selected:active {
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .data {
+                border-collapse:collapse;
+                margin-left: auto;
+                margin-right: auto;
+                width: 990px;
+                font-family:Arial, Helvetica, sans-serif;
+                color: #e5a907;
+                font-size: 12pt;
+                text-align: left;
+                vertical-align:top;
+                margin: 0;
+                behavior:url("/css/csshover3.htc");
+            }
+
+            .data a {
+                text-decoration: none;
+            }
+
+            .data-row:hover {
+                margin: 0;
+                background-color: #f7f6ed;
+
+            }
+
+            .data-row:active {
+                background-color: #f7f7d8;
+            }
+
+            .datarowhover {
+                margin: 0;
+                background-color: #f7f6ed;
+            }
+
+            .data-null {
+                margin: 0;
+                width: 990px;
+                height: 10px;
+                border-top:1px dotted #d3d3d3;
+            }
+
+            .data-spacer {
+                margin: 0;
+                width: 990px;
+            }
+
+            .data-add {
+                margin: 0;
+                background-color: #f7f6ed;
+                border-left: 1px solid #e9e9e9;
+                border-right: 1px solid #e9e9e9;
+                border-bottom: 1px solid #e9e9e9;
+            }
+
+            .data-dotted {
+                text-align: left;
+                vertical-align:top;
+                border-top:1px dotted #d3d3d3;
+                padding: 0 0 26px 0;
+                margin: 0;
+            }
+
+            .data-dotted td {
+                margin: 0;
+            }
+
+            .data-col1 {
+                text-align: left;
+                padding:0;
+            }
+
+            .data-col1 tr td {
+                padding:0 0 0 20px;
+            }
+
+            .data-col1 tr:first-child td {
+                padding:23px 0 0 20px;
+            }
+
+            .data-col2 {
+                text-align: left;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            .data-col2 a:visited {
+                color: green;
+            }
+
+            .data-col5 {
+                table-layout: fixed;
+                text-align: left;
+                padding: 0;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+
+            .data-date {
+                padding: 0 0 0 18;
+                letter-spacing: 0.3em;
+                font-size: 8pt;
+                color: #6A6A6A
+            }
+
+            .data-active {
+                font-size: 8pt;
+                letter-spacing: 0.1em;
+                color: #81a64f;
+                padding: 0 0 13 18;
+            }
+
+            .data-suspended {
+                font-size: 8pt;
+                letter-spacing: 0.1em;
+                color: #de5543;
+                padding: 0 0 13 18;
+            }
+
+            .data-controls {
+                float: right;
+                height: 16px;
+                border-left: 1px solid #d3d3d3;
+                font-size: 8pt;
+                padding: 2px 12px 0 6px;
+                letter-spacing: 0.1em;
+                color: #174f82;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .data-controls:hover {
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .data-controls:active {
+                background-color: #999
+            }
+
+            .data-controls img {
+                border: 0px;
+            }
+
+            .data-count {
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: #f3f3f3;
+                color: #555;
+                font-size: 8pt;
+                margin: 18px 0 0 0;
+                text-align:right;
+                padding: 0 16px 0 0;
+            }
+
+            .chart1 {
+                color:#000;
+                font-size: 10pt;
+            }
+
+            .chart2 {
+                color: #484243;
+                font-size: 8pt;
+            }
+
+            .username {
+                color: #323232;
+                font-size: 16pt;
+            }
+
+            .domain {
+                color: #323232;
+                font-size: 16pt;
+            }
+
+            .cron {
+                color: #323232;
+                font-size: 18px;
+            }
+
+            .log {
+                color: #323232;
+                font-size: 12pt;
+            }
+
+            .aliases {
+                font-size: 12pt;
+                color: #99a7af;
+                padding: 0 0 0 8px;
+            }
+
+            .nginx-ext {
+                color: black;
+                vertical-align:top;
+                font-size: 10pt;
+            }
+
+            .fullname {
+                font-size: 18px;
+                color: #99a7af;
+                padding: 0 0 0 8px;
+            }
+
+            .counter-name {
+                white-space: nowrap;
+                vertical-align:top;
+                line-height: 1.3em;
+                font-size: 10pt;
+                color: #505050;
+                padding: 0 4px 0 0;
+            }
+
+            .cron-counter-name {
+                vertical-align:top;
+                line-height: 0.8em;
+                font-size: 8pt;
+                padding: 4 0 0 0;
+                color: #505050;
+            }
+
+            .counter-value {
+                vertical-align:top;
+                line-height: 1.2em;
+                font-size: 10pt;
+                color: #000;
+                padding: 0 0 0 4px;
+            }
+
+            .log-counter-value {
+                vertical-align:top;
+                font-size: 12pt;
+                color: #484243;
+            }
+
+            .cron-counter-value {
+                vertical-align:top;
+                line-height: 1.2em;
+                font-size: 12pt;
+                color: #484243;
+            }
+
+            .name {
+                font-size: 16pt;
+                color: #555;
+                padding: 0 0 0 10px;
+            }
+
+            .vst-ok {
+                font-size: 18px;
+                color: #62a358;
+                padding: 0 0 0 6px;
+            }
+
+            .vst-ok a{
+                color: #58934f;
+                text-decoration: none;
+            }
+
+            .vst-ok a:hover{
+                text-decoration: underline;
+            }
+
+            .vst-error {
+                font-size: 18px;
+                color: #de6c5d;
+                padding: 0 0 0 6px;
+            }
+
+            .vst-text {
+                color: #323232;
+                font-size: 12pt;
+            }
+
+            .vst-textinput {
+                background-color: #fff;
+                border: 1px solid #c0c0c0;
+                border-radius: 3px 3px 3px 3px;
+                color: #555;
+                font-size: 18px;
+                padding: 5px;
+                width: 360px;
+                height: 120px;
+            }
+
+            .vst-textinput:hover {
+                border: 1px solid #f79b44;
+            }
+
+            .vst-textinput:focus {
+                border: 1px solid #f79b44;
+            }
+
+            .vst-textinput:disabled {
+                background-color: #f1f1f1;
+            }
+
+            .vst-input {
+                background-color: #fff;
+                border: 1px solid #c0c0c0;
+                border-radius: 3px 3px 3px 3px;
+                color: #555;
+                font-size: 14pt;
+                padding: 5px;
+                width: 360px;
+                height: 28px;
+            }
+
+            .vst-input:hover {
+                border: 1px solid #f79b44;
+            }
+
+            .vst-input:focus {
+                border: 1px solid #f79b44;
+            }
+
+            .vst-input:disabled {
+                background-color: #f1f1f1;
+            }
+
+            .vst-list {
+                font-family:Arial, Helvetica, sans-serif;
+                font-size: 12pt;
+                color: #555;
+                height: 30px;
+                min-width: 136px;
+            }
+
+            @-moz-document url-prefix() {
+                .vst-list {
+                    padding-top: 2px;
+                }
+            }
+
+            .vst-checkbox {
+                padding: 5px;
+                font-size: 12pt;
+            }
+
+            .vst-checkbox:hover {
+                border: 1px solid #f79b44;
+            }
+
+            .button {
+                filter:chroma(color=#000000);
+                cursor: pointer;
+                color: #202020;
+                background-color: #fafafa;
+                border: 1px solid #999;
+                border-radius: 3px 3px 3px 3px;
+                font-size: 14px;
+                padding: 2px 16px;
+                width: 108px;
+                height: 34px;
+            }
+
+            .button:hover {
+                background-color: #f0f0f0;
+            }
+
+            .button:active {
+                color: #fff;
+                border: 1px solid #f79b44;
+                background-color: #f79b44;
+            }
+
+            .genpass {
+                color: #34536a;
+                font-size: 8pt;
+                padding: 0 5px;
+                letter-spacing: 0.1em;
+                text-decoration: underline;
+            }
+
+            .genpass:hover {
+                color: #7fa1cb;
+            }
+
+            .genpass:active {
+                background-color: #f79b44;
+                color: #fff;
+            }
+
+            .vst-advanced {
+                color: #34536a;
+                font-size: 10pt;
+                letter-spacing: 0.1em;
+                text-decoration: none;
+                padding: 0 2px;
+                border-bottom: 1px solid #f79b44;
+            }
+
+            .vst-advanced:hover {
+                color: #7fa1cb;
+            }
+
+            .vst-advanced:active {
+                color: #fff;
+                background-color: #f79b44;
+            }
+
+            .fixed{
+                position: fixed;
+                border: none;
+                top: -3px;
+                border-bottom: 1px solid #d3d3d3;
+                background-color: #fff;
+            }
+
+            *html .fixed{
+                position:absolute;
+                position:fixed;
+                _position:absolute;
+                top:0;
+                _top:expression( eval(document.body.scrollTop) + 'px' );
+            }
+
+            #vstobjects{
+                padding-top: 192px;
+                width: 996px;
+                padding-left: 3px;
+                min-height: 370px;
+            }
+
+            .login {
+                font-family:Arial, Helvetica, sans-serif;
+                margin: 80px 0 80px 0;
+                padding: 0;
+                background-color: #fff;
+                text-align: left;
+                vertical-align:top;
+                width: 500px;
+                box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+            }
+
+            .login-box {
+                text-align: left;
+                vertical-align:top;
+                color: #323232;
+            }
+
+            .login-bottom {
+                color: #ebe9dc;
+                text-align: right;
+                vertical-align:top;
+                width: 500px;
+                height: 50px;
+                background-color: #ebe9dc;
+                padding: 0 8px 0 0;
+                margin: 0;
+            }
+
+            .vestacp{
+                font-size: 8pt;
+                color: #323232;
+                text-align: right;
+                padding: 20px 0 0 0;
+            }
+
+            .error {
+                font-size: 10pt;
+                color: #dE6c5d;
+            }
+        </style>
+        <!--[if IE]>
+            <style type="text/css">
+                html, body, div, span, applet, object, iframe {
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    font-size: 100%;
+                    font: inherit;
+                    vertical-align: baseline;
+                }
+
+                .fixed {
+                    margin-top: 0px;
+                }
+
+                .vst-advanced {
+                    text-decoration: underline;
+                }
+
+                #vstobjects{
+                    padding-top: 195px;
+                    min-height: 370px;
+                    height: auto !important;
+                    height: 370px;
+                    width: 996px;
+                }
+
+                .nav-logo {
+                    float:left;
+                    height:112px;
+                    width:161px;
+                    margin: 0;
+                    border-bottom: 1px solid #d3d3d3;
+                }
+
+                .nav-block {
+                    margin: 0;
+                    height:112px;
+                    width: 118px;
+                    float:left;
+                    cursor: pointer;
+                    border-bottom: 1px solid #d3d3d3;
+                }
+
+                .nav-block:hover {
+                    height:109px;
+                    border-bottom: 4px solid #f79b44;
+                }
+
+                .nav-selected-block {
+                    margin: 0;
+                    color: #174f82;
+                    height: 109px;
+                    width: 118px;
+                    float: left;
+                    background-color: #fff;
+                    border-bottom: 4px solid #777;
+                    cursor: pointer;
+                }
+
+                .nav-selected-block:hover {
+                    height:109px;
+                    border-bottom: 4px solid #f79b44;
+                }
+            </style>
+        <![endif]-->
         <!--[if IE 7]>
-            <link rel="stylesheet" type="text/css" href="/css/ie.css" />
             <style type="text/css">
                 .data-col1 a {
                     white-space: nowrap;
@@ -29,6 +920,7 @@
                     top: 2px;
                 }
             </style>
+            <link rel="stylesheet" type="text/css" href="/css/ie.css" />
         <![endif]-->
         <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
         <script type="text/javascript" src="/js/events.js"></script>
@@ -67,5 +959,9 @@
                 });
             });
         </script>
+
+	<script type="text/javascript" src="/js/app.js"></script>
+        <script type="text/javascript" src="/js/templates.js"></script>
+
     </head>
     <body>

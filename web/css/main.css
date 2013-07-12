@@ -154,7 +154,7 @@ form {
 }
 
 .nav-selected-block:hover {
-    height:100px;
+    height:102px;
     border-bottom: 4px solid #f79b44;
 }
 
@@ -263,13 +263,15 @@ form {
     height: 26px;
     margin: 0 4px 0 0;
     min-width: 138px;
-}
-@-moz-document url-prefix() {
-    .submenu-select-dropdown {
-        padding-top: 3px;
-    }
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    padding: 3px 5px;
 }
 
+.submenu-select-dropdown option {
+    padding: 5px 5px 5px 8px;
+}
 .submenu-search-block {
     display: block;
     text-align: right;

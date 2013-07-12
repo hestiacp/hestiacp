@@ -1,11 +1,11 @@
 App.Actions.WEB.update_ftp_username_hint = function(elm, hint) {
 	if (hint.trim() == '') {
-		$(elm).parent().find('.ftp_username_hint').html('');
+		$(elm).parent().find('.hint').html('');
 	} 
 	if (hint.indexOf(GLOBAL.FTP_USER_PREFIX) == 0) {
 		hint = hint.slice(GLOBAL.FTP_USER_PREFIX.length, hint.length);
 	}
-	$(elm).parent().find('.ftp_username_hint').html(GLOBAL.FTP_USER_PREFIX + hint);
+	$(elm).parent().find('.hint').html(GLOBAL.FTP_USER_PREFIX + hint);
 }
 
 App.Listeners.WEB.keypress_ftp_username = function() {

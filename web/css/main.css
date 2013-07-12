@@ -813,3 +813,9 @@ form {
     font-size: 10pt;
     color: #dE6c5d;
 }
+
+.hint {
+    font-size: 14pt;
+    color: #7fa1cb;
+    padding: 5px;
+}

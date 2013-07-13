@@ -21,7 +21,7 @@ software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     phpMyAdmin awstats webalizer vsftpd mysql mysql-server exim dovecot clamd
     spamassassin curl roundcubemail bind bind-utils bind-libs mc screen ftp
     libpng libjpeg libmcrypt mhash zip unzip openssl flex rssh libxml2
-    ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rsync
+    ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rsync sysstat
     rrdtool GeoIP freetype ntp openssh-clients vesta vesta-nginx vesta-php"
 
 

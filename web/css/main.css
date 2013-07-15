@@ -630,10 +630,11 @@ form {
     border: 1px solid #c0c0c0;
     border-radius: 3px 3px 3px 3px;
     color: #555;
-    font-size: 18px;
+    font-size: 12pt;
     padding: 5px;
     width: 360px;
     height: 120px;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 .vst-textinput:hover {
@@ -657,6 +658,7 @@ form {
     padding: 5px;
     width: 360px;
     height: 28px;
+    margin: 0 6px 0 0;
 }
 
 .vst-input:hover {
@@ -688,6 +690,7 @@ form {
 .vst-checkbox {
     padding: 5px;
     font-size: 12pt;
+    border: 1px solid #f7f6ed;
 }
 
 .vst-checkbox:hover {
@@ -817,5 +820,4 @@ form {
 .hint {
     font-size: 14pt;
     color: #7fa1cb;
-    padding: 5px;
 }

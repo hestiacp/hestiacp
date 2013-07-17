@@ -83,6 +83,7 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_dbuser" <?php if (!empty($v_dbuser)) echo "value=".$v_dbuser; ?> disabled>
+                                    <small class="hint"></small>
                                 </td>
                             </tr>
                             <tr>
@@ -140,3 +141,8 @@
                 </tr>
             </table>
         </form>
+
+    <script type="text/javascript">
+        GLOBAL.DB_USER_PREFIX = '<?php echo $user; ?>_';
+    </script>
+    <script type="text/javascript" src="/js/pages/add.db.js"></script>

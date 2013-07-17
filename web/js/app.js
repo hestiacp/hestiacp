@@ -44,6 +44,7 @@ var Error = {FATAL: 1, WARNING: 0, NORMAL: -1};
 //
 GLOBAL = {};
 GLOBAL.FTP_USER_PREFIX = 'admin_';
+GLOBAL.DB_USER_PREFIX  = 'admin_';
 GLOBAL.AJAX_URL = '';
 
 /**
@@ -77,6 +78,7 @@ var App = {
     Core: {},
     // Actions. More widly used funcs
     Actions: {
+        DB: {},
         WEB: {}
     },
     // Utilities
@@ -88,6 +90,7 @@ var App = {
     },
     i18n: {},
     Listeners: {
+        DB: {},
         WEB: {}
     },
     View:{

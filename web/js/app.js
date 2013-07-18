@@ -43,8 +43,9 @@ var Error = {FATAL: 1, WARNING: 0, NORMAL: -1};
 //  GLOBAL SETTINGS
 //
 GLOBAL = {};
-GLOBAL.FTP_USER_PREFIX = 'admin_';
-GLOBAL.DB_USER_PREFIX  = 'admin_';
+GLOBAL.FTP_USER_PREFIX  = 'admin_';
+GLOBAL.DB_USER_PREFIX   = 'admin_';
+GLOBAL.DB_DBNAME_PREFIX = 'admin_';
 GLOBAL.AJAX_URL = '';
 
 /**

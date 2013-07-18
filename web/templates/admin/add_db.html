@@ -71,6 +71,7 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_database" <?php if (!empty($v_database)) echo "value=".$v_database; ?>>
+                                    <small class="hint"></small>
                                 </td>
                             </tr>
                             <tr>
@@ -187,5 +188,6 @@
 
     <script type="text/javascript">
         GLOBAL.DB_USER_PREFIX = '<?php echo $user; ?>_';
+        GLOBAL.DB_DBNAME_PREFIX = '<?php echo $user; ?>_';
     </script>
     <script type="text/javascript" src="/js/pages/add.db.js"></script>

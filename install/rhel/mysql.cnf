@@ -11,6 +11,8 @@ long_query_time=5
 #log-queries-not-using-indexes
 #log-slow-queries=/var/log/mysql/log-slow-queries.log
 
+innodb_file_per_table
+
 [mysqld_safe]
 log-error=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid

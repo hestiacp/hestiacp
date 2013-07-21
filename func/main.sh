@@ -622,6 +622,16 @@ validate_format_domain_alias() {
 # Database
 validate_format_database() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%|\`| ]"
+    if [[ "$1" =~ $exclude ]] || [ 65 -le ${#1} ]; then
+        echo "Error: $2 $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Database user
+validate_format_database() {
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [ 17 -le ${#1} ]; then
         echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
@@ -761,7 +771,7 @@ validate_format(){
             database)       validate_format_database "$arg" 'database';;
             day)            validate_format_mhdmw "$arg" $arg_name ;;
             dbpass)         validate_format_password "$arg" ;;
-            dbuser)         validate_format_database "$arg" 'db_user';;
+            dbuser)         validate_format_duser "$arg" 'db_user';;
             dkim)           validate_format_boolean "$arg" 'dkim' ;;
             dkim_size)      validate_format_key_size "$arg" ;;
             domain)         validate_format_domain "$arg" 'domain';;

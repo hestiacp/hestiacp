@@ -36,6 +36,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
         // Protect input
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
         $v_domain = escapeshellarg($v_domain);
+        $v_domain = strtolower($v_domain);
         $v_ip = escapeshellarg($_POST['v_ip']);
         if (empty($_POST['v_dns'])) $v_dns = 'off';
         if (empty($_POST['v_mail'])) $v_mail = 'off';

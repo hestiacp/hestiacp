@@ -38,6 +38,7 @@ top_panel($user,$TAB);
         // Protect input
         $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
         $v_domain = escapeshellarg($v_domain);
+        $v_domain = strtolower($v_domain);
 
         // Check for errors
         if (!empty($errors[0])) {
@@ -77,6 +78,7 @@ top_panel($user,$TAB);
 
         // Protect input
         $v_domain = escapeshellarg($_POST['v_domain']);
+        $v_domain = strtolower($v_domain);
         $v_account = escapeshellarg($_POST['v_account']);
         $v_password = escapeshellarg($_POST['v_password']);
         $v_quota = escapeshellarg($_POST['v_quota']);

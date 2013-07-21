@@ -630,7 +630,7 @@ validate_format_database() {
 }
 
 # Database user
-validate_format_database() {
+validate_format_dbuser() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [ 17 -le ${#1} ]; then
         echo "Error: $2 $1 is not valid"
@@ -771,7 +771,7 @@ validate_format(){
             database)       validate_format_database "$arg" 'database';;
             day)            validate_format_mhdmw "$arg" $arg_name ;;
             dbpass)         validate_format_password "$arg" ;;
-            dbuser)         validate_format_duser "$arg" 'db_user';;
+            dbuser)         validate_format_dbuser "$arg" 'db_user';;
             dkim)           validate_format_boolean "$arg" 'dkim' ;;
             dkim_size)      validate_format_key_size "$arg" ;;
             domain)         validate_format_domain "$arg" 'domain';;

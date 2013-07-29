@@ -233,13 +233,13 @@ if (!empty($_POST['save'])) {
         $ext = str_replace(' ', ", ", $ext);
         if (( $v_proxy_template != $_POST['v_proxy_template']) ||  ($v_proxy_ext != $ext)) {
             $ext = str_replace(', ', ",", $ext);
-            exec (VESTA_CMD."v-change-web-domain-proxy-tpl ".$v_username." ".$v_domain." ".escapeshellarg($_POST['v_proxy_template'])." ".escapeshellarg($ext)." 'no'", $output, $return_var);
+            if (!empty($_POST['v_proxy_template'])) $v_proxy_template = $_POST['v_proxy_template'];
+            exec (VESTA_CMD."v-change-web-domain-proxy-tpl ".$v_username." ".$v_domain." ".escapeshellarg($v_proxy_template)." ".escapeshellarg($ext)." 'no'", $output, $return_var);
             if ($return_var != 0) {
                 $error = implode('<br>', $output);
                 if (empty($error)) $error = __('Error code:',$return_var);
                 $_SESSION['error_msg'] = $error;
             }
-            $v_proxy_template = $_POST['v_proxy_template'];
             $v_proxy_ext = str_replace(',', ', ', $ext);
             unset($output);
             $restart_proxy = 'yes';

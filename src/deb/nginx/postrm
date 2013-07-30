@@ -1,0 +1,6 @@
+#!/bin/sh
+
+update-rc.d vesta remove >/dev/null 2>&1
+
+
+exit 0

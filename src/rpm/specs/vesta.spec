@@ -42,7 +42,8 @@ fi
 %config(noreplace) %{_vestadir}/web/images/favicon.ico
 
 %changelog
-* Mon Jul 29 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-3
+* Mon Jul 30 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-3
+- Updated romanian language file
 - Fixed issue with uppercase domains
 - Implemented JS hints when adding database or ftp domain
 - Package trigger support

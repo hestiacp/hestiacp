@@ -51,8 +51,13 @@ fi
 %defattr(-,root,root)
 %attr(755,root,root) /usr/local/vesta/nginx
 %{_initrddir}/vesta
+%config(noreplace) /usr/local/vesta/nginx/conf/nginx.conf
+
 
 %changelog
+* Wed Jul 30 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-1
+- upgraded to nginx-1.4.2
+
 * Sat Apr 06 2013 Serghey Rodin <builder@vestacp.com> - 0.9.7-2
 - new init script
 

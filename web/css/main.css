@@ -96,17 +96,18 @@ form {
     font-weight: bold;
     text-decoration: none;
     line-height: 21px;
-    padding: 0 18px 1px 4px;
+    padding: 0 4px 1px 4px;
+    margin: 0 14px 1px 0;
 }
 
 .top-logout:hover {
     color: #fff;
-    background-color: #999;
+    background-color: #f79b44;
 }
 
 .top-logout:active {
     color: #fff;
-    background-color: #f79b44;
+    background-color: #999;
 }
 
 .nav-logo {

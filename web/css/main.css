@@ -111,7 +111,7 @@ form {
 
 .nav-logo {
     float: left;
-    height: 105px;
+    height: 111px;
     width: 167px;
     margin: 0;
     border-bottom: 1px solid #e5e5e5;
@@ -130,7 +130,7 @@ form {
 .nav-block {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    height: 105px;
+    height: 111px;
     width: 119px;
     float:left;
     cursor: pointer;
@@ -138,7 +138,7 @@ form {
 }
 
 .nav-block:hover {
-    height:102px;
+    height:108px;
     border-bottom: 4px solid #f79b44;
 }
 
@@ -146,7 +146,7 @@ form {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     color: #174f82;
-    height: 102px;
+    height: 108px;
     width: 119px;
     float: left;
     border-bottom: 4px solid #777777;
@@ -154,7 +154,7 @@ form {
 }
 
 .nav-selected-block:hover {
-    height:102px;
+    height:108px;
     border-bottom: 4px solid #f79b44;
 }
 
@@ -163,7 +163,7 @@ form {
 }
 
 .nav-header {
-    padding: 12px 0 0 6px;
+    padding: 14px 0 0 6px;
     margin: 0;
     letter-spacing: -1.0px;
     font-size: 16pt;
@@ -171,7 +171,7 @@ form {
 }
 
 .nav-selected-header {
-    padding: 12px 0 0 6px;
+    padding: 14px 0 0 6px;
     margin: 0;
     letter-spacing: -1.0px;
     font-size: 16pt;
@@ -773,7 +773,7 @@ form {
 }
 
 #vstobjects{
-    padding-top: 182px;
+    padding-top: 188px;
     min-height: 370px;
 }
 

@@ -22,11 +22,13 @@ PHP_DAEMON=/usr/local/vesta/php/sbin/vesta-php
 PHP_NAME=vesta-php
 PHP_DESC=vesta-php
 PHP_PID=/var/run/vesta-php.pid
+PHP_CONF=/usr/local/vesta/php/etc/php-fpm.conf
 
 set -e
 
 . /lib/lsb/init-functions
 
+. /etc/profile.d/vesta.sh
 
 start_nginx() {
     start-stop-daemon --start --quiet --pidfile $NGINX_PID \
@@ -74,6 +76,7 @@ case "$1" in
         sleep 1
         start_nginx
         log_end_msg $?
+        log_daemon_msg "Restarting $PHP_DESC" "$PHP_NAME"
         start_php
         log_end_msg $?
         ;;

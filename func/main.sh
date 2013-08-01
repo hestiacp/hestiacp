@@ -491,6 +491,9 @@ sync_cron_jobs() {
                 >> $sys_cron
         fi
     done < $USER_DATA/cron.conf
+
+    # Set proper permissions
+    chow 600 $sys_cron
 }
 
 

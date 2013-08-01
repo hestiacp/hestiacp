@@ -21,7 +21,7 @@ form {
 }
 
 .top-menu {
-    height: 22px;
+    height: 24px;
     background-color: #505050;
 }
 
@@ -32,8 +32,8 @@ form {
     font-size: 10pt;
     font-weight: bold;
     text-decoration: none;
-    line-height: 21px;
-    padding: 0 20px 1px;
+    line-height: 22px;
+    padding: 0 20px 2px;
 }
 
 .top-link:hover {
@@ -54,8 +54,8 @@ form {
     font-size: 10pt;
     font-weight: bold;
     text-decoration: none;
-    line-height: 21px;
-    padding: 0 20px 1px;
+    line-height: 22px;
+    padding: 0 20px 2px;
 }
 
 .top-selected-link:hover {
@@ -70,8 +70,8 @@ form {
 
 .top-user {
     float: left;
-    line-height: 21px;
-    padding: 0 4px 1px;
+    line-height: 22px;
+    padding: 0 4px 2px;
     text-decoration: none;
     color: #ffce4f;
     font-size: 10pt;
@@ -95,9 +95,9 @@ form {
     font-size: 10pt;
     font-weight: bold;
     text-decoration: none;
-    line-height: 21px;
-    padding: 0 4px 1px 4px;
-    margin: 0 14px 1px 0;
+    line-height: 22px;
+    padding: 0 4px 2px 4px;
+    margin: 0 14px 2px 0;
 }
 
 .top-logout:hover {
@@ -774,7 +774,7 @@ form {
 }
 
 #vstobjects{
-    padding-top: 188px;
+    padding-top: 190px;
     min-height: 370px;
 }
 

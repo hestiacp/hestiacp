@@ -40,6 +40,10 @@ fi
 %{_vestadir}
 %config(noreplace) %{_vestadir}/web/images/logo.png
 %config(noreplace) %{_vestadir}/web/images/favicon.ico
+%config(noreplace) %{_vestadir}/web/css/csshover3.htc
+%config(noreplace) %{_vestadir}/web/css/ie.css
+%config(noreplace) %{_vestadir}/web/css/jquery-custom-dialogs.css
+%config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
 * Mon Jul 30 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-3

@@ -208,7 +208,7 @@ if [ "$web" != 'no' ]; then
             if [ ! -z "$check_new" ]; then
                 echo "Error: web domain $domain belongs to another user"
                 echo "Web domain $domain belongs to another user" |\
-                    $sedn_mail -s "$subj" $email
+                    $send_mail -s "$subj" $email
                 rm -rf $tmpdir
                 log_event "$E_EXISTS" "$EVENT"
                 exit $E_EXISTS

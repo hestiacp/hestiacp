@@ -21,7 +21,7 @@ software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     phpMyAdmin awstats webalizer vsftpd mysql mysql-server exim dovecot clamd
     spamassassin curl roundcubemail bind bind-utils bind-libs mc screen ftp
     libpng libjpeg libmcrypt mhash zip unzip openssl flex rssh libxml2
-    ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rsync sysstat
+    ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rsync
     rrdtool GeoIP freetype ntp openssh-clients vesta vesta-nginx vesta-php"
 
 
@@ -521,6 +521,11 @@ if [ "$srv_type" = 'micro' ]; then
 else
     wget $CHOST/$VERSION/mysql.cnf -O /etc/my.cnf
 fi
+
+# Disable aio on OpenVZ
+if [ -e "/proc/user_beancounters" ]; then
+    sed -i "s/#innodb_use_native_aio/innodb_use_native_aio/g" /etc/my.cnf
+fi
 chkconfig mysqld on
 service mysqld start
 if [ "$?" -ne 0 ]; then
@@ -742,6 +747,10 @@ vst_ip=$(wget vestacp.com/what-is-my-ip/ -O - 2>/dev/null)
 if [ ! -z "$vst_ip" ] && [ "$vst_ip" != "$main_ip" ]; then
     # Set NAT association
     $VESTA/bin/v-change-sys-ip-nat $main_ip $vst_ip
+
+    # Assign passive ip address
+    echo "pasv_address=$vst_ip" >> /etc/vsftpd/vsftpd.conf
+    service vsftpd restart
 fi
 if [ -z "$vst_ip" ]; then
     vst_ip=$main_ip

@@ -522,15 +522,20 @@ else
     wget $CHOST/$VERSION/mysql.cnf -O /etc/my.cnf
 fi
 
-# Disable aio on OpenVZ
-if [ -e "/proc/user_beancounters" ]; then
-    sed -i "s/#innodb_use_native_aio/innodb_use_native_aio/g" /etc/my.cnf
-fi
 chkconfig mysqld on
 service mysqld start
 if [ "$?" -ne 0 ]; then
-    echo "Error: mysqld start failed"
-    exit
+
+    # Fix for aio on OpenVZ
+    if [ -e "/proc/user_beancounters" ]; then
+        sed -i "s/#innodb_use_native_aio/innodb_use_native_aio/g" /etc/my.cnf
+    fi
+
+    service mysqld start
+    if [ "$?" -ne 0 ]; then
+        echo "Error: mysqld start failed"
+        exit 1
+    fi
 fi
 
 mysqladmin -u root password $mpass

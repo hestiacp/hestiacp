@@ -411,9 +411,11 @@ fi
 
 # Install Vesta packages
 if [ -z "$disable_remi" ]; then 
-    yum -y --enablerepo=remi install $software
+    yum --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta" \
+        install $software
 else
-    yum -y install $software
+    yum --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta,remi" \
+        install $software
 fi
 if [ $? -ne 0 ]; then
     echo 'Error: yum install failed'

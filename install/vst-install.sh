@@ -411,10 +411,10 @@ fi
 
 # Install Vesta packages
 if [ -z "$disable_remi" ]; then 
-    yum --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta" \
+    yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta,remi" \
         install $software
 else
-    yum --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta,remi" \
+    yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta" \
         install $software
 fi
 if [ $? -ne 0 ]; then

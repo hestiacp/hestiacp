@@ -34,6 +34,19 @@ if [ ! -z "$FTP_SYSTEM" ]; then
     if [ $? -ne 0 ]; then
         /etc/init.d/$FTP_SYSTEM restart >/dev/null 2>&1
         if [ $? -ne 0 ]; then
+            if [ -e "$VESTA/web/inc/mail-wrapper.php" ]; then
+                send_mail="$VESTA/web/inc/mail-wrapper.php"
+            else
+                send_mail=$(which mail)
+            fi
+            email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
+            email=$(echo "$email" | cut -f 2 -d "'")
+            tmpfile=$(mktemp)
+            subj="$(hostname): $FTP_SYSTEM restart failed"
+            /etc/init.d/$FTP_SYSTEM configtest >> $tmpfile 2>&1
+            /etc/init.d/$FTP_SYSTEM restart >> $tmpfile 2>&1
+            cat $tmpfile | $send_mail -s "$subj" $email
+            rm -f $tmpfile
             exit $E_RESTART
         fi
     fi

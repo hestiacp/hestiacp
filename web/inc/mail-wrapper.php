@@ -23,7 +23,7 @@ if (!empty( $data['config']['LANGUAGE'])) {
 require_once('/usr/local/vesta/web/inc/i18n/'.$_SESSION['language'].'.php');
 
 // Define vars
-$from = 'Vesta Control Panel <vesta@'.$_SERVER["HOSTNAME"].'>';
+$from = 'Vesta Control Panel <vesta@'.gethostname().'>';
 $to = $argv[3]."\n";
 $subject = $argv[2]."\n";
 $mailtext = file_get_contents("php://stdin");

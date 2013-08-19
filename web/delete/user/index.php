@@ -15,6 +15,7 @@ if ($_SESSION['user'] == 'admin') {
         if (empty($error)) $error = __('Error: vesta did not return any output.');
             $_SESSION['error_msg'] = $error;
     }
+    unset($_SESSION['look']);
     unset($output);
 }
 

@@ -493,7 +493,7 @@ sync_cron_jobs() {
     done < $USER_DATA/cron.conf
 
     # Set proper permissions
-    chow 600 $sys_cron
+    chown 600 $sys_cron
 }
 
 

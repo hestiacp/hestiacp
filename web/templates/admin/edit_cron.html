@@ -52,7 +52,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_min" <?php if (!empty($v_min)) echo "value=".$v_min; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_min" <?php if (isset($v_min)) echo "value=".$v_min; ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -62,7 +62,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_hour" <?php if (!empty($v_hour)) echo "value=".$v_hour; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_hour" <?php if (isset($v_hour)) echo "value=".$v_hour; ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -72,7 +72,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_day" <?php if (!empty($v_day)) echo "value=".$v_day; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_day" <?php if (isset($v_day)) echo "value=".$v_day; ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -82,7 +82,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_month" <?php if (!empty($v_month)) echo "value=".$v_month; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_month" <?php if (isset($v_month)) echo "value=".$v_month; ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -92,7 +92,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_wday" <?php if (!empty($v_wday)) echo "value=".$v_wday; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_wday" <?php if (isset($v_wday)) echo "value=".$v_wday; ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -102,7 +102,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_cmd" <?php if (!empty($v_cmd)) echo "value='".$v_cmd."'"; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_cmd" <?php if (isset($v_cmd)) echo "value='".$v_cmd."'"; ?>>
                                 </td>
                             </tr>
                         </table>

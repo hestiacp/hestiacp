@@ -67,7 +67,7 @@
                         <table class="data-col2" width="800px">
                             <tr>
                                 <td colspan=5 class="cron" style="padding: 0 0 0 4px;">
-                                    <b><?php echo $data[$key]['CMD'] ?></b>
+                                    <b><?php echo htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?></b>
                                 </td>
                             </tr>
                             <tr>

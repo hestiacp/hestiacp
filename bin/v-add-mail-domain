@@ -48,7 +48,7 @@ mkdir $HOMEDIR/$user/conf/mail/$domain
 touch $HOMEDIR/$user/conf/mail/$domain/aliases
 touch $HOMEDIR/$user/conf/mail/$domain/protection
 touch $HOMEDIR/$user/conf/mail/$domain/passwd
-chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain
+chown -R exim:mail $HOMEDIR/$user/conf/mail/$domain
 chmod 770 $HOMEDIR/$user/conf/mail/$domain
 chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
 mkdir $HOMEDIR/$user/mail/$domain_idn
@@ -76,7 +76,7 @@ if [ "$dkim" = 'yes' ]; then
     chmod 660 $USER_DATA/mail/$domain.*
 
     cp $USER_DATA/mail/$domain.pem $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-    chown root:mail $HOMEDIR/$user/conf/mail/$domain/dkim.pem
+    chown exim:mail $HOMEDIR/$user/conf/mail/$domain/dkim.pem
     chmod 660 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 
     # Adding dkim dns records

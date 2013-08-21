@@ -408,9 +408,8 @@ rebuild_dns_domain_conf() {
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
 
-    domain_idn=$(idn -t --quiet -a "$domain")
-
     # Get domain values
+    domain_idn=$(idn -t --quiet -a "$domain")
     get_domain_values 'mail'
 
     # Rebuilding config structure
@@ -423,11 +422,6 @@ rebuild_mail_domain_conf() {
     touch $HOMEDIR/$user/conf/mail/$domain/aliases
     touch $HOMEDIR/$user/conf/mail/$domain/protection
     touch $HOMEDIR/$user/conf/mail/$domain/passwd
-    chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain
-    chown -R dovecot:mail /etc/exim/domains/$domain_idn
-    chmod 770 $HOMEDIR/$user/conf/mail/$domain
-    chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-    chmod 770 /etc/exim/domains/$domain_idn
 
     # Adding antispam protection
     if [ "$ANTISPAM" = 'yes' ]; then
@@ -446,11 +440,7 @@ rebuild_mail_domain_conf() {
         pub="$USER_DATA/mail/$domain.pub"
         openssl genrsa -out $pem 512 &>/dev/null
         openssl rsa -pubout -in $pem -out $pub &>/dev/null
-        chmod 660 $USER_DATA/mail/$domain.*
-
         cp $pem $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-        chown root:mail $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-        chmod 660 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 
         # Deleting old dkim records
         records=$($BIN/v-list-dns-records $user $domain plain)
@@ -459,15 +449,15 @@ rebuild_mail_domain_conf() {
             $BIN/v-delete-dns-record $user $domain $id
         done
 
-        # Adding dkim dns records
+        # Adding new dkim dns records
         check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
         if [ "$?" -eq 0 ]; then
-            p=$(cat $pub|grep -v ' KEY---'|tr -d '\n')
             record='_domainkey'
             policy="\"t=y; o=~;\""
             $BIN/v-add-dns-record $user $domain $record TXT "$policy"
 
             record='mail._domainkey'
+            p=$(cat $pub|grep -v ' KEY---'|tr -d '\n')
             slct="\"k=rsa\; p=$p\""
             $BIN/v-add-dns-record $user $domain $record TXT "$slct"
         fi
@@ -482,8 +472,6 @@ rebuild_mail_domain_conf() {
     if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
         mkdir $HOMEDIR/$user/mail/$domain_idn
     fi
-    chown $user:mail $HOMEDIR/$user/mail/$domain_idn
-    chmod 770 $HOMEDIR/$user/mail/$domain_idn
 
     dom_aliases=$HOMEDIR/$user/conf/mail/$domain/aliases
     if [ ! -z "$CATCHALL" ]; then
@@ -498,7 +486,6 @@ rebuild_mail_domain_conf() {
     else
         accounts=''
     fi
-
     for account in $accounts; do
         (( ++accs))
         dom_diks=$((dom_diks + U_DISK))
@@ -517,15 +504,27 @@ rebuild_mail_domain_conf() {
         if [ ! -z "$FWD" ]; then
             echo "$account@$domain:$FWD" >> $dom_aliases
         fi
-
     done
+
+    # Set permissions
+    chmod 660 $USER_DATA/mail/$domain.*
+    chmod 770 $HOMEDIR/$user/conf/mail/$domain
+    chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
+    chmod 770 /etc/exim/domains/$domain_idn
+    chmod 770 $HOMEDIR/$user/mail/$domain_idn
+
+    # Set ownership
+    chown -R exim:mail $HOMEDIR/$user/conf/mail/$domain
+    chown -R exim:mail /etc/exim/domains/$domain_idn
+    chown $user:mail $HOMEDIR/$user/mail/$domain_idn
+
+    # Update counters
     update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accs"
     update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_diks"
     U_MAIL_ACCOUNTS=$((U_MAIL_ACCOUNTS + accs))
     U_DISK_MAIL=$((U_DISK_MAIL + dom_diks))
     U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
 }
-
 
 # Rebuild MySQL
 rebuild_mysql_database() {

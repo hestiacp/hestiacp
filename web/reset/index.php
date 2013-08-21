@@ -3,6 +3,10 @@ session_start();
 define('NO_AUTH_REQUIRED',true);
 $TAB = 'RESET PASSWORD';
 
+if (isset($_SESSION['user'])) {
+    header("Location: /list/user");
+}
+
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 

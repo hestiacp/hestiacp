@@ -14,12 +14,12 @@ top_panel($user,$TAB);
 
 if (!empty($_POST['ok'])) {
     // Check input
-    if ((!isset($_POST['v_min'])) || ($_POST['v_min'] != '')) $errors[] = __('minute');
-    if ((!isset($_POST['v_hour'])) || ($_POST['v_hour'] != '')) $errors[] = __('hour');
-    if ((!isset($_POST['v_day'])) || ($_POST['v_day'] != '')) $errors[] = __('day');
-    if ((!isset($_POST['v_month'])) || ($_POST['v_month'] != '')) $errors[] = __('month');
-    if ((!isset($_POST['v_wday'])) || ($_POST['v_wday'] != '')) $errors[] = __('day of week');
-    if ((!isset($_POST['v_cmd'])) || ($_POST['v_cmd'] != '')) $errors[] = __('cmd');
+    if ((!isset($_POST['v_min'])) || ($_POST['v_min'] == '')) $errors[] = __('minute');
+    if ((!isset($_POST['v_hour'])) || ($_POST['v_hour'] == '')) $errors[] = __('hour');
+    if ((!isset($_POST['v_day'])) || ($_POST['v_day'] == '')) $errors[] = __('day');
+    if ((!isset($_POST['v_month'])) || ($_POST['v_month'] == '')) $errors[] = __('month');
+    if ((!isset($_POST['v_wday'])) || ($_POST['v_wday'] == '')) $errors[] = __('day of week');
+    if ((!isset($_POST['v_cmd'])) || ($_POST['v_cmd'] == '')) $errors[] = __('cmd');
 
     // Protect input
     $v_min = escapeshellarg($_POST['v_min']);

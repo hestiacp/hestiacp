@@ -28,7 +28,7 @@ get_srv_state() {
         # Calculate cpu and memory usage
         cpu=0
         mem=0
-        for pid in $(/sbin/pidof $proc_name); do
+        for pid in $(pidof $proc_name); do
             pid_mem=$(pmap -x $pid | tail -n1 | awk '{print $3}')
             pid_cpu=$(grep "^$pid " $tmp_file | cut -f 2 -d ' ')
             cpu=$((cpu + pid_cpu))

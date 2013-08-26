@@ -9,6 +9,9 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Import VESTA variable for cron launch
+source /etc/profile
+
 # Argument defenition
 user=$1
 backup=$2

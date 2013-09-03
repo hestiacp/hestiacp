@@ -47,6 +47,8 @@ fi
 
 %changelog
 * Mon Jul 30 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-3
+- Fix for zero cron bug
+- Minor fixes for dns sync
 - Updated romanian language file
 - Fixed issue with uppercase domains
 - Implemented JS hints when adding database or ftp domain

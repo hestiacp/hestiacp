@@ -15,6 +15,7 @@ host=$1
 # Includes
 source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/func/remote.sh
 
 
 #----------------------------------------------------------#
@@ -35,7 +36,7 @@ is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 $BIN/v-delete-remote-dns-domains $host >>/dev/null 2>&1
 
 # Disabling restart queue
-eval $(grep $host $VESTA/conf/dns-cluster)
+eval $(grep $host $VESTA/conf/dns-cluster.conf)
 case $TYPE in
     ssh) send_cmd="send_ssh_cmd" ;;
     *)  send_cmd="send_api_cmd" ;;

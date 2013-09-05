@@ -43,17 +43,12 @@ is_package_full 'MAIL_DOMAINS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding domain directory
+# Adding domain directory and necessary files
 mkdir $HOMEDIR/$user/conf/mail/$domain
+mkdir $HOMEDIR/$user/mail/$domain_idn
 touch $HOMEDIR/$user/conf/mail/$domain/aliases
 touch $HOMEDIR/$user/conf/mail/$domain/protection
 touch $HOMEDIR/$user/conf/mail/$domain/passwd
-chown -R exim:mail $HOMEDIR/$user/conf/mail/$domain
-chmod 770 $HOMEDIR/$user/conf/mail/$domain
-chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-mkdir $HOMEDIR/$user/mail/$domain_idn
-chown $user:mail $HOMEDIR/$user/mail/$domain_idn
-chmod 770 $HOMEDIR/$user/mail/$domain_idn
 
 # Adding symlink
 ln -s $HOMEDIR/$user/conf/mail/$domain /etc/$MAIL_SYSTEM/domains/$domain_idn
@@ -76,8 +71,6 @@ if [ "$dkim" = 'yes' ]; then
     chmod 660 $USER_DATA/mail/$domain.*
 
     cp $USER_DATA/mail/$domain.pem $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-    chown exim:mail $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-    chmod 660 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 
     # Adding dkim dns records
     check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
@@ -97,6 +90,24 @@ fi
 s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
 s="$s ACCOUNTS='0' U_DISK='0' CATCHALL='' SUSPENDED='no' TIME='$TIME'"
 s="$s DATE='$DATE'"
+
+# Set permissions
+chmod 660 $USER_DATA/mail/$domain.*
+chmod 771 $HOMEDIR/$user/conf/mail/$domain
+chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
+chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
+chmod 770 $HOMEDIR/$user/mail/$domain_idn
+
+# Set ownership
+if [ "$MAIL_SYSTEM" = 'exim' ]; then
+    mail_user=exim
+fi
+if [ "$MAIL_SYSTEM" = 'exim4' ]; then
+    mail_user=Debian-exim
+fi
+chown -R $mail_user:mail $HOMEDIR/$user/conf/mail/$domain
+chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf

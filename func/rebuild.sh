@@ -413,9 +413,10 @@ rebuild_mail_domain_conf() {
     get_domain_values 'mail'
 
     # Rebuilding config structure
-    rm -f /etc/exim/domains/$domain_idn
+    rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
     mkdir -p $HOMEDIR/$user/conf/mail/$domain
-    ln -s $HOMEDIR/$user/conf/mail/$domain /etc/exim/domains/$domain_idn
+    ln -s $HOMEDIR/$user/conf/mail/$domain \
+        /etc/$MAIL_SYSTEM/domains/$domain_idn
     rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
     rm -f $HOMEDIR/$user/conf/mail/$domain/protection
     rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
@@ -508,14 +509,20 @@ rebuild_mail_domain_conf() {
 
     # Set permissions
     chmod 660 $USER_DATA/mail/$domain.*
-    chmod 770 $HOMEDIR/$user/conf/mail/$domain
+    chmod 771 $HOMEDIR/$user/conf/mail/$domain
     chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-    chmod 770 /etc/exim/domains/$domain_idn
+    chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
     chmod 770 $HOMEDIR/$user/mail/$domain_idn
 
     # Set ownership
-    chown -R exim:mail $HOMEDIR/$user/conf/mail/$domain
-    chown -R exim:mail /etc/exim/domains/$domain_idn
+    if [ "$MAIL_SYSTEM" = 'exim' ]; then
+        mail_user=exim
+    fi
+    if [ "$MAIL_SYSTEM" = 'exim4' ]; then
+        mail_user=Debian-exim
+    fi
+    chown -R $mail_user:mail $HOMEDIR/$user/conf/mail/$domain
+    chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
     chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 
     # Update counters

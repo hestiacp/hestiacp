@@ -34,6 +34,9 @@ if [ $1 -ge 2 ]; then
     if [ -e /usr/local/vesta/upd/convert-templates.sh ]; then
         /usr/local/vesta/upd/convert-templates.sh
     fi
+    if [ -e /usr/local/vesta/upd/convert_webip.sh ]; then
+        /usr/local/vesta/upd/convert_webip.sh
+    fi
 fi
 
 %files

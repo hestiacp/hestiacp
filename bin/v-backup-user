@@ -73,6 +73,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
         log_event "$E_LA" "$EVENT"
         exit $E_LA
     fi
+    la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
     (( ++i))
 done
 

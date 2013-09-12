@@ -47,8 +47,12 @@ update_domain_zone
 
 # dns-cluster
 if [ ! -z "$DNS_CLUSTER" ]; then
-    cmd="$BIN/v-change-remote-dns-domain-ttl $user $domain"
-    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+    # Check for first sync
+    dlock=$(grep "domain $user $domain" $VESTA/data/queue/dns-cluster.pipe)
+    if [ -z "$dlock" ]; then
+        cmd="$BIN/v-change-remote-dns-domain-ttl $user $domain $ttl"
+        echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+    fi
 fi
 
 

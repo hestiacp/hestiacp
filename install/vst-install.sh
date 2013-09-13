@@ -30,7 +30,8 @@ help() {
    -d, --disable-remi         Disable remi
    -e, --email                Define email address
    -h, --help                 Print this help and exit
-   -f, --force                Force installation"
+   -f, --force                Force installation
+   -n, --noupdate             Do not run yum update command"
     exit 1
 }
 
@@ -58,6 +59,7 @@ for arg; do
         --disable-remi) args="${args}-d " ;;
         --force)        args="${args}-f " ;;
         --email)        args="${args}-e " ;;
+        --noupdate)     args="${args}-n " ;;
         *)              [[ "${arg:0:1}" == "-" ]] || delim="\""
                         args="${args}${delim}${arg}${delim} ";;
     esac
@@ -65,12 +67,13 @@ done
 eval set -- "$args"
 
 # Getopt
-while getopts "dhfe:" Option; do
+while getopts "dhfne:" Option; do
     case $Option in
         d) disable_remi='yes' ;;          # Disable remi repo
         h) help ;;                        # Help
         e) email=$OPTARG ;;               # Set email
-        f) force=yes ;;                   # Force install
+        f) force='yes' ;;                 # Force install
+        n) noupdate='yes' ;;              # Disable yum update
         *) help ;;                        # Default
     esac
 done
@@ -216,10 +219,12 @@ echo -e "\n\n\n\nInstallation will take about 15 minutes ...\n"
 sleep 5
 
 # Update system
-yum -y update
-if [ $? -ne 0 ]; then
-    echo 'Error: yum update failed'
-    exit 1
+if [ -z "$noupdate" ]; then
+    yum -y update
+    if [ $? -ne 0 ]; then
+        echo 'Error: yum update failed'
+        exit 1
+    fi
 fi
 
 # Install EPEL repo
@@ -726,6 +731,7 @@ wget $CHOST/$VERSION/certificate.key -O certificate.key
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     chattr -i /home/admin/conf > /dev/null 2>&1
     userdel -f admin
+    chattr -i /home/admin/conf
     mv -f /home/admin  $vst_backups/home/
     rm -f /tmp/sess_*
 fi

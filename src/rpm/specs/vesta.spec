@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        3
+Release:        4
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -37,6 +37,9 @@ if [ $1 -ge 2 ]; then
     if [ -e /usr/local/vesta/upd/convert_webip.sh ]; then
         /usr/local/vesta/upd/convert_webip.sh
     fi
+    if [ -e /usr/local/vesta/upd/fix_cron.sh ]; then
+        /usr/local/vesta/upd/fix_cron.sh
+    fi
 fi
 
 %files
@@ -49,6 +52,12 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Tue Sep 17 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-4
+- DNS cluster 5-minute sync improvement
+- Crontab ownership fix
+- Fix for nginx template switcher
+- Fix for LoadAverage check
+
 * Mon Jul 30 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-3
 - Fix for zero cron bug
 - Minor fixes for dns sync

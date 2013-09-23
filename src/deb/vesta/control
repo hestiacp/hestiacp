@@ -1,6 +1,7 @@
 Source: vesta
-Package: Vesta
-Version: 0.9.8-1
+Package: vesta
+Priority: optional
+Version: 0.9.8-4
 Section: admin
 Maintainer: Serghey Rodin <skid@vestacp.com>
 Homepage: http://vestacp.com
@@ -10,4 +11,3 @@ Description: Vesta
  Vesta is an open source hosting control panel.
  Vesta has a clean and focused interface without the clutter.
  Vesta has the latest of very innovative technologies.
-

@@ -105,7 +105,7 @@ if [ ! -e '/usr/bin/wget' ]; then
 fi
 
 # Check repo availability
-wget -q "$RHOST/$REPO/vesta.conf" -O /dev/null
+wget -q "$CHOST/$VERSION/vesta.conf" -O /dev/null
 if [ $? -ne 0 ]; then
     echo "Error: no access to $REPO repository"
     exit 1
@@ -700,7 +700,7 @@ ln -s /home/backup /backup
 chmod a+x /backup
 
 # vesta.conf
-wget $RHOST/$REPO/vesta.conf -O $VESTA/conf/vesta.conf
+wget $CHOST/$VERSION/vesta.conf -O $VESTA/conf/vesta.conf
 if [ "$srv_type" = 'micro' ] ||  [ "$srv_type" = 'small' ]; then
     sed -i "s/clamav//g" $VESTA/conf/vesta.conf
     sed -i "s/spamassassin//g" $VESTA/conf/vesta.conf

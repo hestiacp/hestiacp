@@ -352,7 +352,7 @@ if [ -e '/etc/dovecot.conf' ]; then
     cp /etc/dovecot.conf $vst_backups/dovecot/
 fi
 if [ -e '/etc/dovecot' ]; then
-    cp -r /etc/dovecot $vst_backups/dovecot/
+    cp -r /etc/dovecot/* $vst_backups/dovecot/
 fi
 
 # Backup MySQL stuff

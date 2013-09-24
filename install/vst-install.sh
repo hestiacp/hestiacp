@@ -306,19 +306,13 @@ fi
 # Backup nginx
 service nginx stop > /dev/null 2>&1
 if [ -e '/etc/nginx/nginx.conf' ]; then
-    cp /etc/nginx/* $vst_backups/nginx/
-fi
-if [ -f '/etc/nginx/conf.d' ]; then
-    cp -r /etc/nginx/conf.d $vst_backups/nginx/
+    cp -r /etc/nginx/* $vst_backups/nginx/
 fi
 
 # Backup httpd
 service httpd stop > /dev/null 2>&1
 if [ -e '/etc/httpd/conf/httpd.conf' ]; then
-    cp /etc/httpd/conf/httpd.conf $vst_backups/httpd/
-fi
-if [ -e '/etc/httpd/conf.d' ]; then
-    cp -r /etc/httpd/conf.d $vst_backups/httpd/
+    cp -r /etc/httpd/* $vst_backups/httpd/
 fi
 
 # Backup bind

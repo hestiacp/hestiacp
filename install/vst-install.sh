@@ -293,6 +293,7 @@ mkdir -p $vst_backups/mysql
 mkdir -p $vst_backups/exim
 mkdir -p $vst_backups/dovecot
 mkdir -p $vst_backups/clamd
+mkdir -p $vst_backups/spamassassin
 mkdir -p $vst_backups/vsftpd
 mkdir -p $vst_backups/named
 mkdir -p $vst_backups/vesta/admin
@@ -342,7 +343,7 @@ fi
 # Backup SpamAssassin
 service spamassassin stop > /dev/null 2>&1
 if [ -e '/etc/mail/spamassassin' ]; then
-    cp -r /etc/mail/spamassassin $vst_backups/
+    cp -r /etc/mail/spamassassin/* $vst_backups/spamassassin/
 fi
 
 # Backup dovecot

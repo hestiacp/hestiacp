@@ -330,10 +330,7 @@ fi
 # Backup exim
 service exim stop > /dev/null 2>&1
 if [ -e '/etc/exim/exim.conf' ]; then
-    cp /etc/exim/exim.conf $vst_backups/exim/
-fi
-if [ -e '/etc/exim/domains' ]; then
-    cp -r /etc/exim/domains $vst_backups/exim/
+    cp -r /etc/exim/* $vst_backups/exim/
 fi
 
 # Backup clamav

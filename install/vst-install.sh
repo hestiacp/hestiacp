@@ -306,16 +306,10 @@ fi
 # Backup nginx
 service nginx stop > /dev/null 2>&1
 if [ -e '/etc/nginx/nginx.conf' ]; then
-    cp /etc/nginx/nginx.conf $vst_backups/nginx/
+    cp /etc/nginx/* $vst_backups/nginx/
 fi
-if [ -f '/etc/nginx/conf.d/default.conf' ]; then
-    cp /etc/nginx/conf.d/default.conf $vst_backups/nginx/
-fi
-if [ -e '/etc/nginx/conf.d/example_ssl.conf' ]; then
-    cp /etc/nginx/conf.d/example_ssl.conf $vst_backups/nginx/
-fi
-if [ -e '/etc/nginx/conf.d/vesta_ip.conf' ]; then
-    mv /etc/nginx/conf.d/vesta_ip.conf $vst_backups/nginx
+if [ -f '/etc/nginx/conf.d' ]; then
+    cp -r /etc/nginx/conf.d $vst_backups/nginx/
 fi
 
 # Backup httpd
@@ -323,11 +317,8 @@ service httpd stop > /dev/null 2>&1
 if [ -e '/etc/httpd/conf/httpd.conf' ]; then
     cp /etc/httpd/conf/httpd.conf $vst_backups/httpd/
 fi
-if [ -e '/etc/httpd/conf.d/ssl.conf' ]; then
-    cp /etc/httpd/conf.d/ssl.conf $vst_backups/httpd/
-fi
-if [ -e '/etc/httpd/conf.d/proxy_ajp.conf' ]; then
-    cp /etc/httpd/conf.d/proxy_ajp.conf $vst_backups/httpd/
+if [ -e '/etc/httpd/conf.d' ]; then
+    cp -r /etc/httpd/conf.d $vst_backups/httpd/
 fi
 
 # Backup bind
@@ -397,6 +388,7 @@ fi
 if [ -e '/home/admin/conf/' ]; then
     mv /home/admin/conf/ $vst_backups/vesta/admin
 fi
+
 
 #----------------------------------------------------------#
 #                     Install packages                     #

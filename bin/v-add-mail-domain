@@ -47,7 +47,6 @@ is_package_full 'MAIL_DOMAINS'
 mkdir $HOMEDIR/$user/conf/mail/$domain
 mkdir $HOMEDIR/$user/mail/$domain_idn
 touch $HOMEDIR/$user/conf/mail/$domain/aliases
-touch $HOMEDIR/$user/conf/mail/$domain/protection
 touch $HOMEDIR/$user/conf/mail/$domain/passwd
 
 # Adding symlink
@@ -55,12 +54,12 @@ ln -s $HOMEDIR/$user/conf/mail/$domain /etc/$MAIL_SYSTEM/domains/$domain_idn
 
 # Adding antispam protection
 if [ "$antispam" = 'yes' ]; then
-    echo 'antispam' >> $HOMEDIR/$user/conf/mail/$domain/protection
+    touch $HOMEDIR/$user/conf/mail/$domain/antispam
 fi
 
 # Adding antivirus protection
 if [ "$antivirus" = 'yes' ]; then
-    echo 'antivirus' >> $HOMEDIR/$user/conf/mail/$domain/protection
+    touch $HOMEDIR/$user/conf/mail/$domain/antivirus
 fi
 
 # Adding dkim

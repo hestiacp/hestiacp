@@ -39,10 +39,9 @@ is_object_value_empty 'mail' 'DOMAIN' "$domain" '$ANTISPAM'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding antispam key to config
-if [ -z "$(grep spam $HOMEDIR/$user/conf/mail/$domain/protection)" ]; then
-    echo 'antispam' >> $HOMEDIR/$user/conf/mail/$domain/protection
-fi
+# Adding antispam flag
+touch $HOMEDIR/$user/conf/mail/$domain/antispam
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

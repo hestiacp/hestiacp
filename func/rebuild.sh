@@ -418,20 +418,21 @@ rebuild_mail_domain_conf() {
     ln -s $HOMEDIR/$user/conf/mail/$domain \
         /etc/$MAIL_SYSTEM/domains/$domain_idn
     rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
+    rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
+    rm -f $HOMEDIR/$user/conf/mail/$domain/antivirus
     rm -f $HOMEDIR/$user/conf/mail/$domain/protection
     rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
     touch $HOMEDIR/$user/conf/mail/$domain/aliases
-    touch $HOMEDIR/$user/conf/mail/$domain/protection
     touch $HOMEDIR/$user/conf/mail/$domain/passwd
 
     # Adding antispam protection
     if [ "$ANTISPAM" = 'yes' ]; then
-        echo 'antispam' >> $HOMEDIR/$user/conf/mail/$domain/protection
+        touch $HOMEDIR/$user/conf/mail/$domain/antispam
     fi
 
     # Adding antivirus protection
     if [ "$ANTIVIRUS" = 'yes' ]; then
-        echo 'antivirus' >> $HOMEDIR/$user/conf/mail/$domain/protection
+        touch $HOMEDIR/$user/conf/mail/$domain/antivirus
     fi
 
     # Adding dkim

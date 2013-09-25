@@ -39,8 +39,8 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Delete antivirus key
-sed -i "/antivirus/d" $HOMEDIR/$user/conf/mail/$domain/protection
+# Delete antivirus flag
+rm -f $HOMEDIR/$user/conf/mail/$domain/antivirus
 
 
 #----------------------------------------------------------#

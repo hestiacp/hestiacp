@@ -39,10 +39,8 @@ is_object_value_empty 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding antivirus key to config
-if [ -z "$(grep 'virus' $HOMEDIR/$user/conf/mail/$domain/protection)" ]; then
-    echo 'antivirus' >> $HOMEDIR/$user/conf/mail/$domain/protection
-fi
+# Adding antivirus flag
+touch $HOMEDIR/$user/conf/mail/$domain/antivirus
 
 
 #----------------------------------------------------------#

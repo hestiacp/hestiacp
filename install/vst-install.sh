@@ -745,10 +745,6 @@ vst_ip=$(wget vestacp.com/what-is-my-ip/ -O - 2>/dev/null)
 if [ ! -z "$vst_ip" ] && [ "$vst_ip" != "$main_ip" ]; then
     # Set NAT association
     $VESTA/bin/v-change-sys-ip-nat $main_ip $vst_ip
-
-    # Assign passive ip address
-    echo "pasv_address=$vst_ip" >> /etc/vsftpd/vsftpd.conf
-    service vsftpd restart
 fi
 if [ -z "$vst_ip" ]; then
     vst_ip=$main_ip

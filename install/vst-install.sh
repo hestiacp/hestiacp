@@ -481,7 +481,7 @@ chkconfig httpd on
 service httpd start
 if [ "$?" -ne 0 ]; then
     echo "Error: httpd start failed"
-    exit
+    exit 1
 fi
 
 # Nginx configuration
@@ -493,7 +493,7 @@ chkconfig nginx on
 service nginx start
 if [ "$?" -ne 0 ]; then
     echo "Error: nginx start failed"
-    exit
+    exit 1
 fi
 
 # Vsftpd configuration
@@ -502,7 +502,7 @@ chkconfig vsftpd on
 service vsftpd start
 if [ "$?" -ne 0 ]; then
     echo "Error: vsftpd start failed"
-    exit
+    exit 1
 fi
 
 # MySQL configuration
@@ -546,7 +546,7 @@ chkconfig named on
 service named start
 if [ "$?" -ne 0 ]; then
     echo "Error: named start failed"
-    exit
+    exit 1
 fi
 
 # Exim
@@ -576,7 +576,7 @@ chkconfig exim on
 service exim start
 if [ "$?" -ne 0 ]; then
     echo "Error: exim start failed"
-    exit
+    exit 1
 fi
 
 # Dovecot configuration
@@ -595,7 +595,7 @@ chkconfig dovecot on
 service dovecot start
 if [ "$?" -ne 0 ]; then
     echo "Error: dovecot start failed"
-    exit
+    exit 1
 fi
 
 # ClamAV configuration
@@ -609,7 +609,7 @@ if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     service clamd start
     if [ "$?" -ne 0 ]; then
         echo "Error: clamd start failed"
-    exit
+    exit 1
 fi
 
 fi
@@ -620,7 +620,7 @@ if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     service spamassassin start
     if [ "$?" -ne 0 ]; then
         echo "Error: spamassassin start failed"
-    exit
+    exit 1
 fi
 
 fi
@@ -786,7 +786,7 @@ chkconfig vesta on
 service vesta start
 if [ "$?" -ne 0 ]; then
     echo "Error: vesta start failed"
-    exit
+    exit 1
 fi
 
 # Send notification to vestacp.com

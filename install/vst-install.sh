@@ -458,6 +458,18 @@ sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
 sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
 chmod 755 /usr/bin/rssh
 
+# Nginx configuration
+rm -f /etc/nginx/conf.d/*.conf
+wget $CHOST/$VERSION/nginx.conf -O /etc/nginx/nginx.conf
+wget $CHOST/$VERSION/nginx-status.conf -O /etc/nginx/conf.d/status.conf
+touch /etc/nginx/conf.d/vesta.conf
+chkconfig nginx on
+service nginx start
+if [ "$?" -ne 0 ]; then
+    echo "Error: nginx start failed"
+    exit 1
+fi
+
 # Apache configuration
 wget $CHOST/$VERSION/httpd.conf -O /etc/httpd/conf/httpd.conf
 wget $CHOST/$VERSION/httpd-status.conf -O /etc/httpd/conf.d/status.conf
@@ -481,18 +493,6 @@ chkconfig httpd on
 service httpd start
 if [ "$?" -ne 0 ]; then
     echo "Error: httpd start failed"
-    exit 1
-fi
-
-# Nginx configuration
-rm -f /etc/nginx/conf.d/*.conf
-wget $CHOST/$VERSION/nginx.conf -O /etc/nginx/nginx.conf
-wget $CHOST/$VERSION/nginx-status.conf -O /etc/nginx/conf.d/status.conf
-touch /etc/nginx/conf.d/vesta.conf
-chkconfig nginx on
-service nginx start
-if [ "$?" -ne 0 ]; then
-    echo "Error: nginx start failed"
     exit 1
 fi
 

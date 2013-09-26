@@ -609,9 +609,8 @@ if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     service clamd start
     if [ "$?" -ne 0 ]; then
         echo "Error: clamd start failed"
-    exit 1
-fi
-
+        exit 1
+    fi
 fi
 
 # SpamAssassin configuration
@@ -620,9 +619,8 @@ if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     service spamassassin start
     if [ "$?" -ne 0 ]; then
         echo "Error: spamassassin start failed"
-    exit 1
-fi
-
+        exit 1
+    fi
 fi
 
 # php configuration
@@ -718,6 +716,9 @@ if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     chattr -i /home/admin/conf
     mv -f /home/admin  $vst_backups/home/
     rm -f /tmp/sess_*
+fi
+if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
+    groupdel admin > /dev/null 2>&1
 fi
 vpass=$(gen_pass)
 $VESTA/bin/v-add-user admin $vpass $email default System Administrator

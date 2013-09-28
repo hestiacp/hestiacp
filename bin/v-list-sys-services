@@ -117,10 +117,17 @@ fi
 # ANTIVIRUS
 service=$ANTIVIRUS_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
-    if [ "$ANTIVIRUS_SYSTEM" = 'clamav' ]; then
-        service='clamd'
+    if [ -e "/etc/redhat-release" ]; then
+        if [ "$ANTIVIRUS_SYSTEM" = 'clamav' ];then
+            service='clamd'
+        fi
+        get_srv_state $service
+    else
+        if [ "$ANTIVIRUS_SYSTEM" = 'clamav-daemon' ];then
+            clam_proc_name='clamd'
+        fi
+        get_srv_state $service $clam_proc_name
     fi
-    get_srv_state $service
     str="$str\nNAME='$service' SYSTEM='email antivirus' STATE='$state'"
     str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi

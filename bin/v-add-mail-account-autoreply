@@ -44,7 +44,15 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 #----------------------------------------------------------#
 # Add exim autoreply
 echo -e "$autoreply" > $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
-chown -R root:mail $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
+
+# Set ownership and permissions
+if [ "$MAIL_SYSTEM" = 'exim' ]; then
+    mail_user=exim
+fi
+if [ "$MAIL_SYSTEM" = 'exim4' ]; then
+    mail_user=Debian-exim
+fi
+chown $mail_user:mail $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
 chmod 660 $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
 
 

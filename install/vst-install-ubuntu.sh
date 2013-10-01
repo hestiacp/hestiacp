@@ -111,7 +111,7 @@ fi
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 bind9 mysql-server apache2 nginx vesta; do
+for pkg in exim4 mysql-server apache2 nginx vesta; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg $conflicts"
     fi

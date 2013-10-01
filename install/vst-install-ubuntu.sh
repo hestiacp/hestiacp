@@ -536,9 +536,9 @@ if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     gpasswd -a clamav mail
     gpasswd -a clamav Debian-exim
     /usr/bin/freshclam
-    update-rc.d clamav defaults
-    service clamav stop > /dev/null 2>&1
-    service clamav start
+    update-rc.d clamav-daemon defaults
+    service clamav-daemon stop > /dev/null 2>&1
+    service clamav-daemon start
     if [ "$?" -ne 0 ]; then
         echo "Error: clamav start failed"
         exit 1

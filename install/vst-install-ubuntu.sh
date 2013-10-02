@@ -16,13 +16,13 @@ os=$(head -n 1 /etc/issue | cut -f 1 -d ' ')
 release=$(head -n 1 /etc/issue | cut -f 2 -d ' ' )
 codename=$(lsb_release -cs)
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
-software="nginx apache2 apache2-utils apache2.2-common apache2-suexec rrdtool
+software="nginx apache2 apache2-utils apache2.2-common apache2-suexec-custom
     libapache2-mod-ruid2 libapache2-mod-rpaf libapache2-mod-fcgid bind9 idn
     mysql-server mysql-common mysql-client php5-common php5-cgi php5-mysql
     libapache2-mod-php5 vsftpd mc exim4 exim4-daemon-heavy clamav-daemon flex
     dovecot-imapd dovecot-pop3d phpMyAdmin awstats webalizer jwhois rssh git
     spamassassin roundcube roundcube-mysql roundcube-plugins apparmor-utils
-    apache2-suexec vesta vesta-nginx vesta-php"
+    rrdtool vesta vesta-nginx vesta-php"
 
 
 help() {
@@ -236,7 +236,7 @@ fi
 # Install vesta repo
 check_vesta_repo=$(grep $RHOST $apt_list)
 if [ -z "$check_vesta_repo" ]; then
-    echo "deb http://$RHOST/ $codename free" >> $apt_list
+    echo "deb http://$RHOST/$codename/ $codename vesta" >> $apt_list
 fi
 wget $CHOST/deb_signing.key -O deb_signing.key 
 apt-key add deb_signing.key
@@ -258,7 +258,7 @@ mkdir -p $vst_backups/clamav
 mkdir -p $vst_backups/spamassassin
 mkdir -p $vst_backups/vsftpd
 mkdir -p $vst_backups/bind
-mkdir -p $vst_backups/vesta/admin
+mkdir -p $vst_backups/vesta
 mkdir -p $vst_backups/home
 
 # Backup sudoers
@@ -332,7 +332,10 @@ fi
 # Backup vesta
 service vesta stop > /dev/null 2>&1
 if [ -e '/usr/local/vesta' ]; then
-    mv /usr/local/vesta/* $vst_backups/vesta/
+    cp -r /usr/local/vesta/* $vst_backups/vesta/
+    apt-get -y remove vesta*
+    apt-get -y purge vesta*
+    rm -rf /usr/local/vesta
 fi
 
 

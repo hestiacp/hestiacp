@@ -728,7 +728,7 @@ if [ "$?" -ne 0 ]; then
 fi
 
 # Send notification to vestacp.com
-wget vestacp.com/notify/?$REPO -O /dev/null
+wget vestacp.com/notify/?$codename -O /dev/null
 
 # Send notification to admin email
 echo -e "Congratulations, you have just successfully installed \

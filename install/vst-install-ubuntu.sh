@@ -9,9 +9,12 @@ export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.vestacp.com'
 CHOST='c.vestacp.com'
-REPO='raring'
 VERSION='0.9.8/ubuntu'
-arch=$(arch)
+if [ "$(arch)" != 'x86_64' ]; then
+    arch='i386'
+else
+    arch="amd64"
+fi
 os=$(head -n 1 /etc/issue | cut -f 1 -d ' ')
 release=$(head -n 1 /etc/issue | cut -f 2 -d ' ' )
 codename=$(lsb_release -cs)
@@ -23,7 +26,6 @@ software="nginx apache2 apache2-utils apache2.2-common apache2-suexec-custom
     dovecot-imapd dovecot-pop3d phpMyAdmin awstats webalizer jwhois rssh git
     spamassassin roundcube roundcube-mysql roundcube-plugins apparmor-utils
     rrdtool vesta vesta-nginx vesta-php"
-
 
 help() {
     echo "usage: $0 [OPTIONS]
@@ -88,8 +90,9 @@ if [ -e '/etc/redhat-release' ]; then
 fi
 
 # Check supported OS
-if [ $os !=  'Ubuntu' ] && [ $os != 'Debian' ]; then
-    echo 'Error: sorry, this installer can work only on Debian or Ubuntu'
+if [ $codename !=  'precise' ] && [ $codename != 'raring' ]; then
+    echo 'Error: only Ubuntu LTS 12.04 and Ubuntu 13.04 is supported'
+    exit 1
 fi
 
 # Check wget
@@ -104,7 +107,7 @@ fi
 # Check repo availability
 wget -q "$CHOST/$VERSION/vesta.conf" -O /dev/null
 if [ $? -ne 0 ]; then
-    echo "Error: no access to $REPO repository"
+    echo "Error: no access to repository"
     exit 1
 fi
 
@@ -525,6 +528,12 @@ tar -xzf dovecot-conf.d.tar.gz
 rm -f dovecot-conf.d.tar.gz
 chown -R root:root /etc/dovecot
 gpasswd -a dovecot mail
+if [ "$codename" = 'precise' ]; then
+    dovecot_ssl_conf="/etc/dovecot/conf.d/10-ssl.conf"
+    echo "ssl = yes" > $dovecot_ssl_conf
+    echo "ssl_cert = </etc/ssl/certs/dovecot.pem" >> $dovecot_ssl_conf
+    echo "ssl_key = </etc/ssl/private/dovecot.pem" >> $dovecot_ssl_conf
+fi
 update-rc.d dovecot defaults
 service dovecot stop > /dev/null 2>&1
 service dovecot start
@@ -657,7 +666,7 @@ if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     mv -f /home/admin  $vst_backups/home/
     rm -f /tmp/sess_*
 fi
-if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
+if [ ! -z "$(grep ^admin: /etc/group)" ]; then
     groupdel admin > /dev/null 2>&1
 fi
 vpass=$(gen_pass)
@@ -779,4 +788,4 @@ echo
 cd
 bash
 
-# EOF
+#EOF

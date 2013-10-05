@@ -8,9 +8,9 @@
     Alias /vstats/ %home%/%user%/web/%domain%/stats/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/
     #SuexecUserGroup %user% %group%
-    CustomLog /var/log/httpd/domains/%domain%.bytes bytes
-    CustomLog /var/log/httpd/domains/%domain%.log combined
-    ErrorLog /var/log/httpd/domains/%domain%.error.log
+    CustomLog /var/log/%web_system%/domains/%domain%.bytes bytes
+    CustomLog /var/log/%web_system%/domains/%domain%.log combined
+    ErrorLog /var/log/%web_system%/domains/%domain%.error.log
     <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes +ExecCGI
@@ -31,13 +31,13 @@
     <IfModule mod_ruid2.c>
         RMode config
         RUidGid %user% %group%
-        RGroups apache
+        RGroups %rgroups%
     </IfModule>
     <IfModule itk.c>
         AssignUserID %user% %group%
     </IfModule>
 
-    Include %home%/%user%/conf/web/httpd.%domain%.conf*
+    Include %home%/%user%/conf/web/%web_system%.%domain%.conf*
 
 </VirtualHost>
 

@@ -31,7 +31,7 @@
     <IfModule mod_ruid2.c>
         RMode config
         RUidGid %user% %group%
-        RGroups www-data
+        RGroups %rgroups%
     </IfModule>
     <IfModule itk.c>
         AssignUserID %user% %group%

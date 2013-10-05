@@ -211,6 +211,16 @@ if [ "$mx_failed" -eq 1 ]; then
     exit 1
 fi
 
+# Check for ipv6 on loopback interface
+check_lo_ipv6=$(/sbin/ifconfig lo| grep 'inet6 addr')
+check_rc_ipv6=$(grep 'scope global dev lo' /etc/rc.local)
+if [ ! -z "$check_lo_ipv6)" ] && [ -z "$check_rc_ipv6" ]; then
+    ip addr add ::2/128 scope global dev lo
+    echo "# Vesta: Workraround for openssl validation func" >> /etc/rc.local
+    echo "ip addr add ::2/128 scope global dev lo" >> /etc/rc.local
+    chmod a+x /etc/rc.local
+fi
+
 
 #----------------------------------------------------------#
 #                   Install repository                     #

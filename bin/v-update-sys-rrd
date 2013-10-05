@@ -96,23 +96,23 @@ fi
 # Updateing system stats
 for period in $periods; do
 
-    $BIN/v-update-sys-rrd-la $period
-    $BIN/v-update-sys-rrd-net $period
-    $BIN/v-update-sys-rrd-mem $period
-    $BIN/v-update-sys-rrd-ssh $period
+    $BIN/v-update-sys-rrd-la $period >/dev/null 2>&1
+    $BIN/v-update-sys-rrd-net $period >/dev/null 2>&1
+    $BIN/v-update-sys-rrd-mem $period >/dev/null 2>&1
+    $BIN/v-update-sys-rrd-ssh $period >/dev/null 2>&1
 
     # Updating web stats
     if [ ! -z "$WEB_SYSTEM" ]; then
-        $BIN/v-update-sys-rrd-$WEB_SYSTEM $period
+        $BIN/v-update-sys-rrd-$WEB_SYSTEM $period >/dev/null 2>&1
     fi
 
     if [ ! -z "$PROXY_SYSTEM" ]; then
-        $BIN/v-update-sys-rrd-$PROXY_SYSTEM $period
+        $BIN/v-update-sys-rrd-$PROXY_SYSTEM $period >/dev/null 2>&1
     fi
 
     # Updating ftp stats
     if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
-        $BIN/v-update-sys-rrd-ftp $period
+        $BIN/v-update-sys-rrd-ftp $period >/dev/null 2>&1
     fi
 
     # Updating db stats
@@ -120,12 +120,13 @@ for period in $periods; do
         for type in ${DB_SYSTEM//,/ }; do
             # Switching on db type
             case $type in
-                mysql) $BIN/v-update-sys-rrd-mysql $period ;;
-                pgsql) $BIN/v-update-sys-rrd-pgsql $period ;;
+                mysql) $BIN/v-update-sys-rrd-mysql $period >/dev/null 2>&1 ;;
+                pgsql) $BIN/v-update-sys-rrd-pgsql $period >/dev/null 2>&1 ;;
             esac
         done
     fi
 done
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

@@ -14,6 +14,7 @@ YUM_REPO='/etc/yum.repos.d/vesta.repo'
 arch=$(uname -i)
 os=$(cut -f 1 -d ' ' /etc/redhat-release)
 release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
+codename="${os}_$release"
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     php php-bcmath php-cli php-common php-gd php-imap php-mbstring php-mcrypt
@@ -787,7 +788,7 @@ if [ "$?" -ne 0 ]; then
 fi
 
 # Send notification to vestacp.com
-wget vestacp.com/notify/?$REPO -O /dev/null
+wget vestacp.com/notify/?$codename -O /dev/null
 
 # Send notification to admin email
 echo -e "Congratulations, you have just successfully installed \

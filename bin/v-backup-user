@@ -53,7 +53,11 @@ else
     subj="$user → backup failed"
     email=$(grep CONTACT $VESTA/data/users/admin/user.conf | cut -f 2 -d \')
 fi
-send_mail="$VESTA/web/inc/mail-wrapper.php"
+if [ -e "$VESTA/web/inc/mail-wrapper.php" ]; then
+    send_mail="$VESTA/web/inc/mail-wrapper.php"
+else
+    send_mail=$(which mail)
+fi
 
 # Check load average
 la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')

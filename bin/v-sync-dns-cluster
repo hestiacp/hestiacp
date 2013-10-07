@@ -111,6 +111,9 @@ for cluster_str in $hosts; do
     done
 
     # Clean source records
+    if [ ! -z "$verbose" ]; then
+        echo "STATUS: Wiping dns domains"
+    fi
     $send_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME no
     if [ $? -ne 0 ]; then
         echo "Error: $TYPE connection to $HOST failed (cleanup)"
@@ -125,21 +128,30 @@ for cluster_str in $hosts; do
         for str in $(cat $VESTA/data/users/$user/dns.conf); do
             eval $str
             if [ ! -z "$verbose" ]; then
-                echo "DOMAIN: $DOMAIN"
+                echo "DOMAIN: $DOMAIN index"
             fi
             $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME
+            if [ $? -eq 0 ]; then
+                if [ ! -z "$verbose" ]; then
+                    echo "DOMAIN: $DOMAIN records"
+                fi
 
-            # Sync record
-            if [ "$TYPE" = 'ssh' ]; then
-                tmp=$(mktemp -u)
-                scp_cmd $USER_DATA/$user/dns/$DOMAIN.conf $tmp
-                $send_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp
+                # Sync record
+                if [ "$TYPE" = 'ssh' ]; then
+                    tmp=$(mktemp -u)
+                    scp_cmd $USER_DATA/$user/dns/$DOMAIN.conf $tmp
+                    $send_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp
+                else
+                    for str in $(cat $USER_DATA/$user/dns/$DOMAIN.conf); do
+                        str=$(echo "$str" | sed 's/"/\\"/g')
+                        $send_cmd v-insert-dns-record \
+                            $DNS_USER $DOMAIN "$str"
+                    done
+                fi
             else
-                for str in $(cat $USER_DATA/$user/dns/$DOMAIN.conf); do
-                    str=$(echo "$str" | sed 's/"/\\"/g')
-                    $send_cmd v-insert-dns-record \
-                        $DNS_USER $DOMAIN "$str"
-                done
+                if [ ! -z "$verbose" ]; then
+                    echo "DOMAIN: $DOMAIN skiping records (not uniq)"
+                fi
             fi
         done
     done

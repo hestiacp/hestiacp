@@ -50,8 +50,10 @@ fi
 old_ifs="$IFS"
 IFS=$'\n'
 
-# Starting cluster loop
-for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
+# Check remote dns nodes
+remote_dns_health_check
+
+for cluster_str in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
 
     # Get host values
     eval $cluster_str
@@ -61,30 +63,16 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
         TYPE='api'
     fi
 
+    # Check recipient dns user
+    if [ -z "$DNS_USER" ]; then
+        DNS_USER='dns-cluster'
+    fi
+
     # Switch on connection type
     case $TYPE in
         ssh) send_cmd="send_ssh_cmd" ;;
         *)  send_cmd="send_api_cmd" ;;
     esac
-
-    # Check host connection
-    $send_cmd v-list-sys-config
-    if [ $? -ne 0 ]; then
-        echo "Error: $TYPE connection to $HOST failed"
-        log_event "$E_CONNECT $EVENT"
-        exit $E_CONNECT
-    fi
-
-    # Check recipient dns user
-    if [ -z "$DNS_USER" ]; then
-        DNS_USER='dns-cluster'
-    fi
-    $send_cmd v-list-user $DNS_USER
-    if [ $? -ne 0 ]; then
-        echo "Error: dns user $DNS_USER doesn't exist"
-        log_event "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
 
     # Check dns exceptions
     if [ -z "$DNS_CLUSTER_IGNORE" ]; then
@@ -111,7 +99,7 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
     # Rebuild dns zone
     $send_cmd v-rebuild-dns-domain $DNS_USER $domain 'scheduled'
     if [ $? -ne 0 ]; then
-        echo "Error: $TYPE connection to $HOST failed (rebuild)"
+        echo "Error: $TYPE connection to $HOST failed"
         log_event "$E_CONNECT $EVENT"
         exit $E_CONNECT
     fi
@@ -119,6 +107,7 @@ for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
 done
 
 # Update pipe
+rm -f $tmpfile
 pipe="$VESTA/data/queue/dns-cluster.pipe"
 str=$(grep -n "$SCRIPT $1 $2$" $pipe | cut -f1 -d: | head -n1)
 if [ ! -z "$str" ]; then

@@ -32,7 +32,7 @@ if [ ! -e "$conf" ]; then
 fi
 
 # Defining fileds to select
-fields='$HOST $USER $DNS_USER $TYPE $TIME $DATE'
+fields='$HOST $USER $DNS_USER $SUSPENDED $TIME $DATE'
 
 case $format in
     json)   json_list ;;

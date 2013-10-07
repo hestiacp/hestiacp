@@ -50,8 +50,11 @@ fi
 old_ifs="$IFS"
 IFS=$'\n'
 
+# Check remote dns nodes
+remote_dns_health_check
+
 # Starting cluster loop
-for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
+for cluster_str in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
 
     # Get host values
     eval $cluster_str

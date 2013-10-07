@@ -107,3 +107,50 @@ is_dnshost_alive() {
         exit $E_NOTEXIST
     fi
 }
+
+remote_dns_health_check() {
+    # Define tmp mail vars
+    subj="DNS sync failed"
+    email=$(grep CONTACT $VESTA/data/users/admin/user.conf | cut -f 2 -d \')
+    send_mail="$VESTA/web/inc/mail-wrapper.php"
+    tmpfile=$(mktemp)
+
+    # Starting health-check
+    for str in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
+
+        # Get host values
+        eval $str
+
+        # Check connection type
+        if [ -z "TYPE" ]; then
+            TYPE='api'
+        fi
+
+        # Switch on connection type
+        case $TYPE in
+            ssh) send_cmd="send_ssh_cmd" ;;
+            *)  send_cmd="send_api_cmd" ;;
+        esac
+
+        # Check host connection
+        $send_cmd v-list-sys-config
+        if [ $? -ne 0 ]; then
+            echo "$(basename $0) $*" > $tmpfile
+            echo -e "Error: $TYPE connection to $HOST failed.\n" >> $tmpfile
+            echo -n "Remote dns host has been suspended." >> $tmpfile
+            echo -n "After resolving issue run "  >> $tmpfile
+            echo -e "following commands:\n" >> $tmpfile
+            echo "v-unsuspend-remote-dns-host $HOST" >> $tmpfile
+            echo "v-sync-dns-clustert $HOST" >> $tmpfile
+            echo -e "\n\n--\nVesta Control Panel\n$(hostname)" >> $tmpfile
+            cat $tmpfile |  $send_mail -s "$subj" $email
+
+            log_event "$E_CONNECT $EVENT"
+            dconf="../../../conf/dns-cluster"
+            update_object_value "$dconf" 'HOST' "$HOST" '$SUSPENDED' 'yes'
+        fi
+
+        # Remove tmp file
+        rm -f $tmpfile
+    done
+}

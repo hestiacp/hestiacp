@@ -46,7 +46,7 @@ old_ifs="$IFS"
 IFS=$'\n'
 
 if [ -z $host ]; then
-    hosts=$(cat $VESTA/conf/dns-cluster.conf)
+    hosts=$(cat $VESTA/conf/dns-cluster.conf | grep "SUSPENDED=='no'")
     rm -f $VESTA/data/queue/dns-cluster.pipe
     touch $VESTA/data/queue/dns-cluster.pipe
     chmod 660 $VESTA/data/queue/dns-cluster.pipe

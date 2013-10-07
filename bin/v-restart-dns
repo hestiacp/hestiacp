@@ -43,7 +43,14 @@ if [ ! -z "$DNS_SYSTEM" ]; then
             email=$(echo "$email" | cut -f 2 -d "'")
             tmpfile=$(mktemp)
             subj="$(hostname): $DNS_SYSTEM restart failed"
-            /etc/init.d/$DNS_SYSTEM configtest >> $tmpfile 2>&1
+
+            # Get dns config path
+            if [ -e '/etc/named.conf' ]; then
+                dns_conf='/etc/named.conf'
+            else
+                dns_conf='/etc/bind/named.conf'
+            fi
+            named-checkconf $dns_conf >> $tmpfile 2>&1
             /etc/init.d/$DNS_SYSTEM restart >> $tmpfile 2>&1
             cat $tmpfile | $send_mail -s "$subj" $email
             rm -f $tmpfile

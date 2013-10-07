@@ -12,8 +12,6 @@
 
 # Argument defenition
 package=$1
-version=$2
-release=$3
 
 # Importing system enviroment
 source /etc/profile
@@ -28,22 +26,34 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 # Checking arg number
-check_args '1' "$#" 'PACKAGE [VERSION] [RELEASE]'
+check_args '1' "$#" 'PACKAGE'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Clean yum chache
-yum -q clean all
+if [ -z "/etc/redhat-release" ]; then
+    # Clean yum chache
+    yum -q clean all
 
-# Define yum cmd
-yum="yum -q -y --noplugins --disablerepo=* --enablerepo=vesta"
+    # Define yum cmd
+    yum="yum -q -y --noplugins --disablerepo=* --enablerepo=vesta"
 
-# Update vesta package
-if [ -z "$version" ]; then
+    # Update vesta package
     $yum update $package > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Error: $package update failed"
+        log_event "$E_UPDATE" "$EVENT"
+        exit $E_UPDATE
+    fi
+else
+    # Update repo
+    apt-get update -o Dir::Etc::sourcelist="sources.list.d/vesta.list" \
+        -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" -qq
+
+    # Update vesta package
+    apt-get install $package -qq > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo "Error: $package update failed"
         log_event "$E_UPDATE" "$EVENT"

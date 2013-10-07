@@ -228,22 +228,15 @@ if [ -z "$noupdate" ]; then
 fi
 
 # Install nginx repo
-apt_list=/etc/apt/sources.list
-check_nginx_repo=$(grep nginx.org $apt_list)
-if [ -z "$check_nginx_repo" ]; then
-    echo "deb http://nginx.org/packages/ubuntu/ $codename nginx" >> $apt_list
-    wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-    apt-key add /tmp/nginx_signing.key
-fi
+apt=/etc/apt/sources.list.d
+echo "deb http://nginx.org/packages/ubuntu/ $codename nginx" > $apt/nginx.list
+wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+apt-key add /tmp/nginx_signing.key
 
 # Install vesta repo
-check_vesta_repo=$(grep $RHOST $apt_list)
-if [ -z "$check_vesta_repo" ]; then
-    echo "deb http://$RHOST/$codename/ $codename vesta" >> $apt_list
-fi
-wget $CHOST/deb_signing.key -O deb_signing.key 
+echo "deb http://$RHOST/$codename/ $codename vesta" > $apt/vesta.list
+wget $CHOST/deb_signing.key -O deb_signing.key
 apt-key add deb_signing.key
-
 
 
 #----------------------------------------------------------#

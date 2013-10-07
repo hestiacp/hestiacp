@@ -62,12 +62,7 @@ is_backup_available
 #----------------------------------------------------------#
 
 # Define email wrapper
-if [ -e "$VESTA/web/inc/mail-wrapper.php" ]; then
-    send_mail="$VESTA/web/inc/mail-wrapper.php"
-else
-    send_mail=$(which mail)
-fi
-
+send_mail="$VESTA/web/inc/mail-wrapper.php"
 
 # Check user
 check_user=$(is_object_valid 'user' 'USER' "$user")

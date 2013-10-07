@@ -30,11 +30,7 @@ check_args '1' "$#" 'SERVICE'
 if [ -x "/etc/init.d/$service" ]; then
     /etc/init.d/$service restart >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        if [ -e "$VESTA/web/inc/mail-wrapper.php" ]; then
-            send_mail="$VESTA/web/inc/mail-wrapper.php"
-        else
-            send_mail=$(which mail)
-        fi
+        send_mail="$VESTA/web/inc/mail-wrapper.php"
         email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
         email=$(echo "$email" | cut -f 2 -d "'")
         tmpfile=$(mktemp)

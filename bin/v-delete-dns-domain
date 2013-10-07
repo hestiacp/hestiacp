@@ -46,7 +46,7 @@ if [ -e '/etc/named.conf' ]; then
 fi
 
 if [ -e '/etc/bind/named.conf' ]; then
-    dns_conf='/etc/bin/named.conf'
+    dns_conf='/etc/bind/named.conf'
 fi
 
 # Deleting domain in named.conf

@@ -15,9 +15,8 @@ domain=$2
 lines=${3-70}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
-
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

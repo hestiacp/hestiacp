@@ -16,6 +16,7 @@ ip_status=$2
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/ip.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

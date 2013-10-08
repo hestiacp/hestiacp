@@ -18,9 +18,9 @@ type=${5-api}
 dns_user=${6-dns-cluster}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/remote.sh
+source $VESTA/conf/vesta.conf
 
 # Hiding passwords
 A4='******'

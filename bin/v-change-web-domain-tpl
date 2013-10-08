@@ -18,10 +18,10 @@ template=$3
 restart=$4
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/func/ip.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

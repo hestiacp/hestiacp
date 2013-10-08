@@ -22,8 +22,8 @@ job=$8
 restart=$9
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Assing new value
 A7="$command"

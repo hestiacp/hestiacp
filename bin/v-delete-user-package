@@ -14,8 +14,8 @@
 package=$1
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Functions
 is_package_in_use() {

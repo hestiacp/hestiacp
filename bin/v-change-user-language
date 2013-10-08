@@ -14,8 +14,8 @@ user=$1
 language=$2
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 
 is_language_valid() {

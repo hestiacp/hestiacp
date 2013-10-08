@@ -14,9 +14,9 @@ user=$1
 restart=$2
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/rebuild.sh
+source $VESTA/conf/vesta.conf
 
 # Export sbin
 export PATH=$PATH:/usr/sbin

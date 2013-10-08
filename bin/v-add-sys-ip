@@ -24,10 +24,10 @@ ip_name=$6
 nat_ip=$7
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/ip.sh
 source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

@@ -18,9 +18,9 @@ soa=$(echo $3 | sed -e 's/\.*$//g' -e 's/^\.*//g')
 restart=$4
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

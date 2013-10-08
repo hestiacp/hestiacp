@@ -12,9 +12,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 ssl_home=$3
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

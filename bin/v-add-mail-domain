@@ -21,9 +21,9 @@ dkim=${5-yes}
 dkim_size=${6-512}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

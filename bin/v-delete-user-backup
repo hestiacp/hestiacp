@@ -14,8 +14,8 @@ user=$1
 backup=$(echo $2| cut -f 2 -d \.)
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

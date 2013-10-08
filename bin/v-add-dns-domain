@@ -27,9 +27,9 @@ ns4=$7
 restart=$8
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

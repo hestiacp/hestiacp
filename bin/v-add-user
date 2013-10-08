@@ -18,8 +18,8 @@ fname=$5
 lname=$6
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Hiding password
 A2='******'

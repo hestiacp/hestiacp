@@ -15,8 +15,8 @@ package=$2
 force=$3
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 is_package_avalable() {
     # Parsing user data

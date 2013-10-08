@@ -20,8 +20,8 @@ cron=$7
 udir=$8
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

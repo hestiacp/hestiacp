@@ -20,8 +20,8 @@ queue=$1
 source /etc/profile
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Export PATH for cron
 PATH=$PATH:$BIN

@@ -23,9 +23,9 @@ charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
 template=${8-template1}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/db.sh
+source $VESTA/conf/vesta.conf
 
 # Hiding password
 A4='******'

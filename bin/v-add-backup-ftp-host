@@ -18,8 +18,8 @@ ftp_port=${5-21}
 A3='******'
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Defining ftp command function
 ftpc() {

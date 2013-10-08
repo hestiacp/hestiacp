@@ -14,8 +14,8 @@ object=$1
 format=${2-shell}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Json list function
 json_list_search() {

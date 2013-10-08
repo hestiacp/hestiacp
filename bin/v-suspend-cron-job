@@ -15,8 +15,8 @@ job=$2
 restart=$3
 
 # Inlcudes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

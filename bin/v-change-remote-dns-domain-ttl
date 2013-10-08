@@ -14,9 +14,9 @@ user=$1
 domain=$2
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/remote.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

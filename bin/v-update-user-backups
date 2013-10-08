@@ -10,8 +10,8 @@
 #----------------------------------------------------------#
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Argument defenition
 user=$1

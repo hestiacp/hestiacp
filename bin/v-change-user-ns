@@ -17,8 +17,8 @@ ns3=$4
 ns4=$5
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

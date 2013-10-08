@@ -16,8 +16,8 @@ user=${1-admin}
 ip_status=${2-shared}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#

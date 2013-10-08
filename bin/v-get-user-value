@@ -14,7 +14,6 @@ user=$1
 key=$(echo "$2"| tr '[:lower:]' '[:upper:]'|sed -e "s/^/$/")
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 
 

@@ -19,9 +19,9 @@ password=$4
 quota=${5-0}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
 
 # Hiding password
 A4='******'

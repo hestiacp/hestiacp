@@ -13,8 +13,8 @@
 format=${1-shell}
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Json function
 json_list_wtpl() {

@@ -15,8 +15,8 @@ package=$2
 rewrite=$3
 
 # Includes
-source $VESTA/conf/vesta.conf
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
 
 # Functions
 is_package_new() {

@@ -372,9 +372,16 @@ rebuild_dns_domain_conf() {
     # Updating zone
     update_domain_zone
 
+    # Set permissions
+    if [ "$DNS_SYSTEM" = 'named' ]; then
+        dns_group='named'
+    else
+        dns_group='bind'
+    fi
+
     # Set file permissions
     chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
-    chown root:named $HOMEDIR/$user/conf/dns/$domain.db
+    chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db
 
     # Get dns config path
     if [ -e '/etc/named.conf' ]; then

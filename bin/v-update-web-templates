@@ -21,11 +21,18 @@ source $VESTA/conf/vesta.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Find out OS name
+if [ -e "/etc/redhat-release" ]; then
+    os="rhel"
+else
+    os="ubuntu"
+fi
+
 # Get new archive
 tmpdir=$(mktemp -d --dry-run)
 mkdir $tmpdir
 cd $tmpdir
-wget http://c.vestacp.com/0.9.8/rhel/templates.tar.gz -q
+wget http://c.vestacp.com/$VERSION/$os/templates.tar.gz -q
 if [ "$?" -ne 0 ]; then
     echo "Error: can't download template.tar.gz"
     log_event "$E_CONNECT" "$EVENT"

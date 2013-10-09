@@ -13,6 +13,18 @@
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
+send_email_report() {
+    send_mail="$VESTA/web/inc/mail-wrapper.php"
+    email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
+    email=$(echo "$email" | cut -f 2 -d "'")
+    tmpfile=$(mktemp)
+    subj="$(hostname): $WEB_SYSTEM restart failed"
+    /etc/init.d/$WEB_SYSTEM configtest >> $tmpfile 2>&1
+    /etc/init.d/$WEB_SYSTEM restart >> $tmpfile 2>&1
+    cat $tmpfile | $send_mail -s "$subj" $email
+    rm -f $tmpfile
+}
+
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -28,21 +40,28 @@ if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
     exit
 fi
 
+
+if [ -z "$WEB_SYSTEM" ]; then
+    exit
+fi
+
 # Restart system
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ "$WEB_SYSTEM" == 'apache2' ]; then
+    if [ -e "/var/run/apache2.pid" ]; then
+        /etc/init.d/$WEB_SYSTEM reload >/dev/null 2>&1
+    else
+        /etc/init.d/$WEB_SYSTEM restart >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            send_email_report
+            exit $E_RESTART
+        fi
+    fi
+else
     /etc/init.d/$WEB_SYSTEM reload >/dev/null 2>&1
     if [ "$?" -ne 0 ]; then
         /etc/init.d/$WEB_SYSTEM restart >/dev/null 2>&1
         if [ $? -ne 0 ]; then
-            send_mail="$VESTA/web/inc/mail-wrapper.php"
-            email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
-            email=$(echo "$email" | cut -f 2 -d "'")
-            tmpfile=$(mktemp)
-            subj="$(hostname): $WEB_SYSTEM restart failed"
-            /etc/init.d/$WEB_SYSTEM configtest >> $tmpfile 2>&1
-            /etc/init.d/$WEB_SYSTEM restart >> $tmpfile 2>&1
-            cat $tmpfile | $send_mail -s "$subj" $email
-            rm -f $tmpfile
+            send_email_report
             exit $E_RESTART
         fi
     fi

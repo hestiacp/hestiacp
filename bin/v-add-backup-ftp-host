@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 
 # Defining ftp command function
 ftpc() {
-    ftp -n $host $ftp_port <<EOF
+    /usr/bin/ftp -n $host $ftp_port <<EOF
     quote USER $ftp_user
     quote PASS $ftp_password
     binary

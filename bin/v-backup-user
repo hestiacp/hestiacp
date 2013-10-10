@@ -556,7 +556,8 @@ ftp_backup() {
     echo -e "$(date "+%F %T") FTP ftp://$HOST$BPATH/$user.$DATE.tar"
 
     # Checking ftp connection
-    if [ ! -z "$(ftpc)" ]; then
+    ftp_connect=$(ftpc)
+    if [ ! -z "$(echo $ftp_connect |grep -i -e error -e 'not conn')" ]; then
         rm -rf $tmpdir
         echo "Can't login to ftp://$USERNAME@$HOST" |\
             $send_mail -s "$subj" $email

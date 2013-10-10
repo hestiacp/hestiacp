@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 
 # Defining ftp command function
 ftpc() {
-    /usr/bin/ftp -n $host $ftp_port <<EOF
+    ftp -n $host $ftp_port <<EOF
     quote USER $ftp_user
     quote PASS $ftp_password
     binary
@@ -48,7 +48,8 @@ validate_format 'host' 'ftp_user' 'ftp_password'
 #----------------------------------------------------------#
 
 # Checking network connection
-if [ ! -z "$(ftpc)" ]; then
+ftp_connect=$(ftpc)
+if [ ! -z "$(echo $ftp_connect |grep -i -e error -e 'not connected')" ]; then
     echo "Error: can't login to ftp"
     log_event "$E_CONNECT" "$EVENT"
     exit $E_CONNECT
@@ -60,7 +61,7 @@ ftmpdir=$(mktemp -u -p "$ftp_path")
 ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir")
 if [ ! -z "$ftp_result" ] ; then
     rm -rf $tmpdir
-    echo "Error: can't create temp folder on the ftp"
+    #echo "Error: can't create temp folder on the ftp"
     log_event "$E_FTP" "$EVENT"
     exit $E_FTP
 fi

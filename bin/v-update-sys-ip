@@ -42,8 +42,8 @@ ip_num=$(echo "$ip_list" | wc -l)
 vst_ip_list=$(ls $VESTA/data/ips/)
 vst_ip_num=$(echo "$vst_ip_list" | wc -l)
 
-if [ "$ip_num" -eq '1' ] && [ "$vst_ip_num" -eq '1' ]; then
-    if [ "$ip_list" !=  "$vst_ip_list" ]; then
+if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
+    if [ $ip_num -eq 1 ] && [ "$ip_list" != "$vst_ip_list" ]; then
         new=$ip_list
         old=$vst_ip_list
         mv $VESTA/data/ips/$old $VESTA/data/ips/$new

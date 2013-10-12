@@ -20,13 +20,12 @@ rebuild_user_conf() {
     fi
 
     # Rebuild user
-    shell=$(chsh --list-shells | grep -w "$SHELL" | head -n1)
-    /usr/sbin/adduser "$user" -s "$shell" -c "$CONTACT" \
+    shell=$(grep -w "$SHELL" /etc/shells |head -n1)
+    /usr/sbin/useradd "$user" -s "$shell" -c "$CONTACT" \
         -m -d "$HOMEDIR/$user" > /dev/null 2>&1
 
     # Update user shell
-    shell_path=$(/usr/bin/chsh --list-shells | grep -w "$SHELL" |head -n1)
-    /usr/bin/chsh -s "$shell_path" "$user" &>/dev/null
+    /usr/bin/chsh -s "$shell" "$user" &>/dev/null
 
     # Update password
     shadow=$(grep ^$user: /etc/shadow)

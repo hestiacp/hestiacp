@@ -509,7 +509,7 @@ local_backup(){
 
 # Defining ftp command function
 ftpc() {
-    /usr/bin/ftp -n $HOST $PORT <<EOF
+    /usr/bin/ftp -p -n $HOST $PORT <<EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
     binary
@@ -556,8 +556,9 @@ ftp_backup() {
     echo -e "$(date "+%F %T") FTP ftp://$HOST$BPATH/$user.$DATE.tar"
 
     # Checking ftp connection
-    ftp_connect=$(ftpc)
-    if [ ! -z "$(echo $ftp_connect |grep -i -e error -e 'not conn')" ]; then
+    fconn=$(ftpc)
+    ferror=$(echo $fconn |grep -i -e failed -e error -e "Can't" -e "not conn")
+    if [ ! -z "$ferror" ]; then
         rm -rf $tmpdir
         echo "Can't login to ftp://$USERNAME@$HOST" |\
             $send_mail -s "$subj" $email
@@ -569,7 +570,8 @@ ftp_backup() {
 
     # Check ftp permissions
     ftpc "mkdir $BPATH" > /dev/null 2>&1
-    ftmpdir=$(mktemp -u -p "$BPATH")
+    ftmpdir="$BPATH/vst.bK76A9SUkt"
+    ftpc "mkdir $ftmpdir" "rm $ftmpdir"
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" |grep -v Trying)
     if [ ! -z "$ftp_result" ] ; then
         rm -rf $tmpdir

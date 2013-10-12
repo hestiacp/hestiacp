@@ -52,7 +52,7 @@ if [ ! -z "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
 fi
 
 if [ ! -z "$FTP_USER" ]; then
-    /usr/sbin/userdel -f $FTP_USER
+    /usr/sbin/userdel -f $FTP_USER > /dev/null 2>&1
 fi
 
 # Define shell
@@ -62,12 +62,11 @@ if [ -e "/usr/bin/rssh" ]; then
 fi
 
 # Adding user
-/usr/sbin/adduser -o -u $(id -u $user) \
-    -g $user \
+/usr/sbin/useradd $ftp_user \
     -s $shell \
-    -M -d "$HOMEDIR/$user/web/$domain" \
-    $ftp_user > /dev/null 2>&1
-
+    -o -u $(id -u $user) \
+    -g $user \
+    -M -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
 echo "$ftp_user:$ftp_password" | /usr/sbin/chpasswd
 ftp_md5="$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)"
 

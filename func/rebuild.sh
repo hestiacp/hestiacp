@@ -322,8 +322,15 @@ rebuild_web_domain_conf() {
     # Checking ftp
     if [ ! -z "$FTP_USER" ]; then
         if [ -z "$(grep ^$FTP_USER: /etc/passwd)" ]; then
-            /usr/sbin/adduser -o -u $(id -u $user) -g $user -s /sbin/nologin \
-                -M -d "$HOMEDIR/$user/web/$domain" $FTP_USER > /dev/null 2>&1
+            shell='/sbin/nologin'
+            if [ -e "/usr/bin/rssh" ]; then
+                shell='/usr/bin/rssh'
+            fi
+            /usr/sbin/useradd $FTP_USER \
+                -s $shell \
+                -o -u $(id -u $user) \
+                -g $user \
+                -M -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
 
             # Update password
             shadow=$(grep "^$FTP_USER:" /etc/shadow)

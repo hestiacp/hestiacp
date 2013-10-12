@@ -10,15 +10,6 @@ export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.vestacp.com'
 CHOST='c.vestacp.com'
 VERSION='0.9.8/ubuntu'
-if [ "$(arch)" != 'x86_64' ]; then
-    arch='i386'
-else
-    arch="amd64"
-fi
-os=$(head -n 1 /etc/issue | cut -f 1 -d ' ')
-release=$(head -n 1 /etc/issue | cut -f 2 -d ' ' )
-codename=$(lsb_release -cs)
-memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 software="nginx apache2 apache2-utils apache2.2-common apache2-suexec-custom
     libapache2-mod-ruid2 libapache2-mod-rpaf libapache2-mod-fcgid bind9 idn
     mysql-server mysql-common mysql-client php5-common php5-cgi php5-mysql
@@ -90,8 +81,40 @@ if [ -e '/etc/redhat-release' ]; then
 fi
 
 # Check supported OS
+if [ "$(arch)" != 'x86_64' ]; then
+    arch='i386'
+else
+    arch="amd64"
+fi
+os=$(head -n 1 /etc/issue | cut -f 1 -d ' ')
+release=$(head -n 1 /etc/issue | cut -f 2 -d ' ' )
+if [ -e "/usr/bin/lsb_release" ]; then
+    codename=$(lsb_release -cs)
+else
+    codename='unknown'
+fi
 if [ $codename !=  'precise' ] && [ $codename != 'raring' ]; then
     echo 'Error: only Ubuntu LTS 12.04 and Ubuntu 13.04 is supported'
+    exit 1
+fi
+
+# Check admin user account
+if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" != 'yes' ]; then
+    echo "Error: user admin exists"
+    echo
+    echo 'Please remove admin user account before proceeding.'
+    echo 'If you want to do it automatically run installer with -f option:'
+    echo "Example: bash $0 --force"
+    exit 1
+fi
+
+# Check admin user account
+if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" != 'yes' ]; then
+    echo "Error: user admin exists"
+    echo
+    echo 'Please remove admin user account before proceeding.'
+    echo 'If you want to do it automatically run installer with -f option:'
+    echo "Example: bash $0 --force"
     exit 1
 fi
 
@@ -136,6 +159,7 @@ if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
 fi
 
 # Check server type
+memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 if [ "$memory" -lt '350000' ] && [ -z "$force" ]; then
     echo "Error: not enough memory to install Vesta Control Panel."
     echo -e "\nMinimum RAM required: 350Mb"

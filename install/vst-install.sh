@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Vesta installer v.03
+# Vesta RHEL/CentOS installer v.03
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
@@ -11,11 +11,6 @@ CHOST='c.vestacp.com'
 REPO='cmmnt'
 VERSION='0.9.8/rhel'
 YUM_REPO='/etc/yum.repos.d/vesta.repo'
-arch=$(uname -i)
-os=$(cut -f 1 -d ' ' /etc/redhat-release)
-release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
-codename="${os}_$release"
-memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     php php-bcmath php-cli php-common php-gd php-imap php-mbstring php-mcrypt
     php-mysql php-pdo php-soap php-tidy php-xml php-xmlrpc php-pecl-apc
@@ -24,7 +19,6 @@ software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     libpng libjpeg libmcrypt mhash zip unzip openssl flex rssh libxml2
     ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rsync
     rrdtool GeoIP freetype ntp openssh-clients vesta vesta-nginx vesta-php"
-
 
 help() {
     echo "usage: $0 [OPTIONS]
@@ -92,8 +86,32 @@ if [ ! -e '/etc/redhat-release' ]; then
 fi
 
 # Check supported OS
+arch=$(uname -i)
+os=$(cut -f 1 -d ' ' /etc/redhat-release)
+release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
+codename="${os}_$release"
 if [ $os !=  'CentOS' ] && [ $os != 'Red' ]; then
     echo 'Error: sorry, we currently support RHEL and CentOS only'
+fi
+
+# Check admin user account
+if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" != 'yes' ]; then
+    echo "Error: user admin exists"
+    echo
+    echo 'Please remove admin user account before proceeding.'
+    echo 'If you want to do it automatically run installer with -f option:'
+    echo "Example: bash $0 --force"
+    exit 1
+fi
+
+# Check admin user account
+if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" != 'yes' ]; then
+    echo "Error: user admin exists"
+    echo
+    echo 'Please remove admin user account before proceeding.'
+    echo 'If you want to do it automatically run installer with -f option:'
+    echo "Example: bash $0 --force"
+    exit 1
 fi
 
 # Check wget
@@ -137,6 +155,7 @@ if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
 fi
 
 # Check server type
+memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 if [ "$memory" -lt '350000' ] && [ -z "$force" ]; then
     echo "Error: not enough memory to install Vesta Control Panel."
     echo -e "\nMinimum RAM required: 350Mb"

@@ -404,6 +404,9 @@ rm -f /etc/cron.d/awstats
 # Set directory color
 echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 
+# Register /sbin/nologin
+echo "/sbin/nologin" >> /etc/shells
+
 # Sudo configuration
 wget $CHOST/$VERSION/sudoers.conf -O /etc/sudoers
 chmod 0440 /etc/sudoers

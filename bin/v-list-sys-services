@@ -16,6 +16,8 @@ format=${1-shell}
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
+export PATH=$PATH:/sbin
+
 get_srv_state() {
     srv=$1
     proc_name=${2-$1}
@@ -30,7 +32,7 @@ get_srv_state() {
         mem=0
         for pid in $(pidof $proc_name); do
             pid_mem=$(pmap -x $pid | tail -n1 | awk '{print $3}')
-            pid_cpu=$(grep "^$pid " $tmp_file | cut -f 2 -d ' ')
+            pid_cpu=$(grep "^$pid " $tmp_file | cut -f 2 -d ' '|sed "s/^0//")
             cpu=$((cpu + pid_cpu))
             mem=$((mem + pid_mem))
         done

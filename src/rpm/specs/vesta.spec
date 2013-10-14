@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        4
+Release:        5
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -52,6 +52,23 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Mon Oct 15 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-5
+- Fix for dns sensitive records from Ursadon
+- Fix for exim antispam/antivirus protection
+- Fix for service listing func on RHEL/CentOS 5
+- Fix for remote ftp backups on RHEL/CentOS 5
+- Fix for web-updates on Ubuntu
+- Fix for additional ftp accounts on Ubuntu
+- Fix for user rebuild on Ubuntu
+- Fix for dns removal func on Ubuntu
+- Autoreply permission fix. Thanks to l170v
+- Short domains like co.uk or com.au will be ignored on dns autocreation
+- Implemented automatical suspend function for failed remote dns host
+- Improved restart functions
+- Default DKIM key size has been increased to 1024
+- From now vesta.conf can override any func variable
+- Ubuntu LTS 12.04/13.04 and Debian 7 are now officially supported
+
 * Tue Sep 17 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-4
 - DNS cluster 5-minute sync improvement
 - Crontab ownership fix

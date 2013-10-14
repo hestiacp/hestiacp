@@ -10,7 +10,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 fi
 
 # Check admin user account
-if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" != 'yes' ]; then
+if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ -z "$1" ]; then
     echo "Error: user admin exists"
     echo
     echo 'Please remove admin user account before proceeding.'
@@ -20,8 +20,8 @@ if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" != 'yes' ]; then
 fi
 
 # Check admin user account
-if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" != 'yes' ]; then
-    echo "Error: user admin exists"
+if [ ! -z "$(grep ^admin: /etc/group)" ] && [ -z "$1" ]; then
+    echo "Error: group admin exists"
     echo
     echo 'Please remove admin user account before proceeding.'
     echo 'If you want to do it automatically run installer with -f option:'

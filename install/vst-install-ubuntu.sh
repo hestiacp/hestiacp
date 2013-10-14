@@ -375,13 +375,23 @@ if [ "$srv_type" = 'small' ]; then
     software=$(echo "$software" | sed -e 's/spamassassin//')
 fi
 
-# Install Vesta packages
+# Update system packages
 apt-get update
+
+# Disable daemon autostart
+# For more details /usr/share/doc/sysv-rc/README.policy-rc.d.gz
+echo -e '#!/bin/sh \nexit 101' > /usr/sbin/policy-rc.d
+chmod a+x /usr/sbin/policy-rc.d
+
+# Install Vesta packages
 apt-get -y install $software
 if [ $? -ne 0 ]; then
     echo 'Error: apt-get install failed'
     exit 1
 fi
+
+# Restore  policy
+rm -f /usr/sbin/policy-rc.d
 
 
 #----------------------------------------------------------#

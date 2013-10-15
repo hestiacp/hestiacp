@@ -16,7 +16,7 @@ software="nginx apache2 apache2-utils apache2.2-common apache2-suexec-custom
     libapache2-mod-php5 vsftpd mc exim4 exim4-daemon-heavy clamav-daemon flex
     dovecot-imapd dovecot-pop3d phpMyAdmin awstats webalizer jwhois rssh git
     spamassassin roundcube roundcube-mysql roundcube-plugins apparmor-utils
-    bc ftp lsof ntpdate rrdtool vesta vesta-nginx vesta-php"
+    sudo bc ftp lsof ntpdate rrdtool vesta vesta-nginx vesta-php"
 
 help() {
     echo "usage: $0 [OPTIONS]

@@ -33,7 +33,7 @@ check_args '1' "$#" 'PACKAGE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ -z "/etc/redhat-release" ]; then
+if [ -e "/etc/redhat-release" ]; then
     # Clean yum chache
     yum -q clean all
 

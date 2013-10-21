@@ -1,0 +1,46 @@
+#!/bin/bash
+# info: suspend remote dns server
+# options: HOST
+#
+# The function for suspending remote dns server.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+host=$1
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'HOST'
+validate_format 'host'
+is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
+is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
+is_object_unsuspended "../../conf/dns-cluster" 'HOST' "$host"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Unsuspend remote dns server
+update_object_value "../../conf/dns-cluster" 'HOST' "$host" '$SUSPENDED' 'yes'
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

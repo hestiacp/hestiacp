@@ -41,9 +41,10 @@ is_backup_scheduled 'restore'
 #----------------------------------------------------------#
 
 # Adding restore task to  the queue
+log=$VESTA/log/restore.log
 options="'$web' '$dns' '$mail' '$db' '$cron' '$udir'"
-echo "$BIN/v-restore-user $user $backup $options  yes" \
-    >> $VESTA/data/queue/backup.pipe
+echo "$BIN/v-restore-user $user $backup $options  yes >> $log 2>&1" >>\
+    $VESTA/data/queue/backup.pipe
 
 
 #----------------------------------------------------------#

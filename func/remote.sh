@@ -141,7 +141,7 @@ remote_dns_health_check() {
             echo -n "After resolving issue run "  >> $tmpfile
             echo -e "following commands:\n" >> $tmpfile
             echo "v-unsuspend-remote-dns-host $HOST" >> $tmpfile
-            echo "v-sync-dns-clustert $HOST" >> $tmpfile
+            echo "v-sync-dns-cluster $HOST" >> $tmpfile
             echo -e "\n\n--\nVesta Control Panel\n$(hostname)" >> $tmpfile
             cat $tmpfile |  $send_mail -s "$subj" $email
 

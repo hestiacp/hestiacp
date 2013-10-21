@@ -34,7 +34,7 @@ if [ -e '/etc/redhat-release' ]; then
     type="rhel"
 fi
 
-if [ -e '/etc/lsb-release' ]; then
+if [ -e '/etc/lsb-release' ] && [ -e '/etc/debian_version' ]; then
     type="ubuntu"
 fi
 

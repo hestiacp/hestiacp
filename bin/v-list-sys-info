@@ -1,0 +1,88 @@
+#!/bin/bash
+# info: list system os
+# options: [FORMAT]
+#
+# The function checks available updates for vesta packages.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Check hostname
+HOSTNAME=$(hostname)
+
+# Check OS/Release
+if [ -e '/etc/redhat-release' ]; then
+    if [ ! -z "$(grep CentOS /etc/redhat-release)" ]; then
+        OS='CentOS'
+    else
+        OS="RHEL"
+    fi
+    VERSION=$(cat /etc/redhat-release | tr ' ' '\n' |grep [0-9])
+else
+    if [ -e '/etc/lsb-release' ] && [ -e '/etc/debian_version' ]; then
+        OS="Ubuntu"
+        VERSION=$(grep DISTRIB_RELEASE /etc/lsb-release| cut -f 2 -d '=')
+    else
+        distro=$(head -n1 /etc/issue | cut -f 1 -d ' ')
+        if [ "$distro" = 'Debian' ]; then
+            OS="Debian"
+            VERSION=$(cut /etc/debian_version)
+        else
+            OS='UNKNOWN'
+            VERSION='UNKNOWN'
+        fi
+    fi
+fi
+
+# Check architecture
+ARCH=$(arch)
+
+# Check uptime
+UPTIME=$(cat /proc/uptime |cut -f 1 -d ' '|cut -f 1 -d .)
+UPTIME="$(echo $UPTIME / 3600 | bc)"
+
+# Check LoadAverage
+LOADAVERAGE=$(cat /proc/loadavg |cut -f 1 -d ' ')
+
+# Create tmp file
+tmp_file=$(mktemp)
+
+# Define key/value pairs
+str="HOSTNAME='$HOSTNAME' OS='$OS' VERSION='$VERSION' ARCH='$ARCH'"
+str="$str UPTIME='$UPTIME' LOADAVERAGE='$LOADAVERAGE'"
+
+# Defining config
+echo -e "$str" > $tmp_file
+conf=$tmp_file
+
+# Defining fileds to select
+fields="\$HOSTNAME \$OS \$VERSION \$ARCH \$UPTIME \$LOADAVERAGE"
+
+# Listing services
+case $format in
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  shell_list | column -t ;;
+    *)      check_args '1' '0' 'USER [FORMAT]'
+esac
+
+rm -f $tmp_file
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

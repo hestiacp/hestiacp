@@ -53,7 +53,8 @@ IFS=$'\n'
 # Check remote dns nodes
 remote_dns_health_check
 
-for cluster_str in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
+search_str=$(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf)
+for cluster_str in $search_str; do
 
     # Get host values
     eval $cluster_str
@@ -83,25 +84,26 @@ for cluster_str in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     eval $str
     $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'flush' 'no'
+    if [ $? -eq 0 ]; then
+        # Sync records
+        if [ "$TYPE" = 'ssh' ]; then
+            tmp=$(mktemp -u)
+            scp_cmd $USER_DATA/dns/$DOMAIN.conf $tmp
+            $send_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp 'no'
+        else
+            for str in $(cat $USER_DATA/dns/$DOMAIN.conf); do
+                str=$(echo "$str" | sed 's/"/\\"/g')
+                $send_cmd v-insert-dns-record $DNS_USER $DOMAIN "$str"
+            done
+        fi
 
-    # Sync records
-    if [ "$TYPE" = 'ssh' ]; then
-        tmp=$(mktemp -u)
-        scp_cmd $USER_DATA/dns/$DOMAIN.conf $tmp
-        $send_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp 'no'
-    else
-        for str in $(cat $USER_DATA/dns/$DOMAIN.conf); do
-            str=$(echo "$str" | sed 's/"/\\"/g')
-            $send_cmd v-insert-dns-record $DNS_USER $DOMAIN "$str"
-        done
-    fi
-
-    # Rebuild dns zone
-    $send_cmd v-rebuild-dns-domain $DNS_USER $domain 'scheduled'
-    if [ $? -ne 0 ]; then
-        echo "Error: $TYPE connection to $HOST failed"
-        log_event "$E_CONNECT $EVENT"
-        exit $E_CONNECT
+        # Rebuild dns zone
+        $send_cmd v-rebuild-dns-domain $DNS_USER $domain 'scheduled'
+        if [ $? -ne 0 ]; then
+            echo "Error: $TYPE connection to $HOST failed"
+            log_event "$E_CONNECT $EVENT"
+            exit $E_CONNECT
+        fi
     fi
 
 done

@@ -116,6 +116,11 @@ if [ ! -z "$dns_data" ]; then
     $BIN/v-unsuspend-dns-domain $user $domain no >> /dev/null 2>&1
     $BIN/v-rebuild-dns-domains $owner no
     $BIN/v-rebuild-dns-domains $user
+
+    # Resync dns cluster
+    if [ ! -z "$DNS_CLUSTER" ]; then
+        v-sync-dns-cluster
+    fi
 fi
 
 # MAIL domain

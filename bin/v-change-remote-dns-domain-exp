@@ -93,7 +93,7 @@ done
 
 # Update pipe
 pipe="$VESTA/data/queue/dns-cluster.pipe"
-str=$(grep -n "$SCRIPT $1 $2$" $pipe | cut -f1 -d: | head -n1)
+str=$(grep -n "$SCRIPT $1 $2 $3$" $pipe | cut -f1 -d: | head -n1)
 if [ ! -z "$str" ]; then
     sed -i "$str d"  $pipe
 fi

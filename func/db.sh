@@ -102,7 +102,6 @@ add_mysql_database() {
         exit $E_CONNECT
     fi
 
-
     query="CREATE DATABASE \`$database\` CHARACTER SET $charset"
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
 

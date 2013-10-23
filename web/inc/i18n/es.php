@@ -198,6 +198,7 @@ $LANG['es'] = array(
     'Bandwidth Usage eth0'  => 'Uso de Ancho de Banda (eth0)',
     'FTP Usage'  => 'Uso de FTP',
     'SSH Usage'  => 'Uso de SSH',
+    'Operating System'  => 'Sistema Operativo',
     'reverse proxy'  => 'proxy inverso',
     'web server'  => 'servidor web',
     'dns server'  => 'servidor dns',

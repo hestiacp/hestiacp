@@ -200,6 +200,7 @@ $LANG['ru'] = array(
     'Bandwidth Usage eth0' => 'Использование cети: eth0',
     'FTP Usage' => 'FTP сервер',
     'SSH Usage' => 'SSH сервер',
+    'Operating System'  => 'Операционная система',
     'reverse proxy' => 'обратный прокси',
     'web server' => 'веб сервер',
     'dns server' => 'сервер имен',

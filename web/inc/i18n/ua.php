@@ -200,6 +200,7 @@ $LANG['ua'] = array(
     'Bandwidth Usage eth0' => 'Використання мережі: eth0',
     'FTP Usage' => 'FTP сервер',
     'SSH Usage' => 'SSH сервер',
+    'Operating System'  => 'Операційна система',
     'reverse proxy' => 'зворотній проксі',
     'web server' => 'веб сервер',
     'dns server' => 'сервер імен',

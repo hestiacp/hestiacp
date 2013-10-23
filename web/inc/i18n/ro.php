@@ -200,6 +200,7 @@ $LANG['ro'] = array(
     'Bandwidth Usage eth0' => 'Utilizare rețelei eth0',
     'FTP Usage' => 'FTP ',
     'SSH Usage' => 'SSH',
+    'Operating System'  => 'Sistem de operare',
     'reverse proxy' => 'proxy inversă',
     'web server' => 'server web',
     'dns server' => 'server dns',

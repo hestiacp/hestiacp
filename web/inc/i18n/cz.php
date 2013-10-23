@@ -199,6 +199,7 @@ $LANG['cz'] = array(
     'Bandwidth Usage eth0'  => 'Bandwidth využití eth0',
     'FTP Usage'  => 'FTP využití',
     'SSH Usage'  => 'SSH využití',
+    'Operating System'  => 'Operační systém',
     'reverse proxy'  => 'reverse proxy',
     'web server'  => 'web server',
     'dns server'  => 'dns server',

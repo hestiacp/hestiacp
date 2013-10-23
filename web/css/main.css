@@ -357,7 +357,7 @@ form {
 }
 
 .vst {
-    padding: 0 4px 0 4px;
+    padding: 4px 4px 0 4px;
     margin: 0;
     text-decoration: none;
     color: #999;
@@ -375,7 +375,7 @@ form {
 }
 
 .vst-selected {
-    padding: 0 4px 0 4px;
+    padding: 4px 4px 0 4px;
     margin: 0;
     text-decoration: none;
     color: #174f82;

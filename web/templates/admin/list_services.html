@@ -35,7 +35,7 @@
                                     });
                                 });
                             </script>
-                            <div id="dialog-message" title="Error">
+                            <div id="dialog-message" title="">
                                 <p><?php echo $_SESSION['error_srv'] ?></p>
                             </div>
                         </div>
@@ -50,6 +50,86 @@
 
         <div id="vstobjects">
             <table class='data'>
+                <tr class="data-row"">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr><td><input type="checkbox" class="ch-toggle" name="system[]" value="<?php echo $sys['sysinfo']['HOSTNAME'] ?>" ></td></tr>
+                            <tr><td class="data-active"><b><?php echo 'running' ?></b></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>" class="data-controls">
+                            <span>
+                                <img src="/images/reload.png" width="6px" height="7px">
+                                <?php print __('restart'); ?> 
+                            </span>
+                        </a>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td colspan=4 class="domain" style="padding: 0 0 0 4px;">
+                                    <b><?php echo $sys['sysinfo']['HOSTNAME'] ?></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top;" width="354px">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <a class="counter-name">
+                                                    <?php print __('Operating System'); ?>:
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a class="counter-value">
+                                                    <?php echo $sys['sysinfo']['OS'] ?>
+                                                    <?php echo $sys['sysinfo']['VERSION'] ?>
+                                                     (<?php echo $sys['sysinfo']['ARCH'] ?>)
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="142px">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('LoadAverage');?>:
+                                            </td>
+                                            <td>
+                                                <a class="counter-value"> <?php echo $sys['sysinfo']['LOADAVERAGE'] ?></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="34px">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" widht="280px">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name">
+                                                <?php print __('Uptime');?>:
+                                            </td>
+                                            <td>
+                                                <a class="counter-value"><?php echo humanize_time($sys['sysinfo']['UPTIME']) ?> </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+
 
                <?php
                     foreach ($data as $key => $value) {
@@ -107,7 +187,7 @@
                                 <td style="vertical-align:top;" width="150px">
                                     <table>
                                         <tr>
-                                            <td class="counter-name">
+                                            <td class="counter-name" widht="">
                                                 <?php print __('CPU');?>:
                                             </td>
                                             <td>
@@ -128,7 +208,7 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" >
+                                <td style="vertical-align:top;">
                                     <table>
                                         <tr>
                                             <td class="counter-name">

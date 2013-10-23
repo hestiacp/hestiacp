@@ -52,7 +52,7 @@ ARCH=$(arch)
 
 # Check uptime
 UPTIME=$(cat /proc/uptime |cut -f 1 -d ' '|cut -f 1 -d .)
-UPTIME="$(echo $UPTIME / 3600 | bc)"
+UPTIME="$(echo $UPTIME / 60 | bc)"
 
 # Check LoadAverage
 LOADAVERAGE=$(cat /proc/loadavg |cut -f 1 -d ' ')
@@ -61,21 +61,22 @@ LOADAVERAGE=$(cat /proc/loadavg |cut -f 1 -d ' ')
 tmp_file=$(mktemp)
 
 # Define key/value pairs
-str="HOSTNAME='$HOSTNAME' OS='$OS' VERSION='$VERSION' ARCH='$ARCH'"
-str="$str UPTIME='$UPTIME' LOADAVERAGE='$LOADAVERAGE'"
+str="SYS='sysinfo' HOSTNAME='$HOSTNAME' OS='$OS' VERSION='$VERSION'"
+str="$str ARCH='$ARCH' UPTIME='$UPTIME' LOADAVERAGE='$LOADAVERAGE'"
 
 # Defining config
 echo -e "$str" > $tmp_file
 conf=$tmp_file
 
 # Defining fileds to select
-fields="\$HOSTNAME \$OS \$VERSION \$ARCH \$UPTIME \$LOADAVERAGE"
+fields="\$SYS \$HOSTNAME \$OS \$VERSION \$ARCH \$UPTIME \$LOADAVERAGE"
 
 # Listing services
 case $format in
     json)   json_list ;;
     plain)  nohead=1; shell_list ;;
-    shell)  shell_list | column -t ;;
+    shell)  fields="\$HOSTNAME \$OS \$VERSION \$ARCH \$UPTIME \$LOADAVERAGE"
+            shell_list | column -t ;;
     *)      check_args '1' '0' 'USER [FORMAT]'
 esac
 

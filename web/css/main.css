@@ -202,11 +202,9 @@ form {
 
 .submenu-button-main {
     width: 130px;
-    height: 26px;
+    height: 28px;
     cursor: pointer;
     color: #555;
-    color: #444;
-    background-color: #fafafa;
     background-color: #ececec;
     border: 1px solid #ccc;
     border-radius: 3px 3px 3px 3px;
@@ -218,7 +216,7 @@ form {
 
 .submenu-button {
     width: 130px;
-    height: 26px;
+    height: 28px;
     cursor: pointer;
     color: #555;
     background-color: #fafafa;
@@ -297,13 +295,13 @@ form {
     color: #333333;
     display: block;
     float: left;
-    height: 26px;
+    height: 28px;
     margin: 0 4px 0 0;
     min-width: 138px;
     background-color: #FFFFFF;
     border: 1px solid #CCCCCC;
     border-radius: 3px 3px 3px 3px;
-    padding: 3px 5px;
+    padding: 4px 5px;
 }
 
 .submenu-select-dropdown option {
@@ -323,7 +321,7 @@ form {
     background-color: #fff;
     float: left;
     padding: 0px 3px 0px 3px;
-    height: 24px;
+    height: 26px;
     width: 250px;
     margin: 0 4px 0 0;
 }
@@ -715,7 +713,7 @@ form {
     font-size: 12pt;
     color: #555;
     height: 30px;
-    min-width: 136px;
+    min-width: 138px;
 }
 
 @-moz-document url-prefix() {
@@ -810,8 +808,8 @@ form {
 }
 
 #vstobjects{
-    padding-top: 191px;
-    min-height: 370px;
+    padding-top: 193px;
+    min-height: 372px;
 }
 
 .login {

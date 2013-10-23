@@ -111,6 +111,10 @@ else
         if [ -z "$proxy_include" ]; then
             echo "include $conf;" >> $proxy_conf
         fi
+    else
+        conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
+        rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
     fi
 
     # Checking SSL proxy
@@ -122,6 +126,11 @@ else
         if [ -z "$proxy_include" ]; then
             echo "include $conf;" >> $proxy_conf
         fi
+    else
+        conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
+        rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
+
     fi
 fi
 

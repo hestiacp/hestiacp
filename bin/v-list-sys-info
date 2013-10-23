@@ -39,7 +39,7 @@ else
         distro=$(head -n1 /etc/issue | cut -f 1 -d ' ')
         if [ "$distro" = 'Debian' ]; then
             OS="Debian"
-            VERSION=$(cut /etc/debian_version)
+            VERSION=$(cat /etc/debian_version)
         else
             OS='UNKNOWN'
             VERSION='UNKNOWN'

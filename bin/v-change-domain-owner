@@ -1,0 +1,156 @@
+#!/bin/bash
+# info: change ip owner
+# options: DOMAIN USER [IP]
+#
+# The function of changing domain ownership.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+domain=$1
+user=$2
+ip=$3
+
+# Includes
+source $VESTA/func/ip.sh
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'DOMAIN USER [IP]'
+validate_format 'domain' 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+if [ ! -z "$ip" ]; then
+    is_ip_valid
+    is_ip_avalable
+fi
+
+owner=$(v-search-domain-owner $domain)
+if [ -z "$owner" ]; then
+    echo "Error: domain $domain doesn't exist"
+    log_event "$E_NOTEXIST" "$EVENT"
+    exit $E_NOTEXIST
+fi
+if [ "$owner" = "$user" ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# WEB domain
+web_data=$(grep "DOMAIN='$domain'" $VESTA/data/users/$owner/web.conf)
+if [ ! -z "$web_data" ]; then
+    $BIN/v-suspend-web-domain $owner $domain >> /dev/null 2>&1
+    eval $web_data
+
+    # Change IP
+    if [ ! -z "$ip" ]; then
+        web_data=$(echo "$web_data" | sed -e "s/IP='$IP'/IP='$ip'/")
+    fi
+
+    # Check SSL
+    if [ "$SSL" = 'yes' ]; then
+        ssl_crt=$VESTA/data/users/$owner/ssl/$domain.crt
+        ssl_key=$VESTA/data/users/$owner/ssl/$domain.key
+        ssl_ca=$VESTA/data/users/$owner/ssl/$domain.ca
+        ssl_pem=$VESTA/data/users/$owner/ssl/$domain.pem
+        mv $ssl_crt $VESTA/data/users/$user/ssl/
+        mv $ssl_key $VESTA/data/users/$user/ssl/
+        mv $ssl_ca $VESTA/data/users/$user/ssl/ >> /dev/null 2>&1
+        mv $ssl_pem $VESTA/data/users/$user/ssl/ >> /dev/null 2>&1
+        rm -f $HOMEDIR/$owner/conf/web/ssl.$domain.*
+    fi
+
+    # Check ftp user account
+    if [ ! -z "$FTP_USER" ]; then
+        /usr/sbin/userdel -f  $FTP_USER >> /dev/null 2>&1
+        old_str="FTP_USER='$FTP_USER'"
+        new_str=$(echo "$old_str" | sed -e "s/${owner}_/${user}_/")
+        web_data=$(echo "$web_data" | sed -e "s/$old_str/$new_str/")
+    fi
+
+    # Move config
+    sed -i "/DOMAIN='$domain'/d" $VESTA/data/users/$owner/web.conf
+    echo "$web_data" >> $VESTA/data/users/$user/web.conf
+
+    # Move data
+    mv $HOMEDIR/$owner/web/$domain $HOMEDIR/$user/web/
+
+    # Rebuild config
+    $BIN/v-unsuspend-web-domain $user $domain no >> /dev/null 2>&1
+    $BIN/v-rebuild-web-domains $owner no
+    $BIN/v-rebuild-web-domains $user
+fi
+
+# DNS domain
+dns_data=$(grep "DOMAIN='$domain'" $VESTA/data/users/$owner/dns.conf)
+if [ ! -z "$dns_data" ]; then
+    eval $dns_data
+
+    # Change IP
+    if [ ! -z "$ip" ]; then
+        dns_data=$(echo "$dns_data" | sed -e "s/IP='$IP'/IP='$ip'/")
+        sed -i "s/$IP/$ip/g" $VESTA/data/users/$owner/dns/$domain.conf
+    fi
+
+    # Move config
+    sed -i "/DOMAIN='$domain'/d" $VESTA/data/users/$owner/dns.conf
+    echo "$dns_data" >> $VESTA/data/users/$user/dns.conf
+
+    # Move dns records
+    mv $VESTA/data/users/$owner/dns/$domain.conf \
+        $VESTA/data/users/$user/dns/
+
+    # Rebuild config
+    $BIN/v-unsuspend-dns-domain $user $domain no >> /dev/null 2>&1
+    $BIN/v-rebuild-dns-domains $owner no
+    $BIN/v-rebuild-dns-domains $user
+fi
+
+# MAIL domain
+mail_data=$(grep "DOMAIN='$domain'" $VESTA/data/users/$owner/mail.conf)
+if [ ! -z "$mail_data" ]; then
+
+    # Move config
+    sed -i "/DOMAIN='$domain'/d" $VESTA/data/users/$owner/mail.conf
+    echo "$mail_data" >> $VESTA/data/users/$user/mail.conf
+    mv -f $VESTA/data/users/$owner/mail/$domain.conf \
+        $VESTA/data/users/$user/mail/
+
+    # Move DKIM
+    if [ -e "$VESTA/data/users/$owner/mail/$domain.pem" ]; then
+        mv -f $VESTA/data/users/$owner/mail/$domain.pem \
+            $VESTA/data/users/$user/mail/
+        mv -f $VESTA/data/users/$owner/mail/$domain.pub \
+            $VESTA/data/users/$user/mail/
+    fi
+
+    # Move data
+    mv $HOMEDIR/$owner/mail/$domain $HOMEDIR/$user/mail/
+
+    # Rebuild config
+    $BIN/v-unsuspend-mail-domain $user $domain no >> /dev/null 2>&1
+    $BIN/v-rebuild-mail-domains $owner no
+    $BIN/v-rebuild-mail-domains $user
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

@@ -113,7 +113,7 @@ else
         fi
     else
         conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
+        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
         rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
     fi
 
@@ -128,7 +128,7 @@ else
         fi
     else
         conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
+        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
         rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
 
     fi

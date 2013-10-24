@@ -1,6 +1,7 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #e5e5e5;
+    background-color: #e8ebcc;
     margin: 0;
     padding: 0;
     border: 0;
@@ -212,6 +213,9 @@ form {
     font-size: 9pt;
     font-weight: bold;
     font-family:Arial, Helvetica, sans-serif;
+    color: #fafafa;
+    border: 1px solid #f79b44;
+    background-color: #f79b44;
 }
 
 .submenu-button {
@@ -245,6 +249,9 @@ form {
     color: #fff;
     border: 1px solid #f79b44;
     background-color: #f79b44;
+    color: #fff;
+    border: 1px solid #87a1c2;
+    background-color: #87a1c2;
 }
 
 .submenu-button:hover {
@@ -253,8 +260,9 @@ form {
 
 .submenu-button-main:active {
     color: #555;
-    border: 1px solid #f79b44;
-    background-color: #f79b44;
+    background-color: #ececec;
+    border: 1px solid #e0e0e0;
+
 }
 
 .submenu-button:active {

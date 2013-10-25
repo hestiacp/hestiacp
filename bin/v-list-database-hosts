@@ -10,7 +10,7 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-type=$1
+type=${1-mysql}
 format=${2-shell}
 
 # Includes
@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 # Checking args
-check_args '1' "$#" 'TYPE [FORMAT]'
+#check_args '1' "$#" 'TYPE [FORMAT]'
 
 
 #----------------------------------------------------------#

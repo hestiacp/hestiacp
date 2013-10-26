@@ -49,7 +49,7 @@ form {
 
 .top-selected-link {
     float: left;
-    color: #174f82;
+    color: #2361a1;
     background-color: #fff;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10pt;
@@ -147,7 +147,7 @@ form {
 .nav-selected-block {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    color: #174f82;
+    color: #2361a1;
     height: 108px;
     width: 119px;
     float: left;
@@ -382,7 +382,7 @@ form {
     padding: 4px 4px 0 4px;
     margin: 0;
     text-decoration: none;
-    color: #174f82;
+    color: #2361a1;
     font-size: 12pt;
     float: left;
 }
@@ -518,7 +518,7 @@ form {
     font-size: 8pt;
     padding: 2px 12px 0 6px;
     letter-spacing: 0.1em;
-    color: #174f82;
+    color: #2361a1;
     text-decoration: none;
     cursor: pointer;
 }
@@ -780,7 +780,7 @@ form {
 }
 
 .vst-advanced {
-    color: #34536a;
+    color: #2361a1;
     font-size: 10pt;
     letter-spacing: 0.1em;
     text-decoration: none;

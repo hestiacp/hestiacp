@@ -246,7 +246,6 @@ form {
 }
 
 .submenu-button-main:hover {
-    color: #fff;
     border: 1px solid #999;
     background-color: #999;
 }
@@ -256,9 +255,8 @@ form {
 }
 
 .submenu-button-main:active {
-    color: #555;
-    background-color: #ececec;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #ccc;
+    background-color: #ccc;
 }
 
 .submenu-button:active {
@@ -751,19 +749,17 @@ form {
 }
 
 .button:hover {
-    color: #fff;
     border: 1px solid #999;
     background-color: #999;
 }
 
 .button:active {
-    color: #555;
-    background-color: #ececec;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #ccc;
+    background-color: #ccc;
 }
 
 .genpass {
-    color: #34536a;
+    color: #2361a1;
     font-size: 8pt;
     padding: 0 5px;
     letter-spacing: 0.1em;

@@ -150,6 +150,10 @@ if [ ! -z "$mail_data" ]; then
     $BIN/v-rebuild-mail-domains $user
 fi
 
+# Update counters
+$BIN/v-update-user-counters $owner
+$BIN/v-update-user-counters $user
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

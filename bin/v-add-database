@@ -53,6 +53,7 @@ is_object_unsuspended "../../../conf/$type" 'DBHOST' "$host"
 #is_charset_valid
 is_package_full 'DATABASES'
 
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

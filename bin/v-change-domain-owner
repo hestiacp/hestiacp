@@ -56,7 +56,7 @@ if [ ! -z "$web_data" ]; then
 
     # Change IP
     if [ ! -z "$ip" ]; then
-        web_data=$(echo "$web_data" | sed -e "s/IP='$IP'/IP='$ip'/")
+        web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
     fi
 
     # Check SSL
@@ -76,8 +76,8 @@ if [ ! -z "$web_data" ]; then
     if [ ! -z "$FTP_USER" ]; then
         /usr/sbin/userdel -f  $FTP_USER >> /dev/null 2>&1
         old_str="FTP_USER='$FTP_USER'"
-        new_str=$(echo "$old_str" | sed -e "s/${owner}_/${user}_/")
-        web_data=$(echo "$web_data" | sed -e "s/$old_str/$new_str/")
+        new_str=$(echo "$old_str" | sed "s/${owner}_/${user}_/")
+        web_data=$(echo "$web_data" | sed "s/$old_str/$new_str/")
     fi
 
     # Move config
@@ -100,7 +100,7 @@ if [ ! -z "$dns_data" ]; then
 
     # Change IP
     if [ ! -z "$ip" ]; then
-        dns_data=$(echo "$dns_data" | sed -e "s/IP='$IP'/IP='$ip'/")
+        dns_data=$(echo "$dns_data" | sed "s/IP='$IP'/IP='$ip'/")
         sed -i "s/$IP/$ip/g" $VESTA/data/users/$owner/dns/$domain.conf
     fi
 

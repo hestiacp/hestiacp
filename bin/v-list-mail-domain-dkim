@@ -50,11 +50,11 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 if [ -e "$USER_DATA/mail/$domain.pem" ]; then
-    pem=$(cat $USER_DATA/mail/$domain.pem |sed -e ':a;N;$!ba;s/\n/\\n/g')
+    pem=$(cat $USER_DATA/mail/$domain.pem | sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 if [ -e "$USER_DATA/mail/$domain.pub" ]; then
-    pub=$(cat $USER_DATA/mail/$domain.pub |sed -e ':a;N;$!ba;s/\n/\\n/g')
+    pub=$(cat $USER_DATA/mail/$domain.pub | sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 # Listing domains

@@ -81,7 +81,7 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
     fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
     if [ -e "$fw_conf" ]; then
         ips=$(grep 'MEFaccept 127.0.0.1' $fw_conf)
-        new_ips=$(echo "$ips" | sed -e "s/$ip//" )
+        new_ips=$(echo "$ips" | sed "s/$ip//" )
         sed -i "s/$ips/$new_ips/g" $fw_conf
     fi
 
@@ -89,7 +89,7 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
     rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
     if [ -e "$rpaf_conf" ]; then
         ips=$(grep RPAFproxy_ips $rpaf_conf)
-        new_ips=$(echo "$rpaf_str" | sed -e "s/$ip//")
+        new_ips=$(echo "$rpaf_str" | sed "s/$ip//")
         sed -i "s/$ips/$new_ips/g" $rpaf_conf
     fi
 

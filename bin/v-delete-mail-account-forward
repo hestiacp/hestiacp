@@ -49,10 +49,10 @@ fi
 #----------------------------------------------------------#
 
 fwd=$(echo "$fwd" |\
-    sed -e "s/,/\n/g"|\
-    sed -e "s/^$forward$//g"|\
-    sed -e "/^$/d"|\
-    sed -e ':a;N;$!ba;s/\n/,/g')
+    sed "s/,/\n/g"|\
+    sed "s/^$forward$//g"|\
+    sed "/^$/d"|\
+    sed ':a;N;$!ba;s/\n/,/g')
 
 sed -i "/^$account@$domain:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
 echo "$account@$domain:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases

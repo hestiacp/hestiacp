@@ -54,7 +54,7 @@ if [ $(echo -e "${dom_alias//\./\n}" | wc -l) -le 2 ]; then
 else
     # Check subdomain
     sub=$(echo "$dom_alias" | cut -f1 -d . -s)
-    root=$(echo "$dom_alias" | sed -e "s/^$sub.//" )
+    root=$(echo "$dom_alias" | sed "s/^$sub.//" )
     if [ -e "$USER_DATA/dns/$root.conf" ]; then
         if [ "$sub" == '*' ]; then
             rec=$(grep -w "RECORD='\*'" $USER_DATA/dns/$root.conf)

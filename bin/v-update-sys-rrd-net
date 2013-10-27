@@ -37,7 +37,7 @@ fi
 
 # Parsing network interfaces
 ndev=$(cat /proc/net/dev)
-ifaces=$(echo "$ndev" |grep : |cut -f 1 -d : |sed -e "s/ //g")
+ifaces=$(echo "$ndev" |grep : |cut -f 1 -d : | sed "s/ //g")
 
 # Parsing excludes
 for exclude in $(echo ${RRD_IFACE_EXCLUDE//,/ }); do
@@ -63,7 +63,7 @@ for iface in $ifaces; do
 
     # Parsing device stats
     if [ "$period" = 'daily' ]; then
-        x=$(echo "$ndev" |sed -e "s/^ *//" |grep "^$iface:" |sed -e "s/:/ /")
+        x=$(echo "$ndev" |sed "s/^ *//" |grep "^$iface:" |sed "s/:/ /")
         rx=$(echo "$x" |awk '{print $2}')
         tx=$(echo "$x" |awk '{print $10}')
 

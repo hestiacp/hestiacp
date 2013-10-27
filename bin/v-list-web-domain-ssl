@@ -54,15 +54,15 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 if [ -e "$USER_DATA/ssl/$domain.crt" ]; then
-    crt=$(cat $USER_DATA/ssl/$domain.crt |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+    crt=$(cat $USER_DATA/ssl/$domain.crt | sed ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
 if [ -e "$USER_DATA/ssl/$domain.key" ]; then
-    key=$(cat $USER_DATA/ssl/$domain.key |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+    key=$(cat $USER_DATA/ssl/$domain.key | sed ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-    ca=$(cat $USER_DATA/ssl/$domain.ca |sed -e ':a;N;$!ba;s/\n/\\n/g' )
+    ca=$(cat $USER_DATA/ssl/$domain.ca | sed ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
 # Listing domains

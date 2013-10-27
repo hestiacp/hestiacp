@@ -160,7 +160,7 @@ update_domain_zone() {
     line=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
     if [ -e $conf ]; then
-        zn_serial=$(head $conf|grep 'SOA' -A1|tail -n 1|sed -e "s/ //g")
+        zn_serial=$(head $conf|grep 'SOA' -A1|tail -n 1|sed "s/ //g")
         s_date=$(echo ${zn_serial:0:8})
         c_date=$(date +'%Y%m%d')
         if [ "$s_date" == "$c_date" ]; then
@@ -190,13 +190,13 @@ update_domain_zone() {
 " > $conf
     while read line ; do
         IFS=$'\n'
-        for key in $(echo $line|sed -e "s/' /'\n/g"); do
+        for key in $(echo $line|sed "s/' /'\n/g"); do
             eval ${key%%=*}="${key#*=}"
         done
 
         RECORD=$(idn --quiet -a -t "$RECORD")
         if [ "$SUSPENDED" != 'yes' ]; then
-            eval echo -e "\"$fields\""|sed -e "s/%quote%/'/g" >> $conf
+            eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $conf
         fi
     done < $USER_DATA/dns/$domain.conf
 }
@@ -276,8 +276,8 @@ change_web_config() {
     get_web_config_brds || exit $?
     vhost=$(grep -A $aftr_line -B $bfr_line -ni "Name $domain_idn" $conf)
     str=$(echo "$vhost" | grep -F "$search_phrase" | head -n 1)
-    str_numb=$(echo "$str" | sed -e "s/-/=/" | cut -f 1 -d '=')
-    str_cont=$(echo "$str" | sed -e "s/-/=/" | cut -f 2 -d '=')
+    str_numb=$(echo "$str" | sed "s/-/=/" | cut -f 1 -d '=')
+    str_cont=$(echo "$str" | sed "s/-/=/" | cut -f 2 -d '=')
 
     str_repl=$(echo "$str_repl" | sed \
         -e 's/\\/\\\\/g' \

@@ -33,10 +33,10 @@ rm -f $VESTA/conf/ftp.backup.conf
 
 # Update vesta.conf
 bckp=$(echo "$BACKUP_SYSTEM" |\
-    sed -e "s/,/\n/g"|\
-    sed -e "s/ftp//" |\
-    sed -e "/^$/d"|\
-    sed -e ':a;N;$!ba;s/\n/,/g')
+    sed "s/,/\n/g"|\
+    sed "s/ftp//" |\
+    sed "/^$/d"|\
+    sed ':a;N;$!ba;s/\n/,/g')
 sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf
 
 # Logging

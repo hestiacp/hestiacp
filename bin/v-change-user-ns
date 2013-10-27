@@ -49,7 +49,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Merging values
 ns="$ns1,$ns2,$ns3,$ns4"
-ns=$(echo "$ns"|sed -e "s/,,//g" -e "s/,$//")
+ns=$(echo "$ns" | sed -e "s/,,//g" -e "s/,$//")
 
 # Changing ns values
 update_user_value "$user" '$NS' "$ns"

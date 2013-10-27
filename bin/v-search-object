@@ -62,7 +62,7 @@ shell_list_search() {
     fi
     while read line ; do
         eval $line
-        eval echo "$fields" | sed -e "s/%quote%/'/g"
+        eval echo "$fields" | sed "s/%quote%/'/g"
     done < $conf
 }
 
@@ -183,7 +183,7 @@ for user in $(ls $VESTA/data/users/); do
             type='mail'
             if [ -n "$(echo $ACCOUNT |grep $object)" ]; then
                 key="ACCOUNT"
-                dom="$(echo $row|cut -f 1 -d :|cut -f 9 -d /|sed -e "s/.conf//")"
+                dom="$(echo $row|cut -f 1 -d :|cut -f 9 -d /|sed 's/.conf//')"
                 result="$ACCOUNT@$dom"
                 suspended=$SUSPENDED
                 object_link=$ACCOUNT

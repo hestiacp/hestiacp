@@ -218,10 +218,10 @@ if [ "$web" != 'no' ]; then
                 if [ ! -z "$check_new" ]; then
                     # Delete conflicting alias
                     ALIAS=$(echo "$ALIAS" |\
-                        sed -e "s/,/\n/g"|\
-                        sed -e "s/^$dom_alias$//g"|\
-                        sed -e "/^$/d"|\
-                        sed -e ':a;N;$!ba;s/\n/,/g')
+                        sed "s/,/\n/g"|\
+                        sed "s/^$dom_alias$//g"|\
+                        sed "/^$/d"|\
+                        sed ':a;N;$!ba;s/\n/,/g')
                 fi
             done
 
@@ -719,7 +719,7 @@ if [ "$udir" != 'no' ]; then
 
         # Create user dir list
         udir_list=$(tar -tf $BACKUP/$backup | grep "^./user_dir" |\
-            grep tar.gz | cut -f 3 -d '/' | sed -e "s/.tar.gz//")
+            grep tar.gz | cut -f 3 -d '/' | sed "s/.tar.gz//")
 
         if [ ! -z "$udir" ]; then
             udir_include_list=$(mktemp)

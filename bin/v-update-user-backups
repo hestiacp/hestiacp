@@ -48,7 +48,7 @@ get_backup_info() {
     else
         i=1
         for domain in $web_data; do
-            domain="$(basename $domain|sed -e 's/.tar.gz$//')"
+            domain="$(basename $domain |sed 's/.tar.gz$//')"
             if [ "$i" -eq 1 ]; then
                 web="$domain"
                 i=2
@@ -64,7 +64,7 @@ get_backup_info() {
     else
         i=1
         for domain in $dns_data; do
-            domain="$(basename $domain|sed -e 's/.db$//')"
+            domain="$(basename $domain |sed 's/.db$//')"
             if [ "$i" -eq 1 ]; then
                 dns="$domain"
                 i=2
@@ -80,7 +80,7 @@ get_backup_info() {
     else
         i=1
         for domain in $mail_data; do
-            domain="$(basename $domain|sed -e 's/.tar.gz$//')"
+            domain="$(basename $domain |sed 's/.tar.gz$//')"
             if [ "$i" -eq 1 ]; then
                 ml="$domain"
                 i=2
@@ -96,7 +96,7 @@ get_backup_info() {
     else
         i=1
         for dbase in $db_data; do
-            dbase=$(basename $dbase|sed -e "s/.\(my\|pg\)sql.sql.gz$//")
+            dbase=$(basename $dbase |sed "s/.\(my\|pg\)sql.sql.gz$//")
             if [ "$i" -eq 1 ]; then
                 db="$dbase"
                 i=2
@@ -112,7 +112,7 @@ get_backup_info() {
     else
         i=1
         for certificate in $ssl_data; do
-            certificate="$(basename $certificate|sed -e "s/.crt$//")"
+            certificate=$(basename $certificate |sed "s/.crt$//")
             if [ "$i" -eq 1 ]; then
                 ssl="$certificate"
                 i=2

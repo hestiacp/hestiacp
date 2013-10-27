@@ -88,10 +88,10 @@ if [ -z "$(grep LANGUAGE $VESTA/conf/vesta.conf)" ]; then
     echo "BACKUP_SYSTEM='ftp'" >> $VESTA/conf/vesta.conf
 else
     bckp=$(echo "$BACKUP_SYSTEM,ftp" |\
-        sed -e "s/,/\n/g"|\
+        sed "s/,/\n/g"|\
         sort -r -u |\
-        sed -e "/^$/d"|\
-        sed -e ':a;N;$!ba;s/\n/,/g')
+        sed "/^$/d"|\
+        sed ':a;N;$!ba;s/\n/,/g')
     sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf
 fi
 

@@ -50,10 +50,10 @@ fi
 
 sed -i "/^$malias@$domain:$account/d" $HOMEDIR/$user/conf/mail/$domain/aliases
 aliases=$(echo "$aliases" |\
-    sed -e "s/,/\n/g"|\
-    sed -e "s/^$malias$//g"|\
-    sed -e "/^$/d"|\
-    sed -e ':a;N;$!ba;s/\n/,/g')
+    sed "s/,/\n/g"|\
+    sed "s/^$malias$//g"|\
+    sed "/^$/d"|\
+    sed ':a;N;$!ba;s/\n/,/g')
 
 
 #----------------------------------------------------------#

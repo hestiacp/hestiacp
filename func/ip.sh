@@ -149,10 +149,10 @@ decrease_ip_value() {
     check_ip=$(grep $sip $USER_DATA/web.conf |wc -l)
     if [ "$check_ip" -lt 2 ]; then
         new_usr=$(echo "$current_usr" |\
-            sed -e "s/,/\n/g"|\
-            sed -e "s/^$user$//g"|\
-            sed -e "/^$/d"|\
-            sed -e ':a;N;$!ba;s/\n/,/g')
+            sed "s/,/\n/g"|\
+            sed "s/^$user$//g"|\
+            sed "/^$/d"|\
+            sed ':a;N;$!ba;s/\n/,/g')
     else
         new_usr="$current_usr"
     fi

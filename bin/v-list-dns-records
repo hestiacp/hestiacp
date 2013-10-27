@@ -65,7 +65,7 @@ shell_list_dns() {
     while read line ; do
         IFS=$'\n'
         eval $line
-        eval echo "$fields" | sed -e "s/%quote%/'/g"
+        eval echo "$fields" | sed "s/%quote%/'/g"
     done < $conf
 }
 

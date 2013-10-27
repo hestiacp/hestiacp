@@ -84,16 +84,16 @@ build_awstats() {
     fi
 
     # Creating main awstats page
-    $awstats $opts | sed -e "s%awstats.$domain.%%g" > $dir/$month/index.html
+    $awstats $opts | sed "s%awstats.$domain.%%g" > $dir/$month/index.html
 
     # Creating suplemental awstats pages
     for format in $output; do
         $awstats $opts=$format |\
-            sed -e "s%awstats.$domain.%%g" > $dir/$month/$format.html
+            sed "s%awstats.$domain.%%g" > $dir/$month/$format.html
     done
 
     # Creating index page
-    cat $WEBTPL/awstats/index.tpl | sed -e "s/%month%/$month/g" >\
+    cat $WEBTPL/awstats/index.tpl | sed "s/%month%/$month/g" >\
         $dir/index.html
 
     # Creating navigation page
@@ -120,7 +120,7 @@ build_awstats() {
 
         select_m="$select_m<option value=$link>$month $year<\/option>\n"
     done
-    cat $WEBTPL/awstats/nav.tpl | sed -e "s/%select_month%/$select_m/" >\
+    cat $WEBTPL/awstats/nav.tpl | sed "s/%select_month%/$select_m/" >\
         $dir/nav.html
 }
 

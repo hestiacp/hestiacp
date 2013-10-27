@@ -11,7 +11,7 @@
 
 # Argument defenition
 user=$1
-key=$(echo "$2"| tr '[:lower:]' '[:upper:]'|sed -e "s/^/$/")
+key=$(echo "$2"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Includes
 source $VESTA/func/main.sh

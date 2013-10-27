@@ -278,7 +278,7 @@ get_object_value() {
 update_object_value() {
     row=$(grep -n "$2='$3'" $USER_DATA/$1.conf)
     lnr=$(echo $row | cut -f 1 -d ':')
-    object=$(echo $row | sed -e "s/^$lnr://")
+    object=$(echo $row | sed "s/^$lnr://")
     eval "$object"
     eval old="$4"
     old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')

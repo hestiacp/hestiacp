@@ -55,7 +55,7 @@ increase_dbhost_values() {
     else
         old_users="U_SYS_USERS='$U_SYS_USERS'"
         new_users="U_SYS_USERS='$U_SYS_USERS'"
-        if [ -z "$(echo $U_SYS_USERS|sed -e "s/,/\n/g"|grep -w $user)" ]; then
+        if [ -z "$(echo $U_SYS_USERS|sed "s/,/\n/g"|grep -w $user)" ]; then
             old_users="U_SYS_USERS='$U_SYS_USERS'"
             new_users="U_SYS_USERS='$U_SYS_USERS,$user'"
         fi
@@ -74,10 +74,10 @@ decrease_dbhost_values() {
     new_dbbases="U_DB_BASES='$((U_DB_BASES - 1))'"
     old_users="U_SYS_USERS='$U_SYS_USERS'"
     U_SYS_USERS=$(echo "$U_SYS_USERS" |\
-        sed -e "s/,/\n/g"|\
-        sed -e "s/^$user$//g"|\
-        sed -e "/^$/d"|\
-        sed -e ':a;N;$!ba;s/\n/,/g')
+        sed "s/,/\n/g"|\
+        sed "s/^$user$//g"|\
+        sed "/^$/d"|\
+        sed ':a;N;$!ba;s/\n/,/g')
     new_users="U_SYS_USERS='$U_SYS_USERS'"
 
     sed -i "s/$old_dbbases/$new_dbbases/g" $VESTA/conf/$TYPE.conf
@@ -566,7 +566,7 @@ get_pgsql_disk_usage() {
 
     query="SELECT pg_database_size('$database');"
     usage=$(psql -h $HOST -U $USER -c "$query")
-    usage=$(echo "$usage" | grep -v "-" | grep -v 'row' | sed -e "/^$/d")
+    usage=$(echo "$usage" | grep -v "-" | grep -v 'row' | sed "/^$/d")
     usage=$(echo "$usage" | grep -v "pg_database_size" | awk '{print $1}')
     if [ -z "$usage" ]; then
         usage=0

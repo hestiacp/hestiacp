@@ -33,6 +33,11 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Flush counters
+U_DATABASES=0
+SUSPENDED_DB=0
+U_DISK_DB=0
+
 # Starting rebuild loop
 for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
 
@@ -45,7 +50,16 @@ for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
         pgsql) rebuild_pgsql_database ;;
     esac
 
+    U_DISK_DB=$((U_DISK_DB + U_DISK))
+    U_DATABASES=$((U_DATABASES + 1))
+    if [ "$SUSPENDED" = 'yes' ]; then
+        SUSPENDED_DB=$((SUSPENDED_DB + 1))
+    fi
 done
+
+update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
+update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
+update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
 
 
 #----------------------------------------------------------#

@@ -82,6 +82,7 @@ if ($_SESSION['user'] == 'admin') {
                 }
 
                 $_SESSION['ok_msg'] = __('USER_CREATED_OK',$_POST[v_username],$_POST[v_username]);
+                $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".$_POST[v_username].">" . __('login as') ." ".$_POST[v_username]. "</a>";
                 unset($v_username);
                 unset($v_password);
                 unset($v_email);

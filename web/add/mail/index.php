@@ -151,7 +151,9 @@ top_panel($user,$TAB);
 
             unset($output);
             if (empty($_SESSION['error_msg'])) {
+                list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
                 $_SESSION['ok_msg'] = __('MAIL_ACCOUNT_CREATED_OK',$_POST['v_account'],$_POST[v_domain],$_POST['v_account'],$_POST[v_domain]);
+                $_SESSION['ok_msg'] .= " / <a href=http://".$http_host."/webmail target='_blank'>" . __('open webmail') . "</a>";
                 unset($v_account);
                 unset($v_password);
                 unset($v_password);

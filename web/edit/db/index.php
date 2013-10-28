@@ -25,11 +25,8 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
 
 $v_database = escapeshellarg($_GET['database']);
 exec (VESTA_CMD."v-list-database ".$user." ".$v_database." 'json'", $output, $return_var);
-if ($return_var != 0) {
-    $error = implode('<br>', $output);
-    if (empty($error)) $error = __('Error code:',$return_var);
-    $_SESSION['error_msg'] = $error;
-} else {
+check_return_code($return_var,$output);
+if (empty($_SESSION['error_msg'])) {
     $data = json_decode(implode('', $output), true);
     unset($output);
     $v_username = $user;

@@ -44,13 +44,10 @@ if (!empty($_POST['ok'])) {
         exec (VESTA_CMD."v-add-cron-job ".$user." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
         $v_type = $_POST['v_type'];
         $v_charset = $_POST['v_charset'];
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-            unset($v_password);
-            unset($output);
-        } else {
+        check_return_code($return_var,$output);
+        unset($v_password);
+        unset($output);
+        if (empty($_SESSION['error_msg'])) {
             $_SESSION['ok_msg'] = __('CRON_CREATED_OK');
             unset($v_min);
             unset($v_hour);

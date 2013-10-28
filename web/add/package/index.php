@@ -111,11 +111,7 @@ if ($_SESSION['user'] == 'admin') {
             // Add new package
             if (empty($_SESSION['error_msg'])) {
                 exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package, $output, $return_var);
-                if ($return_var != 0) {
-                    $error = implode('<br>', $output);
-                    if (empty($error)) $error = __('Error code:',$return_var);
-                    $_SESSION['error_msg'] = $error;
-                }
+                check_return_code($return_var,$output);
                 unset($output);
             }
 

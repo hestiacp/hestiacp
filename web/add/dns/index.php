@@ -41,34 +41,22 @@ if (!empty($_POST['ok'])) {
     } else {
         // Add DNS
         exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4, $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
 
         // Change Expiriation date
         if ((!empty($_POST['v_exp'])) && ($_POST['v_exp'] != date('Y-m-d', strtotime('+1 year')))) {
             $v_exp = escapeshellarg($_POST['v_exp']);
             exec (VESTA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             unset($output);
         }
 
         // Change TTL
-        if ((!empty($_POST['v_ttl'])) && ($_POST['v_ttl'] != '14400')) {
+        if ((!empty($_POST['v_ttl'])) && ($_POST['v_ttl'] != '14400') && (empty($_SESSION['error_msg']))) {
             $v_ttl = escapeshellarg($_POST['v_ttl']);
             exec (VESTA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             unset($output);
         }
 
@@ -108,11 +96,7 @@ if (!empty($_POST['ok_rec'])) {
         // Add DNS Record
         exec (VESTA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
         $v_type = $_POST['v_type'];
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         if (empty($_SESSION['error_msg'])) {
             $_SESSION['ok_msg'] = __('DNS_RECORD_CREATED_OK',$_POST[v_rec],$_POST[v_domain]);

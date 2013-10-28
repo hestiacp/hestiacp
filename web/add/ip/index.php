@@ -55,19 +55,14 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." '".$ip_status."' ".$v_name." ".$v_nat, $output, $return_var);
             $v_owner = $_POST['v_owner'];
             $v_interface = $_POST['v_interface'];
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-                unset($v_password);
-                unset($output);
-            } else {
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
                 $_SESSION['ok_msg'] = __('IP_CREATED_OK',$_POST['v_ip'],$_POST['v_ip']);
                 unset($v_ip);
                 unset($v_netmask);
                 unset($v_name);
                 unset($v_nat);
-                unset($output);
             }
         }
     }

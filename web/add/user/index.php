@@ -61,11 +61,9 @@ if ($_SESSION['user'] == 'admin') {
 
         if (empty($_SESSION['error_msg'])) {
             exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            } else {
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
                 exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
                 if (!empty($v_notify)) {
                     $to = $_POST['v_notify'];

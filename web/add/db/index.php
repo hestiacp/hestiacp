@@ -62,14 +62,9 @@ if (!empty($_POST['ok'])) {
         exec (VESTA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." 'default' ".$v_charset, $output, $return_var);
         $v_type = $_POST['v_type'];
         $v_charset = $_POST['v_charset'];
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-            unset($v_password);
-            unset($output);
-        }
-        if ((!empty($v_db_email)) && ($return_var == 0)) {
+        check_return_code($return_var,$output);
+        unset($output);
+        if ((!empty($v_db_email)) && (empty($_SESSION['error_msg']))) {
             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"]);
             if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpmyadmin/";
             if ($_POST['v_type'] == 'pgsql') $db_admin_link = "http://".$http_host."/phppgadmin/";
@@ -80,13 +75,14 @@ if (!empty($_POST['ok'])) {
             $mailtext = __('DATABASE_READY',$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
             send_email($to, $subject, $mailtext, $from);
         }
-        $_SESSION['ok_msg'] = __('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);
-        unset($v_database);
-        unset($v_dbuser);
-        unset($v_password);
-        unset($v_type);
-        unset($v_charset);
-        unset($output);
+        if (empty($_SESSION['error_msg'])) {
+            $_SESSION['ok_msg'] = __('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);
+            unset($v_database);
+            unset($v_dbuser);
+            unset($v_password);
+            unset($v_type);
+            unset($v_charset);
+        }
     }
 }
 

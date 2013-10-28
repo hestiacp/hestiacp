@@ -24,11 +24,8 @@ if ($_SESSION['user'] == 'admin') {
 
     $v_package = escapeshellarg($_GET['package']);
     exec (VESTA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);
-    if ($return_var != 0) {
-        $error = implode('<br>', $output);
-        if (empty($error)) $error = __('Error code:',$return_var);
-        $_SESSION['error_msg'] = $error;
-    } else {
+    check_return_code($return_var,$output);
+    if (empty($_SESSION['error_msg'])) {
         $data = json_decode(implode('', $output), true);
         unset($output);
 
@@ -172,11 +169,7 @@ if ($_SESSION['user'] == 'admin') {
                 // Rewrite package
                 if (empty($_SESSION['error_msg'])) {
                     exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package." 'yes'", $output, $return_var);
-                    if ($return_var != 0) {
-                        $error = implode('<br>', $output);
-                        if (empty($error)) $error = __('Error code:',$return_var);
-                        $_SESSION['error_msg'] = $error;
-                    }
+                    check_return_code($return_var,$output);
                     unset($output);
                 }
 
@@ -186,11 +179,8 @@ if ($_SESSION['user'] == 'admin') {
 
                 // Propogate new package
                 exec (VESTA_CMD."v-update-user-package ".$v_package." 'json'", $output, $return_var);
-                if ($return_var != 0) {
-                    $error = implode('<br>', $output);
-                    if (empty($error)) $error = __('Error code:',$return_var);
-                    $_SESSION['error_msg'] = $error;
-                }
+                check_return_code($return_var,$output);
+                unset($output);
 
                 if (empty($_SESSION['error_msg'])) {
                     $_SESSION['ok_msg'] = __('Changes has been saved.');

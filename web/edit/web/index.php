@@ -28,11 +28,8 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
 // Check domain
 $v_domain = escapeshellarg($_GET['domain']);
 exec (VESTA_CMD."v-list-web-domain ".$user." ".$v_domain." json", $output, $return_var);
-if ($return_var != 0) {
-    $error = implode('<br>', $output);
-    if (empty($error)) $error = __('Error code:',$return_var);
-    $_SESSION['error_msg'] = $error;
-} else {
+check_return_code($return_var,$output);
+if (empty($_SESSION['error_msg'])) {
     $data = json_decode(implode('', $output), true);
     unset($output);
     $v_username = $user;
@@ -98,22 +95,14 @@ if (!empty($_POST['save'])) {
     if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
         $v_ip = escapeshellarg($_POST['v_ip']);
         exec (VESTA_CMD."v-change-web-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         $restart_web = 'yes';
         unset($output);
         exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain." json", $output, $return_var);
         if ((empty($_SESSION['error_msg'])) && ($return_var == 0 )) {
             unset($output);
             exec (VESTA_CMD."v-change-dns-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             $restart_dns = 'yes';
         }
         unset($output);
@@ -121,11 +110,7 @@ if (!empty($_POST['save'])) {
             exec (VESTA_CMD."v-list-dns-domain ".$v_username." '".$v_alias."' json", $output, $return_var);
             if ((empty($_SESSION['error_msg'])) && ($return_var == 0 )) {
                 exec (VESTA_CMD."v-change-dns-domain-ip ".$v_username." '".$v_alias."' ".$v_ip, $output, $return_var);
-                if ($return_var != 0) {
-                    $error = implode('<br>', $output);
-                    if (empty($error)) $error = __('Error code:',$return_var);
-                    $_SESSION['error_msg'] = $error;
-                }
+                check_return_code($return_var,$output);
                 $restart_dns = 'yes';
             }
             unset($output);
@@ -136,11 +121,7 @@ if (!empty($_POST['save'])) {
     if (( $_SESSION['user'] == 'admin') && ($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
         $v_template = escapeshellarg($_POST['v_template']);
         exec (VESTA_CMD."v-change-web-domain-tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         $restart_web = 'yes';
     }
@@ -159,11 +140,7 @@ if (!empty($_POST['save'])) {
                 $restart_web = 'yes';
                 $v_template = escapeshellarg($_POST['v_template']);
                 exec (VESTA_CMD."v-delete-web-domain-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
-                if ($return_var != 0) {
-                    $error = implode('<br>', $output);
-                    if (empty($error)) $error = __('Error code:',$return_var);
-                    $_SESSION['error_msg'] = $error;
-                }
+                check_return_code($return_var,$output);
                 unset($output);
 
                 if (empty($_SESSION['error_msg'])) {
@@ -171,11 +148,7 @@ if (!empty($_POST['save'])) {
                     unset($output);
                     if ($return_var == 0) {
                         exec (VESTA_CMD."v-delete-dns-on-web-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
-                        if ($return_var != 0) {
-                            $error = implode('<br>', $output);
-                            if (empty($error)) $error = __('Error code:',$return_var);
-                            $_SESSION['error_msg'] = $error;
-                        }
+                        check_return_code($return_var,$output);
                         $restart_dns = 'yes';
                     }
                     unset($output);
@@ -189,22 +162,14 @@ if (!empty($_POST['save'])) {
                 $restart_web = 'yes';
                 $v_template = escapeshellarg($_POST['v_template']);
                 exec (VESTA_CMD."v-add-web-domain-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
-                if ($return_var != 0) {
-                    $error = implode('<br>', $output);
-                    if (empty($error)) $error = __('Error code:',$return_var);
-                    $_SESSION['error_msg'] = $error;
-                }
+                check_return_code($return_var,$output);
                 unset($output);
                 if (empty($_SESSION['error_msg'])) {
                     exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain, $output, $return_var);
                     unset($output);
                     if ($return_var == 0) {
                         exec (VESTA_CMD."v-add-dns-on-web-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
-                        if ($return_var != 0) {
-                            $error = implode('<br>', $output);
-                            if (empty($error)) $error = __('Error code:',$return_var);
-                            $_SESSION['error_msg'] = $error;
-                        }
+                        check_return_code($return_var,$output);
                         $restart_dns = 'yes';
                     }
                 }
@@ -216,11 +181,7 @@ if (!empty($_POST['save'])) {
     // Proxy
     if ((!empty($v_proxy)) && (empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-web-domain-proxy ".$v_username." ".$v_domain." 'no'", $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         unset($v_proxy);
         $restart_proxy = 'yes';
@@ -235,11 +196,7 @@ if (!empty($_POST['save'])) {
             $ext = str_replace(', ', ",", $ext);
             if (!empty($_POST['v_proxy_template'])) $v_proxy_template = $_POST['v_proxy_template'];
             exec (VESTA_CMD."v-change-web-domain-proxy-tpl ".$v_username." ".$v_domain." ".escapeshellarg($v_proxy_template)." ".escapeshellarg($ext)." 'no'", $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             $v_proxy_ext = str_replace(',', ', ', $ext);
             unset($output);
             $restart_proxy = 'yes';
@@ -256,11 +213,7 @@ if (!empty($_POST['save'])) {
             $v_proxy_ext = str_replace(',', ', ', $ext);
         }
         exec (VESTA_CMD."v-add-web-domain-proxy ".$v_username." ".$v_domain." ".escapeshellarg($v_proxy_template)." ".escapeshellarg($ext)." 'no'", $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         $restart_proxy = 'yes';
     }
@@ -268,11 +221,7 @@ if (!empty($_POST['save'])) {
     // SSL
     if (( $v_ssl == 'yes' ) && (empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-web-domain-ssl ".$v_username." ".$v_domain." 'no'", $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         $v_ssl = 'no';
         $restart_web = 'yes';
@@ -307,11 +256,7 @@ if (!empty($_POST['save'])) {
             }
 
             exec (VESTA_CMD."v-change-web-domain-sslcert ".$user." ".$v_domain." ".$tmpdir." 'no'", $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             unset($output);
             $restart_web = 'yes';
             $v_ssl_crt = $_POST['v_ssl_crt'];
@@ -323,11 +268,7 @@ if (!empty($_POST['save'])) {
         if ( $v_ssl_home != $_POST['v_ssl_home'] ) {
             $v_ssl_home = escapeshellarg($_POST['v_ssl_home']);
             exec (VESTA_CMD."v-change-web-domain-sslhome ".$user." ".$v_domain." ".$v_ssl_home." 'no'", $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             $v_ssl_home = $_POST['v_ssl_home'];
             unset($output);
         }
@@ -371,11 +312,7 @@ if (!empty($_POST['save'])) {
                 fclose($fp);
             }
             exec (VESTA_CMD."v-add-web-domain-ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             unset($output);
             $v_ssl = 'yes';
             $restart_web = 'yes';
@@ -389,43 +326,27 @@ if (!empty($_POST['save'])) {
     // Web Stats
     if ((!empty($v_stats)) && ($_POST['v_stats'] == 'none') && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-web-domain-stats ".$v_username." ".$v_domain, $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         $v_stats = '';
     }
     if ((!empty($v_stats)) && ($_POST['v_stats'] != $v_stats) && (empty($_SESSION['error_msg']))) {
         $v_stats = escapeshellarg($_POST['v_stats']);
         exec (VESTA_CMD."v-change-web-domain-stats ".$v_username." ".$v_domain." ".$v_stats, $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
     }
     if ((empty($v_stats)) && ($_POST['v_stats'] != 'none') && (empty($_SESSION['error_msg']))) {
         $v_stats = escapeshellarg($_POST['v_stats']);
         exec (VESTA_CMD."v-add-web-domain-stats ".$v_username." ".$v_domain." ".$v_stats, $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
     }
 
     // Web Stats Auth
     if ((!empty($v_stats_user)) && (empty($_POST['v_stats_auth'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-web-domain-stats-user ".$v_username." ".$v_domain, $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         $v_stats_user = '';
         $v_stats_password = '';
@@ -446,11 +367,7 @@ if (!empty($_POST['save'])) {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
             $v_stats_password = escapeshellarg($_POST['v_stats_password']);
             exec (VESTA_CMD."v-add-web-domain-stats-user ".$v_username." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             unset($output);
             $v_stats_password = "••••••••";
         }
@@ -472,11 +389,7 @@ if (!empty($_POST['save'])) {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
             $v_stats_password = escapeshellarg($_POST['v_stats_password']);
             exec (VESTA_CMD."v-add-web-domain-stats-user ".$v_username." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             unset($output);
             $v_stats_password = "••••••••";
         }
@@ -485,11 +398,7 @@ if (!empty($_POST['save'])) {
     // Delete FTP Account
     if ((!empty($v_ftp_user)) && (empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-web-domain-ftp ".$v_username." ".$v_domain, $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         $v_ftp= '';
         $v_ftp_user = '';
@@ -515,11 +424,7 @@ if (!empty($_POST['save'])) {
             $v_ftp_user = escapeshellarg($v_ftp_user);
             $v_ftp_password = escapeshellarg($_POST['v_ftp_password']);
             exec (VESTA_CMD."v-add-web-domain-ftp ".$v_username." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             unset($output);
             $v_ftp= '';
             $v_ftp_user = $user."_".preg_replace("/^".$user."_/", "", $_POST['v_ftp_user']);
@@ -546,20 +451,15 @@ if (!empty($_POST['save'])) {
             $v_ftp_user = escapeshellarg($_POST['v_ftp_user']);
             $v_ftp_password = escapeshellarg($_POST['v_ftp_password']);
             exec (VESTA_CMD."v-add-web-domain-ftp ".$v_username." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            } else {
-                if (!empty($_POST['v_ftp_email'])) {
-                    $to = $_POST['v_ftp_email'];
-                    $subject = __("FTP login credentials");
-                    $hostname = exec('hostname');
-                    $from = __('MAIL_FROM',$hostname);
-                    $mailtext .= __('FTP_ACCOUNT_READY',$_GET['domain'],$user,$_POST['v_ftp_user'],$_POST['v_ftp_password']);
-                    send_email($to, $subject, $mailtext, $from);
-                    unset($v_ftp_email);
-                }
+            check_return_code($return_var,$output);
+            if ((!empty($_POST['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
+                $to = $_POST['v_ftp_email'];
+                $subject = __("FTP login credentials");
+                $hostname = exec('hostname');
+                $from = __('MAIL_FROM',$hostname);
+                $mailtext .= __('FTP_ACCOUNT_READY',$_GET['domain'],$user,$_POST['v_ftp_user'],$_POST['v_ftp_password']);
+                send_email($to, $subject, $mailtext, $from);
+                unset($v_ftp_email);
             }
             unset($output);
             $v_ftp_user =  $user."_".$_POST['v_ftp_user'];
@@ -567,25 +467,18 @@ if (!empty($_POST['save'])) {
         }
     }
 
-
     // Restart web
     if (!empty($restart_web) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-restart-web", $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Restart dns
     if (!empty($restart_dns) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-restart-dns", $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error code:',$return_var);
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     if (empty($_SESSION['error_msg'])) {
@@ -600,7 +493,7 @@ if ($_SESSION['user'] == 'admin') {
 }
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-//}
+
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

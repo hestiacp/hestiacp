@@ -26,11 +26,8 @@ if (empty($_GET['job'])) {
 
 $v_job = escapeshellarg($_GET['job']);
 exec (VESTA_CMD."v-list-cron-job ".$user." ".$v_job." 'json'", $output, $return_var);
-if ($return_var != 0) {
-    $error = implode('<br>', $output);
-    if (empty($error)) $error = __('Error code:',$return_var);
-    $_SESSION['error_msg'] = $error;
-} else {
+check_return_code($return_var,$output);
+if (empty($_SESSION['error_msg'])) {
     $data = json_decode(implode('', $output), true);
     unset($output);
     $v_username = $user;
@@ -62,11 +59,7 @@ if ($return_var != 0) {
             $v_wday = escapeshellarg($_POST['v_wday']);
             $v_cmd = escapeshellarg($_POST['v_cmd']);
             exec (VESTA_CMD."v-change-cron-job ".$v_username." ".$v_job." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             unset($output);
             $v_cmd = $_POST['v_cmd'];
         }

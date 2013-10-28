@@ -89,10 +89,18 @@ if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
 }
 
 
-function check_error($return_var){
+function check_error($return_var) {
     if ( $return_var > 0 ) {
         header("Location: /error/");
         exit;
+    }
+}
+
+function check_return_code($return_var,$output) {
+   if ($return_var != 0) {
+        $error = implode('<br>', $output);
+        if (empty($error)) $error = __('Error code:',$return_var);
+        $_SESSION['error_msg'] = $error;
     }
 }
 

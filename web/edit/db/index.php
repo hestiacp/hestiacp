@@ -51,15 +51,34 @@ if ($return_var != 0) {
     // Action
     if (!empty($_POST['save'])) {
         $v_username = $user;
-        // Change password
-        if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
+
+        // Change database username
+        if (($v_dbuser != $_POST['v_dbuser']) && (empty($_SESSION['error_msg']))) {
+            $v_dbuser = preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);
+            $v_dbuser = escapeshellarg($v_dbuser);
+            if ($v_password != $_POST['v_password']) {
+                // Change username and password
+                $v_password = escapeshellarg($_POST['v_password']);
+                exec (VESTA_CMD."v-change-database-user ".$v_username." ".$v_database." ".$v_dbuser." ".$v_password, $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                $v_dbuser = $user."_".preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);
+                $v_password = "••••••••";
+                $v_pw_changed = 'yes';
+            } else {
+                // Change only username
+                exec (VESTA_CMD."v-change-database-user ".$v_username." ".$v_database." ".$v_dbuser, $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                $v_dbuser = $user."_".preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);
+            }
+        }
+
+        // Change only database password
+        if (($v_password != $_POST['v_password']) && (!isset($v_pw_changed)) && (empty($_SESSION['error_msg']))) {
             $v_password = escapeshellarg($_POST['v_password']);
             exec (VESTA_CMD."v-change-database-password ".$v_username." ".$v_database." ".$v_password, $output, $return_var);
-            if ($return_var != 0) {
-                $error = implode('<br>', $output);
-                if (empty($error)) $error = __('Error code:',$return_var);
-                $_SESSION['error_msg'] = $error;
-            }
+            check_return_code($return_var,$output);
             $v_password = "••••••••";
             unset($output);
         }

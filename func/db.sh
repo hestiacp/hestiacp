@@ -577,3 +577,61 @@ get_pgsql_disk_usage() {
     fi
 }
 
+# Delete MySQL user
+delete_mysql_user() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
+    eval $host_str
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
+        exit $E_PARSING
+    fi
+
+    query='SELECT VERSION()'
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
+    if [ '0' -ne "$?" ]; then
+        echo "Error: Connection failed"
+        log_event  "$E_CONNECT $EVENT"
+        exit $E_CONNECT
+    fi
+
+    query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@\`%\`"
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
+
+    query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@localhost"
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
+
+    query="DROP USER '$old_dbuser'@'%'"
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
+
+    query="DROP USER '$old_dbuser'@'localhost'"
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
+}
+
+# Delete PostgreSQL user
+delete_pgsql_user() {
+    host_str=$(grep "HOST='$HOST'" $VESTA/conf/pgsql.conf)
+    eval $host_str
+    export PGPASSWORD="$PASSWORD"
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
+        echo "Error: postgresql config parsing failed"
+        log_event "$E_PARSING" "$EVENT"
+        exit $E_PARSING
+    fi
+
+    query='SELECT VERSION()'
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+    if [ '0' -ne "$?" ];  then
+        echo "Error: Connection failed"
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
+    fi
+
+    query="REVOKE ALL PRIVILEGES ON DATABASE $database FROM $old_dbuser"
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+
+    query="REVOKE CONNECT ON DATABASE template1 FROM $old_dbuser"
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+    query="DROP ROLE $old_dbuser"
+    psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
+}

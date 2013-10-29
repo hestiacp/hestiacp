@@ -10,12 +10,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_ip = escapeshellarg($_GET['ip']);
         exec (VESTA_CMD."v-delete-sys-ip ".$v_ip, $output, $return_var);
     }
-    if ($return_var != 0) {
-        $error = implode('<br>', $output);
-        if (empty($error)) $error = __('Error: vesta did not return any output.');
-        if ($return_var == 4) $error = __('IP address is in use');
-        $_SESSION['error_msg'] = $error;
-    }
+    check_return_code($return_var,$output);
     unset($output);
 
 }

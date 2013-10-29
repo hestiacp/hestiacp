@@ -15,11 +15,7 @@ if ($_SESSION['user'] == 'admin') {
         $v_username = escapeshellarg($user);
         $v_domain = escapeshellarg($_GET['domain']);
         exec (VESTA_CMD."v-suspend-mail-domain ".$v_username." ".$v_domain, $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error: vesta did not return any output.');
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
         $back=getenv("HTTP_REFERER");
         if (!empty($back)) {
@@ -36,14 +32,10 @@ if ($_SESSION['user'] == 'admin') {
         $v_domain = escapeshellarg($_GET['domain']);
         $v_account = escapeshellarg($_GET['account']);
         exec (VESTA_CMD."v-suspend-mail-account ".$v_username." ".$v_domain." ".$v_account, $output, $return_var);
-        if ($return_var != 0) {
-            $error = implode('<br>', $output);
-            if (empty($error)) $error = __('Error: vesta did not return any output.');
-            $_SESSION['error_msg'] = $error;
-        }
+        check_return_code($return_var,$output);
         unset($output);
-	$back = $_SESSION['back'];
-	    if (!empty($back)) {
+        $back = $_SESSION['back'];
+            if (!empty($back)) {
             header("Location: ".$back);
             exit;
         }

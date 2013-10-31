@@ -270,13 +270,16 @@ if [ "$web" != 'no' ]; then
             fi
 
             # Convert ftp user
-            FTP_USER=$(echo "$FTP_USER"  | cut -f 2,3,4,5,6,7 -d '_')
-            FTP_USER="${user}_${FTP_USER}"
+            if [ ! -z "$FTP_USER" ]; then
+                FTP_USER=$(echo "$FTP_USER"  | cut -f 2,3,4,5,6,7 -d '_')
+                FTP_USER="${user}_${FTP_USER}"
+            fi
 
             # Convert stats user
-            STATS_USER=$(echo "$STATS_USER"  | cut -f 2,3,4,5,6,7 -d '_')
-            STATS_USER="${user}_${STATS_USER}"
-
+            if [ ! -z "$STATS_USER" ]; then
+                STATS_USER=$(echo "$STATS_USER"  | cut -f 2,3,4,5,6,7 -d '_')
+                STATS_USER="${user}_${STATS_USER}"
+            fi
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
             str="$str FTP_USER='$FTP_USER' FTP_MD5='$FTP_MD5' PROXY='$PROXY'"

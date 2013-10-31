@@ -1,0 +1,80 @@
+#!/bin/bash
+# info: delete web/dns/mail domain
+# options: USER DOMAIN
+#
+# The function deletes web/dns/mail domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/ip.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+validate_format 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Web domain
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    check_web=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+    if [  ! -z "$check_web" ]; then
+        $BIN/v-delete-web-domain $user $domain
+        if [ $? -ne 0 ]; then
+            exit $?
+        fi
+    fi
+fi
+
+# DNS domain
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    check_dns=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+    if [  ! -z "$check_dns" ]; then
+        $BIN/v-delete-dns-domain $user $domain
+        if [ $? -ne 0 ]; then
+            exit $?
+        fi
+    fi
+fi
+
+# Mail domain
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    check_mail=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
+    if [  ! -z "$check_mail" ]; then
+        $BIN/v-delete-mail-domain $user $domain
+        if [ $? -ne 0 ]; then
+            exit $?
+        fi
+    fi
+fi
+
+# Check domain status
+if [ -z "$check_web" ] && [ -z "$check_dns" ] && [ -z "$check_mail" ]; then
+    echo "Error: domain $domain doesn't exist"
+    log_event "$E_NOTEXIST $EVENT"
+    exit $E_NOTEXIST
+fi
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit 

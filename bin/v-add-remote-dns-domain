@@ -26,8 +26,6 @@ source $VESTA/conf/vesta.conf
 check_args '2' "$#" 'USER DOMAIN'
 validate_format 'user' 'domain'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
-is_object_valid 'user' 'USER' "$user"
-is_object_valid 'dns' 'DOMAIN' "$domain"
 
 if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
     echo "Error: dns-cluster.conf doesn't exist"
@@ -46,6 +44,17 @@ fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Check domain existance
+check_local_domain=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf 2>/dev/null)
+if [ -z "$check_local_domain" ]; then
+    pipe="$VESTA/data/queue/dns-cluster.pipe"
+    str=$(grep -n "$SCRIPT $1 $2$" $pipe | cut -f1 -d: | head -n1)
+    if [ ! -z "$str" ]; then
+        sed -i "$str d"  $pipe
+    fi
+    exit
+fi
 
 old_ifs="$IFS"
 IFS=$'\n'

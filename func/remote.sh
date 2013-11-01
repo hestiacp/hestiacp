@@ -9,6 +9,7 @@ send_api_cmd() {
     auth="user=$USER&password=$PASSWORD&returncode=yes"
     cmd="cmd=$1"
     args="arg1=$2&arg2=$3&arg3=$4&arg4=$5&arg5=$6&arg6=$7&arg7=$8&arg8=$9"
+    args=$(echo "$args" |sed -e "s/+/%2B/g")
     answer=$(curl -s -k --data "$auth&$cmd&$args" https://$HOST:$PORT/api/)
     if [ "$answer" != '0' ]; then
         return 1

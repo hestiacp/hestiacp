@@ -18,31 +18,7 @@
                             </select>
                             <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
                         </div>
-                        <?php
-                            if (!empty($_SESSION['error_srv'])) {
-                        ?> 
-                        <div>
-                            <script type="text/javascript">
-                                $(function() {
-                                    $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                                    $( "#dialog-message" ).dialog({
-                                        modal: true,
-                                        buttons: {
-                                            Ok: function() {
-                                                $( this ).dialog( "close" );
-                                            }
-                                        }
-                                    });
-                                });
-                            </script>
-                            <div id="dialog-message" title="">
-                                <p><?php echo $_SESSION['error_srv'] ?></p>
-                            </div>
-                        </div>
-                        <?php
-                                unset($_SESSION['error_srv']);
-                            }
-                        ?> 
+                        <?php display_error_block(); ?> 
                     </td>
                 </tr>
             </table>

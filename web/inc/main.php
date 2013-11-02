@@ -213,23 +213,24 @@ function send_email($to,$subject,$mailtext,$from) {
 function display_error_block() {
     if (!empty($_SESSION['error_msg'])) {
         echo '
-                        <script type="text/javascript">
-                            $(function() {
-                                $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                                $( "#dialog-message" ).dialog({
-                                    modal: true,
-                                    buttons: {
-                                        Ok: function() {
-                                            $( this ).dialog( "close" );
-                                        }
-                                    }
-                                });
-                            });
-                    </script>
-                    <div id="dialog-message" title="Error">
-                        <p>';
-        echo $_SESSION['error_msg'];
-        echo "</p>\n                        </div>\n";
+            <div>
+                <script type="text/javascript">
+                    $(function() {
+                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                        $( "#dialog-message" ).dialog({
+                            modal: true,
+                            buttons: {
+                                Ok: function() {
+                                    $( this ).dialog( "close" );
+                                }
+                            }
+                        });
+                    });
+                </script>
+                <div id="dialog-message" title="">
+                    <p>'. $_SESSION['error_msg'] .'</p>
+                </div>
+            </div>'."\n";
         unset($_SESSION['error_msg']);
     }
 }

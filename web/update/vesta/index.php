@@ -14,7 +14,7 @@ if ($_SESSION['user'] == 'admin') {
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) $error = 'Error: '.$v_pkg.' update failed';
-            $_SESSION['error_upd'] = $error;
+            $_SESSION['error_msg'] = $error;
     }
     unset($output);
 }

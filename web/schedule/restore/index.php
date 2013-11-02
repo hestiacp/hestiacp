@@ -30,14 +30,14 @@ if (!empty($_GET['type'])) {
 
 exec ($restore_cmd, $output, $return_var);
 if ($return_var == 0) {
-    $_SESSION['restore_msg'] = __('RESTORE_SCHEDULED');
+    $_SESSION['error_msg'] = __('RESTORE_SCHEDULED');
 } else {
-    $_SESSION['restore_msg'] = implode('<br>', $output);
-    if (empty($_SESSION['restore_msg'])) {
-        $_SESSION['restore_msg'] = __('Error: vesta did not return any output.');
+    $_SESSION['error_msg'] = implode('<br>', $output);
+    if (empty($_SESSION['error_msg'])) {
+        $_SESSION['error_msg'] = __('Error: vesta did not return any output.');
     }
     if ($return_var == 4) {
-        $_SESSION['restore_msg'] = __('RESTORE_EXISTS');
+        $_SESSION['error_msg'] = __('RESTORE_EXISTS');
     }
 }
 

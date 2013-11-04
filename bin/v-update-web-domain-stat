@@ -60,8 +60,13 @@ build_webalizer() {
 }
 
 build_awstats() {
-    awstats="/usr/share/awstats/wwwroot/cgi-bin/awstats.pl"
-    wwwroot="/usr/share/awstats/wwwroot"
+    if [ -e "/etc/redhat-release" ]; then
+        awstats="/usr/share/awstats/wwwroot/cgi-bin/awstats.pl"
+        wwwroot="/usr/share/awstats/wwwroot"
+    else
+        awstats="/usr/lib/cgi-bin/awstats.pl"
+        wwwroot="/usr/share/awstats"
+    fi
     opts="-config=$domain_idn -staticlinks -update -output"
     month=$(date "+%Y-%m")
     output='alldomains allhosts lasthosts unknownip allrobots lastrobots
@@ -116,8 +121,6 @@ build_awstats() {
             11) month='November';;
             12) month='December';;
         esac
-        echo $month
-
         select_m="$select_m<option value=$link>$month $year<\/option>\n"
     done
     cat $WEBTPL/awstats/nav.tpl | sed "s/%select_month%/$select_m/" >\

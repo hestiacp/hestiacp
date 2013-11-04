@@ -1,4 +1,4 @@
-LogFile="/var/log/httpd/domains/%domain%.log"
+LogFile="/var/log/%web_system%/domains/%domain%.log"
 LogType=W
 LogFormat=1
 LogSeparator=" "

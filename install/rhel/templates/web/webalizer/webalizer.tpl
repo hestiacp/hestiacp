@@ -1,5 +1,5 @@
 HostName         %domain_idn%
-LogFile          /var/log/httpd/domains/%domain%.log
+LogFile          /var/log/%web_system%/domains/%domain%.log
 OutputDir        %home%/%user%/web/%domain%/stats
 HistoryName      %home%/%user%/web/%domain%/stats/%domain%.hist
 Incremental      yes

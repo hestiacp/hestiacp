@@ -22,7 +22,7 @@
     <IfModule mod_ruid2.c>
         RMode config
         RUidGid %user% %group%
-        RGroups %rgroups%
+        RGroups www-data
     </IfModule>
     <IfModule itk.c>
         AssignUserID %user% %group%

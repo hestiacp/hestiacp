@@ -54,7 +54,7 @@ form {
     text-decoration: none;
     line-height: 22px;
     padding: 0 20px 2px;
-    color: #2361a1;
+    color: #333;
     background-color: #f1f1f1;
 }
 
@@ -549,12 +549,12 @@ form {
 
 .username {
     color: #222;
-    font-size: 16pt;
+    font-size: 14pt;
 }
 
 .domain {
     color: #222;
-    font-size: 16pt;
+    font-size: 14pt;
 }
 
 .cron {
@@ -604,10 +604,10 @@ form {
 
 .counter-value {
     vertical-align:top;
-    line-height: 1.2em;
+    line-height: 1.3em;
     font-size: 10pt;
     color: #222;
-    padding: 0 0 0 4px;
+    padding: 0 0 0 2px;
 }
 
 .log-counter-value {

@@ -143,14 +143,14 @@ is_mail_new() {
     if [ ! -z "$check_acc" ]; then
         echo "Error: mail account $1 exist"
         log_event "$E_EXISTS" "$EVENT"
-        exit
+        exit $E_EXISTS
     fi
     check_als=$(awk -F "ALIAS='" '{print $2}' $USER_DATA/mail/$domain.conf )
     check_als=$(echo "$check_als" | cut -f 1 -d "'" | grep -w $1)
     if [ ! -z "$check_als" ]; then
         echo "Error: mail alias $1 exist"
         log_event "$E_EXISTS" "$EVENT"
-        exit
+        exit $E_EXISTS
     fi
 }
 

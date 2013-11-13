@@ -119,6 +119,16 @@
                             </td>
                         </tr>
                         <tr>
+                            <td class="vst-text" style="padding: 10 0 0 2px;">
+                                <?php print __("Don't store forwarded mail");?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox" size="20" class="vst-checkbox" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>>
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="vst-text" style="padding: 10px 0 0 2px;">
                                 <?php print __('Autoreply');?>
                             </td>

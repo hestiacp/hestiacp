@@ -34,8 +34,8 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 
 # Defining fileds to select
 conf=$USER_DATA/mail/$domain.conf
-fields="\$ACCOUNT \$ALIAS \$FWD \$AUTOREPLY \$QUOTA \$U_DISK \$SUSPENDED"
-fields="$fields \$TIME \$DATE"
+fields="\$ACCOUNT \$ALIAS \$FWD \$FWD_ONLY \$QUOTA \$AUTOREPLY \$U_DISK"
+fields="$fields \$SUSPENDED \$TIME \$DATE"
 
 # Listing domain accounts
 case $format in 

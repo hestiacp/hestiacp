@@ -130,8 +130,13 @@ if (!empty($_POST['ok_acc'])) {
                 }
                 unset($output);
             }
+            // Add fwd_only flag
+            if ((!empty($_POST['v_fwd_only'])) && (empty($_SESSION['error_msg']))) {
+                exec (VESTA_CMD."v-add-mail-account-fwd-only ".$user." ".$v_domain." ".$v_account, $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+            }
         }
-        unset($output);
 
         if (empty($_SESSION['error_msg'])) {
             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");

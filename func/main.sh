@@ -287,6 +287,17 @@ update_object_value() {
         $USER_DATA/$1.conf
 }
 
+# Add object key
+add_object_key() {
+    row=$(grep -n "$2='$3'" $USER_DATA/$1.conf)
+    lnr=$(echo $row | cut -f 1 -d ':')
+    object=$(echo $row | sed "s/^$lnr://")
+    if [ -z "$(echo $object |grep $4=)" ]; then
+        eval old="$4"
+        sed -i "$lnr s/$5='/$4='' $5='/" $USER_DATA/$1.conf
+    fi
+}
+
 # Search objects
 search_objects() {
     OLD_IFS="$IFS"

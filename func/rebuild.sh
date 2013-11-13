@@ -435,8 +435,10 @@ rebuild_mail_domain_conf() {
     rm -f $HOMEDIR/$user/conf/mail/$domain/antivirus
     rm -f $HOMEDIR/$user/conf/mail/$domain/protection
     rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
+    rm -f $HOMEDIR/$user/conf/mail/$domain/fwd_only
     touch $HOMEDIR/$user/conf/mail/$domain/aliases
     touch $HOMEDIR/$user/conf/mail/$domain/passwd
+    touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
 
     # Adding antispam protection
     if [ "$ANTISPAM" = 'yes' ]; then
@@ -518,6 +520,9 @@ rebuild_mail_domain_conf() {
         done
         if [ ! -z "$FWD" ]; then
             echo "$account@$domain:$FWD" >> $dom_aliases
+        fi
+        if [ "$FWD_ONLY" = 'yes' ]; then
+            echo "$account" >> $HOMEDIR/$user/conf/mail/$domain/fwd_only
         fi
     done
 

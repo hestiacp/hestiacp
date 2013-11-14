@@ -120,6 +120,8 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-change-user-name ".$v_username." ".$v_fname." ".$v_lname, $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
+            $v_fname = $_POST['v_fname'];
+            $v_lname = $_POST['v_lname'];
         }
 
         // Change NameServers

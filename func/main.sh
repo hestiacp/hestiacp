@@ -605,6 +605,15 @@ validate_format_name() {
     fi
 }
 
+# Name with space
+validate_format_name_s() {
+    if ! [[ "$1" =~ ^[[:alnum:]][-|\ |\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+        echo "Error: $2 $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
 # Username
 validate_format_username() {
     if ! [[ "$1" =~ ^[a-zA-Z0-9][-|\.|_|a-zA-Z0-9]{0,28}[a-zA-Z0-9]$ ]]; then
@@ -795,7 +804,7 @@ validate_format(){
             email)          validate_format_email "$arg" ;;
             exp)            validate_format_date "$arg" ;;
             extentions)     validate_format_common "$arg" 'extentions' ;;
-            fname)          validate_format_name "$arg" "$arg_name" ;;
+            fname)          validate_format_name_s "$arg" "$arg_name" ;;
             forward)        validate_format_email "$arg" ;;
             ftp_password)   validate_format_password "$arg" ;;
             ftp_user)       validate_format_username "$arg" "$arg_name" ;;
@@ -808,7 +817,7 @@ validate_format(){
             ip_status)      validate_format_ip_status "$arg" ;;
             job)            validate_format_int "$arg" 'job' ;;
             key)            validate_format_username "$arg" "$arg_name" ;;
-            lname)          validate_format_name "$arg" "$arg_name" ;;
+            lname)          validate_format_name_s "$arg" "$arg_name" ;;
             malias)         validate_format_username "$arg" "$arg_name" ;;
             mask)           validate_format_ip "$arg" ;;
             max_db)         validate_format_int "$arg" 'max db';;

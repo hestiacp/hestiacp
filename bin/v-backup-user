@@ -315,7 +315,7 @@ then
             tar -cpf $tmpdir/mail/$domain/accounts.tar  $accounts
         fi
 
-        if [ ! -z "$BACKUP_GZIP" ] && [ ! -z $accounts ]; then
+        if [ ! -z "$BACKUP_GZIP" ] && [ ! -z "$accounts" ]; then
             gzip -$BACKUP_GZIP $tmpdir/mail/$domain/accounts.tar
         fi
     done

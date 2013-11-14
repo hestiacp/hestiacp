@@ -636,7 +636,7 @@ validate_format_domain_alias() {
 
 # Database
 validate_format_database() {
-    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%|\`| ]"
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [ 65 -le ${#1} ]; then
         echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
@@ -646,7 +646,7 @@ validate_format_database() {
 
 # Database user
 validate_format_dbuser() {
-    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|.|<|>|?|/|\|\"|'|;|%|\`| ]"
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [ 17 -le ${#1} ]; then
         echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"

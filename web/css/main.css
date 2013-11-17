@@ -738,13 +738,13 @@ form {
     width: 108px;
     height: 34px;
     color: #fff;
-    border: 1px solid #f79b44;
-    background-color: #f79b44;
+    border: 1px solid #999;
+    background-color: #999;
 }
 
 .button:hover {
-    border: 1px solid #999;
-    background-color: #999;
+    border: 1px solid #f79b44;
+    background-color: #f79b44;
 }
 
 .button:active {

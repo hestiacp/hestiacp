@@ -4,7 +4,7 @@
  * Diego Hernandes (diego@he.rnand.es)
  */
 
-$LANG['en'] = array(
+$LANG['pt'] = array(
     'Packages'  => 'Pacotes',
     'IP'  => 'IP',
     'Graphs'  => 'Gráficos',

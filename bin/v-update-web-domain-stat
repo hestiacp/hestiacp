@@ -63,6 +63,10 @@ build_awstats() {
     if [ -e "/etc/redhat-release" ]; then
         awstats="/usr/share/awstats/wwwroot/cgi-bin/awstats.pl"
         wwwroot="/usr/share/awstats/wwwroot"
+        if [  ! -e "$awstats" ]; then
+            awstats="/var/www/awstats/awstats.pl"
+            wwwroot="/var/www/awstats"
+        fi
     else
         awstats="/usr/lib/cgi-bin/awstats.pl"
         wwwroot="/usr/share/awstats"

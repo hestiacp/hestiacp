@@ -32,13 +32,10 @@ rm -rf %{buildroot}
 %post
 if [ $1 -ge 2 ]; then
     if [ -e /usr/local/vesta/upd/convert-templates.sh ]; then
-        /usr/local/vesta/upd/convert-templates.sh
+        /usr/local/vesta/upd/convert_templates.sh
     fi
     if [ -e /usr/local/vesta/upd/convert_webip.sh ]; then
         /usr/local/vesta/upd/convert_webip.sh
-    fi
-    if [ -e /usr/local/vesta/upd/fix_cron.sh ]; then
-        /usr/local/vesta/upd/fix_cron.sh
     fi
 fi
 

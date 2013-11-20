@@ -3,7 +3,13 @@
 # Include vesta.conf
 source /usr/local/vesta/conf/vesta.conf
 
-# Remove ol ip definitions from vesta.conf
+# Check if old scheme is in use
+check_oldip=$(grep "^Listen" /etc/$WEB_SYSTEM/conf.d/vesta.conf)
+if [ -z "$check_oldip" ]; then
+    exit
+fi
+
+# Remove old ip definitions from vesta.conf
 sed -i "/^Listen/d" /etc/$WEB_SYSTEM/conf.d/vesta.conf
 sed -i "/^NameVirtualHost/d" /etc/$WEB_SYSTEM/conf.d/vesta.conf
 sed -i "/^$/d" /etc/$WEB_SYSTEM/conf.d/vesta.conf

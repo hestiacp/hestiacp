@@ -737,12 +737,13 @@ form {
     padding: 2px 16px;
     width: 108px;
     height: 34px;
-    color: #fff;
-    border: 1px solid #999;
-    background-color: #999;
+    color: #555;
+    background-color: #fafafa;
+    border: 1px solid #ccc;
 }
 
 .button:hover {
+    color: #fff;
     border: 1px solid #f79b44;
     background-color: #f79b44;
 }

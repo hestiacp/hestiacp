@@ -45,8 +45,10 @@
                         if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
                         if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
                         if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "http://".$http_host."/phpmyadmin/";
+                        if (($data[$key]['TYPE'] == 'mysql') && (!empty($sys['config']['DB_PMA_URL']))) $db_admin_link = $sys['config']['DB_PMA_URL'];
                         if ($data[$key]['TYPE'] == 'pgsql') $db_admin = "phpPgAdmin";
                         if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "http://".$http_host."/phppgadmin/";
+                        if (($data[$key]['TYPE'] == 'pgsql') && (!empty($sys['config']['DB_PGA_URL']))) $db_admin_link = $sys['config']['DB_PGA_URL'];
                 ?> 
                 <tr class="data-row">
                     <td class="data-dotted" width="150">

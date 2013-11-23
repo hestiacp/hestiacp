@@ -105,14 +105,33 @@
                                     <select class="vst-list" name="v_type">
                                         <?php
                                             foreach ($db_types as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
                                                 if ((!empty($v_type)) && ( $value == $v_type )) echo ' selected';
-                                                echo ">".$value."</option>\n";
+                                                echo ">".$value."</option>";
                                             }
                                         ?> 
                                     </select>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                    <?php print __('Host');?> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_host">
+                                        <?php
+                                            foreach ($db_hosts as $key => $value) {
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                if ((!empty($v_host)) && ( $key == $v_host )) echo ' selected';
+                                                echo ">".$key."</option>";
+                                            }
+                                        ?> 
+                                    </select>
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td class="vst-text" style="padding: 10px 0 0 2px;">
                                     <?php print __('Charset');?> 

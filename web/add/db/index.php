@@ -20,6 +20,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_dbuser'])) $errors[] = __('username');
     if (empty($_POST['v_password'])) $errors[] = __('password');
     if (empty($_POST['v_type'])) $errors[] = __('type');
+    if (empty($_POST['v_host'])) $errors[] = __('host');
     if (empty($_POST['v_charset'])) $errors[] = __('charset');
 
     // Check for errors
@@ -47,6 +48,7 @@ if (!empty($_POST['ok'])) {
     $v_password = escapeshellarg($_POST['v_password']);
     $v_type = $_POST['v_type'];
     $v_charset = $_POST['v_charset'];
+    $v_host = $_POST['v_host'];
     $v_db_email = $_POST['v_db_email'];
 
     // Check password length
@@ -59,8 +61,10 @@ if (!empty($_POST['ok'])) {
         // Add Database
         $v_type = escapeshellarg($_POST['v_type']);
         $v_charset = escapeshellarg($_POST['v_charset']);
-        exec (VESTA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." 'default' ".$v_charset, $output, $return_var);
+        $v_host = escapeshellarg($_POST['v_host']);
+        exec (VESTA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." ".$v_host." ".$v_charset, $output, $return_var);
         $v_type = $_POST['v_type'];
+        $v_host = $_POST['v_host'];
         $v_charset = $_POST['v_charset'];
         check_return_code($return_var,$output);
         unset($output);
@@ -89,6 +93,15 @@ if (!empty($_POST['ok'])) {
 exec (VESTA_CMD."v-list-database-types 'json'", $output, $return_var);
 $db_types = json_decode(implode('', $output), true);
 unset($output);
+
+$db_hosts = array();
+foreach ($db_types as $db_type ) {
+    exec (VESTA_CMD."v-list-database-hosts ".$db_type." 'json'", $output, $return_var);
+    $db_hosts_tmp = json_decode(implode('', $output), true);
+    $db_hosts = array_merge($db_hosts, $db_hosts_tmp);
+    unset($db_hosts_tmp);
+    unset($output);
+}
 
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_db.html');
 unset($_SESSION['error_msg']);

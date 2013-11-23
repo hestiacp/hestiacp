@@ -13,6 +13,12 @@ top_panel($user,$TAB);
 
 // Data
 if (empty($_GET['domain'])){
+
+    // SYS
+    exec (VESTA_CMD."v-list-sys-config json", $output, $return_var);
+    $sys = json_decode(implode('', $output), true);
+    unset($output);
+
     exec (VESTA_CMD."v-list-mail-domains $user json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data, true);

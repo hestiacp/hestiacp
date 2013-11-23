@@ -139,9 +139,16 @@ if (!empty($_POST['ok_acc'])) {
         }
 
         if (empty($_SESSION['error_msg'])) {
+            exec (VESTA_CMD."v-list-sys-config json", $output, $return_var);
+            $sys = json_decode(implode('', $output), true);
+            unset($output);
+
             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+            $webmail = "http://".$http_host."/webmail/";
+            if (!empty($sys['config']['MAIL_URL'])) $webmail = $sys['config']['MAIL_URL'];
+
             $_SESSION['ok_msg'] = __('MAIL_ACCOUNT_CREATED_OK',$_POST['v_account'],$_POST[v_domain],$_POST['v_account'],$_POST[v_domain]);
-            $_SESSION['ok_msg'] .= " / <a href=http://".$http_host."/webmail target='_blank'>" . __('open webmail') . "</a>";
+            $_SESSION['ok_msg'] .= " / <a href=".$webmail." target='_blank'>" . __('open webmail') . "</a>";
             unset($v_account);
             unset($v_password);
             unset($v_password);

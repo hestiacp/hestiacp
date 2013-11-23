@@ -738,7 +738,7 @@ form {
     width: 108px;
     height: 34px;
     color: #555;
-    background-color: #fafafa;
+    background-color: #fff;
     border: 1px solid #ccc;
 }
 
@@ -749,6 +749,31 @@ form {
 }
 
 .button:active {
+    border: 1px solid #ccc;
+    background-color: #ccc;
+}
+
+.login-button {
+    filter:chroma(color=#000000);
+    cursor: pointer;
+    border-radius: 3px 3px 3px 3px;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 16px;
+    width: 108px;
+    height: 34px;
+    color: #fff;
+    background-color: #999;
+    border: 1px solid #999;
+}
+
+.login-button:hover {
+    color: #fff;
+    border: 1px solid #f79b44;
+    background-color: #f79b44;
+}
+
+.login-button:active {
     border: 1px solid #ccc;
     background-color: #ccc;
 }

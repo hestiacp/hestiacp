@@ -348,7 +348,7 @@ $LANG['ua'] = array(
     'DNS_RECORD_CREATED_OK' => 'запис <b>%s.%s</b> успішно створено.',
     'MAIL_DOMAIN_CREATED_OK' => 'Домен <a href="/list/mail/?domain=%s"><b>%s</b></a> успішно створено.',
     'MAIL_ACCOUNT_CREATED_OK' => 'Аккаунт <a href="/edit/mail/?account=%s&domain=%s"><b>%s@%s</b></a> успішно створено',
-    'DATABASE_CREATED_OK' => 'База даних <a href="/edit/db/?database=%s"><b>%s</b></a> успішно створена.',
+    'DATABASE_CREATED_OK' => 'База даних <a href="/edit/db/?database=%s"><b>%s</b></a> успішно створена',
     'CRON_CREATED_OK' => 'Завдання успішно додано',
     'IP_CREATED_OK' => '"IP адреса <a href="/edit/ip/?ip=%s"><b>%s</b></a> успішно створена.',
     'PACKAGE_CREATED_OK' => 'Пакет <a href="/edit/package/?package=%s"><b>%s</b></a> успішно створений.',

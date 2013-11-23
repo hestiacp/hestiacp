@@ -348,7 +348,7 @@ $LANG['ro'] = array(
     'DNS_RECORD_CREATED_OK' => 'Înregistrare <b>%s.%s</b> a fost creată cu succes.',
     'MAIL_DOMAIN_CREATED_OK' => 'Domeniu <a href="/list/mail/?domain=%s"><b>%s</b></a> a fost creat cu succes.',
     'MAIL_ACCOUNT_CREATED_OK' => 'Contul de poștă  <a href="/edit/mail/?account=%s&domain=%s"><b>%s@%s</b></a> a fost creat cu succes',
-    'DATABASE_CREATED_OK' => 'Baza de date <a href="/edit/db/?database=%s"><b>%s</b></a> a fost creată cu succes.',
+    'DATABASE_CREATED_OK' => 'Baza de date <a href="/edit/db/?database=%s"><b>%s</b></a> a fost creată cu succes',
     'CRON_CREATED_OK' => 'Sarcina a fost creată cu succes.',
     'IP_CREATED_OK' => '"IP adresa <a href="/edit/ip/?ip=%s"><b>%s</b></a> a fost creată cu succes.',
     'PACKAGE_CREATED_OK' => 'Pachet <a href="/edit/package/?package=%s"><b>%s</b></a> a fost creat cu succes.',

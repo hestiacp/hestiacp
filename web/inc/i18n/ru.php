@@ -348,7 +348,7 @@ $LANG['ru'] = array(
     'DNS_RECORD_CREATED_OK' => 'Запись <b>%s.%s</b> успешно создана.',
     'MAIL_DOMAIN_CREATED_OK' => 'Домен <a href="/list/mail/?domain=%s"><b>%s</b></a> успешно создан.',
     'MAIL_ACCOUNT_CREATED_OK' => 'Аккаунт <a href="/edit/mail/?account=%s&domain=%s"><b>%s@%s</b></a> успешно создан',
-    'DATABASE_CREATED_OK' => 'База данных <a href="/edit/db/?database=%s"><b>%s</b></a> успешно создана.',
+    'DATABASE_CREATED_OK' => 'База данных <a href="/edit/db/?database=%s"><b>%s</b></a> успешно создана',
     'CRON_CREATED_OK' => 'Задание успешно создано',
     'IP_CREATED_OK' => '"IP адрес <a href="/edit/ip/?ip=%s"><b>%s</b></a> успешно создан.',
     'PACKAGE_CREATED_OK' => 'Пакет <a href="/edit/package/?package=%s"><b>%s</b></a> успешно создан.',

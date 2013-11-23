@@ -80,7 +80,21 @@ if (!empty($_POST['ok'])) {
             send_email($to, $subject, $mailtext, $from);
         }
         if (empty($_SESSION['error_msg'])) {
+            exec (VESTA_CMD."v-list-sys-config json", $output, $return_var);
+            $sys = json_decode(implode('', $output), true);
+            unset($output);
+
+            list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
+            if ($_POST['v_host'] != 'localhost' ) $http_host = $_POST['v_host'];
+            if ($_POST['v_type'] == 'mysql') $db_admin = "phpMyAdmin";
+            if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpmyadmin/";
+            if (($_POST['v_type'] == 'mysql') && (!empty($sys['config']['DB_PMA_URL']))) $db_admin_link = $sys['config']['DB_PMA_URL'];
+            if ($_POST['v_type'] == 'pgsql') $db_admin = "phpPgAdmin";
+            if ($_POST['v_type'] == 'pgsql') $db_admin_link = "http://".$http_host."/phppgadmin/";
+            if (($_POST['v_type'] == 'pgsql') && (!empty($sys['config']['DB_PGA_URL']))) $db_admin_link = $sys['config']['DB_PGA_URL'];
+
             $_SESSION['ok_msg'] = __('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);
+            $_SESSION['ok_msg'] .= " / <a href=".$db_admin_link.">" . __('open %s',$db_admin) . "</a>";
             unset($v_database);
             unset($v_dbuser);
             unset($v_password);

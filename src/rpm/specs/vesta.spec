@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        5
+Release:        6
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -31,7 +31,7 @@ rm -rf %{buildroot}
 
 %post
 if [ $1 -ge 2 ]; then
-    if [ -e /usr/local/vesta/upd/convert-templates.sh ]; then
+    if [ -e /usr/local/vesta/upd/convert_templates.sh ]; then
         /usr/local/vesta/upd/convert_templates.sh
     fi
     if [ -e /usr/local/vesta/upd/convert_webip.sh ]; then
@@ -52,6 +52,32 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Wed Nov 27 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-6
+- New style for "Add" button
+- Quick links after object creation (login as/webmail/pma)
+- Custom 3rd party links
+- Checkbox to control email forwardin behaviour
+- Database host selector
+- Portuguese language support from he-rnand-es
+- System info on a service page
+- More robust dns cluster sync
+- User backup/restore logging
+- Database names can contain dots
+- Database user field is now changeable
+- Spaces are now allowed in First Name and Last Name
+- New script to change domain owner
+- New script to database owner
+- New script to show DKIM records in Bind format
+- Ursadon fixed return code for is_mail_new()
+- Ursadon fixed bug in email accounts restore
+- Fix for full restore button
+- Fix for custom ftp restore
+- Fix for package change on Debian and Ubuntu
+- Fix for webalizer and awstats on Debian/Ubuntu
+- Fix for remi awstats package
+- Fix for date and time on database creation
+- Fix for Web API encoding artefacts in web API
+
 * Mon Oct 15 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-5
 - Fix for dns sensitive records from Ursadon
 - Fix for exim antispam/antivirus protection
@@ -86,13 +112,11 @@ fi
 - Debian/Ubuntu addoptation
 - Czech language support
 
-
 * Mon Jun 10 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-2
 - Fixed missing ssl certificate on restore
 - Fixed wrong disk usage key
 - Added nginx trigger for templates
 - Added template update function
-
 
 * Mon May 27 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-1
 - DNS Cluster

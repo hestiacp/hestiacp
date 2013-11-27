@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Run fwd_only trigger
+if [ -x "/usr/local/vesta/upd/add_fwd_only.sh" ]; then
+    /usr/local/vesta/upd/add_fwd_only.sh
+fi

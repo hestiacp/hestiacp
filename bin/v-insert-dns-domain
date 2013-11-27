@@ -33,27 +33,36 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 eval $data
 domain="$DOMAIN"
-is_domain_new 'dns'
+if [ "$flush" = 'no' ]; then
+    is_domain_new 'dns'
+fi
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Flush records
+if [ "$flush" = 'records' ]; then
+    rm -f $USER_DATA/dns/$DOMAIN.conf
+    touch $USER_DATA/dns/$DOMAIN.conf
+    chmod 660 $USER_DATA/dns/$DOMAIN.conf
+    exit
+fi
+
+# Flush domain
+if [ "$flush" = 'domain' ]; then
+    sed -i "/DOMAIN='$DOMAIN'/d" $USER_DATA/dns.conf 2> /dev/null
+fi
+
 # Prepare values for the insert
 dns_rec="DOMAIN='$DOMAIN' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
 dns_rec="$dns_rec SOA='$SOA' SRC='$src' RECORDS='$RECORDS'"
 dns_rec="$dns_rec SUSPENDED='$SUSPENDED' TIME='$TIME' DATE='$DATE'"
-sed -i "/DOMAIN='$DOMAIN'/d" $USER_DATA/dns.conf 2> /dev/null
 echo "$dns_rec" >> $USER_DATA/dns.conf
-chmod 660 $USER_DATA/dns.conf
 
-# Flush dns records
-if [ "$flush" != 'no' ]; then
-    rm -f $USER_DATA/dns/$DOMAIN.conf
-    touch $USER_DATA/dns/$DOMAIN.conf
-    chmod 660 $USER_DATA/dns/$DOMAIN.conf
-fi
+# Set permission
+chmod 660 $USER_DATA/dns.conf
 
 
 #----------------------------------------------------------#

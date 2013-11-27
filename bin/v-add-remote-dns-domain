@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add remote dns domain
-# options: USER DOMAIN
+# options: USER DOMAIN [FLUSH]
 #
 # The function synchronize dns domain with the remote server.
 
@@ -12,6 +12,7 @@
 # Argument defenition
 user=$1
 domain=$2
+flush=$3
 
 # Includes
 source $VESTA/func/main.sh
@@ -23,7 +24,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
+check_args '2' "$#" 'USER DOMAIN [FLUSH]'
 validate_format 'user' 'domain'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 
@@ -89,10 +90,13 @@ for cluster_str in $search_str; do
         DNS_CLUSTER_IGNORE='dns-cluster'
     fi
 
+    # Check flush parameters
+
     # Sync domain
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     eval $str
-    $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'flush' 'no'
+
+    $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME "$flush" 'no'
     if [ $? -eq 0 ]; then
         # Sync records
         if [ "$TYPE" = 'ssh' ]; then
@@ -120,11 +124,10 @@ done
 # Update pipe
 rm -f $tmpfile
 pipe="$VESTA/data/queue/dns-cluster.pipe"
-str=$(grep -n "$SCRIPT $1 $2$" $pipe | cut -f1 -d: | head -n1)
+str=$(grep -n "$SCRIPT $1 $2 " $pipe | cut -f1 -d: | head -n1)
 if [ ! -z "$str" ]; then
     sed -i "$str d"  $pipe
 fi
-
 
 #----------------------------------------------------------#
 #                       Vesta                              #

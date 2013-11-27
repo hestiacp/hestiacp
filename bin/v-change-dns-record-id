@@ -57,7 +57,7 @@ if [ ! -z "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $VESTA/data/queue/dns-cluster.pipe)
     if [ -z "$dlock" ]; then
-        cmd="$BIN/v-add-remote-dns-domain $user $domain"
+        cmd="$BIN/v-add-remote-dns-domain $user $domain records"
         echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
     fi
 fi

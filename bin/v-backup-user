@@ -9,6 +9,9 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Importing system variables
+source /etc/profile
+
 # Argument defenition
 user=$1
 notify=${2-no}

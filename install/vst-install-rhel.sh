@@ -142,7 +142,7 @@ rm -f $tmpfile
 if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
-    echo 'Following rpm packages are already installed:'
+    echo 'Following packages are already installed:'
     echo "$conflicts"
     echo
     echo 'It is highly recommended to remove them before proceeding.'

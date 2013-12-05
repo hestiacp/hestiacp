@@ -147,7 +147,7 @@ rm -f $tmpfile
 if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
-    echo 'Following rpm packages are already installed:'
+    echo 'Following packages are already installed:'
     echo "$conflicts"
     echo
     echo 'It is highly recommended to remove them before proceeding.'
@@ -208,7 +208,6 @@ if [ -z $email ]; then
     echo '   - MySQL database server'
     echo '   - Vsftpd FTP server'
     echo 
-    echo '   * SELinux and Iptables will be disabled'
     echo 
 
     read -p 'Do you want to proceed? [y/n]): ' answer

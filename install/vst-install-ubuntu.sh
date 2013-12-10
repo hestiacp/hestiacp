@@ -467,6 +467,7 @@ chmod 640 /var/log/apache2/access.log
 chmod 640 /var/log/apache2/error.log
 chmod 751 /var/log/apache2/domains
 a2enmod rewrite
+a2enmod actions
 a2enmod suexec
 echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
 update-rc.d apache2 defaults

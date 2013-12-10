@@ -467,6 +467,7 @@ chmod 751 /var/log/apache2/domains
 a2enmod rewrite
 a2enmod suexec
 a2enmod ssl
+a2enmod actions
 a2enmod ruid2
 echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
 update-rc.d apache2 defaults

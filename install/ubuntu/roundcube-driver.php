@@ -7,9 +7,7 @@
  * @author Serghey Rodin <skid@vestacp.com>
  */
 
-class rcube_vesta_password
-{
-    function save($curpass, $passwd)
+    function password_save($curpass, $passwd)
     {
         $rcmail = rcmail::get_instance();
         $vesta_host = $rcmail->config->get('password_vesta_host');
@@ -47,6 +45,12 @@ class rcube_vesta_password
         $result = fread($fp, 2048);
         fclose($fp);
 
+        $fp = fopen("/tmp/roundcube.log", 'w');
+        fwrite($fp, "test ok");
+        fwrite($fp, "\n");
+        fclose($fp);
+
+
         if(strpos($result, 'ok') && !strpos($result, 'error'))
         {
             return PASSWORD_SUCCESS;
@@ -56,4 +60,3 @@ class rcube_vesta_password
         }
 
     }
-}

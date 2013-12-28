@@ -10,7 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.vestacp.com'
 CHOST='c.vestacp.com'
 VERSION='0.9.8/ubuntu'
-software="nginx apache2 apache2-utils apache2.2-common apache2-suexec-custom
+software="nginx apache2 apache2-utils apache2-suexec-custom
     libapache2-mod-ruid2 libapache2-mod-rpaf libapache2-mod-fcgid bind9 idn
     mysql-server mysql-common mysql-client php5-common php5-cgi php5-mysql
     php5-curl libapache2-mod-php5 vsftpd mc exim4 exim4-daemon-heavy
@@ -89,13 +89,9 @@ else
 fi
 os=$(head -n 1 /etc/issue | cut -f 1 -d ' ')
 release=$(head -n 1 /etc/issue | cut -f 2 -d ' ' )
-if [ -e "/usr/bin/lsb_release" ]; then
-    codename=$(lsb_release -cs)
-else
-    codename='unknown'
-fi
-if [ $codename !=  'precise' ] && [ $codename != 'raring' ]; then
-    echo 'Error: only Ubuntu LTS 12.04 and Ubuntu 13.04 is supported'
+codename=$(lsb_release -cs | grep "[precise|raring|saucy]")
+if [ -z "$codename" ]; then
+    echo 'Error: only Ubuntu 12.04, 13.04 and 13.10 is supported'
     exit 1
 fi
 
@@ -256,6 +252,9 @@ apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/ubuntu/ $codename nginx" > $apt/nginx.list
 wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
+if [ $codename = 'saucy' ]; then
+    sed -i "s/saucy/raring/g" $apt/nginx.list
+fi
 
 # Install vesta repo
 echo "deb http://$RHOST/$codename/ $codename vesta" > $apt/vesta.list
@@ -451,14 +450,18 @@ fi
 
 # Apache configuration
 wget $CHOST/$VERSION/apache2.conf -O /etc/apache2/apache2.conf
+if [ "$codename" = 'saucy' ]; then
+    sed -i "/^LockFile /d" /etc/apache2/apache2.conf
+fi
 wget $CHOST/$VERSION/apache2-status.conf \
     -O /etc/apache2/mods-enabled/status.conf
 wget $CHOST/$VERSION/apache2.log -O /etc/logrotate.d/apache2
+echo "# Powever by vesta" > /etc/apache2/sites-available/default
+echo "# Powever by vesta" > /etc/apache2/sites-available/default-ssl
+echo "# Powever by vesta" > /etc/apache2/ports.conf
+mkdir -p /etc/apache2/conf.d
 rm -f /etc/apache2/conf.d/vesta.conf
 echo > /etc/apache2/conf.d/vesta.conf
-echo "# Powever by vesta" > /etc/apache2/sites-available/default
-echo "# Powever by vestas" > /etc/apache2/sites-available/default-ssl
-echo "# Powever by vestas" > /etc/apache2/ports.conf
 touch /var/log/apache2/access.log
 touch /var/log/apache2/error.log
 mkdir -p /var/log/apache2/domains
@@ -467,7 +470,6 @@ chmod 640 /var/log/apache2/access.log
 chmod 640 /var/log/apache2/error.log
 chmod 751 /var/log/apache2/domains
 a2enmod rewrite
-a2enmod actions
 a2enmod suexec
 echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
 update-rc.d apache2 defaults
@@ -604,6 +606,11 @@ fi
 # php configuration
 sed -i "s/;date.timezone =/date.timezone = UTC/g" /etc/php5/apache2/php.ini
 sed -i "s/;date.timezone =/date.timezone = UTC/g" /etc/php5/cli/php.ini
+if [ "$codename" = 'saucy' ]; then
+    ln -s /etc/php5/conf.d/mcrypt.ini /etc/php5/mods-available
+    php5enmod mcrypt
+    service apache2 restart
+fi
 
 # phpMyAdmin configuration
 wget $CHOST/$VERSION/apache2-pma.conf -O /etc/phpmyadmin/apache.conf
@@ -624,6 +631,12 @@ mysql -e "CREATE DATABASE roundcube"
 mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
 sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
 mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
+if [ "$codename" = 'saucy' ]; then
+    wget $CHOST/$VERSION/roundcube-driver-new.php -O \
+        /usr/share/roundcube/plugins/password/drivers/vesta.php
+    ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/
+    service apache2 restart
+fi
 
 # Vesta configuration
 echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh
@@ -678,6 +691,10 @@ cd /usr/local/vesta/data
 wget $CHOST/$VERSION/templates.tar.gz -O templates.tar.gz
 tar -xzf templates.tar.gz
 rm -f templates.tar.gz
+if [ "$codename" = 'saucy' ]; then
+    sed -i "s/Include /IncludeOptional /g" \
+        $VESTA/data/templates/web/apache2/*tpl
+fi
 chmod -R 755 /usr/local/vesta/data/templates
 cp templates/web/skel/public_html/index.html /var/www/
 sed -i 's/%domain%/It worked!/g' /var/www/index.html

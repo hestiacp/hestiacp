@@ -147,10 +147,22 @@ service=$DB_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
     for db in ${DB_SYSTEM//,/ }; do
         service="$db"
-        if [ "$service" == 'mysql' ] && [ ! -e "/etc/init.d/$service" ]; then
-            service='mysqld'
+        if [ "$service" == 'mysql' ]; then
+            if [ ! -e "/etc/init.d/$service" ]; then
+                service='mysqld'
+            fi
+            if [ ! -e "/etc/redhat-release" ]; then
+                db_proc_name='mysqld'
+            fi
         fi
-        get_srv_state $service
+        if [ "$service" == 'pgsql' ]; then
+            service='postgresql'
+            db_proc_name='postmaster'
+            if [ ! -e "/etc/redhat-release" ]; then
+                db_proc_name='postgres'
+            fi
+        fi
+        get_srv_state $service $db_proc_name
         str="$str\nNAME='$service' SYSTEM='database server' STATE='$state'"
         str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
     done

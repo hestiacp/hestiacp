@@ -31,9 +31,9 @@
                 ?>
 
                 <tr class="data-row">
-                    <td class="data-dotted" width="150px">
+                    <td class="data-dotted">
                         <table class="data-col1" width="150">
-                            <tr><td style="padding: 24 0 4px 0;"><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
+                            <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
                             <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
                         </table>
                     </td>
@@ -45,7 +45,7 @@
                             </span>
                         </a>
                         <table class="data-col2" width="830px">
-                            <tr><td colspan=3 class="domain" style="padding: 0 0 4 4;"><b><?php echo __($data[$key]['TITLE']); ?></b></td></tr>
+                            <tr><td colspan=3 class="domain" style="padding: 0 0 4px 4px;"><b><?php echo __($data[$key]['TITLE']); ?></b></td></tr>
                             <tr>
                                 <td style="vertical-align:top;" width="630px">
                                     <table width="630px">

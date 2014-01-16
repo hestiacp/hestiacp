@@ -45,7 +45,7 @@
                 ?> 
 
                 <tr class="data-row">
-                    <td class="data-dotted" width="150">
+                    <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="job[]" value="<?php echo $data[$key]['JOB'] ?>" ></td></tr>
                             <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
@@ -81,81 +81,52 @@
                         </a>
                         <table class="data-col2" width="800px">
                             <tr>
-                                <td colspan=5 class="cron" style="padding: 0 0 0 4px;">
+                                <td colspan=6 class="cron">
                                     <b><?php echo htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;"  width="80px">
-                                    <table>
-                                        <tr>
-                                            <td class="cron-counter-name">
-                                                <?php print __('Min');?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="cron-counter-value">
-                                                <?php echo $data[$key]['MIN'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
+                                <td style="vertical-align:top; width:80px">
+                                    <div class="cron-counter-name">
+                                        <?php print __('Min');?> 
+                                    </div>
+                                    <div class="cron-counter-value">
+                                        <?php echo $data[$key]['MIN'] ?> 
+                                    </div>
                                 </td>
-                                <td style="vertical-align:top;"  width="80px">
-                                    <table>
-                                        <tr>
-                                            <td class="cron-counter-name">
-                                                <?php print __('Hour');?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="cron-counter-value">
-                                                <?php echo $data[$key]['HOUR'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
+                                <td style="vertical-align:top; width:80px">
+                                    <div class="cron-counter-name">
+                                        <?php print __('Hour');?> 
+                                    </div>
+                                    <div class="cron-counter-value">
+                                        <?php echo $data[$key]['HOUR'] ?> 
+                                    </div>
                                 </td>
-                                <td style="vertical-align:top;"  width="80px">
-                                    <table>
-                                        <tr>
-                                            <td class="cron-counter-name">
-                                                <?php print __('Day');?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="cron-counter-value">
-                                                <?php echo $data[$key]['DAY'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
+                                <td style="vertical-align:top; width:80px">
+                                    <div class="cron-counter-name">
+                                        <?php print __('Day');?> 
+                                    </div>
+                                    <div class="cron-counter-value">
+                                        <?php echo $data[$key]['DAY'] ?> 
+                                    </div>
                                 </td>
-                                <td style="vertical-align:top;"  width="80px">
-                                    <table>
-                                        <tr>
-                                            <td class="cron-counter-name">
-                                                <?php print __('Month');?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="cron-counter-value">
-                                                <?php echo $data[$key]['MONTH'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
+                                <td style="vertical-align:top; width:80px">
+                                    <div class="cron-counter-name">
+                                        <?php print __('Month');?> 
+                                    </div>
+                                    <div class="cron-counter-value">
+                                        <?php echo $data[$key]['MONTH'] ?> 
+                                    </div>
                                 </td>
-                                <td style="vertical-align:top;">
-                                    <table>
-                                        <tr>
-                                            <td class="cron-counter-name">
-                                                <?php print __('Day of week');?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="cron-counter-value">
-                                                <?php echo $data[$key]['WDAY'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
+                                <td style="vertical-align:top; width:80px">
+                                    <div class="cron-counter-name">
+                                        <?php print __('Day of week');?> 
+                                    </div>
+                                    <div class="cron-counter-value">
+                                        <?php echo $data[$key]['WDAY'] ?> 
+                                    </div>
                                 </td>
+                                <td style="vertical-align:top;"></td>
                             </tr>
                         </table>
                     </td>

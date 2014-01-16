@@ -27,7 +27,7 @@
         <div id="vstobjects">
             <table class='data'>
                 <tr class="data-row"">
-                    <td class="data-dotted" width="150">
+                    <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="system[]" value="<?php echo $sys['sysinfo']['HOSTNAME'] ?>" ></td></tr>
                             <tr><td class="data-active"><b><?php print __('running') ?></b></td></tr>
@@ -119,7 +119,7 @@
                     ?>
 
                 <tr class="data-row">
-                    <td class="data-dotted" width="150">
+                    <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="service[]" value="<?php echo $key ?>" ></td></tr>
                             <tr><td class="data-<?php echo $status ?>"><b><?php echo __($data[$key]['STATE']); ?></b></td></tr>

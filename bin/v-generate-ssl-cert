@@ -1,0 +1,136 @@
+#!/bin/bash
+# info: generate self signed certificate and CSR request
+# options: DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [FORMAT]
+#
+# The function generates self signed SSL certificate and CSR request
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+domain=$1
+domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
+domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+email=$2
+country=$3
+state=$4
+city=$5
+org=$6
+org_unit=$7
+format=${8-shell}
+KEY_SIZE=2048
+DAYS=365
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# Json function
+json_list_ssl() {
+    i='1'       # iterator
+    echo '{'
+    echo -e "\t\"$domain\": {"
+    echo "        \"CRT\": \"$crt\","
+    echo "        \"KEY\": \"$key\","
+    echo "        \"CSR\": \"$csr\""
+    echo -e "\t}\n}"
+}
+
+# Shell function
+shell_list_ssl() {
+    if [ ! -z "$crt" ]; then
+        echo -e "$crt"
+    fi
+    if [ ! -z "$key" ]; then
+        echo -e "\n$key"
+    fi
+    if [ ! -z "$csr" ]; then
+        echo -e "\n$csr"
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '7' "$#" 'DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [FORMAT]'
+validate_format 'domain' 'email' 'format'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Create temporary work directory
+workdir=$(mktemp -d)
+cd $workdir
+
+# Generate private key
+export PASSPHRASE=gen_password
+openssl genrsa -des3 \
+    -out $domain.key \
+    -passout env:PASSPHRASE $KEY_SIZE 2>/dev/null
+
+# Generate the CSR
+subj="/C=$country/ST=$state/localityName=$city/O=$org"
+subj="$subj/organizationalUnitName=$org_unit/commonName=$domain"
+subj="$subj/emailAddress=$email"
+
+openssl req \
+    -new \
+    -batch \
+    -subj "$subj" \
+    -key $domain.key \
+    -out $domain.csr \
+    -passin env:PASSPHRASE >/dev/null 2>&1
+
+# Remove passphrase
+cp $domain.key $domain.key.tmp
+openssl rsa \
+    -in $domain.key.tmp \
+    -out $domain.key \
+    -passin env:PASSPHRASE >/dev/null 2>&1
+rm $domain.key.tmp
+
+# Generate the cert 1 year
+openssl x509 -req \
+    -days $DAYS \
+    -in $domain.csr \
+    -signkey $domain.key \
+    -out $domain.crt >/dev/null 2>&1
+
+# Listing certificates
+if [ -e "$domain.crt" ]; then
+    crt=$(cat $domain.crt | sed ':a;N;$!ba;s/\n/\\n/g' )
+fi
+
+if [ -e "$domain.key" ]; then
+    key=$(cat $domain.key | sed ':a;N;$!ba;s/\n/\\n/g' )
+fi
+
+if [ -e "$domain.csr" ]; then
+    csr=$(cat $domain.csr | sed ':a;N;$!ba;s/\n/\\n/g' )
+fi
+
+case $format in
+    json)   json_list_ssl ;;
+    plain)  nohead=1; shell_list_ssl ;;
+    shell)  shell_list_ssl ;;
+    *)      check_args '1' '0' '[FORMAT]'
+esac
+
+# Delete tmp dir
+rm -rf $workdir
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

@@ -50,8 +50,8 @@ is_backup_valid() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
-check_args '2' "$#" "$args"
+args_usage='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
+check_args '2' "$#" "$args_usage"
 validate_format 'user' 'backup'
 is_backup_valid
 is_backup_available

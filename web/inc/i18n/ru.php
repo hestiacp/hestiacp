@@ -81,6 +81,7 @@ $LANG['ru'] = array(
     'restart' => 'перезапустить',
     'update' => 'обновить',
     'generate' => 'сгенерировать',
+    'Generate CSR' => 'Cгенерировать CSR запрос',
     'reread IP' => 'перечитать IP',
 
     'Adding User' => 'Добавление аккаунта',
@@ -105,6 +106,7 @@ $LANG['ru'] = array(
     'Editing IP Address' => 'Редактирование IP адреса',
     'Listing' => 'Просмотр',
     'Search Results' => 'Результаты поиска',
+    'Generating CSR' => 'Генерирование CSR запроса',
 
     'active' => 'активен',
     'spnd' => 'заблокировано',
@@ -240,6 +242,7 @@ $LANG['ru'] = array(
     'SSL Certificate' => 'SSL сертификат',
     'SSL Key' => 'Ключ SSL сертификата',
     'SSL Certificate Authority / Intermediate' => 'Центр сертификации SSL / Intermediate',
+    'SSL CSR' => 'SSL CSR запрос',
     'optional' => 'опционально',
     'internal' => 'внутренний',
     'Statistics Authorization' => 'Ограниченный доступ к статистике',
@@ -316,6 +319,11 @@ $LANG['ru'] = array(
     'Last 70 lines of %s.%s.log' => 'Последние 70 строк файла %s.%s.log',
     'Download AccessLog' => 'Скачать AccessLog',
     'Download ErrorLog' => 'Скачать ErrorLog',
+    'Country' => 'Страна',
+    '2 letter code' => 'двухбуквенный код',
+    'State / Province' => 'Область',
+    'City / Locality' => 'Город / Населенный пункт',
+    'Organization' => 'Организация',
 
     '1 account' => ' пользователей на странице: 1',
     '%s accounts' => 'пользователей на странице: %s',
@@ -352,6 +360,7 @@ $LANG['ru'] = array(
     'CRON_CREATED_OK' => 'Задание успешно создано',
     'IP_CREATED_OK' => '"IP адрес <a href="/edit/ip/?ip=%s"><b>%s</b></a> успешно создан.',
     'PACKAGE_CREATED_OK' => 'Пакет <a href="/edit/package/?package=%s"><b>%s</b></a> успешно создан.',
+    'SSL_GENERATED_OK' => 'SSL cертификат был успешно сгенерирован.',
     'Changes has been saved.' => 'Изменения сохранены.',
     'Confirmation' => 'Подтверждение',
     'DELETE_USER_CONFIRMATION' => 'Вы уверены, что хотите удалить пользователя %s?',

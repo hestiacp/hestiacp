@@ -1,0 +1,84 @@
+            <?php
+                $back = $_SESSION['back'];
+                if (empty($back)) {
+                    $back = "location.href='/generate/ssl/'";
+                } else {
+                    $back = "location.href='".$back."'";
+                }
+            ?>
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 18px 8px;" ><a class="name"><b><?php print __('Generating CSR');?></b></a>
+                        <?php
+                            if (!empty($_SESSION['error_msg'])) {
+                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                            } else {
+                                if (!empty($_SESSION['ok_msg'])) {
+                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                }
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <form id="vstobjects" name="v_generate_csr" method="post">
+            <table class='data'>
+                <tr class="data-add">
+                    <td class="data-dotted" width="150">
+                        <table class="data-col1">
+                            <tr>
+                                <td>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted" width="830px">
+                        <table width="830px">
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <table class="data-col2" width="830px">
+                            <tr>
+                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                    <?php print __('SSL CSR');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea size="20" class="vst-textinput" name="v_csr"><?php print $v_csr ?> </textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 20px 0 0 2px;"><?php print __('SSL Certificate');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea size="20" class="vst-textinput" name="v_crt"><?php print $v_crt ?> </textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                    <?php print __('SSL Key');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea size="20" class="vst-textinput" name="v_key"><?php print $v_key ?> </textarea>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="data-col2">
+                            <tr>
+                                <td style="padding: 24px 0 0 0;">
+                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>

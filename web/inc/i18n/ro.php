@@ -81,6 +81,7 @@ $LANG['ro'] = array(
     'restart' => 'repornește',
     'update' => 'actualiza',
     'generate' => 'generează',
+    'Generate CSR' => 'Genera cere CSR',
     'reread IP' => 'recitește IP',
 
     'Adding User' => 'Adăugare utilizator',
@@ -103,6 +104,7 @@ $LANG['ro'] = array(
     'Editing Package' => 'Editare pachetul',
     'Adding IP address' => 'Adăugare adresă IP',
     'Editing IP Address' => 'Editare adresă IP',
+    'Generate CSR' => 'Cerere CSR',
     'Listing' => 'Vizualizare',
     'Search Results' => 'Rezultatele căutării',
 
@@ -240,6 +242,7 @@ $LANG['ro'] = array(
     'SSL Certificate' => 'Certificat SSL',
     'SSL Key' => 'Cheia SSL',
     'SSL Certificate Authority / Intermediate' => 'SSL Intermediar / Certificate Authority',
+    'SSL CSR' => 'Cerere CSR',
     'optional' => 'opțional',
     'internal' => 'intern',
     'Statistics Authorization' => 'Autorizarea statistici',
@@ -316,6 +319,11 @@ $LANG['ro'] = array(
     'Last 70 lines of %s.%s.log' => 'Ultimele 70 linii de %s.%s.log',
     'Download AccessLog' => 'Descarcă AccessLog',
     'Download ErrorLog' => 'Descarcă ErrorLog',
+    'Country' => 'Țară',
+    '2 letter code' => 'cod de 2 litere',
+    'State / Province' => 'Județ',
+    'City / Locality' => 'Oraș / Localitate',
+    'Organization' => 'Organizație',
 
     '1 account' => '1 utilizator',
     '%s accounts' => '%s utilizatori',
@@ -352,6 +360,7 @@ $LANG['ro'] = array(
     'CRON_CREATED_OK' => 'Sarcina a fost creată cu succes.',
     'IP_CREATED_OK' => '"IP adresa <a href="/edit/ip/?ip=%s"><b>%s</b></a> a fost creată cu succes.',
     'PACKAGE_CREATED_OK' => 'Pachet <a href="/edit/package/?package=%s"><b>%s</b></a> a fost creat cu succes.',
+    'SSL_GENERATED_OK' => 'SSL certificat a fost generat cu succes.',
     'Changes has been saved.' => 'Modificările au fost salvate.',
     'Confirmation' => 'Confirmare',
     'DELETE_USER_CONFIRMATION' => 'Ești sigur că dorești să ștergi %s?',

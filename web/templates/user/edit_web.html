@@ -148,7 +148,8 @@
                             </tr>
                             <tr>
                                 <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('SSL Support');?>
+                                    <?php print __('SSL Support');?> /
+                                    <a class="generate" target="_blank" href="/generate/ssl/?domain=<?php echo $v_domain ?>"><?php print __('Generate CSR') ?></a>
                                 </td>
                             </tr>
                             <tr>
@@ -198,7 +199,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('SSL Certificate Authority / Intermediate');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('optional');?>)</span>
+                                                <?php print __('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print __('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -256,7 +257,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('Password');?> <a href="javascript:WEBrandom();" class="genpass"><?php print __('generate');?></a>
+                                                <?php print __('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?php print __('generate');?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -294,7 +295,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text" style="padding: 10px 0 0 0;">
-                                                <?php print __('Password');?> <a href="javascript:FTPrandom();" class="genpass" ><?php print __('generate');?></a>
+                                                <?php print __('Password');?> / <a href="javascript:FTPrandom();" class="generate" ><?php print __('generate');?></a>
                                             </td>
                                         </tr>
                                         <tr>

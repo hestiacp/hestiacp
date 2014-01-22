@@ -80,6 +80,7 @@ $LANG['en'] = array(
     'restart'  => 'restart',
     'update'  => 'update',
     'generate'  => 'generate',
+    'Generate CSR' => 'Generate CSR',
     'reread  IP' => 'reread IP',
 
     'Adding User'  => 'Adding User',
@@ -102,6 +103,7 @@ $LANG['en'] = array(
     'Editing Package'  => 'Editing Package',
     'Adding IP address'  => 'Adding IP address',
     'Editing IP Address'  => 'Editing IP Address',
+    'Generating CSR' => 'Generating CSR',
     'Listing'  => 'Listing',
     'Search Results'  => 'Search Results',
 
@@ -239,6 +241,7 @@ $LANG['en'] = array(
     'SSL Certificate'  => 'SSL Certificate',
     'SSL Key'  => 'SSL Key',
     'SSL Certificate Authority / Intermediate'  => 'SSL Certificate Authority / Intermediate',
+    'SSL CSR' => 'SSL CSR',
     'optional'  => 'optional',
     'internal' => 'internal',
     'Statistics Authorization'  => 'Statistics Authorization',
@@ -315,6 +318,11 @@ $LANG['en'] = array(
     'Last 70 lines of %s.%s.log' => 'Last 70 lines of %s.%s.log',
     'Download AccessLog' => 'Download AccessLog',
     'Download ErrorLog' => 'Download ErrorLog',
+    'Country' => 'Country',
+    '2 letter code' => '2 letter code',
+    'State / Province' => 'State / Province',
+    'City / Locality' => 'City / Locality',
+    'Organization' => 'Organization',
 
    '1 account'  => '1 account',
     '%s accounts'  => '%s accounts',
@@ -351,6 +359,7 @@ $LANG['en'] = array(
     'CRON_CREATED_OK'  => 'Cron job has been created successfully.',
     'IP_CREATED_OK'  => 'IP address <a href="/edit/ip/?ip=%s"><b>%s</b></a> has been created successfully.',
     'PACKAGE_CREATED_OK'  => 'Package <a href="/edit/package/?package=%s"><b>%s</b></a> has been created successfully.',
+    'SSL_GENERATED_OK' => 'Certificate has been generated successfully.',
     'Changes has been saved.'  => 'Changes has been saved.',
     'Confirmation'  => 'Confirmation',
     'DELETE_USER_CONFIRMATION' => 'Are you sure to delete user %s?',

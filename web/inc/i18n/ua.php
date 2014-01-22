@@ -81,6 +81,7 @@ $LANG['ua'] = array(
     'restart' => 'перевиконати',
     'update' => 'оновити',
     'generate' => 'згенерувати',
+    'Generate CSR' => 'Згенерувати CSR запит',
     'reread IP' => 'оновити IP',
  
     'Adding User' => 'Додавання акаунту',
@@ -103,6 +104,7 @@ $LANG['ua'] = array(
     'Editing Package' => 'Редагування пакету',
     'Adding IP address' => 'Додавання IP адреси',
     'Editing IP Address' => 'Редагування IP адреси',
+    'Generating CSR' => 'Генерування CSR запиту',
     'Listing' => 'Перегляд',
     'Search Results' => 'Результати пошуку',
  
@@ -240,6 +242,7 @@ $LANG['ua'] = array(
     'SSL Certificate' => 'SSL сертификат',
     'SSL Key' => 'Ключ SSL сертифікату',
     'SSL Certificate Authority / Intermediate' => 'Центр сертифікації SSL / Intermediate',
+    'SSL CSR' => 'SSL CSR запит',
     'optional' => 'опційно',
     'internal' => 'внутрішній',
     'Statistics Authorization' => 'Обмежений доступ до статистики',
@@ -316,6 +319,11 @@ $LANG['ua'] = array(
     'Last 70 lines of %s.%s.log' => 'Останні 70 ліній файла %s.%s.log',
     'Download AccessLog' => 'Завантажити AccessLog',
     'Download ErrorLog' => 'Завантажити ErrorLog',
+    'Country' => 'Країна',
+    '2 letter code' => 'двобуквений код',
+    'State / Province' => 'Область',
+    'City / Locality' => 'Місто / Населений пункт',
+    'Organization' => 'Організація',
 
     '1 account' => ' користувач на сторінці: 1',
     '%s accounts' => 'користувачів на сторінці: %s',
@@ -352,6 +360,7 @@ $LANG['ua'] = array(
     'CRON_CREATED_OK' => 'Завдання успішно додано',
     'IP_CREATED_OK' => '"IP адреса <a href="/edit/ip/?ip=%s"><b>%s</b></a> успішно створена.',
     'PACKAGE_CREATED_OK' => 'Пакет <a href="/edit/package/?package=%s"><b>%s</b></a> успішно створений.',
+    'SSL_GENERATED_OK' => 'SSL cертификат успішно створено.',
     'Changes has been saved.' => 'Зміни збережені.',
     'Confirmation' => 'Підтвердження',
     'DELETE_USER_CONFIRMATION' => 'Ви впевнені, що хочете видалити користувача %s?',

@@ -57,7 +57,7 @@ shell_list_ssl() {
 #----------------------------------------------------------#
 
 check_args '7' "$#" 'DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [FORMAT]'
-validate_format 'domain' 'email' 'format'
+validate_format 'domain' 'format'
 
 
 #----------------------------------------------------------#

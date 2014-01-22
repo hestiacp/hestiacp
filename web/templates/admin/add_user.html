@@ -70,7 +70,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                    <?php print __('Password');?> <a href="javascript:randomString();" class="genpass" ><?php print __('generate');?></a>
+                                    <?php print __('Password');?> / <a href="javascript:randomString();" class="generate" ><?php print __('generate');?></a>
                                 </td>
                             </tr>
                             <tr>
@@ -124,11 +124,13 @@
                                             foreach ($languages as $key => $value) {
                                                 echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
                                                 $svalue = "'".$value."'";
-                                                if (( $value == $v_language ) || ( $svalue == $v_language)){
-                                                    echo 'selected' ;
-                                                }
                                                 if (( $value == 'en' ) && (empty($v_language))){
                                                     echo 'selected' ;
+                                                }
+                                                if (isset($v_language)){
+                                                    if (( $value == $v_language ) || ( $svalue == $v_language)){
+                                                        echo 'selected' ;
+                                                    }
                                                 }
                                                 echo ">".$value."</option>\n";
                                             }

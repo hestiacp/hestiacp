@@ -17,7 +17,7 @@ software="nginx apache2 apache2-utils apache2-suexec-custom
     clamav-daemon flex dovecot-imapd dovecot-pop3d phpMyAdmin awstats
     webalizer jwhois rssh git spamassassin roundcube roundcube-mysql
     roundcube-plugins apparmor-utils sudo bc ftp lsof ntpdate rrdtool
-    vesta vesta-nginx vesta-php"
+    dnsutils vesta vesta-nginx vesta-php"
 
 help() {
     echo "usage: $0 [OPTIONS]

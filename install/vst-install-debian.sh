@@ -624,6 +624,8 @@ mysql -e "CREATE DATABASE roundcube"
 mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
 sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
 mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
+mkdir -p /var/log/roundcube/error
+chmod -R 777 /var/log/roundcube
 
 # Vesta configuration
 echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh

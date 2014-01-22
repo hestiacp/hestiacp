@@ -637,6 +637,8 @@ if [ "$codename" = 'saucy' ]; then
     ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/
     service apache2 restart
 fi
+mkdir -p /var/log/roundcube/error
+chmod -R 777 /var/log/roundcube
 
 # Vesta configuration
 echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh

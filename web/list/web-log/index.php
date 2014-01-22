@@ -18,3 +18,4 @@ if ($return_var == 0 ) {
         echo $file . "\n";
     }
 }
+echo "    </pre>\n</body>\n</html>\n";

@@ -470,10 +470,6 @@ form {
     overflow: hidden;
 }
 
-.data-col2 a:visited {
-    color: green;
-}
-
 .data-col5 {
     table-layout: fixed;
     text-align: left;
@@ -778,19 +774,23 @@ form {
     background-color: #ccc;
 }
 
-.genpass {
-    color: #2361a1;
-    font-size: 8pt;
-    padding: 0 5px;
-    letter-spacing: 0.1em;
-    text-decoration: underline;
+.optional {
+    padding:0 0 0 6px;
+    font-size: 10pt;
+    color:#555;
 }
 
-.genpass:hover {
+.generate {
+    color: #2361a1;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.generate:hover {
     color: #7fa1cb;
 }
 
-.genpass:active {
+.generate:active {
     background-color: #f79b44;
     color: #fff;
 }

@@ -16,6 +16,7 @@ user=${1-admin}
 ip_status=${2-shared}
 
 # Includes
+source /etc/profile.d/vesta.sh
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
@@ -35,7 +36,7 @@ is_object_valid 'user' 'USER' "$user" "$user"
 
 # Get list of ip addresses
 ip_list=$(/sbin/ifconfig | grep 'inet addr:' | cut -f 2 -d : | \
-    cut -f 1 -d ' '| grep -v 127.0.0.1)
+    cut -f 1 -d ' '| grep -v 127.0.0.1 | grep -v '0.0.0.')
 ip_num=$(echo "$ip_list" | wc -l)
 
 # WorkAround for Amazon stop/start issue

@@ -459,3 +459,58 @@ upd_web_domain_values() {
     fi
 }
 
+# Check if this is a last record
+is_dns_record_critical() {
+    str=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
+    eval $str
+    if [ "$TYPE" = 'A' ] || [ "$TYPE" = 'NS' ]; then
+        records=$(grep "TYPE='$TYPE'" $USER_DATA/dns/$domain.conf| wc -l)
+        if [ $records -le 1 ]; then
+            echo "Error: at least one $TYPE record should remain active"
+            log_event "$E_INVALID" "$EVENT"
+            exit $E_INVALID
+        fi
+    fi
+}
+
+# Check if dns record is valid
+is_dns_fqnd() {
+    t=$1
+    r=$2
+    fqdn_type=$(echo $t | grep "[NS|CNAME|MX|PTR|SRV]")
+    tree_length=3
+    if [ $t = 'CNAME' ]; then
+        tree_length=2
+    fi
+
+    if [ ! -z "$fqdn_type" ]; then
+        dots=$(echo $dvalue | grep -o "\." | wc -l)
+        if [ "$dots" -lt "$tree_length" ]; then
+            r=$(echo $r|sed -e "s/\.$//")
+            msg="$t record $r should be a fully qualified domain name (FQDN)"
+            echo "Error: $msg"
+            log_event "$E_INVALID" "$EVENT"
+            exit $E_INVALID
+        fi
+    fi
+}
+
+# Validate nameserver
+is_dns_nameserver_valid() {
+    d=$1
+    t=$2
+    r=$3
+    if [ "$t" = 'NS' ]; then
+        remote=$(echo $r |grep ".$domain.$")
+        if [ ! -z "$remote" ]; then
+            zone=$USER_DATA/dns/$d.conf
+            a_record=$(echo $r |cut -f 1 -d '.')
+            record=$(grep "RECORD='$a_record'" $zone| grep "TYPE='A'")
+            if [ -z "$record" ]; then
+                echo "Error: corresponding A record $a_record.$d is not exist"
+                log_event "$E_NOTEXIST" "$EVENT"
+                exit $E_NOTEXIST
+            fi
+        fi
+    fi
+}

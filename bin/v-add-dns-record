@@ -33,6 +33,20 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
 
+# Null priority for none MX/SRV records
+if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
+    priority=''
+fi
+
+# Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
+fqdn_type=$(echo $rtype | grep "[NS|CNAME|MX|PTR|SRV]")
+if [ ! -z "$fqdn_type" ]; then
+    trailing_dot=$(echo $dvalue | grep "\.$")
+    if [ -z $trailing_dot ]; then
+        dvalue="$dvalue."
+    fi
+fi
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -49,15 +63,13 @@ is_package_full 'DNS_RECORDS'
 get_next_dnsrecord
 validate_format 'id'
 is_object_new "dns/$domain" 'ID' "$id"
+is_dns_fqnd "$rtype" "$dvalue"
+is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
-    priority=''
-fi
 
 # Adding record
 zone="$USER_DATA/dns/$domain.conf"
@@ -67,7 +79,7 @@ echo "$dns_rec" >> $zone
 chmod 660 $zone
 
 # Sorting records
-sort_dns_records 
+sort_dns_records
 
 # Updating zone
 update_domain_zone

@@ -44,12 +44,29 @@ is_object_valid "dns/$domain" 'ID' "$id"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting old record
+# Parsing domain config
 line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
 eval $line
+
+# Null priority for none MX/SRV records
 if [ "$TYPE" != 'MX' ] && [ "$TYPE" != 'SRV' ]; then
     priority=''
 fi
+
+# Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
+fqdn_type=$(echo $TYPE | grep "[NS|CNAME|MX|PTR|SRV]")
+if [ ! -z "$fqdn_type" ]; then
+    trailing_dot=$(echo $dvalue | grep "\.$")
+    if [ -z $trailing_dot ]; then
+        dvalue="$dvalue."
+    fi
+fi
+
+# Additional verifications
+is_dns_fqnd "$TYPE" "$dvalue"
+is_dns_nameserver_valid "$domain" "$TYPE" "$dvalue"
+
+# Deleting old record
 sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
 
 # Adding record

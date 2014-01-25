@@ -33,6 +33,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_object_valid "dns/$domain" 'ID' "$id"
+is_dns_record_critical
 
 
 #----------------------------------------------------------#

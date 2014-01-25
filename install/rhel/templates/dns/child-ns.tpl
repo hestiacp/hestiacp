@@ -7,5 +7,5 @@ ID='6' RECORD='mail' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%tim
 ID='7' RECORD='www' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='8' RECORD='pop' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='9' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='10' RECORD='@' TYPE='MX' PRIORITY='10' VALUE='mail' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='10' RECORD='@' TYPE='MX' PRIORITY='10' VALUE='mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='11' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% ?all"' SUSPENDED='no' TIME='%time%' DATE='%date%'

@@ -110,7 +110,7 @@ build_awstats() {
         grep -v icon | sort -r )
     for link in $months; do
         year=$(echo $link |cut -f 1 -d \-)
-        month=$(echo $link |cut -f 2 -d \-)
+        month=$(echo $link |cut -f 2 -d \-| sed -e "s/^0//")
         case "$month" in
             1) month='January';;
             2) month='February';;

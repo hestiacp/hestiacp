@@ -263,7 +263,7 @@ form {
 
 .submenu-select-block {
     float:left;
-    padding-left: 22px;
+    padding-left: 31px;
 }
 
 .submenu-select-link {
@@ -274,7 +274,7 @@ form {
     letter-spacing: 0.1em;
     margin: 7px 7px 0 0;
     text-decoration: none;
-    padding: 0 4px 0 14px
+    padding: 0 4px
 }
 
 .submenu-select-link:hover {

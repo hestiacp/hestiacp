@@ -40,14 +40,14 @@ if (!empty($_POST['ok'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     } else {
         // Add DNS
-        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4, $output, $return_var);
+        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." no", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
 
         // Change Expiriation date
         if ((!empty($_POST['v_exp'])) && ($_POST['v_exp'] != date('Y-m-d', strtotime('+1 year')))) {
             $v_exp = escapeshellarg($_POST['v_exp']);
-            exec (VESTA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp, $output, $return_var);
+            exec (VESTA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp." no", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
         }
@@ -55,7 +55,7 @@ if (!empty($_POST['ok'])) {
         // Change TTL
         if ((!empty($_POST['v_ttl'])) && ($_POST['v_ttl'] != '14400') && (empty($_SESSION['error_msg']))) {
             $v_ttl = escapeshellarg($_POST['v_ttl']);
-            exec (VESTA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl, $output, $return_var);
+            exec (VESTA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl." no", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
         }
@@ -64,6 +64,13 @@ if (!empty($_POST['ok'])) {
             $_SESSION['ok_msg'] = __('DNS_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
             unset($v_domain);
         }
+
+        if (empty($_SESSION['error_msg'])) {
+            exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
+
     }
 }
 
@@ -120,11 +127,7 @@ if ((empty($_GET['domain'])) && (empty($_POST['domain'])))  {
     }
     if (empty($v_ttl)) $v_ttl = 14400;
     if (empty($v_exp)) $v_exp = date('Y-m-d', strtotime('+1 year'));
-    if ($_SESSION['user'] == 'admin') {
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_dns.html');
-    } else {
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/user/add_dns.html');
-    }
+    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_dns.html');
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
 } else {

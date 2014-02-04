@@ -272,12 +272,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
     $stats = json_decode(implode('', $output), true);
     unset($output);
 
-// Are you admin?
-if ($_SESSION['user'] == 'admin') {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_web.html');
-} else {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/add_web.html');
-}
     unset($_SESSION['error_msg']);
     unset($_SESSION['ok_msg']);
 //}

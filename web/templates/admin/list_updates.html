@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-search-block">
                             <form action="/search/" method="get">
                             <input type="text" name="q" class="submenu-search-field">
@@ -44,10 +44,10 @@
                             <tr><td class="data-<?php echo $status ?>"><b><?php echo $upd_status ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <?php
                             if ($data[$key]['UPDATED'] == 'no') {
-                        ?>
+                        ?> 
                         <a href="/update/vesta/?pkg=<?php echo $key ?>" class="data-controls">
                             <span>
                                 <img src="/images/update.png" width="6px" height="7px">
@@ -56,17 +56,17 @@
                         </a>
                         <?php
                             }
-                        ?>
-                        <div style="height:20px; width:20px; float:right;"></div>
+                        ?> 
+                        <div style="height:20px;"></div>
 
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td colspan=4 class="domain" style="padding: 0 0 0 4px;">
+                                <td colspan=4 class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;" width="200px">
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
                                             <td class="counter-name" style="padding: 2px 0 0 0">
@@ -75,38 +75,26 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="180px">
+                                <td style="vertical-align:top;" width="297px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
                                                 <?php print __('Version') ?>:
                                             </td>
-                                            <td>
-                                                <a class="counter-value"> <?php echo $data[$key]['VERSION'] ?></a>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['VERSION'] ?> (<?php echo $data[$key]['ARCH'] ?>)
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="170px">
+                                <td style="vertical-align:top;">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
                                                 <?php print __('Release') ?>:
                                             </td>
-                                            <td>
-                                                <a class="counter-value"><?php echo $data[$key]['RELEASE'] ?></a>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" >
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Architecture') ?>:
-                                            </td>
-                                            <td>
-                                                <a class="counter-value"><?php echo $data[$key]['ARCH'] ?> </a>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['RELEASE'] ?> 
                                             </td>
                                         </tr>
                                     </table>

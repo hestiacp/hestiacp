@@ -1,20 +1,20 @@
            <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/mail/?domain=<?php echo $_GET['domain'] ?>'"> <?php print __('Add Mail Account');?> </button>
                         </div>
                         <div class="submenu-search-block">
                             <form action="/search/" method="get">
-                                <input type="text" name="q" class="submenu-search-field">
-                                <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                             </form>
                         </div>
                         <div class="submenu-select-block">
                             <form action="/bulk/mail/" method="post" id="objects">
                             <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
                             <select class="submenu-select-dropdown" name="action">
-                                <option value="apply to selected"><?php print __('apply to selected');?></option>
+                                <option value=""><?php print __('apply to selected');?></option>
                                 <option value="delete"><?php print __('delete');?></option>
                             </select>
                             <input type="submit" name="ok" value="›" class="submenu-button" style="width: 36px;">
@@ -26,15 +26,13 @@
         </div>
 
         <div id="vstobjects">
-            <div style="height:10px; font-size:0;"></div>
             <table class="data" style="background: #ebe9dc;">
                 <tr>
-                    <td style="padding: 8px 2px 8px 0;">
+                    <td style="padding: 10px 4px;">
                         <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
                     </td>
                 </tr>
             </table>
-            <div style="height:10px; font-size:0;"></div>
             <table class="data">
                 <?php
                     foreach ($data as $key => $value) {
@@ -42,9 +40,11 @@
                         if ($data[$key]['SUSPENDED'] == 'yes') {
                             $status = 'suspended';
                             $spnd_action = 'unsuspend' ;
+                            $spnd_confirmation = 'UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION' ;
                         } else {
                             $status = 'active';
                             $spnd_action = 'suspend';
+                            $spnd_confirmation = 'SUSPEND_MAIL_ACCOUNT_CONFIRMATION' ;
                         }
                 ?>
 
@@ -56,7 +56,7 @@
                             <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                             <span class="do_delete">
                                 <img src="/images/delete.png" width="7px" height="7px">
@@ -73,26 +73,22 @@
                                 <?php print __('edit');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
-                            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $key."@".$_GET['domain'] ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
+                        <table class="data-col2">
+                            <tr><td colspan=3 class="domain"><b><?php echo $key."@".$_GET['domain'] ?></b> <a class="aliases"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
                             <tr>
-                                <td style="vertical-align:top;" >
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
-                                            <td class="counter-name" style="padding: 4px 0 0 0;">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="chart1" style="padding: 2px 0 2px 0">
+                                            <td class="chart1" style="padding: 4px 0 0 0">
                                                 <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="200">
+                                <td style="vertical-align:top;" width="297px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
@@ -112,7 +108,7 @@
                                             </tr>
                                     </table>
                                 </td>
-                                <td rowspan=4 style="vertical-align:top;" width="350">
+                                <td style="vertical-align:top;">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
@@ -136,7 +132,7 @@
 
             <table class="data-count">
                 <tr>
-                    <td width="160px"></td>
+                    <td width="174px"></td>
                     <td>
                         <?php
                             if ( $i == 1) {

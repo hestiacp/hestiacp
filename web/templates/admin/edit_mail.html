@@ -8,7 +8,7 @@
             ?> 
             <table class="submenu">
                 <tr>
-                    <td style="padding: 18px 8px;" ><a class="name"><b><?php print __('Editing Mail Domain');?></b></a>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Mail Domain');?></b></a>
                         <?php
                             if (!empty($_SESSION['error_msg'])) {
                                 echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -26,7 +26,7 @@
         <form id="vstobjects" name="v_edit_mail" method="post">
             <table class='data'>
                 <tr class="data-add">
-                    <td class="data-dotted" width="150">
+                    <td class="data-dotted">
                         <table class="data-col1">
                             <tr>
                                 <td>
@@ -37,15 +37,10 @@
                             <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status); ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
-                        <table width="830px">
+                    <td class="data-dotted">
+                        <table class="data-col2">
                             <tr>
-                                <td></td>
-                            </tr>
-                        </table>
-                        <table class="data-col2" width="830px">
-                            <tr>
-                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                <td class="vst-text" style="padding: 24px 0 0 0;">
                                     <?php print __('Domain');?>
                                 </td>
                             </tr>
@@ -55,7 +50,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('AntiSpam Support');?>
                                 </td>
                             </tr>
@@ -65,7 +60,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('AntiVirus Support');?>
                                 </td>
                             </tr>
@@ -75,7 +70,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('DKIM Support');?>
                                 </td>
                             </tr>
@@ -85,7 +80,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Catchall email');?>
                                 </td>
                             </tr>

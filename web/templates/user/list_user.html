@@ -1,8 +1,8 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
-                            <button class="submenu-button-main" onclick="location.href='/add/web/'"> <?php print __('Add Web Domain') ?> </button>
+                            <button class="submenu-button-main" onclick="location.href='/add/web/'"> <?php print __('Add Web Domain');?> </button>
                         </div>
                         <div class="submenu-search-block">
                             <form action="/search/" method="get">
@@ -24,6 +24,7 @@
                 </tr>
             </table>
         </div>
+
         <div id="vstobjects">
             <table class="data">
                 <?php
@@ -32,68 +33,70 @@
                         if ($data[$key]['SUSPENDED'] == 'yes') {
                             $status = 'suspended';
                             $spnd_action = 'unsuspend' ;
+                            $spnd_confirmation = 'UNSUSPEND_USER_CONFIRMATION' ;
                         } else {
                             $status = 'active';
                             $spnd_action = 'suspend' ;
+                            $spnd_confirmation = 'SUSPEND_USER_CONFIRMATION' ;
                         }
-                    ?>
-
+                    ?> 
                 <tr class="data-row">
                     <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="user[]" value="<?php echo $key ?>" ></td></tr>
                             <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
+                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status) ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
-                        <a href="/edit/user/?user=<?php echo "$key" ?>" class="data-controls">
+                    <td class="data-dotted">
+                        <a href="/edit/user/?user=<?php echo $key; ?>" class="data-controls">
                             <span>
                                 <img src="/images/edit.png" width="8px" height="8px">
-                                <?php print __('edit');?> 
+                                <?php print __('edit'); ?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+
+                        <table class="data-col2">
                             <tr>
-                                <td colspan=3 class="username" style="padding: 0 0 0 4px;"><b><?php echo $key ?></b><a class="fullname"><?php echo $data[$key]['FNAME']?> <?php echo $data[$key]['LNAME']?></a></td>
+                                <td colspan=3 class="username"><b><?php echo $key ?></b><a class="fullname"><?php echo $data[$key]['FNAME']?> <?php echo $data[$key]['LNAME']?></a></td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;"  width="260">
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
-                                        <tr><td colspan=2 class="counter-name"  style="padding: 0 0 0 2px;"><?php echo $data[$key]['CONTACT']?></td></tr>
-                                        <tr><td colspan=2 class="counter-name"  style="padding: 0 0 8px 2px;">[<?php echo $data[$key]['PACKAGE']?>] <?php print __('package');?></td></tr>
+                                        <tr><td colspan=2 class="counter-name"><?php echo $data[$key]['CONTACT']?></td></tr>
+                                        <tr><td colspan=2 class="counter-name" style="padding: 2px 0 14px 0;">[<?php echo $data[$key]['PACKAGE']?>] <?php print __('package');?></td></tr>
                                         <tr>
-                                            <td class="chart1" colspan=2 style="padding: 0 0 0 3px;"><?php print __('Bandwidth');?>: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
+                                            <td class="chart1" colspan=2><?php print __('Bandwidth');?>: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
                                                 <div style="width:160px; height:7px; font-size:0;background-color:#c7d5b3;">
                                                     <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:7px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="chart1" colspan=2 style="padding: 0 0 0 3px;"><?php print __('Disk');?>: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
+                                            <td class="chart1" colspan=2 style="padding: 0px 0 0 0;"><?php print __('Disk');?>: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
                                                 <div style="width:160px; height:7px; font-size:0;background-color:#c7d5b3;">
                                                     <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:7px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan=2 style="padding: 2px 0 0 0;">
+                                            <td colspan=2 style="padding: 4px 0 0 1px;">
                                                 <table class="chart2">
                                                     <tr>
                                                         <td>
-                                                            <?php print __('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?>
+                                                            <?php print __('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?> 
                                                         </td>
-                                                        <td style="padding: 0px 0px 0px 4px">
-                                                            <?php print __('Databases');?>: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?>
+                                                        <td style="padding: 2px 0px 2px 4px">
+                                                            <?php print __('Databases');?>: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?> 
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <?php print __('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?>
+                                                            <?php print __('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?> 
 
                                                         </td>
                                                         <td style="padding: 0px 0px 0px 4px">
-                                                            <?php print __('User Directories');?>: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?>
+                                                            <?php print __('User Directories');?>: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?> 
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -101,8 +104,8 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="300">
-                                    <table width="290">
+                                <td style="vertical-align:top;" width="297px">
+                                    <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('Web Domains');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?> / <?php echo $data[$key]['WEB_DOMAINS'] ?></td>
@@ -125,12 +128,12 @@
                                         </tr>
                                         <tr>
                                             <td class="counter-name"><?php print __('Name Servers');?>:<br></td>
-                                            <td class="counter-value"><?php echo str_replace(',', ', ',$data[$key]['NS']) ?></td>
+                                            <td class="counter-value"><?php echo str_replace(',', '<br>',$data[$key]['NS']) ?></td>
                                         </tr>
                                     </table>
                                 </td>
                                 <td style="vertical-align:top;">
-                                    <table class="data-col4">
+                                    <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('Mail Domains');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['U_MAIL_DOMAINS'] ?> / <?php echo $data[$key]['MAIL_DOMAINS'] ?></td>
@@ -173,7 +176,7 @@
 
             <table class="data-count">
                 <tr>
-                    <td width="160px"></td>
+                    <td width="174px">
                     <td>
                         <?php
                             if ( $i == 1) {

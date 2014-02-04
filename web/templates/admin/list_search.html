@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div style="submenu-button-block">
                             <a style="float:left; font-size: 16pt; color: #555;"><b><?php print __('Search Results');?></b></a>
                         </div>
@@ -37,12 +37,12 @@
 
                 <tr class="data-row">
                     <td class="data-dotted">
-                        <table class="data-col1" width="150">
+                        <table class="data-col1">
                             <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
                             <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <?php
                             if ($data[$key]['KEY'] == 'RECORD') {
                                 $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
@@ -147,10 +147,10 @@
                             }
                         ?> 
 
-                        <table class="data-col2" width="830px">
-                            <tr><td colspan=3 class="domain" style="padding: 0 0 0 4px;"><b><?php echo $data[$key]['RESULT'] ?></b> <a class="aliases" style="padding: 0 20px 0 4px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
+                        <table class="data-col2">
+                            <tr><td colspan=3 class="domain"><b><?php echo $data[$key]['RESULT'] ?></b> <a class="aliases"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
                             <tr>
-                                <td style="vertical-align:top;" >
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
                                             <td class="counter-value">
@@ -159,7 +159,7 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="200">
+                                <td style="vertical-align:top;" width="297px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
@@ -171,13 +171,13 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="350">
+                                <td style="vertical-align:top;">
                                     <table >
                                         <tr>
                                             <td class="counter-name">
                                                 <?php print __('Status');?>:
                                             </td>
-                                            <td class="counter-value" style="padding: 0 0 0 8px;">
+                                            <td class="counter-value">
                                                 <?php echo __($status); ?> 
                                             </td>
                                         </tr>
@@ -195,7 +195,7 @@
 
             <table class="data-count">
                 <tr>
-                    <td width="168px"></td>
+                    <td width="174px"></td>
                     <td>
                         <?php
                             if ( $i == 1){

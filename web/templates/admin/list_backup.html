@@ -1,6 +1,6 @@
            <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/schedule/backup/'"> <?php print __('Create Backup');?> </button>
                         </div>
@@ -78,25 +78,25 @@
                                 <?php print __('download');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
+                                <td colspan=3 class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;" >
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
-                                            <td class="chart1" style="padding: 10px 0 0px 2px"><?php print __('Backup Size');?>: <?php echo humanize_usage($data[$key]['SIZE']) ?>
-                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                    <div style="width:<?php echo get_percentage($data[$key]['SIZE'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                            <td class="chart1" style="padding: 4px 0 0 0"><?php print __('Backup Size');?>: <?php echo humanize_usage($data[$key]['SIZE']) ?>
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:100%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="250">
+                                <td style="vertical-align:top;" width="297px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
@@ -106,19 +106,9 @@
                                                 <?php echo $data[$key]['TYPE'] ?> 
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Consistent');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <a class="counter-value" title="<?php echo str_replace(',', ', ', $data[$key]['WEB']) ?>">
-                                                    <?php print __($web) ?> 
-                                                </a>
-                                            </td>
-                                        </tr>
                                     </table>
                                 </td>
-                                <td rowspan=4 style="vertical-align:top;" width="300">
+                                <td style="vertical-align:top;">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
@@ -144,7 +134,7 @@
 
             <table class="data-count">
                 <tr>
-                    <td width="168px"></td>
+                    <td width="174px"></td>
                     <td>
                         <?php
                             if ( $i == 1) {

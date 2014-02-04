@@ -1,6 +1,6 @@
            <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/schedule/restore/?backup=<?php echo $_GET['backup'] ?>'"> <?php print __('Restore All');?> </button>
                         </div>
@@ -27,17 +27,14 @@
         </div>
 
         <div id="vstobjects">
-            <div style="height:10px; font-size:0;"></div>
             <table class="data" style="background: #ebe9dc;">
                 <tr>
-                    <td style="padding: 8px 2px 8px 0;">
+                    <td style="padding: 10px 4px">
                         <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['backup'] ?> </b></a>
                     </td>
                 </tr>
             </table>
-            <div style="height:10px; font-size:0;"></div>
             <table class="data">
-
 
                 <?php
                     $backup = $_GET['backup'];
@@ -52,19 +49,19 @@
                             <tr><td><input type="checkbox" class="ch-toggle" name="web[]" value="<?php echo $key ?>" ></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=web&object=<?php echo $key ?>" class="data-controls">
                             <span>
                                 <img src="/images/restore.png" width="6px" height="8px">
                                 <?php print __('restore');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                <td class="cron" width="239px">
                                     <?php echo 'web ' . __('domain') ?> 
                                 </td>
-                                <td class="domain" style="padding: 0 0 0 4px;">
+                                <td class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
@@ -89,19 +86,19 @@
                             <tr><td><input type="checkbox" class="ch-toggle" name="dns[]" value="<?php echo $key ?>" ></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=dns&object=<?php echo $key ?>" class="data-controls">
                             <span>
                                 <img src="/images/restore.png" width="6px" height="8px">
                                 <?php print __('restore');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                <td class="cron" width="239px">
                                     <?php echo 'dns ' . __('domain') ?>
                                 </td>
-                                <td class="domain" style="padding: 0 0 0 4px;">
+                                <td class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
@@ -126,19 +123,19 @@
                             <tr><td><input type="checkbox" class="ch-toggle" name="mail[]" value="<?php echo $key ?>" ></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=mail&object=<?php echo $key ?>" class="data-controls">
                             <span>
                                 <img src="/images/restore.png" width="6px" height="8px">
                                 <?php print __('restore');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                <td class="cron" width="239px">
                                     <?php echo 'mail ' . __('domain') ?>
                                 </td>
-                                <td class="domain" style="padding: 0 0 0 4px;">
+                                <td class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
@@ -163,19 +160,19 @@
                             <tr><td><input type="checkbox" class="ch-toggle" name="db[]" value="<?php echo $key ?>" ></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=db&object=<?php echo $key ?>" class="data-controls">
                             <span>
                                 <img src="/images/restore.png" width="6px" height="8px">
                                 <?php print __('restore');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                <td class="cron" width="239px">
                                     <?php echo __('database') ?>
                                 </td>
-                                <td class="domain" style="padding: 0 0 0 4px;">
+                                <td class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
@@ -200,19 +197,19 @@
                             <tr><td><input type="checkbox" class="ch-toggle" name="cron[]" value="<?php echo 'yes' ?>" ></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=cron&object=records" class="data-controls">
                             <span>
                                 <img src="/images/restore.png" width="6px" height="8px">
                                 <?php print __('restore');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                <td class="cron" width="239px">
                                     <?php echo __('cron') ?>
                                 </td>
-                                <td class="domain" style="padding: 0 0 0 4px;">
+                                <td class="domain">
                                     <b><?php echo 'cron ' . __('records') ?></b>
                                 </td>
                             </tr>
@@ -237,19 +234,19 @@
                             <tr><td><input type="checkbox" class="ch-toggle" name="udir[]" value="<?php echo $key ?>" ></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=udir&object=<?php echo $key ?>" class="data-controls">
                             <span>
                                 <img src="/images/restore.png" width="6px" height="8px">
                                 <?php print __('restore');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td class="cron" style="width: 170px; font-size: 14px;">
+                                <td class="cron" width="239px">
                                     <?php echo __('user dir') ?>
                                 </td>
-                                <td class="domain" style="padding: 0 0 0 4px;">
+                                <td class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>

@@ -9,7 +9,7 @@
 
             <table class="submenu">
                 <tr>
-                    <td style="padding: 18px 8px;" ><a class="name"><b><?php print __('Adding Package');?></b></a>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding Package');?></b></a>
                         <?php
                             if (!empty($_SESSION['error_msg'])) {
                                 echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -27,20 +27,15 @@
         <form id="vstobjects" name="v_add_package" method="post">
             <table class='data'>
                 <tr class="data-add">
-                    <td class="data-dotted" width="150">
+                    <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
-                        <table width="830px">
+                    <td class="data-dotted">
+                        <table class="data-col2">
                             <tr>
-                                <td></td>
-                            </tr>
-                        </table>
-                        <table class="data-col2" width="830px">
-                            <tr>
-                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                <td class="vst-text" style="padding: 24px 0 0 0;">
                                     <?php print __('Package Name');?>
                                 </td>
                             </tr>
@@ -50,7 +45,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Web Template');?>
                                 </td>
                             </tr>
@@ -73,7 +68,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Proxy Template');?>
                                 </td>
                             </tr>
@@ -96,7 +91,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('DNS Template');?>
                                 </td>
                             </tr>
@@ -119,7 +114,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('SSH Access');?>
                                 </td>
                             </tr>
@@ -142,7 +137,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Web Domains');?>
                                 </td>
                             </tr>
@@ -152,7 +147,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Web Aliases');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('per domain');?>)</span>
                                 </td>
                             </tr>
@@ -162,7 +157,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('DNS domains');?>
                                 </td>
                             </tr>
@@ -172,7 +167,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('DNS records');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('per domain');?>)</span>
                                 </td>
                             </tr>
@@ -182,7 +177,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Mail Domains');?>
                                 </td>
                             </tr>
@@ -192,7 +187,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Mail Accounts');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('per domain');?>)</span>
                                 </td>
                             </tr>
@@ -202,7 +197,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Databases');?>
                                 </td>
                             </tr>
@@ -212,7 +207,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Cron Jobs');?>
                                 </td>
                             </tr>
@@ -222,7 +217,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Backups');?>
                                 </td>
                             </tr>
@@ -232,7 +227,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Quota');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('in megabytes');?>)</span>
                                 </td>
                             </tr>
@@ -242,7 +237,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Bandwidth');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('in megabytes');?>)</span>
                                 </td>
                             </tr>
@@ -252,7 +247,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Name servers');?>
                                 </td>
                             </tr>

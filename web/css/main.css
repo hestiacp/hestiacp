@@ -10,6 +10,16 @@ form {
     margin: 0;
 }
 
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding: 0;
+}
+
+
 .hidden {
     display: none;
 }
@@ -263,7 +273,7 @@ form {
 
 .submenu-select-block {
     float:left;
-    padding-left: 31px;
+    padding-left: 30px;
 }
 
 .submenu-select-link {
@@ -441,10 +451,9 @@ form {
 .data-dotted {
     text-align: left;
     vertical-align:top;
-    border-top:1px dotted #d3d3d3;
+    border-top: 1px dotted #d3d3d3;
     padding: 0 0 26px 0;
     margin: 0;
-    width: 166px;
 }
 
 .data-dotted td {
@@ -453,33 +462,33 @@ form {
 
 .data-col1 {
     text-align: left;
-    padding:0;
+    padding: 0;
+    width: 173px;
 }
 
 .data-col1 tr td {
-    padding:0 0 6px 24px;
+    padding:2px 0 6px 26px;
 }
 
 .data-col1 tr:first-child td {
-    padding:22px 0 0 24px;
+    padding:24px 0 0 26px;
 }
 
 .data-col2 {
     text-align: left;
-    padding: 0;
     overflow: hidden;
+    width: 827px;
 }
 
 .data-col5 {
-    table-layout: fixed;
     text-align: left;
-    padding: 0;
     overflow: hidden;
+    width: 817px;
+    table-layout: fixed;
     white-space: nowrap;
 }
 
 .data-date {
-    padding: 0 0 0 18;
     letter-spacing: 0.3em;
     font-size: 8pt;
     color: #6A6A6A
@@ -489,14 +498,12 @@ form {
     font-size: 8pt;
     letter-spacing: 0.1em;
     color: #81a64f;
-    padding: 0 0 13 18;
 }
 
 .data-suspended {
     font-size: 8pt;
     letter-spacing: 0.1em;
     color: #de5543;
-    padding: 0 0 13 18;
 }
 
 .data-controls {
@@ -504,7 +511,7 @@ form {
     height: 16px;
     border-left: 1px solid #d3d3d3;
     font-size: 8pt;
-    padding: 2px 12px 0 6px;
+    padding: 2px 12px 1px 6px;
     letter-spacing: 0.1em;
     color: #2361a1;
     text-decoration: none;
@@ -546,21 +553,25 @@ form {
 .username {
     color: #222;
     font-size: 14pt;
+    padding: 1px 0 2px 0;
 }
 
 .domain {
     color: #222;
     font-size: 14pt;
+    padding: 1px 0 2px 0;
 }
 
 .cron {
     color: #222;
     font-size: 18px;
+    padding: 1px 0 2px 0;
 }
 
 .log {
     color: #222;
     font-size: 12pt;
+    padding: 1px 0 2px 0;
 }
 
 .aliases {
@@ -587,14 +598,14 @@ form {
     line-height: 1.3em;
     font-size: 10pt;
     color: #222;
-    padding: 0 4px 0 0;
+    padding: 2px 4px 1px 0;
 }
 
 .cron-counter-name {
     vertical-align:top;
     line-height: 0.8em;
     font-size: 8pt;
-    padding: 4 0 0 0;
+    padding: 4px 0 0 0;
     color: #222;
 }
 
@@ -603,7 +614,7 @@ form {
     line-height: 1.3em;
     font-size: 10pt;
     color: #222;
-    padding: 0 0 0 2px;
+    padding: 2px 0 1px 2px;
 }
 
 .log-counter-value {
@@ -685,7 +696,7 @@ form {
     padding: 5px;
     width: 360px;
     height: 28px;
-    margin: 0 6px 0 0;
+    margin: 2px 6px 0 0;
 }
 
 .vst-input:hover {
@@ -706,6 +717,7 @@ form {
     color: #555;
     height: 30px;
     min-width: 138px;
+    margin: 2px 6px 0 0;
 }
 
 @-moz-document url-prefix() {
@@ -718,6 +730,7 @@ form {
     padding: 5px;
     font-size: 12pt;
     border: 1px solid #f7f6ed;
+    margin: 2px 6px 0 0;
 }
 
 .vst-checkbox:hover {
@@ -857,7 +870,6 @@ form {
     vertical-align:top;
     width: 500px;
     height: 50px;
-    padding: 0 8px 0 0;
     margin: 0;
 }
 
@@ -865,7 +877,7 @@ form {
     font-size: 8pt;
     color: #222;
     text-align: right;
-    padding: 20px 0 0 0;
+    padding: 0 8px 0 0;
 }
 
 .error {

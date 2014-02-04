@@ -8,7 +8,7 @@
             ?>
             <table class="submenu">
                 <tr>
-                    <td style="padding: 18px 8px;" ><a class="name"><b><?php print __('Adding Mail Account');?></b></a>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding Mail Account');?></b></a>
                         <?php
                             if (!empty($_SESSION['error_msg'])) {
                                 echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -47,20 +47,15 @@
 
             <table class='data'>
             <tr class="data-add">
-                <td class="data-dotted" width="150">
+                <td class="data-dotted">
                     <table class="data-col1">
                         <tr><td></td></tr>
                     </table>
                 </td>
-                <td class="data-dotted" width="830px">
-                    <table width="830px">
-                        <tr>
-                            <td></td>
-                        </tr>
-                    </table>
+                <td class="data-dotted">
                     <table class="data-col2" width="600px">
                         <tr>
-                            <td class="vst-text" style="padding: 20px 0 0 2px;">
+                            <td class="vst-text" style="padding: 24px 0 0 0;">
                                 <?php print __('Domain');?>
                             </td>
                         </tr>
@@ -70,7 +65,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                 <?php print __('Account');?>
                             </td>
                         </tr>
@@ -80,7 +75,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                 <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
                             </td>
                         </tr>
@@ -90,16 +85,16 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                 <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print __('Advanced options');?></a>
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 9px 0 0 0px;">
+                            <td class="vst-text" style="padding: 12px 0 0 0px;">
                                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                     <tr>
-                                        <td class="vst-text" style="padding: 0 0 0 2px;">
-                                            <?php print __('Quota');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('in megabytes');?>)</span>
+                                        <td class="vst-text" style="padding: 12px 0 0 0;">
+                                            <?php print __('Quota');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('in megabytes');?>)</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -108,8 +103,8 @@
                                         </td>
                                     </tr>
                                 <tr>
-                                    <td class="vst-text" style="padding: 10 0 0 2px;">
-                                        <?php print __('Aliases');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('use local-part');?>)</span>
+                                    <td class="vst-text" style="padding: 12px 0 0 0;">
+                                        <?php print __('Aliases');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('use local-part');?>)</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -118,8 +113,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="vst-text" style="padding: 10 0 0 2px;">
-                                        <?php print __('Forward to');?> <span style="padding: 0pt 0pt 0pt 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('one or more email addresses');?>)</span>
+                                    <td class="vst-text" style="padding: 12px 0 0 0">
+                                        <?php print __('Forward to');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('one or more email addresses');?>)</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -128,7 +123,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="vst-text" style="padding: 10 0 0 2px;">
+                                    <td class="vst-text" style="padding: 12px 0 0 0;">
                                         <?php print __('Do not store forwarded mail');?>
                                     </td>
                                 </tr>
@@ -154,5 +149,5 @@
                 </table>
             </td>
         </tr>
-</table>
-        </form>
+    </table>
+    </form>

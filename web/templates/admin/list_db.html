@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/db/'"> <?php print __('Add Database');?> </button>
                         </div>
@@ -58,7 +58,7 @@
                             <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                             <span class="do_delete">
                                 <img src="/images/delete.png" width="7px" height="7px">
@@ -91,25 +91,25 @@
                                 <?php print __('open %s',$db_admin);?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
+                                <td colspan=3 class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;" >
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
-                                            <td class="chart1" style="padding: 10px 0 0px 2px"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                            <td class="chart1" style="padding: 4px 0 0 0"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="260">
+                                <td style="vertical-align:top;" width="297px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
@@ -129,7 +129,7 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td rowspan=4 style="vertical-align:top;" width="300">
+                                <td style="vertical-align:top;">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
@@ -161,7 +161,7 @@
 
             <table class="data-count">
                 <tr>
-                    <td width="168px"></td>
+                    <td width="174px"></td>
                     <td>
                         <?php
                             if ( $i == 1) {

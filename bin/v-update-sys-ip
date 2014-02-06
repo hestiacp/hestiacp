@@ -53,6 +53,9 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
                 /etc/$PROXY_SYSTEM/conf.d/$new.conf
             sed -i "s/$old/$new/g" /etc/$PROXY_SYSTEM/conf.d/$new.conf
             $BIN/v-restart-proxy
+            if [ $? -ne 0 ]; then
+                exit E_RESTART
+            fi
         fi
         if [ ! -z "$WEB_SYSTEM" ]; then
             mv /etc/$WEB_SYSTEM/conf.d/$old.conf \
@@ -65,6 +68,9 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
                 $BIN/v-rebuild-web-domains $user no
             done
             $BIN/v-restart-web
+            if [ $? -ne 0 ]; then
+                exit E_RESTART
+            fi
         fi
 
         if [ ! -z "$DNS_SYSTEM" ]; then
@@ -75,6 +81,9 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
                 $BIN/v-rebuild-dns-domains $user no
             done
             $BIN/v-restart-dns
+            if [ $? -ne 0 ]; then
+                exit E_RESTART
+            fi
         fi
 
         # No further comparation is needed

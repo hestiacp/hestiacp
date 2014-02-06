@@ -71,7 +71,14 @@ update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
 
 # Restart web server
 $BIN/v-restart-web
+if [ $? -ne 0 ]; then
+    exit E_RESTART
+fi
+
 $BIN/v-restart-proxy
+if [ $? -ne 0 ]; then
+    exit E_RESTART
+fi
 
 # Logging
 log_history "changed ssl home for $domain to $ssl_home"

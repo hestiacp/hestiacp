@@ -72,6 +72,9 @@ chmod 660 $USER_DATA/dns.conf
 # Restart named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns $restart
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
 fi
 
 # Logging

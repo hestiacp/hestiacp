@@ -43,6 +43,9 @@ done
 
 # Restart named
 $BIN/v-restart-dns
+if [ $? -ne 0 ]; then
+    exit E_RESTART
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

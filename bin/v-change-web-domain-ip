@@ -87,7 +87,14 @@ update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$3"
 # Restart web server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
+
     $BIN/v-restart-proxy
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
 fi
 
 # Logging

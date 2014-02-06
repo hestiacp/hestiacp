@@ -103,7 +103,14 @@ increase_user_value "$user" '$U_WEB_ALIASES'
 # Adding task to the vesta pipe
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
+
     $BIN/v-restart-proxy
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
 fi
 
 log_history "added $dom_alias as alias for $domain"

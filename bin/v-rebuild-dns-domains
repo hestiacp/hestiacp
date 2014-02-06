@@ -78,6 +78,9 @@ update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
 # Restart named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
 fi
 
 # Logging

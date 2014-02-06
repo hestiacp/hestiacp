@@ -39,7 +39,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     if [  ! -z "$check_web" ]; then
         $BIN/v-delete-web-domain $user $domain
         if [ $? -ne 0 ]; then
-            exit $?
+            exit E_RESTART
         fi
     fi
 fi
@@ -50,7 +50,7 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
     if [  ! -z "$check_dns" ]; then
         $BIN/v-delete-dns-domain $user $domain
         if [ $? -ne 0 ]; then
-            exit $?
+            exit E_RESTART
         fi
     fi
 fi
@@ -61,7 +61,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
     if [  ! -z "$check_mail" ]; then
         $BIN/v-delete-mail-domain $user $domain
         if [ $? -ne 0 ]; then
-            exit $?
+            exit E_RESTART
         fi
     fi
 fi

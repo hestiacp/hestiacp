@@ -45,13 +45,11 @@ if [ -z "$PROXY_SYSTEM" ]; then
 fi
 
 # Restart system
-/etc/init.d/$PROXY_SYSTEM reload >/dev/null 2>&1
+/etc/init.d/$PROXY_SYSTEM restart >/dev/null 2>&1
 if [ $? -ne 0 ]; then
-    /etc/init.d/$PROXY_SYSTEM restart >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        send_email_report
-        exit $E_RESTART
-    fi
+    send_email_report
+    echo "Error: $PROXY_SYSTEM restart failed"
+    exit $E_RESTART
 fi
 
 # Update restart queue

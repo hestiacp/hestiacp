@@ -54,6 +54,9 @@ decrease_user_value "$user" '$U_CRON_JOBS'
 
 # Restart crond
 $BIN/v-restart-cron
+if [ $? -ne 0 ]; then
+    exit E_RESTART
+fi
 
 # Logging
 log_history "deleted cron job $job"

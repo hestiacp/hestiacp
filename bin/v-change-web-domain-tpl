@@ -75,7 +75,7 @@ fi
 if [ "$SSL" = 'yes' ]; then
     conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
     tpl_file="$WEBTPL/$WEB_SYSTEM/$template.stpl"
-
+    del_web_config
     add_web_config
 
     # Running template trigger

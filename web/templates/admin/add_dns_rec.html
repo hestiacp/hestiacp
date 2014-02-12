@@ -56,6 +56,7 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_rec" <?php if (!empty($v_rec)) echo "value=".$v_rec; ?>>
+                                    <small class="hint"></small>
                                 </td>
                             </tr>
                             <tr>
@@ -116,3 +117,8 @@
                 </tr>
             </table>
         </form>
+
+        <script type="text/javascript">
+            GLOBAL.DNS_REC_PREFIX = '<?php echo $_GET['domain']; ?>';
+        </script>
+        <script type="text/javascript" src="/js/pages/add.dns.record.js"></script>

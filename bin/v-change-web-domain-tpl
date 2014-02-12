@@ -75,7 +75,7 @@ fi
 if [ "$SSL" = 'yes' ]; then
     conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
     tpl_file="$WEBTPL/$WEB_SYSTEM/$template.stpl"
-
+    del_web_config
     add_web_config
 
     # Running template trigger
@@ -96,6 +96,9 @@ update_object_value 'web' 'DOMAIN' "$domain" '$TPL' "$template"
 # Restart web
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
 fi
 
 # Logging

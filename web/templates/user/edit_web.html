@@ -6,10 +6,9 @@
                     $back = "location.href='".$back."'";
                 }
             ?>
-
             <table class="submenu">
                 <tr>
-                    <td style="padding: 18px 8px;" ><a class="name"><b><?php print __('Editing Domain');?></b></a>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Domain');?></b></a>
                         <?php
                             if (!empty($_SESSION['error_msg'])) {
                                 echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -59,26 +58,21 @@
             </script>
             <table class='data'>
                 <tr class="data-add">
-                    <td class="data-dotted" width="150">
+                    <td class="data-dotted">
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date" ?><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
-                                    <a class="data-date" ?><?php echo $v_time?></a>
+                                    <a class="data-date"><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
+                                    <a class="data-date"><?php echo $v_time?></a>
                                 </td>
                             </tr>
                             <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
-                        <table width="830px">
+                    <td class="data-dotted">
+                        <table class="data-col2">
                             <tr>
-                                <td></td>
-                            </tr>
-                        </table>
-                        <table class="data-col2" width="830px">
-                            <tr>
-                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                <td class="vst-text" style="padding: 24px 0 0 0;">
                                     <?php print __('Domain');?>
                                 </td>
                             </tr>
@@ -88,7 +82,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('IP Address');?>
                                 </td>
                             </tr>
@@ -111,7 +105,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Aliases');?>
                                 </td>
                             </tr>
@@ -121,7 +115,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Proxy Support');?>
                                 </td>
                             </tr>
@@ -134,7 +128,7 @@
                                 <td>
                                     <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
                                         <tr>
-                                            <td class="vst-text" style="padding: 9px 0 0 0;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('Proxy Extensions');?>
                                             </td>
                                         </tr>
@@ -147,7 +141,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('SSL Support');?> /
                                     <a class="generate" target="_blank" href="/generate/ssl/?domain=<?php echo $v_domain ?>"><?php print __('Generate CSR') ?></a>
                                 </td>
@@ -161,13 +155,14 @@
                                 <td>
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                         <tr>
-                                            <td class="vst-text" style="padding: 9px 0 0 0;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('SSL Home Directory');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_ssl_home">
+
                                                     <option value='same' <?php if ($v_ssl_home == 'same') echo "selected";?>>
                                                          public_html
                                                     </option>
@@ -178,8 +173,8 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
-                                                <?php print __('SSL Certificate');?>
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                                                <?php print __('SSL Certificate');?> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -188,7 +183,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('SSL Key');?>
                                             </td>
                                         </tr>
@@ -198,7 +193,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print __('optional');?>)</span>
                                             </td>
                                         </tr>
@@ -211,7 +206,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Web Statistics');?>
                                 </td>
                             </tr>
@@ -233,7 +228,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Statistics Authorization');?>
                                 </td>
                             </tr>
@@ -246,7 +241,7 @@
                                 <td>
                                     <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
                                         <tr>
-                                            <td class="vst-text" style="padding: 9px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('Username');?>
                                             </td>
                                         </tr>
@@ -256,7 +251,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?php print __('generate');?></a>
                                             </td>
                                         </tr>
@@ -269,7 +264,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Additional FTP Account');?>
                                 </td>
                             </tr>
@@ -282,25 +277,25 @@
                                 <td>
                                     <table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" id="ftptable" name="v_add_domain_ftp">
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 0;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('Username');?>
                                                 <?php if (empty($v_ftp_user)) echo '<br><span style="font-size: 10pt; color:#777;">' . __('Prefix will be automaticaly added to username',$user."_") . '</span>' ?> 
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ftp_user" <?php if (!empty($v_ftp_user)) echo "value=".$v_ftp_user;  ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ftp_user" <?php if (!empty($v_ftp_user)) echo "value=".$v_ftp_user;?>>
                                                 <small class="hint"></small>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 0;">
-                                                <?php print __('Password');?> / <a href="javascript:FTPrandom();" class="generate" ><?php print __('generate');?></a>
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                                                <?php print __('Password');?> / <a href="javascript:FTPrandom();" class="generate"><?php print __('generate');?></a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text"  class="vst-input" name="v_ftp_password" <?php if (!empty($v_ftp_password)) echo "value=".$v_ftp_password;  ?>>
+                                                <input type="text"  class="vst-input" name="v_ftp_password" <?php if (!empty($v_ftp_password)) echo "value=".$v_ftp_password;?>>
                                             </td>
                                         </tr>
                                         <?php
@@ -308,7 +303,7 @@
                                                 echo '';
                                          ?> 
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 0;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('Send FTP credentials to email');?>
                                             </td>
                                         </tr>

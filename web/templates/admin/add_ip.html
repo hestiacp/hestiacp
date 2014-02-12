@@ -8,7 +8,7 @@
             ?>
             <table class="submenu">
                 <tr>
-                    <td style="padding: 18px 8px;" ><a class="name"><b><?php print __('Adding IP address');?></b></a>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding IP address');?></b></a>
                         <?php
                             if (!empty($_SESSION['error_msg'])) {
                                 echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -37,20 +37,15 @@
 
             <table class='data'>
                 <tr class="data-add">
-                    <td class="data-dotted" width="150">
+                    <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
-                        <table width="830px">
-                            <tr>
-                                <td></td>
-                            </tr>
-                        </table>
+                    <td class="data-dotted">
                         <table class="data-col2" width="600px">
                             <tr>
-                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                <td class="vst-text" style="padding: 24px 0 0 0;">
                                     <?php print __('IP address') ?> 
                                 </td>
                             </tr>
@@ -60,7 +55,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Netmask');?>
                                 </td>
                             </tr>
@@ -70,7 +65,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Interface');?>
                                 </td>
                             </tr>
@@ -88,7 +83,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Shared');?>
                                 </td>
                             </tr>
@@ -122,7 +117,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('Assigned domain');?> <span class="optional">(<?php print __('optional');?>)</span>
                                 </td>
                             </tr>
@@ -132,7 +127,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('NAT IP association');?> <span class="optional"">(<?php print __('optional');?>)</span>
                                 </td>
                             </tr>

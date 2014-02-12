@@ -69,7 +69,7 @@ if [ "$domain_counter" -lt 1 ]; then
     # Deleting web configs
     rm -f $HOMEDIR/$user/conf/web/*
     sed -i "/.*\/$user\/.*$WEB_SYSTEM.conf/d" $web_conf
-    if [ -e "$proxy_conf" ]; then
+    if [ ! -z "$PROXY_SYSTEM" ]; then
         sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
     fi
 
@@ -103,34 +103,35 @@ else
     fi
 
     # Checking proxy
-    if [ "$proxy_change" = 'yes' ]; then
-        tmp_conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
-        conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-        mv $tmp_conf $conf
-        proxy_include=$(grep "$conf" $proxy_conf )
-        if [ -z "$proxy_include" ]; then
-            echo "include $conf;" >> $proxy_conf
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        if [ "$proxy_change" = 'yes' ]; then
+            tmp_conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
+            conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+            mv $tmp_conf $conf
+            proxy_include=$(grep "$conf" $proxy_conf )
+            if [ -z "$proxy_include" ]; then
+                echo "include $conf;" >> $proxy_conf
+            fi
+        else
+            conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+            sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
+            rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
         fi
-    else
-        conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
-        rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
-    fi
 
-    # Checking SSL proxy
-    if [ "$proxy_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
-        tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
-        conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-        mv $tmp_conf $conf
-        proxy_include=$(grep "$conf" $proxy_conf )
-        if [ -z "$proxy_include" ]; then
-            echo "include $conf;" >> $proxy_conf
+        # Checking SSL proxy
+        if [ "$proxy_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
+            tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
+            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+            mv $tmp_conf $conf
+            proxy_include=$(grep "$conf" $proxy_conf )
+            if [ -z "$proxy_include" ]; then
+                echo "include $conf;" >> $proxy_conf
+            fi
+        else
+            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+            sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
+            rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
         fi
-    else
-        conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
-        rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
-
     fi
 fi
 
@@ -148,7 +149,14 @@ update_user_value "$user" '$U_WEB_ALIASES' "$user_aliases"
 # Restart web server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
+
     $BIN/v-restart-proxy
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
 fi
 
 # Logging

@@ -1,13 +1,13 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/dns/'"> <?php print __('Add DNS Domain');?> </button>
                         </div>
                         <div class="submenu-search-block">
                             <form action="/search/" method="get">
-                                <input type="text" name="q" class="submenu-search-field">
-                                <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button" style="width: 96px;">
                             </form>
                         </div>
                         <div class="submenu-select-block">
@@ -24,6 +24,7 @@
                 </tr>
             </table>
         </div>
+
         <div id="vstobjects">
             <table class="data">
                 <?php
@@ -32,20 +33,22 @@
                         if ($data[$key]['SUSPENDED'] == 'yes') {
                             $status = 'suspended';
                             $spnd_action = 'unsuspend' ;
+                            $spnd_confirmation = 'UNSUSPEND_DOMAIN_CONFIRMATION' ;
                         } else {
                             $status = 'active';
                             $spnd_action = 'suspend' ;
+                            $spnd_confirmation = 'SUSPEND_DOMAIN_CONFIRMATION' ;
                         }
                 ?> 
                 <tr class="data-row">
                     <td class="data-dotted">
                         <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo "$key" ?>" ></td></tr>
+                            <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo $key ?>" ></td></tr>
                             <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
                             <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status) ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                             <span class="do_delete">
                                 <img src="/images/delete.png" width="7px" height="7px">
@@ -74,31 +77,31 @@
                                 <?php print __('list records',$data[$key]['RECORDS']); ?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
+                                <td colspan=3 class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;" >
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
-                                            <td class="counter-name" style="padding: 0 0 0 2px;">
+                                            <td class="counter-name">
                                                 <?php echo $data[$key]['IP'] ?> 
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="counter-name" style="padding: 0 0 0 2px;">
+                                            <td class="counter-name">
                                                 <?php print $data[$key]['SRC'] ?> 
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="270">
+                                <td style="vertical-align:top;" width="297px">
                                     <table>
                                         <tr>
-                                            <td class="counter-name"><?php print __('Template');?>:</td>
+                                            <td class="counter-name"><?php print __('Template') ?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['TPL'] ?></td>
                                         </tr>
                                         <tr>
@@ -107,7 +110,7 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td rowspan=4 style="vertical-align:top;" width="300">
+                                <td style="vertical-align:top;">
                                     <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('TTL') ?>:</td>
@@ -131,7 +134,7 @@
 
             <table class="data-count">
                 <tr>
-                    <td width="160px"></td>
+                    <td width="174px"></td>
                     <td>
                         <?php
                             if ( $i == 1) {

@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 16px">
                         <div style="submenu-button-block">
                             <a class="vst<?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo "-selected" ?>" href="?period=daily"><?php print __('Daily');?></a>
                             <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'weekly')) echo "-selected" ?>" href="?period=weekly"><?php print __('Weekly');?></a>
@@ -32,23 +32,23 @@
 
                 <tr class="data-row">
                     <td class="data-dotted">
-                        <table class="data-col1" width="150">
+                        <table class="data-col1">
                             <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
                             <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank" class="data-controls">
                             <span>
                                 <img src="/images/download.png" width="8px" height="8px">
                                 <?php print __('download');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
-                            <tr><td colspan=3 class="domain" style="padding: 0 0 4px 4px;"><b><?php echo __($data[$key]['TITLE']); ?></b></td></tr>
+                        <table class="data-col2">
+                            <tr><td colspan=3 class="domain"><b><?php echo __($data[$key]['TITLE']); ?></b></td></tr>
                             <tr>
-                                <td style="vertical-align:top;" width="630px">
-                                    <table width="630px">
+                                <td style="vertical-align:top; padding:4px 0 0 0;" width="630px">
+                                    <table>
                                         </tr>
                                             <td style="background: #7a766d;" width="630px" height="250px">
                                                 <img style="padding: 0 0 0 36px;" src="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>">

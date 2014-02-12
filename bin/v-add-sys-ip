@@ -152,7 +152,13 @@ fi
 
 # Restart web server
 $BIN/v-restart-web
+if [ $? -ne 0 ]; then
+    exit E_RESTART
+fi
 $BIN/v-restart-proxy
+if [ $? -ne 0 ]; then
+    exit E_RESTART
+fi
 
 # Logging
 log_history "added system ip address $ip" '' 'admin'

@@ -477,7 +477,7 @@ is_dns_record_critical() {
 is_dns_fqnd() {
     t=$1
     r=$2
-    fqdn_type=$(echo $t | grep "[NS|CNAME|MX|PTR|SRV]")
+    fqdn_type=$(echo $t | grep "NS\|CNAME\|MX\|PTR\|SRV")
     tree_length=3
     if [ $t = 'CNAME' ]; then
         tree_length=2

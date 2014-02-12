@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/dns/?domain=<?php echo $_GET['domain'] ?>'"> <?php print __('Add DNS Record');?> </button>
                         </div>
@@ -28,15 +28,13 @@
         </div>
 
         <div id="vstobjects">
-            <div style="height:10px; font-size:0;"></div>
                 <table class="data" style="background: #ebe9dc;">
                     <tr>
-                        <td style="padding: 8px 2px 8px 0;">
+                        <td style="padding: 10px 4px">
                             <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
                         </td>
                     </tr>
                 </table>
-                <div style="height:10px; font-size:0;"></div>
                 <table class="data">
                     <?php
                         foreach ($data as $key => $value) {
@@ -58,7 +56,7 @@
                                 <tr><td></td></tr>
                             </table>
                         </td>
-                        <td class="data-dotted" width="830px">
+                        <td class="data-dotted">
                             <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                                 <span class="do_delete">
                                     <img src="/images/delete.png" width="7px" height="7px">
@@ -75,11 +73,11 @@
                                     <?php print __('edit');?> 
                                 </span>
                             </a>
-                            <table class="data-col5" width="806px">
+                            <table class="data-col5">
                                 <tr>
-                                    <td class="log" style="padding: 0 0 0 4px;" width="200"><b><?php echo $data[$key]['RECORD'] ?></b></td>
-                                    <td class="log-counter-value" width="80"><?php echo $data[$key]['TYPE'] ?></td>
-                                    <td class="log-counter-value" width="80"><?php echo $data[$key]['PRIORITY'] ?></td>
+                                    <td class="log" width="239px"><b><?php echo $data[$key]['RECORD'] ?></b></td>
+                                    <td class="log-counter-value" width="57px"><?php echo $data[$key]['TYPE'] ?></td>
+                                    <td class="log-counter-value" width="62px"><?php echo $data[$key]['PRIORITY'] ?></td>
                                     <td class="log-counter-value" ><?php echo $data[$key]['VALUE'] ?></td>
                                 </tr>
                             </table>
@@ -87,12 +85,12 @@
                     </tr>
                     <?php
                         }
-                    ?>
+                    ?> 
                 </table>
             </form>
             <table class="data-count">
                 <tr>
-                    <td width="168px">
+                    <td width="174px">
                     </td>
                     <td>
                         <?php

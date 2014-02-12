@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-search-block">
                             <form action="/search/" method="get">
                             <input type="text" name="q" class="submenu-search-field">
@@ -33,21 +33,21 @@
                             <tr><td class="data-active"><b><?php print __('running') ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>" class="data-controls">
                             <span>
                                 <img src="/images/reload.png" width="6px" height="7px">
                                 <?php print __('restart'); ?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td colspan=4 class="domain" style="padding: 0 0 0 4px;">
+                                <td colspan=4 class="domain">
                                     <b><?php echo $sys['sysinfo']['HOSTNAME'] ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;" width="354px">
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
                                             <td>
@@ -61,36 +61,26 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="142px">
+                                <td style="vertical-align:top;" width="358px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
                                                 <?php print __('LoadAverage');?>:
                                             </td>
-                                            <td>
-                                                <a class="counter-value"> <?php echo $sys['sysinfo']['LOADAVERAGE'] ?></a>
+                                            <td class="counter-value">
+                                                <?php echo $sys['sysinfo']['LOADAVERAGE'] ?> 
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="34px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                            </td>
-                                            <td>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" widht="280px">
+                                <td style="vertical-align:top;">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
                                                 <?php print __('Uptime');?>:
                                             </td>
-                                            <td>
-                                                <a class="counter-value"><?php echo humanize_time($sys['sysinfo']['UPTIME']) ?> </a>
+                                            <td class="counter-value">
+                                                <?php echo humanize_time($sys['sysinfo']['UPTIME']) ?> 
                                             </td>
                                         </tr>
                                     </table>
@@ -139,42 +129,42 @@
                             </span>
                         </a>
 
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td colspan=4 class="domain" style="padding: 0 0 0 4px;">
+                                <td colspan=4 class="domain">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;" width="200px">
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
-                                            <td class="counter-name" style="padding: 2px 0 0 0">
+                                            <td class="counter-name">
                                                 <?php echo __($data[$key]['SYSTEM']) ?> 
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="150px">
+                                <td style="vertical-align:top;" width="119px">
                                     <table>
                                         <tr>
-                                            <td class="counter-name" widht="">
+                                            <td class="counter-name">
                                                 <?php print __('CPU');?>:
                                             </td>
-                                            <td>
-                                                <a class="counter-value"> <?php echo $cpu ?>%</a>
+                                            <td class="counter-value">
+                                                <?php echo $cpu ?>%
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="180px">
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">
                                                 <?php print __('Memory');?>:
                                             </td>
-                                            <td>
-                                                <a class="counter-value"><?php echo $data[$key]['MEM'] ?> <?php print __('mb');?></a>
+                                            <td class="counter-value">
+                                                <?php echo $data[$key]['MEM'] ?> <?php print __('mb');?> 
                                             </td>
                                         </tr>
                                     </table>
@@ -185,8 +175,8 @@
                                             <td class="counter-name">
                                                 <?php print __('Uptime');?>:
                                             </td>
-                                            <td>
-                                                <a class="counter-value"><?php echo humanize_time($data[$key]['RTIME']) ?> </a>
+                                            <td class="counter-value">
+                                                <?php echo humanize_time($data[$key]['RTIME']) ?> 
                                             </td>
                                         </tr>
                                     </table>

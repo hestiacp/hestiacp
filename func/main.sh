@@ -616,10 +616,17 @@ validate_format_name_s() {
 
 # Username
 validate_format_username() {
-    if ! [[ "$1" =~ ^[a-zA-Z0-9][-|\.|_|a-zA-Z0-9]{0,28}[a-zA-Z0-9]$ ]]; then
-        echo "Error: $2 $1 is not valid"
-        log_event "$E_INVALID" "$EVENT"
-        exit $E_INVALID
+    if [ "${#1}" -eq 1 ]; then
+        if ! [[ "$1" =~ [a-z] ]]; then
+            echo "Error: $2 $1 is not valid"
+            exit 1
+        fi
+    else
+        if ! [[ "$1" =~ ^[a-zA-Z0-9][-|\.|_|a-zA-Z0-9]{0,28}[a-zA-Z0-9]$ ]]
+        then
+            echo "Error: $2 $1 is not valid"
+            exit 1
+        fi
     fi
 }
 

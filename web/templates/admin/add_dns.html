@@ -8,7 +8,7 @@
             ?>
             <table class="submenu">
                 <tr>
-                    <td style="padding: 18px 8px;" ><a class="name"><b><?php print __('Adding DNS Domain');?></b></a>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding DNS Domain');?></b></a>
                         <?php
                             if (!empty($_SESSION['error_msg'])) {
                                 echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
@@ -37,20 +37,15 @@
 
             <table class="data">
                 <tr class="data-add">
-                    <td class="data-dotted" width="150">
+                    <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
-                        <table width="830px">
-                            <tr>
-                                <td></td>
-                            </tr>
-                        </table>
+                    <td class="data-dotted">
                         <table class="data-col2" width="600px">
                             <tr>
-                                <td class="vst-text" style="padding: 20px 0 0 2px;">
+                                <td class="vst-text" style="padding: 24px 0 0 0;">
                                     <?php print __('Domain');?>
                                 </td>
                             </tr>
@@ -60,7 +55,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('IP address');?>
                                 </td>
                             </tr>
@@ -70,7 +65,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print __('Advanced options');?></a>
                                 </td>
                             </tr>
@@ -78,7 +73,7 @@
                                 <td class="vst-text" style="padding: 10px 0 0 0px;">
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('Expiration Date');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('YYYY-MM-DD');?>)</span>
                                             </td>
                                         </tr>
@@ -88,7 +83,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 TTL
                                             </td>
                                         </tr>
@@ -98,7 +93,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text" style="padding: 10px 0 0 2px;">
+                                            <td class="vst-text" style="padding: 12px 0 0 0;">
                                                 <?php print __('Name servers');?>
                                             </td>
                                         </tr>

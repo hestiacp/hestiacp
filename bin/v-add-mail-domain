@@ -18,7 +18,7 @@ domain_idn=$(idn -t --quiet -a "$domain")
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
-dkim_size=${6-512}
+dkim_size=${6-1024}
 
 # Includes
 source $VESTA/func/main.sh

@@ -1,7 +1,7 @@
 server {
     listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
-    error_log  /var/log/httpd/domains/%domain%.error.log error;
+    error_log  /var/log/%web_system%/domains/%domain%.error.log error;
 
     location / {
         proxy_pass      http://%ip%:%web_port%;
@@ -16,8 +16,8 @@ server {
         location ~* ^.+\.(%proxy_extentions%)$ {
             proxy_cache    off;
             root           %docroot%;
-            access_log     /var/log/httpd/domains/%domain%.log combined;
-            access_log     /var/log/httpd/domains/%domain%.bytes bytes;
+            access_log     /var/log/%web_system%/domains/%domain%.log combined;
+            access_log     /var/log/%web_system%/domains/%domain%.bytes bytes;
             expires        max;
             try_files      $uri @fallback;
         }
@@ -37,5 +37,5 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/nginx.%domain%.conf*;
 }

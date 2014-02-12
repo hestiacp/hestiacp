@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/web/'"> <?php print __('Add Web Domain');?> </button>
                         </div>
@@ -76,10 +76,10 @@
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo $key ?>" ></td></tr>
                             <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
-                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
+                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status) ?></b></td></tr>
                         </table>
                     </td>
-                    <td class="data-dotted" width="830px">
+                    <td class="data-dotted">
                         <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
                             <span class="do_delete">
                                 <img src="/images/delete.png" width="7px" height="7px">
@@ -102,6 +102,7 @@
                                 <?php print __('view logs');?> 
                             </span>
                         </a>
+
                         <?php
                             if (!empty($data[$key]['STATS'])) {
                         ?> 
@@ -114,38 +115,38 @@
                         <?php
                                 }
                          ?> 
-                        <table class="data-col2" width="830px">
+                        <table class="data-col2">
                             <tr>
-                                <td colspan=3 class="domain" style="padding: 0 0 0 4px;">
-                                    <b><?php echo $key ?></b> <a class="aliases" style="padding: 0 30px 0 8px"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a>
+                                <td colspan=3 class="domain">
+                                    <b><?php echo $key ?></b> <a class="aliases"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;" >
+                                <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
-                                            <td class="counter-name" style="padding: 0 0 0 2px;">
+                                            <td class="counter-name">
                                                 <?php echo $data[$key]['IP'] ?> 
                                             </td>
                                         <tr>
                                         <tr>
-                                            <td class="chart1" style="padding: 4px 0 0 2px">
+                                            <td class="chart1" style="padding: 8px 0 0 0">
                                                 <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?> 
-                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                    <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="chart1" style="padding: 2px 0 0 2px"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                <div style="width:160px; height:5px; font-size:0;background-color:#c7d5b3;">
-                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:5px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                            <td class="chart1" style="padding: 4px 0 0 0"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                             </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="260">
+                                <td style="vertical-align:top;" width="297px">
                                     <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('Web Template');?>:</td>
@@ -166,7 +167,7 @@
 
                                     </table>
                                 </td>
-                                <td rowspan=4 style="vertical-align:top;" width="300">
+                                <td rowspan=4 style="vertical-align:top;">
                                     <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('Proxy Support');?>:</td>
@@ -176,12 +177,10 @@
                                             <td class="counter-name"><?php print __('Proxy Template');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['PROXY'];?></td>
                                         </tr>
-
                                         <tr>
                                             <td class="counter-name"><?php print __('Proxy Extentions');?>:</td>
                                             <td class="counter-value" <?php if (!empty($proxy_ext_title)) echo "title='".$proxy_ext_title."'" ?>><?php echo $proxy_ext ?></td>
                                         </tr>
-
                                         <tr>
                                             <td class="counter-name"> <?php print __('Additional FTP Account');?>:</td>
                                             <td class="counter-value"> <?php print __($ftp_user) ?></td>
@@ -200,7 +199,7 @@
 
             <table class="data-count">
                 <tr>
-                    <td width="160px">
+                    <td width="174px">
                     <td>
                         <?php
                             if ( $i == 1) {

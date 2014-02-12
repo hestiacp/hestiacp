@@ -94,6 +94,9 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 # Restart web
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-proxy
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
 fi
 
 # Logging

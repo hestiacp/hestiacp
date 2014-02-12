@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 12px 8px">
+                    <td style="padding: 14px 10px">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/cron/'"> <?php print __('Add Cron Job');?> </button>
                         </div>
@@ -79,14 +79,14 @@
                                 <?php print __('edit');?> 
                             </span>
                         </a>
-                        <table class="data-col2" width="800px">
+                        <table class="data-col2">
                             <tr>
                                 <td colspan=6 class="cron">
                                     <b><?php echo htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top; width:80px">
+                                <td style="vertical-align:top; padding: 4px 0 0 1px" width="118px">
                                     <div class="cron-counter-name">
                                         <?php print __('Min');?> 
                                     </div>
@@ -94,7 +94,7 @@
                                         <?php echo $data[$key]['MIN'] ?> 
                                     </div>
                                 </td>
-                                <td style="vertical-align:top; width:80px">
+                                <td style="vertical-align:top; padding: 4px 0 0 0" width="120px">
                                     <div class="cron-counter-name">
                                         <?php print __('Hour');?> 
                                     </div>
@@ -102,7 +102,7 @@
                                         <?php echo $data[$key]['HOUR'] ?> 
                                     </div>
                                 </td>
-                                <td style="vertical-align:top; width:80px">
+                                <td style="vertical-align:top; padding: 4px 0 0 0" width="120px">
                                     <div class="cron-counter-name">
                                         <?php print __('Day');?> 
                                     </div>
@@ -110,7 +110,7 @@
                                         <?php echo $data[$key]['DAY'] ?> 
                                     </div>
                                 </td>
-                                <td style="vertical-align:top; width:80px">
+                                <td style="vertical-align:top; padding: 4px 0 0 0" width="119px">
                                     <div class="cron-counter-name">
                                         <?php print __('Month');?> 
                                     </div>
@@ -118,7 +118,7 @@
                                         <?php echo $data[$key]['MONTH'] ?> 
                                     </div>
                                 </td>
-                                <td style="vertical-align:top; width:80px">
+                                <td style="vertical-align:top; padding: 4px 0 0 0" width="120px">
                                     <div class="cron-counter-name">
                                         <?php print __('Day of week');?> 
                                     </div>
@@ -140,7 +140,7 @@
 
             <table class="data-count">
                 <tr>
-                    <td width="168px"></td>
+                    <td width="174px"></td>
                     <td>
                         <?php
                             if ( $i == 1) {

@@ -56,6 +56,7 @@ if [ $? -ne 0 ]; then
     /etc/init.d/$DNS_SYSTEM restart >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         send_email_report
+        echo "Error: $DNS_SYSTEM restart failed"
         exit $E_RESTART
     fi
 fi

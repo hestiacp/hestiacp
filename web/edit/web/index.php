@@ -97,6 +97,7 @@ if (!empty($_POST['save'])) {
         exec (VESTA_CMD."v-change-web-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         $restart_web = 'yes';
+        $restart_proxy = 'yes';
         unset($output);
         exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain." json", $output, $return_var);
         if ((empty($_SESSION['error_msg'])) && ($return_var == 0 )) {
@@ -138,6 +139,7 @@ if (!empty($_POST['save'])) {
         foreach ($result as $alias) {
             if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
                 $restart_web = 'yes';
+                $restart_proxy = 'yes';
                 $v_template = escapeshellarg($_POST['v_template']);
                 exec (VESTA_CMD."v-delete-web-domain-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
                 check_return_code($return_var,$output);
@@ -160,6 +162,7 @@ if (!empty($_POST['save'])) {
         foreach ($result as $alias) {
             if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
                 $restart_web = 'yes';
+                $restart_proxy = 'yes';
                 $v_template = escapeshellarg($_POST['v_template']);
                 exec (VESTA_CMD."v-add-web-domain-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
                 check_return_code($return_var,$output);
@@ -225,6 +228,7 @@ if (!empty($_POST['save'])) {
         unset($output);
         $v_ssl = 'no';
         $restart_web = 'yes';
+        $restart_proxy = 'yes';
     }
     if (($v_ssl == 'yes') && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
         if (( $v_ssl_crt != str_replace("\r\n", "\n",  $_POST['v_ssl_crt'])) || ( $v_ssl_key != str_replace("\r\n", "\n",  $_POST['v_ssl_key'])) || ( $v_ssl_ca != str_replace("\r\n", "\n",  $_POST['v_ssl_ca']))) {
@@ -259,6 +263,7 @@ if (!empty($_POST['save'])) {
             check_return_code($return_var,$output);
             unset($output);
             $restart_web = 'yes';
+            $restart_proxy = 'yes';
             $v_ssl_crt = $_POST['v_ssl_crt'];
             $v_ssl_key = $_POST['v_ssl_key'];
             $v_ssl_ca = $_POST['v_ssl_ca'];
@@ -316,6 +321,7 @@ if (!empty($_POST['save'])) {
             unset($output);
             $v_ssl = 'yes';
             $restart_web = 'yes';
+            $restart_proxy = 'yes';
             $v_ssl_crt = $_POST['v_ssl_crt'];
             $v_ssl_key = $_POST['v_ssl_key'];
             $v_ssl_ca = $_POST['v_ssl_ca'];
@@ -470,6 +476,13 @@ if (!empty($_POST['save'])) {
     // Restart web
     if (!empty($restart_web) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-restart-web", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    }
+
+    // Restart proxy
+    if (!empty($restart_proxy) && (empty($_SESSION['error_msg']))) {
+        exec (VESTA_CMD."v-restart-proxy", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }

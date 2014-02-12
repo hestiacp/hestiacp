@@ -53,6 +53,7 @@ if [ "$WEB_SYSTEM" == 'apache2' ]; then
         /etc/init.d/$WEB_SYSTEM restart >/dev/null 2>&1
         if [ $? -ne 0 ]; then
             send_email_report
+            echo "Error: $WEB_SYSTEM restart failed"
             exit $E_RESTART
         fi
     fi
@@ -62,6 +63,7 @@ else
         /etc/init.d/$WEB_SYSTEM restart >/dev/null 2>&1
         if [ $? -ne 0 ]; then
             send_email_report
+            echo "Error: $WEB_SYSTEM restart failed"
             exit $E_RESTART
         fi
     fi

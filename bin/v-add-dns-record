@@ -39,7 +39,7 @@ if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
 fi
 
 # Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
-fqdn_type=$(echo $rtype | grep "[NS|CNAME|MX|PTR|SRV]")
+fqdn_type=$(echo $rtype |grep "NS\|CNAME\|MX\|PTR\|SRV")
 if [ ! -z "$fqdn_type" ]; then
     trailing_dot=$(echo $dvalue | grep "\.$")
     if [ -z $trailing_dot ]; then
@@ -107,6 +107,9 @@ increase_user_value "$user" '$U_DNS_RECORDS'
 # Restart named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
 fi
 
 # Logging

@@ -49,6 +49,7 @@ fi
 /etc/init.d/$MAIL_SYSTEM restart >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
+    echo "Error: $MAIL_SYSTEM restart failed"
     exit $E_RESTART
 fi
 

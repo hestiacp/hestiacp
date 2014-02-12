@@ -372,7 +372,15 @@ if [ "$web" != 'no' ]; then
 
     # Restart WEB
     $BIN/v-restart-web
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
+
     $BIN/v-restart-proxy
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
+
     echo
     msg="$msg\n"
 fi
@@ -482,6 +490,10 @@ if [ "$dns" != 'no' ]; then
 
     # Restart DNS
     $BIN/v-restart-dns
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
+
     echo
     msg="$msg\n"
 fi
@@ -695,6 +707,10 @@ if [ "$cron" != 'no' ]; then
 
     # Restart cron
     $BIN/v-restart-cron
+    if [ $? -ne 0 ]; then
+        exit E_RESTART
+    fi
+
     echo
     msg="$msg\n"
 fi

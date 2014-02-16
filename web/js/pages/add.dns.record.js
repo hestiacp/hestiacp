@@ -11,12 +11,12 @@ App.Actions.DB.update_dns_record_hint = function(elm, hint) {
     if (hint == '@') {
         hint = '';
     }
-    
+
     // dont show pregix if domain name = rec value
-    if (hint == GLOBAL.DNS_REC_PREFIX || hint + '.' == GLOBAL.DNS_REC_PREFIX) {
+    if (hint == GLOBAL.DNS_REC_PREFIX + '.') {
         hint = '';
     }
-    
+
     // add dot at the end if needed
     if (hint != '' && hint.slice(-1) != '.') {
         hint += '.';
@@ -33,7 +33,7 @@ App.Listeners.DB.keypress_dns_rec_entry = function() {
     if (current_rec.trim() != '') {
         App.Actions.DB.update_dns_record_hint(ref, current_rec);
     }
-    
+
     ref.bind('keypress input', function(evt) {
         clearTimeout(window.frp_usr_tmt);
         window.frp_usr_tmt = setTimeout(function() {

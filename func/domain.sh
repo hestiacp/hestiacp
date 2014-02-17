@@ -195,6 +195,10 @@ update_domain_zone() {
         done
 
         RECORD=$(idn --quiet -a -t "$RECORD")
+        if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
+            VALUE=$(idn --quiet -a -t "$VALUE")
+        fi
+
         if [ "$SUSPENDED" != 'yes' ]; then
             eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $conf
         fi

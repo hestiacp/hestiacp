@@ -49,6 +49,9 @@ shell_list_wtpl() {
 #----------------------------------------------------------#
 
 # Proxy templates
+if [ -z "$PROXY_SYSTEM" ]; then
+    exit
+fi
 templates=$(ls -t $WEBTPL/$PROXY_SYSTEM |\
     cut -f1 -d . |\
     grep -v proxy_ip |\

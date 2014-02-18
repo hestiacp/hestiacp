@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        6
+Release:        7
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -52,6 +52,26 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Tue Feb 18 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-6
+- CSR Generator
+- JS hint for dns record
+- Support for single-character email usernames
+- German language support by Nevil Verdoold <evilverdoold@gmail.com>
+- Chinese language support by Kevin <kevin@kvm.la>
+- Indonesian(slank) language support by Rumi <rumi4acc@gmail.com>
+- New HTML layout
+- Improved DNS record validation
+- Default dkim size is now set to 1024
+- Explicit error if restart failed
+- Fix for logged-in message window
+- Fix for missing FWD_ONLY flag on restore
+- Fix for MX and CNAME (IDN support)
+- Fix for missing nginx restart trigger on template change
+- Fix for awstats months associactions
+- Fix for logged in message window
+- Fix for SSL template change
+- Fix for PostgreSQL database status
+
 * Wed Nov 27 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-6
 - New style for "Add" button
 - Quick links after object creation (login as/webmail/pma)

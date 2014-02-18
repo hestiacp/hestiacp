@@ -507,6 +507,7 @@ rebuild_mail_domain_conf() {
         (( ++accs))
         dom_diks=$((dom_diks + U_DISK))
         object=$(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
+        FWD_ONLY='no'
         eval "$object"
         if [ "$SUSPENDED" = 'yes' ]; then
             MD5='SUSPENDED'

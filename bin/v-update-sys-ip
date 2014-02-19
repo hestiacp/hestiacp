@@ -54,7 +54,7 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
             sed -i "s/$old/$new/g" /etc/$PROXY_SYSTEM/conf.d/$new.conf
             $BIN/v-restart-proxy
             if [ $? -ne 0 ]; then
-                exit E_RESTART
+                exit $E_RESTART
             fi
         fi
         if [ ! -z "$WEB_SYSTEM" ]; then
@@ -69,7 +69,7 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
             done
             $BIN/v-restart-web
             if [ $? -ne 0 ]; then
-                exit E_RESTART
+                exit $E_RESTART
             fi
         fi
 
@@ -82,7 +82,7 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
             done
             $BIN/v-restart-dns
             if [ $? -ne 0 ]; then
-                exit E_RESTART
+                exit $E_RESTART
             fi
         fi
 

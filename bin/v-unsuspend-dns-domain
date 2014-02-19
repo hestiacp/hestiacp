@@ -52,7 +52,7 @@ sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/dns/$domain.conf
 #if [ "$restart" != 'no' ]; then
 #    $BIN/v-restart-dns
 #    if [ $? -ne 0 ]; then
-#        exit E_RESTART
+#        exit $E_RESTART
 #    fi
 #fi
 

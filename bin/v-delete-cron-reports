@@ -47,7 +47,7 @@ sync_cron_jobs
 # Restart crond
 $BIN/v-restart-cron
 if [ $? -ne 0 ]; then
-    exit E_RESTART
+    exit $E_RESTART
 fi
 
 # Logging

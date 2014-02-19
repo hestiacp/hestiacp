@@ -122,12 +122,12 @@ fi
 # Adding task to the vesta pipe
 $BIN/v-restart-web
 if [ $? -ne 0 ]; then
-    exit E_RESTART
+    exit $E_RESTART
 fi
 
 $BIN/v-restart-proxy
 if [ $? -ne 0 ]; then
-    exit E_RESTART
+    exit $E_RESTART
 fi
 
 # Logging

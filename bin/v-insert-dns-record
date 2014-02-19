@@ -48,7 +48,7 @@ echo "$data" >> $USER_DATA/dns/$domain.conf
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns $restart
     if [ $? -ne 0 ]; then
-        exit E_RESTART
+        exit $E_RESTART
     fi
 fi
 

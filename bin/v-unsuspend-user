@@ -74,17 +74,17 @@ decrease_user_value 'admin' '$SUSPENDED_USERS'
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
     if [ $? -ne 0 ]; then
-        exit E_RESTART
+        exit $E_RESTART
     fi
 
     $BIN/v-restart-dns
     if [ $? -ne 0 ]; then
-        exit E_RESTART
+        exit $E_RESTART
     fi
 
     $BIN/v-restart-cron
     if [ $? -ne 0 ]; then
-        exit E_RESTART
+        exit $E_RESTART
     fi
 fi
 

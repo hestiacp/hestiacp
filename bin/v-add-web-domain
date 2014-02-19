@@ -177,7 +177,7 @@ chmod 660 $USER_DATA/web.conf
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
     if [ $? -ne 0 ]; then
-        exit E_RESTART
+        exit $E_RESTART
     fi
 fi
 

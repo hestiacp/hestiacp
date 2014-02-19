@@ -93,12 +93,12 @@ decrease_user_value "$user" '$U_WEB_SSL'
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
     if [ $? -ne 0 ]; then
-        exit E_RESTART
+        exit $E_RESTART
     fi
 
     $BIN/v-restart-proxy
     if [ $? -ne 0 ]; then
-        exit E_RESTART
+        exit $E_RESTART
     fi
 fi
 

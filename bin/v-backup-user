@@ -538,6 +538,10 @@ ftp_backup() {
     # Parse config
     source $VESTA/conf/ftp.backup.conf
 
+    # Set current data
+    DATE=$(date +%F)
+    TIME=$(date +%T)
+
     # Set default port
     if [ -z "$(grep 'PORT=' $VESTA/conf/ftp.backup.conf)" ]; then
         PORT='21'

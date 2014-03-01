@@ -18,9 +18,6 @@ $v_ftp_email = $panel[$user]['CONTACT'];
         if (empty($_POST['v_ip'])) $errors[] = __('ip');
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))) $errors[] = __('ssl certificate');
         if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))) $errors[] = __('ssl key');
-        if ((!empty($_POST['v_stats_user'])) && (empty($_POST['v_stats_password']))) $errors[] = __('stats user password');
-        if ((!empty($_POST['v_ftp_user'])) && (empty($_POST['v_ftp_password']))) $errors[] = __('ftp user password');
-
         if ((!empty($_POST['v_aliases'])) && ($_POST['v_aliases'] != 'www.'.$_POST['v_domain'])) $v_adv = 'yes';
         if ((!empty($_POST['v_ssl'])) || (!empty($_POST['v_elog']))) $v_adv = 'yes';
         if ((!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key']))) $v_adv = 'yes';
@@ -67,7 +64,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
         }
 
         // Check ftp password length
-        if (empty($_SESSION['error_msg'])) {
+        if ((!empty($_POST['v_ftp'])) && (empty($_SESSION['error_msg']))) {
             if (!empty($_POST['v_ftp_user'])) {
                 $pw_len = strlen($_POST['v_ftp_password']);
                 if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
@@ -75,7 +72,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
         }
 
         // Check stats password length
-        if (empty($_SESSION['error_msg'])) {
+        if ((!empty($v_stats)) && (empty($_SESSION['error_msg']))) {
             if (!empty($_POST['v_stats_user'])) {
                 $pw_len = strlen($_POST['v_stats_password']);
                 if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);

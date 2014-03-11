@@ -31,7 +31,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
         if ($_POST['v_proxy_ext'] != $v_proxy_ext) $v_adv = 'yes';
 
         // Protect input
-        $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
+        $v_domain = preg_replace("/^www\./i", "", $_POST['v_domain']);
         $v_domain = escapeshellarg($v_domain);
         $v_domain = strtolower($v_domain);
         $v_ip = escapeshellarg($_POST['v_ip']);

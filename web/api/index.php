@@ -28,16 +28,16 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     }
 
     // Prepare arguments
-    $cmd = escapeshellarg($_POST['cmd']);
-    $arg1 = escapeshellarg($_POST['arg1']);
-    $arg2 = escapeshellarg($_POST['arg2']);
-    $arg3 = escapeshellarg($_POST['arg3']);
-    $arg4 = escapeshellarg($_POST['arg4']);
-    $arg5 = escapeshellarg($_POST['arg5']);
-    $arg6 = escapeshellarg($_POST['arg6']);
-    $arg7 = escapeshellarg($_POST['arg7']);
-    $arg8 = escapeshellarg($_POST['arg8']);
-    $arg9 = escapeshellarg($_POST['arg9']);
+    if (isset($_POST['cmd'])) $cmd = escapeshellarg($_POST['cmd']);
+    if (isset($_POST['arg1'])) $arg1 = escapeshellarg($_POST['arg1']);
+    if (isset($_POST['arg2'])) $arg2 = escapeshellarg($_POST['arg2']);
+    if (isset($_POST['arg3'])) $arg3 = escapeshellarg($_POST['arg3']);
+    if (isset($_POST['arg4'])) $arg4 = escapeshellarg($_POST['arg4']);
+    if (isset($_POST['arg5'])) $arg5 = escapeshellarg($_POST['arg5']);
+    if (isset($_POST['arg6'])) $arg6 = escapeshellarg($_POST['arg6']);
+    if (isset($_POST['arg7'])) $arg7 = escapeshellarg($_POST['arg7']);
+    if (isset($_POST['arg8'])) $arg8 = escapeshellarg($_POST['arg8']);
+    if (isset($_POST['arg9'])) $arg9 = escapeshellarg($_POST['arg9']);
 
     // Run query
     exec (VESTA_CMD.$cmd." ".$arg1." ".$arg2." ".$arg3." ".$arg4." ".$arg5." ".$arg6." ".$arg7." ".$arg8." ".$arg9, $output, $return_var);

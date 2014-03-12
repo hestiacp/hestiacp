@@ -328,7 +328,7 @@ rebuild_web_domain_conf() {
             /usr/sbin/useradd $FTP_USER \
                 -s $shell \
                 -o -u $(id -u $user) \
-                -g $user \
+                -g $(id -u $user) \
                 -M -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
 
             # Update password

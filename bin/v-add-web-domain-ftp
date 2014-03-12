@@ -65,7 +65,7 @@ fi
 /usr/sbin/useradd $ftp_user \
     -s $shell \
     -o -u $(id -u $user) \
-    -g $user \
+    -g $(id -u $user) \
     -M -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
 echo "$ftp_user:$ftp_password" | /usr/sbin/chpasswd
 ftp_md5="$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)"

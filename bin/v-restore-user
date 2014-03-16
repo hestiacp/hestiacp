@@ -257,9 +257,9 @@ if [ "$web" != 'no' ]; then
 
             # Check proxy template
             if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-                if [ ! -e "$WEBTPL/$PROXY_SYSTEM/$TPL.tpl" ]; then
+                if [ ! -e "$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl" ]; then
                     PROXY="default"
-                    if [ ! -e "$WEBTPL/$PROXY_SYSTEM/$TPL.tpl" ]; then
+                    if [ ! -e "$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl" ]; then
                         echo "Error: no avaiable proxy template"
                         echo "No available proxy tpl" |\
                             $send_mail -s "$subj" $email

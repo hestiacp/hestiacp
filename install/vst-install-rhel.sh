@@ -13,7 +13,7 @@ VERSION='0.9.8/rhel'
 YUM_REPO='/etc/yum.repos.d/vesta.repo'
 software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     php php-bcmath php-cli php-common php-gd php-imap php-mbstring php-mcrypt
-    php-mysql php-pdo php-soap php-tidy php-xml php-xmlrpc php-pecl-apc
+    php-mysql php-pdo php-soap php-tidy php-xml php-xmlrpc
     phpMyAdmin awstats webalizer vsftpd mysql mysql-server exim dovecot clamd
     spamassassin curl roundcubemail bind bind-utils bind-libs mc screen ftp
     libpng libjpeg libmcrypt mhash zip unzip openssl flex rssh libxml2

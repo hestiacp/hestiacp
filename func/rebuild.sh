@@ -455,7 +455,7 @@ rebuild_mail_domain_conf() {
         U_MAIL_DKMI=$((U_MAIL_DKMI + 1))
         pem="$USER_DATA/mail/$domain.pem"
         pub="$USER_DATA/mail/$domain.pub"
-        openssl genrsa -out $pem 512 &>/dev/null
+        openssl genrsa -out $pem 1024 &>/dev/null
         openssl rsa -pubout -in $pem -out $pub &>/dev/null
         cp $pem $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 

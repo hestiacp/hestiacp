@@ -39,8 +39,7 @@ if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
 fi
 
 # Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
-fqdn_type=$(echo $rtype |grep "NS\|CNAME\|MX\|PTR\|SRV")
-if [ ! -z "$fqdn_type" ]; then
+if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     trailing_dot=$(echo $dvalue | grep "\.$")
     if [ -z $trailing_dot ]; then
         dvalue="$dvalue."

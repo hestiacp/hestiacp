@@ -50,9 +50,11 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$IP' "$ip"
 sed -i "s/$old/$ip/g" $USER_DATA/dns/$domain.conf
 
 # Updating zone
-update_domain_zone
+if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_zone
+fi
 
-# dns-cluster
+# Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $VESTA/data/queue/dns-cluster.pipe)

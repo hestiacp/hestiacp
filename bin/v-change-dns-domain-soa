@@ -44,9 +44,11 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 update_object_value 'dns' 'DOMAIN' "$domain" '$SOA' "$soa"
 
 # Updating zone
-update_domain_zone
+if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_zone
+fi
 
-# dns-cluster
+# Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $VESTA/data/queue/dns-cluster.pipe)

@@ -53,7 +53,9 @@ echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
 sort_dns_records
 
 # Updating zone
-update_domain_zone
+if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_zone
+fi
 
 
 #----------------------------------------------------------#

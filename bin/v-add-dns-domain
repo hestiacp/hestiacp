@@ -117,34 +117,30 @@ dns_rec="$dns_rec DATE='$DATE'"
 echo "$dns_rec" >> $USER_DATA/dns.conf
 chmod 660 $USER_DATA/dns.conf
 
-# Get dns config path
-if [ -e '/etc/named.conf' ]; then
-    dns_conf='/etc/named.conf'
+# Create system configs
+if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    if [ -e '/etc/named.conf' ]; then
+        dns_conf='/etc/named.conf'
+        dns_group='named'
+    else
+        dns_conf='/etc/bind/named.conf'
+        dns_group='bind'
+    fi
+
+    # Adding zone in named.conf
+    named="zone \"$domain_idn\" {type master; file"
+    named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+    echo "$named" >> $dns_conf
+
+    # Updating domain dns zone
+    update_domain_zone
+
+    # Set permissions
+    chmod 640 $conf
+    chown root:$dns_group $conf
 fi
 
-if [ -e '/etc/bind/named.conf' ]; then
-    dns_conf='/etc/bind/named.conf'
-fi
-
-# Adding zone in named.conf
-named="zone \"$domain_idn\" {type master; file"
-named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
-echo "$named" >> $dns_conf
-
-# Updating domain dns zone
-update_domain_zone
-
-# Set permissions
-if [ "$DNS_SYSTEM" = 'named' ]; then
-    dns_group='named'
-else
-    dns_group='bind'
-fi
-
-chmod 640 $conf
-chown root:$dns_group $conf
-
-# dns-cluster
+# Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
     cmd="$BIN/v-add-remote-dns-domain $user $domain no"
     echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe

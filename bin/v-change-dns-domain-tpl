@@ -53,9 +53,6 @@ for nameserver in ${ns//,/ };do
 done
 
 # Changing tpl
-update_object_value 'dns' 'DOMAIN' "$domain" '$TPL' "$template"
-
-# Adding zone to dns dir
 cat $DNSTPL/$template.tpl |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
@@ -66,11 +63,14 @@ cat $DNSTPL/$template.tpl |\
         -e "s/%ns4%/$ns4/g" \
         -e "s/%time%/$TIME/g" \
         -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
 
 # Updating zone
-update_domain_zone
+if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_zone
+fi
 
-# dns-cluster
+# Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $VESTA/data/queue/dns-cluster.pipe)
@@ -84,6 +84,10 @@ fi
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Updating vesta config
+update_object_value 'dns' 'DOMAIN' "$domain" '$TPL' "$template"
+update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 
 # Restart named
 if [ "$restart" != 'no' ]; then

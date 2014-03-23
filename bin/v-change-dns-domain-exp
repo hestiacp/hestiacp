@@ -41,7 +41,7 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 # Changing exp
 update_object_value 'dns' 'DOMAIN' "$domain" '$EXP' "$exp"
 
-# dns-cluster
+# Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $VESTA/data/queue/dns-cluster.pipe)

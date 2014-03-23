@@ -46,7 +46,7 @@ if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
     exit
 fi
 
-if [ -z "$DNS_SYSTEM" ]; then
+if [ -z "$DNS_SYSTEM" ] || [ "$DNS_SYSTEM" = 'remote' ] ; then
     exit
 fi
 

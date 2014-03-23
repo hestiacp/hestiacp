@@ -40,7 +40,7 @@ if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
     exit
 fi
 
-if [ -z "$FTP_SYSTEM" ]; then
+if [ -z "$FTP_SYSTEM" ] || [ "$FTP_SYSTEM" = 'remote' ]; then
     exit
 fi
 

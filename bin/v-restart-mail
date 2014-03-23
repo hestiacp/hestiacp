@@ -41,7 +41,7 @@ if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
 fi
 
 
-if [ -z "$MAIL_SYSTEM" ]; then
+if [ -z "$MAIL_SYSTEM" ] || [ "$MAIL_SYSTEM" = 'remote' ]; then
     exit
 fi
 

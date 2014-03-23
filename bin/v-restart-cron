@@ -40,7 +40,7 @@ if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
     exit
 fi
 
-if [ -z "$CRON_SYSTEM" ]; then
+if [ -z "$CRON_SYSTEM" ] || [ "$CRON_SYSTEM" = 'remote' ]; then
     exit
 fi
 

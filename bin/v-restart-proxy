@@ -40,7 +40,7 @@ if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
     exit
 fi
 
-if [ -z "$PROXY_SYSTEM" ]; then
+if [ -z "$PROXY_SYSTEM" ] || [ "$PROXY_SYSTEM" = 'remote' ]; then
     exit
 fi
 

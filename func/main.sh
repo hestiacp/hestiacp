@@ -11,8 +11,7 @@ A6=$6
 A7=$7
 A8=$8
 A9=$9
-EVENT="DATE='$DATE' TIME='$TIME' CMD='$SCRIPT' A1='$A1' A2='$A2' A3='$A3'"
-EVENT="$EVENT A4='$A4' A5='$A5' A6='$A6' A7='$A7' A8='$A8' A9='$A9'"
+EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 HOMEDIR='/home'
 BACKUP='/backup'
 BACKUP_GZIP=5
@@ -52,7 +51,11 @@ E_RESTART=20
 
 # Log event function
 log_event() {
-    echo "RC='$1' $2" >> $VESTA/log/system.log
+    if [ "$1" -eq 0 ]; then
+        echo "$2" >> $VESTA/log/system.log
+    else
+        echo "$2" >> $VESTA/log/error.log
+    fi
 }
 
 # Log user history

@@ -71,7 +71,7 @@ ctime=$(date +%s)
 
 # Proxy
 service=$PROXY_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     get_srv_state $service
     str="NAME='$service' SYSTEM='reverse proxy' STATE='$state' CPU='$cpu'"
     str="$str MEM='$mem' RTIME='$rtime'"
@@ -79,7 +79,7 @@ fi
 
 # Web
 service=$WEB_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     if [ "$service" == 'apache' ]; then
         service='httpd'
     fi
@@ -91,7 +91,7 @@ fi
 
 # DNS
 service=$DNS_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     if [ "$service" == 'bind' ]; then
         service='named'
     fi
@@ -102,7 +102,7 @@ fi
 
 # MAIL
 service=$MAIL_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     get_srv_state $service
     str="$str\nNAME='$service' SYSTEM='mail server' STATE='$state' CPU='$cpu'"
     str="$str MEM='$mem' RTIME='$rtime'"
@@ -110,7 +110,7 @@ fi
 
 # IMAP
 service=$IMAP_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     get_srv_state $service
     str="$str\nNAME='$service' SYSTEM='pop/imap server' STATE='$state'"
     str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
@@ -118,7 +118,7 @@ fi
 
 # ANTIVIRUS
 service=$ANTIVIRUS_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     if [ -e "/etc/redhat-release" ]; then
         if [ "$ANTIVIRUS_SYSTEM" = 'clamav' ];then
             service='clamd'
@@ -136,7 +136,7 @@ fi
 
 # ANTISPAM
 service=$ANTISPAM_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     get_srv_state $service spamd
     str="$str\nNAME='$service' SYSTEM='email antispam' STATE='$state'"
     str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
@@ -144,7 +144,7 @@ fi
 
 # DB
 service=$DB_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     for db in ${DB_SYSTEM//,/ }; do
         service="$db"
         if [ "$service" == 'mysql' ]; then
@@ -170,7 +170,7 @@ fi
 
 # FTP
 service=$FTP_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     get_srv_state $service
     str="$str\nNAME='$service' SYSTEM='ftp server' STATE='$state' CPU='$cpu'"
     str="$str MEM='$mem' RTIME='$rtime'"
@@ -178,7 +178,7 @@ fi
 
 # CRON
 service=$CRON_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'no' ]; then
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     get_srv_state $service
     str="$str\nNAME='$service' SYSTEM='job scheduler' STATE='$state'"
     str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"

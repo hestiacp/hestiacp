@@ -54,7 +54,7 @@ log_event() {
     if [ "$1" -eq 0 ]; then
         echo "$2" >> $VESTA/log/system.log
     else
-        echo "$2" >> $VESTA/log/error.log
+        echo "$2 [Error $1]" >> $VESTA/log/error.log
     fi
 }
 

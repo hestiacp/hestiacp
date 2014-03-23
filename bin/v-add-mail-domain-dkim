@@ -46,9 +46,17 @@ openssl rsa -pubout -in $USER_DATA/mail/$domain.pem \
     -out $USER_DATA/mail/$domain.pub &>/dev/null
 chmod 660 $USER_DATA/mail/$domain.*
 
+# Define exim user
+if [ "$MAIL_SYSTEM" = 'exim' ]; then
+    mail_user=exim
+fi
+if [ "$MAIL_SYSTEM" = 'exim4' ]; then
+    mail_user=Debian-exim
+fi
+
 # Adding dkim to config
 cp $USER_DATA/mail/$domain.pem $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-chown exim:mail $HOMEDIR/$user/conf/mail/$domain/dkim.pem
+chown $mail_user:mail $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 chmod 660 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 
 # Checking dns domain

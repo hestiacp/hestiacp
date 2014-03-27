@@ -332,10 +332,11 @@ if [ "$web" != 'no' ]; then
                     conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
                     cat $tmp_conf >> $conf
                     rm -f $tmp_conf
-                fi
-                proxy_include=$(grep "$conf" $proxy_conf)
-                if [ -z "$proxy_include" ]; then
-                    echo "include $conf;" >> $proxy_conf
+
+                    proxy_include=$(grep "$conf" $proxy_conf)
+                    if [ -z "$proxy_include" ]; then
+                        echo "include $conf;" >> $proxy_conf
+                    fi
                 fi
 
                 # Adding SSL proxy vhost

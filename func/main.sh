@@ -26,6 +26,13 @@ WEBTPL=$VESTA/data/templates/web
 DNSTPL=$VESTA/data/templates/dns
 RRD=$VESTA/web/rrd
 
+if [ "$MAIL_SYSTEM" = 'exim4' ]; then
+    MAIL_USER=Debian-exim
+else
+    MAIL_USER=exim
+fi
+
+
 # Return codes
 OK=0
 E_ARGS=1

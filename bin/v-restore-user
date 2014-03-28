@@ -611,9 +611,8 @@ if [ "$db" != 'no' ]; then
     echo "-- DB --"
     msg="$msg\n-- DB --"
 
-    # Create domain list
-    db_list=$(tar -tf $BACKUP/$backup | grep "^./db" |\
-        grep db.conf | cut -f 3 -d '/')
+    # Create database list
+    db_list=$(tar -tf $BACKUP/$backup | grep "/db.conf$" | cut -f 3 -d '/')
     if [ ! -z "$db" ]; then
         db_include_list=$(mktemp)
         for db_include in ${db//,/ }; do
@@ -622,6 +621,8 @@ if [ "$db" != 'no' ]; then
         db_list=$(echo "$db_list" | egrep -f $db_include_list )
         rm -f $db_include_list
     fi
+    echo "$db_list"
+    exit
 
     for db in $db_list; do
 

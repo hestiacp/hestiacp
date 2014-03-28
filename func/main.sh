@@ -160,7 +160,9 @@ is_type_valid() {
 
 # Check if backup is available for user
 is_backup_available() {
-    if [ "$user" != "$(echo $backup | cut -f 1 -d '.')" ]; then
+    b_owner=$(echo $user |\
+        sed -e "s/\.[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].tar//")
+    if [ "$user" != "$b_owner" ]; then
         echo "Error: User $user don't have permission to use $backup"
         log_event "$E_FORBIDEN" "$EVENT"
         exit $E_FORBIDEN

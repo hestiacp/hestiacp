@@ -621,8 +621,6 @@ if [ "$db" != 'no' ]; then
         db_list=$(echo "$db_list" | egrep -f $db_include_list )
         rm -f $db_include_list
     fi
-    echo "$db_list"
-    exit
 
     for db in $db_list; do
 

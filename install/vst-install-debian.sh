@@ -510,6 +510,7 @@ mysql -e "FLUSH PRIVILEGES"
 
 # Bind configuration
 wget $CHOST/$VERSION/named.conf -O /etc/bind/named.conf
+sed -i "s%listen-on%//listen%" /etc/bind/named.conf.options
 chown root:bind /etc/bind/named.conf
 chmod 640 /etc/bind/named.conf
 update-rc.d bind9 defaults

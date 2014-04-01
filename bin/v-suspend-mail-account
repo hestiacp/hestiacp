@@ -41,10 +41,12 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 #                       Action                             #
 #----------------------------------------------------------#
 
-quota=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$QUOTA')
-sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
-str="$account:SUSPENDED:$user:mail::$HOMEDIR/$user:$quota"
-echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    quota=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$QUOTA')
+    sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
+    str="$account:SUSPENDED:$user:mail::$HOMEDIR/$user:$quota"
+    echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+fi
 
 
 #----------------------------------------------------------#

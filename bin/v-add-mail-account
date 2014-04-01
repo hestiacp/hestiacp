@@ -53,8 +53,10 @@ else
     md5=$(/usr/sbin/dovecotpw -s md5 -p "$password")
 fi
 
-str="$account:$md5:$user:mail::$HOMEDIR/$user:$quota"
-echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    str="$account:$md5:$user:mail::$HOMEDIR/$user:$quota"
+    echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+fi
 
 
 #----------------------------------------------------------#

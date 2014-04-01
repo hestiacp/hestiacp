@@ -40,14 +40,18 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
-for al in ${aliases//,/ }; do
-    sed -i "/^$al@$domain:$account/d" $HOMEDIR/$user/conf/mail/$domain/aliases
-done
 
-sed -i "/^$account@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
-sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
-rm -rf $HOMEDIR/$user/mail/$domain/$account
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
+    for al in ${aliases//,/ }; do
+        sed -i "/^$al@$domain:$account/d" \
+            $HOMEDIR/$user/conf/mail/$domain/aliases
+    done
+
+    sed -i "/^$account@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+    sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
+    rm -rf $HOMEDIR/$user/mail/$domain/$account
+fi
 
 
 #----------------------------------------------------------#
@@ -61,7 +65,6 @@ sed -i "/ACCOUNT='$account'/d" $USER_DATA/mail/$domain.conf
 accounts=$(wc -l $USER_DATA/mail/$domain.conf | cut -f 1 -d ' ')
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS'
 update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accounts"
-
 
 # Logging
 log_history "deleted $account@$domain mail account"

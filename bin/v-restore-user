@@ -332,11 +332,10 @@ if [ "$web" != 'no' ]; then
                     conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
                     cat $tmp_conf >> $conf
                     rm -f $tmp_conf
-
-                    proxy_include=$(grep "$conf" $proxy_conf)
-                    if [ -z "$proxy_include" ]; then
-                        echo "include $conf;" >> $proxy_conf
-                    fi
+                fi
+                proxy_include=$(grep "$conf" $proxy_conf)
+                if [ -z "$proxy_include" ]; then
+                    echo "include $conf;" >> $proxy_conf
                 fi
 
                 # Adding SSL proxy vhost
@@ -611,8 +610,9 @@ if [ "$db" != 'no' ]; then
     echo "-- DB --"
     msg="$msg\n-- DB --"
 
-    # Create database list
-    db_list=$(tar -tf $BACKUP/$backup | grep "/db.conf$" | cut -f 3 -d '/')
+    # Create domain list
+    db_list=$(tar -tf $BACKUP/$backup | grep "^./db" |\
+        grep db.conf | cut -f 3 -d '/')
     if [ ! -z "$db" ]; then
         db_include_list=$(mktemp)
         for db_include in ${db//,/ }; do

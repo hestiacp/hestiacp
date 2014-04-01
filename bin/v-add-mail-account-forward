@@ -48,15 +48,18 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding forward to exim
+# Define fwd string
 if [ -z "$fwd" ]; then
     fwd="$forward"
 else
     fwd="$fwd,$forward"
 fi
 
-sed -i "/^$account@$domain:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
-echo "$account@$domain:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+# Adding forward to exim
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    sed -i "/^$account@$domain:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
+    echo "$account@$domain:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+fi
 
 
 #----------------------------------------------------------#

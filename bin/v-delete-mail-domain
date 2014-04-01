@@ -42,9 +42,21 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 get_domain_values 'mail'
 accounts=$(wc -l $USER_DATA/mail/$domain.conf|cut -f 1 -d ' ')
 
-rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
-rm -rf $HOMEDIR/$user/conf/mail/$domain
-rm -rf $HOMEDIR/$user/mail/$domain_idn
+# Deleting exim configuration files
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
+    rm -rf $HOMEDIR/$user/conf/mail/$domain
+    rm -rf $HOMEDIR/$user/mail/$domain_idn
+fi
+
+# Deleting dkim dns record
+if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
+    records=$($BIN/v-list-dns-records $user $domain plain)
+    dkim_records=$(echo "$records" |grep -w '_domainkey' | cut -f 1 -d ' ')
+    for id in $dkim_records; do
+        $BIN/v-delete-dns-record $user $domain $id
+    done
+fi
 
 
 #----------------------------------------------------------#
@@ -64,7 +76,6 @@ if [ "$DKIM" = 'yes' ]; then
     decrease_user_value "$user" '$U_MAIL_DKMI'
 fi
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
-
 
 # Logging
 log_history "deleted mail domain $domain"

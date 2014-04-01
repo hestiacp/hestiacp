@@ -38,14 +38,15 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$DKIM'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Generating dkim
-rm -f $USER_DATA/mail/$domain.pem
-rm -f $USER_DATA/mail/$domain.pub
-rm -f $HOMEDIR/$user/conf/mail/$domain/dkim.pem
+# Deleting dkim
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    rm -f $USER_DATA/mail/$domain.pem
+    rm -f $USER_DATA/mail/$domain.pub
+    rm -f $HOMEDIR/$user/conf/mail/$domain/dkim.pem
+fi
 
-# Checking dns domain
-check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
-if [ "$?" -eq 0 ]; then
+# Deleting dns record
+if [ ! -z "$DNS_SYSTEM" ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
     records=$($BIN/v-list-dns-records $user $domain plain)
     dkim_records=$(echo "$records" |grep -w '_domainkey' | cut -f 1 -d ' ')
     for id in $dkim_records; do

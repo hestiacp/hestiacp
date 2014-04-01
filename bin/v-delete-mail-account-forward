@@ -48,21 +48,25 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Define new fwd string
 fwd=$(echo "$fwd" |\
     sed "s/,/\n/g"|\
     sed "s/^$forward$//g"|\
     sed "/^$/d"|\
     sed ':a;N;$!ba;s/\n/,/g')
 
-sed -i "/^$account@$domain:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
-echo "$account@$domain:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+# Deleting exim forward
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    sed -i "/^$account@$domain:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
+    echo "$account@$domain:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Update config
+# Updating config
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD' "$fwd"
 
 # Logging

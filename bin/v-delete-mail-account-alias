@@ -48,7 +48,11 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-sed -i "/^$malias@$domain:$account/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    sed -i "/^$malias@$domain:$account/d" \
+        $HOMEDIR/$user/conf/mail/$domain/aliases
+fi
+
 aliases=$(echo "$aliases" |\
     sed "s/,/\n/g"|\
     sed "s/^$malias$//g"|\

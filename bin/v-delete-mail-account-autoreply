@@ -43,13 +43,18 @@ is_object_value_exist "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY'
 #                       Action                             #
 #----------------------------------------------------------#
 
-rm -f $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
-rm -f $USER_DATA/mail/$domain/$account@$domain.msg
+# Deleting exim autoreply message
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    rm -f $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
+fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Deleting autoreply message
+rm -f $USER_DATA/mail/$domain/$account@$domain.msg
 
 # Update config
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$AUTOREPLY' 'no'

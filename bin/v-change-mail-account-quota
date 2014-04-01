@@ -43,9 +43,11 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 #----------------------------------------------------------#
 
 md5=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$MD5')
-sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
-str="$account:$md5:$user:mail::$HOMEDIR/$user:$quota"
-echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
+    str="$account:$md5:$user:mail::$HOMEDIR/$user:$quota"
+    echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+fi
 
 
 #----------------------------------------------------------#

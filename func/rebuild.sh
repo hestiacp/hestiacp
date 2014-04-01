@@ -425,74 +425,57 @@ rebuild_mail_domain_conf() {
     domain_idn=$(idn -t --quiet -a "$domain")
     get_domain_values 'mail'
 
-    # Rebuilding config structure
-    rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
-    mkdir -p $HOMEDIR/$user/conf/mail/$domain
-    ln -s $HOMEDIR/$user/conf/mail/$domain \
-        /etc/$MAIL_SYSTEM/domains/$domain_idn
-    rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
-    rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
-    rm -f $HOMEDIR/$user/conf/mail/$domain/antivirus
-    rm -f $HOMEDIR/$user/conf/mail/$domain/protection
-    rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
-    rm -f $HOMEDIR/$user/conf/mail/$domain/fwd_only
-    touch $HOMEDIR/$user/conf/mail/$domain/aliases
-    touch $HOMEDIR/$user/conf/mail/$domain/passwd
-    touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
-
-    # Adding antispam protection
-    if [ "$ANTISPAM" = 'yes' ]; then
-        touch $HOMEDIR/$user/conf/mail/$domain/antispam
-    fi
-
-    # Adding antivirus protection
-    if [ "$ANTIVIRUS" = 'yes' ]; then
-        touch $HOMEDIR/$user/conf/mail/$domain/antivirus
-    fi
-
-    # Adding dkim
-    if [ "$DKIM" = 'yes' ]; then
-        U_MAIL_DKMI=$((U_MAIL_DKMI + 1))
-        pem="$USER_DATA/mail/$domain.pem"
-        pub="$USER_DATA/mail/$domain.pub"
-        openssl genrsa -out $pem 1024 &>/dev/null
-        openssl rsa -pubout -in $pem -out $pub &>/dev/null
-        cp $pem $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-
-        # Deleting old dkim records
-        records=$($BIN/v-list-dns-records $user $domain plain)
-        dkim_records=$(echo "$records" |grep -w '_domainkey'|cut -f 1 -d ' ')
-        for id in $dkim_records; do
-            $BIN/v-delete-dns-record $user $domain $id
-        done
-
-        # Adding new dkim dns records
-        check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
-        if [ "$?" -eq 0 ]; then
-            record='_domainkey'
-            policy="\"t=y; o=~;\""
-            $BIN/v-add-dns-record $user $domain $record TXT "$policy"
-
-            record='mail._domainkey'
-            p=$(cat $pub|grep -v ' KEY---'|tr -d '\n')
-            slct="\"k=rsa\; p=$p\""
-            $BIN/v-add-dns-record $user $domain $record TXT "$slct"
-        fi
-    fi
-
-    # Removing symbolic link
     if [ "$SUSPENDED" = 'yes' ]; then
         SUSPENDED_MAIL=$((SUSPENDED_MAIL +1))
-        rm -f /etc/exim/domains/$domain_idn
     fi
 
-    if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
-        mkdir $HOMEDIR/$user/mail/$domain_idn
-    fi
+    # Rebuilding exim config structure
+    if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+        rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
+        mkdir -p $HOMEDIR/$user/conf/mail/$domain
+        ln -s $HOMEDIR/$user/conf/mail/$domain \
+            /etc/$MAIL_SYSTEM/domains/$domain_idn
+        rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
+        rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
+        rm -f $HOMEDIR/$user/conf/mail/$domain/antivirus
+        rm -f $HOMEDIR/$user/conf/mail/$domain/protection
+        rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
+        rm -f $HOMEDIR/$user/conf/mail/$domain/fwd_only
+        touch $HOMEDIR/$user/conf/mail/$domain/aliases
+        touch $HOMEDIR/$user/conf/mail/$domain/passwd
+        touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
 
-    dom_aliases=$HOMEDIR/$user/conf/mail/$domain/aliases
-    if [ ! -z "$CATCHALL" ]; then
-        echo "*@$domain:$CATCHALL" >> $dom_aliases
+        # Adding antispam protection
+        if [ "$ANTISPAM" = 'yes' ]; then
+            touch $HOMEDIR/$user/conf/mail/$domain/antispam
+        fi
+
+        # Adding antivirus protection
+        if [ "$ANTIVIRUS" = 'yes' ]; then
+            touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+        fi
+
+        # Adding dkim
+        if [ "$DKIM" = 'yes' ]; then
+            cp $USER_DATA/mail/$domain.pem \
+                $HOMEDIR/$user/conf/mail/$domain/dkim.pem
+        fi
+
+        # Removing symbolic link if domain is suspended
+        if [ "$SUSPENDED" = 'yes' ]; then
+            rm -f /etc/exim/domains/$domain_idn
+        fi
+
+        # Adding mail directiry
+        if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
+            mkdir $HOMEDIR/$user/mail/$domain_idn
+        fi
+
+        # Adding catchall email
+        dom_aliases=$HOMEDIR/$user/conf/mail/$domain/aliases
+        if [ ! -z "$CATCHALL" ]; then
+            echo "*@$domain:$CATCHALL" >> $dom_aliases
+        fi
     fi
 
     # Rebuild domain accounts
@@ -513,37 +496,32 @@ rebuild_mail_domain_conf() {
             MD5='SUSPENDED'
         fi
 
-        str="$account:$MD5:$user:mail::$HOMEDIR/$user:$QUOTA"
-        echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
-
-        for malias in ${ALIAS//,/ }; do
-            echo "$malias@$domain:$account@$domain" >> $dom_aliases
-        done
-        if [ ! -z "$FWD" ]; then
-            echo "$account@$domain:$FWD" >> $dom_aliases
-        fi
-        if [ "$FWD_ONLY" = 'yes' ]; then
-            echo "$account" >> $HOMEDIR/$user/conf/mail/$domain/fwd_only
+        if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+            str="$account:$MD5:$user:mail::$HOMEDIR/$user:$QUOTA"
+            echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+            for malias in ${ALIAS//,/ }; do
+                echo "$malias@$domain:$account@$domain" >> $dom_aliases
+            done
+            if [ ! -z "$FWD" ]; then
+                echo "$account@$domain:$FWD" >> $dom_aliases
+            fi
+            if [ "$FWD_ONLY" = 'yes' ]; then
+                echo "$account" >> $HOMEDIR/$user/conf/mail/$domain/fwd_only
+            fi
         fi
     done
 
-    # Set permissions
-    chmod 660 $USER_DATA/mail/$domain.*
-    chmod 771 $HOMEDIR/$user/conf/mail/$domain
-    chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-    chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
-    chmod 770 $HOMEDIR/$user/mail/$domain_idn
-
-    # Set ownership
-    if [ "$MAIL_SYSTEM" = 'exim' ]; then
-        mail_user=exim
+    # Set permissions and ownership
+    if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+        chmod 660 $USER_DATA/mail/$domain.*
+        chmod 771 $HOMEDIR/$user/conf/mail/$domain
+        chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
+        chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
+        chmod 770 $HOMEDIR/$user/mail/$domain_idn
+        chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
+        chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+        chown $user:mail $HOMEDIR/$user/mail/$domain_idn
     fi
-    if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-        mail_user=Debian-exim
-    fi
-    chown -R $mail_user:mail $HOMEDIR/$user/conf/mail/$domain
-    chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
-    chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 
     # Update counters
     update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accs"

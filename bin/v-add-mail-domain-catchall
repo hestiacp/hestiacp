@@ -41,8 +41,10 @@ is_object_value_empty 'mail' 'DOMAIN' "$domain" '$CATCHALL'
 #----------------------------------------------------------#
 
 # Adding catchall alias
-sed -i "/*@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
-echo "*@$domain:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    sed -i "/*@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+    echo "*@$domain:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+fi
 
 
 #----------------------------------------------------------#
@@ -51,7 +53,6 @@ echo "*@$domain:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 
 # Adding antispam in config
 update_object_value 'mail' 'DOMAIN' "$domain" '$CATCHALL' "$email"
-
 
 # Logging
 log_history "added $email as catchall email for $domain"

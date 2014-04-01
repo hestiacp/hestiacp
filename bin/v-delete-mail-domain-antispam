@@ -40,7 +40,9 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$ANTISPAM'
 #----------------------------------------------------------#
 
 # Delete antispam flag
-rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
+fi
 
 
 #----------------------------------------------------------#

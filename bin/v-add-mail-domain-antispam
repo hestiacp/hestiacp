@@ -40,7 +40,9 @@ is_object_value_empty 'mail' 'DOMAIN' "$domain" '$ANTISPAM'
 #----------------------------------------------------------#
 
 # Adding antispam flag
-touch $HOMEDIR/$user/conf/mail/$domain/antispam
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    touch $HOMEDIR/$user/conf/mail/$domain/antispam
+fi
 
 
 #----------------------------------------------------------#

@@ -40,7 +40,9 @@ is_object_value_empty 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS'
 #----------------------------------------------------------#
 
 # Adding antivirus flag
-touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+fi
 
 
 #----------------------------------------------------------#

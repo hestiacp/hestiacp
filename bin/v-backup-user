@@ -133,8 +133,7 @@ fi
 IFS="$OLD_IFS"
 
 # WEB domains
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ] && [ "$WEB" != '*' ]
-then
+if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
     echo "-- WEB --"
     msg="$msg\n-- WEB --"
     mkdir $tmpdir/web/
@@ -211,11 +210,9 @@ then
         cd $HOMEDIR/$user/web/$domain
         domain_direcotries=$(ls |grep -v logs)
         tar -cpf $tmpdir/web/$domain/domain_data.tar $domain_direcotries
-
-        if [ ! -z "$BACKUP_GZIP" ]; then
-            gzip -$BACKUP_GZIP $tmpdir/web/$domain/domain_data.tar
-        fi
+        gzip -$BACKUP_GZIP $tmpdir/web/$domain/domain_data.tar
     done
+
     if [ "$i" -eq 1 ]; then
         echo -e "$(date "+%F %T") $i domain"
         msg="$msg\n$(date "+%F %T") $i domain"
@@ -228,8 +225,7 @@ then
 fi
 
 # DNS domains
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ] && [ "$DNS" != '*' ]
-then
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
     echo "-- DNS --"
     msg="$msg\n-- DNS --"
     mkdir $tmpdir/dns/
@@ -262,6 +258,7 @@ then
         cp $USER_DATA/dns/$domain.conf vesta/$domain.conf
         cp $HOMEDIR/$user/conf/dns/$domain.db conf/$domain.db
     done
+
     if [ "$i" -eq 1 ]; then
         echo -e "$(date "+%F %T") $i domain"
         msg="$msg\n$(date "+%F %T") $i domain"
@@ -274,8 +271,7 @@ then
 fi
 
 # Mail domains
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ] && [ "$MAIL" != '*' ]
-then
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
     echo "-- MAIL --"
     msg="$msg\n-- MAIL --"
     mkdir $tmpdir/mail/
@@ -300,8 +296,10 @@ then
         domain_idn=$(idn -t --quiet -a "$domain")
 
         # Creating exim config
-        cd $tmpdir/mail/$domain/
-        cp $HOMEDIR/$user/conf/mail/$domain/* conf/
+        if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+            cd $tmpdir/mail/$domain/
+            cp $HOMEDIR/$user/conf/mail/$domain/* conf/
+        fi
 
         # Creating vesta config
         conf="$USER_DATA/mail.conf"
@@ -314,14 +312,12 @@ then
         # Packing mailboxes
         cd $HOMEDIR/$user/mail/$domain_idn
         accounts=$(ls)
-        if [ ! -z "$accounts" ]; then
+        if [ ! -z "$accounts" ] && [[ "$MAIL_SYSTEM" =~ exim ]]; then
             tar -cpf $tmpdir/mail/$domain/accounts.tar  $accounts
-        fi
-
-        if [ ! -z "$BACKUP_GZIP" ] && [ ! -z "$accounts" ]; then
             gzip -$BACKUP_GZIP $tmpdir/mail/$domain/accounts.tar
         fi
     done
+
     if [ "$i" -eq 1 ]; then
         echo -e "$(date "+%F %T") $i domain"
         msg="$msg\n$(date "+%F %T") $i domain"
@@ -335,7 +331,7 @@ fi
 
 
 # Databases
-if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
+if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
     echo "-- DB --"
     msg="$msg\n-- DB --"
     mkdir $tmpdir/db/
@@ -370,10 +366,9 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
             mysql) dump_mysql_database ;;
             pgsql) dump_pgsql_database ;;
         esac
-        if [ ! -z "$BACKUP_GZIP" ]; then 
-            gzip -$BACKUP_GZIP $dump
-        fi
+        gzip -$BACKUP_GZIP $dump
     done
+
     if [ "$i" -eq 1 ]; then
         echo -e "$(date "+%F %T") $i database"
         msg="$msg\n$(date "+%F %T") $i database"
@@ -386,8 +381,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ] && [ "$DB" != '*' ]; then
 fi
 
 # Cron jobs
-if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ] && [ "$CRON" != '*' ]
-then
+if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON" != '*' ]; then
     echo "-- CRON --"
     msg="$msg\n-- CRON --"
     mkdir $tmpdir/cron/
@@ -403,6 +397,7 @@ then
         cron_list="$cron_record"
         cp /var/spool/cron/$user $tmpdir/cron/
     fi
+
     if [ "$cron_record" -eq 1 ]; then
         echo -e "$(date "+%F %T") $cron_record record"
         msg="$msg\n$(date "+%F %T") $cron_record record"

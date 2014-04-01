@@ -48,20 +48,10 @@ fi
 #----------------------------------------------------------#
 
 # Adding account to fwd_only
-touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
-check_fwd=$(grep "^$account$" $HOMEDIR/$user/conf/mail/$domain/fwd_only)
-if [ -z "$check_fwd" ]; then
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     echo "$account" > $HOMEDIR/$user/conf/mail/$domain/fwd_only
+    chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/fwd_only
 fi
-
-# Set ownership
-if [ "$MAIL_SYSTEM" = 'exim' ]; then
-    mail_user=exim
-fi
-if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-    mail_user=Debian-exim
-fi
-chown -R $mail_user:mail $HOMEDIR/$user/conf/mail/$domain/fwd_only
 
 
 #----------------------------------------------------------#

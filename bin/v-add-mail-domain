@@ -43,35 +43,64 @@ is_package_full 'MAIL_DOMAINS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding domain directory and necessary files
-mkdir $HOMEDIR/$user/conf/mail/$domain
-mkdir $HOMEDIR/$user/mail/$domain_idn
-touch $HOMEDIR/$user/conf/mail/$domain/aliases
-touch $HOMEDIR/$user/conf/mail/$domain/passwd
+# Adding domain to mail.conf
+s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
+s="$s ACCOUNTS='0' U_DISK='0' CATCHALL='' SUSPENDED='no' TIME='$TIME'"
+s="$s DATE='$DATE'"
+echo $s >> $USER_DATA/mail.conf
+touch $USER_DATA/mail/$domain.conf
 
-# Adding symlink
-ln -s $HOMEDIR/$user/conf/mail/$domain /etc/$MAIL_SYSTEM/domains/$domain_idn
-
-# Adding antispam protection
-if [ "$antispam" = 'yes' ]; then
-    touch $HOMEDIR/$user/conf/mail/$domain/antispam
-fi
-
-# Adding antivirus protection
-if [ "$antivirus" = 'yes' ]; then
-    touch $HOMEDIR/$user/conf/mail/$domain/antivirus
-fi
-
-# Adding dkim
+# Generating DKIM keys
 if [ "$dkim" = 'yes' ]; then
     openssl genrsa -out $USER_DATA/mail/$domain.pem $dkim_size &>/dev/null
     openssl rsa -pubout -in $USER_DATA/mail/$domain.pem \
         -out $USER_DATA/mail/$domain.pub &>/dev/null
-    chmod 660 $USER_DATA/mail/$domain.*
+fi
 
-    cp $USER_DATA/mail/$domain.pem $HOMEDIR/$user/conf/mail/$domain/dkim.pem
+# Set permissions
+chmod 660 $USER_DATA/mail/$domain.*
+chmod 660 $USER_DATA/mail.conf
 
-    # Adding dkim dns records
+# Building exim configs
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    mkdir $HOMEDIR/$user/conf/mail/$domain
+    mkdir $HOMEDIR/$user/mail/$domain_idn
+    touch $HOMEDIR/$user/conf/mail/$domain/aliases
+    touch $HOMEDIR/$user/conf/mail/$domain/passwd
+    touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
+    ln -s $HOMEDIR/$user/conf/mail/$domain \
+        /etc/$MAIL_SYSTEM/domains/$domain_idn
+
+    # Adding antispam protection
+    if [ "$antispam" = 'yes' ]; then
+        touch $HOMEDIR/$user/conf/mail/$domain/antispam
+    fi
+
+    # Adding antivirus protection
+    if [ "$antivirus" = 'yes' ]; then
+        touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+    fi
+
+    # Adding dkim support
+    if [ "$dkim" = 'yes' ]; then
+        cp -f $USER_DATA/mail/$domain.pem \
+            $HOMEDIR/$user/conf/mail/$domain/dkim.pem
+    fi
+
+    # Set permission
+    chmod 771 $HOMEDIR/$user/conf/mail/$domain
+    chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
+    chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
+    chmod 770 $HOMEDIR/$user/mail/$domain_idn
+
+    # Set ownership
+    chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
+    chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+    chown $user:mail $HOMEDIR/$user/mail/$domain_idn
+fi
+
+# Adding dkim dns records
+if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
     check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
     if [ "$?" -eq 0 ]; then
         p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
@@ -84,34 +113,6 @@ if [ "$dkim" = 'yes' ]; then
         $BIN/v-add-dns-record $user $domain $record TXT "$selector"
     fi
 fi
-
-# Adding domain to vesta db
-s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
-s="$s ACCOUNTS='0' U_DISK='0' CATCHALL='' SUSPENDED='no' TIME='$TIME'"
-s="$s DATE='$DATE'"
-
-# Set permissions
-chmod 660 $USER_DATA/mail/$domain.*
-chmod 771 $HOMEDIR/$user/conf/mail/$domain
-chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
-chmod 770 $HOMEDIR/$user/mail/$domain_idn
-
-# Set ownership
-if [ "$MAIL_SYSTEM" = 'exim' ]; then
-    mail_user=exim
-fi
-if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-    mail_user=Debian-exim
-fi
-chown -R $mail_user:mail $HOMEDIR/$user/conf/mail/$domain
-chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
-chown $user:mail $HOMEDIR/$user/mail/$domain_idn
-
-echo $s >> $USER_DATA/mail.conf
-touch $USER_DATA/mail/$domain.conf
-chmod 660 $USER_DATA/mail.conf
-chmod 660 $USER_DATA/mail/$domain.conf
 
 
 #----------------------------------------------------------#

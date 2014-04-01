@@ -42,7 +42,9 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 #----------------------------------------------------------#
 
 # Deleting account from fwd_only
-sed -i "/^$account$/d" $HOMEDIR/$user/conf/mail/$domain/fwd_only
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    sed -i "/^$account$/d" $HOMEDIR/$user/conf/mail/$domain/fwd_only
+fi
 
 
 #----------------------------------------------------------#

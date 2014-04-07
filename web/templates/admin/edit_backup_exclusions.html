@@ -79,6 +79,16 @@
                             </tr>
                             <tr>
                                 <td class="vst-text" style="padding: 12px 0 0 0;">
+                                    <?php print __('Cron');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea size="20" class="vst-textinput" name="v_cron" placeholder="<?php echo __('CRON_EXCLUSIONS') ?>"><?php if (isset($v_cron)) echo $v_cron; ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
                                     <?php print __('User Directories');?>
                                 </td>
                             </tr>

@@ -89,6 +89,11 @@ if (empty($_SESSION['error_msg'])) {
         $v_db_tmp = rtrim($v_db_tmp, ",");
         $v_db_tmp = "DB=" . escapeshellarg($v_db_tmp);
 
+        $v_cron = $_POST['v_cron'];
+        $v_cron_tmp = str_replace("\r\n", ",", $_POST['v_cron']);
+        $v_cron_tmp = rtrim($v_cron_tmp, ",");
+        $v_cron_tmp = "CRON=" . escapeshellarg($v_cron_tmp);
+
         $v_userdir = $_POST['v_userdir'];
         $v_userdir_tmp = str_replace("\r\n", ",", $_POST['v_userdir']);
         $v_userdir_tmp = rtrim($v_userdir_tmp, ",");

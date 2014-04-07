@@ -103,6 +103,7 @@ $LANG['en'] = array(
     'Editing Package'  => 'Editing Package',
     'Adding IP address'  => 'Adding IP address',
     'Editing IP Address'  => 'Editing IP Address',
+    'Editing Backup Exclusions' => 'Editing Backup Exclusions',
     'Generating CSR' => 'Generating CSR',
     'Listing'  => 'Listing',
     'Search Results'  => 'Search Results',
@@ -404,6 +405,7 @@ $LANG['en'] = array(
     'DNS_EXCLUSIONS' => "Type domain name, one per line. To exlude all domains use *",
     'MAIL_EXCLUSIONS' => "Type domain name, one per line. To exlude all domains use *. To exclude specific accounts use following format: domain.com:info:support:postmaster",
     'DB_EXCLUSIONS' => "Type full database name, one per line. To exlude all databases use *",
+    'CRON_EXCLUSIONS' => "To exlude all jobs use *",
     'USER_EXCLUSIONS' => "Type directory name, one per line. Directories should not include leading or trailing slashes. To exlude all dirs use *",
 
     'Welcome to Vesta Control Panel'  => 'Welcome to Vesta Control Panel',

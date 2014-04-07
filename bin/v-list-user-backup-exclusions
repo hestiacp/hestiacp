@@ -1,0 +1,94 @@
+#!/bin/bash
+# info: list backup exclusions
+# options: USER [FORMAT]
+#
+# The function for obtaining the backup exclusion list
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+format=${2-shell}
+USER=''
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json function
+json_list_backup_xld() {
+    set -f
+    echo '{'
+    fields_count=$(echo "$fields" | wc -w)
+    i=1
+    source $USER_DATA/backup-excludes.conf
+    for field in $fields; do
+        eval value=$field
+        j=1
+        echo -e "\t\"${field//$/}\": {"
+        for exlcude in ${value//,/ }; do
+            exlcude_obj=$(echo $exlcude |cut -f 1 -d:)
+            exclude_param=$(echo $exlcude |sed -e "s/$exlcude_obj://")
+            if [ "$exlcude_obj" = "$exclude_param" ]; then
+                exclude_param=''
+            fi
+            if [ $j -lt "$(echo ${value//,/ } |wc -w)" ]; then
+                echo -e "\t\t\"$exlcude_obj\": \"$exclude_param\","
+            else
+                echo -e "\t\t\"$exlcude_obj\": \"$exclude_param\""
+            fi
+            (( ++j))
+        done
+        if [ $i -lt $fields_count ]; then
+            echo -e "\t},"
+        else
+            echo -e "\t}"
+        fi
+        (( ++i))
+    done
+    echo '}'
+}
+
+# Shell function
+shell_list_backup_xld() {
+    source $USER_DATA/backup-excludes.conf
+    for field in $fields; do
+        eval value=$field
+        echo -e "${field//$/}: $value"
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [FORMAT]'
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining fileds to select
+conf=$VESTA/data/ips/*
+fields="\$WEB \$DNS \$MAIL \$DB \$CRON \$USER"
+
+# Listing backup exclusions
+case $format in
+    json)   json_list_backup_xld ;;
+    plain)  nohead=1; shell_list_backup_xld ;;
+    shell)  shell_list_backup_xld;;
+    *)      check_args '1' '0' '[FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

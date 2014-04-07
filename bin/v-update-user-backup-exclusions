@@ -1,0 +1,82 @@
+#!/bin/bash
+# info: update backup exclusion list
+# options: USER FILE
+#
+# The function for updating backup exclusion list
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+vfile=$2
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+is_file_available() {
+    if [ ! -e "$vfile" ]; then
+        echo "Error: file $vfile doesn't exist"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+}
+
+is_file_valid() {
+    exclude="[!$#&;()\]"
+    vcontent=$(cat $vfile)
+    if [[ "$vcontent" =~ $exclude ]]; then
+        echo "Error: invalid characters in the exlusion list"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER FILE'
+validate_format 'user' 'vfile'
+is_object_valid 'user' 'USER' "$user"
+is_file_available
+is_file_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Flush variables
+WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''
+
+# Source exclusion list
+source $vfile
+
+# Updating exlusion list
+echo "WEB='$WEB'" > $USER_DATA/backup-excludes.conf
+echo "DNS='$DNS'" >> $USER_DATA/backup-excludes.conf
+echo "MAIL='$MAIL'" >> $USER_DATA/backup-excludes.conf
+echo "DB='$DB'" >> $USER_DATA/backup-excludes.conf
+echo "CRON='$DB'" >> $USER_DATA/backup-excludes.conf
+echo "USER='$USER'" >> $USER_DATA/backup-excludes.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_history "updated exlusion list"
+log_event "$OK" "$EVENT"
+
+exit

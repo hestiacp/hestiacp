@@ -62,11 +62,12 @@ send_mail="$VESTA/web/inc/mail-wrapper.php"
 la=$(cat /proc/loadavg | cut -f 1 -d ' ' | cut -f 1 -d '.')
 i=0
 while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
-    echo "$(date "+%F %T") Load Average $la"
-    echo
-    sleep 60
-    if [ "$i" -ge "15" ]; then
-        echo "LoadAverage $i is above threshold" | $send_mail -s "$subj" $email
+    echo "$(date "+%F %T") LoadAverage $la is above threshold. Sleeping..."
+    sleep 120
+    if [ "$i" -ge "5" ]; then
+        mail_top=$(top -b| head -n 30)
+        mail_text="LoadAverage $i is above threshold\n\n$mail_top\n"
+        echo -e "$mail_text" | $send_mail -s "$subj" $email
         echo "Error: LA is too high"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_LA" "$EVENT"
@@ -106,10 +107,10 @@ if [ -e "$USER_DATA/history.log" ]; then
     cp -r $USER_DATA/history.log $tmpdir/vesta/
 fi
 
-if [ -e "$USER_DATA/backup.excludes" ]; then
-    echo -e "$(date "+%F %T") backup.excludes"
-    msg="$msg\n$(date "+%F %T") backup.excludes"
-    cp -r $USER_DATA/backup.excludes $tmpdir/vesta/
+if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+    echo -e "$(date "+%F %T") backup-excludes.conf"
+    msg="$msg\n$(date "+%F %T") backup-excludes.conf"
+    cp -r $USER_DATA/backup-excludes.conf $tmpdir/vesta/
 fi
 
 # Backup PAM
@@ -123,14 +124,9 @@ echo
 msg="$msg\n"
 
 # Parsing excludes
-OLD_IFS="$IFS"
-IFS=$'\n'
-if [ -e "$USER_DATA/backup.excludes" ]; then
-    for exclude in $(cat $USER_DATA/backup.excludes); do
-        eval ${exclude%%=*}=${exclude#*=}
-    done
+if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+    source $USER_DATA/backup-excludes.conf
 fi
-IFS="$OLD_IFS"
 
 # WEB domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
@@ -138,12 +134,15 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
     msg="$msg\n-- WEB --"
     mkdir $tmpdir/web/
 
-    # Parsing unsuspeneded domains
+    # Parsing web domain exclusions
     conf="$USER_DATA/web.conf"
     for domain in $(search_objects 'web' 'SUSPENDED' "*" 'DOMAIN'); do
-        check_exl=$(echo "$WEB"|grep -w $domain)
+        check_exl=$(echo -e "${WEB//,/\n}" |grep "^$domain$")
         if [ -z "$check_exl" ]; then
             web_list="$web_list $domain"
+        else
+            echo "$(date "+%F %T") excluding $domain"
+            msg="$msg\n$(date "+%F %T") excluding $domain"
         fi
     done
     web_list=$(echo "$web_list" | sed -e "s/  */\ /g" -e "s/^ //")
@@ -207,9 +206,26 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         fi
 
         # Packing data folders
+        touch $tmpdir/web/$domain/domain_data.tar
         cd $HOMEDIR/$user/web/$domain
-        domain_direcotries=$(ls |grep -v logs)
-        tar -cpf $tmpdir/web/$domain/domain_data.tar $domain_direcotries
+        set -f
+        fargs+=(-not)
+        fargs+=(-path)
+        fargs+=("./logs*")
+        check_exlusion=$(echo -e "${WEB//,/\n}" | grep "^$domain:")
+        if [ ! -z "$check_exlusion" ]; then
+            xdirs="$(echo -e "${check_exlusion//:/\n}" |grep -v $domain)"
+            for xpath in $xdirs; do
+                xpath="$(echo $xpath | sed -e 's/\/*$//' -e 's/^\/*//')"
+                fargs+=(-not)
+                fargs+=(-path)
+                fargs+=("./$xpath*")
+                echo "$(date "+%F %T") excluding directory $xpath"
+                msg="$msg\n$(date "+%F %T") excluding directory $xpath"
+            done
+        fi
+        find . ${fargs[@]} |grep -v "^./$" | grep -v "^.$" |\
+            xargs tar -rpf $tmpdir/web/$domain/domain_data.tar
         gzip -$BACKUP_GZIP $tmpdir/web/$domain/domain_data.tar
     done
 
@@ -230,11 +246,14 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
     msg="$msg\n-- DNS --"
     mkdir $tmpdir/dns/
 
-    # Parsing unsuspeneded domains
+    # Parsing dns domain exclusions
     for domain in $(search_objects 'dns' 'SUSPENDED' "*" 'DOMAIN'); do
-        check_exl=$(echo "$DNS"|grep -w $domain)
+        check_exl=$(echo -e "${DNS//,/\n}" |grep "^$domain$")
         if [ -z "$check_exl" ]; then
             dns_list="$dns_list $domain"
+        else
+            echo "$(date "+%F %T") excluding $domain"
+            msg="$msg\n$(date "+%F %T") excluding $domain"
         fi
     done
     dns_list=$(echo "$dns_list" | sed -e "s/  */\ /g" -e "s/^ //")
@@ -256,7 +275,9 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
 
         # Backingup dns recods
         cp $USER_DATA/dns/$domain.conf vesta/$domain.conf
-        cp $HOMEDIR/$user/conf/dns/$domain.db conf/$domain.db
+        if [ "$DNS_SYSTEM" != 'remote' ]; then
+            cp $HOMEDIR/$user/conf/dns/$domain.db conf/$domain.db
+        fi
     done
 
     if [ "$i" -eq 1 ]; then
@@ -276,12 +297,15 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
     msg="$msg\n-- MAIL --"
     mkdir $tmpdir/mail/
 
-    # Parsing unsuspeneded domains
+    # Parsing mail domain exclusions
     conf="$USER_DATA/mail.conf"
     for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
-        check_exl=$(echo "$MAIL"|grep -w $domain)
+        check_exl=$(echo -e "${MAIL//,/\n}" |grep "^$domain$")
         if [ -z "$check_exl" ]; then
             mail_list="$mail_list $domain"
+        else
+            echo "$(date "+%F %T") excluding $domain"
+            msg="$msg\n$(date "+%F %T") excluding $domain"
         fi
     done
     mail_list=$(echo "$mail_list" | sed -e "s/  */\ /g" -e "s/^ //")
@@ -311,9 +335,19 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 
         # Packing mailboxes
         cd $HOMEDIR/$user/mail/$domain_idn
-        accounts=$(ls)
-        if [ ! -z "$accounts" ] && [[ "$MAIL_SYSTEM" =~ exim ]]; then
-            tar -cpf $tmpdir/mail/$domain/accounts.tar  $accounts
+        for account in $(ls); do
+            exclusion=$(echo -e "${MAIL//,/\n}" |grep "$domain:")
+            exclusion=$(echo -e "${exclusion//:/\n}" |grep "^$account$")
+            if [ -z "$exclusion" ] && [[ "$MAIL_SYSTEM" =~ exim ]]; then
+                echo "$(date "+%F %T") $account"
+                touch $tmpdir/mail/$domain/accounts.tar
+                tar -rpf $tmpdir/mail/$domain/accounts.tar $account
+            else
+                echo "$(date "+%F %T") excluding account $account"
+                msg="$msg\n$(date "+%F %T") excluding account $account"
+            fi
+        done
+        if [ -e "$tmpdir/mail/$domain/accounts.tar" ]; then
             gzip -$BACKUP_GZIP $tmpdir/mail/$domain/accounts.tar
         fi
     done
@@ -336,11 +370,14 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
     msg="$msg\n-- DB --"
     mkdir $tmpdir/db/
 
-    # Parsing unsuspeneded domains
+    # Parsing database exclusions
     for database in $(search_objects 'db' 'SUSPENDED' "*" 'DB'); do
-        check_exl=$(echo "$DB"|grep -w $database)
+        check_exl=$(echo -e "${DB//,/\n}" |grep "^$database$")
         if [ -z "$check_exl" ]; then
             db_list="$db_list $database"
+        else
+            echo "$(date "+%F %T") excluding $database"
+            msg="$msg\n$(date "+%F %T") excluding $database"
         fi
     done
     db_list=$(echo "$db_list" | sed -e "s/  */\ /g" -e "s/^ //")
@@ -410,38 +447,52 @@ if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON" != '*' ]; then
 fi
 
 # User Directories
-echo "-- User Dir --"
-msg="$msg\n-- User Dir --"
-mkdir $tmpdir/user_dir
-user_dir=$(ls $HOMEDIR/$user | \
-    grep -v conf | \
-    grep -v web | \
-    grep -v dns | \
-    grep -v mail | \
-    grep -v tmp)
-i=0
-for udir in $user_dir; do
-    udir_list="$udir_list $udir"
-    ((i ++))
-    echo -e "$(date "+%F %T") $udir"
-    msg="$msg\n$(date "+%F %T") $udir"
-    cp -pr $HOMEDIR/$user/$udir $tmpdir/user_dir/
-    cd $tmpdir/user_dir/
-    tar -czpf $udir.tar.gz $udir
-    rm -rf $udir
-done
-udir_list=$(echo "$udir_list" | sed -e "s/  */\ /g" -e "s/^ //")
+if [ "$USER" != '*' ]; then
+    echo "-- User Dir --"
+    msg="$msg\n-- User Dir --"
+    mkdir $tmpdir/user_dir
+    cd $HOMEDIR/$user
 
-if [ "$i" -eq 1 ]; then
-    echo -e "$(date "+%F %T") $i user directory"
-    msg="$msg\n$(date "+%F %T") $i directory"
-else
-    echo -e "$(date "+%F %T") $i directories"
-    msg="$msg\n$(date "+%F %T") $i directories"
+    # Default excludes
+    set -f
+    fargs=''
+
+    # Parsing directory exlusion list
+    exlusion_list=$(echo -e "${USER//,/\n}")
+    for xpath in $exlusion_list; do
+        fargs+=(-not)
+        fargs+=(-path)
+        fargs+=("./$xpath*")
+        echo "$(date "+%F %T") excluding directory $xpath"
+        msg="$msg\n$(date "+%F %T") excluding directory $xpath"
+    done
+
+    for udir in $(ls |egrep -v "conf|web|dns|mail"); do
+        check_exl=$(echo -e "${USER//,/\n}" |grep "^$udir$")
+        if [ -z "$check_exl" ]; then
+            ((i ++))
+            udir_list="$udir_list $udir"
+            echo -e "$(date "+%F %T") adding directory $udir"
+            msg="$msg\n$(date "+%F %T") adding directory $udir"
+            touch $tmpdir/user_dir/$udir.tar
+            find ./$udir ${fargs[@]} |grep -v "^./$" |grep -v "^.$" |\
+                grep -v "./$udir$" |\
+                xargs tar -rpf $tmpdir/user_dir/$udir.tar
+            gzip -$BACKUP_GZIP $tmpdir/user_dir/$udir.tar
+        fi
+    done
+    udir_list=$(echo "$udir_list" | sed -e "s/  */\ /g" -e "s/^ //")
+
+    if [ "$i" -eq 1 ]; then
+        echo -e "$(date "+%F %T") $i user directory"
+        msg="$msg\n$(date "+%F %T") $i directory"
+    else
+        echo -e "$(date "+%F %T") $i directories"
+        msg="$msg\n$(date "+%F %T") $i directories"
+    fi
+    echo
+    msg="$msg\n"
 fi
-echo
-msg="$msg\n"
-
 
 # Get backup size
 size="$(du -shm $tmpdir | cut -f 1)"

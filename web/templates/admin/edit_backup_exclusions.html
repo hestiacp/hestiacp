@@ -1,0 +1,104 @@
+            <?php
+                $back = $_SESSION['back'];
+                if (empty($back)) {
+                    $back = "location.href='/list/backup/exclusions'";
+                } else {
+                    $back = "location.href='".$back."'";
+                }
+            ?> 
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Backup Exclusions');?></b></a>
+                        <?php
+                            if (!empty($_SESSION['error_msg'])) {
+                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                            } else {
+                                if (!empty($_SESSION['ok_msg'])) {
+                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                }
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <form id="vstobjects" name="v_edit_backup_exclusions" method="post">
+            <table class='data'>
+                <tr class="data-add">
+                    <td class="data-dotted">
+                        <table class="data-col1">
+                            <tr>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted">
+                        <table class="data-col2" width="600px">
+                            <tr>
+                                <td class="vst-text" style="padding: 24px 0 0 0;">
+                                    <?php print __('Web Domains');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput" name="v_web" placeholder="<?php echo __('WEB_EXCLUSIONS') ?>"><?php if (isset($v_web)) echo $v_web; ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                    <?php print __('DNS Domains');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput" name="v_dns" placeholder="<?php echo __('DNS_EXCLUSIONS') ?>"><?php if (isset($v_dns)) echo $v_dns; ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                    <?php print __('Mail Domains');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput" name="v_mail" placeholder="<?php echo __('MAIL_EXCLUSIONS') ?>"><?php if (isset($v_mail)) echo $v_mail; ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                    <?php print __('Databases');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput" name="v_db" placeholder="<?php echo __('DB_EXCLUSIONS') ?>"><?php if (isset($v_db)) echo $v_db; ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                    <?php print __('User Directories');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea size="20" class="vst-textinput" name="v_userdir" placeholder="<?php echo __('USER_EXCLUSIONS') ?>"><?php if (isset($v_userdir)) echo $v_userdir; ?></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="data-col2">
+                            <tr>
+                                <td style="padding: 24px 0 0 0;" width="116px">
+                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                </td>
+                                <td style="padding: 24px 0 0 0;">
+                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>

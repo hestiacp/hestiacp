@@ -400,6 +400,11 @@ $LANG['en'] = array(
     'RESTORE_SCHEDULED'  => 'Task has been added to the queue. You will receive an email notification when your backup is ready for download.',
     'RESTORE_EXISTS'  => 'An existing restoration task is already running. Please wait for it to finish before launching it again.',
 
+    'WEB_EXCLUSIONS' => "Type domain name, one per line. To exlude all domains use *. To exclude specific dirs use following format: domain.com:public_html/cache:public_html/tmp",
+    'DNS_EXCLUSIONS' => "Type domain name, one per line. To exlude all domains use *",
+    'MAIL_EXCLUSIONS' => "Type domain name, one per line. To exlude all domains use *. To exclude specific accounts use following format: domain.com:info:support:postmaster",
+    'DB_EXCLUSIONS' => "Type full database name, one per line. To exlude all databases use *",
+    'USER_EXCLUSIONS' => "Type directory name, one per line. Directories should not include leading or trailing slashes. To exlude all dirs use *",
 
     'Welcome to Vesta Control Panel'  => 'Welcome to Vesta Control Panel',
     'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',

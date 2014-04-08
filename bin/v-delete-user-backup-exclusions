@@ -1,0 +1,77 @@
+#!/bin/bash
+# info: delete backup exclusion
+# options: USER [SYSTEM]
+#
+# The function for deleteing backup exclusion
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+system=$(echo $2 | tr '[:lower:]' '[:upper:]')
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [SYSTEM]'
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Delete system exclusion
+if [ -z "$system" ]; then
+    WEB=''
+    DNS=''
+    MAIL=''
+    DB=''
+    CRON=''
+    USER=''
+else
+    touch $USER_DATA/backup-excludes.conf
+    source $USER_DATA/backup-excludes.conf
+    case $system in
+        WEB)   WEB='';;
+        DNS)   DNS='';;
+        MAIL)  MAIL='';;
+        DB)    DB='';;
+        CRON)  CRON='';;
+        USER)  USER='';;
+    esac
+fi
+
+# Updating exlusion list
+echo "WEB='$WEB'" > $USER_DATA/backup-excludes.conf
+echo "DNS='$DNS'" >> $USER_DATA/backup-excludes.conf
+echo "MAIL='$MAIL'" >> $USER_DATA/backup-excludes.conf
+echo "DB='$DB'" >> $USER_DATA/backup-excludes.conf
+echo "CRON='$DB'" >> $USER_DATA/backup-excludes.conf
+echo "USER='$USER'" >> $USER_DATA/backup-excludes.conf
+chmod 660 $USER_DATA/backup-excludes.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+if [ -z "$system" ]; then
+    log_history "deleted all exlusions"
+else
+    log_history "deleted $system exlusion"
+fi
+log_event "$OK" "$EVENT"
+
+exit

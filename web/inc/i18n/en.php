@@ -382,6 +382,7 @@ $LANG['en'] = array(
     'SUSPEND_CRON_CONFIRMATION' => 'Are you sure to suspend cron job?',
     'UNSUSPEND_CRON_CONFIRMATION' => 'Are you sure to unsuspend cron job?',
     'DELETE_BACKUP_CONFIRMATION'  => 'Are you sure to delete %s backup?',
+    'DELETE_EXCLUSION_CONFIRMATION' => 'Are you sure to delete %s exclusion?',
     'DELETE_PACKAGE_CONFIRMATION'  => 'Are you sure to delete package %s?',
     'DELETE_IP_CONFIRMATION'  => 'Are you sure to delere IP address %s?',
     'Welcome'  => 'Welcome',

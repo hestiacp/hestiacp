@@ -75,7 +75,7 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Defining fileds to select
-conf=$VESTA/data/ips/*
+touch $USER_DATA/backup-excludes.conf
 fields="\$WEB \$DNS \$MAIL \$DB \$CRON \$USER"
 
 # Listing backup exclusions

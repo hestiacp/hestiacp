@@ -95,20 +95,20 @@ rrdtool graph $RRD/mem/$period-mem.png \
     -c "ARROW#FFFFFF" \
     DEF:ram=$RRD/mem/mem.rrd:RAM:AVERAGE \
     DEF:swap=$RRD/mem/mem.rrd:SWAP:AVERAGE \
-    DEF:free=$RRD/mem/mem.rrd:SWAP:AVERAGE \
+    DEF:free=$RRD/mem/mem.rrd:FREE:AVERAGE \
     COMMENT:'\r' \
     AREA:ram#867995:"RAM "\
     GPRINT:ram:'LAST: Current\:''%8.0lf'  \
     GPRINT:ram:'MIN: Min\:''%8.0lf'  \
     GPRINT:ram:'MAX: Max\:''%8.0lf\j'  \
-    LINE1:swap#f57900:"SWAP" \
-    GPRINT:swap:'LAST:Current\:''%8.0lf' \
-    GPRINT:swap:'MIN:Min\:''%8.0lf' \
-    GPRINT:swap:'MAX:Max\:''%8.0lf\j'\
     AREA:free#1c74cd:"FREE" \
     GPRINT:free:'LAST: Current\:''%8.0lf'  \
     GPRINT:free:'MIN: Min\:''%8.0lf'  \
-    GPRINT:free:'MAX: Max\:''%8.0lf\j' &>/dev/null; result=$?
+    GPRINT:free:'MAX: Max\:''%8.0lf\j'\
+    LINE1:swap#f57900:"SWAP" \
+    GPRINT:swap:'LAST:Current\:''%8.0lf' \
+    GPRINT:swap:'MIN:Min\:''%8.0lf' \
+    GPRINT:swap:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?
 
 
 #----------------------------------------------------------#

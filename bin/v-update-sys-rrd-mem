@@ -36,11 +36,18 @@ if [ ! -d "$RRD/mem" ]; then
 fi
 
 # Checking database
+if [ -e "$RRD/mem/mem.rrd" ]; then
+    rrd_check=$(rrdtool info $RRD/mem/mem.rrd |grep "FREE")
+    if [ -z "$rrd_check" ]; then
+        rm -f $RRD/mem/mem.rrd
+    fi
+fi
 if [ ! -e "$RRD/mem/mem.rrd" ]; then
     # Adding database
     rrdtool create $RRD/mem/mem.rrd --step $RRD_STEP \
         DS:RAM:GAUGE:600:U:U \
         DS:SWAP:GAUGE:600:U:U \
+        DS:FREE:GAUGE:600:U:U \
         RRA:AVERAGE:0.5:1:600 \
         RRA:AVERAGE:0.5:6:700 \
         RRA:AVERAGE:0.5:24:775 \
@@ -54,15 +61,22 @@ fi
 # Parsing data
 if [ "$period" = 'daily' ]; then
     mem=$(free -m)
-    ram=$(echo "$mem" |awk '{print $3}'|head -n2 |tail -n1)
+    used_ram=$(echo "$mem" |awk '{print $3}'|head -n2 |tail -n1)
+    used_cache=$(echo "$mem" |awk '{print $3}'|head -n3 |tail -n1)
+    used=$((used_ram + used_cache))
+
+    free_ram=$(echo "$mem" |awk '{print $4}'|head -n2 |tail -n1)
+    free_cache=$(echo "$mem" |awk '{print $4}'|head -n3 |tail -n1)
+    free=$((free_ram + free_cache))
+
     swap=$(echo "$mem" |awk '{print $3}'|tail -n1)
 
     # Updating rrd
-    rrdtool update $RRD/mem/mem.rrd N:$ram:$swap
+    rrdtool update $RRD/mem/mem.rrd N:$used:$swap:$free
 fi
 
 # Updating rrd graph
-rrdtool graph  $RRD/mem/$period-mem.png \
+rrdtool graph $RRD/mem/$period-mem.png \
     --imgformat PNG \
     --height="120" \
     --width="440" \
@@ -81,6 +95,7 @@ rrdtool graph  $RRD/mem/$period-mem.png \
     -c "ARROW#FFFFFF" \
     DEF:ram=$RRD/mem/mem.rrd:RAM:AVERAGE \
     DEF:swap=$RRD/mem/mem.rrd:SWAP:AVERAGE \
+    DEF:free=$RRD/mem/mem.rrd:SWAP:AVERAGE \
     COMMENT:'\r' \
     AREA:ram#867995:"RAM "\
     GPRINT:ram:'LAST: Current\:''%8.0lf'  \
@@ -89,7 +104,11 @@ rrdtool graph  $RRD/mem/$period-mem.png \
     LINE1:swap#f57900:"SWAP" \
     GPRINT:swap:'LAST:Current\:''%8.0lf' \
     GPRINT:swap:'MIN:Min\:''%8.0lf' \
-    GPRINT:swap:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?
+    GPRINT:swap:'MAX:Max\:''%8.0lf\j'\
+    AREA:free#1c74cd:"FREE" \
+    GPRINT:free:'LAST: Current\:''%8.0lf'  \
+    GPRINT:free:'MIN: Min\:''%8.0lf'  \
+    GPRINT:free:'MAX: Max\:''%8.0lf\j' &>/dev/null; result=$?
 
 
 #----------------------------------------------------------#

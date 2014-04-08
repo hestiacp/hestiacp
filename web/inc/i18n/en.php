@@ -351,6 +351,7 @@ $LANG['en'] = array(
     '%s log records'  => '%s log records',
     '1 object'  => '1 object',
     '%s objects'  => '%s objects',
+    'no exclusions' => 'no exclusions',
 
     'USER_CREATED_OK'  => 'User <a href="/edit/user/?user=%s"><b>%s</b></a> has been created successfully',
     'WEB_DOMAIN_CREATED_OK'  => 'Domain <a href="/edit/web/?domain=%s"><b>%s</b></a> has been created successfully.',

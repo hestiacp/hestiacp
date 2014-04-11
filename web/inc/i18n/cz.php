@@ -81,7 +81,7 @@ $LANG['cz'] = array(
     'update'  => 'aktualizovat',
     'generate'  => 'generovat',
     'Generate CSR' => 'Generovat CSR',
-    'reread  IP' => 'číst IP',
+    'reread IP' => 'číst IP',
 
     'Adding User'  => 'Přidání uživatele',
     'Editing User'  => 'Editace uživatele',

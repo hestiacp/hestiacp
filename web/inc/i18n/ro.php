@@ -106,7 +106,7 @@ $LANG['ro'] = array(
     'Adding IP address' => 'Adăugare adresă IP',
     'Editing IP Address' => 'Editare adresă IP',
     'Editing Backup Exclusions' => 'Editare excluderi',
-    'Generate CSR' => 'Cerere CSR',
+    'Generating CSR' => 'Generare CSR',
     'Listing' => 'Vizualizare',
     'Search Results' => 'Rezultatele căutării',
 

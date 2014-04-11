@@ -84,7 +84,7 @@ $LANG['id'] = array(
     'update'  => 'perbarui',
     'generate'  => 'hasilkan',
     'Generate CSR' => 'Hasilkan CSR',
-    'reread  IP' => 'baca ulang IP',
+    'reread IP' => 'baca ulang IP',
 
     'Adding User'  => 'Menambah User',
     'Editing User'  => 'Menyunting User',

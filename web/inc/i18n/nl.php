@@ -81,7 +81,7 @@ $LANG['nl'] = array(
     'update'  => 'update',
     'generate'  => 'genereer',
     'Generate CSR' => 'Genereer CSR',
-    'reread  IP' => 'ververs IP',
+    'reread IP' => 'ververs IP',
 
     'Adding User'  => 'Gebruiker Toevoegen',
     'Editing User'  => 'Gebruiker Aanpassen',

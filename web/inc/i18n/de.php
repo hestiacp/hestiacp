@@ -80,7 +80,7 @@ $LANG['de'] = array(
     'update'  => 'Aktualisieren',
     'generate'  => 'Generieren',
     'Generate CSR'  => 'CSR generieren',
-    'reread  IP' => 'IP aktualisieren',
+    'reread IP' => 'IP aktualisieren',
 
     'Adding User'  => 'Benutzer anlegen',
     'Editing User'  => 'Benutzer bearbeiten',

@@ -80,7 +80,7 @@ $LANG['cn'] = array(
     'update'  => '更新',
     'generate'  => '生成',
     'Generate CSR' => '生成CSR',
-    'reread  IP' => '重新读取IP',
+    'reread IP' => '重新读取IP',
 
     'Adding User'  => '添加用户',
     'Editing User'  => '修改用过',

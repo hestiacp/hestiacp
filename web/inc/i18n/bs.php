@@ -80,7 +80,7 @@ $LANG['bs'] = array(
     'update'  => 'ažuriraj',
     'generate'  => 'generiši',
     'Generate CSR' => 'Generiši CSR',
-    'reread  IP' => 'obnovi IP',
+    'reread IP' => 'obnovi IP',
 
     'Adding User'  => 'Dodavanje korisnika',
     'Editing User'  => 'Izmjena korisnika',

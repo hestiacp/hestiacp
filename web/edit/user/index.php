@@ -156,13 +156,12 @@ if ($_SESSION['user'] == 'admin') {
     }
 
     // Check user
-    $v_username = escapeshellarg($_GET['user']);
+    $v_username = $user;
     exec (VESTA_CMD."v-list-user ".$v_username." json", $output, $return_var);
     check_return_code($return_var,$output);
     if (empty($_SESSION['error_msg'])) {
         $data = json_decode(implode('', $output), true);
         unset($output);
-        $v_username = $_GET['user'];
         $v_password = "••••••••";
         $v_email = $data[$v_username]['CONTACT'];
         $v_fname = $data[$v_username]['FNAME'];
@@ -191,8 +190,6 @@ if ($_SESSION['user'] == 'admin') {
 
     // Action
     if (!empty($_POST['save'])) {
-        $v_username = escapeshellarg($_POST['v_username']);
-
         // Change password
         if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
             $v_password = escapeshellarg($_POST['v_password']);

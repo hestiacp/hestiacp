@@ -19,7 +19,8 @@ BACKUP_DISK_LIMIT=95
 BACKUP_LA_LIMIT=5
 RRD_STEP=300
 RRD_IFACE_EXCLUDE=lo
-
+PW_MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+PW_LENGHT='10'
 BIN=$VESTA/bin
 USER_DATA=$VESTA/data/users/$user
 WEBTPL=$VESTA/data/templates/web
@@ -128,10 +129,10 @@ is_package_full() {
 
 # Random password generator
 gen_password() {
-    matrix='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-    lenght=10
-    while [ ${n:=1} -le $lenght ]; do
-        pass="$pass${matrix:$(($RANDOM%${#matrix})):1}"
+    pw_matrix=${1-$PW_MATRIX}
+    pw_lenght=${2-$PW_LENGHT}
+    while [ ${n:=1} -le $pw_lenght ]; do
+        pass="$pass${pw_matrix:$(($RANDOM%${#pw_matrix})):1}"
         let n+=1
     done
     echo "$pass"

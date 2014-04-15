@@ -87,6 +87,10 @@ if [ ! -z "$web_data" ]; then
     # Move data
     mv $HOMEDIR/$owner/web/$domain $HOMEDIR/$user/web/
 
+    # Change ownership
+    find $HOMEDIR/$user/web/$domain -user $owner \
+        -exec chown -h $user:$user {} \;
+
     # Rebuild config
     $BIN/v-unsuspend-web-domain $user $domain no >> /dev/null 2>&1
     $BIN/v-rebuild-web-domains $owner no
@@ -143,6 +147,10 @@ if [ ! -z "$mail_data" ]; then
 
     # Move data
     mv $HOMEDIR/$owner/mail/$domain $HOMEDIR/$user/mail/
+
+    # Change ownership
+    find $HOMEDIR/$user/mail/$domain -user $owner \
+        -exec chown -h $user {} \;
 
     # Rebuild config
     $BIN/v-unsuspend-mail-domain $user $domain no >> /dev/null 2>&1

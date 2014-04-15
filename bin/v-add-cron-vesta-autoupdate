@@ -1,0 +1,79 @@
+#!/bin/bash
+# info: add cron job for vesta autoupdates
+# options: NONE
+#
+# The function adds cronjob for vesta autoupdate.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=admin
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
+is_package_full 'CRON_JOBS'
+get_next_cronjob
+check_cron=$(grep 'v-update-sys-vesta-all' $USER_DATA/cron.conf)
+if [ ! -z "$check_cron" ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Define time somewhere at nigth
+min=$(gen_password '012345' '2')
+hour=$(gen_password '1234567' '1')
+day='*'
+month='*'
+WDAY='*'
+command='sudo /usr/local/vesta/bin/v-update-sys-vesta-all'
+
+# Concatenating cron string
+str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
+str="$str CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+
+# Adding to crontab
+echo "$str" >> $VESTA/data/users/$user/cron.conf
+
+# Chaning permissions
+chmod 660 $VESTA/data/users/$user/cron.conf
+
+# Sort jobs by id number
+sort_cron_jobs
+
+# Sync cronjobs with system crond
+sync_cron_jobs
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Increasing cron value
+increase_user_value $user '$U_CRON_JOBS'
+
+# Restart crond
+$BIN/v-restart-cron
+if [ $? -ne 0 ]; then
+    exit $E_RESTART
+fi
+
+# Logging
+log_history "added cron job $job"
+log_event "$OK" "$EVENT"
+
+exit

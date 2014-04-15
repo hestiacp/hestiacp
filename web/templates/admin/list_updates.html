@@ -1,3 +1,4 @@
+
             <table class="submenu">
                 <tr>
                     <td style="padding: 14px 10px">
@@ -15,6 +16,19 @@
                                 <option value="update"><?php print __('update') ?></option>
                             </select>
                             <input type="submit" name="ok" value="›" class="submenu-button-select">
+                        </div>
+                        <div class="submenu-select-block">
+                            <?php
+                                if($autoupdate == 'Enabled') {
+                            ?>
+                            <a class="submenu-select-link" href="/delete/cron/autoupdate/">[ <?php print __('disable autoupdate');?> ]</a>
+                            <?php
+                                } else {
+                            ?>
+                            <a class="submenu-select-link" href="/add/cron/autoupdate/">[ <?php print __('enable autoupdate');?> ]</a>
+                            <?php
+                                }
+                            ?>
                         </div>
                         <?php display_error_block(); ?> 
                     </td>

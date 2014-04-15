@@ -1,0 +1,30 @@
+#!/bin/bash
+# info: update all vesta packages
+# options: USER [RESTART]
+#
+# The function of updating all vesta packages
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Starting update loop
+for package in vesta vesta-ngin vesta-php; do
+    $BIN/v-update-sys-vesta "$package"
+done
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

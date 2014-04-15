@@ -1,0 +1,64 @@
+#!/bin/bash
+# info: list vesta autoupdate settings
+# options: NONE
+#
+# The function for obtaining autoupdate setings.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user='admin'
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json function
+json_list_autoupdate() {
+    echo '['
+    if [ -z "$check_cron" ]; then
+        echo -e  "\t\"Disabled\","
+    else
+        echo -e  "\t\"Enabled\""
+    fi
+    echo "]"
+}
+
+# Shell function
+shell_list_autoupdate() {
+    if [ -z "$nohead" ]; then
+        echo "AUTOUPDATE"
+        echo "----------"
+    fi
+    if [ -z "$check_cron" ]; then
+        echo "Disabled"
+    else
+        echo "Enabled"
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Check cron tab
+check_cron=$(grep 'v-update-sys-vesta-all' $USER_DATA/cron.conf)
+
+# Listing domains
+case $format in 
+    json)   json_list_autoupdate ;;
+    plain)  nohead=1; shell_list_autoupdate ;;
+    shell)  shell_list_autoupdate ;;
+    *)      check_args '1' '0' '[FORMAT]' ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

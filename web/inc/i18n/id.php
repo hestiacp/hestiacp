@@ -1,7 +1,6 @@
 <?php
 /**
  * Vesta language file
- * skid (skid@vestacp.com)
  * azuya ( disketsa@gmail.com || hitamputih82@yahoo.com )
  *
  * NOTES : This translation doesn't use a standard language....
@@ -86,6 +85,8 @@ $LANG['id'] = array(
     'generate'  => 'hasilkan',
     'Generate CSR' => 'Hasilkan CSR',
     'reread IP' => 'baca ulang IP',
+    'enable autoupdate' => 'mengaktifkan autoupdate',
+    'disable autoupdate' => 'menonaktifkan autoupdate',
 
     'Adding User'  => 'Menambah User',
     'Editing User'  => 'Menyunting User',
@@ -368,6 +369,8 @@ $LANG['id'] = array(
     'IP_CREATED_OK'  => 'Alamat IP <a href="/edit/ip/?ip=%s"><b>%s</b></a> udah berhasil dibikin.',
     'PACKAGE_CREATED_OK'  => 'Paket <a href="/edit/package/?package=%s"><b>%s</b></a> udah berhasil dibikin.',
     'SSL_GENERATED_OK' => 'Sertifikat udah berhasil dihasilkan.',
+    'Autoupdate has been successfully enabled' => 'Autoupdate has been successfully enabled',
+    'Autoupdate has been successfully disabled' => 'Autoupdate has been successfully disabled',
     'Changes has been saved.'  => 'Perubahan udah disimpan.',
     'Confirmation'  => 'Konfirmasi',
     'DELETE_USER_CONFIRMATION' => 'Yakin pengguna %s mau dihapus nih?',

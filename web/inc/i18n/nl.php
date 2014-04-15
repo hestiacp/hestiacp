@@ -83,6 +83,8 @@ $LANG['nl'] = array(
     'generate'  => 'genereer',
     'Generate CSR' => 'Genereer CSR',
     'reread IP' => 'ververs IP',
+    'enable autoupdate' => 'autoupdate activeren',
+    'disable autoupdate' => 'autoupdate deactiveren',
 
     'Adding User'  => 'Gebruiker Toevoegen',
     'Editing User'  => 'Gebruiker Aanpassen',
@@ -365,6 +367,8 @@ $LANG['nl'] = array(
     'IP_CREATED_OK'  => 'IP-adres <a href="/edit/ip/?ip=%s"><b>%s</b></a> is succesvol aangemaakt.',
     'PACKAGE_CREATED_OK'  => 'Package <a href="/edit/package/?package=%s"><b>%s</b></a> is succesvol aangemaakt.',
     'SSL_GENERATED_OK' => 'Certificaat is met succes aangemaakt.',
+    'Autoupdate has been successfully enabled' => 'Autoupdate has been successfully enabled',
+    'Autoupdate has been successfully disabled' => 'Autoupdate has been successfully disabled',
     'Changes has been saved.'  => 'Wijzigingen zijn opgeslagen.',
     'Confirmation'  => 'Bevestiging',
     'DELETE_USER_CONFIRMATION' => 'Weet u zeker dat u gebruiker %s wilt verwijderen?',

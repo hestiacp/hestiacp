@@ -82,6 +82,8 @@ $LANG['es'] = array(
     'generate'  => 'generar',
     'Generate CSR' => 'Generar CSR',
     'reread IP' => 'releer IP',
+    'enable autoupdate' => 'activar autoupdate',
+    'disable autoupdate' => 'desactivar autoupdate',
 
     'Adding User'  => 'Añadiendo Usuario',
     'Editing User'  => 'Editando Usuario',
@@ -364,6 +366,8 @@ $LANG['es'] = array(
     'IP_CREATED_OK'  => 'Dirección IP <a href="/edit/ip/?ip=%s"><b>%s</b></a> ha sido creada correctamente.',
     'PACKAGE_CREATED_OK'  => 'Plan <a href="/edit/package/?package=%s"><b>%s</b></a> ha sido creado correctamente.',
     'SSL_GENERATED_OK' => 'SSL certificado ha sido creado correctamente.',
+    'Autoupdate has been successfully enabled' => 'Autoupdate has been successfully enabled',
+    'Autoupdate has been successfully disabled' => 'Autoupdate has been successfully disabled',
     'Changes has been saved.'  => 'Los cambios han sido guardados.',
     'Confirmation'  => 'Confirmación',
     'DELETE_USER_CONFIRMATION' => '¿Está seguro que desea eliminar el usuario %s?',

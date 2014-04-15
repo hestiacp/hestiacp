@@ -1,7 +1,6 @@
 <?php
 /**
  * Vesta language file
- * ZonD80 (zond80@gmail.com)
  * skid (skid@vestacp.com)
  */
 
@@ -83,6 +82,8 @@ $LANG['en'] = array(
     'generate'  => 'generate',
     'Generate CSR' => 'Generate CSR',
     'reread IP' => 'reread IP',
+    'enable autoupdate' => 'enable autoupdate',
+    'disable autoupdate' => 'disable autoupdate',
 
     'Adding User'  => 'Adding User',
     'Editing User'  => 'Editing User',
@@ -365,6 +366,8 @@ $LANG['en'] = array(
     'IP_CREATED_OK'  => 'IP address <a href="/edit/ip/?ip=%s"><b>%s</b></a> has been created successfully.',
     'PACKAGE_CREATED_OK'  => 'Package <a href="/edit/package/?package=%s"><b>%s</b></a> has been created successfully.',
     'SSL_GENERATED_OK' => 'Certificate has been generated successfully.',
+    'Autoupdate has been successfully enabled' => 'Autoupdate has been successfully enabled',
+    'Autoupdate has been successfully disabled' => 'Autoupdate has been successfully disabled',
     'Changes has been saved.'  => 'Changes has been saved.',
     'Confirmation'  => 'Confirmation',
     'DELETE_USER_CONFIRMATION' => 'Are you sure to delete user %s?',

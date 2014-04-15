@@ -84,6 +84,8 @@ $LANG['ru'] = array(
     'generate' => 'сгенерировать',
     'Generate CSR' => 'Cгенерировать CSR запрос',
     'reread IP' => 'перечитать IP',
+    'enable autoupdate' => 'включить автообновление',
+    'disable autoupdate' => 'выключить автообновление',
 
     'Adding User' => 'Добавление аккаунта',
     'Editing User' => 'Редактирование аккаунта',
@@ -366,6 +368,8 @@ $LANG['ru'] = array(
     'IP_CREATED_OK' => '"IP адрес <a href="/edit/ip/?ip=%s"><b>%s</b></a> успешно создан.',
     'PACKAGE_CREATED_OK' => 'Пакет <a href="/edit/package/?package=%s"><b>%s</b></a> успешно создан.',
     'SSL_GENERATED_OK' => 'SSL cертификат был успешно сгенерирован.',
+    'Autoupdate has been successfully enabled' => 'Автообновление было успешно включено',
+    'Autoupdate has been successfully disabled' => 'Автобновление было успешно выключено',
     'Changes has been saved.' => 'Изменения сохранены.',
     'Confirmation' => 'Подтверждение',
     'DELETE_USER_CONFIRMATION' => 'Вы уверены, что хотите удалить пользователя %s?',

@@ -83,6 +83,8 @@ $LANG['cz'] = array(
     'generate'  => 'generovat',
     'Generate CSR' => 'Generovat CSR',
     'reread IP' => 'číst IP',
+    'enable autoupdate' => 'aktivovat autoupdate',
+    'disable autoupdate' => 'deaktivovat autoupdate',
 
     'Adding User'  => 'Přidání uživatele',
     'Editing User'  => 'Editace uživatele',
@@ -365,6 +367,8 @@ $LANG['cz'] = array(
     'IP_CREATED_OK'  => 'IP adresa <a href="/edit/ip/?ip=%s"><b>%s</b></a> byla úspěšně vytvořena.',
     'PACKAGE_CREATED_OK'  => 'Package <a href="/edit/package/?package=%s"><b>%s</b></a> byl úspěšně vytvořen.',
     'SSL_GENERATED_OK' => 'SSL certifikát byl úspěšně vygenerován.',
+    'Autoupdate has been successfully enabled' => 'Autoupdate has been successfully enabled',
+    'Autoupdate has been successfully disabled' => 'Autoupdate has been successfully disabled',
     'Changes has been saved.'  => 'Změny byly uloženy.',
     'Confirmation'  => 'Potvrzení',
     'DELETE_USER_CONFIRMATION' => 'Opravdu chcete odstranit uživatele %s?',

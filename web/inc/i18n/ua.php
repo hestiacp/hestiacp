@@ -2,7 +2,6 @@
 /**
  * Vesta language file
  * COLOBOCman (colobocman@gmail.com)
- * skid (skid@vestacp.com)
  */
  
 $LANG['ua'] = array(
@@ -84,6 +83,8 @@ $LANG['ua'] = array(
     'generate' => 'згенерувати',
     'Generate CSR' => 'Згенерувати CSR запит',
     'reread IP' => 'оновити IP',
+    'enable autoupdate' => 'включити автооновлення',
+    'disable autoupdate' => 'виключити автооновлення',
  
     'Adding User' => 'Додавання акаунту',
     'Editing User' => 'Редагування акаунту',
@@ -366,6 +367,8 @@ $LANG['ua'] = array(
     'IP_CREATED_OK' => '"IP адреса <a href="/edit/ip/?ip=%s"><b>%s</b></a> успішно створена.',
     'PACKAGE_CREATED_OK' => 'Пакет <a href="/edit/package/?package=%s"><b>%s</b></a> успішно створений.',
     'SSL_GENERATED_OK' => 'SSL cертификат успішно створено.',
+    'Autoupdate has been successfully enabled' => 'Aвтооновлення було успішно включено',
+    'Autoupdate has been successfully disabled' => 'Aвтооновлення було успішно виключено',
     'Changes has been saved.' => 'Зміни збережені.',
     'Confirmation' => 'Підтвердження',
     'DELETE_USER_CONFIRMATION' => 'Ви впевнені, що хочете видалити користувача %s?',

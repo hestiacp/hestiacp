@@ -82,6 +82,8 @@ $LANG['bs'] = array(
     'generate'  => 'generiši',
     'Generate CSR' => 'Generiši CSR',
     'reread IP' => 'obnovi IP',
+    'enable autoupdate' => 'uključuju autoupdate',
+    'disable autoupdate' => 'onemogućiti autoupdate',
 
     'Adding User'  => 'Dodavanje korisnika',
     'Editing User'  => 'Izmjena korisnika',
@@ -364,6 +366,8 @@ $LANG['bs'] = array(
     'IP_CREATED_OK'  => 'IP adrese <a href="/edit/ip/?ip=%s"><b>%s</b></a> su uspješno napravljene.',
     'PACKAGE_CREATED_OK'  => 'Paket <a href="/edit/package/?package=%s"><b>%s</b></a> je uspješno napravljen.',
     'SSL_GENERATED_OK' => 'Certifikat je uspješno generisan.',
+    'Autoupdate has been successfully enabled' => 'Autoupdate has been successfully enabled',
+    'Autoupdate has been successfully disabled' => 'Autoupdate has been successfully disabled',
     'Changes has been saved.'  => 'Postavke su uspješno sačuvane.',
     'Confirmation'  => 'Potvrda',
     'DELETE_USER_CONFIRMATION' => 'Da li ste sigurni da želite obrisati %s?',

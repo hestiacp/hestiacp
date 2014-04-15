@@ -84,6 +84,8 @@ $LANG['ro'] = array(
     'generate' => 'generează',
     'Generate CSR' => 'Genera cere CSR',
     'reread IP' => 'recitește IP',
+    'enable autoupdate' => 'activa autoupdate',
+    'disable autoupdate' => 'deactiva autoupdate',
 
     'Adding User' => 'Adăugare utilizator',
     'Editing User' => 'Editare utilizator',
@@ -366,6 +368,8 @@ $LANG['ro'] = array(
     'IP_CREATED_OK' => '"IP adresa <a href="/edit/ip/?ip=%s"><b>%s</b></a> a fost creată cu succes.',
     'PACKAGE_CREATED_OK' => 'Pachet <a href="/edit/package/?package=%s"><b>%s</b></a> a fost creat cu succes.',
     'SSL_GENERATED_OK' => 'SSL certificat a fost generat cu succes.',
+    'Autoupdate has been successfully enabled' => 'Autoupdate a fost activat cu succes',
+    'Autoupdate has been successfully disabled' => 'Autoupdate a fost deactivat cu success',
     'Changes has been saved.' => 'Modificările au fost salvate.',
     'Confirmation' => 'Confirmare',
     'DELETE_USER_CONFIRMATION' => 'Ești sigur că dorești să ștergi %s?',

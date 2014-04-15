@@ -82,6 +82,8 @@ $LANG['cn'] = array(
     'generate'  => '生成',
     'Generate CSR' => '生成CSR',
     'reread IP' => '重新读取IP',
+    'enable autoupdate' => '启用自动更新',
+    'disable autoupdate' => '禁用自动更新',
 
     'Adding User'  => '添加用户',
     'Editing User'  => '修改用过',
@@ -364,6 +366,8 @@ $LANG['cn'] = array(
     'IP_CREATED_OK'  => 'IP address <a href="/edit/ip/?ip=%s"><b>%s</b></a> 已创建成功.',
     'PACKAGE_CREATED_OK'  => 'Package <a href="/edit/package/?package=%s"><b>%s</b></a> 已创建成功.',
     'SSL_GENERATED_OK' => '证书已成功生成.',
+    'Autoupdate has been successfully enabled' => 'Autoupdate has been successfully enabled',
+    'Autoupdate has been successfully disabled' => 'Autoupdate has been successfully disabled',
     'Changes has been saved.'  => '更改已保存.',
     'Confirmation'  => 'Confirmation',
     'DELETE_USER_CONFIRMATION' => '您确定删除用户 %s?',

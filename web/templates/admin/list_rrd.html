@@ -38,7 +38,7 @@
                         </table>
                     </td>
                     <td class="data-dotted">
-                        <a href="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>" target="_blank" class="data-controls">
+                        <a href="/list/rrd/image.php?/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" target="_blank" class="data-controls">
                             <span>
                                 <img src="/images/download.png" width="8px" height="8px">
                                 <?php print __('download');?> 
@@ -51,7 +51,7 @@
                                     <table>
                                         </tr>
                                             <td style="background: #7a766d;" width="630px" height="250px">
-                                                <img style="padding: 0 0 0 36px;" src="/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>">
+                                                <img style="padding: 0 0 0 36px;" src="/list/rrd/image.php?/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>">
                                             </td>
                                         </tr>
                                     </table>

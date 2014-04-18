@@ -216,17 +216,17 @@ rebuild_web_domain_conf() {
     # Checking stats
     if [ ! -z "$STATS" ]; then
         cat $WEBTPL/$STATS/$STATS.tpl |\
-            sed -e "s/%ip%/$ip/g" \
-                -e "s/%web_port%/$WEB_PORT/g" \
-                -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
-                -e "s/%proxy_port%/$PROXY_PORT/g" \
-                -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
-                -e "s/%domain_idn%/$domain_idn/g" \
-                -e "s/%domain%/$domain/g" \
-                -e "s/%user%/$user/g" \
-                -e "s/%home%/${HOMEDIR////\/}/g" \
-                -e "s/%alias%/${aliases//,/ }/g" \
-                -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
+            sed -e "s|%ip%|$ip|g" \
+                -e "s|%web_port%|$WEB_PORT|g" \
+                -e "s|%web_ssl_port%|$WEB_SSL_PORT|g" \
+                -e "s|%proxy_port%|$PROXY_PORT|g" \
+                -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
+                -e "s|%domain_idn%|$domain_idn|g" \
+                -e "s|%domain%|$domain|g" \
+                -e "s|%user%|$user|g" \
+                -e "s|%home%|$HOMEDIR|g" \
+                -e "s|%alias%|${aliases//,/ }|g" \
+                -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
                 > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
 
         if [ "$STATS" == 'awstats' ]; then

@@ -224,31 +224,31 @@ sort_dns_records() {
 # Add web config
 add_web_config() {
     cat $tpl_file | \
-        sed -e "s/%ip%/$ip/g" \
-            -e "s/%web_system%/$WEB_SYSTEM/g" \
-            -e "s/%web_port%/$WEB_PORT/g" \
-            -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
-            -e "s/%rgroups%/$WEB_RGROUPS/g" \
-            -e "s/%proxy_system%/$PROXY_SYSTEM/g" \
-            -e "s/%proxy_port%/$PROXY_PORT/g" \
-            -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+        sed -e "s|%ip%|$ip|g" \
+            -e "s|%web_system%|$WEB_SYSTEM|g" \
+            -e "s|%web_port%|$WEB_PORT|g" \
+            -e "s|%web_ssl_port%|$WEB_SSL_PORT|g" \
+            -e "s|%rgroups%|$WEB_RGROUPS|g" \
+            -e "s|%proxy_system%|$PROXY_SYSTEM|g" \
+            -e "s|%proxy_port%|$PROXY_PORT|g" \
+            -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
             -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
-            -e "s/%domain_idn%/$domain_idn/g" \
-            -e "s/%domain%/$domain/g" \
-            -e "s/%user%/$user/g" \
-            -e "s/%group%/$group/g" \
-            -e "s/%home%/${HOMEDIR////\/}/g" \
-            -e "s/%docroot%/${docroot////\/}/g" \
-            -e "s/%sdocroot%/${sdocroot////\/}/g" \
-            -e "s/%email%/$email/g" \
-            -e "s/%alias_string%/$alias_string/g" \
-            -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
-            -e "s/%alias%/${aliases//,/ }/g" \
-            -e "s/%ssl_crt%/${ssl_crt////\/}/g" \
-            -e "s/%ssl_key%/${ssl_key////\/}/g" \
-            -e "s/%ssl_pem%/${ssl_pem////\/}/g" \
-            -e "s/%ssl_ca_str%/${ssl_ca_str////\/}/g" \
-            -e "s/%ssl_ca%/${ssl_ca////\/}/g" \
+            -e "s|%domain_idn%|$domain_idn|g" \
+            -e "s|%domain%|$domain|g" \
+            -e "s|%user%|$user|g" \
+            -e "s|%group%|$group|g" \
+            -e "s|%home%|$HOMEDIR|g" \
+            -e "s|%docroot%|$docroot|g" \
+            -e "s|%sdocroot%|$sdocroot|g" \
+            -e "s|%email%|$email|g" \
+            -e "s|%alias_string%|$alias_string|g" \
+            -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
+            -e "s|%alias%|${aliases//,/ }|g" \
+            -e "s|%ssl_crt%|$ssl_crt|g" \
+            -e "s|%ssl_key%|$ssl_key|g" \
+            -e "s|%ssl_pem%|$ssl_pem|g" \
+            -e "s|%ssl_ca_str%|$ssl_ca_str|g" \
+            -e "s|%ssl_ca%|$ssl_ca|g" \
     >> $conf
 }
 
@@ -273,24 +273,6 @@ get_web_config_brds() {
         bottom_line=$((bottom_line + multi -1))
     fi
 
-}
-
-# Change web config
-change_web_config() {
-    get_web_config_brds || exit $?
-    vhost=$(grep -A $aftr_line -B $bfr_line -ni "Name $domain_idn" $conf)
-    str=$(echo "$vhost" | grep -F "$search_phrase" | head -n 1)
-    str_numb=$(echo "$str" | sed "s/-/=/" | cut -f 1 -d '=')
-    str_cont=$(echo "$str" | sed "s/-/=/" | cut -f 2 -d '=')
-
-    str_repl=$(echo "$str_repl" | sed \
-        -e 's/\\/\\\\/g' \
-        -e 's/&/\\&/g' \
-        -e 's/\//\\\//g')
-
-    if [ ! -z "$str" ]; then
-        sed -i  "$str_numb s/.*/$str_repl/" $conf
-    fi
 }
 
 # Replace web config

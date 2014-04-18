@@ -16,7 +16,7 @@ software="nginx apache2 apache2-utils apache2.2-common apache2-suexec-custom
     php5-curl libapache2-mod-php5 vsftpd mc exim4 exim4-daemon-heavy
     clamav-daemon flex dovecot-imapd dovecot-pop3d phpMyAdmin awstats
     webalizer jwhois rssh git spamassassin roundcube roundcube-mysql
-    roundcube-plugins apparmor-utils sudo bc ftp lsof ntpdate rrdtool
+    roundcube-plugins sudo bc ftp lsof ntpdate rrdtool
     dnsutils vesta vesta-nginx vesta-php"
 
 help() {
@@ -404,7 +404,7 @@ sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 service ssh restart
 
 # AppArmor
-aa-complain /usr/sbin/named
+#aa-complain /usr/sbin/named
 
 # Disable awstats cron
 rm -f /etc/cron.d/awstats

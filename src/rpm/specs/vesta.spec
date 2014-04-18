@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        7
+Release:        8
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -52,7 +52,24 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
-* Tue Feb 18 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-6
+* Fri Apr 18 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-8
+- Auto Updates
+- Backup Exclusions
+- Memory Chart Improvements
+- DNS Cluster Improvements ()
+- Dutch Language support
+- Separate error log
+- Secured way to show RRD Grapsh
+- Nginx 404 error handler
+- Fix for nginx configuration error on rebuild
+- Fix for template verification on restore
+- Fix for backup ownership verification
+- Fix for preg_match() ruleset
+- Fix for ftp account which starts with digits
+- Fix for 1024 DKIM keys. Thanks to demlasjr
+- Fix for exim user on Debian/Ubuntu
+
+* Tue Feb 18 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-7
 - CSR Generator
 - JS hint for dns record
 - Support for single-character email usernames

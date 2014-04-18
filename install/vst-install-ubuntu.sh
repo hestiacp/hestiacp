@@ -252,8 +252,8 @@ apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/ubuntu/ $codename nginx" > $apt/nginx.list
 wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
-if [ $codename = 'saucy' ]; then
-    sed -i "s/saucy/raring/g" $apt/nginx.list
+if [ $codename = 'trusty' ]; then
+    sed -i "s/trusty/saucy/g" $apt/nginx.list
 fi
 
 # Install vesta repo
@@ -450,7 +450,7 @@ fi
 
 # Apache configuration
 wget $CHOST/$VERSION/apache2.conf -O /etc/apache2/apache2.conf
-if [ "$codename" = 'saucy' ]; then
+if [ "$codename" = 'saucy' ] || [ "$codename" = 'trusty' ]; then
     sed -i "/^LockFile /d" /etc/apache2/apache2.conf
 fi
 wget $CHOST/$VERSION/apache2-status.conf \
@@ -608,7 +608,7 @@ fi
 # php configuration
 sed -i "s/;date.timezone =/date.timezone = UTC/g" /etc/php5/apache2/php.ini
 sed -i "s/;date.timezone =/date.timezone = UTC/g" /etc/php5/cli/php.ini
-if [ "$codename" = 'saucy' ]; then
+if [ "$codename" = 'saucy' ] || [ "$codename" = 'trusty' ]; then
     ln -s /etc/php5/conf.d/mcrypt.ini /etc/php5/mods-available
     php5enmod mcrypt
     service apache2 restart
@@ -634,7 +634,7 @@ mysql -e "CREATE DATABASE roundcube"
 mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
 sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
 mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-if [ "$codename" = 'saucy' ]; then
+if [ "$codename" = 'saucy' ] || [ "$codename" = 'trusty' ]; then
     wget $CHOST/$VERSION/roundcube-driver-new.php -O \
         /usr/share/roundcube/plugins/password/drivers/vesta.php
     ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/
@@ -696,7 +696,7 @@ cd /usr/local/vesta/data
 wget $CHOST/$VERSION/templates.tar.gz -O templates.tar.gz
 tar -xzf templates.tar.gz
 rm -f templates.tar.gz
-if [ "$codename" = 'saucy' ]; then
+if [ "$codename" = 'saucy' ] || [ "$codename" = 'trusty' ]; then
     sed -i "s/Include /IncludeOptional /g" \
         $VESTA/data/templates/web/apache2/*tpl
 fi

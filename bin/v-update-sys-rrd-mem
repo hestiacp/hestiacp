@@ -61,14 +61,8 @@ fi
 # Parsing data
 if [ "$period" = 'daily' ]; then
     mem=$(free -m)
-    used_ram=$(echo "$mem" |awk '{print $3}'|head -n2 |tail -n1)
-    used_cache=$(echo "$mem" |awk '{print $3}'|head -n3 |tail -n1)
-    used=$((used_ram + used_cache))
-
-    free_ram=$(echo "$mem" |awk '{print $4}'|head -n2 |tail -n1)
-    free_cache=$(echo "$mem" |awk '{print $4}'|head -n3 |tail -n1)
-    free=$((free_ram + free_cache))
-
+    used=$(echo "$mem" |awk '{print $3}'|head -n3 |tail -n1)
+    free=$(echo "$mem" |awk '{print $4}'|head -n3 |tail -n1)
     swap=$(echo "$mem" |awk '{print $3}'|tail -n1)
 
     # Updating rrd
@@ -93,14 +87,14 @@ rrdtool graph $RRD/mem/$period-mem.png \
     -c "MGRID#AAAAAA" \
     -c "FRAME#302c2d" \
     -c "ARROW#FFFFFF" \
-    DEF:ram=$RRD/mem/mem.rrd:RAM:AVERAGE \
+    DEF:used=$RRD/mem/mem.rrd:RAM:AVERAGE \
     DEF:swap=$RRD/mem/mem.rrd:SWAP:AVERAGE \
     DEF:free=$RRD/mem/mem.rrd:FREE:AVERAGE \
     COMMENT:'\r' \
-    AREA:ram#867995:"RAM "\
-    GPRINT:ram:'LAST: Current\:''%8.0lf'  \
-    GPRINT:ram:'MIN: Min\:''%8.0lf'  \
-    GPRINT:ram:'MAX: Max\:''%8.0lf\j'  \
+    AREA:used#867995:"USED"\
+    GPRINT:used:'LAST: Current\:''%8.0lf'  \
+    GPRINT:used:'MIN: Min\:''%8.0lf'  \
+    GPRINT:used:'MAX: Max\:''%8.0lf\j'  \
     AREA:free#1c74cd:"FREE" \
     GPRINT:free:'LAST: Current\:''%8.0lf'  \
     GPRINT:free:'MIN: Min\:''%8.0lf'  \

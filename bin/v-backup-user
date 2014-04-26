@@ -41,7 +41,7 @@ is_backup_enabled
 
 # Set backup directory if undefined
 if [ -z "$BACKUP" ]; then
-    BACKUP=/home/backup/
+    BACKUP=/home/backup
 fi
 mkdir -p $BACKUP
 
@@ -86,7 +86,7 @@ if [ "$?" -ne 0 ]; then
     exit $E_NOTEXIST
 fi
 
-# Backingup system configs
+# Backup sys configs
 echo -e "-- SYSTEM --"
 msg="-- SYSTEM --"
 mkdir $tmpdir/vesta
@@ -134,7 +134,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
     msg="$msg\n-- WEB --"
     mkdir $tmpdir/web/
 
-    # Parsing web domain exclusions
+    # Parsing domain exclusions
     conf="$USER_DATA/web.conf"
     for domain in $(search_objects 'web' 'SUSPENDED' "*" 'DOMAIN'); do
         check_exl=$(echo -e "${WEB//,/\n}" |grep "^$domain$")
@@ -148,6 +148,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
     web_list=$(echo "$web_list" | sed -e "s/  */\ /g" -e "s/^ //")
 
     i=0
+    set -f
     for domain in $web_list; do
         ((i ++))
         echo -e "$(date "+%F %T") $domain"
@@ -155,22 +156,22 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         mkdir -p $tmpdir/web/$domain/conf
         mkdir -p $tmpdir/web/$domain/vesta
 
-        # Defining domain variables
+        # Get domain variables
         domain_idn=$(idn -t --quiet -a "$domain")
         get_domain_values 'web'
 
-        # Creating web.config
+        # Backup web.conf
         cd $tmpdir/web/$domain/
         conf="$USER_DATA/web.conf"
         grep "DOMAIN='$domain'" $conf > vesta/web.conf
 
-        # WEB config
+        # Backup vhost config
         tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
         conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
         get_web_config_brds
         sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
 
-        # SSL check
+        # Backup ssl vhost
         if [ "$SSL" = 'yes' ]; then
             tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
             conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
@@ -178,37 +179,35 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
             sed -n "$top_line,$bottom_line p" $conf > conf/s$WEB_SYSTEM.conf
         fi
 
-        # Proxy config
+        # Backup proxy config
         if [ ! -z "$PROXY" ]; then
             tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
             conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/$PROXY_SYSTEM.conf
+        fi
 
-        # SSL proxy config
+        # Backup ssl proxy config
         if [ ! -z "$PROXY" ] && [ "$SSL" = 'yes' ] ; then
             tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
             conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/s$PROXY_SYSTEM.conf
-            fi
         fi
 
-        # Suplemental configs
+        # Backup custom config
         for sconfig in $(ls $HOMEDIR/$user/conf/web/|grep ".$domain.conf"); do
             cp $HOMEDIR/$user/conf/web/$sconfig conf/
         done
 
-        # SSL Certificates
+        # Backup ssl certificates
         if [ "$SSL" = 'yes' ] ; then
             cp $HOMEDIR/$user/conf/web/ssl.$domain.* conf/
             cp $USER_DATA/ssl/$domain.* vesta/
         fi
 
-        # Packing data folders
-        touch $tmpdir/web/$domain/domain_data.tar
-        cd $HOMEDIR/$user/web/$domain
-        set -f
+        # Define exclude arguments
+        fargs=()
         fargs+=(-not)
         fargs+=(-path)
         fargs+=("./logs*")
@@ -219,22 +218,34 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
                 xpath="$(echo $xpath | sed -e 's/\/*$//' -e 's/^\/*//')"
                 fargs+=(-not)
                 fargs+=(-path)
-                fargs+=("./$xpath*")
+                fargs+=("./$xpath/*")
                 echo "$(date "+%F %T") excluding directory $xpath"
                 msg="$msg\n$(date "+%F %T") excluding directory $xpath"
             done
         fi
-        find . ${fargs[@]} |grep -v "^./$" | grep -v "^.$" |\
-            xargs tar -rpf $tmpdir/web/$domain/domain_data.tar
-        gzip -$BACKUP_GZIP $tmpdir/web/$domain/domain_data.tar
-    done
 
+        # Backup files
+        cd $HOMEDIR/$user/web/$domain
+        find . ${fargs[@]} -type f -print0 |\
+            tar -cpf $tmpdir/web/$domain/domain_data.tar --null -T -
+
+        # Backup empty folders
+        find . ${fargs[@]} -type d -empty -print0 |\
+            tar -rpf $tmpdir/web/$domain/domain_data.tar --null -T -
+
+        # Compress archive
+        gzip -$BACKUP_GZIP $tmpdir/web/$domain/domain_data.tar
+
+    done
+    set +f
+
+    # Print total
     if [ "$i" -eq 1 ]; then
-        echo -e "$(date "+%F %T") $i domain"
-        msg="$msg\n$(date "+%F %T") $i domain"
+        echo -e "$(date "+%F %T") *** $i domain ***"
+        msg="$msg\n$(date "+%F %T") *** $i domain ***"
     else
-        echo -e "$(date "+%F %T") $i domains"
-        msg="$msg\n$(date "+%F %T") $i domains"
+        echo -e "$(date "+%F %T") *** $i domains ***"
+        msg="$msg\n$(date "+%F %T") *** $i domains ***"
     fi
     echo
     msg="$msg\n"
@@ -246,7 +257,7 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
     msg="$msg\n-- DNS --"
     mkdir $tmpdir/dns/
 
-    # Parsing dns domain exclusions
+    # Parsing domain exclusions
     for domain in $(search_objects 'dns' 'SUSPENDED' "*" 'DOMAIN'); do
         check_exl=$(echo -e "${DNS//,/\n}" |grep "^$domain$")
         if [ -z "$check_exl" ]; then
@@ -268,24 +279,25 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
         mkdir -p $tmpdir/dns/$domain/conf
         mkdir -p $tmpdir/dns/$domain/vesta
 
-        # Creating dns_domains config
+        # Backup dns.conf
         cd $tmpdir/dns/$domain/
         conf="$USER_DATA/dns.conf"
         grep "DOMAIN='$domain'" $conf > vesta/dns.conf
 
-        # Backingup dns recods
+        # Backup dns recods
         cp $USER_DATA/dns/$domain.conf vesta/$domain.conf
         if [ "$DNS_SYSTEM" != 'remote' ]; then
             cp $HOMEDIR/$user/conf/dns/$domain.db conf/$domain.db
         fi
     done
 
+    # Print total
     if [ "$i" -eq 1 ]; then
-        echo -e "$(date "+%F %T") $i domain"
-        msg="$msg\n$(date "+%F %T") $i domain"
+        echo -e "$(date "+%F %T") *** $i domain ***"
+        msg="$msg\n$(date "+%F %T") *** $i domain ***"
     else
-        echo -e "$(date "+%F %T") $i domains"
-        msg="$msg\n$(date "+%F %T") $i domains"
+        echo -e "$(date "+%F %T") *** $i domains ***"
+        msg="$msg\n$(date "+%F %T") *** $i domains ***"
     fi
     echo
     msg="$msg\n"
@@ -297,7 +309,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
     msg="$msg\n-- MAIL --"
     mkdir $tmpdir/mail/
 
-    # Parsing mail domain exclusions
+    # Parsing domain exclusions
     conf="$USER_DATA/mail.conf"
     for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
         check_exl=$(echo -e "${MAIL//,/\n}" |grep "^$domain$")
@@ -319,13 +331,13 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         mkdir -p $tmpdir/mail/$domain/vesta
         domain_idn=$(idn -t --quiet -a "$domain")
 
-        # Creating exim config
+        # Backup exim config
         if [[ "$MAIL_SYSTEM" =~ exim ]]; then
             cd $tmpdir/mail/$domain/
             cp $HOMEDIR/$user/conf/mail/$domain/* conf/
         fi
 
-        # Creating vesta config
+        # Backup mail.conf
         conf="$USER_DATA/mail.conf"
         grep "DOMAIN='$domain'" $conf > vesta/mail.conf
         cp $USER_DATA/mail/$domain.* vesta/
@@ -333,13 +345,16 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
             cp $USER_DATA/mail/*@$domain.* vesta/
         fi
 
-        # Packing mailboxes
+        # Backup emails
         cd $HOMEDIR/$user/mail/$domain_idn
         for account in $(ls); do
             exclusion=$(echo -e "${MAIL//,/\n}" |grep "$domain:")
             exclusion=$(echo -e "${exclusion//:/\n}" |grep "^$account$")
+
+            # Checking exlusions
             if [ -z "$exclusion" ] && [[ "$MAIL_SYSTEM" =~ exim ]]; then
-                echo "$(date "+%F %T") $account"
+                echo "$(date "+%F %T") + $account@$domain"
+                msg="$msg\n$(date "+%F %T") + $account@$domain"
                 touch $tmpdir/mail/$domain/accounts.tar
                 tar -rpf $tmpdir/mail/$domain/accounts.tar $account
             else
@@ -347,17 +362,20 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
                 msg="$msg\n$(date "+%F %T") excluding account $account"
             fi
         done
+
+        # Compress archive
         if [ -e "$tmpdir/mail/$domain/accounts.tar" ]; then
             gzip -$BACKUP_GZIP $tmpdir/mail/$domain/accounts.tar
         fi
     done
 
+    # Print total
     if [ "$i" -eq 1 ]; then
-        echo -e "$(date "+%F %T") $i domain"
-        msg="$msg\n$(date "+%F %T") $i domain"
+        echo -e "$(date "+%F %T") *** $i domain ***"
+        msg="$msg\n$(date "+%F %T") *** $i domain ***"
     else
-        echo -e "$(date "+%F %T") $i domains"
-        msg="$msg\n$(date "+%F %T") $i domains"
+        echo -e "$(date "+%F %T") *** $i domains ***"
+        msg="$msg\n$(date "+%F %T") *** $i domains ***"
     fi
     echo
     msg="$msg\n"
@@ -380,16 +398,16 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
             msg="$msg\n$(date "+%F %T") excluding $database"
         fi
     done
-    db_list=$(echo "$db_list" | sed -e "s/  */\ /g" -e "s/^ //")
 
     i=0
     conf="$USER_DATA/db.conf"
+    db_list=$(echo "$db_list" | sed -e "s/  */\ /g" -e "s/^ //")
     for database in $db_list; do
         ((i ++))
         get_database_values
 
-        echo -e "$(date "+%F %T") $TYPE $database"
-        msg="$msg\n$(date "+%F %T") $TYPE $database"
+        echo -e "$(date "+%F %T") $database ($TYPE)"
+        msg="$msg\n$(date "+%F %T") $database ($TYPE)"
 
         mkdir -p $tmpdir/db/$database/conf
         mkdir -p $tmpdir/db/$database/vesta
@@ -403,15 +421,18 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
             mysql) dump_mysql_database ;;
             pgsql) dump_pgsql_database ;;
         esac
+
+        # Compress dump
         gzip -$BACKUP_GZIP $dump
     done
 
+    # Print total
     if [ "$i" -eq 1 ]; then
-        echo -e "$(date "+%F %T") $i database"
-        msg="$msg\n$(date "+%F %T") $i database"
+        echo -e "$(date "+%F %T") *** $i database ***"
+        msg="$msg\n$(date "+%F %T") *** $i database ***"
     else
-        echo -e "$(date "+%F %T") $i databases"
-        msg="$msg\n$(date "+%F %T") $i databases"
+        echo -e "$(date "+%F %T") *** $i databases ***"
+        msg="$msg\n$(date "+%F %T") *** $i databases ***"
     fi
     echo
     msg="$msg\n"
@@ -423,10 +444,7 @@ if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON" != '*' ]; then
     msg="$msg\n-- CRON --"
     mkdir $tmpdir/cron/
 
-    # Backingup cron recods
-    echo -e "$(date "+%F %T") cron.conf"
-    msg="$msg\n$(date "+%F %T") cron.conf"
-
+    # Backup cron.conf
     cp $USER_DATA/cron.conf $tmpdir/cron/
     cron_record=$(wc -l $USER_DATA/cron.conf|cut -f 1 -d ' ')
 
@@ -435,12 +453,13 @@ if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON" != '*' ]; then
         cp /var/spool/cron/$user $tmpdir/cron/
     fi
 
+    # Print total
     if [ "$cron_record" -eq 1 ]; then
-        echo -e "$(date "+%F %T") $cron_record record"
-        msg="$msg\n$(date "+%F %T") $cron_record record"
+        echo -e "$(date "+%F %T") *** $cron_record job ***"
+        msg="$msg\n$(date "+%F %T") *** $cron_record job ***"
     else
-        echo -e "$(date "+%F %T") $cron_record records"
-    msg="$msg\n$(date "+%F %T") $cron_record records"
+        echo -e "$(date "+%F %T") *** $cron_record jobs ***"
+        msg="$msg\n$(date "+%F %T") *** $cron_record jobs ***"
     fi
     echo
     msg="$msg\n"
@@ -453,12 +472,13 @@ if [ "$USER" != '*' ]; then
     mkdir $tmpdir/user_dir
     cd $HOMEDIR/$user
 
-    # Default excludes
-    set -f
-    fargs=''
-
-    # Parsing directory exlusion list
+    # Parsing directory exlusions
+    USER=''
+    if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+        source $USER_DATA/backup-excludes.conf
+    fi
     exlusion_list=$(echo -e "${USER//,/\n}")
+    fargs=()
     for xpath in $exlusion_list; do
         fargs+=(-not)
         fargs+=(-path)
@@ -467,6 +487,8 @@ if [ "$USER" != '*' ]; then
         msg="$msg\n$(date "+%F %T") excluding directory $xpath"
     done
 
+    set -f
+    i=0
     for udir in $(ls |egrep -v "conf|web|dns|mail"); do
         check_exl=$(echo -e "${USER//,/\n}" |grep "^$udir$")
         if [ -z "$check_exl" ]; then
@@ -474,21 +496,29 @@ if [ "$USER" != '*' ]; then
             udir_list="$udir_list $udir"
             echo -e "$(date "+%F %T") adding directory $udir"
             msg="$msg\n$(date "+%F %T") adding directory $udir"
-            touch $tmpdir/user_dir/$udir.tar
-            find ./$udir ${fargs[@]} |grep -v "^./$" |grep -v "^.$" |\
-                grep -v "./$udir$" |\
-                xargs tar -rpf $tmpdir/user_dir/$udir.tar
+
+            # Backup files
+            find ./$udir ${fargs[@]} -type f -print0 |\
+                tar -cpf $tmpdir/user_dir/$udir.tar --null -T -
+
+            # Backup empty folders
+            find ./$udir ${fargs[@]} -type d -empty -print0 |\
+                tar -rpf $tmpdir/user_dir/$udir.tar --null -T -
+
+            # Compress arhive
             gzip -$BACKUP_GZIP $tmpdir/user_dir/$udir.tar
         fi
     done
+    set +f
     udir_list=$(echo "$udir_list" | sed -e "s/  */\ /g" -e "s/^ //")
 
+    # Print total
     if [ "$i" -eq 1 ]; then
-        echo -e "$(date "+%F %T") $i user directory"
-        msg="$msg\n$(date "+%F %T") $i directory"
+        echo -e "$(date "+%F %T") *** $i user directory ***"
+        msg="$msg\n$(date "+%F %T") *** $i directory ***"
     else
-        echo -e "$(date "+%F %T") $i directories"
-        msg="$msg\n$(date "+%F %T") $i directories"
+        echo -e "$(date "+%F %T") *** $i directories ***"
+        msg="$msg\n$(date "+%F %T") *** $i directories ***"
     fi
     echo
     msg="$msg\n"
@@ -508,8 +538,6 @@ local_backup(){
     # Removing dublicate for this day
     if [ -e "$BACKUP/$user.$DATE.tar" ]; then
         deprecated="$DATE"
-        echo -e "$(date "+%F %T") Deleted old backup: $user.$DATE.tar"
-        msg="$msg\n$(date "+%F %T") Deleted old backup: $user.$DATE.tar"
         rm -f $BACKUP/$user.$DATE.tar
     fi
 
@@ -524,8 +552,8 @@ local_backup(){
             # Removing old backup
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
             deprecated="$deprecated $backup_date"
-            echo -e "$(date "+%F %T") Deleted old backup: $backup_date"
-            msg="$msg\n$(date "+%F %T") Deleted old backup: $backup_date"
+            echo -e "$(date "+%F %T") Roated: $backup_date"
+            msg="$msg\n$(date "+%F %T") Rotated: $backup_date"
             rm -f $BACKUP/$backup
         done
     fi
@@ -549,8 +577,8 @@ local_backup(){
     chmod 640 $BACKUP/$user.$DATE.tar
     chown admin:$user $BACKUP/$user.$DATE.tar
     localbackup='yes'
-    echo -e "$(date "+%F %T") Archived: $BACKUP/$user.$DATE.tar"
-    msg="$msg\n$(date "+%F %T") Archived: $BACKUP/$user.$DATE.tar"
+    echo -e "$(date "+%F %T") Local: $BACKUP/$user.$DATE.tar"
+    msg="$msg\n$(date "+%F %T") Local: $BACKUP/$user.$DATE.tar"
     U_BACKUPS=$(ls $BACKUP/ | grep "^$user." | wc -l)
     update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 }
@@ -606,7 +634,7 @@ ftp_backup() {
 
 
     # Debug info
-    echo -e "$(date "+%F %T") FTP ftp://$HOST$BPATH/$user.$DATE.tar"
+    echo -e "$(date "+%F %T") Remote: ftp://$HOST$BPATH/$user.$DATE.tar"
 
     # Checking ftp connection
     fconn=$(ftpc)
@@ -644,8 +672,8 @@ ftp_backup() {
         for backup in $(echo "$backup_list" | head -n $backups_rm_number); do 
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
             deprecated="$deprecated $backup"
-            echo -e "$(date "+%F %T") Deleted old ftp backup: $backup_date"
-            msg="$msg\n$(date "+%F %T") Deleted old ftp backup: $backup_date"
+            echo -e "$(date "+%F %T") Roated ftp backup: $backup_date"
+            msg="$msg\n$(date "+%F %T") Roated ftp backup: $backup_date"
             ftpc "cd $BPATH" "delete $backup"
         done
     fi
@@ -692,8 +720,8 @@ fi
 
 echo "$(date "+%F %T") Size: $size Mb"
 msg="$msg\n$(date "+%F %T") Size: $size Mb"
-echo "$(date "+%F %T") RUNTIME: $run_time $min"
-msg="$msg\n$(date "+%F %T") RUNTIME: $run_time $min"
+echo "$(date "+%F %T") Runtime: $run_time $min"
+msg="$msg\n$(date "+%F %T") Runtime: $run_time $min"
 
 
 #----------------------------------------------------------#

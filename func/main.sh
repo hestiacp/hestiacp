@@ -138,7 +138,7 @@ is_package_valid() {
     fi
     if [ ! -e "$pkg_dir/$package.pkg" ]; then
         echo "Error: package $package doesn't exist"
-        log_event "$E_NOTEXIST $EVENT"
+        log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
 }

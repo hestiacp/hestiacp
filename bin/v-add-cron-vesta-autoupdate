@@ -39,7 +39,7 @@ min=$(gen_password '012345' '2')
 hour=$(gen_password '1234567' '1')
 day='*'
 month='*'
-WDAY='*'
+wday='*'
 command='sudo /usr/local/vesta/bin/v-update-sys-vesta-all'
 
 # Concatenating cron string

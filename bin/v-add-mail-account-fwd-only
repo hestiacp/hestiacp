@@ -21,6 +21,13 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
 
+# Define mail user
+if [ "$MAIL_SYSTEM" = 'exim4' ]; then
+    MAIL_USER=Debian-exim
+else
+    MAIL_USER=exim
+fi
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

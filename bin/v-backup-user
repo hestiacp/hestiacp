@@ -148,7 +148,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
     web_list=$(echo "$web_list" | sed -e "s/  */\ /g" -e "s/^ //")
 
     i=0
-    set -f
+
     for domain in $web_list; do
         ((i ++))
         echo -e "$(date "+%F %T") $domain"
@@ -207,6 +207,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         fi
 
         # Define exclude arguments
+        set -f
         fargs=()
         fargs+=(-not)
         fargs+=(-path)
@@ -235,9 +236,8 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         # Compress archive
         gzip -$BACKUP_GZIP $tmpdir/web/$domain/domain_data.tar
-
+        set +f
     done
-    set +f
 
     # Print total
     if [ "$i" -eq 1 ]; then

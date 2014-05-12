@@ -66,6 +66,11 @@ chmod a+x /etc/cron.daily/quotacheck
 # Enabling fs quota
 if [ ! -z "$(quotaon -pa|grep " $mnt "|grep user|grep 'off')" ]; then
     quotaon $mnt
+    if [ $? -ne 0 ]; then
+        echo "Error: quota can't be enabled on $mnt partition"
+        log_event "$E_DISK" "$EVENT"
+        exit $E_DISK
+    fi
 fi
 
 # Updating DISK_QUOTA value

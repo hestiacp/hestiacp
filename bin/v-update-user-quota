@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: rebuild system user
-# options: USER [RESTART]
+# info: update user disk quota
+# options: USER
 #
-# The function rebuilds system user account.
+# The functions upates disk quota for specific user
 
 
 #----------------------------------------------------------#
@@ -11,38 +11,32 @@
 
 # Argument defenition
 user=$1
-restart=$2
 
 # Includes
 source $VESTA/func/main.sh
-source $VESTA/func/rebuild.sh
 source $VESTA/conf/vesta.conf
-
-# Export sbin
-export PATH=$PATH:/usr/sbin
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [RESTART]'
+check_args '1' "$#" 'USER'
 validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Update disk quota
-if [ "$DISK_QUOTA" = 'yes' ]; then
-    $BIN/v-update-user-quota $user
-fi
+# Updating disk quota
+soft=$(get_user_value '$DISK_QUOTA')
+soft=$((soft * 100))
+hard=$((soft + 50000))
 
-# Rebuild user
-rebuild_user_conf
+mnt=$(df -P /home |awk '{print $6}' |tail -n1)
+setquota $user $soft $hard 0 0 $mnt
 
 
 #----------------------------------------------------------#

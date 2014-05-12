@@ -1,0 +1,63 @@
+#!/bin/bash
+# info: delete system quota
+# opions: NONE
+#
+# The script disables filesystem quota on /home patition
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting usrquota on /home partition
+mnt=$(df -P /home |awk '{print $6}' |tail -n1)
+lnr=$(cat -n /etc/fstab |awk '{print $1,$3}' |grep "$mnt$" |cut -f 1 -d ' ')
+options=$(sed -n ${lnr}p /etc/fstab |awk '{print $4}')
+if [ ! -z "$(echo $options |grep usrquota)" ]; then
+    sed -i "$lnr s/,usrquota//" /etc/fstab
+    mount -o remount $mnt
+fi
+
+# Disabling fs quota
+if [ -z "$(quotaon -pa|grep " $mnt "|grep user|grep 'off')" ]; then
+    quotaoff $mnt
+fi
+
+# Deleting quota index
+if [ -e "$mnt/aquota.user" ]; then
+    rm $mnt/aquota.user
+fi
+
+# Deleting weekly cron job
+rm -f /etc/cron.daily/quotacheck
+
+# Updating DISK_QUOTA value
+if [ -z "$(grep DISK_QUOTA $VESTA/conf/vesta.conf)" ]; then
+    echo "DISK_QUOTA='no'" >> $VESTA/conf/vesta.conf
+else
+    sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='no'/g" $VESTA/conf/vesta.conf
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

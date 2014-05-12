@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: add system quota
+# opions: NONE
+#
+# The script enables filesystem quota on /home patition
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking quota package
+if [ ! -e "/usr/sbin/setquota" ]; then
+    if [ -e "/etc/redhat-release" ]; then
+        yum -y install quota >/dev/null 2>&1
+        result=$?
+    else
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get -y install quota >/dev/null 2>&1
+        result=$?
+    fi
+
+    # Checking installation status
+    if [ "$result" -ne 0 ]; then
+        echo "Error: quota package wasn't successfully installed"
+        log_event "$E_UPDATE" "$EVENT"
+        exit $E_UPDATE
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Adding usrquota option on /home partition
+mnt=$(df -P /home |awk '{print $6}' |tail -n1)
+lnr=$(cat -n /etc/fstab |awk '{print $1,$3}' |grep "$mnt$" |cut -f 1 -d ' ')
+options=$(sed -n ${lnr}p /etc/fstab |awk '{print $4}')
+if [ -z "$(echo $options |grep usrquota)" ]; then
+    sed -i "$lnr s/$options/$options,usrquota/" /etc/fstab
+    mount -o remount $mnt
+fi
+
+# Adding aquota.user file
+if [ ! -e "$mnt/aquota.user" ]; then
+    quotacheck -cu $mnt >/dev/null 2>&1
+fi
+
+# Building fs quota index
+quotacheck -um $mnt
+
+# Adding weekly cron job
+echo "quotacheck -um $mnt" > /etc/cron.daily/quotacheck
+chmod a+x /etc/cron.daily/quotacheck
+
+# Enabling fs quota
+if [ ! -z "$(quotaon -pa|grep " $mnt "|grep user|grep 'off')" ]; then
+    quotaon $mnt
+fi
+
+# Updating DISK_QUOTA value
+if [ -z "$(grep DISK_QUOTA $VESTA/conf/vesta.conf)" ]; then
+    echo "DISK_QUOTA='yes'" >> $VESTA/conf/vesta.conf
+else
+    sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='yes'/g" $VESTA/conf/vesta.conf
+fi
+
+# Rebuilding user quota
+for user in $(ls $VESTA/data/users); do
+    $BIN/v-update-user-quota $user
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

@@ -97,16 +97,9 @@ if [ ! -z "$DNS_SYSTEM" ]; then
     chmod 751 $HOMEDIR/$user/conf/dns
 fi 
 
-
 # Set permissions
 chmod a+x $HOMEDIR/$user
 chattr +i $HOMEDIR/$user/conf
-
-# Checking quota
-if [ ! -z "$DISK_QUOTA" ]; then
-    DISK_QUOTA=$(echo "$pkg_data" | grep 'DISK_QUOTA' | cut -f 2 -d \')
-    #$BIN/v-add-user_quota "$user" "$DISK_QUOTA"
-fi
 
 
 #----------------------------------------------------------#
@@ -211,6 +204,12 @@ LANGUAGE=''
 TIME='$TIME'
 DATE='$DATE'" > $USER_DATA/user.conf
 chmod 660 $USER_DATA/user.conf
+
+# Updating quota
+if [ "$DISK_QUOTA" = 'yes' ]; then
+    echo "Setting quota"
+    $BIN/v-update-user-quota "$user"
+fi
 
 # Updating admin counter
 if [ "$user" != 'admin' ]; then

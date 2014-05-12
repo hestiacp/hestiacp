@@ -28,6 +28,9 @@ validate_format 'user'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
+if [ "$MAIL_SYSTEM" = 'remote' ]; then
+    exit
+fi
 
 
 #----------------------------------------------------------#

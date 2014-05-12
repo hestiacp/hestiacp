@@ -254,7 +254,7 @@ add_web_config() {
 
 # Get config top and bottom line numbers
 get_web_config_brds() {
-    serv_line=$(grep -ni 'Name %domain_idn%' "$tpl_file" |cut -f 1 -d :)
+    serv_line=$(egrep -ni "Name %domain_idn%($| )" $tpl_file |cut -f 1 -d :)
     if [ -z "$serv_line" ]; then
         log_event "$E_PARSING" "$EVENT"
         return $E_PARSING
@@ -264,7 +264,7 @@ get_web_config_brds() {
     bfr_line=$((serv_line - 1))
     aftr_line=$((last_line - serv_line - 1))
 
-    str=$(grep -ni "Name $domain_idn" $conf | cut -f 1 -d :)
+    str=$(egrep -ni "Name $domain_idn($| )" $conf | cut -f 1 -d :)
     top_line=$((str - serv_line + 1))
     bottom_line=$((top_line + last_line -1))
 

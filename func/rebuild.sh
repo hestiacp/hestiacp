@@ -553,7 +553,7 @@ rebuild_mysql_database() {
             echo "Database connection to MySQL host $HOST failed" |\
                 $send_mail -s "$subj" $email
         fi
-        log_event  "$E_CONNECT $EVENT"
+        log_event  "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 

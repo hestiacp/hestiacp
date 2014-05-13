@@ -36,10 +36,10 @@ is_object_valid 'user' 'USER' "$user" "$user"
 
 # Get list of ip addresses
 ip_list=$(/sbin/ifconfig | grep 'inet addr:' | cut -f 2 -d : | \
-    cut -f 1 -d ' '| grep -v 127.0.0.1 | grep -v '0.0.0.')
+    cut -f 1 -d ' '| grep -v 127.0.0.1 | grep -v "^0.0.0.")
 ip_num=$(echo "$ip_list" | wc -l)
 
-# WorkAround for Amazon stop/start issue
+# WorkAround for DHCP IP address
 vst_ip_list=$(ls $VESTA/data/ips/)
 vst_ip_num=$(echo "$vst_ip_list" | wc -l)
 
@@ -52,10 +52,6 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
             mv /etc/$PROXY_SYSTEM/conf.d/$old.conf \
                 /etc/$PROXY_SYSTEM/conf.d/$new.conf
             sed -i "s/$old/$new/g" /etc/$PROXY_SYSTEM/conf.d/$new.conf
-            $BIN/v-restart-proxy
-            if [ $? -ne 0 ]; then
-                exit $E_RESTART
-            fi
         fi
         if [ ! -z "$WEB_SYSTEM" ]; then
             mv /etc/$WEB_SYSTEM/conf.d/$old.conf \
@@ -67,11 +63,9 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
             for user in $(ls $VESTA/data/users/); do
                 $BIN/v-rebuild-web-domains $user no
             done
-            $BIN/v-restart-web
-            if [ $? -ne 0 ]; then
-                exit $E_RESTART
-            fi
         fi
+        $BIN/v-restart-web
+        $BIN/v-restart-proxy
 
         if [ ! -z "$DNS_SYSTEM" ]; then
             # Rebuild dns domains

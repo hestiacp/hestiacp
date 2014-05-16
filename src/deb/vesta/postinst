@@ -4,3 +4,8 @@
 if [ -x "/usr/local/vesta/upd/add_fwd_only.sh" ]; then
     /usr/local/vesta/upd/add_fwd_only.sh
 fi
+
+# Run exim permission fixer
+if [ -x "/usr/local/vesta/upd/fix_exim_permissions.sh" ]; then
+    /usr/local/vesta/upd/fix_exim_permissions.sh
+fi

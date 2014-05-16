@@ -32,6 +32,11 @@ if [ -x "/etc/init.d/$service" ]; then
     if [ $? -ne 0 ]; then
         exit $E_RESTART
     fi
+else
+    service $service start >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        exit $E_RESTART
+    fi
 fi
 
 

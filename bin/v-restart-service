@@ -27,25 +27,9 @@ check_args '1' "$#" 'SERVICE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ -x "/etc/init.d/$service" ]; then
-    /etc/init.d/$service restart >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        send_mail="$VESTA/web/inc/mail-wrapper.php"
-        email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
-        email=$(echo "$email" | cut -f 2 -d "'")
-        tmpfile=$(mktemp)
-        subj="$(hostname): $service restart failed"
-        /etc/init.d/$service configtest >> $tmpfile 2>&1
-        /etc/init.d/$service restart >> $tmpfile 2>&1
-        cat $tmpfile | $send_mail -s "$subj" $email
-        rm -f $tmpfile
-        exit $E_RESTART
-    fi
-else
-    service $service restart >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+service $service restart >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    exit $E_RESTART
 fi
 
 

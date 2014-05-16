@@ -27,16 +27,9 @@ check_args '1' "$#" 'SERVICE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ -x "/etc/init.d/$service" ]; then
-    /etc/init.d/$service stop >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
-else
-    service $service stop >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+service $service stop >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    exit $E_RESTART
 fi
 
 

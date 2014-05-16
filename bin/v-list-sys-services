@@ -23,14 +23,9 @@ get_srv_state() {
     proc_name=${2-$1}
 
     # Check service status
-    if [ -e "/etc/init.d/$srv" ]; then
-        /etc/init.d/$srv status > /dev/null 2>&1
-        status=$?
-    else
-        status=1
-        if [ ! -z "$(service $srv status| grep running)" ]; then
-            status=0
-        fi
+    status=1
+    if [ ! -z "$(service $srv status| grep running)" ]; then
+        status=0
     fi
 
     if [ $status -eq 0 ]; then

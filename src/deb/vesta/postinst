@@ -9,3 +9,10 @@ fi
 if [ -x "/usr/local/vesta/upd/fix_exim_permissions.sh" ]; then
     /usr/local/vesta/upd/fix_exim_permissions.sh
 fi
+
+# Run vesta permission fixer
+if [ -x "/usr/local/vesta/upd/fix_vesta_ssl_permissions.sh" ]; then
+    /usr/local/vesta/upd/fix_vesta_ssl_permissions.sh
+fi
+
+exit 0

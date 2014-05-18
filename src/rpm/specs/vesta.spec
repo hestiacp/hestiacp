@@ -40,6 +40,9 @@ if [ $1 -ge 2 ]; then
     if [ -e /usr/local/vesta/upd/add_fwd_only.sh ]; then
         /usr/local/vesta/upd/add_fwd_only.sh
     fi
+    if [ -e /usr/local/vesta/fix_vesta_ssl_permissions.sh ]; then
+        /usr/local/vesta/upd/fix_vesta_ssl_permissions.sh
+    fi
 fi
 
 %files
@@ -52,6 +55,20 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Sun May 18 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-9
+- File System Quota support
+- Norwegian translation. Thanks to Helge Sverre
+- New script to change system hostname
+- Updated Ukranian translation. Thanks to Alexandr Loskutov
+- Updated RRD Memory Graph. Thanks to Demian
+- Updated Dutch translation. Thanks to Ricardo
+- Fix for dns gmail template. Thanks to flangefrog
+- Fix for fwd_only rule. Thanks to demlasjr
+- Fix for oversized backup tarballs
+- Fix for exim mail user on Debian
+- Fix for better vhost matching in get_web_config_brds()
+- Fix for upstart service handler
+
 * Fri Apr 18 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-8
 - Auto Updates
 - Backup Exclusions

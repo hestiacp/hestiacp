@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: change hostname
+# options: HOSTNAME
+#
+# The function for changing system hostname.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+domain=$1
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'HOSTNAME'
+validate_format 'domain'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+hostname $domain
+
+# RHEL/CentOS
+if [ -e "/etc/redhat-release" ]; then
+    touch /etc/sysconfig/network
+    if [ -z "$(grep HOSTNAME /etc/sysconfig/network)" ]; then
+        echo "HOSTNAME='$domain'" >> /etc/sysconfig/network
+    else
+        sed -i "s/HOSTNAME=.*/HOSTNAME='$domain'/" /etc/sysconfig/network
+    fi
+fi
+
+# Debian/Ubuntu
+if [ ! -e "/etc/redhat-release" ]; then
+    echo "$domain" > /etc/hostname
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

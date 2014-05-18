@@ -27,7 +27,7 @@ if [ -e "/etc/exim4/exim4.conf.template" ]; then
     # Check if fwd_only flag
     check_flag=$(grep localuser_fwd_only $conf)
     if [ ! -z "$check_flag" ]; then
-        sed -i "s%/exim/domains/%/exim4/domains/i%" $conf
+        sed -i "s%/exim/domains/%/exim4/domains/%g" $conf
     else
         # Define new router
         fwd1='localuser_fwd_only:\n  driver = accept\n  transport = devnull\n'

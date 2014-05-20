@@ -45,7 +45,7 @@ if [ -z "$FTP_SYSTEM" ] || [ "$FTP_SYSTEM" = 'remote' ]; then
 fi
 
 # Restart system
-/etc/init.d/$FTP_SYSTEM restart >/dev/null 2>&1
+service $FTP_SYSTEM restart >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
     echo "Error: $FTP_SYSTEM restart failed"

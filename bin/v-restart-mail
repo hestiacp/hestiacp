@@ -45,7 +45,7 @@ if [ -z "$MAIL_SYSTEM" ] || [ "$MAIL_SYSTEM" = 'remote' ]; then
 fi
 
 # Restart system
-/etc/init.d/$MAIL_SYSTEM restart >/dev/null 2>&1
+service $MAIL_SYSTEM restart >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
     echo "Error: $MAIL_SYSTEM restart failed"

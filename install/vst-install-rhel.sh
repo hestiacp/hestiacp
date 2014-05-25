@@ -776,7 +776,11 @@ r="$(gen_pass)"
 mysql -e "CREATE DATABASE roundcube"
 mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
 sed -i "s/%password%/$r/g" /etc/roundcubemail/db.inc.php
-mysql roundcube < /usr/share/doc/roundcubemail-*/SQL/mysql.initial.sql
+if [ -e "/usr/share/roundcubemail/SQL/mysql.initial.sql" ]; then
+    mysql roundcube < /usr/share/roundcubemail/SQL/mysql.initial.sql
+else
+    mysql roundcube < /usr/share/doc/roundcubemail-*/SQL/mysql.initial.sql
+fi
 
 # Adding admin user
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then

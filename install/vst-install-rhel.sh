@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Vesta RHEL/CentOS installer v.03
+# Vesta RHEL/CentOS installer v.04
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
@@ -13,20 +13,26 @@ VERSION='0.9.8/rhel'
 YUM_REPO='/etc/yum.repos.d/vesta.repo'
 software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     php php-bcmath php-cli php-common php-gd php-imap php-mbstring php-mcrypt
-    php-mysql php-pdo php-soap php-tidy php-xml php-xmlrpc
+    php-mysql php-pdo php-soap php-tidy php-xml php-xmlrpc quota e2fsprogs
     phpMyAdmin awstats webalizer vsftpd mysql mysql-server exim dovecot clamd
     spamassassin curl roundcubemail bind bind-utils bind-libs mc screen ftp
     libpng libjpeg libmcrypt mhash zip unzip openssl flex rssh libxml2
     ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rsync
     rrdtool GeoIP freetype ntp openssh-clients vesta vesta-nginx vesta-php"
 
+# Help
 help() {
     echo "usage: $0 [OPTIONS]
-   -d, --disable-remi         Disable remi
-   -e, --email                Define email address
-   -h, --help                 Print this help and exit
+   -d, --disable-remi         Disable remi repository
+   -e, --email                Set email address
    -f, --force                Force installation
-   -n, --noupdate             Do not run yum update command"
+   -h, --help                 Print this help and exit
+   -n, --noupdate             Do not run yum update command
+   -m, --mysql-password       Set MySQL password instead of generating it
+   -p, --password             Set admin password instead of generating it
+   -s, --hostname             Set server hostname
+   -q, --quota                Enable File System Quota"
+
     exit 1
 }
 
@@ -50,11 +56,15 @@ gen_pass() {
 for arg; do
     delim=""
     case "$arg" in
-        --help)         args="${args}-h " ;;
-        --disable-remi) args="${args}-d " ;;
-        --force)        args="${args}-f " ;;
-        --email)        args="${args}-e " ;;
-        --noupdate)     args="${args}-n " ;;
+        --disable-remi)         args="${args}-d " ;;
+        --email)                args="${args}-e " ;;
+        --force)                args="${args}-f " ;;
+        --help)                 args="${args}-h " ;;
+        --noupdate)             args="${args}-n " ;;
+        --mysql-password)       args="${args}-m " ;;
+        --password)             args="${args}-p " ;;
+        --hostname)             args="${args}-s " ;;
+        --quota)                args="${args}-q " ;;
         *)              [[ "${arg:0:1}" == "-" ]] || delim="\""
                         args="${args}${delim}${arg}${delim} ";;
     esac
@@ -62,13 +72,17 @@ done
 eval set -- "$args"
 
 # Getopt
-while getopts "dhfne:" Option; do
+while getopts "dhfnqe:m:p:s:" Option; do
     case $Option in
         d) disable_remi='yes' ;;          # Disable remi repo
         h) help ;;                        # Help
         e) email=$OPTARG ;;               # Set email
         f) force='yes' ;;                 # Force install
         n) noupdate='yes' ;;              # Disable yum update
+        m) mpass=$OPTARG ;;               # MySQL pasword
+        p) vpass=$OPTARG ;;               # Admin password
+        s) servername=$OPTARG ;;          # Server hostname
+        q) quota='yes' ;;                 # Enable quota
         *) help ;;                        # Default
     esac
 done
@@ -212,8 +226,16 @@ if [ -z $email ]; then
         exit 1
     fi
 
-    # Check email
+    # Define email
     read -p 'Please enter valid email address: ' email
+
+    # Define server hostname
+    if [ -z "$servername" ]; then
+        read -p "Please enter hostname [$(hostname)]: " servername
+    fi
+    if [ -z "$servername" ]; then
+        servername=$(hostname)
+    fi
 fi
 
 # Validate email
@@ -459,6 +481,84 @@ if [ -e '/etc/selinux/config' ]; then
     setenforce 0
 fi
 
+# Vesta configuration
+echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh
+chmod 755 /etc/profile.d/vesta.sh
+source /etc/profile.d/vesta.sh
+echo 'PATH=$PATH:/usr/local/vesta/bin' >> /root/.bash_profile
+echo 'export PATH' >> /root/.bash_profile
+source /root/.bash_profile
+wget $CHOST/$VERSION/vesta.log -O /etc/logrotate.d/vesta
+
+# Directory tree
+mkdir -p $VESTA/conf
+mkdir -p $VESTA/log
+mkdir -p $VESTA/ssl
+mkdir -p $VESTA/data
+mkdir -p $VESTA/data/ips
+mkdir -p $VESTA/data/queue
+mkdir -p $VESTA/data/users
+touch $VESTA/data/queue/backup.pipe
+touch $VESTA/data/queue/disk.pipe
+touch $VESTA/data/queue/webstats.pipe
+touch $VESTA/data/queue/restart.pipe
+touch $VESTA/data/queue/traffic.pipe
+chmod 750 $VESTA/conf
+chmod 750 $VESTA/data/users
+chmod 750 $VESTA/data/ips
+chmod -R 750 $VESTA/data/queue
+ln -s /usr/local/vesta/log /var/log/vesta
+touch /var/log/vesta/system.log
+touch /var/log/vesta/nginx-error.log
+touch /var/log/vesta/auth.log
+chmod 660 /var/log/vesta/*
+adduser backup
+ln -s /home/backup /backup
+chmod a+x /backup
+
+# vesta.conf
+wget $CHOST/$VERSION/vesta.conf -O $VESTA/conf/vesta.conf
+if [ "$srv_type" = 'micro' ] ||  [ "$srv_type" = 'small' ]; then
+    sed -i "s/clamav//g" $VESTA/conf/vesta.conf
+    sed -i "s/spamassassin//g" $VESTA/conf/vesta.conf
+fi
+
+# Set server hostname
+/usr/local/vesta/bin/v-change-sys-hostname $servername 2>/dev/null
+
+# Templates
+cd /usr/local/vesta/data
+wget $CHOST/$VERSION/packages.tar.gz -O packages.tar.gz
+tar -xzf packages.tar.gz
+rm -f packages.tar.gz
+cd /usr/local/vesta/data
+wget $CHOST/$VERSION/templates.tar.gz -O templates.tar.gz
+tar -xzf templates.tar.gz
+rm -f templates.tar.gz
+chmod -R 755 /usr/local/vesta/data/templates
+cp templates/web/skel/public_html/index.html /var/www/html/
+sed -i 's/%domain%/It worked!/g' /var/www/html/index.html
+if [ "$srv_type" = 'micro' ]; then
+    rm -f /usr/local/vesta/data/templates/web/httpd/phpfcgid.*
+fi
+
+# Generating SSL certificate
+$VESTA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
+     'San Francisco' 'Vesta Control Panel' 'IT' > /tmp/vst.pem
+
+# Parsing merged certificate file
+crt_end=$(grep -n "END CERTIFICATE-" /tmp/vst.pem |cut -f 1 -d:)
+key_start=$(grep -n "BEGIN RSA" /tmp/vst.pem |cut -f 1 -d:)
+key_end=$(grep -n  "END RSA" /tmp/vst.pem |cut -f 1 -d:)
+
+# Adding SSL certificate
+cd /usr/local/vesta/ssl
+sed -n "1,${crt_end}p" /tmp/vst.pem > certificate.crt
+sed -n "$key_start,${key_end}p" /tmp/vst.pem > certificate.key
+chown root:mail /usr/local/vesta/ssl/*
+chmod 660 /usr/local/vesta/ssl/*
+rm /tmp/vst.pem
+
 # Disabling iptables
 chkconfig iptables off
 service iptables stop
@@ -536,17 +636,14 @@ if [ "$?" -ne 0 ]; then
 fi
 
 # MySQL configuration
-mpass=$(gen_pass)
 if [ "$srv_type" = 'micro' ]; then
     wget $CHOST/$VERSION/mysql-512.cnf -O /etc/my.cnf
 else
     wget $CHOST/$VERSION/mysql.cnf -O /etc/my.cnf
 fi
-
 chkconfig mysqld on
 service mysqld start
 if [ "$?" -ne 0 ]; then
-
     # Fix for aio on OpenVZ
     if [ -e "/proc/user_beancounters" ]; then
         sed -i "s/#innodb_use_native_aio/innodb_use_native_aio/g" /etc/my.cnf
@@ -557,6 +654,11 @@ if [ "$?" -ne 0 ]; then
         echo "Error: mysqld start failed"
         exit 1
     fi
+fi
+
+# Generating MySQL password if it wasn't set
+if [ -z "$mpass" ]; then
+    mpass=$(gen_pass)
 fi
 
 mysqladmin -u root password $mpass
@@ -676,69 +778,6 @@ mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
 sed -i "s/%password%/$r/g" /etc/roundcubemail/db.inc.php
 mysql roundcube < /usr/share/doc/roundcubemail-*/SQL/mysql.initial.sql
 
-# Vesta configuration
-echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh
-chmod 755 /etc/profile.d/vesta.sh
-source /etc/profile.d/vesta.sh
-echo 'PATH=$PATH:/usr/local/vesta/bin' >> /root/.bash_profile
-echo 'export PATH' >> /root/.bash_profile
-source /root/.bash_profile
-wget $CHOST/$VERSION/vesta.log -O /etc/logrotate.d/vesta
-
-# Directory tree
-mkdir -p $VESTA/conf
-mkdir -p $VESTA/log
-mkdir -p $VESTA/ssl
-mkdir -p $VESTA/data
-mkdir -p $VESTA/data/ips
-mkdir -p $VESTA/data/queue
-mkdir -p $VESTA/data/users
-touch $VESTA/data/queue/backup.pipe
-touch $VESTA/data/queue/disk.pipe
-touch $VESTA/data/queue/webstats.pipe
-touch $VESTA/data/queue/restart.pipe
-touch $VESTA/data/queue/traffic.pipe
-chmod 750 $VESTA/conf
-chmod 750 $VESTA/data/users
-chmod 750 $VESTA/data/ips
-chmod -R 750 $VESTA/data/queue
-ln -s /usr/local/vesta/log /var/log/vesta
-touch /var/log/vesta/system.log
-touch /var/log/vesta/nginx-error.log
-touch /var/log/vesta/auth.log
-chmod 660 /var/log/vesta/*
-adduser backup
-ln -s /home/backup /backup
-chmod a+x /backup
-
-# vesta.conf
-wget $CHOST/$VERSION/vesta.conf -O $VESTA/conf/vesta.conf
-if [ "$srv_type" = 'micro' ] ||  [ "$srv_type" = 'small' ]; then
-    sed -i "s/clamav//g" $VESTA/conf/vesta.conf
-    sed -i "s/spamassassin//g" $VESTA/conf/vesta.conf
-fi
-
-# Templates
-cd /usr/local/vesta/data
-wget $CHOST/$VERSION/packages.tar.gz -O packages.tar.gz
-tar -xzf packages.tar.gz
-rm -f packages.tar.gz
-cd /usr/local/vesta/data
-wget $CHOST/$VERSION/templates.tar.gz -O templates.tar.gz
-tar -xzf templates.tar.gz
-rm -f templates.tar.gz
-chmod -R 755 /usr/local/vesta/data/templates
-cp templates/web/skel/public_html/index.html /var/www/html/
-sed -i 's/%domain%/It worked!/g' /var/www/html/index.html
-if [ "$srv_type" = 'micro' ]; then
-    rm -f /usr/local/vesta/data/templates/web/httpd/phpfcgid.*
-fi
-
-# Default SSL keys
-cd /usr/local/vesta/ssl
-wget $CHOST/$VERSION/certificate.crt -O certificate.crt
-wget $CHOST/$VERSION/certificate.key -O certificate.key
-
 # Adding admin user
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     chattr -i /home/admin/conf > /dev/null 2>&1
@@ -750,7 +789,13 @@ fi
 if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1
 fi
-vpass=$(gen_pass)
+
+# Generating admin password if it wasn't set
+if [ -z "$vpass" ]; then
+    vpass=$(gen_pass)
+fi
+
+# Adding vesta account
 $VESTA/bin/v-add-user admin $vpass $email default System Administrator
 if [ $? -ne 0 ]; then
     echo "Error: can't create admin user"
@@ -759,7 +804,7 @@ fi
 $VESTA/bin/v-change-user-shell admin bash
 $VESTA/bin/v-change-user-language admin en
 
-# Configure mysql host
+# Configuring mysql host
 $VESTA/bin/v-add-database-host mysql localhost root $mpass
 $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 
@@ -807,6 +852,11 @@ $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 
 # Build inititall rrd images
 $VESTA/bin/v-update-sys-rrd
+
+# Enable file system quota
+if [ "$quota" = 'yes' ]; then
+    $VESTA/bin/v-add-sys-quota
+fi
 
 # Start system service
 chkconfig vesta on

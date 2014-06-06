@@ -32,7 +32,7 @@ is_object_valid 'user' 'USER' "$user"
 
 # Updating disk quota
 soft=$(get_user_value '$DISK_QUOTA')
-soft=$((soft * 100))
+soft=$((soft * 1000))
 hard=$((soft + 50000))
 
 mnt=$(df -P /home |awk '{print $6}' |tail -n1)

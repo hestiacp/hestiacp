@@ -25,9 +25,11 @@ $v_ftp_email = $panel[$user]['CONTACT'];
         if (empty($_POST['v_proxy'])) $v_adv = 'yes';
         if (!empty($_POST['v_ftp'])) $v_adv = 'yes';
 
-        $v_proxy_ext = 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, ';
-        $v_proxy_ext .= 'doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, ';
-        $v_proxy_ext .= 'mpeg, flv, html, htm';
+        $v_proxy_ext = 'jpeg, jpg, png, gif, bmp, ico, svg, tif, tiff, css, js, htm, html, ttf,';
+        $v_proxy_ext .= 'otf, webp, woff, txt, csv, rtf, doc, docx, xls, xlsx, ppt, pptx, odf, ';
+        $v_proxy_ext .= 'odp, ods, odt, pdf, psd, ai, eot, eps, ps, zip, tar, tgz, gz, rar, ';
+        $v_proxy_ext .= 'bz2, 7z, aac, m4a, mp3, mp4, ogg, wav, wma, 3gp, avi, flv, m4v, mkv, ';
+        $v_proxy_ext .= 'mov, mp4, mpeg, mpg, wmv, exe, iso, dmg, swf';
         if ($_POST['v_proxy_ext'] != $v_proxy_ext) $v_adv = 'yes';
 
         // Protect input

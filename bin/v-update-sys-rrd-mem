@@ -95,11 +95,11 @@ rrdtool graph $RRD/mem/$period-mem.png \
     GPRINT:used:'LAST: Current\:''%8.0lf'  \
     GPRINT:used:'MIN: Min\:''%8.0lf'  \
     GPRINT:used:'MAX: Max\:''%8.0lf\j'  \
-    AREA:free#1c74cd:"FREE" \
+    LINE1:free#1c74cd:"FREE" \
     GPRINT:free:'LAST: Current\:''%8.0lf'  \
     GPRINT:free:'MIN: Min\:''%8.0lf'  \
     GPRINT:free:'MAX: Max\:''%8.0lf\j'\
-    LINE1:swap#f57900:"SWAP" \
+    LINE2:swap#f57900:"SWAP" \
     GPRINT:swap:'LAST:Current\:''%8.0lf' \
     GPRINT:swap:'MIN:Min\:''%8.0lf' \
     GPRINT:swap:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?

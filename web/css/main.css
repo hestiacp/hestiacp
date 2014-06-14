@@ -1,6 +1,7 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #e5e5e5;
+    background-color: #e1e8e8;
     margin: 0;
     padding: 0;
     border: 0;
@@ -52,7 +53,7 @@ td {
 }
 
 .top-link:active{
-    color: #2361a1;
+    color: #333;
     background-color: #f1f1f1;
 }
 
@@ -65,7 +66,7 @@ td {
     line-height: 22px;
     padding: 0 20px 2px;
     color: #333;
-    background-color: #f1f1f1;
+    background-color: #e2e2e2;
 }
 
 .top-selected-link:hover {
@@ -195,6 +196,7 @@ td {
     height: 58px;
     line-height: 1.4em;
     font-size: 9pt;
+    font-family: Arial, Helvetica, sans-serif;
     color: #333;
     decoration: none;
 }
@@ -838,12 +840,12 @@ td {
 }
 
 .generate:hover {
-    color: #7fa1cb;
+    background-color: #f79b44;
+    color: #fff;
 }
 
 .generate:active {
-    background-color: #f79b44;
-    color: #fff;
+    background-color: #999;
 }
 
 .vst-advanced {
@@ -903,19 +905,18 @@ td {
 }
 
 .login-bottom {
-    color: #ebe9dc;
     text-align: right;
     vertical-align:top;
-    width: 500px;
+    width: 474px;
     height: 50px;
     margin: 0;
+    padding: 0 26px 0 0;
 }
 
 .vestacp{
     font-size: 8pt;
-    color: #222;
+    color: #505050;
     text-align: right;
-    padding: 0 8px 0 0;
 }
 
 .error {

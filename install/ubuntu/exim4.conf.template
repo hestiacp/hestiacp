@@ -25,9 +25,9 @@ spamd_address = 127.0.0.1 783
 av_scanner = clamd: /var/run/clamav/clamd.ctl
 .endif
 
-#tls_advertise_hosts = *
-#tls_certificate = /usr/local/vesta/ssl/certificate.crt
-#tls_privatekey = /usr/local/vesta/ssl/certificate.key
+tls_advertise_hosts = *
+tls_certificate = /usr/local/vesta/ssl/certificate.crt
+tls_privatekey = /usr/local/vesta/ssl/certificate.key
 
 daemon_smtp_ports = 25 : 465 : 587 : 2525
 tls_on_connect_ports = 465

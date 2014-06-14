@@ -499,7 +499,7 @@ chown root:mail /usr/local/vesta/ssl/*
 chmod 660 /usr/local/vesta/ssl/*
 rm /tmp/vst.pem
 
-# Enable password auth
+# Enable SSH password auth
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 service ssh restart
 
@@ -554,9 +554,9 @@ wget $CHOST/$VERSION/apache2-status.conf \
 wget $CHOST/$VERSION/apache2.log -O /etc/logrotate.d/apache2
 rm -f /etc/apache2/conf.d/vesta.conf
 echo > /etc/apache2/conf.d/vesta.conf
-echo "# Powever by vesta" > /etc/apache2/sites-available/default
-echo "# Powever by vestas" > /etc/apache2/sites-available/default-ssl
-echo "# Powever by vestas" > /etc/apache2/ports.conf
+echo "# Powevered by vesta" > /etc/apache2/sites-available/default
+echo "# Powevered by vesta" > /etc/apache2/sites-available/default-ssl
+echo "# Powevered by vesta" > /etc/apache2/ports.conf
 touch /var/log/apache2/access.log
 touch /var/log/apache2/error.log
 mkdir -p /var/log/apache2/domains
@@ -665,12 +665,6 @@ tar -xzf dovecot-conf.d.tar.gz
 rm -f dovecot-conf.d.tar.gz
 chown -R root:root /etc/dovecot
 gpasswd -a dovecot mail
-if [ "$codename" = 'precise' ]; then
-    dovecot_ssl_conf="/etc/dovecot/conf.d/10-ssl.conf"
-    echo "ssl = yes" > $dovecot_ssl_conf
-    echo "ssl_cert = </etc/ssl/certs/dovecot.pem" >> $dovecot_ssl_conf
-    echo "ssl_key = </etc/ssl/private/dovecot.pem" >> $dovecot_ssl_conf
-fi
 update-rc.d dovecot defaults
 service dovecot stop > /dev/null 2>&1
 service dovecot start
@@ -715,6 +709,7 @@ wget $CHOST/$VERSION/apache2-pma.conf -O /etc/phpmyadmin/apache.conf
 wget $CHOST/$VERSION/pma.conf -O /etc/phpmyadmin/config.inc.php
 ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
 mv -f /etc/phpmyadmin/config-db.php /etc/phpmyadmin/config-db.php_
+chmod 777 /var/lib/phpmyadmin/tmp
 
 # Roundcube configuration
 wget $CHOST/$VERSION/apache2-webmail.conf -O /etc/roundcube/apache.conf
@@ -733,7 +728,7 @@ mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
 mkdir -p /var/log/roundcube/error
 chmod -R 777 /var/log/roundcube
 
-# Adding admin user
+# Deleting old admin user account if exists
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     chattr -i /home/admin/conf > /dev/null 2>&1
     userdel -f admin
@@ -750,7 +745,7 @@ if [ -z "$vpass" ]; then
     vpass=$(gen_pass)
 fi
 
-# Adding vesta account
+# Adding admin account
 $VESTA/bin/v-add-user admin $vpass $email default System Administrator
 if [ $? -ne 0 ]; then
     echo "Error: can't create admin user"
@@ -789,7 +784,7 @@ $VESTA/bin/v-add-dns-domain admin default.domain $vst_ip
 # Add default mail domain
 $VESTA/bin/v-add-mail-domain admin default.domain
 
-# Configuring crond
+# Configuring cron jobs
 command='sudo /usr/local/vesta/bin/v-update-sys-queue disk'
 $VESTA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
 command='sudo /usr/local/vesta/bin/v-update-sys-queue traffic'
@@ -805,7 +800,7 @@ $VESTA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command='sudo /usr/local/vesta/bin/v-update-sys-rrd'
 $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 
-# Build inititall rrd images
+# Building inititall rrd images
 $VESTA/bin/v-update-sys-rrd
 
 # Enable file system quota

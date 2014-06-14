@@ -110,6 +110,11 @@ for period in $periods; do
         $BIN/v-update-sys-rrd-$PROXY_SYSTEM $period >/dev/null 2>&1
     fi
 
+    # Updating mail stats
+    if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+        $BIN/v-update-sys-rrd-mail $period >/dev/null 2>&1
+    fi
+
     # Updating ftp stats
     if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
         $BIN/v-update-sys-rrd-ftp $period >/dev/null 2>&1

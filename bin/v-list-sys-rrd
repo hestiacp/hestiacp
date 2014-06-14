@@ -37,6 +37,9 @@ json_list_rrd() {
                [ "$type" = 'ssh' ]; then
                 title="$(echo $rrd| tr '[:lower:]' '[:upper:]') Usage"
             fi
+            if [ "$type" = 'mail' ]; then
+                title="Exim Usage"
+            fi
             if [ "$type" = 'db' ]; then
                 db_type=$(echo $rrd|cut -f 1 -d _ |sed -e 's/mysql/MySQL/g' \
                     -e 's/pgsql/PostgreSQL/g' )
@@ -84,13 +87,13 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     rrd_types="$rrd_types web"
 fi
 
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    rrd_types="$rrd_types mail"
+fi
+
 if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     rrd_types="$rrd_types db"
 fi
-
-#if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-#    rrd_types="$rrd_types mail"
-#fi
 
 if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
     rrd_types="$rrd_types ftp"

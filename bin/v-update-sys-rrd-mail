@@ -1,0 +1,96 @@
+#!/bin/bash
+# info: update mail rrd
+# options: PERIOD
+#
+# The function is for updating mail rrd database and graphic.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+period=${1-daily}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Switching on time period
+case $period in
+    daily)   start='-1d'; end='now'; grid='MINUTE:30:HOUR:1:HOUR:4:0:%H:%M';;
+    weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
+    monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
+    yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
+    *) exit $E_RRD ;;
+esac
+
+# Checking directory
+if [ ! -d "$RRD/mail" ]; then
+    mkdir $RRD/mail
+fi
+
+# Checking database
+if [ ! -e "$RRD/mail/mail.rrd" ]; then
+    # Adding database
+    rrdtool create $RRD/mail/mail.rrd --step $RRD_STEP \
+        DS:A:GAUGE:600:U:U \
+        RRA:AVERAGE:0.5:1:600 \
+        RRA:AVERAGE:0.5:6:700 \
+        RRA:AVERAGE:0.5:24:775 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MAX:0.5:1:600 \
+        RRA:MAX:0.5:6:700 \
+        RRA:MAX:0.5:24:775 \
+        RRA:MAX:0.5:288:797
+fi
+
+# Parsing data
+if [ "$period" = 'daily' ]; then
+    a=0
+    a=$(exim -bpc)
+
+    # Updating rrd database
+    rrdtool update $RRD/mail/mail.rrd N:$a
+fi
+
+# Updating daily graph
+rrdtool graph $RRD/mail/$period-mail.png \
+    --imgformat PNG \
+    --height="120" \
+    --width="440" \
+    --start "$start" \
+    --end "$end" \
+    --vertical-label "Queue Size" \
+    --x-grid "$grid" \
+    -c "BACK#7a766d" \
+    -c "SHADEA#7a766d" \
+    -c "SHADEB#7a766d" \
+    -c "FONT#FFFFFF" \
+    -c "CANVAS#302c2d" \
+    -c "GRID#666666" \
+    -c "MGRID#AAAAAA" \
+    -c "FRAME#302c2d" \
+    -c "ARROW#FFFFFF" \
+    DEF:a=$RRD/mail/mail.rrd:A:AVERAGE \
+    COMMENT:'\r' \
+    LINE1:a#fefda0:"Emails " \
+    GPRINT:a:'LAST:Current\:''%8.0lf' \
+    GPRINT:a:'MIN:Min\:''%8.0lf' \
+    GPRINT:a:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+if [ "$result" -ne 0 ]; then
+    exit $E_RRD
+fi
+
+exit

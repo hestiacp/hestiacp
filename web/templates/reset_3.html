@@ -4,10 +4,10 @@
                     <td>
                         <table>
                             <tr>
-                                <td style="padding: 0 10 0 42; height: 280px; width: 170px;">
+                                <td style="padding: 0 10px 0 42px; height: 280px; width: 170px;">
                                     <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="Vesta Control Panel" /></a>
                                 </td>
-                                <td style="padding: 20px 0 0 0;">
+                                <td style="padding: 10px 0 0 0;">
                                     <form method="post">
                                         <table class="login-box">
                                             <tr>
@@ -34,12 +34,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td height="28px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 0 0 12px 0;">
+                                                <td style="padding: 20px 0 12px 0;">
                                                     <input tabindex="3" type="submit" value="<?php print __('Reset');?>" class="button">
+                                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="location.href='/login/'">
                                                 </td>
                                             </tr>
                                         </table>
@@ -48,10 +45,10 @@
                             </tr>
                             <tr>
                                 <td colspan=2>
-                                    <table class="login-bottom">
-                                        <tr><td>.<?php if (isset($ERROR)) echo $ERROR ?></td></tr>
-                                        <tr><td> <a tabindex="6" class="vestacp" href="http://vestacp.com" >vestacp.com</a></td></tr>
-                                    </table>
+                                    <div class="login-bottom">
+                                        <div style="height:20px"><?php if (isset($ERROR)) echo $ERROR ?></div>
+                                        <a class="vestacp" href="http://vestacp.com" >vestacp.com</a>
+                                    </div>
                                 </td>
                             </tr>
                         </table>

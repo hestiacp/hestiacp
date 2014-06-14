@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Vesta Ubuntu installer v.01
+# Vesta Ubuntu installer v.04
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
@@ -14,17 +14,21 @@ software="nginx apache2 apache2-utils apache2-suexec-custom
     libapache2-mod-ruid2 libapache2-mod-rpaf libapache2-mod-fcgid bind9 idn
     mysql-server mysql-common mysql-client php5-common php5-cgi php5-mysql
     php5-curl libapache2-mod-php5 vsftpd mc exim4 exim4-daemon-heavy
-    clamav-daemon flex dovecot-imapd dovecot-pop3d phpMyAdmin awstats
-    webalizer jwhois rssh git spamassassin roundcube roundcube-mysql
+    clamav-daemon flex dovecot-imapd dovecot-pop3d phpMyAdmin awstats e2fslibs
+    webalizer jwhois rssh git spamassassin roundcube roundcube-mysql quota
     roundcube-plugins apparmor-utils sudo bc ftp lsof ntpdate rrdtool
     dnsutils vesta vesta-nginx vesta-php"
 
 help() {
     echo "usage: $0 [OPTIONS]
-   -e, --email                Define email address
-   -h, --help                 Print this help and exit
+   -e, --email                Set email address
    -f, --force                Force installation
-   -n, --noupdate             Do not run apt-get upgrade command"
+   -h, --help                 Print this help and exit
+   -n, --noupdate             Do not run yum update command
+   -m, --mysql-password       Set MySQL password instead of generating it
+   -p, --password             Set admin password instead of generating it
+   -s, --hostname             Set server hostname
+   -q, --quota                Enable File System Quota"
     exit 1
 }
 
@@ -48,10 +52,14 @@ gen_pass() {
 for arg; do
     delim=""
     case "$arg" in
-        --help)         args="${args}-h " ;;
-        --force)        args="${args}-f " ;;
-        --email)        args="${args}-e " ;;
-        --noupdate)     args="${args}-n " ;;
+        --email)                args="${args}-e " ;;
+        --force)                args="${args}-f " ;;
+        --help)                 args="${args}-h " ;;
+        --noupdate)             args="${args}-n " ;;
+        --mysql-password)       args="${args}-m " ;;
+        --password)             args="${args}-p " ;;
+        --hostname)             args="${args}-s " ;;
+        --quota)                args="${args}-q " ;;
         *)              [[ "${arg:0:1}" == "-" ]] || delim="\""
                         args="${args}${delim}${arg}${delim} ";;
     esac
@@ -59,12 +67,16 @@ done
 eval set -- "$args"
 
 # Getopt
-while getopts "dhfne:" Option; do
+while getopts "dhfnqe:m:p:s:" Option; do
     case $Option in
         h) help ;;                        # Help
         e) email=$OPTARG ;;               # Set email
-        f) force='yes' ;;                 # Force apt-get install
-        n) noupdate='yes' ;;              # Disable apt-get upgrade
+        f) force='yes' ;;                 # Force install
+        n) noupdate='yes' ;;              # Disable yum update
+        m) mpass=$OPTARG ;;               # MySQL pasword
+        p) vpass=$OPTARG ;;               # Admin password
+        s) servername=$OPTARG ;;          # Server hostname
+        q) quota='yes' ;;                 # Enable quota
         *) help ;;                        # Default
     esac
 done
@@ -89,9 +101,9 @@ else
 fi
 os=$(head -n 1 /etc/issue | cut -f 1 -d ' ')
 release=$(head -n 1 /etc/issue | cut -f 2 -d ' ' )
-codename=$(lsb_release -cs | grep "[precise|raring|saucy]")
+codename=$(lsb_release -cs | egrep "precise|quantal|raring|saucy|trusty")
 if [ -z "$codename" ]; then
-    echo 'Error: only Ubuntu 12.04, 13.04 and 13.10 is supported'
+    echo "Error: Ubuntu $(lsb_release -r|awk '{print $2}') is not supported"
     exit 1
 fi
 
@@ -214,6 +226,14 @@ if [ -z $email ]; then
 
     # Check email
     read -p 'Please enter valid email address: ' email
+
+    # Define server hostname
+    if [ -z "$servername" ]; then
+        read -p "Please enter hostname [$(hostname)]: " servername
+    fi
+    if [ -z "$servername" ]; then
+        servername=$(hostname)
+    fi
 fi
 
 # Validate email
@@ -252,9 +272,6 @@ apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/ubuntu/ $codename nginx" > $apt/nginx.list
 wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
-if [ $codename = 'trusty' ]; then
-    sed -i "s/trusty/saucy/g" $apt/nginx.list
-fi
 
 # Install vesta repo
 echo "deb http://$RHOST/$codename/ $codename vesta" > $apt/vesta.list
@@ -400,7 +417,91 @@ rm -f /usr/sbin/policy-rc.d
 # Set writable permission on tmp directory
 chmod 777 /tmp
 
-# Enable password auth
+# Vesta configuration
+echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh
+chmod 755 /etc/profile.d/vesta.sh
+source /etc/profile.d/vesta.sh
+echo 'PATH=$PATH:/usr/local/vesta/bin' >> /root/.bash_profile
+echo 'export PATH' >> /root/.bash_profile
+source /root/.bash_profile
+wget $CHOST/$VERSION/vesta.log -O /etc/logrotate.d/vesta
+
+# Directory tree
+mkdir -p $VESTA/conf
+mkdir -p $VESTA/log
+mkdir -p $VESTA/ssl
+mkdir -p $VESTA/data
+mkdir -p $VESTA/data/ips
+mkdir -p $VESTA/data/queue
+mkdir -p $VESTA/data/users
+touch $VESTA/data/queue/backup.pipe
+touch $VESTA/data/queue/disk.pipe
+touch $VESTA/data/queue/webstats.pipe
+touch $VESTA/data/queue/restart.pipe
+touch $VESTA/data/queue/traffic.pipe
+chmod 750 $VESTA/conf
+chmod 750 $VESTA/data/users
+chmod 750 $VESTA/data/ips
+chmod -R 750 $VESTA/data/queue
+ln -s /usr/local/vesta/log /var/log/vesta
+touch /var/log/vesta/system.log
+touch /var/log/vesta/nginx-error.log
+touch /var/log/vesta/auth.log
+chmod 660 /var/log/vesta/*
+adduser backup > /dev/null 2>&1
+mkdir -p /home/backup
+chown backup:backup /home/backup
+ln -s /home/backup /backup
+chmod a+x /backup
+
+# vesta.conf
+wget $CHOST/$VERSION/vesta.conf -O $VESTA/conf/vesta.conf
+if [ "$srv_type" = 'micro' ] ||  [ "$srv_type" = 'small' ]; then
+    sed -i "s/clamav-daemon//g" $VESTA/conf/vesta.conf
+    sed -i "s/spamassassin//g" $VESTA/conf/vesta.conf
+fi
+
+# Set server hostname
+/usr/local/vesta/bin/v-change-sys-hostname $servername 2>/dev/null
+
+# Templates
+cd /usr/local/vesta/data
+wget $CHOST/$VERSION/packages.tar.gz -O packages.tar.gz
+tar -xzf packages.tar.gz
+rm -f packages.tar.gz
+cd /usr/local/vesta/data
+wget $CHOST/$VERSION/templates.tar.gz -O templates.tar.gz
+tar -xzf templates.tar.gz
+rm -f templates.tar.gz
+if [ "$codename" = 'saucy' ] || [ "$codename" = 'trusty' ]; then
+    sed -i "s/Include /IncludeOptional /g" \
+        $VESTA/data/templates/web/apache2/*tpl
+fi
+chmod -R 755 /usr/local/vesta/data/templates
+cp templates/web/skel/public_html/index.html /var/www/
+sed -i 's/%domain%/It worked!/g' /var/www/index.html
+if [ "$srv_type" = 'micro' ]; then
+    rm -f /usr/local/vesta/data/templates/web/apache2/phpfcgid.*
+fi
+
+# Generating SSL certificate
+$VESTA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
+     'San Francisco' 'Vesta Control Panel' 'IT' > /tmp/vst.pem
+
+# Parsing merged certificate file
+crt_end=$(grep -n "END CERTIFICATE-" /tmp/vst.pem |cut -f 1 -d:)
+key_start=$(grep -n "BEGIN RSA" /tmp/vst.pem |cut -f 1 -d:)
+key_end=$(grep -n  "END RSA" /tmp/vst.pem |cut -f 1 -d:)
+
+# Adding SSL certificate
+cd /usr/local/vesta/ssl
+sed -n "1,${crt_end}p" /tmp/vst.pem > certificate.crt
+sed -n "$key_start,${key_end}p" /tmp/vst.pem > certificate.key
+chown root:mail /usr/local/vesta/ssl/*
+chmod 660 /usr/local/vesta/ssl/*
+rm /tmp/vst.pem
+
+# Enable SSH password auth
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 service ssh restart
 
@@ -456,9 +557,9 @@ fi
 wget $CHOST/$VERSION/apache2-status.conf \
     -O /etc/apache2/mods-enabled/status.conf
 wget $CHOST/$VERSION/apache2.log -O /etc/logrotate.d/apache2
-echo "# Powever by vesta" > /etc/apache2/sites-available/default
-echo "# Powever by vesta" > /etc/apache2/sites-available/default-ssl
-echo "# Powever by vesta" > /etc/apache2/ports.conf
+echo "# Powevered by vesta" > /etc/apache2/sites-available/default
+echo "# Powevered by vesta" > /etc/apache2/sites-available/default-ssl
+echo "# Powevered by vesta" > /etc/apache2/ports.conf
 mkdir -p /etc/apache2/conf.d
 rm -f /etc/apache2/conf.d/vesta.conf
 echo > /etc/apache2/conf.d/vesta.conf
@@ -491,6 +592,11 @@ if [ "$?" -ne 0 ]; then
     exit 1
 fi
 
+# Generating MySQL password if it wasn't set
+if [ -z "$mpass" ]; then
+    mpass=$(gen_pass)
+fi
+
 # MySQL configuration
 mpass=$(gen_pass)
 wget $CHOST/$VERSION/my.cnf -O /etc/mysql/my.cnf
@@ -506,7 +612,7 @@ mysqladmin -u root password $mpass
 echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
 chmod 600 /root/.my.cnf
 mysql -e "DELETE FROM mysql.user WHERE User=''"
-mysql -e "DROP DATABASE test"
+mysql -e "DROP DATABASE test" > /dev/null 2>&1
 mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 mysql -e "DELETE FROM mysql.user WHERE user='' or password='';"
 mysql -e "FLUSH PRIVILEGES"
@@ -564,12 +670,6 @@ tar -xzf dovecot-conf.d.tar.gz
 rm -f dovecot-conf.d.tar.gz
 chown -R root:root /etc/dovecot
 gpasswd -a dovecot mail
-if [ "$codename" = 'precise' ]; then
-    dovecot_ssl_conf="/etc/dovecot/conf.d/10-ssl.conf"
-    echo "ssl = yes" > $dovecot_ssl_conf
-    echo "ssl_cert = </etc/ssl/certs/dovecot.pem" >> $dovecot_ssl_conf
-    echo "ssl_key = </etc/ssl/private/dovecot.pem" >> $dovecot_ssl_conf
-fi
 update-rc.d dovecot defaults
 service dovecot stop > /dev/null 2>&1
 service dovecot start
@@ -630,7 +730,8 @@ wget $CHOST/$VERSION/roundcube-driver.php -O \
 wget $CHOST/$VERSION/roundcube-pw.conf -O \
     /etc/roundcube/plugins/password/config.inc.php
 r="$(gen_pass)"
-mysql -e "CREATE DATABASE roundcube"
+mysql -e "DROP DATABASE roundcube" > /dev/null 2>&1
+mysql -e "CREATE DATABASE roundcube" 
 mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
 sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
 mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
@@ -643,76 +744,7 @@ fi
 mkdir -p /var/log/roundcube/error
 chmod -R 777 /var/log/roundcube
 
-# Vesta configuration
-echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh
-chmod 755 /etc/profile.d/vesta.sh
-source /etc/profile.d/vesta.sh
-echo 'PATH=$PATH:/usr/local/vesta/bin' >> /root/.bash_profile
-echo 'export PATH' >> /root/.bash_profile
-source /root/.bash_profile
-wget $CHOST/$VERSION/vesta.log -O /etc/logrotate.d/vesta
-
-# Directory tree
-mkdir -p $VESTA/conf
-mkdir -p $VESTA/log
-mkdir -p $VESTA/ssl
-mkdir -p $VESTA/data
-mkdir -p $VESTA/data/ips
-mkdir -p $VESTA/data/queue
-mkdir -p $VESTA/data/users
-touch $VESTA/data/queue/backup.pipe
-touch $VESTA/data/queue/disk.pipe
-touch $VESTA/data/queue/webstats.pipe
-touch $VESTA/data/queue/restart.pipe
-touch $VESTA/data/queue/traffic.pipe
-chmod 750 $VESTA/conf
-chmod 750 $VESTA/data/users
-chmod 750 $VESTA/data/ips
-chmod -R 750 $VESTA/data/queue
-ln -s /usr/local/vesta/log /var/log/vesta
-touch /var/log/vesta/system.log
-touch /var/log/vesta/nginx-error.log
-touch /var/log/vesta/auth.log
-chmod 660 /var/log/vesta/*
-adduser backup > /dev/null 2>&1
-mkdir -p /home/backup
-chown backup:backup /home/backup
-ln -s /home/backup /backup
-chmod a+x /backup
-
-# vesta.conf
-wget $CHOST/$VERSION/vesta.conf -O $VESTA/conf/vesta.conf
-if [ "$srv_type" = 'micro' ] ||  [ "$srv_type" = 'small' ]; then
-    sed -i "s/clamav-daemon//g" $VESTA/conf/vesta.conf
-    sed -i "s/spamassassin//g" $VESTA/conf/vesta.conf
-fi
-
-# Templates
-cd /usr/local/vesta/data
-wget $CHOST/$VERSION/packages.tar.gz -O packages.tar.gz
-tar -xzf packages.tar.gz
-rm -f packages.tar.gz
-cd /usr/local/vesta/data
-wget $CHOST/$VERSION/templates.tar.gz -O templates.tar.gz
-tar -xzf templates.tar.gz
-rm -f templates.tar.gz
-if [ "$codename" = 'saucy' ] || [ "$codename" = 'trusty' ]; then
-    sed -i "s/Include /IncludeOptional /g" \
-        $VESTA/data/templates/web/apache2/*tpl
-fi
-chmod -R 755 /usr/local/vesta/data/templates
-cp templates/web/skel/public_html/index.html /var/www/
-sed -i 's/%domain%/It worked!/g' /var/www/index.html
-if [ "$srv_type" = 'micro' ]; then
-    rm -f /usr/local/vesta/data/templates/web/apache2/phpfcgid.*
-fi
-
-# Default SSL keys
-cd /usr/local/vesta/ssl
-wget $CHOST/$VERSION/certificate.crt -O certificate.crt
-wget $CHOST/$VERSION/certificate.key -O certificate.key
-
-# Adding admin user
+# Deleting old admin user account if exists
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     chattr -i /home/admin/conf > /dev/null 2>&1
     userdel -f admin
@@ -723,7 +755,13 @@ fi
 if [ ! -z "$(grep ^admin: /etc/group)" ]; then
     groupdel admin > /dev/null 2>&1
 fi
-vpass=$(gen_pass)
+
+# Generating admin password if it wasn't set
+if [ -z "$vpass" ]; then
+    vpass=$(gen_pass)
+fi
+
+# Adding admin account
 $VESTA/bin/v-add-user admin $vpass $email default System Administrator
 if [ $? -ne 0 ]; then
     echo "Error: can't create admin user"
@@ -762,7 +800,7 @@ $VESTA/bin/v-add-dns-domain admin default.domain $vst_ip
 # Add default mail domain
 $VESTA/bin/v-add-mail-domain admin default.domain
 
-# Configuring crond
+# Configuring cron jobs
 command='sudo /usr/local/vesta/bin/v-update-sys-queue disk'
 $VESTA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
 command='sudo /usr/local/vesta/bin/v-update-sys-queue traffic'
@@ -778,8 +816,13 @@ $VESTA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command='sudo /usr/local/vesta/bin/v-update-sys-rrd'
 $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 
-# Build inititall rrd images
+# Building inititall rrd images
 $VESTA/bin/v-update-sys-rrd
+
+# Enable file system quota
+if [ "$quota" = 'yes' ]; then
+    $VESTA/bin/v-add-sys-quota
+fi
 
 # Start system service
 update-rc.d vesta defaults

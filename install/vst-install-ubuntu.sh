@@ -24,7 +24,7 @@ help() {
    -e, --email                Set email address
    -f, --force                Force installation
    -h, --help                 Print this help and exit
-   -n, --noupdate             Do not run yum update command
+   -n, --noupdate             Do not run apt-get upgrade command
    -m, --mysql-password       Set MySQL password instead of generating it
    -p, --password             Set admin password instead of generating it
    -s, --hostname             Set server hostname
@@ -72,7 +72,7 @@ while getopts "dhfnqe:m:p:s:" Option; do
         h) help ;;                        # Help
         e) email=$OPTARG ;;               # Set email
         f) force='yes' ;;                 # Force install
-        n) noupdate='yes' ;;              # Disable yum update
+        n) noupdate='yes' ;;              # Disable apt-get upgrade
         m) mpass=$OPTARG ;;               # MySQL pasword
         p) vpass=$OPTARG ;;               # Admin password
         s) servername=$OPTARG ;;          # Server hostname
@@ -89,7 +89,7 @@ fi
 
 # Check supported version
 if [ -e '/etc/redhat-release' ]; then
-    echo 'Error: sorry, this installer can work only on Debian or Ubuntu'
+    echo 'Error: sorry, this installer works only on Ubuntu'
     exit 1
 fi
 
@@ -557,9 +557,9 @@ fi
 wget $CHOST/$VERSION/apache2-status.conf \
     -O /etc/apache2/mods-enabled/status.conf
 wget $CHOST/$VERSION/apache2.log -O /etc/logrotate.d/apache2
-echo "# Powevered by vesta" > /etc/apache2/sites-available/default
-echo "# Powevered by vesta" > /etc/apache2/sites-available/default-ssl
-echo "# Powevered by vesta" > /etc/apache2/ports.conf
+echo "# Powered by vesta" > /etc/apache2/sites-available/default
+echo "# Powered by vesta" > /etc/apache2/sites-available/default-ssl
+echo "# Powered by vesta" > /etc/apache2/ports.conf
 mkdir -p /etc/apache2/conf.d
 rm -f /etc/apache2/conf.d/vesta.conf
 echo > /etc/apache2/conf.d/vesta.conf

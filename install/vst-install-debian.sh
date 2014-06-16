@@ -24,7 +24,7 @@ help() {
    -e, --email                Set email address
    -f, --force                Force installation
    -h, --help                 Print this help and exit
-   -n, --noupdate             Do not apt-get upgrade command
+   -n, --noupdate             Do not run apt-get upgrade command
    -m, --mysql-password       Set MySQL password instead of generating it
    -p, --password             Set admin password instead of generating it
    -s, --hostname             Set server hostname

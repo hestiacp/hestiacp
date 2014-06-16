@@ -209,18 +209,13 @@
             </table>
             </form>
 
-            <table class="data-count">
-                <tr>
-                    <td width="174px">
-                    <td>
-                        <?php
-                            if ( $i == 1) {
-                                echo __('1 domain');
-                            } else {
-                                echo __('%s domains',$i);
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+            <div class="data-count">
+                <?php
+                    if ( $i == 1) {
+                        echo __('1 domain');
+                    } else {
+                        echo __('%s domains',$i);
+                    }
+                ?> 
+            </div>
         </div>

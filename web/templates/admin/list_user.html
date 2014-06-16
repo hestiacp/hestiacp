@@ -249,18 +249,13 @@
             </table>
             </form>
 
-            <table class="data-count">
-                <tr>
-                    <td width="174px">
-                    <td>
-                        <?php
-                            if ( $i == 1) {
-                                echo __('1 account');
-                            } else {
-                                echo __('%s accounts',$i);
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+            <div class="data-count">
+                <?php
+                    if ( $i == 1) {
+                        echo __('1 account');
+                    } else {
+                        echo __('%s accounts',$i);
+                    }
+                ?> 
+            </div>
         </div>

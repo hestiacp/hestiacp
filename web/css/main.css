@@ -1,6 +1,5 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #e5e5e5;
     background-color: #e1e8e8;
     margin: 0;
     padding: 0;
@@ -28,7 +27,7 @@ td {
 .top {
     width: 1000px;
     position: fixed; background: #fff;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e1e8e8;
 }
 
 .top-menu {
@@ -66,7 +65,7 @@ td {
     line-height: 22px;
     padding: 0 20px 2px;
     color: #333;
-    background-color: #e2e2e2;
+    background-color: #f0f0f0;
 }
 
 .top-selected-link:hover {
@@ -126,7 +125,7 @@ td {
     height: 111px;
     width: 167px;
     margin: 0;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e1e8e8;
 }
 
 .nav-lnk {
@@ -146,7 +145,7 @@ td {
     width: 119px;
     float:left;
     cursor: pointer;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e1e8e8;
 }
 
 .nav-block:hover {
@@ -320,13 +319,13 @@ td {
 }
 
 .submenu-select-link:hover {
-    text-decoration: underline;
+    color: #fff;
+    background-color: #f79b44;
 }
 
 .submenu-select-link:active {
     color: #fff;
-    background-color: #f79b44;
-    text-decoration: underline;
+    background-color: #777;
 }
 
 .submenu-select-dropdown {
@@ -460,7 +459,7 @@ td {
 
 .data-row:hover {
     margin: 0;
-    background-color: #f7f6ed;
+    background-color: #f0f0f0;
 }
 
 .data-row:active {
@@ -573,11 +572,9 @@ td {
 
 .data-count {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #f3f3f3;
-    color: #555;
+    color: #505050;
     font-size: 8pt;
-    margin: 18px 0 0 0;
-    padding: 0 16px 0 0;
+    padding: 20px 0 20px 174px;
 }
 
 .chart1 {
@@ -635,7 +632,7 @@ td {
 .counter-name {
     white-space: nowrap;
     vertical-align:top;
-    line-height: 1.3em;
+    line-height: 1.2em;
     font-size: 10pt;
     color: #222;
     padding: 2px 4px 1px 0;
@@ -651,7 +648,7 @@ td {
 
 .counter-value {
     vertical-align:top;
-    line-height: 1.3em;
+    line-height: 1.2em;
     font-size: 10pt;
     color: #222;
     padding: 2px 0 1px 2px;
@@ -858,12 +855,13 @@ td {
 }
 
 .vst-advanced:hover {
-    color: #7fa1cb;
+    color: #fff;
+    background-color: #f79b44;
 }
 
 .vst-advanced:active {
     color: #fff;
-    background-color: #f79b44;
+    background-color: #777;
 }
 
 .fixed{

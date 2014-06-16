@@ -46,18 +46,13 @@
 
         </table>
 
-        <table class="data-count">
-            <tr>
-                <td width="174px"></td>
-                <td>
-                    <?php
-                        if ( $i == 1) {
-                            echo __('one log record');
-                        } else {
-                            echo __('%s log records',$i);
-                        }
-                    ?>
-                </td>
-            </tr>
-        </table>
+        <div class="data-count">
+            <?php
+                if ( $i == 1) {
+                    echo __('one log record');
+                } else {
+                    echo __('%s log records',$i);
+                }
+            ?>
+        </div>
     </div>

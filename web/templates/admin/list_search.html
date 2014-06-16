@@ -193,18 +193,13 @@
             </table>
             </form>
 
-            <table class="data-count">
-                <tr>
-                    <td width="174px"></td>
-                    <td>
-                        <?php
-                            if ( $i == 1){
-                                echo __('1 object');
-                            } else {
-                                echo __('%s objects',$i);
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+            <div class="data-count">
+                <?php
+                    if ( $i == 1){
+                        echo __('1 object');
+                    } else {
+                        echo __('%s objects',$i);
+                    }
+                ?> 
+            </div>
         </div>

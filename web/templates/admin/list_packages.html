@@ -159,18 +159,13 @@
             </table>
             </form>
 
-            <table class="data-count">
-                <tr>
-                    <td width="174px"></td>
-                    <td>
-                        <?php
-                            if ( $i == 1) {
-                                echo __('1 package');
-                            } else {
-                                echo __('%s packages',$i);
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+            <div class="data-count">
+                <?php
+                    if ( $i == 1) {
+                        echo __('1 package');
+                    } else {
+                        echo __('%s packages',$i);
+                    }
+                ?> 
+            </div>
         </div>

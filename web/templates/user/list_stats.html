@@ -179,19 +179,13 @@
 
             </table>
 
-            <table class="data-count">
-                <tr>
-                    <td width="174px"></td>
-                    <td>
-                        <?php
-                            if ( $i == 1) {
-                                echo __('1 month');
-                            } else {
-                                echo __('%s months',$i);
-                            }
-                        ?>
-                    </td>
-                </tr>
-            </table>
+            <div class="data-count">
+                <?php
+                    if ( $i == 1) {
+                        echo __('1 month');
+                    } else {
+                        echo __('%s months',$i);
+                    }
+                ?> 
+            </div>
         </div>
-

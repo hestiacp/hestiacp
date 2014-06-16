@@ -491,9 +491,9 @@ is_dns_nameserver_valid() {
         if [ ! -z "$remote" ]; then
             zone=$USER_DATA/dns/$d.conf
             a_record=$(echo $r |cut -f 1 -d '.')
-            record=$(grep "RECORD='$a_record'" $zone| grep "TYPE='A'")
-            if [ -z "$record" ]; then
-                echo "Error: corresponding A record $a_record.$d is not exist"
+            n_record=$(grep "RECORD='$a_record'" $zone| grep "TYPE='A'")
+            if [ -z "$n_record" ]; then
+                echo "Error: corresponding A record $a_record.$d does not exist"
                 log_event "$E_NOTEXIST" "$EVENT"
                 exit $E_NOTEXIST
             fi

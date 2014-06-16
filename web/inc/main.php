@@ -151,12 +151,12 @@ function humanize_time($usage) {
 }
 
 function humanize_usage($usage) {
-    if ( $usage > 1000 ) {
-        $usage = $usage / 1000;
-        if ( $usage > 1000 ) {
-                $usage = $usage / 1000 ;
-                if ( $usage > 1000 ) {
-                    $usage = $usage / 1000 ;
+    if ( $usage > 1024 ) {
+        $usage = $usage / 1024;
+        if ( $usage > 1024 ) {
+                $usage = $usage / 1024 ;
+                if ( $usage > 1024 ) {
+                    $usage = $usage / 1024 ;
                     $usage = number_format($usage, 2);
                     $usage = $usage."".__('pb');
                 } else {

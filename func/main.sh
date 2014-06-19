@@ -740,8 +740,13 @@ validate_format_mhdmw() {
 # proxy extention or DNS record
 validate_format_common() {
     exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`| ]"
-    if [[ "$1" =~ $exclude ]] || [ 200 -le ${#1} ]; then
+    if [[ "$1" =~ $exclude ]]; then
         echo "Error: $2 $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+    if [ 400 -le ${#1} ]; then
+        echo "Error: $2 $1 is too long"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi

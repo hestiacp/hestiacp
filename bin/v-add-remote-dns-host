@@ -17,6 +17,9 @@ password=$4
 type=${5-api}
 dns_user=${6-dns-cluster}
 
+# fix for variable name in other files
+DNS_USER=$dns_user
+
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/remote.sh

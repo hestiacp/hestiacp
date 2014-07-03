@@ -56,10 +56,14 @@ if [ ! -z "$FTP_USER" ]; then
     /usr/sbin/userdel -f $FTP_USER > /dev/null 2>&1
 fi
 
-# Define shell
-shell='/sbin/nologin'
-if [ -e "/usr/bin/rssh" ]; then
-    shell='/usr/bin/rssh'
+# Define ftp user shell
+if [ -z "$FTP_SHELL" ]; then
+    shell='/sbin/nologin'
+    if [ -e "/usr/bin/rssh" ]; then
+        shell='/usr/bin/rssh'
+    fi
+else
+    shell=$FTP_SHELL
 fi
 
 # Define path

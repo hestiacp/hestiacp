@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: add ftp account for web domain.
-# options: USER DOMAIN FTP_USER FTP_PASSWORD FTP_PATH
+# options: USER DOMAIN FTP_USER FTP_PASSWORD [FTP_PATH]
 #
-# The function creates addutional ftp account for web domain.
+# The function creates additional ftp account for web domain.
 
 
 #----------------------------------------------------------#
@@ -38,13 +38,6 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-
-
-#----------------------------------------------------------#
-#                       Action                             #
-#----------------------------------------------------------#
-
-get_domain_values 'web'
 check_ftp_user=$(grep "^$ftp_user:" /etc/passwd)
 if [ ! -z "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
     echo "Error: ftp user $ftp_user already exists"
@@ -52,9 +45,13 @@ if [ ! -z "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
     exit $E_EXISTS
 fi
 
-if [ ! -z "$FTP_USER" ]; then
-    /usr/sbin/userdel -f $FTP_USER > /dev/null 2>&1
-fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get domain values
+get_domain_values 'web'
 
 # Define ftp user shell
 if [ -z "$FTP_SHELL" ]; then
@@ -70,20 +67,22 @@ fi
 if [ -z "$ftp_path" ]; then
     ftp_path="$HOMEDIR/$user/web/$domain"
 else
+    # Validating path
     ftp_path=$(readlink -f "$HOMEDIR/$user/web/$domain/$ftp_path")
     if [ -z "$(echo $ftp_path |grep $HOMEDIR/$user/web/$domain)" ]; then
         echo "Error: path $ftp_path is invalid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
+    # MKDIR if path doesn't exist
+    if [ ! -e $ftp_path ]; then
+        mkdir -p $ftp_path
+        chown $user:$user $ftp_path
+        chmod 751 $ftp_path
+    fi
 fi
 
-# Create ftp docroot
-mkdir -p $ftp_path
-chown $user:$user $ftp_path
-chmod 751 $ftp_path
-
-# Adding user
+# Adding ftp user
 /usr/sbin/useradd $ftp_user \
     -s $shell \
     -o -u $(id -u $user) \
@@ -97,15 +96,23 @@ ftp_md5="$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)"
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Concatenating ftp variables
+if [ ! -z "$FTP_USER" ]; then
+    ftp_user="$FTP_USER:$ftp_user"
+    ftp_md5="$FTP_MD5:$ftp_md5"
+    ftp_path="$FTP_PATH:$ftp_path"
+fi
+
+# Adding new key into web.conf
+add_object_key "web" 'DOMAIN' "$domain" 'FTP_PATH' 'PROXY'
+
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_USER' "$ftp_user"
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
-
-add_object_key "web" 'DOMAIN' "$domain" 'FTP_PATH' 'PROXY'
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-log_history "added ftp account $ftp_user for $domain"
+log_history "added ftp account ${1}_${3} for $domain"
 log_event "$OK" "$EVENT"
 
 exit

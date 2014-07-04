@@ -1,6 +1,6 @@
 #!/bin/bash
-# info: delete webdomain ftp account.
-# options: USER DOMAIN
+# info: delete webdomain ftp account
+# options: USER DOMAIN FTP_USER
 #
 # The function deletes additional ftp account.
 
@@ -13,6 +13,7 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
+ftp_user=$3
 
 # Includes
 source $VESTA/func/main.sh
@@ -24,14 +25,19 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
-validate_format 'user' 'domain'
+check_args '3' "$#" 'USER DOMAIN FTP_USER'
+validate_format 'user' 'domain' 'ftp_user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_value_exist 'web' 'DOMAIN' "$domain" '$FTP_USER'
+get_domain_values 'web'
+if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
+    echo "Error: account $ftp_user doesn't exist"
+    log_event "$E_NOTEXIST" "$EVENT"
+    exit $E_NOTEXIST
+fi
 
 
 #----------------------------------------------------------#
@@ -39,20 +45,30 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$FTP_USER'
 #----------------------------------------------------------#
 
 # Deleting ftp user
-get_domain_values 'web'
-/usr/sbin/userdel -f  $FTP_USER >> /dev/null 2>&1
+/usr/sbin/userdel -f  $ftp_user >> /dev/null 2>&1
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Rebuild FTP variables
+position=$(echo $FTP_USER |tr ':' '\n' |grep -n '' |grep ":$ftp_user$" |\
+    cut -f 1 -d:)
+ftp_user=$(echo $FTP_USER |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
+    cut -f 2 -d :| sed -e "/^$/d"| sed -e ':a;N;$!ba;s/\n/:/g')
+ftp_md5=$(echo $FTP_MD5 |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
+    cut -f 2 -d :| sed -e "/^$/d"| sed -e ':a;N;$!ba;s/\n/:/g')
+ftp_path=$(echo $FTP_PATH |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
+    cut -f 2 -d :| sed -e "/^$/d"| sed -e ':a;N;$!ba;s/\n/:/g')
+
 # Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$FTP_USER' ''
-update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' ''
+update_object_value 'web' 'DOMAIN' "$domain" '$FTP_USER' "$ftp_user"
+update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
+update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-log_history "deleted ftp account $FTP_USER for $domain"
+log_history "deleted ftp account ${3} for $domain"
 log_event "$OK" "$EVENT"
 
 exit

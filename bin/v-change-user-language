@@ -49,14 +49,6 @@ else
     update_user_value "$user" '$LANGUAGE' "$language"
 fi
 
-exit
-# Changing user contact email
-old_email=$(get_user_value '$CONTACT')
-update_user_value "$user" '$CONTACT' "$email"
-pw_str=$(grep -n "^$user:" /etc/passwd)
-str=$(echo "$pw_str" | cut -f 1 -d :)
-sed -i "$str s/$old_email/$email/g" /etc/passwd
-
 
 #----------------------------------------------------------#
 #                       Vesta                              #

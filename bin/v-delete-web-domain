@@ -89,9 +89,15 @@ if [ ! -z "$STATS" ] && [ "$STATS" != 'no' ]; then
     rm -f /etc/awstats/$STATS.$domain.conf
 fi
 
-# Deleting ftp account
+# Deleting ftp users
 if [ ! -z "$FTP_USER" ]; then
-    /usr/sbin/userdel -f $FTP_USER >> /dev/null 2>&1
+    for ftp_user in ${FTP_USER//:/ }; do
+        /usr/sbin/userdel $ftp_user >> /dev/null 2>&1
+        if [ "$?" != 0 ]; then
+            sed -i "/^$ftp_user:/d" /etc/passwd
+            sed -i "/^$ftp_user:/d" /etc/shadow
+        fi
+    done
 fi
 
 # Deleting directory

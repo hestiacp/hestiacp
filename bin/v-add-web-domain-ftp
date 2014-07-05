@@ -53,7 +53,7 @@ fi
 # Get domain values
 get_domain_values 'web'
 
-# Define ftp user shell
+# Defining ftp user shell
 if [ -z "$FTP_SHELL" ]; then
     shell='/sbin/nologin'
     if [ -e "/usr/bin/rssh" ]; then
@@ -63,22 +63,22 @@ else
     shell=$FTP_SHELL
 fi
 
-# Define path
+# Defining path
 if [ -z "$ftp_path" ]; then
-    ftp_path="$HOMEDIR/$user/web/$domain"
+    ftp_path_a="$HOMEDIR/$user/web/$domain"
 else
-    # Validating path
-    ftp_path=$(readlink -f "$HOMEDIR/$user/web/$domain/$ftp_path")
-    if [ -z "$(echo $ftp_path |grep $HOMEDIR/$user/web/$domain)" ]; then
-        echo "Error: path $ftp_path is invalid"
+    # Validating absolute path
+    ftp_path_a=$(readlink -f "$HOMEDIR/$user/web/$domain/$ftp_path")
+    if [ -z "$(echo $ftp_path_a |grep $HOMEDIR/$user/web/$domain)" ]; then
+        echo "Error: absolute path $ftp_path_a is invalid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
-    # MKDIR if path doesn't exist
-    if [ ! -e $ftp_path ]; then
-        mkdir -p $ftp_path
-        chown $user:$user $ftp_path
-        chmod 751 $ftp_path
+    # Creating ftp user home directory
+    if [ ! -e "$ftp_path_a" ]; then
+        mkdir -p $ftp_path_a
+        chown $user:$user "$ftp_path_a"
+        chmod 751 "$ftp_path_a"
     fi
 fi
 
@@ -87,32 +87,37 @@ fi
     -s $shell \
     -o -u $(id -u $user) \
     -g $(id -u $user) \
-    -M -d "$ftp_path"  > /dev/null 2>&1
+    -M -d "$ftp_path_a"  > /dev/null 2>&1
+
+# Set ftp user password
 echo "$ftp_user:$ftp_password" | /usr/sbin/chpasswd
-ftp_md5="$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)"
+ftp_md5=$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Transforming absolute path to relative
+ftp_path_r=$(echo $ftp_path_a |sed "s%$HOMEDIR/$user/web/$domain%%")
+
 # Concatenating ftp variables
 if [ ! -z "$FTP_USER" ]; then
     ftp_user="$FTP_USER:$ftp_user"
     ftp_md5="$FTP_MD5:$ftp_md5"
-    ftp_path="$FTP_PATH:$ftp_path"
+    ftp_path="$FTP_PATH:$ftp_path_r"
 fi
 
 # Adding new key into web.conf
 add_object_key "web" 'DOMAIN' "$domain" 'FTP_PATH' 'PROXY'
 
-# Update config
+# Updating config
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_USER' "$ftp_user"
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-log_history "added ftp account ${1}_${3} for $domain"
+log_history "added ftp account ${1}_${3}@$domain"
 log_event "$OK" "$EVENT"
 
 exit

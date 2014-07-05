@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: delete webdomain ftp account
-# options: USER DOMAIN FTP_USER
+# info: change path for ftp user.
+# options: USER DOMAIN FTP_USER FTP_PATH
 #
-# The function deletes additional ftp account.
+# The function changes ftp user path.
 
 
 #----------------------------------------------------------#
@@ -14,6 +14,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ftp_user=$3
+ftp_path=$4
 
 # Includes
 source $VESTA/func/main.sh
@@ -25,7 +26,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN FTP_USER'
+check_args '4' "$#" 'USER DOMAIN FTP_USER FTP_PATH'
 validate_format 'user' 'domain' 'ftp_user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -38,41 +39,51 @@ if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
     log_event "$E_NOTEXIST" "$EVENT"
     exit $E_NOTEXIST
 fi
+ftp_path_a=$(readlink -f "$HOMEDIR/$user/web/$domain/$ftp_path")
+if [ -z "$(echo $ftp_path_a |grep $HOMEDIR/$user/web/$domain)" ]; then
+    echo "Error: absolute path $ftp_path_a is invalid"
+    log_event "$E_INVALID" "$EVENT"
+    exit $E_INVALID
+fi
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting ftp user
-/usr/sbin/userdel $ftp_user >> /dev/null 2>&1
-if [ "$?" != 0 ]; then
-    sed -i "/^$ftp_user:/d" /etc/passwd
-    sed -i "/^$ftp_user:/d" /etc/shadow
+# MKDIR if path doesn't exist
+if [ ! -e "$ftp_path_a" ]; then
+    mkdir -p "$ftp_path_a"
+    chown $user:$user "$ftp_path_a"
+    chmod 751 "$ftp_path_a"
 fi
+
+# Chaning ftp user path
+pw_str=$(grep -n "^$ftp_user:" /etc/passwd)
+str=$(echo "$pw_str" | cut -f 1 -d :)
+old_path=$(echo "$pw_str" | cut -f 7 -d :)
+sed -i "$str s%$old_path%$ftp_path_a%g" /etc/passwd
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Transforming absolute path to relative
+ftp_path_r=$(echo $ftp_path_a |sed "s%$HOMEDIR/$user/web/$domain%%")
+
 # Rebuilding FTP variables
 position=$(echo $FTP_USER |tr ':' '\n' |grep -n '' |grep ":$ftp_user$" |\
     cut -f 1 -d:)
-ftp_user=$(echo $FTP_USER |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
-    cut -f 2 -d :| sed -e "/^$/d"| sed -e ':a;N;$!ba;s/\n/:/g')
-ftp_md5=$(echo $FTP_MD5 |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
-    cut -f 2 -d :| sed -e ':a;N;$!ba;s/\n/:/g')
-ftp_path=$(echo $FTP_PATH |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
+ftp_path=$(echo $FTP_PATH |tr ':' '\n' |grep -n '' |\
+    sed -e "s%^$position:.*%$position:$ftp_path_r%" |\
     cut -f 2 -d :| sed -e ':a;N;$!ba;s/\n/:/g')
 
-# Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$FTP_USER' "$ftp_user"
-update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
+# Updating config
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-log_history "deleted ftp account ${3} for $domain"
+log_history "changed path to $ftp_path_a for $ftp_user@$domain"
 log_event "$OK" "$EVENT"
 
 exit

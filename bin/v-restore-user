@@ -363,11 +363,16 @@ if [ "$web" != 'no' ]; then
             exit $E_PARSING
         fi
 
+        # Fix for tar < 1.24
+        find $HOMEDIR/$user/web/$domain -type d \
+            -exec chown -h $user:$user {} \;
+
         # ReChown files if uid differs
         if [ "$old_uid" -ne "$new_uid" ]; then
             find $HOMEDIR/$user/web/$domain/ -user $old_uid \
                 -exec chown -h $user:$user {} \;
         fi
+
     done
 
     # Restart WEB

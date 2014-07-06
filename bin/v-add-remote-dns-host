@@ -16,8 +16,6 @@ user=$3
 password=$4
 type=${5-api}
 dns_user=${6-dns-cluster}
-
-# fix for variable name in other files
 DNS_USER=$dns_user
 
 # Includes
@@ -45,9 +43,10 @@ is_dnshost_alive
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Concatentating db host string
-str="HOST='$host' USER='$user' PASSWORD='$password' DNS_USER='$dns_user'"
-str="$str TYPE='$type' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+# Concatentating dns host string
+str="HOST='$host' PORT='$port' USER='$user' PASSWORD='$password'"
+str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
+str="$str TIME='$TIME' DATE='$DATE'"
 
 # Adding host to dns-cluster.conf
 echo "$str" >> $VESTA/conf/dns-cluster.conf

@@ -67,7 +67,7 @@ echo "WEB='$WEB'" > $USER_DATA/backup-excludes.conf
 echo "DNS='$DNS'" >> $USER_DATA/backup-excludes.conf
 echo "MAIL='$MAIL'" >> $USER_DATA/backup-excludes.conf
 echo "DB='$DB'" >> $USER_DATA/backup-excludes.conf
-echo "CRON='$DB'" >> $USER_DATA/backup-excludes.conf
+echo "CRON='$CRON'" >> $USER_DATA/backup-excludes.conf
 echo "USER='$USER'" >> $USER_DATA/backup-excludes.conf
 chmod 660 $USER_DATA/backup-excludes.conf
 

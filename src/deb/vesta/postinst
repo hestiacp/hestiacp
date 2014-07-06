@@ -15,4 +15,9 @@ if [ -x "/usr/local/vesta/upd/fix_vesta_ssl_permissions.sh" ]; then
     /usr/local/vesta/upd/fix_vesta_ssl_permissions.sh
 fi
 
+# Run MySQL autostart fixed
+if [ -x "/usr/local/vesta/upd/fix_mysql_startup.sh" ]; then
+    /usr/local/vesta/upd/fix_mysql_startup.sh
+fi
+
 exit 0

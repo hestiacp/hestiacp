@@ -601,7 +601,9 @@ fi
 mpass=$(gen_pass)
 wget $CHOST/$VERSION/my.cnf -O /etc/mysql/my.cnf
 mysql_install_db
-update-rc.d mysql defaults
+if [ "$release" != '14.04' ]; then
+    update-rc.d mysql defaults
+fi
 service mysql stop > /dev/null 2>&1
 service mysql start
 if [ "$?" -ne 0 ]; then

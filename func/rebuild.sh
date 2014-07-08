@@ -318,21 +318,36 @@ rebuild_web_domain_conf() {
         $WEBTPL/$PROXY_SYSTEM/$PROXY.sh $user $domain $ip $HOMEDIR $docroot
     fi
 
-    # Checking ftp
-    if [ ! -z "$FTP_USER" ]; then
-        if [ -z "$(grep ^$FTP_USER: /etc/passwd)" ]; then
-            shell='/sbin/nologin'
-            if [ -e "/usr/bin/rssh" ]; then
-                shell='/usr/bin/rssh'
-            fi
-            /usr/sbin/useradd $FTP_USER \
+    # Defining ftp user shell
+    if [ -z "$FTP_SHELL" ]; then
+        shell='/sbin/nologin'
+        if [ -e "/usr/bin/rssh" ]; then
+            shell='/usr/bin/rssh'
+        fi
+    else
+        shell=$FTP_SHELL
+    fi
+
+    # Checking ftp users
+    for ftp_user in ${FTP_USER//:/ }; do
+        if [ -z "$(grep ^$ftp_user: /etc/passwd)" ]; then
+            # Parsing ftp user variables
+            position=$(echo $FTP_USER | tr ':' '\n' | grep -n '' |\
+                grep ":$ftp_user$" | cut -f 1 -d:)
+            ftp_path=$(echo $FTP_PATH | tr ':' '\n' | grep -n '' |\
+                grep "^$position:" | cut -f 2 -d :)
+            ftp_md5=$(echo $FTP_MD5 | tr ':' '\n' | grep -n '' |\
+                grep "^$position:" | cut -f 2 -d :)
+
+            # Adding ftp user
+            /usr/sbin/useradd $ftp_user \
                 -s $shell \
                 -o -u $(id -u $user) \
                 -g $(id -u $user) \
-                -M -d "$HOMEDIR/$user/web/$domain"  > /dev/null 2>&1
+                -M -d "$HOMEDIR/$user/web/$domain${ftp_path}" >/dev/null 2>&1
 
-            # Update password
-            shadow=$(grep "^$FTP_USER:" /etc/shadow)
+            # Updating ftp user password
+            shadow=$(grep "^$ftp_user:" /etc/shadow)
             shdw3=$(echo "$shadow" | cut -f3 -d :)
             shdw4=$(echo "$shadow" | cut -f4 -d :)
             shdw5=$(echo "$shadow" | cut -f5 -d :)
@@ -340,15 +355,14 @@ rebuild_web_domain_conf() {
             shdw7=$(echo "$shadow" | cut -f7 -d :)
             shdw8=$(echo "$shadow" | cut -f8 -d :)
             shdw9=$(echo "$shadow" | cut -f9 -d :)
-            shadow_str="$FTP_USER:$FTP_MD5:$shdw3:$shdw4:$shdw5:$shdw6"
+            shadow_str="$ftp_user:$ftp_md5:$shdw3:$shdw4:$shdw5:$shdw6"
             shadow_str="$shadow_str:$shdw7:$shdw8:$shdw9"
-
             chmod u+w /etc/shadow
-            sed -i "/^$FTP_USER:*/d" /etc/shadow
+            sed -i "/^$ftp_user:*/d" /etc/shadow
             echo "$shadow_str" >> /etc/shadow
             chmod u-w /etc/shadow
         fi
-    fi
+    done
 }
 
 # DNS domain rebuild

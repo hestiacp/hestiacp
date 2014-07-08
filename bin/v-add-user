@@ -207,7 +207,6 @@ chmod 660 $USER_DATA/user.conf
 
 # Updating quota
 if [ "$DISK_QUOTA" = 'yes' ]; then
-    echo "Setting quota"
     $BIN/v-update-user-quota "$user"
 fi
 

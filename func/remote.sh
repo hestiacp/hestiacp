@@ -6,11 +6,21 @@ send_api_cmd() {
         USER=admin
     fi
 
-    auth="user=$USER&password=$PASSWORD&returncode=yes"
-    cmd="cmd=$1"
-    args="arg1=$2&arg2=$3&arg3=$4&arg4=$5&arg5=$6&arg6=$7&arg7=$8&arg8=$9"
-    args=$(echo "$args" |sed -e "s/+/%2B/g")
-    answer=$(curl -s -k --data "$auth&$cmd&$args" https://$HOST:$PORT/api/)
+    answer=$(curl -s -k \
+        --data-urlencode "user=$USER" \
+        --data-urlencode "password=$PASSWORD" \
+        --data-urlencode "returncode=yes" \
+        --data-urlencode "cmd=$1" \
+        --data-urlencode "arg1=$2" \
+        --data-urlencode "arg2=$3" \
+        --data-urlencode "arg3=$4" \
+        --data-urlencode "arg4=$5" \
+        --data-urlencode "arg5=$6" \
+        --data-urlencode "arg6=$7" \
+        --data-urlencode "arg7=$8" \
+        --data-urlencode "arg8=$9" \
+        https://$HOST:$PORT/api/)
+
     if [ "$answer" != '0' ]; then
         return 1
     else
@@ -90,7 +100,7 @@ is_dnshost_alive() {
     $send_cmd v-list-sys-config
     if [ $? -ne 0 ]; then
         echo "Error: $type connection to $HOST failed"
-        log_event "$E_CONNECT $EVENT"
+        log_event "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 
@@ -104,7 +114,7 @@ is_dnshost_alive() {
     $send_cmd v-list-user $DNS_USER
     if [ $? -ne 0 ]; then
         echo "Error: dns user $DNS_USER doesn't exist"
-        log_event "$E_NOTEXIST $EVENT"
+        log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
 }
@@ -146,7 +156,7 @@ remote_dns_health_check() {
             echo -e "\n\n--\nVesta Control Panel\n$(hostname)" >> $tmpfile
             cat $tmpfile |  $send_mail -s "$subj" $email
 
-            log_event "$E_CONNECT $EVENT"
+            log_event "$E_CONNECT" "$EVENT"
             dconf="../../../conf/dns-cluster"
             update_object_value "$dconf" 'HOST' "$HOST" '$SUSPENDED' 'yes'
         fi

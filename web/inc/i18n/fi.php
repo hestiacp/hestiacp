@@ -14,7 +14,7 @@ $LANG['fi'] = array(
     'Log' => 'Loki',
     'Services' => 'Palvelut',
     'Updates' => 'Päivitykset',
-    'Log in' => 'Kirjaudu sisään',
+    'Log in' => 'Kirjaudu',
     'Log out' => 'Kirjaudu ulos',
 
     'USER' => 'TILIT',

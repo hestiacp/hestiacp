@@ -28,7 +28,7 @@ EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 is_user_free() {
     check_sysuser=$(cut -f 1 -d : /etc/passwd | grep -w "$user" )
     if [ ! -z "$check_sysuser" ] || [ -e "$USER_DATA" ]; then
-        echo "Error: user $user exist"
+        echo "Error: user $user exists"
         log_event "$E_EXISTS" "$EVENT"
         exit $E_EXISTS
     fi

@@ -148,6 +148,7 @@ $LANG['en'] = array(
     'Web Aliases'  => 'Web Aliases',
     'per domain'  => 'per domain',
     'DNS domains'  => 'DNS Domains',
+    'DNS domains'  => 'DNS domains',
     'DNS records'   => 'DNS records'  ,
     'Name Servers'  => 'Name Servers',
     'Mail Domains'  => 'Mail Domains',

@@ -148,6 +148,7 @@ $LANG['it'] = array(
     'SSL Domains'  => 'Domini SSL',
     'Web Aliases'  => 'Alias Web',
     'per domain'  => 'per dominio',
+    'DNS Domains'  => 'Zone DNS',
     'DNS domains'  => 'Zone DNS',
     'DNS records'   => 'Record DNS',
     'Name Servers'  => 'Name Servers',

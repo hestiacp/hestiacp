@@ -26,7 +26,10 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         echo 'Error: only admin is allowed to use API';
         exit;
     }
-
+    // Not Declaring arguments may cause Notifies on the response on an API Call when the Directive Dysplay errors is enabled
+    // you may  initialize argument arg1, arg2,... arg9 to = '' here
+    // Or post the unused args to =''
+    
     // Prepare arguments
     if (isset($_POST['cmd'])) $cmd = escapeshellarg($_POST['cmd']);
     if (isset($_POST['arg1'])) $arg1 = escapeshellarg($_POST['arg1']);

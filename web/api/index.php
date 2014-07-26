@@ -41,12 +41,16 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     if (isset($_POST['arg9'])) $arg9 = escapeshellarg($_POST['arg9']);
 
  // Build query
-    $cmdquery = VESTA_CMD.$cmd." ".$arg1." ".$arg2." ";
-    if(!empty($arg3)){
+    $cmdquery = VESTA_CMD.$cmd." ";
+     
+     if(!empty($arg1)){
+                     $cmdquery = $cmdquery.$arg1." "; }
+     if(!empty($arg2)){
+                     $cmdquery = $cmdquery.$arg2." "; }
+     if(!empty($arg3)){
                      $cmdquery = $cmdquery.$arg3." "; }
      if(!empty($arg4)){
                      $cmdquery = $cmdquery.$arg4." "; }
-
      if(!empty($arg5)){
                      $cmdquery = $cmdquery.$arg5." "; }
      if(!empty($arg6)){

@@ -26,7 +26,8 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         echo 'Error: only admin is allowed to use API';
         exit;
     }
-
+    
+    
     // Prepare arguments
     if (isset($_POST['cmd'])) $cmd = escapeshellarg($_POST['cmd']);
     if (isset($_POST['arg1'])) $arg1 = escapeshellarg($_POST['arg1']);
@@ -39,8 +40,31 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     if (isset($_POST['arg8'])) $arg8 = escapeshellarg($_POST['arg8']);
     if (isset($_POST['arg9'])) $arg9 = escapeshellarg($_POST['arg9']);
 
-    // Run query
-    exec (VESTA_CMD.$cmd." ".$arg1." ".$arg2." ".$arg3." ".$arg4." ".$arg5." ".$arg6." ".$arg7." ".$arg8." ".$arg9, $output, $return_var);
+ // Build query
+    $cmdquery = VESTA_CMD.$cmd." ";
+     
+     if(!empty($arg1)){
+                     $cmdquery = $cmdquery.$arg1." "; }
+     if(!empty($arg2)){
+                     $cmdquery = $cmdquery.$arg2." "; }
+     if(!empty($arg3)){
+                     $cmdquery = $cmdquery.$arg3." "; }
+     if(!empty($arg4)){
+                     $cmdquery = $cmdquery.$arg4." "; }
+     if(!empty($arg5)){
+                     $cmdquery = $cmdquery.$arg5." "; }
+     if(!empty($arg6)){
+                     $cmdquery = $cmdquery.$arg6." "; }
+     if(!empty($arg7)){
+                     $cmdquery = $cmdquery.$arg7." "; }
+     if(!empty($arg8)){
+                     $cmdquery = $cmdquery.$arg8." "; }
+     if(!empty($arg9)){
+                     $cmdquery = $cmdquery.$arg9; }
+
+   // Run query
+    exec ($cmdquery, $output, $return_var);
+    
     if ((!empty($_POST['returncode'])) && ($_POST['returncode'] == 'yes')) {
         echo $return_var;
     } else {

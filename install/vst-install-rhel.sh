@@ -233,9 +233,6 @@ if [ -z $email ]; then
     if [ -z "$servername" ]; then
         read -p "Please enter hostname [$(hostname)]: " servername
     fi
-    if [ -z "$servername" ]; then
-        servername=$(hostname)
-    fi
 fi
 
 # Validate email
@@ -524,6 +521,9 @@ if [ "$srv_type" = 'micro' ] ||  [ "$srv_type" = 'small' ]; then
 fi
 
 # Set server hostname
+if [ -z "$servername" ]; then
+    servername=$(hostname)
+fi
 /usr/local/vesta/bin/v-change-sys-hostname $servername 2>/dev/null
 
 # Templates
@@ -683,9 +683,9 @@ fi
 
 # Exim
 wget $CHOST/$VERSION/exim.conf -O /etc/exim/exim.conf
-if [ "$srv_type" = 'micro' ] ||  [ "$srv_type" = 'small' ]; then
-    sed -i "s/^SPAMASSASSIN/#SPAMASSASSIN/g" /etc/exim/exim.conf
-    sed -i "s/^CLAMD/#CLAMD/g" /etc/exim/exim.conf
+if [ "$srv_type" != 'micro' ] &&  [ "$srv_type" != 'small' ]; then
+    sed -i "s/#SPAM/SPAM/g" /etc/exim/exim.conf
+    sed -i "s/#CLAMD/CLAMD/g" /etc/exim/exim.conf
 fi
 wget $CHOST/$VERSION/dnsbl.conf -O /etc/exim/dnsbl.conf
 wget $CHOST/$VERSION/spam-blocks.conf -O /etc/exim/spam-blocks.conf

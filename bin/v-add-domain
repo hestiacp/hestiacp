@@ -48,14 +48,16 @@ if [ -z "$ip" ]; then
 fi
 
 # Web domain
+# Not restart at this point will loose conecction from API calls 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v-add-web-domain $user $domain $ip
+    $BIN/v-add-web-domain $user $domain $ip no
     retun_code=$?
 fi
 
 # Proxy support
+# Not restart at this point will loose conecction from API calls
 if [ ! -z "$PROXY_SYSTEM" ] && [ "$retun_code" -eq 0 ]; then
-    $BIN/v-add-web-domain-proxy $user $domain
+    $BIN/v-add-web-domain-proxy $user $domain '' '' no
 fi
 
 # DNS domain

@@ -1,0 +1,36 @@
+#!/bin/bash
+# File reader
+
+user=$1
+path=$2
+
+# Checking arguments
+if [ -z "$path" ]; then
+    echo "Usage: USER PATH"
+    exit 1
+fi
+
+# Checking users
+if [ ! -e "$VESTA/data/users/$user" ]; then
+    exit 1
+fi
+
+# Checking homedir
+homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
+if [ -z $homedir ]; then
+    exit 1
+fi
+
+# Checking path
+if [ ! -z "$path" ]; then
+    # Validating absolute path
+    rpath=$(readlink -f "$path")
+    if [ -z "$(echo $rpath |grep $homedir)" ]; then
+        exit 1
+    fi
+fi
+
+cat "$path"
+
+exit
+

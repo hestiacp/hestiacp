@@ -327,15 +327,9 @@ is_web_domain_cert_valid() {
     fi
 
     if [ -e "$ssl_dir/$domain.ca" ]; then
-        ca_vrf=$(openssl verify $ssl_dir/$domain.ca 2>/dev/null |grep 'OK')
-        if [ -z "$ca_vrf" ]; then
-            echo "Error: ssl certificate authority is not valid"
-            log_event "$E_INVALID" "$EVENT"
-            exit $E_INVALID
-        fi
-
-        crt_vrf=$(openssl verify -untrusted $ssl_dir/$domain.ca \
-            $ssl_dir/$domain.crt 2>/dev/null |grep 'OK')
+        crt_vrf=$(openssl verify -purpose sslserver \
+            -CAfile $ssl_dir/$domain.ca $ssl_dir/$domain.crt 2>/dev/null |\
+            grep 'OK')
         if [ -z "$crt_vrf" ]; then
             echo "Error: root or/and intermediate cerificate not found"
             log_event "$E_NOTEXIST" "$EVENT"

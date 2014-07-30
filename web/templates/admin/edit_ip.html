@@ -52,7 +52,7 @@
                     <td class="data-dotted">
                         <table class="data-col2" width="600px">
                             <tr>
-                                <td class="vst-text" style="padding: 24px 0 0 0;">
+                                <td class="vst-text step-top">
                                     <?php print __('IP address'); ?> 
                                 </td>
                             </tr>
@@ -62,7 +62,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('Netmask');?> 
                                 </td>
                             </tr>
@@ -72,7 +72,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('Interface'); ?> 
                                 </td>
                             </tr>
@@ -82,35 +82,36 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
-                                    <?php print __('Shared'); ?> 
+                                <td class="vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');"> <?php print __('Shared');?></label>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?>
+                                <td class="step-left">
+                                    <table style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Assigned user');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-bottom">
+                                                <select class="vst-list" name="v_owner">
+                                                    <?php
+                                                        foreach ($users as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            if ((!empty($v_owner)) && ( $value == $v_owner )) echo ' selected';
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
-                                    <?php print __('Assigned user'); ?> 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_owner">
-                                        <?php
-                                            foreach ($users as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
-                                                if ((!empty($v_owner)) && ( $value == $v_owner )) echo ' selected';
-                                                echo ">".$value."</option>\n";
-                                            }
-                                        ?> 
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('Assigned domain');?> <span class="optional">(<?php print __('optional');?>)</span>
                                 </td>
                             </tr>
@@ -120,7 +121,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('NAT IP association');?> <span class="optional">(<?php print __('optional');?>)</span>
                                 </td>
                             </tr>
@@ -133,10 +134,10 @@
                         </table>
                         <table class="data-col2">
                             <tr>
-                                <td style="padding: 24px 0 0 0;" width="116px">
+                                <td class="step-top" width="116px">
                                     <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                 </td>
-                                <td style="padding: 24px 0 0 0;">
+                                <td class="step-top">
                                     <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>

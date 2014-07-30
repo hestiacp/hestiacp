@@ -55,7 +55,7 @@
                 <td class="data-dotted">
                     <table class="data-col2" width="600px">
                         <tr>
-                            <td class="vst-text" style="padding: 24px 0 0 0;">
+                            <td class="vst-text step-top">
                                 <?php print __('Domain');?>
                             </td>
                         </tr>
@@ -65,7 +65,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                            <td class="vst-text input-label">
                                 <?php print __('Account');?>
                             </td>
                         </tr>
@@ -75,25 +75,25 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                            <td class="vst-text input-label">
                                 <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_password">
+                                <input type="text" size="20" class="vst-input password" name="v_password">
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                            <td class="vst-text input-label">
                                 <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print __('Advanced options');?></a>
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0px;">
+                            <td class="vst-text input-label">
                                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                     <tr>
-                                        <td class="vst-text" style="padding: 12px 0 0 0;">
+                                        <td class="vst-text input-label">
                                             <?php print __('Quota');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('in megabytes');?>)</span>
                                         </td>
                                     </tr>
@@ -103,7 +103,7 @@
                                         </td>
                                     </tr>
                                 <tr>
-                                    <td class="vst-text" style="padding: 12px 0 0 0;">
+                                    <td class="vst-text input-label">
                                         <?php print __('Aliases');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('use local-part');?>)</span>
                                     </td>
                                 </tr>
@@ -113,7 +113,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="vst-text" style="padding: 12px 0 0 0">
+                                    <td class="vst-text input-label">
                                         <?php print __('Forward to');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('one or more email addresses');?>)</span>
                                     </td>
                                 </tr>
@@ -123,26 +123,20 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="vst-text" style="padding: 12px 0 0 0;">
-                                        <?php print __('Do not store forwarded mail');?>
+                                    <td class="vst-text input-label">
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>> <?php print __('Do not store forwarded mail');?></label>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" size="20" class="vst-checkbox" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>>
-                                    </td>
-                                </tr>
-
                             </table>
                         </td>
                     </tr>
                 </table>
                 <table class="data-col2">
                     <tr>
-                        <td style="padding: 24px 0 0 0;" width="116px">
+                        <td class="step-top" width="116px">
                             <input type="submit" name="ok_acc" value="<?php print __('Add');?>" class="button">
                         </td>
-                        <td style="padding: 24px 0 0 0;">
+                        <td class="step-top">
                             <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                         </td>
                     </tr>

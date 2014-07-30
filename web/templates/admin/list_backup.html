@@ -1,6 +1,6 @@
            <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 10px">
+                    <td class="wrapper">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/schedule/backup/'"> <?php print __('Create Backup');?> </button>
                         </div>
@@ -92,7 +92,7 @@
                                     <table>
                                         <tr>
                                             <td class="chart1" style="padding: 4px 0 0 0"><?php print __('Backup Size');?>: <?php echo humanize_usage($data[$key]['SIZE']) ?>
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
                                                     <div style="width:100%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>

@@ -1,6 +1,6 @@
            <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 10px">
+                    <td class="wrapper">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/mail/'"> <?php print __('Add Mail Domain');?> </button>
                         </div>
@@ -49,7 +49,7 @@
                             $data[$key]['CATCHALL'] = '/dev/null';
                         }
                 ?> 
-                <tr class="data-row">
+                <tr class="data-row <? if($status == 'suspended') echo 'suspended';?>">
                     <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo "$key" ?>" ></td></tr>
@@ -86,7 +86,7 @@
                         </a>
                         <a href="<?php echo $webmail; ?>" target="_blank" class="data-controls">
                             <span>
-                                <img src="/images/new_window.png" width="8px" height="8px">
+                                <img src="/images/mail.png" width="9px" height="8px">
                                 <?php print __('open webmail');?> 
                             </span>
                         </a>
@@ -114,7 +114,7 @@
                                         <tr>
                                             <td class="chart1" style="padding: 4px 0 0 0">
                                                 <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
                                                     <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>

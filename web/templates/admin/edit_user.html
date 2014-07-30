@@ -52,7 +52,7 @@
                     <td class="data-dotted">
                         <table class="data-col2">
                             <tr>
-                                <td class="vst-text" style="padding: 28px 0 0 0;">
+                                <td class="vst-text step-top">
                                     <?php print __('Username');?>
                                 </td>
                             </tr>
@@ -62,17 +62,17 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
+                                    <input type="text" size="20" class="vst-input password" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('Email');?>
                                 </td>
                             </tr>
@@ -82,7 +82,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;" >
+                                <td class="vst-text input-label">
                                     <?php print __('Package');?>
                                 </td>
                             </tr>
@@ -103,7 +103,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;" >
+                                <td class="vst-text input-label">
                                     <?php print __('Language');?>
                                 </td>
                             </tr>
@@ -127,7 +127,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('First Name');?>
                                 </td>
                             </tr>
@@ -137,7 +137,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('Last Name');?>
                                 </td>
                             </tr>
@@ -147,7 +147,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;" >
+                                <td class="vst-text input-label">
                                     <?php print __('SSH Access');?>
                                 </td>
                             </tr>
@@ -168,7 +168,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
+                                <td class="vst-text input-label">
                                     <?php print __('Default Name Servers');?>
                                 </td>
                             </tr>
@@ -195,10 +195,10 @@
                         </table>
                         <table class="data-col2">
                             <tr>
-                                <td style="padding: 24px 0 0 0;" width="116px">
+                                <td class="step-top" width="116px">
                                     <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                 </td>
-                                <td style="padding: 24px 0 0 0;">
+                                <td class="step-top">
                                     <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>

@@ -1,12 +1,27 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 16px">
+                    <td class="wrapper">
                         <div style="submenu-button-block">
                             <a class="vst<?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo "-selected" ?>" href="?period=daily"><?php print __('Daily');?></a>
                             <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'weekly')) echo "-selected" ?>" href="?period=weekly"><?php print __('Weekly');?></a>
                             <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'monthly')) echo "-selected" ?>" href="?period=monthly"><?php print __('Monthly');?></a>
                             <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'yearly')) echo "-selected" ?>" href="?period=yearly"><?php print __('Yearly');?></a>
                         </div>
+
+			<div class="timer-container">
+		    	    <span class="timer-button pause"></span>
+    			    <span class="timer-button play hidden"></span>
+
+            		    <div class="refresh-timer">
+                    		<div class="movement left">
+                            	    <div class="loader-half left"></div>
+                    		</div>
+    				<div class="movement right">
+                            	    <div class="loader-half right"></div>
+                    		</div>
+            		    </div>
+			</div>
+
                         <div class="submenu-search-block">
                             <form action="/search/" method="get">
                             <input type="text" name="q" class="submenu-search-field">

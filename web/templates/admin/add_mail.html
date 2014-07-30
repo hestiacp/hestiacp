@@ -34,7 +34,7 @@
                     <td class="data-dotted">
                         <table class="data-col2" width="600px">
                             <tr>
-                                <td class="vst-text" style="padding: 24px 0 0 0;">
+                                <td class="vst-text step-top">
                                     <?php print __('Domain');?>
                                 </td>
                             </tr>
@@ -44,42 +44,27 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
-                                    <?php print __('AntiSpam Support');?>
+                                <td class="vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>> <?php print __('AntiSpam Support');?></label>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>>
+                                <td class="vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>> <?php print __('AntiVirus Support');?></label>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
-                                    <?php print __('AntiVirus Support');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
-                                    <?php print __('DKIM Support');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>>
+                                <td class="vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>> <?php print __('DKIM Support');?></label>
                                 </td>
                             </tr>
                         </table>
                         <table class="data-col2">
                             <tr>
-                                <td style="padding: 24px 0 0 0;" width="116px">
+                                <td class="step-top" width="116px">
                                     <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                                 </td>
-                                <td style="padding: 24px 0 0 0;">
+                                <td class="step-top">
                                     <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>

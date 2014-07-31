@@ -55,7 +55,7 @@ str="$str CMD='$command' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 # Adding to crontab
 echo "$str" >> $VESTA/data/users/$user/cron.conf
 
-# Chaning permissions
+# Changing permissions
 chmod 660 $VESTA/data/users/$user/cron.conf
 
 # Sort jobs by id number

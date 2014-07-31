@@ -337,20 +337,20 @@ dump_mysql_database() {
     fi
 
     query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
+    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" >/dev/null 2>/tmp/e.mysql
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
-        echo "Can't connect to mysql server $HOST" |\
+        echo -e "Can't connect to $HOST\n$(cat /tmp/e.mysql)" |\
             $send_mail -s "$subj" $email
         echo "Error: Connection failed"
         log_event  "$E_CONNECT $EVENT"
         exit $E_CONNECT
     fi
 
-    mysqldump -h $HOST -u $USER -p$PASSWORD -r $dump $database
+    mysqldump -h $HOST -u $USER -p$PASSWORD -r $dump $database 2>/tmp/e.mysql
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
-        echo "Can't dump mysql database $database" |\
+        echo -e "Can't dump database $database\n$(cat /tmp/e.mysql)" |\
             $send_mail -s "$subj" $email
         echo "Error: dump $database failed"
         log_event  "$E_DB $EVENT"

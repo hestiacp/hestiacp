@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 ip=$3
@@ -48,29 +48,31 @@ if [ -z "$ip" ]; then
 fi
 
 # Web domain
+# Do Not restart at this point, will loose connection from API calls 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v-add-web-domain $user $domain $ip
-    retun_code=$?
+    $BIN/v-add-web-domain $user $domain $ip no
+    return_code=$?
 fi
 
 # Proxy support
-if [ ! -z "$PROXY_SYSTEM" ] && [ "$retun_code" -eq 0 ]; then
-    $BIN/v-add-web-domain-proxy $user $domain
+# Do Not restart at this point, will loose connection from API calls
+if [ ! -z "$PROXY_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
+    $BIN/v-add-web-domain-proxy $user $domain '' '' no
 fi
 
 # DNS domain
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    if [ "$retun_code" -eq 0 ]; then
+    if [ "$return_code" -eq 0 ]; then
         $BIN/v-add-dns-domain $user $domain $ip
-        retun_code=$?
+        return_code=$?
     fi
 fi
 
 # Mail domain
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    if [ "$retun_code" -eq 0 ]; then
+    if [ "$return_code" -eq 0 ]; then
         $BIN/v-add-mail-domain $user $domain
-        retun_code=$?
+        return_code=$?
     fi
 fi
 
@@ -79,4 +81,4 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-exit $retun_code
+exit $return_code

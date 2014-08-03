@@ -1,7 +1,7 @@
 <?php
 /**
  * Vesta language file
- * French Translation
+ * French Translation https://github.com/nhoway
  */
 
 $LANG['fr'] = array(
@@ -27,7 +27,7 @@ $LANG['fr'] = array(
     'Add Domain'  => 'Ajouter un Domaine',
     'Add Web Domain'  => 'Ajouter un Domaine',
     'Add DNS Domain'  => 'Ajouter un DNS',
-    'Add DNS Record'  => 'Ajouter un Enregistrement DNS',
+    'Add DNS Record'  => 'Ajouter un DNS',
     'Add Mail Domain'  => 'Ajouter un Domaine',
     'Add Mail Account'  => 'Ajouter un Compte',
     'Add Database'  => 'Ajouter une BDD',
@@ -38,6 +38,7 @@ $LANG['fr'] = array(
     'Add Package'  => 'Ajouter un Paquet',
     'Add IP'  => 'Ajouter une IP',
     'Search'  => 'Rechercher',
+    'Add one more FTP Account' => 'Ajouter un autre Compte FTP',
     'Overall Statistics'  => 'Statistiques Générales',
     'Daily'  => 'Quotidien',
     'Weekly'  => 'Hebdomadaire',
@@ -158,7 +159,7 @@ $LANG['fr'] = array(
     'IP Addresses'  => 'Adresses IP',
     'Backups'  => 'Sauvegardes',
     'Backup System'  => 'Système de Sauvegarde',
-    'backup exclusions' => 'exclusions de la sauvegarde',
+    'backup exclusions' => 'exclusions',
     'template'  => 'template',
     'SSL Support'  => 'Support SSL',
     'SSL Home Directory'  => 'Racine SSL',
@@ -291,8 +292,8 @@ $LANG['fr'] = array(
     'day of week'  => 'jour de la semaine',
     'cmd'  => 'cmd',
     'users'  => 'utilisateurs',
-	'disk'  => 'disque',
-	'traffic' => 'traffic',
+    'disk'  => 'disque',
+    'traffic' => 'traffic',
     'domains'  => 'domaines',
     'aliases'  => 'alias',
     'records'  => 'enregistrements',
@@ -331,7 +332,7 @@ $LANG['fr'] = array(
     'City / Locality' => 'Ville',
     'Organization' => 'Organisation',
 
-   '1 account'  => '1 compte',
+    '1 account'  => '1 compte',
     '%s accounts'  => '%s comptes',
     '1 domain'  => '1 domaine',
     '%s domains'  => '%s domaines',
@@ -394,6 +395,7 @@ $LANG['fr'] = array(
     'DELETE_EXCLUSION_CONFIRMATION' => 'Êtes-vous sûr de vouloir supprimer l\'exclusion %s ?',
     'DELETE_PACKAGE_CONFIRMATION'  => 'Êtes-vous sûr de vouloir supprimer le paquet %s ?',
     'DELETE_IP_CONFIRMATION'  => 'Êtes-vous sûr de vouloir supprimer l\'adresse IP %s ?',
+    'RESTART_CONFIRMATION' => 'Êtes-vous sûr de vouloir redémarrer le serveur %s ?',
     'Welcome'  => 'Bienvenue',
     'LOGGED_IN_AS'  => 'Connecté en tant que %s',
     'Error'  => 'Erreur',

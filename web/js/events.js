@@ -102,7 +102,7 @@ VE.helpers.createConfirmationDialog = function(elm, dialog_title, confirmed_loca
             $(this).dialog("destroy");
         },
         buttons: {
-            "Ok": function(event, ui) {
+            "OK": function(event, ui) {
                  location.href = confirmed_location_url;
             },
             "Cancel": function() {

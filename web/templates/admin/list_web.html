@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 10px">
+                    <td class="wrapper">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/web/'"> <?php print __('Add Web Domain');?> </button>
                         </div>
@@ -57,7 +57,18 @@
                         $ftp_user='no';
                         if (!empty($data[$key]['FTP_USER'])) {
                             $ftp_user=$data[$key]['FTP_USER'];
+
                         }
+                        if (strlen($ftp_user) > 16 ) {
+                            $ftp_user = str_replace(':', ', ', $ftp_user);
+                            $ftp_user = substr($ftp_user, 0, 16);
+                            $ftp_user = trim($ftp_user, ":");
+                            $ftp_user = str_replace(':', ', ', $ftp_user);
+                            $ftp_user = $ftp_user.", ...";
+                        } else {
+                            $ftp_user = str_replace(':', ', ', $ftp_user);
+                        }
+
                         $proxy_support='no';
                         if (!empty($data[$key]['PROXY'])) {
                             $proxy_support='yes';
@@ -73,7 +84,7 @@
                             $proxy_ext = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
                         }
                     ?> 
-                <tr class="data-row">
+                <tr class="data-row <? if($status == 'suspended') echo 'suspended';?>">
                     <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo $key ?>" ></td></tr>
@@ -120,7 +131,7 @@
                         ?> 
                         <a href="http://<?php echo $key ?>/vstats/"  target="_blank" class="data-controls">
                             <span>
-                                <img src="/images/new_window.png" width="8px" height="8px">
+                                <img src="/images/stats.png" width="8px" height="8px">
                                 <?php print __('open webstats');?> 
                             </span>
                         </a>
@@ -144,14 +155,14 @@
                                         <tr>
                                             <td class="chart1" style="padding: 8px 0 0 0">
                                                 <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?> 
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
                                                     <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="chart1" style="padding: 4px 0 0 0"><?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
                                                     <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                             </div>
                                             </td>

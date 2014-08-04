@@ -62,7 +62,7 @@
                     <td class="data-dotted">
                     <table class="data-col2" width="600px">
                         <tr>
-                            <td class="vst-text" style="padding: 24px 0 0 0;">
+                            <td class="vst-text step-top input-label">
                                 <?php print __('Account');?>
                             </td>
                         </tr>
@@ -74,17 +74,17 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                            <td class="vst-text input-type input-label">
                                 <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password; ?>
+                                <input type="text" size="20" class="vst-input password" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password; ?>
                             </td>
                          </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                            <td class="vst-text input-type input-label">
                                 <?php print __('Quota');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('in megabytes');?>)</span>
                             </td>
                         </tr>
@@ -94,7 +94,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                            <td class="vst-text input-type input-label">
                                 <?php print __('Aliases');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('use local-part');?>)</span>
                             </td>
                         </tr>
@@ -104,7 +104,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
+                            <td class="vst-text input-type input-label">
                                 <?php print __('Forward to');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('one or more email addresses');?>)</span>
                             </td>
                         </tr>
@@ -114,27 +114,17 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
-                                <?php print __('Do not store forwarded mail');?>
+                            <td class="vst-text input-type input-label">
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>> <?php print __('Do not store forwarded mail');?></label>
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <input type="checkbox" size="20" class="vst-checkbox" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>>
+                            <td class="vst-text input-type input-label">
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_autoreply" <?php if ($v_autoreply == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('autoreplytable');"> <?php print __('Autoreply');?></label>
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text" style="padding: 12px 0 0 0;">
-                                <?php print __('Autoreply');?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" size="20" class="vst-checkbox" name="v_autoreply" <?php if ($v_autoreply == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('autoreplytable');">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
+                            <td class="step-left">
                                 <table style="display:<?php if ($v_autoreply == 'no') { echo 'none';} else {echo 'block';}?> ;" id="autoreplytable">
                                     <tr>
                                         <td class="vst-text" style="padding: 12px 0 0 0;">
@@ -152,10 +142,10 @@
                     </table>
                     <table class="data-col2">
                         <tr>
-                            <td style="padding: 24px 0 0 0;" width="116px">
+                            <td class="step-top" width="116px">
                                 <input type="submit" name="save" value="<?php print __('Save');?>" class="button">
                             </td>
-                            <td style="padding: 24px 0 0 0;">
+                            <td class="step-top">
                                 <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                             </td>
                         </tr>

@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 10px">
+                    <td class="wrapper">
                         <div class="submenu-search-block">
                             <form action="/search/" method="get">
                             <input type="text" name="q" class="submenu-search-field">
@@ -26,7 +26,7 @@
 
         <div id="vstobjects">
             <table class='data'>
-                <tr class="data-row"">
+                <tr class="data-row">
                     <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="system[]" value="<?php echo $sys['sysinfo']['HOSTNAME'] ?>" ></td></tr>
@@ -34,15 +34,19 @@
                         </table>
                     </td>
                     <td class="data-dotted">
-                        <a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>" class="data-controls">
-                            <span>
+                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                            <span class="do_delete">
                                 <img src="/images/reload.png" width="6px" height="7px">
-                                <?php print __('restart'); ?> 
+                                 <?php print __('restart');?> 
+                                <input type="hidden" name="delete_url" value="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME']?>" />
+                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                    <p class="counter-value"><?php print __('RESTART_CONFIRMATION',$sys['sysinfo']['HOSTNAME']);?></p>
+                                </div>
                             </span>
                         </a>
                         <table class="data-col2">
                             <tr>
-                                <td colspan=4 class="domain">
+                                <td colspan=4 class="domain hostname">
                                     <b><?php echo $sys['sysinfo']['HOSTNAME'] ?></b>
                                 </td>
                             </tr>
@@ -108,7 +112,7 @@
                         if ($cpu == '0.0')  $cpu = 0;
                     ?>
 
-                <tr class="data-row">
+                <tr class="data-row <?=$status?>">
                     <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="service[]" value="<?php echo $key ?>" ></td></tr>
@@ -131,12 +135,12 @@
 
                         <table class="data-col2">
                             <tr>
-                                <td colspan=4 class="domain">
+                                <td colspan=4 class="domain step-left">
                                     <b><?php echo $key ?></b>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:top;" width="239px">
+                                <td class="step-left" style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">

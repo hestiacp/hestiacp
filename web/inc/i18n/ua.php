@@ -4,9 +4,9 @@
  * COLOBOCman (colobocman@gmail.com)
  * Alex Connor (alex_connor@icloud.com)
  */
- 
+
 $LANG['ua'] = array(
- 
+
     'Packages' => 'Пакети',
     'IP' => 'IP',
     'Graphs' => 'Графіки',
@@ -16,7 +16,7 @@ $LANG['ua'] = array(
     'Updates' => 'Оновлення',
     'Log in' => 'Увійти',
     'Log out' => 'Вийти',
- 
+
     'USER' => 'USER',
     'WEB' => 'WEB',
     'DNS' => 'DNS',
@@ -24,7 +24,7 @@ $LANG['ua'] = array(
     'DB' => 'DB',
     'CRON' => 'CRON',
     'BACKUP' => 'BACKUP',
- 
+
     'Add User' => 'Додати акаунт',
     'Add Domain' => 'Додати домен',
     'Add Web Domain' => 'Додати WEB домен',
@@ -39,6 +39,7 @@ $LANG['ua'] = array(
     'Restore All'  => 'Відновити все',
     'Add Package' => 'Додати пакет',
     'Add IP' => 'Додати IP',
+    'Add one more FTP Account' => 'Додати ще один FTP акаунт',
     'Search' => 'Пошук',
     'Overall Statistics' => 'Загальна статистика',
     'Daily' => 'Щоденні',
@@ -49,7 +50,7 @@ $LANG['ua'] = array(
     'Back' => 'Назад',
     'Save' => 'Зберегти',
     'Submit' => 'Відправити',
- 
+
     'toggle all' => 'виділити все',
     'apply to selected' => 'застосувати до вибраних',
     'rebuild' => 'перестворити',
@@ -86,7 +87,7 @@ $LANG['ua'] = array(
     'reread IP' => 'оновити IP',
     'enable autoupdate' => 'увімкнути автооновлення',
     'disable autoupdate' => 'вимкнути автооновлення',
- 
+
     'Adding User' => 'Додавання акаунту',
     'Editing User' => 'Редагування акаунту',
     'Adding Domain' => 'Додавання домену',
@@ -111,7 +112,7 @@ $LANG['ua'] = array(
     'Generating CSR' => 'Генерування CSR запиту',
     'Listing' => 'Список',
     'Search Results' => 'Результати пошуку',
- 
+
     'active' => 'активне',
     'spnd' => 'заблоковано',
     'suspended' => 'заблокований',
@@ -119,7 +120,7 @@ $LANG['ua'] = array(
     'stopped' => 'зупинений',
     'outdated' => 'застарілий',
     'updated' => 'оновлений',
- 
+
     'yes' => 'так',
     'no' => 'ні',
     'none' => 'нема',
@@ -356,7 +357,7 @@ $LANG['ua'] = array(
     '1 object' => 'об`єктів на сторінці: 1',
     '%s objects' => 'об`єктів на сторінці: %s',
     'no exclusions' => 'немає виключень',
- 
+
     'USER_CREATED_OK' => 'Аккаунт <a href="/edit/user/?user=%s"><b>%s</b></a> успішно створено',
     'WEB_DOMAIN_CREATED_OK' => 'Домен <a href="/edit/web/?domain=%s"><b>%s</b></a> успішно створено.',
     'DNS_DOMAIN_CREATED_OK' => 'Домен <a href="/list/dns/?domain=%s"><b>%s</b></a> успішно створено.',
@@ -394,6 +395,7 @@ $LANG['ua'] = array(
     'DELETE_EXCLUSION_CONFIRMATION' => 'Ви впевнені, що хочете видалити вийняток %s?',
     'DELETE_PACKAGE_CONFIRMATION' => 'Ви впевнені, що хочете видалити пакет %s?',
     'DELETE_IP_CONFIRMATION' => 'Ви впевнені, що хочете видалити IP адресу %s?',
+    'RESTART_CONFIRMATION' => 'Ви впевнені, що хочете перезапустити %s?',
     'Welcome' => 'Ласкаво просимо',
     'LOGGED_IN_AS' => 'Ви увійшли як користувач %s',
     'Error' => 'Помилка',
@@ -417,19 +419,19 @@ $LANG['ua'] = array(
     'DB_EXCLUSIONS' => "Вкажіть бази по одній на рядок. Для того, щоб виключити всі, використовуйте *",
     'CRON_EXCLUSIONS' => "Для того, щоб виключити всі завдання, використовуйте *",
     'USER_EXCLUSIONS' => "Вкажіть теки по одній на рядок. Для того, щоб виключити всі, використовуйте *",
- 
+
     'Welcome to Vesta Control Panel' => 'Вітаємо в панелі керування Vesta',
     'MAIL_FROM' => 'Vesta Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Вітаємо, %s %s,\n",
     'GREETINGS' => "Вітаємо,\n",
     'ACCOUNT_READY' => "Ваш аккаунт успішно створений і готовий до використання.\n\nhttps://%s/login/\nІм`я користувача: %s\nПароль: %s\n\n--\nПанель керування Vesta\n",
- 
+
     'FTP login credentials' => 'Дані доступу до FTP',
     'FTP_ACCOUNT_READY' => "FTP аккаунт успішно створений і готовий до використання.\n\nХост: %s\nІм`я користувача: %s_%s\nПароль: %s\n\n--\nПанель керування Vesta\n",
- 
+
     'Database Credentials' => 'Дані доступу до БД',
     'DATABASE_READY' => "База даних успішно створена.\n\nБаза даних: %s\nКористувач: %s\nПароль: %s\n%s\n\n--\nПанель керування Vesta\n",
- 
+
     'forgot password' => 'нагадати',
     'Confirm' => 'Підтвердити',
     'New Password' => 'Новий пароль',

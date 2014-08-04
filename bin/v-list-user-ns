@@ -21,7 +21,7 @@ json_list_ns() {
     ns=$(grep "^NS='" $USER_DATA/user.conf |cut -f 2 -d \')
     echo '['
     i=1
-    nslistc=$(echo -e "${ns//,/\n}"|wc -l)
+    nslistc=$(echo -e "${ns//,/\\n}"|wc -l)
     for nameserver in ${ns//,/ };do
         if [ "$i" -ne "$nslistc" ]; then
             echo -e  "\t\"$nameserver\","

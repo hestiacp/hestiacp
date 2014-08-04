@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 10px">
+                    <td class="wrapper">
                         <div style="submenu-button-block">
                             <a style="float:left; font-size: 16pt; color: #555;"><b><?php print __('Search Results');?></b></a>
                         </div>
@@ -35,7 +35,7 @@
                         }
                 ?>
 
-                <tr class="data-row">
+                <tr class="data-row <? if($status == 'suspended') echo 'suspended';?>">
                     <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>

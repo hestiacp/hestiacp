@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 10px">
+                    <td class="wrapper">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/cron/'"> <?php print __('Add Cron Job');?> </button>
                         </div>
@@ -42,7 +42,7 @@
                         }
                 ?> 
 
-                <tr class="data-row">
+                <tr class="data-row <? if($status == 'suspended') echo 'suspended';?>">
                     <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="job[]" value="<?php echo $data[$key]['JOB'] ?>" ></td></tr>

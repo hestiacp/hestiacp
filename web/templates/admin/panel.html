@@ -15,9 +15,11 @@
                     <a class="top-logout" href="/logout/"> <?php print __('Log out') ?> </a>
                 </span>
             </div>
-            <div style="display:block; float:left;">
+            <div class="main-menu">
                 <span class="nav-logo">
-                    <img style="margin: 30px 0 0 10px;" src="/images/logo.png">
+                    <div class="logo-container">
+                        <img src="/images/logo.png">
+                    </div>
                 </span>
 
                 <a class="nav-lnk" href="/list/user/">
@@ -29,9 +31,10 @@
                         <?php print __('users');?>: <? echo $panel[$user]['U_USERS'] ?><br>
                         <?php print __('spnd');?>: <? echo $panel[$user]['SUSPENDED_USERS']?> 
                     </p>
+                    <p class="marker"></p>
                 </span>
-
                 </a>
+
                 <a class="nav-lnk" href="/list/web/">
                 <span class="nav-<?php if($TAB == 'WEB' ) echo 'selected-' ?>block">
                     <p class="nav-<?php if($TAB == 'WEB' ) echo 'selected-' ?>header">
@@ -42,6 +45,7 @@
                         <?php print __('aliases');?>: <? echo $panel[$user]['U_WEB_ALIASES']?><br>
                         <?php print __('spnd');?>: <? echo $panel[$user]['SUSPENDED_WEB']?> 
                     </p>
+                    <p class="marker"></p>
                 </span>
                 </a>
 
@@ -55,6 +59,7 @@
                         <?php print __('records');?>: <? echo $panel[$user]['U_DNS_RECORDS']?><br>
                         <?php print __('spnd');?>: <? echo $panel[$user]['SUSPENDED_DNS']?> 
                     </p>
+                    <p class="marker"></p>
                 </span>
                 </a>
 
@@ -68,6 +73,7 @@
                         <?php print __('accounts');?>: <? echo $panel[$user]['U_MAIL_ACCOUNTS']?><br>
                         <?php print __('spnd');?>: <? echo $panel[$user]['SUSPENDED_MAIL']?> 
                     </p>
+                    <p class="marker"></p>
                 </span>
                 </a>
 
@@ -80,6 +86,7 @@
                         <?php print __('databases');?>: <? echo $panel[$user]['U_DATABASES']?><br>
                         <?php print __('spnd');?>: <? echo $panel[$user]['SUSPENDED_DB']?> 
                     </p>
+                    <p class="marker"></p>
                 </span>
                 </a>
 
@@ -92,6 +99,7 @@
                         <?php print __('jobs');?>: <? echo $panel[$user]['U_CRON_JOBS']?><br>
                         <?php print __('spnd');?>: <? echo $panel[$user]['SUSPENDED_CRON']?> 
                     </p>
+                    <p class="marker"></p>
                 </span>
                 </a>
 
@@ -103,6 +111,7 @@
                     <p class="nav-counters">
                         <?php print __('backups');?>: <? echo $panel[$user]['U_BACKUPS']?><br>
                     </p>
+                    <p class="marker"></p>
                 </span>
                 </a>
             </div>

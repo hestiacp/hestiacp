@@ -66,7 +66,7 @@ var Templator = function()
     {
         'undefined' == typeof App.Templates._indexes[key] ? App.Templates._indexes[key] = {} : false;
         'undefined' == typeof App.Templates._indexes[key][ref_key] ?
-		App.Templates._indexes[key][ref_key] = {} : false;
+        App.Templates._indexes[key][ref_key] = {} : false;
 
         jQuery(tpl).each(function(index, o) {
             if (':' == o.charAt(0)) {
@@ -84,8 +84,8 @@ var Templator = function()
 
 Templator.getTemplate = function(ns, key){
     return [
-		App.Templates._indexes[ns][key],
-		App.Templates.html[ns][key].slice(0)
+        App.Templates._indexes[ns][key],
+        App.Templates.html[ns][key].slice(0)
     ];
 }
 // init templator

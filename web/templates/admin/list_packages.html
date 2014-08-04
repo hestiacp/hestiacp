@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 10px">
+                    <td class="wrapper">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/package/'"> <?php print __('Add Package');?> </button>
                         </div>
@@ -82,7 +82,7 @@
                                         <tr>
                                             <td class="chart1" colspan=2 style="padding: 8px 0 0 0">
                                                 <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['BANDWIDTH']) ?> 
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
                                                     <div style="width:0%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>
@@ -90,7 +90,7 @@
                                         <tr>
                                             <td class="chart1" colspan=2>
                                                 <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['DISK_QUOTA']) ?> 
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#c7d5b3;">
+                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
                                                     <div style="width:0%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
                                                 </div>
                                             </td>

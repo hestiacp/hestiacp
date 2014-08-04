@@ -1,6 +1,6 @@
             <table class="submenu">
                 <tr>
-                    <td style="padding: 14px 10px">
+                    <td class="wrapper">
                         <div class="submenu-button-block">
                             <button class="submenu-button-main" onclick="location.href='/add/dns/'"> <?php print __('Add DNS Domain');?> </button>
                         </div>
@@ -40,7 +40,7 @@
                             $spnd_confirmation = 'SUSPEND_DOMAIN_CONFIRMATION' ;
                         }
                 ?> 
-                <tr class="data-row">
+                <tr class="data-row <? if($status == 'suspended') echo 'suspended';?>">
                     <td class="data-dotted">
                         <table class="data-col1">
                             <tr><td><input type="checkbox" class="ch-toggle" name="domain[]" value="<?php echo $key ?>" ></td></tr>

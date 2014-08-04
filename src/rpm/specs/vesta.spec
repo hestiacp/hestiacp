@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        9
+Release:        10
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -55,6 +55,36 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Mon Aug 4 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-10
+- New Design
+- MultiFTP Support
+- Exim Queue Chart
+- Arabic Language file. Thanks to Bashar Al-Abdulhadi http://bashar.com
+- Italian Language Support. Thanks to Fabio Cagliero http://webnuvola.com
+- Finnish Languge Support. Thanks to Juho Räsänen and Onni Hakala https://github.com/RJuho http://koodimonni.fi
+- French Language Support. Thanks to nhoway https://github.com/nhoway
+- Hungarian Language Support. Thanks to Kovacs Akos http://kovacsakos.info
+- Improved SSL CA Validation
+- Detailed report on mysql dump error
+- Restart Confirmation Dialogue
+- Autorefresh Module for Graphs
+- Switched service manager from init.d to service command
+- Switched free memeory rrd overlay style to linear
+- Updated nginx extention list. Thanks to Vasily Kraev https://github.com/vasilykraev
+- Updated skel templates. Thanks to Jason Hanes https://github.com/square-orange
+- Urlencoder for DNS Cluster API
+- Fixed dnsbl+authentication router. Thanks to Mirek Kratochvil http://e-x-a.org/
+- Fix for tar < 1.24 to preserve directory ownership
+- Fixed autoupdate script. Thanks to Kijamve
+- Fixed some spelling errors. Thanks to Estratos Consulting
+- Fixed backup exclusion for cron objects
+- Fixed MySQL autostart issue on Ubuntu 14.04
+- Fixed Awstats template parser for Ubuntu 14.04
+- Fixed NameServer validation bug
+- Fixed FS-Quota conversion. Thanks to demlasjr https://github.com/demlasjr
+- Fixed spelling. Thanks to Jakub Ďuraš https://github.com/jlamer, Kotso https://github.com/kotso, Dustin Dauncey http://www.dustindauncey.com
+
+
 * Sun May 18 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-9
 - File System Quota support
 - Norwegian translation. Thanks to Helge Sverre

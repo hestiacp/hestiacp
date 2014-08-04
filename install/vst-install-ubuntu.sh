@@ -484,6 +484,11 @@ if [ "$srv_type" = 'micro' ]; then
     rm -f /usr/local/vesta/data/templates/web/apache2/phpfcgid.*
 fi
 
+# Removing CGI templates
+if [ "$codename" = 'trusty' ]; then
+    rm -f /usr/local/vesta/data/templates/web/apache2/phpcgi.*
+fi
+
 # Generating SSL certificate
 $VESTA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
      'San Francisco' 'Vesta Control Panel' 'IT' > /tmp/vst.pem

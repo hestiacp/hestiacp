@@ -10,7 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.vestacp.com'
 CHOST='c.vestacp.com'
 VERSION='0.9.8/debian'
-software="nginx apache2 apache2-utils apache2.2-common bsdutils
+software="nginx apache2 apache2-utils apache2.2-common bsdutils e2fsprogs
     apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
     libapache2-mod-fcgid bind9 idn mysql-server mysql-common
     mysql-client php5-common php5-cgi php5-mysql php5-curl

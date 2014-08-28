@@ -10,7 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.vestacp.com'
 CHOST='c.vestacp.com'
 VERSION='0.9.8/ubuntu'
-software="nginx apache2 apache2-utils apache2-suexec-custom bsdutils
+software="nginx apache2 apache2-utils apache2-suexec-custom bsdutils e2fsprogs
     libapache2-mod-ruid2 libapache2-mod-rpaf libapache2-mod-fcgid bind9 idn
     mysql-server mysql-common mysql-client php5-common php5-cgi php5-mysql
     php5-curl libapache2-mod-php5 vsftpd mc exim4 exim4-daemon-heavy

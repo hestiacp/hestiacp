@@ -634,7 +634,7 @@ label {
 .data-date {
     letter-spacing: 0.3em;
     font-size: 8pt;
-    color: #6a6a6a
+    color: #333;
 }
 
 .data-active {
@@ -669,6 +669,7 @@ label {
 .data-controls:hover {
     color: #fff;
     background-color: #f79b44;
+    border-left: 1px solid #f79b44;
 }
 
 .data-controls:active {
@@ -691,26 +692,47 @@ label {
     padding: 20px 0 20px 174px;
 }
 
-.chart1 {
-    color:#000;
+.chart {
+    color: #222;
     font-size: 10pt;
+    padding: 4px 0;
 }
 
-.chart2 {
-    color: #484243;
+.mini-info {
+    color: #222;
     font-size: 8pt;
+    padding: 4px 0 4px 1px;
+}
+
+.bar {
+    width:160px;
+    height:7px;
+    font-size:0;
+    background-color: #d0d0d0;
+}
+
+.fill {
+    height:7px;
+    background-color: #8bc34a;
+    border-right: 1px #8bc34a solid;
+}
+
+.mini {
+    height:5px;
 }
 
 .username {
     color: #222;
-    font-size: 14pt;
-    padding: 1px 0 2px 0;
+    font-size: 16pt;
+    font-weight: bold;
+    padding: 1px 0 0 0;
 }
 
 .domain {
-    color: #222;
-    font-size: 14pt;
-    padding: 1px 0 2px 0;
+    color: #333;
+    font-size: 16pt;
+    padding: 2px 0 2px 0;
+    font-weight: bold;
 }
 
 .suspended .domain {
@@ -735,8 +757,9 @@ label {
 
 .aliases {
     font-size: 12pt;
-    color: #99a7af;
+    color: #90a4ae;
     padding: 0 0 0 8px;
+    font-weight: normal;
 }
 
 .nginx-ext {
@@ -746,22 +769,22 @@ label {
 }
 
 .fullname {
-    font-size: 18px;
-    color: #99a7af;
-    padding: 0 0 0 8px;
+    font-size: 12pt;
+    font-weight: normal;
+    color: #90a4ae;
 }
 
 .counter-name {
-    white-space: nowrap;
-    vertical-align:top;
+    vertical-align: top;
     line-height: 1.2em;
     font-size: 10pt;
     color: #222;
     padding: 2px 4px 1px 0;
+    white-space: nowrap;
 }
 
 .cron-counter-name {
-    vertical-align:top;
+    vertical-align: top;
     line-height: 0.8em;
     font-size: 8pt;
     padding: 4px 0 0 0;
@@ -769,7 +792,7 @@ label {
 }
 
 .counter-value {
-    vertical-align:top;
+    vertical-align: top;
     line-height: 1.2em;
     font-size: 10pt;
     color: #222;
@@ -797,7 +820,7 @@ label {
 
 .vst-ok {
     font-size: 12pt;
-    color: #33691e;
+    color: #558b2f;
     padding: 4px;
 }
 

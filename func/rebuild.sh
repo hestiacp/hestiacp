@@ -16,7 +16,7 @@ rebuild_user_conf() {
 
     # Run template trigger
     if [ -x "$VESTA/data/packages/$PACKAGE.sh" ]; then
-        $VESTA/data/packages/$package.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
+        $VESTA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
     fi
 
     # Rebuild user

@@ -60,8 +60,8 @@
                         </a>
                         <table class="data-col2">
                             <tr>
-                                <td colspan=3 class="username">
-                                    <b><?php echo $key?></b>
+                                <td colspan=3 class="domain">
+                                    <?php echo $key?>
                                 </td>
                             </tr>
                             <tr>
@@ -79,26 +79,10 @@
                                             <td class="counter-name"><?php print __('DNS Template');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['DNS_TEMPLATE'] ?> </td>
                                         </tr>
-                                        <tr>
-                                            <td class="chart1" colspan=2 style="padding: 8px 0 0 0">
-                                                <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['BANDWIDTH']) ?> 
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
-                                                    <div style="width:0%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                </div>
-                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td class="chart1" colspan=2>
-                                                <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['DISK_QUOTA']) ?> 
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
-                                                    <div style="width:0%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
-                                                </div>
-                                            </td>
+                                            <td class="counter-name"><?php print __('SSH Access');?>:</td>
+                                            <td class="counter-value"><?php echo $data[$key]['SHELL'] ?></td>
                                         </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="297px">
-                                    <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('Web Domains');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['WEB_DOMAINS'] ?> </td>
@@ -107,6 +91,10 @@
                                             <td class="counter-name"><?php print __('Web Aliases');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['WEB_ALIASES'] ?> <?php print __('per domain');?> </td>
                                         </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;" width="238px">
+                                    <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('DNS domains');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['DNS_DOMAINS'] ?> </td>
@@ -115,14 +103,6 @@
                                             <td class="counter-name"><?php print __('DNS records');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['DNS_RECORDS'] ?> <?php print __('per domain');?> </td>
                                         </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Name Servers');?>:</td>
-                                            <td class="counter-value"><?php echo str_replace(',', '<br>',$data[$key]['NS']) ?> </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('Mail Domains');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['MAIL_DOMAINS'] ?> </td>
@@ -138,13 +118,25 @@
                                         <tr>
                                             <td class="counter-name"><?php print __('Cron Jobs');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['CRON_JOBS'] ?> </td>
-                                        </tr>
-                                            <td class="counter-name"><?php print __('SSH Access');?>:</td>
-                                            <td class="counter-value"><?php echo $data[$key]['SHELL'] ?></td>
-                                        </tr>
                                         <tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;">
+                                    <table>
                                             <td class="counter-name"><?php print __('Backups');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['BACKUPS'] ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Bandwidth');?>:</td>
+                                            <td class="counter-value"><?php echo humanize_usage($data[$key]['BANDWIDTH']) ?> </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Disk');?>:</td>
+                                            <td class="counter-value"><?php echo humanize_usage($data[$key]['DISK_QUOTA']) ?> </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Name Servers');?>:</td>
+                                            <td class="counter-value"><?php echo str_replace(',', '<br>',$data[$key]['NS']) ?> </td>
                                         </tr>
                                     </table>
                                 </td>

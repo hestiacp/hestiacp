@@ -77,10 +77,12 @@
                                 <?php print __('list records',$data[$key]['RECORDS']); ?> 
                             </span>
                         </a>
+
                         <table class="data-col2">
                             <tr>
                                 <td colspan=3 class="domain">
-                                    <b><?php echo $key ?></b>
+                                    <?php echo $key ?>
+                                    <a class="aliases"> <?php if(!empty($data[$key]['SRC'])) echo "⇢ ".$data[$key]['SRC'] ?></a>
                                 </td>
                             </tr>
                             <tr>
@@ -92,25 +94,12 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="counter-name">
-                                                <?php print $data[$key]['SRC'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="297px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Template') ?>:</td>
-                                            <td class="counter-value"><?php echo $data[$key]['TPL'] ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('SOA') ?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['SOA'] ?></td>
                                         </tr>
+
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;">
+                                <td style="vertical-align:top;" width="238px">
                                     <table>
                                         <tr>
                                             <td class="counter-name"><?php print __('TTL') ?>:</td>
@@ -119,6 +108,14 @@
                                         <tr>
                                             <td class="counter-name"><?php print __('Expire');?>:</td>
                                             <td class="counter-value"><?php echo strftime("%d %b %Y", strtotime($data[$key]['EXP'])) ?></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align:top;">
+                                    <table>
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Template') ?>:</td>
+                                            <td class="counter-value"><?php echo $data[$key]['TPL'] ?></td>
                                         </tr>
                                     </table>
                                 </td>

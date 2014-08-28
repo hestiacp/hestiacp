@@ -56,23 +56,23 @@
                                 <td style="vertical-align:top;" width="239px">
                                     <table>
                                         <tr>
-                                            <td class="chart1" colspan=2 style="padding: 14px 0 0 0px;">
-                                                <?php print __('Bandwidth');?>: <?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>% (<?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>)
-                                                <div style="width:160px; height:7px; font-size:0;background-color:#ddd;">
-                                                    <div style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%; height:8px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                            <td class="chart" colspan=2" style="padding: 10px 0 0 0">
+                                                <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>
+                                                <div class="bar" title="<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%">
+                                                    <div class="fill" style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%;"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="chart1" colspan=2>
-                                                <?php print __('Disk');?>: <?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>% (<?php echo humanize_usage($data[$key]['U_DISK']) ?>)
-                                                <div style="width:160px; height:8px; font-size:0;background-color:#ddd;">
-                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%; height:8px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                            <td class="chart" colspan=2>
+                                                <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
+                                                <div class="bar" title="<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%">
+                                                    <div class="fill" style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="chart1" colspan=2 style="padding: 4px 0 0 0;">
+                                            <td class="mini-info" colspan=2>
                                                 <table class="chart2">
                                                     <tr>
                                                         <td>
@@ -95,7 +95,7 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="297px">
+                                <td style="vertical-align:top;" width="238px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">

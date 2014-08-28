@@ -86,21 +86,27 @@
                             </span>
                         </a>
                         <table class="data-col2">
-                            <tr><td colspan=3 class="domain"><b><?php echo $key."@".$_GET['domain'] ?></b> <a class="aliases"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
+                            <tr>
+                                <td colspan=3 class="domain">
+                                    <?php echo $key."@".$_GET['domain'] ?> 
+                                    <a class="aliases"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a>
+                                </td>
+                            </tr>
                             <tr>
                                 <td style="vertical-align:top;" width="239px">
                                     <table>
+                                        <tr><td colspan=2><div style="height:10px;"></div></td></tr>
                                         <tr>
-                                            <td class="chart1" style="padding: 4px 0 0 0">
+                                            <td class="chart">
                                                 <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?> 
-                                                <div style="width:160px; height:6px; font-size:0;background-color:#ddd;">
-                                                    <div style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%; height:6px; background-color:#9bbb62; border-right:1px #9bbb62 solid;"></div>
+                                                <div class="bar mini" title="<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%">
+                                                    <div class="fill mini" style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA']) ?>%"></div>
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td style="vertical-align:top;" width="297px">
+                                <td style="vertical-align:top;" width="238px">
                                     <table>
                                         <tr>
                                             <td class="counter-name">

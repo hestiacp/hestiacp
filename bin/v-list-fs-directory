@@ -33,7 +33,7 @@ else
 fi
 
 # Listing files
-find "$path" -maxdepth 1 -printf "%y/%m/%TY-%Tm-%Td/%TH:%TM:%TS/%u/%g/%s/%P\n"
+find "$path" -maxdepth 1 -printf "%y|%m|%TY-%Tm-%Td|%TH:%TM:%TS|%u|%g|%s|%P\n"
 
 
 exit

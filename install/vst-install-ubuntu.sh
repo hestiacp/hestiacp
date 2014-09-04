@@ -605,7 +605,6 @@ if [ -z "$mpass" ]; then
 fi
 
 # MySQL configuration
-mpass=$(gen_pass)
 wget $CHOST/$VERSION/my.cnf -O /etc/mysql/my.cnf
 mysql_install_db
 if [ "$release" != '14.04' ]; then

@@ -518,7 +518,9 @@ echo "/sbin/nologin" >> /etc/shells
 
 # Sudo configuration
 wget $CHOST/$VERSION/sudoers.conf -O /etc/sudoers
-chmod 0440 /etc/sudoers
+wget $CHOST/$VERSION/sudoers.admin.conf -O /etc/sudoers.d/admin
+chmod 440 /etc/sudoers
+chmod 440 /etc/sudoers.d/admin
 
 # NTP Synchronization
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate

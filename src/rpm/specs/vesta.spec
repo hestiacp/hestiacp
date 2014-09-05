@@ -43,7 +43,9 @@ if [ $1 -ge 2 ]; then
     if [ -e /usr/local/vesta/upd/fix_vesta_ssl_permissions.sh ]; then
         /usr/local/vesta/upd/fix_vesta_ssl_permissions.sh
     fi
-fi
+    if [ -e /usr/local/vesta/upd/add_sudo.sh ]; then
+        /usr/local/vesta/upd/add_sudo.sh
+    fi
 
 %files
 %{_vestadir}

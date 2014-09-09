@@ -262,7 +262,8 @@ if (!empty($_POST['ok'])) {
                 $v_ftp_password = escapeshellarg($v_ftp_user_data['v_ftp_password']);
 
                 if ($domain_added) {
-                    exec (VESTA_CMD."v-add-web-domain-ftp ".$user." ".$v_domain." ".$v_ftp_username." ".$v_ftp_password . " " . $v_ftp_user_data['v_ftp_path'], $output, $return_var);
+                    $v_ftp_path = escapeshellarg(trim($v_ftp_user_data['v_ftp_path']));
+                    exec (VESTA_CMD."v-add-web-domain-ftp ".$user." ".$v_domain." ".$v_ftp_username." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
                     check_return_code($return_var,$output);
                     unset($output);
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {

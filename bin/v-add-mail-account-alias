@@ -45,7 +45,7 @@ is_mail_new "$malias"
 
 # Adding exim alias
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    str="$malias@$domain:$account@$domain"
+    str="$malias@$domain_idn:$account@$domain_idn"
     echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 

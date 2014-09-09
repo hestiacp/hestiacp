@@ -488,7 +488,7 @@ rebuild_mail_domain_conf() {
         # Adding catchall email
         dom_aliases=$HOMEDIR/$user/conf/mail/$domain/aliases
         if [ ! -z "$CATCHALL" ]; then
-            echo "*@$domain:$CATCHALL" >> $dom_aliases
+            echo "*@$domain_idn:$CATCHALL" >> $dom_aliases
         fi
     fi
 
@@ -514,10 +514,10 @@ rebuild_mail_domain_conf() {
             str="$account:$MD5:$user:mail::$HOMEDIR/$user:$QUOTA"
             echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
             for malias in ${ALIAS//,/ }; do
-                echo "$malias@$domain:$account@$domain" >> $dom_aliases
+                echo "$malias@$domain_idn:$account@$domain_idn" >> $dom_aliases
             done
             if [ ! -z "$FWD" ]; then
-                echo "$account@$domain:$FWD" >> $dom_aliases
+                echo "$account@$domain_idn:$FWD" >> $dom_aliases
             fi
             if [ "$FWD_ONLY" = 'yes' ]; then
                 echo "$account" >> $HOMEDIR/$user/conf/mail/$domain/fwd_only

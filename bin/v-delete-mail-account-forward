@@ -57,8 +57,8 @@ fwd=$(echo "$fwd" |\
 
 # Deleting exim forward
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    sed -i "/^$account@$domain:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
-    echo "$account@$domain:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+    sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
+    echo "$account@$domain_idn:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 
 

@@ -55,7 +55,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed contact email to $email"
+log_history "changed language to $language"
 log_event "$OK" "$EVENT"
 
 exit

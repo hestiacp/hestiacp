@@ -1,0 +1,125 @@
+#!/bin/bash
+# info: update system firewall rules
+# options: NONE
+#
+# The function updates iptables rules
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Defining absolute path for iptables and modprobe
+iptables="/sbin/iptables"
+modprobe="/sbin/modprobe"
+
+# Includes
+source /etc/profile.d/vesta.sh
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking local IPv4 rules
+rules="$VESTA/data/firewall/rules_ipv4.conf"
+if [ ! -e "$rules" ]; then
+    exit
+fi
+
+# Checking conntrack module avaiabilty
+$modprobe nf_conntrack >/dev/null 2>&1
+$modprobe nf_conntrack_ftp >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    stateful='no'
+fi
+
+# Creating temporary file
+tmp=$(mktemp)
+
+# Flushing INPUT chain
+echo "$iptables -P INPUT ACCEPT" >> $tmp
+echo "$iptables -F INPUT" >> $tmp
+
+# Pasring iptables rules
+IFS=$'\n'
+for line in $(sort -r -n -k 2 -t \' $rules); do
+    eval $line
+    if [ "$SUSPENDED" = 'no' ]; then
+        chain="-A INPUT"
+        proto="-p $PROTOCOL"
+        port="--dport $PORT"
+        ip="-s $IP"
+        state=""
+        action="-j $ACTION"
+
+        # Adding multiport module
+        if [[ "$PORT" =~ ,|-|: ]] ; then
+            port="-m multiport --dports ${PORT//-/:}"
+        fi
+
+        # Accepting all dst ports
+        if [[ "$PORT" = "0" ]] || [ "$PROTOCOL" = 'ICMP' ]; then
+            port=""
+        fi
+
+        # Checking FTP for contrack module
+        if [ "$TYPE" = "FTP" ] || [ "$PORT" = '21' ]; then
+            if [ "$stateful" != 'no' ]; then
+                state="-m conntrack --ctstate NEW"
+            else
+                port="-m multiport --dports 20,21,12000:12100"
+            fi
+            ftp="yes"
+        fi
+
+        # Adding firewall rule
+        echo "$iptables $chain $proto $port $ip $state $action" >> $tmp
+    fi
+done
+
+# Handling DNS replies
+proto="-p udp"
+port="--sport 53"
+action="-j ACCEPT"
+echo "$iptables $chain $proto $port $state $action" >> $tmp
+
+# Enabling stateful firewall
+if [ "$stateful" != 'no' ]; then
+    proto="-p tcp"
+    state="-m state --state ESTABLISHED,RELATED"
+    action="-j ACCEPT"
+    echo "$iptables $chain $proto $state $action" >> $tmp
+fi
+
+# Switching chain policy to DROP
+echo "$iptables -P INPUT DROP" >> $tmp
+
+# Applying rules
+bash $tmp
+
+# Saving rules to the master iptables file
+if [ -e "/etc/redhat-release" ]; then
+    /sbin/iptables-save > /etc/sysconfig/iptables
+    if [ -z "$(ls /etc/rc3.d/S*iptables 2>/dev/null)" ]; then
+        /sbin/chkconfig iptables on
+    fi
+else
+    sbin/iptables-save > /etc/iptables.up.rules
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

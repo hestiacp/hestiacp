@@ -187,6 +187,18 @@ if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
+# FIREWALL
+service=$FIREWALL_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
+    state="stopped"
+    /sbin/iptables -L vesta >/dev/null 2>&1
+    if [ "$?" -eq 0 ]; then
+        state="running"
+    fi
+    str="$str\nNAME='$FIREWALL_SYSTEM' SYSTEM='firewall'"
+    str="$str STATE='$state' CPU='0' MEM='0' RTIME='0'"
+fi
+
 # Defining config
 echo -e "$str" > $tmp_file
 conf=$tmp_file

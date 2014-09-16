@@ -1,0 +1,89 @@
+#!/bin/bash
+# info: list firewall rule
+# options: RULE [FORMAT]
+#
+# The function of obtaining firewall rule parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+rule=$1
+format=${2-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json function
+json_list_fw_rule() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    line=$(grep "RULE='$rule'" $conf)
+    echo '{'
+    eval $line
+    for field in $fields; do
+        eval value=$field
+        if [ "$i" -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ "$fileds_count" -eq "$i" ]; then
+                echo -e "\t\t\"${field//$/}\": \"$value\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"$value\","
+            fi
+        fi
+        (( ++i))
+    done
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+    echo -e "}"
+}
+
+# Shell function
+shell_list_fw_rule() {
+    line=$(grep "RULE='$rule'" $conf)
+    eval $line
+    for field in $fields; do
+        eval key="$field"
+        if [ -z "$key" ]; then
+            key=NULL
+        fi
+        echo "${field//$/}: $key "
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'RULE [FORMAT]'
+is_object_valid '../../data/firewall/rules_ipv4' 'RULE' "$rule"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config and fields to select
+conf=$VESTA/data/firewall/rules_ipv4.conf
+fields="\$RULE \$ACTION \$PROTOCOL \$PORT \$IP \$COMMENT"
+fields="$fields \$RULE \$SUSPENDED \$TIME \$DATE"
+
+# Listing fw rule
+case $format in 
+    json)   json_list_fw_rule ;;
+    plain)  nohead=1; shell_list_fw_rule ;;
+    shell)  shell_list_fw_rule |column -t ;;
+    *)      check_args '2' '0' 'RULE [FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

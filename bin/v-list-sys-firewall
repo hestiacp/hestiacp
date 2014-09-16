@@ -1,0 +1,44 @@
+#!/bin/bash
+# info: list iptables rules
+# options: [FORMAT]
+#
+# The function of obtaining the list of all iptables rules.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf=$VESTA/data/firewall/rules_ipv4.conf
+
+# Defining fileds to select
+fields="\$RULE \$ACTION \$PROTOCOL \$PORT \$IP \$COMMENT"
+fields="$fields \$RULE \$SUSPENDED \$TIME \$DATE"
+
+# Listing domains
+case $format in 
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  fields="\$ACTION \$PROTOCOL \$PORT \$IP";
+            shell_list | column -t ;;
+    *)      check_args '1' '0' 'USER [FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

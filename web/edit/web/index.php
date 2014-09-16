@@ -430,8 +430,11 @@ if (!empty($_POST['save'])) {
     if (!empty($_POST['v_ftp_user'])) {
         $v_ftp_users_updated = array();
         foreach ($_POST['v_ftp_user'] as $i => $v_ftp_user_data) {
+            if (empty($v_ftp_user_data['v_ftp_user']) && empty($v_ftp_user_data['v_ftp_password'])) {
+                continue;
+            }
             $v_ftp_user_data['v_ftp_user'] = preg_replace("/^".$user."_/i", "", $v_ftp_user_data['v_ftp_user']);
-            if ($v_ftp_user_data['is_new'] == 1) {
+            if ($v_ftp_user_data['is_new'] == 1 && !empty($_POST['v_ftp'])) {
                 if ((!empty($v_ftp_user_data['v_ftp_email'])) && (!filter_var($v_ftp_user_data['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = __('Please enter valid email address.');
                 if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = 'ftp user';
                 if (empty($v_ftp_user_data['v_ftp_password'])) $errors[] = 'ftp user password';
@@ -450,8 +453,9 @@ if (!empty($_POST['save'])) {
                 $v_ftp_username_full = $user . '_' . $v_ftp_user_data['v_ftp_user'];
                 $v_ftp_user = escapeshellarg($v_ftp_username);
                 $v_ftp_password = escapeshellarg($v_ftp_user_data['v_ftp_password']);
+                $v_ftp_path = escapeshellarg(trim($v_ftp_user_data['v_ftp_path']));
                 if (empty($_SESSION['error_msg'])) {
-                    exec (VESTA_CMD."v-add-web-domain-ftp ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_password . " " . $v_ftp_user_data['v_ftp_path'], $output, $return_var);
+                    exec (VESTA_CMD."v-add-web-domain-ftp ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
                     check_return_code($return_var,$output);
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
@@ -495,40 +499,43 @@ if (!empty($_POST['save'])) {
                 continue;
             }
 
-            // Change FTP Account
-            if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = __('ftp user');
-            if (empty($v_ftp_user_data['v_ftp_password'])) $errors[] = __('ftp user password');
-            if (!empty($errors[0])) {
-                foreach ($errors as $i => $error) {
-                    if ( $i == 0 ) {
-                        $error_msg = $error;
-                    } else {
-                        $error_msg = $error_msg.", ".$error;
+            if (!empty($_POST['v_ftp'])) {
+                // Change FTP Account
+                if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = __('ftp user');
+                if (empty($v_ftp_user_data['v_ftp_password'])) $errors[] = __('ftp user password');
+                if (!empty($errors[0])) {
+                    foreach ($errors as $i => $error) {
+                        if ( $i == 0 ) {
+                            $error_msg = $error;
+                        } else {
+                            $error_msg = $error_msg.", ".$error;
+                        }
                     }
+                    $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
                 }
-                $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+
+                $v_ftp_username = $user . '_' . $v_ftp_user_data['v_ftp_user']; //preg_replace("/^".$user."_/", "", $v_ftp_user_data['v_ftp_user']);
+                $v_ftp_username = escapeshellarg($v_ftp_username);
+                $v_ftp_user_data['v_ftp_password'] = escapeshellarg(trim($v_ftp_user_data['v_ftp_password']));
+                $v_ftp_path = escapeshellarg(trim($v_ftp_user_data['v_ftp_path']));
+                exec (VESTA_CMD."v-change-web-domain-ftp-path ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_path, $output, $return_var);
+                if ($v_ftp_user_data['v_ftp_password'] != "'••••••••'" && $v_ftp_user_data['v_ftp_password'] != "••••••••" && !empty($v_ftp_user_data['v_ftp_password'])) {
+                    exec (VESTA_CMD."v-change-web-domain-ftp-password ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_user_data['v_ftp_password'], $output, $return_var);
+                }
+                check_return_code($return_var, $output);
+                unset($output);
+
+                $v_ftp_password = "••••••••";
+
+                $v_ftp_users_updated[] = array(
+                    'is_new'            => 0,
+                    'v_ftp_user'        => $v_ftp_username,
+                    'v_ftp_password'    => $v_ftp_password,
+                    'v_ftp_path'        => $v_ftp_user_data['v_ftp_path'],
+                    'v_ftp_email'       => $v_ftp_user_data['v_ftp_email'],
+                    'v_ftp_pre_path'    => $v_ftp_user_prepath
+                );
             }
-
-            $v_ftp_username = $user . '_' . $v_ftp_user_data['v_ftp_user']; //preg_replace("/^".$user."_/", "", $v_ftp_user_data['v_ftp_user']);
-            $v_ftp_username = escapeshellarg($v_ftp_username);
-            $v_ftp_user_data['v_ftp_password'] = escapeshellarg(trim($v_ftp_user_data['v_ftp_password']));
-            exec (VESTA_CMD."v-change-web-domain-ftp-path ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_user_data['v_ftp_path'], $output, $return_var);
-            if ($v_ftp_user_data['v_ftp_password'] != "••••••••" && !empty($v_ftp_user_data['v_ftp_password'])) {
-                exec (VESTA_CMD."v-change-web-domain-ftp-password ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_user_data['v_ftp_password'], $output, $return_var);
-            }
-            check_return_code($return_var, $output);
-            unset($output);
-
-            $v_ftp_password = "••••••••";
-
-            $v_ftp_users_updated[] = array(
-                'is_new'            => 0,
-                'v_ftp_user'        => $v_ftp_username,
-                'v_ftp_password'    => $v_ftp_password,
-                'v_ftp_path'        => $v_ftp_user_data['v_ftp_path'],
-                'v_ftp_email'       => $v_ftp_user_data['v_ftp_email'],
-                'v_ftp_pre_path'    => $v_ftp_user_prepath
-            );
         }
     }
 

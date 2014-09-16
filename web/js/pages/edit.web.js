@@ -21,7 +21,7 @@ App.Listeners.WEB.keypress_ftp_username = function() {
             App.Actions.WEB.update_ftp_username_hint(ref, current_val);
         }
         
-        ref.bind('keypress', function(evt) {
+        ref.bind('keypress input', function(evt) {
             clearTimeout(window.frp_usr_tmt);
             window.frp_usr_tmt = setTimeout(function() {
                 var elm = $(evt.target);
@@ -57,7 +57,7 @@ App.Listeners.WEB.keypress_ftp_path = function() {
             App.Actions.WEB.update_ftp_path_hint(ref, current_val);
         }
         
-        ref.bind('keypress', function(evt) {
+        ref.bind('keypress input', function(evt) {
             clearTimeout(window.frp_usr_tmt);
             window.frp_usr_tmt = setTimeout(function() {
                 var elm = $(evt.target);

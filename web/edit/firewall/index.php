@@ -48,7 +48,10 @@ if (!empty($_POST['save'])) {
     $v_rule = escapeshellarg($_GET['rule']);
     $v_action = escapeshellarg($_POST['v_action']);
     $v_protocol = escapeshellarg($_POST['v_protocol']);
-    $v_port = escapeshellarg($_POST['v_port']);
+    $v_port = str_replace(" ",",", $_POST['v_port']);
+    $v_port = preg_replace('/\,+/', ',', $v_port);
+    $v_port = trim($v_port, ",");
+    $v_port = escapeshellarg($v_port);
     $v_ip = escapeshellarg($_POST['v_ip']);
     $v_comment = escapeshellarg($_POST['v_comment']);
 
@@ -60,7 +63,9 @@ if (!empty($_POST['save'])) {
     $v_rule = $_GET['v_rule'];
     $v_action = $_POST['v_action'];
     $v_protocol = $_POST['v_protocol'];
-    $v_port = $_POST['v_port'];
+    $v_port = str_replace(" ",",", $_POST['v_port']);
+    $v_port = preg_replace('/\,+/', ',', $v_port);
+    $v_port = trim($v_port, ",");
     $v_ip = $_POST['v_ip'];
     $v_comment = $_POST['v_comment'];
 

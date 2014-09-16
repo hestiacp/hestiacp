@@ -100,7 +100,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Chane dns domain IP
-    if (empty($_SESSION['error_msg'])) {
+    if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg'])))  {
         exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain." json", $output, $return_var);
         unset($output);
         if ($return_var == 0 ) {
@@ -112,7 +112,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Change dns ip for each alias
-    if (empty($_SESSION['error_msg'])) {
+    if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
         foreach($valiases as $v_alias ){
             exec (VESTA_CMD."v-list-dns-domain ".$v_username." '".$v_alias."' json", $output, $return_var);
             unset($output);

@@ -91,7 +91,7 @@ check_args() {
 # Subsystem checker
 is_system_enabled() {
     if [ -z "$1" ] || [ "$1" = no ]; then
-        echo "Error: $2 is disabled in the vesta.conf"
+        echo "Error: $2 is not enabled in the $VESTA/conf/vesta.conf"
         log_event "$E_DISABLED" "$EVENT"
         exit $E_DISABLED
     fi
@@ -564,13 +564,25 @@ validate_format_interface() {
 
 # IP address
 validate_format_ip() {
+    t_ip=$(echo $1 |awk -F / '{print $1}')
+    t_cidr=$(echo $1 |awk -F / '{print $2}')
     valid_octets=0
-    for octet in ${1//./ }; do
+    valid_cidr=1
+    for octet in ${t_ip//./ }; do
         if [[ $octet =~ ^[0-9]{1,3}$ ]] && [[ $octet -le 255 ]]; then
             ((++valid_octets))
         fi
     done
-    if [ "$valid_octets" -lt 4 ]; then
+
+    if [ ! -z "$(echo $1|grep '/')" ]; then
+        if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 32 ]]; then
+            valid_cidr=0
+        fi
+        if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
+            valid_cidr=0
+        fi
+    fi
+    if [ "$valid_octets" -lt 4 ] || [ "$valid_cidr" -eq 0 ]; then
         echo "Error: ip $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
@@ -625,12 +637,14 @@ validate_format_username() {
     if [ "${#1}" -eq 1 ]; then
         if ! [[ "$1" =~ [a-z] ]]; then
             echo "Error: $2 $1 is not valid"
+            log_event "$E_INVALID" "$EVENT"
             exit 1
         fi
     else
         if ! [[ "$1" =~ ^[a-zA-Z0-9][-|\.|_|a-zA-Z0-9]{0,28}[a-zA-Z0-9]$ ]]
         then
             echo "Error: $2 $1 is not valid"
+            log_event "$E_INVALID" "$EVENT"
             exit 1
         fi
     fi
@@ -792,6 +806,42 @@ validate_format_autoreply() {
     fi
 }
 
+# Firewall action
+validate_format_fw_action() {
+    if [ "$1" != "ACCEPT" ] && [ "$1" != 'DROP' ] ; then
+        echo "Error: $1 is not valid action"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Firewall protocol
+validate_format_fw_protocol() {
+    if [ "$1" != "ICMP" ] && [ "$1" != 'UDP' ] && [ "$1" != 'TCP' ] ; then
+        echo "Error: $1 is not valid protocol"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+}
+
+# Firewall port
+validate_format_fw_port() {
+    if [ "${#1}" -eq 1 ]; then
+        if ! [[ "$1" =~ [0-9] ]]; then
+            echo "Error: port $1 is not valid"
+            log_event "$E_INVALID" "$EVENT"
+            exit 1
+        fi
+    else
+        if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,30}[0-9]$ ]]
+        then
+            echo "Error: port $1 is not valid"
+            log_event "$E_INVALID" "$EVENT"
+            exit 1
+        fi
+    fi
+}
+
 # Format validation controller
 validate_format(){
     for arg_name in $*; do
@@ -804,12 +854,14 @@ validate_format(){
 
         case $arg_name in
             account)        validate_format_username "$arg" "$arg_name" ;;
+            action)         validate_format_fw_action "$arg";;
             antispam)       validate_format_boolean "$arg" 'antispam' ;;
             antivirus)      validate_format_boolean "$arg" 'antivirus' ;;
             autoreply)      validate_format_autoreply "$arg" ;;
             backup)         validate_format_domain "$arg" 'backup' ;;
             charset)        validate_format_name "$arg" "$arg_name" ;;
             charsets)       validate_format_common "$arg" 'charsets' ;;
+            comment)        validate_format_name "$arg" 'comment' ;;
             database)       validate_format_database "$arg" 'database';;
             day)            validate_format_mhdmw "$arg" $arg_name ;;
             dbpass)         validate_format_password "$arg" ;;
@@ -850,10 +902,13 @@ validate_format(){
             package)        validate_format_name "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" 'port' ;;
+            port_ext)       validate_format_fw_port "$arg";;
+            protocol)       validate_format_fw_protocol "$arg" ;;
             quota)          validate_format_int "$arg" 'quota' ;;
             restart)        validate_format_boolean "$arg" 'restart' ;;
             record)         validate_format_common "$arg" 'record';;
             rtype)          validate_format_dns_type "$arg" ;;
+            rule)           validate_format_int "$arg" "rule id" ;;
             shell)          validate_format_shell "$arg" ;;
             soa)            validate_format_domain "$arg" 'soa_record';;
             stats_pass)     validate_format_password "$arg" ;;

@@ -1,0 +1,125 @@
+            <?php
+                $back = $_SESSION['back'];
+                if (empty($back)) {
+                    $back = "location.href='/list/firewall/'";
+                } else {
+                    $back = "location.href='".$back."'";
+                }
+            ?> 
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Firewall Rule');?></b></a>
+                        <?php
+                            if (!empty($_SESSION['error_msg'])) {
+                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                            } else {
+                                if (!empty($_SESSION['ok_msg'])) {
+                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                }
+                            }
+                        ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <form id="vstobjects" name="v_edit_firewall" method="post">
+
+            <script type="text/javascript">
+                function elementHideShow(elementToHideOrShow) {
+                    var el = document.getElementById(elementToHideOrShow);
+                    if (el.style.display == "block") {
+                        el.style.display = "none";
+                    } else {
+                        el.style.display = "block";
+                    }
+                }
+            </script>
+
+            <table class='data'>
+                <tr class="data-add">
+                    <td class="data-dotted">
+                        <table class="data-col1">
+                            <tr>
+                                <td>
+                                    <a class="data-date"><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
+                                    <a class="data-date"><?php echo $v_time?></a>
+                                </td>
+                            </tr>
+                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted">
+                        <table class="data-col2" width="600px">
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Action'); ?> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_action">
+                                        <option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?php print __('DROP') ?></option>
+                                        <option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>><?php print __('ACCEPT') ?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Protocol') ?> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_protocol">
+                                        <option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?php print __('TCP') ?></option>
+                                        <option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>><?php print __('UDP') ?></option>
+                                        <option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>><?php print __('ICMP') ?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Port');?> <span class="optional">(<?php print __('ranges are acceptable');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_port" <?php if (isset($v_port)) echo "value=".$v_port; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('IP Address');?> <span class="optional">(<?php print __('CDIR format is supported');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Comment');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_comment" maxlength="8" <?php if (!empty($v_comment)) echo "value=".$v_comment; ?>>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="data-col2">
+                            <tr>
+                                <td class="step-top" width="116px">
+                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                </td>
+                                <td class="step-top">
+                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>

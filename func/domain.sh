@@ -313,25 +313,26 @@ is_web_domain_cert_valid() {
 
     crt_vrf=$(openssl verify $ssl_dir/$domain.crt 2>&1)
     if [ ! -z "$(echo $crt_vrf | grep 'unable to load')" ]; then
-        echo "Error: certificate is not valid"
+        echo "Error: SSL Certificate is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
 
     if [ ! -z "$(echo $crt_vrf | grep 'unable to get local issuer')" ]; then
         if [ ! -e "$ssl_dir/$domain.ca" ]; then
-            echo "Error: certificate authority not found"
+            echo "Error: Certificate Authority not found"
             log_event "$E_NOTEXIST" "$EVENT"
             exit $E_NOTEXIST
         fi
     fi
 
     if [ -e "$ssl_dir/$domain.ca" ]; then
-        crt_vrf=$(openssl verify -purpose sslserver \
-            -CAfile $ssl_dir/$domain.ca $ssl_dir/$domain.crt 2>/dev/null |\
-            grep 'OK')
-        if [ -z "$crt_vrf" ]; then
-            echo "Error: root or/and intermediate cerificate not found"
+        s1=$(openssl x509 -text -in $ssl_dir/$domain.crt 2>/dev/null)
+        s1=$(echo "$s1" |grep Issuer  |awk -F = '{print $6}' |head -n1)
+        s2=$(openssl x509 -text -in $ssl_dir/$domain.ca 2>/dev/null)
+        s2=$(echo "$s2" |grep Subject  |awk -F = '{print $6}' |head -n1)
+        if [ "$s1" != "$s2" ]; then
+            echo "Error: SSL intermediate chain is not valid"
             log_event "$E_NOTEXIST" "$EVENT"
             exit $E_NOTEXIST
         fi
@@ -339,7 +340,7 @@ is_web_domain_cert_valid() {
 
     key_vrf=$(grep 'PRIVATE KEY' $ssl_dir/$domain.key | wc -l)
     if [ "$key_vrf" -ne 2 ]; then
-        echo "Error: ssl key is not valid"
+        echo "Error: SSL Key is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi

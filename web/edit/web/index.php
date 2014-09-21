@@ -280,6 +280,21 @@ if (!empty($_POST['save'])) {
             $v_ssl_crt = $_POST['v_ssl_crt'];
             $v_ssl_key = $_POST['v_ssl_key'];
             $v_ssl_ca = $_POST['v_ssl_ca'];
+            
+            // Cleanup certificate tempfiles
+            if (!empty($_POST['v_ssl_crt'])) {
+                unlink($tmpdir."/".$_POST['v_domain'].".crt");
+            }
+
+            if (!empty($_POST['v_ssl_key'])) {
+                unlink($tmpdir."/".$_POST['v_domain'].".key");
+            }
+
+            if (!empty($_POST['v_ssl_ca'])) {
+                unlink($tmpdir."/".$_POST['v_domain'].".ca");
+            }
+
+            rmdir($tmpdir);
         }
     }
 
@@ -332,6 +347,21 @@ if (!empty($_POST['save'])) {
             $v_ssl_key = $_POST['v_ssl_key'];
             $v_ssl_ca = $_POST['v_ssl_ca'];
             $v_ssl_home = $_POST['v_ssl_home'];
+            
+            // Cleanup certificate tempfiles
+            if (!empty($_POST['v_ssl_crt'])) {
+                unlink($tmpdir."/".$_POST['v_domain'].".crt");
+            }
+
+            if (!empty($_POST['v_ssl_key'])) {
+                unlink($tmpdir."/".$_POST['v_domain'].".key");
+            }
+
+            if (!empty($_POST['v_ssl_ca'])) {
+                unlink($tmpdir."/".$_POST['v_domain'].".ca");
+            }
+
+            rmdir($tmpdir);
         }
     }
 

@@ -39,6 +39,9 @@ pw_str=$(grep -n "^$user:" /etc/passwd)
 str=$(echo "$pw_str" | cut -f 1 -d :)
 sed -i "$str s/$old_email/$email/g" /etc/passwd
 
+# Update crontab email
+$BIN/v-rebuild-cron-jobs $user > /dev/null 2>&1
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

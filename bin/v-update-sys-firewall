@@ -55,7 +55,6 @@ IFS=$'\n'
 for line in $(sort -r -n -k 2 -t \' $rules); do
     eval $line
     if [ "$SUSPENDED" = 'no' ]; then
-        chain="-A INPUT"
         proto="-p $PROTOCOL"
         port="--dport $PORT"
         ip="-s $IP"
@@ -83,22 +82,22 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
         fi
 
         # Adding firewall rule
-        echo "$iptables $chain $proto $port $ip $state $action" >> $tmp
+        echo "$iptables -A INPUT $proto $port $ip $state $action" >> $tmp
     fi
 done
 
-# Handling DNS replies
-proto="-p udp"
-port="--sport 53"
-action="-j ACCEPT"
-echo "$iptables $chain $proto $port $state $action" >> $tmp
+# Handling local traffic
+echo "$iptables -A INPUT -p udp --sport 53 -j ACCEPT" >> $tmp
+echo "$iptables -A INPUT -s 127.0.0.1 -j ACCEPT" >> $tmp
+for ip in $(ls $VESTA/data/ips); do
+    echo "$iptables -A INPUT -s $ip -j ACCEPT" >> $tmp
+done
 
 # Enabling stateful firewall
 if [ "$stateful" != 'no' ]; then
-    proto="-p tcp"
-    state="-m state --state ESTABLISHED,RELATED"
-    action="-j ACCEPT"
-    echo "$iptables $chain $proto $state $action" >> $tmp
+    str="$iptables -A INPUT -p tcp -m state"
+    str="$str --state ESTABLISHED,RELATED -j ACCEPT"
+    echo "$str" >> $tmp
 fi
 
 # Switching chain policy to DROP
@@ -106,6 +105,9 @@ echo "$iptables -P INPUT DROP" >> $tmp
 
 # Applying rules
 bash $tmp
+
+# Deleting temporary file
+rm -f $tmp
 
 # Saving rules to the master iptables file
 if [ -e "/etc/redhat-release" ]; then

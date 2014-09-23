@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add web/dns/mail domain
-# options: USER DOMAIN [IP]
+# options: USER DOMAIN [IP] [RESTART]
 #
 # The function adds web/dns/mail domain to a server.
 
@@ -13,6 +13,7 @@
 user=$1
 domain=$2
 ip=$3
+restart="${4-yes}"
 
 # Includes
 source $VESTA/func/main.sh
@@ -24,9 +25,9 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [IP]'
+check_args '2' "$#" 'USER DOMAIN [IP] [RESTART]'
 validate_format 'user' 'domain'
-if [ ! -z "$ip" ]; then
+if [ ! -z "$ip" ] ; then
     validate_format 'ip'
 fi
 is_object_valid 'user' 'USER' "$user"
@@ -50,20 +51,23 @@ fi
 # Web domain
 # Do Not restart at this point, will loose connection from API calls 
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v-add-web-domain $user $domain $ip no
+    $BIN/v-add-web-domain $user $domain $ip 'no'
     return_code=$?
 fi
 
 # Proxy support
 # Do Not restart at this point, will loose connection from API calls
 if [ ! -z "$PROXY_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
-    $BIN/v-add-web-domain-proxy $user $domain '' '' no
+    extentions="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
+    extentions="$extentions,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav"
+    extentions="$extentions,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm"
+    $BIN/v-add-web-domain-proxy $user $domain 'default' "$extentions" 'no'
 fi
 
 # DNS domain
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
     if [ "$return_code" -eq 0 ]; then
-        $BIN/v-add-dns-domain $user $domain $ip
+        $BIN/v-add-dns-domain $user $domain $ip 'no'
         return_code=$?
     fi
 fi
@@ -74,6 +78,13 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
         $BIN/v-add-mail-domain $user $domain
         return_code=$?
     fi
+fi
+
+# Restart services
+if [ "$restart" != 'no' ] && [ "$return_code" -eq 0 ]; then
+    $BIN/v-restart-web
+    $BIN/v-restart-proxy
+    $BIN/v-restart-dns
 fi
 
 

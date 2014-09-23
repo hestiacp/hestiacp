@@ -12,6 +12,7 @@
 # Argument defenition
 user=$1
 domain=$2
+restart="${3-yes}"
 
 # Includes
 source $VESTA/func/main.sh
@@ -37,7 +38,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     check_web=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
     if [  ! -z "$check_web" ]; then
-        $BIN/v-delete-web-domain $user $domain
+        $BIN/v-delete-web-domain $user $domain 'no'
         if [ $? -ne 0 ]; then
             exit $E_RESTART
         fi
@@ -48,7 +49,7 @@ fi
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
     check_dns=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     if [  ! -z "$check_dns" ]; then
-        $BIN/v-delete-dns-domain $user $domain
+        $BIN/v-delete-dns-domain $user $domain 'no'
         if [ $? -ne 0 ]; then
             exit $E_RESTART
         fi
@@ -69,12 +70,20 @@ fi
 # Check domain status
 if [ -z "$check_web" ] && [ -z "$check_dns" ] && [ -z "$check_mail" ]; then
     echo "Error: domain $domain doesn't exist"
-    log_event "$E_NOTEXIST $EVENT"
+    log_event "$E_NOTEXIST" "$EVENT"
     exit $E_NOTEXIST
 fi
+
+# Restart services
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web
+    $BIN/v-restart-proxy
+    $BIN/v-restart-dns
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-exit 
+exit

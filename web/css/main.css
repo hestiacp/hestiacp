@@ -136,8 +136,8 @@ label:active {
     font-weight: bold;
     text-decoration: none;
     line-height: 22px;
-    padding: 0 4px 2px 4px;
-    margin: 0 14px 2px 0;
+    padding: 0px 19px 4px 17px;
+    margin: 0px 0px 2px 0px;
 }
 
 .top-logout:hover {
@@ -594,12 +594,11 @@ label:active {
 
 .data-add {
     margin: 0;
-    background-color: #D3E1D1;
+    background-color: #f7f6ed;
     border-bottom: 1px solid #e9e9e9;
 }
-
-.mode-add .data-add {
-    background-color: #f7f6ed;
+.data.mode-add {
+    border-top: 5px solid #F79B44;
 }
 
 .data-dotted {
@@ -793,7 +792,7 @@ label:active {
     vertical-align: top;
     line-height: 1.2em;
     font-size: 10pt;
-    color: #7E7D7F;
+    color: #626163; /* #7E7D7F;*/
     padding: 2px 4px 1px 0;
     white-space: nowrap;
 }
@@ -810,7 +809,7 @@ label:active {
     vertical-align: top;
     line-height: 1.2em;
     font-size: 10pt;
-    color: #626163;
+    color: #545355; /*#626163;*/
     padding: 2px 0 1px 2px;
 }
 
@@ -904,6 +903,11 @@ label:active {
     border: 1px solid #909090;
 }
 
+.vst-input:disabled:hover {
+    border: 1px solid #C0C0C0;
+}
+
+
 .vst-input:focus {
     border: 1px solid #f79b44;
     background-color: #fffcd2;
@@ -994,8 +998,8 @@ label:active {
 }
 
 .login-button:hover {
-    border: 1px solid #adaeae;
-    background-color: #adaeae;
+    border: 1px solid #6DB8D3;
+    background-color: #6DB8D3;
 }
 
 .login-button:active {

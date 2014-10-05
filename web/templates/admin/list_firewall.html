@@ -19,6 +19,11 @@
                             </select>
                             <input type="submit" name="ok" value="›" class="submenu-button-select">
                         </div>
+                        <?php if(!empty($_SESSION['FIREWALL_EXTENSION'])) { ?> 
+                        <div class="submenu-select-block">
+                            <a class="submenu-select-link" href="/list/firewall/banlist/">[ <?php print __('list fail2ban');?> ]</a>
+                        </div>
+                        <?php } ?>
                         <?php display_error_block(); ?> 
                     </td>
                 </tr>
@@ -37,10 +42,10 @@
                             } else {
                                 $status = 'active';
                                 $spnd_action = 'suspend' ;
-                                $spnd_confirmation = 'UNSUSPEND_RULE_CONFIRMATION' ;
+                                $spnd_confirmation = 'SUSPEND_RULE_CONFIRMATION' ;
                             }
                     ?> 
-                    <tr class="data-row">
+                    <tr class="data-row <? if($status == 'suspended') echo 'suspended';?>">
                         <td class="data-dotted">
                             <table class="data-col1">
                                 <tr><td><input type="checkbox" class="ch-toggle" name="rule[]" value="<?php echo $data[$key]['RULE']?>" > </td></tr>
@@ -58,7 +63,17 @@
                                     </div>
                                 </span>
                             </a>
-                            <a href="/edit/firewall/?rule=<?php echo $data[$key]['RULE'] ?>" class="data-controls">
+                            <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="data-controls do_<?php echo $spnd_action ?>">
+                                <span class="do_<?php echo $spnd_action ?>">
+                                    <img src="/images/suspend.png" width="7px" height="8px">
+                                    <?php echo __($spnd_action); ?> 
+                                    <input type="hidden" name="<?php echo $spnd_action ?>_url" value="/<?php echo $spnd_action ?>/firewall/?rule=<?php echo $data[$key]['RULE'] ?>" />
+                                    <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print __('Confirmation');?>">
+                                        <p class="counter-value"><?php print __($spnd_confirmation,$key);?></p>
+                                    </div>
+                                </span>
+                            </a>
+                            <a href="/edit/firewall/?rule=<?php echo $key ?>" class="data-controls">
                                 <span>
                                     <img src="/images/edit.png" width="8px" height="8px">
                                     <?php print __('edit');?> 

@@ -1,0 +1,43 @@
+#!/bin/bash
+# info: list firewall block list
+# options: [FORMAT]
+#
+# The function of obtaining the list of currently blocked ips.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config
+conf=$VESTA/data/firewall/banlist.conf
+
+# Defining fileds to select
+fields="\$IP:\$CHAIN \$TIME \$DATE"
+
+# Listing domains
+case $format in
+    json)   json_list ;;
+    plain)  nohead=1; shell_list ;;
+    shell)  fields='$IP $CHAIN $TIME $DATE';
+            shell_list | column -t ;;
+    *)      check_args '1' '0' 'USER [FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

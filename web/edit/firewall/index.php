@@ -22,7 +22,7 @@ if (empty($_GET['rule'])) {
 
 // List rule
 $v_rule = escapeshellarg($_GET['rule']);
-exec (VESTA_CMD."v-list-sys-firewall-rule ".$v_rule." 'json'", $output, $return_var);
+exec (VESTA_CMD."v-list-firewall-rule ".$v_rule." 'json'", $output, $return_var);
 check_return_code($return_var,$output);
 $data = json_decode(implode('', $output), true);
 unset($output);
@@ -56,7 +56,7 @@ if (!empty($_POST['save'])) {
     $v_comment = escapeshellarg($_POST['v_comment']);
 
     // Change Status
-    exec (VESTA_CMD."v-change-sys-firewall-rule ".$v_rule." ".$v_action." ".$v_protocol." ".$v_port." ".$v_ip." ".$v_comment, $output, $return_var);
+    exec (VESTA_CMD."v-change-firewall-rule ".$v_rule." ".$v_action." ".$v_ip."  ".$v_port." ".$v_protocol."".$v_comment, $output, $return_var);
     check_return_code($return_var,$output);
     unset($output);
 

@@ -18,11 +18,11 @@ $rule = $_POST['rule'];
 $action = $_POST['action'];
 
 switch ($action) {
-    case 'delete': $cmd='v-delete-sys-firewall-rule';
+    case 'delete': $cmd='v-delete-firewall-rule';
         break;
-    case 'suspend': $cmd='v-suspend-sys-firewall-rule';
+    case 'suspend': $cmd='v-suspend-firewall-rule';
         break;
-    case 'unsuspend': $cmd='v-unsuspend-sys-firewall-rule';
+    case 'unsuspend': $cmd='v-unsuspend-firewall-rule';
         break;
     default: header("Location: /list/firewall/"); exit;
 }

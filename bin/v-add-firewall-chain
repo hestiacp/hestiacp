@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: add firewall chain
+# options: CHAIN [PORT] [PROTOCOL] [PROTOCOL]
+#
+# The function adds new rule to system firewall
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system variables
+source /etc/profile
+
+# Argument defenition
+chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
+port=$2
+protocol=${4-TCP}
+protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
+
+# Defining absolute path to iptables
+iptables="/sbin/iptables"
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL]'
+validate_format 'chain'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking known chains
+case $chain in
+    SSH)        port=22; protocol=TCP ;;
+    FTP)        port=21; protocol=TCP  ;;
+    MAIL)       port=25; protocol=TCP  ;;
+    DNS)        port=53; protocol=UDP  ;;
+    HTTP)       port=80; protocol=TCP  ;;
+    HTTPS)      port=443; protocol=TCP  ;;
+    POP3)       port=110; protocol=TCP  ;;
+    IMAP)       port=143; protocol=TCP  ;;
+    MYSQL)      port=3306; protocol=TCP  ;;
+    POSTGRES)   port=5432; protocol=TCP  ;;
+    VESTA)      port=8083; protocol=TCP  ;;
+    *)          check_args '2' "$#" 'CHAIN PORT' ;;
+esac
+
+# Adding chain
+$iptables -N fail2ban-$chain 2>/dev/null
+if [ $? -eq 0 ]; then
+    $iptables -A fail2ban-$chain -j RETURN
+    $iptables -I INPUT -p $protocol --dport $port -j fail2ban-$chain
+fi
+
+# Preserving chain
+chains=$VESTA/data/firewall/chains.conf
+check_chain=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
+if [ -z "$check_chain" ]; then
+    echo "CHAIN='$chain' PORT='$port' PROTOCOL='$protocol'" >> $chains
+fi
+
+# Changing permissions
+chmod 660 $chains
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

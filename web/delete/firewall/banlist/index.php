@@ -13,9 +13,10 @@ if ($_SESSION['user'] != 'admin') {
     exit;
 }
 
-if (!empty($_GET['rule'])) {
-    $v_rule = escapeshellarg($_GET['rule']);
-    exec (VESTA_CMD."v-delete-firewall-rule ".$v_rule, $output, $return_var);
+if ((!empty($_GET['ip'])) && (!empty($_GET['chain']))) {
+    $v_ip = escapeshellarg($_GET['ip']);
+    $v_chain = escapeshellarg($_GET['chain']);
+    exec (VESTA_CMD."v-delete-firewall-ban ".$v_ip." ".$v_chain, $output, $return_var);
 }
 check_return_code($return_var,$output);
 unset($output);
@@ -26,5 +27,5 @@ if (!empty($back)) {
     exit;
 }
 
-header("Location: /list/firewall/");
+header("Location: /list/firewall/banlist/");
 exit;

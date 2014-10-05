@@ -1,0 +1,78 @@
+#!/bin/bash
+# info: add firewall blocking rule
+# options: IP CHAIN
+#
+# The function adds new blocking rule to system firewall
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system variables
+source /etc/profile
+
+# Argument defenition
+ip=$1
+chain=$(echo $2|tr '[:lower:]' '[:upper:]')
+
+# Defining absolute path for iptables and modprobe
+iptables="/sbin/iptables"
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'IP CHAIN'
+validate_format 'ip' 'chain'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking server ip
+if [ -e "$VESTA/data/ips/$ip" ] || [ "$ip" = '127.0.0.1' ]; then
+    exit
+fi
+
+# Checking ip exclusions
+excludes="$VESTA/data/firewall/excludes.conf"
+check_excludes=$(grep "^$ip$" $excludes 2>/dev/null)
+if  [ ! -z "$check_excludes" ]; then
+    exit
+fi
+
+# Checking ip in banlist
+conf="$VESTA/data/firewall/banlist.conf"
+check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
+if [ ! -z "$check_ip" ]; then
+    exit
+fi
+
+# Adding chain
+$BIN/v-add-firewall-chain $chain
+
+# Adding ip to banlist
+echo "IP='$ip' CHAIN='$chain' TIME='$TIME' DATE='$DATE'" >> $conf
+$iptables -I fail2ban-$chain 1 -s $ip \
+    -j REJECT --reject-with icmp-port-unreachable 2>/dev/null
+
+# Changing permissions
+chmod 660 $conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

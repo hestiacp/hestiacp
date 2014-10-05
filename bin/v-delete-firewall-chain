@@ -1,0 +1,66 @@
+#!/bin/bash
+# info: delete firewall chain
+# options: CHAIN
+#
+# The function adds new rule to system firewall
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system variables
+source /etc/profile
+
+# Argument defenition
+chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
+
+# Defining absolute path to iptables
+iptables="/sbin/iptables"
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'CHAIN'
+validate_format 'chain'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting chain
+chains=$VESTA/data/firewall/chains.conf
+banlist=$VESTA/data/firewall/banlist.conf
+chain_param=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
+if [ ! -z "$chain_param" ]; then
+    eval $chain_param
+    sed -i "/CHAIN='$chain'/d" $chains
+    sed -i "/CHAIN='$chain'/d" $banlist
+    $iptables -D INPUT -p $PROTOCOL \
+        --dport $PORT -j fail2ban-$CHAIN 2>/dev/null
+fi
+
+# Deleting iptables chain
+$iptables -F fail2ban-$CHAIN 2>/dev/null
+$iptables -X fail2ban-$CHAIN 2>/dev/null
+
+# Changing permissions
+chmod 660 $chains
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

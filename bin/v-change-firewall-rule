@@ -1,0 +1,80 @@
+#!/bin/bash
+# info: change firewall rule
+# options: RULE ACTION IP PORT [PROTOCOL] [COMMENT]
+#
+# The function is used for changing existing firewall rule.
+# It fully replace rule with new one but keeps same id.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system variables
+source /etc/profile
+
+# Argument defenition
+rule=$1
+action=$(echo $2|tr '[:lower:]' '[:upper:]')
+ip=$3
+port_ext=$4
+protocol=${5-TCP}
+protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
+comment=$6
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# Sort function
+sort_fw_rules() {
+    cat $VESTA/data/firewall/rules.conf |\
+        sort -n -k 2 -t \' > $VESTA/data/firewall/rules.conf.tmp
+    mv -f $VESTA/data/firewall/rules.conf.tmp \
+        $VESTA/data/firewall/rules.conf
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '5' "$#" 'RULE ACTION IP  PORT [PROTOCOL] [COMMENT]'
+validate_format 'rule' 'action' 'protocol' 'port_ext' 'ip'
+if [ ! -z "$comment" ]; then
+    validate_format 'comment'
+fi
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Concatenating firewall rule
+str="RULE='$rule' ACTION='$action' PROTOCOL='$protocol' PORT='$port_ext'"
+str="$str IP='$ip' COMMENT='$comment' SUSPENDED='no'"
+str="$str TIME='$TIME' DATE='$DATE'"
+
+# Deleting old rule
+sed -i "/RULE='$rule' /d" $VESTA/data/firewall/rules.conf
+
+# Adding new
+echo "$str" >> $VESTA/data/firewall/rules.conf
+
+# Sorting firewall rules by id number
+sort_fw_rules
+
+# Updating system firewall
+$BIN/v-update-firewall
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

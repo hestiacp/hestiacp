@@ -21,7 +21,7 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 # Defining config
-conf=$VESTA/data/firewall/rules_ipv4.conf
+conf=$VESTA/data/firewall/rules.conf
 
 # Defining fileds to select
 fields="\$RULE \$ACTION \$PROTOCOL \$PORT \$IP \$COMMENT"

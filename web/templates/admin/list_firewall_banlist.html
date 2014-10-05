@@ -1,0 +1,88 @@
+            <table class="submenu">
+                <tr>
+                    <td class="wrapper">
+                        <div class="submenu-button-block">
+                            <button class="submenu-button-main" onclick="location.href='/add/firewall/banlist/'"> <?php print __('Ban IP Address');?> </button>
+                        </div>
+                        <div class="submenu-search-block">
+                            <form action="/search/" method="get">
+                            <input type="text" name="q" class="submenu-search-field">
+                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
+                            </form>
+                        </div>
+                        <div class="submenu-select-block">
+                            <form action="/bulk/firewall/banlist/" method="post" id="objects">
+                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
+                            <select class="submenu-select-dropdown" name="action">
+                                <option value=""><?php print __('apply to selected');?></option>
+                                <option value="delete"><?php print __('delete');?></option>
+                            </select>
+                            <input type="submit" name="ok" value="›" class="submenu-button-select">
+                        </div>
+                        <?php display_error_block(); ?> 
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="vstobjects">
+                <table class="data" style="background: #ebe9dc;">
+                    <tr>
+                        <td style="padding: 10px 4px">
+                            <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?> Fail2ban</b></a>
+                        </td>
+                    </tr>
+                </table>
+                <table class="data">
+                    <?php
+                        foreach ($data as $key => $value) {
+                            ++$i;
+                            list($ip,$chain) = split(":",$key);
+                    ?> 
+                    <tr class="data-row">
+                        <td class="data-dotted">
+                            <table class="data-col1">
+                                <tr><td><input type="checkbox" class="ch-toggle" name="ipchain[]" value="<?php echo $key ?>"</td></tr>
+                                <tr><td></td></tr>
+                            </table>
+                        </td>
+                        <td class="data-dotted">
+                            <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
+                                <span class="do_delete">
+                                    <img src="/images/delete.png" width="7px" height="7px">
+                                    <?php print __('delete');?>
+                                    <input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?php echo $ip ?>&chain=<?php echo $chain ?>"/>
+                                    <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
+                                        <p class="counter-value"><?php print __('DELETE_IP_CONFIRMATION',$ip);?></p>
+                                    </div>
+                                </span>
+                            </a>
+                            <table class="data-col5">
+                                <tr>
+                                    <td class="log" width="119px"><?php echo $data[$key]['TIME'] ?></td>
+                                    <td class="log" width="119px"><?php echo $data[$key]['DATE']?></td>
+                                    <td class="log" width="232px"><?php echo $chain ?></td>
+                                    <td class="log" ><?php echo $ip ?></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <?php
+                        }
+                    ?> 
+                </table>
+            </form>
+            <div class="data-count">
+                <?php
+                    if ( $i == 0) {
+                        echo __('There is no currently banned IP addresses');
+                    }
+                    if ( $i == 1) {
+                        echo __('1 IP address');
+                    }
+                    if ( $i > 1) {
+                        echo __('%s IP addresses',$i);
+                    }
+                ?> 
+            </div>
+        </div>

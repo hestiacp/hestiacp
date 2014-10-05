@@ -1,33 +1,44 @@
 #!/bin/bash
-# info: change firewall rule
-# options: RULE ACTION PROTOCOL PORT IP [COMMENT]
+# info: add firewall rule
+# options: ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]
 #
-# The function is used for changing existing firewall rule.
-# It fully replace rule with new one but keeps same id.
+# The function adds new rule to system firewall
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Importing system variables
+source /etc/profile
+
 # Argument defenition
-rule=$1
-action=$(echo $2|tr '[:lower:]' '[:upper:]')
-protocol=$(echo $3|tr '[:lower:]' '[:upper:]')
-port_ext=$4
-ip=$5
-comment=$6
+action=$(echo $1|tr '[:lower:]' '[:upper:]')
+ip=$2
+port_ext=$3
+protocol=${4-TCP}
+protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
+comment=$5
+rule=$6
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Sort function
+# Get next firewall rule id
+get_next_fw_rule() {
+    if [ -z "$rule" ]; then
+        curr_str=$(grep "RULE=" $VESTA/data/firewall/rules.conf |\
+         cut -f 2 -d \' | sort -n | tail -n1)
+        rule="$((curr_str +1))"
+    fi
+}
+
 sort_fw_rules() {
-    cat $VESTA/data/firewall/rules_ipv4.conf |\
-        sort -n -k 2 -t \' > $VESTA/data/firewall/rules_ipv4.conf.tmp
-    mv -f $VESTA/data/firewall/rules_ipv4.conf.tmp \
-        $VESTA/data/firewall/rules_ipv4.conf
+    cat $VESTA/data/firewall/rules.conf |\
+        sort -n -k 2 -t \' > $VESTA/data/firewall/rules.conf.tmp
+    mv -f $VESTA/data/firewall/rules.conf.tmp \
+        $VESTA/data/firewall/rules.conf
 }
 
 
@@ -35,32 +46,37 @@ sort_fw_rules() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'RULE ACTION PROTOCOL PORT IP [COMMENT]'
-validate_format 'rule' 'action' 'protocol' 'port_ext' 'ip' 'comment'
+check_args '3' "$#" 'ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]'
+validate_format 'action' 'protocol' 'port_ext' 'ip'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
-is_object_valid '../../data/firewall/rules_ipv4' 'RULE' "$rule"
+get_next_fw_rule
+validate_format 'rule'
+is_object_new '../../data/firewall/rules' 'RULE' "$rule"
+if [ ! -z "$comment"]; then
+    validate_format 'comment'
+fi
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Concatenating firewall rule
+# Concatenating rule
 str="RULE='$rule' ACTION='$action' PROTOCOL='$protocol' PORT='$port_ext'"
 str="$str IP='$ip' COMMENT='$comment' SUSPENDED='no'"
 str="$str TIME='$TIME' DATE='$DATE'"
 
-# Deleting old rule
-sed -i "/RULE='$rule' /d" $VESTA/data/firewall/rules_ipv4.conf
+# Adding to config
+echo "$str" >> $VESTA/data/firewall/rules.conf
 
-# Adding new
-echo "$str" >> $VESTA/data/firewall/rules_ipv4.conf
+# Changing permissions
+chmod 660 $VESTA/data/firewall/rules.conf
 
 # Sorting firewall rules by id number
 sort_fw_rules
 
 # Updating system firewall
-$BIN/v-update-sys-firewall
+$BIN/v-update-firewall
 
 
 #----------------------------------------------------------#

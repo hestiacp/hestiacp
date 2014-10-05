@@ -1,0 +1,63 @@
+#!/bin/bash
+# info: delete firewall blocking rule
+# options: IP CHAIN
+#
+# The function deletes blocking rule from system firewall
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system variables
+source /etc/profile
+
+# Argument defenition
+ip=$1
+chain=$(echo $2|tr '[:lower:]' '[:upper:]')
+
+# Defining absolute path for iptables and modprobe
+iptables="/sbin/iptables"
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'IP CHAIN'
+validate_format 'ip' 'chain'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking ip in banlist
+conf="$VESTA/data/firewall/banlist.conf"
+check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
+if [ -z "$check_ip" ]; then
+    exit
+fi
+
+# Deleting ip from banlist
+sed -i "/IP='$ip' CHAIN='$chain'/d" $conf
+$iptables -D fail2ban-$chain -s $ip \
+    -j REJECT --reject-with icmp-port-unreachable 2>/dev/null
+
+# Changing permissions
+chmod 660 $conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

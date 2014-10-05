@@ -61,7 +61,7 @@ shell_list_fw_rule() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'RULE [FORMAT]'
-is_object_valid '../../data/firewall/rules_ipv4' 'RULE' "$rule"
+is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 
 
 #----------------------------------------------------------#
@@ -69,7 +69,7 @@ is_object_valid '../../data/firewall/rules_ipv4' 'RULE' "$rule"
 #----------------------------------------------------------#
 
 # Defining config and fields to select
-conf=$VESTA/data/firewall/rules_ipv4.conf
+conf=$VESTA/data/firewall/rules.conf
 fields="\$RULE \$ACTION \$PROTOCOL \$PORT \$IP \$COMMENT"
 fields="$fields \$RULE \$SUSPENDED \$TIME \$DATE"
 

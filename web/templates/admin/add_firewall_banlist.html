@@ -1,0 +1,93 @@
+            <?php
+                $back = $_SESSION['back'];
+                if (empty($back)) {
+                    $back = "location.href='/list/firewall/banlist/'";
+                } else {
+                    $back = "location.href='".$back."'";
+                }
+            ?>
+            <table class="submenu">
+                <tr>
+                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding IP Address to Banlist');?></b></a>
+                        <?php
+                            if (!empty($_SESSION['error_msg'])) {
+                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                            } else {
+                                if (!empty($_SESSION['ok_msg'])) {
+                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                                }
+                            }
+                        ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <form id="vstobjects" name="v_add_ip" method="post">
+            <script type="text/javascript">
+                function elementHideShow(elementToHideOrShow) {
+                    var el = document.getElementById(elementToHideOrShow);
+                    if (el.style.display == "block") {
+                        el.style.display = "none";
+                    } else {
+                        el.style.display = "block";
+                    }
+                }
+            </script>
+
+            <table class="data mode-add">
+                <tr class="data-add">
+                    <td class="data-dotted">
+                        <table class="data-col1">
+                            <tr><td></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted">
+                        <table class="data-col2" width="600px">
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Banlist') ?> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_chain">
+                                        <option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?php print __('SSH') ?></option>
+                                        <option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?php print __('FTP') ?></option>
+                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?php print __('MAIL') ?></option>
+                                        <option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?php print __('DNS') ?></option>
+                                        <option value="HTTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'HTTP'" )) echo 'selected'?>><?php print __('HTTP') ?></option>
+                                        <option value="HTTPS" <?php if ((!empty($v_chain)) && ( $v_chain == "'HTTPS'" )) echo 'selected'?>><?php print __('HTPS') ?></option>
+                                        <option value="POP3" <?php if ((!empty($v_chain)) && ( $v_chain == "'POP3'" )) echo 'selected'?>><?php print __('POP3') ?></option>
+                                        <option value="IMAP" <?php if ((!empty($v_chain)) && ( $v_chain == "'IMAP'" )) echo 'selected'?>><?php print __('IMAP') ?></option>
+                                        <option value="MYSQL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MYSQL'" )) echo 'selected'?>><?php print __('MYSQL') ?></option>
+                                        <option value="POSTGRES" <?php if ((!empty($v_chain)) && ( $v_chain == "'POSTGRES'" )) echo 'selected'?>><?php print __('POSTGRES') ?></option>
+                                        <option value="VESTA" <?php if ((!empty($v_chain)) && ( $v_chain == "'VESTA'" )) echo 'selected'?>><?php print __('VESTA') ?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('IP Address');?> <span class="optional">(<?php print __('CDIR format is supported');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="data-col2">
+                            <tr>
+                                <td class="step-top" width="116px">
+                                    <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
+                                </td>
+                                <td class="step-top">
+                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </from>

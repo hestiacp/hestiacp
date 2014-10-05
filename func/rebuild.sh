@@ -217,6 +217,7 @@ rebuild_web_domain_conf() {
     if [ ! -z "$STATS" ]; then
         cat $WEBTPL/$STATS/$STATS.tpl |\
             sed -e "s|%ip%|$ip|g" \
+                -e "s|%web_system%|$WEB_SYSTEM|g" \
                 -e "s|%web_port%|$WEB_PORT|g" \
                 -e "s|%web_ssl_port%|$WEB_SSL_PORT|g" \
                 -e "s|%proxy_port%|$PROXY_PORT|g" \

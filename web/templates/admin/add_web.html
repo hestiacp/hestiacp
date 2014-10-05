@@ -63,7 +63,7 @@
                 }
             </script>
 
-            <table class='data'>
+            <table class="data mode-add">
                 <tr class="data-add">
                 <td class="data-dotted">
                     <table class="data-col1">
@@ -284,7 +284,7 @@
                                     <table <?php echo (!empty($v_ftp)) ? "style='display: block'" : "style='display:none;'"  ?> class="ftptable ftptable-nrm" name="v_add_domain_ftp">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('FTP') ?> #<span class="ftp-user-number"><?php print $i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?php print __('remove') ?>)</a>
+                                                <?php print __('FTP') ?> #<span class="ftp-user-number"><?php print $i + 1; ?></span> <a class="ftp-remove-user additional-control do_delete" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?php print __('remove') ?>)</a>
                                                 <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?php print $i ?>][delete]" value="0" />
                                                 <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?php print $i ?>][is_new]" value="<?php print $ftp_user['is_new'] ?>" />
                                             </td>
@@ -365,7 +365,7 @@
             <table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
                 <tr>
                     <td class="vst-text input-label">
-                        <?php print __('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?php print __('remove') ?>)</a>
+                        <?php print __('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control do_delete" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?php print __('remove') ?>)</a>
                         <input type="hidden"  class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
                         <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1" />
                     </td>

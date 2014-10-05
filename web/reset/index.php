@@ -70,27 +70,19 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
     }
 }
 
+// Set system language
+exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
+if (!empty( $data['config']['LANGUAGE'])) {
+    $_SESSION['language'] = $data['config']['LANGUAGE'];
+} else {
+    $_SESSION['language'] = 'en';
+}
 
 if (empty($_GET['action'])) {
-    // Set system language
-    exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    if (!empty( $data['config']['LANGUAGE'])) {
-        $_SESSION['language'] = $data['config']['LANGUAGE'];
-    } else {
-        $_SESSION['language'] = 'en';
-    }
     require_once '../templates/header.html';
     require_once '../templates/reset_1.html';
 } else {
-    // Set system language
-    exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    if (!empty( $data['config']['LANGUAGE'])) {
-        $_SESSION['language'] = $data['config']['LANGUAGE'];
-    } else {
-        $_SESSION['language'] = 'en';
-    }
     require_once '../templates/header.html';
     if ($_GET['action'] == 'code' ) {
         require_once '../templates/reset_2.html';

@@ -64,17 +64,14 @@ if (!empty($_POST['ok'])) {
 
     // Get database manager url
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-list-sys-config json", $output, $return_var);
-        $sys = json_decode(implode('', $output), true);
-        unset($output);
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"] . ":");
         if ($_POST['v_host'] != 'localhost' ) $http_host = $_POST['v_host'];
         if ($_POST['v_type'] == 'mysql') $db_admin = "phpMyAdmin";
         if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpmyadmin/";
-        if (($_POST['v_type'] == 'mysql') && (!empty($sys['config']['DB_PMA_URL']))) $db_admin_link = $sys['config']['DB_PMA_URL'];
+        if (($_POST['v_type'] == 'mysql') && (!empty($_SESSION['DB_PMA_URL']))) $db_admin_link = $_SESSION['DB_PMA_URL'];
         if ($_POST['v_type'] == 'pgsql') $db_admin = "phpPgAdmin";
         if ($_POST['v_type'] == 'pgsql') $db_admin_link = "http://".$http_host."/phppgadmin/";
-        if (($_POST['v_type'] == 'pgsql') && (!empty($sys['config']['DB_PGA_URL']))) $db_admin_link = $sys['config']['DB_PGA_URL'];
+        if (($_POST['v_type'] == 'pgsql') && (!empty($_SESSION['DB_PGA_URL']))) $db_admin_link = $_SESSION['DB_PGA_URL'];
     }
 
     // Email login credentials
@@ -109,9 +106,7 @@ top_panel($user,$TAB);
 $v_db_email = $panel[$user]['CONTACT'];
 
 // List avaiable database types
-exec (VESTA_CMD."v-list-database-types 'json'", $output, $return_var);
-$db_types = json_decode(implode('', $output), true);
-unset($output);
+$db_types = split(",",$_SESSION['DB_SYSTEM']);
 
 // List available database servers
 $db_hosts = array();

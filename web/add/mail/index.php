@@ -144,12 +144,9 @@ if (!empty($_POST['ok_acc'])) {
 
     // Get webmail url
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-list-sys-config json", $output, $return_var);
-        $sys = json_decode(implode('', $output), true);
-        unset($output);
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         $webmail = "http://".$http_host."/webmail/";
-        if (!empty($sys['config']['MAIL_URL'])) $webmail = $sys['config']['MAIL_URL'];
+        if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
     }
 
     // Flush field values on success

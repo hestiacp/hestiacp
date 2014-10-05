@@ -1,5 +1,12 @@
 <?php
 
+// Check system settiongs
+if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
+    session_destroy();
+    header("Location: /login/");
+    exit;
+}
+
 // Check user session
 if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];

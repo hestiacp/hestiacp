@@ -16,7 +16,6 @@ domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 id=$3
 dvalue=$(idn -t --quiet -u "$4" )
-dvalue=$(echo $dvalue | tr '[:upper:]' '[:lower:]')
 priority=$5
 restart=$6
 

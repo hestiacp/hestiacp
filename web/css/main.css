@@ -136,8 +136,8 @@ label:active {
     font-weight: bold;
     text-decoration: none;
     line-height: 22px;
-    padding: 0 4px 2px 4px;
-    margin: 0 14px 2px 0;
+    padding: 0px 19px 4px 17px;
+    margin: 0px 0px 2px 0px;
 }
 
 .top-logout:hover {
@@ -272,7 +272,11 @@ label:active {
     font-size: 9pt;
     font-family: Arial, Helvetica, sans-serif;
 //    color: #333;
+<<<<<<< HEAD
     color: #666;
+=======
+    color: #7E7D7F;
+>>>>>>> 29caf7e3b5ca98e665b4b3c7c6be94ade368c484
     decoration: none;
     overflow: hidden;
 }
@@ -597,6 +601,9 @@ label:active {
     background-color: #eceff1;
     border-bottom: 1px solid #e9e9e9;
 }
+.data.mode-add {
+    border-top: 5px solid #F79B44;
+}
 
 .mode-add .data-add {
     background-color: #f7f6ed;
@@ -793,7 +800,11 @@ label:active {
     vertical-align: top;
     line-height: 1.2em;
     font-size: 10pt;
+<<<<<<< HEAD
     color: #666;
+=======
+    color: #626163; /* #7E7D7F;*/
+>>>>>>> 29caf7e3b5ca98e665b4b3c7c6be94ade368c484
     padding: 2px 4px 1px 0;
     white-space: nowrap;
 }
@@ -803,14 +814,22 @@ label:active {
     line-height: 0.8em;
     font-size: 8pt;
     padding: 4px 0 0 0;
+<<<<<<< HEAD
     color: #666;
+=======
+    color: #7E7D7F;
+>>>>>>> 29caf7e3b5ca98e665b4b3c7c6be94ade368c484
 }
 
 .counter-value {
     vertical-align: top;
     line-height: 1.2em;
     font-size: 10pt;
+<<<<<<< HEAD
     color: #555;
+=======
+    color: #545355; /*#626163;*/
+>>>>>>> 29caf7e3b5ca98e665b4b3c7c6be94ade368c484
     padding: 2px 0 1px 2px;
 }
 
@@ -905,6 +924,11 @@ label:active {
     border: 1px solid #909090;
 }
 
+.vst-input:disabled:hover {
+    border: 1px solid #C0C0C0;
+}
+
+
 .vst-input:focus {
     border: 1px solid #f79b44;
     background-color: #fffcd2;
@@ -927,12 +951,21 @@ label:active {
     min-width: 138px;
     margin: 2px 6px 0 0;
     padding: 8px 1px 6px 10px;
+<<<<<<< HEAD
 }
 
 .vst-list option {
     padding: 6px 1px 6px 15px;
 }
 
+=======
+}
+
+.vst-list option {
+    padding: 6px 1px 6px 15px;
+}
+
+>>>>>>> 29caf7e3b5ca98e665b4b3c7c6be94ade368c484
 /*
 @-moz-document url-prefix() {
     .vst-list {
@@ -995,8 +1028,8 @@ label:active {
 }
 
 .login-button:hover {
-    border: 1px solid #adaeae;
-    background-color: #adaeae;
+    border: 1px solid #6DB8D3;
+    background-color: #6DB8D3;
 }
 
 .login-button:active {

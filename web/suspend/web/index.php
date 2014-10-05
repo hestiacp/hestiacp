@@ -5,19 +5,23 @@ ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-if ($_SESSION['user'] == 'admin') {
-    if (!empty($_GET['user'])) {
-        $user=$_GET['user'];
-    }
-
-    if (!empty($_GET['domain'])) {
-        $v_username = escapeshellarg($user);
-        $v_domain = escapeshellarg($_GET['domain']);
-        exec (VESTA_CMD."v-suspend-web-domain ".$v_username." ".$v_domain, $output, $return_var);
-    }
-    check_return_code($return_var,$output);
-    unset($output);
+// Check user
+if ($_SESSION['user'] != 'admin') {
+    header("Location: /list/user");
+    exit;
 }
+
+if (!empty($_GET['user'])) {
+    $user=$_GET['user'];
+}
+
+if (!empty($_GET['domain'])) {
+    $v_username = escapeshellarg($user);
+    $v_domain = escapeshellarg($_GET['domain']);
+    exec (VESTA_CMD."v-suspend-web-domain ".$v_username." ".$v_domain, $output, $return_var);
+}
+check_return_code($return_var,$output);
+unset($output);
 
 $back = $_SESSION['back'];
 if (!empty($back)) {

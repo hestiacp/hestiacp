@@ -43,14 +43,10 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 case $chain in
     SSH)        port=22; protocol=TCP ;;
     FTP)        port=21; protocol=TCP  ;;
-    MAIL)       port=25; protocol=TCP  ;;
+    MAIL)       port='25,465,587,2525,110,995,143,993'; protocol=TCP  ;;
     DNS)        port=53; protocol=UDP  ;;
-    HTTP)       port=80; protocol=TCP  ;;
-    HTTPS)      port=443; protocol=TCP  ;;
-    POP3)       port=110; protocol=TCP  ;;
-    IMAP)       port=143; protocol=TCP  ;;
-    MYSQL)      port=3306; protocol=TCP  ;;
-    POSTGRES)   port=5432; protocol=TCP  ;;
+    WEB)        port='80,443'; protocol=TCP  ;;
+    DB)         port='3306,5432'; protocol=TCP  ;;
     VESTA)      port=8083; protocol=TCP  ;;
     *)          check_args '2' "$#" 'CHAIN PORT' ;;
 esac
@@ -59,7 +55,14 @@ esac
 $iptables -N fail2ban-$chain 2>/dev/null
 if [ $? -eq 0 ]; then
     $iptables -A fail2ban-$chain -j RETURN
-    $iptables -I INPUT -p $protocol --dport $port -j fail2ban-$chain
+
+    # Adding multiport module
+    if [[ "$port" =~ ,|-|: ]] ; then
+        port_str="-m multiport --dports $port"
+    else
+        port_str="--dport $port"
+    fi
+    $iptables -I INPUT -p $protocol $port_str -j fail2ban-$chain
 fi
 
 # Preserving chain

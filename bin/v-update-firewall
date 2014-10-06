@@ -129,7 +129,14 @@ fi
 chains=$VESTA/data/firewall/chains.conf
 for chain in $(cat $chains 2>/dev/null); do
     eval $chain
-    $iptables -I INPUT -p $PROTOCOL --dport $PORT -j fail2ban-$CHAIN
+    if [[ "$PORT" =~ ,|-|: ]] ; then
+        port="-m multiport --dports $PORT"
+    else
+        port="--dport $PORT"
+    fi
+    echo "$iptables -I INPUT -p $PROTOCOL $port -j fail2ban-$CHAIN" > $tmp
+    bash $tmp
+    rm -f $tmp
 done
 
 # Saving rules to the master iptables file

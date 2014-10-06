@@ -78,6 +78,12 @@ int main (int argc, char** argv) {
         }
     } else {
         printf("Error: no such user\n",argv[1]);
+        strcat(str, argv[1]);
+        strcat(str, " ");
+        strcat(str, ip);
+        strcat(str, " failed to login \n");
+        fputs (str,pFile);      /* write */
+        fclose (pFile);         /* close */
         exit(3);
     };
 

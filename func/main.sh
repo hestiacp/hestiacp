@@ -764,6 +764,22 @@ validate_format_common() {
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
+    if [[ "$1" =~ @ ]] && [ ${#1} -gt 1 ] ; then
+        echo "Error: @ can not be mixed"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+    if [[ $1 =~ \* ]]; then
+        if [[ ! $1 =~ \*$ ]]; then
+            echo "Error: * can be used only at the end"
+            log_event "$E_INVALID" "$EVENT"
+            exit $E_INVALID
+        fi
+        if [ "$(echo $1 | grep -o '*'|wc -l)" -gt 1 ]; then
+            log_event "$E_INVALID" "$EVENT"
+            echo "Error: * can be used only once"
+        fi
+    fi
 }
 
 # DNS record value

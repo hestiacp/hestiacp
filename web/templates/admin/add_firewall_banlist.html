@@ -53,15 +53,11 @@
                                 <td>
                                     <select class="vst-list" name="v_chain">
                                         <option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?php print __('SSH') ?></option>
+                                        <option value="WEB" <?php if ((!empty($v_chain)) && ( $v_chain == "'WEB'" )) echo 'selected'?>><?php print __('WEB') ?></option>
                                         <option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?php print __('FTP') ?></option>
-                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?php print __('MAIL') ?></option>
                                         <option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?php print __('DNS') ?></option>
-                                        <option value="HTTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'HTTP'" )) echo 'selected'?>><?php print __('HTTP') ?></option>
-                                        <option value="HTTPS" <?php if ((!empty($v_chain)) && ( $v_chain == "'HTTPS'" )) echo 'selected'?>><?php print __('HTPS') ?></option>
-                                        <option value="POP3" <?php if ((!empty($v_chain)) && ( $v_chain == "'POP3'" )) echo 'selected'?>><?php print __('POP3') ?></option>
-                                        <option value="IMAP" <?php if ((!empty($v_chain)) && ( $v_chain == "'IMAP'" )) echo 'selected'?>><?php print __('IMAP') ?></option>
-                                        <option value="MYSQL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MYSQL'" )) echo 'selected'?>><?php print __('MYSQL') ?></option>
-                                        <option value="POSTGRES" <?php if ((!empty($v_chain)) && ( $v_chain == "'POSTGRES'" )) echo 'selected'?>><?php print __('POSTGRES') ?></option>
+                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?php print __('MAIL') ?></option>
+                                        <option value="DB" <?php if ((!empty($v_chain)) && ( $v_chain == "'DB'" )) echo 'selected'?>><?php print __('DB') ?></option>
                                         <option value="VESTA" <?php if ((!empty($v_chain)) && ( $v_chain == "'VESTA'" )) echo 'selected'?>><?php print __('VESTA') ?></option>
                                     </select>
                                 </td>

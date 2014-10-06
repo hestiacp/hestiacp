@@ -61,7 +61,7 @@
                                     <?php print __('delete');?>
                                     <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" />
                                     <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                        <p class="counter-value"><?php print __('DELETE_RECORD_CONFIRMATION',$data[$key]['RECORD']);?></p>
+                                        <p class="confirmation"><?php print __('DELETE_RECORD_CONFIRMATION',$data[$key]['RECORD']);?></p>
                                     </div>
                                 </span>
                             </a>

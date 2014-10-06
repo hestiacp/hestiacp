@@ -46,23 +46,23 @@
                         <?php
                             if ($data[$key]['KEY'] == 'RECORD') {
                                 $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'RECORD_ACTION_CONFIRMATION';
+                                $cnfrm = 'DELETE_RECORD_CONFIRMATION';
                             }
                             if ($data[$key]['KEY'] == 'ACCOUNT') {
                                 $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'USER_ACTION_CONFIRMATION';
+                                $cnfrm = 'DELETE_USER_CONFIRMATION';
                             }
                             if ($data[$key]['KEY'] == 'JOB') {
                                 $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'CRON_ACTION_CONFIRMATION';
+                                $cnfrm = 'DELETE_CRON_CONFIRMATION';
                             }
                             if ($data[$key]['KEY'] == 'DATABASE') {
                                 $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'DATABASE_ACTION_CONFIRMATION';
+                                $cnfrm = 'DELETE_DATABASE_CONFIRMATION';
                             }
                             if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
                                 $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'DOMAIN_ACTION_CONFIRMATION';
+                                $cnfrm = 'DELETE_DOMAIN_CONFIRMATION';
                             }
                         ?> 
                         <a id="delete_link_<?php echo $i ?>" class="do_delete">
@@ -71,7 +71,7 @@
                                 <?php print __('delete');?> 
                                 <input type="hidden" name="delete_url" value="<?php echo $delete_lnk; ?>" />
                                 <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                    <p class="counter-value"><?php print __($cnfrm,__('delete'),$data[$key]['RESULT']);?></p>
+                                    <p class="confirmation"><?php print __($cnfrm,$data[$key]['RESULT']);?></p>
                                 </div>
                             </span>
                         </a>
@@ -80,23 +80,23 @@
 
                             if ($data[$key]['KEY'] == 'RECORD') {
                                 $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'RECORD_ACTION_CONFIRMATION';
+                                $cnfrm = 'SUSPEND_RECORD_CONFIRMATION';
                             }
                             if ($data[$key]['KEY'] == 'ACCOUNT') {
                                 $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'USER_ACTION_CONFIRMATION';
+                                $cnfrm = 'SUSPEND_USER_CONFIRMATION';
                             }
                             if ($data[$key]['KEY'] == 'JOB') {
                                 $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'CRON_ACTION_CONFIRMATION';
+                                $cnfrm = 'SUSPEND_CRON_CONFIRMATION';
                             }
                             if ($data[$key]['KEY'] == 'DATABASE') {
                                 $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'DATABASE_ACTION_CONFIRMATION';
+                                $cnfrm = 'SUSPEND_DATABASE_CONFIRMATION';
                             }
                             if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
                                 $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'DOMAIN_ACTION_CONFIRMATION';
+                                $cnfrm = 'SUSPEND_DOMAIN_CONFIRMATION';
                             }
                         ?> 
                         <a id="<?php echo $spnd_action ?>_link_<?php echo $i ?>" class="do_<?php echo $spnd_action ?>">
@@ -105,7 +105,7 @@
                                 <?php echo __($spnd_action); ?> 
                                 <input type="hidden" name="<?php echo $spnd_action ?>_url" value="<?php echo $spnd_lnk ?>" />
                                 <div id="<?php echo $spnd_action ?>_dialog_<?php echo $i ?>" class="confirmation-text-suspention hidden" title="<?php print __('Confirmation');?>">
-                                    <p class="counter-value"><?php print __($cnfrm,__($spnd_action),$data[$key]['RESULT']);?></p>
+                                    <p class="confirmation"><?php print __($cnfrm,$data[$key]['RESULT']);?></p>
                                 </div>
                             </span>
                         </a>

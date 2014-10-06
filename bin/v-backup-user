@@ -586,7 +586,7 @@ local_backup(){
 
 # Defining ftp command function
 ftpc() {
-    /usr/bin/ftp -p -n $HOST $PORT <<EOF
+    /usr/bin/ftp -n $HOST $PORT <<EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
     binary

@@ -24,7 +24,6 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-
 check_args '2' "$#" 'USER DOMAIN [IP] [RESTART]'
 validate_format 'user' 'domain'
 if [ ! -z "$ip" ] ; then
@@ -49,14 +48,12 @@ if [ -z "$ip" ]; then
 fi
 
 # Web domain
-# Do Not restart at this point, will loose connection from API calls 
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+if [ ! -z "$WEB_SYSTEM" ]; then
     $BIN/v-add-web-domain $user $domain $ip 'no'
     return_code=$?
 fi
 
 # Proxy support
-# Do Not restart at this point, will loose connection from API calls
 if [ ! -z "$PROXY_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
     extentions="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
     extentions="$extentions,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav"
@@ -65,19 +62,15 @@ if [ ! -z "$PROXY_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
 fi
 
 # DNS domain
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    if [ "$return_code" -eq 0 ]; then
-        $BIN/v-add-dns-domain $user $domain $ip 'no'
-        return_code=$?
-    fi
+if [ ! -z "$DNS_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
+    $BIN/v-add-dns-domain $user $domain $ip 'no'
+    return_code=$?
 fi
 
 # Mail domain
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    if [ "$return_code" -eq 0 ]; then
-        $BIN/v-add-mail-domain $user $domain
-        return_code=$?
-    fi
+if [ ! -z "$MAIL_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
+    $BIN/v-add-mail-domain $user $domain
+    return_code=$?
 fi
 
 # Restart services

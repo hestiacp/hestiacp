@@ -126,8 +126,10 @@ if [ -x "$VESTA/data/firewall/custom.sh" ]; then
 fi
 
 # Checking fail2ban support
-chains=$VESTA/data/firewall/chains.conf
-for chain in $(cat $chains 2>/dev/null); do
+if [ ! -z "$FIREWALL_EXTENSION" ]; then
+    chains=$(cat $VESTA/data/firewall/chains.conf 2>/dev/null)
+fi
+for chain in $chains; do
     eval $chain
     if [[ "$PORT" =~ ,|-|: ]] ; then
         port="-m multiport --dports $PORT"
@@ -146,7 +148,14 @@ if [ -e "/etc/redhat-release" ]; then
         /sbin/chkconfig iptables on
     fi
 else
-    sbin/iptables-save > /etc/iptables.up.rules
+    /sbin/iptables-save > /etc/iptables.rules
+    preup="/etc/network/if-pre-up.d/iptables"
+    if [ ! -e "$preup" ]; then
+        echo '#!/bin/sh' > $preup
+        echo "/sbin/iptables-restore < /etc/iptables.rules" >> $preup
+        echo "exit 0" >> $preup
+        chmod +x $preup
+    fi
 fi
 
 

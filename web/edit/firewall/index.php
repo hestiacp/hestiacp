@@ -56,7 +56,7 @@ if (!empty($_POST['save'])) {
     $v_comment = escapeshellarg($_POST['v_comment']);
 
     // Change Status
-    exec (VESTA_CMD."v-change-firewall-rule ".$v_rule." ".$v_action." ".$v_ip."  ".$v_port." ".$v_protocol."".$v_comment, $output, $return_var);
+    exec (VESTA_CMD."v-change-firewall-rule ".$v_rule." ".$v_action." ".$v_ip."  ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
     check_return_code($return_var,$output);
     unset($output);
 

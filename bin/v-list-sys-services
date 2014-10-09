@@ -199,6 +199,15 @@ if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     str="$str STATE='$state' CPU='0' MEM='0' RTIME='0'"
 fi
 
+# Fail2ban
+service=$FIREWALL_EXTENSION
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='job scheduler' STATE='$state'"
+    str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+fi
+
+
 # Defining config
 echo -e "$str" > $tmp_file
 conf=$tmp_file

@@ -46,6 +46,9 @@ if [ $1 -ge 2 ]; then
     if [ -e /usr/local/vesta/upd/add_sudo.sh ]; then
         /usr/local/vesta/upd/add_sudo.sh
     fi
+    if [ -e /usr/local/vesta/upd/add_firewall.sh ]; then
+        /usr/local/vesta/upd/add_firewall.sh
+    fi
 
 %files
 %{_vestadir}

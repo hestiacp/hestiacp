@@ -96,7 +96,9 @@ if (!empty($_POST['save'])) {
         $v_language = escapeshellarg($_POST['v_language']);
         exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
         check_return_code($return_var,$output);
-        if (($_GET['user'] == 'admin') && (empty($_SESSION['error_msg']))) $_SESSION['language'] = $_POST['v_language'];
+        if (empty($_SESSION['error_msg'])) {
+             if ((empty($_GET['user'])) || ($_GET['user'] == $_SESSION['user'])) $_SESSION['language'] = $_POST['v_language'];
+        }
         unset($output);
     }
 

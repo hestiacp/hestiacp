@@ -33,7 +33,6 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 # Checking local IPv4 rules
 rules="$VESTA/data/firewall/rules.conf"
 ports="$VESTA/data/firewall/ports.conf"
-fail2ban="$VESTA/data/firewall/fail2ban.conf"
 
 if [ ! -e "$rules" ]; then
     exit

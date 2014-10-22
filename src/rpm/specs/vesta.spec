@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        10
+Release:        11
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -60,6 +60,19 @@ if [ $1 -ge 2 ]; then
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Wed Oct 22 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-11
+- Firewall support
+- Fail2ban support
+- Sudo support for admin user
+- Cron email reporting switch
+- Improved SSL validation
+- Minor design improvements
+- Unsuccessfull login attempt logger
+- Fix for fase sensitive dns records
+- Fix for webstats
+- Fix for ftp user login
+
+
 * Mon Aug 4 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-10
 - New Design
 - MultiFTP Support

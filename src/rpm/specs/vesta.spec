@@ -49,7 +49,7 @@ if [ $1 -ge 2 ]; then
     if [ -e /usr/local/vesta/upd/add_firewall.sh ]; then
         /usr/local/vesta/upd/add_firewall.sh
     fi
-
+fi
 %files
 %{_vestadir}
 %config(noreplace) %{_vestadir}/web/images/logo.png

@@ -17,22 +17,23 @@ software="nginx httpd mod_ssl mod_ruid2 mod_extract_forwarded mod_fcgid
     phpMyAdmin awstats webalizer vsftpd mysql mysql-server exim dovecot clamd
     spamassassin curl roundcubemail bind bind-utils bind-libs mc screen ftp
     libpng libjpeg libmcrypt mhash zip unzip openssl flex rssh libxml2
-    ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rsync
-    rrdtool GeoIP freetype ntp openssh-clients vesta vesta-nginx vesta-php"
+    ImageMagick sqlite pcre sudo bc jwhois mailx lsof tar telnet rrdtool
+    fail2ban GeoIP freetype ntp openssh-clients vesta vesta-nginx vesta-php"
 
 # Help
 help() {
     echo "usage: $0 [OPTIONS]
-   -d, --disable-remi         Disable remi repository
-   -e, --email                Set email address
-   -f, --force                Force installation
    -h, --help                 Print this help and exit
+   -f, --force                Force installation
+   -i, --disable-iptables     Disable iptables support
+   -b, --disable-fail2ban     Disable fail2ban protection
+   -d, --disable-remi         Disable remi repository
    -n, --noupdate             Do not run yum update command
-   -m, --mysql-password       Set MySQL password instead of generating it
-   -p, --password             Set admin password instead of generating it
    -s, --hostname             Set server hostname
+   -e, --email                Set email address
+   -p, --password             Set admin password instead of generating it
+   -m, --mysql-password       Set MySQL password instead of generating it
    -q, --quota                Enable File System Quota"
-
     exit 1
 }
 
@@ -56,14 +57,16 @@ gen_pass() {
 for arg; do
     delim=""
     case "$arg" in
-        --disable-remi)         args="${args}-d " ;;
-        --email)                args="${args}-e " ;;
-        --force)                args="${args}-f " ;;
         --help)                 args="${args}-h " ;;
+        --force)                args="${args}-f " ;;
+        --disable-fail2ban)     args="${args}-b " ;;
+        --disable-remi)         args="${args}-d " ;;
+        --disable-iptables)     args="${args}-i " ;;
         --noupdate)             args="${args}-n " ;;
-        --mysql-password)       args="${args}-m " ;;
-        --password)             args="${args}-p " ;;
         --hostname)             args="${args}-s " ;;
+        --email)                args="${args}-e " ;;
+        --password)             args="${args}-p " ;;
+        --mysql-password)       args="${args}-m " ;;
         --quota)                args="${args}-q " ;;
         *)              [[ "${arg:0:1}" == "-" ]] || delim="\""
                         args="${args}${delim}${arg}${delim} ";;
@@ -72,16 +75,18 @@ done
 eval set -- "$args"
 
 # Getopt
-while getopts "dhfnqe:m:p:s:" Option; do
+while getopts "hfibdnqe:m:p:s:" Option; do
     case $Option in
-        d) disable_remi='yes' ;;          # Disable remi repo
         h) help ;;                        # Help
-        e) email=$OPTARG ;;               # Set email
         f) force='yes' ;;                 # Force install
+        i) disable_iptables='yes' ;;      # Disable iptables
+        b) disable_fail2ban='yes' ;;      # Disable fail2ban
+        d) disable_remi='yes' ;;          # Disable remi repo
         n) noupdate='yes' ;;              # Disable yum update
-        m) mpass=$OPTARG ;;               # MySQL pasword
-        p) vpass=$OPTARG ;;               # Admin password
         s) servername=$OPTARG ;;          # Server hostname
+        e) email=$OPTARG ;;               # Set email
+        p) vpass=$OPTARG ;;               # Admin password
+        m) mpass=$OPTARG ;;               # MySQL pasword
         q) quota='yes' ;;                 # Enable quota
         *) help ;;                        # Default
     esac
@@ -106,6 +111,7 @@ release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
 codename="${os}_$release"
 if [ $os !=  'CentOS' ] && [ $os != 'Red' ]; then
     echo 'Error: sorry, we currently support RHEL and CentOS only'
+    exit
 fi
 
 # Check admin user account
@@ -447,6 +453,11 @@ if [ "$srv_type" = 'small' ]; then
     software=$(echo "$software" | sed -e 's/spamassassin//')
 fi
 
+# Exclude fail2ban
+if [ "$disable_fail2ban" = 'yes' ]; then
+    software=$(echo "$software" | sed -e 's/fail2ban//')
+fi
+
 # Install Vesta packages
 if [ -z "$disable_remi" ]; then 
     yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta,remi" \
@@ -495,6 +506,7 @@ mkdir -p $VESTA/data
 mkdir -p $VESTA/data/ips
 mkdir -p $VESTA/data/queue
 mkdir -p $VESTA/data/users
+mkdir -p $VESTA/data/firewall
 touch $VESTA/data/queue/backup.pipe
 touch $VESTA/data/queue/disk.pipe
 touch $VESTA/data/queue/webstats.pipe
@@ -542,6 +554,17 @@ if [ "$srv_type" = 'micro' ]; then
     rm -f /usr/local/vesta/data/templates/web/httpd/phpfcgid.*
 fi
 
+# Firewall configuration
+wget $CHOST/$VERSION/firewall.tar.gz -O firewall.tar.gz
+tar -xzf firewall.tar.gz
+if [ "$disable_iptables" = 'yes' ]; then
+    sed -i "s/iptables//" $VESTA/conf/vesta.conf
+    chkconfig iptables off
+    service iptables stop
+else
+    $BIN/v-update-firewall
+fi
+
 # Generating SSL certificate
 $VESTA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
      'San Francisco' 'Vesta Control Panel' 'IT' > /tmp/vst.pem
@@ -558,10 +581,6 @@ sed -n "$key_start,${key_end}p" /tmp/vst.pem > certificate.key
 chown root:mail /usr/local/vesta/ssl/*
 chmod 660 /usr/local/vesta/ssl/*
 rm /tmp/vst.pem
-
-# Disabling iptables
-chkconfig iptables off
-service iptables stop
 
 # Disabling webalizer routine
 rm -f /etc/cron.daily/00webalizer
@@ -755,6 +774,18 @@ if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
         echo "Error: spamassassin start failed"
         exit 1
     fi
+fi
+
+# Fail2ban configuration
+if [ -z "$disable_fail2ban" ]; then
+    cd /etc
+    wget $CHOST/$VERSION/fail2ban.tar.gz -O fail2ban.tar.gz
+    tar -xzf fail2ban.tar.gz
+    rm -f fail2ban.tar.gz
+    chkconfig fail2ban on
+    service fail2ban start
+else
+    sed -i "s/fail2ban//" $VESTA/conf/vestac.conf
 fi
 
 # php configuration

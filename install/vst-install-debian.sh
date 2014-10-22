@@ -18,17 +18,19 @@ software="nginx apache2 apache2-utils apache2.2-common bsdutils e2fsprogs
     flex dovecot-imapd dovecot-pop3d phpMyAdmin awstats webalizer
     jwhois rssh git spamassassin roundcube roundcube-mysql
     roundcube-plugins sudo bc ftp lsof ntpdate rrdtool quota e2fslibs
-    dnsutils vesta vesta-nginx vesta-php"
+    fail2ban dnsutils vesta vesta-nginx vesta-php"
 
 help() {
     echo "usage: $0 [OPTIONS]
-   -e, --email                Set email address
-   -f, --force                Force installation
    -h, --help                 Print this help and exit
-   -n, --noupdate             Do not run apt-get upgrade command
-   -m, --mysql-password       Set MySQL password instead of generating it
-   -p, --password             Set admin password instead of generating it
+   -f, --force                Force installation
+   -i, --disable-iptables     Disable iptables support
+   -b, --disable-fail2ban     Disable fail2ban protection
+   -n, --noupdate             Do not run yum update command
    -s, --hostname             Set server hostname
+   -e, --email                Set email address
+   -p, --password             Set admin password instead of generating it
+   -m, --mysql-password       Set MySQL password instead of generating it
    -q, --quota                Enable File System Quota"
     exit 1
 }
@@ -53,13 +55,15 @@ gen_pass() {
 for arg; do
     delim=""
     case "$arg" in
-        --email)                args="${args}-e " ;;
-        --force)                args="${args}-f " ;;
         --help)                 args="${args}-h " ;;
+        --force)                args="${args}-f " ;;
+        --disable-fail2ban)     args="${args}-b " ;;
+        --disable-iptables)     args="${args}-i " ;;
         --noupdate)             args="${args}-n " ;;
-        --mysql-password)       args="${args}-m " ;;
-        --password)             args="${args}-p " ;;
         --hostname)             args="${args}-s " ;;
+        --email)                args="${args}-e " ;;
+        --password)             args="${args}-p " ;;
+        --mysql-password)       args="${args}-m " ;;
         --quota)                args="${args}-q " ;;
         *)              [[ "${arg:0:1}" == "-" ]] || delim="\""
                         args="${args}${delim}${arg}${delim} ";;
@@ -68,15 +72,17 @@ done
 eval set -- "$args"
 
 # Getopt
-while getopts "dhfnqe:m:p:s:" Option; do
+while getopts "hfibdnqe:m:p:s:" Option; do
     case $Option in
         h) help ;;                        # Help
-        e) email=$OPTARG ;;               # Set email
         f) force='yes' ;;                 # Force install
-        n) noupdate='yes' ;;              # Disable apt-get upgrade
-        m) mpass=$OPTARG ;;               # MySQL pasword
-        p) vpass=$OPTARG ;;               # Admin password
+        i) disable_iptables='yes' ;;      # Disable iptables
+        b) disable_fail2ban='yes' ;;      # Disable fail2ban
+        n) noupdate='yes' ;;              # Disable yum update
         s) servername=$OPTARG ;;          # Server hostname
+        e) email=$OPTARG ;;               # Set email
+        p) vpass=$OPTARG ;;               # Admin password
+        m) mpass=$OPTARG ;;               # MySQL pasword
         q) quota='yes' ;;                 # Enable quota
         *) help ;;                        # Default
     esac
@@ -391,6 +397,11 @@ if [ "$srv_type" = 'small' ]; then
     software=$(echo "$software" | sed -e 's/spamassassin//')
 fi
 
+# Exclude fail2ban
+if [ "$disable_fail2ban" = 'yes' ]; then
+    software=$(echo "$software" | sed -e 's/fail2ban//')
+fi
+
 # Update system packages
 apt-get update
 
@@ -434,6 +445,7 @@ mkdir -p $VESTA/data
 mkdir -p $VESTA/data/ips
 mkdir -p $VESTA/data/queue
 mkdir -p $VESTA/data/users
+mkdir -p $VESTA/data/firewall
 touch $VESTA/data/queue/backup.pipe
 touch $VESTA/data/queue/disk.pipe
 touch $VESTA/data/queue/webstats.pipe
@@ -481,6 +493,15 @@ cp templates/web/skel/public_html/index.html /var/www/
 sed -i 's/%domain%/It worked!/g' /var/www/index.html
 if [ "$srv_type" = 'micro' ]; then
     rm -f /usr/local/vesta/data/templates/web/apache2/phpfcgid.*
+fi
+
+# Firewall configuartion
+wget $CHOST/$VERSION/firewall.tar.gz -O firewall.tar.gz
+tar -xzf firewall.tar.gz
+if [ "$disable_iptables" = 'yes' ]; then
+    sed -i "s/iptables//" $VESTA/conf/vesta.conf
+else
+    $BIN/v-update-firewall
 fi
 
 # Generating SSL certificate
@@ -703,6 +724,17 @@ if [ "$srv_type" = 'medium' ] ||  [ "$srv_type" = 'large' ]; then
     fi
 fi
 
+# Fail2ban configuration
+if [ -z "$disable_fail2ban" ]; then
+    cd /etc
+    wget $CHOST/$VERSION/fail2ban.tar.gz -O fail2ban.tar.gz
+    tar -xzf fail2ban.tar.gz
+    rm -f fail2ban.tar.gz
+    chkconfig fail2ban on
+    service fail2ban start
+else
+    sed -i "s/fail2ban//" $VESTA/conf/vestac.conf
+fi
 # php configuration
 sed -i "s/;date.timezone =/date.timezone = UTC/g" /etc/php5/apache2/php.ini
 sed -i "s/;date.timezone =/date.timezone = UTC/g" /etc/php5/cli/php.ini

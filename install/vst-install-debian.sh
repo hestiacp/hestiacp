@@ -498,10 +498,11 @@ fi
 # Firewall configuartion
 wget $CHOST/$VERSION/firewall.tar.gz -O firewall.tar.gz
 tar -xzf firewall.tar.gz
+rm -f firewall.tar.gz
 if [ "$disable_iptables" = 'yes' ]; then
     sed -i "s/iptables//" $VESTA/conf/vesta.conf
 else
-    $BIN/v-update-firewall
+    /usr/local/vesta/bin/v-update-firewall
 fi
 
 # Generating SSL certificate

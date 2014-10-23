@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        11
+Release:        12
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -60,6 +60,10 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Wed Oct 23 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-12
+- Firewall service handler for Debian and Ubuntu
+- Minor i18n fix
+
 * Wed Oct 22 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-11
 - Firewall support
 - Fail2ban support

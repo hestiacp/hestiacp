@@ -27,9 +27,17 @@ check_args '1' "$#" 'SERVICE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-service $service restart >/dev/null 2>&1
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
+if [ "$service" != "iptables" ]; then
+    service $service restart >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        exit $E_RESTART
+    fi
+else
+    $BIN/v-stop-firewall
+    $BIN/v-update-firewall
+    if [ $? -ne 0 ]; then
+        exit $E_RESTART
+    fi
 fi
 
 

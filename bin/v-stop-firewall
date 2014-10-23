@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: stop system firewall
+# options: NONE
+#
+# The function stops  iptables
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Defining absolute path for iptables and modprobe
+iptables="/sbin/iptables"
+modprobe="/sbin/modprobe"
+
+# Includes
+source /etc/profile.d/vesta.sh
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+#is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Creating temporary file
+tmp=$(mktemp)
+
+# Flushing INPUT chain
+echo "$iptables -P INPUT ACCEPT" >> $tmp
+echo "$iptables -F INPUT" >> $tmp
+
+# Deleting vesta chain
+echo "$iptables -X vesta" >> $tmp
+
+# Applying rules
+bash $tmp 2>/dev/null
+
+# Deleting temporary file
+rm -f $tmp
+
+# Saving rules to the master iptables file
+if [ -e "/etc/redhat-release" ]; then
+    /sbin/iptables-save > /etc/sysconfig/iptables
+    if [ -z "$(ls /etc/rc3.d/S*iptables 2>/dev/null)" ]; then
+        /sbin/chkconfig iptables off
+    fi
+else
+    /sbin/iptables-save > /etc/iptables.rules
+    preup="/etc/network/if-pre-up.d/iptables"
+    if [ ! -e "$preup" ]; then
+        echo '#!/bin/sh' > $preup
+        echo "/sbin/iptables-restore < /etc/iptables.rules" >> $preup
+        echo "exit 0" >> $preup
+        chmod +x $preup
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

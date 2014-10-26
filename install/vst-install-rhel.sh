@@ -554,18 +554,6 @@ if [ "$srv_type" = 'micro' ]; then
     rm -f /usr/local/vesta/data/templates/web/httpd/phpfcgid.*
 fi
 
-# Firewall configuration
-wget $CHOST/$VERSION/firewall.tar.gz -O firewall.tar.gz
-tar -xzf firewall.tar.gz
-rm -f firewall.tar.gz
-if [ "$disable_iptables" = 'yes' ]; then
-    sed -i "s/iptables//" $VESTA/conf/vesta.conf
-    chkconfig iptables off
-    service iptables stop
-else
-    /usr/local/vesta/bin/v-update-firewall
-fi
-
 # Generating SSL certificate
 $VESTA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
      'San Francisco' 'Vesta Control Panel' 'IT' > /tmp/vst.pem
@@ -848,6 +836,18 @@ $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 
 # Configuring system ips
 $VESTA/bin/v-update-sys-ip
+
+# Firewall configuration
+wget $CHOST/$VERSION/firewall.tar.gz -O firewall.tar.gz
+tar -xzf firewall.tar.gz
+rm -f firewall.tar.gz
+if [ "$disable_iptables" = 'yes' ]; then
+    sed -i "s/iptables//" $VESTA/conf/vesta.conf
+    chkconfig iptables off
+    service iptables stop
+else
+    /usr/local/vesta/bin/v-update-firewall
+fi
 
 # Get main ip
 main_ip=$(ifconfig |grep 'inet addr:' |grep -v 127.0.0.1 |head -n1 | \

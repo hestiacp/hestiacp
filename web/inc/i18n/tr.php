@@ -4,7 +4,7 @@
  * ozgur (@forum.vestacp.com)
  */
 
-$LANG['en'] = array(
+$LANG['tr'] = array(
     'Packages'  => 'Paketler',
     'IP'  => 'IP',
     'Graphs'  => 'Grafikler',

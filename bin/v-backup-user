@@ -487,6 +487,7 @@ if [ "$USER" != '*' ]; then
         msg="$msg\n$(date "+%F %T") excluding directory $xpath"
     done
 
+    IFS=$'\n'
     set -f
     i=0
     for udir in $(ls |egrep -v "conf|web|dns|mail"); do
@@ -656,9 +657,9 @@ ftp_backup() {
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" |grep -v Trying)
     if [ ! -z "$ftp_result" ] ; then
         rm -rf $tmpdir
-        echo "Can't create ftp backup folder" |\
+        echo "Can't create ftp backup folder ftp://$HOST$BPATH" |\
             $send_mail -s "$subj" $email
-        echo "Error: cant's create ftp folder"
+        echo "Error: cant's create ftp folder ftp://$HOST$BPATH"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$E_FTP" "$EVENT"
         exit $E_FTP
@@ -695,7 +696,7 @@ echo "-- SUMMARY --"
 msg="$msg\n-- SUMMARY --"
 
 # Switching on backup system types
-for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\n}"); do
+for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
     case $backup_type in
         local) local_backup ;;
         ftp)   ftp_backup ;;

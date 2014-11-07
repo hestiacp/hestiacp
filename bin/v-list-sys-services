@@ -203,7 +203,7 @@ fi
 service=$FIREWALL_EXTENSION
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     get_srv_state $service
-    str="$str\nNAME='$service' SYSTEM='job scheduler' STATE='$state'"
+    str="$str\nNAME='$service' SYSTEM='Brute force blocking' STATE='$state'"
     str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 

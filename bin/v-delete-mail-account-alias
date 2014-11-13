@@ -49,7 +49,7 @@ fi
 #----------------------------------------------------------#
 
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    sed -i "/^$malias@$domain:$account/d" \
+    sed -i "/^$malias@$domain_idn:$account/d" \
         $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 

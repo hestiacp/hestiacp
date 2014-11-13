@@ -42,8 +42,8 @@ is_object_value_empty 'mail' 'DOMAIN' "$domain" '$CATCHALL'
 
 # Adding catchall alias
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    sed -i "/*@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
-    echo "*@$domain:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+    sed -i "/*@$domain_idn:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+    echo "*@$domain_idn:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 
 

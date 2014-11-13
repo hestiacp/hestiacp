@@ -41,7 +41,7 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$CATCHALL'
 
 # Delete cathcall alias
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    sed -i "/*@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+    sed -i "/*@$domain_idn:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 
 

@@ -41,8 +41,8 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 # Change cathcall alias
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    sed -i "/*@$domain:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
-    echo "*@$domain:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+    sed -i "/*@$domain_idn:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+    echo "*@$domain_idn:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 
 

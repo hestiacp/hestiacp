@@ -952,8 +952,4 @@ echo 'you have successfully installed Vesta Control Panel.'
 echo
 echo
 
-# Tricky way to get new PATH variable
-cd
-bash
-
 # EOF

@@ -37,7 +37,7 @@
                     <?php
                         foreach ($data as $key => $value) {
                             ++$i;
-                            list($ip,$chain) = split(":",$key);
+                            list($ip,$chain) = explode(":",$key);
                     ?> 
                     <tr class="data-row">
                         <td class="data-dotted">

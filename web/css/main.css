@@ -316,17 +316,17 @@ label:active {
 }
 
 .submenu-button-select {
-    width: 28px;
+    width: 24px;
     height: 28px;
     cursor: pointer;
     color: #555;
     background-color: #fafafa;
     border: 1px solid #ccc;
-    border-radius: 3px 3px 3px 3px;
-    padding: 0;
+    border-radius: 0px 3px 3px 0px;
     font-size: 9pt;
     font-weight: bold;
     font-family:Arial, Helvetica, sans-serif;
+    position: absolute;
 }
 
 .submenu-button-search {
@@ -426,35 +426,61 @@ label:active {
     background-color: #777;
 }
 
-.submenu-select-dropdown {
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 9pt;
-    color: #333;
-    display: block;
+.submenu-select-wrapper {
     float: left;
-    height: 28px;
-    margin: 0 4px 0 0;
-    min-width: 138px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    background: #fafafa url("/images/arrow.png") no-repeat right 3px center;
+    cursor: pointer;
+    color: #777;
+    font-size: 9pt;
+    border-radius: 3px 0px 0px 3px;
+    padding: 0 11px 0 0;
+}
+
+.submenu-select-wrapper, .submenu-select-wrapper select{
+    min-width: 107px;
+    height: 26px;
+    line-height: 26px;
+}
+
+.submenu-select-wrapper:hover {
     background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 3px 3px 3px 3px;
-    padding: 0px 0px 2px 4px;
+    border-color:#909090;
+    color: #555;
 }
 
-
-.submenu-select-dropdown:hover {
-    border: 1px solid #909090;
-}
-
-.submenu-select-dropdown:focus {
-    border: 1px solid #f79b44;
+.submenu-select-wrapper select:focus {
+    border-color:#f79b44;
     background-color: #fffcd2;
     color: #333;
 }
 
+.submenu-select-wrapper option {
+    padding: 5px;
+}
 
-.submenu-select-dropdown option {
-    padding: 5px 5px 5px 8px;
+.submenu-select-wrapper .holder{
+    display: block;
+    margin: 0 5px 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.submenu-select-wrapper select{
+    margin: 0;
+    position: absolute;
+    cursor: pointer;
+    outline: none;
+    opacity: 0;
+    /* CSS hacks for older browsers */
+    _noFocusLine: expression(this.hideFocus=true); 
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -khtml-opacity: 0;
+    -moz-opacity: 0;
 }
 
 .submenu-search-block {
@@ -1249,3 +1275,4 @@ label:active {
     color: #555;
     padding: 2px 0 1px 2px;
 }
+

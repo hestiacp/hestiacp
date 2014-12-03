@@ -4,7 +4,7 @@
         <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
         <title>Vesta - <?php echo "$TAB"; ?> </title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-        <link type="text/css" href="/css/main.css?ver=1413983264" rel="stylesheet" />
+        <link type="text/css" href="/css/main.css?ver=1417643221" rel="stylesheet" />
         <!--[if IE 7]>
             <link rel="stylesheet" type="text/css" href="/css/ie.css" />
             <style type="text/css">
@@ -22,11 +22,6 @@
 
                 .submenu-select-block {
                     width:239px;
-                }
-
-                .submenu-select-dropdown {
-                    position: relative;
-                    top: 2px;
                 }
             </style>
         <![endif]-->
@@ -177,8 +172,21 @@
                     }
                 }
             }
-
         </script>
+
+        <script language="JavaScript">
+            $(document).ready(function(){
+                $(".submenu-select-dropdown").each(function(){
+                    $(this).wrap( "<span class='submenu-select-wrapper'></span>" );
+                    $(this).after("<span class='holder'></span>");
+                });
+                $(".submenu-select-dropdown").change(function(){
+                    var selectedOption = $(this).find(":selected").text();
+                    $(this).next(".holder").text(selectedOption);
+                }).trigger('change');
+            })
+        </script>
+
         <script type="text/javascript" src="/js/app.js"></script>
         <script type="text/javascript" src="/js/templates.js"></script>
     </head>

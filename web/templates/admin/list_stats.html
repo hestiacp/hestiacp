@@ -1,6 +1,7 @@
             <table class="submenu">
                 <tr>
                     <td class="wrapper">
+                        <div style="float:left; width: 147px;">&nbsp;</div>
                         <div class="submenu-search-block">
                             <form action="/search/" method="get">
                             <input type="text" name="q" class="submenu-search-field">
@@ -9,7 +10,7 @@
                         </div>
                         <div class="submenu-select-block" style="padding-left:8px;">
                             <form action="/list/stats/" method="get" id="objects">
-                            <a class="vst<?php if (empty($_GET['user'])) echo "-selected"; ?>" style="padding: 4px 12px 0 0;" href='/list/stats/'><?php print __('Overall Statistics');?></a> 
+                            <a class="vst-selected" style="margin: 0px 8px 0 0;" href='/list/stats/'><?php print __('Overall Statistics');?></a> 
                             <select class="submenu-select-dropdown" name="user">
                                 <option value=""><?php print __('show per user');?></option>
                             <?php

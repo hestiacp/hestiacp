@@ -23,9 +23,16 @@ get_srv_state() {
     proc_name=${2-$1}
 
     # Check service status
-    status=$(service $srv status 2>/dev/null)
-    rc=$?
-    stopped=$(echo $status| grep stop)
+
+    # Check if systemd is used as init system
+    if [[ $(systemctl) =~ -\.mount ]]; then 
+        $(systemctl -q is-active $srv)
+        rc=$?
+    else
+        status=$(service $srv status 2>/dev/null)
+        rc=$?
+        stopped=$(echo $status| grep stop)
+    fi
 
     if [ "$rc" -eq 0 ] && [ -z "$stopped" ]; then
         state='running'

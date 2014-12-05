@@ -95,7 +95,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 fi
 
 # Check supported version
-if [ -e '/etc/redhat-release' ] || [ -e '/etc/lsb-release' ]; then
+if [ -e '/etc/redhat-release' ] || [ "$(lsb_release -si)" == "Ubuntu" ]; then
     echo 'Error: sorry, this installer works only on Debian 7'
     exit 1
 fi

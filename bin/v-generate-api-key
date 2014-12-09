@@ -21,6 +21,10 @@ HASH=$(keygen)
 #                       Action                             #
 #----------------------------------------------------------#
 
+if [ ! -d ${KEYS} ]; then
+  mkdir ${KEYS}
+fi
+
 if [[ -e ${KEYS}${HASH} ]] ; then
     while [[ -e ${KEYS}${HASH} ]] ; do
         HASH=$(keygen)

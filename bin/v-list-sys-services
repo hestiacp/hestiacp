@@ -23,29 +23,41 @@ get_srv_state() {
     proc_name=${2-$1}
 
     # Check service status
-    status=$(service $srv status 2>/dev/null)
-    rc=$?
-    stopped=$(echo $status| grep stop)
+    state='running'
 
-    if [ "$rc" -eq 0 ] && [ -z "$stopped" ]; then
-        state='running'
+    # Searching related pids
+    if [ -z $3 ]; then
+        pids=$(pidof $proc_name |tr ' ' '|')
+    else
+        pids=$(pidof -x $proc_name |tr ' ' '|')
+    fi
+    if [ ! -z "$pids" ]; then
+        pid=$(echo $pids|cut -f 1 -d \|)
+        pids=$(egrep "$pids" $tmp_file)
 
-        # Calculate cpu and memory usage
-        cpu=0
-        mem=0
-        for pid in $(pidof $proc_name); do
-            pid_mem=$(pmap -x $pid | tail -n1 | awk '{print $3}')
-            pid_cpu=$(grep "^$pid " $tmp_file | cut -f 2 -d ' '|sed "s/^0//")
-            cpu=$((cpu + pid_cpu))
-            mem=$((mem + pid_mem))
-        done
-        mem=$((mem / 1024))
+        # Calculating CPU usage
+        cpu=$(echo "$pids" |awk '{ sum += $2} END {print sum}')
 
-        # Get pid date
-        if [ ! -z $pid ] && [ -e "/proc/$pid" ]; then
-            mtime=$(stat -c "%Y" /proc/$pid)
+        # Calculating memory usage
+        mem=$(echo "$pids" |awk '{sum += $3} END {print sum/1024 }')
+        mem=$(printf "%.0f\n" $mem)
+
+        # Searching service uptime
+        if [ -e "/var/run/$srv.pid" ]; then
+            srv_file="/var/run/$srv.pid"
+        fi
+        if [ -z "$srv_file" ] && [ -e "/var/run/$srv/$srv.pid" ]; then
+            srv_file="/var/run/$srv/$srv.pid"
+        fi
+        if [ -z $srv_file ] && [ -e "/proc/$pid" ]; then
+            srv_file="/proc/$pid"
+        fi
+        if [ ! -z "$srv_file" ]; then
+            mtime=$(stat -c "%Y" $srv_file)
             rtime=$((ctime - mtime))
             rtime=$((rtime  / 60))
+        else
+            rtime=0
         fi
     else
         # Service is stopped
@@ -63,22 +75,10 @@ get_srv_state() {
 
 # Save current proccess list
 tmp_file=$(mktemp)
-if [ "$format" = 'json' ]; then
-    ps aux | awk '{print $2" "$3}' | tr -d '.' > $tmp_file
-else
-    ps aux | awk '{print $2" "$3}' | cut -f 1 -d '.' > $tmp_file
-fi
+ps -eo pid,pcpu,size > $tmp_file
 
 # Get current time
 ctime=$(date +%s)
-
-# Proxy
-service=$PROXY_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
-    get_srv_state $service
-    str="NAME='$service' SYSTEM='reverse proxy' STATE='$state' CPU='$cpu'"
-    str="$str MEM='$mem' RTIME='$rtime'"
-fi
 
 # Web
 service=$WEB_SYSTEM
@@ -87,15 +87,24 @@ if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
         service='httpd'
     fi
     get_srv_state $service
-    str="$str\nNAME='$service' SYSTEM='web server' STATE='$state' CPU='$cpu'"
+    str="NAME='$service' SYSTEM='web server' STATE='$state' CPU='$cpu'"
     str="$str MEM='$mem' RTIME='$rtime'"
 
 fi
 
+# Proxy
+service=$PROXY_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='reverse proxy' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
+fi
+
+
 # DNS
 service=$DNS_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
-    if [ "$service" == 'bind' ]; then
+    if [ "$service" == 'bind' ] || [ "$service" == 'bind9' ]; then
         service='named'
     fi
     get_srv_state $service
@@ -202,8 +211,8 @@ fi
 # Fail2ban
 service=$FIREWALL_EXTENSION
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
-    get_srv_state $service
-    str="$str\nNAME='$service' SYSTEM='Brute force blocking' STATE='$state'"
+    get_srv_state $service fail2ban-server script
+    str="$str\nNAME='$service' SYSTEM='brute-force monitor' STATE='$state'"
     str="$str CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 

@@ -37,7 +37,7 @@ is_charset_valid() {
 
     if [ -z "$(echo $CHARSETS | grep -wi $charset )" ]; then
         echo "Error: charset $charset not exist"
-        log_event "$E_NOTEXIST $EVENT"
+        log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
 }
@@ -98,7 +98,7 @@ add_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_CONNECT $EVENT"
+        log_event  "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 
@@ -212,7 +212,7 @@ change_mysql_password() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event "$E_CONNECT $EVENT"
+        log_event "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 
@@ -269,7 +269,7 @@ delete_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_CONNECT $EVENT"
+        log_event  "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 
@@ -343,7 +343,7 @@ dump_mysql_database() {
         echo -e "Can't connect to $HOST\n$(cat /tmp/e.mysql)" |\
             $send_mail -s "$subj" $email
         echo "Error: Connection failed"
-        log_event  "$E_CONNECT $EVENT"
+        log_event  "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 
@@ -353,7 +353,7 @@ dump_mysql_database() {
         echo -e "Can't dump database $database\n$(cat /tmp/e.mysql)" |\
             $send_mail -s "$subj" $email
         echo "Error: dump $database failed"
-        log_event  "$E_DB $EVENT"
+        log_event  "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
@@ -399,7 +399,7 @@ dump_pgsql_database() {
         echo "Can't dump pgsql database $database" |\
             $send_mail -s "$subj" $email
         echo "Error: dump $database failed"
-        log_event  "$E_DB $EVENT"
+        log_event  "$E_DB" "$EVENT"
         exit $E_DB
     fi
 
@@ -435,7 +435,7 @@ suspend_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_CONNECT $EVENT"
+        log_event  "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 
@@ -483,7 +483,7 @@ unsuspend_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_CONNECT $EVENT"
+        log_event  "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 
@@ -530,8 +530,8 @@ get_mysql_disk_usage() {
     query='SELECT VERSION()'
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
-        echo "Error: Connection failed"
-        log_event  "$E_CONNECT $EVENT"
+        echo "Error: Connection to $HOST failed"
+        log_event  "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 
@@ -591,7 +591,7 @@ delete_mysql_user() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Connection failed"
-        log_event  "$E_CONNECT $EVENT"
+        log_event  "$E_CONNECT" "$EVENT"
         exit $E_CONNECT
     fi
 

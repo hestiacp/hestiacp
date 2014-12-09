@@ -6,6 +6,12 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     // Authentication
     $auth_code = 1;
     if (empty($_POST['hash'])) {
+        // Check user permission to use API
+        if ($_POST['user'] != 'admin') {
+            echo 'Error: only admin is allowed to use API';
+            exit;
+        }
+        
         $v_user = escapeshellarg($_POST['user']);
         $v_password = escapeshellarg($_POST['password']);
         exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." '".$_SERVER["REMOTE_ADDR"]."'",  $output, $auth_code);
@@ -20,13 +26,6 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         echo 'Error: authentication failed';
         exit;
     }
-
-    // Check user permission to use API
-    if ($_POST['user'] != 'admin') {
-        echo 'Error: only admin is allowed to use API';
-        exit;
-    }
-    
     
     // Prepare arguments
     if (isset($_POST['cmd'])) $cmd = escapeshellarg($_POST['cmd']);

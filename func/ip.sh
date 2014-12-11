@@ -54,14 +54,14 @@ is_ip_free() {
 
 # Get full interface name
 get_ip_iface() {
-    i=$(/sbin/ifconfig -a |grep -w "$interface"|cut -f1 -d ' '|\
-        tail -n 1|cut -f 2 -d :)
+    i=$(/sbin/ip addr | grep -w $interface |\
+         awk '{print $NF}' | tail -n 1 | cut -f 2 -d :)
     if [ "$i" = "$interface" ]; then
         n=0
     else
         n=$((i + 1))
     fi
-    iface="$interface:$n"
+    echo "$interface:$n"
 }
 
 
@@ -200,4 +200,51 @@ get_user_ip(){
         done
     fi
     echo "$ip"
+}
+
+# Convert CIDR to netmask
+convert_cidr() {
+    set -- $(( 5 - ($1 / 8) )) 255 255 255 255 \
+        $(((255 << (8 - ($1 % 8))) & 255 )) 0 0 0
+    if [[ $1 -gt 1 ]]; then
+        shift $1
+    else
+        shift
+    fi
+    echo ${1-0}.${2-0}.${3-0}.${4-0}
+}
+
+# Convert netmask to CIDR
+convert_netmask() {
+    nbits=0
+    IFS=.
+    for dec in $1 ; do
+        case $dec in
+            255) let nbits+=8;;
+            254) let nbits+=7;;
+            252) let nbits+=6;;
+            248) let nbits+=5;;
+            240) let nbits+=4;;
+            224) let nbits+=3;;
+            192) let nbits+=2;;
+            128) let nbits+=1;;
+            0);;
+        esac
+    done
+    echo "$nbits"
+}
+
+# Calculate broadcast address
+get_broadcast() {
+    OLD_IFS=$IFS
+    IFS=.
+    typeset -a I=($1)
+    typeset -a N=($2)
+    IFS=$OLD_IFS
+
+    echo "$((${I[0]} |\
+        (255 ^ ${N[0]}))).$((${I[1]} |\
+        (255 ^ ${N[1]}))).$((${I[2]} |\
+        (255 ^ ${N[2]}))).$((${I[3]} |\
+        (255 ^ ${N[3]})))"
 }

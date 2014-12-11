@@ -905,11 +905,11 @@ validate_format(){
             key)            validate_format_username "$arg" "$arg_name" ;;
             lname)          validate_format_name_s "$arg" "$arg_name" ;;
             malias)         validate_format_username "$arg" "$arg_name" ;;
-            mask)           validate_format_ip "$arg" ;;
             max_db)         validate_format_int "$arg" 'max db';;
             min)            validate_format_mhdmw "$arg" $arg_name ;;
             month)          validate_format_mhdmw "$arg" $arg_name ;;
             nat_ip)         validate_format_ip "$arg" ;;
+            netmask)        validate_format_ip "$arg" ;;
             newid)          validate_format_int "$arg" 'id' ;;
             ns1)            validate_format_domain "$arg" 'name_server';;
             ns2)            validate_format_domain "$arg" 'name_server';;

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system ip address
-# options: IP MASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]
+# options: IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NAT_IP]
 #
 # The function adds ip address into a system. It also creates rc scripts. You
 # can specify ip name which will be used as root domain for temporary aliases.
@@ -16,7 +16,7 @@
 
 # Argument defenition
 ip=${1// /}
-mask=$2
+netmask=$2
 interface="${3-eth0}"
 user="${4-admin}"
 ip_status="${5-shared}"
@@ -34,8 +34,8 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP MASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]'
-validate_format 'ip' 'mask' 'interface' 'user' 'ip_status'
+check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NAT_IP]'
+validate_format 'ip' 'netmask' 'interface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -50,11 +50,18 @@ fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-get_ip_iface
-sys_ip_check=$(/sbin/ifconfig | grep "addr:$ip ")
+
+# Converting netmask to CIDR format and calculating broadcast address
+cidr=$(convert_netmask $netmask)
+broadcast=$(get_broadcast $ip $netmask)
+iface=$(get_ip_iface)
+
+sys_ip_check=$(/sbin/ip addr | grep "$ip/$cidr")
 if [ -z "$sys_ip_check" ]; then
-    # Adding sys ip
-    /sbin/ifconfig "$iface" "$ip" netmask "$mask"
+
+    # Adding system ip
+    /sbin/ip addr add $ip/$cidr broadcast $broadcast \
+        dev $interface label $iface
 
     # Adding RHEL/CentOS/Fedora startup script
     if [ -e "/etc/redhat-release" ]; then
@@ -63,7 +70,7 @@ if [ -z "$sys_ip_check" ]; then
         sys_ip="$sys_ip\nBOOTPROTO=static"
         sys_ip="$sys_ip\nONBOOT=yes"
         sys_ip="$sys_ip\nIPADDR=$ip"
-        sys_ip="$sys_ip\nNETMASK=$mask"
+        sys_ip="$sys_ip\nNETMASK=$netmask"
         echo -e $sys_ip > /etc/sysconfig/network-scripts/ifcfg-$iface
     fi
 
@@ -73,7 +80,7 @@ if [ -z "$sys_ip_check" ]; then
         sys_ip="$sys_ip\nauto $iface"
         sys_ip="$sys_ip\niface $iface inet static"
         sys_ip="$sys_ip\naddress $ip"
-        sys_ip="$sys_ip\nnetmask $mask"
+        sys_ip="$sys_ip\nnetmask $netmask"
         echo -e $sys_ip >> /etc/network/interfaces
     fi
 fi
@@ -85,7 +92,7 @@ NAME='$ip_name'
 U_SYS_USERS=''
 U_WEB_DOMAINS='0'
 INTERFACE='$interface'
-NETMASK='$mask'
+NETMASK='$netmask'
 NAT='$nat_ip'
 TIME='$TIME'
 DATE='$DATE'" > $VESTA/data/ips/$ip

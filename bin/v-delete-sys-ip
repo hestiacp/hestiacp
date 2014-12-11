@@ -35,33 +35,40 @@ is_ip_key_empty '$U_SYS_USERS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get ip owner
-user="$(get_ip_value '$OWNER')"
-ip_status="$(get_ip_value '$STATUS')"
+# Import ip variables
+source $VESTA/data/ips/$ip
+cidr=$(convert_netmask $NETMASK)
 
-# Deleting interface
-interface=$(/sbin/ifconfig | grep -B1 "dr:$ip " | head -n1 | cut -f1 -d \ )
+# Checking main ip on the interface
+interface=$(/sbin/ip addr | grep "$ip/$cidr" | awk '{print $NF}')
 if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
     echo "Error: can't delete main IP address"
     log_event "$E_FORBIDEN" "$EVENT"
     exit $E_FORBIDEN
 fi
+
+# Deleting system ip
 if [ ! -z "$interface" ]; then
-    /sbin/ifconfig $interface down
-
-    # Deleting startup conf on RHEL/CentOS/Fedora
-    if [ -e "/etc/sysconfig/network-scripts/ifcfg-$interface" ]; then
-        rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
+    /sbin/ip addr del $ip/$cidr dev $INTERFACE
+    if [ "$?" -ne 0 ]; then
+        echo "Error: can't delete system ip"
+        log_event "$E_FORBIDEN" "$EVENT"
+        exit $E_FORBIDEN
     fi
+fi
 
-    # Deleting startup conf on Debian/Ubuntu
-    if [ -e "/etc/network/interfaces" ]; then
-        ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
-        if [ ! -z "$ip_str" ]; then
-            first_str=$((ip_str - 3))
-            last_str=$((ip_str + 1))
-            sed -i "$first_str,$last_str d" /etc/network/interfaces
-        fi
+# Deleting startup conf on RHEL/CentOS/Fedora
+if [ -e "/etc/sysconfig/network-scripts/ifcfg-$interface" ]; then
+    rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
+fi
+
+# Deleting startup conf on Debian/Ubuntu
+if [ -e "/etc/network/interfaces" ]; then
+    ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
+    if [ ! -z "$ip_str" ]; then
+        first_str=$((ip_str - 3))
+        last_str=$((ip_str + 1))
+        sed -i "$first_str,$last_str d" /etc/network/interfaces
     fi
 fi
 
@@ -92,7 +99,6 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
         new_ips=$(echo "$rpaf_str" | sed "s/$ip//")
         sed -i "s/$ips/$new_ips/g" $rpaf_conf
     fi
-
 fi
 
 
@@ -101,23 +107,19 @@ fi
 #----------------------------------------------------------#
 
 # Updating user conf
-if [ ! -z "$user" ]; then
-    decrease_user_value "$user" '$IP_OWNED'
+if [ ! -z "$OWNER" ]; then
+    decrease_user_value "$OWNER" '$IP_OWNED'
 fi
 
-if [ "$user" = 'admin' ]; then
-    if [ "$ip_status" = 'shared' ]; then
+if [ "$OWNER" = 'admin' ]; then
+    if [ "$STATUS" = 'shared' ]; then
         for user in $(ls $VESTA/data/users/); do
             decrease_user_value "$user" '$IP_AVAIL'
         done
-    else
-        decrease_user_value 'admin' '$IP_AVAIL'
     fi
 else
-    decrease_user_value "$user" '$IP_AVAIL'
-    decrease_user_value 'admin' '$IP_AVAIL'
+    decrease_user_value "$OWNER" '$IP_AVAIL'
 fi
-
 
 # Adding task to the vesta pipe
 $BIN/v-restart-web

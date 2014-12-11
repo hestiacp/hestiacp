@@ -18,6 +18,7 @@ ip_status=${2-shared}
 # Includes
 source /etc/profile.d/vesta.sh
 source $VESTA/func/main.sh
+source $VESTA/func/ip.sh
 source $VESTA/conf/vesta.conf
 
 
@@ -35,8 +36,8 @@ is_object_valid 'user' 'USER' "$user" "$user"
 #----------------------------------------------------------#
 
 # Get list of ip addresses
-ip_list=$(/sbin/ifconfig | grep 'inet addr:' | cut -f 2 -d : | \
-    cut -f 1 -d ' '| grep -v 127.0.0.1 | grep -v "^0.0.0.")
+ip_list=$(/sbin/ip addr |grep "inet "|grep -v "host lo" |awk '{print $2}')
+ip_list=$(echo "$ip_list"|cut -f 1 -d /)
 ip_num=$(echo "$ip_list" | wc -l)
 
 # WorkAround for DHCP IP address
@@ -88,10 +89,11 @@ fi
 # Compare ips
 for ip in $ip_list; do
     if [ ! -e "$VESTA/data/ips/$ip" ]; then
-        iface=$(/sbin/ifconfig |grep -B1 -w $ip |head -n1 |cut -f1 -d ' ')
-        interface=$(echo "$iface" | cut -f 1 -d :)
-        mask=$(/sbin/ifconfig |grep -w $ip |awk -F "Mask:" '{print $2}')
-        $BIN/v-add-sys-ip $ip $mask $interface
+        interface=$(/sbin/ip addr |grep $ip |awk '{print $NF}')
+        interface=$(echo $interface |cut -f 1 -d :)
+        netmask=$(/sbin/ip addr |grep $ip |awk '{print $2}' |cut -f 2 -d /)
+        netmask=$(convert_cidr $netmask)
+        $BIN/v-add-sys-ip $ip $netmask $interface
     fi
 done
 

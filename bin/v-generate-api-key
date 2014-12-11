@@ -1,0 +1,41 @@
+#!/bin/bash
+# info: generate api key
+# options: none
+#
+# The function creates a key file in /usr/local/vesta/data/keys/
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+keygen()
+{
+    cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -n 1
+}
+KEYS='/usr/local/vesta/data/keys/'
+HASH=$(keygen)
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ ! -d ${KEYS} ]; then
+  mkdir ${KEYS}
+fi
+
+if [[ -e ${KEYS}${HASH} ]] ; then
+    while [[ -e ${KEYS}${HASH} ]] ; do
+        HASH=$(keygen)
+    done
+fi
+
+touch ${KEYS}${HASH}
+echo ${HASH}
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

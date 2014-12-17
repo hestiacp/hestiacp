@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system ip address
-# options: IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NAT_IP]
+# options: IP NETMASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]
 #
 # The function adds ip address into a system. It also creates rc scripts. You
 # can specify ip name which will be used as root domain for temporary aliases.
@@ -34,7 +34,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NAT_IP]'
+check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP]'
 validate_format 'ip' 'netmask' 'interface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"
@@ -50,18 +50,15 @@ fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-# Converting netmask to CIDR format and calculating broadcast address
+iface=$(get_ip_iface)
 cidr=$(convert_netmask $netmask)
 broadcast=$(get_broadcast $ip $netmask)
-iface=$(get_ip_iface)
 
-sys_ip_check=$(/sbin/ip addr | grep "$ip/$cidr")
+sys_ip_check=$(/sbin/ip addr | grep "$ip")
 if [ -z "$sys_ip_check" ]; then
-
-    # Adding system ip
-    /sbin/ip addr add $ip/$cidr broadcast $broadcast \
-        dev $interface label $iface
+    # Adding sys ip
+    /sbin/ip addr add $ip/$cidr dev $interface \
+        broadcast $broadcast label $iface
 
     # Adding RHEL/CentOS/Fedora startup script
     if [ -e "/etc/redhat-release" ]; then
@@ -101,14 +98,19 @@ chmod 660 $VESTA/data/ips/$ip
 # WEB support
 if [ ! -z "$WEB_SYSTEM" ]; then
     web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
+    rm -f $web_conf
 
     if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
-        echo "NameVirtualHost $ip:$WEB_PORT" >  $web_conf
+        if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
+            echo "NameVirtualHost $ip:$WEB_PORT" >  $web_conf
+        fi
         echo "Listen $ip:$WEB_PORT" >> $web_conf
     fi
 
     if [ "$WEB_SSL" = 'mod_ssl' ]; then
-        echo "NameVirtualHost $ip:$WEB_SSL_PORT" >> $web_conf
+        if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
+            echo "NameVirtualHost $ip:$WEB_SSL_PORT" >> $web_conf
+        fi
         echo "Listen $ip:$WEB_SSL_PORT" >> $web_conf
     fi
 fi

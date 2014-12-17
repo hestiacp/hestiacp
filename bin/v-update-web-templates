@@ -44,10 +44,10 @@ fi
 tar -xzpf templates.tar.gz -C $VESTA/data/ templates/web
 
 # Replace includes for apache2.4
-if [ "$os" = 'ubuntu' ]; then
-    if [ ! -z "$(apache2 -v|grep 'Apache/2.4')" ]; then
+if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
+    if [ ! -z "$(/usr/sbin/apachectl -v | grep 'Apache/2.4')" ]; then
         sed -i "s/Include /IncludeOptional /g" \
-            $VESTA/data/templates/web/apache2/*tpl
+            $VESTA/data/templates/web/$WEB_SYSTEM/*tpl
     fi
 fi
 

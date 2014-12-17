@@ -19,8 +19,8 @@ send_email_report() {
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $PROXY_SYSTEM restart failed"
-    /etc/init.d/$PROXY_SYSTEM configtest >> $tmpfile 2>&1
-    /etc/init.d/$PROXY_SYSTEM restart >> $tmpfile 2>&1
+    service $PROXY_SYSTEM configtest >> $tmpfile 2>&1
+    service $PROXY_SYSTEM restart >> $tmpfile 2>&1
     cat $tmpfile | $send_mail -s "$subj" $email
     rm -f $tmpfile
 }
@@ -45,7 +45,7 @@ if [ -z "$PROXY_SYSTEM" ] || [ "$PROXY_SYSTEM" = 'remote' ]; then
 fi
 
 # Restart system
-/etc/init.d/$PROXY_SYSTEM restart >/dev/null 2>&1
+service $PROXY_SYSTEM restart >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
     echo "Error: $PROXY_SYSTEM restart failed"

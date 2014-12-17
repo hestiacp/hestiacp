@@ -19,8 +19,8 @@ send_email_report() {
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $MAIL_SYSTEM restart failed"
-    /etc/init.d/$MAIL_SYSTEM configtest >> $tmpfile 2>&1
-    /etc/init.d/$MAIL_SYSTEM restart >> $tmpfile 2>&1
+    service $MAIL_SYSTEM configtest >> $tmpfile 2>&1
+    service $MAIL_SYSTEM restart >> $tmpfile 2>&1
     cat $tmpfile | $send_mail -s "$subj" $email
     rm -f $tmpfile
 }

@@ -19,8 +19,8 @@ send_email_report() {
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $CRON_SYSTEM restart failed"
-    /etc/init.d/$CRON_SYSTEM configtest >> $tmpfile 2>&1
-    /etc/init.d/$CRON_SYSTEM restart >> $tmpfile 2>&1
+    service $CRON_SYSTEM configtest >> $tmpfile 2>&1
+    service $CRON_SYSTEM restart >> $tmpfile 2>&1
     cat $tmpfile | $send_mail -s "$subj" $email
     rm -f $tmpfile
 }
@@ -45,11 +45,9 @@ if [ -z "$CRON_SYSTEM" ] || [ "$CRON_SYSTEM" = 'remote' ]; then
 fi
 
 # Restart system
-if [ -e "/var/run/crond.pid" ]; then
-    /etc/init.d/$CRON_SYSTEM reload >/dev/null 2>&1
-    reload cron >/dev/null 2>&1
-else
-    /etc/init.d/$CRON_SYSTEM restart >/dev/null 2>&1
+service $CRON_SYSTEM reload >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    service $CRON_SYSTEM restart >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         send_email_report
         exit $E_RESTART

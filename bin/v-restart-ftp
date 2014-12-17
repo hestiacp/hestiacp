@@ -19,8 +19,8 @@ send_email_report() {
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $FTP_SYSTEM restart failed"
-    /etc/init.d/$FTP_SYSTEM configtest >> $tmpfile 2>&1
-    /etc/init.d/$FTP_SYSTEM restart >> $tmpfile 2>&1
+    service $FTP_SYSTEM configtest >> $tmpfile 2>&1
+    service $FTP_SYSTEM restart >> $tmpfile 2>&1
     cat $tmpfile | $send_mail -s "$subj" $email
     rm -f $tmpfile
 }

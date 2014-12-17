@@ -19,8 +19,8 @@ send_email_report() {
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $WEB_SYSTEM restart failed"
-    /etc/init.d/$WEB_SYSTEM configtest >> $tmpfile 2>&1
-    /etc/init.d/$WEB_SYSTEM restart >> $tmpfile 2>&1
+    service $WEB_SYSTEM configtest >> $tmpfile 2>&1
+    service $WEB_SYSTEM restart >> $tmpfile 2>&1
     cat $tmpfile | $send_mail -s "$subj" $email
     rm -f $tmpfile
 }
@@ -44,27 +44,24 @@ if [ -z "$WEB_SYSTEM" ] || [ "$WEB_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-# Restart system
+# Reload web system
+service $WEB_SYSTEM reload >/dev/null 2>&1
+rc=$?
+
+# Workaround for Ubuntu 12.04
 if [ "$WEB_SYSTEM" == 'apache2' ]; then
-    if [ -e "/var/run/apache2.pid" ]; then
-        /etc/init.d/$WEB_SYSTEM reload >/dev/null 2>&1
-    else
-        /etc/init.d/$WEB_SYSTEM restart >/dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            send_email_report
-            echo "Error: $WEB_SYSTEM restart failed"
-            exit $E_RESTART
-        fi
+    if [ ! -e "/var/run/apache2.pid" ]; then
+        rc=1
     fi
-else
-    /etc/init.d/$WEB_SYSTEM reload >/dev/null 2>&1
-    if [ "$?" -ne 0 ]; then
-        /etc/init.d/$WEB_SYSTEM restart >/dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            send_email_report
-            echo "Error: $WEB_SYSTEM restart failed"
-            exit $E_RESTART
-        fi
+fi
+
+# Resart web system if reload didn't work
+if [ "$rc" -ne 0 ]; then
+    service $WEB_SYSTEM restart >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        send_email_report
+        echo "Error: $WEB_SYSTEM restart failed"
+        exit $E_RESTART
     fi
 fi
 

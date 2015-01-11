@@ -35,6 +35,7 @@ is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'cron' 'JOB' "$job"
+is_object_unsuspended 'cron' 'JOB' "$job"
 
 
 #----------------------------------------------------------#

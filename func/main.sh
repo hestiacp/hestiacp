@@ -243,7 +243,7 @@ is_object_unsuspended() {
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
     fi
     if [ ! -z "$spnd" ]; then
-        echo "Error: $(basename $1) $3 is already suspended"
+        echo "Error: $(basename $1) $3 is suspended"
         log_event "$E_UNSUSPENDED" "$EVENT"
         exit $E_UNSUSPENDED
     fi
@@ -356,6 +356,9 @@ decrease_user_value() {
         new=0
     else
         new=$((old - factor))
+    fi
+    if [ "$new" -lt 0 ]; then
+        new=0
     fi
     sed -i "s/$key='$old'/$key='$new'/g" $conf
 }

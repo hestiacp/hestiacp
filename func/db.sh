@@ -347,7 +347,8 @@ dump_mysql_database() {
         exit $E_CONNECT
     fi
 
-    mysqldump -h $HOST -u $USER -p$PASSWORD -r $dump $database 2>/tmp/e.mysql
+    mysqldump --single-transaction -h $HOST -u $USER -p$PASSWORD \
+        -r $dump $database 2>/tmp/e.mysql
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         echo -e "Can't dump database $database\n$(cat /tmp/e.mysql)" |\

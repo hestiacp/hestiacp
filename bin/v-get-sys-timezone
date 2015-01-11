@@ -1,0 +1,49 @@
+#!/bin/bash
+# info: get system timezone
+# options: [FORMAT]
+#
+# The function to get system timezone
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking timesonze on RHEL/CentOS
+if [ -f "/etc/sysconfig/clock" ]; then
+    source /etc/sysconfig/clock
+
+# Checking timezone on Debian/Ubuntu
+elif [ -f "/etc/timezone" ]; then
+    ZONE=$(cat /etc/timezone)
+
+# Checking symlynks
+elif [ -h /etc/localtime ]; then
+    ZONE=$(readlink /etc/localtime | sed "s/\/usr\/share\/zoneinfo\///")
+
+# Parsing zoneinfo (very slow)
+else
+    checksum=$(md5sum /etc/localtime | cut -d' ' -f1)
+    ZONE=$(find /usr/share/zoneinfo/ -type f -exec md5sum {} \; |\
+        grep "^$checksum" | sed "s/.*\/usr\/share\/zoneinfo\///" | head -n 1)
+fi
+
+echo $ZONE
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

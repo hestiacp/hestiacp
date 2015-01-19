@@ -17,7 +17,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." '".$_SERVER["REMOTE_ADDR"]."'",  $output, $auth_code);
     } else {
         $key = '/usr/local/vesta/data/keys/' . basename($_POST['hash']);
-        if (file_exists($key)) {
+        if (file_exists($key) && is_file($key)) {
             $auth_code = '0';
         }
     }

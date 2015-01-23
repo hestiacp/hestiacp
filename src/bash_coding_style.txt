@@ -5,7 +5,7 @@ Contents:
 
     1. Introduction
     2. Naming Convention
-    3. Coments
+    3. Comments
     4. Coding Styles
     5. Basic formating
     6. If, For, and While   

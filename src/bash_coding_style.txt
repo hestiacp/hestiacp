@@ -41,7 +41,7 @@ Contents:
         }                               #
 
 
-3. Coments
+3. Comments
     The total length of a line (including comment) must not exceed more than 80
     characters. Every file must be documented with an introductory comment that
     provides shorthand information on the file name and its contents.

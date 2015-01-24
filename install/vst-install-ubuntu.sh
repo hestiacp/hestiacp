@@ -535,9 +535,9 @@ echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 echo "/sbin/nologin" >> /etc/shells
 
 # Sudo configuration
-wget $CHOST/$VERSION/sudoers.conf -O /etc/sudoers
+wget $CHOST/$VERSION/sudoers.vestacp.conf -O /etc/sudoers.d/vestacp
 wget $CHOST/$VERSION/sudoers.admin.conf -O /etc/sudoers.d/admin
-chmod 440 /etc/sudoers
+chmod 440 /etc/sudoers.d/vestacp
 chmod 440 /etc/sudoers.d/admin
 
 # NTP Synchronization

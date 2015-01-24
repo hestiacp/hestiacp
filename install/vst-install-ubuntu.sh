@@ -300,11 +300,6 @@ mkdir -p $vst_backups/bind
 mkdir -p $vst_backups/vesta
 mkdir -p $vst_backups/home
 
-# Backup sudoers
-if [ -e '/etc/sudoers' ]; then
-    cp /etc/sudoers $vst_backups/
-fi
-
 # Backup nginx
 service nginx stop > /dev/null 2>&1
 if [ -e '/etc/nginx/nginx.conf' ]; then

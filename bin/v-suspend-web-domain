@@ -73,7 +73,7 @@ fi
 
 # Checking proxy SSL
 if [ ! -z "$PROXY" ] && [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$PROXY_SSL/$PROXY.stpl"
+    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
     conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
     del_web_config
     add_web_config

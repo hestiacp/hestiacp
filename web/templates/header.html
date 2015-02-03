@@ -4,7 +4,7 @@
         <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
         <title>Vesta - <?php echo "$TAB"; ?> </title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-        <link type="text/css" href="/css/main.css?ver=1417643221" rel="stylesheet" />
+        <link type="text/css" href="/css/main.css?ver=1407230838" rel="stylesheet" />
         <!--[if IE 7]>
             <link rel="stylesheet" type="text/css" href="/css/ie.css" />
             <style type="text/css">
@@ -23,86 +23,98 @@
                 .submenu-select-block {
                     width:239px;
                 }
+
+                .submenu-select-dropdown {
+                    position: relative;
+                    top: 2px;
+                }
             </style>
         <![endif]-->
         <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
-        <script type="text/javascript" src="/js/events.js"></script>
         <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.cookie.js"></script>
         <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
-        <script language="JavaScript">
+        <script type="text/javascript" src="/js/events.js"></script>
+
+        <script type="text/javascript">
             var checked=false;
             var frmname='';
             function checkedAll(frmname) {
-                var valus= document.getElementById(frmname);
-                if (checked==false) {
-                    checked=true;
-                    $('.data-row').addClass("selected");
-                } else {
-                    checked = false;
+                if ($('.selected').length > 0) {
                     $('.data-row').removeClass("selected");
+                    $('.ch-toggle').attr("checked", false);
                 }
-                for (var i =0; i < valus.elements.length; i++) {
-                    valus.elements[i].checked=checked;
+                else {
+                    $('.data-row').addClass("selected");
+                    $('.ch-toggle').attr("checked", true);
                 }
             }
         </script>
-        <script language="JavaScript">
-            $('document').ready(function() {
+        <script type="text/javascript">
+            $(document).ready(function() {
                 var nav = $('.top');
                 var nav = $('.top');
                 var lastScrollTop = 0;
 
                 $(window).scroll(function () {
-
                     var st = $(this).scrollTop();
 
-                    if(st > 27 ){
+                    if (st > 27 ) {
                         nav.addClass("small-logo");
-                    }else{
+                    }
+                    else{
                         nav.removeClass("small-logo");
                     }
 
-                    if (st > lastScrollTop){
+                    if (st > lastScrollTop) {
                         if ($(this).scrollTop() > 58) {
                             nav.addClass("small");
                         }
-                    } else {
+                    } 
+                    else {
                         if ($(this).scrollTop() < 58) {
                             nav.removeClass("small");
                         }
                     }
                     lastScrollTop = st;
                 });
+                
+             
 
-
-                $('#vstobjects').bind('click', function(evt) { // observe change event on whole div#vstobjects
+                /*$('#vstobjects').bind('click', function(evt) { // observe change event on whole div#vstobjects
+                    console.log(evt);
                     var elm = evt.target; // grab element on which user clicked
-
+                    document.getSelection().removeAllRanges();
                     if($(elm).hasClass('data-controls') || $(elm).parents('.data-controls')[0]){
                         return;
                     }
 
                     var parent = $(elm).hasClass('data-row') ? $(elm) : $(elm).parents('.data-row'); // check if outer element is row container and get it
                     if (!$(parent).hasClass('selected')) {
+                        if (evt.shiftKey === false && evt.ctrlKey === false) {
+                            $('#vstobjects').find('.selected').each(function(i, o) {
+                                $(o).find('.ch-toggle').attr('checked', false);
+                                $(o).removeClass('selected');
+                            });
+                        }
                         parent.addClass('selected'); // add class
                         parent.find('.ch-toggle').attr('checked', true);
+                        parent.find('.ch-toggle').focus();
                         // another actions on checked row
                     }
                     else {
                         parent.removeClass('selected'); // remove class
                         parent.find('.ch-toggle').attr('checked', false);
+                        parent.find('.ch-toggle').focus();
                         // another actions on unchecked row
                     }
-                });
+                });*/
 
 
                 if($('.movement.left').length){
-
                     refresh_timer.right = $('.movement.right');
                     refresh_timer.left = $('.movement.left');
-
                     refresh_timer.start();
-
 
                     $('.pause').click(function(){
                         refresh_timer.stop();
@@ -119,8 +131,6 @@
                     });
                 }
             });
-
-
 
             refresh_timer = {
                 speed: 50,
@@ -141,16 +151,14 @@
                 turn: function(){
                     this.degr += 1;
 
-///                 console.log(this.first + " - " + this.degr);
-
-                    if(this.first && this.degr >= 361){
+                    if (this.first && this.degr >= 361){
                         this.first = 0;
                         this.degr = 180;
                         this.left.css({'-webkit-transform': 'rotate(180deg)'});
                         this.left.css({'transform': 'rotate(180deg)'});
                         this.left.children('.loader-half').addClass('dark');
                     }
-                    if(!this.first && this.degr >= 360){
+                    if (!this.first && this.degr >= 360){
                         this.first = 1;
                         this.degr = 180;
                         this.left.css({'-webkit-transform': 'rotate(0deg)'});
@@ -163,17 +171,18 @@
                         location.reload();
                     }
 
-                    if(this.first){
+                    if (this.first){
                         this.right.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
                         this.right.css({'transform': 'rotate('+this.degr+'deg)'});
-                    }else{
+                    }
+                    else{
                         this.left.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
-                    this.left.css({'transform': 'rotate('+this.degr+'deg)'});
+                        this.left.css({'transform': 'rotate('+this.degr+'deg)'});
                     }
                 }
             }
-        </script>
 
+        </script>
         <script language="JavaScript">
             $(document).ready(function(){
                 $(".submenu-select-dropdown").each(function(){
@@ -186,7 +195,6 @@
                 }).trigger('change');
             })
         </script>
-
         <script type="text/javascript" src="/js/app.js"></script>
         <script type="text/javascript" src="/js/templates.js"></script>
     </head>

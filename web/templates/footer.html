@@ -1,9 +1,32 @@
     <br>
     </div>
     <br>
+    <script src="/js/jquery.finder.js"></script>
     <script type="text/javascript">
-            $(document).ready(function() {
-                VE.core.register($('.data'));
+        $(document).ready(function() {
+            VE.core.register($('.data'));
+            var shift_select_ref = $('#vstobjects').finderSelect({children: '.data-row', 
+                'onFinish': function(evt) {
+                    var ref = $(evt.target);
+                    if (ref.hasClass('ch-toggle')) {
+                        if (!ref.prop('checked')) {
+                            ref.parents('.data-row').addClass('selected');
+                        }
+                        else {
+                            ref.parents('.data-row').removeClass('selected');
+                        }
+                    }
+                    else {
+                        $('#vstobjects').find('.data-row .ch-toggle').attr('checked', false);
+                        $('#vstobjects').find('.data-row.selected .ch-toggle').attr('checked', true);
+                    }
+                }
+            });
+            $('table').on('mousedown', 'td', function(e) {
+                if (e.ctrlKey) {
+                    e.preventDefault();
+                }
+            });
         });
     </script>
     </body>

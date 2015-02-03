@@ -74,8 +74,8 @@ App.Actions.WEB.add_ftp_user_form = function() {
     var index = $('.data-col2 .ftptable').length + 1;
     
     ref.find('input').each(function(i, elm) {
-        var attr_value = $(elm).attr('name').replace('%INDEX%', index);
-        $(elm).attr('name', attr_value);
+        var attr_value = $(elm).prop('name').replace('%INDEX%', index);
+        $(elm).prop('name', attr_value);
     });
     
     ref.find('.ftp-user-number').text(index);
@@ -132,7 +132,34 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
     }
 }
 
+App.Actions.WEB.randomPasswordGenerated = function(elm) { 
+    return App.Actions.WEB.passwordChanged(elm);
+}
+
+App.Actions.WEB.passwordChanged = function(elm) { 
+    var ref = $(elm).parents('.ftptable');
+    if (ref.find('.vst-email-alert-on-psw').length == 0) {
+        var inp_name = ref.find('.v-ftp-user-is-new').prop('name');
+        inp_name = inp_name.replace('is_new', 'v_ftp_email');
+        ref.find('tr:last').after('<tr>\
+                                        <td class="vst-text step-left input-label">\
+                                             Send FTP credentials to email\
+                                        </td>\
+                                    </tr>\
+                                    <tr>\
+                                        <td class="step-left">\
+                                            <input type="text" value="" name="' + inp_name + '" class="vst-input vst-email-alert-on-psw">\
+                                        </td>\
+                                    </tr>');
+    }
+}
+
 //
 // Page entry point
 App.Listeners.WEB.keypress_ftp_username();
 App.Listeners.WEB.keypress_ftp_path();
+
+$('.v-ftp-user-psw').on('keypress', function(evt) {
+    var elm = $(evt.target);
+    App.Actions.WEB.passwordChanged(elm);
+});

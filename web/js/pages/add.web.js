@@ -84,8 +84,8 @@ App.Actions.WEB.add_ftp_user_form = function() {
     var index = $('.data-col2 .ftptable').length + 1;
     
     ref.find('input').each(function(i, elm) {
-        var attr_value = $(elm).attr('name').replace('%INDEX%', index);
-        $(elm).attr('name', attr_value);
+        var attr_value = $(elm).prop('name').replace('%INDEX%', index);
+        $(elm).prop('name', attr_value);
     });
     
     ref.find('.ftp-user-number').text(index);
@@ -141,8 +141,8 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
         var index = $('.data-col2 .ftptable').length + 1;
         
         ref.find('input').each(function(i, elm) {
-            var attr_value = $(elm).attr('name').replace('%INDEX%', index);
-            $(elm).attr('name', attr_value);
+            var attr_value = $(elm).prop('name').replace('%INDEX%', index);
+            $(elm).prop('name', attr_value);
         });
         
         ref.find('.ftp-user-number').text(index);

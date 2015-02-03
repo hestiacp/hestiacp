@@ -551,6 +551,13 @@ if (!empty($_POST['save'])) {
                 exec (VESTA_CMD."v-change-web-domain-ftp-path ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_path, $output, $return_var);
                 if ($v_ftp_user_data['v_ftp_password'] != "'••••••••'" && $v_ftp_user_data['v_ftp_password'] != "••••••••" && !empty($v_ftp_user_data['v_ftp_password'])) {
                     exec (VESTA_CMD."v-change-web-domain-ftp-password ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_user_data['v_ftp_password'], $output, $return_var);
+                    $to = $v_ftp_user_data['v_ftp_email'];
+                    $subject = __("FTP login credentials");
+                    $hostname = exec('hostname');
+                    $from = __('MAIL_FROM',$hostname);
+                    $mailtext = __('FTP_ACCOUNT_READY',$_GET['domain'],$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
+                    send_email($to, $subject, $mailtext, $from);
+                    unset($v_ftp_email);
                 }
                 check_return_code($return_var, $output);
                 unset($output);

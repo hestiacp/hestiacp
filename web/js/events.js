@@ -122,3 +122,49 @@ VE.helpers.createConfirmationDialog = function(elm, dialog_title, confirmed_loca
 VE.helpers.warn = function(msg) {
     alert('WARNING: ' + msg);
 }
+
+VE.helpers.extendPasswordFields = function() {
+    var references = ['.password'];
+    
+    $(document).ready(function() {
+        $(references).each(function(i, ref) {
+            VE.helpers.initAdditionalPasswordFieldElements(ref);
+        });
+    });
+}
+
+VE.helpers.initAdditionalPasswordFieldElements = function(ref) {
+    var enabled = $.cookie('hide_passwords') == '1' ? true : false;
+    if (enabled) {
+        VE.helpers.hidePasswordFieldText(ref);
+    }
+    
+    $(ref).prop('autocomplete', 'off');
+
+    var enabled_html = enabled ? '' : 'show-passwords-enabled-action';
+    var html = '<span class="hide-password"><img class="toggle-psw-visibility-icon ' + enabled_html + '" onClick="VE.helpers.toggleHiddenPasswordText(\'' + ref + '\', this)" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAANlJREFUOI3d0UtKA0EQBuBP0eQCitkJLiXiSSTkUCKIIPg8SJCouDELrxDRCxi3SUQimXFhjRSDZq8/FE3/jyqqm3+JXVziGbOoJ1xgZ1GwiXMUKDFBH1cYB1fgBI16uIG7MJW4x1rS1zFIeh8rucFREicR7mKEV3SwgWnyHVThLXzUuotwxY2Cu0ncDJvLccko4lxKXPkL9509TMQ4du7E5BfsoYW35NvPU1dxncRB7FyhhYek99Qeka+fOMU8TNPY+TZNnuP4p3BGG2d4xHvUMJpvLwr+UXwCQghNMl5Zo0AAAAAASUVORK5CYII=" /></span>';
+    $(ref).after(html);
+}
+
+VE.helpers.hidePasswordFieldText = function(ref) {
+    $.cookie('hide_passwords', '1', { expires: 365, path: '/' });
+    $(ref).prop('type', 'password');
+}
+
+VE.helpers.revealPasswordFieldText = function(ref) {
+    $.cookie('hide_passwords', '0', { expires: 365, path: '/' });
+    $(ref).prop('type', 'text');
+}
+
+VE.helpers.toggleHiddenPasswordText = function(ref, triggering_elm) {
+    $(triggering_elm).toggleClass('show-passwords-enabled-action');
+
+    if ($(ref).prop('type') == 'text') {
+        VE.helpers.hidePasswordFieldText(ref);
+    }
+    else {
+        VE.helpers.revealPasswordFieldText(ref);
+    }
+}
+
+VE.helpers.extendPasswordFields();

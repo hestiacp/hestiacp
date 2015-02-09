@@ -154,6 +154,7 @@ label:active {
     display: block;
     float: left;
     margin-bottom: 1px;
+    z-index: 10;
 }
 
 .nav-logo {
@@ -291,6 +292,7 @@ label:active {
 .top.small .submenu{
     position: fixed;
     top: 82px;
+    z-index: 10;
 }
 
 .submenu .wrapper{
@@ -1280,6 +1282,7 @@ label:active {
     color: #2361a1;
     padding-left: 3px;
     margin-left: -36px;
+    z-index: 1;
 }
 
 .hide-password:hover {
@@ -1313,4 +1316,11 @@ label:active {
     -moz-opacity: 1;
     -khtml-opacity: 1;
     opacity: 1;
+}
+
+.unlim-trigger {
+    cursor: pointer;
+    margin-left: -36px;
+    padding-left: 3px;
+    z-index: 1;
 }

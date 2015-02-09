@@ -1294,3 +1294,23 @@ label:active {
 .show-passwords-enabled-action {
     opacity: 1;
 }
+
+
+.data-controls {
+    /*display: none;*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    -khtml-opacity: 0;
+    opacity: 0;
+}
+
+.data-row:hover .data-controls,
+.selected .data-controls {
+    /*display: block;*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: alpha(opacity=100);
+    -moz-opacity: 1;
+    -khtml-opacity: 1;
+    opacity: 1;
+}

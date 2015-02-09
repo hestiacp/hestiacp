@@ -36,7 +36,7 @@ is_object_valid 'user' 'USER' "$user" "$user"
 #----------------------------------------------------------#
 
 # Get list of ip addresses
-ip_list=$(/sbin/ip addr |grep "inet "|grep -v "host lo" |awk '{print $2}')
+ip_list=$(/sbin/ip addr|grep 'inet '|grep global|awk '{print $2}')
 ip_list=$(echo "$ip_list"|cut -f 1 -d /)
 ip_num=$(echo "$ip_list" | wc -l)
 

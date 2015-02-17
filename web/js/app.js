@@ -710,8 +710,8 @@ var App = {
     Core: {},
     // CONSTANT VALUES
     Constants: {
-        UNLIM_VALUE: 'Unlim',
-        UNLIM_TRANSLATED_VALUE: 'Unlim'
+        UNLIM_VALUE: 'unlimited',
+        UNLIM_TRANSLATED_VALUE: 'unlimited'
     }, 
     // Actions. More widly used funcs
     Actions: {

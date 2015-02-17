@@ -156,7 +156,11 @@ if (!empty($_POST['save'])) {
 }
 
 // Panel
-top_panel($user,$TAB);
+if (!empty($_SESSION['look'])) {
+    top_panel($user,$TAB);
+} else {
+    top_panel($_SESSION['user'],$TAB);
+}
 
 // Display body
 if ($_SESSION['user'] == 'admin') {

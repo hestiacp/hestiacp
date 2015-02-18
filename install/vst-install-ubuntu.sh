@@ -805,6 +805,7 @@ $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 $VESTA/bin/v-update-sys-ip
 
 # Firewall configuartion
+cd $VESTA/data
 wget $CHOST/$VERSION/firewall.tar.gz -O firewall.tar.gz
 tar -xzf firewall.tar.gz
 rm -f firewall.tar.gz

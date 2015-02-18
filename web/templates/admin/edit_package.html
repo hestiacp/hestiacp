@@ -73,6 +73,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Proxy Template');?>
@@ -96,6 +97,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?php echo ""; }?> 
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('DNS Template');?>
@@ -206,7 +208,6 @@
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_mail_accounts" <?php if (isset($v_mail_accounts)) echo "value=".$v_mail_accounts; ?>>
                                     <img id="unlim-mail-accounts" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
-                                    
                                 <td>
                             </tr>
                             <tr>
@@ -239,7 +240,6 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_backups" <?php if (isset($v_backups)) echo "value=".$v_backups; ?>>
-                                    <img id="unlim-backups" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
                                 </td>
                             </tr>
                             <tr>

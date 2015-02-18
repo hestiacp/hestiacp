@@ -60,9 +60,11 @@ $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List proxy templates
-exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
-$proxy_templates = json_decode(implode('', $output), true);
-unset($output);
+if (!empty($_SESSION['PROXY_SYSTEM'])) {
+    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    $proxy_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
 
 // List dns templates
 exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);

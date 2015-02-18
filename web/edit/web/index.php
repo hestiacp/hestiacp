@@ -76,9 +76,11 @@ $templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List proxy templates
-exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
-$proxy_templates = json_decode(implode('', $output), true);
-unset($output);
+if (!empty($_SESSION['PROXY_SYSTEM'])) {
+    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    $proxy_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
 
 // List web stat engines
 exec (VESTA_CMD."v-list-web-stats json", $output, $return_var);
@@ -189,7 +191,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Delete proxy support
-    if ((!empty($v_proxy)) && (empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && (!empty($v_proxy)) && (empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-web-domain-proxy ".$v_username." ".$v_domain." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -198,13 +200,13 @@ if (!empty($_POST['save'])) {
     }
 
     // Change proxy template / Update extention list
-    if ((!empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && (!empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
         $ext = preg_replace("/\n/", " ", $_POST['v_proxy_ext']);
         $ext = preg_replace("/,/", " ", $ext);
         $ext = preg_replace('/\s+/', ' ',$ext);
         $ext = trim($ext);
         $ext = str_replace(' ', ", ", $ext);
-        if (( $v_proxy_template != $_POST['v_proxy_template']) ||  ($v_proxy_ext != $ext)) {
+        if (( $v_proxy_template != $_POST['v_proxy_template']) || ($v_proxy_ext != $ext)) {
             $ext = str_replace(', ', ",", $ext);
             if (!empty($_POST['v_proxy_template'])) $v_proxy_template = $_POST['v_proxy_template'];
             exec (VESTA_CMD."v-change-web-domain-proxy-tpl ".$v_username." ".$v_domain." ".escapeshellarg($v_proxy_template)." ".escapeshellarg($ext)." 'no'", $output, $return_var);
@@ -216,7 +218,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Add proxy support
-    if ((empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && (empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
         $v_proxy_template = $_POST['v_proxy_template'];
         if (!empty($_POST['v_proxy_ext'])) {
             $ext = preg_replace("/\n/", " ", $_POST['v_proxy_ext']);
@@ -280,7 +282,7 @@ if (!empty($_POST['save'])) {
             $v_ssl_crt = $_POST['v_ssl_crt'];
             $v_ssl_key = $_POST['v_ssl_key'];
             $v_ssl_ca = $_POST['v_ssl_ca'];
-            
+
             // Cleanup certificate tempfiles
             if (!empty($_POST['v_ssl_crt'])) {
                 unlink($tmpdir."/".$_POST['v_domain'].".crt");
@@ -347,7 +349,7 @@ if (!empty($_POST['save'])) {
             $v_ssl_key = $_POST['v_ssl_key'];
             $v_ssl_ca = $_POST['v_ssl_ca'];
             $v_ssl_home = $_POST['v_ssl_home'];
-            
+
             // Cleanup certificate tempfiles
             if (!empty($_POST['v_ssl_crt'])) {
                 unlink($tmpdir."/".$_POST['v_domain'].".crt");
@@ -584,7 +586,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Restart proxy server
-    if (!empty($restart_proxy) && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && !empty($restart_proxy) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-restart-proxy", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);

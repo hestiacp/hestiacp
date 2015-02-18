@@ -19,7 +19,9 @@ if (!empty($_POST['ok'])) {
     // Check empty fields
     if (empty($_POST['v_package'])) $errors[] = __('package');
     if (empty($_POST['v_web_template'])) $errors[] = __('web template');
-    if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+    if (!empty($_SESSION['PROXY_SYSTEM'])) {
+        if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+    }
     if (empty($_POST['v_dns_template'])) $errors[] = __('dns template');
     if (empty($_POST['v_shell'])) $errrors[] = __('shell');
     if (!isset($_POST['v_web_domains'])) $errors[] = __('web domains');
@@ -140,9 +142,11 @@ $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List web templates for proxy
-exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
-$proxy_templates = json_decode(implode('', $output), true);
-unset($output);
+if (!empty($_SESSION['PROXY_SYSTEM'])) {
+    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    $proxy_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
 
 // List DNS templates
 exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
@@ -159,17 +163,17 @@ if (empty($v_web_template)) $v_web_template = 'default';
 if (empty($v_proxy_template)) $v_proxy_template = 'default';
 if (empty($v_dns_template)) $v_dns_template = 'default';
 if (empty($v_shell)) $v_shell = 'nologin';
-if (empty($v_web_domains)) $v_web_domains = "'0'";
-if (empty($v_web_aliases)) $v_web_aliases = "'0'";
-if (empty($v_dns_domains)) $v_dns_domains = "'0'";
-if (empty($v_dns_records)) $v_dns_records = "'0'";
-if (empty($v_mail_domains)) $v_mail_domains = "'0'";
-if (empty($v_mail_accounts)) $v_mail_accounts = "'0'";
-if (empty($v_databases)) $v_databases = "'0'";
-if (empty($v_cron_jobs)) $v_cron_jobs = "'0'";
-if (empty($v_backups)) $v_backups = "'0'";
-if (empty($v_disk_quota)) $v_disk_quota = "'0'";
-if (empty($v_bandwidth)) $v_bandwidth = "'0'";
+if (empty($v_web_domains)) $v_web_domains = "'1'";
+if (empty($v_web_aliases)) $v_web_aliases = "'1'";
+if (empty($v_dns_domains)) $v_dns_domains = "'1'";
+if (empty($v_dns_records)) $v_dns_records = "'1'";
+if (empty($v_mail_domains)) $v_mail_domains = "'1'";
+if (empty($v_mail_accounts)) $v_mail_accounts = "'1'";
+if (empty($v_databases)) $v_databases = "'1'";
+if (empty($v_cron_jobs)) $v_cron_jobs = "'1'";
+if (empty($v_backups)) $v_backups = "'1'";
+if (empty($v_disk_quota)) $v_disk_quota = "'1000'";
+if (empty($v_bandwidth)) $v_bandwidth = "'1000'";
 if (empty($v_ns1)) $v_ns1 = 'ns1.example.ltd';
 if (empty($v_ns2)) $v_ns2 = 'ns2.example.ltd';
 

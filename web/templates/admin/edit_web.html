@@ -140,6 +140,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support');?></label>
@@ -185,9 +186,10 @@
                                     </table>
                                 </td>
                             </tr>
+                            <?php echo ""; }?> 
                             <tr>
                                 <td class="vst-text step-top">
-                            	    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
                                     <a class="generate" target="_blank" href="/generate/ssl/?domain=<?php echo $v_domain ?>"><?php print __('Generate CSR') ?></a>
                                 </td>
                             </tr>

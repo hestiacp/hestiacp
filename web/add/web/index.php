@@ -141,7 +141,7 @@ if (!empty($_POST['ok'])) {
     }
 
     // Add proxy support
-    if (($_POST['v_proxy'] == 'on')  && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'on')  && (empty($_SESSION['error_msg']))) {
         $ext = str_replace(' ', '', $v_proxy_ext);
         $ext = escapeshellarg($ext);
         exec (VESTA_CMD."v-add-web-domain-proxy ".$user." ".$v_domain." '' ".$ext." 'no'", $output, $return_var);
@@ -217,7 +217,7 @@ if (!empty($_POST['ok'])) {
     }
 
     // Restart proxy server
-    if (($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-restart-proxy", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);

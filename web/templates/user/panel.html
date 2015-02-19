@@ -22,9 +22,9 @@
                     <p class="nav-<?php if($TAB == 'USER' ) echo 'selected-' ?>header">
                         <?php print __('USER');?> 
                     </p>
-                    <p class="nav-counters">
-                        <?php print __('disk');?>: <? echo humanize_usage($panel[$user]['U_DISK']) ?> <br>
-                        <?php print __('traffic');?>: <? echo humanize_usage($panel[$user]['U_BANDWIDTH']) ?> 
+                    <p class="nav-counters" style="text-transform: lowercase;">
+                        <?php print __('Disk'); ?>: <? echo humanize_usage($panel[$user]['U_DISK']) ?> <br>
+                        <?php print __('Bandwidth') ;?>: <? echo humanize_usage($panel[$user]['U_BANDWIDTH']) ?> 
                     </p>
                     <p class="marker"></p>
                 </span>

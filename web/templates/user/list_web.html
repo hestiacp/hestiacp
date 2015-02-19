@@ -152,6 +152,7 @@
                                 </td>
                                 <td style="vertical-align:top;" width="238px">
                                     <table>
+                                        <tr><td>&nbsp;</td><td></td></tr>
                                         <tr>
                                             <td class="counter-name"><?php print __('Web Template');?>:</td>
                                             <td class="counter-value"><?php print __($data[$key]['TPL']) ?></td>
@@ -160,33 +161,31 @@
                                             <td class="counter-name"><?php print __('SSL Support');?>:</td>
                                             <td class="counter-value"><?php print __($data[$key]['SSL']) ?></td>
                                         </tr>
-
                                         <tr>
                                             <td class="counter-name"><?php print __('Web Statistics');?>: </td>
                                             <td class="counter-value"> <?php print __($web_stats) ?></td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Proxy Support');?>:</td>
-                                            <td class="counter-value"><?php print __($proxy_support);?></td>
                                         </tr>
 
                                     </table>
                                 </td>
                                 <td rowspan=4 style="vertical-align:top;">
                                     <table>
+                                        <tr><td>&nbsp;</td><td></td></tr>
+                                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Proxy Support');?>:</td>
+                                            <td class="counter-value"><?php print __($proxy_support);?></td>
+                                        </tr>
                                         <tr>
                                             <td class="counter-name"><?php print __('Proxy Template');?>:</td>
                                             <td class="counter-value"><?php echo $data[$key]['PROXY'];?></td>
                                         </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Proxy Extensions');?>:</td>
-                                            <td class="counter-value"><?php echo $proxy_ext;?></td>
-                                        </tr>
+                                        <?php echo ""; }?> 
                                         <tr>
                                             <td class="counter-name"> <?php print __('Additional FTP Account');?>:</td>
                                             <td class="counter-value"> <?php print __($ftp_user) ?></td>
                                         </tr>
+
                                     </table>
                                 </td>
                             </tr>

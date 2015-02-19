@@ -118,6 +118,7 @@
                                     <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
                                 </td>
                             </tr>
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support');?></label>
@@ -139,6 +140,7 @@
                                     </table>
                                 </td>
                             </tr>
+                            <?php echo ""; }?> 
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes' || $v_ssl == 'on') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
@@ -329,7 +331,6 @@
                                     <?php endforeach; ?>
                                 </td>
                             </tr>
-                            
                             <tr class="add-new-ftp-user-button" style="<?php print !empty($v_ftp_user) ? '' : 'display:none;' ?>">
                                 <td class="vst-text step-top v-add-new-user step-bottom">
                                     <a class="additional-control" onClick="App.Actions.WEB.add_ftp_user_form()"><?php print __('Add one more FTP Account');?></a>
@@ -350,7 +351,7 @@
                 </tr>
             </table>
         </form>
-        
+
         <div id="templates" class="hidden">
             <table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
                 <tr> 

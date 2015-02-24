@@ -534,6 +534,7 @@ wget $CHOST/$VERSION/sudoers.vestacp.conf -O /etc/sudoers.d/vestacp
 wget $CHOST/$VERSION/sudoers.admin.conf -O /etc/sudoers.d/admin
 chmod 440 /etc/sudoers.d/vestacp
 chmod 440 /etc/sudoers.d/admin
+echo 'Defaults:admin !syslog' >>/etc/sudoers.d/admin
 
 # NTP Synchronization
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate

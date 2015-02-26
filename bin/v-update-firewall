@@ -12,6 +12,7 @@
 # Defining absolute path for iptables and modprobe
 iptables="/sbin/iptables"
 modprobe="/sbin/modprobe"
+sysctl="/sbin/sysctl"
 
 # Includes
 source /etc/profile.d/vesta.sh
@@ -38,11 +39,16 @@ if [ ! -e "$rules" ]; then
     exit
 fi
 
+$sysctl net.netfilter.nf_conntrack_max >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    conntrack='no'
+fi
+
 # Checking conntrack module avaiabilty
 $modprobe nf_conntrack >/dev/null 2>&1
 $modprobe nf_conntrack_ftp >/dev/null 2>&1
 if [ $? -ne 0 ]; then
-    stateful='no'
+    conntrack_ftp='no'
 fi
 
 # Creating temporary file
@@ -75,7 +81,7 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 
         # Checking FTP for contrack module
         if [ "$TYPE" = "FTP" ] || [ "$PORT" = '21' ]; then
-            if [ "$stateful" != 'no' ]; then
+            if [ "$conntrack_ftp" != 'no' ]; then
                 state="-m conntrack --ctstate NEW"
             else
                 port="-m multiport --dports 20,21,12000:12100"
@@ -101,7 +107,7 @@ for p_rule in $(cat $ports); do
 done
 
 # Enabling stateful support
-if [ "$stateful" != 'no' ]; then
+if [ "$conntrack" != 'no' ]; then
     str="$iptables -A INPUT -p tcp -m state"
     str="$str --state ESTABLISHED,RELATED -j ACCEPT"
     echo "$str" >> $tmp

@@ -41,7 +41,6 @@ App.Listeners.PACKAGE.init = function() {
         if ($(ref).val().trim() == App.Constants.UNLIM_VALUE || $(ref).val().trim() == App.Constants.UNLIM_TRANSLATED_VALUE) {
             $(ref).val('0');
             App.Actions.PACKAGE.enable_unlimited(ref, elm);
-            //$(elm).attr('checked', true);
         }
         else {
             App.Actions.PACKAGE.disable_unlimited(ref, elm);
@@ -54,7 +53,7 @@ App.Listeners.PACKAGE.init = function() {
 // Trigger listeners
 App.Listeners.PACKAGE.init();
 App.Listeners.PACKAGE.checkbox_unlimited_feature();
-$('form[name="v_edit_package"]').bind('submit', function(evt) {
+$('form[name="v_add_package"]').bind('submit', function(evt) {
     $('input:disabled').each(function(i, elm) {
         $(elm).attr('disabled', false);
     });

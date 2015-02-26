@@ -1291,11 +1291,11 @@ label:active {
 
 .toggle-psw-visibility-icon {
     cursor: pointer;
-    opacity: 0.4;
+    opacity: 1;
 }
 
 .show-passwords-enabled-action {
-    opacity: 1;
+    opacity: 0.4;
 }
 
 

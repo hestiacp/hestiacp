@@ -5,28 +5,39 @@
     <script type="text/javascript">
         $(document).ready(function() {
             VE.core.register($('.data'));
-            var shift_select_ref = $('#vstobjects').finderSelect({children: '.data-row', 
-                'onFinish': function(evt) {
-                    var ref = $(evt.target);
-                    if (ref.hasClass('ch-toggle')) {
-                        if (!ref.prop('checked')) {
-                            ref.parents('.data-row').addClass('selected');
+            if (location.href.search(/list/) != -1) {
+                var shift_select_ref = $('body').finderSelect({children: '.data-row', 
+                    'onFinish': function(evt) {
+                        var ref = $(evt.target);
+                        if (ref.hasClass('ch-toggle')) {
+                            if (!ref.prop('checked')) {
+                                ref.parents('.data-row').addClass('selected');
+                            }
+                            else {
+                                ref.parents('.data-row').removeClass('selected');
+                            }
                         }
                         else {
-                            ref.parents('.data-row').removeClass('selected');
+                            $('#vstobjects').find('.data-row .ch-toggle').attr('checked', false);
+                            $('#vstobjects').find('.data-row.selected .ch-toggle').attr('checked', true);
+                        }
+                    },
+                    'toggleAllHook': function() {
+                        if ($('.data-row').length == $('.ch-toggle:checked').length) {
+                            $('.data-row.selected').removeClass('selected');
+                            $('.ch-toggle').attr('checked', false);
+                        }
+                        else {
+                            $('.ch-toggle').attr('checked', true);
                         }
                     }
-                    else {
-                        $('#vstobjects').find('.data-row .ch-toggle').attr('checked', false);
-                        $('#vstobjects').find('.data-row.selected .ch-toggle').attr('checked', true);
+                });
+                $('table').on('mousedown', 'td', function(e) {
+                    if (e.ctrlKey) {
+                        e.preventDefault();
                     }
-                }
-            });
-            $('table').on('mousedown', 'td', function(e) {
-                if (e.ctrlKey) {
-                    e.preventDefault();
-                }
-            });
+                });
+            }
         });
     </script>
     </body>

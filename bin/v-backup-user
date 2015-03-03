@@ -672,7 +672,7 @@ ftp_backup() {
         backups_rm_number=$((backups_count - BACKUPS + 1))
         for backup in $(echo "$backup_list" | head -n $backups_rm_number); do 
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
-            deprecated="$deprecated $backup"
+            deprecated="$deprecated $backup_date"
             echo -e "$(date "+%F %T") Roated ftp backup: $backup_date"
             msg="$msg\n$(date "+%F %T") Roated ftp backup: $backup_date"
             ftpc "cd $BPATH" "delete $backup"

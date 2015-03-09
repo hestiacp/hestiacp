@@ -172,7 +172,7 @@
                         var c = f.get.clicks(p,o,$(this));
                         
                         var ref = $(e.target);
-                        if (ref.parents('.data-row').hasClass('selected') && $('.selected').length == 1) {console.warn(1);
+                        if (ref.parents('.data-row').hasClass('selected') && $('.selected').length == 1) {
                             ref.parents('.data-row').removeClass('selected');
                             ref.parents('.data-row').find('.ch-toggle').attr('checked', false);
                             return;
@@ -203,7 +203,7 @@
             p.on('mouseout', function(){
                 d.off("keydown", turnOff);
             });
-
+            
             function turnOff(e) {
                 if (f.detect.ctrl(e)) {
                     if (e.keyCode == 65) {
@@ -562,6 +562,7 @@
         hAll: function(p,o) {
             f.h.on(p.find(o.children), o);
             f.t.update(p, o);
+            o.toggleAllHook && o.toggleAllHook();
         },
         unHExist: function(bool,el,o) {
             if(bool) {

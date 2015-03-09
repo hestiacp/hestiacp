@@ -142,7 +142,7 @@ VE.helpers.initAdditionalPasswordFieldElements = function(ref) {
     $(ref).prop('autocomplete', 'off');
 
     var enabled_html = enabled ? '' : 'show-passwords-enabled-action';
-    var html = '<span class="hide-password"><img class="toggle-psw-visibility-icon ' + enabled_html + '" onClick="VE.helpers.toggleHiddenPasswordText(\'' + ref + '\', this)" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAANlJREFUOI3d0UtKA0EQBuBP0eQCitkJLiXiSSTkUCKIIPg8SJCouDELrxDRCxi3SUQimXFhjRSDZq8/FE3/jyqqm3+JXVziGbOoJ1xgZ1GwiXMUKDFBH1cYB1fgBI16uIG7MJW4x1rS1zFIeh8rucFREicR7mKEV3SwgWnyHVThLXzUuotwxY2Cu0ncDJvLccko4lxKXPkL9509TMQ4du7E5BfsoYW35NvPU1dxncRB7FyhhYek99Qeka+fOMU8TNPY+TZNnuP4p3BGG2d4xHvUMJpvLwr+UXwCQghNMl5Zo0AAAAAASUVORK5CYII=" /></span>';
+    var html = '<span class="hide-password"><img class="toggle-psw-visibility-icon ' + enabled_html + '" onClick="VE.helpers.toggleHiddenPasswordText(\'' + ref + '\', this)" src="/images/toggle_password.png" /></span>';
     $(ref).after(html);
 }
 

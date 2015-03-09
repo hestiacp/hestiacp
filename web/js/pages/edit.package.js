@@ -41,7 +41,6 @@ App.Listeners.PACKAGE.init = function() {
         if ($(ref).val().trim() == App.Constants.UNLIM_VALUE || $(ref).val().trim() == App.Constants.UNLIM_TRANSLATED_VALUE) {
             $(ref).val('0');
             App.Actions.PACKAGE.enable_unlimited(ref, elm);
-            //$(elm).attr('checked', true);
         }
         else {
             App.Actions.PACKAGE.disable_unlimited(ref, elm);

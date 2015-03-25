@@ -43,7 +43,7 @@ function vesta_CreateAccount($params) {
         curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
         $answer = curl_exec($curl);
 
-		logModuleCall('vesta','CreateAccount_UserAccount','https://'.$params["serverhostname"].':8083/api/'$postdata,$answer);
+		logModuleCall('vesta','CreateAccount_UserAccount','https://'.$params["serverhostname"].':8083/api/'.$postdata,$answer);
 
         // Enable ssh access
         if(($answer == 'OK') && ($params["configoption2"] == 'on')) {
@@ -65,7 +65,7 @@ function vesta_CreateAccount($params) {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
             $answer = curl_exec($curl);
 
-            logModuleCall('vesta','CreateAccount_EnableSSH','https://'.$params["serverhostname"].':8083/api/'$postdata,$answer);
+            logModuleCall('vesta','CreateAccount_EnableSSH','https://'.$params["serverhostname"].':8083/api/'.$postdata,$answer);
         }
 
         // Add domain
@@ -89,7 +89,7 @@ function vesta_CreateAccount($params) {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
             $answer = curl_exec($curl);
 
-            logModuleCall('vesta','CreateAccount_AddDomain','https://'.$params["serverhostname"].':8083/api/'$postdata,$answer);
+            logModuleCall('vesta','CreateAccount_AddDomain','https://'.$params["serverhostname"].':8083/api/'.$postdata,$answer);
         }
     }
 
@@ -128,7 +128,7 @@ function vesta_TerminateAccount($params) {
         $answer = curl_exec($curl);
     }
 
-	logModuleCall('vesta','TerminateAccount','https://'.$params["serverhostname"].':8083/api/'$postdata,$answer);
+	logModuleCall('vesta','TerminateAccount','https://'.$params["serverhostname"].':8083/api/'.$postdata,$answer);
 
     if($answer == 'OK') {
         $result = "success";
@@ -165,7 +165,7 @@ function vesta_SuspendAccount($params) {
         $answer = curl_exec($curl);
     }
 
-	logModuleCall('vesta','SuspendAccount','https://'.$params["serverhostname"].':8083/api/'$postdata,$answer);
+	logModuleCall('vesta','SuspendAccount','https://'.$params["serverhostname"].':8083/api/'.$postdata,$answer);
 
     if($answer == 'OK') {
         $result = "success";
@@ -202,7 +202,7 @@ function vesta_UnsuspendAccount($params) {
         $answer = curl_exec($curl);
     }
 
-    logModuleCall('vesta','UnsuspendAccount','https://'.$params["serverhostname"].':8083/api/'$postdata,$answer);
+    logModuleCall('vesta','UnsuspendAccount','https://'.$params["serverhostname"].':8083/api/'.$postdata,$answer);
 
     if($answer == 'OK') {
         $result = "success";
@@ -240,7 +240,7 @@ function vesta_ChangePassword($params) {
         $answer = curl_exec($curl);
     }
 
-	logModuleCall('vesta','ChangePassword','https://'.$params["serverhostname"].':8083/api/'$postdata,$answer);
+	logModuleCall('vesta','ChangePassword','https://'.$params["serverhostname"].':8083/api/'.$postdata,$answer);
 
     if($answer == 'OK') {
         $result = "success";
@@ -278,7 +278,7 @@ function vesta_ChangePackage($params) {
         $answer = curl_exec($curl);
     }
 
-	logModuleCall('vesta','ChangePackage','https://'.$params["serverhostname"].':8083/api/'$postdata,$answer);
+	logModuleCall('vesta','ChangePackage','https://'.$params["serverhostname"].':8083/api/'.$postdata,$answer);
 
     if($answer == 'OK') {
         $result = "success";

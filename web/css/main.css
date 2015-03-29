@@ -1,6 +1,7 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #75b0c5;
+    background: url("/images/pattern.png") repeat fixed 0 0 rgba(0, 0, 0, 0);
     margin: 0;
     padding: 0;
     border: 0;

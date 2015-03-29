@@ -13,7 +13,7 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 stats_user=$3
-stats_pass=$4
+password=$4
 
 # Includes
 source $VESTA/func/main.sh
@@ -30,12 +30,13 @@ EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN STATS_USER STATS_PASS'
-validate_format 'user' 'domain' 'stats_user' 'stats_pass'
+validate_format 'user' 'domain' 'stats_user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_password_valid
 
 
 #----------------------------------------------------------#
@@ -53,7 +54,7 @@ Require valid-user" > $stats_dir/.htaccess
 
 # Generating htaccess user and password
 rm -f $stats_dir/.htpasswd
-htpasswd -bc $stats_dir/.htpasswd "$stats_user" "$stats_pass" &>/dev/null
+htpasswd -bc $stats_dir/.htpasswd "$stats_user" "$password" &>/dev/null
 stats_crypt=$(grep $stats_user: $stats_dir/.htpasswd |cut -f 2 -d :)
 
 #----------------------------------------------------------#

@@ -19,7 +19,7 @@
 user=$1
 database="$user"_"$2"
 dbuser="$user"_"$3"
-dbpass=$4
+password=$4
 type=${5-mysql}
 host=$6
 charset=${7-UTF8}
@@ -40,7 +40,7 @@ EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DATABASE DBUSER DBPASS [TYPE] [HOST] [CHARSET]'
-validate_format 'user' 'database' 'dbuser' 'dbpass' 'charset'
+validate_format 'user' 'database' 'dbuser' 'charset'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_type_valid "$DB_SYSTEM" "$type"
 is_object_valid 'user' 'USER' "$user"
@@ -51,6 +51,8 @@ is_object_valid "../../../conf/$type" 'DBHOST' "$host"
 is_object_unsuspended "../../../conf/$type" 'DBHOST' "$host"
 #is_charset_valid
 is_package_full 'DATABASES'
+is_password_valid
+dbpass="$password"
 
 
 #----------------------------------------------------------#

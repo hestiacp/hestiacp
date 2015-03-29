@@ -17,7 +17,7 @@
 type=$1
 host=$2
 dbuser=$3
-dbpass=$4
+password=$4
 max_db=${6-500}
 charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
 template=${8-template1}
@@ -29,6 +29,7 @@ source $VESTA/conf/vesta.conf
 
 # Hiding password
 A4='******'
+EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
 
 #----------------------------------------------------------#
@@ -37,10 +38,12 @@ A4='******'
 
 args_usage='TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
 check_args '4' "$#" "$args_usage"
-validate_format 'host' 'dbuser' 'dbpass' 'max_db' 'charsets' 'template'
+validate_format 'host' 'dbuser' 'max_db' 'charsets' 'template'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
+is_password_valid
+dbpass="$password"
 case $type in
     mysql) is_mysql_host_alive ;;
     pgsql) is_pgsql_host_alive ;;

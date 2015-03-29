@@ -25,6 +25,7 @@ source $VESTA/conf/vesta.conf
 
 # Hiding passwords
 A4='******'
+EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
 
 #----------------------------------------------------------#
@@ -33,8 +34,9 @@ A4='******'
 
 args_usage='HOST PORT USER PASSWORD [TYPE] [DNS_USER]'
 check_args '4' "$#" "$args_usage"
-validate_format 'host' 'port' 'user' 'password' 'type' 'dns_user'
+validate_format 'host' 'port' 'user' 'type' 'dns_user'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
+is_password_valid
 is_dnshost_new
 is_dnshost_alive
 

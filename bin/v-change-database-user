@@ -13,7 +13,7 @@
 user=$1
 database=$2
 dbuser="$user"_"$3"
-dbpass=$4
+password=$4
 
 # Includes
 source $VESTA/func/main.sh
@@ -32,25 +32,24 @@ EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
 check_args '3' "$#" 'USER DATABASE DBUSER [DBPASS]'
 validate_format 'user' 'database' 'dbuser'
-if [ ! -z "$dbpass" ]; then
-    validate_format 'dbpass'
-fi
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
 is_object_unsuspended 'db' 'DB' "$database"
+is_password_valid
+dbpass="$password"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
 
 # Compare old and new user
 old_dbuser=$(get_object_value 'db' 'DB' "$database" '$DBUSER')
 if [ "$old_dbuser" = "$dbuser" ]; then
     exit
 fi
-
-
-#----------------------------------------------------------#
-#                       Action                             #
-#----------------------------------------------------------#
 
 # Set new dbuser
 update_object_value 'db' 'DB' "$database" '$DBUSER' "$dbuser"

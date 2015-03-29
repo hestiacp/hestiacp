@@ -40,12 +40,12 @@ is_user_free() {
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER PASSWORD EMAIL [PACKAGE] [FNAME] [LNAME]'
-validate_format 'user' 'password' 'email' 'package'
+validate_format 'user' 'email' 'package'
 if [ ! -z "$fname" ]; then
     validate_format 'fname' 'lname'
 fi
-
 is_user_free "$user"
+is_password_valid
 is_package_valid
 
 

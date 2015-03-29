@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: change database password
+# info: change database owner
 # options: DATABASE USER
 #
 # The function for changing database owner.

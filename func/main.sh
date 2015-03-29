@@ -273,6 +273,15 @@ is_object_value_exist() {
     fi
 }
 
+# Check if password is transmitted via file
+is_password_valid() {
+    if [[ "$password" =~ ^/tmp/ ]]; then
+        if [ -f "$password" ]; then
+            password=$(head -n1 $password)
+        fi
+    fi
+}
+
 # Get object value
 get_object_value() {
     object=$(grep "$2='$3'" $USER_DATA/$1.conf)

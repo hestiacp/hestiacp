@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add backup sftp host
-# options: HOST USERNAME [PASSWORD] [PATH] [PORT]
+# options: HOST USERNAME PASSWORD [PATH] [PORT]
 #
 # The function adds sftp host for system backups
 
@@ -11,87 +11,84 @@
 # Argument defenition
 sftp_host=$1
 sftp_user=$2
-sftp_password=${3-******}
+password=$3
 sftp_path=${4-backup}
 sftp_port=${5-22}
-
-A3='******'
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Replace password with ******
-if [[ $A3 != '******' ]]
-then
-	EVENT="${EVENT/$sftp_password/******}"
-fi
+# Hiding password
+A3='******'
+EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
 # sftp command function
 sftpc() {
-expect -f "-" <<EOF "$@"
-	set count 0
-	spawn /usr/bin/sftp -o StrictHostKeyChecking=no -o Port=$sftp_port $sftp_user@$sftp_host
-	expect {
-		"password:" {
-	    	send "$sftp_password\r"
-	    	exp_continue
-	  	}
+    expect -f "-" <<EOF "$@"
+        set count 0
+        spawn /usr/bin/sftp -o StrictHostKeyChecking=no -o \
+            Port=$sftp_port $sftp_user@$sftp_host
+        expect {
+            "password:" {
+                send "$password\r"
+                exp_continue
+            }
 
-	  	-re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
-			set count \$argc
-			set output "Disconnected."
-			set rc $E_FTP
-			exp_continue
-		}
+            -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
+                set count \$argc
+                set output "Disconnected."
+                set rc $E_FTP
+                exp_continue
+            }
 
-		-re ".*denied.*(publickey|password)." {
-			set output "Permission denied, wrong publickey or password."
-			set rc $E_CONNECT
-		}
+            -re ".*denied.*(publickey|password)." {
+                set output "Permission denied, wrong publickey or password."
+                set rc $E_CONNECT
+            }
 
-	  	"sftp>" {
-	  		if {\$count < \$argc} {
-	  			set arg [lindex \$argv \$count]
-	  			send "\$arg\r"
-	  			incr count
-	  		} else {
-	  			send "exit\r"
-	  			set output "Disconnected."
-	  			if {[info exists rc] != 1} {
-	  				set rc $OK
-	  			}
-	  		}
-	  		exp_continue  	
-		}
+            "sftp>" {
+                if {\$count < \$argc} {
+                    set arg [lindex \$argv \$count]
+                    send "\$arg\r"
+                    incr count
+                } else {
+                    send "exit\r"
+                    set output "Disconnected."
+                    if {[info exists rc] != 1} {
+                        set rc $OK
+                    }
+                }
+                exp_continue
+            }
 
-		timeout {
-			set output "Connection timeout."
-			set rc $E_CONNECT
-		}
-  	}
+            timeout {
+                set output "Connection timeout."
+                set rc $E_CONNECT
+            }
+        }
 
-  	if {[info exists output] == 1} {
-  		puts "\$output"
-  	}
+        if {[info exists output] == 1} {
+            puts "\$output"
+        }
 
-  	exit \$rc		
+        exit \$rc
 EOF
 }
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_expect=$(which expect)
-if [[ ! -n $check_expect ]]
-then
-	echo "Error: \"expect\" utility not found"
-	log_event "$E_NOTEXIST" "$EVENT"
-	exit $E_NOTEXIST
+check_args '3' "$#" "HOST USERNAME PASSWORD [PATH] [PORT]"
+which expect >/dev/null 2>&1
+if [ $? -ne 0 ];then
+    echo "Error: expect utility not found"
+    log_event "$E_NOTEXIST" "$EVENT"
+    exit $E_NOTEXIST
 fi
-
-check_args '2' "$#" "HOST USERNAME [PASSWORD] [PATH] [PORT]"
+is_password_valid
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -100,35 +97,35 @@ check_args '2' "$#" "HOST USERNAME [PASSWORD] [PATH] [PORT]"
 # Checking network connection and write permissions
 sftmpdir="$sftp_path/vst.bK76A9SUkt"
 sftpc "mkdir $sftp_path" > /dev/null 2>&1
-sftpc "mkdir $sftmpdir" "rmdir $sftmpdir"
+sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
 rc=$?
-if [[ "$rc" != 0 ]]
-then
-	case $rc in
+if [[ "$rc" != 0 ]]; then
+    case $rc in
         $E_CONNECT) echo "Error: can't login to sftp host";;
-		$E_FTP) echo "Error: can't create temp folder on the sftp host";;
-	esac
-	log_event "$rc" "$EVENT"
-	exit "$rc"
+        $E_FTP) echo "Error: can't create temp folder on the sftp host";;
+    esac
+    log_event "$rc" "$EVENT"
+    exit "$rc"
 fi
 
 # Adding sftp backup config file
 echo "HOST='$sftp_host'
 USERNAME='$sftp_user'
-PASSWORD='$sftp_password'
+PASSWORD='$password'
 BPATH='$sftp_path'
 PORT='$sftp_port'
 TIME='$TIME'
 DATE='$DATE'" > $VESTA/conf/sftp.backup.conf
 chmod 660 $VESTA/conf/sftp.backup.conf
 
+
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
 # Update vesta.conf
-if [ -z "$(grep LANGUAGE $VESTA/conf/vesta.conf)" ]; then
-    echo "BACKUP_SYSTEM='ftp'" >> $VESTA/conf/vesta.conf
+if [ -z "$(grep BACKUP_SYSTEM $VESTA/conf/vesta.conf)" ]; then
+    echo "BACKUP_SYSTEM='sftp'" >> $VESTA/conf/vesta.conf
 else
     bckp=$(echo "$BACKUP_SYSTEM,sftp" |\
         sed "s/,/\n/g"|\
@@ -139,7 +136,6 @@ else
 fi
 
 # Logging
-echo "$sftp_host/$sftp_path successfully added as backup destination"
 log_event "$OK" "$EVENT"
 
 exit

@@ -689,70 +689,63 @@ ftp_backup() {
 
 # sftp command function
 sftpc() {
-expect -f "-" <<EOF "$@"
-    set timeout 60
-    set count 0
-    spawn /usr/bin/sftp -o StrictHostKeyChecking=no -o Port=$PORT $USERNAME@$HOST
-    expect {
-        "password:" {
-            send "$PASSWORD\r"
-            exp_continue
-        }
-
-        -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
-            set count \$argc
-            set output "Disconnected."
-            set rc $E_FTP
-            exp_continue
-        }
-
-        -re ".*denied.*(publickey|password)." {
-            set output "Permission denied, wrong publickey or password."
-            set rc $E_CONNECT
-        }
-
-        -re "\[0-9]*%" {
-            exp_continue
-        }
-
-        "sftp>" {
-            if {\$count < \$argc} {
-                set arg [lindex \$argv \$count]
-                send "\$arg\r"
-                incr count
-            } else {
-                send "exit\r"
-                set output "Disconnected."
-                if {[info exists rc] != 1} {
-                    set rc $OK
-                }
+    expect -f "-" <<EOF "$@"
+        set timeout 60
+        set count 0
+        spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
+            -o Port=$PORT $USERNAME@$HOST
+        expect {
+            "password:" {
+                send "$PASSWORD\r"
+                exp_continue
             }
-            exp_continue
+
+            -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
+                set count \$argc
+                set output "Disconnected."
+                set rc $E_FTP
+                exp_continue
+            }
+
+            -re ".*denied.*(publickey|password)." {
+                set output "Permission denied, wrong publickey or password."
+                set rc $E_CONNECT
+            }
+
+            -re "\[0-9]*%" {
+                exp_continue
+            }
+
+            "sftp>" {
+                if {\$count < \$argc} {
+                    set arg [lindex \$argv \$count]
+                    send "\$arg\r"
+                    incr count
+                } else {
+                    send "exit\r"
+                    set output "Disconnected."
+                    if {[info exists rc] != 1} {
+                        set rc $OK
+                    }
+                }
+                exp_continue
+            }
+
+            timeout {
+                set output "Connection timeout."
+                set rc $E_CONNECT
+            }
         }
 
-        timeout {
-            set output "Connection timeout."
-            set rc $E_CONNECT
+        if {[info exists output] == 1} {
+            puts "\$output"
         }
-    }
-
-    if {[info exists output] == 1} {
-        puts "\$output"
-    }
 
     exit \$rc
 EOF
 }
 
 sftp_backup() {
-    #Checking expect installation
-    check_expect=$(which expect)
-    if [[ ! -n $check_expect ]]
-    then
-        echo "Error: \"expect\" utility not found"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
-    fi
 
     # Checking config
     if [ ! -e "$VESTA/conf/sftp.backup.conf" ]; then
@@ -788,36 +781,33 @@ sftp_backup() {
     fi
 
     # Debug info
-    echo -e "$(date "+%F %T") Remote: $HOST/$BPATH/$user.$DATE.tar"
+    echo -e "$(date "+%F %T") Remote: sftp://$HOST/$BPATH/$user.$DATE.tar"
 
     # Checking network connection and write permissions
-    echo -e "$(date "+%F %T") Checking network connection and write permissions ..."
     sftmpdir="$BPATH/vst.bK76A9SUkt"
     sftpc "mkdir $BPATH" > /dev/null 2>&1
     sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
     rc=$?
-    if [[ "$rc" != 0 ]]
-    then
+    if [[ "$rc" != 0 ]]; then
         rm -rf $tmpdir
         case $rc in
-            $E_CONNECT) echo "Error: can't login to sftp host" | $send_mail -s "$subj" $email;;
-            $E_FTP) echo "Error: can't create temp folder on the sftp host" | $send_mail -s "$subj" $email;;
+            $E_CONNECT) echo "Error: can't login to sftp host $HOST" |\
+                $send_mail -s "$subj" $email;;
+            $E_FTP) echo "Error: can't create temp folder on sftp $HOST" |\
+                $send_mail -s "$subj" $email;;
         esac
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
         log_event "$rc" "$EVENT"
         exit "$rc"
     fi
-    echo -e "$(date "+%F %T") Connection established"
 
     # Checking retention
-    echo -e "$(date "+%F %T") Checking retention ..."
     backup_list=$(sftpc "cd $BPATH" "ls -l" |awk '{print $9}' |grep "^$user\.")
     backups_count=$(echo "$backup_list" | wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS + 1))
         for backup in $(echo "$backup_list" | head -n $backups_rm_number); do 
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar.*$//")
-            if [ -z $deprecated ]; then deprecated="$backup_date"; else deprecated="$deprecated $backup_date"; fi
             echo -e "$(date "+%F %T") Roated sftp backup: $backup_date"
             msg="$msg\n$(date "+%F %T") Roated sftp backup: $backup_date"
             sftpc "cd $BPATH" "rm $backup" > /dev/null 2>&1
@@ -836,7 +826,6 @@ sftp_backup() {
         sftpc "cd $BPATH" "put $user.$DATE.tar" > /dev/null 2>&1
         rm -f $user.$DATE.tar
     fi
-    echo -e "$(date "+%F %T") Upload complete"
 }
 
 echo "-- SUMMARY --"

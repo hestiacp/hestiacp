@@ -12,20 +12,23 @@
 # Argument defenition
 host=$1
 ftp_user=$2
-ftp_password=$3
+password=$3
 ftp_path=${4-/backup}
 ftp_port=${5-21}
-A3='******'
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
+# Hiding password
+A3='******'
+EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
+
 # Defining ftp command function
 ftpc() {
     ftp -p -n $host $ftp_port <<EOF
     quote USER $ftp_user
-    quote PASS $ftp_password
+    quote PASS $password
     binary
     $1
     $2
@@ -40,7 +43,8 @@ EOF
 #----------------------------------------------------------#
 
 check_args '3' "$#" "HOST USERNAME PASSWORD [PATH] [PORT]"
-validate_format 'host' 'ftp_user' 'ftp_password'
+validate_format 'host' 'ftp_user'
+is_password_valid
 
 
 #----------------------------------------------------------#
@@ -48,10 +52,11 @@ validate_format 'host' 'ftp_user' 'ftp_password'
 #----------------------------------------------------------#
 
 # Checking network connection
-fconn=$(ftpc)
-ferror=$(echo $fconn |grep -i -e failed -e error -e "Can't" -e "not conn")
+fconn=$(ftpc 2>&1)
+ferror=$(echo $fconn |\
+    grep -i -e failed -e error -e "can't" -e "not conn" -e "incorrect")
 if [ ! -z "$ferror" ]; then
-    echo "Error: can't login to ftp"
+    echo "Error: can't login to ftp server"
     log_event "$E_CONNECT" "$EVENT"
     exit $E_CONNECT
 fi
@@ -71,7 +76,7 @@ fi
 # Adding backup host
 echo "HOST='$host'
 USERNAME='$ftp_user'
-PASSWORD='$ftp_password'
+PASSWORD='$password'
 BPATH='$ftp_path'
 PORT='$ftp_port'
 TIME='$TIME'
@@ -84,7 +89,7 @@ chmod 660 $VESTA/conf/ftp.backup.conf
 #----------------------------------------------------------#
 
 # Update vesta.conf
-if [ -z "$(grep LANGUAGE $VESTA/conf/vesta.conf)" ]; then
+if [ -z "$(grep BACKUP_SYSTEM $VESTA/conf/vesta.conf)" ]; then
     echo "BACKUP_SYSTEM='ftp'" >> $VESTA/conf/vesta.conf
 else
     bckp=$(echo "$BACKUP_SYSTEM,ftp" |\

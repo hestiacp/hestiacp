@@ -40,7 +40,6 @@ bckp=$(echo "$BACKUP_SYSTEM" |\
 sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf
 
 # Logging
-echo "sftp host successfulle removed from configuration"
 log_event "$OK" "$EVENT"
 
 exit

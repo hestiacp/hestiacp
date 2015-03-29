@@ -31,6 +31,32 @@ source $VESTA/conf/vesta.conf
 A4='******'
 EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
+is_mysql_host_alive() {
+    mycnf=$(mktemp)
+    echo "[client]">$mycnf
+    echo "host='$HOST'" >> $mycnf
+    echo "user='$USER'" >> $mycnf
+    echo "password='$PASSWORD'" >> $mycnf
+    chmod 600 $mycnf
+    mysql --defaults-file=$mycnf -e 'SELECT VERSION()' >/dev/null 2>&1
+    rm $mycnf
+    if [ '0' -ne "$?" ]; then
+        echo "Error: MySQL connection to $host failed"
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
+    fi
+}
+
+is_pgsql_host_alive() {
+    export PGPASSWORD="$dbpass"
+    psql -h $host -U $dbuser -c "SELECT VERSION()" > /dev/null 2>&1
+    if [ '0' -ne "$?" ]; then
+        echo "Error: PostgreSQL connection to $host failed"
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
+    fi
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

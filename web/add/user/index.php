@@ -47,7 +47,6 @@ if (!empty($_POST['ok'])) {
 
     // Protect input
     $v_username = escapeshellarg($_POST['v_username']);
-    $v_password = escapeshellarg($_POST['v_password']);
     $v_email = escapeshellarg($_POST['v_email']);
     $v_package = escapeshellarg($_POST['v_package']);
     $v_language = escapeshellarg($_POST['v_language']);
@@ -58,9 +57,15 @@ if (!empty($_POST['ok'])) {
 
     // Add user
     if (empty($_SESSION['error_msg'])) {
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['v_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        unlink($v_password);
+        $v_password = escapeshellarg($_POST['v_password']);
     }
 
     // Set language

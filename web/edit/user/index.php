@@ -76,11 +76,15 @@ if (!empty($_POST['save'])) {
 
     // Change password
     if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
-        $v_password = escapeshellarg($_POST['v_password']);
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['v_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-change-user-password ".$v_username." ".$v_password, $output, $return_var);
         check_return_code($return_var,$output);
-        $v_password = "••••••••";
         unset($output);
+        unlink($v_password);
+        $v_password = "••••••••";
     }
 
     // Change package (admin only)

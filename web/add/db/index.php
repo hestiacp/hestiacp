@@ -43,7 +43,6 @@ if (!empty($_POST['ok'])) {
     // Protect input
     $v_database = escapeshellarg($_POST['v_database']);
     $v_dbuser = escapeshellarg($_POST['v_dbuser']);
-    $v_password = escapeshellarg($_POST['v_password']);
     $v_type = $_POST['v_type'];
     $v_charset = $_POST['v_charset'];
     $v_host = $_POST['v_host'];
@@ -54,9 +53,15 @@ if (!empty($_POST['ok'])) {
         $v_type = escapeshellarg($_POST['v_type']);
         $v_charset = escapeshellarg($_POST['v_charset']);
         $v_host = escapeshellarg($_POST['v_host']);
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['v_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." ".$v_host." ".$v_charset, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        unlink($v_password);
+        $v_password = escapeshellarg($_POST['v_password']);
         $v_type = $_POST['v_type'];
         $v_host = $_POST['v_host'];
         $v_charset = $_POST['v_charset'];

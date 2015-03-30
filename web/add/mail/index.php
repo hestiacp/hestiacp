@@ -87,7 +87,6 @@ if (!empty($_POST['ok_acc'])) {
     $v_domain = escapeshellarg($_POST['v_domain']);
     $v_domain = strtolower($v_domain);
     $v_account = escapeshellarg($_POST['v_account']);
-    $v_password = escapeshellarg($_POST['v_password']);
     $v_quota = escapeshellarg($_POST['v_quota']);
     $v_aliases = $_POST['v_aliases'];
     $v_fwd = $_POST['v_fwd'];
@@ -96,9 +95,15 @@ if (!empty($_POST['ok_acc'])) {
 
     // Add Mail Account
     if (empty($_SESSION['error_msg'])) {
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['v_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-add-mail-account ".$user." ".$v_domain." ".$v_account." ".$v_password." ".$v_quota, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        unlink($v_password);
+        $v_password = escapeshellarg($_POST['v_password']);
     }
 
     // Add Aliases

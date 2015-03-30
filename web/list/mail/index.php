@@ -23,7 +23,7 @@ if (empty($_GET['domain'])){
         include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_mail.html');
     }
 } else {
-    exec (VESTA_CMD."v-list-mail-accounts '".$user."' '".$_GET['domain']."' json", $output, $return_var);
+    exec (VESTA_CMD."v-list-mail-accounts '".$user."' '".escapeshellarg($_GET['domain'])."' json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data, true);
     unset($output);

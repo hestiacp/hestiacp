@@ -11,11 +11,15 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
             echo 'Error: only admin is allowed to use API';
             exit;
         }
-        
+
         $v_user = escapeshellarg($_POST['user']);
-        $v_password = escapeshellarg($_POST['password']);
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['password']."\n");
+        fclose($fp);
         $v_ip_addr = escapeshellarg($_SERVER["REMOTE_ADDR"]);
         exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." '".$v_ip_addr."'",  $output, $auth_code);
+        unlink($v_password);
     } else {
         $key = '/usr/local/vesta/data/keys/' . basename($_POST['hash']);
         if (file_exists($key) && is_file($key)) {
@@ -27,7 +31,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         echo 'Error: authentication failed';
         exit;
     }
-    
+
     // Prepare arguments
     if (isset($_POST['cmd'])) $cmd = escapeshellarg($_POST['cmd']);
     if (isset($_POST['arg1'])) $arg1 = escapeshellarg($_POST['arg1']);
@@ -40,31 +44,30 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     if (isset($_POST['arg8'])) $arg8 = escapeshellarg($_POST['arg8']);
     if (isset($_POST['arg9'])) $arg9 = escapeshellarg($_POST['arg9']);
 
- // Build query
+    // Build query
     $cmdquery = VESTA_CMD.$cmd." ";
-     
-     if(!empty($arg1)){
-                     $cmdquery = $cmdquery.$arg1." "; }
-     if(!empty($arg2)){
-                     $cmdquery = $cmdquery.$arg2." "; }
-     if(!empty($arg3)){
-                     $cmdquery = $cmdquery.$arg3." "; }
-     if(!empty($arg4)){
-                     $cmdquery = $cmdquery.$arg4." "; }
-     if(!empty($arg5)){
-                     $cmdquery = $cmdquery.$arg5." "; }
-     if(!empty($arg6)){
-                     $cmdquery = $cmdquery.$arg6." "; }
-     if(!empty($arg7)){
-                     $cmdquery = $cmdquery.$arg7." "; }
-     if(!empty($arg8)){
-                     $cmdquery = $cmdquery.$arg8." "; }
-     if(!empty($arg9)){
-                     $cmdquery = $cmdquery.$arg9; }
+    if(!empty($arg1)){
+         $cmdquery = $cmdquery.$arg1." "; }
+    if(!empty($arg2)){
+         $cmdquery = $cmdquery.$arg2." "; }
+    if(!empty($arg3)){
+         $cmdquery = $cmdquery.$arg3." "; }
+    if(!empty($arg4)){
+         $cmdquery = $cmdquery.$arg4." "; }
+    if(!empty($arg5)){
+         $cmdquery = $cmdquery.$arg5." "; }
+    if(!empty($arg6)){
+         $cmdquery = $cmdquery.$arg6." "; }
+    if(!empty($arg7)){
+         $cmdquery = $cmdquery.$arg7." "; }
+    if(!empty($arg8)){
+         $cmdquery = $cmdquery.$arg8." "; }
+    if(!empty($arg9)){
+         $cmdquery = $cmdquery.$arg9; }
 
-   // Run query
+    // Run query
     exec ($cmdquery, $output, $return_var);
-    
+
     if ((!empty($_POST['returncode'])) && ($_POST['returncode'] == 'yes')) {
         echo $return_var;
     } else {

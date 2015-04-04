@@ -48,12 +48,11 @@ is_password_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ -x '/usr/bin/doveadm' ]; then
-    md5=$(/usr/bin/doveadm pw -s md5 -p "$password")
-else
-    md5=$(/usr/sbin/dovecotpw -s md5 -p "$password")
-fi
+# Generating hashed password
+salt=$(gen_password "$PW_MATRIX" "8")
+md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<<$password)"
 
+# Adding account info into password file
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     str="$account:$md5:$user:mail::$HOMEDIR/$user:$quota"
     echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd

@@ -466,7 +466,7 @@ recalc_user_disk_usage() {
         sed -i "s/U_DISK_DB='$d'/U_DISK_DB='$usage'/g" $USER_DATA/user.conf
         u_usage=$((u_usage + usage))
     fi
-    usage=$(grep 'U_DIR_DISK=' $USER_DATA/user.conf | cut -f 2 -d "'")
+    usage=$(grep 'U_DISK_DIRS=' $USER_DATA/user.conf | cut -f 2 -d "'")
     u_usage=$((u_usage + usage))
     old=$(grep "U_DISK='" $USER_DATA/user.conf | cut -f 2 -d \')
     sed -i "s/U_DISK='$old'/U_DISK='$u_usage'/g" $USER_DATA/user.conf

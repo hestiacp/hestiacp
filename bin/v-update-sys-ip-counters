@@ -45,7 +45,7 @@ for ip in $ip_list; do
 
     # Calculate usage
     ip_usage=$(grep -H $ip $VESTA/data/users/*/web.conf)
-    web_domains=$(echo "$ip_usage"| wc -l)
+    web_domains=$(echo "$ip_usage" | sed '/^$/d' | wc -l)
     sys_users=$(echo "$ip_usage" | cut -f7 -d/ | sort -u |\
         tr '\n' ',' | sed "s/,$//g")
 

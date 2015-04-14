@@ -26,7 +26,7 @@ help() {
    -f, --force                Force installation
    -i, --disable-iptables     Disable iptables support
    -b, --disable-fail2ban     Disable fail2ban protection
-   -n, --noupdate             Do not run yum update command
+   -n, --noupdate             Do not run apt-get upgrade command
    -s, --hostname             Set server hostname
    -e, --email                Set email address
    -p, --password             Set admin password instead of generating it
@@ -78,7 +78,7 @@ while getopts "hfibdnqe:m:p:s:" Option; do
         f) force='yes' ;;                 # Force install
         i) disable_iptables='yes' ;;      # Disable iptables
         b) disable_fail2ban='yes' ;;      # Disable fail2ban
-        n) noupdate='yes' ;;              # Disable yum update
+        n) noupdate='yes' ;;              # Disable apt-get upgrade
         s) servername=$OPTARG ;;          # Server hostname
         e) email=$OPTARG ;;               # Set email
         p) vpass=$OPTARG ;;               # Admin password
@@ -126,11 +126,11 @@ if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" != 'yes' ]; then
     exit 1
 fi
 
-# Check admin user account
+# Check admin group
 if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" != 'yes' ]; then
-    echo "Error: user admin exists"
+    echo "Error: group admin exists"
     echo
-    echo 'Please remove admin user account before proceeding.'
+    echo 'Please remove admin group before proceeding.'
     echo 'If you want to do it automatically run installer with -f option:'
     echo "Example: bash $0 --force"
     exit 1

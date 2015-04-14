@@ -51,15 +51,28 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select class="vst-list" name="v_chain">
-                                        <option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?php print __('SSH') ?></option>
-                                        <option value="WEB" <?php if ((!empty($v_chain)) && ( $v_chain == "'WEB'" )) echo 'selected'?>><?php print __('WEB') ?></option>
-                                        <option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?php print __('FTP') ?></option>
-                                        <option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?php print __('DNS') ?></option>
-                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?php print __('MAIL') ?></option>
-                                        <option value="DB" <?php if ((!empty($v_chain)) && ( $v_chain == "'DB'" )) echo 'selected'?>><?php print __('DB') ?></option>
-                                        <option value="VESTA" <?php if ((!empty($v_chain)) && ( $v_chain == "'VESTA'" )) echo 'selected'?>><?php print __('VESTA') ?></option>
-                                    </select>
+									<select class="vst-list" name="v_chain">
+									<?php	
+										// chains list
+										$chains = array(
+											'SSH',
+											'WEB',
+											'FTP',
+											'DNS',
+											'MAIL',
+											'DB',
+											'VESTA'
+										);
+										
+										foreach($chains as $chain){
+											$selected = (!empty($v_chain)) && ( $v_chain == $chain) ? 'selected' : '';
+									?>
+										<option value="<?php echo $chain?>" <?php echo $selected ?>>
+											<?php print __($chain) ?>
+										</option>
+									
+									<?php } ?>
+									</select>                                    
                                 </td>
                             </tr>
                             <tr>

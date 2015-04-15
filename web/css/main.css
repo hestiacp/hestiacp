@@ -892,7 +892,7 @@ label:active {
 
 .vst-textinput {
     background-color: #fff;
-    border: 1px solid #c0c0c0;
+    border: 1px solid #ddd;
     border-radius: 3px 3px 3px 3px;
     color: #555;
     font-size: 12pt;
@@ -919,7 +919,7 @@ label:active {
 
 .vst-input {
     background-color: #fff;
-    border: 1px solid #c0c0c0;
+    border: 1px solid #ddd;
     border-radius: 3px 3px 3px 3px;
     color: #555;
     font-size: 14pt;

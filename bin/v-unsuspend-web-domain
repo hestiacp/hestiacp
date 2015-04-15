@@ -40,7 +40,7 @@ is_object_suspended 'web' 'DOMAIN' "$domain"
 
 # Parsing domain values
 get_domain_values 'web'
-tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
 SUSPENDED='no'
 ip=$(get_real_ip $IP)
@@ -54,7 +54,7 @@ add_web_config
 
 # Check SSL
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
     conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
     del_web_config
     add_web_config

@@ -45,7 +45,7 @@ is_ip_avalable
 # Define variable for replace
 get_domain_values 'web'
 ip=$(get_real_ip $ip)
-tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
 old=$(get_real_ip $IP)
 new=$ip
@@ -53,7 +53,7 @@ replace_web_config
 
 # Checking SSL
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
     conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
     replace_web_config
 fi

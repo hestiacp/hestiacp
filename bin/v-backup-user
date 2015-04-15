@@ -166,14 +166,14 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         grep "DOMAIN='$domain'" $conf > vesta/web.conf
 
         # Backup vhost config
-        tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+        tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
         conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
         get_web_config_brds
         sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
 
         # Backup ssl vhost
         if [ "$SSL" = 'yes' ]; then
-            tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+            tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
             conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
             get_web_config_brds
             sed -n "$top_line,$bottom_line p" $conf > conf/s$WEB_SYSTEM.conf

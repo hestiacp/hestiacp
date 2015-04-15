@@ -121,7 +121,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Web Template');?>
+                                    <?php print __('Web Template')  . " <span style='color:#777;'> / " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -140,10 +140,37 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Backend Template') . " <span style='color:#777;'> / " .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_backend_template">
+                                        <?php
+                                            foreach ($backend_templates as $key => $value) {
+                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                $svalue = "'".$value."'";
+                                                if ((!empty($v_backend_template)) && ( $value == $v_backend_template ) || ($svalue == $v_backend_template)){
+                                                    echo ' selected' ;
+                                                }
+                                                if ((empty($v_backend_template)) && ($value == 'default')){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">".$value."</option>\n";
+                                            }
+                                        ?> 
+                                    </select>
+                                </td>
+                            </tr>
+                            <?php echo ""; }?> 
+
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support')  . " <span style='color:#777;'> / " .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
                                 </td>
                             </tr>
                             <tr>

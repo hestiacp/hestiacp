@@ -45,6 +45,7 @@ if ( $v_ssl == 'yes' ) {
     $v_ssl_ca = $ssl_str[$v_domain]['CA'];
 }
 $v_ssl_home = $data[$v_domain]['SSL_HOME'];
+$v_backend_template = $data[$v_domain]['BACKEND'];
 $v_proxy = $data[$v_domain]['PROXY'];
 $v_proxy_template = $data[$v_domain]['PROXY'];
 $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
@@ -74,6 +75,13 @@ unset($output);
 exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
 $templates = json_decode(implode('', $output), true);
 unset($output);
+
+// List backend templates
+if (!empty($_SESSION['WEB_BACKEND'])) {
+    exec (VESTA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    $backend_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
 
 // List proxy templates
 if (!empty($_SESSION['PROXY_SYSTEM'])) {
@@ -188,6 +196,14 @@ if (!empty($_POST['save'])) {
                 }
             }
         }
+    }
+
+    // Change backend template
+    if ((!empty($_SESSION['WEB_BACKEND'])) && ( $v_backend_template != $_POST['v_backend_template']) && (empty($_SESSION['error_msg']))) {
+            $v_backend_template = $_POST['v_backend_template'];
+            exec (VESTA_CMD."v-change-web-domain-backend-tpl ".$v_username." ".$v_domain." ".escapeshellarg($v_backend_template), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
     }
 
     // Delete proxy support

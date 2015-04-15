@@ -221,6 +221,13 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
+    // Restart backend server
+    if ((!empty($_SESSION['WEB_BACKEND'])) && (empty($_SESSION['error_msg']))) {
+        exec (VESTA_CMD."v-restart-web-backend", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    }
+
     // Restart proxy server
     if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-restart-proxy", $output, $return_var);

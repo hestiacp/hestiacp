@@ -45,22 +45,30 @@ fields='$DOMAIN'
 nohead=1
 domain_counter=0
 
+# Adding log directory
+mkdir -p /var/log/$WEB_SYSTEM/domains
+chmod 771 /var/log/$WEB_SYSTEM/domains
+
 # Clean up old config
 rm -f $HOMEDIR/$user/conf/tmp_*.conf
 
+
 # Starting loop
 for domain in $(shell_list); do
+    template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
+    if [ ! -z "$WEB_BACKEND" ]; then
+        $BIN/v-add-web-domain-backend $user $domain $template
+    fi
+
     ((++ domain_counter))
     rebuild_web_domain_conf
 done
 
-# Config path
-web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
-proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
-
 # Touch vesta configs
+web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
 touch $web_conf
 if [ ! -z "$PROXY_SYSTEM" ]; then
+    proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
     touch $proxy_conf
 fi
 
@@ -72,7 +80,6 @@ if [ "$domain_counter" -lt 1 ]; then
     if [ ! -z "$PROXY_SYSTEM" ]; then
         sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
     fi
-
 else
     # Clean web configs
     sed -i "/.*\/$user\/.*.conf/d" $web_conf
@@ -87,8 +94,11 @@ else
 
     # Checking include
     web_include=$(grep "$conf" $web_conf )
-    if [ -z "$web_include" ]; then
+    if [ -z "$web_include" ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
         echo "Include $conf" >> $web_conf
+    fi
+    if [ -z "$web_include" ] && [ "$WEB_SYSTEM" = 'nginx' ]; then
+        echo "include $conf;" >> $web_conf
     fi
 
     # Checking SSL
@@ -96,10 +106,13 @@ else
         tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$WEB_SYSTEM.conf"
         conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
         mv $tmp_conf $conf
-    fi
-    ssl_include=$(grep "$conf" $web_conf )
-    if [ -z "$ssl_include" ]; then
-        echo "Include $conf" >> $web_conf
+        ssl_include=$(grep "$conf" $web_conf )
+        if [ -z "$ssl_include" ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
+            echo "Include $conf" >> $web_conf
+        fi
+        if [ -z "$ssl_include" ] && [ "$WEB_SYSTEM" = 'nginx' ]; then
+            echo "include $conf;" >> $web_conf
+        fi
     fi
 
     # Checking proxy
@@ -153,9 +166,11 @@ if [ "$restart" != 'no' ]; then
         exit $E_RESTART
     fi
 
-    $BIN/v-restart-proxy
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
+    if [ ! -z "$PROXY_SYSTEM" ];then
+        $BIN/v-restart-proxy
+        if [ $? -ne 0 ]; then
+            exit $E_RESTART
+        fi
     fi
 fi
 

@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list web templates
-# options: USER [FORMAT]
+# info: listing backend templates
+# options: [FORMAT]
 #
-# The function for obtaining the list of web templates available to a user.
+# The function for obtaining the list of available backend templates.
 
 
 #----------------------------------------------------------#
@@ -18,8 +18,6 @@ source $VESTA/conf/vesta.conf
 
 # Json function
 json_list_wtpl() {
-    templates=$(ls -t $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
-    templates=$(echo "$templates" | grep "\.tpl" |cut -f 1 -d  '.' )
     t_counter=$(echo "$templates" | wc -w)
     i=1
     echo '['
@@ -32,12 +30,10 @@ json_list_wtpl() {
         (( ++i))
     done
     echo "]"
-}
+    }
 
 # Shell function
 shell_list_wtpl() {
-    templates=$(ls -t $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
-    templates=$(echo "$templates" | grep "\.tpl" |cut -f 1 -d  '.' )
     if [ -z "$nohead" ]; then
         echo "Templates"
         echo "----------"
@@ -48,10 +44,18 @@ shell_list_wtpl() {
 }
 
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Proxy templates
+if [ -z "$WEB_BACKEND" ]; then
+    exit
+fi
+templates=$(ls -t $WEBTPL/$WEB_BACKEND |\
+    cut -f1 -d . |\
+    grep -v proxy_ip |\
+    sort -u )
 
 # Listing domains
 case $format in

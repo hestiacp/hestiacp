@@ -43,7 +43,6 @@ is_domain_new 'web'
 is_ip_valid
 is_ip_avalable
 is_package_full 'WEB_DOMAINS'
-
 template=$(get_user_value '$WEB_TEMPLATE')
 is_web_template_valid
 
@@ -77,8 +76,19 @@ fi
 group="$user"
 email="info@$domain"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
-tpl_file="$WEBTPL/$WEB_SYSTEM/$template.tpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.tpl"
 conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+
+# Checking backend
+if [ ! -z "$WEB_BACKEND" ]; then
+    is_web_backend_pool_valid
+    $BIN/v-add-web-domain-backend $user $domain
+    rc=$?
+    if [ $rc -ne 0 ]; then
+        exit $rc
+    fi
+    get_domain_backend_values
+fi
 
 # Adding web config
 add_web_config
@@ -142,14 +152,18 @@ chmod 551 $HOMEDIR/$user/web/$domain/logs
 chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
 # Running template trigger
-if [ -x $WEBTPL/$WEB_SYSTEM/$template.sh ]; then
-    $WEBTPL/$WEB_SYSTEM/$template.sh $user $domain $ip $HOMEDIR $docroot
+if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh ]; then
+    $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh \
+        $user $domain $ip $HOMEDIR $docroot
 fi
 
-# Checking web config
-web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
-if [ -z "$(grep $conf $web_conf)" ]; then
+# Checking web config include
+web_include="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+if [ -z "$web_include" ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
     echo "Include $conf" >> $web_conf
+fi
+if [ -z "$web_include" ] && [ "$WEB_SYSTEM" = 'nginx' ]; then
+    echo "include $conf;" >> $web_conf
 fi
 
 
@@ -163,9 +177,10 @@ increase_user_value "$user" '$U_WEB_DOMAINS'
 increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Defining domain variables
+BACKEND_TPL=$(grep BACKEND_TEMPLATE $USER_DATA/user.conf |cut -f 2 -d \')
 str="DOMAIN='$domain' IP='$IP' IP6='' ALIAS='$aliases' TPL='$template'"
 str="$str SSL='no' SSL_HOME='same' FTP_USER='' FTP_MD5=''"
-str="$str PROXY='' PROXY_EXT='' STATS='' STATS_USER=''"
+str="$str BACKEND='$BACKEND_TPL' PROXY='' PROXY_EXT='' STATS='' STATS_USER=''"
 str="$str STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0' SUSPENDED='no'"
 str="$str TIME='$TIME' DATE='$DATE'"
 

@@ -1,0 +1,174 @@
+#!/bin/bash
+# info: change web domain backend template
+# options: USER DOMAIN TEMPLATE [RESTART]
+#
+# The function changes backend template
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+template=$3
+restart="$4"
+
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/ip.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN TEMPLATE [RESTART]'
+validate_format 'user' 'domain' 'template'
+is_system_enabled "$WEB_BACKEND" 'WEB_BACKEND'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_web_backend_template_valid $template
+is_web_backend_pool_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting backend
+rm -f $pool/$backend.conf
+
+# Allocating backend port
+backend_port=9000
+ports=$(grep -v '^;' $pool/* 2>/dev/null |grep listen |grep -o :[0-9].*)
+ports=$(echo "$ports" |sed "s/://" |sort -n)
+for port in $ports; do
+    if [ "$backend_port" -eq "$port" ]; then
+        backend_port=$((backend_port + 1))
+    fi
+done
+
+# Changing backend config
+cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
+    sed -e "s|%backend_port%|$backend_port|" \
+        -e "s|%user%|$user|"\
+        -e "s|%domain%|$domain|"\
+        -e "s|%domain_idn%|$domain_idn|"\
+        -e "s|%backend%|$backend|g" > $pool/$backend.conf
+
+# Checking backend pool configuration
+if [ "$backend" = "$user" ]; then
+    conf=$USER_DATA/web.conf
+    fields='$DOMAIN'
+    nohead=1
+
+    for domain in $(shell_list); do
+
+        # Parsing domain values
+        get_domain_values 'web'
+        ip=$(get_real_ip $IP)
+
+        # Deleting old vhost
+        tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
+        conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+        del_web_config
+
+        # Deleting old ssl vhost
+        if [ "$SSL" = 'yes' ]; then
+            tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
+            conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+            del_web_config
+        fi
+
+        # Adding new vhost
+        upd_web_domain_values
+        tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
+        conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+        add_web_config
+
+        # Adding new ssl vhost
+        if [ "$SSL" = 'yes' ]; then
+            conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+            tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
+            add_web_config
+        fi
+
+        # Update config
+        add_object_key "web" 'DOMAIN' "$domain" 'BACKEND' 'PROXY'
+        update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' "$template"
+    done
+
+    # Chaning template in user config
+    old_template=$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)
+    if [ -z "$old_template" ]; then
+        sed -i "s/^WEB_DOMAINS/BACKEND_TEMPLATE='$template'\nWEB_DOMAINS/g" \
+            $USER_DATA/user.conf
+    else
+        update_user_value "$user" '$BACKEND_TEMPLATE' "$template"
+    fi
+else
+    # Parsing domain values
+    get_domain_values 'web'
+    ip=$(get_real_ip $IP)
+
+    # Deleting old vhost
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
+    conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+    del_web_config
+
+    # Deleting old ssl vhost
+    if [ "$SSL" = 'yes' ]; then
+        tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
+        conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+        del_web_config
+    fi
+
+    # Adding new vhost
+    upd_web_domain_values
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
+    conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+    add_web_config
+
+    # Adding new ssl vhost
+    if [ "$SSL" = 'yes' ]; then
+        conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+        tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
+        add_web_config
+    fi
+
+    # Update config
+    add_object_key "web" 'DOMAIN' "$domain" 'BACKEND' 'PROXY'
+    update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' "$template"
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+
+# Restart web
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web
+    if [ $? -ne 0 ]; then
+        exit $E_RESTART
+    fi
+    $BIN/v-restart-web-backend
+    if [ $? -ne 0 ]; then
+        exit $E_RESTART
+    fi
+fi
+
+# Logging
+log_history "changed backend template for $domain to $template"
+log_event "$OK" "$EVENT"
+
+exit

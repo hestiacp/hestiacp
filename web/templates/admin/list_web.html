@@ -193,6 +193,12 @@
                                 <td rowspan=4 style="vertical-align:top;">
                                     <table>
                                         <tr><td>&nbsp;</td><td></td></tr>
+                                        <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Backend Template');?>:</td>
+                                            <td class="counter-value"><?php echo $data[$key]['BACKEND'];?></td>
+                                        </tr>
+                                        <?php echo ""; }?> 
                                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                                         <tr>
                                             <td class="counter-name"><?php print __('Proxy Support');?>:</td>

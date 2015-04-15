@@ -244,9 +244,9 @@ if [ "$web" != 'no' ]; then
 
             # Check web template
             check_tpl=$(is_web_template_valid)
-            if [ ! -e "$WEBTPL/$WEB_SYSTEM/$TPL.tpl" ]; then
+            if [ ! -e "$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl" ]; then
                 TPL="default"
-                if [ ! -e "$WEBTPL/$WEB_SYSTEM/$TPL.tpl" ]; then
+                if [ ! -e "$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl" ]; then
                     echo "Error: no avaiable web template"
                     echo "No available web template" |\
                         $send_mail -s "$subj" $email
@@ -280,9 +280,22 @@ if [ "$web" != 'no' ]; then
                 STATS_USER=$(echo "$STATS_USER"  | cut -f 2,3,4,5,6,7 -d '_')
                 STATS_USER="${user}_${STATS_USER}"
             fi
+
+            # Set default backend template
+            if [ ! -z "$WEB_BACKEND" ]; then
+                if  [ ! -z "$BACKEND" ]; then
+                    if [ ! -e "$WEBTPL/$WEB_BACKEND/$BACKEND.tpl" ]; then
+                        BACKEND='default'
+                    fi
+                else
+                    BACKEND='default'
+                fi
+            fi
+
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
-            str="$str FTP_USER='$FTP_USER' FTP_MD5='$FTP_MD5' PROXY='$PROXY'"
+            str="$str FTP_USER='$FTP_USER' FTP_MD5='$FTP_MD5'"
+            str="$str BACKEND='$BACKEND' PROXY='$PROXY'"
             str="$str PROXY_EXT='$PROXY_EXT' STATS='$STATS'"
             str="$str STATS_USER='$STATS_USER' STATS_CRYPT='$STATS_CRYPT'"
             str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' SUSPENDED='no'"
@@ -297,6 +310,11 @@ if [ "$web" != 'no' ]; then
                 done
             fi
 
+            # Rebuild backend
+            if [ ! -z "$WEB_BACKEND" ]; then
+                $BIN/v-add-web-domain-backend $user $domain $BACKEND
+            fi
+
             # Rebuild web config
             rebuild_web_domain_conf
 
@@ -307,8 +325,11 @@ if [ "$web" != 'no' ]; then
             cat $tmp_conf >> $conf
             rm -f $tmp_conf
             web_include=$(grep "$conf" $web_conf)
-            if [ -z "$web_include" ]; then
+            if [ -z "$web_include" ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
                 echo "Include $conf" >> $web_conf
+            fi
+            if [ -z "$web_include" ] && [ "$WEB_SYSTEM" = 'nginx' ]; then
+                echo "include $conf;" >> $web_conf
             fi
 
             # Adding SSL vhost
@@ -319,8 +340,11 @@ if [ "$web" != 'no' ]; then
                 rm -f $tmp_conf
             fi
             ssl_include=$(grep "$conf" $web_conf)
-            if [ -z "$ssl_include" ]; then
+            if [ -z "$ssl_include" ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
                 echo "Include $conf" >> $web_conf
+            fi
+            if [ -z "$ssl_include" ] && [ "$WEB_SYSTEM" = 'nginx' ]; then
+                echo "include $conf;" >> $web_conf
             fi
 
             # Proxy

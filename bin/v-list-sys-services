@@ -92,6 +92,14 @@ if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
 
 fi
 
+# Backend
+service=$WEB_BACKEND
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
+    get_srv_state $service
+    str="$str\nNAME='$service' SYSTEM='backend server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
+fi
+
 # Proxy
 service=$PROXY_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then

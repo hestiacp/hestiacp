@@ -42,7 +42,7 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
 # Parsing domain values
 get_domain_values 'web'
 conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
 
 # Deleting domain
 del_web_config

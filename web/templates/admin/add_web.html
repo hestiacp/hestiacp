@@ -136,7 +136,7 @@
                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                         <tr>
                             <td class="vst-text step-top" >
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if ($v_proxy !== 'off') echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if ($v_proxy !== 'off') echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support')  . " <span style='color:#777;'> / " .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
                             </td>
                         </tr>
                         <tr>

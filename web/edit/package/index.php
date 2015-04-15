@@ -30,6 +30,7 @@ unset($output);
 // Parse package
 $v_package = $_GET['package'];
 $v_web_template = $data[$v_package]['WEB_TEMPLATE'];
+$v_backend_template = $data[$v_package]['BACKEND_TEMPLATE'];
 $v_proxy_template = $data[$v_package]['PROXY_TEMPLATE'];
 $v_dns_template = $data[$v_package]['DNS_TEMPLATE'];
 $v_web_domains = $data[$v_package]['WEB_DOMAINS'];
@@ -59,12 +60,20 @@ exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
 $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
+// List backend templates
+if (!empty($_SESSION['WEB_BACKEND'])) {
+    exec (VESTA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    $backend_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
+
 // List proxy templates
 if (!empty($_SESSION['PROXY_SYSTEM'])) {
     exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
     $proxy_templates = json_decode(implode('', $output), true);
     unset($output);
 }
+
 
 // List dns templates
 exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
@@ -82,7 +91,12 @@ if (!empty($_POST['save'])) {
     // Check empty fields
     if (empty($_POST['v_package'])) $errors[] = __('package');
     if (empty($_POST['v_web_template'])) $errors[] = __('web template');
-    if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+    if (!empty($_SESSION['WEB_BACKEND'])) {
+        if (empty($_POST['v_backend_template'])) $errors[] = __('backend template');
+    }
+    if (!empty($_SESSION['PROXY_SYSTEM'])) {
+        if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+    }
     if (empty($_POST['v_dns_template'])) $errors[] = __('dns template');
     if (empty($_POST['v_shell'])) $errrors[] = __('shell');
     if (!isset($_POST['v_web_domains'])) $errors[] = __('web domains');
@@ -112,7 +126,12 @@ if (!empty($_POST['save'])) {
     // Protect input
     $v_package = escapeshellarg($_POST['v_package']);
     $v_web_template = escapeshellarg($_POST['v_web_template']);
-    $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
+    if (!empty($_SESSION['WEB_BACKEND'])) {
+        $v_backend_template = escapeshellarg($_POST['v_backend_template']);
+    }
+    if (!empty($_SESSION['PROXY_SYSTEM'])) {
+        $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
+    }
     $v_dns_template = escapeshellarg($_POST['v_dns_template']);
     $v_shell = escapeshellarg($_POST['v_shell']);
     $v_web_domains = escapeshellarg($_POST['v_web_domains']);
@@ -144,6 +163,7 @@ if (!empty($_POST['save'])) {
 
     // Save package file on a fs
     $pkg = "WEB_TEMPLATE=".$v_web_template."\n";
+    $pkg .= "BACKEND_TEMPLATE=".$v_backend_template."\n";
     $pkg .= "PROXY_TEMPLATE=".$v_proxy_template."\n";
     $pkg .= "DNS_TEMPLATE=".$v_dns_template."\n";
     $pkg .= "WEB_DOMAINS=".$v_web_domains."\n";

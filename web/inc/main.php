@@ -165,17 +165,17 @@ function humanize_usage($usage) {
                 if ( $usage > 1024 ) {
                     $usage = $usage / 1024 ;
                     $usage = number_format($usage, 2);
-                    $usage = $usage."".__('pb');
+                    $usage = $usage." ".__('pb');
                 } else {
                     $usage = number_format($usage, 2);
-                    $usage = $usage."".__('tb');
+                    $usage = $usage." ".__('tb');
                 }
         } else {
             $usage = number_format($usage, 2);
-            $usage = $usage."".__('gb');
+            $usage = $usage." ".__('gb');
         }
     } else {
-        $usage = $usage."".__('mb');
+        $usage = $usage." ".__('mb');
     }
     return $usage;
 }

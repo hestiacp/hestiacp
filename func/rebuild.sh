@@ -196,15 +196,16 @@ rebuild_web_domain_conf() {
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
     # Adding tmp conf
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
     conf="$HOMEDIR/$user/conf/web/tmp_$WEB_SYSTEM.conf"
     add_web_config
     chown root:$user $conf
     chmod 640 $conf
 
     # Running template trigger
-    if [ -x $WEBTPL/$WEB_SYSTEM/$TPL.sh ]; then
-        $WEBTPL/$WEB_SYSTEM/$TPL.sh $user $domain $ip $HOMEDIR $docroot
+    if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.sh ]; then
+        $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.sh \
+            $user $domain $ip $HOMEDIR $docroot
     fi
 
     # Checking aliases
@@ -220,6 +221,7 @@ rebuild_web_domain_conf() {
                 -e "s|%web_system%|$WEB_SYSTEM|g" \
                 -e "s|%web_port%|$WEB_PORT|g" \
                 -e "s|%web_ssl_port%|$WEB_SSL_PORT|g" \
+                -e "s|%backend_lsnr%|$backend_lsnr|g" \
                 -e "s|%proxy_port%|$PROXY_PORT|g" \
                 -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
                 -e "s|%domain_idn%|$domain_idn|g" \
@@ -262,7 +264,7 @@ rebuild_web_domain_conf() {
 
         # Adding domain to the web conf
         conf="$HOMEDIR/$user/conf/web/tmp_s$WEB_SYSTEM.conf"
-        tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+        tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
         add_web_config
         chown root:$user $conf
         chmod 640 $conf
@@ -279,8 +281,9 @@ rebuild_web_domain_conf() {
         fi
 
         # Running template trigger
-        if [ -x $WEBTPL/$WEB_SYSTEM/$TPL.sh ]; then
-            $WEBTPL/$WEB_SYSTEM/$TPL.sh $user $domain $ip $HOMEDIR $sdocroot
+        if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.sh ]; then
+            $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.sh \
+                $user $domain $ip $HOMEDIR $sdocroot
         fi
 
         user_ssl=$((user_ssl + 1))

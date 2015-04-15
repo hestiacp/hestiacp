@@ -76,8 +76,8 @@ conf=$USER_DATA/web.conf
 
 # Defining fileds to select
 fields='$DOMAIN $IP $IP6 $U_DISK $U_BANDWIDTH $TPL $ALIAS $STATS $STATS_USER
-    $SSL $SSL_HOME $FTP_USER $FTP_PATH $PROXY $PROXY_EXT $DOCUMENT_ROOT
-    $SUSPENDED $TIME $DATE'
+    $SSL $SSL_HOME $FTP_USER $FTP_PATH $BACKEND $PROXY $PROXY_EXT
+    $DOCUMENT_ROOT $SUSPENDED $TIME $DATE'
 
 # Defining document root
 DOCUMENT_ROOT="$HOMEDIR/$user/web/$domain/public_html"

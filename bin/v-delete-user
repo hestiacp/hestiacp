@@ -91,9 +91,15 @@ sed -i "/ $user$/d" $VESTA/data/queue/traffic.pipe
 
 # Deleting system user
 /usr/sbin/userdel -f $user >> /dev/null 2>&1
+/usr/sbin/userdel -f $user >> /dev/null 2>&1
 if [ "$?" != 0 ]; then
     sed -i "/^$user:/d" /etc/passwd
     sed -i "/^$user:/d" /etc/shadow
+fi
+
+/usr/sbin/groupdel $user >> /dev/null 2>&1
+if [ "$?" != 0 ]; then
+    sed -i "/^$user:/d" /etc/group
 fi
 
 # Deleting user directories

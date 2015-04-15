@@ -44,7 +44,7 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Get template name
 get_domain_values 'web'
-tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
 ip=$(get_real_ip $IP)
 
@@ -60,13 +60,18 @@ fi
 
 # Checking SSL
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
     conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
     del_web_config
 
     # Deleting SSL certificates
     rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
     rm -f $USER_DATA/ssl/$domain.*
+fi
+
+# Checking backend
+if [ ! -z "$WEB_BACKEND" ]; then
+    $BIN/v-delete-web-domain-backend $user $domain $restart
 fi
 
 # Checking proxy
@@ -164,9 +169,11 @@ if [ "$restart" != 'no' ]; then
         exit $E_RESTART
     fi
 
-    $BIN/v-restart-proxy
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        if [ $? -ne 0 ]; then
+            exit $E_RESTART
+        fi
     fi
 fi
 

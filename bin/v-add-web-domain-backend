@@ -1,0 +1,79 @@
+#!/bin/bash
+# info: add web domain backend
+# options: USER DOMAIN [TEMPLATE] [RESTART]
+#
+# The call is used for adding web backend configuration for user
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+domain_idn=$(idn -t --quiet -a "$domain")
+template=$3
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [TEMPLATE] [RESTART]'
+validate_format 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$WEB_BACKEND" 'WEB_BACKEND'
+is_object_unsuspended 'user' 'USER' "$user"
+is_web_backend_template_valid $template
+is_web_backend_pool_valid
+if [ -e "$pool/$backend.conf" ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Allocating backend port
+backend_port=9000
+ports=$(grep -v '^;' $pool/* 2>/dev/null |grep listen |grep -o :[0-9].*)
+ports=$(echo "$ports" |sed "s/://" |sort -n)
+for port in $ports; do
+    if [ "$backend_port" -eq "$port" ]; then
+        backend_port=$((backend_port + 1))
+    fi
+done
+
+# Adding backend config
+cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
+    sed -e "s|%backend_port%|$backend_port|" \
+        -e "s|%user%|$user|"\
+        -e "s|%domain%|$domain|"\
+        -e "s|%domain_idn%|$domain_idn|"\
+        -e "s|%backend%|$backend|g" > $pool/$backend.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restart backend server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web-backend
+    if [ $? -ne 0 ]; then
+        exit $E_RESTART
+    fi
+fi
+
+# Logging
+log_history "added $WEB_BACKEND backend configuration for $domain"
+log_event "$OK" "$EVENT"
+
+exit

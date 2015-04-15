@@ -49,7 +49,7 @@ is_package_full 'WEB_ALIASES'
 
 # Parsing domain values
 get_domain_values 'web'
-tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
 ip=$(get_real_ip $IP)
 
@@ -68,7 +68,7 @@ del_web_config
 add_web_config
 
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
     conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
     del_web_config
     add_web_config

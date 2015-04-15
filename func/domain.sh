@@ -1,7 +1,7 @@
 # Web template check
 is_web_template_valid() {
-    t="$WEBTPL/$WEB_SYSTEM/$template.tpl"
-    s="$WEBTPL/$WEB_SYSTEM/$template.stpl"
+    t="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.tpl"
+    s="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.stpl"
     if [ ! -e $t ] || [ ! -e $s ]; then
         echo "Error: web template $template not found"
         log_event "$E_NOTEXIST" "$EVENT"
@@ -17,6 +17,56 @@ is_proxy_template_valid() {
         echo "Error: proxy template $template not found"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
+    fi
+}
+
+# Backend template check
+is_web_backend_template_valid() {
+    if [ ! -z "$1" ]; then
+        template=$1
+    else
+        template=$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)
+    fi
+    if [ -z "$template" ]; then
+        if [ -e "$WEBTPL/$WEB_BACKEND/default.tpl" ]; then
+            sed -i "s/^WEB_DOMAINS/BACKEND_TEMPLATE='default'\nWEB_DOMAINS/g" \
+                $USER_DATA/user.conf
+            template='default'
+        else
+            echo "Error: backend template default not found"
+            log_event "$E_NOTEXIST" "$EVENT"
+            exit $E_NOTEXIST
+        fi
+    else
+        template=$(echo "$template"|cut -f 2 -d \'|head -n1)
+        if [ ! -e "$WEBTPL/$WEB_BACKEND/$template.tpl" ]; then
+            echo "Error: backend template $template not found"
+            log_event "$E_NOTEXIST" "$EVENT"
+            exit $E_NOTEXIST
+        fi
+    fi
+}
+
+# Backend pool check
+is_web_backend_pool_valid(){
+    if [ -d "/etc/php-fpm.d" ]; then
+        pool="/etc/php-fpm.d"
+    fi
+    if [ -d "/etc/php5/fpm/pool.d" ]; then
+        pool="/etc/php5/fpm/pool.d"
+    fi
+    if [ -d "/etc/php-fpm-5.5.d" ]; then
+        pool="/etc/php-fpm-5.5.d"
+    fi
+    if [ ! -e "$pool" ]; then
+        echo "Error: backend pool directory not found"
+        log_event "$E_NOTEXIST" "$EVENT"
+        exit $E_NOTEXIST
+    fi
+
+    backend="$domain"
+    if [ "$WEB_BACKEND_POOL" = 'user' ]; then
+        backend="$user"
     fi
 }
 
@@ -228,6 +278,7 @@ add_web_config() {
             -e "s|%web_system%|$WEB_SYSTEM|g" \
             -e "s|%web_port%|$WEB_PORT|g" \
             -e "s|%web_ssl_port%|$WEB_SSL_PORT|g" \
+            -e "s|%backend_lsnr%|$backend_lsnr|g" \
             -e "s|%rgroups%|$WEB_RGROUPS|g" \
             -e "s|%proxy_system%|$PROXY_SYSTEM|g" \
             -e "s|%proxy_port%|$PROXY_PORT|g" \
@@ -295,6 +346,15 @@ get_domain_values() {
     for line in $(grep "DOMAIN='$domain'" $USER_DATA/$1.conf); do
         eval $line
     done
+}
+
+# Get backend values
+get_domain_backend_values() {
+    lsnr=$(grep "listen =" $pool/$backend.conf |cut -f 2 -d = |sed "s/ //")
+    backend_lsnr="$lsnr"
+    if [ ! -z "$(echo $lsnr |grep /)" ]; then
+        backend_lsnr="unix:$backend_lsnr"
+    fi
 }
 
 # SSL certificate verification
@@ -373,7 +433,10 @@ upd_web_domain_values() {
     if [ "$SSL_HOME" = 'single' ]; then
         sdocroot="$HOMEDIR/$user/web/$domain/public_shtml" ;
     fi
-
+    if [ ! -z "$WEB_BACKEND" ]; then
+        is_web_backend_pool_valid
+        get_domain_backend_values
+    fi
     i=1
     j=1
     OLD_IFS="$IFS"

@@ -63,7 +63,7 @@ chmod 660 $USER_DATA/ssl/$domain.*
 # Parsing domain values
 get_domain_values 'web'
 conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
 SSL_HOME="$ssl_home"
 ip=$(get_real_ip $IP)
 
@@ -85,8 +85,9 @@ if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
 fi
 
 # Running template trigger
-if [ -x $WEBTPL/$WEB_SYSTEM/$template.sh ]; then
-    $WEBTPL/$WEB_SYSTEM/$template.sh $user $domain $ip $HOMEDIR $sdocroot
+if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh ]; then
+    $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh \
+        $user $domain $ip $HOMEDIR $sdocroot
 fi
 
 # Checking web config

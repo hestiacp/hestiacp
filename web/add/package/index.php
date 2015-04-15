@@ -19,6 +19,9 @@ if (!empty($_POST['ok'])) {
     // Check empty fields
     if (empty($_POST['v_package'])) $errors[] = __('package');
     if (empty($_POST['v_web_template'])) $errors[] = __('web template');
+    if (!empty($_SESSION['WEB_SYSTEM'])) {
+        if (empty($_POST['v_backend_template'])) $errors[] = __('backend template');
+    }
     if (!empty($_SESSION['PROXY_SYSTEM'])) {
         if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
     }
@@ -51,6 +54,7 @@ if (!empty($_POST['ok'])) {
     // Protect input
     $v_package = escapeshellarg($_POST['v_package']);
     $v_web_template = escapeshellarg($_POST['v_web_template']);
+    $v_backend_template = escapeshellarg($_POST['v_backend_template']);
     $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
     $v_dns_template = escapeshellarg($_POST['v_dns_template']);
     $v_shell = escapeshellarg($_POST['v_shell']);
@@ -87,7 +91,12 @@ if (!empty($_POST['ok'])) {
     // Create package file
     if (empty($_SESSION['error_msg'])) {
         $pkg = "WEB_TEMPLATE=".$v_web_template."\n";
-        $pkg .= "PROXY_TEMPLATE=".$v_proxy_template."\n";
+        if (!empty($_SESSION['WEB_BACKEND'])) {
+            $pkg .= "BACKEND_TEMPLATE=".$v_backend_template."\n";
+        }
+        if (!empty($_SESSION['PROXY_SYSTEM'])) {
+            $pkg .= "PROXY_TEMPLATE=".$v_proxy_template."\n";
+        }
         $pkg .= "DNS_TEMPLATE=".$v_dns_template."\n";
         $pkg .= "WEB_DOMAINS=".$v_web_domains."\n";
         $pkg .= "WEB_ALIASES=".$v_web_aliases."\n";
@@ -141,6 +150,13 @@ exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
 $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
+// List web templates for backend
+if (!empty($_SESSION['WEB_BACKEND'])) {
+    exec (VESTA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    $backend_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
+
 // List web templates for proxy
 if (!empty($_SESSION['PROXY_SYSTEM'])) {
     exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
@@ -160,6 +176,7 @@ unset($output);
 
 // Set default values
 if (empty($v_web_template)) $v_web_template = 'default';
+if (empty($v_backend_template)) $v_backend_template = 'default';
 if (empty($v_proxy_template)) $v_proxy_template = 'default';
 if (empty($v_dns_template)) $v_dns_template = 'default';
 if (empty($v_shell)) $v_shell = 'nologin';

@@ -71,6 +71,12 @@
                                             <td class="counter-name"><?php print __('Web Template');?>:</td>
                                             <td class="counter-value"><?php print __($data[$key]['WEB_TEMPLATE'])?></td>
                                         </tr>
+                                        <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
+                                        <tr>
+                                            <td class="counter-name"><?php print __('Backend Template');?>:</td>
+                                            <td class="counter-value"><?php print __($data[$key]['BACKEND_TEMPLATE']);?></td>
+                                        </tr>
+                                        <?php echo ""; }?> 
                                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                                         <tr>
                                             <td class="counter-name"><?php print __('Proxy Template');?>:</td>

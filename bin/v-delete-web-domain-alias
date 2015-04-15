@@ -55,7 +55,7 @@ ALIAS=$(echo "$ALIAS" |\
     sed -e "s/^$dom_alias$//g"|\
     sed -e "/^$/d"|\
     sed -e ':a;N;$!ba;s/\n/,/g')
-tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.tpl"
+tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
 conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
 
 # Preparing domain values for the template substitution
@@ -66,7 +66,7 @@ del_web_config
 add_web_config
 
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$TPL.stpl"
+    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
     conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
     del_web_config
     add_web_config

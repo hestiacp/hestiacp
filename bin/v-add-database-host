@@ -65,8 +65,8 @@ is_pgsql_host_alive() {
 args_usage='TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
 check_args '4' "$#" "$args_usage"
 validate_format 'host' 'dbuser' 'max_db' 'charsets' 'template'
-is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
-is_type_valid "$DB_SYSTEM" "$type"
+#is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+#is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
 is_password_valid
 dbpass="$password"
@@ -91,14 +91,27 @@ case $type in
            str="$str TIME='$TIME' DATE='$DATE'";;
 esac
 
-# Adding host to conf
-echo "$str" >> $VESTA/conf/$type.conf
-chmod 660 $VESTA/conf/$type.conf
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Adding host to conf
+echo "$str" >> $VESTA/conf/$type.conf
+chmod 660 $VESTA/conf/$type.conf
+
+# Updating vesta.conf
+if [ -z "$(grep DB_SYSTEM $VESTA/conf/vesta.conf)" ]; then
+    echo "DB_SYSTEM='$type'" >> $VESTA/conf/vesta.conf
+else
+    db=$(echo "$DB_SYSTEM,$type" |\
+        sed "s/,/\n/g"|\
+        sort -r -u |\
+        sed "/^$/d"|\
+        sed ':a;N;$!ba;s/\n/,/g')
+    sed -i "s/DB_SYSTEM=.*/DB_SYSTEM='$db'/g" $VESTA/conf/vesta.conf
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

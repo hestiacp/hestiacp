@@ -11,9 +11,14 @@ App.Actions.PACKAGE.disable_unlimited = function(elm, source_elm) {
     if ($(elm).data('prev_value') && $(elm).data('prev_value').trim() != '') {
         var prev_value = $(elm).data('prev_value').trim();
         $(elm).val(prev_value);
+        if (App.Helpers.isUnlimitedValue(prev_value)) {
+            $(elm).val('0');
+        }
     }
     else {
-        $(elm).val('0');
+        if (App.Helpers.isUnlimitedValue($(elm).val())) {
+            $(elm).val('0');
+        }
     }
     $(elm).attr('disabled', false);
     $(source_elm).css('opacity', '0.5');
@@ -38,14 +43,23 @@ App.Listeners.PACKAGE.checkbox_unlimited_feature = function() {
 App.Listeners.PACKAGE.init = function() {
     $('.unlim-trigger').each(function(i, elm) {
         var ref = $(elm).prev('.vst-input');
-        if ($(ref).val().trim() == App.Constants.UNLIM_VALUE || $(ref).val().trim() == App.Constants.UNLIM_TRANSLATED_VALUE) {
-            $(ref).val('0');
+        if (App.Helpers.isUnlimitedValue($(ref).val())) {
             App.Actions.PACKAGE.enable_unlimited(ref, elm);
         }
         else {
+            $(ref).data('prev_value', $(ref).val());
             App.Actions.PACKAGE.disable_unlimited(ref, elm);
         }
     });
+}
+
+App.Helpers.isUnlimitedValue = function(value) {
+    var value = value.trim();
+    if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
+        return true;
+    }
+
+    return false;
 }
 
 //

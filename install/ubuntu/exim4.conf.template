@@ -108,7 +108,7 @@ acl_check_rcpt:
   require message       = relay not permitted
           domains       = +local_domains : +relay_to_domains
 
-  deny    message       = smtp auth requried
+  deny    message       = smtp auth required
          sender_domains = +local_domains
          !authenticated = *
 

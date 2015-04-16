@@ -536,11 +536,8 @@ TIME=$(date +%T)
 
 # Defining local storage function
 local_backup(){
-    # Removing dublicate for this day
-    if [ -e "$BACKUP/$user.$DATE.tar" ]; then
-        deprecated="$DATE"
-        rm -f $BACKUP/$user.$DATE.tar
-    fi
+
+    rm -f $BACKUP/$user.$DATE.tar
 
     # Checking retention
     backup_list=$(ls -lrt $BACKUP/ | awk '{print $9}' |grep "^$user\.")
@@ -549,10 +546,9 @@ local_backup(){
         backups_rm_number=$((backups_count - BACKUPS))
         (( ++backups_rm_number))
 
+        # Removing old backup
         for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
-            # Removing old backup
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
-            deprecated="$deprecated $backup_date"
             echo -e "$(date "+%F %T") Roated: $backup_date"
             msg="$msg\n$(date "+%F %T") Rotated: $backup_date"
             rm -f $BACKUP/$backup
@@ -672,7 +668,6 @@ ftp_backup() {
         backups_rm_number=$((backups_count - BACKUPS + 1))
         for backup in $(echo "$backup_list" | head -n $backups_rm_number); do 
             backup_date=$(echo $backup | sed -e "s/$user.//" -e "s/.tar$//")
-            deprecated="$deprecated $backup"
             echo -e "$(date "+%F %T") Roated ftp backup: $backup_date"
             msg="$msg\n$(date "+%F %T") Roated ftp backup: $backup_date"
             ftpc "cd $BPATH" "delete $backup"
@@ -732,7 +727,7 @@ expect -f "-" <<EOF "$@"
                     set rc $OK
                 }
             }
-            exp_continue    
+            exp_continue
         }
 
         timeout {
@@ -745,7 +740,7 @@ expect -f "-" <<EOF "$@"
         puts "\$output"
     }
 
-    exit \$rc       
+    exit \$rc
 EOF
 }
 
@@ -813,7 +808,7 @@ sftp_backup() {
         exit "$rc"
     fi
     echo -e "$(date "+%F %T") Connection established"
-    
+
     # Checking retention
     echo -e "$(date "+%F %T") Checking retention ..."
     backup_list=$(sftpc "cd $BPATH" "ls -l" |awk '{print $9}' |grep "^$user\.")
@@ -857,7 +852,6 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
 done
 
 # Removing tmpdir
-cd /
 rm -rf $tmpdir
 
 # Calculation run time
@@ -882,14 +876,11 @@ msg="$msg\n$(date "+%F %T") Runtime: $run_time $min"
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Deleting old backup records
-for backup_record in $deprecated; do
-    if [ -e "$USER_DATA/backup.conf" ]; then
-        sed -i "/DATE='$backup_record/d" $USER_DATA/backup.conf
-    fi
-done
+# Removing duplicate
+touch $USER_DATA/backup.conf
+sed -i "/$user.$DATE.tar/d" $USER_DATA/backup.conf
 
-# Concatenating string
+# Regestering new backup
 backup_str="BACKUP='$user.$DATE.tar'"
 backup_str="$backup_str TYPE='$BACKUP_SYSTEM' SIZE='$size'"
 backup_str="$backup_str WEB='${web_list// /,}'"
@@ -900,9 +891,13 @@ backup_str="$backup_str CRON='$cron_list'"
 backup_str="$backup_str UDIR='${udir_list// /,}'"
 backup_str="$backup_str RUNTIME='$run_time' TIME='$TIME' DATE='$DATE'"
 echo "$backup_str" >> $USER_DATA/backup.conf
+
+# Removing old backups
+tail -n $BACKUPS $USER_DATA/backup.conf > $USER_DATA/backup.conf_
+mv -f $USER_DATA/backup.conf_ $USER_DATA/backup.conf
 chmod 660 $USER_DATA/backup.conf
 
-# Clean backup queue
+# Deleting task from queue
 sed -i "/v-backup-user $user /d" $VESTA/data/queue/backup.pipe
 
 # Send notification

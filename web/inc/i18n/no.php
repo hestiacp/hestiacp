@@ -11,6 +11,7 @@ $LANG['no'] = array(
     'Graphs'  => 'Grafer',
     'Statistics'  => 'Statistikk',
     'Log'  => 'Logg',
+    'Server'  => 'Serveren',
     'Services'  => 'Tjenester',
     'Firewall' => 'Brannmur',
     'Updates'  => 'Oppdateringer',

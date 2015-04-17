@@ -12,6 +12,7 @@ $LANG['hu'] = array(
     'Graphs'  => 'Grafikonok',
     'Statistics'  => 'Statisztikák',
     'Log'  => 'Log',
+    'Server'  => 'Szerveren',
     'Services'  => 'Szolgáltatások',
     'Firewall' => 'Firewall',
     'Updates'  => 'Frissítések',

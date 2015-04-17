@@ -13,6 +13,7 @@ $LANG['id'] = array(
     'Graphs'  => 'Grafik',
     'Statistics'  => 'Statisktik',
     'Log'  => 'Log',
+    'Server'  => 'Server',
     'Services'  => 'Layanan',
     'Firewall' => 'Firewall',
     'Updates'  => 'Updates',

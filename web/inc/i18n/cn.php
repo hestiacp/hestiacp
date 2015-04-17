@@ -10,6 +10,7 @@ $LANG['cn'] = array(
     'Graphs'  => '流量统计',
     'Statistics'  => '统计分析',
     'Log'  => '日志',
+    'Server'  => '服务器',
     'Services'  => '系统服务',
     'Firewall' => '防火牆',
     'Updates'  => '更新升级',

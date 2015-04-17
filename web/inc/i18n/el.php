@@ -11,6 +11,7 @@ $LANG['el'] = array(
     'Graphs'  => 'Γραφήματα',
     'Statistics'  => 'Στατιστικά',
     'Log'  => 'Αρχείο Καταγραφής',
+    'Server'  => 'Διακομιστής',
     'Services'  => 'Υπηρεσίες',
     'Firewall' => 'Firewall',
     'Updates'  => 'Ενημερώσεις',

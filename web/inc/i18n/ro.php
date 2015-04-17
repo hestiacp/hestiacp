@@ -12,6 +12,7 @@ $LANG['ro'] = array(
     'Graphs' => 'Graficele',
     'Statistics' => 'Statistică',
     'Log' => 'Log',
+    'Server'  => 'Server',
     'Services' => 'Servicii',
     'Firewall' => 'Firewall',
     'Updates' => 'Actualizări',

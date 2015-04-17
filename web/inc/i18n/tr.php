@@ -10,6 +10,7 @@ $LANG['tr'] = array(
     'Graphs'  => 'Grafikler',
     'Statistics'  => 'İstatistikler',
     'Log'  => 'Log',
+    'Server'  => 'Sunucu',
     'Services'  => 'Servisler',
     'Firewall' => 'Güvenlik Duvarı',
     'Updates'  => 'Güncellemeler',

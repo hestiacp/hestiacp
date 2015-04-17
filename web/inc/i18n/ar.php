@@ -10,6 +10,7 @@ $LANG['ar'] = array(
     'Graphs'  => 'رسوم بيانية',
     'Statistics'  => 'إحصائيات',
     'Log'  => 'سجل',
+    'Server'  => 'نادل',
     'Services'  => 'خدمات',
     'Firewall' => 'جدار الحماية',
     'Updates'  => 'تحديثات',

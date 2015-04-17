@@ -12,6 +12,7 @@ $LANG['ua'] = array(
     'Graphs' => 'Графіки',
     'Statistics' => 'Статистика',
     'Log' => 'Журнал',
+    'Server'  => 'Сервер',
     'Services' => 'Служби',
     'Firewall' => 'Брандмауер',
     'Updates' => 'Оновлення',

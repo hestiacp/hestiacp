@@ -10,6 +10,7 @@ $LANG['bs'] = array(
     'Graphs'  => 'Grafici',
     'Statistics'  => 'Statistika',
     'Log'  => 'Log',
+    'Server'  => 'Server',
     'Services'  => 'Servisi',
     'Updates'  => 'Novo',
     'Log in'  => 'Ulaz',

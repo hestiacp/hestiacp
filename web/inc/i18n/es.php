@@ -10,6 +10,7 @@ $LANG['es'] = array(
     'Graphs'  => 'Gráficos',
     'Statistics'  => 'Estadísticas',
     'Log'  => 'Mensajes',
+    'Server'  => 'Servidor',
     'Services'  => 'Servicios',
     'Firewall' => 'Firewall',
     'Updates'  => 'Actualizaciones',

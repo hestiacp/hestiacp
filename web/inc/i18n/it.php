@@ -11,6 +11,7 @@ $LANG['it'] = array(
     'Graphs'  => 'Grafici',
     'Statistics'  => 'Statistiche',
     'Log'  => 'Log',
+    'Server'  => 'Server',
     'Services'  => 'Servizi',
     'Firewall' => 'Firewall',
     'Updates'  => 'Aggiornamenti',

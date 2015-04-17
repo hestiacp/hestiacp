@@ -10,6 +10,7 @@ $LANG['tw'] = array(
     'Graphs'  => '圖表',
     'Statistics'  => '狀態',
     'Log'  => '日誌',
+    'Server'  => '服務器',
     'Services'  => '服務',
     'Firewall' => '防火牆',
     'Updates'  => '更新',

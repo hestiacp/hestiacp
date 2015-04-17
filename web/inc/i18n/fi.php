@@ -11,6 +11,7 @@ $LANG['fi'] = array(
     'Graphs' => 'Kuvaajat',
     'Statistics' => 'Tilastot',
     'Log' => 'Loki',
+    'Server'  => 'Pavelin',
     'Services' => 'Palvelut',
     'Firewall' => 'Firewall',
     'Updates' => 'Päivitykset',

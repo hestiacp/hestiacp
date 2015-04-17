@@ -11,6 +11,7 @@ $LANG['cz'] = array(
     'Graphs'  => 'Grafy',
     'Statistics'  => 'Statistika',
     'Log'  => 'Logy',
+    'Server'  => 'Server',
     'Services'  => 'Služby',
     'Firewall' => 'Firewall',
     'Updates'  => 'Aktualizace',

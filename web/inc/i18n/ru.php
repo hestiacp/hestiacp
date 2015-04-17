@@ -12,6 +12,7 @@ $LANG['ru'] = array(
     'Graphs' => 'Графики',
     'Statistics' => 'Статистика',
     'Log' => 'Журнал',
+    'Server'  => 'Сервер',
     'Services' => 'Службы',
     'Firewall' => 'Фаервол',
     'Updates' => 'Обновления',

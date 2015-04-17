@@ -11,6 +11,7 @@ $LANG['nl'] = array(
     'Graphs'  => 'Grafieken',
     'Statistics'  => 'Statistieken',
     'Log'  => 'Logs',
+    'Server'  => 'Server',
     'Services'  => 'Processen',
     'Firewall' => 'Firewall',
     'Updates'  => 'Updates',

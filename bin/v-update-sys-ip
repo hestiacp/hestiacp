@@ -65,8 +65,19 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
                 $BIN/v-rebuild-web-domains $user no
             done
         fi
+
+        # Restarting web server
         $BIN/v-restart-web
-        $BIN/v-restart-proxy
+
+        # Restarting proxy server
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            $BIN/v-restart-proxy
+        fi
+
+        # Restarting firewall
+        if [ ! -z "$FIREWALL_SYSTEM" ];
+            $BIN/v-update-firewall
+        fi
 
         if [ ! -z "$DNS_SYSTEM" ]; then
             # Rebuild dns domains
@@ -96,7 +107,6 @@ for ip in $ip_list; do
         $BIN/v-add-sys-ip $ip $netmask $interface
     fi
 done
-
 
 
 #----------------------------------------------------------#

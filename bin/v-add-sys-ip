@@ -159,14 +159,23 @@ else
     increase_user_value 'admin' '$IP_AVAIL'
 fi
 
-# Restart web server
+# Restarting web server
 $BIN/v-restart-web
 if [ $? -ne 0 ]; then
     exit $E_RESTART
 fi
-$BIN/v-restart-proxy
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
+
+# Restarting proxy server
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    $BIN/v-restart-proxy
+    if [ $? -ne 0 ]; then
+        exit $E_RESTART
+    fi
+fi
+
+# Restarting firewall
+if [ ! -z "$FIREWALL_SYSTEM" ];
+    $BIN/v-update-firewall
 fi
 
 # Logging

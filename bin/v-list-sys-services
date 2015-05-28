@@ -31,6 +31,10 @@ get_srv_state() {
     else
         pids=$(pidof -x $proc_name |tr ' ' '|')
     fi
+    if [ -z "$pids" ]; then
+        #fallback to pgrep
+        pids=$(pgrep $proc_name |tr '\n' '|')
+    fi
     if [ ! -z "$pids" ]; then
         pid=$(echo $pids|cut -f 1 -d \|)
         pids=$(egrep "$pids" $tmp_file)

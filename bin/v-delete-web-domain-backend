@@ -35,7 +35,6 @@ is_web_backend_pool_valid
 
 # Checking last webdomain
 domains=$(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'|wc -l)
-echo $domain
 if [ "$backend" = "$user" ] && [ "$domains" -gt 1 ]; then
     exit
 fi

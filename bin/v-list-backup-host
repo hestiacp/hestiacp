@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list backup host
-# options: [FORMAT]
+# options: TYPE [FORMAT]
 #
-# The function for obtaining the list of back fto host.
+# The function for obtaining the list of backup host parameters.
 
 
 #----------------------------------------------------------#
@@ -10,7 +10,8 @@
 #----------------------------------------------------------#
 
 # Argument defenition
-format=${1-shell}
+TYPE=$1
+format=${2-shell}
 
 # Includes
 source $VESTA/func/main.sh
@@ -19,19 +20,16 @@ source $VESTA/func/main.sh
 json_list_ftp_host() {
     i=1
     fileds_count=$(echo "$fields" | wc -w)
-    ip_data=$(cat $VESTA/conf/ftp.backup.conf)
+    ip_data=$(cat $VESTA/conf/$TYPE.backup.conf)
     echo '{'
+    echo -e "\t\"$TYPE\": {"
     eval $ip_data
     for field in $fields; do
         eval value=$field
-        if [ $i -eq 1 ]; then
-            echo -e "\t\"$value\": {"
+        if [ $fileds_count -eq $i ]; then
+            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
         else
-            if [ $fileds_count -eq $i ]; then
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-            fi
+            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
         fi
     (( ++i))
     done
@@ -43,7 +41,7 @@ json_list_ftp_host() {
 
 # Shell function
 shell_list_ftp_host() {
-    line=$(cat $VESTA/conf/ftp.backup.conf)
+    line=$(cat $VESTA/conf/$TYPE.backup.conf)
     eval $line
     for field in $fields; do
         eval key="$field"
@@ -59,17 +57,19 @@ shell_list_ftp_host() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+check_args '1' "$#" 'TYPE [FORMAT]'
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ ! -e "$VESTA/conf/ftp.backup.conf" ]; then
+if [ ! -e "$VESTA/conf/$TYPE.backup.conf" ]; then
     exit
 fi
 
 # Defining fileds to select
-fields='$HOST $USERNAME $PORT $TIME $DATE'
+fields='$HOST $USERNAME $PORT $TYPE $BPATH $TIME $DATE'
 
 # Listing database
 case $format in 

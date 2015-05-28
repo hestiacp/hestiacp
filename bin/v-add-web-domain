@@ -158,7 +158,8 @@ if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh ]; then
 fi
 
 # Checking web config include
-web_include="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
+web_include=$(grep "$conf" $web_conf )
 if [ -z "$web_include" ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
     echo "Include $conf" >> $web_conf
 fi

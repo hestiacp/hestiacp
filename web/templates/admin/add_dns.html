@@ -1,29 +1,36 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/dns/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?>
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding DNS Domain');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Adding DNS Domain')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+        <?php
+          $back = $_SESSION['back'];
+          if (empty($back)) {
+            $back = "location.href='/list/dns/'";
+          } else {
+            $back = "location.href='".$back."'";
+          }
+        ?>
         <form id="vstobjects" name="v_add_dns" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <script language="javascript">
                 function elementHideShow(elementToHideOrShow){
                     var el = document.getElementById(elementToHideOrShow);
@@ -51,7 +58,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".htmlentities($v_domain);  ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -61,7 +68,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".htmlentities($v_ip); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -74,12 +81,12 @@
                                   <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Expiration Date');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('YYYY-MM-DD');?>)</span>
+                                                <?php print __('Expiration Date');?> <span class="optional">(<?=__('YYYY-MM-DD');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".$v_exp; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".htmlentities($v_exp); ?>>
                                             </td>
                                         </tr>
                                         <tr>
@@ -89,7 +96,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ttl" <?php if (!empty($v_ttl)) echo "value=".$v_ttl; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ttl" <?php if (!empty($v_ttl)) echo "value=".htmlentities($v_ttl); ?>>
                                             </td>
                                         </tr>
                                         <tr>
@@ -99,22 +106,22 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".$v_ns1; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".htmlentities($v_ns1); ?>>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".$v_ns2; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".htmlentities($v_ns2); ?>>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".$v_ns3; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".htmlentities($v_ns3); ?>>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".htmlentities($v_ns4); ?>>
                                             </td>
                                         </tr>
                                     </table>
@@ -127,7 +134,7 @@
                                     <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -135,3 +142,4 @@
                 </tr>
             </table>
         </form>
+    </div>

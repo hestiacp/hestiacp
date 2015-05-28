@@ -1,29 +1,36 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/generate/ssl/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?>
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Generating CSR');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Generating CSR')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/generate/ssl/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
         <form id="vstobjects" name="v_generate_csr" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <table class='data'>
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -69,7 +76,7 @@
                         <table class="data-col2">
                             <tr>
                                 <td style="padding: 24px 0 0 0;">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -77,3 +84,4 @@
                 </tr>
             </table>
         </form>
+    </div>

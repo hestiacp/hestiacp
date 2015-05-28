@@ -1,58 +1,92 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div id="vstobjects">
-            <table class='data'>
-
-                <?php
-                    foreach ($data as $key => $value) {
-                        ++$i;
-                ?>
-
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo  strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-                            <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <div style="height:20px; width:20px;"></div>
-                    <table class="data-col5">
-                        <tr>
-                            <td class="domain" style="font-size: 14pt; font-weight:normal">
-                                <?php echo $data[$key]['CMD'] ?>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
             </tr>
-
-            <?php
-                }
-            ?> 
-
-        </table>
-
-        <div class="data-count">
-            <?php
-                if ( $i == 1) {
-                    echo __('one log record');
-                } else {
-                    echo __('%s log records',$i);
-                }
-            ?>
+          </table>
         </div>
+      </div>
+
+      <? display_error_block(); ?>
+
+      <!-- /.l-sort -->
     </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+
+    <div class="l-center">
+      <?php
+        foreach ($data as $key => $value) {
+           ++$i;
+      ?>
+
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
+            <div class="actions-panel clearfix">
+            </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__date">
+            <?=strftime("%d %b %Y", strtotime($data[$key]['DATE']))?>
+          </div>
+          <div class="l-unit__date">
+            <?=$data[$key]['TIME']?>
+          </div>
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name small">
+            <?=$data[$key]['CMD']?>
+          </div>
+
+          <!-- div class="l-unit__stats">
+          </div -->
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+    <div id="vstobjects">
+        <div class="l-separator"></div>
+    <div class="l-center">
+        <div class="l-unit-ft">
+          <table class='data'></table>
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix">
+            <?
+              if ( $i == 1) {
+                echo __('one log record');
+              } else {
+                echo __('%s log records',$i);
+              }
+            ?>
+          </div>
+      </div>
+    </div>
+  </div>

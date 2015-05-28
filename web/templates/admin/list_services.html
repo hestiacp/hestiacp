@@ -1,200 +1,213 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div style="float:left; width: 160px;">&nbsp;</div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-button-block">
-                            <form action="/bulk/service/" method="post" id="objects">
-                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                            <select class="submenu-select-dropdown" name="action">
-                                <option value=""><?php print __('apply to selected');?></option>
-                                <option value="stop"><?php print __('stop');?></option>
-                                <option value="start"><?php print __('start');?></option>
-                                <option value="restart"><?php print __('restart');?></option>
-                            </select>
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
+              </td>
+              <td>
+                <form action="/bulk/service/" method="post" id="objects">
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                <div class="l-select">
+                    <select class="" name="action">
+                      <option value=""><?php print __('apply to selected');?></option>
+                      <option value="stop"><?php print __('stop');?></option>
+                      <option value="start"><?php print __('start');?></option>
+                      <option value="restart"><?php print __('restart');?></option>
+                    </select>
+                </div>
+                <input type="submit" class="l-sort-toolbar__filter-apply" value="">
+              </td>
+            </tr>
+          </table>
         </div>
+      </div>
 
-        <div id="vstobjects">
-            <table class='data'>
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="system[]" value="<?php echo $sys['sysinfo']['HOSTNAME'] ?>" ></td></tr>
-                            <tr><td class="data-active"><b><?php print __('running') ?></b></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                            <span class="do_delete">
-                                <img src="/images/reload.png" width="6px" height="7px">
-                                 <?php print __('restart');?> 
-                                <input type="hidden" name="delete_url" value="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME']?>" />
-                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                    <p class="confirmation"><?php print __('RESTART_CONFIRMATION',$sys['sysinfo']['HOSTNAME']);?></p>
-                                </div>
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td colspan=4 class="domain hostname"">
-                                    <b><?php echo $sys['sysinfo']['HOSTNAME'] ?></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align:top;" width="240px">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <a class="counter-name">
-                                                    <?php echo $sys['sysinfo']['OS'] ?>
-                                                    <?php echo $sys['sysinfo']['VERSION'] ?>
-                                                     (<?php echo $sys['sysinfo']['ARCH'] ?>)
-                                                </a>
-                                            </td>
+      <? display_error_block(); ?>
 
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="290px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('LoadAverage');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $sys['sysinfo']['LOADAVERAGE'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Uptime');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo humanize_time($sys['sysinfo']['UPTIME']) ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+      <!-- /.l-sort -->
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+
+    <div class="l-center">
 
 
 
-               <?php
-                    foreach ($data as $key => $value) {
-                        ++$i;
-                        if ($data[$key]['STATE'] == 'running') {
-                            $status = 'active';
-                            $action = 'stop';
-                        } else {
-                            $status = 'suspended';
-                            $action = 'start';
-                        }
 
-                        $cpu = $data[$key]['CPU'] / 10;
-                        $cpu = number_format($cpu, 1);
-                        if ($cpu == '0.0')  $cpu = 0;
-                    ?>
-
-                <tr class="data-row <?=$status?>">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="service[]" value="<?php echo $key ?>" ></td></tr>
-                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($data[$key]['STATE']); ?></b></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted" width="830px">
-                        <a href="/restart/service/?srv=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/reload.png" width="6px" height="7px">
-                                <?php print __('restart'); ?> 
-                            </span>
-                        </a>
-                        <a href="/<?php echo $action ?>/service/?srv=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/<?php echo $action ?>.png" width="7px" height="7px">
-                                <?php print __($action); ?> 
-                            </span>
-                        </a>
-
-                        <table class="data-col2">
-                            <tr>
-                                <td colspan=4 class="domain step-left">
-                                    <b><?php echo $key ?></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="step-left" style="vertical-align:top;" width="189px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php echo __($data[$key]['SYSTEM']) ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="120px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('CPU');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $cpu ?>%
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="170px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Memory');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['MEM'] ?> <?php print __('mb');?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Uptime');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo humanize_time($data[$key]['RTIME']) ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <?php
-                    }
-                ?> 
-            </table>
-            </form>
-
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check0" class="ch-toggle" type="checkbox" name="srv[]" value="<?php echo $sys['sysinfo']['HOSTNAME'] ?>">
+            <label for="check0" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__restart"><a href="/restart/service/?srv=<?php echo $sys['sysinfo']['HOSTNAME'] ?>"><?=__('restart')?> <i></i></a></div>
+            </div>
+            <!-- /.actions-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__suspended"">suspended</div>
+          <!-- div class="l-unit__date">
+          </div-->
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name separate">
+            <?=$sys['sysinfo']['HOSTNAME']?>
+          </div>
+
+
+          <div class="l-unit__stats">
+            <table>
+
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left">
+                      <b><?=$sys['sysinfo']['OS']?>
+                      <?=$sys['sysinfo']['VERSION']?></b>
+                    </div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">(<?=$sys['sysinfo']['ARCH']?>)</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('LoadAverage')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"><b><?=$sys['sysinfo']['LOADAVERAGE']?></b></div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Uptime')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"><b><?=humanize_time($sys['sysinfo']['UPTIME'])?></b></div>
+                  </div>
+                </td>
+              </tr>
+
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+
+
+
+
+
+
+
+      <?php
+        foreach ($data as $key => $value) {
+        ++$i;
+          if ($data[$key]['STATE'] == 'running') {
+            $status = 'active';
+            $action = 'stop';
+          } else {
+            $status = 'suspended';
+            $action = 'start';
+          }
+
+          $cpu = $data[$key]['CPU'] / 10;
+          $cpu = number_format($cpu, 1);
+          if ($cpu == '0.0')  $cpu = 0;
+      ?>
+
+
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?php echo $i ?>" type="checkbox" name="service[]" value="<?php echo $key ?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__<?=__($action)?>"><a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__($action)?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__restart"><a href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('restart')?> <i></i></a></div>
+            </div>
+            <!-- /.actions-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix step-left">
+          <!-- div class="l-unit__date">
+          </div-->
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name small-2">
+            <?=$key?>
+          </div>
+
+
+          <div class="l-unit__stats">
+            <table>
+
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=__($data[$key]['SYSTEM'])?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"></div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('CPU')?>: <b><?=$cpu?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"><?=__('Memory')?>: <b><?=$data[$key]['MEM']?> <?=__('mb')?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Uptime')?>: <b><?=humanize_time($data[$key]['RTIME'])?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"></div>
+                  </div>
+                </td>
+              </tr>
+
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+    <div id="vstobjects">
+      <div class="l-separator"></div>
+      <div class="l-center">
+        <div class="l-unit-ft">
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix"></div>
+        </div>
+    </div>
+  </div>

@@ -1,29 +1,36 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/firewall/banlist/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?>
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding IP Address to Banlist');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?>
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Adding IP Address to Banlist')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+        <?php
+          $back = $_SESSION['back'];
+          if (empty($back)) {
+            $back = "location.href='/list/firewall/banlist/'";
+          } else {
+            $back = "location.href='".$back."'";
+          }
+        ?>
         <form id="vstobjects" name="v_add_ip" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <script type="text/javascript">
                 function elementHideShow(elementToHideOrShow) {
                     var el = document.getElementById(elementToHideOrShow);
@@ -51,28 +58,15 @@
                             </tr>
                             <tr>
                                 <td>
-									<select class="vst-list" name="v_chain">
-									<?php	
-										// chains list
-										$chains = array(
-											'SSH',
-											'WEB',
-											'FTP',
-											'DNS',
-											'MAIL',
-											'DB',
-											'VESTA'
-										);
-										
-										foreach($chains as $chain){
-											$selected = (!empty($v_chain)) && ( $v_chain == $chain) ? 'selected' : '';
-									?>
-										<option value="<?php echo $chain?>" <?php echo $selected ?>>
-											<?php print __($chain) ?>
-										</option>
-									
-									<?php } ?>
-									</select>                                    
+                                    <select class="vst-list" name="v_chain">
+                                        <option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?php print __('SSH') ?></option>
+                                        <option value="WEB" <?php if ((!empty($v_chain)) && ( $v_chain == "'WEB'" )) echo 'selected'?>><?php print __('WEB') ?></option>
+                                        <option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?php print __('FTP') ?></option>
+                                        <option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?php print __('DNS') ?></option>
+                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?php print __('MAIL') ?></option>
+                                        <option value="DB" <?php if ((!empty($v_chain)) && ( $v_chain == "'DB'" )) echo 'selected'?>><?php print __('DB') ?></option>
+                                        <option value="VESTA" <?php if ((!empty($v_chain)) && ( $v_chain == "'VESTA'" )) echo 'selected'?>><?php print __('VESTA') ?></option>
+                                    </select>
                                 </td>
                             </tr>
                             <tr>
@@ -82,7 +76,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".htmlentities($v_ip); ?>>
                                 </td>
                             </tr>
                         </table>
@@ -92,7 +86,7 @@
                                     <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -100,3 +94,4 @@
                 </tr>
             </table>
         </from>
+      </div>

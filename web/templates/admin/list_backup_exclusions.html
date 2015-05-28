@@ -1,87 +1,114 @@
-           <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div class="submenu-button-block">
-                            <button class="submenu-button-main" onclick="location.href='/edit/backup/exclusions/'"> <?php print __('Configure');?> </button>
-                        </div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-select-block">
-                            <form action="/bulk/backup/exclusions/" method="post" id="objects">
-                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                            <select class="submenu-select-dropdown" name="action">
-                                <option value=""><?php print __('apply to selected');?></option>
-                                <option value="delete"><?php print __('delete');?></option>
-                            </select>
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <a href="/edit/backup/exclusions/" class="l-sort__create-btn edit" title="<?=str_replace(' ', '&nbsp;', __('Configure'))?>"></a>
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
+                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
+              </td>
+              <td>
+                <form action="/bulk/backup/exclusions/" method="post">
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                <div class="l-select">
+                  <select name="" id="">
+                    <option value=""><?=__('apply to selected')?></option>
+                    <option value="delete"><?php print __('delete') ?></option>
+                  </select>
+                </div>
+                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div id="vstobjects">
-            <table class="data">
+      </div>
 
-                <?php
-                    foreach ($data as $key => $value) {
-                ?> 
+      <? display_error_block(); ?>
 
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="system[]" value="<?php echo $key ?>" ></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted" width="830px">
-                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                            <span class="do_delete">
-                                <img src="/images/delete.png" width="7px" height="7px">
-                                <?php print __('delete');?> 
-                                <input type="hidden" name="delete_url" value="/delete/backup/exclusion/?system=<?php echo "$key" ?>" />
-                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                    <p class="confirmation"><?php print __('DELETE_EXCLUSION_CONFIRMATION',$key);?></p>
-                                </div>
-                            </span>
-                        </a>
-                        <table class="data-col5">
-                            <tr>
-                                <td class="cron" width="116px" style="vertical-align:top;">
-                                    <b><?php echo $key ?></b>
-                                </td>
-                                <td style="vertical-align:top;" class="counter-value">
-                                    <?php if (empty($value)) print __('no exclusions'); ?> 
-                                    <table>
-                                    <?php
-                                        foreach ($value as $ex_key => $ex_value) {
-                                    ?> 
-                                        <tr>
-                                            <td class="counter-value"><b><?php echo $ex_key ?></b></td>
-                                            <td class="counter-value" style="padding-left:12px;"><?php echo $ex_value ?></td>
-                                        </tr>
-                                    <?php
-                                        }
-                                    ?> 
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+      <!-- /.l-sort -->
+    </div>
 
-                <?php
-                    }
-                ?> 
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
 
-            </table>
-            </form>
 
-            <div class="data-count">
-                ...
+    <div class="l-center">
+      <?
+        foreach ($data as $key => $value) {
+      ?>
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="check" value="check<?php echo $i ?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel__col actions-panel__delete">
+              <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                <?=__('delete')?> <i class="do_delete"></i>
+                <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                  <p class="confirmation"><?=__('DELETE_BACKUP_CONFIRMATION',$key)?></p>
+                </div>
+              </a>
             </div>
+
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <!-- div class="l-unit__name separate">
+            <?=$key?>
+          </div -->
+
+          <div class="l-unit__stats">
+            <table>
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left l-unit__name small-2"><?=$key?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3">
+                      <?
+                        if (empty($value)) echo __('no exclusions');
+                        foreach ($value as $ex_key => $ex_value) {
+                         echo '<b>'.$ex_key.':</b>'.$ex_value.'<br>';
+                        }
+                      ?>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <? } ?>
+
+    </div>
+
+
+
+    <div id="vstobjects">
+      <div class="l-separator"></div>
+    </div>

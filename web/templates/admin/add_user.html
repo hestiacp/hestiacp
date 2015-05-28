@@ -1,29 +1,38 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/user/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?> 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding User');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+   <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Adding User')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+        <?php
+          $back = $_SESSION['back'];
+          if (empty($back)) {
+            $back = "location.href='/list/user/'";
+          } else {
+            $back = "location.href='".$back."'";
+          }
+        ?>
         <form id="vstobjects" name="v_add_user" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <script type="text/javascript">
                 $(function() {
                     $("#v_email").change(function() {
@@ -59,7 +68,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_username" <?php if (!empty($v_username)) echo "value=".$v_username;  ?> >
+                                    <input type="text" size="20" class="vst-input" name="v_username" <?php if (!empty($v_username)) echo "value=".htmlentities($v_username);  ?> >
                                 </td>
                             </tr>
                             <tr>
@@ -69,7 +78,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password"  <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
+                                    <input type="text" size="20" class="vst-input password" name="v_password"  <?php if (!empty($v_password)) echo "value=".htmlentities($v_password);  ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -79,7 +88,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' <?php if (!empty($v_email)) echo "value=".$v_email; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' <?php if (!empty($v_email)) echo "value=".htmlentities($v_email); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -92,7 +101,7 @@
                                     <select class="vst-list" name="v_package">
                                         <?php
                                             foreach ($data as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
                                                 if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
                                                     echo 'selected' ;
                                                 } else {
@@ -100,7 +109,7 @@
                                                         echo 'selected' ;
                                                     }
                                                 }
-                                                echo ">".$key."</option>\n";
+                                                echo ">".htmlentities($key)."</option>\n";
                                             }
                                         ?> 
                                     </select>
@@ -116,7 +125,7 @@
                                     <select class="vst-list" name="v_language">
                                         <?php
                                             foreach ($languages as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
+                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                                 $svalue = "'".$value."'";
                                                 if (( $value == 'en' ) && (empty($v_language))){
                                                     echo 'selected' ;
@@ -126,7 +135,7 @@
                                                         echo 'selected' ;
                                                     }
                                                 }
-                                                echo ">".$value."</option>\n";
+                                                echo ">".htmlentities($value)."</option>\n";
                                             }
                                         ?>
                                     </select>
@@ -139,7 +148,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".$v_fname; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".htmlentities($v_fname); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -149,7 +158,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".$v_lname; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".htmlentities($v_lname); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -159,7 +168,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text"  class="vst-input" name="v_notify" id="v_notify" <?php if (!empty($v_notify)) echo "value=".$v_notify; ?>>
+                                    <input type="text"  class="vst-input" name="v_notify" id="v_notify" <?php if (!empty($v_notify)) echo "value=".htmlentities($v_notify); ?>>
                                 </td>
                             </tr>
 
@@ -170,7 +179,7 @@
                                 <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                             </td>
                             <td class="step-top">
-                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                             </td>
                         </tr>
                     </table>
@@ -178,3 +187,4 @@
                 </tr>
             </table>
         </form>
+    </div>

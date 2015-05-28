@@ -1,34 +1,58 @@
-    <br>
     </div>
-    <br>
     <script src="/js/jquery.finder.js"></script>
     <script type="text/javascript">
+        lastScrollTop = 0;
+
         $(document).ready(function() {
-            VE.core.register($('.data'));
+
+            hover_menu();
+            $(window).scroll(function(){hover_menu()});
+
+            $('.l-sort-toolbar .sort-by').click(function(){
+              $('.context-menu.sort-order').toggle();
+            });
+
+//** SORTING **/
+/*
+          var units_arr = $('.units .l-unit');
+          var units = [];
+          units_arr.each(function(i, elm){
+            units[i] = {}
+            units[i]['id'] = elm.id;
+            units[i]['ip'] = parseInt($('#'+elm.id).find('.l-unit__ip').html().replace(/[^0-9]+/g,""));
+            units[i]['name'] = $('#'+elm.id).find('.l-unit__name').attr('u_name');
+            units[i]['date'] = parseInt($($('#'+elm.id).find('.l-unit__date')).attr('u_date'));
+          });
+*/
+
+            /*jQuery('.ch-toggle').bind('change', function(evt) {
+                evt.stopImmediatePropagation();
+                console.log(123);
+            });*/
+
+            VE.core.register();
             if (location.href.search(/list/) != -1) {
-                var shift_select_ref = $('body').finderSelect({children: '.data-row', 
+                var shift_select_ref = $('body').finderSelect({children: '.l-unit', 
                     'onFinish': function(evt) {
                         var ref = $(evt.target);
-                        if (ref.hasClass('ch-toggle')) {
-                            if (!ref.prop('checked')) {
-                                ref.parents('.data-row').addClass('selected');
-                            }
-                            else {
-                                ref.parents('.data-row').removeClass('selected');
-                            }
+                        $('.l-content').find('.l-unit .ch-toggle').attr('checked', false);
+                        $('.l-content').find('.l-unit.selected .ch-toggle').attr('checked', true);
+                        
+                        
+                        if ($('.l-content').find('.l-unit.selected').length == $('.l-content').find('.l-unit').length) {
+                            $('.toggle-all').addClass('clicked-on');
                         }
-                        else {
-                            $('#vstobjects').find('.data-row .ch-toggle').attr('checked', false);
-                            $('#vstobjects').find('.data-row.selected .ch-toggle').attr('checked', true);
-                        }
+                        
                     },
                     'toggleAllHook': function() {
-                        if ($('.data-row').length == $('.ch-toggle:checked').length) {
-                            $('.data-row.selected').removeClass('selected');
+                        if ($('.l-unit').length == $('.ch-toggle:checked').length) {
+                            $('.l-unit.selected').removeClass('selected');
                             $('.ch-toggle').attr('checked', false);
+                            $('#toggle-all').attr('checked', false);
                         }
                         else {
                             $('.ch-toggle').attr('checked', true);
+                            $('#toggle-all').attr('checked', true);
                         }
                     }
                 });

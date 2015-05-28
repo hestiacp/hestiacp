@@ -1,29 +1,36 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/firewall/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?>
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding Firewall Rule');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?>
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Adding Firewall Rule')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+        <?php
+          $back = $_SESSION['back'];
+          if (empty($back)) {
+            $back = "location.href='/list/firewall/'";
+          } else {
+            $back = "location.href='".$back."'";
+          }
+        ?>
         <form id="vstobjects" name="v_add_ip" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <script type="text/javascript">
                 function elementHideShow(elementToHideOrShow) {
                     var el = document.getElementById(elementToHideOrShow);
@@ -80,7 +87,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_port" <?php if (!empty($v_port)) echo "value=".$v_port; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_port" <?php if (!empty($v_port)) echo "value=".htmlentities($v_port); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -90,7 +97,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".$v_ip; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".htmlentities($v_ip); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -100,7 +107,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_comment" maxlength="8" <?php if (!empty($v_comment)) echo "value=".$v_comment; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_comment" maxlength="255" <?php if (!empty($v_comment)) echo "value=".htmlentities($v_comment); ?>>
                                 </td>
                             </tr>
 
@@ -111,7 +118,7 @@
                                     <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -119,3 +126,4 @@
                 </tr>
             </table>
         </from>
+    </div>

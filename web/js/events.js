@@ -57,7 +57,7 @@ VE.core.dispatch = function(evt, elm, event_type) {
  * Suspend action
  */
 VE.callbacks.click.do_suspend = function(evt, elm) {
-     var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
+     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="suspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
      VE.helpers.createConfirmationDialog(dialog_elm, '', url);
@@ -67,7 +67,7 @@ VE.callbacks.click.do_suspend = function(evt, elm) {
  * Unsuspend action
  */
 VE.callbacks.click.do_unsuspend = function(evt, elm) {
-     var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
+     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="unsuspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
      VE.helpers.createConfirmationDialog(dialog_elm, '', url);
@@ -77,7 +77,7 @@ VE.callbacks.click.do_unsuspend = function(evt, elm) {
  * Delete action
  */
 VE.callbacks.click.do_delete = function(evt, elm) {
-     var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
+     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="delete_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-delete');
      VE.helpers.createConfirmationDialog(dialog_elm, '', url);

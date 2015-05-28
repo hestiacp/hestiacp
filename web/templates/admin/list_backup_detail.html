@@ -1,266 +1,346 @@
-           <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div class="submenu-button-block">
-                            <button class="submenu-button-main" onclick="location.href='/schedule/restore/?backup=<?php echo $_GET['backup'] ?>'"> <?php print __('Restore All');?> </button>
-                        </div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-select-block">
-                            <form action="/bulk/restore/" method="post" id="objects">
-                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                            <select class="submenu-select-dropdown" name="action">
-                                <option value=""><?php print __('apply to selected');?></option>
-                                <option value="restore"><?php print __('restore');?></option>
-                            </select>
-                            <input type="hidden" name="backup" value="<?php echo $_GET['backup'] ?>">
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <a href="/schedule/restore/?backup=<?=$_GET['backup']?>" class="l-sort__create-btn restore" title="<?=str_replace(' ', '&nbsp;', __('Restore All'))?>"></a>
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
+                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
+              </td>
+              <td>
+                <form action="/bulk/restore/" method="post">
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                <input type="hidden" name="backup" value="<?php echo $_GET['backup'] ?>">
+                <div class="l-select">
+                  <select name="" id="">
+                    <option value=""><?=__('apply to selected')?></option>
+                    <option value="restore"><?php print __('restore') ?></option>
+                  </select>
+                </div>
+                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div id="vstobjects">
-            <table class="data" style="background: #ebe9dc;">
-                <tr>
-                    <td style="padding: 10px 4px">
-                        <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['backup'] ?> </b></a>
-                    </td>
-                </tr>
-            </table>
-            <table class="data">
+      </div>
 
-                <?php
-                    $backup = $_GET['backup'];
-                    $web = explode(',',$data[$backup]['WEB']);
-                    foreach ($web as $key) {
-                        if (!empty($key)) {
-                ?> 
+      <? display_error_block(); ?>
 
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="web[]" value="<?php echo $key ?>" ></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=web&object=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/restore.png" width="6px" height="8px">
-                                <?php print __('restore');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td class="cron" style="font-size:12pt" width="239px">
-                                    <?php echo 'web ' . __('domain') ?> 
-                                </td>
-                                <td class="domain" style="font-weight:normal">
-                                    <?php echo $key ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+      <!-- /.l-sort -->
+    </div>
 
-                <?php
-                        }
-                    }
-                ?> 
-
-                <?php
-                    $dns = explode(',',$data[$backup]['DNS']);
-                    foreach ($dns as $key) {
-                        if (!empty($key)) {
-                ?> 
-
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="dns[]" value="<?php echo $key ?>" ></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=dns&object=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/restore.png" width="6px" height="8px">
-                                <?php print __('restore');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td class="cron" style="font-size:12pt" width="239px">
-                                    <?php echo 'dns ' . __('domain') ?>
-                                </td>
-                                <td class="domain" style="font-weight:normal"">
-                                    <?php echo $key ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <?php
-                        }
-                    }
-                ?> 
-
-                <?php
-                    $mail = explode(',',$data[$backup]['MAIL']);
-                    foreach ($mail as $key) {
-                        if (!empty($key)) {
-                ?> 
-
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="mail[]" value="<?php echo $key ?>" ></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=mail&object=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/restore.png" width="6px" height="8px">
-                                <?php print __('restore');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td class="cron" style="font-size:12pt" width="239px">
-                                    <?php echo 'mail ' . __('domain') ?>
-                                </td>
-                                <td class="domain" style="font-weight:normal">
-                                    <?php echo $key ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <?php
-                        }
-                    }
-                ?> 
-
-                <?php
-                    $db = explode(',',$data[$backup]['DB']);
-                    foreach ($db as $key) {
-                        if (!empty($key)) {
-                ?> 
-
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="db[]" value="<?php echo $key ?>" ></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=db&object=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/restore.png" width="6px" height="8px">
-                                <?php print __('restore');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td class="cron" style="font-size:12pt" width="239px">
-                                    <?php echo __('database') ?>
-                                </td>
-                                <td class="domain" style="font-weight:normal">
-                                    <?php echo $key ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <?php
-                        }
-                    }
-                ?> 
-
-                <?php
-                    $backup = $_GET['backup'];
-                    if (!empty($data[$backup]['CRON'])) {
-                        if (!empty($key)) {
-                ?> 
-
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="cron[]" value="<?php echo 'yes' ?>" ></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=cron&object=records" class="data-controls">
-                            <span>
-                                <img src="/images/restore.png" width="6px" height="8px">
-                                <?php print __('restore');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td class="cron" style="font-size:12pt" width="239px">
-                                    <?php echo __('cron') ?>
-                                </td>
-                                <td class="domain" style="font-weight:normal">
-                                    <?php echo 'cron ' . __('records') ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <?php
-                        }
-                    }
-                ?> 
-
-                <?php
-                    $udir = explode(',',$data[$backup]['UDIR']);
-                    foreach ($udir as $key) {
-                        if (!empty($key)) {
-                ?> 
-
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="udir[]" value="<?php echo $key ?>" ></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a href="/schedule/restore/?backup=<?php echo $backup ?>&type=udir&object=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/restore.png" width="6px" height="8px">
-                                <?php print __('restore');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td class="cron" style="font-size:12pt" width="239px">
-                                    <?php echo __('user dir') ?>
-                                </td>
-                                <td class="domain" style="font-weight:normal">
-                                    <?php echo $key ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <?php
-                        }
-                    }
-                ?> 
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
 
 
-            </table>
-            </form>
+    <div class="l-center">
 
+
+    <div class="l-unit">
+      <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['backup'])?></div>
+    </div>
+
+    <div class="l-separator"></div>
+
+      <?
+        $backup = $_GET['backup'];
+        $web = explode(',',$data[$backup]['WEB']);
+        foreach ($web as $key) {
+          if (!empty($key)) {
+      ?>
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="check" value="check<?php echo $i ?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
+            <div class="actions-panel__col actions-panel__update"><a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('restore')?> <i></i></a></div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <!-- div class="l-unit__name separate">
+            <?=$key?>
+          </div -->
+
+          <div class="l-unit__stats">
+            <table>
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='WEB ' . __('domain')?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <? }} ?>
+
+
+
+      <?
+        $mail = explode(',',$data[$backup]['MAIL']);
+        foreach ($mail as $key) {
+          if (!empty($key)) {
+      ?>
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check2" type="checkbox" name="check" value="check2">
+            <label for="check2" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel__col actions-panel__update"><a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>"><?=__('restore')?> <i></i></a></div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__stats">
+            <table>
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='MAIL ' . __('domain')?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <? }} ?>
+
+
+
+
+      <?
+        $dns = explode(',',$data[$backup]['DNS']);
+        foreach ($dns as $key) {
+          if (!empty($key)) {
+      ?>
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check2" type="checkbox" name="check" value="check2">
+            <label for="check2" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
+            <div class="actions-panel__col actions-panel__update"><a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>"><?=__('restore')?> <i></i></a></div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__stats">
+            <table>
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='DNS ' . __('domain')?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <? }} ?>
+
+
+
+      <?
+        $db = explode(',',$data[$backup]['DB']);
+        foreach ($db as $key) {
+          if (!empty($key)) {
+      ?>
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check2" type="checkbox" name="check" value="check2">
+            <label for="check2" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
+            <div class="actions-panel__col actions-panel__update"><a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>"><?=__('restore')?> <i></i></a></div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__stats">
+            <table>
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('database')?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <? }} ?>
+
+
+
+
+      <?
+        $backup = $_GET['backup'];
+        if (!empty($data[$backup]['CRON'])) {
+          if (!empty($key)) {
+      ?>
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check2" type="checkbox" name="check" value="check2">
+            <label for="check2" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
+            <div class="actions-panel__col actions-panel__update"><a href="/schedule/restore/?backup=<?=$backup?>&type=cron&object=records"><?=__('restore')?> <i></i></a></div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__stats">
+            <table>
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('cron')?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?='cron '.__('records')?></b></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <? }} ?>
+
+
+
+
+      <?
+        $udir = explode(',',$data[$backup]['UDIR']);
+        foreach ($udir as $key) {
+          if (!empty($key)) {
+      ?>
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check2" type="checkbox" name="check" value="check2">
+            <label for="check2" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
+            <div class="actions-panel__col actions-panel__update"><a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>"><?=__('restore')?> <i></i></a></div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__stats">
+            <table>
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('user dir')?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <? }} ?>
+    </div>
+
+
+    <div id="vstobjects">
+      <div class="l-separator"></div>
+    </div>

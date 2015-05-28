@@ -1,29 +1,36 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+          <span class="title edit"><b><?=__('Editing Cron Job')?></b></span>
             <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/cron/'";
-                } else {
-                    $back = "location.href='".$back."'";
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                 }
-            ?> 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Cron Job');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+              }
+            ?>
         </div>
 
-        <form id="vstobjects" name="v_edit_cron" method="post">
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/cron/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+        <form id="vstobjects" name="v_edit_cron" method="post"  class="<?=__($v_status)?>">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <table class='data'>
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -46,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_min" <?php if (isset($v_min)) echo "value=".$v_min; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_min" <?php if (isset($v_min)) echo "value=".htmlentities($v_min); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -56,7 +63,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_hour" <?php if (isset($v_hour)) echo "value=".$v_hour; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_hour" <?php if (isset($v_hour)) echo "value=".htmlentities($v_hour); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -66,7 +73,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_day" <?php if (isset($v_day)) echo "value=".$v_day; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_day" <?php if (isset($v_day)) echo "value=".htmlentities($v_day); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -76,7 +83,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_month" <?php if (isset($v_month)) echo "value=".$v_month; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_month" <?php if (isset($v_month)) echo "value=".htmlentities($v_month); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -86,7 +93,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_wday" <?php if (isset($v_wday)) echo "value=".$v_wday; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_wday" <?php if (isset($v_wday)) echo "value=".htmlentities($v_wday); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -96,7 +103,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input long" name="v_cmd" <?php if (isset($v_cmd)) echo "value='".$v_cmd."'"; ?>>
+                                    <input type="text" size="20" class="vst-input long" name="v_cmd" <?php if (isset($v_cmd)) echo "value='".htmlentities($v_cmd)."'"; ?>>
                                 </td>
                             </tr>
                         </table>
@@ -106,7 +113,7 @@
                                     <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -114,3 +121,4 @@
                 </tr>
             </table>
         </form>
+    </div>

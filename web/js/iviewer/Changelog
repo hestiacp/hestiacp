@@ -1,0 +1,97 @@
+Version 0.7.12
+
+* Add method to enable/disable mousewheel functionality
+
+Version 0.7.11 (2014/05/02)
+
+* Bower release!
+
+Version 0.7.10 (2014/05/02)
+
+* IE7&8 fixes
+* remove ui nodes on destroy
+* gallery-like functionality for iviewer-lightbox test page
+
+
+Version 0.7.9 (2014/01/05)
+
+* Grunt based release scripts
+* Option to fill container
+* DblClick event added
+* Zoom on double click
+* Move more events to the iviewer namespace
+
+Version 0.7.8 (2013/09/23)
+
+* handle MozMousePixelScroll oddness in mousewheel handler to use proper pageX
+and pageY event properties
+* replace midernizr contain function call with String::indexOf
+
+Version 0.7.7 (2013/03/12)
+
+* IE10 touch support
+* Widget reacts on mouse wheel not only over the image but over the whole
+container
+* Do not use jQuery.browser to detect for internet explorer filters (fixes
+#44)
+* Force img_object to trigger loaded event asynchronously in all cases (I'm
+looking at you, IE8)
+
+Version 0.7.6 (2013/01/26)
+
+* add public update method
+* immediately finish zoom animation if iage coordinates are set during it (#39)
+* do not remove asrc attribute from image when loading new one to prevent
+additional requests from some browsers (#31)
+
+Version 0.7.5 (2012/10/24)
+
+* add image load error callback
+* clean up DOM when widget is destoyed
+
+Version 0.7.4 (2012/08/21)
+
+* remove variable dragInitialized from the global scope
+
+Version 0.7.3 (2012/08/21)
+
+* reset max-width css property on image load to avoid breaking in the twitter bootstrap
+* support gesture events for iOS systems
+* on zoom with mouse wheel mouse position is preferred over center of image as
+a fixed point
+* on ipad zoom will prefer the center of the gesture (thx to colinbashbash!)
+* ipad panning stability fixes (thx to colinbashbash!)
+
+Version 0.7.2 (2012/07/20)
+
+* add mousewheel option to add possibility to disable it
+* add an ability to return current coordinates from the info method
+* [bug] Stop previous animation on the subsequent dimensions change
+* [bug] Round dimension and position values on zoom change to prevent
+  coordinates distortion.
+
+Version 0.7.1 (2012/03/01)
+
+* add class iviewer_loading while image is being loaded
+* move closure function that deals with loaded image to
+  the prototype to allow its expansion
+* reset image node attribute only after next image was
+  loaded to remove unwanted image flickering.
+
+Version 0.7 (2012/02/17)
+
+* all callbacks are now fired with _trigger method of jQuery UI. So the first
+  parameter in every callback now is a jquery event. Other arguments are
+  shifted. Also, this now point to the html element, not the widget object
+  itself.
+* Added info method to access some image properties from outside world
+* Updated lightbox example to show, how multiple files can be shown
+* Rotation filters are now applied event at zero angle to please IE
+
+Version 0.6 (2012/02/07)
+
+* Changelog file (eventually)
+* Image rotation feature
+* onAfterZoom is working again
+* onMouseMove callback is working again
+* Do not animation image on initial load (only zoom will be animated now)

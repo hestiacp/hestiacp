@@ -1,171 +1,281 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div class="submenu-button-block">
-                            <button class="submenu-button-main" onclick="location.href='/add/package/'"> <?php print __('Add Package');?> </button>
-                        </div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-select-block">
-                            <form action="/bulk/package/" method="post" id="objects">
-                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                            <select class="submenu-select-dropdown" name="action">
-                                <option value=""><?php print __('apply to selected');?></option>
-                                <option value="delete"><?php print __('delete');?></option>
-                            </select>
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <a href="/add/package/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add Package'))?>"></a>
+
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
+              </td>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+              </td>
+              <td>
+                <form action="/bulk/package/" method="post" id="objects">
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                <div class="l-select">
+                  <select name="action" id="">
+                    <option value=""><?=__('apply to selected')?></option>
+                    <option value="delete"><?=__('delete')?></option>
+                  </select>
+                </div>
+                <input type="submit" class="l-sort-toolbar__filter-apply" value="" />
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div id="vstobjects">
-            <table class='data'>
+      </div>
 
-                <?php
-                    foreach ($data as $key => $value) {
-                        ++$i;
-                ?> 
+      <? display_error_block(); ?>
 
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="package[]" value="<?php echo $key ?>"></td></tr>
-                            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                            <span class="do_delete">
-                                <img src="/images/delete.png" width="7px" height="7px" >
-                                <?php print __('delete');?> 
-                                <input type="hidden" name="delete_url" value="/delete/package/?package=<?php echo "$key" ?>" />
-                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                    <p class="confirmation"><?php print __('DELETE_PACKAGE_CONFIRMATION',$key);?></p>
-                                </div>
-                            </span>
-                        </a>
+      <!-- /.l-sort -->
+    </div>
 
-                        <a href="/edit/package/?package=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/edit.png" width="8px" height="8px">
-                            <?php print __('edit');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td colspan=3 class="domain">
-                                    <?php echo $key?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align:top;" width="239px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Web Template');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['WEB_TEMPLATE'])?></td>
-                                        </tr>
-                                        <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Backend Template');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['BACKEND_TEMPLATE']);?></td>
-                                        </tr>
-                                        <?php echo ""; }?> 
-                                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Proxy Template');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['PROXY_TEMPLATE']);?></td>
-                                        </tr>
-                                        <?php echo ""; }?> 
-                                        <tr>
-                                            <td class="counter-name"><?php print __('DNS Template');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['DNS_TEMPLATE']);?></td>
-                                        </tr>
-                                        </tr>
-                                            <td class="counter-name"><?php print __('SSH Access');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['SHELL']);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Web Domains');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['WEB_DOMAINS']);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Web Aliases');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['WEB_ALIASES']);?></td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="238px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('DNS domains');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['DNS_DOMAINS']);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('DNS records');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['DNS_RECORDS']);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Mail Domains');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['MAIL_DOMAINS']);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Mail Accounts');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['MAIL_ACCOUNTS']);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Databases');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['DATABASES']);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Cron Jobs');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['CRON_JOBS']);?></td>
-                                        <tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <table>
-                                            <td class="counter-name"><?php print __('Backups');?>:</td>
-                                            <td class="counter-value"><?php print __($data[$key]['BACKUPS']);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Bandwidth');?>:</td>
-                                            <td class="counter-value"><?php echo humanize_usage($data[$key]['BANDWIDTH']) ?> </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Disk');?>:</td>
-                                            <td class="counter-value"><?php echo humanize_usage($data[$key]['DISK_QUOTA']) ?> </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name"><?php print __('Name Servers');?>:</td>
-                                            <td class="counter-value"><?php echo str_replace(',', '<br>',$data[$key]['NS']) ?> </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
 
-                <?php
-                    }
-                ?> 
-            </table>
-            </form>
 
-            <div class="data-count">
-                <?php
-                    if ( $i == 1) {
-                        echo __('1 package');
-                    } else {
-                        echo __('%s packages',$i);
-                    }
-                ?> 
+    <div class="l-center">
+      <?php
+        foreach ($data as $key => $value) {
+           ++$i;
+      ?>
+
+
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended';?>">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="package[]" value="<?php echo $key ?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__edit"><a href="/edit/package/?package=<?=$key?>"><?=__('edit')?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__delete">
+                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                  <?=__('delete')?> <i class="do_delete"></i>
+                  <input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__('DELETE_PACKAGE_CONFIRMATION',$key)?></p>
+                  </div>
+                </a>
+              </div>
+
             </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__date">
+            <?=strftime("%d&nbsp; %b&nbsp; %Y", strtotime($data[$key]['DATE']))?>
+          </div>
+          <div class="l-unit__suspended"">suspended</div>
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name separate">
+            <?=$key?>
+          </div>
+
+
+          <div class="l-unit__stats">
+            <table>
+
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Template')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['WEB_TEMPLATE'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['DNS_DOMAINS'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backups')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['BACKUPS'])?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <? if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Proxy Template')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['PROXY_TEMPLATE'])?></b>
+                    </div>
+                  </div>
+                  <? } ?>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS records')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['DNS_RECORDS'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Bandwidth')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=humanize_usage($data[$key]['BANDWIDTH'])?></b> <?=humanize_usage($data[$key]['BANDWIDTH'])?>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS Template')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['DNS_TEMPLATE'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail Domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['MAIL_DOMAINS'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Disk')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=humanize_usage($data[$key]['DISK_QUOTA'])?></b> <?=humanize_usage($data[$key]['DISK_QUOTA'])?>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSH Access')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['SHELL'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail Accounts')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['MAIL_ACCOUNTS'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Name Servers')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=str_replace(',', '<br>',$data[$key]['NS'])?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['WEB_DOMAINS'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Databases')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['DATABASES'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Aliases')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['WEB_ALIASES'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Cron Jobs')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['CRON_JOBS'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                </td>
+              </tr>
+
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <div class="l-separator"></div>
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+    <div id="vstobjects">
+        <div class="l-separator"></div>
+    <div class="l-center">
+        <div class="l-unit-ft">
+          <table class='data'></table>
+          <!-- /form -->
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix">
+            <?php
+              if ( $i == 1) {
+                echo __('1 package');
+              } else {
+                echo __('%s packages',$i);
+              }
+            ?>
+          </div>
+      </div>
+    </div>
+  </div>

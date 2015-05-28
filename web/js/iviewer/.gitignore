@@ -1,0 +1,5 @@
+*.swp
+logs
+public/photos
+public/phtmp
+node_modules

@@ -1,29 +1,36 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+          <span class="title edit"><b><?=__('Editing Mail Domain')?></b></span>
             <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/mail/'";
-                } else {
-                    $back = "location.href='".$back."'";
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                 }
-            ?> 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Mail Domain');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+              }
+            ?>
         </div>
 
-        <form id="vstobjects" name="v_edit_mail" method="post">
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/mail/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+        <form id="vstobjects" name="v_edit_mail" method="post" class="<?=__($v_status)?>">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <table class='data'>
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -46,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".htmlentities($v_domain);  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".htmlentities($v_domain);  ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -71,7 +78,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_catchall" <?php if (!empty($v_catchall)) echo "value=".$v_catchall;  ?> >
+                                    <input type="text" size="20" class="vst-input" name="v_catchall" <?php if (!empty($v_catchall)) echo "value=".htmlentities($v_catchall);  ?> >
                                 </td>
                             </tr>
                         </table>
@@ -81,7 +88,7 @@
                                     <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -89,3 +96,4 @@
                 </tr>
             </table>
         </form>
+    </div>

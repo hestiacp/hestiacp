@@ -1,0 +1,44 @@
+body, form { padding: 0; margin: 0; background: #333;  }
+
+
+input.save { 
+    background-color: rgba(247, 165, 48, 0.8);
+    border: 1px solid #f79b44;
+    border-radius: 3px;
+/*    bottom: 17px;*/
+    top: 9px;
+    color: #fafafa;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 9pt;
+    font-weight: bold;
+    height: 28px;
+    padding: 0;
+    position: absolute;
+    right: 47px;
+    width: 130px;
+    z-index: 1000;
+    transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+}
+
+input.save:hover { border: 1px solid #6DB8D3; background-color: #6DB8D3; color: #FFF; opacity: 1; box-shadow: 0 6px 10px rgba(0,0,0,0.23), 0 10px 30px rgba(0,0,0,0.19); }
+input.save:active { border: 1px solid #FFCC00; background-color: #FFCC00; color: #FFF; }
+
+
+.ace_gutter,
+.ace_scroller { padding-top: 10px; }
+.ace-twilight .ace_gutter-active-line { margin-top: 10px; }
+
+.ace_gutter-cell { color: #777; }
+/*
+.ace_gutter-cell { color: #777; padding: 9px 0px 0px 4px; }
+.ace_line { padding: 9px 0px 0px 4px; }
+
+.ace_editor,
+.ace-twilight .ace_cursor,
+.ace_text-input { font-size: 17px; }
+*/
+
+.ace_editor { font-size: 19px !important; }

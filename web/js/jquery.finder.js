@@ -168,13 +168,18 @@
         click: function(p,o) {
             p.on(o.event, o.children, function(e){
                 if(f.detect.leftMouse(e)) {
-                    if (!$(e.target).hasClass('ch-toggle')) {
+                    if ($(e.target).hasClass('ch-toggle') ||
+                        $(e.target).hasClass('check-label') ||
+                        ( $(e.target).hasClass('l-unit-toolbar__col--left')) ) {
+
                         var c = f.get.clicks(p,o,$(this));
                         
                         var ref = $(e.target);
-                        if (ref.parents('.data-row').hasClass('selected') && $('.selected').length == 1) {
-                            ref.parents('.data-row').removeClass('selected');
-                            ref.parents('.data-row').find('.ch-toggle').attr('checked', false);
+                        if (ref.parents('.l-unit').hasClass('selected') && $('.l-unit.selected').length == 1) {
+                            ref.parents('.l-unit').find('.ch-toggle').attr('checked', false);
+                            ref.parents('.l-unit').removeClass('selected');
+                            ref.parents('.l-unit').removeClass('selected-current');
+                            $('.toggle-all').removeClass('clicked-on');
                             return;
                         }
 
@@ -205,11 +210,13 @@
             });
             
             function turnOff(e) {
-                if (f.detect.ctrl(e)) {
-                    if (e.keyCode == 65) {
+                if (f.detect.ctrl(e)) { 
+                    if (e.keyCode == 65) { // ctrl + a
                         e.preventDefault();
-                        if(f.detect.alt(e)) {
+                        //if(f.detect.alt(e)) {
+                        if(jQuery('.ch-toggle:checked').length > 0) {
                             f.t.unHAll(p, o);
+                            jQuery('.ch-toggle:checked').attr('checked', false);
                         } else {
                             f.t.hAll(p,o);
                         }
@@ -303,6 +310,7 @@
             el.removeClass(o.unSelectClass);
             el.addClass(o.selectClass);
             f.get.hook('highlight:after', [el, o]);
+
         },
         off: function(el,o) {
             f.get.hook('unHighlight:before', [el, o]);
@@ -392,8 +400,9 @@
             return b.data('down', bool);
         },
         cursor: function(p,o) {
+            /* do not set cursor pointer inline styles
             var s = f.get.siblings(p,o);
-            return s.css('cursor', o.cursor);
+            return s.css('cursor', o.cursor);*/
         }
     };
 
@@ -558,11 +567,13 @@
         unHAll: function(p,o) {
             f.h.off(p.find(o.children), o);
             f.t.update(p, o);
+            $('.toggle-all').removeClass('clicked-on');
         },
         hAll: function(p,o) {
             f.h.on(p.find(o.children), o);
             f.t.update(p, o);
             o.toggleAllHook && o.toggleAllHook();
+            $('.toggle-all').addClass('clicked-on');
         },
         unHExist: function(bool,el,o) {
             if(bool) {

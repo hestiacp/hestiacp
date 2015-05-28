@@ -1,201 +1,175 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-        <title>Vesta - <?php echo "$TAB"; ?> </title>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-        <link type="text/css" href="/css/main.css?ver=1407230838" rel="stylesheet" />
-        <!--[if IE 7]>
-            <link rel="stylesheet" type="text/css" href="/css/ie.css" />
-            <style type="text/css">
-                .data-col1 a {
-                    white-space: nowrap;
-                }
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <title>Vesta - <?="$TAB"?> </title>
+  <link rel="stylesheet" href="/css/styles.min.css">
 
-                .submenu-button-block {
-                    width: 120px;
-                }
+  <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
+  <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
+  <script type="text/javascript" src="/js/events.js"></script>
 
-                .submenu-search-block {
-                    width:369px;
-                }
+  <script type="text/javascript">
+    var checked=false;
+    var frmname='';
+    function checkedAll(frmname) {
+        if ($('.l-unit.selected').length > 0) {
+            $('.l-unit').removeClass("selected");
+            $('.ch-toggle').attr("checked", false);
+            $('.toggle-all').removeClass('clicked-on');
+        }
+        else {
+            $('.l-unit').addClass("selected");
+            $('.ch-toggle').attr("checked", true);
+            $('.toggle-all').addClass('clicked-on');
+        }
+    }
+    
+    function doSearch(url) {
+        var url = url || '/search/';
+        var loc = url + '?q=' + $('.search-input').val();
+        
+        location.href = loc;
+        
+        return false;
+    }
+  </script>
+  <script type="text/javascript">
 
-                .submenu-select-block {
-                    width:239px;
-                }
+    var search_activated = 0;
+    var search_display_interval = 0;
+    var search_hover_interval = 0;
 
-                .submenu-select-dropdown {
-                    position: relative;
-                    top: 2px;
-                }
-            </style>
-        <![endif]-->
-        <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
-        <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
-        <script type="text/javascript" src="/js/jquery.cookie.js"></script>
-        <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
-        <script type="text/javascript" src="/js/events.js"></script>
+    $(document).ready(function() {
+        $('.l-sort__create-btn').hover(function(){
+          $(".l-sort__create-btn").append("<div id='add-icon'></div>");
+          $(".l-sort__create-btn").append("<div id='tooltip'>"+$('.l-sort__create-btn').attr('title').replace(' ','&nbsp;')+"</div>");
+        }, function(){
+          $("#add-icon").remove();
+          $("#tooltip").remove();
+        });
 
-        <script type="text/javascript">
-            var checked=false;
-            var frmname='';
-            function checkedAll(frmname) {
-                if ($('.selected').length > 0) {
-                    $('.data-row').removeClass("selected");
-                    $('.ch-toggle').attr("checked", false);
-                }
-                else {
-                    $('.data-row').addClass("selected");
-                    $('.ch-toggle').attr("checked", true);
-                }
+
+        $('.l-sort-toolbar__search-box').hover(function(){
+          clearTimeout(search_display_interval);
+          clearTimeout(search_hover_interval);
+          search_display_interval = setTimeout(function(){$('.search-input').addClass('activated');}, 150);
+        }, function(){
+          clearTimeout(search_display_interval);
+          clearTimeout(search_hover_interval);
+          search_hover_interval = setTimeout(function(){
+            if(!search_activated && !$(".search-input").val().length){
+              $(".search-input").removeClass('activated');
             }
-        </script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                var nav = $('.top');
-                var nav = $('.top');
-                var lastScrollTop = 0;
+          }, 600);
+        });
 
-                $(window).scroll(function () {
-                    var st = $(this).scrollTop();
-
-                    if (st > 27 ) {
-                        nav.addClass("small-logo");
-                    }
-                    else{
-                        nav.removeClass("small-logo");
-                    }
-
-                    if (st > lastScrollTop) {
-                        if ($(this).scrollTop() > 58) {
-                            nav.addClass("small");
-                        }
-                    } 
-                    else {
-                        if ($(this).scrollTop() < 58) {
-                            nav.removeClass("small");
-                        }
-                    }
-                    lastScrollTop = st;
-                });
-                
-             
-
-                /*$('#vstobjects').bind('click', function(evt) { // observe change event on whole div#vstobjects
-                    console.log(evt);
-                    var elm = evt.target; // grab element on which user clicked
-                    document.getSelection().removeAllRanges();
-                    if($(elm).hasClass('data-controls') || $(elm).parents('.data-controls')[0]){
-                        return;
-                    }
-
-                    var parent = $(elm).hasClass('data-row') ? $(elm) : $(elm).parents('.data-row'); // check if outer element is row container and get it
-                    if (!$(parent).hasClass('selected')) {
-                        if (evt.shiftKey === false && evt.ctrlKey === false) {
-                            $('#vstobjects').find('.selected').each(function(i, o) {
-                                $(o).find('.ch-toggle').attr('checked', false);
-                                $(o).removeClass('selected');
-                            });
-                        }
-                        parent.addClass('selected'); // add class
-                        parent.find('.ch-toggle').attr('checked', true);
-                        parent.find('.ch-toggle').focus();
-                        // another actions on checked row
-                    }
-                    else {
-                        parent.removeClass('selected'); // remove class
-                        parent.find('.ch-toggle').attr('checked', false);
-                        parent.find('.ch-toggle').focus();
-                        // another actions on unchecked row
-                    }
-                });*/
+        $('.search-input').focus(function(){
+          search_activated = 1;
+          clearTimeout(search_hover_interval);
+        });
+        $('.search-input').blur(function(){
+          search_activated = 0;
+          clearTimeout(search_hover_interval);
+          search_hover_interval = setTimeout(function(){
+            if(!$(".search-input").val().length){
+              $(".search-input").removeClass('activated');
+            }
+          }, 600);
+        });
 
 
-                if($('.movement.left').length){
-                    refresh_timer.right = $('.movement.right');
-                    refresh_timer.left = $('.movement.left');
-                    refresh_timer.start();
+        if($('.movement.left').length){
+            refresh_timer.right = $('.movement.right');
+            refresh_timer.left = $('.movement.left');
+            refresh_timer.start();
 
-                    $('.pause').click(function(){
-                        refresh_timer.stop();
-                        $('.pause').addClass('hidden');
-                        $('.play').removeClass('hidden');
-                        $('.refresh-timer').addClass('paused');
-                    });
-
-                    $('.play').click(function(){
-                        refresh_timer.start();
-                        $('.pause').removeClass('hidden');
-                        $('.play').addClass('hidden');
-                        $('.refresh-timer').removeClass('paused');
-                    });
-                }
+            $('.pause').click(function(){
+                refresh_timer.stop();
+                $('.pause').addClass('hidden');
+                $('.play').removeClass('hidden');
+                $('.refresh-timer').addClass('paused');
             });
 
-            refresh_timer = {
-                speed: 50,
-                degr: 180,
-                right: 0,
-                left: 0,
-                periodical: 0,
-                first: 1,
+            $('.play').click(function(){
+                refresh_timer.start();
+                $('.pause').removeClass('hidden');
+                $('.play').addClass('hidden');
+                $('.refresh-timer').removeClass('paused');
+            });
+        }
+    });
 
-                start: function(){
-                    this.periodical = setInterval(function(){refresh_timer.turn()}, this.speed);
-                },
+    refresh_timer = {
+        speed: 50,
+        degr: 180,
+        right: 0,
+        left: 0,
+        periodical: 0,
+        first: 1,
 
-                stop: function(){
-                    clearTimeout(this.periodical);
-                },
+        start: function(){
+            this.periodical = setInterval(function(){refresh_timer.turn()}, this.speed);
+        },
 
-                turn: function(){
-                    this.degr += 1;
+        stop: function(){
+            clearTimeout(this.periodical);
+        },
 
-                    if (this.first && this.degr >= 361){
-                        this.first = 0;
-                        this.degr = 180;
-                        this.left.css({'-webkit-transform': 'rotate(180deg)'});
-                        this.left.css({'transform': 'rotate(180deg)'});
-                        this.left.children('.loader-half').addClass('dark');
-                    }
-                    if (!this.first && this.degr >= 360){
-                        this.first = 1;
-                        this.degr = 180;
-                        this.left.css({'-webkit-transform': 'rotate(0deg)'});
-                        this.right.css({'-webkit-transform': 'rotate(180deg)'});
-                        this.left.css({'transform': 'rotate(0deg)'});
-                        this.right.css({'transform': 'rotate(180deg)'});
-                        this.left.children('.loader-half').removeClass('dark');
+        turn: function(){
+            this.degr += 1;
 
-                        this.stop();
-                        location.reload();
-                    }
+            if (this.first && this.degr >= 361){
+                this.first = 0;
+                this.degr = 180;
+                this.left.css({'-webkit-transform': 'rotate(180deg)'});
+                this.left.css({'transform': 'rotate(180deg)'});
+                this.left.children('.loader-half').addClass('dark');
+            }
+            if (!this.first && this.degr >= 360){
+                this.first = 1;
+                this.degr = 180;
+                this.left.css({'-webkit-transform': 'rotate(0deg)'});
+                this.right.css({'-webkit-transform': 'rotate(180deg)'});
+                this.left.css({'transform': 'rotate(0deg)'});
+                this.right.css({'transform': 'rotate(180deg)'});
+                this.left.children('.loader-half').removeClass('dark');
 
-                    if (this.first){
-                        this.right.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
-                        this.right.css({'transform': 'rotate('+this.degr+'deg)'});
-                    }
-                    else{
-                        this.left.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
-                        this.left.css({'transform': 'rotate('+this.degr+'deg)'});
-                    }
-                }
+                this.stop();
+                location.reload();
             }
 
-        </script>
-        <script language="JavaScript">
-            $(document).ready(function(){
-                $(".submenu-select-dropdown").each(function(){
-                    $(this).wrap( "<span class='submenu-select-wrapper'></span>" );
-                    $(this).after("<span class='holder'></span>");
-                });
-                $(".submenu-select-dropdown").change(function(){
-                    var selectedOption = $(this).find(":selected").text();
-                    $(this).next(".holder").text(selectedOption);
-                }).trigger('change');
-            })
-        </script>
-        <script type="text/javascript" src="/js/app.js"></script>
-        <script type="text/javascript" src="/js/templates.js"></script>
-    </head>
-    <body>
+            if (this.first){
+                this.right.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
+                this.right.css({'transform': 'rotate('+this.degr+'deg)'});
+            }
+            else{
+                this.left.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
+                this.left.css({'transform': 'rotate('+this.degr+'deg)'});
+            }
+        }
+    }
+
+  </script>
+  <script language="text/javascript">
+    $(document).ready(function(){
+        $(".submenu-select-dropdown").each(function(){
+            $(this).wrap( "<span class='submenu-select-wrapper'></span>" );
+            $(this).after("<span class='holder'></span>");
+        });
+        $(".submenu-select-dropdown").change(function(){
+            var selectedOption = $(this).find(":selected").text();
+            $(this).next(".holder").text(selectedOption);
+        }).trigger('change');
+        $('.to-top').bind('click', function(evt) {
+            $("html, body").animate({ scrollTop: 0 }, "normal");
+        });
+    })
+  </script>
+  <script type="text/javascript" src="/js/app.js"></script>
+  <script type="text/javascript" src="/js/templates.js"></script>
+</head>
+<body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">

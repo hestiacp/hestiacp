@@ -1,29 +1,36 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/db/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?> 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding database');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Adding database')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+        <?php
+          $back = $_SESSION['back'];
+          if (empty($back)) {
+            $back = "location.href='/list/db/'";
+          } else {
+            $back = "location.href='".$back."'";
+          }
+        ?>
         <form id="vstobjects" name="v_add_db" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <script type="text/javascript">
                 function elementHideShow(elementToHideOrShow) {
                     var el = document.getElementById(elementToHideOrShow);
@@ -65,7 +72,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_database" <?php if (!empty($v_database)) echo "value=".$v_database; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_database" <?php if (!empty($v_database)) echo "value=".htmlentities($v_database); ?>>
                                     <small class="hint"></small>
                                 </td>
                             </tr>
@@ -76,7 +83,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_dbuser" <?php if (!empty($v_dbuser)) echo "value=".$v_dbuser; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_dbuser" <?php if (!empty($v_dbuser)) echo "value=".htmlentities($v_dbuser); ?>>
                                     <small class="hint"></small>
                                 </td>
                             </tr>
@@ -100,9 +107,9 @@
                                     <select class="vst-list" name="v_type">
                                         <?php
                                             foreach ($db_types as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                                 if ((!empty($v_type)) && ( $value == $v_type )) echo ' selected';
-                                                echo ">".$value."</option>";
+                                                echo ">".htmlentities($value)."</option>";
                                             }
                                         ?> 
                                     </select>
@@ -118,9 +125,9 @@
                                     <select class="vst-list" name="v_host">
                                         <?php
                                             foreach ($db_hosts as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
                                                 if ((!empty($v_host)) && ( $key == $v_host )) echo ' selected';
-                                                echo ">".$key."</option>";
+                                                echo ">".htmlentities($key)."</option>";
                                             }
                                         ?> 
                                     </select>
@@ -180,7 +187,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text"  class="vst-input" name="v_db_email" <?php if (!empty($v_db_email)) echo "value=".$v_db_email; ?>>
+                                    <input type="text"  class="vst-input" name="v_db_email" <?php if (!empty($v_db_email)) echo "value=".htmlentities($v_db_email); ?>>
                                 </td>
                             </tr>
                         </table>
@@ -190,7 +197,7 @@
                                     <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -198,7 +205,7 @@
                 </tr>
             </table>
         </form>
-
+    </div>
 
     <script type="text/javascript">
         GLOBAL.DB_USER_PREFIX = '<?php echo $user; ?>_';

@@ -49,9 +49,11 @@ if [ "$restart" != 'no' ]; then
         exit $E_RESTART
     fi
 
-    $BIN/v-restart-proxy
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        if [ $? -ne 0 ]; then
+            exit $E_RESTART
+        fi
     fi
 fi
 

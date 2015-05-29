@@ -16,7 +16,7 @@ domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 account=$(echo $3 | tr '[:upper:]' '[:lower:]')
 password=$4
-quota=${5-0}
+quota=${5-unlimited}
 
 # Includes
 source $VESTA/func/main.sh
@@ -33,7 +33,10 @@ EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN ACCOUNT PASSWORD [QUOTA]'
-validate_format 'user' 'domain' 'account' 'quota'
+validate_format 'user' 'domain' 'account'
+if [ "$quota" != 'unlimited' ]; then
+    validate_format 'quota'
+fi
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -54,6 +57,9 @@ md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<<$password)"
 
 # Adding account info into password file
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    if [ "$quota" = 'unlimited' ]; then
+        quota='0'
+    fi
     str="$account:$md5:$user:mail::$HOMEDIR/$user:$quota"
     echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
 fi
@@ -62,6 +68,10 @@ fi
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+if [[ "$quota" -eq '0' ]]; then
+    quota='unlimited'
+fi
 
 str="ACCOUNT='$account' ALIAS='' QUOTA='$quota' AUTOREPLY='no' FWD=''"
 str="$str FWD_ONLY='' MD5='$md5' U_DISK='0' SUSPENDED='no' TIME='$TIME'"

@@ -57,12 +57,12 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         exec (VESTA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
         $data = json_decode(implode('', $output), true);
 
+        // Define session user
+        $_SESSION['user'] = key($data);
+        $v_user = $_SESSION['user'];
+
         // Define language
         if (!empty($data[$v_user]['LANGUAGE'])) $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
-
-        // Define session user
-        reset($data);
-        $_SESSION['user'] = key($data);
 
         // Redirect request to control panel interface
         if (!empty($_SESSION['request_uri'])) {

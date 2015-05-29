@@ -29,7 +29,7 @@
           $back = "location.href='".$back."'";
         }
       ?>
-        <form id="vstobjects" name="v_edit_package" method="post"  class="<?=__($v_status)?>">
+        <form id="vstobjects" name="v_edit_package" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <table class='data'>
                 <tr class="data-add">
@@ -59,7 +59,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Web Template');?>
+                                    <?php print __('Web Template')  . " <span class='optional'> " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -80,10 +80,35 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Backend Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_backend_template">
+                                        <?php
+                                            foreach ($backend_templates as $key => $value) {
+                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                if ((!empty($v_backend_template)) && ( $value == $v_backend_template)){
+                                                    echo ' selected' ;
+                                                }
+                                                if ((!empty($v_backend_template)) && ( $value == $_POST['v_backend_template'])){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">".$value."</option>\n";
+                                            }
+                                        ?> 
+                                    </select>
+                                </td>
+                            </tr>
+                            <?php echo ""; }?> 
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Proxy Template');?>
+                                    <?php print __('Proxy Template')  . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -107,7 +132,7 @@
                             <?php echo ""; }?> 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('DNS Template');?>
+                                    <?php print __('DNS Template')  . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>

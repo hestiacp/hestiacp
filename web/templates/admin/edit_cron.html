@@ -29,7 +29,7 @@
           $back = "location.href='".$back."'";
         }
       ?>
-        <form id="vstobjects" name="v_edit_cron" method="post"  class="<?=__($v_status)?>">
+        <form id="vstobjects" name="v_edit_cron" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <table class='data'>
                 <tr class="data-add">
@@ -41,7 +41,7 @@
                                     <a class="data-date"><?php echo $v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
+                            <tr><td class="data-<?php echo $v_status ?>"><b><?=__($v_status)?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">

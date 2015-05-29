@@ -32,7 +32,7 @@ $data = json_decode(implode('', $output), true);
 unset($output);
 
 // Parse user
-$v_password = "••••••••";
+$v_password = "";
 $v_email = $data[$v_username]['CONTACT'];
 $v_package = $data[$v_username]['PACKAGE'];
 $v_language = $data[$v_username]['LANGUAGE'];
@@ -75,7 +75,7 @@ unset($output);
 if (!empty($_POST['save'])) {
 
     // Change password
-    if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
         $v_password = tempnam("/tmp","vst");
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
@@ -84,7 +84,7 @@ if (!empty($_POST['save'])) {
         check_return_code($return_var,$output);
         unset($output);
         unlink($v_password);
-        $v_password = "••••••••";
+        $v_password = escapeshellarg($_POST['v_password']);
     }
 
     // Change package (admin only)

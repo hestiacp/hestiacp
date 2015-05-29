@@ -1,6 +1,6 @@
 <?php
 session_start();
-$TAB = 'SERVER';
+$TAB = 'UPDATES';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

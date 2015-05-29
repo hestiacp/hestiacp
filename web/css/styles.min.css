@@ -1080,6 +1080,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   display: inline-block;
   border-style: solid none solid solid;
 }
+.lang-ru .l-select {
+  width: 199px;
+}
+
 .l-select:after {
   pointer-events: none;
   background-image: url("/images/sprite.png");
@@ -1103,6 +1107,9 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-select select:focus {
   border: 0;
   outline: 0;
+}
+.lang-ru .l-select select {
+  min-width: 215px;
 }
 .l-select select option {
   padding: 7px;
@@ -1342,6 +1349,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__stat-col--right {
   float: left;
+  max-width: 152px;
 }
 
 .l-unit-toolbar__col--left {
@@ -1988,7 +1996,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 16px;
   overflow: hidden;
   padding-top: 6px;
-  width: 600px;
+  max-width: 600px;
 }
 
 .vst-ok a {
@@ -2361,6 +2369,10 @@ td.hint {
   text-align: left;
   vertical-align: top;
   width: 500px;
+}
+
+.login a.error {
+  color: #BE5ABF;
 }
 .vestacp {
   color: #505050;

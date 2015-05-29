@@ -35,7 +35,7 @@ unset($output);
 $v_username = $user;
 $v_database = $_GET['database'];
 $v_dbuser = $data[$v_database]['DBUSER'];
-$v_password = "••••••••";
+$v_password = "";
 $v_host = $data[$v_database]['HOST'];
 $v_type = $data[$v_database]['TYPE'];
 $v_charset = $data[$v_database]['CHARSET'];
@@ -63,7 +63,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Change database password
-    if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
         $v_password = tempnam("/tmp","vst");
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
@@ -72,7 +72,7 @@ if (!empty($_POST['save'])) {
         check_return_code($return_var,$output);    
         unset($output);
         unlink($v_password);
-        $v_password = "••••••••";
+        $v_password = escapeshellarg($_POST['v_password']);
     }
 
     // Set success message

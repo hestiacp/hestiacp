@@ -114,7 +114,7 @@
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backup Size')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=humanize_usage($data[$key]['SIZE'])?></b> <?=humanize_usage($data[$key]['SIZE'])?>
+                      <b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <?=humanize_usage_measure($data[$key]['SIZE'])?>
                     </div>
                   </div>
                 </td>

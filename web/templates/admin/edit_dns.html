@@ -29,7 +29,7 @@
           $back = "location.href='".$back."'";
         }
       ?>
-        <form id="vstobjects" name="v_edit_dns" method="post"  class="<?=__($v_status)?>">
+        <form id="vstobjects" name="v_edit_dns" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 
             <table class='data'>
@@ -69,7 +69,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Template');?>
+                                    <?php print __('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>

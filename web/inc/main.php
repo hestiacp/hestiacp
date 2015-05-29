@@ -181,6 +181,47 @@ function humanize_usage($usage) {
     return $usage;
 }
 
+function humanize_usage_size($usage) {
+    if ( $usage > 1024 ) {
+        $usage = $usage / 1024;
+        if ( $usage > 1024 ) {
+                $usage = $usage / 1024 ;
+                if ( $usage > 1024 ) {
+                    $usage = $usage / 1024 ;
+                    $usage = number_format($usage, 2);
+                } else {
+                    $usage = number_format($usage, 2);
+                }
+        } else {
+            $usage = number_format($usage, 2);
+        }
+    }
+
+    return $usage;
+}
+
+function humanize_usage_measure($usage) {
+    $measure = 'kb';
+    if ( $usage > 1024 ) {
+        $usage = $usage / 1024;
+        if ( $usage > 1024 ) {
+                $usage = $usage / 1024 ;
+                if ( $usage > 1024 ) {
+                    $measure = __('pb');
+                } else {
+                    $measure = __('tb');
+                }
+        } else {
+            $measure = __('gb');
+        }
+    } else {
+        $measure = __('mb');
+    }
+
+    return $measure;
+}
+
+
 function get_percentage($used,$total) {
     if (!isset($total)) $total =  0;
     if (!isset($used)) $used =  0;

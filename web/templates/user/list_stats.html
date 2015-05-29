@@ -94,7 +94,7 @@
                       <?=__('Bandwidth')?>
                     </div>
                     <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage($data[$key]['U_BANDWIDTH'])?>
+                      <b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?>
                     </div>
                   </div>
                   <div class="l-percent">
@@ -151,7 +151,7 @@
                   <div class="l-unit__stat-cols clearfix graph">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Disk')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage($data[$key]['U_DISK'])?></b> <?=humanize_usage($data[$key]['U_DISK'])?>
+                      <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
                     </div>
                   </div>
                   <div class="l-percent">
@@ -181,10 +181,10 @@
                 <td>
                   <div class="l-unit__stat-cols clearfix tiny">
                     <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Web')?>: <b><?=humanize_usage($data[$key]['U_DISK_WEB'])?></b> <?=humanize_usage($data[$key]['U_DISK_WEB'])?>
+                      <?=__('Web')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_WEB'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_WEB'])?>
                     </div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <?=__('Databases')?>: <b><?=humanize_usage($data[$key]['U_DISK_DB'])?></b> <?=humanize_usage($data[$key]['U_DISK_DB'])?>
+                      <?=__('Databases')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_DB'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_DB'])?>
                     </div>
                   </div>
                 </td>
@@ -210,10 +210,10 @@
                 <td>
                   <div class="l-unit__stat-cols clearfix tiny">
                     <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Mail')?>: <b><?=humanize_usage($data[$key]['U_DISK_MAIL'])?></b> <?=humanize_usage($data[$key]['U_DISK_MAIL'])?>
+                      <?=__('Mail')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_MAIL'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_MAIL'])?>
                     </div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <?=__('User Directories')?>: <b><?=humanize_usage($data[$key]['U_DISK_DIRS'])?></b> <?=humanize_usage($data[$key]['U_DISK_DIRS'])?>
+                      <?=__('User Directories')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_DIRS'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_DIRS'])?>
                     </div>
                   </div>
                 </td>

@@ -116,7 +116,7 @@
           <div class="l-unit__date">
             <?=strftime("%d %b %Y", strtotime($data[$key]['DATE']))?>
           </div>
-          <div class="l-unit__suspended"">suspended</div>
+          <div class="l-unit__suspended""><?=__('suspended')?></div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -133,7 +133,7 @@
                       <?=__('Disk')?>
                     </div>
                     <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage($data[$key]['U_DISK'])?></b> <?=humanize_usage($data[$key]['U_DISK'])?>
+                      <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
                     </div>
                   </div>
                   <div class="l-percent">

@@ -29,8 +29,8 @@
           <a href="/list/user/">
             <div class="l-stat__col-title"><?=__('USER')?></div>
             <ul>
-              <li><?=__('Disk')?>: <span><?=humanize_usage($panel[$user]['U_DISK'])?></span></li>
-              <li><?=__('Bandwidth');?>: <span><?=humanize_usage($panel[$user]['U_BANDWIDTH'])?></span></li>
+              <li><?=__('Disk')?>: <span><?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?></span></li>
+              <li><?=__('Bandwidth');?>: <span> <?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span></li>
             </ul>
           </a>
         </div>

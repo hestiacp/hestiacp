@@ -174,7 +174,7 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
 fi
 
 # Restarting firewall
-if [ ! -z "$FIREWALL_SYSTEM" ];
+if [ ! -z "$FIREWALL_SYSTEM" ]; then
     $BIN/v-update-firewall
 fi
 

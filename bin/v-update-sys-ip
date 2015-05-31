@@ -75,7 +75,7 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
         fi
 
         # Restarting firewall
-        if [ ! -z "$FIREWALL_SYSTEM" ];
+        if [ ! -z "$FIREWALL_SYSTEM" ]; then
             $BIN/v-update-firewall
         fi
 

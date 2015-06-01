@@ -31,7 +31,7 @@ get_srv_state() {
     else
         pids=$(pidof -x $proc_name |tr ' ' '|')
     fi
-    if [ -z "$pids" ]; then
+    if [ -z "$pids" ] && [ "$proc_name" != 'nginx' ] ; then
         #fallback to pgrep
         pids=$(pgrep $proc_name |tr '\n' '|')
     fi

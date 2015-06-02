@@ -25,12 +25,6 @@ source $VESTA/conf/vesta.conf
 
 check_args '2' "$#" 'KEY VALUE'
 validate_format 'key'
-check_ckey=$(grep "^$key='" $VESTA/conf/vesta.conf)
-if [ -z "$check_ckey" ]; then
-    echo "Error: key $key not found"
-    log_event "$E_INVALID" "$EVENT"
-    exit $E_INVALID
-fi
 
 
 #----------------------------------------------------------#
@@ -38,7 +32,17 @@ fi
 #----------------------------------------------------------#
 
 # Updating conf
-sed -i "s/$key=.*/$key='$value'/g" $VESTA/conf/vesta.conf
+check_ckey=$(grep "^$key='" $VESTA/conf/vesta.conf)
+if [ -z "$check_ckey" ]; then
+    echo "$key='$value'" >> $VESTA/conf/vesta.conf
+else
+    sed -i "s|$key=.*|$key='$value'|g" $VESTA/conf/vesta.conf
+fi
+
+if [ "$key" = "BACKUP" ] && [ "$value" != '/backup' ]; then
+    rm /backup
+    ln -s $value /backup
+fi
 
 
 #----------------------------------------------------------#

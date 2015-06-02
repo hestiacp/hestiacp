@@ -40,6 +40,15 @@ exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
 $languages = json_decode(implode('', $output), true);
 unset($output);
 
+// List dns cluster hosts
+exec (VESTA_CMD."v-list-remote-dns-hosts json", $output, $return_var);
+$dns_cluster = json_decode(implode('', $output), true);
+unset($output);
+foreach ($dns_cluster as $key => $value) {
+    $v_dns_cluster='yes';
+}
+
+
 // List backup settings
 $v_backup_dir = "/backup";
 if (!empty($_SESSION['BACKUP'])) $v_backup_dir = $_SESSION['BACKUP'];
@@ -56,7 +65,7 @@ foreach ($backup_types as $backup_type) {
         $v_backup_host = $v_remote_backup[$backup_type]['HOST'];
         $v_backup_type = $v_remote_backup[$backup_type]['TYPE'];
         $v_backup_username = $v_remote_backup[$backup_type]['USERNAME'];
-        $v_backup_password = "••••••••";
+        $v_backup_password = "";
         $v_backup_port = $v_remote_backup[$backup_type]['PORT'];
         $v_backup_bpath = $v_remote_backup[$backup_type]['BPATH'];
     }
@@ -64,6 +73,12 @@ foreach ($backup_types as $backup_type) {
 
 // Check POST request
 if (!empty($_POST['save'])) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
 
     // Change hostname
     if ((!empty($_POST['v_hostname'])) && ($v_hostname != $_POST['v_hostname'])) {
@@ -131,9 +146,131 @@ if (!empty($_POST['save'])) {
     // Disable local backup
     if (empty($_SESSION['error_msg'])) {
         if (($_POST['v_backup'] == 'no') && ($v_backup == 'yes' )) {
-            exec (VESTA_CMD."v-delete-backup-quota", $output, $return_var);
+            exec (VESTA_CMD."v-delete-backup-host local", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
+            if (empty($_SESSION['error_msg'])) $v_backup = 'no';
+            $v_backup_adv = 'yes';
+        }
+    }
+
+    // Enable local backups
+    if (empty($_SESSION['error_msg'])) {
+        if (($_POST['v_backup'] == 'yes') && ($v_backup != 'yes' )) {
+            exec (VESTA_CMD."v-add-backup-host local", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_backup = 'yes';
+            $v_backup_adv = 'yes';
+        }
+    }
+
+
+    // Change backup gzip level
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_backup_gzip'] != $v_backup_gzip ) {
+            exec (VESTA_CMD."v-change-sys-config-value BACKUP_GZIP ".escapeshellarg($_POST['v_backup_gzip']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_backup_gzip = $_POST['v_backup_gzip'];
+            $v_backup_adv = 'yes';
+        }
+    }
+
+    // Change backup path
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_backup_dir'] != $v_backup_dir ) {
+            exec (VESTA_CMD."v-change-sys-config-value BACKUP ".escapeshellarg($_POST['v_backup_dir']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_backup_dir = $_POST['v_backup_dir'];
+            $v_backup_adv = 'yes';
+        }
+    }
+
+    // Add remote backup host
+    if (empty($_SESSION['error_msg'])) {
+        if ((!empty($_POST['v_backup_host'])) && (empty($v_backup_host))) {
+            $v_backup_host = escapeshellarg($_POST['v_backup_host']);
+            $v_backup_type = escapeshellarg($_POST['v_backup_type']);
+            $v_backup_username = escapeshellarg($_POST['v_backup_username']);
+            $v_backup_password = escapeshellarg($_POST['v_backup_password']);
+            $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
+            exec (VESTA_CMD."v-add-backup-host '". $v_backup_type ."' '". $v_backup_host ."' '". $v_backup_username ."' '". $v_backup_password ."' '". $v_backup_bpath ."'", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_backup_host = $_POST['v_backup_host'];
+            if (empty($_SESSION['error_msg'])) $v_backup_type = $_POST['v_backup_type'];
+            if (empty($_SESSION['error_msg'])) $v_backup_username = $_POST['v_backup_username'];
+            if (empty($_SESSION['error_msg'])) $v_backup_password = $_POST['v_backup_password'];
+            if (empty($_SESSION['error_msg'])) $v_backup_bpath = $_POST['v_backup_bpath'];
+            $v_backup_new = 'yes';
+            $v_backup_adv = 'yes';
+            $v_backup_remote_adv = 'yes';
+        }
+    }
+
+    // Change remote backup host type
+    if (empty($_SESSION['error_msg'])) {
+        if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] != $v_backup_type)) {
+            exec (VESTA_CMD."v-delete-backup-host '". $v_backup_type ."'", $output, $return_var);
+            unset($output);
+
+            $v_backup_host = escapeshellarg($_POST['v_backup_host']);
+            $v_backup_type = escapeshellarg($_POST['v_backup_type']);
+            $v_backup_username = escapeshellarg($_POST['v_backup_username']);
+            $v_backup_password = escapeshellarg($_POST['v_backup_password']);
+            $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
+            exec (VESTA_CMD."v-add-backup-host '". $v_backup_type ."' '". $v_backup_host ."' '". $v_backup_username ."' '". $v_backup_password ."' '". $v_backup_bpath ."'", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_backup_host = $_POST['v_backup_host'];
+            if (empty($_SESSION['error_msg'])) $v_backup_type = $_POST['v_backup_type'];
+            if (empty($_SESSION['error_msg'])) $v_backup_username = $_POST['v_backup_username'];
+            if (empty($_SESSION['error_msg'])) $v_backup_password = $_POST['v_backup_password'];
+            if (empty($_SESSION['error_msg'])) $v_backup_bpath = $_POST['v_backup_bpath'];
+            $v_backup_adv = 'yes';
+            $v_backup_remote_adv = 'yes';
+        }
+    }
+
+    // Change remote backup host
+    if (empty($_SESSION['error_msg'])) {
+        if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] == $v_backup_type) && (!isset($v_backup_new))) {
+            if (($_POST['v_backup_host'] != $v_backup_host) || ($_POST['v_backup_username'] != $v_backup_username) || ($_POST['v_backup_password'] || $v_backup_password) || ($_POST['v_backup_bpath'] == $v_backup_bpath)){
+                $v_backup_host = escapeshellarg($_POST['v_backup_host']);
+                $v_backup_type = escapeshellarg($_POST['v_backup_type']);
+                $v_backup_username = escapeshellarg($_POST['v_backup_username']);
+                $v_backup_password = escapeshellarg($_POST['v_backup_password']);
+                $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
+                exec (VESTA_CMD."v-add-backup-host '". $v_backup_type ."' '". $v_backup_host ."' '". $v_backup_username ."' '". $v_backup_password ."' '". $v_backup_bpath ."'", $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) $v_backup_host = $_POST['v_backup_host'];
+                if (empty($_SESSION['error_msg'])) $v_backup_type = $_POST['v_backup_type'];
+                if (empty($_SESSION['error_msg'])) $v_backup_username = $_POST['v_backup_username'];
+                if (empty($_SESSION['error_msg'])) $v_backup_password = $_POST['v_backup_password'];
+                if (empty($_SESSION['error_msg'])) $v_backup_bpath = $_POST['v_backup_bpath'];
+                $v_backup_adv = 'yes';
+                $v_backup_remote_adv = 'yes';
+            }
+        }
+    }
+
+
+    // Delete remote backup host
+    if (empty($_SESSION['error_msg'])) {
+        if ((empty($_POST['v_backup_host'])) && (!empty($v_backup_host))) {
+            exec (VESTA_CMD."v-delete-backup-host '". $v_backup_type ."'", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_backup_host = '';
+            if (empty($_SESSION['error_msg'])) $v_backup_type = '';
+            if (empty($_SESSION['error_msg'])) $v_backup_username = '';
+            if (empty($_SESSION['error_msg'])) $v_backup_password = '';
+            if (empty($_SESSION['error_msg'])) $v_backup_bpath = '';
+            $v_backup_adv = '';
+            $v_backup_remote_adv = '';
         }
     }
 
@@ -141,6 +278,14 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = __('Changes has been saved.');
     }
+}
+
+// Check system configuration
+exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
+$sys_arr = $data['config'];
+foreach ($sys_arr as $key => $value) {
+    $_SESSION[$key] = $value;
 }
 
 // Header

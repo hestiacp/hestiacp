@@ -349,6 +349,7 @@ $LANG['it'] = array(
     'ranges are acceptable' => 'gamme sono ammessi',
     'CIDR format is supported' => 'formato CIDR e supportato',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 account',
     '%s accounts'  => '%s account',
     '1 domain'  => '1 dominio',

@@ -350,6 +350,7 @@ $LANG['hu'] = array(
     'ranges are acceptable' => 'tartományok megengedett',
     'CIDR format is supported' => 'CIDR formátum támogatott',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 fiók',
     '%s accounts'  => '%s fiók',
     '1 domain'  => '1 domain',

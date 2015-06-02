@@ -348,6 +348,7 @@ $LANG['tr'] = array(
     'ranges are acceptable' => 'kabul edilebilir aralıklar',
     'CIDR format is supported' => 'CIDR formatı destekleniyor',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 hesap',
     '%s accounts'  => '%s hesap',
     '1 domain'  => '1 alan adı',

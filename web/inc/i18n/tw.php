@@ -348,6 +348,7 @@ $LANG['tw'] = array(
     'ranges are acceptable' => '可使用範圍',
     'CIDR format is supported' => 'CIDR 格式是支援的',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 帳號',
     '%s accounts'  => '%s 帳號',
     '1 domain'  => '1 網域',

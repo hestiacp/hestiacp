@@ -350,6 +350,7 @@ $LANG['ru'] = array(
     'ranges are acceptable' => 'можно использовать диапазоны',
     'CIDR format is supported' => 'поддерживается формат CIDR',
 
+    'unlimited'  => 'неограничено',
     '1 account' => ' пользователей на странице: 1',
     '%s accounts' => 'пользователей на странице: %s',
     '1 domain' => 'доменов на странице: 1',

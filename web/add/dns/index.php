@@ -10,6 +10,12 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check POST request for dns domain
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
     if (empty($_POST['v_ip'])) $errors[] = __('ip');
@@ -70,7 +76,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('DNS_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
+        $_SESSION['ok_msg'] = __('DNS_DOMAIN_CREATED_OK',htmlentities($_POST[v_domain]),htmlentities($_POST[v_domain]));
         unset($v_domain);
     }
 }
@@ -78,6 +84,12 @@ if (!empty($_POST['ok'])) {
 
 // Check POST request for dns record
 if (!empty($_POST['ok_rec'])) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
 
     // Check empty fields
     if (empty($_POST['v_domain'])) $errors[] = 'domain';
@@ -112,7 +124,7 @@ if (!empty($_POST['ok_rec'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('DNS_RECORD_CREATED_OK',$_POST[v_rec],$_POST[v_domain]);
+        $_SESSION['ok_msg'] = __('DNS_RECORD_CREATED_OK',htmlentities($_POST[v_rec]),htmlentities($_POST[v_domain]));
         unset($v_domain);
         unset($v_rec);
         unset($v_val);

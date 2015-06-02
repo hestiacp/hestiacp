@@ -11,6 +11,12 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check POST request for mail domain
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
     if (!empty($errors[0])) {
@@ -59,7 +65,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('MAIL_DOMAIN_CREATED_OK',$_POST['v_domain'],$_POST['v_domain']);
+        $_SESSION['ok_msg'] = __('MAIL_DOMAIN_CREATED_OK',htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
         unset($v_domain);
     }
 }
@@ -67,6 +73,12 @@ if (!empty($_POST['ok'])) {
 
 // Check POST request for mail account
 if (!empty($_POST['ok_acc'])) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
 
     // Check empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
@@ -156,7 +168,7 @@ if (!empty($_POST['ok_acc'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('MAIL_ACCOUNT_CREATED_OK',strtolower($_POST['v_account']),$_POST[v_domain],strtolower($_POST['v_account']),$_POST[v_domain]);
+        $_SESSION['ok_msg'] = __('MAIL_ACCOUNT_CREATED_OK',htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]));
         $_SESSION['ok_msg'] .= " / <a href=".$webmail." target='_blank'>" . __('open webmail') . "</a>";
         unset($v_account);
         unset($v_password);

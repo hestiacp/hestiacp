@@ -13,10 +13,15 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
+
 }
 
 if (isset($_SESSION['user'])) {
     require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
+    if(!isset($_SESSION['token'])){
+        $token = uniqid(mt_rand(), true);
+        $_SESSION['token'] = $token;
+    }
 }
 
 
@@ -277,7 +282,7 @@ function display_error_block() {
                     });
                 </script>
                 <div id="dialog-message" title="">
-                    <p>'. $_SESSION['error_msg'] .'</p>
+                    <p>'. htmlentities($_SESSION['error_msg']) .'</p>
                 </div>
             </div>'."\n";
         unset($_SESSION['error_msg']);

@@ -91,6 +91,12 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account'])))  {
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_domain = escapeshellarg($_POST['v_domain']);
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Delete antispam
     if (($v_antispam == 'yes') && (empty($_POST['v_antispam'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-mail-domain-antispam ".$v_username." ".$v_domain, $output, $return_var);
@@ -173,6 +179,13 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
 // Check POST request for mail account
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['account']))) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     $v_domain = escapeshellarg($_POST['v_domain']);
     $v_account = escapeshellarg($_POST['v_account']);
 

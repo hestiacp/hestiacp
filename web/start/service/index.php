@@ -18,5 +18,5 @@ if ($_SESSION['user'] == 'admin') {
     unset($output);
 }
 
-header("Location: /list/services/");
+header("Location: /list/server/");
 exit;

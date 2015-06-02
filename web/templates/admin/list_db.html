@@ -5,7 +5,36 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="l-sort-toolbar__search-box">
+            <?
+              $mysql = 0;
+              $pgsql = 0;
+
+
+              list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+
+              foreach ($data as $key => $value) {
+                if ($data[$key]['TYPE'] == 'mysql'){
+                  $mysql = 1;
+
+                  $db_admin_link = "http://".$http_host."/phpmyadmin/";
+                  if (!empty($_SESSION['DB_PMA_URL']))
+                    $db_admin_link = $_SESSION['DB_PMA_URL'];
+                }
+                if ($data[$key]['TYPE'] == 'pgsql'){
+                  $pgsql = 1;
+                  $db_admin_link = "http://".$http_host."/phppgadmin/";
+                  if (!empty($_SESSION['DB_PGA_URL']))
+                    $db_admin_link = $_SESSION['DB_PGA_URL'];
+                }
+              }
+              if($mysql){
+                echo '<td class="step-right"><a class="vst" href="'.$db_admin_link.'">phpMyAdmin</td>';
+              }
+              if($pgsql){
+                echo '<td class="step-right"><a class="vst" href="'.$db_admin_link.'">phpPgAdmin</td>';
+              }
+            ?>
+              <td class="l-sort-toolbar__search-box step-left">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
@@ -83,7 +112,6 @@
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__edit"><a href="/edit/db/?database=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__db"><a href="<?=$db_admin_link?>" target="_blank"><?=__('%s',$db_admin)?> <i></i></a></div>
               <div class="actions-panel__col actions-panel__suspend">
                 <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
                   <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
@@ -140,7 +168,7 @@
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('User')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('User')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <b><?=__($data[$key]['DBUSER'])?></b>
                     </div>
@@ -148,7 +176,7 @@
                 </td>
                 <td>
                     <div class="l-unit__stat-cols clearfix last">
-                      <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Host')?>:</div>
+                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Host')?>:</div>
                       <div class="l-unit__stat-col l-unit__stat-col--right">
                         <b><?=$data[$key]['HOST']?></b>
                       </div>
@@ -159,7 +187,7 @@
                 <td></td>
                 <td>
                     <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Charset')?>:</div>
+                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Charset')?>:</div>
                       <div class="l-unit__stat-col l-unit__stat-col--right">
                         <b><?=$data[$key]['CHARSET']?></b>
                       </div>
@@ -167,7 +195,7 @@
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Type')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Type')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <b><?=$data[$key]['TYPE']?></b>
                     </div>

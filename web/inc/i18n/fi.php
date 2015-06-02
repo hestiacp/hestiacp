@@ -352,6 +352,7 @@ $LANG['fi'] = array(
     'ranges are acceptable' => 'vaihteluvälit ovat hyväksyttäviä',
     'CIDR format is supported' => 'CIDR muotoa tuetaan',
 
+    'unlimited'  => 'unlimited',
     '1 account' => '1 tili',
     '%s accounts' => '%s tiliä',
     '1 domain' => '1 domain',

@@ -351,6 +351,7 @@ $LANG['id'] = array(
     'ranges are acceptable' => 'rentang diperbolehkan',
     'CIDR format is supported' => 'Format CIDR didukung',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 pengguna',
     '%s accounts'  => '%s pengguna',
     '1 domain'  => '1 domain',

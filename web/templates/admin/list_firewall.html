@@ -5,7 +5,12 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="l-sort-toolbar__search-box">
+              <td class="step-right">
+                <? if(!empty($_SESSION['FIREWALL_EXTENSION'])) {
+                     echo '<a class="vst" href="/list/firewall/banlist/"> '.__('list fail2ban').'</a>';
+                   } ?>
+              </td>
+              <td class="l-sort-toolbar__search-box step-left">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
@@ -26,11 +31,6 @@
                   </select>
                 </div>
                 <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td>
-              <td>
-                <? if(!empty($_SESSION['FIREWALL_EXTENSION'])) {
-                     echo '[<a class="vst" href="/list/firewall/banlist/"> '.__('list fail2ban').'</a>]';
-                   } ?>
               </td>
             </tr>
           </table>

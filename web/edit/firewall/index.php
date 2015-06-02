@@ -45,6 +45,13 @@ if ( $v_suspended == 'yes' ) {
 
 // Check POST request
 if (!empty($_POST['save'])) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     $v_rule = escapeshellarg($_GET['rule']);
     $v_action = escapeshellarg($_POST['v_action']);
     $v_protocol = escapeshellarg($_POST['v_protocol']);

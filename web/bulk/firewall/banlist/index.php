@@ -7,6 +7,12 @@ session_start();
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// Check token
+if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+    header('location: /login/');
+    exit();
+}
+
 // Check user
 if ($_SESSION['user'] != 'admin') {
     header("Location: /list/user");

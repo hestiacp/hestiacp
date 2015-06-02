@@ -4,7 +4,15 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="l-sort-toolbar__search-box">
+              <td class="step-right">
+                <?
+                  list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+                  $webmail = "http://".$http_host."/webmail/";
+                  if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
+                ?>
+                <a class="vst" href="<?=$webmail?>" target="_blank"><?=__('open webmail')?> <i></i></a>
+              </td>
+              <td class="l-sort-toolbar__search-box step-left">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
@@ -141,7 +149,7 @@
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Quota')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['QUOTA']?></b>
+                      <b><? echo __($data[$key]['QUOTA']) ?></b>
                     </div>
                   </div>
                 </td>

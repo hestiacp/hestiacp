@@ -4,6 +4,16 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
+              <td class="step-right">
+              <?
+                if($panel[$user]['CRON_REPORTS'] == 'yes') {
+                  echo '<a class="vst" href="/delete/cron/reports/?token='.$_SESSION['token'].'">'.__('turn off notifications').'</a>';
+                } else {
+                  echo '<a class="vst" href="/add/cron/reports/?token='.$_SESSION['token'].'">'.__('turn on notifications').'</a>';
+                }
+              ?>
+              </td>
+
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -32,16 +42,6 @@
                   </select>
                 </div>
                 <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td>
-              <td>
-              &nbsp;
-              <?
-                if($panel[$user]['CRON_REPORTS'] == 'yes') {
-                  echo '<a class="vst" href="/delete/cron/reports/?token='.$_SESSION['token'].'">'.__('turn off notifications').'</a>';
-                } else {
-                  echo '<a class="vst" href="/add/cron/reports/?token='.$_SESSION['token'].'">'.__('turn on notifications').'</a>';
-                }
-              ?>
               </td>
             </tr>
           </table>

@@ -581,6 +581,7 @@ body {
 
 .body-login {
   height: auto;
+  padding-top: 10%;
   /*background: url(/images/edit_bg.png);*/
   background-color: #eee;
 }
@@ -1051,17 +1052,17 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 .l-sort-toolbar .vst {
   padding: 0 12px;
-  color: #999;
+  color: #777;
   text-transform: uppercase;
   font-size: 11px;
   font-weight: bold;
   line-height: 30px;
 }
 .l-sort-toolbar .vst:hover {
-  color: #f79b44;
+  color: #ff6701;
 }
 .l-sort-toolbar .vst:active {
-  color: #f72b44;
+  color: #55C9C0;
 }
 .l-sort-toolbar .vst.selected {
   color: #ff6701;
@@ -1223,7 +1224,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-sort-toolbar .step-left {
-  padding-left: 45px;
+  padding-left: 40px;
 }
 .step-right {
   padding-right: 40px;
@@ -1391,6 +1392,9 @@ div.l-content > div.l-separator:nth-of-type(4) {
   content: '';
   width: 33px;
   height: 33px;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 .actions-panel__col a {
   line-height: 33px;
@@ -1400,9 +1404,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-left: 13px;
   display: block;
   cursor: pointer;
+  position: relative;
+  padding-right: 36px;
 }
 .lang-ru .actions-panel__col a {
   font-size: 11px;
+  line-height: 31px;
+  padding-top: 2px;
 }
 .lang-tw .actions-panel__col a {
   font-size: 15px;
@@ -2104,6 +2112,11 @@ label {
   text-shadow: 0 0 0 #555;
   color: transparent !important;
 }
+
+.vst-list.long-2 {
+  width: 486px;
+  background-position: 502px -604px;
+}
 .vst-list option {
   padding: 6px 1px 6px 15px;
 }
@@ -2364,7 +2377,7 @@ td.hint {
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
   font-family: Arial,Helvetica,sans-serif;
-  margin: 10% 0 0;
+  margin: 0;
   padding: 0;
   text-align: left;
   vertical-align: top;

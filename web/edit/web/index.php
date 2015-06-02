@@ -100,6 +100,12 @@ unset($output);
 if (!empty($_POST['save'])) {
     $v_domain = escapeshellarg($_POST['v_domain']);
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Change web domain IP
     if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
         $v_ip = escapeshellarg($_POST['v_ip']);

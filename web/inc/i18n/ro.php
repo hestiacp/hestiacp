@@ -350,6 +350,7 @@ $LANG['ro'] = array(
     'ranges are acceptable' => 'intervale sunt acceptabile',
     'CIDR format is supported' => 'format CIDR este suportat',
 
+    'unlimited'  => 'unlimited',
     '1 account' => '1 utilizator',
     '%s accounts' => '%s utilizatori',
     '1 domain' => '1 domeniu',

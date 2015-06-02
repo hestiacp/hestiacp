@@ -107,7 +107,7 @@
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__name">
-            <?=$key?> <? if(!empty($data[$key]['SRC'])) echo "<span>⇢ ".$data[$key]['SRC']."</span>";?>
+            <?=$key?> <? if(!empty($data[$key]['SRC'])) echo "<span>⇢ ".$data[$key]['SRC']."</span>&nbsp; &nbsp; ";  if($data[$key]['RECORDS']) echo '<span>/ '.$data[$key]['RECORDS'].'</span>';?>
           </div>
           <div class="l-unit__ip">
             <?=str_replace('.', '&nbsp;.&nbsp;', $data[$key]['IP'])?>

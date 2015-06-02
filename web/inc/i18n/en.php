@@ -348,6 +348,7 @@ $LANG['en'] = array(
     'ranges are acceptable' => 'ranges are acceptable',
     'CIDR format is supported' => 'CIDR format is supported',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 account',
     '%s accounts'  => '%s accounts',
     '1 domain'  => '1 domain',

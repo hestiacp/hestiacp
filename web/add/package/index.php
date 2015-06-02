@@ -16,10 +16,16 @@ if ($_SESSION['user'] != 'admin') {
 // Check POST request
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_package'])) $errors[] = __('package');
     if (empty($_POST['v_web_template'])) $errors[] = __('web template');
-    if (!empty($_SESSION['WEB_SYSTEM'])) {
+    if (!empty($_SESSION['WEB_BACKEND'])) {
         if (empty($_POST['v_backend_template'])) $errors[] = __('backend template');
     }
     if (!empty($_SESSION['PROXY_SYSTEM'])) {
@@ -132,7 +138,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('PACKAGE_CREATED_OK',$_POST['v_package'],$_POST['v_package']);
+        $_SESSION['ok_msg'] = __('PACKAGE_CREATED_OK',htmlentities($_POST['v_package']),htmlentities($_POST['v_package']));
         unset($v_package);
     }
 

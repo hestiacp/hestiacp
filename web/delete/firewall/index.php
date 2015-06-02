@@ -13,6 +13,12 @@ if ($_SESSION['user'] != 'admin') {
     exit;
 }
 
+// Check token
+if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
+    header('location: /login/');
+    exit();
+}
+
 if (!empty($_GET['rule'])) {
     $v_rule = escapeshellarg($_GET['rule']);
     exec (VESTA_CMD."v-delete-firewall-rule ".$v_rule, $output, $return_var);

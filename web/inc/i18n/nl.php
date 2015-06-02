@@ -349,6 +349,7 @@ $LANG['nl'] = array(
     'ranges are acceptable' => 'marges zijn toegestaan',
     'CIDR format is supported' => 'CIDR-indeling wordt ondersteund',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 account',
     '%s accounts'  => '%s accounts',
     '1 domain'  => '1 domein',

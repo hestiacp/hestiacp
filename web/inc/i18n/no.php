@@ -349,6 +349,7 @@ $LANG['no'] = array(
     'ranges are acceptable' => 'områder er tillatt',
     'CIDR format is supported' => 'CIDR-format støttes',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 konto',
     '%s accounts'  => '%s kontoer',
     '1 domain'  => '1 domene',

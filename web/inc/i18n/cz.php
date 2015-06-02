@@ -349,6 +349,7 @@ $LANG['cz'] = array(
     'ranges are acceptable' => 'rozsahy jsou přijatelné',
     'CIDR format is supported' => 'Formát CIDR je podporován',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 účet',
     '%s accounts'  => '%s účtů',
     '1 domain'  => '1 doména',

@@ -74,6 +74,12 @@ unset($output);
 // Check POST request
 if (!empty($_POST['save'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Change password
     if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
         $v_password = tempnam("/tmp","vst");

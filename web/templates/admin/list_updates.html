@@ -3,7 +3,14 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="l-sort-toolbar__search-box">
+              <td class="step-right">
+                <? if($autoupdate == 'Enabled') {
+                     echo '<a class="vst" href="/delete/cron/autoupdate/&token='.$_SESSION['token'].'">'.__('disable autoupdate').'</a>';
+                   } else {
+                     echo '<a class="vst" href="/add/cron/autoupdate/&token='.$_SESSION['token'].'">'.__('enable autoupdate').'</a>';
+                   } ?>
+              </td>
+              <td class="l-sort-toolbar__search-box step-left">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
@@ -27,13 +34,6 @@
                   </select>
                 </div>
                 <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td>
-              <td class="step-left">
-                <? if($autoupdate == 'Enabled') {
-                     echo '<a class="vst" href="/delete/cron/autoupdate/&token=<?=$_SESSION['token']?>"> '.__('disable autoupdate').'</a>';
-                   } else {
-                     echo '<a class="vst" href="/add/cron/autoupdate/&token=<?=$_SESSION['token']?>">'.__('enable autoupdate').'</a>';
-                   } ?>
               </td>
             </tr>
           </table>

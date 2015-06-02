@@ -348,6 +348,7 @@ $LANG['cn'] = array(
     'ranges are acceptable' => '範圍是可以接受的',
     'CIDR format is supported' => '支持CIDR格式',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 账户',
     '%s accounts'  => '%s 账户',
     '1 domain'  => '1 域名',

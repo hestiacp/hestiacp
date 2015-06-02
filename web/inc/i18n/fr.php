@@ -350,6 +350,7 @@ $LANG['fr'] = array(
     'ranges are acceptable' => 'plages sont acceptables',
     'CIDR format is supported' => 'Le format CIDR est pris en charge',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 compte',
     '%s accounts'  => '%s comptes',
     '1 domain'  => '1 domaine',

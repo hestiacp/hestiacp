@@ -710,14 +710,15 @@ var App = {
     Core: {},
     // CONSTANT VALUES
     Constants: {
-        UNLIM_VALUE: 'unlimited',
-        UNLIM_TRANSLATED_VALUE: 'unlimited'
+        UNLIM_VALUE: 'unlimited', // overritten in i18n.js.php
+        UNLIM_TRANSLATED_VALUE: 'unlimited' // overritten in i18n.js.php
     }, 
     // Actions. More widly used funcs
     Actions: {
         DB:      {},
         WEB:     {},
-        PACKAGE: {}
+        PACKAGE: {},
+        MAIL_ACC:{}
     },
     // Utilities
     Helpers: {},
@@ -732,7 +733,8 @@ var App = {
     Listeners: {
         DB:      {},
         WEB:     {},
-        PACKAGE: {}
+        PACKAGE: {},
+        MAIL_ACC:{}
     },
     View:{
         HTML: {

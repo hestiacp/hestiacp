@@ -4,6 +4,9 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
+              <td class="step-right">
+                <a class="vst" href="/list/backup/exclusions/"><?=__('backup exclusions')?></a>
+              </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -25,9 +28,6 @@
                   </select>
                 </div>
                 <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td>
-              <td>
-                <a class="vst" href="/list/backup/exclusions/"><?=__('backup exclusions')?></a>
               </td>
             </tr>
           </table>

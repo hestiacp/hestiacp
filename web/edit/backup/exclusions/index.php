@@ -66,6 +66,13 @@ foreach ($data['USER'] as $key => $value) {
 
 // Check POST request
 if (!empty($_POST['save'])) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     $v_web = $_POST['v_web'];
     $v_web_tmp = str_replace("\r\n", ",", $_POST['v_web']);
     $v_web_tmp = rtrim($v_web_tmp, ",");

@@ -13,6 +13,12 @@ if ($_SESSION['user'] != 'admin') {
     exit;
 }
 
+// Check token
+if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
+    header('location: /login/');
+    exit();
+}
+
 if ((!empty($_GET['ip'])) && (!empty($_GET['chain']))) {
     $v_ip = escapeshellarg($_GET['ip']);
     $v_chain = escapeshellarg($_GET['chain']);

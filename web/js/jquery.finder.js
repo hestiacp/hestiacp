@@ -175,7 +175,7 @@
                         var c = f.get.clicks(p,o,$(this));
                         
                         var ref = $(e.target);
-                        if (ref.parents('.l-unit').hasClass('selected') && $('.l-unit.selected').length == 1) {
+                        if (ref.parents('.l-unit').hasClass('selected')/* && $('.l-unit.selected').length == 1*/) {
                             ref.parents('.l-unit').find('.ch-toggle').attr('checked', false);
                             ref.parents('.l-unit').removeClass('selected');
                             ref.parents('.l-unit').removeClass('selected-current');
@@ -481,7 +481,7 @@
         },
         singleClick: function(p,c,o) {
             var s = f.get.siblings(p,o);
-            f.h.off(s, o);
+            //f.h.off(s, o);
             f.h.on(c.current.v, o);
             f.set.clicks(c.current.v, null, null, p, o);
         },

@@ -80,6 +80,12 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id'])))  {
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['record_id']))) {
     $v_domain = escapeshellarg($_POST['v_domain']);
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Change domain IP
     if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
         $v_ip = escapeshellarg($_POST['v_ip']);
@@ -139,6 +145,13 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
 
 // Check POST request for dns record
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['record_id']))) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Protect input
     $v_domain = escapeshellarg($_POST['v_domain']);
     $v_record_id = escapeshellarg($_POST['v_record_id']);

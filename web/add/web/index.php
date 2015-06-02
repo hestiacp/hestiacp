@@ -10,6 +10,12 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check POST request
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check for empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
     if (empty($_POST['v_ip'])) $errors[] = __('ip');
@@ -314,7 +320,7 @@ if (!empty($_POST['ok'])) {
         }
 
         if (!empty($_SESSION['error_msg']) && $domain_added) {
-            $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
+            $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($_POST[v_domain]),htmlentities($_POST[v_domain]));
             $_SESSION['flash_error_msg'] = $_SESSION['error_msg'];
             $url = '/edit/web/?domain='.strtolower(preg_replace("/^www\./i", "", $_POST['v_domain']));
             header('Location: ' . $url);
@@ -324,7 +330,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
+        $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($_POST[v_domain]),htmlentities($_POST[v_domain]));
         unset($v_domain);
         unset($v_aliases);
         unset($v_ssl);

@@ -4,7 +4,7 @@
           <span class="title edit"><b><?=__('Editing Mail Account')?></b></span>
             <?php
               if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
               } else {
                 if (!empty($_SESSION['ok_msg'])) {
                   echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
@@ -97,6 +97,7 @@
                         <tr>
                             <td>
                                 <input type="text" size="20" class="vst-input" name="v_quota" <?php if (!empty($v_quota)) {echo "value=".htmlentities($v_quota);} else { echo "value=0";}; ?>>
+                                <img class="unlim-trigger" id="unlim-quota" src="/images/unlim.png" />
                             </td>
                         </tr>
                         <tr>
@@ -161,3 +162,4 @@
         </table>
     </form>
 </div>
+<script type="text/javascript" src="/js/pages/edit.mail_acc.js"></script>

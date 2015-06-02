@@ -349,6 +349,7 @@ $LANG['el'] = array(
     'ranges are acceptable' => 'εύρος είναι αποδεκτό',
     'CIDR format is supported' => 'To format CIDR υποστηρίζεται',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 λογαριασμός',
     '%s accounts'  => '%s λογαριασμοί',
     '1 domain'  => '1 domain',

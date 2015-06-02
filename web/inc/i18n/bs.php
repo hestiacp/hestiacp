@@ -343,6 +343,7 @@ $LANG['bs'] = array(
     'ranges are acceptable' => 'rasponi su prihvatljivi',
     'CIDR format is supported' => 'CIDR format je podržan',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 račun',
     '%s accounts'  => '%s računa',
     '1 domain'  => '1 domena',

@@ -16,6 +16,12 @@ if ($_SESSION['user'] != 'admin') {
 // Check POST request
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_ip'])) $errors[] = __('ip address');
     if (empty($_POST['v_netmask'])) $errors[] = __('netmask');
@@ -61,7 +67,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('IP_CREATED_OK',$_POST['v_ip'],$_POST['v_ip']);
+        $_SESSION['ok_msg'] = __('IP_CREATED_OK',htmlentities($_POST['v_ip']),htmlentities($_POST['v_ip']));
         unset($v_ip);
         unset($v_netmask);
         unset($v_name);

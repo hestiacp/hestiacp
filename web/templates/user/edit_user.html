@@ -4,10 +4,10 @@
           <span class="title edit"><b><?=__('Editing User')?></b></span>
             <?php
               if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
               } else {
                 if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                  echo "<span class=\"vst-ok\"> → ".htmlentities($_SESSION['ok_msg'])."</span>";
                 }
               }
             ?>

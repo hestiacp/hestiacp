@@ -346,6 +346,7 @@ $LANG['ar'] = array(
     'ranges are acceptable' => 'نطاقات مقبولة',
     'CDIR format is supported' => 'ويدعم صيغة CIDR',
 
+    'unlimited'  => 'unlimited',
     '1 account'  => '1 حساب',
     '%s accounts'  => 'حسابات %s',
     '1 domain'  => '1 نطاق',

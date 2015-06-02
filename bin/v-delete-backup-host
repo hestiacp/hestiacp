@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete backup ftp server
-# options: NONE
+# options: TYPE
 #
 # The function deletes ftp backup host
 
@@ -8,6 +8,9 @@
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
+
+# Argument defenition
+type=$1
 
 # Includes
 source $VESTA/func/main.sh
@@ -18,23 +21,31 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+check_args '1' "$#" 'TYPE [HOST]'
+types=$(echo "$BACKUP_SYSTEM" |sed "s/,/\n/g" |grep "^$type$")
+if [ -z "$types" ]; then
+    echo "Error: invalid backup type"
+    log_event "$E_INVALID" "$EVENT"
+    exit $E_INVALID
+fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking network connection
-rm -f $VESTA/conf/ftp.backup.conf
+# Deleting host config
+rm -f $VESTA/conf/$type.backup.conf
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Update vesta.conf
+# Updating vesta.conf
 bckp=$(echo "$BACKUP_SYSTEM" |\
     sed "s/,/\n/g"|\
-    sed "s/^ftp$//" |\
+    sed "s/^$type$//" |\
     sed "/^$/d"|\
     sed ':a;N;$!ba;s/\n/,/g')
 sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf

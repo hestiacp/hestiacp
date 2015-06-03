@@ -59,7 +59,7 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
-* Wed June 03 2015 Serghey Rodin <builder@vestacp.com> - 0.9.8-13
+* Wed Jun 03 2015 Serghey Rodin <builder@vestacp.com> - 0.9.8-13
 - New UI
 - PHP-FPM support
 - Security improvements

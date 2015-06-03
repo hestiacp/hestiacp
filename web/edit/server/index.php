@@ -45,9 +45,24 @@ exec (VESTA_CMD."v-list-remote-dns-hosts json", $output, $return_var);
 $dns_cluster = json_decode(implode('', $output), true);
 unset($output);
 foreach ($dns_cluster as $key => $value) {
-    $v_dns_cluster='yes';
+    $v_dns_cluster = 'yes';
 }
 
+// List MySQL hosts
+exec (VESTA_CMD."v-list-database-hosts mysql json", $output, $return_var);
+$v_mysql_hosts = json_decode(implode('', $output), true);
+unset($output);
+foreach ($v_mysql_hosts as $key => $value) {
+    $v_mysql = 'yes';
+}
+
+// List PostgreSQL hosts
+exec (VESTA_CMD."v-list-database-hosts pgsql json", $output, $return_var);
+$v_pgsql_hosts = json_decode(implode('', $output), true);
+unset($output);
+foreach ($v_pgsql_hosts as $key => $value) {
+    $v_psql = 'yes';
+}
 
 // List backup settings
 $v_backup_dir = "/backup";
@@ -142,6 +157,46 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Update mysql pasword
+    if (empty($_SESSION['error_msg'])) {
+        if (!empty($_POST['v_mysql_password'])) {
+            exec (VESTA_CMD."v-change-database-host-password mysql localhost root '".escapeshellarg($_POST['v_mysql_password'])."'", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_db_adv = 'yes';
+        }
+    }
+
+
+    // Update webmail url
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_mail_url'] != $_SESSION['MAIL_URL']) {
+            exec (VESTA_CMD."v-change-sys-config-value MAIL_URL '".escapeshellarg($_POST['v_mail_url'])."'", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_mail_adv = 'yes';
+        }
+    }
+
+    // Update phpMyAdmin url
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_mysql_url'] != $_SESSION['DB_PMA_URL']) {
+            exec (VESTA_CMD."v-change-sys-config-value DB_PMA_URL '".escapeshellarg($_POST['v_mysql_url'])."'", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_db_adv = 'yes';
+        }
+    }
+
+    // Update phpPgAdmin url
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_psql_url'] != $_SESSION['DB_PGA_URL']) {
+            exec (VESTA_CMD."v-change-sys-config-value DB_PGA_URL '".escapeshellarg($_POST['v_pgsql_url'])."'", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_db_adv = 'yes';
+        }
+    }
 
     // Disable local backup
     if (empty($_SESSION['error_msg'])) {

@@ -171,6 +171,18 @@
                                                 <br><br>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Backend Pool Mode') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_web_backend_pool" value="<?php echo $_SESSION['WEB_BACKEND_POOL']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+
                                         <?php } ?> 
                                     </table>
                                 </td>
@@ -206,16 +218,30 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <?php if ($v_dns_cluster != 'yes') {?> 
                                                 <select class="vst-list" name="v_dns_cluster" disabled>
                                                     <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($v_dns_cluster == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
                                                 </select>
-                                                <?php } else { ?>
-                                                <textarea size="20" class="vst-textinput" name="v_dns_cluster"><?php foreach ($dns_cluster as $key => $value) echo $key . "\n"; ?></textarea>
-                                                <?php } ?>
+                                                <br><br><br>
+                                            </td>
+                                        </tr>
+                                        <?php if ($v_dns_cluster = 'yes') {
+                                                  $i = 0;
+                                                  foreach ($dns_cluster as $key => $value) {
+                                                      $i++;
+                                         ?> 
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Host'). ' #'.$i  ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_dns_remote_host" value="<?php echo $key; ?>" disabled>
                                                 <br><br>
                                             </td>
                                         </tr>
+                                        <?php }} ?> 
                                     </table>
                                 </td>
                             </tr>
@@ -269,9 +295,14 @@
                                         </tr>
                                         <?php } ?> 
                                         <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print __('NONE');?>
-                                                <br><br><br>
+                                            <td class="vst-text">
+                                                <?php print __('Webmail URL') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_mail_url" value="<?php echo $_SESSION['MAIL_URL']; ?>">
+                                                <br><br>
                                             </td>
                                         </tr>
                                     </table>
@@ -289,13 +320,153 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label step-left">
-                                    <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="db">
+                                    <table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('NONE');?>
-                                                <br><br><br>
+                                                <?php print __('MySQL Support');?>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_mysql" disabled>
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($v_mysql == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php if ($v_mysql == 'yes') { ?>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('phpMyAdmin URL') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_url" value="<?php echo $_SESSION['DB_PMA_URL']; ?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php } ?>
+                                        <?php if ($v_mysql == 'yes') {
+                                                  $i = 0;
+                                                  foreach ($v_mysql_hosts as $key => $value) {
+                                                      $i++;
+                                         ?> 
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Host'). ' #'.$i  ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_host" value="<?php echo $key; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Password') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_password" value="">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Maximum Number Of Databases') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_max" value="<?php echo $value['MAX_DB']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Current Number Of Databases') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_max" value="<?php echo $value['U_DB_BASES']; ?>" disabled>
+                                                <br><br><br><br>
+                                            </td>
+                                        </tr>
+                                        <?php }} ?> 
+
+
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('PostgreSQL Support');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_pgsql" disabled>
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($v_pgsql == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php if ($v_pgsql == 'yes') { ?>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('phpPgAdmin URL') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_pgsql_url" value="<?php echo $_SESSION['DB_PGA_URL']; ?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php } ?>
+                                        <?php if ($v_pgsql == 'yes') {
+                                                  $i = 0;
+                                                  foreach ($v_pgsql_hosts as $key => $value) {
+                                                      $i++;
+                                         ?> 
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Host'). ' #'.$i  ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_pgsql_host" value="<?php echo $key; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Maximum Number Of Databases') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_psql_max" value="<?php echo $value['MAX_DB']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Current Number Of Databases') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_pgsql_max" value="<?php echo $value['U_DB_BASES']; ?>" disabled>
+                                                <br><br><br><br>
+                                            </td>
+                                        </tr>
+                                        <?php }} ?> 
                                     </table>
                                 </td>
                             </tr>
@@ -433,7 +604,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top">
                                     <a href="javascript:elementHideShow('vesta');" class="vst-text">
-                                        <b><?php print __('Vesta Control Panel Plugins');?> <img src="/images/arrow.png"></b>
+                                        <b><?php print __('Vesta Control Panel Plugins');?> <span style="color:#ff6701;font-size:10px; padding:0 10px;">preview</span><img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>

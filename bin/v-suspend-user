@@ -38,6 +38,11 @@ fi
 # Adding '!' in front of the password
 /usr/sbin/usermod --lock $user
 
+# Suspending ftp accounts
+for ftp in $(grep ^$user_.* /etc/passwd| cut -f 1 -d : ); do
+    /usr/sbin/usermod --lock $ftp 2>/dev/null
+done
+
 # Suspending web domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     $BIN/v-suspend-web-domains $user $restart

@@ -37,6 +37,11 @@ fi
 # Deleting '!' in front of the password
 /usr/sbin/usermod --unlock $user
 
+# Unsuspending ftp accounts
+for ftp in $(grep ^$user_.* /etc/passwd| cut -f 1 -d : ); do
+    /usr/sbin/usermod --unlock $ftp 2>/dev/null
+done
+
 # Unsuspending web domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     $BIN/v-unsuspend-web-domains $user $restart

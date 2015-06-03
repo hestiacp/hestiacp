@@ -468,5 +468,31 @@ $LANG['es'] = array(
     'RESET_CODE_SENT'  => 'El código de cambio de contraseña fue enviado a su correo<br>',
     'MAIL_RESET_SUBJECT'  => 'Cambio de Contraseña en %s',
     'PASSWORD_RESET_REQUEST' => "Para cambiar su contraseña del panel, por favor siga este link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternativamente, puede dirigirse a https://%s/reset/?action=code&user=%s e ingresar el siguiente código de cambio:\n%s\n\nSi usted no ha solicitado un cambio de contraseña, por favor ignore este mensaje y acepte nuestras disculpas.\n\n--\nPanel de Control Vesta\n",
-'unlimited' => 'ES test'
+
+    'Jan' => 'Jan',
+    'Feb' => 'Feb',
+    'Mar' => 'Mar',
+    'Apr' => 'Apr',
+    'May' => 'May',
+    'Jun' => 'Jun',
+    'Jul' => 'Jul',
+    'Aug' => 'Aug',
+    'Sep' => 'Sep',
+    'Oct' => 'Oct',
+    'Nov' => 'Nov',
+    'Dec' => 'Dec',
+
+    'Configuring Server' => 'Configuring Server',
+    'Hostname' => 'Hostname',
+    'Time Zone' => 'Time Zone',
+    'Default Language' => 'Default Language',
+    'FileSystem Disk Quota' => 'FileSystem Disk Quota',
+    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'preview' => 'preview',
+    'Reseller Role' => 'Reseller Role',
+    'Web Config Editor' => 'Web Config Editor',
+    'Template Manager' => 'Template Manager',
+    'Backup Migration Manager' => 'Backup Migration Manager',
+    'FileManager' => 'FileManager',
+
 );

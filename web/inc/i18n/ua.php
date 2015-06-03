@@ -483,6 +483,17 @@ $LANG['ua'] = array(
     'Oct' => 'Жовт',
     'Nov' => 'Лист',
     'Dec' => 'Груд',
-    
+
+    'Configuring Server' => 'Configuring Server',
+    'Hostname' => 'Hostname',
+    'Time Zone' => 'Time Zone',
+    'Default Language' => 'Default Language',
+    'FileSystem Disk Quota' => 'FileSystem Disk Quota',
+    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'preview' => 'preview',
+    'Reseller Role' => 'Reseller Role',
+    'Web Config Editor' => 'Web Config Editor',
+    'Template Manager' => 'Template Manager',
+    'Backup Migration Manager' => 'Backup Migration Manager',
+    'FileManager' => 'FileManager',
 );
-?>

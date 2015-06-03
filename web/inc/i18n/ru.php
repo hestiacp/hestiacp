@@ -470,7 +470,7 @@ $LANG['ru'] = array(
     'RESET_CODE_SENT' => 'Код для восстановления пароля был выслан на ваш электронный адрес.<br>',
     'MAIL_RESET_SUBJECT' => 'Восстановление пароля %s',
     'PASSWORD_RESET_REQUEST'=>"Чтобы восстановить пароль, пройдите по ссылке:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nВы также можете октрыть страницу https://%s/reset/?action=code&user=%s и вручную ввести код для восстановления:\n%s\n\nЕсли вы не запрашивали процедуру восстановления пароля, пожалуйста проигнорируйте это письмо и примите наши извинения.\n\n--\nПанель управления Vesta\n",
-    
+
     'Jan' => 'Янв',
     'Feb' => 'Фев',
     'Mar' => 'Мар',
@@ -483,5 +483,18 @@ $LANG['ru'] = array(
     'Oct' => 'Окт',
     'Nov' => 'Ноя',
     'Dec' => 'Дек',
+
+    'Configuring Server' => 'Настройки Сервера',
+    'Hostname' => 'Имя Хоста',
+    'Time Zone' => 'Часовой Пояс',
+    'Default Language' => 'Язык по умолчанию',
+    'FileSystem Disk Quota' => 'FileSystem Disk Quota',
+    'Vesta Control Panel Plugins' => 'Vesta Control Panel Плагины',
+    'preview' => 'превью',
+    'Reseller Role' => 'Ресселер',
+    'Web Config Editor' => 'Веб Редактор Конфигов',
+    'Template Manager' => 'Менеджер Шаблонов',
+    'Backup Migration Manager' => 'Менеджер Миграции Бэкапов',
+    'FileManager' => 'Файл Менеджер',
 
 );

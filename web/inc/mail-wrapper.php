@@ -1,6 +1,6 @@
 #!/usr/local/vesta/php/bin/php
 <?php
-
+error_reporting(NULL);
 if (empty($argv[1])) {
     echo "Error: not enough arguments\n";
     exit(3);

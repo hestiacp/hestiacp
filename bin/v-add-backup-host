@@ -98,7 +98,7 @@ EOF
 
 if [ "$type" != 'local' ];then
     check_args '4' "$#" "TYPE HOST USERNAME PASSWORD [PATH] [PORT]"
-    validate_format 'host' 'user'
+    validate_format 'host'
     is_password_valid
     if [ "$type" = 'sftp' ]; then
         which expect >/dev/null 2>&1

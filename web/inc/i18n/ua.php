@@ -350,7 +350,7 @@ $LANG['ua'] = array(
     'ranges are acceptable' => 'дозволені діапазони',
     'CIDR format is supported' => 'формат CIDR підтримується',
 
-    'unlimited'  => 'unlimited',
+    'unlimited'  => 'безлімітний',
     '1 account' => ' 1 акаунт',
     '%s accounts' => '%s акаунтів',
     '1 domain' => '1 домен',

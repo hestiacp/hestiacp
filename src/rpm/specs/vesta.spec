@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        12
+Release:        14
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -20,7 +20,6 @@ This package contains the packages for Vesta Control Panel api.
 %setup -q -n %{name}-%{version}
 
 %build
-gcc -lcrypt src/v-check-user-password.c -o bin/v-check-user-password
 
 %install
 install -d  %{buildroot}%{_vestadir}
@@ -60,6 +59,12 @@ fi
 %config(noreplace) %{_vestadir}/web/css/main.css
 
 %changelog
+* Wed June 03 2015 Serghey Rodin <builder@vestacp.com> - 0.9.8-13
+- New UI
+- PHP-FPM support
+- Security improvements
+- Dozen bugfixes
+
 * Wed Oct 23 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-12
 - Firewall service handler for Debian and Ubuntu
 - Minor i18n fix

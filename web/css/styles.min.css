@@ -1297,6 +1297,11 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit__name span:first-of-type {
   margin-left: 39px;
 }
+.l-unit__name b {
+  font-weight: normal;
+  font-style: italic;
+}
+
 .l-unit__ip {
   margin-bottom: 34px;
   font-size: 12px;
@@ -2128,6 +2133,18 @@ label {
   color: #333;
 }
 
+a.vst-text,
+a.vst-text b{
+  color: #2c9491;
+}
+a.vst-text:hover,
+a.vst-text:hover b{
+  color: #ff6701;
+}
+a.vst-text:active,
+a.vst-text:active b{
+  color: #ff6701;
+}
 
 .vst-textinput {
   background-color: #fff;

@@ -51,12 +51,15 @@ if [ $1 -ge 2 ]; then
 fi
 %files
 %{_vestadir}
-%config(noreplace) %{_vestadir}/web/images/logo.png
+%config(noreplace) %{_vestadir}/web/images/sprite.png
 %config(noreplace) %{_vestadir}/web/images/favicon.ico
-%config(noreplace) %{_vestadir}/web/css/csshover3.htc
-%config(noreplace) %{_vestadir}/web/css/ie.css
+%config(noreplace) %{_vestadir}/web/css/file_manager.css
+%config(noreplace) %{_vestadir}/web/css/file_manager_editor.css
+%config(noreplace) %{_vestadir}/web/css/jquery.arcticmodal.css
 %config(noreplace) %{_vestadir}/web/css/jquery-custom-dialogs.css
-%config(noreplace) %{_vestadir}/web/css/main.css
+%config(noreplace) %{_vestadir}/web/css/jquery.fileupload.css
+%config(noreplace) %{_vestadir}/web/css/styles.min.css
+%config(noreplace) %{_vestadir}/web/css/uploadify.css
 
 %changelog
 * Wed Jun 03 2015 Serghey Rodin <builder@vestacp.com> - 0.9.8-13

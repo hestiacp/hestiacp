@@ -26,6 +26,7 @@ USER_DATA=$VESTA/data/users/$user
 WEBTPL=$VESTA/data/templates/web
 DNSTPL=$VESTA/data/templates/dns
 RRD=$VESTA/web/rrd
+send_mail="$VESTA/web/inc/mail-wrapper.php"
 
 # Return codes
 OK=0

@@ -89,7 +89,7 @@ fi
 disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
 if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
     rm -rf $tmpdir
-    echo "Not enough disk space to run backup" | $send_mail -s "$subj" $email
+    echo "Not enough disk space to run restore" | $send_mail -s "$subj" $email
     echo "Error: Not enough disk space"
     sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
     log_event "$E_DISK" "$EVENT"
@@ -399,15 +399,23 @@ if [ "$web" != 'no' ]; then
 
     done
 
+    # Add user to traff queue
+    sed -i "/ $user /d" $VESTA/data/queue/traffic.pipe
+    echo "$BIN/v-update-web-domains-traff $user" >>\
+        $VESTA/data/queue/traffic.pipe
+
     # Restart WEB
     $BIN/v-restart-web
     if [ $? -ne 0 ]; then
         exit $E_RESTART
     fi
 
-    $BIN/v-restart-proxy
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
+    # Restart Proxy
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        if [ $? -ne 0 ]; then
+            exit $E_RESTART
+        fi
     fi
 
     echo

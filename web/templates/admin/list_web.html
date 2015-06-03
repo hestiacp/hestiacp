@@ -158,7 +158,7 @@
 
         <div class="l-unit__col l-unit__col--left clearfix">
           <div class="l-unit__date" u_date="<?=strtotime('1/1/2011')?>">
-            <?=strftime("%d %b %Y", strtotime($data[$key]['DATE']))?>
+            <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?=__('suspended')?></div>
         </div>

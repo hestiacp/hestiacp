@@ -134,6 +134,11 @@ function top_panel($user, $TAB) {
     }
 }
 
+function translate_date($date){
+  $date = strtotime($date);
+  return strftime("%d &nbsp;", $date).__(strftime("%b", $date)).strftime(" &nbsp;%Y", $date);
+}
+
 function humanize_time($usage) {
     if ( $usage > 60 ) {
         $usage = $usage / 60;

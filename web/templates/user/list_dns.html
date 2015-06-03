@@ -100,7 +100,7 @@
 
         <div class="l-unit__col l-unit__col--left clearfix">
           <div class="l-unit__date">
-            <?=strftime("%d %b %Y", strtotime($data[$key]['DATE']))?>
+            <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?__('suspended')?></div>
         </div>
@@ -145,7 +145,7 @@
                   <div class="l-unit__stat-cols clearfix last">
                     <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Expire')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=strftime("%d %b %Y", strtotime($data[$key]['EXP']))?></b>
+                      <b><?=translate_date($data[$key]['EXP'])?></b>
                     </div>
                   </div>
                 </td>

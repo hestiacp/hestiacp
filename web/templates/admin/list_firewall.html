@@ -107,7 +107,7 @@
           <div class="l-unit__stats">
             <div class="clearfix l-unit__stat-col--left"><b><?=$data[$key]['ACTION'] ?></b></div>
             <div class="clearfix l-unit__stat-col--left compact"><b><?=$data[$key]['PROTOCOL']?></b></div>
-            <div class="clearfix l-unit__stat-col--left wide-2"><? if(!empty($data[$key]['COMMENT'])) echo '/ ' . $data[$key]['COMMENT']?></div>
+            <div class="clearfix l-unit__stat-col--left wide-2"><? if(!empty($data[$key]['COMMENT'])) echo '/ ' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></div>
             <div class="clearfix l-unit__stat-col--left wide"><b><?=$data[$key]['PORT'] ?></b></div>
             <div class="clearfix l-unit__stat-col--left"><b><?=$data[$key]['IP'] ?></b></div>
           </div>

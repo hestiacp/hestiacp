@@ -403,7 +403,7 @@ button {
 button,
 select {
   text-transform: none;
-  color: transparent !important;
+  /*color: transparent !important;*/
   text-shadow: 0 0 0 #555 !important;
 }
 
@@ -2115,7 +2115,7 @@ label {
   -moz-appearance:none;
   -webkit-appearance:none;
   text-shadow: 0 0 0 #555;
-  color: transparent !important;
+  /*color: transparent !important;*/
 }
 
 .vst-list.long-2 {

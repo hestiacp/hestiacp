@@ -356,7 +356,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
 
 // List IP addresses
 exec (VESTA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
-$ips = array_unique(json_decode(implode('', $output), true));
+$ips = json_decode(implode('', $output), true);
 unset($output);
 
 // List web stat engines

@@ -110,7 +110,7 @@
             <?=$key?> <? if(!empty($data[$key]['SRC'])) echo "<span>⇢ ".$data[$key]['SRC']."</span>&nbsp; &nbsp; ";  if($data[$key]['RECORDS']) echo '<span>/ '.$data[$key]['RECORDS'].'</span>';?>
           </div>
           <div class="l-unit__ip">
-            <?=str_replace('.', '&nbsp;.&nbsp;', $data[$key]['IP'])?>
+            <?=str_replace('.', '<span>.</span>', $data[$key]['IP'])?>
           </div>
           <!-- /.l-unit__ip -->
 

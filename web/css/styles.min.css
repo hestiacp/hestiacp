@@ -553,9 +553,9 @@ th {
 }
 
 body {
-  -webkit-touch-callout: none;
+/*  -webkit-touch-callout: none;
   -webkit-text-size-adjust: none;
-  -webkit-user-select: none;
+  -webkit-user-select: none; */
 }
 
 html,
@@ -1306,6 +1306,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   margin-bottom: 34px;
   font-size: 12px;
   letter-spacing: 1px;
+}
+.l-unit__ip span {
+  padding-left: 3px;
+  padding-right: 3px;
 }
 .l-unit__stats {
   margin-bottom: 53px;

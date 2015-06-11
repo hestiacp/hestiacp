@@ -725,7 +725,7 @@ if [ -z "$disable_fail2ban" ]; then
     chkconfig fail2ban on
     service fail2ban start
 else
-    sed -i "s/fail2ban//" $VESTA/conf/vestac.conf
+    sed -i "s/fail2ban//" $VESTA/conf/vesta.conf
 fi
 # php configuration
 sed -i "s/;date.timezone =/date.timezone = UTC/g" /etc/php5/apache2/php.ini

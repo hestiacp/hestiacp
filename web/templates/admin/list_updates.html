@@ -5,9 +5,9 @@
             <tr>
               <td class="step-right">
                 <? if($autoupdate == 'Enabled') {
-                     echo '<a class="vst" href="/delete/cron/autoupdate/&token='.$_SESSION['token'].'">'.__('disable autoupdate').'</a>';
+                     echo '<a class="vst" href="/delete/cron/autoupdate/?&token='.$_SESSION['token'].'">'.__('disable autoupdate').'</a>';
                    } else {
-                     echo '<a class="vst" href="/add/cron/autoupdate/&token='.$_SESSION['token'].'">'.__('enable autoupdate').'</a>';
+                     echo '<a class="vst" href="/add/cron/autoupdate/?&token='.$_SESSION['token'].'">'.__('enable autoupdate').'</a>';
                    } ?>
               </td>
               <td class="l-sort-toolbar__search-box step-left">

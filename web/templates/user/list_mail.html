@@ -1,7 +1,12 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <a href="/add/mail/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add Mail Domain'))?>"></a>
-
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Domain')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-accounts" sort_as_int="1"><span class="name"><?=__('Accounts')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
+        </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -25,7 +30,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
                 <form action="/bulk/mail/" method="post" id="objects">
@@ -57,7 +62,7 @@
 
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         $webmail = "http://".$http_host."/webmail/";
@@ -80,7 +85,7 @@
       ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE['mail-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="mail-<?=sha1($key)?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-accounts="<?=$data[$key]['ACCOUNTS']?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
@@ -124,6 +129,9 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -203,7 +211,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!--div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 
@@ -214,6 +222,7 @@
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit">
+          <table class='data'></table>
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php

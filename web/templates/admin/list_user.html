@@ -7,6 +7,12 @@
             echo '<a class="l-sort__create-btn" href="/add/web/" title="'.str_replace(' ', '&nbsp;', __('Add Web Domain')).'"></a>';
           }
         ?>
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Username')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=__('Bandwidth')?></span><span class="up">&nbsp;</span></li>
+        </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -22,7 +28,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
                 <form action="/bulk/user/" method="post" id="objects">
@@ -59,7 +65,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -74,7 +80,7 @@
           }
       ?>
 
-      <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; ?>">
+      <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE['user-'.sha1($key)] == 1) echo ' l-unit--starred';?>" uniq-id="user-<?=sha1($key)?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="user[]" value="<?php echo $key ?>">
@@ -143,6 +149,11 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?__('suspended')?></div>
+
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
+
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -327,7 +338,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 

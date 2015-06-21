@@ -49,14 +49,14 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?php
         foreach ($data as $key => $value) {
            ++$i;
       ?>
 
 
-      <div class="l-unit">
+      <div class="l-unit <? if($_COOKIE['stats-'.sha1($key)] == 1) echo ' l-unit--starred';?>" uniq-id="stats-<?=sha1($key)?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
           </div>
@@ -73,6 +73,9 @@
         <div class="l-unit__col l-unit__col--left clearfix">
           <div class="l-unit__date">
             <?=translate_date($key)?>
+          </div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
           </div>
         </div>
         <!-- /.l-unit__col -->
@@ -242,7 +245,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 

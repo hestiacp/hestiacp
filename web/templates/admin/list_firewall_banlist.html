@@ -13,14 +13,14 @@
                 </form>
               </td>
               <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all"  onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
                 <form action="/bulk/firewall/banlist/" method="post">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
-                  <select name="" id="">
+                  <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
                     <option value="delete"><?php print __('delete') ?></option>
                   </select>
@@ -42,7 +42,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -52,7 +52,7 @@
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended';?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="check" value="check<?php echo $i ?>">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ipchain[]" value="<?php echo $ip . ':' . $chain ?>">
             <label for="check<?php echo $i ?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
@@ -61,7 +61,7 @@
               <div class="actions-panel__col actions-panel__delete">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?=$ip?>&token=<?=$_SESSION['token']?>" />
+                  <input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?=$ip?>&chain=<?=$chain?>&token=<?=$_SESSION['token']?>" />
                   <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
                     <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>
                   </div>
@@ -89,7 +89,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 

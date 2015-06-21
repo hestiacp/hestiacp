@@ -1,7 +1,14 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <a href="/add/ip/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add IP'))?>"></a>
-
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-ip"><span class="name"><?=__('ip')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-netmask"><span class="name"><?=__('Netmask')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-interface"><span class="name"><?=__('Interface')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-domains" sort_as_int="1"><span class="name"><?=__('Domains')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-owner"><span class="name"><?=__('Owner')?></span><span class="up">&nbsp;</span></li>
+        </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -17,7 +24,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
                 <form action="/bulk/ip/" method="post" id="objects">
@@ -46,16 +53,13 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?php
         foreach ($data as $key => $value) {
            ++$i;
       ?>
 
-
-
-
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended';?>">
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_COOKIE['ip-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="ip-<?=sha1($key)?>" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>" sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=__($data[$key]['INTERFACE'])?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>" sort-owner="<?=__($data[$key]['OWNER'])?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ip[]" value="<?=$key?>">
@@ -86,6 +90,9 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?=__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -110,7 +117,7 @@
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Domains')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <b><?=$data[$key]['U_WEB_DOMAINS']?></b>
                     </div>
@@ -118,7 +125,7 @@
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Owner')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Owner')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <b><?=__($data[$key]['OWNER'])?></b>
                     </div>
@@ -137,7 +144,7 @@
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Status')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Status')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <b><?=__($data[$key]['STATUS'])?></b>
                     </div>
@@ -145,7 +152,7 @@
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Users')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Users')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <b><?=str_replace(',', ', ', $data[$key]['U_SYS_USERS'])?></b>
                     </div>
@@ -164,7 +171,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 

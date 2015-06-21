@@ -496,4 +496,7 @@ $LANG['ua'] = array(
     'Template Manager' => 'Менеджер Шаблонів',
     'Backup Migration Manager' => 'Менеджер Міграції Бекапів',
     'FileManager' => 'Файл Менеджер',
+
+    'sort by' => 'sort by',
+    'Date' => 'Date',
 );

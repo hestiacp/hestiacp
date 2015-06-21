@@ -182,7 +182,7 @@ $LANG['ru'] = array(
     'Additional FTP Account' => 'Дополнительный ftp',
     'SOA' => 'SOA',
     'TTL' => 'TTL',
-    'Expire' => 'Регистрация до',
+    'Expire' => 'Истекает',
     'Records' => 'DNS записи',
     'Catchall email' => 'Ловушка почты',
     'AntiVirus Support' => 'Антивирус',
@@ -497,4 +497,6 @@ $LANG['ru'] = array(
     'Backup Migration Manager' => 'Менеджер Миграции Бэкапов',
     'FileManager' => 'Файл Менеджер',
 
+    'sort by' => 'сортировка',
+    'Date' => 'Дата',
 );

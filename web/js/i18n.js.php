@@ -45,4 +45,4 @@ if (!function_exists('__')) {
 ?>
 
 App.i18n.ARE_YOU_SURE     = '<?php echo __('Are you sure?') ?>';
-App.Constants.UNLIM_VALUE = '<?php echo __('unlimited') ?>';
+App.Constants.UNLIM_TRANSLATED_VALUE = '<?php echo __('unlimited') ?>';

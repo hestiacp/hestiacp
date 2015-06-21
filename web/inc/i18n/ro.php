@@ -182,7 +182,7 @@ $LANG['ro'] = array(
     'Additional FTP Account' => 'Cont suplimentar FTP',
     'SOA' => 'SOA',
     'TTL' => 'TTL',
-    'Expire' => 'Data expirării',
+    'Expire' => 'Expiră',
     'Records' => 'DNS înregistrări',
     'Catchall email' => 'E-mail catchall',
     'AntiVirus Support' => 'Antivirus',
@@ -497,4 +497,6 @@ $LANG['ro'] = array(
     'Backup Migration Manager' => 'Backup Migration Manager',
     'FileManager' => 'FileManager',
 
+    'sort by' => 'sort by',
+    'Date' => 'Data',
 );

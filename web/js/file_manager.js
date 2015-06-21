@@ -25,7 +25,6 @@ FM.ORDER_BOX_B = $('.context-menu.sort-order.tab-b');
 FM.ORDER_TAB_A = 'type_asc';
 FM.ORDER_TAB_B = 'type_asc';
 
-
 FM.TAB_A_CURRENT_PATH = GLOBAL.TAB_A__PATH;
 FM.TAB_B_CURRENT_PATH = GLOBAL.TAB_B_PATH;
 
@@ -156,11 +155,11 @@ FM.getFileType = function(name) {
 
 FM.sortItems = function(items, box) {
     var sorted = [];
-    
+
     var files    = [];
     var dirs     = [];
     var combined = []
-    
+
     $.each(items, function(i, o) {
         if (i > 0) { // i == 0 means first .. element in list
             if (FM.isItemFile(o)) {
@@ -175,9 +174,9 @@ FM.sortItems = function(items, box) {
     //    var sort_type = $(box).parents('.window').find('.menu').find('.sort-by-v').val();
     var sort_type = FM.ORDER_TAB_A;
     if($(box).closest('.window').find('.menu').hasClass('menu-right')){
-	sort_type = FM.ORDER_TAB_B;
+      sort_type = FM.ORDER_TAB_B;
     }
-    
+
     switch (sort_type) {
         case 'type_asc':
             files.sort(function (a, b) {
@@ -203,7 +202,7 @@ FM.sortItems = function(items, box) {
                 var size_b = parseInt(b.size, 10);
                 return ((size_a < size_b) ? -1 : ((size_a > size_b) ? 1 : 0));
             });
-            
+
             sorted = $.merge(dirs, files);
             break;
         case 'size_desc':
@@ -212,7 +211,7 @@ FM.sortItems = function(items, box) {
                 var size_b = parseInt(b.size, 10);
                 return ((size_a > size_b) ? -1 : ((size_a < size_b) ? 1 : 0));
             });
-            
+
             sorted = $.merge(dirs, files);
             break;
         case 'date_asc':
@@ -235,9 +234,9 @@ FM.sortItems = function(items, box) {
                 var date_b = Date.parseDate(b.date + ' ' + time_b, 'yy-m-d h:i:s');
                 return ((date_a > date_b) ? -1 : ((date_a < date_b) ? 1 : 0));
             });
-            
+
             break;
-            
+
         case 'name_asc':
             sorted = $.merge(dirs, files);
             sorted.sort(function (a, b) {
@@ -250,7 +249,7 @@ FM.sortItems = function(items, box) {
             sorted.sort(function (a, b) {
                 return a.name.localeCompare(b.name);
             });
-            
+
             sorted = sorted.reverse();
             break;
         default:
@@ -263,8 +262,8 @@ FM.sortItems = function(items, box) {
             sorted = $.merge(dirs, files);
             break;
     }
-    
-    
+
+
     sorted = $.merge([items[0]], sorted);
 
     return sorted;

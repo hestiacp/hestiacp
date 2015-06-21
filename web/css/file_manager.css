@@ -179,8 +179,8 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: 0;  border-left: 
 .listing li.selected-inactive .mode,
 .listing li.selected-inactive .time,
 .listing li.selected-inactive .date { color: #999 !important; }
-.listing li.selected { background-color: #7FD5D9; }
 .window.active .listing li.selected.active { background-color: #73CAA0; }
+.listing li.selected { background-color: #7FD5D9; }
 
 
 .listing li.selected-inactive.selected.active { background-color: #dfc891;  border-top: 1px solid #cdb885; border-bottom: 1px solid #cdb885; }

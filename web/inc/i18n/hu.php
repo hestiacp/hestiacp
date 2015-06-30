@@ -422,6 +422,7 @@ $LANG['hu'] = array(
     'DELETE_IP_CONFIRMATION'  => 'Biztos, hogy törlöd a(z) IP címet?',
     'DELETE_RULE_CONFIRMATION' => 'Biztos, hogy törlöd a #%s szabályok?',
     'SUSPEND_RULE_CONFIRMATION' => 'Biztos, hogy felfüggeszted a #%s szabályok?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Biztos, hogy újra szeretnéd aktiválni a #%s szabályok?',
     'RESTART_CONFIRMATION' => 'Are you sure you want to restart %s?',
     'Welcome'  => 'Üdvözöljük',
@@ -499,4 +500,6 @@ $LANG['hu'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Date',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

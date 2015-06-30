@@ -422,6 +422,7 @@ $LANG['no'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Er du sikker på at du vil slette regel #%s?',
     'SUSPEND_RULE_CONFIRMATION' => 'Er du sikker på at du vil suspendere regel #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Er du sikker på at du vil oppheve suspensjon av regel #%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Er du sikker på at du vil omstarte %s?',
     'Welcome'  => 'Velkommen',
     'LOGGED_IN_AS'  => 'Logget inn som %s',
@@ -498,4 +499,6 @@ $LANG['no'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Date',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

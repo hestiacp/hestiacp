@@ -423,6 +423,7 @@ $LANG['ru'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Вы уверены, что хотите удалить правило №%s?',
     'SUSPEND_RULE_CONFIRMATION' => 'Вы уверены, что хотите заблокирован правило №%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Вы уверены, что хотите разблокировать правило №%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Вы уверены, что хотите перезагрузить %s?',
     'Welcome' => 'Добро пожаловать',
     'LOGGED_IN_AS' => 'Вы вошли как пользователь %s',
@@ -499,4 +500,6 @@ $LANG['ru'] = array(
 
     'sort by' => 'сортировка',
     'Date' => 'Дата',
+    'Starred' => 'Избранные',
+    'Name' => 'Имя',
 );

@@ -421,6 +421,7 @@ $LANG['pt'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Tem certeza que deseja deletar o regra #%s?',
     'SUSPEND_RULE_CONFIRMATION' => 'Tem certeza que deseja suspender o regra #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Tem certeza que deseja reativar o regra #%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Tem certeza que deseja reiniciar %s?',
     'Welcome'  => 'Bem Vindo',
     'LOGGED_IN_AS'  => 'Entrar como o usuário %s',
@@ -497,4 +498,6 @@ $LANG['pt'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Data',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

@@ -425,6 +425,7 @@ $LANG['fi'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Haluatko varmasti poistaa säännön #%s?',
     'SUSPEND_RULE_CONFIRMATION' => 'Haluatko varmasti keskeyttää sääntöä #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Haluatko varmasti ottaa käyttöön sääntöä #%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Haluatko varmasti käynnistää uudelleen %s?',
     'Welcome' => 'Tervetuloa',
     'LOGGED_IN_AS' => 'Kirjautunut käyttäjänä %s',
@@ -501,4 +502,6 @@ $LANG['fi'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Date',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

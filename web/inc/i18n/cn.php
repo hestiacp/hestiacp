@@ -421,6 +421,7 @@ $LANG['cn'] = array(
     'DELETE_RULE_CONFIRMATION' => '您確定要刪除規則 #%s?',
     'SUSPEND_RULE_CONFIRMATION' => '您確定要暫停規則 #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => '您確定要取消掛起規則 #%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Are you sure you want to restart %s?',
     'Welcome'  => '欢迎光临',
     'LOGGED_IN_AS'  => '以用户身份 %s 登录',
@@ -497,4 +498,6 @@ $LANG['cn'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Date',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

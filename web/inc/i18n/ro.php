@@ -423,6 +423,7 @@ $LANG['ro'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Ești sigur că dorești să ștergi regulă #%s?',
     'SUSPEND_RULE_CONFIRMATION' => 'Ești sigur că dorești să suspendezi regulă #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Ești sigur că dorești să unsuspendezi regulă #%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Ești sigur că dorești să restartezi %s?',
     'Welcome' => 'Bun venit',
     'LOGGED_IN_AS' => 'Ai intrat ca utilizator %s',
@@ -499,4 +500,6 @@ $LANG['ro'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Data',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

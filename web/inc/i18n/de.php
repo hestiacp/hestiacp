@@ -420,6 +420,7 @@ $LANG['de'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Regel #%s wirklich löschen?',
     'SUSPEND_RULE_CONFIRMATION' => 'Regel #%s wirklich sperren?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Regel #%s wirklich entsperren?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => '%s wirklich neu starten?',
     'Welcome'  => 'Willkommen',
     'LOGGED_IN_AS'  => 'Angemeldet als %s',
@@ -496,4 +497,6 @@ $LANG['de'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Datum',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

@@ -423,6 +423,7 @@ $LANG['ua'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Ви впевнені, що хочете видалити правило #%s?',
     'SUSPEND_RULE_CONFIRMATION' => 'Ви впевнені, що хочете заблокувати правило #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Ви впевнені, що хочете розблокувати правило #%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Ви впевнені, що хочете перезапустити %s?',
     'Welcome' => 'Ласкаво просимо',
     'LOGGED_IN_AS' => 'Ви увійшли як користувач %s',
@@ -499,4 +500,6 @@ $LANG['ua'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Date',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

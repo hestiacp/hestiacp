@@ -421,6 +421,7 @@ $LANG['tw'] = array(
     'DELETE_RULE_CONFIRMATION' => '您確定要刪除規則 #%s 嗎?',
     'SUSPEND_RULE_CONFIRMATION' => '您確定要暫停規則  #%s 嗎?',
     'UNSUSPEND_RULE_CONFIRMATION' => '您確定要取消暫停規則 #%s 嗎?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => '您確定您要重新啟動 %s 嗎?',
     'Welcome'  => '歡迎',
     'LOGGED_IN_AS'  => '登入為使用者 %s',
@@ -497,4 +498,6 @@ $LANG['tw'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Date',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

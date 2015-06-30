@@ -419,6 +419,7 @@ $LANG['se'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Är du säker på att du vill radera regeln #%s?',
     'SUSPEND_RULE_CONFIRMATION' => 'Är du säker på att du vill avaktivera regeln  #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Är du säker på att du vill återaktivera regeln #%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Är du säker på att du vill starta om %s?',
     'Welcome'  => 'Välkommen',
     'LOGGED_IN_AS'  => 'Inloggad som %s',
@@ -495,4 +496,6 @@ $LANG['se'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Datum',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

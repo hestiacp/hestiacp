@@ -416,6 +416,7 @@ $LANG['bs'] = array(
     'DELETE_RULE_CONFIRMATION' => 'Da li ste sigurni da želite obrisati pravilo #%s?',
     'SUSPEND_RULE_CONFIRMATION' => 'Da li ste sigurni da želite obustaviti pravilo  #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Da li ste sigurni da želite ponovo vratiti pravilo #%s?',
+    'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
     'RESTART_CONFIRMATION' => 'Da li ste sigurni da želite ponovno pokretanje %s?',
     'Welcome'  => 'Dobrodošli',
     'LOGGED_IN_AS'  => 'Ušli ste kao %s',
@@ -492,4 +493,6 @@ $LANG['bs'] = array(
 
     'sort by' => 'sort by',
     'Date' => 'Datum',
+    'Starred' => 'Starred',
+    'Name' => 'Name',
 );

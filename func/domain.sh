@@ -85,11 +85,10 @@ is_domain_new() {
     type="$1"
     dom=${2-$domain}
 
-    web=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/web.conf)
-    dns=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/dns.conf)
-    mail=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/mail.conf)
-
     # Check web domain
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        web=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/web.conf)
+    fi
     if [ ! -z "$web" ] && [ "$type" == 'web' ]; then
         echo "Error: domain $dom exist"
         log_event "$E_EXISTS" "$EVENT"
@@ -105,6 +104,9 @@ is_domain_new() {
     fi
 
     # Check dns domain
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        dns=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/dns.conf)
+    fi
     if [ ! -z "$dns" ] && [ "$type" == 'dns' ]; then
         echo "Error: domain $dom exist"
         log_event "$E_EXISTS" "$EVENT"
@@ -120,6 +122,9 @@ is_domain_new() {
     fi
 
     # Check mail domain
+    if [ ! -z "$MAIL_SYSTEM" ]; then
+        mail=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/mail.conf)
+    fi
     if [ ! -z "$mail" ] && [ "$type" == 'mail' ]; then
         echo "Error: domain $dom exist"
         log_event "$E_EXISTS" "$EVENT"
@@ -135,7 +140,9 @@ is_domain_new() {
     fi
 
     # Check web aliases
-    web_alias=$(grep -w $dom $VESTA/data/users/*/web.conf)
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        web_alias=$(grep -w $dom $VESTA/data/users/*/web.conf)
+    fi
     if [ ! -z "$web_alias" ]; then
         c1=$(grep -H "'$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
         c2=$(grep -H "'$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)

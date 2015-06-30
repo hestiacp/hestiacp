@@ -725,12 +725,19 @@ fi
 if [ "$release" -eq '5' ]; then
     wget $CHOST/$VERSION/dovecot.conf -O /etc/dovecot.conf
 else
-    wget $CHOST/$VERSION/dovecot.tar.gz -O  /etc/dovecot.tar.gz
-    cd /etc/
-    rm -rf dovecot
+    wget $CHOST/$VERSION/$release/dovecot.tar.gz -O  /etc/dovecot.tar.gz
+    cd /etc
+    if [ -d /etc/dovecot ]; then
+        rm -rf /etc/dovecot
+    fi
+    if [ -f /etc/dovecot.conf ]; then
+        rm /etc/dovecot.conf
+    fi
     tar -xzf dovecot.tar.gz
     rm -f dovecot.tar.gz
-    chown -R root:root /etc/dovecot
+    if [ -d /etc/dovecot ]; then
+        chown -R root:root /etc/dovecot
+    fi
 fi
 gpasswd -a dovecot mail
 chkconfig dovecot on

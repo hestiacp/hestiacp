@@ -613,14 +613,7 @@ validate_format_ip_status() {
 
 # Email address
 validate_format_email() {
-    local_part=$(echo $1 | cut  -s -f1 -d\@)
-    remote_host=$(echo $1 | cut -s -f2 -d\@)
-    mx_failed=1
-    if [ ! -z "$remote_host" ] && [ ! -z "$local_part" ]; then
-        /usr/bin/host -t mx "$remote_host" &> /dev/null
-        mx_failed="$?"
-    fi
-    if [ "$mx_failed" -eq 1 ]; then
+    if [[ ! "$1" =~ "@" ]] ; then
         echo "Error: email $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID

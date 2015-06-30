@@ -19,7 +19,7 @@ source $VESTA/func/main.sh
 json_list_pkgs() {
     echo '{'
     fileds_count=$(echo "$fields" | wc -w)
-    for package in $(ls -t $VESTA/data/packages |grep .pkg); do
+    for package in $(ls  --sort=time  $VESTA/data/packages |grep .pkg); do
         PACKAGE=${package/.pkg/}
         pkg_data=$(cat $VESTA/data/packages/$package)
         eval $pkg_data

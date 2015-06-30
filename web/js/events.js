@@ -8,7 +8,15 @@ var VE = { // Vesta Events object
         keypress: {}
     },
     helpers: {}, // simple handy methods
-    tmp: {}
+    tmp: {
+        sort_par: 'sort-name',
+        sort_direction: -1,
+        sort_as_int: 0,
+        form_changed: 0,
+        search_activated: 0,
+        search_display_interval: 0,
+        search_hover_interval: 0
+    }
 };
 
 /*
@@ -138,7 +146,7 @@ VE.helpers.initAdditionalPasswordFieldElements = function(ref) {
     if (enabled) {
         VE.helpers.hidePasswordFieldText(ref);
     }
-    
+
     $(ref).prop('autocomplete', 'off');
 
     var enabled_html = enabled ? '' : 'show-passwords-enabled-action';
@@ -166,5 +174,57 @@ VE.helpers.toggleHiddenPasswordText = function(ref, triggering_elm) {
         VE.helpers.revealPasswordFieldText(ref);
     }
 }
+
+VE.helpers.refresh_timer = {
+    speed: 50,
+    degr: 180,
+    right: 0,
+    left: 0,
+    periodical: 0,
+    first: 1,
+
+    start: function(){
+        this.periodical = setInterval(function(){VE.helpers.refresh_timer.turn()}, this.speed);
+    },
+
+    stop: function(){
+        clearTimeout(this.periodical);
+    },
+
+    turn: function(){
+        this.degr += 1;
+
+        if (this.first && this.degr >= 361){
+            this.first = 0;
+            this.degr = 180;
+            this.left.css({'-webkit-transform': 'rotate(180deg)'});
+            this.left.css({'transform': 'rotate(180deg)'});
+            this.left.children('.loader-half').addClass('dark');
+        }
+        if (!this.first && this.degr >= 360){
+            this.first = 1;
+            this.degr = 180;
+            this.left.css({'-webkit-transform': 'rotate(0deg)'});
+            this.right.css({'-webkit-transform': 'rotate(180deg)'});
+            this.left.css({'transform': 'rotate(0deg)'});
+            this.right.css({'transform': 'rotate(180deg)'});
+            this.left.children('.loader-half').removeClass('dark');
+
+            this.stop();
+            location.reload();
+        }
+
+        if (this.first){
+            this.right.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
+            this.right.css({'transform': 'rotate('+this.degr+'deg)'});
+        }
+        else{
+            this.left.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
+            this.left.css({'transform': 'rotate('+this.degr+'deg)'});
+        }
+    }
+}
+
+
 
 VE.helpers.extendPasswordFields();

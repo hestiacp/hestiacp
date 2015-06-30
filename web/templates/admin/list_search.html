@@ -1,9 +1,9 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <ul class="context-menu sort-order" style="display:none;">
-          <li entity="date"><span class="name active">date</span><span class="up">&nbsp;</span></li>
-          <li entity="name"><span class="name">name</span><span class="up">&nbsp;</span></li>
-          <li entity="ip"><span class="name">ip</span><span class="up">&nbsp;</span></li>
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Name')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix width-100p">
           <span class="title edit display-inline-block float-left"><b><?=__('Search Results')?></b></span>
@@ -16,9 +16,9 @@
                   <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
                 </form>
               </td>
-              <!-- td class="sort-by">
+              <td class="sort-by">
                 <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
-              </td -->
+              </td>
             </tr>
           </table>
         </div>
@@ -51,10 +51,16 @@
           } else {
             $object = strtolower($data[$key]['TYPE']." ".$data[$key]['KEY']);
           }
+
+          $uniq_id = $data[$key]['TYPE'].'-';
+          if($data[$key]['KEY'] == 'ACCOUNT'){
+            $uniq_id .= 'acc-';
+          }
+          $uniq_id .= sha1($data[$key]['RESULT']);
         ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>" id="web-unit-<?=$i?>">
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?>" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$data[$key]['RESULT']?>">
         <div class="l-unit-toolbar clearfix">
           <!--div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="check<?=$i?>">
@@ -192,14 +198,17 @@
         <!-- /.l-unit-toolbar -->
 
         <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date" u_date="<?=strtotime($data[$key]['DATE'])?>">
+          <div class="l-unit__date">
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate" u_name="<?=$data[$key]['RESULT']?>">
+          <div class="l-unit__name separate">
             <?=$data[$key]['RESULT']?> <span><?=str_replace(',', ', ', $data[$key]['ALIAS'])?></span>
           </div>
           <!-- /.l-unit__name -->

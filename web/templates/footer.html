@@ -13,14 +13,74 @@
             });
 
 
+            // CREATE BUTTON
+
+            $('.l-sort__create-btn').hover(function(){
+              $(".l-sort__create-btn").append("<div id='add-icon'></div>");
+              $(".l-sort__create-btn").append("<div id='tooltip'>"+$('.l-sort__create-btn').attr('title').replace(' ','&nbsp;')+"</div>");
+            }, function(){
+              $("#add-icon").remove();
+              $("#tooltip").remove();
+            });
+
+
+            // SEARCH BOX
+
+            $('.l-sort-toolbar__search, .l-sort-toolbar__search-box .search-input').hover(function(){
+              clearTimeout(VE.tmp.search_display_interval);
+              clearTimeout(VE.tmp.search_hover_interval);
+              VE.tmp.search_display_interval = setTimeout(function(){$('.search-input').addClass('activated');}, 150);
+            }, function(){
+              clearTimeout(VE.tmp.search_display_interval);
+              clearTimeout(VE.tmp.search_hover_interval);
+              VE.tmp.search_hover_interval = setTimeout(function(){
+                if(!VE.tmp.search_activated && !$(".search-input").val().length){
+                  $(".search-input").removeClass('activated');
+                }
+              }, 600);
+            });
+
+            $('.search-input').focus(function(){
+              VE.tmp.search_activated = 1;
+              clearTimeout(VE.tmp.search_hover_interval);
+            });
+            $('.search-input').blur(function(){
+              VE.tmp.search_activated = 0;
+              clearTimeout(VE.tmp.search_hover_interval);
+              VE.tmp.search_hover_interval = setTimeout(function(){
+                if(!$(".search-input").val().length){
+                  $(".search-input").removeClass('activated');
+                }
+              }, 600);
+            });
+
+
+            // TIMER
+
+            if($('.movement.left').length){
+              VE.helpers.refresh_timer.right = $('.movement.right');
+              VE.helpers.refresh_timer.left = $('.movement.left');
+              VE.helpers.refresh_timer.start();
+
+              $('.pause').click(function(){
+                VE.helpers.refresh_timer.stop();
+                $('.pause').addClass('hidden');
+                $('.play').removeClass('hidden');
+                $('.refresh-timer').addClass('paused');
+              });
+
+              $('.play').click(function(){
+                VE.helpers.refresh_timer.start();
+                $('.pause').removeClass('hidden');
+                $('.play').addClass('hidden');
+                $('.refresh-timer').removeClass('paused');
+              });
+            }
+
 
             // SORTING
 
-            V = {
-              sort_par: 'sort-name',
-              sort_direction: -1,
-              sort_as_int: 0
-            };
+            $('#vstobjects input, #vstobjects select, #vstobjects textarea').change(function(){VE.tmp.form_changed=1});
 
             $('.sort-order span').click(function(){
               $('.context-menu.sort-order').toggle();
@@ -29,26 +89,26 @@
 
               $('.sort-order span').removeClass('active');
               $(this).addClass('active');
-              V.sort_par = $(this).parent('li').attr('entity');
-              V.sort_as_int = $(this).parent('li').attr('sort_as_int');
-              V.sort_direction = $(this).hasClass('up')*1 || -1;
+              VE.tmp.sort_par = $(this).parent('li').attr('entity');
+              VE.tmp.sort_as_int = $(this).parent('li').attr('sort_as_int');
+              VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1;
 
               $('.l-sort .sort-by span b').html($(this).parent('li').find('.name').html());
               $('.l-sort .sort-by i').removeClass('l-icon-up-arrow l-icon-down-arrow');
               $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('l-icon-up-arrow') : $('.l-sort .sort-by i').addClass('l-icon-down-arrow');
 
 
-              $('.l-unit').sort(function (a, b) {
-                if(V.sort_as_int)
-                  return parseInt($(a).attr(V.sort_par)) >= parseInt($(b).attr(V.sort_par)) ? V.sort_direction : V.sort_direction * -1;
+              $('.units .l-unit').sort(function (a, b) {
+                if(VE.tmp.sort_as_int)
+                  return parseInt($(a).attr(VE.tmp.sort_par)) >= parseInt($(b).attr(VE.tmp.sort_par)) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;
                 else
-                  return $(a).attr(V.sort_par) <= $(b).attr(V.sort_par) ? V.sort_direction : V.sort_direction * -1;
+                  return $(a).attr(VE.tmp.sort_par) <= $(b).attr(VE.tmp.sort_par) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;
                 }).appendTo(".l-center.units");
               });
 
 
 
-              // STARS
+            // STARS
 
               $('.l-unit .l-icon-star').click(function(){
                 var l_unit = $(this).parents('.l-unit');
@@ -57,11 +117,304 @@
                   // removing star
                   $.removeCookie(l_unit.attr('uniq-id'));
                   l_unit.removeClass('l-unit--starred');
+                  l_unit.attr({'sort-star': 0});
                 }
                 else{
-                  $.cookie(l_unit.attr('uniq-id'), 1, {expires: 3650});
+                  $.cookie(l_unit.attr('uniq-id'), 1, {expires: 3650, path: '/'});
                   l_unit.addClass('l-unit--starred');
+                  l_unit.attr({'sort-star': 1});
                 }
+              });
+
+
+
+              // Shortcuts
+
+              shortcut.add("Ctrl+Enter", function(){ 
+                $('form#vstobjects').submit();
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': false,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Ctrl+Backspace", function(){ 
+                if($('form#vstobjects button.cancel')[0]){
+                  location.href=$('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'","");
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': false,
+                  'target':           document
+                  }
+              );
+
+
+              shortcut.add("f", function(){
+                $('.search-input').addClass('activated').focus();
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("a", function(){
+                if($('.l-sort__create-btn')[0]){
+                  location.href=$('.l-sort__create-btn').attr('href');
+                }
+              }, {
+                  'type':             'keyup',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+
+
+              shortcut.add("a+1", function(){
+                  location.href='/add/user/';
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+
+
+
+              shortcut.add("1", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(1) a').attr('href'));
+                } else {
+                  location.href=$('.l-stat .l-stat__col:nth-of-type(1) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("2", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(2) a').attr('href'));
+                } else {
+                  location.href=$('.l-stat .l-stat__col:nth-of-type(2) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("3", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(3) a').attr('href'));
+                } else {
+                  location.href=$('.l-stat .l-stat__col:nth-of-type(3) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("4", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(4) a').attr('href'));
+                } else {
+                  location.href=$('.l-stat .l-stat__col:nth-of-type(4) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("5", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(5) a').attr('href'));
+                } else {
+                  location.href=$('.l-stat .l-stat__col:nth-of-type(5) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("6", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(6) a').attr('href'));
+                } else {
+                  location.href=$('.l-stat .l-stat__col:nth-of-type(6) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("7", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(7) a').attr('href'));
+                } else {
+                  location.href=$('.l-stat .l-stat__col:nth-of-type(7) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+
+              shortcut.add("Ctrl+1", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(1) a').attr('href'));
+                } else {
+                  location.href=$('.l-menu .l-menu__item:nth-of-type(1) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Ctrl+2", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(2) a').attr('href'));
+                } else {
+                  location.href=$('.l-menu .l-menu__item:nth-of-type(2) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Ctrl+3", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(3) a').attr('href'));
+                } else {
+                  location.href=$('.l-menu .l-menu__item:nth-of-type(3) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Ctrl+4", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(4) a').attr('href'));
+                } else {
+                  location.href=$('.l-menu .l-menu__item:nth-of-type(4) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Ctrl+5", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(5) a').attr('href'));
+                } else {
+                  location.href=$('.l-menu .l-menu__item:nth-of-type(5) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Ctrl+6", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(6) a').attr('href'));
+                } else {
+                  location.href=$('.l-menu .l-menu__item:nth-of-type(6) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Ctrl+7", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(7) a').attr('href'));
+                } else {
+                  location.href=$('.l-menu .l-menu__item:nth-of-type(7) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Ctrl+8", function(){
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(8) a').attr('href'));
+                } else {
+                  location.href=$('.l-menu .l-menu__item:nth-of-type(8) a').attr('href');
+                }
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+
+              shortcut.add("h", function(){
+                $('.shortcuts').toggle();
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+
+              $('.shortcuts .close').click(function(){
+                $('.shortcuts').hide();
               });
 
 
@@ -78,12 +431,12 @@
                         /*var ref = $(evt.target);
                         $('.l-content').find('.l-unit .ch-toggle').attr('checked', false);
                         $('.l-content').find('.l-unit.selected .ch-toggle').attr('checked', true);
-                        
-                        
+
+
                         if ($('.l-content').find('.l-unit.selected').length == $('.l-content').find('.l-unit').length) {
                             $('.toggle-all').addClass('clicked-on');
                         }*/
-                        
+
                     },
                     'toggleAllHook': function() {
                         /*if ($('.l-unit').length == $('.ch-toggle:checked').length) {
@@ -105,5 +458,43 @@
             }
         });
     </script>
+
+    <div title="Confirmation" class="confirmation-text-redirect hidden">
+      <p class="confirmation"><?=__('LEAVE_PAGE_CONFIRMATION')?></p>
+    </div>
+
+    <div class="shortcuts" style="display:none">
+      <div class="header">
+        <div class="title">Shortcuts</div>
+        <div class="close"></div>
+      </div>
+      <ul>
+        <li><span class="key">a</span>Go to add form</li>
+        <li><span class="key">&lt;Ctrl&gt; + Enter</span>Save Form</li>
+        <li class="step-top"><span class="key">&lt;Ctrl&gt; + Backspace</span>Cancel saving form</li>
+
+        <li><span class="key">1</span>Go to USER list</li>
+        <li><span class="key">2</span>Go to WEB list</li>
+        <li><span class="key">3</span>Go to DNS list</li>
+        <li><span class="key">4</span>Go to MAIL list</li>
+        <li><span class="key">5</span>Go to DB list</li>
+        <li><span class="key">6</span>Go to CRON list</li>
+        <li class="step-top"><span class="key">7</span>Go to BACKUP list</li>
+      </ul>
+      <ul>
+        <li class="step-top"><span class="key">f</span>Focus on search</li>
+        <li class="step-top"><span class="key">h</span>Display/Close shortcuts</li>
+
+        <li><span class="key">&lt;Ctrl&gt; + 1</span>Go to Packages</li>
+        <li><span class="key">&lt;Ctrl&gt; + 2</span>Go to IP</li>
+        <li><span class="key">&lt;Ctrl&gt; + 3</span>Go to Graphs</li>
+        <li><span class="key">&lt;Ctrl&gt; + 4</span>Go to Statistics</li>
+        <li><span class="key">&lt;Ctrl&gt; + 5</span>Go to Log</li>
+        <li><span class="key">&lt;Ctrl&gt; + 6</span>Go to Updates</li>
+        <li><span class="key">&lt;Ctrl&gt; + 7</span>Go to Firewall</li>
+        <li><span class="key">&lt;Ctrl&gt; + 8</span>Go to Server</li>
+      </ul>
+
+    </div>
     </body>
 </html>

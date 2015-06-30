@@ -7,6 +7,7 @@
           <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-user"><span class="name"><?=__('User')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-server"><span class="name"><?=__('Host')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -22,13 +23,13 @@
                 if ($data[$key]['TYPE'] == 'mysql'){
                   $mysql = 1;
 
-                  $db_admin_link = "http://".$http_host."/phpmyadmin/";
+                  $db_myadmin_link = "http://".$http_host."/phpmyadmin/";
                   if (!empty($_SESSION['DB_PMA_URL']))
                     $db_myadmin_link = $_SESSION['DB_PMA_URL'];
                 }
                 if ($data[$key]['TYPE'] == 'pgsql'){
                   $pgsql = 1;
-                  $db_admin_link = "http://".$http_host."/phppgadmin/";
+                  $db_pgadmin_link = "http://".$http_host."/phppgadmin/";
                   if (!empty($_SESSION['DB_PGA_URL']))
                     $db_pgadmin_link = $_SESSION['DB_PGA_URL'];
                 }
@@ -108,7 +109,7 @@
       ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE['db-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="db-<?=sha1($key)?>"" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>">
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE['db-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="db-<?=sha1($key)?>"" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-star="<? if($_COOKIE['db-'.sha1($key)] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">

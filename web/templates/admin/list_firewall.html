@@ -7,6 +7,7 @@
           <li entity="sort-port"><span class="name"><?=__('Port')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-ip" sort_as_int="1"><span class="name"><?=__('IP address')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-comment"><span class="name"><?=__('Comment')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -71,7 +72,7 @@
           }
       ?>
 
-      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_COOKIE['firewall-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="firewall-<?=sha1($key)?>" sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>">
+      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_COOKIE['firewall-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="firewall-<?=sha1($key)?>" sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>" sort-star="<? if($_COOKIE['firewall-'.sha1($key)] == 1) echo '1'; else echo '2'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="rule[]" value="<?php echo $key ?>">

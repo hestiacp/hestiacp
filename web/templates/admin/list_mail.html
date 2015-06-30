@@ -6,6 +6,7 @@
           <li entity="sort-name"><span class="name"><?=__('Domain')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-accounts" sort_as_int="1"><span class="name"><?=__('Accounts')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -85,7 +86,7 @@
       ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE['mail-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="mail-<?=sha1($key)?>"  sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-accounts="<?=$data[$key]['ACCOUNTS']?>">
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE['mail-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="mail-<?=sha1($key)?>"  sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_COOKIE['mail-'.sha1($key)] == 1) echo "1"; else echo "0"; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">

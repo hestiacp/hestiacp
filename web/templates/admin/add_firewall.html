@@ -31,6 +31,7 @@
         ?>
         <form id="vstobjects" name="v_add_ip" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="ok" value="Add" />
             <script type="text/javascript">
                 function elementHideShow(elementToHideOrShow) {
                     var el = document.getElementById(elementToHideOrShow);
@@ -126,4 +127,5 @@
                 </tr>
             </table>
         </from>
+
     </div>

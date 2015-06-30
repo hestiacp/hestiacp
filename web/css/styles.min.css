@@ -989,8 +989,9 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-sort-toolbar .sort-by b {
-  text-transform: lowercase;
+  text-transform: uppercase;
   padding-left: 3px;
+  font-size: 12px;
 }
 
 .l-sort-toolbar .toggle-all:hover {
@@ -1753,7 +1754,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   background-position: -78px -442px;
 }
 
-.actions-panel__mail i {
+.actions-panel__.l-icon-starmail i {
   background-position: -1px -324px;
 }
 .actions-panel__mail:hover a {
@@ -1890,7 +1891,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-icon-star:hover {
-  -background-position: -130px 560px;
   background-position: 0px 560px;
 }
 
@@ -1900,7 +1900,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit:hover .l-icon-star {
-  display: inline-block;
+  /*display: inline-block;*/
 }
 
 
@@ -2671,3 +2671,64 @@ form#vstobjects.suspended {
 .ui-dialog .ui-dialog-buttonpane button:nth-of-type(2) {
   -background-color: #dfdedd;
 }
+
+.shortcuts {
+  background: rgba(50, 50, 50, 0.9);
+  display: inline-block;
+  position: fixed;
+  right: 20%;
+  bottom: 0;
+  color: #eee;
+  width: 800px;
+  border: 1px solid #333;
+}
+.shortcuts .header {
+  border-bottom: 1px solid #333;
+  height: 43px;
+}
+.shortcuts .title {
+  text-transform: uppercase;
+  color: #ffcc00;
+  padding: 7px 0 7px 14px;
+  display: inline-block;
+  float: left;
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+.shortcuts .close {
+  background: url("/images/sprite.png") repeat scroll -408px -469px;
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: 32px;
+  padding-top: 11px;
+  width: 46px;
+}
+.shortcuts .close:hover {
+  background-color: #000;
+  
+}
+.shortcuts .close:active {
+  background-color: #55c9c0;
+}
+.shortcuts ul {
+  list-style-type: none;
+  padding: 30px 15px;
+  display: inline-block;
+  float: left;
+}
+.shortcuts ul li {
+  padding: 5px 20px;
+}
+.shortcuts ul li.step-top {
+  padding-bottom: 30px;
+}
+.shortcuts ul li span {
+  color: #48F4EF;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0 20px 0 0;
+  text-align: right;
+  width: 140px;
+}
+

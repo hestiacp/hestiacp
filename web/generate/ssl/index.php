@@ -40,6 +40,7 @@ if (empty($_POST['v_country'])) $errors[] = __('country');
 if (empty($_POST['v_state'])) $errors[] = __('domain');
 if (empty($_POST['v_locality'])) $errors[] = __('city');
 if (empty($_POST['v_org'])) $errors[] = __('organization');
+if (empty($_POST['v_email'])) $errors[] = __('email');
 $v_domain = $_POST['v_domain'];
 $v_email = $_POST['v_email'];
 $v_country = $_POST['v_country'];

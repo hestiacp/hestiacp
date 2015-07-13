@@ -74,6 +74,7 @@ fi
 # Adding httpasswd user
 auth_hash=$($BIN/v-generate-password-hash htpasswd htpasswd $password)
 touch $htpasswd
+chmod 640 $htpasswd $htaccess
 sed -i "/^$auth_user:/d" $htpasswd
 echo "$auth_user:$auth_hash" >> $htpasswd
 

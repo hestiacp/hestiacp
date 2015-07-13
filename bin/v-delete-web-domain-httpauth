@@ -54,7 +54,7 @@ sed -i "/^$auth_user:/d" $htpasswd
 
 # Deleting password protection
 if [ "$(echo "$AUTH_USER" |tr : '\n' |wc -l)" -le 1 ]; then
-    rm -f $htaccess
+    rm -f $htaccess $htpasswd
     restart_required='yes'
 fi
 

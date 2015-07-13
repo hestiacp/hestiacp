@@ -35,7 +35,7 @@ conf=$USER_DATA/web.conf
 
 # Defining fileds to select
 fields="\$DOMAIN \$IP \$IP6 \$U_DISK \$U_BANDWIDTH \$TPL \$ALIAS \$STATS"
-fields="$fields \$STATS_USER \$SSL \$SSL_HOME \$FTP_USER \$FTP_PATH"
+fields="$fields \$STATS_USER \$SSL \$SSL_HOME \$FTP_USER \$FTP_PATH \$AUTH_USER"
 fields="$fields \$BACKEND \$PROXY \$PROXY_EXT \$SUSPENDED \$TIME \$DATE"
 
 # Listing domains

@@ -1,12 +1,24 @@
 body { margin: 0; padding: 0; }
 .hidden { display: none; }
 
+.l-logo {
+    background-image: url("/images/sprite.png");
+    background-position: -117px -34px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    float: left;
+    height: 22px;
+    margin-left: 10px;
+    margin-top: 11px;
+    width: 73px;
+}
+
 #main{ display: inline-block; font-family: Arial; font-size: 15px; color: #777; width: 100%; }
 
 .window { display: inline-block; float: left; /*border: 1px solid #eee;*/ width: 50%; height: 100%; background-color: #ececec; /*background: url(/images/background-dots.png) #ececec;*/ }
 .window.active { background: #fff; }
 
-.pwd { background-color: #7b7b7b; height: 31px; padding: 12px 0 0 17px; }
+.pwd { background-color: #7b7b7b; height: 31px; padding: 12px 0 0 17px; color: yellow;}
 .window.active .pwd { background-color: #333; }
 .window.active .pwd a { color: #FFF; }
 .pwd a { color: #CFCFCF; margin-right: 6px; padding: 0 7px; cursor: pointer; text-decoration: none; }
@@ -227,7 +239,12 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: 0;  border-left: 
 .context-menu.sort-order li:hover { background-color: #333; }
 .context-menu.sort-order span { padding: 12px 12px 12px 12px; background: ulr(/images/flat_icons.png) }
 .context-menu.sort-order span.up { background: url(/images/flat_icons.png) -255px -141px; padding: 12px 14px; display: inline-block; width: 16px; }
-.context-menu.sort-order span.name { background: url("/images/flat_icons.png") repeat scroll -162px -105px; display: inline-block; padding: 12px 28px 12px 12px; width: 64px; }
+.context-menu.sort-order span.name,
+.context-menu.sort-order span.date,
+.context-menu.sort-order span.size,
+.context-menu.sort-order span.type
+ { background: url("/images/flat_icons.png") repeat scroll -162px -105px; display: inline-block; padding: 12px 28px 12px 12px; width: 64px; }
+
 
 
 .context-menu.sort-order span.active { background-color: #FFCC00; color: #FFF; }

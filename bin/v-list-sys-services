@@ -180,6 +180,9 @@ if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
             if [ ! -e "/etc/redhat-release" ]; then
                 db_proc_name='postgres'
             fi
+            if [ ! -e '/etc/init.d/postgresql' ]; then
+                db_proc_name='postgres'
+            fi
         fi
         get_srv_state $service $db_proc_name
         str="$str\nNAME='$service' SYSTEM='database server' STATE='$state'"

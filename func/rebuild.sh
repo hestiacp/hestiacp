@@ -515,6 +515,9 @@ rebuild_mail_domain_conf() {
         fi
 
         if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+            if [ "$QUOTA" = 'unlimited' ]; then
+                QUOTA=0
+            fi
             str="$account:$MD5:$user:mail::$HOMEDIR/$user:$QUOTA"
             echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
             for malias in ${ALIAS//,/ }; do

@@ -26,7 +26,7 @@ App.Templates.html = {
                             <p class="ok" onClick="FM.confirmDelete();">delete</p>\
                             </div>\
                         </div>'],
-        popup_rename: ['<div class="confirm-box rename warning">\
+        popup_rename_: ['<div class="confirm-box rename warning">\
                             <div class="message">Rename file <span class="title">"~!:FILENAME~!"</span></div>\
                             <!-- div class="warning">File <span class="title">"reading.txt"</span> already exists</div -->\
                             <div class="warning"></div>\
@@ -42,6 +42,20 @@ App.Templates.html = {
                                 <p class="ok" onClick="FM.confirmRename();">rename</p>\
                             </div>\
                         </div>'],
+
+        popup_rename: ['<div class="confirm-box unpack warning">\
+                            <div class="message">Extract archive <span class="title">"~!:FILENAME~!"</span> to <span class="title">"~!:DIRNAME~!"</span></div>\
+                            <div class="warning"></div>\
+                            <div class="actions">\
+                                <label><input type="checkbox" name="overwrite" class="title" />Overwrite exising files</label>\
+                            </div>\
+                            <div class="controls">\
+                                <p class="cancel" onClick="FM.popupClose();">cancel</p>\
+                                <p class="ok" onClick="FM.confirmRename();">Extract</p>\
+                            </div>\
+                        </div>'],
+
+
         popup_create_file: ['<div class="confirm-box rename warning">\
                             <div class="message">Create file</div>\
                             <!-- div class="warning">File <span class="title">"reading.txt"</span> already exists</div -->\

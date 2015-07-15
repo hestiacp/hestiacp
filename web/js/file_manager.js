@@ -65,8 +65,20 @@ FM.init = function() {
     FM.TAB_A_CURRENT_PATH = FM.formatPath(GLOBAL.START_DIR_A);
     FM.TAB_B_CURRENT_PATH = FM.formatPath(GLOBAL.START_DIR_B);
     
-    FM.open(dir_A, FM.TAB_A);
-    FM.open(dir_B, FM.TAB_B);
+    FM.open(dir_A, FM.TAB_A, function() {
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+        if (FM['CURRENT_' + tab + '_LINE'] == -1) {
+           FM.setActive(0, FM.CURRENT_TAB);
+        }
+    });
+    FM.open(dir_B, FM.TAB_B, function() {
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+        if (FM['CURRENT_' + tab + '_LINE'] == -1) {
+           FM.setActive(0, FM.CURRENT_TAB);
+        }
+    });
+    
+    
 }
 
 FM.setActive = function(index, box) {
@@ -74,18 +86,31 @@ FM.setActive = function(index, box) {
     $(box + ' .selected').removeClass('selected');
     $(box).find('li:eq('+index+')').addClass('selected');
     //$(box).find('li:eq('+index+')').addClass('selected');
-    var w_h = $(window).height();
-    var pos = $(box).find('li:eq('+index+')').position();
-    console.log(w_h);
-    console.log(pos);
-    if (pos.top > w_h) {
-        $(box).scrollTo($(box).find('li:eq('+index+')'));
+    //var w_h = $(window).height() - 100;
+    var w_offset = $(box).scrollTop();
+    var w_height = $(box).height()
+    var pos = $(box).find('li.selected').position();
+    //console.log(w_height);
+    //console.log(w_offset);
+    //console.log(pos);
+    var wwh = w_height - w_offset + pos.top;
+    //console.info(wwh);
+    console.info((pos.top + w_offset) + ' > ' + w_height);
+    console.log((pos.top + w_offset) > w_height);
+/*    if (pos.top > w_height) {
+        var cur_elm = $(box).find('li.selected').position();
+        var cur_elm_height = $(box).find('li.selected').height();
+        //$(box).scrollTo(wwh - 350);
+        $(box).scrollTo(w_offset + cur_elm.top - w_height/2 + cur_elm_height/2);
+        
     }
-    else {
-        if (Math.abs(pos.top) > w_h) {
-            $(box).scrollTo($(box).find('li:eq('+index+')'));
-        }
-    }
+    else {*/
+        var cur_elm = $(box).find('li.selected').position();
+        var cur_elm_height = $(box).find('li.selected').height();
+
+        $(box).scrollTo(w_offset + cur_elm.top - w_height/2 + cur_elm_height/2);
+
+    //}
 
     FM['CURRENT_' + tab + '_LINE'] = index;
     FM.CURRENT_TAB  = box;
@@ -122,7 +147,7 @@ FM.goDown = function() {
 }
 
 
-FM.open = function(dir, box) {
+FM.open = function(dir, box, callback) {
     var tab = FM.getTabLetter(box);
 
     FM['TAB_'+tab+'_CURRENT_PATH'] = dir;
@@ -137,7 +162,15 @@ FM.open = function(dir, box) {
         else {
             FM.directoryNotAvailable(reply);
         }
+
+        callback && callback(reply);
+        
+        var current_pwd = dir.trim() == '' ? FM.ROOT_DIR : dir;
+    
+        $('.pwd-tab-' + tab).html(current_pwd);
     });
+    
+    
 }
 
 FM.isItemFile = function(item) {
@@ -405,6 +438,18 @@ FM.fotoramaOpen = function(tab, img_index) {
 }
 
 FM.selectItem = function(item, box) {
+    
+    if (FM.CURRENT_TAB == FM.TAB_A) {
+        FM.setTabActive(FM.TAB_B);
+        $(FM.TAB_B).find('.selected-inactive').removeClass('selected-inactive');
+        $(FM.TAB_A).find('.selected').addClass('selected-inactive');
+    }
+    else {
+        FM.setTabActive(FM.TAB_A);
+        $(FM.TAB_A).find('.selected-inactive').removeClass('selected-inactive');
+        $(FM.TAB_B).find('.selected').addClass('selected-inactive');
+    }
+    
     $(box).find('.active').removeClass('active');
     $(box).find('.selected').removeClass('selected');
     /*if ($(item).hasClass('active')) {
@@ -421,6 +466,8 @@ FM.selectItem = function(item, box) {
     }
     
     FM.setTabActive(box);
+    
+    
 }
 
 FM.switchTab = function() {
@@ -433,6 +480,12 @@ FM.switchTab = function() {
         FM.setTabActive(FM.TAB_A);
         $(FM.TAB_A).find('.selected-inactive').removeClass('selected-inactive');
         $(FM.TAB_B).find('.selected').addClass('selected-inactive');
+    }
+    
+    
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    if (FM['CURRENT_' + tab + '_LINE'] == -1) {
+       FM.setActive(0, FM.CURRENT_TAB);
     }
 }
 
@@ -448,7 +501,7 @@ FM.setTabActive = function(box) {
 FM.confirmRename = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
-    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
     if (!selected) {
         return alert('No file selected');
     }
@@ -481,7 +534,7 @@ FM.confirmRename = function() {
 
 FM.renameItems = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
-    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
     if (selected.length == 0) {
         return alert('No file selected');
     }
@@ -822,11 +875,11 @@ FM.reOrderList = function(elm){
         FM.ORDER_TAB_B = entity+'_'+direction;
     }
     
-    primary_box.find('span').removeClass('selected');
+    primary_box.find('span').removeClass('active');
     $(menu).find('.sort-by .entity').html(elm.closest('li').find('span').html());
     $(menu).find('.sort-by').removeClass('desc asc').addClass(direction).addClass('sort-by');
 
-    elm.addClass('selected');
+    elm.addClass('active');
     primary_box.hide();
 
     FM.open(path, tab);

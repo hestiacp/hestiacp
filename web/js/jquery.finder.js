@@ -211,6 +211,22 @@
             
             function turnOff(e) {
                 if (f.detect.ctrl(e)) { 
+/*
+                  shortcut.add("Ctrl+a", function(evt){
+                    if(jQuery('.ch-toggle:checked').length > 0) {
+                      f.t.unHAll(p, o);
+                      jQuery('.ch-toggle:checked').attr('checked', false);
+                    } else {
+                      f.t.hAll(p,o);
+                    }
+                  }, {
+                    'type':             'keyup',
+                    'propagate':        false,
+                    'disable_in_input': true,
+                    'target':           document
+                    }
+                  );
+*/
                     if (e.keyCode == 65) { // ctrl + a
                         e.preventDefault();
                         //if(f.detect.alt(e)) {

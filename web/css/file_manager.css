@@ -18,7 +18,7 @@ body { margin: 0; padding: 0; }
 .window { display: inline-block; float: left; /*border: 1px solid #eee;*/ width: 50%; height: 100%; background-color: #ececec; /*background: url(/images/background-dots.png) #ececec;*/ }
 .window.active { background: #fff; }
 
-.pwd { background-color: #7b7b7b; height: 31px; padding: 12px 0 0 17px; color: yellow;}
+.pwd { background-color: #7b7b7b; height: 31px; padding: 12px 0 0 17px; color: #eee; font-size: 14px; }
 .window.active .pwd { background-color: #333; }
 .window.active .pwd a { color: #FFF; }
 .pwd a { color: #CFCFCF; margin-right: 6px; padding: 0 7px; cursor: pointer; text-decoration: none; }
@@ -305,6 +305,10 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: 0;  border-left: 
 
 .confirm-box .actions select { background-color: #333333; border: 1px solid #ccc; color: #fff; font-family: Arial; font-size: 16px; margin-bottom: 27px; margin-left: 27px; padding: 10px 14px; }
 .confirm-box .actions .title { color: #ccc; font-family: Arial; line-height: 33px; padding-left: 27px; text-transform: capitalize; }
+.confirm-box .actions label { cursor: pointer; padding-left: 27px; color: #ebe697; }
+.confirm-box.unpack .actions { padding-bottom: 30px; }
+.confirm-box.unpack .actions input { margin-right: 5px; }
+
 
 /*.confirm-box.owner-mode { height: 484px; }*/
 .confirm-box.owner-mode .warning { display: none; }
@@ -316,6 +320,8 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: 0;  border-left: 
 .confirm-box.owner-mode .mode .col,
 .confirm-box.owner-mode .owner-group .col { display: inline-block; float: left; width: 150px; }
 .confirm-box.owner-mode .recursive { margin-top: 30px; margin-bottom: 25px; }
+
+
 
 
 .warning-box { width: 60%; background-color: #ff9f89; border-bottom: 5px solid #ff6c6e; color: #FFF; font-family: arial; margin-left: auto; margin-right: auto; padding-bottom: 30px; margin-bottom: 50px; left: 20%; position: absolute; top: 0; box-shadow: 0 2px 11px 0 rgba(0, 0, 0, 0.5); }
@@ -345,17 +351,88 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: 0;  border-left: 
 
 
 /*
- Для Дмитрия (удалить после прочтения):
- 
- Аплоад прячет инпут, делая его прозрачным, и помещая поверх кнопку html (сделано для кроссбраузерности)
- При стилизации кнопки для аплоада, важно задать такие же размеры для инпута с типом файла, 
- иначе он может быть больше или меньше стилизованной кнопки, что приведёт к вызову аплоад диалогового окна 
- при клике на неправильную область
- 
- 
-    вот файл инпут ----> .fileinput-button input
+
+ Прочёл. Похоже проблема уже решена, не понял, что нужно сделать, проверить правильность решения?
+ Вроде всё в порядке, инпут уже максимльно близко вкладывается в спан.
+
+
+ -- Для Дмитрия (удалить после прочтения):
+
+ -- Аплоад прячет инпут, делая его прозрачным, и помещая поверх кнопку html (сделано для кроссбраузерности)
+ -- При стилизации кнопки для аплоада, важно задать такие же размеры для инпута с типом файла, 
+ -- иначе он может быть больше или меньше стилизованной кнопки, что приведёт к вызову аплоад диалогового окна 
+ -- при клике на неправильную область
+
+
+ -- вот файл инпут ----> .fileinput-button input
 */
 .fileinput-button input {
     font-size: 14px !important;
     width: 90px;
 }
+
+.progress-container {
+  width: 100%;
+  position: fixed;
+  bottom: 1px;
+}
+.progress-container .progress-elm {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    display: block;
+    height: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 7px;
+    width: 212px;
+}
+
+.progress-container .progress-elm .title {
+    color: #fff;
+    display: inline-block;
+    float: left;
+    font-family: arial;
+    font-size: 11px;
+    margin-left: 4px;
+    padding-right: 14px;
+    padding-top: 0;
+    text-transform: uppercase;
+}
+
+.progress-container .progress-elm .progress {
+    background: #ebebeb url("/images/progress.gif") no-repeat scroll -60px 0;
+    border-color: #8a9079;
+    border-radius: 3px;
+    color: transparent;
+    display: inline-block;
+    height: 0;
+    margin-top: 3px;
+    padding: 3px 12px;
+    transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    width: 60px;
+    float: left;
+}
+
+.progress-container .progress-elm .close {
+    background: rgba(0, 0, 0, 0) url("/images/sprite.png") repeat scroll -428px -487px;
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    height: 7px;
+    margin-right: 3px;
+    margin-top: 3px;
+    width: 7px;
+}
+.progress-container .progress-elm .close:hover {
+    border: 7px solid #333;
+    margin-top: -4px;
+    margin-right: -4px;
+    background-color: #333;
+}
+.progress-container .progress-elm .close:active {
+    border: 7px solid #FFCC00;
+    margin-top: -4px;
+    margin-right: -4px;
+    background-color: #FFCC00;
+}
+

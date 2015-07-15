@@ -91,27 +91,6 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Package');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_package">
-                                        <?php
-                                            foreach ($packages as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
-                                                $skey = "'".$key."'";
-                                                if (( $key == $v_package ) || ( $skey == $v_package)){
-                                                    echo 'selected' ;
-                                                }
-                                                echo ">".htmlentities($key)."</option>\n";
-                                            }
-                                        ?> 
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
                                     <?php print __('Language');?>
                                 </td>
                             </tr>
@@ -152,27 +131,6 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=\"".htmlentities($v_lname)."\""; ?>>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('SSH Access');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_shell">
-                                        <?php
-                                            foreach ($shells as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                                $svalue = "'".$value."'";
-                                                if (( $value == $v_shell ) || ($svalue == $v_shell )){
-                                                    echo 'selected' ;
-                                                }
-                                                echo ">".htmlentities($value)."</option>\n";
-                                            }
-                                        ?> 
-                                    </select>
                                 </td>
                             </tr>
                             <tr>

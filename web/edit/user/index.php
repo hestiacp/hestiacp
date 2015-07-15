@@ -7,8 +7,6 @@ $TAB = 'USER';
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 
 // Check user argument
 if (empty($_GET['user'])) {
@@ -164,6 +162,11 @@ if (!empty($_POST['save'])) {
         $_SESSION['ok_msg'] = __('Changes has been saved.');
     }
 }
+
+
+// Header
+include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
+
 
 // Panel
 if (!empty($_SESSION['look'])) {

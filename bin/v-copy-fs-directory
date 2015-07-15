@@ -1,16 +1,16 @@
 #!/bin/bash
-# info: copy file
-# options: USER SRC_FILE DST_FLE
+# info: copy directory
+# options: USER SRC_DIRECTORY DST_DIRECTORY
 #
-# The function copies file on the file system
+# The function copies directory on the file system
 
 user=$1
-src_file=$2
-dst_file=$3
+src_dir=$2
+dst_dir=$3
 
 # Checking arguments
-if [ -z "$dst_file" ]; then
-    echo "Usage: USER SRC_FILE DST_FILE"
+if [ -z "$dst_dir" ]; then
+    echo "Usage: USER SRC_DIRECTORY DST_DIRECTORY"
     exit 1
 fi
 
@@ -25,25 +25,25 @@ if [ -z $homedir ]; then
     exit 1
 fi
 
-# Checking source file
-if [ ! -f "$src_file" ]; then
+# Checking source dir
+if [ ! -e "$src_dir" ]; then
     exit 1
 fi
 
 # Checking source path
-rpath=$(readlink -f "$src_file")
+rpath=$(readlink -f "$src_dir")
 if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
     exit 1
 fi
 
 # Checking destination path
-rpath=$(readlink -f "$dst_file")
+rpath=$(readlink -f "$dst_dir")
 if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
     exit 1
 fi
 
-# Copying file
-sudo -u $user cp $src_file $dst_file >/dev/null 2>&1
+# Copying directory
+sudo -u $user cp -r $src_dir $dst_dir >/dev/null 2>&1
 
 # Exiting
 exit $?

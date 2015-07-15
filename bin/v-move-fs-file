@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: copy file
+# info: move file
 # options: USER SRC_FILE DST_FLE
 #
-# The function copies file on the file system
+# The function moved file or directory on the file system. This function
+# can also be used to rename files just like normal mv command.
 
 user=$1
 src_file=$2
@@ -43,7 +44,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Copying file
-sudo -u $user cp $src_file $dst_file >/dev/null 2>&1
+sudo -u $user mv $src_file $dst_file >/dev/null 2>&1
 
 # Exiting
 exit $?

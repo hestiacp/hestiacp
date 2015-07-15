@@ -1,5 +1,8 @@
 #!/bin/bash
-# File reader
+# info: open file
+# options: USER FILE
+#
+# The function opens/reads files on the file system
 
 user=$1
 path=$2
@@ -10,12 +13,12 @@ if [ -z "$path" ]; then
     exit 1
 fi
 
-# Checking users
+# Checking vesta user
 if [ ! -e "$VESTA/data/users/$user" ]; then
     exit 1
 fi
 
-# Checking homedir
+# Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z $homedir ]; then
     exit 1
@@ -23,14 +26,14 @@ fi
 
 # Checking path
 if [ ! -z "$path" ]; then
-    # Validating absolute path
     rpath=$(readlink -f "$path")
-    if [ -z "$(echo $rpath |grep $homedir)" ]; then
+    if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
         exit 1
     fi
 fi
 
-cat "$path"
+# Reading file
+sudo -u $user cat "$path"
 
-exit
-
+# Exiting
+exit $?

@@ -1,0 +1,100 @@
+#!/bin/bash
+# info: archive to directory
+# options: USER ARCHIVE DIRECTORY
+#
+# The function extracts archive into directory on the file system
+
+user=$1
+src_file=$2
+dst_dir=$3
+
+# Checking arguments
+if [ -z "$dst_dir" ]; then
+    echo "Usage: USER ARCHIVE DIRECTORY"
+    exit 1
+fi
+
+# Checking vesta user
+if [ ! -e "$VESTA/data/users/$user" ]; then
+    exit 1
+fi
+
+# Checking user homedir
+homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
+if [ -z $homedir ]; then
+    exit 1
+fi
+
+# Checking source dir
+if [ ! -e "$src_file" ]; then
+    exit 1
+fi
+
+# Checking source path
+rpath=$(readlink -f "$src_file")
+if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+    exit 1
+fi
+
+# Checking destination path
+rpath=$(readlink -f "$dst_dir")
+if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+    exit 1
+fi
+
+# Extracting gziped archive
+if [ ! -z "$(echo $src_file |egrep -i  '.tgz|.tar.gz')" ]; then
+    x='yes'
+    sudo -u $user mkdir -p $dst_dir >/dev/null 2>&1
+    sudo -u $user tar -xzf $src_file -C $dst_dir >/dev/null 2>&1
+    rc=$?
+fi
+
+# Extracting bziped archive
+if [ ! -z "$(echo $src_file |egrep -i  '.tbz|.tar.bz')" ]; then
+    x='yes'
+    sudo -u $user mkdir -p $dst_dir >/dev/null 2>&1
+    sudo -u $user tar -xjf $src_file -C $dst_dir >/dev/null 2>&1
+    rc=$?
+fi
+
+# Extracting gziped file
+if [ ! -z "$(echo $src_file |grep -i  '.gz')" ] && [ -z "$x" ]; then
+    sudo -u $user mkdir -p $dst_dir >/dev/null 2>&1
+    sudo -u $user mv $src_file $dst_dir >/dev/null 2>&1
+    sudo -u $user gzip -d $dst_dir/$(basename $src_file) >/dev/null 2>&1
+    rc=$?
+fi
+
+# Extracting bziped file
+if [ ! -z "$(echo $src_file |grep -i  '.bz')" ] && [ -z "$x" ]; then
+    sudo -u $user mkdir -p $dst_dir >/dev/null 2>&1
+    sudo -u $user mv $src_file $dst_dir >/dev/null 2>&1
+    sudo -u $user bzip2 -d $dst_dir/$(basename $src_file) >/dev/null 2>&1
+    rc=$?
+fi
+
+# Extracting ziped archive
+if [ ! -z "$(echo $src_file |grep -i  '.zip')" ]; then
+    sudo -u $user mkdir -p $dst_dir >/dev/null 2>&1
+    sudo -u $user unzip $src_file -d $dst_dir >/dev/null 2>&1
+    rc=$?
+fi
+
+# Extracting tared archive
+if [ ! -z "$(echo $src_file |grep -i '.tar')" ] && [ -z "$x" ]; then
+    x='yes'
+    sudo -u $user mkdir -p $dst_dir >/dev/null 2>&1
+    sudo -u $user tar -xf $src_file -C $dst_dir >/dev/null 2>&1
+    rc=$?
+fi
+
+# Extracting rared archive
+if [ ! -z "$(echo $src_file |grep -i  '.rar')" ]; then
+    sudo -u $user mkdir -p $dst_dir >/dev/null 2>&1
+    sudo -u $user unrar $src_file  $dst_dir >/dev/null 2>&1
+    rc=$?
+fi
+
+# Exiting
+exit $rc

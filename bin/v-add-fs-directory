@@ -1,0 +1,37 @@
+#!/bin/bash
+# info: add directory
+# options: USER DIRECTORY
+#
+# The function creates new directory on the file system
+
+user=$1
+dst_dir=$2
+
+# Checking arguments
+if [ -z "$dst_dir" ]; then
+    echo "Usage: USER DIRECTORY"
+    exit 1
+fi
+
+# Checking vesta user
+if [ ! -e "$VESTA/data/users/$user" ]; then
+    exit 1
+fi
+
+# Checking user homedir
+homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
+if [ -z $homedir ]; then
+    exit 1
+fi
+
+# Checking destination path
+rpath=$(readlink -f "$dst_dir")
+if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+    exit 1
+fi
+
+# Adding directory
+sudo -u $user mkdir -p $dst_dir >/dev/null 2>&1
+
+# Extiging
+exit $?

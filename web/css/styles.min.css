@@ -679,7 +679,7 @@ input[type="checkbox"] {
 }
 
 .l-menu__item--active {
-  background-color: #fff;
+  //background-color: #fff;
 }
 
 .l-menu__item.l-menu__item--active a {
@@ -687,6 +687,7 @@ input[type="checkbox"] {
   font-size: 10px;
   font-weight: bold;
   text-transform: uppercase;
+  background-color: #fff;
 }
 
 .l-menu {
@@ -699,7 +700,7 @@ input[type="checkbox"] {
   color: #f7f7f7;
   position: relative;
   line-height: 34px;
-  padding: 11px 20px;
+  padding: 11px 18px;
 }
 .l-menu__item a:hover {
   background-color: #f79b44;
@@ -727,6 +728,10 @@ input[type="checkbox"] {
 
 .lang-de .l-menu__item a {
   padding: 11px 12px;
+}
+
+.lang-tw .l-menu__item a {
+  padding: 13px 18px;
 }
 
 .l-profile {
@@ -758,6 +763,12 @@ input[type="checkbox"] {
 }
 .l-profile__logout:active {
   color: #ffd62e;
+}
+.lang-cn .l-profile__logout {
+  padding: 8px 5px;
+}
+.lang-tw .l-profile__logout {
+  padding: 8px 5px;
 }
 
 
@@ -1456,16 +1467,17 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 .lang-ru .actions-panel__col a {
   font-size: 11px;
-  line-height: 31px;
-  padding-top: 2px;
+  padding-top: 1px;
 }
 .lang-tw .actions-panel__col a {
   font-size: 15px;
   font-weight: normal;
+  line-height: 29px;
 }
 .lang-ar .actions-panel__col a {
   font-size: 15px;
   font-weight: normal;
+  line-height: 29px;
 }
 
 
@@ -2072,7 +2084,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 16px;
   overflow: hidden;
   padding-top: 6px;
-  width: 630px;
+  width: 620px;
 }
 
 .vst-ok {
@@ -2157,7 +2169,9 @@ label {
   background-color: #D7F9FF;
   color: #333;
 }
-.vst-input:disabled {
+
+.vst-input:disabled,
+.vst-list:disabled {
   background-color: #ebebeb;
 }
 .vst-input:focus:disabled {

@@ -85,6 +85,12 @@ if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
         conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
         del_web_config
     fi
+
+    # Deleting domain from proxy cache pool
+    pool="/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf"
+    if [ -e "$pool" ]; then
+        sed -i "/=$domain:/d" $pool
+    fi
 fi
 
 # Checking stats

@@ -90,5 +90,3 @@ if (empty($_SESSION['language'])) $_SESSION['language']='en';
 require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
 require_once('../templates/header.html');
 require_once('../templates/login.html');
-
-?>

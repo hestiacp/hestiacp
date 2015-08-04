@@ -14,7 +14,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Login as someone else
 if (isset($_SESSION['user'])) {
-    if ($_SESSION['user'] ==  'admin' && !empty($_GET['loginas'])) {
+    if ($_SESSION['user'] == 'admin' && !empty($_GET['loginas'])) {
         exec (VESTA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
         if ( $return_var == 0 ) {
             $data = json_decode(implode('', $output), true);

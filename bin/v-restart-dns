@@ -25,7 +25,7 @@ send_email_report() {
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $DNS_SYSTEM restart failed"
-    named-checkconf $dns_conf >> $tmpfile 2>&1
+    /usr/sbin/named-checkconf $dns_conf >> $tmpfile 2>&1
     service $DNS_SYSTEM restart >> $tmpfile 2>&1
     cat $tmpfile | $send_mail -s "$subj" $email
     rm -f $tmpfile

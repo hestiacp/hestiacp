@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: copy directory
+# info: move file
 # options: USER SRC_DIRECTORY DST_DIRECTORY
 #
-# The function copies directory on the file system
+# The function moved file or directory on the file system. This function
+# can also be used to rename files just like normal mv command.
 
 user=$1
 src_dir=$2
@@ -27,8 +28,8 @@ if [ -z $homedir ]; then
     exit 12
 fi
 
-# Checking source dir
-if [ ! -e "$src_dir" ]; then
+# Checking source file
+if [ ! -d "$src_dir" ]; then
     echo "Error: source directory $src_dir doesn't exist"
     exit 3
 fi
@@ -47,10 +48,10 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
     exit 2
 fi
 
-# Copying directory
-sudo -u $user cp -r "$src_dir" "$dst_dir" >/dev/null 2>&1
+# Moving directory
+sudo -u $user mv "$src_dir" "$dst_dir" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
-    echo "Error: directory $src_dir was not copied"
+    echo "Error: directory $src_dir was not moved"
     exit 3
 fi
 

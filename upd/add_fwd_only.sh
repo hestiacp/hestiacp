@@ -41,6 +41,6 @@ if [ -e "/etc/exim4/exim4.conf.template" ]; then
 fi
 
 # Restart mail server
-/usr/local/vesta/bin/v-restart-mail
+/usr/local/vesta/bin/v-restart-mail > /dev/null 2>&1
 
 exit

@@ -22,6 +22,7 @@ domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 ip=$3
 restart=$4
+alises=$5
 
 # Includes
 source $VESTA/func/main.sh
@@ -133,23 +134,21 @@ done
 
 # Changing file owner
 chown -R $user:$user $HOMEDIR/$user/web/$domain
-chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
-chown root:$user $conf
+chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* $conf
 
 # Changing file permissions
-chmod 640 $conf
+chmod 640 $conf /var/log/$WEB_SYSTEM/domains/$domain.*
 chmod 551 $HOMEDIR/$user/web/$domain
-chmod 751 $HOMEDIR/$user/web/$domain/private
-chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
-chmod 751 $HOMEDIR/$user/web/$domain/public_html
-chmod 751 $HOMEDIR/$user/web/$domain/public_shtml
-chmod 751 $HOMEDIR/$user/web/$domain/document_errors
-chmod -f -R 665 $HOMEDIR/$user/web/$domain/cgi-bin/*
-chmod -f -R 665 $HOMEDIR/$user/web/$domain/public_html/*
-chmod -f -R 665 $HOMEDIR/$user/web/$domain/document_errors/*
-chmod 551 $HOMEDIR/$user/web/$domain/stats
-chmod 551 $HOMEDIR/$user/web/$domain/logs
-chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
+chmod 751 $HOMEDIR/$user/web/$domain/private \
+  $HOMEDIR/$user/web/$domain/cgi-bin \
+  $HOMEDIR/$user/web/$domain/public_html \
+  $HOMEDIR/$user/web/$domain/public_shtml \
+  $HOMEDIR/$user/web/$domain/document_errors
+chmod -f -R 665 $HOMEDIR/$user/web/$domain/cgi-bin/* \
+  $HOMEDIR/$user/web/$domain/public_html/* \
+  $HOMEDIR/$user/web/$domain/document_errors/* \
+chmod 551 $HOMEDIR/$user/web/$domain/stats \
+  $HOMEDIR/$user/web/$domain/logs
 
 # Running template trigger
 if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh ]; then
@@ -187,7 +186,6 @@ str="$str TIME='$TIME' DATE='$DATE'"
 
 # Registering domain
 echo "$str" >> $USER_DATA/web.conf
-chmod 660 $USER_DATA/web.conf
 
 # Restart web server
 if [ "$restart" != 'no' ]; then

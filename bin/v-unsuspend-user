@@ -38,7 +38,7 @@ fi
 /usr/sbin/usermod --unlock $user
 
 # Unsuspending ftp accounts
-for ftp in $(grep ^$user_.* /etc/passwd| cut -f 1 -d : ); do
+for ftp in $(grep "^${user}_" /etc/passwd |cut -f 1 -d : ); do
     /usr/sbin/usermod --unlock $ftp 2>/dev/null
 done
 

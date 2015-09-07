@@ -1,6 +1,6 @@
 <?php
 
-// Check system settiongs
+// Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
     session_destroy();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
@@ -168,29 +168,6 @@ function humanize_time($usage) {
     return $usage;
 }
 
-function humanize_usage($usage) {
-    if ( $usage > 1024 ) {
-        $usage = $usage / 1024;
-        if ( $usage > 1024 ) {
-                $usage = $usage / 1024 ;
-                if ( $usage > 1024 ) {
-                    $usage = $usage / 1024 ;
-                    $usage = number_format($usage, 2);
-                    $usage = $usage." ".__('pb');
-                } else {
-                    $usage = number_format($usage, 2);
-                    $usage = $usage." ".__('tb');
-                }
-        } else {
-            $usage = number_format($usage, 2);
-            $usage = $usage." ".__('gb');
-        }
-    } else {
-        $usage = $usage." ".__('mb');
-    }
-    return $usage;
-}
-
 function humanize_usage_size($usage) {
     if ( $usage > 1024 ) {
         $usage = $usage / 1024;
@@ -212,23 +189,24 @@ function humanize_usage_size($usage) {
 
 function humanize_usage_measure($usage) {
     $measure = 'kb';
+
     if ( $usage > 1024 ) {
         $usage = $usage / 1024;
         if ( $usage > 1024 ) {
                 $usage = $usage / 1024 ;
                 if ( $usage > 1024 ) {
-                    $measure = __('pb');
+                    $measure = 'pb';
                 } else {
-                    $measure = __('tb');
+                    $measure = 'tb';
                 }
         } else {
-            $measure = __('gb');
+            $measure = 'gb';
         }
     } else {
-        $measure = __('mb');
+        $measure = 'mb';
     }
 
-    return $measure;
+    return __($measure);
 }
 
 

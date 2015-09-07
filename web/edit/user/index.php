@@ -130,17 +130,15 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Change full name (admin only)
-    if (($v_fname != $_POST['v_fname']) || ($v_lname != $_POST['v_lname'])) {
-        if (($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
-            $v_fname = escapeshellarg($_POST['v_fname']);
-            $v_lname = escapeshellarg($_POST['v_lname']);
-            exec (VESTA_CMD."v-change-user-name ".$v_username." ".$v_fname." ".$v_lname, $output, $return_var);
-            check_return_code($return_var,$output);
-            unset($output);
-            $v_fname = $_POST['v_fname'];
-            $v_lname = $_POST['v_lname'];
-        }
+    // Change full name
+    if (($v_fname != $_POST['v_fname']) || ($v_lname != $_POST['v_lname']) && (empty($_SESSION['error_msg']))) {
+        $v_fname = escapeshellarg($_POST['v_fname']);
+        $v_lname = escapeshellarg($_POST['v_lname']);
+        exec (VESTA_CMD."v-change-user-name ".$v_username." ".$v_fname." ".$v_lname, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        $v_fname = $_POST['v_fname'];
+        $v_lname = $_POST['v_lname'];
     }
 
     // Change NameServers

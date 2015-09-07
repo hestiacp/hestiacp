@@ -11,6 +11,7 @@ is_web_template_valid() {
 
 # Proxy template check
 is_proxy_template_valid() {
+    template=$1
     t="$WEBTPL/$PROXY_SYSTEM/$template.tpl"
     s="$WEBTPL/$PROXY_SYSTEM/$template.stpl"
     if [ ! -e $t ] || [ ! -e $s ]; then
@@ -84,20 +85,21 @@ is_dns_template_valid() {
 is_domain_new() {
     type="$1"
     dom=${2-$domain}
+    object=${3-domain}
 
     # Check web domain
     if [ ! -z "$WEB_SYSTEM" ]; then
         web=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/web.conf)
     fi
     if [ ! -z "$web" ] && [ "$type" == 'web' ]; then
-        echo "Error: domain $dom exist"
+        echo "Error: $object $dom exist"
         log_event "$E_EXISTS" "$EVENT"
         exit $E_EXISTS
     fi
     if [ ! -z "$web" ]; then
         web_user=$(echo "$web" |cut -f 7 -d /)
         if [ "$web_user" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
@@ -108,14 +110,14 @@ is_domain_new() {
         dns=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/dns.conf)
     fi
     if [ ! -z "$dns" ] && [ "$type" == 'dns' ]; then
-        echo "Error: domain $dom exist"
+        echo "Error: $object $dom exist"
         log_event "$E_EXISTS" "$EVENT"
         exit $E_EXISTS
     fi
     if [ ! -z "$dns" ]; then
         dns_user=$(echo "$dns" |cut -f 7 -d /)
         if [ "$dns_user" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
@@ -126,14 +128,14 @@ is_domain_new() {
         mail=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/mail.conf)
     fi
     if [ ! -z "$mail" ] && [ "$type" == 'mail' ]; then
-        echo "Error: domain $dom exist"
+        echo "Error: $object $dom exist"
         log_event "$E_EXISTS" "$EVENT"
         exit $E_EXISTS
     fi
     if [ ! -z "$mail" ]; then
         mail_user=$(echo "$mail" |cut -f 7 -d /)
         if [ "$mail_user" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
@@ -149,7 +151,7 @@ is_domain_new() {
         c3=$(grep -H ",$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
         c4=$(grep -H ",$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
         if [ ! -z "$c1" ] && [ "$type" == "web"  ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
@@ -160,34 +162,34 @@ is_domain_new() {
         fi
 
         if [ ! -z "$c2" ] && [ "$type" == "web"  ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
         if [ ! -z "$c2" ] && [ "$c2" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
 
         if [ ! -z "$c3" ] && [ "$type" == "web"  ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
         if [ ! -z "$c3" ] && [ "$c3" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
 
         if [ ! -z "$c4" ] && [ "$type" == "web"  ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
         if [ ! -z "$c4" ] && [ "$c4" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi

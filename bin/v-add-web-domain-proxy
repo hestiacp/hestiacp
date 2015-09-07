@@ -42,7 +42,7 @@ is_object_value_empty 'web' 'DOMAIN' "$domain" '$PROXY'
 if [ -z $template ]; then
     template=$(get_user_value '$PROXY_TEMPLATE')
 fi
-is_proxy_template_valid
+is_proxy_template_valid $template
 
 
 #----------------------------------------------------------#

@@ -39,7 +39,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_exist 'web' 'DOMAIN' "$domain" '$PROXY'
-is_proxy_template_valid
+is_proxy_template_valid $template
 
 
 #----------------------------------------------------------#

@@ -1977,9 +1977,11 @@ div.l-content > div.l-separator:nth-of-type(4) {
   right: 3%;
 }
 
+/*
 #vstobjects {
   margin-top: -1px;
 }
+*/
 
 #vstobjects .l-center {
   padding-top: 20px;
@@ -2745,4 +2747,3 @@ form#vstobjects.suspended {
   text-align: right;
   width: 140px;
 }
-

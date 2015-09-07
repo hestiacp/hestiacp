@@ -39,7 +39,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_domain_new 'web' "$dom_alias"
+is_domain_new 'web' "$dom_alias" 'alias'
 is_package_full 'WEB_ALIASES'
 
 

@@ -1,6 +1,6 @@
 #!/bin/bash
-# info: add dns domain or dns record based on web domain alias restart
-# options: USER DOMAIN
+# info: add dns domain or dns record after web domain alias
+# options: USER ALIAS IP [RESTART]
 #
 # The function adds dns domain or dns record based on web domain alias.
 
@@ -11,13 +11,9 @@
 
 # Argument defenition
 user=$1
-domain=$(echo $2 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-domain_idn=$(idn -t --quiet -a "$domain")
-dom_alias=$(idn -t --quiet -u "$3" )
-dom_alias=$(echo $dom_alias | sed -e 's/\.*$//g' -e 's/^\.*//g')
-dom_alias=$(echo $dom_alias | tr '[:upper:]' '[:lower:]')
-dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
-restart="$4"
+alias=$2
+ip=$3
+restart=$4
 
 # Includes
 source $VESTA/func/main.sh
@@ -29,58 +25,54 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN ALIAS'
-validate_format 'user' 'domain'
-is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+check_args '3' "$#" 'USER ALIAS IP [RESTART]'
+validate_format 'user' 'alias' 'ip'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
+if [ -e "$USER_DATA/dns/$alias.conf" ]; then
+    exit
+fi
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing domain values
-get_domain_values 'web'
+# Logging
+log_event "$OK" "$EVENT"
 
-# Check if it a simple domain
-if [ $(echo -e "${dom_alias//\./\n}" | wc -l) -le 2 ]; then
-    if [ ! -e "$USER_DATA/dns/$dom_alias.conf" ]; then
-        $BIN/v-add-dns-domain \
-            $user $dom_alias $IP '' '' '' '' '' $restart > /dev/null
-    fi
+# Define additional vars
+sub_domain=$(echo "$alias" |awk -F '.' '{print $1}')
+top_domain=$(echo "$alias" |sed -e "s/^$sub_domain.//")
+domain_lvl=$(echo "$alias" |grep -o "\." |wc -l)
+
+# Adding second level domain
+if [ "$domain_lvl" -eq 1 ] || [ "${#top_domain}" -le '6' ]; then
+    $BIN/v-add-dns-domain \
+        $user $alias $ip '' '' '' '' '' $restart >> /dev/null
+    exit
+fi
+
+# Adding toplevel domain and then its sub
+$BIN/v-add-dns-domain $user $top_domain $ip '' '' '' '' $restart >> /dev/null
+
+# Checking top-level domain
+if [ ! -e "$USER_DATA/dns/$top_domain.conf" ]; then
+    exit
+fi
+
+# Checking subdomain record
+if [ "$sub_domain" == '*' ]; then
+    check_record=$(grep -w "RECORD='\*'" $USER_DATA/dns/$top_domain.conf)
 else
-    # Check subdomain
-    sub=$(echo "$dom_alias" | cut -f1 -d . -s)
-    dom=$(echo "$dom_alias" | sed -e "s/^$sub.//" )
+    check_record=$(grep -w "RECORD='$sub_domain'" $USER_DATA/dns/$top_domain.conf)
+fi
 
-    # Ignore short domains like co.uk, com.au and so on
-    if [ "${#dom}" -le '6' ]; then
-        exit
-    fi
-
-    if [ ! -e "$USER_DATA/dns/$dom.conf" ]; then
-        $BIN/v-add-dns-domain \
-            $user $dom $IP '' '' '' '' $restart > /dev/null
-
-        if [ $? -eq 0 ]; then
-            $BIN/v-add-dns-record \
-                $user $dom "$sub" A $IP '' '' $restart
-        fi
-    else
-        if [ "$sub" == '*' ]; then
-            rec=$(grep -w "RECORD='\*'" $USER_DATA/dns/$dom.conf)
-        else
-            rec=$(grep -w "RECORD='$sub'" $USER_DATA/dns/$dom.conf)
-        fi
-        if [ -z "$rec" ]; then
-            $BIN/v-add-dns-record \
-                 $user $dom "$sub" A $IP '' '' $restart > /dev/null
-        fi
-    fi
+# Adding subdomain record
+if [ -z "$check_record" ]; then
+    $BIN/v-add-dns-record \
+        $user $top_domain "$sub_domain" A $ip '' '' $restart >> /dev/null
 fi
 
 
@@ -88,6 +80,6 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# No Logging
+# No logging
 
 exit

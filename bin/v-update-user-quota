@@ -31,12 +31,19 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Updating disk quota
-soft=$(get_user_value '$DISK_QUOTA')
-soft=$((soft * 1000))
-hard=$((soft + 50000))
+quota=$(get_user_value '$DISK_QUOTA')
+soft=$((quota * 1000))
+hard=$((quota + 50000))
 
+# Searching home mount point
 mnt=$(df -P /home |awk '{print $6}' |tail -n1)
-setquota $user $soft $hard 0 0 $mnt
+
+# Checking unlinmited quota
+if [ "$quota" = 'unlimited' ]; then
+    setquota $user 0 0 0 0 $mnt
+else
+    setquota $user $soft $hard 0 0 $mnt
+fi
 
 
 #----------------------------------------------------------#

@@ -46,3 +46,10 @@ if (!function_exists('__')) {
 
 App.i18n.ARE_YOU_SURE     = '<?php echo __('Are you sure?') ?>';
 App.Constants.UNLIM_TRANSLATED_VALUE = '<?php echo __('unlimited') ?>';
+
+App.Constants.FM_DIRECTORY_NAME_CANNOT_BE_EMPTY = '<?php echo __('Directory name cannot be empty') ?>';
+App.Constants.FM_FILE_NAME_CANNOT_BE_EMPTY      = '<?php echo __('File name cannot be empty') ?>';
+App.Constants.FM_NO_FILE_SELECTED               = '<?php echo __('No file selected') ?>';
+App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED  = '<?php echo __('No file or folder selected') ?>';
+App.Constants.FM_FILE_TYPE_NOT_SUPPORTED        = '<?php echo __('File type not supported') ?>';
+

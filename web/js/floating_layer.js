@@ -2,7 +2,12 @@
 {
     jQuery.fn.flayer_close = function()
     {
-        jQuery(this).flayer.close();
+        try {
+            jQuery(this).flayer.close();
+        }
+        catch (e) {
+            fb.error(e);
+        }
     }
     jQuery.fn.flayer = function(params)
     {  
@@ -15,8 +20,9 @@
             id : 'floating-box',
             className : 'floating-box-class',
             zIndex : 5000,
-            beforeStart : function(){},
-            beforeEnd : function(){},
+            beforeStart : function() {},
+            beforeEnd : function() {},
+            afterStart: function() {},
             close : null,
             closeClass : 'close-floating-layer',
             outerClose : false,
@@ -207,6 +213,7 @@
             jQuery(ref.content).append(jQuery(elm).removeClass('hidden'));
             start_ovservers();
             jQuery(ref.container).removeClass('hidden').css({'display':'block'});
+            config.afterStart(elm);
 
         }
         //

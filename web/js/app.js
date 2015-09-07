@@ -800,6 +800,38 @@ App.Ajax.request = function(method, data, callback, onError){
     }*/
     //App.Helpers.setAjaxBusy(method, data);
     data = data || {};
+    
+    var prgs = $('.progress-container');
+    
+    switch (method) {
+        case 'cd':
+            prgs.find('title').text('Opening dir');
+            prgs.show();
+            break;
+        case 'delete_files':
+            prgs.find('title').text('Deleting');
+            prgs.show();
+            break;
+        case 'unpack_item':
+            prgs.find('title').text('Unpacking');
+            prgs.show();
+            break;
+        case 'create_file':
+            prgs.find('title').text('Creating file');
+            prgs.show();
+            break;
+        case 'create_dir':
+            prgs.find('title').text('Creating directory');
+            prgs.show();
+            break;
+        case 'rename_file':
+            prgs.find('title').text('Renaming file');
+            prgs.show();
+            break;
+        default:
+        
+            break;
+    }
 
     jQuery.ajax({
         url: GLOBAL.ajax_url,
@@ -816,6 +848,7 @@ App.Ajax.request = function(method, data, callback, onError){
         cache: false,
         error: function(jqXHR, textStatus, errorThrown)
         {
+            prgs.hide();
             onError && onError();
             if ('undefined' != typeof onError) {
                 fb.error(textStatus);
@@ -824,9 +857,11 @@ App.Ajax.request = function(method, data, callback, onError){
         complete: function()
         {
             //App.Helpers.setAjaxFree(method, data);
+            prgs.hide();
         },
         success: function(reply)
         {
+            prgs.hide();
             //App.Helpers.setAjaxFree(method, data);
             try {
                 callback && callback(reply);

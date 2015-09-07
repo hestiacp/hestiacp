@@ -32,7 +32,7 @@ class FileManager {
         $path = !empty($_REQUEST['dir']) ? $_REQUEST['dir'] : '';
         $start_url = !empty($path) ? $this->ROOT_DIR . '/' . $path : $this->ROOT_DIR;
         $listing = $this->getDirectoryListing($path);
-        
+         
         return $data = array(
             'result'     => true,
             'ROOT_DIR'   => $this->ROOT_DIR,
@@ -50,11 +50,34 @@ class FileManager {
             $path = $this->ROOT_DIR . '/' . $path_part;
         }
         //var_dump($path);die();
+        //$path = str_replace(' ', '\ ', $path);
         return escapeshellarg($path);
     }
     
-    function deleteItems($dir, $item) {
-        if (is_readable($item)) {
+    function deleteItem($dir, $item) {
+        $dir = $this->formatFullPath($item);
+        if (is_dir($item)) {
+            exec (VESTA_CMD . "v-delete-fs-directory {$this->user} {$dir}", $output, $return_var);
+        }
+        else {
+            exec (VESTA_CMD . "v-delete-fs-file {$this->user} {$dir}", $output, $return_var);
+        }
+
+        $error = self::check_return_code($return_var, $output);
+        
+        if (empty($error)) {
+            return array(
+                'result' => true
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+        
+        /*if (is_readable($item)) {
             unlink($item);
         }
         if (is_readable($item)) {
@@ -65,93 +88,194 @@ class FileManager {
         }
         return array(
             'result' => true
-        );
+        );*/
     }
     
-    function copyFile($dir, $target_dir, $filename) {
-        // todo: checks
-        // todo: vesta method "create file"
-        if (empty($dir)) {
-            $dir = $this->ROOT_DIR;
-        }
+    function copyFile($item, $dir, $target_dir, $filename) {
+        $src = $this->formatFullPath($item);
+        $dst = $this->formatFullPath($target_dir);
+    
+        exec (VESTA_CMD . "v-copy-fs-file {$this->user} {$src} {$dst}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
         
-        if (empty($target_dir)) {
-            $target_dir = $this->ROOT_DIR;
-        }
-        copy($dir . '/' . $filename, $target_dir.'/'.$filename);
-        
-        if (!is_readable($target_dir . '/' .$filename)) {
+        if (empty($error)) {
             return array(
-                'result'  => false,
-                'message' => 'item was not created'
+                'result' => true
             );
         }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+    }
+    
+    
+    function copyDirectory($item, $dir, $target_dir, $filename) {
+        $src = $this->formatFullPath($item);
+        $dst = $this->formatFullPath($target_dir);
+    
+        exec (VESTA_CMD . "v-copy-fs-directory {$this->user} {$src} {$dst}", $output, $return_var);
+
+
+        $error = self::check_return_code($return_var, $output);
         
-        return array(
-            'result' => true,
-            'bla' => $target_dir.'/'.$filename,
-            'bla2' => $dir . '/' . $filename
-        );
+        if (empty($error)) {
+            return array(
+                'result' => true
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+    }
+    
+    static function check_return_code($return_var, $output) {
+        if ($return_var != 0) {
+            $error = implode('<br>', $output);
+            return $error;
+            //if (empty($error)) $error = __('Error code:',$return_var);
+            //$_SESSION['error_msg'] = $error;
+        }
+        
+        return null;
     }
     
     function createFile($dir, $filename) {
-        // todo: checks
-        // todo: vesta method "create file"
-        if (empty($dir)) {
-            $dir = $this->ROOT_DIR;
-        }
-        file_put_contents($dir . '/' . $filename, '');
+        $dir = $this->formatFullPath($dir . '/' . $filename);
+
+        exec (VESTA_CMD . "v-add-fs-file {$this->user} {$dir}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
         
-        if (!is_readable($dir . '/' .$filename)) {
+        if (empty($error)) {
             return array(
-                'result'  => false,
-                'message' => 'item was not created'
+                'result' => true
             );
         }
-        
-        return array(
-            'result' => true
-        );
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
     }
     
-    function renameItem($dir, $item, $target_name) {
-        if (empty($dir)) {
-            $dir = $this->ROOT_DIR;
-        }
-        if (is_readable($dir . '/' . $item)) {
-            rename($dir . '/' . $item, $dir . '/' . $target_name);
-        }
-        if (!is_readable($dir . '/' .$target_name)) {
+    function packItem($item, $dir, $target_dir, $filename) {
+        $item     = $this->formatFullPath($item);
+        $dst_item = $this->formatFullPath($target_dir);
+//print VESTA_CMD . "v-add-fs-archive {$this->user} {$item} {$dst_item}";die();
+        exec (VESTA_CMD . "v-add-fs-archive {$this->user} {$item} {$dst_item}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
+        
+        if (empty($error)) {
             return array(
-                'result'  => false,
-                'message' => 'item was not renamed'
+                'result' => true
             );
         }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+    }
+    
+    function unpackItem($item, $dir, $target_dir, $filename) {
+        $item     = $this->formatFullPath($item);
+        $dst_item = $this->formatFullPath($target_dir);
+
+        exec (VESTA_CMD . "v-extract-fs-archive {$this->user} {$item} {$dst_item}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
         
-        return array(
-            'result' => true
-        );
+        if (empty($error)) {
+            return array(
+                'result' => true
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+    }
+    
+    function renameFile($dir, $item, $target_name) {
+        $item     = $this->formatFullPath($dir . '/' . $item);
+        $dst_item = $this->formatFullPath($dir . '/' . $target_name);
+        
+//        var_dump(VESTA_CMD . "v-move-fs-file {$this->user} {$item} {$dst_item}");die();
+
+        exec (VESTA_CMD . "v-move-fs-file {$this->user} {$item} {$dst_item}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
+        
+        if (empty($error)) {
+            return array(
+                'result' => true
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+    }
+    function renameDirectory($dir, $item, $target_name) {
+        $item     = $this->formatFullPath($dir . $item);
+        $dst_item = $this->formatFullPath($dir . $target_name);
+
+        if ($item == $dst_item) {
+            return array(
+                'result' => true
+            );
+        }
+
+
+        exec (VESTA_CMD . "v-move-fs-directory {$this->user} {$item} {$dst_item}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
+        
+        if (empty($error)) {
+            return array(
+                'result' => true
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
     }
     
     function createDir($dir, $dirname) {
-        // todo: checks
-        // todo: vesta method "create file"
-        if (empty($dir)) {
-            $dir = $this->ROOT_DIR;
-        }
+        $dir = $this->formatFullPath($dir . '/' . $dirname);
 
-        mkdir($dir . '/' . $dirname);
+        exec (VESTA_CMD . "v-add-fs-directory {$this->user} {$dir}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
         
-        if (!is_readable($dir . '/' .$dirname)) {
+        if (empty($error)) {
             return array(
-                'result'  => false,
-                'message' => 'item was not created'
+                'result' => true
             );
         }
-        
-        return array(
-            'result' => true
-        );
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
     }
     
     function getDirectoryListing($dir = '') {

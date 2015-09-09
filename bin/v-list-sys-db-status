@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: list db status
+# options: [FORMAT]
+#
+# The function lists db server status
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+#format=${1-shell}
+
+# Includes
+#source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking db system
+if [ -z "$DB_SYSTEM" ]; then
+    exit
+fi
+
+# Checking supported database systems
+for db in $(echo $DB_SYSTEM| tr ',' '\n'); do
+    OLD_IFS="$IFS"
+    IFS=$'\n'
+
+    # Checking database config
+    if [ -e "$VESTA/conf/$db.conf" ]; then
+
+        # Checking server status
+        for host_str in $(cat $VESTA/conf/$db.conf); do
+            eval $host_str
+
+            # Checking MySQL
+            if [ "$db" = 'mysql' ]; then
+                mycnf="$VESTA/conf/.mysql.$HOST"
+                if [ ! -e "$mycnf" ]; then
+                    echo "[client]">$mycnf
+                    echo "host='$HOST'" >> $mycnf
+                    echo "user='$USER'" >> $mycnf
+                    echo "password='$PASSWORD'" >> $mycnf
+                    chmod 600 $mycnf
+                else
+                    mypw=$(grep password $mycnf|cut -f 2 -d \')
+                    if [ "$mypw" != "$PASSWORD" ]; then
+                        echo "[client]">$mycnf
+                        echo "host='$HOST'" >> $mycnf
+                        echo "user='$USER'" >> $mycnf
+                        echo "password='$PASSWORD'" >> $mycnf
+                        chmod 660 $mycnf
+                    fi
+                fi
+                echo "MySQL $HOST status"
+                mysqladmin --defaults-file=$mycnf status |sed -e "s/  /\n/g"
+                echo
+                mysqladmin --defaults-file=$mycnf processlist
+                echo -en "\n-------------------------------------"
+                echo -en  "-------------------------------------\n\n"
+            fi
+
+            # Checking PostgreSQL
+            if [ "$db" = 'pgsql' ]; then
+                echo "PostgreSQL $HOST status"
+                export PGPASSWORD="$PASSWORD"
+                psql -h $HOST -U $USER -c "SELECT * FROM pg_stat_activity"
+            fi
+        done
+    fi
+    IFS="$OLD_IFS"
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

@@ -120,7 +120,7 @@ FM.init = function() {
 FM.setActive = function(index, box) {
     var tab = FM.getTabLetter(box);
     $(box + ' .selected').removeClass('selected');
-    $(box).find('li:eq('+index+')').addClass('selected');
+    $(box).find('li.dir:eq('+index+')').addClass('selected');
     //$(box).find('li:eq('+index+')').addClass('selected');
     //var w_h = $(window).height() - 100;
     var w_offset = $(box).scrollTop();
@@ -1009,9 +1009,11 @@ FM.setTabActive = function(box, action) {
     
     if (FM.CURRENT_TAB == FM.TAB_A) {
         $(FM.TAB_B).find('.selected').addClass('selected-inactive').removeClass('selected');
+        $(FM.TAB_A).find('.selected-inactive').addClass('selected').removeClass('selected-inactive');
     }
     else {
         $(FM.TAB_A).find('.selected').addClass('selected-inactive').removeClass('selected');
+        $(FM.TAB_B).find('.selected-inactive').addClass('selected').removeClass('selected-inactive');
     }
 }
 
@@ -1627,6 +1629,24 @@ $(document).ready(function() {
     
     shortcut.add("Up",function() {
         FM.goUp();
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': false,
+        'target':           document
+    });
+    
+    shortcut.add("Left",function() {
+        FM.setTabActive(FM.TAB_A);
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': false,
+        'target':           document
+    });
+    
+    shortcut.add("Right",function() {
+        FM.setTabActive(FM.TAB_B);
     },{
         'type':             'keydown',
         'propagate':        false,

@@ -670,7 +670,7 @@ validate_format_domain() {
 validate_format_domain_alias() {
     exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [[ "$1" =~ "^[0-9]+$" ]]; then
-        echo "Error: domain alias $1 is not valid"
+        echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
@@ -916,6 +916,7 @@ validate_format(){
             ns2)            validate_format_domain "$arg" 'name_server';;
             ns3)            validate_format_domain "$arg" 'name_server';;
             ns4)            validate_format_domain "$arg" 'name_server';;
+            object)         validate_format_domain_alias "$arg" 'object';;
             package)        validate_format_name "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" 'port' ;;

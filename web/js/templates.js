@@ -24,9 +24,9 @@ App.Templates.html = {
                         <span class="size-value">~!:SIZE_VALUE~!</span>\
                         <span class="date">~!:DATE~!</span>\
                         <span class="time">~!:TIME~!</span>\
-                        <span class="subcontext-control ~!:SUBMENU_CLASS~!" onClick="FM.toggleSubContextMenu(this)">&#8226;&#8226;&#8226;&nbsp;\
+                        <!-- span class="subcontext-control ~!:SUBMENU_CLASS~!" onClick="FM.toggleSubContextMenu(this)">&#8226;&#8226;&#8226;&nbsp;\
                         <ul class="subcontext-menu subcontext-menu-hidden"><li onClick="FM.downloadFileFromSubcontext(this);">Download</li><li onClick="FM.editFileFromSubcontext(this);">Edit</li></ul>\
-                        </span>\
+                        </span -->\
                     </li>'],
         popup_alert: ['<div class="confirm-box alarm popup-box">\
                             <div class="message">~!:TEXT~!</div>\

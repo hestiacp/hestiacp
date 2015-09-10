@@ -31,6 +31,11 @@ switch ($_REQUEST['action']) {
         $dir = $_REQUEST['dir'];
         print json_encode($fm->ls($dir));
         break;
+    case 'check_file_type':
+        $dir = $_REQUEST['dir'];
+        
+        print json_encode($fm->checkFileType($dir));
+        break;
     case 'rename_file':
         $dir = $_REQUEST['dir'];
         $item = $_REQUEST['item'];

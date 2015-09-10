@@ -164,12 +164,26 @@ FM.setSecondInactive = function(index, box) {
     FM.BG_TAB  = box;
 }
 
+FM.goToTop = function() {
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    var index = 0;
+
+    FM.setActive(index, FM.CURRENT_TAB);
+}
+
+FM.goToBottom = function() {
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    var index = $(FM.CURRENT_TAB).find('.dir').length - 1;
+
+    FM.setActive(index, FM.CURRENT_TAB);
+}
+
 FM.goUp = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var index = FM['CURRENT_' + tab + '_LINE'];
     index -= 1;
     if (index < 0) {
-        index = $(FM.CURRENT_TAB).find('li').length - 1;
+        index = $(FM.CURRENT_TAB).find('li.dir').length - 1;
     }
     
     FM.setActive(index, FM.CURRENT_TAB);
@@ -179,7 +193,7 @@ FM.goDown = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var index = FM['CURRENT_' + tab + '_LINE'];
     index += 1;
-    if (index > ($(FM.CURRENT_TAB).find('li').length - 1)) {
+    if (index > ($(FM.CURRENT_TAB).find('li.dir').length - 1)) {
         index = 0;
     }
     
@@ -196,6 +210,7 @@ FM.open = function(dir, box, callback) {
         'dir': dir
     };
     App.Ajax.request('cd', params, function(reply) {
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
         FM.preselectedItems[tab] = [];
         if (reply.result == true) {
             var html = FM.generate_listing(reply.listing, box);
@@ -216,6 +231,9 @@ FM.open = function(dir, box, callback) {
         var url = '/list/directory/?dir_a='+path_a+'&dir_b='+path_b;
         history.pushState({}, null, url);
         
+        if (FM['CURRENT_' + tab + '_LINE'] == -1) {
+           FM.setActive(0, FM.CURRENT_TAB);
+        }
     });
 }
 
@@ -401,7 +419,7 @@ FM.openFile = function(dir, box, elm) {
     
     var elm = $(elm).hasClass('dir') ? $(elm) : $(elm).closest('.dir');
     var src = $.parseJSON($(elm).find('.source').val());
-    console.log(elm);
+
     if (FM.isItemPseudo(src)) {
         FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], FM['TAB_' + tab]);
     }
@@ -552,7 +570,7 @@ FM.fotoramaOpen = function(tab, img_index) {
     });
 
     $('.fotorama').on('fotorama:fullscreenexit', function (e, fotorama) {
-	$('.fotorama').data('fotorama').destroy();
+    $('.fotorama').data('fotorama').destroy();
     });
 
     $('.fotorama').fotorama().data('fotorama').requestFullScreen();
@@ -587,7 +605,7 @@ FM.checkBulkStatus = function(bulkStatuses, acc) {
     }
 
     if (status == true) {
-        $('#popup .results').html(msg);
+        $('#popup .results').html('Done');
         $('.controls p').replaceWith('<p class="ok" onClick="FM.bulkPopupClose();">close</p>');
     }
     else {
@@ -637,7 +655,7 @@ FM.bulkCopy = function() {
         var cfr_html = '';
         
         $.each(acc, function(i, o) {
-            var ref = $(o).parents('.dir');
+            var ref = $(o);
             var src = $(ref).find('.source').val();
             src = $.parseJSON(src);
           
@@ -654,7 +672,7 @@ FM.bulkCopy = function() {
         
         var bulkStatuses = [];
         $.each(acc, function(i, o) {
-            var ref = $(o).parents('.dir');
+            var ref = $(o);
             var src = $(ref).find('.source').val();
             src = $.parseJSON(src);
           
@@ -712,7 +730,7 @@ FM.bulkRemove = function() {
         var cfr_html = '';
         
         $.each(acc, function(i, o) {
-            var ref = $(o).parents('.dir');
+            var ref = $(o);
             var src = $(ref).find('.source').val();
             src = $.parseJSON(src);
           
@@ -729,7 +747,7 @@ FM.bulkRemove = function() {
         
         var bulkStatuses = [];
         $.each(acc, function(i, o) {
-            var ref = $(o).parents('.dir');
+            var ref = $(o);
             var src = $(ref).find('.source').val();
             src = $.parseJSON(src);
           
@@ -784,6 +802,10 @@ FM.toggleAllItemsSelected = function() {
         $(box).find('.dir').removeClass('selected');
         var index = FM['CURRENT_' + tab + '_LINE'];
         $(box).find('.dir:eq(' + index + ')').addClass('selected');
+        
+        $(FM.preselectedItems[tab]).each(function(i, index) {
+            $(box).find('.dir:eq(' + index + ')').addClass('selected');
+        });
     }
     else {
         $(box).find('.dir').addClass('selected');
@@ -1010,6 +1032,10 @@ FM.setTabActive = function(box, action) {
     if (FM.CURRENT_TAB == FM.TAB_A) {
         $(FM.TAB_B).find('.selected').addClass('selected-inactive').removeClass('selected');
         $(FM.TAB_A).find('.selected-inactive').addClass('selected').removeClass('selected-inactive');
+
+        if ($(FM.TAB_A).find('.selected-inactive').length == 0 && $(FM.TAB_A).find('.selected').length == 0) {
+            
+        }
     }
     else {
         $(FM.TAB_A).find('.selected').addClass('selected-inactive').removeClass('selected');
@@ -1277,7 +1303,7 @@ FM.confirmCopyItems = function () {
     App.Ajax.request(action, params, function(reply) {
         if (reply.result == true) {
             FM.popupClose();
-            FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], FM['TAB_' + tab]);
+            // FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], FM['TAB_' + tab]);
             FM.open(FM['TAB_' + opposite_tab + '_CURRENT_PATH'], FM['TAB_' + opposite_tab]);
         }
         else {
@@ -1638,6 +1664,11 @@ $(document).ready(function() {
     
     shortcut.add("Left",function() {
         FM.setTabActive(FM.TAB_A);
+        
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+        if (FM['CURRENT_' + tab + '_LINE'] == -1) {
+           FM.setActive(0, FM.CURRENT_TAB);
+        }
     },{
         'type':             'keydown',
         'propagate':        false,
@@ -1647,6 +1678,29 @@ $(document).ready(function() {
     
     shortcut.add("Right",function() {
         FM.setTabActive(FM.TAB_B);
+        
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+        if (FM['CURRENT_' + tab + '_LINE'] == -1) {
+           FM.setActive(0, FM.CURRENT_TAB);
+        }
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': false,
+        'target':           document
+    });
+    
+    shortcut.add("Home",function() {
+        FM.goToTop();
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': false,
+        'target':           document
+    });
+    
+    shortcut.add("End",function() {
+        FM.goToBottom();
     },{
         'type':             'keydown',
         'propagate':        false,

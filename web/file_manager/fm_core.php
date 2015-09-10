@@ -42,6 +42,26 @@ class FileManager {
         );
     }*/
     
+    public function checkFileType($dir) {
+        $dir = $this->formatFullPath($dir);
+
+        exec(VESTA_CMD . "v-delete-fs-file {$this->user} {$dir}", $output, $return_var);
+        
+        $error = self::check_return_code($return_var, $output);
+        
+        if (empty($error)) {
+            return array(
+                'result' => true
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+    }
+    
     public function formatFullPath($path_part = '') {
         if (substr($path_part, 0, strlen($this->ROOT_DIR)) === $this->ROOT_DIR) {
             $path = $path_part;

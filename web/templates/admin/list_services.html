@@ -5,6 +5,9 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
+              <td class="step-right">
+                <a class="vst" href="/list/server/?cpu" target="_blank" > <?php print __('show: CPU / MEM / NET / DISK'); ?> </a>
+              </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />

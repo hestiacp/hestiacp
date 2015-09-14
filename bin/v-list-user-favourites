@@ -20,7 +20,7 @@ source $VESTA/func/main.sh
 json_list_favourites() {
     i=1
     fileds_count=$(echo "$fields" | wc -w)
-    fvrt_data=$(cat $USER_DATA/favourites.conf >/dev/null)
+    fvrt_data=$(cat $USER_DATA/favourites.conf 2>/dev/null)
     echo '{'
     eval $fvrt_data
     for field in $fields; do

@@ -1890,8 +1890,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 36px;
   height: 36px;
   background-position: -216px 560px;
-  display: none;
   cursor: pointer;
+  display: none;
 }
 .l-unit--starred .l-icon-star {
   display: inline-block;
@@ -1912,7 +1912,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit:hover .l-icon-star {
-  /*display: inline-block;*/
+  display: inline-block;
 }
 
 
@@ -2144,6 +2144,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .step-top {
   padding-top: 42px;
 }
+.step-top-small {
+  padding-top: 22px;
+}
+.jump-top {
+  margin-top: -60px;
+}
+
 .data a {
   text-decoration: none;
 }
@@ -2341,14 +2348,30 @@ a.vst-text:active b{
 .additional-control.ftp-remove-user {
   padding: 2px 0 0 0;
 }
+
+.additional-control.delete:hover,
 .additional-control.ftp-remove-user:hover {
   background-color: #FF3438;
   border-color: #FF3438;
 }
+.additional-control.delete:active,
 .additional-control.ftp-remove-user:active {
   background-color: #FF5F5F;
   border-color: #FF5F5F;
 }
+.additional-control.add:hover {
+  background-color: #9FBF0C;
+  border-color: #9FBF0C;
+}
+.additional-control.add:active{
+  background-color: #c0e60f;
+  border-color: #c0e60f;
+}
+
+.additional-control.remove-ns {
+  display: none;
+}
+
 .data .step-left {
   padding-left: 50px;
 }
@@ -2478,6 +2501,23 @@ td.hint {
 .data-dotted {
   vertical-align: top;
 }
+.mail-infoblock-td {
+  vertical-align: top;
+}
+.mail-infoblock {
+  padding-top: 76px;
+  margin-left: -100px;
+  font-size: 12px;
+  color: #777;
+}
+.mail-infoblock td {
+  color: #777;
+  font-size: 14px;
+  height: 20px;
+  padding-right: 25px;
+  font-weight: normal;
+}
+
 
 :focus {outline:none;}
 ::-moz-focus-inner {border:0;}

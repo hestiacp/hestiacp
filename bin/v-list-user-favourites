@@ -36,9 +36,9 @@ json_list_favourites() {
         fi
     (( ++i))
     done
-    if [ -n "$value" ]; then
+    #if [ -n "$value" ]; then
         echo -e '        }'
-    fi
+    #fi
     echo -e '}'
 }
 
@@ -74,7 +74,9 @@ is_object_valid 'user' 'USER' "$user"
 USER=''
 WEB=''
 DNS=''
+DNS_REC=''
 MAIL=''
+MAIL_ACC=''
 DB=''
 CRON=''
 BACKUP=''
@@ -84,7 +86,8 @@ FIREWALL=''
 
 # Defining fileds to select
 OBJ='Favourites'
-fields='$OBJ $USER $WEB $DNS $MAIL $DB $CRON $BACKUP $IP $PACKAGE $FIREWALL'
+fields='$OBJ $USER $WEB $DNS $DNS_REC $MAIL $MAIL_ACC $DB $CRON $BACKUP
+    $IP $PACKAGE $FIREWALL'
 
 # Listing favourites
 case $format in

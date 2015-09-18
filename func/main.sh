@@ -916,7 +916,7 @@ validate_format(){
             ns2)            validate_format_domain "$arg" 'name_server';;
             ns3)            validate_format_domain "$arg" 'name_server';;
             ns4)            validate_format_domain "$arg" 'name_server';;
-            object)         validate_format_domain_alias "$arg" 'object';;
+            object)         validate_format_name_s "$arg" 'object';;
             package)        validate_format_name "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" 'port' ;;

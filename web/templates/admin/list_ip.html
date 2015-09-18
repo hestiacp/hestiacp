@@ -60,7 +60,10 @@
            ++$i;
       ?>
 
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_COOKIE['ip-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="ip-<?=sha1($key)?>" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>" sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=__($data[$key]['INTERFACE'])?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>" sort-owner="<?=__($data[$key]['OWNER'])?>" sort-star="<? if($_COOKIE['ip-'.sha1($key)] == 1) echo '1'; else echo '0'; ?>">
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['IP'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" 
+v_section="ip" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>" 
+sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=__($data[$key]['INTERFACE'])?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>" 
+sort-owner="<?=__($data[$key]['OWNER'])?>" sort-star="<? if($_SESSION['favourites']['IP'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ip[]" value="<?=$key?>">

@@ -13,6 +13,8 @@
 user=$1
 system=$(echo "$2" |tr '[:lower:]' '[:upper:]')
 object=$3
+email=$3
+id=$3
 
 # Includes
 source $VESTA/func/main.sh
@@ -24,7 +26,12 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER SYSTEM OBJECT'
-validate_format 'user' 'system' 'object'
+case $system in 
+    MAIL_ACC)   validate_format 'email' ;;
+    CRON)       validate_format 'id' ;;
+    DNS_REC)    validate_format 'id' ;;
+    *)          validate_format 'object'
+esac
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -33,7 +40,9 @@ case $system in
     USER)       check='ok' ;;
     WEB)        check='ok' ;;
     DNS)        check='ok' ;;
+    DNS_REC)    check='ok' ;;
     MAIL)       check='ok' ;;
+    MAIL_ACC)   check='ok' ;;
     DB)         check='ok' ;;
     CRON)       check='ok' ;;
     BACKUP)     check='ok' ;;
@@ -52,7 +61,9 @@ esac
 USER=''
 WEB=''
 DNS=''
+DNS_REC=''
 MAIL=''
+MAIL_ACC=''
 DB=''
 CRON=''
 BACKUP=''
@@ -89,7 +100,9 @@ eval $system=$value
 echo "USER='$USER'
 WEB='$WEB'
 DNS='$DNS'
+DNS_REC='$DNS_REC'
 MAIL='$MAIL'
+MAIL_ACC='$MAIL_ACC'
 DB='$DB'
 CRON='$CRON'
 BACKUP='$BACKUP'

@@ -46,11 +46,37 @@ FM.EDITABLE_FILETYPES = [
     'txt', 'php', 'js', 'html'
 ];
 
+FM.EDITABLE_MIMETYPES = [
+    'application/emma+xml', 
+    'application/epp+xml',
+    'application/javascript',
+    'application/json',
+    'application/jsonml+json	',
+    'application/lost+xml',
+    'application/marc',
+    'application/msword',
+    'application/sru+xml',
+    'application/vnd.android.package-archive',
+    'text/csv',
+    'text/css',
+    'text/javascript',
+    'text/html',
+    'text/x-java-source'
+];
+
+FM.EDITABLE_MIMETYPES_MASKS = [
+    /(.)*text(.)*/,
+    /(.)*inode(.)*/
+];
+
 FM.preselectedItems = {'A': [], 'B': []};
 
 
 FM.directoryNotAvailable = function(reply) {
-    alert('Directory not available'); // todo: translate
+    var tpl = Tpl.get('popup_alert', 'FM');
+    tpl.set(':TEXT', App.Constants.FM_DIRECTORY_NOT_AVAILABLE);
+    
+    FM.popupOpen(tpl.finalize());
 }
 
 FM.showError = function(type, message) {
@@ -382,7 +408,8 @@ FM.sortItems = function(items, box) {
     return sorted;
 }
 
-FM.isFileEditable = function(src) {
+FM.isFileEditable = function(src, mime) {
+    
     if ('undefined' == typeof src.filetype) {
         return false;
     }
@@ -391,7 +418,21 @@ FM.isFileEditable = function(src) {
         return true;
     }
     
-    return false;
+    var mime_type = mime.split(';');
+    mime_type = mime_type[0];
+
+    if ($.inArray(mime_type, FM.EDITABLE_MIMETYPES) != -1) {
+        return true;
+    }
+
+    var editable = false;
+    $.each(FM.EDITABLE_MIMETYPES_MASKS, function(i, mask) {
+        if (mime_type.search(mask) != -1) {
+            editable = true;
+        }
+    });
+
+    return editable;
 }
 
 FM.editFileFromSubcontext = function(elm) {
@@ -414,26 +455,36 @@ FM.openFile = function(dir, box, elm) {
     var tab = FM.getTabLetter(box);
 
     FM['TAB_'+tab+'_CURRENT_PATH'] = dir;
-    
-    
-    
+
     var elm = $(elm).hasClass('dir') ? $(elm) : $(elm).closest('.dir');
     var src = $.parseJSON($(elm).find('.source').val());
-
+    
     if (FM.isItemPseudo(src)) {
-        FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], FM['TAB_' + tab]);
+        return FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], FM['TAB_' + tab]);
     }
     
-    if (FM.isFileEditable(src)) {
-        var myWindow = window.open('/edit/file/?path=' + src.full_path, '_blank');//, src.full_path, "width=900, height=700");
-    }
-    else {
-        var path = src.full_path;
-        var win = window.open('/download/file/?path=' + path, '_blank');
-        win.focus();
-    }
+    var params = {
+        dir: src.full_path
+    };
     
-    
+    App.Ajax.request('check_file_type', params, function(reply) {
+        if (reply.result) {
+            if (FM.isFileEditable(src, reply.data)) {
+                var myWindow = window.open('/edit/file/?path=' + src.full_path, '_blank');//, src.full_path, "width=900, height=700");
+            }
+            else {
+                var path = src.full_path;
+                var win = window.open('/download/file/?path=' + path, '_blank');
+                //win.focus();
+            }
+        }
+        else {
+            // force download file
+            var path = src.full_path;
+            var win = window.open('/download/file/?path=' + path, '_blank');
+            //win.focus();
+        }
+    });
 }
 
 FM.getTabLetter = function(box) {
@@ -551,7 +602,6 @@ FM.generate_listing = function(reply, box) {
 FM.toggleCheck = function(uid) {
     var ref = $('#check' + uid);
     if (ref.length > 0) {
-        //ref.attr('checked', true);
         $(ref).hasClass('checkbox-selected') ? $(ref).addClass('checkbox-selected') : $(ref).removeClass('checkbox-selected');
     }
 }
@@ -605,7 +655,7 @@ FM.checkBulkStatus = function(bulkStatuses, acc) {
     }
 
     if (status == true) {
-        $('#popup .results').html('Done');
+        $('#popup .results').html(App.Constants.FM_DONE);
         $('.controls p').replaceWith('<p class="ok" onClick="FM.bulkPopupClose();">close</p>');
     }
     else {
@@ -665,7 +715,7 @@ FM.bulkCopy = function() {
         });
         
         var tpl = Tpl.get('popup_bulk', 'FM');
-        tpl.set(':ACTION', 'YOU ARE COPYING');
+        tpl.set(':ACTION', App.Constants.FM_YOU_ARE_COPYING);
         tpl.set(':TEXT',   cfr_html);
        
         FM.popupOpen(tpl.finalize());
@@ -740,7 +790,7 @@ FM.bulkRemove = function() {
         });
         
         var tpl = Tpl.get('popup_bulk', 'FM');
-        tpl.set(':ACTION', 'YOU ARE REMOVING');
+        tpl.set(':ACTION', App.Constants.FM_YOU_ARE_REMOVING);
         tpl.set(':TEXT',   cfr_html);
        
         FM.popupOpen(tpl.finalize());
@@ -750,10 +800,7 @@ FM.bulkRemove = function() {
             var ref = $(o);
             var src = $(ref).find('.source').val();
             src = $.parseJSON(src);
-          
-            /*if (!FM.isItemPseudo(o)) {
-                cfr_html += '<div>'+src.name+'</div>';
-            }*/
+
             var tab = FM.getTabLetter(FM.CURRENT_TAB);
 
             var opposite_tab = 'A';
@@ -1610,22 +1657,6 @@ FM.init();
 $(document).ready(function() {
     $('.progress-container').hide();
     
-    //return alert('statechange: Back');
-    /*$(document).bind('keydown.up', function() {
-        console.log(1);
-        //try{FM.goUp();}catch(e){console.log(e);}
-        //console.log(FM);
-        FM.goUp();
-    });
-    
-    $(document).bind('keydown.down', function() {
-        console.log(1);
-        //try{FM.goUp();}catch(e){console.log(e);}
-        //console.log(FM);
-        FM.goDown();
-    });*/
-
-
     var ph = $('.window .pwd').outerHeight();
     var mh = $('.window .menu').outerHeight();
     var wh = $(window).outerHeight();
@@ -1825,5 +1856,5 @@ $(document).ready(function() {
 $(window).bind('statechange', function(evt){
     $(evt).stopPropagation();
     // History.getState() 
-    alert('No way back yet');
+    //alert('No way back yet');
 })

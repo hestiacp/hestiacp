@@ -38,47 +38,47 @@ App.Templates.html = {
                             <div class="message">~!:ACTION~!: <br />~!:TEXT~!</div>\
                             <div class="results"></div>\
                                 <div class="controls">\
-                            <!-- p class="ok" onClick="FM.popupClose();">close</p -->\
+                            <!-- p class="ok" onClick="FM.popupClose();">'+App.Constants.FM_CLOSE+'</p -->\
                             <p><img src="/images/in_progress.gif"></p>\
                             </div>\
                         </div>'],
         popup_delete: ['<div class="confirm-box delete popup-box">\
-                            <div class="message">Are you sure you want to delete <span class="title">"~!:FILENAME~!"</span>?</div>\
+                            <div class="message">'+App.Constants.FM_CONFIRM_DELETE+' <span class="title">"~!:FILENAME~!"</span>?</div>\
                                 <div class="controls">\
-                            <p class="cancel" onClick="FM.popupClose();">cancel</p>\
-                            <p class="ok" onClick="FM.confirmDelete();">delete</p>\
+                            <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                            <p class="ok" onClick="FM.confirmDelete();">'+App.Constants.FM_DELETE+'</p>\
                             </div>\
                         </div>'],
         popup_copy: ['<div class="confirm-box copy popup-box">\
-                            <div class="message">Are you sure you want to copy <span class="title">"~!:SRC_FILENAME~!"</span> into:</div>\
+                            <div class="message">'+App.Constants.FM_CLOSE+' <span class="title">"~!:SRC_FILENAME~!"</span> '+App.Constants.FM_INTO_KEYWORD+':</div>\
                             <div class="actions">\
                                 <input type="text" id="copy_dest" value="~!:DST_FILENAME~!" class="new-title">\
                             </div>\
-                            <div class="message">existing files will be replaced</div>\
+                            <div class="message">'+App.Constants.FM_EXISTING_FILES_WILL_BE_DELETED+'</div>\
                                 <div class="controls">\
-                            <p class="cancel" onClick="FM.popupClose();">cancel</p>\
-                            <p class="ok" onClick="FM.confirmCopyItems();">copy</p>\
+                            <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                            <p class="ok" onClick="FM.confirmCopyItems();">'+App.Constants.FM_COPY+'</p>\
                             </div>\
                         </div>'],
         popup_rename: ['<div class="confirm-box rename warning">\
-                            <div class="message">Original name: <span class="title">"~!:FILENAME~!"</span></div>\
-                            <!-- div class="warning">File <span class="title">"reading.txt"</span> already exists</div -->\
+                            <div class="message">'+App.Constants.FM_ORIGINAL_NAME+': <span class="title">"~!:FILENAME~!"</span></div>\
+                            <!-- div class="warning">'+App.Constants.FM_FILE+' <span class="title">"reading.txt"</span> '+App.Constants.FM_ALREADY_EXISTS+'</div -->\
                             <div class="warning warning-message"></div>\
                             <div class="actions">\
                                 <input type="text" id="rename-title" class="new-title"  value="~!:NEW_NAME~!" />\
                             </div>\
                             <div class="controls">\
-                                <p class="cancel" onClick="FM.popupClose();">cancel</p>\
-                                <p class="ok" onClick="FM.confirmRename();">rename</p>\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmRename();">'+App.Constants.FM_RENAME+'</p>\
                             </div>\
                             <div class="controls replace">\
-                                <p class="cancel" onClick="FM.popupClose();">cancel</p>\
-                                <p class="ok" onClick="FM.confirmRename();">rename</p>\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmRename();">'+App.Constants.FM_Rename+'</p>\
                             </div>\
                         </div>'],
 
         popup_pack: ['<div class="confirm-box pack warning">\
-                            <div class="message">Pack <span class="title">"~!:FILENAME~!"</span> into:</div>\
+                            <div class="message">'+App.Constants.FM_PACK+' <span class="title">"~!:FILENAME~!"</span> '+App.Constants.FM_INTO_KEYWORD+':</div>\
                             <div class="actions">\
                                 <input type="text" id="pack-destination" class="new-title" value="~!:DST_DIRNAME~!">\
                             </div>\
@@ -87,13 +87,13 @@ App.Templates.html = {
                                 <label><input type="checkbox" name="overwrite" class="title" />Overwrite exising files</label>\
                             </div -->\
                             <div class="controls">\
-                                <p class="cancel" onClick="FM.popupClose();">cancel</p>\
-                                <p class="ok" onClick="FM.confirmPackItem();">Pack</p>\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmPackItem();">'+App.Constants.FM_PACK+'</p>\
                             </div>\
                         </div>'],
 
         popup_unpack: ['<div class="confirm-box unpack warning">\
-                            <div class="message">Extract archive <span class="title">"~!:FILENAME~!"</span> to:</div>\
+                            <div class="message">'+App.Constants.FM_EXTRACT+' <span class="title">"~!:FILENAME~!"</span> '+App.Constants.FM_INTO_KEYWORD+':</div>\
                             <div class="actions">\
                                 <input type="text" id="unpack-destination" class="new-title" value="~!:DST_DIRNAME~!">\
                             </div>\
@@ -102,22 +102,22 @@ App.Templates.html = {
                                 <label><input type="checkbox" name="overwrite" class="title" />Overwrite exising files</label>\
                             </div -->\
                             <div class="controls">\
-                                <p class="cancel" onClick="FM.popupClose();">cancel</p>\
-                                <p class="ok" onClick="FM.confirmUnpackItem();">Extract</p>\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmUnpackItem();">'+App.Constants.FM_EXTRACT+'</p>\
                             </div>\
                         </div>'],
 
 
         popup_create_file: ['<div class="confirm-box rename warning">\
-                            <div class="message">Create file</div>\
+                            <div class="message">'+App.Constants.FM_CREATE_FILE+'</div>\
                             <!-- div class="warning">File <span class="title">"reading.txt"</span> already exists</div -->\
                             <div class="warning warning-message"></div>\
                             <div class="actions">\
                                 <input type="text" id="rename-title" class="new-title" />\
                             </div>\
                             <div class="controls replace">\
-                                <p class="cancel" onClick="FM.popupClose();">cancel</p>\
-                                <p class="ok" onClick="FM.confirmCreateFile();">create</p>\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmCreateFile();">'+App.Constants.FM_CREATE+'</p>\
                             </div>\
                         </div>'],
         popup_create_dir: ['<div class="confirm-box rename warning">\
@@ -128,14 +128,14 @@ App.Templates.html = {
                                 <input type="text" id="rename-title" class="new-title" />\
                             </div>\
                             <div class="controls replace">\
-                                <p class="cancel" onClick="FM.popupClose();">cancel</p>\
-                                <p class="ok" onClick="FM.confirmCreateDir();">create</p>\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmCreateDir();">'+App.Constants.FM_CREATE+'</p>\
                             </div>\
                         </div>'],
         popup_no_file_selected: ['<div class="confirm-box no-file-selected">\
                             <div class="message">Please select a file</div>\
                             <div class="controls">\
-                                <p class="ok" onClick="FM.confirmCreateDir();">ok</p>\
+                                <p class="ok" onClick="FM.confirmCreateDir();">'+App.Constants.FM_OK+'</p>\
                             </div>\
                         </div>']
     }

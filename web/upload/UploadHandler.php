@@ -210,7 +210,7 @@ class UploadHandler
     protected function get_upload_path($file_name = null, $version = null) {
         $relocate_directory = $_GET['dir'];
         if (empty($relocate_directory)) {
-            $relocate_directory = '/home/admin/';
+            $relocate_directory = '/home/admin/'; // fallback dir
         }
         if ($relocate_directory[strlen($relocate_directory) -1] != '/') {
             $relocate_directory .= '/';
@@ -1041,7 +1041,7 @@ class UploadHandler
     }
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
-            $index = null, $content_range = null) {
+        $index = null, $content_range = null) {
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
@@ -1076,12 +1076,13 @@ class UploadHandler
                 );
             }
             $file_size = $this->get_file_size($file_path, $append_file);
-            //var_dump($file_size);die();
+
             if ($file_size === $file->size) {
                 $file->url = $this->get_download_url($file->name);
-                if ($this->is_valid_image_file($file_path)) {
-                    $this->handle_image_file($file_path, $file);
-                }
+                // uncomment if images also need to be resized
+                //if ($this->is_valid_image_file($file_path)) {
+                //    $this->handle_image_file($file_path, $file);
+                //}
             } else {
                 $file->size = $file_size;
                 if (!$content_range && $this->options['discard_aborted_uploads']) {

@@ -45,13 +45,13 @@ class FileManager {
     public function checkFileType($dir) {
         $dir = $this->formatFullPath($dir);
 
-        exec(VESTA_CMD . "v-delete-fs-file {$this->user} {$dir}", $output, $return_var);
+        exec(VESTA_CMD . "v-get-fs-file-type {$this->user} {$dir}", $output, $return_var);
         
         $error = self::check_return_code($return_var, $output);
-        
         if (empty($error)) {
             return array(
-                'result' => true
+                'result' => true,
+                'data'   => implode('', $output)
             );
         }
         else {

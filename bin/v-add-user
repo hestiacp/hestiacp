@@ -207,6 +207,11 @@ if [ -x "$VESTA/data/packages/$package.sh" ]; then
     $VESTA/data/packages/$package.sh "$user" "$email" "$fname" "$lname"
 fi
 
+# Adding jailed sftp env
+if [ ! -z "$SFTPJAIL_KEY" ]; then
+    $BIN/v-add-user-sftp-jail $user
+fi
+
 # Logging
 log_history "added system user $user" '' 'admin'
 log_event "$OK" "$EVENT"

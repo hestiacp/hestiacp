@@ -51,6 +51,11 @@ if [ "$?" != 0 ]; then
     sed -i "/^$ftp_user:/d" /etc/shadow
 fi
 
+# Deleting sftp jail
+if [ ! -z "$SFTPJAIL_KEY" ]; then
+    $BINv-delete-user-sftp-jail $ftp_user
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

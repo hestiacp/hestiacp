@@ -94,6 +94,11 @@ fi
 echo "$ftp_user:$password" | /usr/sbin/chpasswd
 ftp_md5=$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)
 
+# Adding jailed sftp env
+if [ ! -z "$SFTPJAIL_KEY" ]; then
+    $BIN/v-add-user-sftp-jail $ftp_user
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

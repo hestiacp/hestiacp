@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: change user shell
-# options: USER SHELL
+# info: delete user sftp jail
+# opions: USER
 #
-# The function changes system shell of a user. Shell gives abilty to use ssh.
+# The script enables sftp jailed environment
 
 
 #----------------------------------------------------------#
@@ -11,7 +11,6 @@
 
 # Argument defenition
 user=$1
-shell=$2
 
 # Includes
 source $VESTA/func/main.sh
@@ -22,38 +21,43 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER SHELL'
-validate_format 'user' 'shell'
-is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
-
+check_args '1' "$#" 'USER'
+validate_format 'user'
+user_str=$(grep "^$user:" /etc/passwd)
+if [ -z "$user_str" ]; then
+    exit
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get shell full path
-shell_path=$(grep -w "$shell" /etc/shells | head -n1)
+# Defining user homedir
+home="$(echo $user_str |cut -f 6 -d :)"
 
-# Changing passwd file
-/usr/bin/chsh -s "$shell_path" "$user" &>/dev/null
-shell=$(basename $shell_path)
-
-# Adding jailed sftp env
-if [ ! -z "$SFTPJAIL_KEY" ]; then
-    $BIN/v-add-user-sftp-jail $user
+# Unmounting home directory
+mount_dir=$(mount |grep /chroot/$user/ |awk '{print $3}')
+if [ ! -z "$mount_dir" ]; then
+    umount -f $mount_dir 2>/dev/null
+    if [ $? -ne 0 ]; then
+        gpasswd -d $user sftp-only >/dev/null 2>&1
+        exit 1
+    fi
 fi
+
+# Deleting chroot dir
+rmdir $mount_dir 2>/dev/null
+rm -rf /chroot/$user
+
+# Deleting user from sftp group
+gpasswd -d $user sftp-only >/dev/null 2>&1
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Changing user shell
-update_user_value "$user" '$SHELL' "$shell"
-
 # Logging
-log_history "changed $user shell to $shell" '' 'admin'
-log_event "$OK" "$EVENT"
+#log_event "$OK" "$EVENT"
 
 exit

@@ -1,7 +1,12 @@
 <?php
-session_start();
 
 define('NO_AUTH_REQUIRED',true);
+
+
+// Main include
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+
+
 $TAB = 'LOGIN';
 
 // Logout
@@ -9,8 +14,6 @@ if (isset($_GET['logout'])) {
     session_destroy();
 }
 
-// Main include
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Login as someone else
 if (isset($_SESSION['user'])) {

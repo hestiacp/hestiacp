@@ -4,8 +4,6 @@
 //error_reporting(NULL);
 
 
-session_start();
-
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 include($_SERVER['DOCUMENT_ROOT']."/file_manager/fm_core.php");
 

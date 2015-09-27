@@ -62,7 +62,8 @@ App.Constants.FM_RENAME                         = '<?php echo __('Rename') ?>';
 App.Constants.FM_DELETE                         = '<?php echo __('Delete') ?>';
 App.Constants.FM_EXTRACT                        = '<?php echo __('Extract') ?>';
 App.Constants.FM_CREATE                         = '<?php echo __('Create') ?>';
-App.Constants.FM_PACK                           = '<?php echo __('Pack') ?>';
+App.Constants.FM_PACK                           = '<?php echo __('Compress') ?>';
+App.Constants.FM_PACK_BUTTON                    = '<?php echo __('Compress') ?>';
 App.Constants.FM_OK                             = '<?php echo __('OK') ?>';
 App.Constants.FM_YOU_ARE_COPYING                = '<?php echo __('YOU ARE COPYING') ?>';
 App.Constants.FM_YOU_ARE_REMOVING               = '<?php echo __('YOU ARE REMOVING') ?>';
@@ -70,12 +71,12 @@ App.Constants.FM_YOU_ARE_REMOVING               = '<?php echo __('YOU ARE REMOVI
 App.Constants.FM_CONFIRM_COPY                   = '<?php echo __('Are you sure you want to copy') ?>';
 App.Constants.FM_CONFIRM_DELETE                 = '<?php echo __('Are you sure you want to delete') ?>';
 App.Constants.FM_INTO_KEYWORD                   = '<?php echo __('into') ?>';
-App.Constants.FM_EXISTING_FILES_WILL_BE_DELETED = '<?php echo __('existing files will be deleted') ?>';
+App.Constants.FM_EXISTING_FILES_WILL_BE_REPLACED= '<?php echo __('existing files will be replaced') ?>';
 App.Constants.FM_ORIGINAL_NAME                  = '<?php echo __('Original name') ?>';
 App.Constants.FM_FILE                           = '<?php echo __('File') ?>';
 App.Constants.FM_ALREADY_EXISTS                 = '<?php echo __('already exists') ?>';
-App.Constants.FM_EXTRACT                        = '<?php echo __('extract archive') ?>';
 App.Constants.FM_CREATE_FILE                    = '<?php echo __('Create file') ?>';
+App.Constants.FM_CREATE_DIRECTORY               = '<?php echo __('Create directory') ?>';
 
 
 

@@ -250,6 +250,10 @@
         <div class="message-small">writing the reading text at the reading write writing the reading text at the reading write!</div>
     </div>
 
+    <div class="warning-box reload hidden">
+        <div class="message-small">Hit F5 to reload the page</div>
+    </div>
+
 
     <div class="warning-box hidden">
         <div class="close ripple"></div>

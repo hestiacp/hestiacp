@@ -43,6 +43,11 @@ $v_ns1 = $nameservers[0];
 $v_ns2 = $nameservers[1];
 $v_ns3 = $nameservers[2];
 $v_ns4 = $nameservers[3];
+$v_ns5 = $nameservers[4];
+$v_ns6 = $nameservers[5];
+$v_ns7 = $nameservers[6];
+$v_ns8 = $nameservers[7];
+
 $v_suspended = $data[$v_username]['SUSPENDED'];
 if ( $v_suspended == 'yes' ) {
     $v_status =  'suspended';
@@ -142,17 +147,35 @@ if (!empty($_POST['save'])) {
     }
 
     // Change NameServers
-    if (($v_ns1 != $_POST['v_ns1']) || ($v_ns2 != $_POST['v_ns2']) || ($v_ns3 != $_POST['v_ns3']) || ($v_ns4 != $_POST['v_ns4']) && (empty($_SESSION['error_msg']))) {
+    if (($v_ns1 != $_POST['v_ns1']) || ($v_ns2 != $_POST['v_ns2']) || ($v_ns3 != $_POST['v_ns3']) || ($v_ns4 != $_POST['v_ns4']) || ($v_ns5 != $_POST['v_ns5'])
+ || ($v_ns6 != $_POST['v_ns6']) || ($v_ns7 != $_POST['v_ns7']) || ($v_ns8 != $_POST['v_ns8']) && (empty($_SESSION['error_msg']))) {
         $v_ns1 = escapeshellarg($_POST['v_ns1']);
         $v_ns2 = escapeshellarg($_POST['v_ns2']);
         $v_ns3 = escapeshellarg($_POST['v_ns3']);
         $v_ns4 = escapeshellarg($_POST['v_ns4']);
+        $v_ns5 = escapeshellarg($_POST['v_ns5']);
+        $v_ns6 = escapeshellarg($_POST['v_ns6']);
+        $v_ns7 = escapeshellarg($_POST['v_ns7']);
+        $v_ns8 = escapeshellarg($_POST['v_ns8']);
         $ns_cmd = VESTA_CMD."v-change-user-ns ".$v_username." ".$v_ns1." ".$v_ns2;
         if (!empty($_POST['v_ns3'])) $ns_cmd = $ns_cmd." ".$v_ns3;
         if (!empty($_POST['v_ns4'])) $ns_cmd = $ns_cmd." ".$v_ns4;
+        if (!empty($_POST['v_ns5'])) $ns_cmd = $ns_cmd." ".$v_ns5;
+        if (!empty($_POST['v_ns6'])) $ns_cmd = $ns_cmd." ".$v_ns6;
+        if (!empty($_POST['v_ns7'])) $ns_cmd = $ns_cmd." ".$v_ns7;
+        if (!empty($_POST['v_ns8'])) $ns_cmd = $ns_cmd." ".$v_ns8;
         exec ($ns_cmd, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+
+        $v_ns1 = str_replace("'","", $v_ns1);
+        $v_ns2 = str_replace("'","", $v_ns2);
+        $v_ns3 = str_replace("'","", $v_ns3);
+        $v_ns4 = str_replace("'","", $v_ns4);
+        $v_ns5 = str_replace("'","", $v_ns5);
+        $v_ns6 = str_replace("'","", $v_ns6);
+        $v_ns7 = str_replace("'","", $v_ns7);
+        $v_ns8 = str_replace("'","", $v_ns8);
     }
 
     // Set success message

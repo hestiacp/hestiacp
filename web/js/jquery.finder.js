@@ -203,10 +203,10 @@
         },
         selectAll: function(p,o) {
             p.on('mouseover', function(){
-                d.on("keydown", turnOff);
+                //d.on("keydown", turnOff);
             });
             p.on('mouseout', function(){
-                d.off("keydown", turnOff);
+                //d.off("keydown", turnOff);
             });
             
             function turnOff(e) {

@@ -19,7 +19,7 @@
 <div class="archive button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.packItem()">ARCHIVE</div>
 <div class="archive button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.packItem()" title="Create Archive"></div>
 <div class="extract button extract-btn" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.unpackItem()">EXRACT</div>
-<div class="extract button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.unpackItem()" title="Extract Archive"></div>
+<div class="extract button extract-btn small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.unpackItem()" title="Extract Archive"></div>
 <div class="download button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.downloadFiles()">DOWNLOAD</div><!-- div class="total-size">0 Mb</div -->
 
 

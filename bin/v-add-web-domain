@@ -39,7 +39,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN IP [RESTART] [ALIASES] [PROXY_EXTENTIONS]'
-validate_format 'user' 'domain' 'ip' 'extentions'
+validate_format 'user' 'domain' 'ip'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -55,6 +55,7 @@ if [ ! -z "$aliases" ]; then
     done
 fi
 if [ ! -z "$PROXY_SYSTEM" ]; then
+    validate_format 'extentions'
     proxy=$(get_user_value '$PROXY_TEMPLATE')
     is_proxy_template_valid $proxy
 fi

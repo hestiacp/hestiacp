@@ -107,24 +107,70 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".htmlentities($v_ns1); ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo 'value="'.htmlentities($v_ns1).'"'; ?>>
+                                                <span class="remove-ns additional-control delete">delete</span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".htmlentities($v_ns2); ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo 'value="'.htmlentities($v_ns2).'"'; ?>>
+                                                <span class="remove-ns additional-control delete">delete</span>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".htmlentities($v_ns3); ?>>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".htmlentities($v_ns4); ?>>
-                                            </td>
-                                        </tr>
+                            <?  if($v_ns3)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities($v_ns3).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns4)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities($v_ns4).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns5)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities($v_ns5).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns6)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities($v_ns6).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns7)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities($v_ns7).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns8)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities($v_ns8).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+                            ?>
+                                <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
+                                    <td class="step-top-small">
+                                      <span class="add-ns-button additional-control add">Add one more Name Server</span>
+                                    </td>
+                                </tr>
+
                                     </table>
                                 </td>
                             </tr>
@@ -144,3 +190,33 @@
             </table>
         </form>
     </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.add-ns-button').click(function(){
+                  var n = $("input[name^=v_ns]").length;
+                  if(n < 8){
+                    var t = $($('input[name=v_ns1]').parents('tr')[0]).clone(true, true);
+                    t.find('input').attr({value:'', name:'v_ns'+(n+1)});
+                    t.find('span').show();
+                    $('tr.add-ns').before(t);
+                  }
+                  if( n == 7 ) {
+                    $('.add-ns').hide();
+                  }
+                });
+
+                $('.remove-ns').click(function(){
+                    $(this).parents('tr')[0].remove();
+                    $('input[name^=v_ns]').each(function(i, ns){
+                        $(ns).attr({name: 'v_ns'+(i+1)});
+                        i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+                    })
+                    $('.add-ns').show()
+                })
+
+                $('input[name^=v_ns]').each(function(i, ns){
+                  i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+                })
+
+            });
+        </script>

@@ -52,6 +52,7 @@ App.Constants.FM_FILE_NAME_CANNOT_BE_EMPTY      = '<?php echo __('File name cann
 App.Constants.FM_NO_FILE_SELECTED               = '<?php echo __('No file selected') ?>';
 App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED  = '<?php echo __('No file or folder selected') ?>';
 App.Constants.FM_FILE_TYPE_NOT_SUPPORTED        = '<?php echo __('File type not supported') ?>';
+App.Constants.FM_DIRECTORY_DOWNLOAD_NOT_READY   = '<?php echo __('Directory download not available in current version') ?>';
 
 App.Constants.FM_DIRECTORY_NOT_AVAILABLE        = '<?php echo __('Directory not available') ?>';
 App.Constants.FM_DONE                           = '<?php echo __('Done') ?>';

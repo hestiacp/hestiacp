@@ -339,7 +339,6 @@ FM.updateTopLevelPathBar = function(box, tab, path) {
         if (part.trim() == '') {
             return;
         }
-        console.log("part - " + part);
         formattedPath.push('<a href="javascript:void(0)" onClick="FM.open(\''+part+'\', \''+box+'\')">'+part+'</span>');
     });
 
@@ -1043,9 +1042,12 @@ FM.itemIsArchieve = function(item) {
 FM.unpackItem = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
-    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
     if (selected.length == 0) {
-        return alert('No file selected');
+        //return alert('No file selected');
+        return FM.displayError(
+            App.Constants.FM_NO_FILE_SELECTED
+        );
     }
     
 
@@ -1078,7 +1080,7 @@ FM.unpackItem = function() {
 FM.packItem = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
-    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
     if (selected.length == 0) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_SELECTED
@@ -1206,7 +1208,7 @@ FM.confirmRename = function() {
 
 FM.renameItems = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
-    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
     if (selected.length == 0) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
@@ -1440,7 +1442,7 @@ FM.confirmCopyItems = function () {
 
 FM.downloadFiles = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
-    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
     if (!selected) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
@@ -1451,7 +1453,10 @@ FM.downloadFiles = function() {
     src = $.parseJSON(src);
     
     if (FM.isItemPseudo(src) || FM.isItemDir(src)) {
-        alert('Folder downloads are in progress atm');
+        //alert('Folder downloads are in progress atm');
+        return FM.displayError(
+            App.Constants.FM_DIRECTORY_DOWNLOAD_NOT_READY
+        );
     }
     
     if (FM.isItemPseudo(src)) {
@@ -1769,6 +1774,8 @@ $(document).ready(function() {
 
 
     shortcut.add("Esc",function() {
+		FM.Env.RELOAD_IN_TIME = false;
+        $('#reload-in-time').remove();
         if (FM.isPopupOpened()) {
             return FM.handlePopupCancel();
         }

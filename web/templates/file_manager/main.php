@@ -449,23 +449,27 @@
             $(".listing-left").selectable({
                 selected: function (event, ui) {
                     FM.setTabActive(FM.TAB_A, 'skip_highlights');
-                    $(".listing-left .selected").each(function(i, o) {
+                    $(".listing-left .selected, .listing-left .ui-selectee").each(function(i, o) {
                         if (!$(o).hasClass('ui-selected')) {
                             $(o).removeClass('selected');
+                            $(o).removeClass('active');
                         }
                     });
                     $(ui.selected).addClass('selected');
+                    $(ui.selected).addClass('active');
                     checkIfArchive(ui.selected);
                     $(".listing-left .ui-selected").addClass('selected');
                 },
                 unselected: function (event, ui) {
-                    $(".listing-left .selected").each(function(i, o) {
+                    $(".listing-left .selected, .listing-left .ui-selectee").each(function(i, o) {
                         if (!$(o).hasClass('ui-selected')) {
                             $(o).removeClass('selected');
+                            $(o).removeClass('active');
                         }
                     });
                     FM.setTabActive(FM.TAB_A, 'skip_highlights');
                     $(ui.unselected).removeClass('selected');
+                    $(ui.selected).addClass('active');
                 }
             });
             $(".listing-right").selectable({

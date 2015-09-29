@@ -35,7 +35,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     $v_user = escapeshellarg($_POST['user']);
 
     // Send password via tmp file
-    $v_password = tempnam("/tmp","vst");
+    $v_password = exec('mktemp -p /tmp');
     $fp = fopen($v_password, "w");
     fwrite($fp, $_POST['password']."\n");
     fclose($fp);

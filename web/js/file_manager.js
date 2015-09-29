@@ -292,6 +292,32 @@ FM.goDown = function() {
     FM.setActive(index, FM.CURRENT_TAB);
 }
 
+// reloads provided tab
+// reloads opposite tab if its needed
+FM.openAndSync = function(dir, box, callback) {
+	var tab = FM.getTabLetter(box);
+
+	var opposite_tab = 'A';
+	if (tab == 'A') {
+		opposite_tab = 'B';
+	}
+	
+	var oppositeSyncNeeded = false;
+
+	if (FM.TAB_A_CURRENT_PATH == FM.TAB_B_CURRENT_PATH) {
+		oppositeSyncNeeded = true;
+	}
+
+
+	if (oppositeSyncNeeded) {
+		FM.open(dir, FM['TAB_' + opposite_tab], callback);
+		return FM.open(dir, box, callback);
+	}
+	else {
+		return FM.open(dir, box, callback);
+	}
+}
+
 
 FM.open = function(dir, box, callback) {
     var tab = FM.getTabLetter(box);
@@ -662,7 +688,14 @@ FM.generate_listing = function(reply, box) {
 
     $(box).html(acc.done());
     
-    FM['CURRENT_'+tab+'_LINE'] = -1;
+    //////// 
+    /*if (FM['CURRENT_'+tab+'_LINE'] > -1 && $(box).find('.dir:eq(' + FM['CURRENT_'+tab+'_LINE'] + ')').lrngth > 0) {
+		
+	}
+	else {
+		FM['CURRENT_'+tab+'_LINE'] = -1;
+	}*/
+	FM['CURRENT_'+tab+'_LINE'] = -1;
 }
 
 FM.toggleCheck = function(uid) {
@@ -1111,7 +1144,7 @@ FM.packItem = function() {
     
     var tpl = Tpl.get('popup_pack', 'FM');
     tpl.set(':FILENAME', src.name);
-    tpl.set(':DST_DIRNAME', dst + '/' + src.name + '_packed.tar.gz');
+    tpl.set(':DST_DIRNAME', dst + '/' + src.name + '.tar.gz');
     FM.popupOpen(tpl.finalize());
 }
 
@@ -1198,7 +1231,7 @@ FM.confirmRename = function() {
     App.Ajax.request(action, params, function(reply) {
         if (reply.result == true) {
             FM.popupClose();
-            FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+            FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
         }
         else {
             FM.showError('rename-items', reply.message);
@@ -1235,6 +1268,7 @@ FM.isPopupOpened = function() {
 }
 
 FM.popupOpen = function(html) {
+	FM.popupClose();
 	//$('#popup').flayer_close();
     $('<div>').attr('id', 'popup').html(html).flayer({
         afterStart: function(elm) {
@@ -1432,7 +1466,7 @@ FM.confirmCopyItems = function () {
         if (reply.result == true) {
             FM.popupClose();
             // FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], FM['TAB_' + tab]);
-            FM.open(FM['TAB_' + opposite_tab + '_CURRENT_PATH'], FM['TAB_' + opposite_tab]);
+            FM.openAndSync(FM['TAB_' + opposite_tab + '_CURRENT_PATH'], FM['TAB_' + opposite_tab]);
         }
         else {
             FM.showError('copy-items', reply.message);
@@ -1504,7 +1538,7 @@ FM.confirmDelete = function() {
     App.Ajax.request('delete_files', params, function(reply) {
         if (reply.result == true) {
             FM.popupClose();
-            FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+            FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
         }
         else {
             FM.showError('delete-items', reply.message);
@@ -1611,7 +1645,7 @@ FM.confirmCreateDir = function() {
     App.Ajax.request('create_dir', params, function(reply) {
         if (reply.result == true) {
             FM.popupClose();
-            FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+            FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
         }
         else {
             FM.showError('create-dir', reply.message);
@@ -1646,7 +1680,7 @@ FM.confirmCreateFile = function() {
     App.Ajax.request('create_file', params, function(reply) {
         if (reply.result == true) {
             FM.popupClose();
-            FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+            FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
         }
         else {
             FM.showError('create-file', reply.message);
@@ -1948,6 +1982,7 @@ $(document).ready(function() {
         'disable_in_input': true,
         'target':           document
     });
+
     shortcut.add("shift+F6",function() {
         FM.renameItems();
     },{
@@ -1988,14 +2023,7 @@ $(document).ready(function() {
         'target':           document
     });
 
-    shortcut.add("u",function() {
-/// TODO upload file        FM.uploadFile();
-    },{
-        'type':             'keydown',
-        'propagate':        false,
-        'disable_in_input': true,
-        'target':           document
-    });
+    
 
     shortcut.add("d",function() {
         FM.downloadFiles();
@@ -2025,7 +2053,15 @@ $(document).ready(function() {
     });*/
     
 
-
+	shortcut.add("u",function() {
+		var tab_letter = FM.getTabLetter(FM.CURRENT_TAB);
+		$('#file_upload_'+tab_letter).trigger('click');
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': true,
+        'target':           document
+    });
 
 
     /* is jQuery .live() has been removed in version 1.9 onwards

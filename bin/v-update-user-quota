@@ -33,7 +33,7 @@ is_object_valid 'user' 'USER' "$user"
 # Updating disk quota
 quota=$(get_user_value '$DISK_QUOTA')
 soft=$((quota * 1000))
-hard=$((quota + 50000))
+hard=$((soft + 50000))
 
 # Searching home mount point
 mnt=$(df -P /home |awk '{print $6}' |tail -n1)

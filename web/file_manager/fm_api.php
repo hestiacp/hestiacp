@@ -97,6 +97,10 @@ switch ($_REQUEST['action']) {
         $item       = $_REQUEST['item'];
         print json_encode($fm->packItem($item, $dir, $target_dir, $filename));
         break;
+    case 'backup':
+        $path = $_REQUEST['path'];
+        print json_encode($fm->backupItem($path));
+        break;
     default:
         //print json_encode($fm->init());
         break;

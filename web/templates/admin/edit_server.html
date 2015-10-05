@@ -684,8 +684,21 @@
                                             <td>
                                                 <select class="vst-list" name="v_filemanager">
                                                     <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes'><?php print __('yes'); ?></option>
                                                 </select>
                                                 <br><br>
+                                                <div class="filemanager description" style="display:none">
+                                                    Web Filemanager is a commercial module. By purchasing it you not only get powerfull filemanagement tool but also help VestaCP get better and stronger.<br>
+                                                    You can see the bref video review of the module functionality.<br>
+                                                    <span>(to try it free for a week please use "TMKE765" as a licence key)</span>
+                                                    <div class="licence">
+                                                        To activate filemanager insert licence key: <input type="text" class="vst-input" name="v_filemanager_licence" /><br>
+                                                    </div>
+                                                    <ul>
+                                                        <li><a class="purchase" href="read.com">get monthly licence 3$/month</a></li>
+                                                        <li><a class="purchase" href="read.com">get forever licence 50$</a></li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
                                     </table>
@@ -700,7 +713,7 @@
                                     <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -709,3 +722,15 @@
             </table>
         </form>
     </div>
+
+<script>
+    $(document).ready(function(){
+        $('select[name=v_filemanager]').change(function(){
+            if($(this).val() == 'yes'){
+                $('.filemanager.description').show();
+            } else {
+                $('.filemanager.description').hide();
+            }
+        });
+    });
+</script>

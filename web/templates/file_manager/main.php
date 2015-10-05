@@ -474,6 +474,8 @@
 					else {
 						FM['CURRENT_A_LINE'] = 0;
 					}
+					
+					FM.preselectedItems.A = [];
 
                     /*FM.setTabActive(FM.TAB_A, 'skip_highlights');
                     $(".listing-left .selected, .listing-left .ui-selectee").each(function(i, o) {
@@ -538,6 +540,8 @@
 					else {
 						FM['CURRENT_B_LINE'] = 0;
 					}
+					
+					FM.preselectedItems.B = [];
                     
                 },
                 unselected: function (event, ui) {

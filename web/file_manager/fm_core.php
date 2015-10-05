@@ -206,6 +206,47 @@ class FileManager {
             );
         }
     }
+
+    function backupItem($item) {
+        
+        $src_item     = $this->formatFullPath($item);
+        
+        $dst_item_name = $item . '~' . date('Ymd_His');
+
+        $dst_item = $this->formatFullPath($dst_item_name);
+
+//print VESTA_CMD . "v-add-fs-archive {$this->user} {$item} {$dst_item}";die();
+        exec (VESTA_CMD . "v-copy-fs-file {$this->user} {$src_item} {$dst_item}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
+        
+        if (empty($error)) {
+            return array(
+                'result'   => true,
+                'filename' => $dst_item_name
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+
+        $error = self::check_return_code($return_var, $output);
+        
+        if (empty($error)) {
+            return array(
+                'result' => true
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+    }
     
     function unpackItem($item, $dir, $target_dir, $filename) {
         $item     = $this->formatFullPath($item);

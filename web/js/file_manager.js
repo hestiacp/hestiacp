@@ -56,7 +56,7 @@ FM.EDITABLE_MIMETYPES = [
     'application/epp+xml',
     'application/javascript',
     'application/json',
-    'application/jsonml+json	',
+    'application/jsonml+json    ',
     'application/lost+xml',
     'application/marc',
     'application/msword',
@@ -219,9 +219,9 @@ FM.setSecondInactive = function(index, box) {
 }
 
 FM.goBackwards = function() {
-	if (FM.isPopupOpened()) {
-		return;
-	}
+    if (FM.isPopupOpened()) {
+        return;
+    }
 
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
@@ -234,13 +234,13 @@ FM.goBackwards = function() {
 }
 
 FM.goToTop = function() {
-	if (FM.isPopupOpened()) {
-		return;
-	}
-	if (FM.isPopupOpened()) {
-		return;
-	}
-	
+    if (FM.isPopupOpened()) {
+        return;
+    }
+    if (FM.isPopupOpened()) {
+        return;
+    }
+    
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var index = 0;
 
@@ -248,9 +248,9 @@ FM.goToTop = function() {
 }
 
 FM.goToBottom = function() {
-	if (FM.isPopupOpened()) {
-		return;
-	}
+    if (FM.isPopupOpened()) {
+        return;
+    }
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var index = $(FM.CURRENT_TAB).find('.dir').length - 1;
 
@@ -258,9 +258,9 @@ FM.goToBottom = function() {
 }
 
 FM.goUp = function() {
-	if (FM.isPopupOpened()) {
-		return;
-	}
+    if (FM.isPopupOpened()) {
+        return;
+    }
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var index = FM['CURRENT_' + tab + '_LINE'];
     index -= 1;
@@ -275,10 +275,10 @@ FM.goUp = function() {
 }
 
 FM.goDown = function() {
-	if (FM.isPopupOpened()) {
-		return;
-	}
-	
+    if (FM.isPopupOpened()) {
+        return;
+    }
+    
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var index = FM['CURRENT_' + tab + '_LINE'];
     index += 1;
@@ -295,27 +295,27 @@ FM.goDown = function() {
 // reloads provided tab
 // reloads opposite tab if its needed
 FM.openAndSync = function(dir, box, callback) {
-	var tab = FM.getTabLetter(box);
+    var tab = FM.getTabLetter(box);
 
-	var opposite_tab = 'A';
-	if (tab == 'A') {
-		opposite_tab = 'B';
-	}
-	
-	var oppositeSyncNeeded = false;
+    var opposite_tab = 'A';
+    if (tab == 'A') {
+        opposite_tab = 'B';
+    }
+    
+    var oppositeSyncNeeded = false;
 
-	if (FM.TAB_A_CURRENT_PATH == FM.TAB_B_CURRENT_PATH) {
-		oppositeSyncNeeded = true;
-	}
+    if (FM.TAB_A_CURRENT_PATH == FM.TAB_B_CURRENT_PATH) {
+        oppositeSyncNeeded = true;
+    }
 
 
-	if (oppositeSyncNeeded) {
-		FM.open(dir, FM['TAB_' + opposite_tab], callback);
-		return FM.open(dir, box, callback);
-	}
-	else {
-		return FM.open(dir, box, callback);
-	}
+    if (oppositeSyncNeeded) {
+        FM.open(dir, FM['TAB_' + opposite_tab], callback);
+        return FM.open(dir, box, callback);
+    }
+    else {
+        return FM.open(dir, box, callback);
+    }
 }
 
 
@@ -690,12 +690,12 @@ FM.generate_listing = function(reply, box) {
     
     //////// 
     /*if (FM['CURRENT_'+tab+'_LINE'] > -1 && $(box).find('.dir:eq(' + FM['CURRENT_'+tab+'_LINE'] + ')').lrngth > 0) {
-		
-	}
-	else {
-		FM['CURRENT_'+tab+'_LINE'] = -1;
-	}*/
-	FM['CURRENT_'+tab+'_LINE'] = -1;
+        
+    }
+    else {
+        FM['CURRENT_'+tab+'_LINE'] = -1;
+    }*/
+    FM['CURRENT_'+tab+'_LINE'] = -1;
 }
 
 FM.toggleCheck = function(uid) {
@@ -958,9 +958,9 @@ FM.toggleAllItemsSelected = function() {
 }
 
 FM.selectCurrentElementAndGoToNext = function () {
-	if (FM.isPopupOpened()) {
-		return;
-	}
+    if (FM.isPopupOpened()) {
+        return;
+    }
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
     
@@ -1106,7 +1106,7 @@ FM.unpackItem = function() {
     
     var tpl = Tpl.get('popup_unpack', 'FM');
     tpl.set(':FILENAME', src.name);
-    tpl.set(':DST_DIRNAME', dst + '/' + src.name + '_extracted');
+    tpl.set(':DST_DIRNAME', dst + '/' + src.name);
     FM.popupOpen(tpl.finalize());
 }
 
@@ -1151,10 +1151,10 @@ FM.packItem = function() {
 
 
 FM.switchTab = function() {
-	if (FM.isPopupOpened()) {
-		return;
-	}
-	
+    if (FM.isPopupOpened()) {
+        return;
+    }
+    
     if (FM.CURRENT_TAB == FM.TAB_A) {
         FM.setTabActive(FM.TAB_B);
         $(FM.TAB_B).find('.selected-inactive').removeClass('selected-inactive');
@@ -1264,12 +1264,12 @@ FM.renameItems = function() {
 }
 
 FM.isPopupOpened = function() {
-	return $('#popup').length > 0 ? true : false;
+    return $('#popup').length > 0 ? true : false;
 }
 
 FM.popupOpen = function(html) {
-	FM.popupClose();
-	//$('#popup').flayer_close();
+    FM.popupClose();
+    //$('#popup').flayer_close();
     $('<div>').attr('id', 'popup').html(html).flayer({
         afterStart: function(elm) {
             elm.find('input[type="text"]:first').focus();
@@ -1601,12 +1601,12 @@ FM.displayError = function(msg) {
 }
 
 FM.triggerRefreshActionTrick = function() {
-	// reload-in-time
-	$('#reload-in-time').remove();
-	FM.Env.RELOAD_IN_TIME = true;
-	var tpl = Tpl.get('reload_in_time', 'FM');
-	//tpl.set(':TIME_LEFT', FM.RELOAD_IN_TIME_SECONDS + 1);
-	
+    // reload-in-time
+    $('#reload-in-time').remove();
+    FM.Env.RELOAD_IN_TIME = true;
+    var tpl = Tpl.get('reload_in_time', 'FM');
+    //tpl.set(':TIME_LEFT', FM.RELOAD_IN_TIME_SECONDS + 1);
+    
     $('body').append(tpl.finalize());
     
     var ref = $('#reload-in-time').find('.reload-in-time-counter');
@@ -1614,14 +1614,14 @@ FM.triggerRefreshActionTrick = function() {
     var timeleft = FM.RELOAD_IN_TIME_SECONDS;
     FM.Env.reload_in_time_interval = 
     setInterval(function() {
-		if (timeleft <= 0) {
-			clearInterval(FM.Env.reload_in_time_interval);
-			$('#reload-in-time').remove();
-			FM.Env.RELOAD_IN_TIME = false;
-		}
-		//ref.text(timeleft);
-		timeleft -= 1;
-	}, 1000);
+        if (timeleft <= 0) {
+            clearInterval(FM.Env.reload_in_time_interval);
+            $('#reload-in-time').remove();
+            FM.Env.RELOAD_IN_TIME = false;
+        }
+        //ref.text(timeleft);
+        timeleft -= 1;
+    }, 1000);
 }
 
 
@@ -1808,7 +1808,7 @@ $(document).ready(function() {
 
 
     shortcut.add("Esc",function() {
-		FM.Env.RELOAD_IN_TIME = false;
+        FM.Env.RELOAD_IN_TIME = false;
         $('#reload-in-time').remove();
         if (FM.isPopupOpened()) {
             return FM.handlePopupCancel();
@@ -1839,14 +1839,14 @@ $(document).ready(function() {
     });
     
     shortcut.add("Left",function() {
-		if (!FM.isPopupOpened()) {
-			FM.setTabActive(FM.TAB_A);
+        if (!FM.isPopupOpened()) {
+            FM.setTabActive(FM.TAB_A);
         
-			var tab = FM.getTabLetter(FM.CURRENT_TAB);
-			if (FM['CURRENT_' + tab + '_LINE'] == -1) {
-			   FM.setActive(0, FM.CURRENT_TAB);
-			}
-		}
+            var tab = FM.getTabLetter(FM.CURRENT_TAB);
+            if (FM['CURRENT_' + tab + '_LINE'] == -1) {
+               FM.setActive(0, FM.CURRENT_TAB);
+            }
+        }
     },{
         'type':             'keydown',
         'propagate':        false,
@@ -1855,14 +1855,14 @@ $(document).ready(function() {
     });
     
     shortcut.add("Right",function() {
-		if (!FM.isPopupOpened()) {
-			FM.setTabActive(FM.TAB_B);
+        if (!FM.isPopupOpened()) {
+            FM.setTabActive(FM.TAB_B);
         
-			var tab = FM.getTabLetter(FM.CURRENT_TAB);
-			if (FM['CURRENT_' + tab + '_LINE'] == -1) {
-			   FM.setActive(0, FM.CURRENT_TAB);
-			}
-		}
+            var tab = FM.getTabLetter(FM.CURRENT_TAB);
+            if (FM['CURRENT_' + tab + '_LINE'] == -1) {
+               FM.setActive(0, FM.CURRENT_TAB);
+            }
+        }
         
     },{
         'type':             'keydown',
@@ -2000,14 +2000,14 @@ $(document).ready(function() {
         'target':           document
     });
     shortcut.add("F5",function() {
-		if (FM.Env.RELOAD_IN_TIME == true) {
-			location.reload();
-			return;
-		}
-		else {
-			FM.copyItems();
-			FM.triggerRefreshActionTrick();
-		}
+        if (FM.Env.RELOAD_IN_TIME == true) {
+            location.reload();
+            return;
+        }
+        else {
+            FM.copyItems();
+            FM.triggerRefreshActionTrick();
+        }
     },{
         'type':             'keydown',
         'propagate':        false,
@@ -2043,8 +2043,8 @@ $(document).ready(function() {
     });
     /*shortcut.add("Y",function() {
         if (FM.Env.RELOAD_IN_TIME == true) {
-			location.reload();
-		}
+            location.reload();
+        }
     },{
         'type':             'keydown',
         'propagate':        false,
@@ -2053,9 +2053,9 @@ $(document).ready(function() {
     });*/
     
 
-	shortcut.add("u",function() {
-		var tab_letter = FM.getTabLetter(FM.CURRENT_TAB);
-		$('#file_upload_'+tab_letter).trigger('click');
+    shortcut.add("u",function() {
+        var tab_letter = FM.getTabLetter(FM.CURRENT_TAB);
+        $('#file_upload_'+tab_letter).trigger('click');
     },{
         'type':             'keydown',
         'propagate':        false,

@@ -2787,3 +2787,56 @@ form#vstobjects.suspended {
   text-align: right;
   width: 140px;
 }
+
+.description {
+  font-weight: normal;
+  line-height: 25px;
+  padding-bottom: 20px;
+  margin-left: 50px;
+}
+.description ul{
+  margin-top: 15px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.description li{
+  margin: 10px 0;
+}
+
+.description a {
+  line-height: 30px;
+  text-decoration: underline;
+  color: #2c9491;
+}
+.description a.purchase {
+  color: #86A307;
+  background-color: #9fbf0c;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 7px;
+  text-transform: capitalize;
+  text-decoration: none;
+}
+.description a.purchase:hover {
+  background-color: #c0e60f;
+  color: #555;
+}
+.description .licence {
+  padding: 20px 0;
+  color: #2c9491;
+}
+
+.description .licence input {
+  margin-left: 17px;
+  width: 137px;
+}
+
+.description span {
+  font-style: italic;
+  line-height: 45px;
+  padding-top: 20px;
+}
+

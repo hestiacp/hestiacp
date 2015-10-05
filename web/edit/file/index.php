@@ -3,6 +3,17 @@ session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 /*
+if (empty($panel)) {
+    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
+    exec ($command, $output, $return_var);
+    if ( $return_var > 0 ) {
+        header("Location: /error/");
+        exit;
+    }
+    $panel = json_decode(implode('', $output), true);
+}
+*/
+/*
 // Check user session
 if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
@@ -23,13 +34,15 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
 <script src="/js/cheef-editor/ace/mode-ruby.js"></script>
 <script src="/js/cheef-editor/jquery-ace.min.js"></script>
 
+<div id="message" style="display:none; position: absoulte;background-color: green; color: white; padding: 10px;"></div>
+<div id="error-message" style="display:none; position: absoulte;background-color: red; color: white; padding: 10px;"></div>
+
 <?php 
 
     if (!empty($_REQUEST['path'])) {
         $content = '';
         $path = $_REQUEST['path'];
         if (is_readable($path)) {
-            
             $image = getimagesize($path) ? true : false;
             
             if ($image) {
@@ -49,8 +62,16 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
                   }
             }
             
-            $content = file_get_contents($path);
-            $content = $content;
+            // $content = file_get_contents($path);
+            // v-open-fs-file
+            
+            exec (VESTA_CMD . "v-open-fs-file {$user} {$path}", $content, $return_var);
+            if ($return_var != 0) {
+                print 'Error while opening file'; // todo: handle this more styled
+                exit;
+            }
+            
+            $content = implode("\n", $content);
         }
     }
     else {
@@ -59,18 +80,78 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
 
 ?>
 
-<form method="post">
+<form id="edit-file-form" method="post">
+<!-- input id="do-backup" type="button" onClick="javascript:void(0);" name="save" value="backup (ctrl+F2)" class="backup" / -->
 <input type="submit" name="save" value="Save" class="save" />
 
 
 <textarea name="contents" class="editor" id="editor" rows="4" style="display:none;width: 100%; height: 100%;"><?php echo $content ?></textarea>
 
 </form>
-<script>
-  $('.editor').ace({ theme: 'twilight', lang: 'ruby' });
 
-  var dcrt = $('#editor').data('ace');
-  var editor = dcrt.editor.ace;
-  editor.gotoLine(0);
-  editor.focus();
+<script type="text/javascript" src="/js/hotkeys.js"></script>
+<script type="text/javascript">
+    $('.editor').ace({ theme: 'twilight', lang: 'ruby' });
+
+    var dcrt = $('#editor').data('ace');
+    var editor = dcrt.editor.ace;
+    editor.gotoLine(0);
+    editor.focus();
+
+
+    var makeBackup = function() {
+        var params = {
+            action: 'backup',
+            path:   '<?= $path ?>'
+        };
+        
+        $.ajax({url: "/file_manager/fm_api.php", 
+            method: "POST",
+            data:   params,
+            dataType: 'JSON',
+            success: function(reply) {
+                var fadeTimeout = 3000;
+                if (reply.result) {
+                    $('#message').text('File backed up as ' + reply.filename);
+                    clearTimeout(window.msg_tmt);
+                    $('#message').show();
+                    window.msg_tmt = setTimeout(function() {$('#message').fadeOut();}, fadeTimeout);
+                }
+                else {
+                    $('#error-message').text(reply.message);
+                    clearTimeout(window.errmsg_tmt);
+                    $('#error-message').show();
+                    window.errmsg_tmt = setTimeout(function() {$('#error-message').fadeOut();}, fadeTimeout);
+                }
+            }
+        });
+    }
+
+    $('#do-backup').on('click', function(evt) {
+        evt.preventDefault();
+        
+        makeBackup();
+    });
+    // 
+    // Shortcuts
+    // 
+    shortcut.add("Ctrl+s",function() {
+        var inp = $('<input>').attr({'type': 'hidden', 'name': 'save'}).val('Save');
+        $('#edit-file-form').append(inp);
+        $('#edit-file-form').submit();
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': false,
+        'target':           document
+    });
+    shortcut.add("Ctrl+F2",function() {
+        makeBackup();
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': false,
+        'target':           document
+    });
+    
 </script>

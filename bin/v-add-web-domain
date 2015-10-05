@@ -188,8 +188,8 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
     if [ -z "$(grep "$conf" $proxy_conf)" ]; then
         echo "include $conf;" >> $proxy_conf
     fi
-    if [ -x $WEBTPL/$PROXY_SYSTEM/$template.sh ]; then
-        $WEBTPL/$PROXY_SYSTEM/$template.sh $user $domain $ip $HOMEDIR $docroot
+    if [ -x $WEBTPL/$PROXY_SYSTEM/$proxy.sh ]; then
+        $WEBTPL/$PROXY_SYSTEM/$proxy.sh $user $domain $ip $HOMEDIR $docroot
     fi
 fi
 

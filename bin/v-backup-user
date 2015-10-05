@@ -227,7 +227,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         # Backup files
         cd $HOMEDIR/$user/web/$domain
-        find . ${fargs[@]} -type f -print0 |\
+        find . ${fargs[@]} -type f -or -type l -print0 |\
             tar -cpf $tmpdir/web/$domain/domain_data.tar --null -T -
 
         # Backup empty folders
@@ -490,7 +490,7 @@ if [ "$USER" != '*' ]; then
     IFS=$'\n'
     set -f
     i=0
-    for udir in $(ls |egrep -v "conf|web|dns|mail"); do
+    for udir in $(ls -a |egrep -v "conf|web|dns|mail|^\.\.$|^\.$"); do
         check_exl=$(echo -e "${USER//,/\n}" |grep "^$udir$")
         if [ -z "$check_exl" ]; then
             ((i ++))
@@ -499,7 +499,7 @@ if [ "$USER" != '*' ]; then
             msg="$msg\n$(date "+%F %T") adding directory $udir"
 
             # Backup files
-            find ./$udir ${fargs[@]} -type f -print0 |\
+            find ./$udir ${fargs[@]} -type f -or -type l -print0 |\
                 tar -cpf $tmpdir/user_dir/$udir.tar --null -T -
 
             # Backup empty folders

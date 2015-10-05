@@ -11,11 +11,11 @@ is_web_template_valid() {
 
 # Proxy template check
 is_proxy_template_valid() {
-    template=$1
-    t="$WEBTPL/$PROXY_SYSTEM/$template.tpl"
-    s="$WEBTPL/$PROXY_SYSTEM/$template.stpl"
+    proxy=$1
+    t="$WEBTPL/$PROXY_SYSTEM/$proxy.tpl"
+    s="$WEBTPL/$PROXY_SYSTEM/$proxy.stpl"
     if [ ! -e $t ] || [ ! -e $s ]; then
-        echo "Error: proxy template $template not found"
+        echo "Error: proxy template $proxy not found"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi

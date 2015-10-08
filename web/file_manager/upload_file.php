@@ -27,7 +27,7 @@ if (!empty($_FILES) && $_POST['token'] == $verifyToken) {
 
     exec (VESTA_CMD . "v-copy-fs-file {$user} {$tempFile} {$targetFile}", $output, $return_var);
 
-    $error = self::check_return_code($return_var, $output);
+    $error = check_return_code($return_var, $output);
     if ($return_var != 0) {
         echo '0';
     } else {

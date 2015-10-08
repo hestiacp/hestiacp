@@ -9,14 +9,10 @@ App.Templates.html = {
     // file manager
     //
 
-//<input id="check~!:index~!" class="ch-toggle2" type="checkbox" name="domain[]" value="~!:index3~!">\    
-    
     FM: {
 		reload_in_time: [
-					//'<div id="reload-in-time" style="position: absolute; top: 0; left: 45%; background-color: yellow; padding: 50px;z-index: 999999">If you want to reload, hit key "Y" to reload.<br /> You have <strong class="reload-in-time-counter">~!:TIME_LEFT~!</strong>s. to do this.<br /> Hurry up!</div>'
 					'<div id="reload-in-time" class="warning-box reload">\
-						<!-- div class="close ripple" onClick="try{FM.Env.RELOAD_IN_TIME = false;}catch(e){}"></div -->\
-						<div class="message-small">Hit <span>F5</span> to reload the page</div>\
+						<div class="message-small">'+App.Constants.FM_HIT+' <span>F5</span> '+App.Constants.FM_TO_RELOAD_THE_PAGE+'</div>\
 					</div>'
 		],
         entry_line: ['<li class="dir">\
@@ -38,7 +34,7 @@ App.Templates.html = {
         popup_alert: ['<div class="confirm-box alarm popup-box">\
                             <div class="message">~!:TEXT~!</div>\
                                 <div class="controls">\
-                            <p class="ok" onClick="FM.popupClose();">close</p>\
+                            <p class="ok" onClick="FM.popupClose();">'+App.Constants.FM_CLOSE+'</p>\
                             </div>\
                         </div>'],
         popup_bulk: ['<div class="confirm-box alarm popup-box">\

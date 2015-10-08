@@ -2,6 +2,8 @@
 session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+
+$user = $_SESSION['user'];
 /*
 if (empty($panel)) {
     $command = VESTA_CMD."v-list-user '".$user."' 'json'";
@@ -56,7 +58,16 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
                     $f = fopen ($fn, 'w+');
                     fwrite($f, $_POST['contents']);
                     if ($f) {
-                        copy($fn, $path);
+                        //copy($fn, $path);
+                        exec (VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}", $output, $return_var);
+
+                        $error = check_return_code($return_var, $output);
+                        if ($return_var != 0) {
+                            var_dump(VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}");
+                            var_dump($path);
+                            var_dump($output);
+                            die('<p style="color: white">Error while saving file</p>');//echo '0';
+                        }
                     }
                     unlink($fn);
                   }
@@ -65,13 +76,24 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
             // $content = file_get_contents($path);
             // v-open-fs-file
             
-            exec (VESTA_CMD . "v-open-fs-file {$user} {$path}", $content, $return_var);
+
+            //print file_get_contents($path);
+            exec (VESTA_CMD . "v-check-fs-permission {$user} {$path}", $content, $return_var);
+
+            if ($return_var != 0) {
+                print 'Error while opening file'; // todo: handle this more styled
+                exit;
+            }
+
+            
+            /*exec (VESTA_CMD . "v-open-fs-file {$user} {$path}", $content, $return_var);
             if ($return_var != 0) {
                 print 'Error while opening file'; // todo: handle this more styled
                 exit;
             }
             
-            $content = implode("\n", $content);
+            $content = implode("\n", $content);*/
+            $content = file_get_contents($path);
         }
     }
     else {

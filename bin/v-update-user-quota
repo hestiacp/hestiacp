@@ -31,9 +31,10 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Updating disk quota
+# Hard quota set to more than 10%. This is more meaningful.
 quota=$(get_user_value '$DISK_QUOTA')
-soft=$((quota * 1000))
-hard=$((soft + 50000))
+soft=$((quota * 1024))
+hard=$((soft * 1.10))
 
 # Searching home mount point
 mnt=$(df -P /home |awk '{print $6}' |tail -n1)

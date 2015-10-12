@@ -14,6 +14,10 @@
 <link rel="stylesheet" href="/css/jquery.fileupload.css">
 </head>
 <body>
+    <a href="#" class="to-shortcuts">
+        <i class="l-icon-shortcuts"></i>
+    </a>
+
     <div id="main">
         <div class="window active">
             <a href="/" class="l-logo"></a>
@@ -71,6 +75,43 @@
             <div class="progress-container hidden">
             <div class="progress-elm"><span class="title"><?=__('Initializing')?></span><span class="progress" style="backround-position: -96px;  backround-position:-10px"></span><span class="close hidden"></span></div>
         </div>
+
+    <div class="shortcuts" style="display:none">
+      <div class="header">
+        <div class="title">Shortcuts</div>
+        <div class="close"></div>
+      </div>
+      <ul>
+        <li><span class="key">u</span><?=__('Upload')?></li>
+        <li><span class="key">n</span><?=__('New File')?></li>
+        <li><span class="key">F7</span><?=__('New Folder')?></li>
+        <li><span class="key">d</span><?=__('Download')?></li>
+        <li><span class="key">F2 / &lt;Shift&gt;+F6</span><?=__('Rename')?></li>
+        <li><span class="key">F5</span><?=__('Copy')?></li>
+        <li><span class="key">a</span><?=__('Archive')?></li>
+        <li><span class="key">F8 / Del</span><?=__('Delete')?></li>
+        <li class="step-top"><span class="key">&lt;Ctrl&gt; + s</span><?=__('Save File (in text editor)')?></li>
+        <li class="step-top"><span class="key">h</span><?=__('Display Shortcuts Help')?></li>
+        <li class="step-top"><span class="key">Esc</span><?=__('Close Popup / Cancel')?></li>
+      </ul>
+      <ul>
+        <li><span class="key bigger">&uarr;</span><?=__('Move Cursor Up')?></li>
+        <li><span class="key bigger">&darr;</span><?=__('Move Cursor Down')?></li>
+        <li><span class="key bigger">&larr;</span><?=__('Switch to Left Tab')?></li>
+        <li><span class="key bigger">&rarr;</span><?=__('Switch to Right Tab')?></li>
+        <li><span class="key">&lt;Tab&gt;</span><?=__('Switch Tab')?></li>
+        <li><span class="key">&lt;Home&gt;</span><?=__('Go to the Top of the File List')?></li>
+        <li><span class="key">&lt;End&gt;</span><?=__('Go to the Last File')?></li>
+        <li class="step-top"><span class="key">&lt;Enter&gt;</span><?=__('Open File / Enter Directory')?></li>
+        <li><span class="key">&lt;Backspace&gt;</span><?=__('Go to Parent Directory')?></li>
+        <li class="step-top"><span class="key">&lt;Insert&gt; / &lt;Space&gt;</span><?=__('Select Current File')?></li>
+        <li><span class="key">&lt;Shift&gt; + click</span><?=__('Select Bunch of Files')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + click</span><?=__('Add File to the Current Selection')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + a</span><?=__('Select All Files')?></li>
+      </ul>
+      <ul class="note"><?=__('shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager')?></ul>
+    </div>
+
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.2/fotorama.js"></script>
@@ -346,6 +387,8 @@
 						FM['CURRENT_B_LINE'] = 0;
 					}
                 }
+
+
             });
             /*$(".listing-right").selectable({
                 selected: function (event, ui) {

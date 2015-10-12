@@ -63,6 +63,7 @@ App.Constants.FM_COPY                           = '<?=__('Copy') ?>';
 App.Constants.FM_CANCEL                         = '<?=__('Cancel')?>';
 App.Constants.FM_RENAME                         = '<?=__('Rename')?>';
 App.Constants.FM_DELETE                         = '<?=__('Delete')?>';
+App.Constants.FM_CONFIRM_DELETE_BULK            = '<?=__('Delete items')?>';
 App.Constants.FM_EXTRACT                        = '<?=__('Extract')?>';
 App.Constants.FM_CREATE                         = '<?=__('Create')?>';
 App.Constants.FM_PACK                           = '<?=__('Compress')?>';
@@ -70,6 +71,8 @@ App.Constants.FM_PACK_BUTTON                    = '<?=__('Compress')?>';
 App.Constants.FM_OK                             = '<?=__('OK')?>';
 App.Constants.FM_YOU_ARE_COPYING                = '<?=__('YOU ARE COPYING')?>';
 App.Constants.FM_YOU_ARE_REMOVING               = '<?=__('YOU ARE REMOVING')?>';
+
+App.Constants.FM_COPY_BULK                      = '<?=__('Copy files')?>';
 
 App.Constants.FM_CONFIRM_COPY                   = '<?=__('Are you sure you want to copy')?>';
 App.Constants.FM_CONFIRM_DELETE                 = '<?=__('Are you sure you want to delete')?>';

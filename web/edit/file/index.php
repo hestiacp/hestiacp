@@ -57,20 +57,24 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
                 if ($fn) {
                     $f = fopen ($fn, 'w+');
                     fwrite($f, $_POST['contents']);
+                    fclose($f);
+                    
+                    chmod($fn, 0644);
+                    
                     if ($f) {
                         //copy($fn, $path);
                         exec (VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}", $output, $return_var);
 
                         $error = check_return_code($return_var, $output);
                         if ($return_var != 0) {
-                            var_dump(VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}");
+                            /*var_dump(VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}");
                             var_dump($path);
-                            var_dump($output);
+                            var_dump($output);*/
                             die('<p style="color: white">Error while saving file</p>');//echo '0';
                         }
                     }
                     unlink($fn);
-                  }
+                }
             }
             
             // $content = file_get_contents($path);

@@ -1867,7 +1867,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 
-.l-icon-up-arrow, .l-icon-down-arrow, .l-icon-star, .l-icon-to-top, .l-icon-star-orange, .l-icon-star-blue {
+.l-icon-up-arrow, .l-icon-down-arrow, .l-icon-star, .l-icon-to-top, .l-icon-shortcuts, .l-icon-star-orange, .l-icon-star-blue {
   display: inline-block;
   vertical-align: middle;
   background-image: url("/images/sprite.png");
@@ -1928,6 +1928,19 @@ div.l-content > div.l-separator:nth-of-type(4) {
   background-position: -402px -68px;
 }
 
+.l-icon-shortcuts {
+  width: 35px;
+  height: 35px;
+  background-position: -283px -68px;
+  border-radius: 18px;
+}
+.l-icon-shortcuts:hover {
+  background-color: #ccc;
+}
+.l-icon-shortcuts:active {
+  background-color: #98D5CD;
+}
+
 .l-icon-star-orange {
   width: 13px;
   height: 13px;
@@ -1974,8 +1987,16 @@ div.l-content > div.l-separator:nth-of-type(4) {
   display: inline-block;
   position: fixed;
   top: 92%;
-  right: 3%;
+  right: 4%;
 }
+
+.to-shortcuts {
+  display: inline-block;
+  position: fixed;
+  top: 92%;
+  right: 1%;
+}
+
 
 /*
 #vstobjects {
@@ -2737,6 +2758,7 @@ form#vstobjects.suspended {
   color: #eee;
   width: 800px;
   border: 1px solid #333;
+  font-size: 13px;
 }
 .shortcuts .header {
   border-bottom: 1px solid #333;
@@ -2777,7 +2799,7 @@ form#vstobjects.suspended {
   padding: 5px 20px;
 }
 .shortcuts ul li.step-top {
-  padding-bottom: 30px;
+  padding-top: 30px;
 }
 .shortcuts ul li span {
   color: #48F4EF;

@@ -460,10 +460,25 @@
                   }
               );
 
+              shortcut.add("Esc", function(){
+                $('.shortcuts').hide();
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
 
               $('.shortcuts .close').click(function(){
                 $('.shortcuts').hide();
               });
+
+              $('.to-shortcuts').click(function(){
+                $('.shortcuts').toggle();
+              });
+
 
             VE.core.register();
             if (location.href.search(/list/) != -1) {
@@ -511,30 +526,31 @@
         <div class="close"></div>
       </div>
       <ul>
-        <li><span class="key">n</span>Add New object</li>
-        <li><span class="key">&lt;Ctrl&gt; + Enter</span>Save Form</li>
-        <li class="step-top"><span class="key">&lt;Ctrl&gt; + Backspace</span>Cancel saving form</li>
+        <li><span class="key">n</span><?=__('Add New object')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + Enter</span><?=__('Save Form')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + Backspace</span><?=__('Cancel saving form')?></li>
 
-        <li><span class="key">1</span>Go to USER list</li>
-        <li><span class="key">2</span>Go to WEB list</li>
-        <li><span class="key">3</span>Go to DNS list</li>
-        <li><span class="key">4</span>Go to MAIL list</li>
-        <li><span class="key">5</span>Go to DB list</li>
-        <li><span class="key">6</span>Go to CRON list</li>
-        <li class="step-top"><span class="key">7</span>Go to BACKUP list</li>
+        <li class="step-top"><span class="key">1</span><?=__('Go to USER list')?></li>
+        <li><span class="key">2</span><?=__('Go to WEB list')?></li>
+        <li><span class="key">3</span><?=__('Go to DNS list')?></li>
+        <li><span class="key">4</span><?=__('Go to MAIL list')?></li>
+        <li><span class="key">5</span><?=__('Go to DB list')?></li>
+        <li><span class="key">6</span><?=__('Go to CRON list')?></li>
+        <li><span class="key">7</span><?=__('Go to BACKUP list')?></li>
       </ul>
       <ul>
-        <li class="step-top"><span class="key">f</span>Focus on search</li>
-        <li class="step-top"><span class="key">h</span>Display/Close shortcuts</li>
+        <li><span class="key">f</span><?=__('Focus on search')?></li>
+        <li class="step-top"><span class="key">h</span><?=__('Display/Close shortcuts')?></li>
 
-        <li><span class="key">&lt;Ctrl&gt; + 1</span>Go to Packages</li>
-        <li><span class="key">&lt;Ctrl&gt; + 2</span>Go to IP</li>
-        <li><span class="key">&lt;Ctrl&gt; + 3</span>Go to Graphs</li>
-        <li><span class="key">&lt;Ctrl&gt; + 4</span>Go to Statistics</li>
-        <li><span class="key">&lt;Ctrl&gt; + 5</span>Go to Log</li>
-        <li><span class="key">&lt;Ctrl&gt; + 6</span>Go to Updates</li>
-        <li><span class="key">&lt;Ctrl&gt; + 7</span>Go to Firewall</li>
-        <li><span class="key">&lt;Ctrl&gt; + 8</span>Go to Server</li>
+        <li class="step-top"><span class="key">&lt;Ctrl&gt; + 1</span><?=__('Go to Packages')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + 2</span><?=__('Go to IP')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + 3</span><?=__('Go to Graphs')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + 4</span><?=__('Go to Statistics')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + 5</span><?=__('Go to Log')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + 6</span><?=__('Go to Updates')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + 7</span><?=__('Go to Firewall')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + 8</span><?=__('Go to File Manager')?></li>
+        <li><span class="key">&lt;Ctrl&gt; + 9</span><?=__('Go to Server')?></li>
       </ul>
 
     </div>

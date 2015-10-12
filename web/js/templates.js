@@ -10,11 +10,11 @@ App.Templates.html = {
     //
 
     FM: {
-		reload_in_time: [
-					'<div id="reload-in-time" class="warning-box reload">\
-						<div class="message-small">'+App.Constants.FM_HIT+' <span>F5</span> '+App.Constants.FM_TO_RELOAD_THE_PAGE+'</div>\
-					</div>'
-		],
+        reload_in_time: [
+                    '<div id="reload-in-time" class="warning-box reload">\
+                        <div class="message-small">'+App.Constants.FM_HIT+' <span>F5</span> '+App.Constants.FM_TO_RELOAD_THE_PAGE+'</div>\
+                    </div>'
+        ],
         entry_line: ['<li class="dir">\
                         <span class="marker">\
                         </span>\
@@ -37,14 +37,33 @@ App.Templates.html = {
                             <p class="ok" onClick="FM.popupClose();">'+App.Constants.FM_CLOSE+'</p>\
                             </div>\
                         </div>'],
-        popup_bulk: ['<div class="confirm-box alarm popup-box">\
+        popup_bulk_remove: ['<div class="confirm-box delete popup-box">\
+                            <div class="message">'+App.Constants.FM_CONFIRM_DELETE_BULK+' (~!:NUMBER_OF_ITEMS~!)?</div>\
+                                <div class="controls">\
+                            <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                            <p class="ok" onClick="FM.bulkRemoveDo();">'+App.Constants.FM_DELETE+'</p>\
+                            </div>\
+                        </div>'],
+        popup_bulk_copy: ['<div class="confirm-box copy popup-box">\
+                            <div class="message">'+App.Constants.FM_COPY_BULK+' (~!:NUMBER_OF_ITEMS~!) '+ App.Constants.FM_INTO_KEYWORD +':</div>\
+                            <div class="actions">\
+                                <input type="text" id="copy_dest" value="~!:DST_FILENAME~!" class="new-title">\
+                            </div>\
+                            <div class="results"></div>\
+                            <div class="message">'+App.Constants.FM_EXISTING_FILES_WILL_BE_REPLACED+'</div>\
+                                <div class="controls">\
+                            <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                            <p class="ok" onClick="FM.bulkCopyDo();">'+App.Constants.FM_COPY+'</p>\
+                            </div>\
+                        </div>'],
+        /*popup_bulk: ['<div class="confirm-box alarm popup-box">\
                             <div class="message">~!:ACTION~!: <br />~!:TEXT~!</div>\
                             <div class="results"></div>\
                                 <div class="controls">\
                             <!-- p class="ok" onClick="FM.popupClose();">'+App.Constants.FM_CLOSE+'</p -->\
                             <p><img src="/images/in_progress.gif"></p>\
                             </div>\
-                        </div>'],
+                        </div>'],*/
         popup_delete: ['<div class="confirm-box delete popup-box">\
                             <div class="message">'+App.Constants.FM_CONFIRM_DELETE+' <span class="title">"~!:FILENAME~!"</span>?</div>\
                                 <div class="controls">\

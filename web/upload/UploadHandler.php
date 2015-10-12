@@ -1,4 +1,36 @@
 <?php
+
+//session_start();
+
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+
+//$user = $_SESSION['user'];
+
+if (empty($panel)) {
+    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
+    exec ($command, $output, $return_var);
+    if ( $return_var > 0 ) {
+        header("Location: /error/");
+        exit;
+    }
+    $panel = json_decode(implode('', $output), true);
+}
+$user = array_keys($panel);
+$user = $user[0];
+
+define('USERNAME', $user);
+
+
+/*
+// Check user session
+if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
+    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
+    header("Location: /login/");
+    exit;
+}
+*/
+
+
 /*
  * jQuery File Upload Plugin PHP Class 8.1.0
  * https://github.com/blueimp/jQuery-File-Upload
@@ -1042,6 +1074,8 @@ class UploadHandler
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
         $index = null, $content_range = null) {
+  
+        
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
@@ -1065,7 +1099,21 @@ class UploadHandler
                         FILE_APPEND
                     );
                 } else {
-                    move_uploaded_file($uploaded_file, $file_path);
+                    chmod($uploaded_file, 0644);
+                    //move_uploaded_file($uploaded_file, $file_path);
+                    exec (VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} {$file_path}", $output, $return_var);
+
+                    $error = check_return_code($return_var, $output);
+                    if ($return_var != 0) {
+                        //var_dump(VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}");
+                        //var_dump($path);
+                        //var_dump($output);
+                        $file->error = 'Error while saving file';
+                        /*var_dump(VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} {$file_path}");
+                        var_dump($return_var);
+                        var_dump($output);
+                        die();*/
+                    }
                 }
             } else {
                 // Non-multipart uploads (PUT method support)

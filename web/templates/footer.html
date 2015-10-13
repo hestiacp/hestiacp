@@ -151,14 +151,16 @@
                   }
               );
 
-              shortcut.add("Ctrl+Backspace", function(){ 
-                if($('form#vstobjects button.cancel')[0]){
+//              shortcut.add("Ctrl+Backspace", function(){ 
+              shortcut.add("Backspace", function(){
+                console.log("read");
+                if($('form#vstobjects .button.cancel')[0]){
                   location.href=$('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'","");
                 }
               }, {
                   'type':             'keydown',
                   'propagate':        false,
-                  'disable_in_input': false,
+                  'disable_in_input': true,
                   'target':           document
                   }
               );

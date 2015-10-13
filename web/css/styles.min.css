@@ -808,6 +808,14 @@ input[type="checkbox"] {
   border-bottom: 3px solid #ff6e42;
 }
 
+.l-stat__col.focus {
+  background-color: #ddd;
+}
+.l-stat__col.focus a {
+  border-bottom: 3px solid #AACC0D;
+}
+
+
 .l-stat__col a:hover .l-stat__col-title {
   color: #ff6701;
 }

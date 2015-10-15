@@ -472,6 +472,46 @@
                   }
               );
 
+              shortcut.add("Left", function(){
+                VE.navigation.move_focus_left();
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Right", function(){
+                VE.navigation.move_focus_right();
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Enter", function(){
+                VE.navigation.enter_focused();
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
+              shortcut.add("Tab", function(){
+                VE.navigation.switch_menu();
+              }, {
+                  'type':             'keydown',
+                  'propagate':        false,
+                  'disable_in_input': true,
+                  'target':           document
+                  }
+              );
+
 
               $('.shortcuts .close').click(function(){
                 $('.shortcuts').hide();
@@ -481,6 +521,8 @@
                 $('.shortcuts').toggle();
               });
 
+
+            VE.navigation.init();
 
             VE.core.register();
             if (location.href.search(/list/) != -1) {

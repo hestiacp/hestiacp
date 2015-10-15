@@ -711,6 +711,10 @@ input[type="checkbox"] {
   background-color: #ff6701;
 }
 
+.l-menu.active .l-menu__item.focus a {
+  text-decoration: underline;
+  color: #5edad0;
+}
 
 .lang-ua .l-menu__item a,
 .lang-nl .l-menu__item a,
@@ -808,12 +812,13 @@ input[type="checkbox"] {
   border-bottom: 3px solid #ff6e42;
 }
 
-.l-stat__col.focus {
-  background-color: #ddd;
+.l-stat.active .l-stat__col.focus a {
+  border-bottom: 3px solid #5edad0;
 }
-.l-stat__col.focus a {
-  border-bottom: 3px solid #AACC0D;
+.l-stat.active .l-stat__col.focus a .l-stat__col-title {
+  color: #36B3A9;
 }
+
 
 
 .l-stat__col a:hover .l-stat__col-title {

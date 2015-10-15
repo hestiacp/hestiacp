@@ -1,6 +1,13 @@
 // Init kinda namespace object
 var VE = { // Vesta Events object
     core: {}, // core functions
+    navigation: {
+        state: {
+            active_menu: 1,
+            menu_selector: '.l-stat__col',
+            menu_active_selector: '.l-stat__col--active'
+        }
+    }, // menu and element navigation functions
     callbacks: { // events callback functions
         click: {},
         mouseover: {},
@@ -225,6 +232,75 @@ VE.helpers.refresh_timer = {
     }
 }
 
+VE.navigation.enter_focused = function() {
+    if($(VE.navigation.state.menu_selector + '.focus a').attr('href')){
+        location.href=($(VE.navigation.state.menu_selector + '.focus a').attr('href'));
+    }
+}
 
+VE.navigation.move_focus_left = function(){
+    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
+    if(index == -1)
+        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector)));
+    if(index > 0){
+        $(VE.navigation.state.menu_selector).removeClass('focus');
+        $($(VE.navigation.state.menu_selector)[index-1]).addClass('focus');
+    } else {
+        $($(VE.navigation.state.menu_selector)[0]).addClass('focus');
+    }
+}
+
+VE.navigation.move_focus_right = function(){
+    var max_index = $(VE.navigation.state.menu_selector).length-1;
+    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
+    if(index == -1)
+        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))) || 0;
+
+    if(index < max_index){
+        $(VE.navigation.state.menu_selector).removeClass('focus');
+        $($(VE.navigation.state.menu_selector)[index+1]).addClass('focus');
+    }
+}
+
+VE.navigation.switch_menu = function(){
+    if(VE.navigation.state.active_menu == 0){
+        VE.navigation.state.active_menu = 1;
+        VE.navigation.state.menu_selector = '.l-stat__col';
+        VE.navigation.state.menu_active_selector = '.l-stat__col--active';
+        $('.l-menu').removeClass('active');
+        $('.l-stat').addClass('active');
+    } else {
+        VE.navigation.state.active_menu = 0;
+        VE.navigation.state.menu_selector = '.l-menu__item';
+        VE.navigation.state.menu_active_selector = '.l-menu__item--active';
+        $('.l-menu').addClass('active');
+        $('.l-stat').removeClass('active');
+    }
+
+
+    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
+    if(index == -1){
+        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))) || 0;
+        if(index == -1)
+           index = 0;
+        $($(VE.navigation.state.menu_selector)[index]).addClass('focus');
+    }
+}
+
+VE.navigation.init = function(){
+    if($('.l-menu__item.l-menu__item--active').length){
+//        VE.navigation.switch_menu();
+        VE.navigation.state.active_menu = 0;
+        VE.navigation.state.menu_selector = '.l-menu__item';
+        VE.navigation.state.menu_active_selector = '.l-menu__item--active';
+        $('.l-menu').addClass('active');
+        $('.l-stat').removeClass('active');
+
+    } else {
+        $('.l-stat').addClass('active');
+    }
+}
 
 VE.helpers.extendPasswordFields();
+
+

@@ -51,6 +51,7 @@ sed -i "s/$old/$ip/g" $USER_DATA/dns/$domain.conf
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_serial
     update_domain_zone
 fi
 
@@ -59,7 +60,7 @@ if [ ! -z "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $VESTA/data/queue/dns-cluster.pipe)
     if [ -z "$dlock" ]; then
-        cmd="$BIN/v-add-remote-dns-domain $user $domain domain"
+        cmd="$BIN/v-add-remote-dns-domain $user $domain domain yes"
         echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
     fi
 fi

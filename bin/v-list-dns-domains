@@ -32,7 +32,8 @@ is_object_valid 'user' 'USER' "$user"
 
 # Defining config and fields
 conf=$USER_DATA/dns.conf
-fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SRC $RECORDS $SUSPENDED $TIME $DATE'
+fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SERIAL $SRC $RECORDS
+    $SUSPENDED $TIME $DATE'
 
 # Listing domains
 case $format in 

@@ -81,6 +81,7 @@ if [ -z $ns2 ]; then
 fi
 soa="$ns1"
 exp=$(date +%F -d "+ 1 year")
+serial=$(date +'%Y%m%d01')
 ttl=14400
 
 # Reading template
@@ -111,8 +112,8 @@ records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
 
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
-dns_rec="$dns_rec SOA='$soa' RECORDS='$records' SUSPENDED='no' TIME='$TIME'"
-dns_rec="$dns_rec DATE='$DATE'"
+dns_rec="$dns_rec SOA='$soa' SERIAL='$serial' SRC='' RECORDS='$records'"
+dns_rec="$dns_rec SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 
 echo "$dns_rec" >> $USER_DATA/dns.conf
 chmod 660 $USER_DATA/dns.conf

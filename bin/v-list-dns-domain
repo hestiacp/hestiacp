@@ -87,7 +87,8 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 
 # Defining config and fields to select
 conf=$USER_DATA/dns.conf
-fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $RECORDS $SUSPENDED $TIME $DATE'
+fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SERIAL $SRC $RECORDS
+    $SUSPENDED $TIME $DATE'
 
 # Listing domains
 case $format in 

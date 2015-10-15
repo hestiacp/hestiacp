@@ -111,7 +111,7 @@ for cluster_str in $search_str; do
         fi
 
         # Rebuild dns zone
-        $send_cmd v-rebuild-dns-domain $DNS_USER $domain 'scheduled'
+        $send_cmd v-rebuild-dns-domain $DNS_USER $domain 'scheduled' 'no'
         if [ $? -ne 0 ]; then
             echo "Error: $TYPE connection to $HOST failed"
             log_event "$E_CONNECT $EVENT"

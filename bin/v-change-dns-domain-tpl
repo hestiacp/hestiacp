@@ -67,6 +67,7 @@ records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_serial
     update_domain_zone
 fi
 

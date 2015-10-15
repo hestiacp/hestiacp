@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: rebuild dns domains
-# options: USER [RESTART]
+# options: USER [RESTART] [UPDATE_SERIAL]
 #
 # The function rebuilds DNS configuration files.
 
@@ -12,6 +12,7 @@
 # Argument defenition
 user=$1
 restart=$2
+update_serial=$3
 
 # Includes
 source $VESTA/func/main.sh
@@ -24,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [RESTART]'
+check_args '1' "$#" 'USER [RESTART] [UPDATE_SERIAL]'
 validate_format 'user'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -65,6 +66,9 @@ sed -i "/\/$user\/conf\/dns/d" $dns_conf
 
 # Starting loop
 for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
+   if [ "$update_serial" != 'no' ]; then
+        update_domain_serial
+    fi
     rebuild_dns_domain_conf
 done
 

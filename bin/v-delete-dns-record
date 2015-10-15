@@ -45,6 +45,7 @@ sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_serial
     update_domain_zone
 fi
 

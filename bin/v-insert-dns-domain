@@ -57,7 +57,7 @@ fi
 
 # Prepare values for the insert
 dns_rec="DOMAIN='$DOMAIN' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
-dns_rec="$dns_rec SOA='$SOA' SRC='$src' RECORDS='$RECORDS'"
+dns_rec="$dns_rec SOA='$SOA' SERIAL="$SERIAL" SRC='$src' RECORDS='$RECORDS'"
 dns_rec="$dns_rec SUSPENDED='$SUSPENDED' TIME='$TIME' DATE='$DATE'"
 echo "$dns_rec" >> $USER_DATA/dns.conf
 

@@ -161,13 +161,20 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Expire')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Serial')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=translate_date($data[$key]['EXP'])?></b>
+                      <b><?=$data[$key]['SERIAL']?></b>
                     </div>
                   </div>
                 </td>
                 <td>
+
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Expire')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['EXP']?></b>
+                    </div>
+                  </div>
                 </td>
               </tr>
 

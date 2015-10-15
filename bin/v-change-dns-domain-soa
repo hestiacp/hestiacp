@@ -45,6 +45,7 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$SOA' "$soa"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_serial
     update_domain_zone
 fi
 

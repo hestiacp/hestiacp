@@ -216,32 +216,13 @@ is_mail_new() {
 # Update domain zone
 update_domain_zone() {
     conf="$HOMEDIR/$user/conf/dns/$domain.db"
-    line=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+    domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
-    if [ -e $conf ]; then
-        zn_serial=$(head $conf|grep 'SOA' -A1|tail -n 1|sed "s/ //g")
-        s_date=$(echo ${zn_serial:0:8})
-        c_date=$(date +'%Y%m%d')
-        if [ "$s_date" == "$c_date" ]; then
-            cur_value=$(echo ${zn_serial:8} )
-            new_value=$(expr $cur_value + 1 )
-            len_value=$(expr length $new_value)
-            if [ 1 -eq "$len_value" ]; then
-                new_value='0'$new_value
-            fi
-            serial="$c_date""$new_value"
-        else
-            serial="$(date +'%Y%m%d01')"
-        fi
-    else
-        serial="$(date +'%Y%m%d01')"
-    fi
-
-    eval $line
+    eval $domain_param
     SOA=$(idn --quiet -a -t "$SOA")
     echo "\$TTL $TTL
 @    IN    SOA    $SOA.    root.$domain_idn. (
-                                            $serial
+                                            $SERIAL
                                             7200
                                             3600
                                             1209600
@@ -262,6 +243,31 @@ update_domain_zone() {
             eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $conf
         fi
     done < $USER_DATA/dns/$domain.conf
+}
+
+# Update zone serial
+update_domain_serial() {
+    zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
+    if [ -e $zn_conf ]; then
+        zn_serial=$(head $zn_conf |grep 'SOA' -A1 |tail -n 1 |sed "s/ //g")
+        s_date=$(echo ${zn_serial:0:8})
+        c_date=$(date +'%Y%m%d')
+        if [ "$s_date" == "$c_date" ]; then
+            cur_value=$(echo ${zn_serial:8} )
+            new_value=$(expr $cur_value + 1 )
+            len_value=$(expr length $new_value)
+            if [ 1 -eq "$len_value" ]; then
+                new_value='0'$new_value
+            fi
+            serial="$c_date""$new_value"
+        else
+            serial="$(date +'%Y%m%d01')"
+        fi
+    else
+        serial="$(date +'%Y%m%d01')"
+    fi
+    add_object_key "dns" 'DOMAIN' "$domain" 'SERIAL' 'RECORDS'
+    update_object_value 'dns' 'DOMAIN' "$domain" '$SERIAL' "$serial"
 }
 
 # Get next DNS record ID

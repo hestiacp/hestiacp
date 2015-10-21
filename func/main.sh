@@ -2,16 +2,6 @@
 DATE=$(date +%F)
 TIME=$(date +%T)
 SCRIPT=$(basename $0)
-A1=$1
-A2=$2
-A3=$3
-A4=$4
-A5=$5
-A6=$6
-A7=$7
-A8=$8
-A9=$9
-EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 HOMEDIR='/home'
 BACKUP='/backup'
 BACKUP_GZIP=5
@@ -51,6 +41,16 @@ E_RRD=18
 E_UPDATE=19
 E_RESTART=20
 
+# Event string for logger
+EVENT="$DATE $TIME $SCRIPT"
+for ((I=1; I <= $# ; I++)); do
+    if [[ "$HIDE" != $I ]]; then
+        EVENT="$EVENT '$(eval echo \$${I})'"
+    else
+        EVENT="$EVENT '******'"
+    fi
+done
+
 # Log event function
 log_event() {
     if [ "$1" -eq 0 ]; then
@@ -77,6 +77,20 @@ log_history() {
     curr_str=$(grep "ID=" $log | cut -f 2 -d \' | sort -n | tail -n1)
     id="$((curr_str +1))"
     echo "ID='$id' DATE='$DATE' TIME='$TIME' CMD='$cmd' UNDO='$undo'" >> $log
+}
+
+# Result checker
+check_result() {
+    if [ $1 -ne 0 ]; then
+        echo "Error: $2"
+        if [ ! -z "$3" ]; then
+            log_event $3 $EVENT
+            exit $3
+        else
+            log_event $1 $EVENT
+            exit $1
+        fi
+    fi
 }
 
 # Argument list checker
@@ -292,7 +306,7 @@ get_object_value() {
 
 # Update object value
 update_object_value() {
-    row=$(grep -n "$2='$3'" $USER_DATA/$1.conf)
+    row=$(grep -nF "$2='$3'" $USER_DATA/$1.conf)
     lnr=$(echo $row | cut -f 1 -d ':')
     object=$(echo $row | sed "s/^$lnr://")
     eval "$object"

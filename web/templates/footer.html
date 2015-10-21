@@ -141,7 +141,8 @@
 
               // Shortcuts
 
-              shortcut.add("Ctrl+Enter", function(){ 
+              shortcut.add("Ctrl+Enter", function(){
+
                 $('form#vstobjects').submit();
               }, {
                   'type':             'keydown',
@@ -151,10 +152,10 @@
                   }
               );
 
-//              shortcut.add("Ctrl+Backspace", function(){ 
               shortcut.add("Backspace", function(){
-                console.log("read");
-                if($('form#vstobjects .button.cancel')[0]){
+                if(VE.tmp.form_changed && $('form#vstobjects .button.cancel')[0]){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'",""));
+                } else if($('form#vstobjects .button.cancel')[0]){
                   location.href=$('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'","");
                 }
               }, {
@@ -338,120 +339,6 @@
                   }
               );
 
-
-              shortcut.add("Ctrl+1", function(){
-                if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(1) a').attr('href'));
-                } else {
-                  location.href=$('.l-menu .l-menu__item:nth-of-type(1) a').attr('href');
-                }
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-              shortcut.add("Ctrl+2", function(){
-                if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(2) a').attr('href'));
-                } else {
-                  location.href=$('.l-menu .l-menu__item:nth-of-type(2) a').attr('href');
-                }
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-              shortcut.add("Ctrl+3", function(){
-                if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(3) a').attr('href'));
-                } else {
-                  location.href=$('.l-menu .l-menu__item:nth-of-type(3) a').attr('href');
-                }
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-              shortcut.add("Ctrl+4", function(){
-                if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(4) a').attr('href'));
-                } else {
-                  location.href=$('.l-menu .l-menu__item:nth-of-type(4) a').attr('href');
-                }
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-              shortcut.add("Ctrl+5", function(){
-                if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(5) a').attr('href'));
-                } else {
-                  location.href=$('.l-menu .l-menu__item:nth-of-type(5) a').attr('href');
-                }
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-              shortcut.add("Ctrl+6", function(){
-                if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(6) a').attr('href'));
-                } else {
-                  location.href=$('.l-menu .l-menu__item:nth-of-type(6) a').attr('href');
-                }
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-              shortcut.add("Ctrl+7", function(){
-                if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(7) a').attr('href'));
-                } else {
-                  location.href=$('.l-menu .l-menu__item:nth-of-type(7) a').attr('href');
-                }
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-              shortcut.add("Ctrl+8", function(){
-                if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', ('.l-menu .l-menu__item:nth-of-type(8) a').attr('href'));
-                } else {
-                  location.href=$('.l-menu .l-menu__item:nth-of-type(8) a').attr('href');
-                }
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-
               shortcut.add("h", function(){
                 $('.shortcuts').toggle();
               }, {
@@ -493,7 +380,11 @@
               );
 
               shortcut.add("Enter", function(){
-                VE.navigation.enter_focused();
+                if(VE.tmp.form_changed){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $(VE.navigation.state.menu_selector + '.focus a').attr('href'));
+                } else {
+                  VE.navigation.enter_focused();
+                }
               }, {
                   'type':             'keydown',
                   'propagate':        false,
@@ -502,12 +393,12 @@
                   }
               );
 
-              shortcut.add("Tab", function(){
+              shortcut.add("Alt", function(){
                 VE.navigation.switch_menu();
               }, {
                   'type':             'keydown',
                   'propagate':        false,
-                  'disable_in_input': true,
+                  'disable_in_input': false,
                   'target':           document
                   }
               );
@@ -572,7 +463,7 @@
       <ul>
         <li><span class="key">n</span><?=__('Add New object')?></li>
         <li><span class="key">&lt;Ctrl&gt; + Enter</span><?=__('Save Form')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + Backspace</span><?=__('Cancel saving form')?></li>
+        <li><span class="key">Backspace</span><?=__('Cancel saving form')?></li>
 
         <li class="step-top"><span class="key">1</span><?=__('Go to USER list')?></li>
         <li><span class="key">2</span><?=__('Go to WEB list')?></li>
@@ -586,15 +477,10 @@
         <li><span class="key">f</span><?=__('Focus on search')?></li>
         <li class="step-top"><span class="key">h</span><?=__('Display/Close shortcuts')?></li>
 
-        <li class="step-top"><span class="key">&lt;Ctrl&gt; + 1</span><?=__('Go to Packages')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + 2</span><?=__('Go to IP')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + 3</span><?=__('Go to Graphs')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + 4</span><?=__('Go to Statistics')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + 5</span><?=__('Go to Log')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + 6</span><?=__('Go to Updates')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + 7</span><?=__('Go to Firewall')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + 8</span><?=__('Go to File Manager')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + 9</span><?=__('Go to Server')?></li>
+        <li class="step-top"><span class="key bigger">&larr;</span><?=__('Move backward through top menu')?></li>
+        <li><span class="key bigger">&rarr;</span><?=__('Move forward through top menu')?></li>
+        <li><span class="key">&lt;Alt&gt;</span><?=__('Switch active menu')?></li>
+        <li><span class="key">&lt;Enter&gt;</span><?=__('Enter focused element')?></li>
       </ul>
 
     </div>

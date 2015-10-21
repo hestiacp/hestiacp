@@ -26,7 +26,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DATA [SRC] [RESTART]'
+check_args '2' "$#" 'USER DATA [SRC] [FLUSH] [RESTART]'
 validate_format 'user' 'data'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -47,11 +47,10 @@ if [ "$flush" = 'records' ]; then
     rm -f $USER_DATA/dns/$DOMAIN.conf
     touch $USER_DATA/dns/$DOMAIN.conf
     chmod 660 $USER_DATA/dns/$DOMAIN.conf
-    exit
 fi
 
 # Flush domain
-if [ "$flush" = 'domain' ]; then
+if [ "$flush" ! = 'no' ]; then
     sed -i "/DOMAIN='$DOMAIN'/d" $USER_DATA/dns.conf 2> /dev/null
 fi
 

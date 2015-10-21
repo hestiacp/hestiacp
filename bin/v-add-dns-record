@@ -109,9 +109,7 @@ increase_user_value "$user" '$U_DNS_RECORDS'
 # Restart named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? $E_RESTART 'dns failed to restart'
 fi
 
 # Logging

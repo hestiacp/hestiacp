@@ -10,7 +10,6 @@
 
 # Argument defenition
 host=$1
-verbose=$2
 
 # Includes
 source $VESTA/func/main.sh
@@ -23,146 +22,60 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
-
 if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
-    echo "Error: dns-cluster.conf doesn't exist"
-    log_event "$E_NOTEXIST $EVENT"
-    exit $E_NOTEXIST
+    check_result $E_NOTEXIST "dns-cluster.conf doesn't exist"
 fi
-
-number_of_proc=$(ps auxf | grep -v grep | grep $VESTA/bin/$SCRIPT | wc -l)
-if [ "$number_of_proc" -gt 2 ]; then
-    echo "Error: another sync process already exists"
-    log_event "$E_EXISTS $EVENT"
-    exit $E_EXISTS
+if [ "$(ps auxf |grep -v grep |grep $BIN/$SCRIPT |wc -l)" -gt 2 ]; then
+    check_result $E_EXISTS "another sync process already running"
 fi
+remote_dns_health_check 'no_email'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-old_ifs="$IFS"
+# Selecting remote hosts
 IFS=$'\n'
-
 if [ -z $host ]; then
-    hosts=$(cat $VESTA/conf/dns-cluster.conf | grep "SUSPENDED='no'")
-    rm -f $VESTA/data/queue/dns-cluster.pipe
-    touch $VESTA/data/queue/dns-cluster.pipe
-    chmod 660 $VESTA/data/queue/dns-cluster.pipe
+    hosts=$(cat $VESTA/conf/dns-cluster.conf |grep "SUSPENDED='no'")
 else
     hosts=$(grep "HOST='$host'" $VESTA/conf/dns-cluster.conf)
 fi
 
 # Starting cluster loop
-for cluster_str in $hosts; do
+for cluster in $hosts; do
 
-    # Get host values
-    eval $cluster_str
+    # Parsing host values
+    eval $cluster
 
-    # Check connection type
-    if [ -z "TYPE" ]; then
-        TYPE='api'
-    fi
+    # Wiping remote domains
+    cluster_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME no
+    check_result $? "$HOST connection failed" $E_CONNECT
 
-    # Print hostname
-    if [ ! -z "$verbose" ]; then
-        echo "HOSTNAME: $HOSTNAME"
-        echo "TYPE: $TYPE"
-    fi
-
-    # Switch on connection type
-    case $TYPE in
-        ssh) send_cmd="send_ssh_cmd" ;;
-        *)  send_cmd="send_api_cmd" ;;
-    esac
-
-    # Check host connection
-    $send_cmd v-list-sys-config
-    if [ $? -ne 0 ]; then
-        echo "Error: $TYPE connection to $HOST failed"
-        log_event "$E_CONNECT $EVENT"
-        exit $E_CONNECT
-    fi
-
-    # Check recipient dns user
-    if [ -z "$DNS_USER" ]; then
-        DNS_USER='dns-cluster'
-    fi
-    if [ ! -z "$verbose" ]; then
-        echo "DNS_USER: $DNS_USER"
-    fi
-    $send_cmd v-list-user $DNS_USER
-    if [ $? -ne 0 ]; then
-        echo "Error: dns user $DNS_USER doesn't exist"
-        log_event "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
-
-    # Check dns exceptions
-    if [ -z "$DNS_CLUSTER_IGNORE" ]; then
-        DNS_CLUSTER_IGNORE='dns-cluster'
-    fi
-
-    # Create userlist
-    user_list=$(ls $VESTA/data/users)
-    for exception in $(echo -e "${DNS_CLUSTER_IGNORE//,/\n}"); do 
-        user_list=$(echo "$user_list" | grep -v "^$exception$")
-    done
-
-    # Clean source records
-    if [ ! -z "$verbose" ]; then
-        echo "STATUS: Wiping dns domains"
-    fi
-    $send_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME no
-    if [ $? -ne 0 ]; then
-        echo "Error: $TYPE connection to $HOST failed (cleanup)"
-        log_event "$E_CONNECT $EVENT"
-        exit $E_CONNECT
-    fi
-
-    # Start user loop
+    # Syncing user domains
+    user_list=$(ls $VESTA/data/users |grep -v "dns-cluster")
     for user in $user_list; do
-
-        # Sync domain
         for str in $(cat $VESTA/data/users/$user/dns.conf); do
-            eval $str
-            if [ ! -z "$verbose" ]; then
-                echo "DOMAIN: $DOMAIN index"
-            fi
-            $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME
-            if [ $? -eq 0 ]; then
-                if [ ! -z "$verbose" ]; then
-                    echo "DOMAIN: $DOMAIN records"
-                fi
 
-                # Sync record
-                if [ "$TYPE" = 'ssh' ]; then
-                    tmp=$(mktemp -u)
-                    scp_cmd $USER_DATA/$user/dns/$DOMAIN.conf $tmp
-                    $send_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp
-                else
-                    for str in $(cat $USER_DATA/$user/dns/$DOMAIN.conf); do
-                        str=$(echo "$str" | sed 's/"/\\"/g')
-                        $send_cmd v-insert-dns-record \
-                            $DNS_USER $DOMAIN "$str"
-                    done
-                fi
-            else
-                if [ ! -z "$verbose" ]; then
-                    echo "DOMAIN: $DOMAIN skiping records (not uniq)"
-                fi
-            fi
+            # Syncing domain index
+            eval $str
+            cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME ' ' no
+            check_result $? "$HOST connection failed" $E_CONNECT
+
+            # Syncing domain records
+            tmp_file="/tmp/vst-sync.$DOMAIN"
+            cluster_file $USER_DATA/$user/dns/$DOMAIN.conf $tmp_file
+            check_result $? "$HOST connection failed" $E_CONNECT
+
+            cluster_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp_file 'no'
+            check_result $? "$HOST connection failed" $E_CONNECT
         done
     done
 
-    # Rebuild dns zones
-    $send_cmd v-rebuild-dns-domains $DNS_USER
-    if [ $? -ne 0 ]; then
-        echo "Error: $TYPE connection to $HOST failed (rebuild)"
-        log_event "$E_CONNECT $EVENT"
-        exit $E_CONNECT
-    fi
+    # Rebuilding dns zones
+    cluster_cmd v-rebuild-dns-domains $DNS_USER
+    check_result $? "$TYPE connection to $HOST failed" $E_CONNECT
 
 done
 
@@ -170,5 +83,10 @@ done
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Flushing dns-cluster queue
+rm -f $VESTA/data/queue/dns-cluster.pipe
+touch $VESTA/data/queue/dns-cluster.pipe
+chmod 660 $VESTA/data/queue/dns-cluster.pipe
 
 exit

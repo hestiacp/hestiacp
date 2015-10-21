@@ -344,7 +344,8 @@ $LANG['ar'] = array(
     'Comment' => 'تعليق',
     'Banlist' => 'قائمة ممنوعة',
     'ranges are acceptable' => 'نطاقات مقبولة',
-    'CDIR format is supported' => 'ويدعم صيغة CIDR',
+    'CIDR format is supported' => 'ويدعم صيغة CIDR',
+    'Add one more Name Server' => 'Add one more Name Server',
 
     'unlimited'  => 'unlimited',
     '1 account'  => '1 حساب',
@@ -494,11 +495,14 @@ $LANG['ar'] = array(
     'Template Manager' => 'Template Manager',
     'Backup Migration Manager' => 'Backup Migration Manager',
     'FileManager' => 'FileManager',
+    'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
 
     'sort by' => 'sort by',
     'Date' => 'Date',
     'Starred' => 'Starred',
     'Name' => 'Name',
+
+
 
     'File Manager' => 'File Manager',
     'type' => 'type',
@@ -544,5 +548,47 @@ $LANG['ar'] = array(
     'Create file' => 'Create file',
     'Create directory' => 'Create directory',
 
+    'Add New object' => 'Add New object',
+    'Save Form' => 'Save Form',
+    'Cancel saving form' => 'Cancel saving form',
+    'Go to USER list' => 'Go to USER list',
+    'Go to WEB list' => 'Go to WEB list',
+    'Go to DNS list' => 'Go to DNS list',
+    'Go to MAIL list' => 'Go to MAIL list',
+    'Go to DB list' => 'Go to DB list',
+    'Go to CRON list' => 'Go to CRON list',
+    'Go to BACKUP list' => 'Go to BACKUP list',
+    'Focus on search' => 'Focus on search',
+    'Display/Close shortcuts' => 'Display/Close shortcuts',
+    'Move backward through top menu' => 'Move backward through top menu',
+    'Move forward through top menu' => 'Move forward through top menu',
+    'Switch active menu' => 'Switch active menu',
+    'Enter focused element' => 'Enter focused element',
+
+    'Upload' => 'Upload',
+    'New File' => 'New File',
+    'New Folder' => 'New Folder',
+    'Download' => 'Download',
+    'Rename' => 'Rename',
+    'Copy' => 'Copy',
+    'Archive' => 'Archive',
+    'Delete' => 'Delete',
+    'Save File (in text editor)' => 'Save File (in text editor)',
+    'Close Popup / Cancel' => 'Close Popup / Cancel',
+    'Move Cursor Up' => 'Move Cursor Up',
+    'Move Cursor Dow' => 'Move Cursor Dow',
+    'Switch to Left Tab' => 'Switch to Left Tab',
+    'Switch to Right Tab' => 'Switch to Right Tab',
+    'Switch Tab' => 'Switch Tab',
+    'Go to the Top of File List' => 'Go to the Top of File List',
+    'Go to the Last File' => 'Go to the Last File',
+    'Open File/Enter Directory' => 'Open File/Enter Directory',
+    'Go to Parent Directory' => 'Go to Parent Directory',
+    'Select Current File' => 'Select Current File',
+    'Select Bunch of Files' => 'Select Bunch of Files',
+    'Append File to the Current Selection' => 'Append File to the Current Selection',
+    'Select All Files' => 'Select All Files',
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' => 
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager'
 
 );

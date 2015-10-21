@@ -347,6 +347,7 @@ $LANG['en'] = array(
     'Banlist' => 'Banlist',
     'ranges are acceptable' => 'ranges are acceptable',
     'CIDR format is supported' => 'CIDR format is supported',
+    'Add one more Name Server' => 'Add one more Name Server',
 
     'unlimited'  => 'unlimited',
     '1 account'  => '1 account',
@@ -495,6 +496,7 @@ $LANG['en'] = array(
     'Template Manager' => 'Template Manager',
     'Backup Migration Manager' => 'Backup Migration Manager',
     'FileManager' => 'FileManager',
+    'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
 
     'sort by' => 'sort by',
     'Date' => 'Date',
@@ -559,16 +561,10 @@ $LANG['en'] = array(
     'Go to BACKUP list' => 'Go to BACKUP list',
     'Focus on search' => 'Focus on search',
     'Display/Close shortcuts' => 'Display/Close shortcuts',
-    'Go to Packages' => 'Go to Packages',
-    'Go to IP' => 'Go to IP',
-    'Go to Graphs' => 'Go to Graphs',
-    'Go to Statistic' => 'Go to Statistic',
-    'Go to Log' => 'Go to Log',
-    'Go to Updates' => 'Go to Updates',
-    'Go to Firewall' => 'Go to Firewall',
-    'Go to File Manager' => 'Go to File Manager',
-    'Go to Server' => 'Go to Server',
-
+    'Move backward through top menu' => 'Move backward through top menu',
+    'Move forward through top menu' => 'Move forward through top menu',
+    'Switch active menu' => 'Switch active menu',
+    'Enter focused element' => 'Enter focused element',
 
     'Upload' => 'Upload',
     'New File' => 'New File',
@@ -579,7 +575,6 @@ $LANG['en'] = array(
     'Archive' => 'Archive',
     'Delete' => 'Delete',
     'Save File (in text editor)' => 'Save File (in text editor)',
-    'Display Shortcuts Hel' => 'Display Shortcuts Hel',
     'Close Popup / Cancel' => 'Close Popup / Cancel',
     'Move Cursor Up' => 'Move Cursor Up',
     'Move Cursor Dow' => 'Move Cursor Dow',
@@ -594,6 +589,7 @@ $LANG['en'] = array(
     'Select Bunch of Files' => 'Select Bunch of Files',
     'Append File to the Current Selection' => 'Append File to the Current Selection',
     'Select All Files' => 'Select All Files',
-    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' => 'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager'
 
 );

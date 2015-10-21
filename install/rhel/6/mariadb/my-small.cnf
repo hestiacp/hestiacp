@@ -1,0 +1,35 @@
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+symbolic-links=0
+
+skip-external-locking
+key_buffer_size = 32K
+max_allowed_packet = 8M
+table_open_cache = 4
+sort_buffer_size = 128K
+read_buffer_size = 256K
+read_rnd_buffer_size = 256K
+net_buffer_length = 2K
+thread_stack = 240K
+
+#innodb_use_native_aio = 0
+innodb_file_per_table
+
+max_connections=50
+max_user_connections=25
+wait_timeout=10
+interactive_timeout=50
+long_query_time=5
+
+#slow_query_log=1
+#slow_query_log_file=/var/log/mysql-slow-queries.log
+
+[mysqld_safe]
+log-error=/var/log/mariadb/mariadb.log
+pid-file=/var/run/mariadb/mariadb.pid
+
+#
+# include all files from the config directory
+#
+!includedir /etc/my.cnf.d

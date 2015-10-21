@@ -28,7 +28,7 @@ input.save:active { border: 1px solid #FFCC00; background-color: #FFCC00; color:
 
 
 .ace_gutter,
-.ace_scroller { padding-top: 10px; }
+.ace_scroller { padding-top: 0px; }
 .ace-twilight .ace_gutter-active-line { margin-top: 10px; }
 
 .ace_gutter-cell { color: #777; }

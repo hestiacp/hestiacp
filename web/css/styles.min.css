@@ -1156,6 +1156,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   font-size: 13px;
 }
 
+.units div:last-child {  
+  border-bottom: none !important;
+}
+
 .units .l-unit {
   border-bottom: 1px solid #ddd;
 }
@@ -1944,15 +1948,18 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-icon-shortcuts {
   width: 35px;
   height: 35px;
-  background-position: -283px -68px;
+  background-position: -240px -281px;
   border-radius: 18px;
 }
 .l-icon-shortcuts:hover {
-  background-color: #ccc;
+  background-position: -160px -281px;
 }
 .l-icon-shortcuts:active {
-  background-color: #98D5CD;
+  background-position: -198px -281px;
 }
+
+
+
 
 .l-icon-star-orange {
   width: 13px;
@@ -2000,14 +2007,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
   display: inline-block;
   position: fixed;
   top: 92%;
-  right: 4%;
+  right: 1%;
 }
 
 .to-shortcuts {
   display: inline-block;
   position: fixed;
   top: 92%;
-  right: 1%;
+  right: 4%;
 }
 
 
@@ -2593,6 +2600,7 @@ td.hint {
 .l-unit.selected {
   background-color: #feef9a;
   color: #555;
+  border-bottom: 1px solid #c0b990;
 }
 
 .l-unit.selected b,
@@ -2804,9 +2812,10 @@ form#vstobjects.suspended {
 }
 .shortcuts ul {
   list-style-type: none;
-  padding: 30px 15px;
+  padding: 30px 20px;
   display: inline-block;
   float: left;
+  width: 360px;
 }
 .shortcuts ul li {
   padding: 5px 20px;
@@ -2820,7 +2829,10 @@ form#vstobjects.suspended {
   font-weight: bold;
   padding: 0 20px 0 0;
   text-align: right;
-  width: 140px;
+/*  width: 140px;*/
+}
+.shortcuts ul li span.bigger {
+  font-size: 18px;
 }
 
 .description {

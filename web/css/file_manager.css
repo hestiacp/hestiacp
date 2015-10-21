@@ -102,7 +102,7 @@ body { margin: 0; padding: 0; }
 
 ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  border-left: 1px solid #DDDDDD; overflow: auto; }
 .listing li { color: #999999; display: block; height: 34px; margin: 1px 0 0; line-height: 30px; padding: 0; }
-.listing li span { display: inline-block; float: right; }
+.listing li span { display: inline-block; float: right; height: 32px; overflow: hidden; }
 .listing li .marker { width: 4px; float: left; height: 100%; margin-right: 31px; }
 .listing li.back {  }
 .listing li.file {  }
@@ -200,7 +200,9 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 .listing li .icon.filetype-xhtml { background: url("/images/flat_icons.png") no-repeat scroll -138px -227px; }
 
 
-.listing li .filename { color: #555; cursor: pointer; height: 32px; max-width: 40%; overflow: hidden; float: left; padding: 2px 7px 0 7px; border-radius: 3px; transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) 0s; -webkit-transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) 0s; }
+.listing li .filename-holder { max-width: 40%; overflow: hidden; float: left; height: 35px; }
+.listing li .filename { color: #555; cursor: pointer; height: 32px; float: left; padding: 2px 7px 0 7px; border-radius: 3px; transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) 0s; -webkit-transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) 0s; }
+
 /* .listing li .filename { background: url("/images/folder_.png") no-repeat scroll -2px 6px; color: #555; cursor: pointer; float: left; margin-left: -27px; padding-left: 19px; }*/
 
 .listing li .filename:hover { color: #333; background-color: #D1D0CF; }
@@ -531,7 +533,7 @@ input[type="checkbox"] {
 */
 
 @media (max-width: 1400px) {
-  .listing li .filename { width: 35%; }
+  .listing li .filename-holder { width: 35%; }
 }
 
 
@@ -540,13 +542,13 @@ input[type="checkbox"] {
   .menu div.button.mkdir { display: none; }
   .menu div.button.mkfile.small,
   .menu div.button.mkdir.small { display: inline-block; }
-  .listing li .filename { max-width: 30%; }
+  .listing li .filename-holder { max-width: 30%; }
 }
 
 @media (max-width: 1210px) {
   .menu div.button.del { display: none; }
   .menu div.button.del.small { display: inline-block; }
-  .listing li .filename { max-width: 25%; }
+  .listing li .filename-holder { max-width: 25%; }
 }
 
 
@@ -554,7 +556,7 @@ input[type="checkbox"] {
   .menu div.button { display: none; }
   .menu div.button.medium,
   .menu div.button.small { display: inline-block; }
-  .listing li .filename { max-width: 20%; }
+  .listing li .filename-holder { max-width: 20%; }
 }
 
 @media (max-width: 1080px) {
@@ -569,11 +571,11 @@ input[type="checkbox"] {
   .menu div.button { display: inline-block; }
   .menu div.button.small { display: none; }
   .menu div.copy.button { display: none; }
-  .listing li .filename { max-width: 40%; }
+  .listing li .filename-holder { max-width: 40%; }
 }
 
 @media (max-width: 720px) {
-  .listing li .filename { max-width: 30%; }
+  .listing li .filename-holder { max-width: 30%; }
 }
 
 @media (max-width: 600px) {
@@ -581,18 +583,18 @@ input[type="checkbox"] {
   .menu div.button.medium,
   .menu div.button.small { display: inline-block; }
   .menu div.copy.button.small { display: none; }
-  .listing li .filename { max-width: 20%; }
+  .listing li .filename-holder { max-width: 20%; }
 }
 
 @media (max-width: 520px) {
   .listing li .owner { display: none; }
-  .listing li .filename { max-width: 15%; }
+  .listing li .filename-holder { max-width: 15%; }
 }
 
 @media (max-width: 400px) {
   .listing li .mode { display: none; }
   .listing li .time { display: none; }
-  .listing li .filename { max-width: 30%; }
+  .listing li .filename-holder { max-width: 30%; }
 }
 
 @media (max-width: 360px) {
@@ -672,9 +674,10 @@ input[type="checkbox"] {
 }
 .shortcuts ul {
   list-style-type: none;
-  padding: 30px 10px;
+  padding: 30px 20px;
   display: inline-block;
   float: left;
+  width: 360px;
 }
 .shortcuts ul li {
   padding: 5px 20px;
@@ -688,7 +691,6 @@ input[type="checkbox"] {
   font-weight: bold;
   padding: 0 20px 0 0;
   text-align: right;
-  width: 140px;
 }
 .shortcuts ul li span.bigger {
   font-size: 18px;
@@ -715,12 +717,12 @@ input[type="checkbox"] {
   background-image: url("/images/sprite.png");
   width: 35px;
   height: 35px;
-  background-position: -283px -68px;
+  background-position: -122px -283px;
   border-radius: 18px;
 }
 .l-icon-shortcuts:hover {
-  background-color: #ccc;
+  background-position: -160px -283px;
 }
 .l-icon-shortcuts:active {
-  background-color: #98D5CD;
+  background-position: -198px -283px;
 }

@@ -1174,8 +1174,13 @@ FM.selectItem = function(item, box) {
     src = $.parseJSON(src);
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
 
+
+
     if (FM.itemIsArchieve(src)) {
-        $('.menu-'+tab+' .extract-btn').show();
+        if($('.menu-'+tab+' .archive.button').first().is(':visible'))
+            $('.menu-'+tab+' .extract-btn').first().show();
+        else
+            $('.menu-'+tab+' .extract-btn.small').show();
     }
     else {
         $('.menu-'+tab+' .extract-btn').hide();

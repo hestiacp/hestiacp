@@ -20,7 +20,7 @@ App.Templates.html = {
                         </span>\
                         <span class="icon ~!:ITEM_TYPE~!" ></span>\
                         <input type="hidden" class="source" value=\'~!:SOURCE~!\'/>\
-                        <span class="filename ripple" ~!:CL_ACTION_1~!>~!:NAME~!</span>\
+                        <span class="filename-holder"><div class="filename ripple" ~!:CL_ACTION_1~!>~!:NAME~!</div></span>\
                         <span class="mode">~!:PERMISSIONS~!</span>\
                         <span class="owner">~!:OWNER~!</span>\
                         <span class="size-unit">~!:SIZE_UNIT~!</span>\

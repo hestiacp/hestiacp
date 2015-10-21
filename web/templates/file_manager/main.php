@@ -91,7 +91,7 @@
         <li><span class="key">a</span><?=__('Archive')?></li>
         <li><span class="key">F8 / Del</span><?=__('Delete')?></li>
         <li class="step-top"><span class="key">&lt;Ctrl&gt; + s</span><?=__('Save File (in text editor)')?></li>
-        <li class="step-top"><span class="key">h</span><?=__('Display Shortcuts Help')?></li>
+        <li class="step-top"><span class="key">h</span><?=__('Display/Close shortcuts')?></li>
         <li class="step-top"><span class="key">Esc</span><?=__('Close Popup / Cancel')?></li>
       </ul>
       <ul>

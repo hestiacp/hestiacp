@@ -13,17 +13,13 @@
 user=$1
 database=$2
 dbuser="$user"_"$3"
-password=$4
+password=$4; HIDE=4
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/db.sh
 source $VESTA/func/rebuild.sh
 source $VESTA/conf/vesta.conf
-
-# Hiding password
-A4='******'
-EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
 
 #----------------------------------------------------------#

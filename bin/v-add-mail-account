@@ -15,17 +15,13 @@ domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 domain_idn=$(idn -t --quiet -a "$domain")
 account=$(echo $3 | tr '[:upper:]' '[:lower:]')
-password=$4
+password=$4; HIDE=4
 quota=${5-unlimited}
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
-
-# Hiding password
-A4='******'
-EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
 
 #----------------------------------------------------------#

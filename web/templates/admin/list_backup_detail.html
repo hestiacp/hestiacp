@@ -1,6 +1,6 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/schedule/restore/?backup=<?=$_GET['backup']?>" class="l-sort__create-btn restore" title="<?=str_replace(' ', '&nbsp;', __('Restore All'))?>"></a>
+        <a href="/schedule/restore/?backup=<?=htmlentities($_GET['backup'])?>" class="l-sort__create-btn restore" title="<?=str_replace(' ', '&nbsp;', __('Restore All'))?>"></a>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -18,7 +18,7 @@
               <td>
                 <form action="/bulk/restore/" method="post">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                <input type="hidden" name="backup" value="<?php echo $_GET['backup'] ?>">
+                <input type="hidden" name="backup" value="<?=htmlentities($_GET['backup']); ?>">
                 <div class="l-select">
                   <select name="" id="">
                     <option value=""><?=__('apply to selected')?></option>

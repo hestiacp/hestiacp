@@ -146,10 +146,10 @@ is_domain_new() {
         web_alias=$(grep -w $dom $VESTA/data/users/*/web.conf)
     fi
     if [ ! -z "$web_alias" ]; then
-        c1=$(grep -H "'$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
-        c2=$(grep -H "'$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
-        c3=$(grep -H ",$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
-        c4=$(grep -H ",$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c1=$(grep -HF "'$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c2=$(grep -HF "'$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c3=$(grep -HF ",$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c4=$(grep -HF ",$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
         if [ ! -z "$c1" ] && [ "$type" == "web"  ]; then
             echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
@@ -215,11 +215,13 @@ is_mail_new() {
 
 # Update domain zone
 update_domain_zone() {
-    conf="$HOMEDIR/$user/conf/dns/$domain.db"
     domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
     eval $domain_param
     SOA=$(idn --quiet -a -t "$SOA")
+    if [ -z "$SERIAL" ]; then
+        SERIAL=$(date +'%Y%m%d01')
+    fi
+    zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
     echo "\$TTL $TTL
 @    IN    SOA    $SOA.    root.$domain_idn. (
                                             $SERIAL
@@ -227,7 +229,8 @@ update_domain_zone() {
                                             3600
                                             1209600
                                             180 )
-" > $conf
+" > $zn_conf
+    fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
     while read line ; do
         IFS=$'\n'
         for key in $(echo $line|sed "s/' /'\n/g"); do
@@ -240,7 +243,7 @@ update_domain_zone() {
         fi
 
         if [ "$SUSPENDED" != 'yes' ]; then
-            eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $conf
+            eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $zn_conf
         fi
     done < $USER_DATA/dns/$domain.conf
 }
@@ -320,6 +323,7 @@ add_web_config() {
 
 # Get config top and bottom line numbers
 get_web_config_brds() {
+
     serv_line=$(egrep -ni "Name %domain_idn%($| )" $tpl_file |cut -f 1 -d :)
     if [ -z "$serv_line" ]; then
         log_event "$E_PARSING" "$EVENT"
@@ -330,15 +334,14 @@ get_web_config_brds() {
     bfr_line=$((serv_line - 1))
     aftr_line=$((last_line - serv_line - 1))
 
-    str=$(egrep -ni "Name $domain_idn($| )" $conf | cut -f 1 -d :)
+    str=$(grep -niF "Name $domain_idn" $conf |egrep "$domain_idn$|$domain_idn ")
+    str=$(echo "$str" |cut -f 1 -d :)
     top_line=$((str - serv_line + 1))
     bottom_line=$((top_line + last_line -1))
-
     multi=$(sed -n "$top_line,$bottom_line p" $conf |grep ServerAlias |wc -l)
     if [ "$multi" -ge 2 ]; then
         bottom_line=$((bottom_line + multi -1))
     fi
-
 }
 
 # Replace web config

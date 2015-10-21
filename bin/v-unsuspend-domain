@@ -1,68 +1,72 @@
 #!/bin/bash
-# info: add web/dns/mail domain
-# options: USER DOMAIN [IP] [RESTART]
+# info: unsuspend web/dns/mail domain
+# options: USER DOMAIN
 #
-# The function adds web/dns/mail domain to a server.
+# The function unsuspends web/dns/mail domain.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument definition
+# Argument defenition
 user=$1
 domain=$2
-ip=$3
-restart="${4-yes}"
+restart="${3-yes}"
 
 # Includes
 source $VESTA/func/main.sh
-source $VESTA/func/ip.sh
 source $VESTA/conf/vesta.conf
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-check_args '2' "$#" 'USER DOMAIN [IP] [RESTART]'
+
+check_args '2' "$#" 'USER DOMAIN'
 validate_format 'user' 'domain'
-if [ ! -z "$ip" ] ; then
-    validate_format 'ip'
-fi
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get ip if it wasn't defined
-if [ -z "$ip" ]; then
-    ip=$(get_user_ip $user)
-    if [ -z "$ip" ]; then
-        echo "Error: no avaiable IP address"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
-    fi
-fi
-
-# Working on web domain
+# Working on Web domain
 if [ ! -z "$WEB_SYSTEM" ]; then
-    $BIN/v-add-web-domain $user $domain $ip 'no'
-    check_result $? "can't add web domain" >/dev/null
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |grep "SUSPENDED='yes")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
+        $BIN/v-unsuspend-web-domain $user $domain 'no'
+        check_result $? "can't suspend web" > /dev/null
+    fi
 fi
 
 # Working on DNS domain
 if [ ! -z "$DNS_SYSTEM" ]; then
-    $BIN/v-add-dns-domain $user $domain $ip "" "" "" "" "" 'no'
-    check_result $? "can't add dns domain" >/dev/null
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='yes")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
+        $BIN/v-unsuspend-dns-domain $user $domain 'no'
+        check_result $? "can't suspend dns" > /dev/null
+    fi
 fi
 
-# Working on mail domain
+# Working on Mail domain
 if [ ! -z "$MAIL_SYSTEM" ]; then
-    $BIN/v-add-mail-domain $user $domain
-    check_result $? "can't add mail domain" >/dev/null
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf |grep "SUSPENDED='yes")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
+        $BIN/v-unsuspend-mail-domain $user $domain
+        check_result $? "can't suspend mail" > /dev/null
+    fi
+fi
+
+# Checking domain search result
+if [ -z "$domain_found" ]; then
+    echo "Error: domain $domain doesn't exist"
+    log_event "$E_NOTEXIST" "$EVENT"
+    exit $E_NOTEXIST
 fi
 
 # Restarting services

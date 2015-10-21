@@ -171,8 +171,10 @@ service=$DB_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     for db in ${DB_SYSTEM//,/ }; do
         service="$db"
-        if [ -e "/etc/redhat-release" ]; then
-            service='mysqld'
+        if [ "$service" = 'mysql' ]; then
+            if [ -e "/etc/redhat-release" ]; then
+                service='mysqld'
+            fi
         fi
         if [ "$service" == 'pgsql' ]; then
             service='postgresql'

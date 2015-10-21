@@ -65,8 +65,17 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     if(!empty($arg9)){
          $cmdquery = $cmdquery.$arg9; }
 
-    // Run query
-    exec ($cmdquery, $output, $return_var);
+    // Check command
+    if ($cmd == "'v-make-tmp-file'") {
+        // Used in DNS Cluster
+        $fp = fopen($_POST['arg2'], 'w');
+        fwrite($fp, $_POST['arg1']."\n");
+        fclose($fp);
+        $return_var = 0;
+    } else {
+        // Run normal cmd query
+        exec ($cmdquery, $output, $return_var);
+    }
 
     if ((!empty($_POST['returncode'])) && ($_POST['returncode'] == 'yes')) {
         echo $return_var;

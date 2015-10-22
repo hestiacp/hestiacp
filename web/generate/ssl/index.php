@@ -108,5 +108,3 @@ $_SESSION['back'] = $_SERVER['REQUEST_URI'];
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_ssl.html');
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
 unset($_SESSION['ok_msg']);
-
-?>

@@ -344,4 +344,3 @@ function list_timezones() {
     }
     return $timezone_list;
 }
-?>

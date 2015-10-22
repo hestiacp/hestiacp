@@ -52,7 +52,7 @@ done
 sudo -u $user tar -czf "$archive.tar.gz" \
     $src1 $src2 $src3 $src4 $src5 $src6 $src7 > /dev/null 2>&1
 if [ "$?" -ne 0 ]; then
-    echo "Error: archive $archive.tar.gz was not created"
+#    echo "Error: archive $archive.tar.gz was not created"
     exit 3
 fi
 

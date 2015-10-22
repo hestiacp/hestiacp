@@ -27,22 +27,19 @@ if ($_SESSION['user'] == 'admin') {
     }
 } else {
     switch ($action) {
-        case 'delete': $cmd='v-web-domain';
+        case 'delete': $cmd='v-delete-domain';
             break;
         default: header("Location: /list/web/"); exit;
     }
 }
 
-print_r($_POST);
-
 foreach ($domain as $value) {
     $value = escapeshellarg($value);
     echo VESTA_CMD.$cmd." ".$user." ".$value." no";
-//    exec (VESTA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
+    exec (VESTA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
     $restart='yes';
 }
 
-exit();
 
 if (isset($restart)) {
     exec (VESTA_CMD."v-restart-web", $output, $return_var);

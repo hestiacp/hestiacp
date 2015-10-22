@@ -51,6 +51,12 @@ if [ $? -ne 0 ]; then
     conntrack_ftp='no'
 fi
 
+# Checking custom OpenSSH  port
+sshport=$(grep '^Port ' /etc/ssh/sshd_config | head -1 | cut -d ' ' -f 2)
+if [[ "$sshport" =~ ^[0-9]+$ ]] && [ "$sshport" -ne "22"  ]; then
+    sed -i "s/PORT='22'/PORT=\'$sshport\'/" $rules
+fi
+
 # Creating temporary file
 tmp=$(mktemp)
 

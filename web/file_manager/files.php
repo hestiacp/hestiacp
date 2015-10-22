@@ -4,24 +4,17 @@
 //define(LISTING_TIMEOUT, 0.000001);
 define(LISTING_TIMEOUT, 5);
 
-
-
-
 //echo 'files: ';
 //$files = scandir(__DIR__);
 
-
 //echo '<pre>';
 //print_r($files);
-
 
 //$_REQUEST['sort_field'] = 'size';
 $_REQUEST['sort_field'] = 'name';
 //$_REQUEST['sort_field'] = 'atime';
 //$_REQUEST['sort_field'] = 'mtime';
 $_REQUEST['sort_desc'] = 1;
-
-
 
 /*
 +-  copy file / dir [ recursive ]
@@ -33,7 +26,7 @@ $_REQUEST['sort_desc'] = 1;
 +-  create dir
 */
 
-switch($_REQUEST['action']){
+switch($_REQUEST['action']) {
     case 'copy': fm_copy($_REQUEST['source'], $_REQUEST['dest']); break;
     case 'rename': fm_rename($_REQUEST['source'], $_REQUEST['dest']); break;
     case 'delete': fm_delete($_REQUEST['source']); break;
@@ -53,23 +46,11 @@ switch($_REQUEST['action']){
     break;
 }
 
-
-
-
-
-
 //echo $_GET['sort_field'];
 
 //    if(in_array($_GET['sort_field'], $available_sort_fields)){
 //	echo '1';
 //    }	
-
-
-
-
-
-
-
 
 /*
   upload_file
@@ -87,17 +68,16 @@ switch($_REQUEST['action']){
   download file / image   
 */
 
-
-
-function fm_create_file($filename){
+function fm_create_file($filename)
+{
     if(is_file($filename))
         return array('error' => 'file exists', 'code' => 1);
 
-    return !!fopen($filename, 'w');
+    return (bool) fopen($filename, 'w'); // (bool) > !!, sorry
 }
 
-
-function fm_create_dir($dirname){
+function fm_create_dir($dirname)
+{
     if(is_dir($filename))
         return array('error' => 'directory exists', 'code' => 1);
 
@@ -105,49 +85,49 @@ function fm_create_dir($dirname){
     return mkdir($dirname);
 }
 
-
-function fm_chown($filename, $recursive = 0, $uid = FALSE, $gid = FALSE){
-    if(is_dir($filename) && $recursive){
+function fm_chown($filename, $recursive = 0, $uid = FALSE, $gid = FALSE)
+{
+    if (is_dir($filename) && $recursive) {
         $dir_handle  = opendir($dir);
-	while ($item = readdir($dir_handle)){
-    	    if (!in_array($item, array('.','..'))){
+	while ($item = readdir($dir_handle)) {
+    	    if (!in_array($item, array('.','..'))) {
 		$new_item = $filename.'/'.$item;
 
-	        if($uid !== FALSE) chown($new_item, (int)$uid);
-		if($gid !== FALSE) chgrp($new_item, (int)$gid); 
+	        if ($uid !== FALSE) chown($new_item, (int)$uid);
+		if ($gid !== FALSE) chgrp($new_item, (int)$gid); 
 
-		if(is_dir($new_item)){
+		if (is_dir($new_item)) {
 		    fm_chown($new_item, $recursive, $uid, $gid);
 		}
 	    }
 	}
-    }else{
+    } else {
         if($uid !== FALSE) chown($filename, (int)$uid);
 	if($gid !== FALSE) chgrp($filename, (int)$gid); 
     }
 }
 
-
-function fm_chmod($filename, $recursive = 0, $mode){
-    if(is_dir($filename) && $recursive){
+function fm_chmod($filename, $recursive = 0, $mode)
+{
+    if(is_dir($filename) && $recursive) {
         $dir_handle  = opendir($dir);
-	while ($item = readdir($dir_handle)){
-    	    if (!in_array($item, array('.','..'))){
+	while ($item = readdir($dir_handle)) {
+    	    if (!in_array($item, array('.','..'))) {
 		$new_item = $filename.'/'.$item;
 	        chmod($new_item, octdec($mode));
 
-		if(is_dir($new_item)){
+		if (is_dir($new_item)) {
 		    fm_chmod($new_item, $recursive, $mode);
 		}
 	    }
 	}
-    }else{
+    } else {
 	chmod($filename, octdec($mode));
     }
 }
 
-
-function fm_delete($filename){
+function fm_delete($filename)
+{
     if(is_dir($filename)){
 	foreach (
 	    $iterator = new RecursiveIteratorIterator(
@@ -162,19 +142,21 @@ function fm_delete($filename){
 //	    copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
 	  }
 	}
-    }else{
+    } else {
 	return unlink($filename);
     }
 }
 
 
-function fm_rename($source, $dest){
+function fm_rename($source, $dest)
+{
     return rename($source, $dest);
 }
 
 
-function fm_copy($source, $dest){
-    if(is_dir($source)){
+function fm_copy($source, $dest)
+{
+    if (is_dir($source)) {
 	foreach (
 	    $iterator = new RecursiveIteratorIterator(
 	    new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
@@ -187,14 +169,13 @@ function fm_copy($source, $dest){
 	    copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
 	  }
 	}
-    
     }else{
 	return copy($source, $dest);
     }
 }
 
-
-function list_dir(){
+function list_dir()
+{
     $dir_iterator = new RecursiveDirectoryIterator("/path");
     $iterator = new RecursiveIteratorIterator($dir_iterator, RecursiveIteratorIterator::SELF_FIRST);
     // could use CHILD_FIRST if you so wish
@@ -214,12 +195,9 @@ function list_dir(){
     echo "\nTotal file size: ", $size, " bytes\n";
 }
 
-
-
-
 /// fast removing directory 
-function rmrf($dir) {
-    
+function rmrf($dir)
+{
     foreach (glob($dir) as $file) {
         if (is_dir($file)) {
             rmrf("$file/*");
@@ -229,9 +207,6 @@ function rmrf($dir) {
         }
     }
 }
-
-
-
 
 function dir_list($dir, $sort = 0)
 {
@@ -252,7 +227,7 @@ function dir_list($dir, $sort = 0)
         if (!in_array($object, array('.','..'))){
             $filename    = $dir . $object;
 	    $time = microtime(true) - $start;
-	    if($time <= LISTING_TIMEOUT){
+	    if ($time <= LISTING_TIMEOUT) {
     		$stats = stat($filename);
     		$mode = explain_mode($stats['mode']);
 		$perms = decoct(fileperms($filename));
@@ -274,8 +249,11 @@ function dir_list($dir, $sort = 0)
             	);
 	    }else{
 		$listing['timeout_exeeded'] = TRUE;
-		if(is_dir($filename)){   $type = 'd';
-		}else{   $type = '-'; }
+		if (is_dir($filename)) {
+			$type = 'd';
+		} else {
+			$type = '-';
+		}
 
 	        $item = array(
             	    'name' => $object,
@@ -294,7 +272,6 @@ function dir_list($dir, $sort = 0)
             	);
 	    }
 
-
 	    $listing['count']++;
 
 	    if($item['type'] == 'd'){
@@ -311,7 +288,6 @@ function dir_list($dir, $sort = 0)
     }
     $listing['time'] = microtime(TRUE) - $start;
 
-
     if(!$listing['timeout_exeeded']){
 	if(in_array($_REQUEST['sort_field'], $available_sort_fields)){
 	    if($_REQUEST['sort_desc']){
@@ -324,7 +300,6 @@ function dir_list($dir, $sort = 0)
 
     return $listing;
 }
-
 	
 function explain_mode($mode)
 {
@@ -355,5 +330,3 @@ function explain_mode($mode)
 
     return $info;
 }
-
-?>

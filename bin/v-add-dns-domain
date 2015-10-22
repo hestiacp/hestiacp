@@ -179,7 +179,7 @@ fi
 
 # Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
-    cmd="$BIN/v-add-remote-dns-domain $user $domain no"
+    cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
     echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
 fi
 

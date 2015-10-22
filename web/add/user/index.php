@@ -50,6 +50,11 @@ if (!empty($_POST['ok'])) {
         $pw_len = strlen($_POST['v_password']);
         if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
     }
+    // Check username length
+    if (empty($_SESSION['error_msg'])) {
+	$username_len = strlen($_POST['v_username']);
+	if ($username_len > 12) $_SESSION['error_msg'] = __('Username is too long. Maximum 12 characters', $error_msg);
+    }
 
     // Protect input
     $v_username = escapeshellarg($_POST['v_username']);

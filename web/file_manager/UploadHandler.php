@@ -84,7 +84,7 @@ class UploadHandler
             // The php.ini settings upload_max_filesize and post_max_size
             // take precedence over the following max_file_size setting:
             'max_file_size' => null,
-            'min_file_size' => 1,
+            'min_file_size' => 0,
             // The maximum number of files for the upload directory:
             'max_number_of_files' => null,
             // Defines which files are handled as image files:

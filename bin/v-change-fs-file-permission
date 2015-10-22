@@ -41,7 +41,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Changing file permissions
-sudo -u $user chmod $permisions "$src_file" >/dev/null 2>&1
+sudo -u $user chmod $permissions "$src_file" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: access permission on $src_file was not changed"
     exit 3

@@ -1237,7 +1237,7 @@ FM.unpackItem = function() {
     
     var tpl = Tpl.get('popup_unpack', 'FM');
     tpl.set(':FILENAME', src.name);
-    tpl.set(':DST_DIRNAME', dst + '/' + src.name);
+    tpl.set(':DST_DIRNAME', (dst + '/' + src.name).replace('//', '/'));
     FM.popupOpen(tpl.finalize());
 }
 
@@ -1275,7 +1275,7 @@ FM.packItem = function() {
     
     var tpl = Tpl.get('popup_pack', 'FM');
     tpl.set(':FILENAME', src.name);
-    tpl.set(':DST_DIRNAME', dst + '/' + src.name + '.tar.gz');
+    tpl.set(':DST_DIRNAME', (dst + '/' + src.name + '.tar.gz').replace('//', '/'));
     FM.popupOpen(tpl.finalize());
 }
 
@@ -1448,7 +1448,7 @@ FM.copyItems = function() {
 
     var tpl = Tpl.get('popup_copy', 'FM');
     tpl.set(':SRC_FILENAME', src.full_path);
-    tpl.set(':DST_FILENAME', dst + '/' + src.name);
+    tpl.set(':DST_FILENAME', (dst + '/' + src.name).replace('//', '/'));
     FM.popupOpen(tpl.finalize());
 }
 
@@ -2081,7 +2081,14 @@ $(document).ready(function() {
                 FM.open(src.full_path, FM.CURRENT_TAB);
             }
             else {
-                FM.openFile(src.full_path, FM.CURRENT_TAB, elm);
+                if(FM.IMG_FILETYPES.indexOf(src.filetype) >= 0 && src.filetype.length > 0) {
+                    //FM.IMAGES[tab][FM.IMAGES[tab].length] = {'img': "/view/file/?path=/home/admin/"+o.name+"&raw=true", 'thumb': "/view/file/?path=/home/admin/"+o.name//+"&raw=true", 'id': 'img-'+i};
+                    //cl_act = 'onClick="FM.fotoramaOpen(\'' + tab + '\', \'img-' + i +'\')"';
+                    FM.fotoramaOpen(tab, 'img-' + elm.index());
+                }
+                else {
+                    FM.openFile(src.full_path, FM.CURRENT_TAB, elm);
+                }
             }
         }
     },{

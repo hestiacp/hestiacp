@@ -90,6 +90,7 @@ set_default_value() {
     fi
 }
 
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -845,10 +846,10 @@ ZONE=$(timedatectl 2>/dev/null|grep Timezone|awk '{print $2}')
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
 fi
-sed -i "s/;date.timezone =/date.timezone = $ZONE/g" /etc/php5/apache2/php.ini
-sed -i "s/;date.timezone =/date.timezone = $ZONE/g" /etc/php5/cli/php.ini
-sed -i 's%_open_tag = Off%_open_tag = On%g' /etc/php5/apache2/php.ini
-sed -i 's%_open_tag = Off%_open_tag = On%g' /etc/php5/cli/php.ini
+for pconf in $(find /etc/php* -name php.ini); do
+    sed -i "s/;date.timezone =/date.timezone = $ZONE/g" $pconf
+    sed -i 's%_open_tag = Off%_open_tag = On%g' $pconf
+fi
 
 
 #----------------------------------------------------------#

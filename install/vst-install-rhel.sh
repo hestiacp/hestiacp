@@ -892,8 +892,10 @@ fi
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
 fi
-sed -i 's%short_open_tag = Off%short_open_tag = On%g' /etc/php.ini
-sed -i "s%;date.timezone =%date.timezone = $ZONE%g" /etc/php.ini
+for pconf in $(find /etc/php* -name php.ini); do
+    sed -i "s/;date.timezone =/date.timezone = $ZONE/g" $pconf
+    sed -i 's%_open_tag = Off%_open_tag = On%g' $pconf
+fi
 
 
 #----------------------------------------------------------#

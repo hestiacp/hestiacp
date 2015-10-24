@@ -1048,10 +1048,6 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
     php5enmod mcrypt 2>/dev/null
     service apache2 restart
-    if [ "$release" -eq 8 ]; then
-        mv -f /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
-        mv -f /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
-    fi
 fi
 
 

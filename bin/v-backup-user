@@ -206,36 +206,26 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         fi
 
         # Define exclude arguments
+        exlusion=$(echo -e "$WEB" |tr ',' '\n' |grep "^$domain:")
         set -f
         fargs=()
-        fargs+=(-not)
-        fargs+=(-path)
-        fargs+=("./logs*")
-        exlusion=$(echo -e "$WEB" |tr ',' '\n' |grep "^$domain:")
+        fargs+=(--exclude='logs/*')
         if [ ! -z "$exlusion" ]; then
             xdirs="$(echo -e "$exlusion" |tr ':' '\n' |grep -v $domain)"
             for xpath in $xdirs; do
-                xpath="$(echo $xpath |sed -e 's/\/*$//' -e 's/^\/*//')"
-                fargs+=(-not)
-                fargs+=(-path)
-                fargs+=("./$xpath/*")
+                fargs+=(--exclude=$xpath/*)
                 echo "$(date "+%F %T") excluding directory $xpath"
                 msg="$msg\n$(date "+%F %T") excluding directory $xpath"
             done
         fi
+        set +f
 
         # Backup files
         cd $HOMEDIR/$user/web/$domain
-        find . ${fargs[@]} -type f -or -type l -print0 |\
-            tar -cpf $tmpdir/web/$domain/domain_data.tar --null -T -
-
-        # Backup empty folders
-        find . ${fargs[@]} -type d -empty -print0 |\
-            tar -rpf $tmpdir/web/$domain/domain_data.tar --null -T -
+        tar -cpf $tmpdir/web/$domain/domain_data.tar * ${fargs[@]} 
 
         # Compress archive
         gzip -$BACKUP_GZIP $tmpdir/web/$domain/domain_data.tar
-        set +f
     done
 
     # Print total
@@ -488,6 +478,7 @@ if [ "$USER" != '*' ]; then
     IFS=$'\n'
     set -f
     i=0
+
     for udir in $(ls -a |egrep -v "conf|web|dns|mail|^\.\.$|^\.$"); do
         exclusion=$(echo "$USER" |tr ',' '\n' |grep "^$udir$")
         if [ -z "$exclusion" ]; then
@@ -496,13 +487,8 @@ if [ "$USER" != '*' ]; then
             echo -e "$(date "+%F %T") adding $udir"
             msg="$msg\n$(date "+%F %T") adding  $udir"
 
-            # Backup files
-            find ./$udir ${fargs[@]} -type f -or -type l -print0 |\
-                tar -cpf $tmpdir/user_dir/$udir.tar --null -T -
-
-            # Backup empty folders
-            find ./$udir ${fargs[@]} -type d -empty -print0 |\
-                tar -rpf $tmpdir/user_dir/$udir.tar --null -T -
+            # Backup files and dirs
+            tar -cpf $tmpdir/user_dir/$udir.tar $udir
 
             # Compress arhive
             gzip -$BACKUP_GZIP $tmpdir/user_dir/$udir.tar

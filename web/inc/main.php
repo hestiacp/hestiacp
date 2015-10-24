@@ -102,8 +102,9 @@ if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
     $user = $_SESSION['look'];
 }
 
-get_favorites();
-
+if (isset($_SESSION['user'])) {
+    get_favorites();
+}
 
 function get_favorites(){
     exec (VESTA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);

@@ -642,7 +642,7 @@ touch $VESTA/data/queue/backup.pipe $VESTA/data/queue/disk.pipe \
     $VESTA/log/nginx-error.log $VESTA/log/auth.log
 chmod 750 $VESTA/conf $VESTA/data/users $VESTA/data/ips $VESTA/log
 chmod -R 750 $VESTA/data/queue
-chmod 660 /var/log/vesta/*
+chmod 660 $VESTA/log/*
 rm -f /var/log/vesta
 ln -s /usr/local/vesta/log /var/log/vesta
 

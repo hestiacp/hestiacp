@@ -69,27 +69,6 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Template');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_template">
-                                        <?php
-                                            foreach ($templates as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                                $svalue = "'".$value."'";
-                                                if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
-                                                    echo ' selected' ;
-                                                }
-                                                echo ">".htmlentities($value)."</option>\n";
-                                            }
-                                        ?> 
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
                                     <?php print __('Expiration Date');?><span class="optional">(<?=__('YYYY-MM-DD');?>)</span>
                                 </td>
                             </tr>

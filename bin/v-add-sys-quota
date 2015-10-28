@@ -22,18 +22,11 @@ source $VESTA/conf/vesta.conf
 if [ ! -e "/usr/sbin/setquota" ]; then
     if [ -e "/etc/redhat-release" ]; then
         yum -y install quota >/dev/null 2>&1
-        result=$?
+        check_result $? "quota package installation failed" $E_UPDATE
     else
         export DEBIAN_FRONTEND=noninteractive
         apt-get -y install quota >/dev/null 2>&1
-        result=$?
-    fi
-
-    # Checking installation status
-    if [ "$result" -ne 0 ]; then
-        echo "Error: quota package wasn't successfully installed"
-        log_event "$E_UPDATE" "$EVENT"
-        exit $E_UPDATE
+        check_result $? "quota package installation failed" $E_UPDATE
     fi
 fi
 
@@ -66,11 +59,7 @@ chmod a+x /etc/cron.daily/quotacheck
 # Enabling fs quota
 if [ ! -z "$(quotaon -pa|grep " $mnt "|grep user|grep 'off')" ]; then
     quotaon $mnt
-    if [ $? -ne 0 ]; then
-        echo "Error: quota can't be enabled on $mnt partition"
-        log_event "$E_DISK" "$EVENT"
-        exit $E_DISK
-    fi
+    check_result $? "quota can't be enabled in $mtn" $E_DISK
 fi
 
 # Updating DISK_QUOTA value

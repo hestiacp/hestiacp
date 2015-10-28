@@ -67,9 +67,7 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
 # Restart backend server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web-backend
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Web backend restart failed" >/dev/null
 fi
 
 # Logging

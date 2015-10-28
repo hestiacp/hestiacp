@@ -42,11 +42,7 @@ if [ -e "/etc/redhat-release" ]; then
 
     # Update vesta package
     $yum update $package > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Error: $package update failed"
-        log_event "$E_UPDATE" "$EVENT"
-        exit $E_UPDATE
-    fi
+    check_result $? "$pacakge update failed" $E_UPDATE
 else
     # Update repo
     apt-get update -o Dir::Etc::sourcelist="sources.list.d/vesta.list" \
@@ -54,11 +50,7 @@ else
 
     # Update vesta package
     apt-get install $package -qq > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Error: $package update failed"
-        log_event "$E_UPDATE" "$EVENT"
-        exit $E_UPDATE
-    fi
+    check_result $? "$pacakge update failed" $E_UPDATE
 fi
 
 

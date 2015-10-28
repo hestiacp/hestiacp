@@ -58,11 +58,7 @@ shell=$(grep -w "$shell_conf" /etc/shells |head -n1)
 
 # Adding user
 /usr/sbin/useradd "$user" -s "$shell" -c "$email" -m -d "$HOMEDIR/$user"
-if [ $? -ne 0 ]; then
-    echo "Error: user creation failed"
-    log_event "$E_INVALID" "$EVENT"
-    exit $E_INVALID
-fi
+check_result $? "user creation failed" $E_INVALID
 
 # Adding password
 echo "$user:$password" | /usr/sbin/chpasswd

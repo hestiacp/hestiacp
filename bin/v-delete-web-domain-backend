@@ -52,12 +52,10 @@ rm -f $pool/$backend.conf
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart backend server
+# Restarting backend server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web-backend
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Backend restart failed" >/dev/null
 fi
 
 # Logging

@@ -96,12 +96,10 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart named
+# Restarting named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "DNS restart failed" >/dev/null
 fi
 
 # Logging

@@ -69,12 +69,10 @@ records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f1 -d ' ')"
 update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 decrease_user_value "$user" '$U_DNS_RECORDS'
 
-# Restart named
+# Restarting named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Bind restart failed" >/dev/null
 fi
 
 # Logging

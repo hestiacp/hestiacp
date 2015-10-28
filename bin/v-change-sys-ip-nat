@@ -77,9 +77,7 @@ fi
 # Restart ftp server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-ftp
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "FTP restart failed" >/dev/null
 fi
 
 # Logging

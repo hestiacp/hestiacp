@@ -76,21 +76,16 @@ fi
 update_user_value "$user" '$SUSPENDED' 'no'
 decrease_user_value 'admin' '$SUSPENDED_USERS'
 
+# Restarting system services
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Web restart failed" >/dev/null
 
     $BIN/v-restart-dns
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "DNS restart failed" >/dev/null
 
     $BIN/v-restart-cron
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Cron restart failed" >/dev/null
 fi
 
 # Logging

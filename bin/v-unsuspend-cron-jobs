@@ -41,12 +41,10 @@ done
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart crond
+# Restarting crond
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-cron
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Cron restart failed" >/dev/null
 fi
 
 # Logging

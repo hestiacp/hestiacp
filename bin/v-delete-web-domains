@@ -42,18 +42,14 @@ done
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart web server
+# Restarting web server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Web restart failed" >/dev/null
 
     if [ ! -z "$PROXY_SYSTEM" ]; then
         $BIN/v-restart-proxy
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
+        check_result $? "Proxy restart failed" >/dev/null
     fi
 fi
 

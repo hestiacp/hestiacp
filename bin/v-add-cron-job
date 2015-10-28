@@ -72,11 +72,9 @@ sync_cron_jobs
 # Increasing cron value
 increase_user_value $user '$U_CRON_JOBS'
 
-# Restart crond
+# Restarting crond
 $BIN/v-restart-cron
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+check_result $? "Cron restart failed" >/dev/null
 
 # Logging
 log_history "added cron job $job"

@@ -87,9 +87,7 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
                 $BIN/v-rebuild-dns-domains $user no
             done
             $BIN/v-restart-dns
-            if [ $? -ne 0 ]; then
-                exit $E_RESTART
-            fi
+            check_result $? "dns restart failed" >/dev/null
         fi
 
         # No further comparation is needed

@@ -562,7 +562,6 @@ $LANG['el'] = array(
     'Display/Close shortcuts' => 'Display/Close shortcuts',
     'Move backward through top menu' => 'Move backward through top menu',
     'Move forward through top menu' => 'Move forward through top menu',
-    'Switch active menu' => 'Switch active menu',
     'Enter focused element' => 'Enter focused element',
 
     'Upload' => 'Upload',

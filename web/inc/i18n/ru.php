@@ -563,7 +563,6 @@ $LANG['ru'] = array(
     'Display/Close shortcuts' => 'Показать/Скрыть список горячих клавиш',
     'Move backward through top menu' => 'Фокус на предыдущий пункт меню',
     'Move forward through top menu' => 'Фокус на следующий пункт меню',
-    'Switch active menu' => 'Переключиться между меню',
     'Enter focused element' => 'Перейти в активный пункт меню',
 
     'Upload' => 'Загрузить файл',

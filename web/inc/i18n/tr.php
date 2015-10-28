@@ -498,10 +498,10 @@ $LANG['tr'] = array(
     'FileManager' => 'DosyaYöneticisi',
     'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
 
-    'sort by' => 'sort by',
-    'Date' => 'Date',
-    'Starred' => 'Starred',
-    'Name' => 'Name',
+    'sort by' => 'sıralama ölçütü',
+    'Date' => 'Tarih',
+    'Starred' => 'Yıldızlı',
+    'Name' => 'İsim',
 
     'File Manager' => 'File Manager',
     'type' => 'type',
@@ -561,7 +561,6 @@ $LANG['tr'] = array(
     'Display/Close shortcuts' => 'Display/Close shortcuts',
     'Move backward through top menu' => 'Move backward through top menu',
     'Move forward through top menu' => 'Move forward through top menu',
-    'Switch active menu' => 'Switch active menu',
     'Enter focused element' => 'Enter focused element',
 
     'Upload' => 'Upload',

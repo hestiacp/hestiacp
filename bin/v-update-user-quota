@@ -33,17 +33,17 @@ is_object_valid 'user' 'USER' "$user"
 # Updating disk quota
 # Had quota equals package value. Soft quota equals 90% of package value for warnings.
 quota=$(get_user_value '$DISK_QUOTA')
-soft=$((quota * 1024 * 0.90))
-hard=$((quota * 1024))
+soft=$(echo "$quota * 1024 * 0.90"|bc |cut -f 1 -d .)
+hard=$(echo "$quota * 1024"|bc |cut -f 1 -d .)
 
 # Searching home mount point
 mnt=$(df -P /home |awk '{print $6}' |tail -n1)
 
 # Checking unlinmited quota
 if [ "$quota" = 'unlimited' ]; then
-    setquota $user 0 0 0 0 $mnt
+    setquota $user 0 0 0 0 $mnt 2>/dev/null
 else
-    setquota $user $soft $hard 0 0 $mnt
+    setquota $user $soft $hard 0 0 $mnt 2>/dev/null
 fi
 
 

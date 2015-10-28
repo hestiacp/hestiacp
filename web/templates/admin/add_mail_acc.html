@@ -49,6 +49,11 @@
                       randomstring += chars.substring(rnum,rnum+1);
                     }
                     document.v_add_mail_acc.v_password.value = randomstring;
+
+                    if($('input[name=v_password]').attr('type') == 'text')
+                      $('#v_password').text(randomstring);
+                    else
+                      $('#v_password').text(Array(randomstring.length+1).join('*'));
                   }
                 $(document).ready(function() {
                     $('#v_account').text($('input[name=v_account]').val());

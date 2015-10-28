@@ -89,6 +89,9 @@ if (isset($_SESSION['language'])) {
         case 'es':
             setlocale(LC_ALL, 'es_ES.utf8');
             break;
+        case 'ja':
+            setlocale(LC_ALL, 'ja_JP.utf8');
+            break;
         default:
             setlocale(LC_ALL, 'en_US.utf8');
     }

@@ -2686,6 +2686,7 @@ form#vstobjects.suspended {
   padding: 3px 14px 3px 27px;
   position: absolute;
   text-transform: uppercase;
+  word-break: keep-all;
   z-index: -1;
 }
 

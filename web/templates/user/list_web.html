@@ -101,6 +101,11 @@
                             $ftp_user = str_replace(':', ', ', $ftp_user);
                         }
 
+                        $backend_support='no';
+                        if (!empty($data[$key]['BACKEND'])) {
+                            $backend_support='yes';
+                        }
+
                         $proxy_support='no';
                         if (!empty($data[$key]['PROXY'])) {
                             $proxy_support='yes';
@@ -207,6 +212,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                   </div>
                 </td>
                 <td>
+                  <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>.
                   <? if($proxy_support == 'no'){ ?>
                     <div class="l-unit__stat-cols clearfix disabled last"><?=__('Proxy Support')?></div>
                   <? } else {?>
@@ -216,6 +222,19 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                         <b><?=__($proxy_support)?></b>
                       </div>
                     </div>
+                  <? } ?>
+                  <? } ?>
+                  <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>.
+                  <? if($backend_support == 'no'){ ?>
+                    <div class="l-unit__stat-cols clearfix disabled last"><?=__('Backend Support')?></div>
+                  <? } else {?>
+                    <div class="l-unit__stat-cols clearfix last">
+                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backend Support')?>:</div>
+                      <div class="l-unit__stat-col l-unit__stat-col--right">
+                        <b><?=__($backend_support)?></b>
+                      </div>
+                    </div>
+                  <? } ?>
                   <? } ?>
                 </td>
               </tr>
@@ -234,12 +253,22 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                   <? } ?>
                 </td>
                 <td>
+                  <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>.
                   <div class="l-unit__stat-cols clearfix last">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Proxy Template')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <b><?=$data[$key]['PROXY']?></b>
                     </div>
                   </div>
+                  <? } ?>
+                  <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>.
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backend Template')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['BACKEND']?></b>
+                    </div>
+                  </div>
+                  <? } ?>
                 </td>
               </tr>
               <tr>

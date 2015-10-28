@@ -663,9 +663,8 @@ FM.generate_listing = function(reply, box) {
         tpl.set(':SIZE_VALUE', o.type == 'f' ? FM.humanFileSizeValue(o.size) : '&nbsp;');
         tpl.set(':SIZE_UNIT', o.type == 'f' ? FM.humanFileSizeUnit(o.size) : '&nbsp;');
         tpl.set(':TIME', (psDate.getFullYear() != new Date().getFullYear()) ? psDate.getFullYear() || "" : time);
-        tpl.set(':DATE', o.date.trim() != '' ? psDate.format('mmm d') : '&nbsp;'/*o.date*/);
-        
-        
+        tpl.set(':DATE', o.date.trim() != '' ? App.Constants.FM_TRANSLATED_DATES[psDate.format('mmm')] + psDate.format(' d'): '&nbsp;'/*o.date*/);
+
         if (o.name == '..' || o.type == 'd') {
             tpl.set(':SUBMENU_CLASS', 'hidden');
         }

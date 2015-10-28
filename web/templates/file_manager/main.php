@@ -86,11 +86,11 @@
         <li><span class="key">n</span><?=__('New File')?></li>
         <li><span class="key">F7</span><?=__('New Folder')?></li>
         <li><span class="key">d</span><?=__('Download')?></li>
-        <li><span class="key">F2 / &lt;Shift&gt;+F6</span><?=__('Rename')?></li>
+        <li><span class="key">F2 / Shift+F6</span><?=__('Rename')?></li>
         <li><span class="key">F5</span><?=__('Copy')?></li>
         <li><span class="key">a</span><?=__('Archive')?></li>
         <li><span class="key">F8 / Del</span><?=__('Delete')?></li>
-        <li class="step-top"><span class="key">&lt;Ctrl&gt; + s</span><?=__('Save File (in text editor)')?></li>
+        <li class="step-top"><span class="key">Ctrl + s</span><?=__('Save File (in text editor)')?></li>
         <li class="step-top"><span class="key">h</span><?=__('Display/Close shortcuts')?></li>
         <li class="step-top"><span class="key">Esc</span><?=__('Close Popup / Cancel')?></li>
       </ul>
@@ -99,15 +99,15 @@
         <li><span class="key bigger">&darr;</span><?=__('Move Cursor Down')?></li>
         <li><span class="key bigger">&larr;</span><?=__('Switch to Left Tab')?></li>
         <li><span class="key bigger">&rarr;</span><?=__('Switch to Right Tab')?></li>
-        <li><span class="key">&lt;Tab&gt;</span><?=__('Switch Tab')?></li>
-        <li><span class="key">&lt;Home&gt;</span><?=__('Go to the Top of the File List')?></li>
-        <li><span class="key">&lt;End&gt;</span><?=__('Go to the Last File')?></li>
-        <li class="step-top"><span class="key">&lt;Enter&gt;</span><?=__('Open File / Enter Directory')?></li>
-        <li><span class="key">&lt;Backspace&gt;</span><?=__('Go to Parent Directory')?></li>
-        <li class="step-top"><span class="key">&lt;Insert&gt; / &lt;Space&gt;</span><?=__('Select Current File')?></li>
-        <li><span class="key">&lt;Shift&gt; + click</span><?=__('Select Bunch of Files')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + click</span><?=__('Add File to the Current Selection')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + a</span><?=__('Select All Files')?></li>
+        <li><span class="key">Tab</span><?=__('Switch Tab')?></li>
+        <li><span class="key">Home</span><?=__('Go to the Top of the File List')?></li>
+        <li><span class="key">End</span><?=__('Go to the Last File')?></li>
+        <li class="step-top"><span class="key">Enter</span><?=__('Open File / Enter Directory')?></li>
+        <li><span class="key">Backspace</span><?=__('Go to Parent Directory')?></li>
+        <li class="step-top"><span class="key">Insert / Space</span><?=__('Select Current File')?></li>
+        <li><span class="key">Shift + click</span><?=__('Select Bunch of Files')?></li>
+        <li><span class="key">Ctrl + click</span><?=__('Add File to the Current Selection')?></li>
+        <li><span class="key">Ctrl + a</span><?=__('Select All Files')?></li>
       </ul>
       <ul class="note"><?=__('shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager')?></ul>
     </div>

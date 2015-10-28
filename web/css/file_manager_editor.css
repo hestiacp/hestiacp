@@ -1,11 +1,10 @@
 body, form { padding: 0; margin: 0; background: #333;  }
 
 
-input.save { 
+input.save {
     background-color: rgba(247, 165, 48, 0.8);
     border: 1px solid #f79b44;
     border-radius: 3px;
-/*    bottom: 17px;*/
     top: 9px;
     color: #fafafa;
     cursor: pointer;
@@ -32,13 +31,5 @@ input.save:active { border: 1px solid #FFCC00; background-color: #FFCC00; color:
 .ace-twilight .ace_gutter-active-line { margin-top: 10px; }
 
 .ace_gutter-cell { color: #777; }
-/*
-.ace_gutter-cell { color: #777; padding: 9px 0px 0px 4px; }
-.ace_line { padding: 9px 0px 0px 4px; }
-
-.ace_editor,
-.ace-twilight .ace_cursor,
-.ace_text-input { font-size: 17px; }
-*/
 
 .ace_editor { font-size: 19px !important; }

@@ -83,6 +83,6 @@ App.Constants.FM_FILE                           = '<?=__('File')?>';
 App.Constants.FM_ALREADY_EXISTS                 = '<?=__('already exists')?>';
 App.Constants.FM_CREATE_FILE                    = '<?=__('Create file')?>';
 App.Constants.FM_CREATE_DIRECTORY               = '<?=__('Create directory')?>';
-
+App.Constants.FM_TRANSLATED_DATES               = {'Jan': '<?=__('Jan')?>', 'Feb': '<?=__('Feb')?>','Mar': '<?=__('Mar')?>','Apr': '<?=__('Apr')?>','May': '<?=__('May')?>','Jun': '<?=__('Jun')?>','Jul': '<?=__('Jul')?>','Aug': '<?=__('Aug')?>','Sep': '<?=__('Sep')?>','Oct': '<?=__('Oct')?>','Nov': '<?=__('Nov')?>','Dec': '<?=__('Dec')?>'};
 
 

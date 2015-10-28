@@ -116,7 +116,7 @@ class UploadHandler
             // The php.ini settings upload_max_filesize and post_max_size
             // take precedence over the following max_file_size setting:
             'max_file_size' => null,
-            'min_file_size' => 1,
+            'min_file_size' => null,
             // The maximum number of files for the upload directory:
             'max_number_of_files' => null,
             // Defines which files are handled as image files:
@@ -476,9 +476,17 @@ class UploadHandler
             1
         );
     }
+    
+    protected function sanitizeFileName($file) {
+        $file = preg_replace("/[^a-z0-9\._-]+/", '', $file);
+
+        return $file;
+    }
 
     protected function get_unique_filename($file_path, $name, $size, $type, $error,
             $index, $content_range) {
+        $name = $this->sanitizeFileName($name);
+
         while(is_dir($this->get_upload_path($name))) {
             $name = $this->upcount_name($name);
         }
@@ -1074,8 +1082,8 @@ class UploadHandler
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
         $index = null, $content_range = null) {
-  
-        
+
+
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
@@ -1162,7 +1170,7 @@ class UploadHandler
     protected function body($str) {
         echo $str;
     }
-    
+
     protected function header($str) {
         header($str);
     }

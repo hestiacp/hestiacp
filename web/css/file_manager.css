@@ -556,11 +556,12 @@ input[type="checkbox"] {
   .menu div.button { display: none; }
   .menu div.button.medium,
   .menu div.button.small { display: inline-block; }
-  .listing li .filename-holder { max-width: 20%; }
 }
 
 @media (max-width: 1080px) {
+  .listing li .filename-holder { max-width: 36%; }
   .listing li .owner { display: none; }
+  .listing li .mode { display: none; }
 }
 
 @media (max-width: 890px) {

@@ -177,19 +177,26 @@
                   }
               );
 
-              shortcut.add("a", function(evt){
-                  if (!evt.ctrlKey && !evt.shiftKey) {
-                      if ($('.l-sort__create-btn')[0]) {
-                          location.href=$('.l-sort__create-btn').attr('href');
+              $(window).bind('keypress', function(evt) {
+                  if (evt.charCode == 97) {
+                      evt.preventDefault();
+                      if (!evt.ctrlKey && !evt.shiftKey) {
+                          if ($('.l-sort__create-btn')[0]) {
+                              location.href=$('.l-sort__create-btn').attr('href');
+                          }
                       }
-                  }
-              }, {
-                  'type':             'keyup',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
+                      else {
+                          if ($('.l-unit .ch-toggle:eq(0)').attr('checked')) {
+                                $('.l-unit').removeClass('selected');
+                                $('.l-unit .ch-toggle').attr('checked', false);
+                          }
+                          else {
+                               $('.l-unit').addClass('selected');
+                               $('.l-unit .ch-toggle').attr('checked', true);
+                          }
+                      }
+                }
+              });
 
               shortcut.add("n", function(evt){
                   if (!evt.ctrlKey && !evt.shiftKey) {
@@ -205,29 +212,6 @@
                   }
               );
 
-
-              shortcut.add("Ctrl+m", function(evt){
-                console.log('ctrl+m');
-              }, {
-                  'type':             'keyup',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-              shortcut.add("m", function(evt){
-                console.log('m');
-              }, {
-                  'type':             'keyup',
-                  'propagate':        false,
-                  'disable_in_input': true,
-                  'target':           document
-                  }
-              );
-
-
-
               shortcut.add("a+1", function(){
                   location.href='/add/user/';
               }, {
@@ -237,9 +221,6 @@
                   'target':           document
                   }
               );
-
-
-
 
               shortcut.add("1", function(){
                 if(VE.tmp.form_changed){
@@ -393,17 +374,6 @@
                   }
               );
 
-              shortcut.add("Alt", function(){
-                VE.navigation.switch_menu();
-              }, {
-                  'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': false,
-                  'target':           document
-                  }
-              );
-
-
               $('.shortcuts .close').click(function(){
                 $('.shortcuts').hide();
               });
@@ -412,13 +382,21 @@
                 $('.shortcuts').toggle();
               });
 
+              $('.l-profile__notifications').click(function(){
+                $('.notification-container').toggle();
+                $('.l-profile__notifications').toggleClass('active');
+
+                left = $('.l-profile__notifications').offset().left - $('.notification-container').outerWidth() + 28;
+                $('.notification-container').css({left: left+'px'});
+              });
+        
 
             VE.navigation.init();
 
             VE.core.register();
             if (location.href.search(/list/) != -1) {
                 var shift_select_ref = $('body').finderSelect({
-					children: '.l-unit', 
+                    children: '.l-unit', 
                     'onFinish': function(evt) {
                         var ref = $(evt.target);
                         $('.l-content').find('.l-unit .ch-toggle').attr('checked', false);
@@ -462,7 +440,7 @@
       </div>
       <ul>
         <li><span class="key">n</span><?=__('Add New object')?></li>
-        <li><span class="key">&lt;Ctrl&gt; + Enter</span><?=__('Save Form')?></li>
+        <li><span class="key">Ctrl + Enter</span><?=__('Save Form')?></li>
         <li><span class="key">Backspace</span><?=__('Cancel saving form')?></li>
 
         <li class="step-top"><span class="key">1</span><?=__('Go to USER list')?></li>
@@ -479,8 +457,7 @@
 
         <li class="step-top"><span class="key bigger">&larr;</span><?=__('Move backward through top menu')?></li>
         <li><span class="key bigger">&rarr;</span><?=__('Move forward through top menu')?></li>
-        <li><span class="key">&lt;Alt&gt;</span><?=__('Switch active menu')?></li>
-        <li><span class="key">&lt;Enter&gt;</span><?=__('Enter focused element')?></li>
+        <li><span class="key">Enter</span><?=__('Enter focused element')?></li>
       </ul>
 
     </div>

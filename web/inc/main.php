@@ -89,6 +89,9 @@ if (isset($_SESSION['language'])) {
         case 'es':
             setlocale(LC_ALL, 'es_ES.utf8');
             break;
+        case 'ja':
+            setlocale(LC_ALL, 'ja_JP.utf8');
+            break;
         default:
             setlocale(LC_ALL, 'en_US.utf8');
     }
@@ -102,11 +105,7 @@ if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
     $user = $_SESSION['look'];
 }
 
-if (isset($_SESSION['user'])) {
-    get_favorites();
-}
-
-function get_favorites(){
+function get_favourites(){
     exec (VESTA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
 //    $data = json_decode(implode('', $output).'}', true);
     $data = json_decode(implode('', $output), true);

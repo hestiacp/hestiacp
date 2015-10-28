@@ -67,6 +67,9 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         $_SESSION['user'] = key($data);
         $v_user = $_SESSION['user'];
 
+        // Get user favorites
+        get_favourites();
+
         // Define language
         if (!empty($data[$v_user]['LANGUAGE'])) $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
 

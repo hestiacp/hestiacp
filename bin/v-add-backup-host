@@ -98,11 +98,7 @@ if [ "$type" != 'local' ];then
     is_password_valid
     if [ "$type" = 'sftp' ]; then
         which expect >/dev/null 2>&1
-        if [ $? -ne 0 ];then
-            echo "Error: expect utility not found"
-            log_event "$E_NOTEXIST" "$EVENT"
-            exit $E_NOTEXIST
-        fi
+        check_result $? "expect command not found"  $E_NOTEXIST
     fi
 fi
 

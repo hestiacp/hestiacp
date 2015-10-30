@@ -75,6 +75,9 @@ if [ ! -z "$WEB_BACKEND" ]; then
     fi
     get_domain_backend_values
     backend=$(get_user_value '$BACKEND_TEMPLATE')
+    if [ -z "$backend" ]; then
+        backend='default'
+    fi
 fi
 
 # Defining variables for add_config function

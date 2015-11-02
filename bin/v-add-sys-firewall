@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: add system firewall
+# opions: NONE
+#
+# The script enables firewall
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+if [ "$FIREWALL_SYSTEM" = 'iptables' ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Adding firewall directory
+mkdir -p $VESTA/data/firewall/
+
+# Adding default ruleset
+if [ ! -e "$VESTA/data/firewall/rules.conf" ]; then
+    cp $VESTA/install/rhel/7/* $VESTA/data/firewall/
+fi
+
+# Updating FIREWAL_SYSTEM value
+if [ -z "$(grep FIREWALL_SYSTEM $VESTA/conf/vesta.conf)" ]; then
+    echo "FIREWALL_SYSTEM='iptables'" >> $VESTA/conf/vesta.conf
+else
+    sed -i "s/FIREWALL_SYSTEM.*/FIREWALL_SYSTEM='iptables'/g" \
+        $VESTA/conf/vesta.conf
+fi
+
+# Updating firewall rules
+$BIN/v-update-firewall
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

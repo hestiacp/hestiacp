@@ -849,7 +849,7 @@ fi
 for pconf in $(find /etc/php* -name php.ini); do
     sed -i "s/;date.timezone =/date.timezone = $ZONE/g" $pconf
     sed -i 's%_open_tag = Off%_open_tag = On%g' $pconf
-fi
+done
 
 
 #----------------------------------------------------------#

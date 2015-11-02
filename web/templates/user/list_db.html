@@ -23,13 +23,13 @@
                 if ($data[$key]['TYPE'] == 'mysql'){
                   $mysql = 1;
 
-                  $db_admin_link = "http://".$http_host."/phpmyadmin/";
+                  $db_myadmin_link = "http://".$http_host."/phpmyadmin/";
                   if (!empty($_SESSION['DB_PMA_URL']))
                     $db_myadmin_link = $_SESSION['DB_PMA_URL'];
                 }
                 if ($data[$key]['TYPE'] == 'pgsql'){
                   $pgsql = 1;
-                  $db_admin_link = "http://".$http_host."/phppgadmin/";
+                  $db_pgadmin_link = "http://".$http_host."/phppgadmin/";
                   if (!empty($_SESSION['DB_PGA_URL']))
                     $db_pgadmin_link = $_SESSION['DB_PGA_URL'];
                 }
@@ -41,6 +41,7 @@
                 echo '<td class="step-right"><a class="vst" href="'.$db_pgadmin_link.'" target="_blank">phpPgAdmin</td>';
               }
             ?>
+
               <td class="l-sort-toolbar__search-box step-left">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -61,8 +62,6 @@
                 <div class="l-select">
                   <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
-                    <option value="suspend"><?=__('suspend')?></option>
-                    <option value="unsuspend"><?=__('unsuspend')?></option>
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
@@ -121,15 +120,6 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__edit"><a href="/edit/db/?database=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-              </div>
               <div class="actions-panel__col actions-panel__delete">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>

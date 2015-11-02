@@ -17,12 +17,11 @@
               </td>
               <td>
                 <form action="/bulk/dns/" method="post">
+                <input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>" />
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
-                  <select name="" id="">
+                  <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
-                    <option value="suspend"><?php print __('suspend');?></option>
-                    <option value="unsuspend"><?php print __('unsuspend');?></option>
                     <option value="delete"><?php print __('delete');?></option>
                   </select>
                 </div>
@@ -71,8 +70,8 @@
  v_unit_id="<?=$key?>" v_section="dns_rec">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="check" value="check<?php echo $i ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
+            <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" name="record[]" value="<?=$data[$key]['ID']?>">
+            <label for="check<?=$data[$key]['ID']?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">

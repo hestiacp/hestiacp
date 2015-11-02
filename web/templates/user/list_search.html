@@ -125,39 +125,6 @@
                   <div class="actions-panel__col actions-panel__logs"><a href="http://<?=$data[$key]['RESULT']?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a></div>
               <? } ?>
 
-
-              <?
-                if ($data[$key]['KEY'] == 'RECORD') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_RECORD_CONFIRMATION';
-                }
-                if ($data[$key]['KEY'] == 'ACCOUNT') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_USER_CONFIRMATION';
-                }
-                if ($data[$key]['KEY'] == 'JOB') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_CRON_CONFIRMATION';
-                }
-                  if ($data[$key]['KEY'] == 'DATABASE') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_DATABASE_CONFIRMATION';
-                }
-                if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_DOMAIN_CONFIRMATION';
-                }
-              ?>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="<?=$spnd_lnk?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($cnfrm, $data[$key]['RESULT'])?></p>
-                  </div>
-                </a>
-              </div>
-
               <?
                 if ($data[$key]['KEY'] == 'RECORD') {
                   $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];

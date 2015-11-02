@@ -35,11 +35,9 @@ if ($_SESSION['user'] == 'admin') {
 
 foreach ($domain as $value) {
     $value = escapeshellarg($value);
-    echo VESTA_CMD.$cmd." ".$user." ".$value." no";
     exec (VESTA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
     $restart='yes';
 }
-
 
 if (isset($restart)) {
     exec (VESTA_CMD."v-restart-web", $output, $return_var);

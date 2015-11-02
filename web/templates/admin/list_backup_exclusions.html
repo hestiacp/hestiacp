@@ -11,7 +11,7 @@
                   <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
                 </form>
               </td>
-              <td class="toggle-all">
+              <!--td class="toggle-all">
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
@@ -25,7 +25,7 @@
                   </select>
                 </div>
                 <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td>
+              </td-->
             </tr>
           </table>
         </div>
@@ -49,12 +49,12 @@
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="check" value="check<?php echo $i ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
+            <!--input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="check" value="check<?php echo $i ?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label -->
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel__col actions-panel__delete">
+            <!-- div class="actions-panel__col actions-panel__delete">
               <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                 <?=__('delete')?> <i class="do_delete"></i>
                 <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -62,7 +62,7 @@
                   <p class="confirmation"><?=__('DELETE_BACKUP_CONFIRMATION',$key)?></p>
                 </div>
               </a>
-            </div>
+            </div-->
 
             <!-- /.actiona-panel -->
           </div>

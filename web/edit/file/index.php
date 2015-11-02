@@ -15,6 +15,9 @@ if (empty($panel)) {
     $panel = json_decode(implode('', $output), true);
 }
 */
+
+
+
 /*
 // Check user session
 if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
@@ -23,6 +26,14 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     exit;
 }
 */
+
+// Check module activation
+if (!$_SESSION['FILEMANAGER_KEY']) {
+    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
+    header("Location: /login/");
+    exit;
+}
+
 
 ?>
 

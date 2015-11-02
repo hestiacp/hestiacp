@@ -267,10 +267,13 @@
                 var src = $(item).find('.source').val();
                 src = $.parseJSON(src);
                 var tab = FM.getTabLetter(FM.CURRENT_TAB);
+
                 if (FM.itemIsArchieve(src)) {
-                    $('.menu-'+tab+' .extract-btn').show();
-                }
-                else {
+                    if($('.menu-'+tab+' .archive.button').first().is(':visible'))
+                        $('.menu-'+tab+' .extract-btn').first().show();
+                    else
+                        $('.menu-'+tab+' .extract-btn.small').show();
+                } else {
                     $('.menu-'+tab+' .extract-btn').hide();
                 }
             }

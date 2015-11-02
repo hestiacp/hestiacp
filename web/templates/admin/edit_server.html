@@ -112,21 +112,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('FileSystem Disk Quota');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_quota">
-                                        <option value='no'><?php print __('no'); ?></option>
-                                        <option value='yes' <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
-
-                                    </select>
-                                    <br><br>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td class="vst-text input-label step-top">
                                     <a href="javascript:elementHideShow('web');" class="vst-text">
                                         <b><?php print __('WEB');?> <img src="/images/arrow.png"></b>
@@ -624,6 +609,34 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('FileSystem Disk Quota');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_quota">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Firewall');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_firewall">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['FIREWALL_SYSTEM'] == 'iptables') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td class="vst-text">
                                                 <?php print __('Reseller Role') ?> 
                                             </td>
@@ -631,32 +644,6 @@
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_reseller" disabled="disabled">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                </select>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text">
-                                                <?php print __('Web Config Editor') ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_conf_editor" disabled="disabled">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                </select>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text">
-                                                <?php print __('Template Manager') ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_template_manager" disabled="disabled">
                                                     <option value='no'><?php print __('no'); ?></option>
                                                 </select>
                                                 <br><br>
@@ -684,21 +671,21 @@
                                             <td>
                                                 <select class="vst-list" name="v_sftp">
                                                     <?
-                                                        if($_SESSION['SFTP_KEY']){
+                                                        if($_SESSION['SFTPJAIL_KEY']){
                                                             echo '<option value="cancel">'.__('Disable and Cancel Licence').'</option>';
                                                         } else {
                                                             echo '<option value="no">'.__('no').'</option>';
                                                         }
                                                      ?>
 
-                                                    <option value='yes' <? if($_GET['lead'] == 'sftp' || $_SESSION['SFTP_KEY'] != '') echo 'selected="selected"'; ?>><?php print __('yes'); ?></option>
+                                                    <option value='yes' <? if($_GET['lead'] == 'sftp' || $_SESSION['SFTPJAIL_KEY'] != '') echo 'selected="selected"'; ?>><?php print __('yes'); ?></option>
                                                 </select>
                                                 <br><br>
-                                                <div class="sftp description" <? if($_GET['lead'] != 'sftp' && !$_SESSION['SFTP_KEY']) echo 'style="display:none"'; ?>>
+                                                <div class="sftp description" <? if($_GET['lead'] != 'sftp' && !$_SESSION['SFTPJAIL_KEY']) echo 'style="display:none"'; ?>>
                                                     <?
 
-                                                    if($_GET['sftp_licence_key'] != '' || $_SESSION['SFTP_KEY']){
-                                                        $licence_key = $_GET['sftp_licence_key'] != '' ? $_GET['sftp_licence_key'] : $_SESSION['SFTP_KEY'];
+                                                    if($_GET['sftp_licence_key'] != '' || $_SESSION['SFTPJAIL_KEY']){
+                                                        $licence_key = $_GET['sftp_licence_key'] != '' ? $_GET['sftp_licence_key'] : $_SESSION['SFTPJAIL_KEY'];
                                                         echo 'Restrict users so that they cannot use SSH and access only their home directory.
                                                             <div class="licence">
                                                                 Licence Key: <input type="text" class="vst-input" name="v_sftp_licence" value="'.$licence_key.'" /><br>

@@ -157,6 +157,25 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Set firewall support
+    if (empty($_SESSION['error_msg'])) {
+        if ($_SESSION['FIREWALL_SYSTEM'] == 'iptables') $v_firewall = 'yes';
+        if ($_SESSION['FIREWALL_SYSTEM'] != 'iptables') $v_firewall = 'no';
+        if ((!empty($_POST['v_firewall'])) && ($v_firewall != $_POST['v_firewall'])) {
+            if($_POST['v_firewall'] == 'yes') {
+                exec (VESTA_CMD."v-add-sys-firewall", $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) $_SESSION['FIREWALL_SYSTEM'] = 'iptables';
+            } else {
+                exec (VESTA_CMD."v-delete-sys-firewall", $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) $_SESSION['FIREWALL_SYSTEM'] = '';
+            }
+        }
+    }
+
     // Update mysql pasword
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_mysql_password'])) {
@@ -336,7 +355,7 @@ if (!empty($_POST['save'])) {
 
     // activating sftp licence
     if (empty($_SESSION['error_msg'])) {
-        if($_SESSION['SFTP_KEY'] != $_POST['v_sftp_licence'] && $_POST['v_sftp'] == 'yes'){
+        if($_SESSION['SFTPJAIL_KEY'] != $_POST['v_sftp_licence'] && $_POST['v_sftp'] == 'yes'){
             $module = 'sftpjail';
             $licence_key = escapeshellarg($_POST['v_sftp_licence']);
             exec (VESTA_CMD."v-activate-vesta-license ".$module." ".$licence_key, $output, $return_var);
@@ -344,22 +363,22 @@ if (!empty($_POST['save'])) {
             unset($output);
             if (empty($_SESSION['error_msg'])) {
                 $_SESSION['ok_msg'] = __('Licence Activated');
-                $_SESSION['SFTP_KEY'] = $_POST['v_sftp_licence'];
+                $_SESSION['SFTPJAIL_KEY'] = $_POST['v_sftp_licence'];
             }
         }
     }
 
     // cancel sftp licence
     if (empty($_SESSION['error_msg'])) {
-        if($_POST['v_sftp'] == 'cancel' && $_SESSION['SFTP_KEY']){
+        if($_POST['v_sftp'] == 'cancel' && $_SESSION['SFTPJAIL_KEY']){
             $module = 'sftpjail';
-            $licence_key = escapeshellarg($_SESSION['SFTP_KEY']);
+            $licence_key = escapeshellarg($_SESSION['SFTPJAIL_KEY']);
             exec (VESTA_CMD."v-deactivate-vesta-license ".$module." ".$licence_key, $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
                 $_SESSION['ok_msg'] = __('Licence Deactivated');
-                unset($_SESSION['SFTP_KEY']);
+                unset($_SESSION['SFTPJAIL_KEY']);
             }
         }
     }

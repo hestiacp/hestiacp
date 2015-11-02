@@ -648,7 +648,12 @@ FM.generate_listing = function(reply, box) {
 
         o.filetype = FM.getFileType(o.name);
         if(FM.IMG_FILETYPES.indexOf(o.filetype) >= 0 && o.filetype.length > 0) {
-            FM.IMAGES[tab][FM.IMAGES[tab].length] = {'img': "/view/file/?path=/home/admin/"+o.name+"&raw=true", 'thumb': "/view/file/?path=/home/admin/"+o.name+"&raw=true", 'id': 'img-'+i};
+            FM.IMAGES[tab][FM.IMAGES[tab].length++] = 
+            {
+                'img': "/view/file/?path="+o.full_path+"&raw=true", 
+                'thumb': "/view/file/?path="+o.full_path+"&raw=true", 
+                'id': 'img-'+i
+            };
             cl_act = 'onClick="FM.fotoramaOpen(\'' + tab + '\', \'img-' + i +'\')"';
         }
 
@@ -717,7 +722,7 @@ FM.fotoramaOpen = function(tab, img_index) {
     });
 
     $('.fotorama').on('fotorama:fullscreenexit', function (e, fotorama) {
-    $('.fotorama').data('fotorama').destroy();
+        $('.fotorama').data('fotorama').destroy();
     });
 
     $('.fotorama').fotorama().data('fotorama').requestFullScreen();

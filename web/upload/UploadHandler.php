@@ -478,7 +478,7 @@ class UploadHandler
     }
     
     protected function sanitizeFileName($file) {
-        $file = preg_replace("/[^a-z0-9\._-]+/", '', $file);
+        $file = preg_replace("/[^A-Za-z0-9\._-]+/", '', $file);
 
         return $file;
     }

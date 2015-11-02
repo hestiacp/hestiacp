@@ -42,11 +42,15 @@ for str in $modules; do
     license=$(echo "$str" |cut -f 2 -d \')
     if [ ! -z "$license" ]; then
         v_host='https://vestacp.com/checkout'
-        answer=$(curl -s $v_host/check.php?licence_key=$license)
+        answer=$(curl -s "$v_host/check.php?licence_key=$license&module=$module")
         check_result $? "cant' connect to vestacp.com " 0
+        echo "$module $license $answer"
         if [[ "$answer" != '0' ]]; then
-            sed -i "s/${module}_KEY=.*/${module}_KEY=''/g" $VESTA/conf/vesta.conf
-            echo "deactivating $module"
+            if [ "$module" = 'SFTPJAIL' ]; then
+                setsid $BIN/v-delete-sys-sftp-jail 2>/dev/null
+            fi
+            sed -i "s/${module}_KEY=.*/${module}_KEY=''/g" \
+                $VESTA/conf/vesta.conf
         fi
     fi
 done

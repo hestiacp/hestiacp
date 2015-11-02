@@ -56,6 +56,11 @@ else
     sed -i "s/${module}_KEY=.*/${module}_KEY='$license'/g" $VESTA/conf/vesta.conf
 fi
 
+# Activating sftpjail
+if [ "$module" = 'SFTPJAIL' ]; then
+    setsid $BIN/v-add-sys-sftp-jail 2>/dev/null
+fi
+
 # Logging
 log_event "$OK" "$EVENT"
 

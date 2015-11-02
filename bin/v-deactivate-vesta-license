@@ -37,7 +37,6 @@ check_args '2' "$#" 'MODULE LICENSE'
 v_host='https://vestacp.com/checkout'
 answer=$(curl -s $v_host/cancel.php?licence_key=$license)
 check_result $? "cant' connect to vestacp.com " $E_CONNECT
-echo $answer
 
 # Checking server answer
 if [[ "$answer" != '0' ]]; then
@@ -53,6 +52,11 @@ fi
 # Updating vesta.conf
 if [ ! -z "$(grep "${module}_KEY" $VESTA/conf/vesta.conf)" ]; then
     sed -i "s/${module}_KEY=.*/${module}_KEY=''/g" $VESTA/conf/vesta.conf
+fi
+
+# Deactivating sftpjail
+if [ "$module" = 'SFTPJAIL' ]; then
+    setsid $BIN/v-delete-sys-sftp-jail 2>/dev/null
 fi
 
 # Logging

@@ -1,7 +1,7 @@
 <?php
 // Init
-error_reporting(NULL);
-ob_start();
+//error_reporting(NULL);
+//ob_start();
 session_start();
 $TAB = 'SERVER';
 
@@ -332,6 +332,67 @@ if (!empty($_POST['save'])) {
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = __('Changes has been saved.');
+    }
+
+    // activating sftp licence
+    if (empty($_SESSION['error_msg'])) {
+        if($_SESSION['SFTP_KEY'] != $_POST['v_sftp_licence'] && $_POST['v_sftp'] == 'yes'){
+            $module = 'sftpjail';
+            $licence_key = escapeshellarg($_POST['v_sftp_licence']);
+            exec (VESTA_CMD."v-activate-vesta-license ".$module." ".$licence_key, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
+                $_SESSION['ok_msg'] = __('Licence Activated');
+                $_SESSION['SFTP_KEY'] = $_POST['v_sftp_licence'];
+            }
+        }
+    }
+
+    // cancel sftp licence
+    if (empty($_SESSION['error_msg'])) {
+        if($_POST['v_sftp'] == 'cancel' && $_SESSION['SFTP_KEY']){
+            $module = 'sftpjail';
+            $licence_key = escapeshellarg($_SESSION['SFTP_KEY']);
+            exec (VESTA_CMD."v-deactivate-vesta-license ".$module." ".$licence_key, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
+                $_SESSION['ok_msg'] = __('Licence Deactivated');
+                unset($_SESSION['SFTP_KEY']);
+            }
+        }
+    }
+
+
+    // activating filemanager licence
+    if (empty($_SESSION['error_msg'])) {
+        if($_SESSION['FILEMANAGER_KEY'] != $_POST['v_filemanager_licence'] && $_POST['v_filemanager'] == 'yes'){
+            $module = 'filemanager';
+            $licence_key = escapeshellarg($_POST['v_filemanager_licence']);
+            exec (VESTA_CMD."v-activate-vesta-license ".$module." ".$licence_key, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
+                $_SESSION['ok_msg'] = __('Licence Activated');
+                $_SESSION['FILEMANAGER_KEY'] = $_POST['v_filemanager_licence'];
+            }
+        }
+    }
+
+    // cancel filemanager licence
+    if (empty($_SESSION['error_msg'])) {
+        if($_POST['v_filemanager'] == 'cancel' && $_SESSION['FILEMANAGER_KEY']){
+            $module = 'filemanager';
+            $licence_key = escapeshellarg($_SESSION['FILEMANAGER_KEY']);
+            exec (VESTA_CMD."v-deactivate-vesta-license ".$module." ".$licence_key, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
+                $_SESSION['ok_msg'] = __('Licence Deactivated');
+                unset($_SESSION['FILEMANAGER_KEY']);
+            }
+        }
     }
 }
 

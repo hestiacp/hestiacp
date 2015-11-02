@@ -8,6 +8,7 @@ var VE = { // Vesta Events object
             menu_active_selector: '.l-stat__col--active'
         }
     }, // menu and element navigation functions
+    notifications: {},
     callbacks: { // events callback functions
         click: {},
         mouseover: {},
@@ -352,6 +353,57 @@ VE.navigation.switch_menu = function(position){
         }
     }
 }
+
+VE.notifications.get_list = function(){
+/// TODO get notifications only once
+    $.ajax({
+        url: "/list/notifications/?ajax=1",
+        dataType: "json"
+    }).done(function(data) {
+        var acc = [];
+
+        $.each(data, function(i, elm){
+            var tpl = Tpl.get('notification', 'WEB');
+            if(elm.ACK == 'no')
+                tpl.set(':UNSEEN', 'unseen');
+            else
+                tpl.set(':UNSEEN', '');
+
+            tpl.set(':ID', elm.ID);
+            tpl.set(':TYPE', elm.TYPE);
+            tpl.set(':TOPIC', elm.TOPIC);
+            tpl.set(':NOTICE', elm.NOTICE);
+            acc.push(tpl.finalize());
+        });
+
+        $('.notification-container').html(acc.done()).show();
+
+        $('.notification-container .mark-seen').click(function(event){
+            /// TODO add token
+            VE.notifications.mark_seen($(event.target).attr('id').replace("notification-", ""));
+//            VE.notifications.delete($(event.target).attr('id').replace("notification-", ""));
+        });
+
+    });
+}
+
+
+VE.notifications.delete = function(id){
+    $('#notification-'+id).parents('li').remove();
+    $.ajax({
+        url: "/delete/notification/?delete=1&notification_id="+id+"&token="+$('#token').attr('token')
+    });
+}
+
+VE.notifications.mark_seen = function(id){
+    $('#notification-'+id).parents('li').removeClass('unseen');
+    $.ajax({
+        url: "/delete/notification/?notification_id="+id+"&token="+$('#token').attr('token')
+    });
+    if($('.notification-container .unseen').length == 0)
+        $('.l-profile__notifications').removeClass('updates');
+}
+
 
 
 

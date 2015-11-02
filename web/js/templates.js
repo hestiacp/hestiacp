@@ -4,7 +4,14 @@
  */
 App.Templates.html = {
     WEB: {
-        hint: ['']
+        hint: [''],
+        notification: [
+                    '<li class="~!:UNSEEN~!"><span class="mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
+                        <span class="title"><span class="icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
+                        ~!:NOTICE~!\
+                    </li>'
+        ]
+
     },
     // file manager
     //

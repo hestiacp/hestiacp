@@ -383,13 +383,17 @@
               });
 
               $('.l-profile__notifications').click(function(){
-                $('.notification-container').toggle();
-                $('.l-profile__notifications').toggleClass('active');
+                if(!$('.l-profile__notifications').hasClass('active')){
+                    VE.notifications.get_list();
+                    $('.l-profile__notifications').addClass('active');
+                    left = $('.l-profile__notifications').offset().left - $('.notification-container').outerWidth() + 28;
+                    $('.notification-container').css({left: left+'px'});
 
-                left = $('.l-profile__notifications').offset().left - $('.notification-container').outerWidth() + 28;
-                $('.notification-container').css({left: left+'px'});
+                } else {
+                    $('.notification-container').hide();
+                    $('.l-profile__notifications').removeClass('active');
+                }
               });
-        
 
             VE.navigation.init();
 

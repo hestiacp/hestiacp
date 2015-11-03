@@ -20,7 +20,7 @@
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <input type="hidden" name="backup" value="<?=htmlentities($_GET['backup']); ?>">
                 <div class="l-select">
-                  <select name="" id="">
+                  <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
                     <option value="restore"><?php print __('restore') ?></option>
                   </select>
@@ -57,8 +57,8 @@
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="check" value="check<?php echo $i ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
+            <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="web[]" value="<?=$key?>">
+            <label for="check<?=$i++?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
@@ -108,8 +108,8 @@
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check2" type="checkbox" name="check" value="check2">
-            <label for="check2" class="check-label"></label>
+            <input id="check2<?=$i?>" type="checkbox" name="mail[]" value="<?=$key?>">
+            <label for="check2<?=$i++?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
@@ -156,8 +156,8 @@
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check2" type="checkbox" name="check" value="check2">
-            <label for="check2" class="check-label"></label>
+            <input id="check3<?=$i?>" type="checkbox" name="dns[]" value="<?=$key?>">
+            <label for="check3<?=$i++?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
@@ -203,8 +203,8 @@
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check2" type="checkbox" name="check" value="check2">
-            <label for="check2" class="check-label"></label>
+            <input id="check4<?=$i?>" type="checkbox" name="db[]" value="<?=$key?>">
+            <label for="check4<?=$i++?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
@@ -251,8 +251,8 @@
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check2" type="checkbox" name="check" value="check2">
-            <label for="check2" class="check-label"></label>
+            <input id="check5<?=$i?>" type="checkbox" name="check" value="<?=$key?>">
+            <label for="check5<?=$i++?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
@@ -299,8 +299,8 @@
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check2" type="checkbox" name="check" value="check2">
-            <label for="check2" class="check-label"></label>
+            <input id="check6<?=$i?>" type="checkbox" name="udir[]" value="<?=$key?>">
+            <label for="check6<?=$i++?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">

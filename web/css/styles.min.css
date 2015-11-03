@@ -2848,13 +2848,14 @@ form#vstobjects.suspended {
 }
 
 .search-input {
+  background-color: #fff;
   border: 1px solid #ddd;
   height: 21px;
   line-height: 28px;
   padding-left: 7px;
   float: left;
-  width: 0px;
-  visibility: hidden;
+  width: 74px;
+/*  visibility: hidden;*/
   -webkit-transition: width .2s ease-out;
   -moz-transition: width .2s ease-out;
   -o-transition: width .2s ease-out;
@@ -2865,9 +2866,9 @@ form#vstobjects.suspended {
   visibility: visible;
 }
 .search-input:focus {
-  background-color: #d7f9ff;
-  border-color: #55c9c0;
-  color: #333;
+//  background-color: #e8fcff;
+//  border-color: #75c9c2;
+//  color: #333;
 }
 
 .float-left {

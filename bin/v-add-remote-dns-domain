@@ -44,7 +44,7 @@ remote_dns_health_check
 str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf 2>/dev/null)
 if [ -z "$str" ]; then
     pipe="$VESTA/data/queue/dns-cluster.pipe"
-    queue_str=$(grep -n "$SCRIPT $1 $2 no$" $pipe |cut -f1 -d: |head -n1)
+    queue_str=$(grep -n "$SCRIPT $1 $2 " $pipe |cut -f1 -d: |head -n1)
     if [ ! -z "$queue_str" ]; then
         sed -i "$queue_str d"  $pipe
     fi

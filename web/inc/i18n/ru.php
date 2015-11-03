@@ -589,6 +589,17 @@ $LANG['ru'] = array(
     'Append File to the Current Selection' => 'Добавить файл к выбранным',
     'Select All Files' => 'Выбрать все файлы',
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' => 
-    'горячие клавиши заимствованы из великолепного файл менеджера GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>'
+        'горячие клавиши заимствованы из великолепного файл менеджера GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
+
+    'Licence Key' => 'Лицензионный Ключ',
+    'Enter License Key' => 'Внесите Лицензионный Ключ',
+    'Buy Licence' => 'Купить Лицензионный Ключ',
+    'Buy Lifetime License' => 'Купить Бесконечный Лицензионный Ключ ',
+    'Disable and Cancel Licence' => 'Отключить и Закрыть Лицензию',
+    'Licence Activated' => 'Лицензия Активирована',
+    'Licence Deactivated' => 'Лицензия Отключена',
+    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restrict users so that they cannot use SSH and access only their home directory.',
+    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
+    'This is a commercial module, you would need to purchace license key to enable it.' => 'Это коммерческий модуль, чтобы включить его, вам необходимо приобрести лицензию.'
 
 );

@@ -2345,7 +2345,7 @@ label {
 
 .vst-input:disabled,
 .vst-list:disabled {
-  background-color: #ebebeb;
+  background-color: #e0e0e0;
 }
 .vst-input:focus:disabled {
   border-color: #f1f1f1;

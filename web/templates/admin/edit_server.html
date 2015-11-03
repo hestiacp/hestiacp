@@ -609,7 +609,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text input-label">
+                                            <td class="vst-text">
                                                 <?php print __('FileSystem Disk Quota');?>
                                             </td>
                                         </tr>
@@ -683,27 +683,24 @@
                                                 <br><br>
                                                 <div class="sftp description" <? if($_GET['lead'] != 'sftp' && !$_SESSION['SFTPJAIL_KEY']) echo 'style="display:none"'; ?>>
                                                     <?
-
                                                     if($_GET['sftp_licence_key'] != '' || $_SESSION['SFTPJAIL_KEY']){
                                                         $licence_key = $_GET['sftp_licence_key'] != '' ? $_GET['sftp_licence_key'] : $_SESSION['SFTPJAIL_KEY'];
-                                                        echo 'Restrict users so that they cannot use SSH and access only their home directory.
+                                                        echo __('Restrict users so that they cannot use SSH and access only their home directory.').'
                                                             <div class="licence">
-                                                                Licence Key: <input type="text" class="vst-input" name="v_sftp_licence" value="'.$licence_key.'" /><br>
+                                                                '.__('Licence Key').': <input type="text" class="vst-input" name="v_sftp_licence" value="'.$licence_key.'" /><br>
                                                             </div>';
                                                     } else {
-                                                        echo '
-                                                            Restrict users so that they cannot use SSH and access only their home directory.
-                                                            This is a commercial module, you would need to purchace license key to enable it.
-
-                                                            <div class="licence">
-                                                                Enter License Key: <input type="text" class="vst-input" name="v_sftp_licence" /><br>
+                                                        echo 
+                                                            __('Restrict users so that they cannot use SSH and access only their home directory.').' '.__('This is a commercial module, you would need to purchace license key to enable it.').
+                                                            '<div class="licence">
+                                                                '.__('Enter License Key').': <input type="text" class="vst-input" name="v_sftp_licence" /><br>
                                                             </div>
                                                             <ul>
                                                                 <li>
-                                                                    <a href="https://vestacp.com/checkout/2co.php?demo=Y&product_id=6&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">Buy Licence 1$/month</a>
+                                                                    <a href="https://vestacp.com/checkout/2co.php?demo=Y&product_id=6&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">'.__('Buy Licence').' 1$/'.__('month').'</a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="https://vestacp.com/checkout/2co.php?demo=Y&product_id=9&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">Buy Lifetime License 18$</a>
+                                                                    <a href="https://vestacp.com/checkout/2co.php?demo=Y&product_id=9&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">'.__('Buy Lifetime License').' 18$</a>
                                                                 </li>
                                                             </ul>
                                                             <span class="twoco">2Checkout.com Inc. (Ohio, USA) is a payment facilitator for goods and services provided by vestacp.com.</span>';
@@ -734,28 +731,24 @@
                                                 <br><br>
                                                 <div class="filemanager description" <? if($_GET['lead'] != 'filemanager' && !$_SESSION['FILEMANAGER_KEY']) echo 'style="display:none"'; ?>>
                                                     <?
-
                                                     if($_GET['filemanager_licence_key'] != '' || $_SESSION['FILEMANAGER_KEY']){
                                                         $licence_key = $_GET['filemanager_licence_key'] != '' ? $_GET['filemanager_licence_key'] : $_SESSION['FILEMANAGER_KEY'];
-                                                        echo '
-                                                            Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.
-
-                                                            <div class="licence">
-                                                                Licence Key: <input type="text" class="vst-input" name="v_filemanager_licence" value="'.$licence_key.'" /><br>
+                                                        echo __('Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.').
+                                                            '<div class="licence">
+                                                                '.__('Licence Key').': <input type="text" class="vst-input" name="v_filemanager_licence" value="'.$licence_key.'" /><br>
                                                             </div>';
                                                     } else {
-                                                        echo '
-                                                            Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.
-                                                            This is a commercial module, you would need to purchace license key to enable it.
-                                                            <div class="licence">
-                                                                Enter Licence Key: <input type="text" class="vst-input" name="v_filemanager_licence" /><br>
+                                                        echo __('Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.').' '.
+                                                            __('This is a commercial module, you would need to purchace license key to enable it.').
+                                                            '<div class="licence">
+                                                                '.__('Enter Licence Key').': <input type="text" class="vst-input" name="v_filemanager_licence" /><br>
                                                             </div>
                                                             <ul>
                                                                 <li>
-                                                                    <a href="https://vestacp.com/checkout/2co.php?demo=Y&product_id=7&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">Buy Licence 3$/month</a>
+                                                                    <a href="https://vestacp.com/checkout/2co.php?demo=Y&product_id=7&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">'.__('Buy Licence').' 3$/'.__('month').'</a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="https://vestacp.com/checkout/2co.php?demo=Y&product_id=8&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">Buy Lifetime Licence 50$</a>
+                                                                    <a href="https://vestacp.com/checkout/2co.php?demo=Y&product_id=8&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">'.__('Buy Lifetime Licence').' 50$</a>
                                                                 </li>
                                                             </ul>
                                                             <span class="twoco">2Checkout.com Inc. (Ohio, USA) is a payment facilitator for goods and services provided by vestacp.com.</span>';

@@ -424,12 +424,19 @@
                         }
                     }
                 });
+
                 $('table').on('mousedown', 'td', function(e) {
                     if (e.ctrlKey) {
                         e.preventDefault();
                     }
                 });
             }
+
+            $(document).click(function(evt){
+                //close notification popup
+                $('.notification-container').hide();
+                $('.l-profile__notifications').removeClass('active');
+             });
         });
     </script>
 

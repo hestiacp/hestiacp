@@ -379,6 +379,11 @@ FM.isItemDir = function(item) {
     return item.type == 'd';
 }
 
+FM.isItemLink = function(item) {
+    return item.type == 'l';
+}
+
+
 FM.getFileType = function(name) {
     var filetype = name.split('.').pop().toLowerCase();
     return filetype.length > 6 || name.indexOf('.') <= 0 ? '' : filetype;
@@ -393,7 +398,7 @@ FM.sortItems = function(items, box) {
 
     $.each(items, function(i, o) {
         if (i > 0) { // i == 0 means first .. element in list
-            if (FM.isItemFile(o)) {
+            if (FM.isItemFile(o) || FM.isItemLink(o)) {
                 files.push(o);
             }
             else {
@@ -595,7 +600,7 @@ FM.toggleSubContextMenu = function(ref) {
 FM.generate_listing = function(reply, box) {
     var tab = FM.getTabLetter(box);
     FM.IMAGES[tab] = [];
-    
+
     var acc = [];
     if (reply.length == 0) {
         reply = [{
@@ -608,7 +613,7 @@ FM.generate_listing = function(reply, box) {
             date: ''
         }];
     }
-    
+
     var path_arr = FM['TAB_'+tab+'_CURRENT_PATH'].split('/');
     path_arr = path_arr.filter(function(v){return v!==''});
     path_arr.pop();
@@ -616,7 +621,7 @@ FM.generate_listing = function(reply, box) {
     if (back_path == FM.ROOT_DIR || path_arr.length < FM.ROOT_DIR.split('/').length) {
         back_path = '';//FM.ROOT_DIR;
     }
-    
+
     reply = FM.sortItems(reply, box);
 
     $(reply).each(function(i, o) {
@@ -624,7 +629,7 @@ FM.generate_listing = function(reply, box) {
         var cl_act = o.type == 'd' ? 'onClick="FM.open(\'' + path + '\', \'' + box + '\')"' : 'onClick="FM.openFile(\''+path+'\', \'' + box + '\', this)"';
         //var cl_act = o.type == 'd' ? 'onDblClick="FM.open(\'' + path + '\', \'' + box + '\')"' : 'onDblClick="FM.openFile(\''+path+'\', \'' + box + '\', this)"';
         //var cl_act = '';
-        
+
         if (o.name == '') {
             path = FM.formatPath(back_path);
             cl_act = o.type == 'd' ? 'onClick="FM.open(\'' + path + '\', \'' + box + '\')"' : 'onClick="FM.openFile(\''+path+'\', \'' + box + '\', this)"';
@@ -641,7 +646,7 @@ FM.generate_listing = function(reply, box) {
 
         var time = o.time.split('.');
         time = time[0];
-        
+
         var psDate = new Date(o.date);
 
         o.full_path = path;
@@ -682,6 +687,9 @@ FM.generate_listing = function(reply, box) {
 
         if (FM.isItemDir(o)) {
             tpl.set(':ITEM_TYPE', 'filetype-dir');
+        }
+        else if (FM.isItemLink(o)) {
+            tpl.set(':ITEM_TYPE', 'filetype-link');
         }
         else {
             tpl.set(':ITEM_TYPE', 'filetype-' + o.filetype);

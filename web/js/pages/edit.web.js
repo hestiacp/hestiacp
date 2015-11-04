@@ -3,11 +3,11 @@ App.Actions.WEB.update_ftp_username_hint = function(elm, hint) {
         $(elm).parent().find('.hint').html('');
     }
 
-    //hint = hint.replace(/[^\w\d]/gi, '');
-
     if (hint.indexOf(GLOBAL.FTP_USER_PREFIX) == 0) {
         hint = hint.slice(GLOBAL.FTP_USER_PREFIX.length, hint.length);
     }
+    hint = hint.replace(/[^\w\d]/gi, '');
+
     $(elm).parent().find('.v-ftp-user').val(hint);
     $(elm).parent().find('.hint').text(GLOBAL.FTP_USER_PREFIX + hint);
 }

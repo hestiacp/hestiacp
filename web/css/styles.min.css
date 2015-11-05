@@ -1278,13 +1278,11 @@ div.l-content > div.l-separator:nth-of-type(4) {
   overflow: hidden;
   font-size: 13px;
 }
-
-.units div:last-child {  
-  border-bottom: none !important;
-}
-
 .units .l-unit {
   border-bottom: 1px solid #ddd;
+}
+.units > div:last-child {
+  border-bottom: none;
 }
 
 

@@ -334,9 +334,64 @@
       <!-- div class="l-separator"></div-->
       <!-- /.l-separator -->
       <? }} ?>
+
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check7<?=$i?>" type="checkbox" name="cron" value="<?=$i?>">
+            <label for="check7<?=$i++?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
+            <div class="actions-panel__col actions-panel__update"><a href="/schedule/restore/?backup=<?=$backup?>&type=cron"><?=__('restore')?> <i></i></a></div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__stats">
+            <table>
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('cron')?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b></b></div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <!-- div class="l-separator"></div-->
+      <!-- /.l-separator -->
     </div>
+
 
 
     <div id="vstobjects">
       <div class="l-separator"></div>
+      <div class="l-center">
+        <div class="l-unit-ft">
+          <table class='data'></table>
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix">
+            <?php
+              if ( $i == 1) {
+                echo __('1 item');
+              } else {
+                echo __('%s items',$i);
+              }
+            ?>
+          </div>
+        </div>
+      </div>
     </div>

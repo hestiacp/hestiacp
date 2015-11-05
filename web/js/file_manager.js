@@ -99,6 +99,10 @@ FM.showError = function(type, message) {
 
             return;
         }
+        
+        if (ref.find('.results').length > 0) {
+            ref.find('.results').html(message);
+        }
     }
     else {
         FM.popupClose();
@@ -750,7 +754,7 @@ FM.bulkOperation = function(ref) {
 }
 
 FM.checkBulkStatus = function(bulkStatuses, acc) {
-    var status = false;
+    var status = true;
     var msg    = '';
     if (bulkStatuses.length == acc.length) {
         $.each(bulkStatuses, function(i, o) {
@@ -759,18 +763,24 @@ FM.checkBulkStatus = function(bulkStatuses, acc) {
             }
         });
 
-        if (msg == '') {
-            status = true;
+        if (msg != '') {
+            status = false;
         }
     }
 
     if (status == true) {
-        $('#popup .results').html(App.Constants.FM_DONE);
-        $('.controls').html('<p class="ok" onClick="FM.bulkPopupClose();">'+App.Constants.FM_DONE+'</p>');
+        //$('#popup .results').html(App.Constants.FM_DONE);
+        //$('.controls').html('<p class="ok" onClick="FM.bulkPopupClose();">'+App.Constants.FM_DONE+'</p>');
+        FM.popupClose();
+        
+        var box = FM['TAB_' + tab];
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+        FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
     }
     else {
-        $('#popup .results').html(msg);
-        $('.controls').html('<p class="ok" onClick="FM.bulkPopupClose();">'+App.Constants.FM_DONE+'</p>');
+        $('#popup .results').show().html(msg);
+        //$('.controls').html('<p class="ok" onClick="FM.bulkPopupClose();">'+App.Constants.FM_DONE+'</p>');
+        $('#popup .ok').hide();
     }
 }
 
@@ -1249,7 +1259,7 @@ FM.unpackItem = function() {
     
     var tpl = Tpl.get('popup_unpack', 'FM');
     tpl.set(':FILENAME', src.name);
-    tpl.set(':DST_DIRNAME', (dst + '/' + src.name).replace('//', '/'));
+    tpl.set(':DST_DIRNAME', (dst).replace('//', '/'));
     FM.popupOpen(tpl.finalize());
 }
 

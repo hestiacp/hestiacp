@@ -3,14 +3,15 @@
 include($_SERVER['DOCUMENT_ROOT'] . "/inc/main.php");
 
 
-
-
 if ((!isset($_SESSION['FILEMANAGER_KEY'])) || (empty($_SESSION['FILEMANAGER_KEY']))) {
     header("Location: /filemanager-not-purchased/");
     exit;
 }
 
-
+// Check login_as feature
+if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
+    $user=$_SESSION['look'];
+}
 
 if (empty($panel)) {
     $command = VESTA_CMD."v-list-user '".$user."' 'json'";

@@ -25,7 +25,7 @@
             <div class="menu menu-left menu-A">
                 <?php $pre_tab = 'A';include($_SERVER['DOCUMENT_ROOT'].'/templates/file_manager/tab_menu.php'); ?>
             </div>
-            <ul class="listing listing-left"></ul>
+            <ul class="listing listing-left" onClick="FM.setTabActive('.listing-left');"></ul>
         </div>
 
         <div class="window">
@@ -33,7 +33,7 @@
             <div class="menu menu-right menu-B">
                 <?php $pre_tab = 'B';include($_SERVER['DOCUMENT_ROOT'].'/templates/file_manager/tab_menu.php'); ?>
             </div>
-            <ul class="listing listing-right"></ul>
+            <ul class="listing listing-right" onClick="FM.setTabActive('.listing-right');"></ul>
         </div>
         </div>
 

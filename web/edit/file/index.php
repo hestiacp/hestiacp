@@ -47,7 +47,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
                 chmod($fn, 0644);
 
                 if ($f) {
-                    exec (VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}", $output, $return_var);
+                    exec (VESTA_CMD . "v-copy-fs-file {$user} {$fn} ".escapeshellarg($path), $output, $return_var);
                     $error = check_return_code($return_var, $output);
                     if ($return_var != 0) {
                         print('<p style="color: white">Error while saving file</p>');
@@ -58,16 +58,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
             }
         }
 
-        exec (VESTA_CMD . "v-check-fs-permission {$user} '{$path}'", $content, $return_var);
-        if ($return_var != 0) {
-            var_dump($return_var);
-            var_dump($content);
-            exit;
-            print 'Error while opening file'; // todo: handle this more styled
-            exit;
-        }
-
-        exec (VESTA_CMD . "v-open-fs-file {$user} {$path}", $content, $return_var);
+        exec (VESTA_CMD . "v-open-fs-file {$user} ".escapeshellarg($path), $content, $return_var);
         if ($return_var != 0) {
             print 'Error while opening file'; // todo: handle this more styled
             exit;

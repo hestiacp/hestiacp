@@ -1,6 +1,11 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+if ((!isset($_SESSION['FILEMANAGER_KEY'])) || (empty($_SESSION['FILEMANAGER_KEY']))) {
+    header("Location: /login/");
+    exit;
+}
+
 $user = $_SESSION['user'];
 if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
     $user=$_SESSION['look'];

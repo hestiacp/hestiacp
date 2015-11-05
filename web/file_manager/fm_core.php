@@ -74,13 +74,7 @@ class FileManager {
     
     function deleteItem($dir, $item) {
         $dir = $this->formatFullPath($item);
-        //if (is_dir($item)) {
-            //var_dump(VESTA_CMD . "v-delete-fs-directory {$this->user} {$dir}");die();
-            exec (VESTA_CMD . "v-delete-fs-directory {$this->user} {$dir}", $output, $return_var);
-        //}
-        //else {
-        //    exec (VESTA_CMD . "v-delete-fs-file {$this->user} {$dir}", $output, $return_var);
-        //}
+        exec (VESTA_CMD . "v-delete-fs-directory {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
         

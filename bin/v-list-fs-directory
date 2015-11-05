@@ -40,7 +40,6 @@ fi
 # Listing directory
 sudo -u $user find "$path" -maxdepth 1 \
     -printf "%y|%m|%TY-%Tm-%Td|%TH:%TM|%u|%g|%s|%P\n" 2>/dev/null
-#    -printf "%y|%m|%TY-%Tm-%Td|%TH:%TM:%TS|%u|%g|%s|%P\n" 2>/dev/null
 
 # Exiting
 exit $?

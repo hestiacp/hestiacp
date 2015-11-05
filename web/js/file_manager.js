@@ -161,34 +161,16 @@ FM.setActive = function(index, box) {
     $(box + ' .active').removeClass('active');
     $(box).find('li.dir:eq('+index+')').addClass('active');
     
-    //$(box).find('li:eq('+index+')').addClass('selected');
-    //var w_h = $(window).height() - 100;
     var w_offset = $(box).scrollTop();
     var w_height = $(box).height()
     var pos = $(box).find('li.selected').position();
-    //console.log(w_height);
-    //console.log(w_offset);
-    //console.log(pos);
+    
     var wwh = w_height - w_offset + pos.top;
-    //console.info(wwh);
-    //console.info((pos.top + w_offset) + ' > ' + w_height);
-    //console.log((pos.top + w_offset) > w_height);
-/*    if (pos.top > w_height) {
-        var cur_elm = $(box).find('li.selected').position();
-        var cur_elm_height = $(box).find('li.selected').height();
-        //$(box).scrollTo(wwh - 350);
-        $(box).scrollTo(w_offset + cur_elm.top - w_height/2 + cur_elm_height/2);
-        
-    }
-    else {*/
-        var cur_elm = $(box).find('li.selected').position();
-        var cur_elm_height = $(box).find('li.selected').height();
 
-        $(box).scrollTo(w_offset + cur_elm.top - w_height/2 + cur_elm_height/2);
+    var cur_elm = $(box).find('li.selected').position();
+    var cur_elm_height = $(box).find('li.selected').height();
 
-    //}
-    
-    
+    $(box).scrollTo(w_offset + cur_elm.top - w_height/2 + cur_elm_height/2);
     
 
     FM['CURRENT_' + tab + '_LINE'] = index;
@@ -215,7 +197,6 @@ FM.setActive = function(index, box) {
 }
 
 FM.setSecondInactive = function(index, box) {
-    //$(box + ' .active').removeClass('selected-inactive');
     $(box).find('li:eq('+index+')').addClass('selected-inactive');
 
     FM.BG_LINE = index;
@@ -286,9 +267,7 @@ FM.goDown = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var index = FM['CURRENT_' + tab + '_LINE'];
     index += 1;
-    /*if (index > ($(FM.CURRENT_TAB).find('li.dir').length - 1)) {
-        index = 0;
-    }*/
+
     if (index > ($(FM.CURRENT_TAB).find('li.dir').length - 1)) {
         index = $(FM.CURRENT_TAB).find('li.dir').length - 1;
     }
@@ -298,7 +277,7 @@ FM.goDown = function() {
 
 // reloads provided tab
 // reloads opposite tab if its needed
-FM.openAndSync = function(dir, box, callback) {
+FM.openAndSync = function(dir, box, callback, forceOppositeSync) {
     var tab = FM.getTabLetter(box);
 
     var opposite_tab = 'A';
@@ -312,6 +291,9 @@ FM.openAndSync = function(dir, box, callback) {
         oppositeSyncNeeded = true;
     }
 
+    if ('undefined' != typeof forceOppositeSync) {
+        oppositeSyncNeeded = forceOppositeSync;
+    }
 
     if (oppositeSyncNeeded) {
         FM.open(dir, FM['TAB_' + opposite_tab], callback);
@@ -365,11 +347,16 @@ FM.updateTopLevelPathBar = function(box, tab, path) {
     path = path.replace(FM.ROOT_DIR, '');
     formattedPath.push('<a href="javascript:void(0)" onClick="FM.open(\''+FM.ROOT_DIR+'\', \''+box+'\')">'+FM.ROOT_DIR+'</span>');
 
+    var fullDirPath = FM.ROOT_DIR;
     $.each(path.split('/'), function(i, part) {
         if (part.trim() == '') {
             return;
         }
-        formattedPath.push('<a href="javascript:void(0)" onClick="FM.open(\''+part+'\', \''+box+'\')">'+part+'</span>');
+        fullDirPath += '/' + part; 
+        
+        fullDirPath = fullDirPath.replace(/\/\//g, '/');
+        
+        formattedPath.push('<a href="javascript:void(0)" onClick="FM.open(\''+fullDirPath+'\', \''+box+'\')">'+part+'</span>');
     });
 
     $('.pwd-tab-' + tab).html(formattedPath.join(' / '));
@@ -403,6 +390,7 @@ FM.sortItems = function(items, box) {
     $.each(items, function(i, o) {
         if (i > 0) { // i == 0 means first .. element in list
             if (FM.isItemFile(o) || FM.isItemLink(o)) {
+                o.filetype = FM.getFileType(o.name);
                 files.push(o);
             }
             else {
@@ -411,7 +399,6 @@ FM.sortItems = function(items, box) {
         }
     });
 
-    //    var sort_type = $(box).parents('.window').find('.menu').find('.sort-by-v').val();
     var sort_type = FM.ORDER_TAB_A;
     if($(box).closest('.window').find('.menu').hasClass('menu-right')){
       sort_type = FM.ORDER_TAB_B;
@@ -420,7 +407,7 @@ FM.sortItems = function(items, box) {
     switch (sort_type) {
         case 'type_asc':
             files.sort(function (a, b) {
-                return a.name.localeCompare( b.name );
+                return a.filetype.localeCompare( b.filetype );
             });
             dirs.sort(function (a, b) {
                 return a.name.localeCompare( b.name );
@@ -429,7 +416,7 @@ FM.sortItems = function(items, box) {
             break;
         case 'type_desc':
             files.sort(function (a, b) {
-                return a.name.localeCompare( b.name );
+                return b.filetype.localeCompare( a.filetype );
             });
             dirs.sort(function (a, b) {
                 return a.name.localeCompare( b.name );
@@ -554,8 +541,6 @@ FM.downloadFileFromSubcontext = function(elm) {
 
 FM.openFile = function(dir, box, elm) {
     var tab = FM.getTabLetter(box);
-
-    //FM['TAB_'+tab+'_CURRENT_PATH'] = dir;
 
     var elm = $(elm).hasClass('dir') ? $(elm) : $(elm).closest('.dir');
     var src = $.parseJSON($(elm).find('.source').val());
@@ -769,19 +754,16 @@ FM.checkBulkStatus = function(bulkStatuses, acc) {
     }
 
     if (status == true) {
-        //$('#popup .results').html(App.Constants.FM_DONE);
-        //$('.controls').html('<p class="ok" onClick="FM.bulkPopupClose();">'+App.Constants.FM_DONE+'</p>');
         FM.popupClose();
-        
-        var box = FM['TAB_' + tab];
-        var tab = FM.getTabLetter(FM.CURRENT_TAB);
-        FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
     }
     else {
         $('#popup .results').show().html(msg);
-        //$('.controls').html('<p class="ok" onClick="FM.bulkPopupClose();">'+App.Constants.FM_DONE+'</p>');
         $('#popup .ok').hide();
     }
+    
+    var box = FM['TAB_' + tab];
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box, function(){}, true);
 }
 
 FM.bulkPopupClose = function() {
@@ -901,7 +883,7 @@ FM.bulkCopy = function() {
             var src = $(ref).find('.source').val();
             src = $.parseJSON(src);
 
-            if (!FM.isItemPseudo(o)) {
+            if (!FM.isItemPseudo(src)) {
                 cfr_html += '<div>'+src.name+'</div>';
                 numberOfItems++;
             }
@@ -1002,7 +984,7 @@ FM.bulkRemove = function() {
             var src = $(ref).find('.source').val();
             src = $.parseJSON(src);
           
-            if (!FM.isItemPseudo(o)) {
+            if (!FM.isItemPseudo(src)) {
                 cfr_html += '<div>'+src.name+'</div>';
                 numberOfItems++;
             }
@@ -1355,7 +1337,7 @@ FM.setTabActive = function(box, action) {
 FM.confirmRename = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
-    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
     if (!selected) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
@@ -1531,7 +1513,7 @@ FM.confirmUnpackItem = function () {
 FM.confirmPackItem = function () {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
-    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
     if (selected.length == 0) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED

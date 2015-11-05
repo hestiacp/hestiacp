@@ -448,6 +448,10 @@
                 });
             }
 
+			// 
+			$('form#objects').bind('submit', function(evt) {
+				$('.l-unit.selected').find('.ch-toggle').attr('checked', true);
+			});
 
 
         });

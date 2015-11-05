@@ -633,6 +633,7 @@ a {
   background-size: 450px auto;
   background-repeat: no-repeat;
   background-position: -232px -9px;
+  z-index: 99;
 }
 
 input[type="checkbox"] {
@@ -672,7 +673,7 @@ input[type="checkbox"] {
   margin-bottom: 28px;
   position: fixed;
   width: 100%;
-  z-index: 11;
+  z-index: 100;
 }
 .l-header a {
   font-size: 12px;
@@ -812,7 +813,7 @@ input[type="checkbox"] {
   position: fixed;
   top: 34px;
   width: 351px;
-  z-index: 21;
+  z-index: 200;
   font-size: 12px;
   padding: 0;
   color: #7f7f7f;
@@ -906,7 +907,7 @@ input[type="checkbox"] {
   margin: 34px auto;
   position: fixed;
   background-color: #fff;
-  z-index: 10;
+  z-index: 100;
   padding-top: 30px;
 }
 .l-stat__col {
@@ -989,21 +990,21 @@ div.l-content > div.l-separator:nth-of-type(2) {
   margin-top: 214px;
   width: 100%;
   position: fixed;
-  z-index: 20;
+  z-index: 120;
 }
 
 div.l-content > div.l-separator:nth-of-type(4) {
   margin-top: 259px;
   width: 100%;
   position: fixed;
-  z-index: 5;
+  z-index: 100;
 }
 
 .l-sort {
   position: fixed;
   width: 998px;
   background-color: #fff;
-  z-index: 10;
+  z-index: 110;
   margin-top: 215px;
 }
 .l-sort__create-btn {

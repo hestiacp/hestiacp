@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        14
+Release:        15
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -30,23 +30,11 @@ rm -rf %{buildroot}
 
 %post
 if [ $1 -ge 2 ]; then
-    if [ -e /usr/local/vesta/upd/convert_templates.sh ]; then
-        /usr/local/vesta/upd/convert_templates.sh
-    fi
-    if [ -e /usr/local/vesta/upd/convert_webip.sh ]; then
-        /usr/local/vesta/upd/convert_webip.sh
-    fi
-    if [ -e /usr/local/vesta/upd/add_fwd_only.sh ]; then
-        /usr/local/vesta/upd/add_fwd_only.sh
-    fi
-    if [ -e /usr/local/vesta/upd/fix_vesta_ssl_permissions.sh ]; then
-        /usr/local/vesta/upd/fix_vesta_ssl_permissions.sh
-    fi
     if [ -e /usr/local/vesta/upd/add_sudo.sh ]; then
         /usr/local/vesta/upd/add_sudo.sh
     fi
-    if [ -e /usr/local/vesta/upd/add_firewall.sh ]; then
-        /usr/local/vesta/upd/add_firewall.sh
+    if [ -e /usr/local/vesta/upd/add_notifications.sh ]; then
+        /usr/local/vesta/upd/add_notifications.sh
     fi
 fi
 %files
@@ -62,6 +50,32 @@ fi
 %config(noreplace) %{_vestadir}/web/css/uploadify.css
 
 %changelog
+* Fri Nov 06 2015 Serghey Rodin <builder@vestacp.com> - 0.9.8-15
+- File Manager (commercial plugin)
+- SFTP Chroot (commercial plugin)
+- Monitoring Tools: top/free/df/server-status/mysql-status/etc
+- New installer
+- Improved PHP-FPM support
+- UI: Notification center
+- UI: Starred objects
+- UI: Object sorting
+- UI: HotKeys suport
+- UI: Mail account settings JS hint
+- UI: Autofocus on first input when adding/editing
+- UI: Up to 8 nameserver dns support
+- Core: Improved system logger, domain adding api and backup routine
+- Japanese language support. Thanks to Flatta
+- Polish language support. Thanks to MarPiRK
+- Vietnamese language support. Thanks to Nguyen Ngoc Phuong
+- Security Fix: Command Injection and XSS Thanks to Global IT
+- BugFix: DNS Cluster SOA synchronization
+- BugFix: Bulk Operation
+- BugFix: Backup exclusions
+- BugFix: Domain validation
+- BugFix: FTP user name prefix
+- BugFix: Fail2Ban manager
+- BugFix: Service manager
+
 * Wed Jun 03 2015 Serghey Rodin <builder@vestacp.com> - 0.9.8-13
 - New UI
 - PHP-FPM support

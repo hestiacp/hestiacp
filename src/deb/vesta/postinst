@@ -1,34 +1,13 @@
 #!/bin/bash
 
-# Run fwd_only trigger
-if [ -x "/usr/local/vesta/upd/add_fwd_only.sh" ]; then
-    /usr/local/vesta/upd/add_fwd_only.sh
-fi
-
-# Run exim permission fixer
-if [ -x "/usr/local/vesta/upd/fix_exim_permissions.sh" ]; then
-    /usr/local/vesta/upd/fix_exim_permissions.sh
-fi
-
-# Run vesta permission fixer
-if [ -x "/usr/local/vesta/upd/fix_vesta_ssl_permissions.sh" ]; then
-    /usr/local/vesta/upd/fix_vesta_ssl_permissions.sh
-fi
-
-# Run MySQL autostart fixed
-if [ -x "/usr/local/vesta/upd/fix_mysql_startup.sh" ]; then
-    /usr/local/vesta/upd/fix_mysql_startup.sh
-fi
-
 # Run SUDO trigger
 if [ -x "/usr/local/vesta/upd/add_sudo.sh" ]; then
     /usr/local/vesta/upd/add_sudo.sh
 fi
 
-# Run Firewall trigger
-if [ -x "/usr/local/vesta/upd/add_firewall.sh" ]; then
-    /usr/local/vesta/upd/add_firewall.sh
+# Run Notification trigger
+if [ -x "/usr/local/vesta/upd/add_notifications.sh" ]; then
+    /usr/local/vesta/upd/add_notifications.sh
 fi
-
 
 exit 0

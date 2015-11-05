@@ -34,7 +34,7 @@ if [ -z "$(echo $rpath |grep $homedir)" ]; then
 fi
 
 # Listing file type
-sudo -u $user file -i -b $path 2>/dev/null
+sudo -u $user file -i -b "$path" 2>/dev/null
 
 # Exiting
 exit $?

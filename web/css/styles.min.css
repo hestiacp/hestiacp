@@ -629,7 +629,7 @@ a {
   left: 0;
   top: 0;
   display: inline-block;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-size: 450px auto;
   background-repeat: no-repeat;
   background-position: -232px -9px;
@@ -656,7 +656,7 @@ input[type="checkbox"] {
 }
 
 .l-logo {
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -117px -7px;
   background-repeat: no-repeat;
   display: inline-block;
@@ -778,7 +778,7 @@ input[type="checkbox"] {
 }
 
 .l-profile__notifications {
-  background: url("/images/sprite.png") no-repeat scroll -129px -135px;
+  background: url("/images/sprite.png?1446554103") no-repeat scroll -129px -135px;
   border-radius: 30px;
   color: #fff;
   cursor: pointer;
@@ -896,7 +896,7 @@ input[type="checkbox"] {
 .notification-container .icon.starred {
   display: inline-block;
   width: 21px;
-  background: url("/images/sprite.png") repeat scroll -184px 556px;
+  background: url("/images/sprite.png?1446554103") repeat scroll -184px 556px;
 }
 
 
@@ -1008,7 +1008,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   margin-top: 215px;
 }
 .l-sort__create-btn {
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -331px -107px;
   background-repeat: no-repeat;
   bottom: -23px;
@@ -1076,7 +1076,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding: 12px;
 }
 .context-menu.sort-order span.name {
-  background: url("/images/sprite.png") no-repeat scroll -292px -361px rgba(0, 0, 0, 0);
+  background: url("/images/sprite.png?1446554103") no-repeat scroll -292px -361px rgba(0, 0, 0, 0);
   display: inline-block;
   padding: 12px 28px 12px 12px;
   width: 117px;
@@ -1084,7 +1084,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   font-weight: bold;
 }
 .context-menu.sort-order span.up {
-  background: url("/images/sprite.png") no-repeat scroll -434px -417px rgba(0, 0, 0, 0);
+  background: url("/images/sprite.png?1446554103") no-repeat scroll -434px -417px rgba(0, 0, 0, 0);
   display: inline-block;
   padding: 12px 14px;
   width: 16px;
@@ -1170,7 +1170,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   float: left;
   width: 30px;
   height: 30px;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -333px -1px;
   border: none;
 }
@@ -1191,7 +1191,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   float: left;
   width: 25px;
   height: 25px;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -333px -37px;
   border: none;
 }
@@ -1244,7 +1244,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-select:after {
   pointer-events: none;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -245px -175px;
   width: 7px;
   height: 4px;
@@ -1582,7 +1582,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   position: relative;
 }
 .actions-panel__col i {
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-repeat: no-repeat;
   display: inline-block;
   float: right;
@@ -2009,7 +2009,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-icon-up-arrow, .l-icon-down-arrow, .l-icon-star, .l-icon-to-top, .l-icon-shortcuts, .l-icon-star-orange, .l-icon-star-blue {
   display: inline-block;
   vertical-align: middle;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
 }
 
 .l-icon-down-arrow {
@@ -2367,7 +2367,7 @@ label {
   margin: 2px 6px 0 0;
   min-width: 138px;
   padding: 8px 1px 6px 10px;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -185px -604px;
   width: 270px;
   appearance:none;
@@ -2780,7 +2780,7 @@ form#vstobjects.suspended {
 #add-icon {
   width: 45px;
   height: 45px;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -378px -107px;
   background-repeat: no-repeat;
   display: inline-block;
@@ -2919,7 +2919,7 @@ form#vstobjects.suspended {
   letter-spacing: 3px;
 }
 .shortcuts .close {
-  background: url("/images/sprite.png") repeat scroll -408px -469px;
+  background: url("/images/sprite.png?1446554103") repeat scroll -408px -469px;
   cursor: pointer;
   display: inline-block;
   float: right;

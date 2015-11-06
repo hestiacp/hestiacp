@@ -1,5 +1,6 @@
 <?php
-session_start();
+error_reporting(NULL);
+
 $TAB = 'MAIL';
 
 // Main include

@@ -1,5 +1,4 @@
 <?php
-session_start();
 error_reporting(NULL);
 
 // Main include

@@ -1,6 +1,6 @@
 <?php
 // Init
-/error_reporting(NULL);
+error_reporting(NULL);
 $TAB = 'SERVER';
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

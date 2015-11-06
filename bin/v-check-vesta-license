@@ -9,10 +9,10 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 module=$(echo $1 | tr '[:lower:]' '[:upper:]')
 
-# Importing system enviroment
+# Importing system environment
 source /etc/profile
 
 # Includes

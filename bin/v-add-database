@@ -15,7 +15,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 database="$user"_"$2"
 dbuser="$user"_"$3"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system sftp jail
-# opions: NONE
+# options: NONE
 #
 # The script enables sftp jailed environment
 
@@ -9,8 +9,8 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system enviroment  as we run this script
-# mostly by cron wich do not read it by itself
+# Importing system environment  as we run this script
+# mostly by cron which do not read it by itself
 source /etc/profile
 
 # Includes

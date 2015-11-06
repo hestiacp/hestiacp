@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 type=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 template=$3

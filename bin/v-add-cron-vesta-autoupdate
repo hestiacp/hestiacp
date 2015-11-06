@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=admin
 
 # Includes
@@ -34,7 +34,7 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Define time somewhere at nigth
+# Define time somewhere at night
 min=$(gen_password '012345' '2')
 hour=$(gen_password '1234567' '1')
 day='*'

@@ -11,7 +11,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=${1-admin}
 ip_status=${2-shared}
 

@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 topic=$(echo $2 |sed "s/'/%quote%/g")
 notice=$(echo $3 |sed "s/'/%quote%/g")

@@ -2,14 +2,14 @@
 # info: delete web domains
 # options: USER [RESTART]
 #
-# The function deteles all user's webdomains.
+# The function deletes all user's webdomains.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 restart=$2
 

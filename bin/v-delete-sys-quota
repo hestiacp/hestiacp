@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: delete system quota
-# opions: NONE
+# options: NONE
 #
-# The script disables filesystem quota on /home patition
+# The script disables filesystem quota on /home partition
 
 
 #----------------------------------------------------------#

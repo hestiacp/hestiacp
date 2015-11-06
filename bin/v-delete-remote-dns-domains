@@ -8,7 +8,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 host=$1
 
 # Includes

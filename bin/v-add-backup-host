@@ -2,14 +2,14 @@
 # info: add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
 #
-# The function adds backup host
+# This function adds a backup host
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 type=$1
 host=$2
 user=$3

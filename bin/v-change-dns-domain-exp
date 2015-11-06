@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: change dns domain expiriation date
+# info: change dns domain expiration date
 # options: USER DOMAIN EXP
 #
 # The function of changing the term of expiration domain's registration. The
@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
@@ -57,7 +57,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed whois expiriation date for $domain"
+log_history "changed whois expiration date for $domain"
 log_event "$OK" "$EVENT"
 
 exit

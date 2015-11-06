@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: add system quota
-# opions: NONE
+# options: NONE
 #
-# The script enables filesystem quota on /home patition
+# The script enables filesystem quota on /home partition
 
 
 #----------------------------------------------------------#

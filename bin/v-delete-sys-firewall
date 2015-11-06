@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete system firewall
-# opions: NONE
+# options: NONE
 #
 # The script disables firewall support
 

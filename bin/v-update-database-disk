@@ -2,14 +2,14 @@
 # info: update database disk usage
 # options: USER DATABASE
 #
-# The function recalculates disk usage for speciefic database.
+# The function recalculates disk usage for specific database.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 database=$2
 

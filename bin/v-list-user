@@ -2,7 +2,7 @@
 # info: list system user
 # options: USER [FORMAT]
 #
-# The function for obtainig the list of all user's parameters.
+# The function for obtaining the list of all user's parameters.
 
 
 #----------------------------------------------------------#
@@ -12,7 +12,7 @@
 # Includes
 source $VESTA/func/main.sh
 
-# Argument defenition
+# Argument definition
 user=$1
 USER="$user"
 format=${2-shell}

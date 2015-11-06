@@ -9,10 +9,10 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 rule=$1
 
-# Inlcudes
+# Includes
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 

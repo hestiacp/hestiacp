@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: change remote dns domain expiriation date
+# info: change remote dns domain expiration date
 # options: USER DOMAIN
 #
 # The function synchronize dns domain with the remote server.
@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 

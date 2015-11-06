@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: update apach2 rrd
+# info: update apache2 rrd
 # options: PERIOD
 #
 # The function is for updating apache rrd database and graphic.
@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 period=${1-daily}
 
 # Includes

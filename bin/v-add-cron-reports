@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cron reports
-# opions: user
+# options: user
 #
 # The script for enabling reports on cron tasks and administrative
 # notifications.
@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 
 # Includes

@@ -2,14 +2,14 @@
 # info: list mail account autoreply
 # options: USER DOMAIN ACCOUNT [FORMAT]
 #
-# The function of obtainin mail account autoreply message.
+# The function of obtaining mail account autoreply message.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 account=$3

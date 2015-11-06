@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 min=$2
 hour=$3
@@ -25,7 +25,7 @@ restart=$9
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Assing new value
+# Assigning new value
 A7="$command"
 
 

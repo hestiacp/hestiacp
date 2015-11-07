@@ -42,8 +42,8 @@ else
     dpkg_data=$(dpkg-query -s vesta)
     pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/vesta.list)
     ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
-    VERSION=$(echo "$dpkg_data"|grep Version |cut -f 2 -d ' '|cut -f 1 -d \-)
-    RELEASE=$(echo "$dpkg_data"|grep Version |cut -f 2 -d ' '|cut -f 2 -d \-)
+    VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+    RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
     DATE=$(date -d @$pkg_date +"%F")
     TIME=$(date -d @$pkg_date +"%T")
 fi
@@ -65,8 +65,8 @@ else
     dpkg_data=$(dpkg-query -s vesta-php)
     pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/vesta-php.list)
     ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
-    VERSION=$(echo "$dpkg_data"|grep Version |cut -f 2 -d ' '|cut -f 1 -d \-)
-    RELEASE=$(echo "$dpkg_data"|grep Version |cut -f 2 -d ' '|cut -f 2 -d \-)
+    VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+    RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
     DATE=$(date -d @$pkg_date +"%F")
     TIME=$(date -d @$pkg_date +"%T")
 fi
@@ -89,8 +89,8 @@ else
     dpkg_data=$(dpkg-query -s vesta-nginx)
     pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/vesta-nginx.list)
     ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
-    VERSION=$(echo "$dpkg_data"|grep Version |cut -f 2 -d ' '|cut -f 1 -d \-)
-    RELEASE=$(echo "$dpkg_data"|grep Version |cut -f 2 -d ' '|cut -f 2 -d \-)
+    VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+    RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
     DATE=$(date -d @$pkg_date +"%F")
     TIME=$(date -d @$pkg_date +"%T")
 fi

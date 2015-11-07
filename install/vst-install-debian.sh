@@ -1176,6 +1176,9 @@ update-rc.d vesta defaults
 service vesta start
 check_result $? "vesta start failed"
 
+# Adding notifications
+$VESTA/upd/add_notifications.sh
+
 
 #----------------------------------------------------------#
 #                   Vesta Access Info                      #

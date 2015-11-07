@@ -112,21 +112,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('FileSystem Disk Quota');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_quota">
-                                        <option value='no'><?php print __('no'); ?></option>
-                                        <option value='yes' <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
-
-                                    </select>
-                                    <br><br>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td class="vst-text input-label step-top">
                                     <a href="javascript:elementHideShow('web');" class="vst-text">
                                         <b><?php print __('WEB');?> <img src="/images/arrow.png"></b>
@@ -605,13 +590,13 @@
                             <tr>
                                 <td class="vst-text input-label step-top">
                                     <a href="javascript:elementHideShow('vesta');" class="vst-text">
-                                        <b><?php print __('Vesta Control Panel Plugins');?> <span style="color:#ff6701;font-size:10px; padding:0 10px;">preview</span><img src="/images/arrow.png"></b>
+                                        <b><?php print __('Vesta Control Panel Plugins');?> <!-- span style="color:#ff6701;font-size:10px; padding:0 10px;">preview</span--><img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label step-left">
-                                    <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="vesta">
+                                    <table style="display:<?php if (empty($v_adv) && $_GET['lead'] != 'filemanager' && $_GET['lead'] != 'sftp') echo 'none';?> ;" id="vesta">
                                         <tr>
                                             <td class="vst-text">
                                                 <?php print __('Version') ?> 
@@ -625,38 +610,40 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
+                                                <?php print __('FileSystem Disk Quota');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_quota">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Firewall');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_firewall">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['FIREWALL_SYSTEM'] == 'iptables') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
                                                 <?php print __('Reseller Role') ?> 
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="vst-list" name="v_reseller">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                </select>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text">
-                                                <?php print __('Web Config Editor') ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_conf_editor">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                </select>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text">
-                                                <?php print __('Template Manager') ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_template_manager">
+                                                <select class="vst-list" name="v_reseller" disabled="disabled">
                                                     <option value='no'><?php print __('no'); ?></option>
                                                 </select>
                                                 <br><br>
@@ -669,35 +656,104 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="vst-list" name="v_backup_manager">
+                                                <select class="vst-list" name="v_backup_manager" disabled="disabled">
                                                     <option value='no'><?php print __('no'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text">
-                                                <?php print __('FileManager') ?> 
+                                            <td class="vst-text" id="module-sftp">
+                                                <?php print __('SFTP Chroot') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_sftp">
+                                                    <?
+                                                        if($_SESSION['SFTPJAIL_KEY']){
+                                                            echo '<option value="cancel">'.__('Disable and Cancel Licence').'</option>';
+                                                        } else {
+                                                            echo '<option value="no">'.__('no').'</option>';
+                                                        }
+                                                     ?>
+
+                                                    <option value='yes' <? if($_GET['lead'] == 'sftp' || $_SESSION['SFTPJAIL_KEY'] != '') echo 'selected="selected"'; ?>><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                                <div class="sftp description" <? if($_GET['lead'] != 'sftp' && !$_SESSION['SFTPJAIL_KEY']) echo 'style="display:none"'; ?>>
+                                                    <?
+                                                    if($_GET['sftp_licence_key'] != '' || $_SESSION['SFTPJAIL_KEY']){
+                                                        $licence_key = $_GET['sftp_licence_key'] != '' ? $_GET['sftp_licence_key'] : $_SESSION['SFTPJAIL_KEY'];
+                                                        echo __('Restrict users so that they cannot use SSH and access only their home directory.').'
+                                                            <div class="licence">
+                                                                '.__('Licence Key').': <input type="text" class="vst-input" name="v_sftp_licence" value="'.$licence_key.'" /><br>
+                                                            </div>';
+                                                    } else {
+                                                        echo 
+                                                            __('Restrict users so that they cannot use SSH and access only their home directory.').' '.__('This is a commercial module, you would need to purchace license key to enable it.').
+                                                            '<div class="licence">
+                                                                '.__('Enter License Key').': <input type="text" class="vst-input" name="v_sftp_licence" /><br>
+                                                            </div>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="https://vestacp.com/checkout/2co.php?product_id=6&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">'.__('Buy Licence').' 1$/'.__('month').'</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://vestacp.com/checkout/2co.php?product_id=9&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">'.__('Buy Lifetime License').' 18$</a>
+                                                                </li>
+                                                            </ul>
+                                                            <span class="twoco">2Checkout.com Inc. (Ohio, USA) is a payment facilitator for goods and services provided by vestacp.com.</span>';
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="vst-text" id="module-filemanager">
+                                                <?php print __('File Manager') ?> 
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_filemanager">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                    <option value='yes'><?php print __('yes'); ?></option>
+                                                    <?
+                                                        if($_SESSION['FILEMANAGER_KEY']){
+                                                            echo '<option value="cancel">'.__('Disable and Cancel Licence').'</option>';
+
+                                                        } else {
+                                                            echo '<option value="no">'.__('no').'</option>';
+                                                        }
+                                                     ?>
+                                                    <option value='yes' <? if($_GET['lead'] == 'filemanager' || $_SESSION['FILEMANAGER_KEY']) echo 'selected="selected"'; ?>><?php print __('yes'); ?></option>
                                                 </select>
                                                 <br><br>
-                                                <div class="filemanager description" style="display:none">
-                                                    Web Filemanager is a commercial module. By purchasing it you not only get powerfull filemanagement tool but also help VestaCP get better and stronger.<br>
-                                                    You can see the bref video review of the module functionality.<br>
-                                                    <span>(to try it free for a week please use "TMKE765" as a licence key)</span>
-                                                    <div class="licence">
-                                                        To activate filemanager insert licence key: <input type="text" class="vst-input" name="v_filemanager_licence" /><br>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a class="purchase" href="read.com">get monthly licence 3$/month</a></li>
-                                                        <li><a class="purchase" href="read.com">get forever licence 50$</a></li>
-                                                    </ul>
+                                                <div class="filemanager description" <? if($_GET['lead'] != 'filemanager' && !$_SESSION['FILEMANAGER_KEY']) echo 'style="display:none"'; ?>>
+                                                    <?
+                                                    if($_GET['filemanager_licence_key'] != '' || $_SESSION['FILEMANAGER_KEY']){
+                                                        $licence_key = $_GET['filemanager_licence_key'] != '' ? $_GET['filemanager_licence_key'] : $_SESSION['FILEMANAGER_KEY'];
+                                                        echo __('Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.').
+                                                            '<div class="licence">
+                                                                '.__('Licence Key').': <input type="text" class="vst-input" name="v_filemanager_licence" value="'.$licence_key.'" /><br>
+                                                            </div>';
+                                                    } else {
+                                                        echo __('Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.').' '.
+                                                            __('This is a commercial module, you would need to purchace license key to enable it.').
+                                                            '<div class="licence">
+                                                                '.__('Enter Licence Key').': <input type="text" class="vst-input" name="v_filemanager_licence" /><br>
+                                                            </div>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="https://vestacp.com/checkout/2co.php?product_id=7&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">'.__('Buy Licence').' 3$/'.__('month').'</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://vestacp.com/checkout/2co.php?product_id=8&referer='.$_SERVER['HTTP_HOST'].'" class="purchase">'.__('Buy Lifetime Licence').' 50$</a>
+                                                                </li>
+                                                            </ul>
+                                                            <span class="twoco">2Checkout.com Inc. (Ohio, USA) is a payment facilitator for goods and services provided by vestacp.com.</span>';
+                                                    }
+                                                    ?>
                                                 </div>
                                             </td>
                                         </tr>
@@ -732,5 +788,13 @@
                 $('.filemanager.description').hide();
             }
         });
-    });
+
+        $('select[name=v_sftp]').change(function(){
+            if($(this).val() == 'yes'){
+                $('.sftp.description').show();
+            } else {
+                $('.sftp.description').hide();
+            }
+        });
+     });
 </script>

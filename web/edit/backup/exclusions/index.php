@@ -3,7 +3,7 @@
 error_reporting(NULL);
 ob_start();
 session_start();
-$TAB = 'BACKUP EXCLUSIONS';
+$TAB = 'BACKUP';
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 

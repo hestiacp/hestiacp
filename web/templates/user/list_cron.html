@@ -41,8 +41,6 @@
                     <option value=""><?=__('apply to selected')?></option>
                     <? if($panel[$user]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'.__('turn off notifications').'</option>'; ?>
                     <? if($panel[$user]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'.__('turn on notifications').'</option>'; ?>
-                    <option value="suspend"><?=__('suspend')?></option>
-                    <option value="unsuspend"><?=__('unsuspend')?></option>
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
@@ -91,15 +89,6 @@ sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-nam
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__edit"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-              </div>
               <div class="actions-panel__col actions-panel__delete">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>

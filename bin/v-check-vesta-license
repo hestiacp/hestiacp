@@ -1,0 +1,63 @@
+#!/bin/bash
+# info: check vesta license
+# options: [MODULE]
+#
+# The function activates and register vesta license
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+module=$(echo $1 | tr '[:lower:]' '[:upper:]')
+
+# Importing system enviroment
+source /etc/profile
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking module
+if [ -z "$module" ]; then
+    modules=$(grep _KEY= $VESTA/conf/vesta.conf)
+else
+    modules=$(grep "${module}_KEY" $VESTA/conf/vesta.conf)
+fi
+
+IFS=$'\n'
+for str in $modules; do
+    module=$(echo "$str" |cut -f 1 -d _)
+    license=$(echo "$str" |cut -f 2 -d \')
+    if [ ! -z "$license" ]; then
+        v_host='https://vestacp.com/checkout'
+        answer=$(curl -s "$v_host/check.php?licence_key=$license&module=$module")
+        check_result $? "cant' connect to vestacp.com " 0
+        echo "$module $license $answer"
+        if [[ "$answer" != '0' ]]; then
+            if [ "$module" = 'SFTPJAIL' ]; then
+                setsid $BIN/v-delete-sys-sftp-jail 2>/dev/null
+            fi
+            sed -i "s/${module}_KEY=.*/${module}_KEY=''/g" \
+                $VESTA/conf/vesta.conf
+        fi
+    fi
+done
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

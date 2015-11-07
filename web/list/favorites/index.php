@@ -1,6 +1,5 @@
 <?php
-
-    session_start();
+error_reporting(NULL);
     include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
     echo '<br> Favorites: <br>';

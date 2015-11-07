@@ -1,7 +1,6 @@
 <?php
-session_start();
-$TAB = 'WEB';
 error_reporting(NULL);
+$TAB = 'WEB';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

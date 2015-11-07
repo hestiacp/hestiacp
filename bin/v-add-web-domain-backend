@@ -13,7 +13,7 @@
 user=$1
 domain=$2
 domain_idn=$(idn -t --quiet -a "$domain")
-template=$3
+template=${3-default}
 
 # Includes
 source $VESTA/func/main.sh

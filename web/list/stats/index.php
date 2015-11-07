@@ -1,5 +1,5 @@
 <?php
-session_start();
+error_reporting(NULL);
 $TAB = 'STATS';
 
 // Main include

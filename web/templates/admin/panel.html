@@ -1,3 +1,4 @@
+  <div class="hidden" id="token" token="<?=$_SESSION['token']?>"></div>
   <a href="#" class="to-top">
     <i class="l-icon-to-top"></i>
   </a>
@@ -21,14 +22,16 @@
         <div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?>"><a href="/list/server/"><?=__('Server')?></a></div>
       </div>
       <!-- /.l-menu -->
-
       <div class="l-profile noselect">
+        <a class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo "updates"; ?>">&nbsp;</a>
         <a class="l-profile__username" href="/edit/user/?user=<?php echo $user; ?>"><?=$user?></a>
         <a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> </a>
       </div>
       <!-- /.l-profile -->
     </div>
   </div>
+  <ul class="notification-container hidden"></ul>
+
   <!-- /.l-header -->
 
 

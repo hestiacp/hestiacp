@@ -1,28 +1,20 @@
 <?php
-session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-
 $user = $_SESSION['user'];
-/*
-if (empty($panel)) {
-    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
-    exec ($command, $output, $return_var);
-    if ( $return_var > 0 ) {
-        header("Location: /error/");
-        exit;
-    }
-    $panel = json_decode(implode('', $output), true);
-}
-*/
-/*
-// Check user session
-if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
+
+// Check module activation
+if (!$_SESSION['FILEMANAGER_KEY']) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
 }
-*/
+
+// Check login_as feature
+if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
+    $user=$_SESSION['look'];
+}
+
 
 ?>
 
@@ -44,66 +36,37 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     if (!empty($_REQUEST['path'])) {
         $content = '';
         $path = $_REQUEST['path'];
-        if (is_readable($path)) {
-            $image = getimagesize($path) ? true : false;
-            
-            if ($image) {
-                header('Location: /view/file/?path='.$path);
-                exit;
-            }
-            
-            if (!empty($_POST['save'])) {
-                $fn = tempnam ('/tmp', 'vst-save-file-');
-                if ($fn) {
-                    $f = fopen ($fn, 'w+');
-                    fwrite($f, $_POST['contents']);
-                    fclose($f);
-                    
-                    chmod($fn, 0644);
-                    
-                    if ($f) {
-                        //copy($fn, $path);
-                        exec (VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}", $output, $return_var);
+        if (!empty($_POST['save'])) {
+            $fn = tempnam ('/tmp', 'vst-save-file-');
+            if ($fn) {
+                $contents = $_POST['contents'];
+                $contents = preg_replace("/\r/", "", $contents);
+                $f = fopen ($fn, 'w+');
+                fwrite($f, $contents);
+                fclose($f);
+                chmod($fn, 0644);
 
-                        $error = check_return_code($return_var, $output);
-                        if ($return_var != 0) {
-                            /*var_dump(VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}");
-                            var_dump($path);
-                            var_dump($output);*/
-                            die('<p style="color: white">Error while saving file</p>');//echo '0';
-                        }
+                if ($f) {
+                    exec (VESTA_CMD . "v-copy-fs-file {$user} {$fn} ".escapeshellarg($path), $output, $return_var);
+                    $error = check_return_code($return_var, $output);
+                    if ($return_var != 0) {
+                        print('<p style="color: white">Error while saving file</p>');
+                        exit;
                     }
-                    unlink($fn);
                 }
+                unlink($fn);
             }
-            
-            // $content = file_get_contents($path);
-            // v-open-fs-file
-            
-
-            //print file_get_contents($path);
-            exec (VESTA_CMD . "v-check-fs-permission {$user} {$path}", $content, $return_var);
-
-            if ($return_var != 0) {
-                print 'Error while opening file'; // todo: handle this more styled
-                exit;
-            }
-
-            
-            /*exec (VESTA_CMD . "v-open-fs-file {$user} {$path}", $content, $return_var);
-            if ($return_var != 0) {
-                print 'Error while opening file'; // todo: handle this more styled
-                exit;
-            }
-            
-            $content = implode("\n", $content);*/
-            $content = file_get_contents($path);
         }
-    }
-    else {
+
+        exec (VESTA_CMD . "v-open-fs-file {$user} ".escapeshellarg($path), $content, $return_var);
+        if ($return_var != 0) {
+            print 'Error while opening file'; // todo: handle this more styled
+            exit;
+        }
+        $content = implode("\n", $content)."\n";
+    } else {
         $content = '';
     }
-
 ?>
 
 <form id="edit-file-form" method="post">
@@ -120,9 +83,11 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     $('.editor').ace({ theme: 'twilight', lang: 'ruby' });
 
     var dcrt = $('#editor').data('ace');
-    var editor = dcrt.editor.ace;
-    editor.gotoLine(0);
-    editor.focus();
+    dcrt.editor.ace.getSession().setNewLineMode('unix');
+    var aceInstance = dcrt.editor.ace;
+    aceInstance.gotoLine(0);
+    aceInstance.focus();
+    
 
 
     var makeBackup = function() {

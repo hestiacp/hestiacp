@@ -3,7 +3,7 @@ body { margin: 0; padding: 0; }
 
 .l-logo {
     background-color: #7B7B7B;
-    background-image: url("/images/sprite.png");
+    background-image: url("/images/sprite.png?1446554103");
     background-position: -117px -57px;
     background-repeat: no-repeat;
     border: 9px solid #7B7B7B;
@@ -111,6 +111,7 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 /* .listing li .icon { background: url("/images/document.png") no-repeat scroll -2px 6px; float: left; margin-left: -17px; width: 13px; height: 24px; }*/
 .listing li .icon { background: url("/images/flat_icons.png") no-repeat scroll  -97px -100px; float: left; margin-left: -17px; width: 31px; height: 31px; margin-top: 1px; }
 .listing li .icon.filetype-dir { background: url("/images/flat_icons.png") no-repeat scroll -24px -98px; }
+.listing li .icon.filetype-link { background: url("/images/flat_icons.png") no-repeat scroll -97px -121px; }
 
 .listing li .icon.filetype-tif,
 .listing li .icon.filetype-gif,
@@ -474,7 +475,7 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 }
 
 .progress-container .progress-elm .close {
-    background: rgba(0, 0, 0, 0) url("/images/sprite.png") repeat scroll -428px -487px;
+    background: rgba(0, 0, 0, 0) url("/images/sprite.png?1446554103") repeat scroll -428px -487px;
     cursor: pointer;
     display: inline-block;
     float: right;
@@ -505,7 +506,7 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 }
 /*W
 .check-label::before {
-    background-image: url("/images/sprite.png");
+    background-image: url("/images/sprite.png?1446554103");
     background-position: -232px -9px;
     background-repeat: no-repeat;
     background-size: 450px auto;
@@ -658,7 +659,7 @@ input[type="checkbox"] {
   line-height: 30px;
 }
 .shortcuts .close {
-  background: url("/images/sprite.png") repeat scroll -408px -469px;
+  background: url("/images/sprite.png?1446554103") repeat scroll -408px -469px;
   cursor: pointer;
   display: inline-block;
   float: right;
@@ -715,7 +716,7 @@ input[type="checkbox"] {
 .l-icon-shortcuts {
   display: inline-block;
   vertical-align: middle;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   width: 35px;
   height: 35px;
   background-position: -122px -283px;

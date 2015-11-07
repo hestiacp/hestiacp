@@ -867,7 +867,7 @@ App.Ajax.request = function(method, data, callback, onError){
                 callback && callback(reply);
             }
             catch(e) {
-                alert('GENERAL ERROR: '+e);
+                fb.error('GENERAL ERROR with ajax method: ' + data.request_method + ' ' + e);
                 //App.Helpers.generalError();
             }
         }

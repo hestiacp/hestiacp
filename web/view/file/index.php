@@ -2,18 +2,21 @@
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+if ((!isset($_SESSION['FILEMANAGER_KEY'])) || (empty($_SESSION['FILEMANAGER_KEY']))) {
+    header("Location: /login/");
+    exit;
+}
+
+$user = $_SESSION['user'];
+if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
+    $user=$_SESSION['look'];
+}
+
 if (!empty($_REQUEST['path'])) {
     $path = $_REQUEST['path'];
-    if (is_readable($path) && !empty($_REQUEST['raw'])) {
-        //print file_get_contents($path);
-        exec (VESTA_CMD . "v-check-fs-permission {$user} {$path}", $content, $return_var);
-
-        if ($return_var != 0) {
-            print 'Error while opening file'; // todo: handle this more styled
-            exit;
-        }
-        header('content-type: image/jpeg'); 
-        print file_get_contents($path);
+    if (!empty($_REQUEST['raw'])) {
+        header('content-type: image/jpeg');
+        passthru (VESTA_CMD . "v-open-fs-file " . $user . " " . escapeshellarg($_REQUEST['path']));
         exit;
     }
 }

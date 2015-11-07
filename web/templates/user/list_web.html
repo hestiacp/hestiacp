@@ -32,8 +32,6 @@
                 <div class="l-select">
                   <select name="action">
                     <option value=""><?=__('apply to selected')?></option>
-                    <option value="suspend"><?=__('suspend')?></option>
-                    <option value="unsuspend"><?=__('unsuspend')?></option>
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
@@ -140,15 +138,6 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
               <? if (!empty($data[$key]['STATS'])) { ?>
                   <div class="actions-panel__col actions-panel__logs"><a href="http://<?=$key?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a></div>
               <? } ?>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action ?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-              </div>
               <div class="actions-panel__col actions-panel__delete">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>

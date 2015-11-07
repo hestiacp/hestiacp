@@ -33,8 +33,6 @@
                 <div class="l-select">
                   <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
-                    <option value="suspend"><?php print __('suspend');?></option>
-                    <option value="unsuspend"><?php print __('unsuspend');?></option>
                     <option value="delete"><?php print __('delete');?></option>
                   </select>
                 </div>
@@ -84,15 +82,6 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
               <div class="actions-panel__col actions-panel__logs"><a href="/list/dns/?domain=<?=$key?>"><?=__('list records',$data[$key]['RECORDS'])?> <i></i></a></div>
               <div class="actions-panel__col actions-panel__add"><a href="/add/dns/?domain=<?=$key?>"><?=__('add record')?> <i></i></a></div>
               <div class="actions-panel__col actions-panel__edit"><a href="/edit/dns/?domain=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-              </div>
               <div class="actions-panel__col actions-panel__delete">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>

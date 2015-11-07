@@ -4,19 +4,12 @@
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-//$user = $_SESSION['user'];
-
-if (empty($panel)) {
-    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
-    exec ($command, $output, $return_var);
-    if ( $return_var > 0 ) {
-        header("Location: /error/");
-        exit;
-    }
-    $panel = json_decode(implode('', $output), true);
+// Check login_as feature
+$user = $_SESSION['user'];
+if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
+    $user=$_SESSION['look'];
 }
-$user = array_keys($panel);
-$user = $user[0];
+
 
 define('USERNAME', $user);
 
@@ -478,7 +471,9 @@ class UploadHandler
     }
     
     protected function sanitizeFileName($file) {
-        $file = preg_replace("/[^a-z0-9\._-]+/", '', $file);
+        // (|\\?*<\":>+[]/')
+        // \|\\\?\*\<\"\'\:\>\+\[\]
+        $file = preg_replace("/'/", '', $file);
 
         return $file;
     }
@@ -1140,11 +1135,11 @@ class UploadHandler
                 //    $this->handle_image_file($file_path, $file);
                 //}
             } else {
-                $file->size = $file_size;
-                if (!$content_range && $this->options['discard_aborted_uploads']) {
-                    unlink($file_path);
-                    $file->error = $this->get_error_message('abort');
-                }
+                //$file->size = $file_size;
+                //if (!$content_range && $this->options['discard_aborted_uploads']) {
+                //    unlink($file_path);
+                //    $file->error = $this->get_error_message('abort');
+                //}
             }
             $this->set_additional_file_properties($file);
         }

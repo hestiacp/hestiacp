@@ -44,9 +44,7 @@ class FileManager {
     
     public function checkFileType($dir) {
         $dir = $this->formatFullPath($dir);
-
         exec(VESTA_CMD . "v-get-fs-file-type {$this->user} {$dir}", $output, $return_var);
-        
         $error = self::check_return_code($return_var, $output);
         if (empty($error)) {
             return array(
@@ -76,12 +74,7 @@ class FileManager {
     
     function deleteItem($dir, $item) {
         $dir = $this->formatFullPath($item);
-        if (is_dir($item)) {
-            exec (VESTA_CMD . "v-delete-fs-directory {$this->user} {$dir}", $output, $return_var);
-        }
-        else {
-            exec (VESTA_CMD . "v-delete-fs-file {$this->user} {$dir}", $output, $return_var);
-        }
+        exec (VESTA_CMD . "v-delete-fs-directory {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
         
@@ -189,8 +182,12 @@ class FileManager {
     function packItem($item, $dir, $target_dir, $filename) {
         $item     = $this->formatFullPath($item);
         $dst_item = $this->formatFullPath($target_dir);
-//print VESTA_CMD . "v-add-fs-archive {$this->user} {$item} {$dst_item}";die();
-        exec (VESTA_CMD . "v-add-fs-archive {$this->user} {$item} {$dst_item}", $output, $return_var);
+        
+        $dst_item = str_replace('.tar.gz', '', $dst_item);
+        
+        //$item = str_replace($dir . '/', '', $item);
+//var_dump(VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$item}");die();
+        exec (VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
         

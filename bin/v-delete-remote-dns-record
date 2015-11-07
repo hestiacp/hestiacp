@@ -55,7 +55,7 @@ for cluster in $(cat $VESTA/conf/dns-cluster.conf); do
 
     # Sync domain
     cluster_cmd v-delete-dns-record $DNS_USER $domain $id 'no'
-    check_result $? "$HOST connection failed (rebuild)" $E_CONNECT
+    #check_result $? "$HOST connection failed (delete)" $E_CONNECT
 
     # Rebuilding dns zone
     cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'

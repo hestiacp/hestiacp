@@ -39,8 +39,6 @@
                 <div class="l-select">
                   <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
-                    <option value="suspend"><?=__('suspend')?></option>
-                    <option value="unsuspend"><?=__('unsuspend')?></option>
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
@@ -100,15 +98,6 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
               <div class="actions-panel__col actions-panel__logs"><a href="?domain=<?=$key?>"><?=__('list accounts',$data[$key]['ACCOUNTS'])?> <i></i></a></div>
               <div class="actions-panel__col actions-panel__add"><a href="/add/mail/?domain=<?=$key?>"><?=__('add account')?> <i></i></a></div>
               <div class="actions-panel__col actions-panel__edit"><a href="/edit/mail/?domain=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-              </div>
               <div class="actions-panel__col actions-panel__delete">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>

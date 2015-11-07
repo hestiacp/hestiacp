@@ -629,10 +629,11 @@ a {
   left: 0;
   top: 0;
   display: inline-block;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-size: 450px auto;
   background-repeat: no-repeat;
   background-position: -232px -9px;
+  z-index: 99;
 }
 
 input[type="checkbox"] {
@@ -655,7 +656,7 @@ input[type="checkbox"] {
 }
 
 .l-logo {
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -117px -7px;
   background-repeat: no-repeat;
   display: inline-block;
@@ -672,7 +673,7 @@ input[type="checkbox"] {
   margin-bottom: 28px;
   position: fixed;
   width: 100%;
-  z-index: 11;
+  z-index: 100;
 }
 .l-header a {
   font-size: 12px;
@@ -777,7 +778,7 @@ input[type="checkbox"] {
 }
 
 .l-profile__notifications {
-  background: url("/images/sprite.png") no-repeat scroll -129px -135px;
+  background: url("/images/sprite.png?1446554103") no-repeat scroll -129px -135px;
   border-radius: 30px;
   color: #fff;
   cursor: pointer;
@@ -799,11 +800,6 @@ input[type="checkbox"] {
   background-color: #c4da5e;
 }
 .l-profile__notifications.updates {
-  background-position: -165px -135px;
-}
-
-.l-profile__notifications.updates2 {
-/*  background-position: -202px -135px; */
   background-position: -202px -157px;
 }
 
@@ -817,34 +813,42 @@ input[type="checkbox"] {
   position: fixed;
   top: 34px;
   width: 351px;
-  z-index: 21;
+  z-index: 200;
   font-size: 12px;
   padding: 0;
-  color: #9E9E9E;
+  color: #7f7f7f;
 }
+.notification-container .unseen {
+  color: #ABABAB;
+}
+
+
 .notification-container li {
   border-bottom: 1px solid #555;
   padding: 10px 15px 24px;
 }
 .notification-container .mark-seen {
-  background: rgba(0, 0, 0, 0) url("/images/sprite.png") repeat scroll -427px -486px;
-  border: 5px solid #454545;
-  border-radius: 12px;
+  background-color: #abc04b;
+  border: 2px solid #454545;
+  border-radius: 10px;
   cursor: pointer;
-  display: inline-block;
+  display: none;
   float: right;
-  height: 9px;
-  margin-right: -8px;
-  margin-top: -3px;
-  width: 9px;
+  height: 7px;
+  margin-right: -5px;
+  margin-top: 0;
+  width: 7px;
 }
 .notification-container .mark-seen:hover {
   background-color: #333;
-  border-color: #333;
+  border-color: #abc04b;
 }
 .notification-container .mark-seen:active {
   background-color: #777;
   border-color: #777;
+}
+.notification-container .unseen .mark-seen{
+  display: inline-block;
 }
 .notification-container .title {
   color: #9e9e9e;
@@ -870,7 +874,6 @@ input[type="checkbox"] {
   color: #dacf2e;
 }
 
-
 .notification-container a {
   color: #5ABDB5;/* #eee;*/
 }
@@ -881,6 +884,21 @@ input[type="checkbox"] {
   color: #00C0C0;
 }
 
+.notification-container .icon {
+  display: inline-block;
+  width: 0;
+}
+.notification-container .icon.filemanager {
+  display: inline-block;
+  width: 22px;
+  background: url("/images/flat_icons.png") repeat scroll -31px -100px;
+}
+.notification-container .icon.starred {
+  display: inline-block;
+  width: 21px;
+  background: url("/images/sprite.png?1446554103") repeat scroll -184px 556px;
+}
+
 
 
 .l-stat {
@@ -889,7 +907,7 @@ input[type="checkbox"] {
   margin: 34px auto;
   position: fixed;
   background-color: #fff;
-  z-index: 10;
+  z-index: 100;
   padding-top: 30px;
 }
 .l-stat__col {
@@ -972,25 +990,25 @@ div.l-content > div.l-separator:nth-of-type(2) {
   margin-top: 214px;
   width: 100%;
   position: fixed;
-  z-index: 20;
+  z-index: 120;
 }
 
 div.l-content > div.l-separator:nth-of-type(4) {
   margin-top: 259px;
   width: 100%;
   position: fixed;
-  z-index: 5;
+  z-index: 100;
 }
 
 .l-sort {
   position: fixed;
   width: 998px;
   background-color: #fff;
-  z-index: 10;
+  z-index: 110;
   margin-top: 215px;
 }
 .l-sort__create-btn {
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -331px -107px;
   background-repeat: no-repeat;
   bottom: -23px;
@@ -1058,7 +1076,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding: 12px;
 }
 .context-menu.sort-order span.name {
-  background: url("/images/sprite.png") no-repeat scroll -292px -361px rgba(0, 0, 0, 0);
+  background: url("/images/sprite.png?1446554103") no-repeat scroll -292px -361px rgba(0, 0, 0, 0);
   display: inline-block;
   padding: 12px 28px 12px 12px;
   width: 117px;
@@ -1066,7 +1084,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   font-weight: bold;
 }
 .context-menu.sort-order span.up {
-  background: url("/images/sprite.png") no-repeat scroll -434px -417px rgba(0, 0, 0, 0);
+  background: url("/images/sprite.png?1446554103") no-repeat scroll -434px -417px rgba(0, 0, 0, 0);
   display: inline-block;
   padding: 12px 14px;
   width: 16px;
@@ -1152,7 +1170,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   float: left;
   width: 30px;
   height: 30px;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -333px -1px;
   border: none;
 }
@@ -1173,7 +1191,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   float: left;
   width: 25px;
   height: 25px;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -333px -37px;
   border: none;
 }
@@ -1226,7 +1244,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-select:after {
   pointer-events: none;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -245px -175px;
   width: 7px;
   height: 4px;
@@ -1261,13 +1279,11 @@ div.l-content > div.l-separator:nth-of-type(4) {
   overflow: hidden;
   font-size: 13px;
 }
-
-.units div:last-child {  
-  border-bottom: none !important;
-}
-
 .units .l-unit {
   border-bottom: 1px solid #ddd;
+}
+.units > div:last-child {
+  border-bottom: none;
 }
 
 
@@ -1566,7 +1582,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   position: relative;
 }
 .actions-panel__col i {
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-repeat: no-repeat;
   display: inline-block;
   float: right;
@@ -1993,7 +2009,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-icon-up-arrow, .l-icon-down-arrow, .l-icon-star, .l-icon-to-top, .l-icon-shortcuts, .l-icon-star-orange, .l-icon-star-blue {
   display: inline-block;
   vertical-align: middle;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
 }
 
 .l-icon-down-arrow {
@@ -2233,7 +2249,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 16px;
   overflow: hidden;
   padding-top: 6px;
-  width: 620px;
+  width: 593px;
 }
 
 .vst-ok {
@@ -2328,7 +2344,7 @@ label {
 
 .vst-input:disabled,
 .vst-list:disabled {
-  background-color: #ebebeb;
+  background-color: #e0e0e0;
 }
 .vst-input:focus:disabled {
   border-color: #f1f1f1;
@@ -2351,7 +2367,7 @@ label {
   margin: 2px 6px 0 0;
   min-width: 138px;
   padding: 8px 1px 6px 10px;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -185px -604px;
   width: 270px;
   appearance:none;
@@ -2764,7 +2780,7 @@ form#vstobjects.suspended {
 #add-icon {
   width: 45px;
   height: 45px;
-  background-image: url("/images/sprite.png");
+  background-image: url("/images/sprite.png?1446554103");
   background-position: -378px -107px;
   background-repeat: no-repeat;
   display: inline-block;
@@ -2831,13 +2847,14 @@ form#vstobjects.suspended {
 }
 
 .search-input {
+  background-color: #fff;
   border: 1px solid #ddd;
   height: 21px;
   line-height: 28px;
   padding-left: 7px;
   float: left;
-  width: 0px;
-  visibility: hidden;
+  width: 74px;
+/*  visibility: hidden;*/
   -webkit-transition: width .2s ease-out;
   -moz-transition: width .2s ease-out;
   -o-transition: width .2s ease-out;
@@ -2848,9 +2865,9 @@ form#vstobjects.suspended {
   visibility: visible;
 }
 .search-input:focus {
-  background-color: #d7f9ff;
-  border-color: #55c9c0;
-  color: #333;
+//  background-color: #e8fcff;
+//  border-color: #75c9c2;
+//  color: #333;
 }
 
 .float-left {
@@ -2902,7 +2919,7 @@ form#vstobjects.suspended {
   letter-spacing: 3px;
 }
 .shortcuts .close {
-  background: url("/images/sprite.png") repeat scroll -408px -469px;
+  background: url("/images/sprite.png?1446554103") repeat scroll -408px -469px;
   cursor: pointer;
   display: inline-block;
   float: right;
@@ -3001,6 +3018,10 @@ form#vstobjects.suspended {
   background-color: #5f9491;
 }
 
+.description.cancel-success {
+  color: #8fac0a;
+  font-weight: bold;
+}
 
 .description .licence {
   padding: 20px 0;

@@ -1245,6 +1245,9 @@ chkconfig vesta on
 service vesta start
 check_result $? "vesta start failed"
 
+# Adding notifications
+$VESTA/upd/add_notifications.sh
+
 
 #----------------------------------------------------------#
 #                   Vesta Access Info                      #

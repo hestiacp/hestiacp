@@ -5,10 +5,10 @@
 # The function opens/reads files on the file system
 
 user=$1
-src_file=$2
+src=$2
 
 # Checking arguments
-if [ -z "$src_file" ]; then
+if [ -z "$src" ]; then
     echo "Usage: USER FILE"
     exit 1
 fi
@@ -27,27 +27,19 @@ if [ -z $homedir ]; then
 fi
 
 # Checking path
-if [ ! -z "$src_file" ]; then
-    rpath=$(readlink -f "$src_file")
+if [ ! -z "$src" ]; then
+    rpath=$(readlink -f "$src")
     if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
-        echo "Error: invalid source path $src_file"
+        echo "Error: invalid source path $user $src"
         exit 2
     fi
 fi
 
-# Reading file
-#sudo -u $user cat "$src_file" 2>/dev/null
-#if [ $? -ne 0 ]; then
-#    echo "Error: file $src_file was not opened"
-#    exit 3
-#fi
-
 # Checking if file has readable permission
-if [[ ! -r $src_file ]]
-then
-#  echo "File is readable"
-#else
-  echo "Cannot read file"
+sudo -u $user ls "$src" > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "Error: can't read $src"
+    exit 1
 fi
 
 # Exiting

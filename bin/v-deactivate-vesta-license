@@ -1,0 +1,65 @@
+#!/bin/bash
+# info: deactivate vesta license
+# options: MODULE LICENSE
+#
+# The function activates and register vesta license
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+module=$(echo $1 | tr '[:lower:]' '[:upper:]')
+license=$2
+
+# Importing system enviroment
+source /etc/profile
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '2' "$#" 'MODULE LICENSE'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Activating license
+v_host='https://vestacp.com/checkout'
+answer=$(curl -s $v_host/cancel.php?licence_key=$license)
+check_result $? "cant' connect to vestacp.com " $E_CONNECT
+
+# Checking server answer
+if [[ "$answer" != '0' ]]; then
+    echo "Error: $module license $license is invalid"
+    exit $E_INVALID
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Updating vesta.conf
+if [ ! -z "$(grep "${module}_KEY" $VESTA/conf/vesta.conf)" ]; then
+    sed -i "s/${module}_KEY=.*/${module}_KEY=''/g" $VESTA/conf/vesta.conf
+fi
+
+# Deactivating sftpjail
+if [ "$module" = 'SFTPJAIL' ]; then
+    setsid $BIN/v-delete-sys-sftp-jail 2>/dev/null
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

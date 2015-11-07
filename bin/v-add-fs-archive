@@ -1,22 +1,16 @@
 #!/bin/bash
 # info: archive directory
-# options: USER ARCHIVE DIRECTORY [DIRECTORY_N]
+# options: USER ARCHIVE SOURCE
 #
 # The function creates tar archive
 
 user=$1
 archive=$2
-src1=$3
-src2=$4
-src3=$5
-src4=$6
-src5=$7
-src6=$8
-src7=$9
+src=$3
 
 # Checking arguments
-if [ -z "$src1" ]; then
-    echo "Usage: USER ARCHIVE DIRECTORY [DIRECTORY_N]"
+if [ -z "$src" ]; then
+    echo "Usage: USER ARCHIVE SOURCE"
     exit 1
 fi
 
@@ -40,19 +34,22 @@ if [ -e "$archive.tar.gz" ]; then
 fi
 
 # Checking source path
-for src_path in $src1 $src2 $src3 $src4 $src5 $src6 $src7; do
-    rpath=$(readlink -f "$src_path")
-    if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
-        echo "Error: invalid source path $src_path"
-        exit 1
-    fi
-done
+rpath=$(readlink -f "$src")
+if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+    echo "Error: invalid source path $src"
+    exit 1
+fi
+
+# Parsing current directory
+d=$(dirname "$src")
+
+# Removing leading file path
+f=$(echo "$src" |sed -e "s|$d/||")
 
 # Creating tar.gz archive
-sudo -u $user tar -czf "$archive.tar.gz" \
-    $src1 $src2 $src3 $src4 $src5 $src6 $src7 > /dev/null 2>&1
+sudo -u $user tar -czf "$archive.tar.gz" -C $d $f >/dev/null 2>&1
 if [ "$?" -ne 0 ]; then
-#    echo "Error: archive $archive.tar.gz was not created"
+    echo "Error: archive $archive.tar.gz was not created"
     exit 3
 fi
 

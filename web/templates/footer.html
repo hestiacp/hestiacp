@@ -178,7 +178,8 @@
               );
 
               $(window).bind('keypress', function(evt) {
-                  if (evt.charCode == 97) {
+                  var tag = evt.target.tagName.toLowerCase();
+                  if (evt.charCode == 97 && tag != 'input' && tag != 'textarea' && tag != 'selectbox') {
                       evt.preventDefault();
                       if (!evt.ctrlKey && !evt.shiftKey) {
                           if ($('.l-sort__create-btn')[0]) {
@@ -382,14 +383,33 @@
                 $('.shortcuts').toggle();
               });
 
-              $('.l-profile__notifications').click(function(){
-                $('.notification-container').toggle();
-                $('.l-profile__notifications').toggleClass('active');
-
-                left = $('.l-profile__notifications').offset().left - $('.notification-container').outerWidth() + 28;
-                $('.notification-container').css({left: left+'px'});
+              $(document).click(function(evt){
+                //close notification popup
+                if(!$(evt.target).hasClass('l-profile__notifications') && $(evt.target).parents('ul.notification-container').length == 0){
+                  $('.notification-container').hide();
+                  $('.l-profile__notifications').removeClass('active');
+                }
               });
-        
+
+
+              // focusing on the first input at form
+              if(location.href.indexOf('lead=') == -1){
+                $('#vstobjects .vst-input:not([disabled]), #vstobjects .vst-list:not([disabled])').first().focus();
+              }
+
+
+              $('.l-profile__notifications').click(function(){
+                if(!$('.l-profile__notifications').hasClass('active')){
+                  VE.notifications.get_list();
+                  $('.l-profile__notifications').addClass('active');
+                  left = $('.l-profile__notifications').offset().left - $('.notification-container').outerWidth() + 28;
+                  $('.notification-container').css({left: left+'px'});
+
+                } else {
+                  $('.notification-container').hide();
+                  $('.l-profile__notifications').removeClass('active');
+                }
+              });
 
             VE.navigation.init();
 
@@ -420,12 +440,20 @@
                         }
                     }
                 });
+
                 $('table').on('mousedown', 'td', function(e) {
                     if (e.ctrlKey) {
                         e.preventDefault();
                     }
                 });
             }
+
+			// 
+			$('form#objects').bind('submit', function(evt) {
+				$('.l-unit.selected').find('.ch-toggle').attr('checked', true);
+			});
+
+
         });
     </script>
 

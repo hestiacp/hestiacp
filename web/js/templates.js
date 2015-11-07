@@ -4,7 +4,14 @@
  */
 App.Templates.html = {
     WEB: {
-        hint: ['']
+        hint: [''],
+        notification: [
+                    '<li class="~!:UNSEEN~!"><span class="mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
+                        <span class="title"><span class="icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
+                        ~!:NOTICE~!\
+                    </li>'
+        ]
+
     },
     // file manager
     //
@@ -39,6 +46,7 @@ App.Templates.html = {
                         </div>'],
         popup_bulk_remove: ['<div class="confirm-box delete popup-box">\
                             <div class="message">'+App.Constants.FM_CONFIRM_DELETE_BULK+' (~!:NUMBER_OF_ITEMS~!)?</div>\
+                            <div class="results"></div>\
                                 <div class="controls">\
                             <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
                             <p class="ok" onClick="FM.bulkRemoveDo();">'+App.Constants.FM_DELETE+'</p>\
@@ -50,7 +58,7 @@ App.Templates.html = {
                                 <input type="text" id="copy_dest" value="~!:DST_FILENAME~!" class="new-title">\
                             </div>\
                             <div class="results"></div>\
-                            <div class="message">'+App.Constants.FM_EXISTING_FILES_WILL_BE_REPLACED+'</div>\
+                            <div class="warning">'+App.Constants.FM_EXISTING_FILES_WILL_BE_REPLACED+'</div>\
                                 <div class="controls">\
                             <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
                             <p class="ok" onClick="FM.bulkCopyDo();">'+App.Constants.FM_COPY+'</p>\
@@ -66,6 +74,7 @@ App.Templates.html = {
                         </div>'],*/
         popup_delete: ['<div class="confirm-box delete popup-box">\
                             <div class="message">'+App.Constants.FM_CONFIRM_DELETE+' <span class="title">"~!:FILENAME~!"</span>?</div>\
+                            <div class="warning warning-message"></div>\
                                 <div class="controls">\
                             <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
                             <p class="ok" onClick="FM.confirmDelete();">'+App.Constants.FM_DELETE+'</p>\
@@ -77,6 +86,7 @@ App.Templates.html = {
                                 <input type="text" id="copy_dest" value="~!:DST_FILENAME~!" class="new-title">\
                             </div>\
                             <div class="message">'+App.Constants.FM_EXISTING_FILES_WILL_BE_REPLACED+'</div>\
+                           <div class="warning warning-message"></div>\
                                 <div class="controls">\
                             <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
                             <p class="ok" onClick="FM.confirmCopyItems();">'+App.Constants.FM_COPY+'</p>\

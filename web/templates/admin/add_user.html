@@ -128,12 +128,12 @@
                                             foreach ($languages as $key => $value) {
                                                 echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                                 $svalue = "'".$value."'";
-                                                if (( $value == 'en' ) && (empty($v_language))){
-                                                    echo 'selected' ;
+                                                if (( $value == $_SESSION['LANGUAGE'] ) && (empty($v_language))){
+                                                    echo ' selected' ;
                                                 }
                                                 if (isset($v_language)){
                                                     if (( $value == $v_language ) || ( $svalue == $v_language)){
-                                                        echo 'selected' ;
+                                                        echo ' selected' ;
                                                     }
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";

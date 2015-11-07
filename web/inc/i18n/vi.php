@@ -582,8 +582,7 @@ $LANG['vi'] = array(
     'Select Bunch of Files' => 'Select Bunch of Files',
     'Append File to the Current Selection' => 'Append File to the Current Selection',
     'Select All Files' => 'Select All Files',
-    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>.
-        'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' => 'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
     'Licence Key' => 'Licence Key',
     'Enter License Key' => 'Enter License Key',

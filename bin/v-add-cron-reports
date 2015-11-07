@@ -46,9 +46,7 @@ sync_cron_jobs
 
 # Restart crond
 $BIN/v-restart-cron
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+check_result $? "Cron restart failed" >/dev/null
 
 # Logging
 log_history "enabled cron reporting"

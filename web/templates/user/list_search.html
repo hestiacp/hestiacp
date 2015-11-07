@@ -1,182 +1,270 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div style="submenu-button-block">
-                            <a style="float:left; font-size: 16pt; color: #555;"><b><?php print __('Search Results');?></b></a>
-                        </div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Name')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        </ul>
+        <div class="l-sort-toolbar clearfix width-100p">
+          <span class="title edit display-inline-block float-left"><b><?=__('Search Results')?></b></span>
+          <table class="float-right">
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+              </td>
+            </tr>
+          </table>
         </div>
+      </div>
 
-        <div id="vstobjects">
-            <table class="data">
-                <?php
-                    foreach ($data as $key => $value) {
-                        ++$i;
-                        if ($data[$key]['SUSPENDED'] == 'yes') {
-                            $status = 'suspended';
-                            $spnd_action = 'unsuspend' ;
-                        } else {
-                            $status = 'active';
-                            $spnd_action = 'suspend';
-                        }
-                        if ($data[$key]['TYPE'] == 'db') {
-                            $object = 'database';
-                        } else {
-                            $object = strtolower($data[$key]['TYPE']." ".$data[$key]['KEY']);
-                        }
+      <? display_error_block() ?>
+
+      <!-- /.l-sort -->
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+
+
+
+    <div class="l-center units">
+      <?
+        foreach ($data as $key => $value) {
+          ++$i;
+          if ($data[$key]['SUSPENDED'] == 'yes') {
+            $status = 'suspended';
+            $spnd_action = 'unsuspend' ;
+          } else {
+            $status = 'active';
+            $spnd_action = 'suspend';
+          }
+            if ($data[$key]['TYPE'] == 'db') {
+            $object = 'database';
+          } else {
+            $object = strtolower($data[$key]['TYPE']." ".$data[$key]['KEY']);
+          }
+
+          $uniq_id = $data[$key]['TYPE'].'-';
+          if($data[$key]['KEY'] == 'ACCOUNT'){
+            $uniq_id .= 'acc-';
+          }
+          $uniq_id .= sha1($data[$key]['RESULT']);
+        ?>
+
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred';?>" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$data[$key]['RESULT']?>">
+        <div class="l-unit-toolbar clearfix">
+          <!--div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="check<?=$i?>">
+            <label for="check<?=$i?>" class="check-label"></label>
+          </div -->
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+
+            <?
+              if ($data[$key]['USER'] != $user && $data[$key]['KEY'] == 'ACCOUNT') {
+                if ($key == $user) {
+            ?>
+                  <div class="actions-panel__col actions-panel__loginas"><a href="/logout""><?=__('logout')?> <i></i></a></div>
+                <?
+                  if (!empty($_SESSION['look_alert'])) {
                 ?>
+                    <script type="text/javascript">
+                      $(function() {
+                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
+                        $( "#dialog-message" ).dialog({
+                          modal: true,
+                          buttons: {
+                            Ok: function() {
+                              $( this ).dialog( "close" );
+                            },
+                          }
+                        });
+                      });
+                    </script>
+                    <div id="dialog-message" title="<?=__('Welcome')?>">
+                      <p class="confirmation"><?=__('LOGGED_IN_AS',$key)?></p>
+                    </div>
+                    <?
+                      unset($_SESSION['look_alert']);
+                  }
+                } else { ?>
+                  <div class="actions-panel__col actions-panel__loginas"><a href="/login/?loginas=<?=$data[$key]['USER']?>&token=<?=$_SESSION['token']?>""><?=__('login as')?> <i></i></a></div>
+            <?  }
+              }
+            ?>
 
-                <tr class="data-row <? if($status == 'suspended') echo 'suspended';?>">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <?php
-                            if ($data[$key]['KEY'] == 'RECORD') {
-                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'RECORD_ACTION_CONFIRMATION';
-                            }
-                            if ($data[$key]['KEY'] == 'ACCOUNT') {
-                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'USER_ACTION_CONFIRMATION';
-                            }
-                            if ($data[$key]['KEY'] == 'JOB') {
-                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'CRON_ACTION_CONFIRMATION';
-                            }
-                            if ($data[$key]['KEY'] == 'DATABASE') {
-                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'DATABASE_ACTION_CONFIRMATION';
-                            }
-                            if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
-                                $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'DOMAIN_ACTION_CONFIRMATION';
-                            }
-                        ?> 
-                        <a id="delete_link_<?php echo $i ?>" class="do_delete">
-                            <span class="data-controls do_delete">
-                                <img src="/images/delete.png" width="7px" height="7px">
-                                <?php print __('delete');?> 
-                                <input type="hidden" name="delete_url" value="<?php echo $delete_lnk; ?>" />
-                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="Confirmation">
-                                    <p class="confirmation"><?php print __($cnfrm,__('delete'),$data[$key]['RESULT']);?></p>
-                                </div>
-                            </span>
-                        </a>
 
-                        <?php
+            <?
+              if ($data[$key]['KEY'] == 'RECORD') {
+                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+              }
+              if ($data[$key]['KEY'] == 'ACCOUNT') {
+                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+              }
+              if ($data[$key]['KEY'] == 'JOB') {
+                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+              }
+              if ($data[$key]['KEY'] == 'DATABASE') {
+                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+              }
+              if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
+                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+              }
+            ?>
+              <div class="actions-panel__col actions-panel__edit"><a href="<?=$edit_lnk?>"><?=__('edit')?> <i></i></a></div>
+              <? if (!empty($data[$key]['STATS'])) { ?>
+                  <div class="actions-panel__col actions-panel__logs"><a href="http://<?=$data[$key]['RESULT']?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a></div>
+              <? } ?>
 
-                            if ($data[$key]['KEY'] == 'RECORD') {
-                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'RECORD_ACTION_CONFIRMATION';
-                            }
-                            if ($data[$key]['KEY'] == 'ACCOUNT') {
-                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'USER_ACTION_CONFIRMATION';
-                            }
-                            if ($data[$key]['KEY'] == 'JOB') {
-                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'CRON_ACTION_CONFIRMATION';
-                            }
-                            if ($data[$key]['KEY'] == 'DATABASE') {
-                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'DATABASE_ACTION_CONFIRMATION';
-                            }
-                            if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
-                                $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                                $cnfrm = 'DOMAIN_ACTION_CONFIRMATION';
-                            }
-                        ?> 
 
-                        <?php
-                            if ($data[$key]['KEY'] == 'RECORD') {
-                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                            }
-                            if ($data[$key]['KEY'] == 'ACCOUNT') {
-                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                            }
-                            if ($data[$key]['KEY'] == 'JOB') {
-                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                            }
-                            if ($data[$key]['KEY'] == 'DATABASE') {
-                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                            }
-                            if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
-                                $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                            }
-                        ?> 
-                        <a href="<?php echo $edit_lnk; ?>">
-                            <span class="data-controls">
-                                <img src="/images/edit.png" width="8px" height="8px">
-                                <?php print __('edit'); ?> 
-                            </span>
-                        </a>
+              <?
+                if ($data[$key]['KEY'] == 'RECORD') {
+                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'SUSPEND_RECORD_CONFIRMATION';
+                }
+                if ($data[$key]['KEY'] == 'ACCOUNT') {
+                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'SUSPEND_USER_CONFIRMATION';
+                }
+                if ($data[$key]['KEY'] == 'JOB') {
+                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'SUSPEND_CRON_CONFIRMATION';
+                }
+                  if ($data[$key]['KEY'] == 'DATABASE') {
+                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'SUSPEND_DATABASE_CONFIRMATION';
+                }
+                if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
+                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'SUSPEND_DOMAIN_CONFIRMATION';
+                }
+              ?>
+              <div class="actions-panel__col actions-panel__suspend">
+                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
+                  <input type="hidden" name="<?=$spnd_action?>_url" value="<?=$spnd_lnk?>&token=<?=$_SESSION['token']?>" />
+                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__($cnfrm, $data[$key]['RESULT'])?></p>
+                  </div>
+                </a>
+              </div>
 
-                        <table class="data-col2">
-                            <tr><td colspan=3 class="domain"><b><?php echo $data[$key]['RESULT'] ?></b> <a class="aliases"><?php echo str_replace(',', ', ', $data[$key]['ALIAS']) ?></a></td></tr>
-                            <tr>
-                                <td style="vertical-align:top;" width="239px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-value">
-                                                <?php echo $object ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="238px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Owner');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['USER'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <table >
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Status');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo __($status); ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <?php
-                    }
-                ?> 
-            </table>
-            </form>
-
-            <div class="data-count">
-                <?php
-                    if ( $i == 1){
-                        echo __('1 object');
-                    } else {
-                        echo __('%s objects',$i);
-                    }
-                ?> 
+              <?
+                if ($data[$key]['KEY'] == 'RECORD') {
+                  $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'DELETE_RECORD_CONFIRMATION';
+                }
+                if ($data[$key]['KEY'] == 'ACCOUNT') {
+                  $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'DELETE_USER_CONFIRMATION';
+                }
+                if ($data[$key]['KEY'] == 'JOB') {
+                  $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'DELETE_CRON_CONFIRMATION';
+                }
+                if ($data[$key]['KEY'] == 'DATABASE') {
+                  $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'DELETE_DATABASE_CONFIRMATION';
+                }
+                if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
+                  $delete_lnk = '/delete/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
+                  $cnfrm = 'DELETE_DOMAIN_CONFIRMATION';
+                }
+              ?>
+              <div class="actions-panel__col actions-panel__delete">
+                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                  <?=__('delete')?> <i class="do_delete"></i>
+                  <input type="hidden" name="delete_url" value="<?=$delete_lnk?>&token=<?=$_SESSION['token']?>" />
+                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__($cnfrm, $data[$key]['RESULT'])?></p>
+                  </div>
+                </a>
+              </div>
             </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__date" u_date="<?=strtotime($data[$key]['DATE'])?>">
+            <?=translate_date($data[$key]['DATE'])?>
+          </div>
+          <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name separate" u_name="<?=$data[$key]['RESULT']?>">
+            <?=$data[$key]['RESULT']?> <span><?=str_replace(',', ', ', $data[$key]['ALIAS'])?></span>
+          </div>
+          <!-- /.l-unit__name -->
+          <div class="l-unit__stats">
+            <table>
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=$object?></div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Owner')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['USER']?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Status')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($status)?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <!--div class="l-separator"></div-->
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+
+    <div id="vstobjects">
+      <div class="l-separator"></div>
+      <div class="l-center">
+        <div class="l-unit">
+          <table class='data'></table>
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix">
+            <?php
+              if ( $i == 1) {
+                echo __('1 object');
+              } else {
+                echo __('%s objects',$i);
+              }
+            ?>
+          </div>
+        </div>
+      </div>
+    </div>

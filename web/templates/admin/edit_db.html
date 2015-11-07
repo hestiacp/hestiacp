@@ -1,29 +1,37 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+          <span class="title edit"><b><?=__('Editing Database')?></b></span>
             <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/db/'";
-                } else {
-                    $back = "location.href='".$back."'";
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                 }
-            ?> 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Database');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+              }
+            ?>
         </div>
 
-        <form id="vstobjects" name="v_edit_db" method="post">
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/db/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+        <form id="vstobjects" name="v_edit_db" method="post"  class="<?=$v_status?>">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
             <script type="text/javascript">
                 function elementHideShow(elementToHideOrShow) {
                     var el = document.getElementById(elementToHideOrShow);
@@ -51,8 +59,8 @@
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date"><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
-                                    <a class="data-date"><?php echo $v_time?></a>
+                                    <a class="data-date"><?=translate_date($v_date)?></a><br>
+                                    <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
                             <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
@@ -67,7 +75,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_database" <?php if (!empty($v_database)) echo "value=".$v_database; ?> disabled>
+                                    <input type="text" size="20" class="vst-input" name="v_database" <?php if (!empty($v_database)) echo "value=".htmlentities($v_database); ?> disabled>
                                     <small class="hint"></small>
                                 </td>
                             </tr>
@@ -78,7 +86,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_dbuser" <?php if (!empty($v_dbuser)) echo "value=".$v_dbuser; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_dbuser" <?php if (!empty($v_dbuser)) echo "value=".htmlentities($v_dbuser); ?>>
                                     <small class="hint"></small>
                                 </td>
                             </tr>
@@ -89,7 +97,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password"  <?php if (!empty($v_password)) echo "value=".$v_password; ?>>
+                                    <input type="text" size="20" class="vst-input password" name="v_password"  <?php if (!empty($v_password)) echo "value=".htmlentities($v_password); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -99,7 +107,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_type" <?php if (!empty($v_type)) echo "value=".$v_type; ?> disabled>
+                                    <input type="text" size="20" class="vst-input" name="v_type" <?php if (!empty($v_type)) echo "value=".htmlentities($v_type); ?> disabled>
                                 </td>
                             </tr>
                             <tr>
@@ -109,7 +117,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_host" <?php if (!empty($v_host)) echo "value=".$v_host; ?> disabled>
+                                    <input type="text" size="20" class="vst-input" name="v_host" <?php if (!empty($v_host)) echo "value=".htmlentities($v_host); ?> disabled>
                                 </td>
                             </tr>
                             <tr>
@@ -119,7 +127,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_charset" <?php if (!empty($v_charset)) echo "value=".$v_charset; ?> disabled>
+                                    <input type="text" size="20" class="vst-input" name="v_charset" <?php if (!empty($v_charset)) echo "value=".htmlentities($v_charset); ?> disabled>
                                 </td>
                             </tr>
                         </table>
@@ -129,7 +137,7 @@
                                     <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -137,7 +145,7 @@
                 </tr>
             </table>
         </form>
-
+    </div>
     <script type="text/javascript">
         GLOBAL.DB_USER_PREFIX = '<?php echo $user; ?>_';
         GLOBAL.DB_DBNAME_PREFIX = '<?php echo $user; ?>_';

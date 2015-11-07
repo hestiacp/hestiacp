@@ -60,7 +60,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account'])))  {
     $v_username = $user;
     $v_domain = $_GET['domain'];
     $v_account = $_GET['account'];
-    $v_password = "••••••••";
+    $v_password = "";
     $v_aliases = str_replace(',', "\n", $data[$v_account]['ALIAS']);
     $valiases = explode(",", $data[$v_account]['ALIAS']);
     $v_fwd = str_replace(',', "\n", $data[$v_account]['FWD']);
@@ -90,6 +90,12 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account'])))  {
 // Check POST request for mail domain
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_domain = escapeshellarg($_POST['v_domain']);
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
 
     // Delete antispam
     if (($v_antispam == 'yes') && (empty($_POST['v_antispam'])) && (empty($_SESSION['error_msg']))) {
@@ -173,16 +179,27 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
 // Check POST request for mail account
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['account']))) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     $v_domain = escapeshellarg($_POST['v_domain']);
     $v_account = escapeshellarg($_POST['v_account']);
 
     // Change password
-    if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
-        $v_password = escapeshellarg($_POST['v_password']);
+    if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['v_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-change-mail-account-password ".$v_username." ".$v_domain." ".$v_account." ".$v_password, $output, $return_var);
         check_return_code($return_var,$output);
-        $v_password = "••••••••";
         unset($output);
+        unlink($v_password);
+        $v_password = escapeshellarg($_POST['v_password']);;
     }
 
     // Change quota

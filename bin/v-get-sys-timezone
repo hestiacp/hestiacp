@@ -30,7 +30,7 @@ elif [ -f "/etc/timezone" ]; then
 
 # Checking symlynks
 elif [ -h /etc/localtime ]; then
-    ZONE=$(readlink /etc/localtime | sed "s/\/usr\/share\/zoneinfo\///")
+    ZONE=$(readlink /etc/localtime | sed "s%.*share/zoneinfo/%%")
 
 # Parsing zoneinfo (very slow)
 else

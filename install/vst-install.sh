@@ -5,10 +5,10 @@
 #
 # Currently Supported Operating Systems:
 #
-#   RHEL 5, RHEL 6
-#   CentOS 5, CentOS 6
-#   Debian 7
-#   Ubuntu LTS, Ubuntu 13.04, Ubuntu 13.10
+#   RHEL 5, 6, 7
+#   CentOS 5, 6, 7
+#   Debian 7, 8
+#   Ubuntu 12.04 - 15.04
 #
 
 # Am I root?
@@ -27,11 +27,11 @@ if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ -z "$1" ]; then
     exit 1
 fi
 
-# Check admin user account
+# Check admin group
 if [ ! -z "$(grep ^admin: /etc/group)" ] && [ -z "$1" ]; then
     echo "Error: group admin exists"
     echo
-    echo 'Please remove admin user account before proceeding.'
+    echo 'Please remove admin group before proceeding.'
     echo 'If you want to do it automatically run installer with -f option:'
     echo "Example: bash $0 --force"
     exit 1

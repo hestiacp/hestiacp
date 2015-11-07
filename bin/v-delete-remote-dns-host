@@ -32,25 +32,13 @@ is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 #                       Action                             #
 #----------------------------------------------------------#
 
-eval $(grep $host $VESTA/conf/dns-cluster.conf)
-case $TYPE in
-    ssh) send_cmd="send_ssh_cmd" ;;
-    *)  send_cmd="send_api_cmd" ;;
-esac
-
-
-# Check host connection
-$send_cmd v-list-sys-config
-if [ $? -eq 0 ]; then
-    # Deleting domains
-    $BIN/v-delete-remote-dns-domains $host >>/dev/null 2>&1
-    $send_cmd v-add-cron-restart-job
-fi
+# Deleting remote domains
+$BIN/v-delete-remote-dns-domains $host >>/dev/null 2>&1
 
 # Deleting server
 sed -i "/HOST='$host' /d" $VESTA/conf/dns-cluster.conf
 
-# Delete DNS_CLUSTER key
+# Deleting DNS_CLUSTER key
 check_cluster=$(grep HOST $VESTA/conf/dns-cluster.conf |wc -l)
 if [ "$check_cluster" -eq '0' ]; then
     rm -f $VESTA/conf/dns-cluster.conf

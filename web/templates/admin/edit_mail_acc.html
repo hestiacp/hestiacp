@@ -1,30 +1,37 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+          <span class="title edit"><b><?=__('Editing Mail Account')?></b></span>
             <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/mail/?domain=".$_GET['domain']."'";
-                } else {
-                    $back = "location.href='".$back."'";
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                 }
-            ?> 
-
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Mail Account');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+              }
+            ?>
         </div>
 
-        <form id="vstobjects" name="v_edit_mail_acc" method="post">
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/mail/?domain=".$_GET['domain']."'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+        <form id="vstobjects" name="v_edit_mail_acc" method="post"  class="<?=$v_status?>">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
             <script type="text/javascript">
                 function elementHideShow(elementToHideOrShow) {
                     var el = document.getElementById(elementToHideOrShow);
@@ -52,8 +59,8 @@
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date"><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
-                                    <a class="data-date"><?php echo $v_time?></a>
+                                    <a class="data-date"><?=translate_date($v_date)?></a><br>
+                                    <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
                             <tr><td class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
@@ -68,9 +75,9 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_email" <?php if (!empty($v_account)) echo "value=".$_GET['account']."@".$_GET['domain']; ?> disabled >
-                                <input type="hidden" name="v_domain" <?php echo "value=".$v_domain; ?>>
-                                <input type="hidden" name="v_account" <?php if (!empty($v_account)) echo "value=".$v_account; ?> >
+                                <input type="text" size="20" class="vst-input" name="v_email" <?php if (!empty($v_account)) echo "value=".htmlentities($_GET['account'])."@".htmlentities($_GET['domain']); ?> disabled >
+                                <input type="hidden" name="v_domain" <?php echo "value=".htmlentities($v_domain); ?>>
+                                <input type="hidden" name="v_account" <?php if (!empty($v_account)) echo "value=".htmlentities($v_account); ?> >
                             </td>
                         </tr>
                         <tr>
@@ -80,37 +87,38 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input password" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password; ?>
+                                <input type="text" size="20" class="vst-input password" name="v_password" <?php if (!empty($v_password)) echo "value=".htmlentities($v_password); ?>
                             </td>
                          </tr>
                         <tr>
                             <td class="vst-text input-type input-label">
-                                <?php print __('Quota');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('in megabytes');?>)</span>
+                                <?php print __('Quota');?> <span class="optional">(<?=__('in megabytes')?>)</span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_quota" <?php if (!empty($v_quota)) {echo "value=".$v_quota;} else { echo "value=0";}; ?>>
+                                <input type="text" size="20" class="vst-input" name="v_quota" <?php if (!empty($v_quota)) {echo "value=".htmlentities($v_quota);} else { echo "value=0";}; ?>>
+                                <img class="unlim-trigger" id="unlim-quota" src="/images/unlim.png" />
                             </td>
                         </tr>
                         <tr>
                             <td class="vst-text input-type input-label">
-                                <?php print __('Aliases');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('use local-part');?>)</span>
+                                <?php print __('Aliases');?> <span class="optional">(<?=__('use local-part')?>)</span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
+                                <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td class="vst-text input-type input-label">
-                                <?php print __('Forward to');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('one or more email addresses');?>)</span>
+                                <?php print __('Forward to');?> <span class="optional">(<?=__('one or more email addresses')?>)</span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <textarea size="20" class="vst-textinput" name="v_fwd"><?php if (!empty($v_fwd)) echo $v_fwd;  ?></textarea>
+                                <textarea size="20" class="vst-textinput" name="v_fwd"><?php if (!empty($v_fwd)) echo htmlentities($v_fwd);  ?></textarea>
                             </td>
                         </tr>
                         <tr>
@@ -133,7 +141,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <textarea size="20" class="vst-textinput" name="v_autoreply_message"><?php if (!empty($v_autoreply_message)) echo $v_autoreply_message; ?></textarea>
+                                            <textarea size="20" class="vst-textinput" name="v_autoreply_message"><?php if (!empty($v_autoreply_message)) echo htmlentities($v_autoreply_message); ?></textarea>
                                         </td>
                                     </tr>
                                 </table>
@@ -146,7 +154,7 @@
                                 <input type="submit" name="save" value="<?php print __('Save');?>" class="button">
                             </td>
                             <td class="step-top">
-                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                             </td>
                         </tr>
                     </table>
@@ -154,3 +162,5 @@
             </tr>
         </table>
     </form>
+</div>
+<script type="text/javascript" src="/js/pages/edit.mail_acc.js"></script>

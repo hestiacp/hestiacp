@@ -46,8 +46,8 @@ fi
 
 # Deleting ip from banlist
 sed -i "/IP='$ip' CHAIN='$chain'/d" $conf
-$iptables -D fail2ban-$chain -s $ip \
-    -j REJECT --reject-with icmp-port-unreachable 2>/dev/null
+b=$($iptables -L fail2ban-$chain --line-number -n|grep $ip|awk '{print $1}')
+$iptables -D fail2ban-$chain $b 2>/dev/null
 
 # Changing permissions
 chmod 660 $conf

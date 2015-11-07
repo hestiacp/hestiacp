@@ -19,7 +19,7 @@ source $VESTA/func/main.sh
 json_list_pkgs() {
     echo '{'
     fileds_count=$(echo "$fields" | wc -w)
-    for package in $(ls -t $VESTA/data/packages); do
+    for package in $(ls  --sort=time  $VESTA/data/packages |grep .pkg); do
         PACKAGE=${package/.pkg/}
         pkg_data=$(cat $VESTA/data/packages/$package)
         eval $pkg_data
@@ -51,7 +51,7 @@ json_list_pkgs() {
 
 # Shell fnction
 shell_list_pkgs() {
-    for package in $(ls -t $VESTA/data/packages); do
+    for package in $(ls -t $VESTA/data/packages |grep .pkg); do
         PACKAGE=${package/.pkg/}
         pkg_descr=$(cat $VESTA/data/packages/$package)
         eval $pkg_descr
@@ -71,10 +71,10 @@ shell_list_pkgs() {
 #----------------------------------------------------------#
 
 # Defining fields
-fields='$PACKAGE $WEB_TEMPLATE $PROXY_TEMPLATE $DNS_TEMPLATE $WEB_DOMAINS
-    $WEB_ALIASES $DNS_DOMAINS $DNS_RECORDS $MAIL_DOMAINS $MAIL_ACCOUNTS
-    $DATABASES $CRON_JOBS $DISK_QUOTA $BANDWIDTH $NS $SHELL $BACKUPS $TIME
-    $DATE'
+fields='$PACKAGE $WEB_TEMPLATE $BACKEND_TEMPLATE $PROXY_TEMPLATE
+    $DNS_TEMPLATE $WEB_DOMAINS $WEB_ALIASES $DNS_DOMAINS $DNS_RECORDS
+    $MAIL_DOMAINS $MAIL_ACCOUNTS $DATABASES $CRON_JOBS $DISK_QUOTA $BANDWIDTH
+    $NS $SHELL $BACKUPS $TIME $DATE'
 
 # Listing domains
 case $format in

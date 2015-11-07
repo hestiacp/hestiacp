@@ -10,6 +10,12 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
     $user=$_GET['user'];
 }
 
+// Check token
+if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
+    header('location: /login/');
+    exit();
+}
+
 // DNS domain
 if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
     $v_username = escapeshellarg($user);

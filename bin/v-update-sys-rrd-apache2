@@ -69,16 +69,16 @@ fi
 # Updating rrd graph
 rrdtool graph $RRD/web/$period-apache2.png \
     --imgformat PNG \
-    --height="120" \
-    --width="440" \
+    --height="150" \
+    --width="670" \
     --start "$start" \
     --end "$end" \
     --vertical-label "Connections" \
     --x-grid "$grid" \
-    -c "BACK#7a766d" \
-    -c "SHADEA#7a766d" \
-    -c "SHADEB#7a766d" \
-    -c "FONT#FFFFFF" \
+    -c "BACK#ffffff" \
+    -c "SHADEA#ffffff" \
+    -c "SHADEB#ffffff" \
+    -c "FONT#555555" \
     -c "CANVAS#302c2d" \
     -c "GRID#666666" \
     -c "MGRID#AAAAAA" \

@@ -1,29 +1,37 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/backup/exclusions'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?> 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing Backup Exclusions');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title edit"><b><?=__('Editing Backup Exclusions')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
-        <form id="vstobjects" name="v_edit_backup_exclusions" method="post">
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center edit">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/backup/exclusions'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+        <form id="vstobjects" name="v_edit_backup_exclusions" method="post" class="<?=__($v_status)?>">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
             <table class='data'>
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -44,7 +52,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea class="vst-textinput" name="v_web" placeholder="<?php echo __('WEB_EXCLUSIONS') ?>"><?php if (isset($v_web)) echo $v_web; ?></textarea>
+                                    <textarea class="vst-textinput" name="v_web" placeholder="<?php echo __('WEB_EXCLUSIONS') ?>"><?php if (isset($v_web)) echo htmlentities($v_web); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -54,7 +62,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea class="vst-textinput" name="v_dns" placeholder="<?php echo __('DNS_EXCLUSIONS') ?>"><?php if (isset($v_dns)) echo $v_dns; ?></textarea>
+                                    <textarea class="vst-textinput" name="v_dns" placeholder="<?php echo __('DNS_EXCLUSIONS') ?>"><?php if (isset($v_dns)) echo htmlentities($v_dns); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -64,7 +72,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea class="vst-textinput" name="v_mail" placeholder="<?php echo __('MAIL_EXCLUSIONS') ?>"><?php if (isset($v_mail)) echo $v_mail; ?></textarea>
+                                    <textarea class="vst-textinput" name="v_mail" placeholder="<?php echo __('MAIL_EXCLUSIONS') ?>"><?php if (isset($v_mail)) echo htmlentities($v_mail); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -74,7 +82,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea class="vst-textinput" name="v_db" placeholder="<?php echo __('DB_EXCLUSIONS') ?>"><?php if (isset($v_db)) echo $v_db; ?></textarea>
+                                    <textarea class="vst-textinput" name="v_db" placeholder="<?php echo __('DB_EXCLUSIONS') ?>"><?php if (isset($v_db)) echo htmlentities($v_db); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -84,7 +92,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea size="20" class="vst-textinput" name="v_cron" placeholder="<?php echo __('CRON_EXCLUSIONS') ?>"><?php if (isset($v_cron)) echo $v_cron; ?></textarea>
+                                    <textarea size="20" class="vst-textinput" name="v_cron" placeholder="<?php echo __('CRON_EXCLUSIONS') ?>"><?php if (isset($v_cron)) echo htmlentities($v_cron); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -94,7 +102,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea size="20" class="vst-textinput" name="v_userdir" placeholder="<?php echo __('USER_EXCLUSIONS') ?>"><?php if (isset($v_userdir)) echo $v_userdir; ?></textarea>
+                                    <textarea size="20" class="vst-textinput" name="v_userdir" placeholder="<?php echo __('USER_EXCLUSIONS') ?>"><?php if (isset($v_userdir)) echo htmlentities($v_userdir); ?></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -104,7 +112,7 @@
                                     <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -112,3 +120,4 @@
                 </tr>
             </table>
         </form>
+    </div>

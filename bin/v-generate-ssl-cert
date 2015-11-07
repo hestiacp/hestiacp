@@ -13,6 +13,7 @@
 domain=$1
 domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+domain_alias=$domain
 email=$2
 country=$3
 state=$4
@@ -57,7 +58,7 @@ shell_list_ssl() {
 #----------------------------------------------------------#
 
 check_args '7' "$#" 'DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [FORMAT]'
-validate_format 'domain' 'format'
+validate_format 'domain_alias' 'format'
 
 
 #----------------------------------------------------------#

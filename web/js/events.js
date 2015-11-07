@@ -1,6 +1,13 @@
 // Init kinda namespace object
 var VE = { // Vesta Events object
     core: {}, // core functions
+    navigation: {
+        state: {
+            active_menu: 1,
+            menu_selector: '.l-stat__col',
+            menu_active_selector: '.l-stat__col--active'
+        }
+    }, // menu and element navigation functions
     callbacks: { // events callback functions
         click: {},
         mouseover: {},
@@ -8,7 +15,15 @@ var VE = { // Vesta Events object
         keypress: {}
     },
     helpers: {}, // simple handy methods
-    tmp: {}
+    tmp: {
+        sort_par: 'sort-name',
+        sort_direction: -1,
+        sort_as_int: 0,
+        form_changed: 0,
+        search_activated: 0,
+        search_display_interval: 0,
+        search_hover_interval: 0
+    }
 };
 
 /*
@@ -57,7 +72,7 @@ VE.core.dispatch = function(evt, elm, event_type) {
  * Suspend action
  */
 VE.callbacks.click.do_suspend = function(evt, elm) {
-     var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
+     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="suspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
      VE.helpers.createConfirmationDialog(dialog_elm, '', url);
@@ -67,7 +82,7 @@ VE.callbacks.click.do_suspend = function(evt, elm) {
  * Unsuspend action
  */
 VE.callbacks.click.do_unsuspend = function(evt, elm) {
-     var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
+     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="unsuspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
      VE.helpers.createConfirmationDialog(dialog_elm, '', url);
@@ -77,7 +92,7 @@ VE.callbacks.click.do_unsuspend = function(evt, elm) {
  * Delete action
  */
 VE.callbacks.click.do_delete = function(evt, elm) {
-     var ref = elm.hasClass('data-controls') ? elm : elm.parents('.data-controls');
+     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="delete_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-delete');
      VE.helpers.createConfirmationDialog(dialog_elm, '', url);
@@ -138,11 +153,11 @@ VE.helpers.initAdditionalPasswordFieldElements = function(ref) {
     if (enabled) {
         VE.helpers.hidePasswordFieldText(ref);
     }
-    
+
     $(ref).prop('autocomplete', 'off');
 
     var enabled_html = enabled ? '' : 'show-passwords-enabled-action';
-    var html = '<span class="hide-password"><img class="toggle-psw-visibility-icon ' + enabled_html + '" onClick="VE.helpers.toggleHiddenPasswordText(\'' + ref + '\', this)" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAANlJREFUOI3d0UtKA0EQBuBP0eQCitkJLiXiSSTkUCKIIPg8SJCouDELrxDRCxi3SUQimXFhjRSDZq8/FE3/jyqqm3+JXVziGbOoJ1xgZ1GwiXMUKDFBH1cYB1fgBI16uIG7MJW4x1rS1zFIeh8rucFREicR7mKEV3SwgWnyHVThLXzUuotwxY2Cu0ncDJvLccko4lxKXPkL9509TMQ4du7E5BfsoYW35NvPU1dxncRB7FyhhYek99Qeka+fOMU8TNPY+TZNnuP4p3BGG2d4xHvUMJpvLwr+UXwCQghNMl5Zo0AAAAAASUVORK5CYII=" /></span>';
+    var html = '<span class="hide-password"><img class="toggle-psw-visibility-icon ' + enabled_html + '" onClick="VE.helpers.toggleHiddenPasswordText(\'' + ref + '\', this)" src="/images/toggle_password.png" /></span>';
     $(ref).after(html);
 }
 
@@ -167,4 +182,192 @@ VE.helpers.toggleHiddenPasswordText = function(ref, triggering_elm) {
     }
 }
 
+VE.helpers.refresh_timer = {
+    speed: 50,
+    degr: 180,
+    right: 0,
+    left: 0,
+    periodical: 0,
+    first: 1,
+
+    start: function(){
+        this.periodical = setInterval(function(){VE.helpers.refresh_timer.turn()}, this.speed);
+    },
+
+    stop: function(){
+        clearTimeout(this.periodical);
+    },
+
+    turn: function(){
+        this.degr += 1;
+
+        if (this.first && this.degr >= 361){
+            this.first = 0;
+            this.degr = 180;
+            this.left.css({'-webkit-transform': 'rotate(180deg)'});
+            this.left.css({'transform': 'rotate(180deg)'});
+            this.left.children('.loader-half').addClass('dark');
+        }
+        if (!this.first && this.degr >= 360){
+            this.first = 1;
+            this.degr = 180;
+            this.left.css({'-webkit-transform': 'rotate(0deg)'});
+            this.right.css({'-webkit-transform': 'rotate(180deg)'});
+            this.left.css({'transform': 'rotate(0deg)'});
+            this.right.css({'transform': 'rotate(180deg)'});
+            this.left.children('.loader-half').removeClass('dark');
+
+            this.stop();
+            location.reload();
+        }
+
+        if (this.first){
+            this.right.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
+            this.right.css({'transform': 'rotate('+this.degr+'deg)'});
+        }
+        else{
+            this.left.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
+            this.left.css({'transform': 'rotate('+this.degr+'deg)'});
+        }
+    }
+}
+
+VE.navigation.enter_focused = function() {
+    if($(VE.navigation.state.menu_selector + '.focus a').attr('href')){
+        location.href=($(VE.navigation.state.menu_selector + '.focus a').attr('href'));
+    }
+}
+
+/*
+VE.navigation.move_focus_left = function(){
+    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
+    if(index == -1)
+        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector)));
+    if(index > 0){
+        $(VE.navigation.state.menu_selector).removeClass('focus');
+        $($(VE.navigation.state.menu_selector)[index-1]).addClass('focus');
+    } else {
+        $($(VE.navigation.state.menu_selector)[0]).addClass('focus');
+    }
+
+    
+}
+
+VE.navigation.move_focus_right = function(){
+    var max_index = $(VE.navigation.state.menu_selector).length-1;
+    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
+    if(index == -1)
+        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))) || 0;
+
+    if(index < max_index){
+        $(VE.navigation.state.menu_selector).removeClass('focus');
+        $($(VE.navigation.state.menu_selector)[index+1]).addClass('focus');
+    }
+}
+
+VE.navigation.switch_menu = function(){
+    if(VE.navigation.state.active_menu == 0){
+        VE.navigation.state.active_menu = 1;
+        VE.navigation.state.menu_selector = '.l-stat__col';
+        VE.navigation.state.menu_active_selector = '.l-stat__col--active';
+        $('.l-menu').removeClass('active');
+        $('.l-stat').addClass('active');
+    } else {
+        VE.navigation.state.active_menu = 0;
+        VE.navigation.state.menu_selector = '.l-menu__item';
+        VE.navigation.state.menu_active_selector = '.l-menu__item--active';
+        $('.l-menu').addClass('active');
+        $('.l-stat').removeClass('active');
+    }
+
+
+    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
+    if(index == -1){
+        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))) || 0;
+        if(index == -1)
+           index = 0;
+        $($(VE.navigation.state.menu_selector)[index]).addClass('focus');
+    }
+}
+*/
+
+
+VE.navigation.move_focus_left = function(){
+    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
+    if(index == -1)
+        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector)));
+
+    $(VE.navigation.state.menu_selector).removeClass('focus');
+
+    if(index > 0){
+        $($(VE.navigation.state.menu_selector)[index-1]).addClass('focus');
+    } else {
+        VE.navigation.switch_menu('last');
+    }
+}
+
+VE.navigation.move_focus_right = function(){
+    var max_index = $(VE.navigation.state.menu_selector).length-1;
+    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
+    if(index == -1)
+        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))) || 0;
+
+    $(VE.navigation.state.menu_selector).removeClass('focus');
+
+    if(index < max_index){
+        $($(VE.navigation.state.menu_selector)[index+1]).addClass('focus');
+    } else {
+        VE.navigation.switch_menu('first');
+    }
+}
+
+VE.navigation.switch_menu = function(position){
+    position = position || 'first'; // last
+
+    if(VE.navigation.state.active_menu == 0){
+        VE.navigation.state.active_menu = 1;
+        VE.navigation.state.menu_selector = '.l-stat__col';
+        VE.navigation.state.menu_active_selector = '.l-stat__col--active';
+        $('.l-menu').removeClass('active');
+        $('.l-stat').addClass('active');
+
+        if(position == 'first'){
+            $($(VE.navigation.state.menu_selector)[0]).addClass('focus');
+        } else {
+            var max_index = $(VE.navigation.state.menu_selector).length-1;
+            $($(VE.navigation.state.menu_selector)[max_index]).addClass('focus');
+        }
+    } else {
+        VE.navigation.state.active_menu = 0;
+        VE.navigation.state.menu_selector = '.l-menu__item';
+        VE.navigation.state.menu_active_selector = '.l-menu__item--active';
+        $('.l-menu').addClass('active');
+        $('.l-stat').removeClass('active');
+
+        if(position == 'first'){
+            $($(VE.navigation.state.menu_selector)[0]).addClass('focus');
+        } else {
+            var max_index = $(VE.navigation.state.menu_selector).length-1;
+            $($(VE.navigation.state.menu_selector)[max_index]).addClass('focus');
+        }
+    }
+}
+
+
+
+VE.navigation.init = function(){
+    if($('.l-menu__item.l-menu__item--active').length){
+//        VE.navigation.switch_menu();
+        VE.navigation.state.active_menu = 0;
+        VE.navigation.state.menu_selector = '.l-menu__item';
+        VE.navigation.state.menu_active_selector = '.l-menu__item--active';
+        $('.l-menu').addClass('active');
+        $('.l-stat').removeClass('active');
+    } else {
+        $('.l-stat').addClass('active');
+    }
+}
+
 VE.helpers.extendPasswordFields();
+
+

@@ -30,6 +30,7 @@ unset($output);
 // Parse package
 $v_package = $_GET['package'];
 $v_web_template = $data[$v_package]['WEB_TEMPLATE'];
+$v_backend_template = $data[$v_package]['BACKEND_TEMPLATE'];
 $v_proxy_template = $data[$v_package]['PROXY_TEMPLATE'];
 $v_dns_template = $data[$v_package]['DNS_TEMPLATE'];
 $v_web_domains = $data[$v_package]['WEB_DOMAINS'];
@@ -49,6 +50,10 @@ $v_ns1 = $nameservers[0];
 $v_ns2 = $nameservers[1];
 $v_ns3 = $nameservers[2];
 $v_ns4 = $nameservers[3];
+$v_ns5 = $nameservers[4];
+$v_ns6 = $nameservers[5];
+$v_ns7 = $nameservers[6];
+$v_ns8 = $nameservers[7];
 $v_backups = $data[$v_package]['BACKUPS'];
 $v_date = $data[$v_package]['DATE'];
 $v_time = $data[$v_package]['TIME'];
@@ -59,10 +64,20 @@ exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
 $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
+// List backend templates
+if (!empty($_SESSION['WEB_BACKEND'])) {
+    exec (VESTA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    $backend_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
+
 // List proxy templates
-exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
-$proxy_templates = json_decode(implode('', $output), true);
-unset($output);
+if (!empty($_SESSION['PROXY_SYSTEM'])) {
+    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    $proxy_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
+
 
 // List dns templates
 exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
@@ -77,10 +92,21 @@ unset($output);
 // Check POST request
 if (!empty($_POST['save'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_package'])) $errors[] = __('package');
     if (empty($_POST['v_web_template'])) $errors[] = __('web template');
-    if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+    if (!empty($_SESSION['WEB_BACKEND'])) {
+        if (empty($_POST['v_backend_template'])) $errors[] = __('backend template');
+    }
+    if (!empty($_SESSION['PROXY_SYSTEM'])) {
+        if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+    }
     if (empty($_POST['v_dns_template'])) $errors[] = __('dns template');
     if (empty($_POST['v_shell'])) $errrors[] = __('shell');
     if (!isset($_POST['v_web_domains'])) $errors[] = __('web domains');
@@ -110,7 +136,12 @@ if (!empty($_POST['save'])) {
     // Protect input
     $v_package = escapeshellarg($_POST['v_package']);
     $v_web_template = escapeshellarg($_POST['v_web_template']);
-    $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
+    if (!empty($_SESSION['WEB_BACKEND'])) {
+        $v_backend_template = escapeshellarg($_POST['v_backend_template']);
+    }
+    if (!empty($_SESSION['PROXY_SYSTEM'])) {
+        $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
+    }
     $v_dns_template = escapeshellarg($_POST['v_dns_template']);
     $v_shell = escapeshellarg($_POST['v_shell']);
     $v_web_domains = escapeshellarg($_POST['v_web_domains']);
@@ -128,9 +159,17 @@ if (!empty($_POST['save'])) {
     $v_ns2 = trim($_POST['v_ns2'], '.');
     $v_ns3 = trim($_POST['v_ns3'], '.');
     $v_ns4 = trim($_POST['v_ns4'], '.');
+    $v_ns5 = trim($_POST['v_ns5'], '.');
+    $v_ns6 = trim($_POST['v_ns6'], '.');
+    $v_ns7 = trim($_POST['v_ns7'], '.');
+    $v_ns8 = trim($_POST['v_ns8'], '.');
     $v_ns = $v_ns1.",".$v_ns2;
     if (!empty($v_ns3)) $v_ns .= ",".$v_ns3;
     if (!empty($v_ns4)) $v_ns .= ",".$v_ns4;
+    if (!empty($v_ns5)) $v_ns .= ",".$v_ns5;
+    if (!empty($v_ns6)) $v_ns .= ",".$v_ns6;
+    if (!empty($v_ns7)) $v_ns .= ",".$v_ns7;
+    if (!empty($v_ns8)) $v_ns .= ",".$v_ns8;
     $v_ns = escapeshellarg($v_ns);
     $v_time = escapeshellarg(date('H:i:s'));
     $v_date = escapeshellarg(date('Y-m-d'));
@@ -142,6 +181,7 @@ if (!empty($_POST['save'])) {
 
     // Save package file on a fs
     $pkg = "WEB_TEMPLATE=".$v_web_template."\n";
+    $pkg .= "BACKEND_TEMPLATE=".$v_backend_template."\n";
     $pkg .= "PROXY_TEMPLATE=".$v_proxy_template."\n";
     $pkg .= "DNS_TEMPLATE=".$v_dns_template."\n";
     $pkg .= "WEB_DOMAINS=".$v_web_domains."\n";

@@ -6,6 +6,12 @@ session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// Check token
+if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+    header('location: /login/');
+    exit();
+}
+
 $package = $_POST['package'];
 $action = $_POST['action'];
 

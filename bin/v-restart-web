@@ -50,7 +50,9 @@ rc=$?
 
 # Workaround for Ubuntu 12.04
 if [ "$WEB_SYSTEM" == 'apache2' ]; then
-    if [ ! -e "/var/run/apache2.pid" ]; then
+    pid1='/var/run/apache2.pid'
+    pid2='/var/run/apache2/apache2.pid'
+    if [ ! -e "$pid1" ] && [ ! -e "$pid2" ]; then
         rc=1
     fi
 fi

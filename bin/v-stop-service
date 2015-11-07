@@ -29,14 +29,10 @@ check_args '1' "$#" 'SERVICE'
 
 if [ "$service" != 'iptables' ]; then
     service $service stop >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "$service stop failed" $E_RESTART
 else
     $BIN/v-stop-firewall
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "$service stop failed" $E_RESTART
 fi
 
 

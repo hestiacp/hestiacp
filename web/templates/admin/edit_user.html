@@ -1,29 +1,37 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+          <span class="title edit"><b><?=__('Editing User')?></b></span>
             <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/user/'";
-                } else {
-                    $back = "location.href='".$back."'";
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                 }
-            ?> 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Editing User');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+              }
+            ?>
         </div>
 
-        <form id="vstobjects" method="post" name="v_edit_user">
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/user/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+        <form id="vstobjects" method="post" name="v_edit_user" class="<?=$v_status?>">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
             <script type="text/javascript">
                 function randomString() {
                     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -42,8 +50,8 @@
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date"><?php echo strftime("%d %b %Y", strtotime($v_date))?></a><br>
-                                    <a class="data-date"><?php echo $v_time?></a>
+                                    <a class="data-date"><?=translate_date($v_date)?></a><br>
+                                    <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
                             <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status); ?></b></td></tr>
@@ -58,7 +66,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_user" <?php if (!empty($v_username)) echo "value=".$v_username;  ?> disabled> <input type="hidden" name="v_username" <?php if (!empty($v_username)) echo "value=".$v_username;  ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_user" <?php if (!empty($v_username)) echo "value=".htmlentities($v_username);  ?> disabled> <input type="hidden" name="v_username" <?php if (!empty($v_username)) echo "value=".htmlentities($v_username);  ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -68,7 +76,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" <?php if (!empty($v_password)) echo "value=".$v_password;  ?>>
+                                    <input type="text" size="20" class="vst-input password" name="v_password" <?php if (!empty($v_password)) echo "value=".htmlentities($v_password);  ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -78,7 +86,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" <?php if (!empty($v_email)) echo "value=".$v_email; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_email" <?php if (!empty($v_email)) echo "value=".htmlentities($v_email); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -91,12 +99,12 @@
                                     <select class="vst-list" name="v_package">
                                         <?php
                                             foreach ($packages as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
                                                 $skey = "'".$key."'";
                                                 if (( $key == $v_package ) || ( $skey == $v_package)){
                                                     echo 'selected' ;
                                                 }
-                                                echo ">".$key."</option>\n";
+                                                echo ">".htmlentities($key)."</option>\n";
                                             }
                                         ?> 
                                     </select>
@@ -120,7 +128,7 @@
                                                 if (( $value == 'en' ) && (empty($v_language))){
                                                     echo 'selected' ;
                                                 }
-                                                echo ">".$value."</option>\n";
+                                                echo ">".htmlentities($value)."</option>\n";
                                             }
                                         ?> 
                                     </select>
@@ -133,7 +141,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=\"".$v_fname."\""; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=\"".htmlentities($v_fname)."\""; ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -143,7 +151,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=\"".$v_lname."\""; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=\"".htmlentities($v_lname)."\""; ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -156,12 +164,12 @@
                                     <select class="vst-list" name="v_shell">
                                         <?php
                                             foreach ($shells as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                                 $svalue = "'".$value."'";
                                                 if (( $value == $v_shell ) || ($svalue == $v_shell )){
                                                     echo 'selected' ;
                                                 }
-                                                echo ">".$value."</option>\n";
+                                                echo ">".htmlentities($value)."</option>\n";
                                             }
                                         ?> 
                                     </select>
@@ -174,24 +182,72 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".$v_ns1; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo 'value="'.htmlentities($v_ns1).'"'; ?>>
+                                    <span class="remove-ns additional-control delete"><?=__('delete')?></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".$v_ns2; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo 'value="'.htmlentities($v_ns2).'"'; ?>>
+                                    <span class="remove-ns additional-control delete"><?=__('delete')?></span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".$v_ns3; ?>>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>>
-                                </td>
-                            </tr>
+                            <?  if($v_ns3)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities($v_ns3).'">
+                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns4)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities($v_ns4).'">
+                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns5)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities($v_ns5).'">
+                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns6)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities($v_ns6).'">
+                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns7)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities($v_ns7).'">
+                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns8)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities($v_ns8).'">
+                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                    </td>
+                                </tr>';
+                            ?>
+
+                                <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
+                                    <td class="step-top-small">
+                                      <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
+                                    </td>
+                                </tr>
+
+
                         </table>
                         <table class="data-col2">
                             <tr>
@@ -199,7 +255,7 @@
                                     <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -207,3 +263,34 @@
                 </tr>
             </table>
         </form>
+    </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.add-ns-button').click(function(){
+                  var n = $("input[name^=v_ns]").length;
+                  if(n < 8){
+                    var t = $($('input[name=v_ns1]').parents('tr')[0]).clone(true, true);
+                    t.find('input').attr({value:'', name:'v_ns'+(n+1)});
+                    t.find('span').show();
+                    $('tr.add-ns').before(t);
+                  }
+                  if( n == 7 ) {
+                    $('.add-ns').hide();
+                  }
+                });
+
+                $('.remove-ns').click(function(){
+                    $(this).parents('tr')[0].remove();
+                    $('input[name^=v_ns]').each(function(i, ns){
+                        $(ns).attr({name: 'v_ns'+(i+1)});
+                        i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+                    })
+                    $('.add-ns').show()
+                })
+
+                $('input[name^=v_ns]').each(function(i, ns){
+                  i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+                })
+
+            });
+        </script>

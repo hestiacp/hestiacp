@@ -17,7 +17,7 @@
 type=$1
 host=$2
 dbuser=$3
-dbpass=$4
+password=$4; HIDE=4
 max_db=${6-500}
 charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
 template=${8-template1}
@@ -27,8 +27,31 @@ source $VESTA/func/main.sh
 source $VESTA/func/db.sh
 source $VESTA/conf/vesta.conf
 
-# Hiding password
-A4='******'
+is_mysql_host_alive() {
+    mycnf=$(mktemp)
+    echo "[client]">$mycnf
+    echo "host='$HOST'" >> $mycnf
+    echo "user='$USER'" >> $mycnf
+    echo "password='$PASSWORD'" >> $mycnf
+    chmod 600 $mycnf
+    mysql --defaults-file=$mycnf -e 'SELECT VERSION()' >/dev/null 2>&1
+    rm $mycnf
+    if [ '0' -ne "$?" ]; then
+        echo "Error: MySQL connection to $host failed"
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
+    fi
+}
+
+is_pgsql_host_alive() {
+    export PGPASSWORD="$dbpass"
+    psql -h $host -U $dbuser -c "SELECT VERSION()" > /dev/null 2>&1
+    if [ '0' -ne "$?" ]; then
+        echo "Error: PostgreSQL connection to $host failed"
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
+    fi
+}
 
 
 #----------------------------------------------------------#
@@ -37,10 +60,12 @@ A4='******'
 
 args_usage='TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
 check_args '4' "$#" "$args_usage"
-validate_format 'host' 'dbuser' 'dbpass' 'max_db' 'charsets' 'template'
-is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
-is_type_valid "$DB_SYSTEM" "$type"
+validate_format 'host' 'dbuser' 'max_db' 'charsets' 'template'
+#is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+#is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
+is_password_valid
+dbpass="$password"
 case $type in
     mysql) is_mysql_host_alive ;;
     pgsql) is_pgsql_host_alive ;;
@@ -62,14 +87,27 @@ case $type in
            str="$str TIME='$TIME' DATE='$DATE'";;
 esac
 
-# Adding host to conf
-echo "$str" >> $VESTA/conf/$type.conf
-chmod 660 $VESTA/conf/$type.conf
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Adding host to conf
+echo "$str" >> $VESTA/conf/$type.conf
+chmod 660 $VESTA/conf/$type.conf
+
+# Updating vesta.conf
+if [ -z "$(grep DB_SYSTEM $VESTA/conf/vesta.conf)" ]; then
+    echo "DB_SYSTEM='$type'" >> $VESTA/conf/vesta.conf
+else
+    db=$(echo "$DB_SYSTEM,$type" |\
+        sed "s/,/\n/g"|\
+        sort -r -u |\
+        sed "/^$/d"|\
+        sed ':a;N;$!ba;s/\n/,/g')
+    sed -i "s/DB_SYSTEM=.*/DB_SYSTEM='$db'/g" $VESTA/conf/vesta.conf
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

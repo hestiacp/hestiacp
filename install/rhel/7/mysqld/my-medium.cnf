@@ -1,0 +1,37 @@
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+symbolic-links=0
+
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 16M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+
+#innodb_use_native_aio = 0
+innodb_file_per_table
+
+max_connections=70
+max_user_connections=30
+wait_timeout=10
+interactive_timeout=50
+long_query_time=5
+
+#slow_query_log=1
+#slow_query_log_file=/var/log/mysql-slow-queries.log
+
+
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+#
+# include all files from the config directory
+#
+!includedir /etc/my.cnf.d

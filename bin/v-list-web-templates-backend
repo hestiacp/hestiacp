@@ -1,0 +1,73 @@
+#!/bin/bash
+# info: listing backend templates
+# options: [FORMAT]
+#
+# The function for obtaining the list of available backend templates.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# Json function
+json_list_wtpl() {
+    t_counter=$(echo "$templates" | wc -w)
+    i=1
+    echo '['
+    for template in $templates; do
+        if [ "$i" -lt "$t_counter" ]; then
+            echo -e  "\t\"$template\","
+        else
+            echo -e  "\t\"$template\""
+        fi
+        (( ++i))
+    done
+    echo "]"
+    }
+
+# Shell function
+shell_list_wtpl() {
+    if [ -z "$nohead" ]; then
+        echo "Templates"
+        echo "----------"
+    fi
+    for template in $templates; do
+        echo "$template"
+    done
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Proxy templates
+if [ -z "$WEB_BACKEND" ]; then
+    exit
+fi
+templates=$(ls -t $WEBTPL/$WEB_BACKEND |\
+    cut -f1 -d . |\
+    grep -v proxy_ip |\
+    sort -u )
+
+# Listing domains
+case $format in
+    json)   json_list_wtpl ;;
+    plain)  nohead=1; shell_list_wtpl ;;
+    shell)  shell_list_wtpl ;;
+    *)      check_args '1' '0' '[FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

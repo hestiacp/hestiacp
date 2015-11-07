@@ -1,58 +1,58 @@
 #!/bin/bash
-# File copier
+# info: copy file
+# options: USER SRC_FILE DST_FLE
+#
+# The function copies file on the file system
 
 user=$1
-file_src=$2
-file_dst=$3
+src_file=$2
+dst_file=$3
 
 # Checking arguments
-if [ -z "$file_dst" ]; then
+if [ -z "$dst_file" ]; then
     echo "Usage: USER SRC_FILE DST_FILE"
     exit 1
 fi
 
-# Checking users
+# Checking vesta user
 if [ ! -e "$VESTA/data/users/$user" ]; then
-    exit 1
+    echo "Error: vesta user $user doesn't exist"
+    exit 3
 fi
 
-# Checking homedir
+# Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z $homedir ]; then
-    exit 1
+    echo "Error: user home directory doesn't exist"
+    exit 12
 fi
 
 # Checking source file
-if [ ! -e "$file_src" ]; then
-    exit 1
+if [ ! -f "$src_file" ]; then
+    echo "Error: $src_file doesn't exist"
+    exit 3
 fi
 
 # Checking source path
-rpath=$(readlink -f "$file_src")
-if [ -z "$(echo $rpath |grep ^/tmp)" ]; then
-    exit 1
+rpath=$(readlink -f "$src_file")
+if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+    echo "Error: invalid source path $src_file"
+    exit 2
 fi
 
 # Checking destination path
-rpath=$(readlink -f "$file_dst")
-if [ -z "$(echo $rpath |grep ^$homedir)" ]; then
-    exit 1
-fi
-
-# Checking dst file permission
-if [ -e "$file_dst" ]; then
-    perms=$(stat --format '%a' $file_dst)
+rpath=$(readlink -f "$dst_file")
+if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+    echo "Error: ivalid destination path $dst_file"
+    exit 2
 fi
 
 # Copying file
-cp $file_src $file_dst
-
-# Changing ownership
-chown $user:$user $file_dst
-
-# Changin permissions
-if [ ! -z "$perms" ]; then
-    chmod $perms $file_dst
+sudo -u $user cp "$src_file" "$dst_file" >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "Error: file $src_file was not copied"
+    exit 3
 fi
 
+# Exiting
 exit

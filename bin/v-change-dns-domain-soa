@@ -45,6 +45,7 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$SOA' "$soa"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_serial
     update_domain_zone
 fi
 
@@ -63,12 +64,10 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart named
+# Restarting named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "DNS restart failed" >/dev/null
 fi
 
 # Logging

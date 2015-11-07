@@ -1,29 +1,38 @@
-            <?php
-                $back = $_SESSION['back'];
-                    if (empty($back)) {
-                    $back = "location.href='/list/web/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?> 
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding Domain');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Adding Domain')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/web/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+
         <form id="vstobjects" name="v_add_web" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="ok" value="Add" />
             <script type="text/javascript">
                 $(function() {
                     $("#v_domain").change(function() {
@@ -81,7 +90,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_domain" id="v_domain" <?php if (!empty($v_domain)) echo "value=".$v_domain;  ?>>
+                                <input type="text" size="20" class="vst-input" name="v_domain" id="v_domain" <?php if (!empty($v_domain)) echo "value=".htmlentities($v_domain);  ?>>
                             </td>
                         </tr>
                         <tr>
@@ -96,11 +105,11 @@
                                         foreach ($ips as $key => $value) {
                                             $display_ip = $key;
                                             if (!empty($value['NAT'])) $display_ip = $value['NAT'];
-                                            echo "\t\t\t\t<option value=\"".$display_ip."\"";
+                                            echo "\t\t\t\t<option value=\"".htmlentities($display_ip)."\"";
                                             if ((!empty($v_ip)) && ( $display_ip == $_POST['v_ip'])){
                                                 echo ' selected';
                                             }
-                                            echo ">".$display_ip."</option>\n";
+                                            echo ">".htmlentities($display_ip)."</option>\n";
                                         }
                                     ?>
                                 </select>
@@ -130,9 +139,10 @@
                         </tr>
                         <tr>
                             <td>
-                                <textarea size="20" class="vst-textinput" name="v_aliases" id="v_aliases" ><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
+                                <textarea size="20" class="vst-textinput" name="v_aliases" id="v_aliases" ><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
                             </td>
                         </tr>
+                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                         <tr>
                             <td class="vst-text step-top" >
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if ($v_proxy !== 'off') echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support');?></label>
@@ -148,12 +158,13 @@
                                     </tr>
                                     <tr>
                                         <td class="step-left">
-                                            <textarea size="20" class="vst-textinput" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo $v_proxy_ext;} else { echo 'jpeg, jpg, png, gif, bmp, ico, svg, tif, tiff, css, js, htm, html, ttf, otf, webp, woff, txt, csv, rtf, doc, docx, xls, xlsx, ppt, pptx, odf, odp, ods, odt, pdf, psd, ai, eot, eps, ps, zip, tar, tgz, gz, rar, bz2, 7z, aac, m4a, mp3, mp4, ogg, wav, wma, 3gp, avi, flv, m4v, mkv, mov, mp4, mpeg, mpg, wmv, exe, iso, dmg, swf'; }  ?></textarea>
+                                            <textarea size="20" class="vst-textinput" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities($v_proxy_ext);} else { echo 'jpeg, jpg, png, gif, bmp, ico, svg, tif, tiff, css, js, htm, html, ttf, otf, webp, woff, txt, csv, rtf, doc, docx, xls, xlsx, ppt, pptx, odf, odp, ods, odt, pdf, psd, ai, eot, eps, ps, zip, tar, tgz, gz, rar, bz2, 7z, aac, m4a, mp3, mp4, ogg, wav, wma, 3gp, avi, flv, m4v, mkv, mov, mp4, mpeg, mpg, wmv, exe, iso, dmg, swf'; }  ?></textarea>
                                         </td>
                                     </tr>
                                 </table>
                             </td>
                         </tr>
+                        <?php echo ""; }?> 
                         <tr>
                             <td class="step-top vst-text">
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if($v_ssl == 'yes' || $v_ssl == 'on') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
@@ -187,7 +198,7 @@
                                     </tr>
                                     <tr>
                                         <td class="step-left">
-                                            <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo $v_ssl_crt; ?></textarea>
+                                            <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo htmlentities($v_ssl_crt); ?></textarea>
                                         </td>
                                     </tr>
                                     <tr>
@@ -197,7 +208,7 @@
                                     </tr>
                                     <tr>
                                         <td class="step-left">
-                                            <textarea size="20" class="vst-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo $v_ssl_key; ?></textarea>
+                                            <textarea size="20" class="vst-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo htmlentities($v_ssl_key); ?></textarea>
                                         </td>
                                     </tr>
                                     <tr>
@@ -207,7 +218,7 @@
                                     </tr>
                                     <tr>
                                         <td class="step-left">
-                                            <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo $v_ssl_ca; ?></textarea>
+                                            <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo htmlentities($v_ssl_ca); ?></textarea>
                                         </td>
                                     </tr>
                                 </table>
@@ -224,12 +235,12 @@
                                     <?php
                                         foreach ($stats as $key => $value) {
                                             $svalue = "'".$value."'";
-                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                             if (empty($v_stats)) $v_stats = 'none';
                                             if (( $value == $v_stats ) || ($svalue == $v_stats )){
                                                 echo ' selected' ;
                                             }
-                                            echo ">" . __($value) . "</option>\n";
+                                            echo ">" . htmlentities(__($value)) . "</option>\n";
                                         }
                                     ?> 
                                 </select>
@@ -250,7 +261,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text" size="20" class="vst-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".$v_stats_user;  ?>>
+                                            <input type="text" size="20" class="vst-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".htmlentities($v_stats_user);  ?>>
                                         </td>
                                     </tr>
                                     <tr>
@@ -260,7 +271,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text" size="20" class="vst-input password" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".$v_stats_password;  ?> id="v_password">
+                                            <input type="text" size="20" class="vst-input password" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".htmlentities($v_stats_password);  ?> id="v_password">
                                         </td>
                                     </tr>
                                 </table>
@@ -286,7 +297,7 @@
                                             <td class="vst-text input-label">
                                                 <?php print __('FTP') ?> #<span class="ftp-user-number"><?php print $i + 1; ?></span> <a class="ftp-remove-user additional-control do_delete" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?php print __('delete') ?>)</a>
                                                 <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?php print $i ?>][delete]" value="0" />
-                                                <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?php print $i ?>][is_new]" value="<?php print $ftp_user['is_new'] ?>" />
+                                                <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?php print $i ?>][is_new]" value="<?php print htmlentities($ftp_user['is_new']) ?>" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -297,7 +308,7 @@
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="text" size="20" class="vst-input v-ftp-user" <?php print $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?> name="v_ftp_user[<?php print $i ?>][v_ftp_user]" <?php if (!empty($v_ftp_user)) echo "value=".$v_ftp_user; ?>>
+                                                <input type="text" size="20" class="vst-input v-ftp-user" <?php print $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?> name="v_ftp_user[<?php print $i ?>][v_ftp_user]" <?php if (!empty($v_ftp_user)) echo "value=".htmlentities($v_ftp_user); ?>>
                                                 <small class="hint"></small>
                                             </td>
                                         </tr>
@@ -308,7 +319,7 @@
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?php print $i ?>][v_ftp_password]" <?php if (!empty($v_ftp_password)) echo "value=".$v_ftp_password; ?>>
+                                                <input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?php print $i ?>][v_ftp_password]" <?php if (!empty($v_ftp_password)) echo "value=".htmlentities($v_ftp_password); ?>>
                                             </td>
                                         </tr>
 
@@ -319,8 +330,8 @@
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?php print !empty($v_ftp_pre_path) ? $v_ftp_pre_path : '/'; ?>">
-                                                <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path]" <?php if (!empty($v_ftp_path)) echo "value=".$v_ftp_path; ?>>
+                                                <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?php print !empty($v_ftp_pre_path) ? htmlentities($v_ftp_pre_path) : '/'; ?>">
+                                                <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path]" <?php if (!empty($v_ftp_path)) echo "value=".htmlentities($v_ftp_path); ?>>
                                                 <br /><span class="ftp-path-prefix"><?php print $v_ftp_pre_path ?></span><span class="ftp-path-value v-ftp-path-hint"></span>
                                             </td>
                                         </tr>
@@ -332,7 +343,7 @@
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="text"  class="vst-input" name="v_ftp_user[<?php print $i ?>][v_ftp_email]" <?php if (!empty($v_ftp_email)) echo "value=".$v_ftp_email; ?>>
+                                                <input type="text"  class="vst-input" name="v_ftp_user[<?php print $i ?>][v_ftp_email]" <?php if (!empty($v_ftp_email)) echo "value=".htmlentities($v_ftp_email); ?>>
                                             </td>
                                         </tr>
                                 </table>
@@ -345,14 +356,13 @@
                                 </td>
                             </tr>
                         </table>
-
                     <table class="data-col2">
                         <tr>
                             <td class="step-top" width="116px">
                                 <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                             </td>
                             <td class="step-top">
-                                <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                             </td>
                         </tr>
                     </table>
@@ -360,12 +370,12 @@
             </tr>
         </table>
     </form>
-    
+
     <div id="templates" class="hidden">
             <table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
                 <tr>
                     <td class="vst-text input-label">
-                        <?php print __('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control do_delete" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?php print __('delete') ?>)</a>
+                        <?php print __('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control do_delete" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?=__('delete')?>)</a>
                         <input type="hidden"  class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
                         <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1" />
                     </td>
@@ -417,6 +427,8 @@
                 </tr>
         </table>
         </div>
+      </div>
+
 
     <script type="text/javascript">
         GLOBAL.FTP_USER_PREFIX  = '<?php echo $user; ?>_';

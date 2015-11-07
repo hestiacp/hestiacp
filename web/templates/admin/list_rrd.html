@@ -1,85 +1,118 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div style="submenu-button-block">
-                            <a class="vst<?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo "-selected" ?>" href="?period=daily"><?php print __('Daily');?></a>
-                            <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'weekly')) echo "-selected" ?>" href="?period=weekly"><?php print __('Weekly');?></a>
-                            <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'monthly')) echo "-selected" ?>" href="?period=monthly"><?php print __('Monthly');?></a>
-                            <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'yearly')) echo "-selected" ?>" href="?period=yearly"><?php print __('Yearly');?></a>
-                        </div>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <div class="l-sort-toolbar clearfix float-left">
+          <table class="width-100p">
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td>
+                <a class="vst<?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo " selected" ?>" href="?period=daily"><?=__('Daily')?></a>
+                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'weekly')) echo " selected" ?>" href="?period=weekly"><?=__('Weekly')?></a>
+                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'monthly')) echo " selected" ?>" href="?period=monthly"><?=__('Monthly')?></a>
+                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'yearly')) echo " selected" ?>" href="?period=yearly"><?=__('Yearly')?></a>
+              </td>
 
-			<div class="timer-container">
-		    	    <span class="timer-button pause"></span>
-    			    <span class="timer-button play hidden"></span>
+              <td>
+                <div class="timer-container">
+                  <span class="timer-button pause"></span>
+                  <span class="timer-button play hidden"></span>
 
-            		    <div class="refresh-timer">
-                    		<div class="movement left">
-                            	    <div class="loader-half left"></div>
-                    		</div>
-    				<div class="movement right">
-                            	    <div class="loader-half right"></div>
-                    		</div>
-            		    </div>
-			</div>
-
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+                  <div class="refresh-timer">
+                    <div class="movement left">
+                      <div class="loader-half left"></div>
+                    </div>
+                    <div class="movement right">
+                      <div class="loader-half right"></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
         </div>
+        <!-- div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+            </tr>
+          </table>
+        </div -->
 
-        <div id="vstobjects">
-            <table class='data'>
-                <?php
-                    if (empty($_GET['period'])) {
-                        $period='daily';
-                    } else {
-                        $period=$_GET['period'];
-                    }
-                    foreach ($data as $key => $value) {
-                ?>
+      </div>
 
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE']))?></a></td></tr>
-                            <tr><td><a class="data-date" title="<?php echo $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo $data[$key]['TIME']?></a></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a href="/list/rrd/image.php?/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" target="_blank" class="data-controls">
-                            <span>
-                                <img src="/images/download.png" width="8px" height="8px">
-                                <?php print __('download');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr><td colspan=3 class="domain"><b><?php echo __($data[$key]['TITLE']); ?></b></td></tr>
-                            <tr>
-                                <td style="vertical-align:top; padding:4px 0 0 0;" width="630px">
-                                    <table>
-                                        </tr>
-                                            <td style="background: #7a766d;" width="630px" height="250px">
-                                                <img style="padding: 0 0 0 36px;" src="/list/rrd/image.php?/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png" ?>">
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+      <? display_error_block(); ?>
 
-            <?php
-                }
-            ?> 
-        </table>
+      <!-- /.l-sort -->
     </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center units">
+      <?php
+        if (empty($_GET['period'])) {
+          $period='daily';
+        } else {
+          $period=$_GET['period'];
+        }
+
+        foreach ($data as $key => $value) {
+      ?>
+
+
+
+
+      <div class="l-unit">
+        <div class="l-unit-toolbar clearfix">
+         <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__edit  actions-panel__download">
+                <a href="/list/rrd/image.php?/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" target="_blank"><?=__('download')?> <i></i></a>
+              </div>
+            </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
+        </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__date">
+            <?=translate_date($data[$key]['DATE'])?>
+          </div>
+          <div class="l-unit__date">
+            <?=$data[$key]['TIME']?>
+          </div>
+
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name separate">
+            <?= __($data[$key]['TITLE'])?>
+          </div>
+
+
+
+         <div class="l-unit__stats">
+            <img src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>">
+         </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <!-- div class="l-separator"></div -->
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+    <div id="vstobjects">
+        <div class="l-separator"></div>
+    <div class="l-center">
+    </div>
+</div>

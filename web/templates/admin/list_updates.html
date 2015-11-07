@@ -1,127 +1,145 @@
-
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div style="float:left; width: 160px;">&nbsp;</div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-button-block">
-                            <form action="/bulk/vesta/" method="post" id="objects">
-                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                            <select class="submenu-select-dropdown" name="action">
-                                <option value=""><?php print __('apply to selected') ?></option>
-                                <option value="update"><?php print __('update') ?></option>
-                            </select>
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <div class="submenu-select-block" style="margin: 0 0 0 21px;">
-                            <?php
-                                if($autoupdate == 'Enabled') {
-                            ?>
-                            <a class="submenu-select-link" href="/delete/cron/autoupdate/">[ <?php print __('disable autoupdate');?> ]</a>
-                            <?php
-                                } else {
-                            ?>
-                            <a class="submenu-select-link" href="/add/cron/autoupdate/">[ <?php print __('enable autoupdate');?> ]</a>
-                            <?php
-                                }
-                            ?>
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="step-right">
+                <? if($autoupdate == 'Enabled') {
+                     echo '<a class="vst" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'">'.__('disable autoupdate').'</a>';
+                   } else {
+                     echo '<a class="vst" href="/add/cron/autoupdate/?token='.$_SESSION['token'].'">'.__('enable autoupdate').'</a>';
+                   } ?>
+              </td>
+              <td class="l-sort-toolbar__search-box step-left">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
+              </td>
+              <td>
+                <form action="/bulk/vesta/" method="post">
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                <div class="l-select">
+                  <select name="action" id="">
+                    <option value=""><?=__('apply to selected')?></option>
+                    <option value="update"><?php print __('update') ?></option>
+                  </select>
+                </div>
+                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div id="vstobjects">
-            <table class='data'>
+      </div>
 
-               <?php
-                    foreach ($data as $key => $value) {
-                        ++$i;
-                        if ($data[$key]['UPDATED'] == 'yes') {
-                            $status = 'active';
-                            $upd_status = __('updated');
-                        } else {
-                            $status = 'suspended';
-                            $upd_status = __('outdated');
-                        }
-                    ?>
+      <? display_error_block(); ?>
 
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td style="padding: 18 0 6 18;"><input type="checkbox" class="ch-toggle" name="pkg[]" value="<?php echo $key ?>" ></td></tr>
-                            <tr><td class="data-<?php echo $status ?>"><b><?php echo $upd_status ?></b></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <?php
-                            if ($data[$key]['UPDATED'] == 'no') {
-                        ?> 
-                        <a href="/update/vesta/?pkg=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/update.png" width="6px" height="7px">
-                                <?php print __('update') ?>
-                            </span>
-                        </a>
-                        <?php
-                            }
-                        ?> 
-                        <div style="height:20px;"></div>
+      <!-- /.l-sort -->
+    </div>
 
-                        <table class="data-col2">
-                            <tr>
-                                <td colspan=4 class="domain">
-                                    <b><?php echo $key ?></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align:top;" width="239px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name" style="padding: 2px 0 0 0">
-                                                <?php echo __($data[$key]['DESCR']) ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="238px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Version') ?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['VERSION'] ?> (<?php echo $data[$key]['ARCH'] ?>)
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Release') ?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['RELEASE'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
 
-                <?php
-                    }
-                ?> 
-            </table>
-            </form>
+
+    <div class="l-center units">
+      <?php
+        foreach ($data as $key => $value) {
+          ++$i;
+
+          if ($data[$key]['UPDATED'] == 'yes') {
+            $status = 'active';
+            $upd_status = __('updated');
+          } else {
+            $status = 'suspended';
+            $upd_status = __('outdated');
+          }
+
+      ?>
+
+
+
+
+      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--outdated';?>">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="pkg" value="<?php echo $key ?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+              <? if ($data[$key]['UPDATED'] == 'no') {
+                   echo '<div class="actions-panel__col actions-panel__update"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a></div>';
+                 }
+              ?>
+            </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__date">
+            <?=__($upd_status)?>
+          </div>
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name separate">
+            <?=$key?>
+          </div>
+
+
+
+          <div class="l-unit__stats">
+            <table>
+
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=__($data[$key]['DESCR'])?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Version')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['VERSION'] ?></b> (<?=$data[$key]['ARCH']?>)
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Release')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['RELEASE']?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <!-- div class="l-separator"></div -->
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+    <div id="vstobjects">
+        <div class="l-separator"></div>
+  </div>

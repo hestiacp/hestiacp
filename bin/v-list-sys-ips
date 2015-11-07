@@ -18,7 +18,7 @@ source $VESTA/func/main.sh
 # Json function
 json_list_ips() {
     echo '{'
-    ip_list=$(ls $VESTA/data/ips/)
+    ip_list=$(ls --sort=time $VESTA/data/ips/)
     fileds_count=$(echo "$fields" | wc -w)
     for IP in $ip_list; do
         ip_data=$(cat $VESTA/data/ips/$IP)

@@ -1,29 +1,36 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/mail/?domain=".$v_domain."'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?>
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding Mail Account');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Adding Mail Account')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+        <?php
+          $back = $_SESSION['back'];
+          if (empty($back)) {
+            $back = "location.href='/list/mail/?domain=".$v_domain."'";
+          } else {
+            $back = "location.href='".$back."'";
+          }
+        ?>
         <form id="vstobjects" name="v_add_mail_acc" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <script type="text/javascript">
                 function elementHideShow(elementToHideOrShow) {
                     var el = document.getElementById(elementToHideOrShow);
@@ -42,7 +49,34 @@
                       randomstring += chars.substring(rnum,rnum+1);
                     }
                     document.v_add_mail_acc.v_password.value = randomstring;
+
+                    if($('input[name=v_password]').attr('type') == 'text')
+                      $('#v_password').text(randomstring);
+                    else
+                      $('#v_password').text(Array(randomstring.length+1).join('*'));
                   }
+                $(document).ready(function() {
+                    $('#v_account').text($('input[name=v_account]').val());
+                    $('#v_password').text($('input[name=v_password]').val());
+
+                    $('input[name=v_account]').change(function(){
+                      $('#v_account').text($(this).val());
+                    });
+
+                    $('input[name=v_password]').change(function(){
+                      if($('input[name=v_password]').attr('type') == 'text')
+                        $('#v_password').text($(this).val());
+                      else
+                        $('#v_password').text(Array($(this).val().length+1).join('*'));
+                    });
+
+                    $('.toggle-psw-visibility-icon').click(function(){
+                      if($('input[name=v_password]').attr('type') == 'text')
+                        $('#v_password').text($('input[name=v_password]').val());
+                      else
+                        $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
+                    });
+                });
             </script>
 
             <table class="data mode-add">
@@ -61,7 +95,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_domain" <?php echo "value=".$v_domain;  ?> disabled ><input type="hidden" name="v_domain" <?php echo "value=".$v_domain;  ?>>
+                                <input type="text" size="20" class="vst-input" name="v_domain" <?php echo "value=".htmlentities($v_domain);  ?> disabled ><input type="hidden" name="v_domain" <?php echo "value=".htmlentities($v_domain);  ?>>
                             </td>
                         </tr>
                         <tr>
@@ -71,7 +105,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_account" <?php if (!empty($v_account)) echo "value=".$v_account; ?>>
+                                <input type="text" size="20" class="vst-input" name="v_account" <?php if (!empty($v_account)) echo "value=".htmlentities($v_account); ?>>
                             </td>
                         </tr>
                         <tr>
@@ -94,32 +128,33 @@
                                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                     <tr>
                                         <td class="vst-text input-label">
-                                            <?php print __('Quota');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('in megabytes');?>)</span>
+                                            <?php print __('Quota');?> <span class="optional">(<?=__('in megabytes')?>)</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text" size="20" class="vst-input" name="v_quota" <?php if (!empty($v_quota)) echo "value=".$v_quota; ?>>
+                                            <input type="text" size="20" class="vst-input" name="v_quota" <?php if (!empty($v_quota)) echo "value=".htmlentities($v_quota); ?>>
+                                            <img class="unlim-trigger" id="unlim-quota" src="/images/unlim.png" />
                                         </td>
                                     </tr>
                                 <tr>
                                     <td class="vst-text input-label">
-                                        <?php print __('Aliases');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('use local-part');?>)</span>
+                                        <?php print __('Aliases');?> <span class="optional">(<?=__('use local-part')?>)</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo $v_aliases;  ?></textarea>
+                                        <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="vst-text input-label">
-                                        <?php print __('Forward to');?> <span style="padding: 0 0 0 6px; font-size: 10pt; color: rgb(85, 85, 85);">(<?php print __('one or more email addresses');?>)</span>
+                                        <?php print __('Forward to');?> <span class="optional">(<?=__('one or more email addresses')?>)</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <textarea size="20" class="vst-textinput" name="v_fwd"><?php if (!empty($v_fwd)) echo $v_fwd;  ?></textarea>
+                                        <textarea size="20" class="vst-textinput" name="v_fwd"><?php if (!empty($v_fwd)) echo htmlentities($v_fwd);  ?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -137,11 +172,60 @@
                             <input type="submit" name="ok_acc" value="<?php print __('Add');?>" class="button">
                         </td>
                         <td class="step-top">
-                            <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                            <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                         </td>
                     </tr>
                 </table>
             </td>
+            <td class="mail-infoblock-td">
+                <div class="mail-infoblock">
+                <table>
+                    <tr>
+                        <td>Username:</td>
+                        <td><span id="v_account">william.cage</span>@<?=htmlentities($v_domain)?></td>
+                    </tr>
+                    <tr>
+                        <td>Password:</td>
+                        <td id="v_password">******</td>
+                    </tr>
+                    <tr>
+                        <td>IMAP hostname:</td>
+                        <td><?=htmlentities($v_domain)?></td>
+                    </tr>
+                    <tr>
+                        <td>IMAP port:</td>
+                        <td>143</td>
+                    </tr>
+                    <tr>
+                        <td>IMAP security:</td>
+                        <td>STARTTLS</td>
+                    </tr>
+                    <tr>
+                        <td>IMAP auth method:</td>
+                        <td>Normal password</td>
+                    </tr>
+                    <tr>
+                        <td>SMTP hostname</td>
+                        <td><?=htmlentities($v_domain)?></td>
+                    </tr>
+                    <tr>
+                        <td>SMTP port:</td>
+                        <td>587</td>
+                    </tr>
+                    <tr>
+                        <td>SMTP security:</td>
+                        <td>STARTTLS</td>
+                    </tr>
+                    <tr>
+                        <td>SMTP auth method:</td>
+                        <td>Normal password</td>
+                    </tr>
+                </table>
+                </div>
+            </td>
+
         </tr>
     </table>
     </form>
+  </div>
+  <script type="text/javascript" src="/js/pages/edit.package.js"></script>

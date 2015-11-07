@@ -1,0 +1,87 @@
+#!/bin/bash
+# info: list backup host
+# options: TYPE [FORMAT]
+#
+# The function for obtaining the list of backup host parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+TYPE=$1
+format=${2-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json function
+json_list_ftp_host() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    ip_data=$(cat $VESTA/conf/$TYPE.backup.conf)
+    echo '{'
+    echo -e "\t\"$TYPE\": {"
+    eval $ip_data
+    for field in $fields; do
+        eval value=$field
+        if [ $fileds_count -eq $i ]; then
+            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+        else
+            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+        fi
+    (( ++i))
+    done
+    if [ -n "$value" ]; then
+        echo -e '        }'
+    fi
+    echo -e '}'
+}
+
+# Shell function
+shell_list_ftp_host() {
+    line=$(cat $VESTA/conf/$TYPE.backup.conf)
+    eval $line
+    for field in $fields; do
+        eval key="$field"
+        if [ -z "$key" ]; then
+            key='NULL'
+        fi
+        echo "${field//$/}: $key "
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'TYPE [FORMAT]'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ ! -e "$VESTA/conf/$TYPE.backup.conf" ]; then
+    exit
+fi
+
+# Defining fileds to select
+fields='$HOST $USERNAME $PORT $TYPE $BPATH $TIME $DATE'
+
+# Listing database
+case $format in 
+    json)   json_list_ftp_host ;;
+    plain)  nohead=1; shell_list_ftp_host;;
+    shell)  shell_list_ftp_host | column -t ;;
+    *)      check_args '2' '0' '[FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

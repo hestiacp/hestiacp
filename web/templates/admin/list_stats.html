@@ -1,207 +1,272 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div style="float:left; width: 147px;">&nbsp;</div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-select-block" style="padding-left:8px;">
-                            <form action="/list/stats/" method="get" id="objects">
-                            <a class="vst-selected" style="margin: 0px 8px 0 0;" href='/list/stats/'><?php print __('Overall Statistics');?></a> 
-                            <select class="submenu-select-dropdown" name="user">
-                                <option value=""><?php print __('show per user');?></option>
-                            <?php
-                                foreach ($users as $key => $value) {
-                                    echo "\t\t\t\t<option value=\"".$value."\"";
-                                    if ((!empty($v_user)) && ( $value == $_GET['user'])){
-                                        echo ' selected';
-                                    }
-                                    echo ">".$value."</option>\n";
-                                }
-                            ?> 
-                            </select>
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td></td>
+              <td class="step-right">
+                <a class="vst" href='/list/stats/'><?=__('Overall Statistics')?></a>
+              </td>
+              <td>
+                <form action="/list/stats/" method="get" id="objects">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <div class="l-select">
+                    <select class="" name="user">
+                      <option value=""><?=__('show per user')?></option>
+                        <?
+                          foreach ($users as $key => $value) {
+                            echo "\t\t\t\t<option value=\"".$value."\"";
+                            if ((!empty($v_user)) && ( $value == $_GET['user'])){
+                              echo ' selected';
+                            }
+                              echo ">".$value."</option>\n";
+                            }
+                          ?>
+                    </select>
+                  </div>
+                  <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                </form>
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div id="vstobjects">
-            <table class='data'>
+      </div>
 
-                <?php
-                    foreach ($data as $key => $value) {
-                        ++$i;
-                ?>
+      <? display_error_block(); ?>
 
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><a class="data-date" ><?php echo strftime("%d %b %Y", strtotime($key))?></a></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <div style="height:19px"></div>
-                        <table class="data-col2">
-                            <tr>
-                                <td colspan=3 class="username">
-                                    <b><?php echo strftime("%b %Y", strtotime($key))?></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align:top;" width="239px">
-                                    <table>
-                                        <tr>
-                                            <td class="chart" colspan=2" style="padding: 10px 0 0 0">
-                                                <?php print __('Bandwidth');?>: <?php echo humanize_usage($data[$key]['U_BANDWIDTH']) ?>
-                                                <div class="bar" title="<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%">
-                                                    <div class="fill" style="width:<?php echo get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH']) ?>%;"></div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="chart" colspan=2>
-                                                <?php print __('Disk');?>: <?php echo humanize_usage($data[$key]['U_DISK']) ?>
-                                                <div class="bar" title="<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%">
-                                                    <div class="fill" style="width:<?php echo get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA']) ?>%"></div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="mini-info" colspan=2>
-                                                <table class="chart2">
-                                                    <tr>
-                                                        <td>
-                                                            <?php print __('Web');?>: <?php echo humanize_usage($data[$key]['U_DISK_WEB'])?>
-                                                        </td>
-                                                        <td style="padding: 0px 0px 0px 4px">
-                                                            <?php print __('Databases');?>: <?php echo humanize_usage($data[$key]['U_DISK_DB'])?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <?php print __('Mail');?>: <?php echo humanize_usage($data[$key]['U_DISK_MAIL'])?>
-                                                        </td>
-                                                        <td style="padding: 0px 0px 0px 4px">
-                                                            <?php print __('User Directories');?>: <?php echo humanize_usage($data[$key]['U_DISK_DIRS'])?>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="238px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Web Domains');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_WEB_DOMAINS'] ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('SSL Domains');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_WEB_SSL'] ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Web Aliases');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_WEB_ALIASES'] ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('DNS domains');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_DNS_DOMAINS'] ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('DNS records');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_DNS_RECORDS'] ?>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Mail Domains');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_MAIL_DOMAINS'] ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Mail Accounts');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_MAIL_ACCOUNTS'] ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Databases');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_DATABASES'] ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Cron Jobs');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['U_CRON_JOBS'] ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('IP Addresses');?>:
-                                            </td>
-                                            <td class="counter-value">
-                                                <?php echo $data[$key]['IP_OWNED'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+      <!-- /.l-sort -->
+    </div>
 
-                <?php
-                    }
-                ?> 
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
 
-            </table>
 
-            <div class="data-count">
-                <?php
-                    if ( $i == 1) {
-                        echo __('1 month');
-                    } else {
-                        echo __('%s months',$i);
-                    }
-                ?> 
+    <div class="l-center units">
+      <?php
+        foreach ($data as $key => $value) {
+           ++$i;
+      ?>
+
+
+      <div class="l-unit <? if($_COOKIE['stats-'.sha1($key)] == 1) echo ' l-unit--starred';?>" uniq-id="stats-<?=sha1($key)?>">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
+            <div class="actions-panel clearfix">
             </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__date">
+            <?=translate_date($key)?>
+          </div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name separate">
+            <?=__(strftime("%b", strtotime($key))).strftime(" %Y", strtotime($key))?>
+          </div>
+
+
+
+          <div class="l-unit__stats">
+            <table>
+
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                  <div class="l-unit__stat-cols clearfix graph">
+                    <div class="l-unit__stat-col l-unit__stat-col--left">
+                      <?=__('Bandwidth')?>
+                    </div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
+                      <b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?>
+                    </div>
+                  </div>
+                  <div class="l-percent">
+                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH'])?>%"></div>
+                  </div>
+                  <!-- /.percent -->
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_WEB_DOMAINS']?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail Domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_MAIL_DOMAINS']?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSL Domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_WEB_SSL']?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail Accounts')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_MAIL_ACCOUNTS']?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix graph">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Disk')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
+                      <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
+                    </div>
+                  </div>
+                  <div class="l-percent">
+                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA'])?>%"></div>
+                  </div>
+                  <!-- /.percent -->
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Aliases')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_WEB_ALIASES']?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Databases')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_DATABASES']?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix tiny">
+                    <div class="l-unit__stat-col l-unit__stat-col--left">
+                      <?=__('Web')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_WEB'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_WEB'])?>
+                    </div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <?=__('Databases')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_DB'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_DB'])?>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_DNS_DOMAINS']?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Cron Jobs')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_CRON_JOBS']?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix tiny">
+                    <div class="l-unit__stat-col l-unit__stat-col--left">
+                      <?=__('Mail')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_MAIL'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_MAIL'])?>
+                    </div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <?=__('User Directories')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_DIRS'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_DIRS'])?>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS records')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_DNS_RECORDS']?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('IP Addresses')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['IP_OWNED']?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <!-- div class="l-separator"></div-->
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+    <div id="vstobjects">
+        <div class="l-separator"></div>
+    <div class="l-center">
+        <div class="l-unit-ft">
+          <table class='data'></table>
+          <!-- /form -->
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix">
+            <?php
+              if ( $i == 1) {
+                echo __('1 month');
+              } else {
+                echo __('%s months',$i);
+              }
+            ?>
+          </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,106 @@
+#!/bin/bash
+# info: add system sftp jail
+# opions: NONE
+#
+# The script enables sftp jailed environment
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system enviroment  as we run this script
+# mostly by cron wich do not read it by itself
+source /etc/profile
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+if [ -z "$SFTPJAIL_KEY" ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking sshd directives
+config='/etc/ssh/sshd_config'
+sftp_n=$(grep -n "Subsystem.*sftp" $config |grep -v internal |grep -v ":#")
+sftp_i=$(grep -n "Subsystem.*sftp" $config |grep internal |grep -v ":#")
+
+# Disabling normal sftp
+if [ ! -z "$sftp_n" ]; then
+    fline=$(echo $sftp_n |cut -f 1 -d :)
+    sed -i "${fline}s/Subsystem.*sftp/#Subsystem sftp/" $config
+    restart='yes'
+fi
+
+# Enabling jailed sftp
+if [ -z "$sftp_i" ]; then
+    echo "Subsystem sftp internal-sftp" >> $config
+    echo "Match Group sftp-only" >> $config
+    echo "ChrootDirectory /chroot/%u" >> $config
+    echo "    AllowTCPForwarding no" >> $config
+    echo "    X11Forwarding no" >> $config
+    echo "    ForceCommand internal-sftp" >> $config
+    restart='yes'
+fi
+
+# Validating opensshd config
+if [ "$restart" = 'yes' ]; then
+    subj="OpenSSH restart failed"
+    email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f 2 -d \')
+    send_mail="$VESTA/web/inc/mail-wrapper.php"
+    /usr/sbin/sshd -t >/dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+        mail_text="OpenSSH can not be restarted. Please check config:
+            \n\n$(/usr/sbin/sshd -t)"
+        echo -e "$mail_text" | $send_mail -s "$subj" $email
+    else
+        service ssh restart >/dev/null 2>&1
+        service sshd restart >/dev/null 2>&1
+    fi
+fi
+
+# Adding sftp group
+groupadd sftp-only 2>/dev/null
+
+# Checking users
+shells="rssh|nologin"
+for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
+    $BIN/v-add-user-sftp-jail $user
+done
+
+# Adding v-add-sys-sftp-jail to startup
+if [ -e "/etc/rc.local" ]; then
+    check_sftp=$(grep $0 /etc/rc.local)
+    check_exit=$(grep ^exit /etc/rc.local)
+    if [ -z "$check_sftp" ]; then
+        if [ -z "$check_exit" ]; then
+            echo "$BIN/v-add-sys-sftp-jail" >> /etc/rc.local
+        else
+            sed -i "s|^exit|$BIN/v-add-sys-sftp-jail\nexit|" /etc/rc.local
+        fi
+    fi
+    chmod +x /etc/rc.local
+else
+    echo "$BIN/v-add-sys-sftp-jail" > /etc/rc.local
+    chmod +x /etc/rc.local
+fi
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

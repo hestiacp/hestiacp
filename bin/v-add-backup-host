@@ -1,0 +1,186 @@
+#!/bin/bash
+# info: add backup host
+# options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
+#
+# The function adds backup host
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+type=$1
+host=$2
+user=$3
+password=$4; HIDE=4
+path=${5-/backup}
+port=$6
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# Defining ftp command function
+ftpc() {
+    ftp -p -n $host $port <<EOF
+    quote USER $user
+    quote PASS $password
+    binary
+    $1
+    $2
+    $3
+    quit
+EOF
+}
+
+# Defining sftp command function
+sftpc() {
+    expect -f "-" <<EOF "$@"
+        set count 0
+        spawn /usr/bin/sftp -o StrictHostKeyChecking=no -o \
+            Port=$port $user@$host
+        expect {
+            "password:" {
+                send "$password\r"
+                exp_continue
+            }
+
+            -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
+                set count \$argc
+                set output "Disconnected."
+                set rc $E_FTP
+                exp_continue
+            }
+
+            -re ".*denied.*(publickey|password)." {
+                set output "Permission denied, wrong publickey or password."
+                set rc $E_CONNECT
+            }
+
+            "sftp>" {
+                if {\$count < \$argc} {
+                    set arg [lindex \$argv \$count]
+                    send "\$arg\r"
+                    incr count
+                } else {
+                    send "exit\r"
+                    set output "Disconnected."
+                    if {[info exists rc] != 1} {
+                        set rc $OK
+                    }
+                }
+                exp_continue
+            }
+
+            timeout {
+                set output "Connection timeout."
+                set rc $E_CONNECT
+            }
+        }
+
+        if {[info exists output] == 1} {
+            puts "\$output"
+        }
+
+        exit \$rc
+EOF
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+if [ "$type" != 'local' ];then
+    check_args '4' "$#" "TYPE HOST USERNAME PASSWORD [PATH] [PORT]"
+    validate_format 'host'
+    is_password_valid
+    if [ "$type" = 'sftp' ]; then
+        which expect >/dev/null 2>&1
+        check_result $? "expect command not found"  $E_NOTEXIST
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking network connection
+if [ "$type" = 'ftp' ]; then
+    if [ -z $port ]; then
+        port=21
+    fi
+    fconn=$(ftpc 2>&1)
+    ferror=$(echo $fconn |\
+        grep -i -e failed -e error -e "can't" -e "not conn" -e "incorrect")
+    if [ ! -z "$ferror" ]; then
+        echo "Error: can't login to ftp $user@$host"
+        log_event "$E_CONNECT" "$EVENT"
+        exit $E_CONNECT
+    fi
+
+    # Checking write permissions
+    ftpc "mkdir $path" > /dev/null 2>&1
+    ftmpdir="$path/vst.bK76A9SUkt"
+    ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir"|grep -v Trying)
+    if [ ! -z "$ftp_result" ] ; then
+        echo "$ftp_result"
+        rm -rf $tmpdir
+        echo "Error: can't create $ftmpdir folder on the ftp"
+        log_event "$E_FTP" "$EVENT"
+        exit $E_FTP
+    fi
+fi
+if [ "$type" = 'sftp' ]; then
+    if [ -z $port ]; then
+        port=22
+    fi
+    sftmpdir="$path/vst.bK76A9SUkt"
+    sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+    rc=$?
+    if [[ "$rc" != 0 ]]; then
+        case $rc in
+            $E_CONNECT) echo "Error: can't login to sftp $user@$host";;
+            $E_FTP) echo "Error: can't create temp folder on the sftp host";;
+        esac
+        log_event "$rc" "$EVENT"
+        exit "$rc"
+    fi
+fi
+
+
+# Adding backup host
+if [ $type != 'local' ]; then
+    echo "HOST='$host'
+    USERNAME='$user'
+    PASSWORD='$password'
+    BPATH='$path'
+    PORT='$port'
+    TIME='$TIME'
+    DATE='$DATE'" > $VESTA/conf/$type.backup.conf
+    chmod 660 $VESTA/conf/$type.backup.conf
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Update vesta.conf
+if [ -z "$(grep BACKUP_SYSTEM $VESTA/conf/vesta.conf)" ]; then
+    echo "BACKUP_SYSTEM='$type'" >> $VESTA/conf/vesta.conf
+else
+    bckp=$(echo "$BACKUP_SYSTEM,$type" |\
+        sed "s/,/\n/g"|\
+        sort -r -u |\
+        sed "/^$/d"|\
+        sed ':a;N;$!ba;s/\n/,/g')
+    sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

@@ -1,155 +1,176 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div class="submenu-button-block">
-                            <button class="submenu-button-main" onclick="location.href='/add/cron/'"> <?php print __('Add Cron Job');?> </button>
-                        </div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-select-block">
-                            <form action="/bulk/cron/" method="post" id="objects">
-                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                            <select class="submenu-select-dropdown" name="action">
-                                <option value=""><?php print __('apply to selected');?></option>
-                                <?php if($panel[$user]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'. __('turn off notifications').'</option>'; ?> 
-                                <?php if($panel[$user]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'. __('turn on notifications').'</option>'; ?> 
-                                <option value="delete"><?php print __('delete');?></option>
-                            </select>
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <?php  if ($panel[$user]['LANGUAGE'] == 'en') { ?>
-                        <div class="submenu-select-block" style="margin: 0 0 0 21px;">
-                            <?php
-                                if($panel[$user]['CRON_REPORTS'] == 'yes') {
-                            ?> 
-                            <a class="submenu-select-link" href="/delete/cron/reports/">[ <?php print __('turn off notifications');?> ]</a>
-                            <?php
-                                } else {
-                            ?> 
-                            <a class="submenu-select-link" href="/add/cron/reports/">[ <?php print __('turn on notifications');?> ]</a>
-                            <?php
-                                }
-                            ?> 
-                        </div>
-                        <?php } ?> 
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <a href="/add/cron/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add Cron Job'))?>"></a>
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Command')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        </ul>
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="step-right">
+              <?
+                if($panel[$user]['CRON_REPORTS'] == 'yes') {
+                  echo '<a class="vst" href="/delete/cron/reports/?token='.$_SESSION['token'].'">'.__('turn off notifications').'</a>';
+                } else {
+                  echo '<a class="vst" href="/add/cron/reports/?token='.$_SESSION['token'].'">'.__('turn on notifications').'</a>';
+                }
+              ?>
+              </td>
+
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
+              </td>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+              </td>
+              <td class="step-right">
+                <form action="/bulk/cron/" method="post" id="objects">
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                <div class="l-select">
+                  <select name="action" id="">
+                    <option value=""><?=__('apply to selected')?></option>
+                    <? if($panel[$user]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'.__('turn off notifications').'</option>'; ?>
+                    <? if($panel[$user]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'.__('turn on notifications').'</option>'; ?>
+                    <option value="suspend"><?=__('suspend')?></option>
+                    <option value="unsuspend"><?=__('unsuspend')?></option>
+                    <option value="delete"><?=__('delete')?></option>
+                  </select>
+                </div>
+                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div id="vstobjects">
-            <table class='data'>
+      </div>
 
-                <?php
-                    foreach ($data as $key => $value) {
-                        ++$i;
-                        if ($data[$key]['SUSPENDED'] == 'yes') {
-                            $status = 'suspended';
-                            $spnd_action = 'unsuspend';
-                            $spnd_confirmation = 'UNSUSPEND_CRON_CONFIRMATION' ;
-                        } else {
-                            $status = 'active';
-                            $spnd_action = 'suspend';
-                            $spnd_confirmation = 'SUSPEND_CRON_CONFIRMATION' ;
-                        }
-                ?> 
+      <? display_error_block() ?>
 
-                <tr class="data-row <? if($status == 'suspended') echo 'suspended';?>">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="job[]" value="<?php echo $data[$key]['JOB'] ?>" ></td></tr>
-                            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
-                            <tr><td class="data-<?php echo $status ?>"><b><?php echo __($status); ?></b></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted" width="830px">
-                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                            <span class="do_delete">
-                                <img src="/images/delete.png" width="7px" height="7px">
-                                <?php print __('delete');?> 
-                                <input type="hidden" name="delete_url" value="/delete/cron/?job=<?php echo $data[$key]['JOB']; ?>" />
-                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                    <p class="confirmation"><?php print __('DELETE_CRON_CONFIRMATION');?></p>
-                                </div>
-                            </span>
-                        </a>
-                        <a href="/edit/cron/?job=<?php echo $data[$key]['JOB'] ?>" class="data-controls">
-                            <span>
-                                <img src="/images/edit.png" width="8px" height="8px">
-                                <?php print __('edit');?> 
-                            </span>
-                        </a>
-                        <table class="data-col2">
-                            <tr>
-                                <td colspan=6 class="cron">
-                                    <b><?php echo htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align:top; padding: 4px 0 0 1px" width="118px">
-                                    <div class="cron-counter-name">
-                                        <?php print __('Min');?> 
-                                    </div>
-                                    <div class="cron-counter-value">
-                                        <?php echo $data[$key]['MIN'] ?> 
-                                    </div>
-                                </td>
-                                <td style="vertical-align:top; padding: 4px 0 0 0" width="120px">
-                                    <div class="cron-counter-name">
-                                        <?php print __('Hour');?> 
-                                    </div>
-                                    <div class="cron-counter-value">
-                                        <?php echo $data[$key]['HOUR'] ?> 
-                                    </div>
-                                </td>
-                                <td style="vertical-align:top; padding: 4px 0 0 0" width="120px">
-                                    <div class="cron-counter-name">
-                                        <?php print __('Day');?> 
-                                    </div>
-                                    <div class="cron-counter-value">
-                                        <?php echo $data[$key]['DAY'] ?> 
-                                    </div>
-                                </td>
-                                <td style="vertical-align:top; padding: 4px 0 0 0" width="119px">
-                                    <div class="cron-counter-name">
-                                        <?php print __('Month');?> 
-                                    </div>
-                                    <div class="cron-counter-value">
-                                        <?php echo $data[$key]['MONTH'] ?> 
-                                    </div>
-                                </td>
-                                <td style="vertical-align:top; padding: 4px 0 0 0" width="120px">
-                                    <div class="cron-counter-name">
-                                        <?php print __('Day of week');?> 
-                                    </div>
-                                    <div class="cron-counter-value">
-                                        <?php echo $data[$key]['WDAY'] ?> 
-                                    </div>
-                                </td>
-                                <td style="vertical-align:top;"></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+      <!-- /.l-sort -->
+    </div>
 
-                <?php
-                    }
-                ?> 
-            </table>
-            </from>
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
 
-            <div class="data-count">
-                <?php
-                    if ( $i == 1) {
-                        echo __('1 cron job');
-                    } else {
-                        echo __('%s cron jobs',$i);
-                    }
-                ?> 
+
+
+    <div class="l-center units">
+      <?
+        foreach ($data as $key => $value) {
+          ++$i;
+          if ($data[$key]['SUSPENDED'] == 'yes') {
+            $status = 'suspended';
+            $spnd_action = 'unsuspend';
+            $spnd_confirmation = 'UNSUSPEND_CRON_CONFIRMATION' ;
+          } else {
+            $status = 'active';
+            $spnd_action = 'suspend';
+            $spnd_confirmation = 'SUSPEND_CRON_CONFIRMATION' ;
+          }
+      ?>
+
+
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites'][CRON][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="cron" 
+sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>" sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo '0'; ?>">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__edit"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=__('edit')?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__suspend">
+                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
+                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
+                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
+                  </div>
+                </a>
+              </div>
+              <div class="actions-panel__col actions-panel__delete">
+                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                  <?=__('delete')?> <i class="do_delete"></i>
+                  <input type="hidden" name="delete_url" value="/delete/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
+                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__('DELETE_CRON_CONFIRMATION',$key)?></p>
+                  </div>
+                </a>
+              </div>
+
+
             </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__date">
+            <?=translate_date($data[$key]['DATE'])?>
+          </div>
+          <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name separate small-2">
+            <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>
+          </div>
+          <!-- /.l-unit__name -->
+          <div class="l-unit__stats separate">
+            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Min')?><br><b><?=$data[$key]['MIN']?></b></div>
+            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Hour')?><br><b><?=$data[$key]['HOUR']?></b></div>
+            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Day')?><br><b><?=$data[$key]['DAY']?></b></div>
+            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Month')?><br><b><?=$data[$key]['MONTH']?></b></div>
+            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Day of week')?><br><b><?=$data[$key]['WDAY']?></b></div>
+          </div>
+
+          <div class="l-unit__stats">
+          </div>
+          <!-- /.l-unit__stats -->
+
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <!--div class="l-separator"></div-->
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+
+    <div id="vstobjects">
+      <div class="l-separator"></div>
+      <div class="l-center">
+        <div class="l-unit">
+          <table class='data'></table>
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix">
+            <?php
+              if ( $i == 1) {
+                echo __('1 cron job');
+              } else {
+                echo __('%s cron jobs',$i);
+              }
+            ?>
+          </div>
+        </div>
+      </div>
+    </div>

@@ -35,7 +35,7 @@ unset($output);
 $v_username = $user;
 $v_database = $_GET['database'];
 $v_dbuser = $data[$v_database]['DBUSER'];
-$v_password = "••••••••";
+$v_password = "";
 $v_host = $data[$v_database]['HOST'];
 $v_type = $data[$v_database]['TYPE'];
 $v_charset = $data[$v_database]['CHARSET'];
@@ -52,6 +52,12 @@ if ( $v_suspended == 'yes' ) {
 if (!empty($_POST['save'])) {
     $v_username = $user;
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Change database user
     if (($v_dbuser != $_POST['v_dbuser']) && (empty($_SESSION['error_msg']))) {
         $v_dbuser = preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);
@@ -63,12 +69,16 @@ if (!empty($_POST['save'])) {
     }
 
     // Change database password
-    if (($v_password != $_POST['v_password']) && (empty($_SESSION['error_msg']))) {
-        $v_password = escapeshellarg($_POST['v_password']);
+    if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['v_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-change-database-password ".$v_username." ".$v_database." ".$v_password, $output, $return_var);
-        check_return_code($return_var,$output);
-        $v_password = "••••••••";
+        check_return_code($return_var,$output);    
         unset($output);
+        unlink($v_password);
+        $v_password = escapeshellarg($_POST['v_password']);
     }
 
     // Set success message

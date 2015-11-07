@@ -1,29 +1,37 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/web/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?>
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Generating CSR');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Generating CSR')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/web/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
         <form id="vstobjects" name="v_generate_csr" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="generate" value="generate" />
             <table class='data'>
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -48,7 +56,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_domain" value="<?php print $v_domain ?>">
+                                    <input type="text" size="20" class="vst-input" name="v_domain" value="<?php print htmlentities($v_domain) ?>">
                                 </td>
                             </tr>
                             <tr>
@@ -58,7 +66,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?php print $v_email ?>">
+                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?php print htmlentities($v_email) ?>">
                                 </td>
                             </tr>
                             <tr>
@@ -69,7 +77,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_country" value="<?php print $v_country?>">
+                                    <input type="text" size="20" class="vst-input" name="v_country" value="<?php print htmlentities($v_country)?>">
                                 </td>
                             </tr>
                             <tr>
@@ -79,7 +87,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_state" value="<?php print $v_state ?>">
+                                    <input type="text" size="20" class="vst-input" name="v_state" value="<?php print htmlentities($v_state) ?>">
                                 </td>
                             </tr>
                             <tr>
@@ -89,7 +97,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_locality" value="<?php print $v_locality ?>">
+                                    <input type="text" size="20" class="vst-input" name="v_locality" value="<?php print htmlentities($v_locality) ?>">
                                 </td>
                             </tr>
                             <tr>
@@ -99,7 +107,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_org" value="<?php print $v_org ?>">
+                                    <input type="text" size="20" class="vst-input" name="v_org" value="<?php print htmlentities($v_org) ?>">
                                 </td>
                             </tr>
                         </table>
@@ -109,7 +117,7 @@
                                     <input type="submit" class="button" name="generate" value="<?php print __('Ok');?>">
                                 </td>
                                 <td style="padding: 24px 0 0 0;">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -117,3 +125,4 @@
                 </tr>
             </table>
         </form>
+    </div>

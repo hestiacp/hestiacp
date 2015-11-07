@@ -178,7 +178,11 @@ get_real_ip() {
         echo $1
     else
         nated_ip=$(grep -H "^NAT='$1'" $VESTA/data/ips/*)
-        echo "$nated_ip" | cut -f 1 -d : | cut -f 7 -d /
+        if [ ! -z "$nated_ip" ]; then
+            echo "$nated_ip" | cut -f 1 -d : | cut -f 7 -d /
+        else
+            get_user_ip
+        fi
     fi
 }
 

@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        12
+Release:        14
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -20,7 +20,6 @@ This package contains the packages for Vesta Control Panel api.
 %setup -q -n %{name}-%{version}
 
 %build
-gcc -lcrypt src/v-check-user-password.c -o bin/v-check-user-password
 
 %install
 install -d  %{buildroot}%{_vestadir}
@@ -52,14 +51,23 @@ if [ $1 -ge 2 ]; then
 fi
 %files
 %{_vestadir}
-%config(noreplace) %{_vestadir}/web/images/logo.png
+%config(noreplace) %{_vestadir}/web/images/sprite.png
 %config(noreplace) %{_vestadir}/web/images/favicon.ico
-%config(noreplace) %{_vestadir}/web/css/csshover3.htc
-%config(noreplace) %{_vestadir}/web/css/ie.css
+%config(noreplace) %{_vestadir}/web/css/file_manager.css
+%config(noreplace) %{_vestadir}/web/css/file_manager_editor.css
+%config(noreplace) %{_vestadir}/web/css/jquery.arcticmodal.css
 %config(noreplace) %{_vestadir}/web/css/jquery-custom-dialogs.css
-%config(noreplace) %{_vestadir}/web/css/main.css
+%config(noreplace) %{_vestadir}/web/css/jquery.fileupload.css
+%config(noreplace) %{_vestadir}/web/css/styles.min.css
+%config(noreplace) %{_vestadir}/web/css/uploadify.css
 
 %changelog
+* Wed Jun 03 2015 Serghey Rodin <builder@vestacp.com> - 0.9.8-13
+- New UI
+- PHP-FPM support
+- Security improvements
+- Dozen bugfixes
+
 * Wed Oct 23 2014 Serghey Rodin <builder@vestacp.com> - 0.9.8-12
 - Firewall service handler for Debian and Ubuntu
 - Minor i18n fix

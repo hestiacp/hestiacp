@@ -9,6 +9,12 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 $backup = $_POST['backup'];
 $action = $_POST['action'];
 
+// Check token
+if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+    header('location: /login/');
+    exit();
+}
+
 switch ($action) {
     case 'delete': $cmd='v-delete-user-backup';
         break;

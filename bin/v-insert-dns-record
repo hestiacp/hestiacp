@@ -44,12 +44,10 @@ echo "$data" >> $USER_DATA/dns/$domain.conf
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart named
+# Restarting named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns $restart
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Bind restart failed" >/dev/null
 fi
 
 # Logging

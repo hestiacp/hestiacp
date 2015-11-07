@@ -1,0 +1,66 @@
+#!/bin/bash
+# info: update user notification
+# options: USER NOTIFICATION
+#
+# The function updates user notification.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+nid=$2
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER NOTIFICATION'
+validate_format 'user' 'nid'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Updating notification
+update_object_value 'notifications' 'NID' "$nid" '$ACK' 'yes' 2>/dev/null
+
+# Checking last notification
+if [ -e "$USER_DATA/notifications.conf" ]; then
+    if [ -z "$(grep NID= $USER_DATA/notifications.conf)" ]; then
+        notice='no'
+    fi
+    if [ -z "$(grep "ACK='no'" $USER_DATA/notifications.conf)" ]; then
+        notice='no'
+    fi
+else
+    notice='no'
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Updating notification counter
+if [ "$notice" = 'no' ]; then
+    if [ -z "$(grep NOTIFICATIONS $USER_DATA/user.conf)" ]; then
+        sed -i "s/^TIME/NOTIFICATIONS='no'\nTIME/g" $USER_DATA/user.conf
+    else
+        update_user_value "$user" '$NOTIFICATIONS' "no"
+    fi
+fi
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

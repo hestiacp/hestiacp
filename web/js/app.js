@@ -710,14 +710,15 @@ var App = {
     Core: {},
     // CONSTANT VALUES
     Constants: {
-        UNLIM_VALUE: 'Unlim',
-        UNLIM_TRANSLATED_VALUE: 'Unlim'
+        UNLIM_VALUE: 'unlimited', // overritten in i18n.js.php
+        UNLIM_TRANSLATED_VALUE: 'unlimited' // overritten in i18n.js.php
     }, 
     // Actions. More widly used funcs
     Actions: {
         DB:      {},
         WEB:     {},
-        PACKAGE: {}
+        PACKAGE: {},
+        MAIL_ACC:{}
     },
     // Utilities
     Helpers: {},
@@ -732,7 +733,8 @@ var App = {
     Listeners: {
         DB:      {},
         WEB:     {},
-        PACKAGE: {}
+        PACKAGE: {},
+        MAIL_ACC:{}
     },
     View:{
         HTML: {
@@ -798,6 +800,38 @@ App.Ajax.request = function(method, data, callback, onError){
     }*/
     //App.Helpers.setAjaxBusy(method, data);
     data = data || {};
+    
+    var prgs = $('.progress-container');
+    
+    switch (method) {
+        case 'cd':
+            prgs.find('title').text('Opening dir');
+            prgs.show();
+            break;
+        case 'delete_files':
+            prgs.find('title').text('Deleting');
+            prgs.show();
+            break;
+        case 'unpack_item':
+            prgs.find('title').text('Unpacking');
+            prgs.show();
+            break;
+        case 'create_file':
+            prgs.find('title').text('Creating file');
+            prgs.show();
+            break;
+        case 'create_dir':
+            prgs.find('title').text('Creating directory');
+            prgs.show();
+            break;
+        case 'rename_file':
+            prgs.find('title').text('Renaming file');
+            prgs.show();
+            break;
+        default:
+        
+            break;
+    }
 
     jQuery.ajax({
         url: GLOBAL.ajax_url,
@@ -814,6 +848,7 @@ App.Ajax.request = function(method, data, callback, onError){
         cache: false,
         error: function(jqXHR, textStatus, errorThrown)
         {
+            prgs.hide();
             onError && onError();
             if ('undefined' != typeof onError) {
                 fb.error(textStatus);
@@ -822,9 +857,11 @@ App.Ajax.request = function(method, data, callback, onError){
         complete: function()
         {
             //App.Helpers.setAjaxFree(method, data);
+            prgs.hide();
         },
         success: function(reply)
         {
+            prgs.hide();
             //App.Helpers.setAjaxFree(method, data);
             try {
                 callback && callback(reply);
@@ -952,4 +989,50 @@ String.prototype.trim = function()
         }
     }
     return str;
+}
+
+hover_menu = function() {
+    var sep_1 = $('div.l-content > div.l-separator:nth-of-type(2)');
+    var sep_2 = $('div.l-content > div.l-separator:nth-of-type(4)');
+    var nav_main = $('.l-stat');
+    var nav_a = $('.l-stat .l-stat__col a');
+    var nav_context = $('.l-sort');
+
+    var st = $(window).scrollTop();
+
+    if (st <= 112) {
+        sep_1.css({'margin-top': 214 - st + 'px'});
+        sep_2.css({'margin-top': 259 - st + 'px'});
+        nav_a.css({'height': 111 - st + 'px'});
+        nav_a.css({'min-height': 111 - st + 'px'});
+        nav_context.css({'margin-top': 215 - st + 'px'});
+        sep_2.css({'box-shadow':'none'});
+    }
+
+    if(st > 112){
+        sep_1.css({'margin-top': '100px'});
+        sep_2.css({'margin-top': '145px'});
+        nav_a.css({'height': '0'});
+        nav_a.css({'min-height': '0'});
+        nav_context.css({'margin-top': '101px'});
+        nav_a.find('ul').css({'visibility': 'hidden'});
+        nav_main.css({'padding-top': '27px'});
+        sep_2.css({'box-shadow':'0 2px 5px  0 rgba(0, 0, 0, 0.6)'});
+    }
+
+    if(st == 0){
+        nav_a.css({'min-height': '111px'});
+        nav_a.css({'height': '111px'});
+    }
+
+    if(st < 109 ){
+        nav_a.find('ul').css({'visibility': 'visible'});
+        nav_main.css({'padding-top': 30 + 'px'});
+    }
+
+    if (st <= 112 && st > 110 ) {
+        nav_main.css({'padding-top': 30 - st + 109  + 'px'});
+    }
+
+    lastScrollTop = st;
 }

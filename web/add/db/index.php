@@ -9,6 +9,12 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check POST request
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_database'])) $errors[] = __('database');
     if (empty($_POST['v_dbuser'])) $errors[] = __('username');
@@ -43,7 +49,6 @@ if (!empty($_POST['ok'])) {
     // Protect input
     $v_database = escapeshellarg($_POST['v_database']);
     $v_dbuser = escapeshellarg($_POST['v_dbuser']);
-    $v_password = escapeshellarg($_POST['v_password']);
     $v_type = $_POST['v_type'];
     $v_charset = $_POST['v_charset'];
     $v_host = $_POST['v_host'];
@@ -54,9 +59,15 @@ if (!empty($_POST['ok'])) {
         $v_type = escapeshellarg($_POST['v_type']);
         $v_charset = escapeshellarg($_POST['v_charset']);
         $v_host = escapeshellarg($_POST['v_host']);
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['v_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." ".$v_host." ".$v_charset, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        unlink($v_password);
+        $v_password = escapeshellarg($_POST['v_password']);
         $v_type = $_POST['v_type'];
         $v_host = $_POST['v_host'];
         $v_charset = $_POST['v_charset'];
@@ -86,7 +97,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('DATABASE_CREATED_OK',$user."_".$_POST['v_database'],$user."_".$_POST['v_database']);
+        $_SESSION['ok_msg'] = __('DATABASE_CREATED_OK',htmlentities($user)."_".htmlentities($_POST['v_database']),htmlentities($user)."_".htmlentities($_POST['v_database']));
         $_SESSION['ok_msg'] .= " / <a href=".$db_admin_link." target='_blank'>" . __('open %s',$db_admin) . "</a>";
         unset($v_database);
         unset($v_dbuser);

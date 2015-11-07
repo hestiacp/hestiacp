@@ -16,6 +16,12 @@ if ($_SESSION['user'] != 'admin') {
 // Check POST request
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_username'])) $errors[] = __('user');
     if (empty($_POST['v_password'])) $errors[] = __('password');
@@ -47,7 +53,6 @@ if (!empty($_POST['ok'])) {
 
     // Protect input
     $v_username = escapeshellarg($_POST['v_username']);
-    $v_password = escapeshellarg($_POST['v_password']);
     $v_email = escapeshellarg($_POST['v_email']);
     $v_package = escapeshellarg($_POST['v_package']);
     $v_language = escapeshellarg($_POST['v_language']);
@@ -58,9 +63,15 @@ if (!empty($_POST['ok'])) {
 
     // Add user
     if (empty($_SESSION['error_msg'])) {
+        $v_password = tempnam("/tmp","vst");
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['v_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        unlink($v_password);
+        $v_password = escapeshellarg($_POST['v_password']);
     }
 
     // Set language
@@ -88,8 +99,8 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('USER_CREATED_OK',$_POST['v_username'],$_POST['v_username']);
-        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".$_POST['v_username'].">" . __('login as') ." ".$_POST['v_username']. "</a>";
+        $_SESSION['ok_msg'] = __('USER_CREATED_OK',htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
+        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username']).">" . __('login as') ." ".htmlentities($_POST['v_username']). "</a>";
         unset($v_username);
         unset($v_password);
         unset($v_email);

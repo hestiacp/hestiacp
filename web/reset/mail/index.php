@@ -104,8 +104,7 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
     list($v_account, $v_domain) = explode('@', $_POST['email']);
     $v_domain = escapeshellarg($v_domain);
     $v_account = escapeshellarg($v_account);
-    $password = $_POST['password'];
-    $new = escapeshellarg($_POST['new']);
+    $v_password = $_POST['password'];
 
     // Get domain owner
     exec (VESTA_CMD."v-search-domain-owner ".$v_domain." 'mail'", $output, $return_var);
@@ -126,12 +125,16 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
     // Compare hashes
     if (!empty($v_hash)) {
         $salt = explode('$', $v_hash);
-        $n_hash = md5crypt($password, $salt[2]);
+        $n_hash = md5crypt($v_password, $salt[2]);
         $n_hash = '{MD5}'.$n_hash;
 
         // Change password
         if ( $v_hash == $n_hash ) {
-            exec (VESTA_CMD."v-change-mail-account-password '".$v_user."' ".$v_domain." ".$v_account." ".$new, $output, $return_var);
+            $v_new_password = tempnam("/tmp","vst");
+            $fp = fopen($v_new_password, "w");
+            fwrite($fp, $_POST['new']."\n");
+            fclose($fp);
+            exec (VESTA_CMD."v-change-mail-account-password '".$v_user."' ".$v_domain." ".$v_account." ".$v_new_password, $output, $return_var);
             if ($return_var == 0) {
                 echo "ok";
                 exit;

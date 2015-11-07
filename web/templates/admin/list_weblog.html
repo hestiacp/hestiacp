@@ -1,29 +1,40 @@
-<!DOCTYPE HTML>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Web Log Manager</title>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <link type="text/css" href="/css/main.css" rel="stylesheet" />
+  <meta charset="utf-8">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <title>Vesta - <?=__('Web Log Manager')?> </title>
+  <link rel="stylesheet" href="/css/styles.min.css">
+
+  <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
+  <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
+  <script type="text/javascript" src="/js/events.js"></script>
 </head>
 <body>
-    <div style="margin:0 auto;display: block; background: #fff;" >
-        <div class="top">
-            <div class="top-menu">
-                <a class="top-<?php if($_GET['type'] == 'access') echo 'selected-' ?>link" href="/list/web-log/?domain=<?php echo $_GET['domain']."&type=access"?>">
-                    <?php print __('AccessLog') ?> 
-                </a>
-                <a class="top-<?php if($_GET['type'] == 'error' ) echo 'selected-' ?>link" href="/list/web-log/?domain=<?php echo $_GET['domain']."&type=error"?>">
-                    <?php print __('ErrorLog') ?> 
-                </a>
-                <a class="top-link" href="/download/web-log/?domain=<?php echo $_GET['domain']."&type=access"?>">
-                    <?php print __('Download AccessLog') ?>
-                </a>
-                <a class="top-link" href="/download/web-log/?domain=<?php echo $_GET['domain']."&type=error"?>">
-                    <?php print __('Download ErrorLog') ?>
-                </a>
-            </div>
-        </div>
+  <a href="#" class="to-top">
+    <i class="l-icon-to-top"></i>
+  </a>
+  <div class="l-header">
+    <div class="l-center">
+      <a href="/" class="l-logo"></a>
+      <!-- /.l-logo -->
+      <div class="l-menu clearfix">
+        <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=$_GET['domain']?>&type=access"><?=__('AccessLog')?></a></div>
+        <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=$_GET['domain']?>&type=error"><?=__('ErrorLog')?></a></div>
+        <div class="l-menu__item"><a href="/download/web-log/?domain=<?=$_GET['domain']?>&type=access"><?=__('Download AccessLog')?></a></div>
+        <div class="l-menu__item"><a href="/download/web-log/?domain=<?=$_GET['domain']?>&type=error"><?=__('Download ErrorLog')?></a></div>
+      </div>
+      <!-- /.l-menu -->
+      <div class="l-profile">
+        <a class="l-profile__username" href="/edit/user/?user=<?php echo $user; ?>"><?=$user?></a>
+        <a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> </a>
+      </div>
+      <!-- /.l-profile -->
     </div>
-    <div style="color: #323232; padding: 40px 0 20px 0;background: #fff;"><?php echo __('Last 70 lines of %s.%s.log',$_GET['domain'],$_GET['type']) ;?></div>
-    <pre>
+  </div>
+  <!-- /.l-header -->
+
+  <div style="color: #ff6701; padding: 10px 0 20px 20px; background: #fff; "><?php echo __('Last 70 lines of %s.%s.log',$_GET['domain'],$_GET['type']) ;?></div>
+  <pre style="margin-left: 20px; color: #555; font-family: arial; font-size: 14px; line-height: 30px;">

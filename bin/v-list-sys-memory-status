@@ -1,0 +1,40 @@
+#!/bin/bash
+# info: list virtual memory info
+# options: [FORMAT]
+#
+# The function lists virtual memory information
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+#format=${1-shell}
+
+# Includes
+#source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Displaying memory and swap usage
+free -t -m
+echo -en "\n-------------------------------------"
+echo -en  "-------------------------------------\n\n"
+
+# Displaying memory stats
+vmstat -S m -s
+echo -en "\n-------------------------------------"
+echo -en  "-------------------------------------\n\n"
+
+# Displaying ram information
+dmidecode -t 17 2>/dev/null
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

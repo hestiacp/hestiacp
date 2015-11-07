@@ -1,0 +1,105 @@
+#!/bin/bash
+# info: add password protection for web domain
+# options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
+#
+# The call is used for securing web domain with http auth
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+auth_user=$3
+password=$4; HIDE=4
+restart=${5-yes}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
+
+# Definining htpasswd file
+htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
+htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+docroot="$HOMEDIR/$user/web/$domain/public_html"
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '4' "$#" 'USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]'
+validate_format 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_password_valid
+get_domain_values 'web'
+if [ ! -z "$(echo "$AUTH_USER" |tr : '\n' |grep ^$auth_user$)" ]; then
+    echo "Error: auth user $auth_user already exists"
+    log_event "$E_EXISTS" "$EVENT"
+    exit $E_EXISTS
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Adding htaccess password protection
+if [ ! -e "$htaccess" ]; then
+    if [ "$WEB_SYSTEM" != 'nginx' ]; then
+        echo "<Directory $docroot>" > $htaccess
+        echo "    AuthUserFile $htpasswd" >> $htaccess
+        echo "    AuthName \"$domain access\"" >> $htaccess
+        echo "    AuthType Basic" >> $htaccess
+        echo "    Require valid-user" >> $htaccess
+        echo "</Directory>" >> $htaccess
+    else
+        echo "auth_basic  \"$domain password access\";" > $htaccess
+        echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+    fi
+    restart_required='yes'
+fi
+
+# Adding httpasswd user
+auth_hash=$($BIN/v-generate-password-hash htpasswd htpasswd $password)
+touch $htpasswd
+chmod 640 $htpasswd $htaccess
+sed -i "/^$auth_user:/d" $htpasswd
+echo "$auth_user:$auth_hash" >> $htpasswd
+
+# Restarting web server
+if [ "$restart" != 'no' ] && [ "$restart_required" = 'yes' ]; then
+    $BIN/v-restart-web
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Preparing web.conf keys
+if [ ! -z "$AUTH_USER" ]; then
+    auth_user="$AUTH_USER:$auth_user"
+    auth_hash="$AUTH_HASH:$auth_hash"
+else
+    # Adding new key into web.conf
+    add_object_key "web" 'DOMAIN' "$domain" 'AUTH_USER' 'U_DISK'
+    add_object_key "web" 'DOMAIN' "$domain" 'AUTH_HASH' 'U_DISK'
+fi
+
+# Updating config
+update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_USER' "$auth_user"
+update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_HASH' "$auth_hash"
+
+# Logging
+log_history "added http auth user $httpauth_user on $domain"
+log_event "$OK" "$EVENT"
+
+exit

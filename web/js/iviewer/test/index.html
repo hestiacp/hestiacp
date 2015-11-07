@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>jquery.iviewer test</title>
+        <script type="text/javascript" src="jquery.js" ></script>
+        <script type="text/javascript" src="jqueryui.js" ></script>
+        <script type="text/javascript" src="jquery.mousewheel.min.js" ></script>
+        <script type="text/javascript" src="../jquery.iviewer.js" ></script>
+        <script type="text/javascript">
+            var $ = jQuery;
+            $(document).ready(function(){
+                  var iv1 = $("#viewer").iviewer({
+                       src: "test_image.jpg",
+                       update_on_resize: false,
+                       zoom_animation: false,
+                       mousewheel: false,
+                       onMouseMove: function(ev, coords) { },
+                       onStartDrag: function(ev, coords) { return false; }, //this image will not be dragged
+                       onDrag: function(ev, coords) { }
+                  });
+
+                   $("#in").click(function(){ iv1.iviewer('zoom_by', 1); });
+                   $("#out").click(function(){ iv1.iviewer('zoom_by', -1); });
+                   $("#fit").click(function(){ iv1.iviewer('fit'); });
+                   $("#orig").click(function(){ iv1.iviewer('set_zoom', 100); });
+                   $("#update").click(function(){ iv1.iviewer('update_container_info'); });
+
+                  var iv2 = $("#viewer2").iviewer(
+                  {
+                      src: "test_image2.jpg"
+                  });
+
+                  $("#chimg").click(function()
+                  {
+                    iv2.iviewer('loadImage', "test_image.jpg");
+                    return false;
+                  });
+
+                  var fill = false;
+                  $("#fill").click(function()
+                  {
+                    fill = !fill;
+                    iv2.iviewer('fill_container', fill);
+                    return false;
+                  });
+            });
+        </script>
+        <link rel="stylesheet" href="../jquery.iviewer.css" />
+        <style>
+            .viewer
+            {
+                width: 50%;
+                height: 500px;
+                border: 1px solid black;
+                position: relative;
+            }
+
+            .wrapper
+            {
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>JQuery.iviewer test</h1>
+        <!-- wrapper div is needed for opera because it shows scroll bars for reason -->
+        <div class="wrapper">
+            <span>
+                <a id="in" href="#">+</a>
+                <a id="out" href="#">-</a>
+                <a id="fit" href="#">fit</a>
+                <a id="orig" href="#">orig</a>
+                <a id="update" href="#">update</a>
+            </span>
+            <div id="viewer" class="viewer"></div>
+            <br />
+            <div id="viewer2" class="viewer" style="width: 80%;"></div>
+            <br />
+            <p>
+              <a href="#" id="chimg">Change Image</a>
+              <a href="#" id="fill">Fill container</a>
+            </p>
+        </div>
+    </body>
+</html>

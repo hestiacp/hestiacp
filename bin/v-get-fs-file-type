@@ -1,0 +1,40 @@
+#!/bin/bash
+# info: get file type
+# options: USER FILE
+#
+# The function shows file type
+
+user=$1
+path=$2
+
+# Checking arguments
+if [ -z "$path" ]; then
+    echo "Usage: USER FILE"
+    exit 1
+fi
+
+# Checking vesta user
+if [ ! -e "$VESTA/data/users/$user" ]; then
+    echo "Error: vesta user $user doesn't exist"
+    exit 3
+fi
+
+# Checking user homedir
+homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
+if [ -z $homedir ]; then
+    echo "Error: user home directory doesn't exist"
+    exit 12
+fi
+
+# Checking path
+rpath=$(readlink -f "$path")
+if [ -z "$(echo $rpath |grep $homedir)" ]; then
+    echo "Error: invalid path $path"
+    exit 2
+fi
+
+# Listing file type
+sudo -u $user file -i -b $path 2>/dev/null
+
+# Exiting
+exit $?

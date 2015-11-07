@@ -14,7 +14,7 @@ user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ftp_user=${1}_${3}
-ftp_password=$4
+password=$4; HIDE=4
 ftp_path=$5
 
 # Includes
@@ -22,17 +22,13 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
 
-# Hiding password
-A4='******'
-EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN FTP_USER FTP_PASSWORD [FTP_PATH]'
-validate_format 'user' 'domain' 'ftp_user' 'ftp_password'
+validate_format 'user' 'domain' 'ftp_user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -44,6 +40,7 @@ if [ ! -z "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
     log_event "$E_EXISTS" "$EVENT"
     exit $E_EXISTS
 fi
+is_password_valid
 
 
 #----------------------------------------------------------#
@@ -90,8 +87,13 @@ fi
     -M -d "$ftp_path_a"  > /dev/null 2>&1
 
 # Set ftp user password
-echo "$ftp_user:$ftp_password" | /usr/sbin/chpasswd
+echo "$ftp_user:$password" | /usr/sbin/chpasswd
 ftp_md5=$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)
+
+# Adding jailed sftp env
+if [ ! -z "$SFTPJAIL_KEY" ]; then
+    $BIN/v-add-user-sftp-jail $ftp_user
+fi
 
 
 #----------------------------------------------------------#

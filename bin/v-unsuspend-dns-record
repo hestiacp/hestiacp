@@ -53,6 +53,7 @@ sort_dns_records
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_serial
     update_domain_zone
 fi
 
@@ -60,14 +61,6 @@ fi
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Restart named
-#if [ "$restart" != 'no' ]; then
-#    $BIN/v-restart-dns
-#    if [ $? -ne 0 ]; then
-#        exit $E_RESTART
-#    fi
-#fi
 
 # Logging
 log_event "$OK" "$EVENT"

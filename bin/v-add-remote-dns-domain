@@ -27,110 +27,69 @@ source $VESTA/conf/vesta.conf
 check_args '2' "$#" 'USER DOMAIN [FLUSH]'
 validate_format 'user' 'domain'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
-
 if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
-    echo "Error: dns-cluster.conf doesn't exist"
-    log_event "$E_NOTEXIST $EVENT"
-    exit $E_NOTEXIST
+    check_result $E_NOTEXIST "dns-cluster.conf doesn't exist"
 fi
-
-number_of_proc=$(ps auxf | grep -v grep | grep $VESTA/bin/$SCRIPT | wc -l)
-if [ "$number_of_proc" -gt 2 ]; then
-    echo "Error: another sync process already exists"
-    log_event "$E_EXISTS $EVENT"
-    exit $E_EXISTS
+if [ "$(ps auxf |grep -v grep |grep $BIN/$SCRIPT |wc -l)" -gt 2 ]; then
+    check_result $E_EXISTS "another sync process already running"
 fi
+remote_dns_health_check
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Check domain existance
-check_local_domain=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf 2>/dev/null)
-if [ -z "$check_local_domain" ]; then
+# Parsing domain record
+str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf 2>/dev/null)
+if [ -z "$str" ]; then
     pipe="$VESTA/data/queue/dns-cluster.pipe"
-    str=$(grep -n "$SCRIPT $1 $2$" $pipe | cut -f1 -d: | head -n1)
-    if [ ! -z "$str" ]; then
-        sed -i "$str d"  $pipe
+    queue_str=$(grep -n "$SCRIPT $1 $2 no$" $pipe |cut -f1 -d: |head -n1)
+    if [ ! -z "$queue_str" ]; then
+        sed -i "$queue_str d"  $pipe
     fi
     exit
 fi
 
-old_ifs="$IFS"
 IFS=$'\n'
+for cluster in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
 
-# Check remote dns nodes
-remote_dns_health_check
+    # Parsing remote dns host parameters
+    eval $cluster
 
-search_str=$(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf)
-for cluster_str in $search_str; do
-
-    # Get host values
-    eval $cluster_str
-
-    # Check connection type
-    if [ -z "TYPE" ]; then
-        TYPE='api'
-    fi
-
-    # Check recipient dns user
-    if [ -z "$DNS_USER" ]; then
-        DNS_USER='dns-cluster'
-    fi
-
-    # Switch on connection type
-    case $TYPE in
-        ssh) send_cmd="send_ssh_cmd" ;;
-        *)  send_cmd="send_api_cmd" ;;
-    esac
-
-    # Check dns exceptions
-    if [ -z "$DNS_CLUSTER_IGNORE" ]; then
-        DNS_CLUSTER_IGNORE='dns-cluster'
-    fi
-
-    # Check flush parameters
-
-    # Sync domain
-    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+    # Parsing domain parameters
     eval $str
 
-    $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME "$flush" 'no'
-    if [ $? -eq 0 ]; then
-        # Sync records
-        if [ "$TYPE" = 'ssh' ]; then
-            tmp=$(mktemp -u)
-            scp_cmd $USER_DATA/dns/$DOMAIN.conf $tmp
-            $send_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp 'no'
-        else
-            for str in $(cat $USER_DATA/dns/$DOMAIN.conf); do
-                str=$(echo "$str" | sed 's/"/\\"/g')
-                $send_cmd v-insert-dns-record $DNS_USER $DOMAIN "$str"
-            done
-        fi
+    # Syncing domain data
+    cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
+    check_result $? "$HOST connection failed" $E_CONNECT
 
-        # Rebuild dns zone
-        $send_cmd v-rebuild-dns-domain $DNS_USER $domain 'scheduled'
-        if [ $? -ne 0 ]; then
-            echo "Error: $TYPE connection to $HOST failed"
-            log_event "$E_CONNECT $EVENT"
-            exit $E_CONNECT
-        fi
-    fi
+    # Syncing domain records
+    tmp_file="/tmp/vst-sync.$DOMAIN"
+    cluster_file $USER_DATA/dns/$DOMAIN.conf $tmp_file
+    check_result $? "$HOST connection failed" $E_CONNECT
 
+    # Inserting synced records
+    cluster_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp_file 'no'
+    check_result $? "$HOST connection failed" $E_CONNECT
+
+    # Rebuilding dns zone
+    cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
+    check_result $? "$HOST connection failed" $E_CONNECT
 done
 
-# Update pipe
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Updating pipe
 rm -f $tmpfile
 pipe="$VESTA/data/queue/dns-cluster.pipe"
 str=$(grep -n "$SCRIPT $1 $2 " $pipe | cut -f1 -d: | head -n1)
 if [ ! -z "$str" ]; then
     sed -i "$str d"  $pipe
 fi
-
-#----------------------------------------------------------#
-#                       Vesta                              #
-#----------------------------------------------------------#
 
 exit

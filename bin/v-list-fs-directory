@@ -1,5 +1,8 @@
 #!/bin/bash
-# File list wrapper
+# info: list directory
+# options: USER DIRECTORY
+#
+# The function lists directory on the file system
 
 user=$1
 path=$2
@@ -10,30 +13,34 @@ if [ -z "$user" ]; then
     exit 1
 fi
 
-# Checking users
+# Checking vesta user
 if [ ! -e "$VESTA/data/users/$user" ]; then
-    exit 1
+    echo "Error: vesta user $user doesn't exist"
+    exit 3
 fi
 
-# Checking homedir
+# Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z $homedir ]; then
-    exit 1
+    echo "Error: user home directory doesn't exist"
+    exit 12
 fi
 
 # Checking path
 if [ ! -z "$path" ]; then
-    # Validating absolute path
     rpath=$(readlink -f "$path")
     if [ -z "$(echo $rpath |grep $homedir)" ]; then
-        exit 1
+    echo "Error: invalid path $dst_dir"
+        exit 2
     fi
 else
     path=$homedir
 fi
 
-# Listing files
-find "$path" -maxdepth 1 -printf "%y|%m|%TY-%Tm-%Td|%TH:%TM:%TS|%u|%g|%s|%P\n"
+# Listing directory
+sudo -u $user find "$path" -maxdepth 1 \
+    -printf "%y|%m|%TY-%Tm-%Td|%TH:%TM|%u|%g|%s|%P\n" 2>/dev/null
+#    -printf "%y|%m|%TY-%Tm-%Td|%TH:%TM:%TS|%u|%g|%s|%P\n" 2>/dev/null
 
-
-exit
+# Exiting
+exit $?

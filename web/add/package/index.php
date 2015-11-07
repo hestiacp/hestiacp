@@ -16,10 +16,21 @@ if ($_SESSION['user'] != 'admin') {
 // Check POST request
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_package'])) $errors[] = __('package');
     if (empty($_POST['v_web_template'])) $errors[] = __('web template');
-    if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+    if (!empty($_SESSION['WEB_BACKEND'])) {
+        if (empty($_POST['v_backend_template'])) $errors[] = __('backend template');
+    }
+    if (!empty($_SESSION['PROXY_SYSTEM'])) {
+        if (empty($_POST['v_proxy_template'])) $errors[] = __('proxy template');
+    }
     if (empty($_POST['v_dns_template'])) $errors[] = __('dns template');
     if (empty($_POST['v_shell'])) $errrors[] = __('shell');
     if (!isset($_POST['v_web_domains'])) $errors[] = __('web domains');
@@ -49,6 +60,7 @@ if (!empty($_POST['ok'])) {
     // Protect input
     $v_package = escapeshellarg($_POST['v_package']);
     $v_web_template = escapeshellarg($_POST['v_web_template']);
+    $v_backend_template = escapeshellarg($_POST['v_backend_template']);
     $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
     $v_dns_template = escapeshellarg($_POST['v_dns_template']);
     $v_shell = escapeshellarg($_POST['v_shell']);
@@ -67,9 +79,17 @@ if (!empty($_POST['ok'])) {
     $v_ns2 = trim($_POST['v_ns2'], '.');
     $v_ns3 = trim($_POST['v_ns3'], '.');
     $v_ns4 = trim($_POST['v_ns4'], '.');
+    $v_ns5 = trim($_POST['v_ns5'], '.');
+    $v_ns6 = trim($_POST['v_ns6'], '.');
+    $v_ns7 = trim($_POST['v_ns7'], '.');
+    $v_ns8 = trim($_POST['v_ns8'], '.');
     $v_ns = $v_ns1.",".$v_ns2;
     if (!empty($v_ns3)) $v_ns .= ",".$v_ns3;
     if (!empty($v_ns4)) $v_ns .= ",".$v_ns4;
+    if (!empty($v_ns5)) $v_ns .= ",".$v_ns5;
+    if (!empty($v_ns6)) $v_ns .= ",".$v_ns6;
+    if (!empty($v_ns7)) $v_ns .= ",".$v_ns7;
+    if (!empty($v_ns8)) $v_ns .= ",".$v_ns8;
     $v_ns = escapeshellarg($v_ns);
     $v_time = escapeshellarg(date('H:i:s'));
     $v_date = escapeshellarg(date('Y-m-d'));
@@ -85,7 +105,12 @@ if (!empty($_POST['ok'])) {
     // Create package file
     if (empty($_SESSION['error_msg'])) {
         $pkg = "WEB_TEMPLATE=".$v_web_template."\n";
-        $pkg .= "PROXY_TEMPLATE=".$v_proxy_template."\n";
+        if (!empty($_SESSION['WEB_BACKEND'])) {
+            $pkg .= "BACKEND_TEMPLATE=".$v_backend_template."\n";
+        }
+        if (!empty($_SESSION['PROXY_SYSTEM'])) {
+            $pkg .= "PROXY_TEMPLATE=".$v_proxy_template."\n";
+        }
         $pkg .= "DNS_TEMPLATE=".$v_dns_template."\n";
         $pkg .= "WEB_DOMAINS=".$v_web_domains."\n";
         $pkg .= "WEB_ALIASES=".$v_web_aliases."\n";
@@ -121,7 +146,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('PACKAGE_CREATED_OK',$_POST['v_package'],$_POST['v_package']);
+        $_SESSION['ok_msg'] = __('PACKAGE_CREATED_OK',htmlentities($_POST['v_package']),htmlentities($_POST['v_package']));
         unset($v_package);
     }
 
@@ -139,10 +164,19 @@ exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
 $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
+// List web templates for backend
+if (!empty($_SESSION['WEB_BACKEND'])) {
+    exec (VESTA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    $backend_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
+
 // List web templates for proxy
-exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
-$proxy_templates = json_decode(implode('', $output), true);
-unset($output);
+if (!empty($_SESSION['PROXY_SYSTEM'])) {
+    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    $proxy_templates = json_decode(implode('', $output), true);
+    unset($output);
+}
 
 // List DNS templates
 exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
@@ -156,20 +190,21 @@ unset($output);
 
 // Set default values
 if (empty($v_web_template)) $v_web_template = 'default';
+if (empty($v_backend_template)) $v_backend_template = 'default';
 if (empty($v_proxy_template)) $v_proxy_template = 'default';
 if (empty($v_dns_template)) $v_dns_template = 'default';
 if (empty($v_shell)) $v_shell = 'nologin';
-if (empty($v_web_domains)) $v_web_domains = "'0'";
-if (empty($v_web_aliases)) $v_web_aliases = "'0'";
-if (empty($v_dns_domains)) $v_dns_domains = "'0'";
-if (empty($v_dns_records)) $v_dns_records = "'0'";
-if (empty($v_mail_domains)) $v_mail_domains = "'0'";
-if (empty($v_mail_accounts)) $v_mail_accounts = "'0'";
-if (empty($v_databases)) $v_databases = "'0'";
-if (empty($v_cron_jobs)) $v_cron_jobs = "'0'";
-if (empty($v_backups)) $v_backups = "'0'";
-if (empty($v_disk_quota)) $v_disk_quota = "'0'";
-if (empty($v_bandwidth)) $v_bandwidth = "'0'";
+if (empty($v_web_domains)) $v_web_domains = "'1'";
+if (empty($v_web_aliases)) $v_web_aliases = "'1'";
+if (empty($v_dns_domains)) $v_dns_domains = "'1'";
+if (empty($v_dns_records)) $v_dns_records = "'1'";
+if (empty($v_mail_domains)) $v_mail_domains = "'1'";
+if (empty($v_mail_accounts)) $v_mail_accounts = "'1'";
+if (empty($v_databases)) $v_databases = "'1'";
+if (empty($v_cron_jobs)) $v_cron_jobs = "'1'";
+if (empty($v_backups)) $v_backups = "'1'";
+if (empty($v_disk_quota)) $v_disk_quota = "'1000'";
+if (empty($v_bandwidth)) $v_bandwidth = "'1000'";
 if (empty($v_ns1)) $v_ns1 = 'ns1.example.ltd';
 if (empty($v_ns2)) $v_ns2 = 'ns2.example.ltd';
 

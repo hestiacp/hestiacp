@@ -1,0 +1,59 @@
+#!/bin/bash
+# info: archive directory
+# options: USER ARCHIVE DIRECTORY [DIRECTORY_N]
+#
+# The function creates tar archive
+
+user=$1
+archive=$2
+src1=$3
+src2=$4
+src3=$5
+src4=$6
+src5=$7
+src6=$8
+src7=$9
+
+# Checking arguments
+if [ -z "$src1" ]; then
+    echo "Usage: USER ARCHIVE DIRECTORY [DIRECTORY_N]"
+    exit 1
+fi
+
+# Checking vesta user
+if [ ! -e "$VESTA/data/users/$user" ]; then
+    echo "Error: vesta user $user doesn't exist"
+    exit 3
+fi
+
+# Checking user homedir
+homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
+if [ -z $homedir ]; then
+    echo "Error: user home directory doesn't exist"
+    exit 12
+fi
+
+# Checking archive
+if [ -e "$archive.tar.gz" ]; then
+    echo "Error: archive already exist $archive.tar.gz"
+    exit 1
+fi
+
+# Checking source path
+for src_path in $src1 $src2 $src3 $src4 $src5 $src6 $src7; do
+    rpath=$(readlink -f "$src_path")
+    if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+        echo "Error: invalid source path $src_path"
+        exit 1
+    fi
+done
+
+# Creating tar.gz archive
+sudo -u $user tar -czf "$archive.tar.gz" \
+    $src1 $src2 $src3 $src4 $src5 $src6 $src7 > /dev/null 2>&1
+if [ "$?" -ne 0 ]; then
+#    echo "Error: archive $archive.tar.gz was not created"
+    exit 3
+fi
+
+exit

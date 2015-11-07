@@ -22,6 +22,9 @@ source $VESTA/conf/vesta.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
+if [ -z "$BACKUP_SYSTEM" ]; then
+    exit
+fi
 for user in $(ls $VESTA/data/users); do
     check_suspend=$(grep "SUSPENDED='no'" $VESTA/data/users/$user/user.conf)
     log=$VESTA/log/backup.log

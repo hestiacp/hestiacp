@@ -19,7 +19,7 @@ source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
 is_package_avalable() {
-    # Parsing user data
+
     usr_data=$(cat $USER_DATA/user.conf)
     IFS=$'\n'
     for key in $usr_data; do
@@ -37,17 +37,55 @@ is_package_avalable() {
         grep -v DATE)
     eval $pkg_data
 
-    # Comparing user data with package
-    if [[ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ]] ||\
-       [[ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ]] ||\
-       [[ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ]] ||\
-       [[ "$DATABASES" -lt "$U_DATABASES" ]] ||\
-       [[ "$CRON_JOBS" -lt "$U_CRON_JOBS" ]] ||\
-       [[ "$DISK_QUOTA" -lt "$U_DISK" ]] ||\
-       [[ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]]; then
-        echo "Error: Package not cover current usage"
-        log_event "$E_LIMIT" "$EVENT"
-        exit $E_LIMIT
+    # Checking usage agains package limits
+    if [ "$WEB_DOMAINS" != 'unlimited' ]; then
+        if [ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ]; then
+            echo "Error: Package doesn't cover WEB_DOMAIN usage"
+            log_event "$E_LIMIT" "$EVENT"
+            exit $E_LIMIT
+        fi
+    fi
+    if [ "$DNS_DOMAINS" ! = 'unlimited' ]; then
+        if [ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ]; then
+            echo "Error: Package doesn't cover DNS_DOMAIN usage"
+            log_event "$E_LIMIT" "$EVENT"
+            exit $E_LIMIT
+        fi
+    fi
+    if [ "$MAIL_DOMAINS" != 'unlimited' ]; then
+        if [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ]; then
+            echo "Error: Package doesn't cover MAIL_DOMAIN usage"
+            log_event "$E_LIMIT" "$EVENT"
+            exit $E_LIMIT
+        fi
+    fi
+    if [ "$DATABASES" != 'unlimited' ]; then
+        if [ "$DATABASES" -lt "$U_DATABASES" ]; then
+            echo "Error: Package doesn't cover DATABASE usage"
+            log_event "$E_LIMIT" "$EVENT"
+            exit $E_LIMIT
+        fi
+    fi
+    if [ "$CRON_JOBS" != 'unlimited' ]; then
+        if [ "$CRON_JOBS" -lt "$U_CRON_JOBS" ]; then
+            echo "Error: Package doesn't cover CRON usage"
+            log_event "$E_LIMIT" "$EVENT"
+            exit $E_LIMIT
+        fi
+    fi
+    if [ "$DISK_QUOTA" != 'unlimited' ]; then
+        if [ "$DISK_QUOTA" -lt "$U_DISK" ]; then
+            echo "Error: Package doesn't cover DISK usage"
+            log_event "$E_LIMIT" "$EVENT"
+            exit $E_LIMIT
+        fi
+    fi
+    if [ "$BANDWIDTH" != 'unlimited' ]; then
+        if [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]; then
+            echo "Error: Package doesn't cover BANDWIDTH usage"
+            log_event "$E_LIMIT" "$EVENT"
+            exit $E_LIMIT
+        fi
     fi
 }
 
@@ -110,6 +148,7 @@ U_DATABASES='$U_DATABASES'
 U_CRON_JOBS='$U_CRON_JOBS'
 U_BACKUPS='$U_BACKUPS'
 LANGUAGE='$LANGUAGE'
+NOTIFICATIONS='$NOTIFICATIONS'
 TIME='$TIME'
 DATE='$DATE'" > $USER_DATA/user.conf
 }
@@ -143,6 +182,12 @@ shell=$(grep -w "$shell_conf" /etc/shells |head -n1)
 # Run template trigger
 if [ -x "$VESTA/data/packages/$package.sh" ]; then
     $VESTA/data/packages/$package.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
+fi
+
+# Update disk quota
+source $VESTA/conf/vesta.conf
+if [ "$DISK_QUOTA" = 'yes' ]; then
+    $BIN/v-update-user-quota $user
 fi
 
 

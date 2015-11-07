@@ -1,0 +1,97 @@
+#!/bin/bash
+# info: list user notifications
+# options: USER [FORMAT]
+#
+# The function for getting the list notifications
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+format=${2-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json function
+json_list_notifications() {
+    echo '{'
+    fileds_count=$(echo $fields| wc -w )
+    while read line; do
+        eval $line
+        if [ -n "$data" ]; then
+            echo -e '        },'
+        fi
+        i=1
+        IFS=' '
+        for field in $fields; do
+            eval value=\"$field\"
+            value=$(echo "$value"|sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+            if [ $i -eq 1 ]; then
+                (( ++i))
+                echo -e "\t\"$value\": {"
+            else
+                if [ $i -lt $fileds_count ]; then
+                    (( ++i))
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+                else
+                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+                    data=1
+                fi
+            fi
+        done
+    done < $conf
+    if [ -n "$data" ]; then
+        echo -e '        }'
+    fi
+    echo -e '}'
+}
+
+# Shell function
+shell_list_notifications() {
+    while read line ; do
+        eval $line
+        echo "$TOPIC" |sed -e "s/%quote%/'/g"
+        echo "$NOTICE" |sed -e "s/%quote%/'/g"
+        echo "$DATE $TIME"
+        echo "--"
+        echo
+    done < $conf
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '1' "$#" 'USER [FORMAT]'
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining fileds to select
+conf=$USER_DATA/notifications.conf
+fields='$NID $TOPIC $NOTICE $TYPE $ACK $TIME $DATE'
+
+# Listing favourites
+case $format in
+    json)   json_list_notifications ;;
+    plain)  shell_list_notifications ;;
+    shell)  shell_list_notifications  ;;
+    *)      check_args '1' '0' 'USER [FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

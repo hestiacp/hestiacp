@@ -1,147 +1,202 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div class="submenu-button-block">
-                            <button class="submenu-button-main" onclick="location.href='/add/ip/'"> <?php print __('Add IP');?> </button>
-                        </div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-select-block">
-                            <form action="/bulk/ip/" method="post" id="objects">
-                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                            <select class="submenu-select-dropdown" name="action">
-                                <option value=""><?php print __('apply to selected');?></option>
-                                <option value="reread IP"><?php print __('reread IP');?></option>
-                                <option value="delete"><?php print __('delete');?></option>
-                            </select>
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <a href="/add/ip/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add IP'))?>"></a>
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-ip"><span class="name"><?=__('ip')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-netmask"><span class="name"><?=__('Netmask')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-interface"><span class="name"><?=__('Interface')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-domains" sort_as_int="1"><span class="name"><?=__('Domains')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-owner"><span class="name"><?=__('Owner')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        </ul>
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
+              </td>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+              </td>
+              <td>
+                <form action="/bulk/ip/" method="post" id="objects">
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                <div class="l-select">
+                  <select name="action" id="">
+                    <option value=""><?=__('apply to selected')?></option>
+                    <option value="reread IP"><?=__('reread IP')?></option>
+                    <option value="delete"><?=__('delete')?></option>
+                  </select>
+                </div>
+                <input type="submit" class="l-sort-toolbar__filter-apply" value="" />
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div id="vstobjects">
-            <table class='data'>
+      </div>
 
-                <?php
-                    foreach ($data as $key => $value) {
-                        ++$i;
-                ?> 
+      <? display_error_block(); ?>
 
-                <tr class="data-row">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr><td><input type="checkbox" class="ch-toggle" name="ip[]" value="<?php echo $key ?>"></td></tr>
-                            <tr><td><a class="data-date" title="<?php echo  $data[$key]['DATE']."  ".$data[$key]['TIME'] ?>"><?php echo strftime("%d %b %Y", strtotime($data[$key]['DATE'])) ?></a></td></tr>
-                            <tr><td class="data-active"><b><?php print __('active');?></b></td></tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                            <span class="do_delete">
-                                <img src="/images/delete.png" width="7px" height="7px">
-                                <?php print __('delete');?> 
-                                <input type="hidden" name="delete_url" value="/delete/ip/?ip=<?php echo "$key" ?>" />
-                                <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                    <p class="confirmation"><?php print __('DELETE_IP_CONFIRMATION',$key);?></p>
-                                </div>
-                            </span>
-                        </a>
-                        <a href="/edit/ip/?ip=<?php echo $key ?>" class="data-controls">
-                            <span>
-                                <img src="/images/edit.png" width="8px" height="8px">
-                                <?php print __('edit');?>
-                            </span>
-                        </a>
+      <!-- /.l-sort -->
+    </div>
 
-                        <table class="data-col2">
-                            <tr>
-                                <td colspan=3 class="domain">
-                                    <b><?php echo $key ?></b>
-                                    <?php if (!empty($data[$key]['NAT'])) echo ' → <b>' . $data[$key]['NAT'] . '</b>'; ?>
-                                    <a class="aliases" style="padding:0 0 0 8px;"><?php echo  $data[$key]['NAME'] ?></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align:top;" width="239px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php echo $data[$key]['NETMASK'] ?> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php echo $data[$key]['INTERFACE'] ?> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;" width="238px">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Domains');?>:
-                                            </td>
-                                            <td>
-                                                <a class="counter-value"><?php echo $data[$key]['U_WEB_DOMAINS'] ?></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Status');?>:
-                                            </td>
-                                            <td>
-                                                <a class="counter-value"> <?php echo __($data[$key]['STATUS']) ?></a>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="vertical-align:top;">
-                                    <table>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Owner');?>:
-                                            </td>
-                                            <td>
-                                                <a class="counter-value"> <?php echo __($data[$key]['OWNER']) ?></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="counter-name">
-                                                <?php print __('Users');?>:
-                                            </td>
-                                            <td>
-                                                <a class="counter-value"> <?php echo str_replace(',', ', ', $data[$key]['U_SYS_USERS']) ?></a>
-                                            </td>
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
 
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
 
-                <?php
-                    }
-                ?> 
-            </table>
-            </form>
+    <div class="l-center units">
+      <?php
+        foreach ($data as $key => $value) {
+           ++$i;
+      ?>
 
-            <div class="data-count">
-                <?php
-                    if ( $i == 1) {
-                        echo __('1 IP address');
-                    } else {
-                        echo __('%s IP addresses',$i);
-                    }
-                ?> 
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['IP'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" 
+v_section="ip" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>" 
+sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=__($data[$key]['INTERFACE'])?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>" 
+sort-owner="<?=__($data[$key]['OWNER'])?>" sort-star="<? if($_SESSION['favourites']['IP'][$key] == 1) echo '1'; else echo '0'; ?>">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ip[]" value="<?=$key?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__edit"><a href="/edit/ip/?ip=<?=$key?>"><?=__('edit')?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__delete">
+                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                  <?=__('delete')?> <i class="do_delete"></i>
+                  <input type="hidden" name="delete_url" value="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>
+                  </div>
+                </a>
+              </div>
             </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__date">
+            <?=translate_date($data[$key]['DATE'])?>
+          </div>
+          <div class="l-unit__suspended""><?=__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__name separate">
+            <?=$key?>
+                <?php if (!empty($data[$key]['NAT'])) echo ' → <b>' . $data[$key]['NAT'] . '</b>'; ?>
+                <span><?=str_replace(',', ', ', $data[$key]['NAME'])?></span>
+          </div>
+
+
+
+          <div class="l-unit__stats">
+            <table>
+
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=$data[$key]['NETMASK']?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Domains')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['U_WEB_DOMAINS']?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Owner')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['OWNER'])?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+
+               <tr>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=$data[$key]['INTERFACE']?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Status')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=__($data[$key]['STATUS'])?></b>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Users')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=str_replace(',', ', ', $data[$key]['U_SYS_USERS'])?></b>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+
+
+
+
+            </table>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <!-- div class="l-separator"></div-->
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+    <div id="vstobjects">
+        <div class="l-separator"></div>
+    <div class="l-center">
+        <div class="l-unit-ft">
+          <table class='data'></table>
+          <!-- /form -->
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix">
+            <?php
+              if ( $i == 1) {
+                echo __('1 IP address');
+              } else {
+                echo __('%s IP addresses',$i);
+              }
+            ?>
+          </div>
+      </div>
+    </div>
+  </div>

@@ -1,30 +1,39 @@
-            <?php
-                $back = $_SESSION['back'];
-                if (empty($back)) {
-                    $back = "location.href='/list/package/'";
-                } else {
-                    $back = "location.href='".$back."'";
-                }
-            ?>
-
-            <table class="submenu">
-                <tr>
-                    <td style="padding: 20px 10px;" ><a class="name"><b><?php print __('Adding Package');?></b></a>
-                        <?php
-                            if (!empty($_SESSION['error_msg'])) {
-                                echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                            } else {
-                                if (!empty($_SESSION['ok_msg'])) {
-                                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                                }
-                            }
-                        ?>
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+                <span class="title"><b><?=__('Adding Package')?></b></span>
+                  <?php
+                    if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+                    } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                      }
+                    }
+                  ?>
         </div>
 
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+        <?php
+            echo 'reading-read '.$v_ns5;
+
+          $back = $_SESSION['back'];
+          if (empty($back)) {
+            $back = "location.href='/list/package/'";
+          } else {
+            $back = "location.href='".$back."'";
+          }
+        ?>
         <form id="vstobjects" name="v_add_package" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="ok" value="Add" />
             <table class="data mode-add">
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -41,12 +50,12 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_package" <?php if (!empty($v_package)) echo "value=".$v_package;  ?> >
+                                    <input type="text" size="20" class="vst-input" name="v_package" <?php if (!empty($v_package)) echo "value=".htmlentities($v_package);  ?> >
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Web Template');?>
+                                    <?php print __('Web Template') . "<span class='optional'>" . strtoupper($_SESSION['WEB_SYSTEM']) . "</span>" ;?>
                                 </td>
                             </tr>
                             <tr>
@@ -54,11 +63,35 @@
                                     <select class="vst-list" name="v_web_template">
                                         <?php
                                             foreach ($web_templates as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                                 if ((!empty($v_web_template)) && ( $value == $v_web_template)){
                                                     echo 'selected' ;
                                                 }
                                                 if ((!empty($v_web_template)) && ( $value == $_POST['v_web_template'])){
+                                                    echo 'selected' ;
+                                                }
+                                                echo ">".htmlentities($value)."</option>\n";
+                                            }
+                                        ?> 
+                                    </select>
+                                </td>
+                            </tr>
+                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Backend Template') . "<span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']). "</span>" ;?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_backend_template">
+                                        <?php
+                                            foreach ($backend_templates as $key => $value) {
+                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                if ((!empty($v_backend_template)) && ( $value == $v_backend_template)){
+                                                    echo 'selected' ;
+                                                }
+                                                if ((!empty($v_backend_template)) && ( $value == $_POST['v_backend_template'])){
                                                     echo 'selected' ;
                                                 }
                                                 echo ">".$value."</option>\n";
@@ -67,9 +100,13 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?php echo ""; }?> 
+
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Proxy Template');?>
+                                    <?php print __('Proxy Template')  . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>" ;?>
+
                                 </td>
                             </tr>
                             <tr>
@@ -77,22 +114,23 @@
                                     <select class="vst-list" name="v_proxy_template">
                                         <?php
                                             foreach ($proxy_templates as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                                 if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template)){
                                                     echo 'selected' ;
                                                 }
                                                 if ((!empty($v_proxy_template)) && ( $value == $_POST['v_proxy_template'])){
                                                     echo 'selected' ;
                                                 }
-                                                echo ">".$value."</option>\n";
+                                                echo ">".htmlentities($value)."</option>\n";
                                             }
                                         ?> 
                                     </select>
                                 </td>
                             </tr>
+                            <?php echo ""; }?> 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('DNS Template');?>
+                                    <?php print __('DNS Template') . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>" ;?>
                                 </td>
                             </tr>
                             <tr>
@@ -100,14 +138,14 @@
                                     <select class="vst-list" name="v_dns_template">
                                         <?php
                                             foreach ($dns_templates as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                                 if ((!empty($v_dns_template)) && ( $value == $v_dns_template)){
                                                     echo 'selected' ;
                                                 }
                                                 if ((!empty($v_dns_template)) && ( $value == $_POST['v_dns_template'])){
                                                     echo 'selected' ;
                                                 }
-                                                echo ">".$value."</option>\n";
+                                                echo ">".htmlentities($value)."</option>\n";
                                             }
                                         ?> 
                                     </select>
@@ -123,14 +161,14 @@
                                     <select class="vst-list" name="v_shell">
                                         <?php
                                             foreach ($shells as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
                                                 if ((!empty($v_shell)) && ( $value == $v_shell)){
                                                 echo 'selected' ;
                                             }
                                             if ((!empty($v_shell)) && ( $value == $_POST['v_shell'])){
                                                 echo 'selected' ;
                                             }
-                                            echo ">".$value."</option>\n";
+                                            echo ">".htmlentities($value)."</option>\n";
                                             }
                                         ?> 
                                     </select>
@@ -143,19 +181,19 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_web_domains" <?php if (isset($v_web_domains)) echo "value=".$v_web_domains; ?>>
-                                    <img class="unlim-trigger" id="unlim-web-domains" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_web_domains" <?php if (isset($v_web_domains)) echo "value=".htmlentities($v_web_domains); ?>>
+                                    <img class="unlim-trigger" id="unlim-web-domains" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Web Aliases');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('per domain');?>)</span>
+                                    <?php print __('Web Aliases');?> <span class="optional">(<?=__('per domain')?>)</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_web_aliases" <?php if (isset($v_web_aliases)) echo "value=".$v_web_aliases; ?>>
-                                    <img id="unlim-web-aliases" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_web_aliases" <?php if (isset($v_web_aliases)) echo "value=".htmlentities($v_web_aliases); ?>>
+                                    <img id="unlim-web-aliases" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
@@ -165,19 +203,19 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_dns_domains" <?php if (isset($v_dns_domains)) echo "value=".$v_dns_domains; ?>>
-                                    <img id="unlim-dns-domain" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_dns_domains" <?php if (isset($v_dns_domains)) echo "value=".htmlentities($v_dns_domains); ?>>
+                                    <img id="unlim-dns-domain" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('DNS records');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('per domain');?>)</span>
+                                    <?php print __('DNS records');?> <span class="optional">(<?=__('per domain')?>)</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_dns_records" <?php if (isset($v_dns_records)) echo "value=".$v_dns_records; ?>>
-                                    <img id="unlim-dns-records" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_dns_records" <?php if (isset($v_dns_records)) echo "value=".htmlentities($v_dns_records); ?>>
+                                    <img id="unlim-dns-records" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
@@ -187,19 +225,19 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_mail_domains" <?php if (isset($v_mail_domains)) echo "value=".$v_mail_domains; ?>>
-                                    <img id="unlim-mail-domains" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_mail_domains" <?php if (isset($v_mail_domains)) echo "value=".htmlentities($v_mail_domains); ?>>
+                                    <img id="unlim-mail-domains" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Mail Accounts');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('per domain');?>)</span>
+                                    <?php print __('Mail Accounts');?> <span class="optional">(<?=__('per domain')?>)</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_mail_accounts" <?php if (isset($v_mail_accounts)) echo "value=".$v_mail_accounts; ?>>
-                                    <img id="unlim-mail-accounts" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_mail_accounts" <?php if (isset($v_mail_accounts)) echo "value=".htmlentities($v_mail_accounts); ?>>
+                                    <img id="unlim-mail-accounts" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
@@ -209,8 +247,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_databases" <?php if (isset($v_databases)) echo "value=".$v_databases; ?>>
-                                    <img id="unlim-databases" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_databases" <?php if (isset($v_databases)) echo "value=".htmlentities($v_databases); ?>>
+                                    <img id="unlim-databases" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
@@ -220,8 +258,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_cron_jobs" <?php if (isset($v_cron_jobs)) echo "value=".$v_cron_jobs; ?>>
-                                    <img id="unlim-cron-jobs" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_cron_jobs" <?php if (isset($v_cron_jobs)) echo "value=".htmlentities($v_cron_jobs); ?>>
+                                    <img id="unlim-cron-jobs" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
@@ -231,30 +269,29 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_backups" <?php if (isset($v_backups)) echo "value=".$v_backups; ?>>
-                                    <img id="unlim-backups" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_backups" <?php if (isset($v_backups)) echo "value=".htmlentities($v_backups); ?>>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Quota');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('in megabytes');?>)</span>
+                                    <?php print __('Quota');?> <span class="optional">(<?=__('in megabytes')?>)</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_disk_quota" <?php if (isset($v_disk_quota)) echo "value=".$v_disk_quota; ?>>
-                                    <img id="unlim-disk-quota" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_disk_quota" <?php if (isset($v_disk_quota)) echo "value=".htmlentities($v_disk_quota); ?>>
+                                    <img id="unlim-disk-quota" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Bandwidth');?> <span style="padding:0 0 0 6px; font-size: 10pt; color:#555;">(<?php print __('in megabytes');?>)</span>
+                                    <?php print __('Bandwidth');?> <span class="optional">(<?=__('in megabytes')?>)</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_bandwidth" <?php if (isset($v_bandwidth)) echo "value=".$v_bandwidth; ?>>
-                                    <img name="unlim-bandwidth" class="unlim-trigger" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAQAAACMnYaxAAAAAmJLR0QA/4ePzL8AAACaSURBVBgZxcExasJQAADQBwkIujhGXHSxB3ArDg4u0lkE8TRCZwvFC2Rzq2fQOCpY0EO4qoNgftEM9gTte/y9CJG6spOnRNVZoOlbEOyN3I0dBMFOgy9LLW0frj7NXE21vcgsOBoodFycvSoMnWI3kUIiRqIQuzG30dWTyk28y6V6urbm1GWCXKbv7s1aEKzUPFSU/FZS8U9+AP5iKrZ4my0HAAAAAElFTkSuQmCC" />
+                                    <input type="text" size="20" class="vst-input" name="v_bandwidth" <?php if (isset($v_bandwidth)) echo "value=".htmlentities($v_bandwidth); ?>>
+                                    <img name="unlim-bandwidth" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
                             <tr>
@@ -264,24 +301,69 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".$v_ns1; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".htmlentities($v_ns1); ?>>
+                                    <span class="remove-ns additional-control delete">delete</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".$v_ns2; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".htmlentities($v_ns2); ?>>
+                                    <span class="remove-ns additional-control delete">delete</span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns3" <?php if (!empty($v_ns3)) echo "value=".$v_ns3; ?>>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns4" <?php if (!empty($v_ns4)) echo "value=".$v_ns4; ?>>
-                                </td>
-                            </tr>
+                            <?  if($v_ns3)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities($v_ns3).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns4)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities($v_ns4).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns5)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities($v_ns5).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns6)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities($v_ns6).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns7)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities($v_ns7).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+
+                                if($v_ns8)
+                                  echo '<tr>
+                                    <td>
+                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities($v_ns8).'">
+                                        <span class="remove-ns additional-control delete">delete</span>
+                                    </td>
+                                </tr>';
+                            ?>
+                                <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
+                                    <td class="step-top-small">
+                                      <span class="add-ns-button additional-control add">Add one more Name Server</span>
+                                    </td>
+                                </tr>
                         </table>
                         <table class="data-col2">
                             <tr>
@@ -289,7 +371,7 @@
                                     <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
                                 </td>
                             </tr>
                         </table>
@@ -297,4 +379,35 @@
                 </tr>
             </table>
         </form>
+      </div>
         <script type="text/javascript" src="/js/pages/add.package.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.add-ns-button').click(function(){
+                  var n = $("input[name^=v_ns]").length;
+                  if(n < 8){
+                    var t = $($('input[name=v_ns1]').parents('tr')[0]).clone(true, true);
+                    t.find('input').attr({value:'', name:'v_ns'+(n+1)});
+                    t.find('span').show();
+                    $('tr.add-ns').before(t);
+                  }
+                  if( n == 7 ) {
+                    $('.add-ns').hide();
+                  }
+                });
+
+                $('.remove-ns').click(function(){
+                    $(this).parents('tr')[0].remove();
+                    $('input[name^=v_ns]').each(function(i, ns){
+                        $(ns).attr({name: 'v_ns'+(i+1)});
+                        i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+                    })
+                    $('.add-ns').show()
+                })
+
+                $('input[name^=v_ns]').each(function(i, ns){
+                  i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+                })
+
+            });
+        </script>

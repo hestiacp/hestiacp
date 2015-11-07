@@ -1,0 +1,107 @@
+<?php
+
+// Init
+//error_reporting(NULL);
+
+
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+include($_SERVER['DOCUMENT_ROOT']."/file_manager/fm_core.php");
+
+
+// todo: set in session?
+if (empty($panel)) {
+    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
+    exec ($command, $output, $return_var);
+    if ( $return_var > 0 ) {
+        header("Location: /error/");
+        exit;
+    }
+    $panel = json_decode(implode('', $output), true);
+}
+
+$fm = new FileManager($user);
+$fm->setRootDir($panel[$user]['HOME']);
+
+$_REQUEST['action'] = empty($_REQUEST['action']) ? '' : $_REQUEST['action'];
+
+switch ($_REQUEST['action']) {
+    case 'cd':
+        $dir = $_REQUEST['dir'];
+        print json_encode($fm->ls($dir));
+        break;
+    case 'check_file_type':
+        $dir = $_REQUEST['dir'];
+        
+        print json_encode($fm->checkFileType($dir));
+        break;
+    case 'rename_file':
+        $dir = $_REQUEST['dir'];
+        $item = $_REQUEST['item'];
+        $target_name = $_REQUEST['target_name'];
+
+        print json_encode($fm->renameFile($dir, $item, $target_name));
+        break;
+    case 'rename_directory':
+        $dir = $_REQUEST['dir'];
+        $item = $_REQUEST['item'];
+        $target_name = $_REQUEST['target_name'];
+
+        print json_encode($fm->renameDirectory($dir, $item, $target_name));
+        break;
+    case 'delete_files':
+        $dir = $_REQUEST['dir'];
+        $item = $_REQUEST['item'];
+
+        print json_encode($fm->deleteItem($dir, $item));
+        break;
+    case 'create_file':
+        $dir = $_REQUEST['dir'];
+        $filename = $_REQUEST['filename'];
+        print json_encode($fm->createFile($dir, $filename));
+        break;
+    case 'create_dir':
+        $dir = $_REQUEST['dir'];
+        $dirname = $_REQUEST['dirname'];
+        print json_encode($fm->createDir($dir, $dirname));
+        break;
+    
+    case 'open_file':
+        $dir = $_REQUEST['dir'];
+        print json_encode($fm->open_file($dir));
+        break;
+    case 'copy_file':
+        $dir = $_REQUEST['dir'];
+        $target_dir = $_REQUEST['dir_target'];
+        $filename   = $_REQUEST['filename'];
+        $item       = $_REQUEST['item'];
+        print json_encode($fm->copyFile($item, $dir, $target_dir, $filename));
+        break;
+    case 'copy_directory':
+        $dir = $_REQUEST['dir'];
+        $target_dir = $_REQUEST['dir_target'];
+        $filename   = $_REQUEST['filename'];
+        $item       = $_REQUEST['item'];
+        print json_encode($fm->copyDirectory($item, $dir, $target_dir, $filename));
+        break;
+    case 'unpack_item':
+        $dir = $_REQUEST['dir'];
+        $target_dir = $_REQUEST['dir_target'];
+        $filename   = $_REQUEST['filename'];
+        $item       = $_REQUEST['item'];
+        print json_encode($fm->unpackItem($item, $dir, $target_dir, $filename));
+        break;
+    case 'pack_item':
+        $dir = $_REQUEST['dir'];
+        $target_dir = $_REQUEST['dir_target'];
+        $filename   = $_REQUEST['filename'];
+        $item       = $_REQUEST['item'];
+        print json_encode($fm->packItem($item, $dir, $target_dir, $filename));
+        break;
+    case 'backup':
+        $path = $_REQUEST['path'];
+        print json_encode($fm->backupItem($path));
+        break;
+    default:
+        //print json_encode($fm->init());
+        break;
+}

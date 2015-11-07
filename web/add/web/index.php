@@ -10,6 +10,12 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check POST request
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check for empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
     if (empty($_POST['v_ip'])) $errors[] = __('ip');
@@ -34,34 +40,39 @@ if (!empty($_POST['ok'])) {
         }
     }
 
-    // Default proxy extention list
-    $v_proxy_ext = 'jpeg, jpg, png, gif, bmp, ico, svg, tif, tiff, css, js, htm, html, ttf, ';
-    $v_proxy_ext .= 'otf, webp, woff, txt, csv, rtf, doc, docx, xls, xlsx, ppt, pptx, odf, ';
-    $v_proxy_ext .= 'odp, ods, odt, pdf, psd, ai, eot, eps, ps, zip, tar, tgz, gz, rar, ';
-    $v_proxy_ext .= 'bz2, 7z, aac, m4a, mp3, mp4, ogg, wav, wma, 3gp, avi, flv, m4v, mkv, ';
-    $v_proxy_ext .= 'mov, mp4, mpeg, mpg, wmv, exe, iso, dmg, swf';
-
-    // Set advanced option checkmark
-    if (empty($_POST['v_proxy'])) $v_adv = 'yes';
-    if (!empty($_POST['v_ftp'])) $v_adv = 'yes';
-    if ($_POST['v_proxy_ext'] != $v_proxy_ext) $v_adv = 'yes';
-
-    // Set domain name to lowercase and remove www prefix
+    // Set domain to lowercase and remove www prefix
     $v_domain = preg_replace("/^www\./i", "", $_POST['v_domain']);
     $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
 
-    // Prepare domain values
+    // Define domain ip address
     $v_ip = escapeshellarg($_POST['v_ip']);
-    if ((!empty($_POST['v_aliases'])) && ($_POST['v_aliases'] != 'www.'.$_POST['v_domain'])) $v_adv = 'yes';
-    if ((!empty($_POST['v_ssl'])) || (!empty($_POST['v_elog']))) $v_adv = 'yes';
-    if ((!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key']))) $v_adv = 'yes';
-    if ((!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
-    if (!empty($v_domain)) $v_ftp_user_prepath .= $v_domain;
-    if (empty($_POST['v_dns'])) $v_dns = 'off';
-    if (empty($_POST['v_mail'])) $v_mail = 'off';
-    if (empty($_POST['v_proxy'])) $v_proxy = 'off';
+
+    // Define domain aliases
     $v_aliases = $_POST['v_aliases'];
+    $aliases = preg_replace("/\n/", ",", $v_aliases);
+    $aliases = preg_replace("/\r/", ",", $aliases);
+    $aliases = preg_replace("/\t/", ",", $aliases);
+    $aliases = preg_replace("/ /", ",", $aliases);
+    $aliases_arr = explode(",", $aliases);
+    $aliases_arr = array_unique($aliases_arr);
+    $aliases_arr = array_filter($aliases_arr);
+    $aliases = implode(",",$aliases_arr);
+    $aliases = escapeshellarg($aliases);
+
+    // Define proxy extentions
+    $v_proxy_ext = $_POST['v_proxy_ext'];
+    $proxy_ext = preg_replace("/\n/", ",", $v_proxy_ext);
+    $proxy_ext = preg_replace("/\r/", ",", $proxy_ext);
+    $proxy_ext = preg_replace("/\t/", ",", $proxy_ext);
+    $proxy_ext = preg_replace("/ /", ",", $proxy_ext);
+    $proxy_ext_arr = explode(",", $proxy_ext);
+    $proxy_ext_arr = array_unique($proxy_ext_arr);
+    $proxy_ext_arr = array_filter($proxy_ext_arr);
+    $proxy_ext = implode(",",$proxy_ext_arr);
+    $proxy_ext = escapeshellarg($proxy_ext);
+
+    // Define other options
     $v_elog = $_POST['v_elog'];
     $v_ssl = $_POST['v_ssl'];
     $v_ssl_crt = $_POST['v_ssl_crt'];
@@ -71,20 +82,29 @@ if (!empty($_POST['ok'])) {
     $v_stats = escapeshellarg($_POST['v_stats']);
     $v_stats_user = $data[$v_domain]['STATS_USER'];
     $v_stats_password = $data[$v_domain]['STATS_PASSWORD'];
-    $v_proxy_ext = preg_replace("/\n/", " ", $_POST['v_proxy_ext']);
-    $v_proxy_ext = preg_replace("/,/", " ", $v_proxy_ext);
-    $v_proxy_ext = preg_replace('/\s+/', ' ',$v_proxy_ext);
-    $v_proxy_ext = trim($v_proxy_ext);
-    $v_proxy_ext = str_replace(' ', ", ", $v_proxy_ext);
     $v_ftp = $_POST['v_ftp'];
     $v_ftp_user = $_POST['v_ftp_user'];
     $v_ftp_password = $_POST['v_ftp_password'];
     $v_ftp_email = $_POST['v_ftp_email'];
+    if (!empty($v_domain)) $v_ftp_user_prepath .= $v_domain;
 
+    // Set advanced option checkmark
+    if (empty($_POST['v_proxy'])) $v_adv = 'yes';
+    if (!empty($_POST['v_ftp'])) $v_adv = 'yes';
+    if ($_POST['v_proxy_ext'] != $v_proxy_ext) $v_adv = 'yes';
+    if ((!empty($_POST['v_aliases'])) && ($_POST['v_aliases'] != 'www.'.$_POST['v_domain'])) $v_adv = 'yes';
+    if ((!empty($_POST['v_ssl'])) || (!empty($_POST['v_elog']))) $v_adv = 'yes';
+    if ((!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key']))) $v_adv = 'yes';
+    if ((!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
+
+    // Check advanced features
+    if (empty($_POST['v_dns'])) $v_dns = 'off';
+    if (empty($_POST['v_mail'])) $v_mail = 'off';
+    if (empty($_POST['v_proxy'])) $v_proxy = 'off';
 
     // Add web domain
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
+        exec (VESTA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." 'no' ".$aliases." ".$proxy_ext, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $domain_added = empty($_SESSION['error_msg']);
@@ -97,6 +117,18 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
+    // Add DNS for domain aliases
+    if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
+        foreach ($aliases_arr as $alias) {
+            if ($alias != "www.".$_POST['v_domain']) {
+                $alias = escapeshellarg($alias);
+                exec (VESTA_CMD."v-add-dns-on-web-alias ".$user." ".$alias." ".$v_ip." 'no'", $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+            }
+        }
+    }
+
     // Add mail domain
     if (($_POST['v_mail'] == 'on') && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-add-mail-domain ".$user." ".$v_domain, $output, $return_var);
@@ -104,47 +136,10 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
-    // Add domain aliases
-    if ((!empty($_POST['v_aliases'])) && (empty($_SESSION['error_msg']))) {
-        $valiases = preg_replace("/\n/", " ", $_POST['v_aliases']);
-        $valiases = preg_replace("/,/", " ", $valiases);
-        $valiases = preg_replace('/\s+/', ' ',$valiases);
-        $valiases = trim($valiases);
-        $aliases = explode(" ", $valiases);
-        foreach ($aliases as $alias) {
-            if ($alias == 'www.'.$_POST['v_domain']) {
-                $www_alias = 'yes';
-            } else {
-                $alias = escapeshellarg($alias);
-                if (empty($_SESSION['error_msg'])) {
-                    exec (VESTA_CMD."v-add-web-domain-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
-                    check_return_code($return_var,$output);
-                    unset($output);
-                }
-                if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-                    exec (VESTA_CMD."v-add-dns-on-web-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
-                    check_return_code($return_var,$output);
-                    unset($output);
-                }
-            }
-        }
-    }
-
-    // Delete www. alias if it wasn't found
-    if ((empty($www_alias)) && (empty($_SESSION['error_msg']))) {
-        $alias =  preg_replace("/^www./i", "", $_POST['v_domain']);
-        $alias = 'www.'.$alias;
-        $alias = escapeshellarg($alias);
-        exec (VESTA_CMD."v-delete-web-domain-alias ".$user." ".$v_domain." ".$alias." 'no'", $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-    }
-
-    // Add proxy support
-    if (($_POST['v_proxy'] == 'on')  && (empty($_SESSION['error_msg']))) {
-        $ext = str_replace(' ', '', $v_proxy_ext);
+    // Delete proxy support
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'off')  && (empty($_SESSION['error_msg']))) {
         $ext = escapeshellarg($ext);
-        exec (VESTA_CMD."v-add-web-domain-proxy ".$user." ".$v_domain." '' ".$ext." 'no'", $output, $return_var);
+        exec (VESTA_CMD."v-delete-web-domain-proxy ".$user." ".$v_domain." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -196,10 +191,15 @@ if (!empty($_POST['ok'])) {
     // Add web stats password
     if ((!empty($_POST['v_stats_user'])) && (empty($_SESSION['error_msg']))) {
         $v_stats_user = escapeshellarg($_POST['v_stats_user']);
-        $v_stats_password = escapeshellarg($_POST['v_stats_password']);
+        $v_stats_password = tempnam("/tmp","vst");
+        $fp = fopen($v_stats_password, "w");
+        fwrite($fp, $_POST['v_stats_password']."\n");
+        fclose($fp);
         exec (VESTA_CMD."v-add-web-domain-stats-user ".$user." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        unlink($v_stats_password);
+        $v_stats_password = escapeshellarg($_POST['v_stats_password']);
     }
 
     // Restart DNS server
@@ -216,8 +216,15 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
+    // Restart backend server
+    //if ((!empty($_SESSION['WEB_BACKEND'])) && (empty($_SESSION['error_msg']))) {
+    //    exec (VESTA_CMD."v-restart-web-backend", $output, $return_var);
+    //    check_return_code($return_var,$output);
+    //    unset($output);
+    //}
+
     // Restart proxy server
-    if (($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-restart-proxy", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -259,13 +266,16 @@ if (!empty($_POST['ok'])) {
                 $v_ftp_username      = $v_ftp_user_data['v_ftp_user'];
                 $v_ftp_username_full = $user . '_' . $v_ftp_user_data['v_ftp_user'];
                 $v_ftp_user = escapeshellarg($v_ftp_user_data['v_ftp_user']);
-                $v_ftp_password = escapeshellarg($v_ftp_user_data['v_ftp_password']);
-
                 if ($domain_added) {
                     $v_ftp_path = escapeshellarg(trim($v_ftp_user_data['v_ftp_path']));
+                    $v_ftp_password = tempnam("/tmp","vst");
+                    $fp = fopen($v_ftp_password, "w");
+                    fwrite($fp, $v_ftp_user_data['v_ftp_password']."\n");
+                    fclose($fp);
                     exec (VESTA_CMD."v-add-web-domain-ftp ".$user." ".$v_domain." ".$v_ftp_username." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
                     check_return_code($return_var,$output);
                     unset($output);
+                    unlink($v_ftp_password);
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
                         $subject = __("FTP login credentials");
@@ -299,7 +309,7 @@ if (!empty($_POST['ok'])) {
         }
 
         if (!empty($_SESSION['error_msg']) && $domain_added) {
-            $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
+            $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($_POST[v_domain]),htmlentities($_POST[v_domain]));
             $_SESSION['flash_error_msg'] = $_SESSION['error_msg'];
             $url = '/edit/web/?domain='.strtolower(preg_replace("/^www\./i", "", $_POST['v_domain']));
             header('Location: ' . $url);
@@ -309,7 +319,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',$_POST[v_domain],$_POST[v_domain]);
+        $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($_POST[v_domain]),htmlentities($_POST[v_domain]));
         unset($v_domain);
         unset($v_aliases);
         unset($v_ssl);
@@ -335,7 +345,7 @@ $v_ftp_email = $panel[$user]['CONTACT'];
 
 // List IP addresses
 exec (VESTA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
-$ips = array_unique(json_decode(implode('', $output), true));
+$ips = json_decode(implode('', $output), true);
 unset($output);
 
 // List web stat engines

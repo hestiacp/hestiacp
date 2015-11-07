@@ -1,100 +1,141 @@
-            <table class="submenu">
-                <tr>
-                    <td class="wrapper">
-                        <div class="submenu-button-block">
-                            <button class="submenu-button-main" onclick="location.href='/add/dns/?domain=<?php echo $_GET['domain'] ?>'"> <?php print __('Add DNS Record');?> </button>
-                        </div>
-                        <div class="submenu-search-block">
-                            <form action="/search/" method="get">
-                            <input type="text" name="q" class="submenu-search-field">
-                            <input type="submit" value="<?php print __('Search');?>" class="submenu-button-search">
-                            </form>
-                        </div>
-                        <div class="submenu-select-block">
-                            <form action="/bulk/dns/" method="post" id="objects">
-                            <a class="submenu-select-link" href='javascript:checkedAll("objects");'> <?php print __('toggle all');?> </a>
-                            <select class="submenu-select-dropdown" name="action">
-                                <option value=""><?php print __('apply to selected');?></option>
-                                <option value="suspend"><?php print __('suspend');?></option>
-                                <option value="unsuspend"><?php print __('unsuspend');?></option>
-                                <option value="delete"><?php print __('delete');?></option>
-                            </select>
-                            <input type="submit" name="ok" value="›" class="submenu-button-select">
-                        </div>
-                        <?php display_error_block(); ?> 
-                    </td>
-                </tr>
-            </table>
+    <div class="l-center">
+      <div class="l-sort clearfix noselect">
+        <a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" title="<?=str_replace(' ', '&nbsp;', __('Add DNS Record'))?>" class="l-sort__create-btn"></a>
+        <div class="l-sort-toolbar clearfix">
+          <table>
+            <tr>
+              <td class="l-sort-toolbar__search-box">
+                <form action="/search/" method="get">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
+                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                </form>
+              </td>
+              <td class="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
+              </td>
+              <td>
+                <form action="/bulk/dns/" method="post">
+                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                <div class="l-select">
+                  <select name="" id="">
+                    <option value=""><?=__('apply to selected')?></option>
+                    <option value="suspend"><?php print __('suspend');?></option>
+                    <option value="unsuspend"><?php print __('unsuspend');?></option>
+                    <option value="delete"><?php print __('delete');?></option>
+                  </select>
+                </div>
+                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div id="vstobjects">
-                <table class="data" style="background: #ebe9dc;">
-                    <tr>
-                        <td style="padding: 10px 4px">
-                            <a class="name" style="color: #555; font-size: 10pt;"><b><?php print __('Listing');?>  <?php echo $_GET['domain'] ?></b></a>
-                        </td>
-                    </tr>
-                </table>
-                <table class="data">
-                    <?php
-                        foreach ($data as $key => $value) {
-                            ++$i;
-                            if ($data[$key]['SUSPENDED'] == 'yes') {
-                                $status = 'suspended';
-                                $spnd_action = 'unsuspend' ;
-                                $spnd_confirmation = 'UNSUSPEND_RECORD_CONFIRMATION' ;
-                            } else {
-                                $status = 'active';
-                                $spnd_action = 'suspend' ;
-                                $spnd_confirmation = 'UNSUSPEND_RECORD_CONFIRMATION' ;
-                            }
-                    ?> 
-                    <tr class="data-row">
-                        <td class="data-dotted">
-                            <table class="data-col1">
-                                <tr><td><input type="checkbox" class="ch-toggle" name="record[]" value="<?php echo $data[$key]['ID']?>" > <input type="hidden" name="domain" value="<?php echo $_GET['domain'] ?>" ></td></tr>
-                                <tr><td></td></tr>
-                            </table>
-                        </td>
-                        <td class="data-dotted">
-                            <a id="delete_link_<?php echo $i ?>" class="data-controls do_delete">
-                                <span class="do_delete">
-                                    <img src="/images/delete.png" width="7px" height="7px">
-                                    <?php print __('delete');?>
-                                    <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" />
-                                    <div id="delete_dialog_<?php echo $i ?>" class="confirmation-text-delete hidden" title="<?php print __('Confirmation');?>">
-                                        <p class="confirmation"><?php print __('DELETE_RECORD_CONFIRMATION',$data[$key]['RECORD']);?></p>
-                                    </div>
-                                </span>
-                            </a>
-                            <a href="/edit/dns/?domain=<?php echo $_GET['domain'] ?>&record_id=<?php echo $data[$key]['ID'] ?>" class="data-controls">
-                                <span>
-                                    <img src="/images/edit.png" width="8px" height="8px">
-                                    <?php print __('edit');?> 
-                                </span>
-                            </a>
-                            <table class="data-col5">
-                                <tr>
-                                    <td class="log" width="239px"><b><?php echo $data[$key]['RECORD'] ?></b></td>
-                                    <td class="log-counter-value" width="57px"><?php echo $data[$key]['TYPE'] ?></td>
-                                    <td class="log-counter-value" width="62px"><?php echo $data[$key]['PRIORITY'] ?></td>
-                                    <td class="log-counter-value" ><?php echo htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8') ?></td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <?php
-                        }
-                    ?> 
-                </table>
-            </form>
-            <div class="data-count">
-                <?php
-                    if ( $i == 1) {
-                        echo __('1 record');
-                    } else {
-                        echo __('%s records',$i);
-                    }
-                ?> 
+      </div>
+
+      <? display_error_block(); ?>
+
+      <!-- /.l-sort -->
+    </div>
+
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+
+
+
+    <div class="l-center units">
+
+    <div class="l-unit">
+      <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['domain'])?></div>
+    </div>
+
+      <?php
+        foreach ($data as $key => $value) {
+          ++$i;
+          if ($data[$key]['SUSPENDED'] == 'yes') {
+            $status = 'suspended';
+            $spnd_action = 'unsuspend' ;
+            $spnd_confirmation = 'UNSUSPEND_RECORD_CONFIRMATION' ;
+          } else {
+            $status = 'active';
+            $spnd_action = 'suspend' ;
+            $spnd_confirmation = 'UNSUSPEND_RECORD_CONFIRMATION' ;
+          }
+      ?>
+
+
+      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS_REC'][$key] == 1) echo ' l-unit--starred';?>"
+v_unit_id="<?=$key?>" v_section="dns_rec">
+        <div class="l-unit-toolbar clearfix">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="check" value="check<?php echo $i ?>">
+            <label for="check<?php echo $i ?>" class="check-label"></label>
+          </div>
+          <!-- l-unit-toolbar__col -->
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__edit"><a href="/edit/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>"><?=__('edit')?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__delete">
+                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                  <?=__('delete')?> <i class="do_delete"></i>
+                  <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
+                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__('DELETE_RECORD_CONFIRMATION',$data[$key]['RECORD'])?></p>
+                  </div>
+                </a>
+              </div>
+
             </div>
+            <!-- /.actiona-panel -->
+          </div>
+          <!-- l-unit-toolbar__col -->
         </div>
+        <!-- /.l-unit-toolbar -->
+
+        <div class="l-unit__col l-unit__col--left clearfix">
+          <div class="l-unit__suspended""><?=__('suspended')?></div>
+          <div class="text-center jump-top">
+            <i class="l-icon-star"></i>
+          </div>
+        </div>
+        <!-- /.l-unit__col -->
+        <div class="l-unit__col l-unit__col--right">
+          <div class="l-unit__stats">
+            <div class="clearfix l-unit__stat-col--left small"><b><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></b></div>
+            <div class="clearfix l-unit__stat-col--left compact"><b><?=$data[$key]['TYPE']?></b></div>
+            <div class="clearfix l-unit__stat-col--left compact"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
+            <div class="clearfix l-unit__stat-col--left wide-4"><b><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8')?></b></div>
+          </div>
+          <!-- /.l-unit__stats -->
+        </div>
+        <!-- /.l-unit__col -->
+      </div>
+      <!-- /.l-unit -->
+      <!-- div class="l-separator"></div-->
+      <!-- /.l-separator -->
+      <?}?>
+
+    </div>
+
+    <div id="vstobjects">
+        <div class="l-separator"></div>
+    <div class="l-center">
+        <div class="l-unit-ft">
+          <table class='data'></table>
+          <!-- /form -->
+          <div class="l-unit__col l-unit__col--left clearfix"></div>
+          <div class="data-count l-unit__col l-unit__col--right clearfix">
+            <?php
+              if ( $i == 1) {
+                echo __('1 record');
+              } else {
+                echo __('%s records',$i);
+              }
+            ?>
+          </div>
+      </div>
+    </div>
+  </div>

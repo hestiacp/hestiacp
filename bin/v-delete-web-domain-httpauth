@@ -1,0 +1,87 @@
+#!/bin/bash
+# info: delete http auth user
+# options: USER DOMAIN AUTH_USER [RESTART]
+#
+# The call is used for deleting http auth user
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+auth_user=$3
+restart=${4-yes}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
+
+# Definining htpasswd file
+htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
+htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN AUTH_USER [RESTART]'
+validate_format 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_password_valid
+get_domain_values 'web'
+if [ -z "$(echo "$AUTH_USER" |tr : '\n' |grep ^$auth_user$)" ]; then
+    echo "Error: auth user $auth_user doesn't exist"
+    log_event "$E_NOTEXIST" "$EVENT"
+    exit $E_NOTEXIST
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting auth user
+sed -i "/^$auth_user:/d" $htpasswd
+
+# Deleting password protection
+if [ "$(echo "$AUTH_USER" |tr : '\n' |wc -l)" -le 1 ]; then
+    rm -f $htaccess $htpasswd
+    restart_required='yes'
+fi
+
+# Restarting web server
+if [ "$restart" != 'no' ] && [ "$restart_required" = 'yes' ]; then
+    $BIN/v-restart-web
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Rebuilding FTP variables
+position=$(echo $AUTH_USER |tr ':' '\n' |grep -n '' |grep ":$auth_user$" |\
+    cut -f 1 -d:)
+auth_user=$(echo $AUTH_USER |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
+    cut -f 2 -d :| sed -e "/^$/d"| sed -e ':a;N;$!ba;s/\n/:/g')
+auth_hash=$(echo $AUTH_HASH |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
+    cut -f 2 -d :| sed -e ':a;N;$!ba;s/\n/:/g')
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_USER' "$auth_user"
+update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_HASH' "$auth_hash"
+
+# Logging
+log_history "changed auth user $httpauth_user password on $domain"
+log_event "$OK" "$EVENT"
+
+exit

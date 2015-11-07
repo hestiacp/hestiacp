@@ -5,6 +5,12 @@ session_start();
 $TAB = 'USER';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// Check token
+if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
+    header('location: /login/');
+    exit();
+}
+
 // Check user
 if ($_SESSION['user'] != 'admin') {
     header("Location: /list/user");

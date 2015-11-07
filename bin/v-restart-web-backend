@@ -1,0 +1,65 @@
+#!/bin/bash
+# info: restart backend server
+# options: NONE
+#
+# The function reloads backend server configuration.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+send_email_report() {
+    send_mail="$VESTA/web/inc/mail-wrapper.php"
+    email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
+    email=$(echo "$email" | cut -f 2 -d "'")
+    tmpfile=$(mktemp)
+    subj="$(hostname): $WEB_BACKEND restart failed"
+    service $WEB_BACKEND configtest >> $tmpfile 2>&1
+    service $WEB_BACKEND restart >> $tmpfile 2>&1
+    cat $tmpfile | $send_mail -s "$subj" $email
+    rm -f $tmpfile
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Schedule restart
+if [ "$1" = 'scheduled' ]; then
+    echo "$BIN/$SCRIPT now" >> $VESTA/data/queue/restart.pipe
+    exit
+fi
+if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
+    echo "$BIN/$SCRIPT now" >> $VESTA/data/queue/restart.pipe
+    exit
+fi
+
+if [ -z "$WEB_BACKEND" ] || [ "$WEB_BACKEND" = 'remote' ]; then
+    exit
+fi
+
+# Restart system
+service $WEB_BACKEND restart >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    send_email_report
+    echo "Error: $WEB_BACKEND restart failed"
+    exit $E_RESTART
+fi
+
+# Update restart queue
+if [ -e "$VESTA/data/queue/restart.pipe" ]; then
+    sed -i "/$SCRIPT/d" $VESTA/data/queue/restart.pipe
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

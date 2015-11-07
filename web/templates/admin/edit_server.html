@@ -1,0 +1,736 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left">
+          <span class="title edit"><b><?=__('Configuring Server')?></b></span>
+            <?php
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                }
+              }
+            ?>
+        </div>
+
+      </div>
+      <? display_error_block() ?>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/server/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+
+        <form id="vstobjects" name="v_configure_server" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
+            <script type="text/javascript">
+                function elementHideShow(elementToHideOrShow) {
+                    var el = document.getElementById(elementToHideOrShow);
+                    if (el.style.display == "block") {
+                        el.style.display = "none";
+                    } else {
+                        el.style.display = "block";
+                    }
+                }
+            </script>
+            <table class="data mode-add">
+                <tr class="data-add">
+                    <td class="data-dotted">
+                        <table class="data-col1">
+                            <tr><td></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted">
+                        <table class="data-col2" width="600px">
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Hostname') ?> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_hostname" <?php if (!empty($v_hostname)) echo "value=".$v_hostname; ?>>
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Time Zone');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list long-2" name="v_timezone">
+                                        <?php
+                                            foreach ($v_timezones as $key => $value) {
+                                                echo "\t\t\t\t<option value=\"".$key."\"";
+                                                if ((!empty($v_timezone)) && ( $key == $v_timezone)){
+                                                    echo ' selected' ;
+                                                }
+                                                if ((!empty($v_timezone)) && ( $key == $_POST['v_timezone'])){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">".$value."</option>\n";
+                                            }
+                                        ?> 
+                                    </select>
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Default Language');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_language">
+                                        <?php
+                                            foreach ($languages as $key => $value) {
+                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                if ((!empty($_SESSION['LANGUAGE'])) && ( $value == $_SESSION['LANGUAGE'])){
+                                                    echo ' selected' ;
+                                                }
+                                                if ((!empty($_SESSION['LANGUAGE'])) && ( $value == $_POST['v_language'])){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">".$value."</option>\n";
+                                            }
+                                        ?> 
+                                    </select>
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('FileSystem Disk Quota');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_quota">
+                                        <option value='no'><?php print __('no'); ?></option>
+                                        <option value='yes' <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+
+                                    </select>
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-top">
+                                    <a href="javascript:elementHideShow('web');" class="vst-text">
+                                        <b><?php print __('WEB');?> <img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="web">
+                                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?> 
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Proxy Server') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_proxy_system" value="<?php echo $_SESSION['PROXY_SYSTEM']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php } ?> 
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Web Server') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_web_system" value="<?php echo $_SESSION['WEB_SYSTEM']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?> 
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Backend Server') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_web_backend" value="<?php echo $_SESSION['WEB_BACKEND']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Backend Pool Mode') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_web_backend_pool" value="<?php echo $_SESSION['WEB_BACKEND_POOL']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+
+                                        <?php } ?> 
+                                    </table>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="vst-text input-label step-top">
+                                    <a href="javascript:elementHideShow('dns');" class="vst-text">
+                                        <b><?php print __('DNS');?> <img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('DNS Server') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_dns_system" value="<?php echo $_SESSION['DNS_SYSTEM']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('DNS Cluster');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_dns_cluster" disabled>
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($v_dns_cluster == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br><br>
+                                            </td>
+                                        </tr>
+                                        <?php if ($v_dns_cluster = 'yes') {
+                                                  $i = 0;
+                                                  foreach ($dns_cluster as $key => $value) {
+                                                      $i++;
+                                         ?> 
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Host'). ' #'.$i  ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_dns_remote_host" value="<?php echo $key; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php }} ?> 
+                                    </table>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="vst-text input-label step-top">
+                                    <a href="javascript:elementHideShow('mail');" class="vst-text">
+                                        <b><?php print __('MAIL');?> <img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('MAIL Server') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_mail_system" value="<?php echo $_SESSION['MAIL_SYSTEM']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?> 
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Antivirus') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_antivirus_system" value="<?php echo $_SESSION['ANTIVIRUS_SYSTEM']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php } ?> 
+                                        <?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?> 
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('AntiSpam') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_antispam_system" value="<?php echo $_SESSION['ANTISPAM_SYSTEM']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php } ?> 
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Webmail URL') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_mail_url" value="<?php echo $_SESSION['MAIL_URL']; ?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td class="vst-text input-label step-top">
+                                    <a href="javascript:elementHideShow('db');" class="vst-text">
+                                        <b><?php print __('DB');?> <img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('MySQL Support');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_mysql" disabled>
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($v_mysql == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php if ($v_mysql == 'yes') { ?>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('phpMyAdmin URL') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_url" value="<?php echo $_SESSION['DB_PMA_URL']; ?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php } ?>
+                                        <?php if ($v_mysql == 'yes') {
+                                                  $i = 0;
+                                                  foreach ($v_mysql_hosts as $key => $value) {
+                                                      $i++;
+                                         ?> 
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Host'). ' #'.$i  ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_host" value="<?php echo $key; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Password') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_password" value="">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Maximum Number Of Databases') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_max" value="<?php echo $value['MAX_DB']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Current Number Of Databases') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_max" value="<?php echo $value['U_DB_BASES']; ?>" disabled>
+                                                <br><br><br><br>
+                                            </td>
+                                        </tr>
+                                        <?php }} ?> 
+
+
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('PostgreSQL Support');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_pgsql" disabled>
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($v_pgsql == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php if ($v_pgsql == 'yes') { ?>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('phpPgAdmin URL') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_pgsql_url" value="<?php echo $_SESSION['DB_PGA_URL']; ?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <?php } ?>
+                                        <?php if ($v_pgsql == 'yes') {
+                                                  $i = 0;
+                                                  foreach ($v_pgsql_hosts as $key => $value) {
+                                                      $i++;
+                                         ?> 
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Host'). ' #'.$i  ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_pgsql_host" value="<?php echo $key; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Maximum Number Of Databases') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_psql_max" value="<?php echo $value['MAX_DB']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text step-left">
+                                                <?php print __('Current Number Of Databases') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <input type="text" size="20" class="vst-input" name="v_pgsql_max" value="<?php echo $value['U_DB_BASES']; ?>" disabled>
+                                                <br><br><br><br>
+                                            </td>
+                                        </tr>
+                                        <?php }} ?> 
+                                    </table>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="vst-text input-label step-top">
+                                    <a href="javascript:elementHideShow('backup');" class="vst-text">
+                                        <b><?php print __('BACKUP');?> <img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_backup_adv)) echo 'none';?> ;" id="backup">
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Local backup') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_backup">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($v_backup == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Compression level') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_backup_gzip">
+                                                    <option value='1' <?php if($v_backup_gzip == '1') echo 'selected' ?>>1</option>
+                                                    <option value='2' <?php if($v_backup_gzip == '2') echo 'selected' ?>>2</option>
+                                                    <option value='3' <?php if($v_backup_gzip == '3') echo 'selected' ?>>3</option>
+                                                    <option value='4' <?php if($v_backup_gzip == '4') echo 'selected' ?>>4</option>
+                                                    <option value='5' <?php if($v_backup_gzip == '5') echo 'selected' ?>>5</option>
+                                                    <option value='6' <?php if($v_backup_gzip == '6') echo 'selected' ?>>6</option>
+                                                    <option value='7' <?php if($v_backup_gzip == '7') echo 'selected' ?>>7</option>
+                                                    <option value='8' <?php if($v_backup_gzip == '8') echo 'selected' ?>>8</option>
+                                                    <option value='9' <?php if($v_backup_gzip == '9') echo 'selected' ?>>9</option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Directory') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_backup_dir" <?php if (!empty($v_backup_dir)) echo "value=".$v_backup_dir; ?>>
+                                                <br><br>
+                                            </td>
+                                        </tr>                                        <tr>
+                                            <td class="vst-text input-label step-top">
+                                                <a href="javascript:elementHideShow('remote_backup');" class="vst-text">
+                                                <?php print __('Remote backup');?> <img src="/images/arrow.png">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label step-left">
+                                                <table style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;" id="remote_backup">
+                                                    <td class="vst-text">
+                                                        <?php print __('Protocol') ?> 
+                                                    </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="vst-list" name="v_backup_type">
+                                                                <option value='ftp'><?php print __('ftp'); ?></option>
+                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && ($v_backup_type  == 'sftp')) echo 'selected' ?> ><?php print __('sftp'); ?></option>
+                                                            </select>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text">
+                                                            <?php print __('Host') ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_host" <?php if (!empty($v_backup_host)) echo "value=".$v_backup_host; ?>>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text">
+                                                            <?php print __('Username') ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_username" <?php if (!empty($v_backup_username)) echo "value=".$v_backup_username; ?>>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text">
+                                                            <?php print __('Password') ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_password" <?php if (!empty($v_backup_password)) echo "value=".$v_backup_password; ?>>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text">
+                                                            <?php print __('Directory') ?> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_bpath" <?php if (!empty($v_backup_bpath)) echo "value=".$v_backup_bpath; ?>>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text input-label step-top">
+                                    <a href="javascript:elementHideShow('vesta');" class="vst-text">
+                                        <b><?php print __('Vesta Control Panel Plugins');?> <span style="color:#ff6701;font-size:10px; padding:0 10px;">preview</span><img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="vesta">
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Version') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_version" value="<?php echo $_SESSION['VERSION']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Reseller Role') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_reseller">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Web Config Editor') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_conf_editor">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Template Manager') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_template_manager">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Backup Migration Manager') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_backup_manager">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('FileManager') ?> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_filemanager">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes'><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                                <div class="filemanager description" style="display:none">
+                                                    Web Filemanager is a commercial module. By purchasing it you not only get powerfull filemanagement tool but also help VestaCP get better and stronger.<br>
+                                                    You can see the bref video review of the module functionality.<br>
+                                                    <span>(to try it free for a week please use "TMKE765" as a licence key)</span>
+                                                    <div class="licence">
+                                                        To activate filemanager insert licence key: <input type="text" class="vst-input" name="v_filemanager_licence" /><br>
+                                                    </div>
+                                                    <ul>
+                                                        <li><a class="purchase" href="read.com">get monthly licence 3$/month</a></li>
+                                                        <li><a class="purchase" href="read.com">get forever licence 50$</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <table class="data-col2">
+                            <tr>
+                                <td class="step-top" width="116px">
+                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                </td>
+                                <td class="step-top">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+<script>
+    $(document).ready(function(){
+        $('select[name=v_filemanager]').change(function(){
+            if($(this).val() == 'yes'){
+                $('.filemanager.description').show();
+            } else {
+                $('.filemanager.description').hide();
+            }
+        });
+    });
+</script>

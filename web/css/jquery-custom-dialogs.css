@@ -56,9 +56,9 @@
 .ui-widget { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; }
 .ui-widget .ui-widget { font-size: 10pt; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; }
-.ui-widget-content { border: 1px solid #aaaaaa; color: #222222; }
+.ui-widget-content { border: 1px solid #aaaaaa; color: #ccc; }
 .ui-widget-content a { color: #222222; }
-.ui-widget-header { background: #777; color: #444; font-size: 10pt; font-weight: bold;}
+.ui-widget-header { color: #444; font-size: 10pt; font-weight: bold;}
 .ui-widget-header a { color: #222222; }
 
 /* Interaction Cues
@@ -375,10 +375,11 @@
  *
  * http://docs.jquery.com/UI/Button#theming
  */
-.ui-button { display: inline-block; position: relative; padding: 0; margin-right: .10pt; text-decoration: none !important; cursor: pointer; text-align: center; zoom: 1; overflow: visible; } /* the overflow property removes extra width in IE */
+/*
+.ui-button { display: inline-block; position: relative; padding: 0; margin-right: .10pt; text-decoration: none !important; cursor: pointer; text-align: center; zoom: 1; overflow: visible; }
 .ui-button { filter:chroma(color=#000000); cursor: pointer; color: #fff; background-color: #f79b44; border: 1px solid #f79b44; border-radius: 3px 3px 3px 3px; font-weight: bold; font-size: 14px; padding: 2px 16px; width: 108px; height: 34px; }
 .ui-button:hover { border: 1px solid #9e9e9e; background-color: #9e9e9e; color: #fff;}
-.ui-button:active { background-color: #ccc; color: #fff; border: 1px solid #ccc; }
+.ui-button:active { background-color: #ccc; color: #fff; border: 1px solid #ccc; }*/
 .ui-button-icon-only { width: 2.2em; } /* to make room for the icon, a width needs to be set here */
 button.ui-button-icon-only { width: 2.4em; } /* button elements seem to need a little more width */
 .ui-button-icons-only { width: 3.4em; } 
@@ -416,14 +417,14 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  *
  * http://docs.jquery.com/UI/Dialog#theming
  */
-.ui-dialog { position: absolute; padding: .2em; width: 300px; overflow: hidden; background: #fff; }
-.ui-dialog .ui-dialog-titlebar { padding: .4em 10pt; position: relative;  }
-.ui-dialog .ui-dialog-title { float: left; margin: .10pt 16px .10pt 0;  font-family: Arial; color: #fff;} 
+.ui-dialog { background: none repeat scroll 0 0 #333; border: 1px solid #333; border-radius: 3px; box-shadow: 0 2px 11px 0 rgba(0, 0, 0, 0.5); font-family: arial; overflow: hidden; padding: 27px 0 5px; position: absolute; width: 480px; }
+.ui-dialog .ui-dialog-titlebar { padding: 2px 26px 0; position: relative;  }
+.ui-dialog .ui-dialog-title { float: left; margin: .10pt 16px .10pt 0;  font-family: Arial; color: #ebe697; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
 .ui-dialog .ui-dialog-titlebar-close { position: absolute; right: .3em; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }
 .ui-dialog .ui-dialog-titlebar-close span { display: block; margin: 1px; }
 .ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus { padding: 0; }
-.ui-dialog .ui-dialog-content { position: relative; border: 0; padding: .5em 10pt; background: none; overflow: auto; zoom: 1; }
-.ui-dialog .ui-dialog-buttonpane { text-align: left; border-width: 0 0 0 0; background-image: none; margin: .5em 0 0 0; padding: .3em 10pt .5em .4em; }
+.ui-dialog .ui-dialog-content { position: relative; border: 0; padding: 10px 14px 30px; background: none; overflow: auto; zoom: 1; }
+.ui-dialog .ui-dialog-buttonpane { border-color: #555; border-style: solid none none; text-align: left; margin: .5em 0 0 0; padding: 6px 0 1px 1px; }
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { text-align: center; ;margin: 0 0 0 0px; }
 .ui-dialog .ui-dialog-buttonpane button { margin: .5em .4em .5em 0; cursor: pointer; }
 .ui-dialog .ui-resizable-se { width: 14px; height: 14px; right: 3px; bottom: 3px; }

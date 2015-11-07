@@ -456,7 +456,7 @@ $LANG['vi'] = array(
     'Database Credentials'  => 'Thông tin CSDL',
     'DATABASE_READY' => "Tạo thành công CSDL.\n\nDatabase: %s\nNgười dùng: %s\nMật khẩu: %s\n%s\n\n--\nVesta Control Panel\n",
 
-    'forgot password'  => 'quên mật khẩu',
+    'forgot password'  => 'Quên mật khẩu',
     'Confirm'  => 'Xác nhận',
     'New Password'  => 'Mật khẩu mới',
     'Confirm Password'  => 'Xác nhận mật khẩu',

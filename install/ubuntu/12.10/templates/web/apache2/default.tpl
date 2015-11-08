@@ -28,7 +28,7 @@
         AssignUserID %user% %group%
     </IfModule>
 
-    IncludeOptional %home%/%user%/conf/web/%web_system%.%domain%.conf*
+    Include %home%/%user%/conf/web/%web_system%.%domain%.conf*
 
 </VirtualHost>
 

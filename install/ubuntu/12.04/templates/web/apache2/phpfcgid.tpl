@@ -22,7 +22,7 @@
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    IncludeOptional %home%/%user%/conf/web/%web_system%.%domain%.conf*
+    Include %home%/%user%/conf/web/%web_system%.%domain%.conf*
 
 </VirtualHost>
 

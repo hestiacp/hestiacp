@@ -1143,12 +1143,12 @@ if [ "$fail2ban" = 'yes' ]; then
     rm -f fail2ban.tar.gz
     if [ "$dovecot" = 'no' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n dovecot-iptables -A 2)
-        fline=$(echo "$fline" |tail -n1 |cut -f 1 -d -)
+        fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
         sed -i "${fline}s/true/false/" /etc/fail2ban/jail.local
     fi
     if [ "$exim" = 'no' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n exim-iptables -A 2)
-        fline=$(echo "$fline" |tail -n1 |cut -f 1 -d -)
+        fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
         sed -i "${fline}s/true/false/" /etc/fail2ban/jail.local
     fi
     chkconfig fail2ban on

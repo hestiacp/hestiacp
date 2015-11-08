@@ -16,10 +16,8 @@ if (isset($_GET['cpu'])) {
     $TAB = 'CPU';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-cpu-status', $output, $return_var);
-    if ($return_var == 0 ) {
-        foreach($output as $file) {
-            echo $file . "\n";
-        }
+    foreach($output as $file) {
+        echo $file . "\n";
     }
     echo "    </pre>\n</body>\n</html>\n";
     exit();
@@ -30,10 +28,8 @@ if (isset($_GET['mem'])) {
     $TAB = 'MEMORY';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-memory-status', $output, $return_var);
-    if ($return_var == 0 ) {
-        foreach($output as $file) {
-            echo $file . "\n";
-        }
+    foreach($output as $file) {
+        echo $file . "\n";
     }
     echo "    </pre>\n</body>\n</html>\n";
     exit();
@@ -44,10 +40,8 @@ if (isset($_GET['disk'])) {
     $TAB = 'MEMORY';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-disk-status', $output, $return_var);
-    if ($return_var == 0 ) {
-        foreach($output as $file) {
-            echo $file . "\n";
-        }
+    foreach($output as $file) {
+        echo $file . "\n";
     }
     echo "    </pre>\n</body>\n</html>\n";
     exit();
@@ -58,10 +52,8 @@ if (isset($_GET['net'])) {
     $TAB = 'MEMORY';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-network-status', $output, $return_var);
-    if ($return_var == 0 ) {
-        foreach($output as $file) {
-            echo $file . "\n";
-        }
+    foreach($output as $file) {
+        echo $file . "\n";
     }
     echo "    </pre>\n</body>\n</html>\n";
     exit();
@@ -72,10 +64,8 @@ if (isset($_GET['web'])) {
     $TAB = 'WEB';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-web-status', $output, $return_var);
-    if ($return_var == 0 ) {
-        foreach($output as $file) {
-            echo $file . "\n";
-        }
+    foreach($output as $file) {
+        echo $file . "\n";
     }
     echo "    </pre>\n</body>\n</html>\n";
     exit();
@@ -87,10 +77,8 @@ if (isset($_GET['dns'])) {
     $TAB = 'DNS';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-dns-status', $output, $return_var);
-    if ($return_var == 0 ) {
-        foreach($output as $file) {
-            echo $file . "\n";
-        }
+    foreach($output as $file) {
+        echo $file . "\n";
     }
     echo "    </pre>\n</body>\n</html>\n";
     exit();

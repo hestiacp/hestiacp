@@ -792,6 +792,7 @@ cp templates/web/skel/public_html/index.html /var/www/html/
 sed -i 's/%domain%/It worked!/g' /var/www/html/index.html
 
 # Downloading firewall rules
+chkconfig firewalld off >/dev/null 2>&1
 wget $vestacp/firewall.tar.gz -O firewall.tar.gz
 tar -xzf firewall.tar.gz
 rm -f firewall.tar.gz

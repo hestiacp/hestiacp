@@ -10,6 +10,7 @@ if [ ! -e '/etc/sudoers.d/admin' ]; then
     echo 'Defaults env_keep="VESTA"' >> /etc/sudoers.d/admin
     echo 'Defaults:admin !syslog' >> /etc/sudoers.d/admin
     echo 'Defaults:admin !requiretty' >> /etc/sudoers.d/admin
+    echo 'Defaults:root !requiretty' >> /etc/sudoers.d/admin
     echo '' >> /etc/sudoers.d/admin
     echo 'admin   ALL=(ALL)       ALL' >> /etc/sudoers.d/admin
     echo 'admin   ALL=NOPASSWD:/usr/local/vesta/bin/*' >> /etc/sudoers.d/admin

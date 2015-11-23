@@ -20,12 +20,12 @@ source $VESTA/conf/vesta.conf
 
 is_language_valid() {
 	if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
-        echo "Error: language $1 not valid"
+        echo "Error: language $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
     if [ ! -e "$VESTA/web/inc/i18n/$1.php" ]; then
-        echo "Error: language $1 not exist"
+        echo "Error: language $1 doesn't exist"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi

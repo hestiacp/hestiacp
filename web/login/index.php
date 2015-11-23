@@ -93,8 +93,8 @@ foreach ($sys_arr as $key => $value) {
     $_SESSION[$key] = $value;
 }
 
-// Set default language
-if (empty($_SESSION['language'])) $_SESSION['language']='en';
+// Detect language
+if (empty($_SESSION['language'])) $_SESSION['language'] = detect_user_language();
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
 require_once('../templates/header.html');

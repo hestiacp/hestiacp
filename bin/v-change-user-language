@@ -19,7 +19,7 @@ source $VESTA/conf/vesta.conf
 
 
 is_language_valid() {
-	if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
+    if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
         echo "Error: language $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID

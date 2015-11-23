@@ -4,7 +4,7 @@ session_start();
 require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n.php');
 
 if (empty($_SESSION['language'])) {
-    $_SESSION['language'] = 'en';
+    $_SESSION['language'] = detect_user_language();
 }
 ?>
 

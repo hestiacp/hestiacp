@@ -85,7 +85,7 @@ function detect_user_language($fallback='en') {
     }
     arsort($accept_langs_sorted);
 
-    // List lanugages
+    // List languages
     exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
     $languages = json_decode(implode('', $output), true);
     unset($output);

@@ -62,7 +62,7 @@ exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
 $packages = json_decode(implode('', $output), true);
 unset($output);
 
-// List lanugages
+// List languages
 exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
 $languages = json_decode(implode('', $output), true);
 unset($output);

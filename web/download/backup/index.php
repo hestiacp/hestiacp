@@ -5,6 +5,11 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 $backup = $_GET['backup'];
 
+// Check if the backup exists
+if (!file_exists($backup)) {
+    exit(0);
+}
+
 // Data
 if ($_SESSION['user'] == 'admin') {
     header('Content-type: application/gzip');
@@ -19,5 +24,3 @@ if ((!empty($_SESSION['user'])) && ($_SESSION['user'] != 'admin')) {
         header("X-Accel-Redirect: /backup/" . $backup);
     }
 }
-
-?>

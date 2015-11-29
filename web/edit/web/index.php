@@ -188,14 +188,14 @@ if (!empty($_POST['save'])) {
                 $restart_web = 'yes';
                 $restart_proxy = 'yes';
                 $v_template = escapeshellarg($_POST['v_template']);
-                exec (VESTA_CMD."v-add-web-domain-alias ".$v_username." ".$v_domain." '".$alias."' 'no'", $output, $return_var);
+                exec (VESTA_CMD."v-add-web-domain-alias ".$v_username." ".$v_domain." ".escapeshellarg($alias)." 'no'", $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
                 if (empty($_SESSION['error_msg'])) {
                     exec (VESTA_CMD."v-list-dns-domain ".$v_username." ".$v_domain, $output, $return_var);
                     unset($output);
                     if ($return_var == 0) {
-                        exec (VESTA_CMD."v-add-dns-on-web-alias ".$v_username." ".$alias." ".$v_ip." no", $output, $return_var);
+                        exec (VESTA_CMD."v-add-dns-on-web-alias ".$v_username." ".escapeshellarg($alias)." ".$v_ip." no", $output, $return_var);
                         check_return_code($return_var,$output);
                     unset($output);
                         $restart_dns = 'yes';
@@ -520,7 +520,7 @@ if (!empty($_POST['save'])) {
                     $fp = fopen($v_ftp_password, "w");
                     fwrite($fp, $v_ftp_user_data['v_ftp_password']."\n");
                     fclose($fp);
-                    exec (VESTA_CMD."v-add-web-domain-ftp ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
+                    exec (VESTA_CMD."v-add-web-domain-ftp ".$v_username." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
                     check_return_code($return_var,$output);
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];

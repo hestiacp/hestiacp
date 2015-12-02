@@ -13,12 +13,11 @@ top_panel($user,$TAB);
 
 // Data
 if ($_SESSION['user'] == 'admin') {
-    exec (VESTA_CMD."v-list-sys-vesta-updates json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    unset($output);
-    exec (VESTA_CMD."v-list-sys-vesta-autoupdate plain", $output, $return_var);
-    $autoupdate = $output['0'];
-    unset($output);
+    v_exec('v-list-sys-vesta-updates', ['json'], false, $output);
+    $data = json_decode($output, true);
+
+    v_exec('v-list-sys-vesta-autoupdate', ['plain'], false, $output);
+    $autoupdate = strtok($output, "\n");
 
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_updates.html');
 }

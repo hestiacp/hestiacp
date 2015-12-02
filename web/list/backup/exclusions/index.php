@@ -12,9 +12,8 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-exec (VESTA_CMD."v-list-user-backup-exclusions $user json", $output, $return_var);
-$data = json_decode(implode('', $output), true);
-unset($output);
+v_exec('v-list-user-backup-exclusions', [$user, 'json'], false, $output);
+$data = json_decode($output, true);
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_backup_exclusions.html');
 
 // Back uri

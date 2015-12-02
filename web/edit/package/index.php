@@ -21,14 +21,13 @@ if (empty($_GET['package'])) {
 }
 
 
+$v_package = $_GET['package'];
+
 // List package
-$v_package = escapeshellarg($_GET['package']);
-exec (VESTA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);
-$data = json_decode(implode('', $output), true);
-unset($output);
+v_exec('v-list-user-package', [$v_package, 'json'], false, $output);
+$data = json_decode($output, true);
 
 // Parse package
-$v_package = $_GET['package'];
 $v_web_template = $data[$v_package]['WEB_TEMPLATE'];
 $v_backend_template = $data[$v_package]['BACKEND_TEMPLATE'];
 $v_proxy_template = $data[$v_package]['PROXY_TEMPLATE'];
@@ -45,7 +44,7 @@ $v_disk_quota = $data[$v_package]['DISK_QUOTA'];
 $v_bandwidth = $data[$v_package]['BANDWIDTH'];
 $v_shell = $data[$v_package]['SHELL'];
 $v_ns = $data[$v_package]['NS'];
-$nameservers = explode(", ", $v_ns);
+$nameservers = explode(', ', $v_ns);
 $v_ns1 = $nameservers[0];
 $v_ns2 = $nameservers[1];
 $v_ns3 = $nameservers[2];
@@ -57,45 +56,39 @@ $v_ns8 = $nameservers[7];
 $v_backups = $data[$v_package]['BACKUPS'];
 $v_date = $data[$v_package]['DATE'];
 $v_time = $data[$v_package]['TIME'];
-$v_status =  'active';
+$v_status = 'active';
 
 // List web templates
-exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
-$web_templates = json_decode(implode('', $output), true);
-unset($output);
+v_exec('v-list-web-templates', ['json'], false, $output);
+$web_templates = json_decode($output, true);
 
 // List backend templates
 if (!empty($_SESSION['WEB_BACKEND'])) {
-    exec (VESTA_CMD."v-list-web-templates-backend json", $output, $return_var);
-    $backend_templates = json_decode(implode('', $output), true);
-    unset($output);
+    v_exec('v-list-web-templates-backend', ['json'], false, $output);
+    $backend_templates = json_decode($output, true);
 }
 
 // List proxy templates
 if (!empty($_SESSION['PROXY_SYSTEM'])) {
-    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
-    $proxy_templates = json_decode(implode('', $output), true);
-    unset($output);
+    v_exec('v-list-web-templates-proxy', ['json'], false, $output);
+    $proxy_templates = json_decode($output, true);
 }
 
 
 // List dns templates
-exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
-$dns_templates = json_decode(implode('', $output), true);
-unset($output);
+v_exec('v-list-dns-templates', ['json'], false, $output);
+$dns_templates = json_decode($output, true);
 
 // List shels
-exec (VESTA_CMD."v-list-sys-shells json", $output, $return_var);
-$shells = json_decode(implode('', $output), true);
-unset($output);
+v_exec('v-list-sys-shells', ['json'], false, $output);
+$shells = json_decode($output, true);
 
 // Check POST request
 if (!empty($_POST['save'])) {
-
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit();
+        exit;
     }
 
     // Check empty fields
@@ -133,8 +126,10 @@ if (!empty($_POST['save'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
 
+    $v_package = $_POST['v_package'];
+
     // Protect input
-    $v_package = escapeshellarg($_POST['v_package']);
+    // TODO: Use array?
     $v_web_template = escapeshellarg($_POST['v_web_template']);
     if (!empty($_SESSION['WEB_BACKEND'])) {
         $v_backend_template = escapeshellarg($_POST['v_backend_template']);
@@ -199,23 +194,18 @@ if (!empty($_POST['save'])) {
     $pkg .= "BACKUPS=".$v_backups."\n";
     $pkg .= "TIME=".$v_time."\n";
     $pkg .= "DATE=".$v_date."\n";
-    $fp = fopen($tmpdir."/".$_POST['v_package'].".pkg", 'w');
+    $fp = fopen("$tmpdir/$v_package.pkg", 'w');
     fwrite($fp, $pkg);
     fclose($fp);
 
     // Save changes
-    exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package." 'yes'", $output, $return_var);
-    check_return_code($return_var,$output);
-    unset($output);
+    v_exec('v-add-user-package', [$tmpdir, $v_package, 'yes']);
 
     // Remove temporary dir
-    exec ('rm -rf '.$tmpdir, $output, $return_var);
-    unset($output);
+    safe_exec('rm', ['-rf', $tmpdir]);
 
     // Propogate new package
-    exec (VESTA_CMD."v-update-user-package ".$v_package." 'json'", $output, $return_var);
-    check_return_code($return_var,$output);
-    unset($output);
+    v_exec('v-update-user-package', [$v_package, 'json']);
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {

@@ -102,25 +102,21 @@ function to64 ($v, $n)
 // Check arguments
 if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST['new']))) {
     list($v_account, $v_domain) = explode('@', $_POST['email']);
-    $v_domain = escapeshellarg($v_domain);
-    $v_account = escapeshellarg($v_account);
     $v_password = $_POST['password'];
 
     // Get domain owner
-    exec (VESTA_CMD."v-search-domain-owner ".$v_domain." 'mail'", $output, $return_var);
+    $return_var = v_exec('v-search-domain-owner', [$v_domain, 'mail'], false, $output);
     if ($return_var == 0) {
-        $v_user = $output[0];
+        $v_user = strtok($output, "\n");
     }
-    unset($output);
 
     // Get current md5 hash
     if (!empty($v_user)) {
-        exec (VESTA_CMD."v-get-mail-account-value '".$v_user."' ".$v_domain." ".$v_account." 'md5'", $output, $return_var);
+        $return_var = v_exec('v-get-mail-account-value', [$v_user, $v_domain, $v_account, 'md5'], false, $output);
         if ($return_var == 0) {
-            $v_hash = $output[0];
+            $v_hash = strtok($output, "\n");
         }
     }
-    unset($output);
 
     // Compare hashes
     if (!empty($v_hash)) {
@@ -129,14 +125,14 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
         $n_hash = '{MD5}'.$n_hash;
 
         // Change password
-        if ( $v_hash == $n_hash ) {
+        if ($v_hash == $n_hash) {
             $v_new_password = tempnam("/tmp","vst");
             $fp = fopen($v_new_password, "w");
             fwrite($fp, $_POST['new']."\n");
             fclose($fp);
-            exec (VESTA_CMD."v-change-mail-account-password '".$v_user."' ".$v_domain." ".$v_account." ".$v_new_password, $output, $return_var);
+            $return_var = v_exec('v-change-mail-account-password', [$v_user, $v_domain, $v_account, $v_new_password], false, $output);
             if ($return_var == 0) {
-                echo "ok";
+                echo 'ok';
                 exit;
             }
         }

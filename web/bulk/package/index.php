@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit();
+    exit;
 }
 
 $package = $_POST['package'];
@@ -27,8 +27,7 @@ if ($_SESSION['user'] == 'admin') {
 }
 
 foreach ($package as $value) {
-    $value = escapeshellarg($value);
-    exec (VESTA_CMD.$cmd." ".$value, $output, $return_var);
+    v_exec($cmd, [$value], false);
     $restart = 'yes';
 }
 

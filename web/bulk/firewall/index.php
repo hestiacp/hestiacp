@@ -10,7 +10,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit();
+    exit;
 }
 
 // Check user
@@ -34,8 +34,7 @@ switch ($action) {
 }
 
 foreach ($rule as $value) {
-    $value = escapeshellarg($value);
-    exec (VESTA_CMD.$cmd." ".$value, $output, $return_var);
+    v_exec($cmd, [$value], false);
     $restart = 'yes';
 }
 

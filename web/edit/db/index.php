@@ -21,51 +21,40 @@ if (empty($_GET['database'])) {
 
 // Edit as someone else?
 if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
-    $user=escapeshellarg($_GET['user']);
+    $user = $_GET['user'];
 }
 
-// List datbase
-$v_database = escapeshellarg($_GET['database']);
-exec (VESTA_CMD."v-list-database ".$user." ".$v_database." 'json'", $output, $return_var);
-check_return_code($return_var,$output);
-$data = json_decode(implode('', $output), true);
-unset($output);
-
-// Parse database
 $v_username = $user;
 $v_database = $_GET['database'];
+
+// List datbase
+v_exec('v-list-database', [$user, $v_database, 'json'], true, $output);
+$data = json_decode($output, true);
+
+// Parse database
 $v_dbuser = $data[$v_database]['DBUSER'];
-$v_password = "";
+$v_password = '';
 $v_host = $data[$v_database]['HOST'];
 $v_type = $data[$v_database]['TYPE'];
 $v_charset = $data[$v_database]['CHARSET'];
 $v_date = $data[$v_database]['DATE'];
 $v_time = $data[$v_database]['TIME'];
 $v_suspended = $data[$v_database]['SUSPENDED'];
-if ( $v_suspended == 'yes' ) {
-    $v_status =  'suspended';
-} else {
-    $v_status =  'active';
-}
+$v_status = $v_suspended == 'yes' ? 'suspended' : 'active';
 
 // Check POST request
 if (!empty($_POST['save'])) {
-    $v_username = $user;
-
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit();
+        exit;
     }
 
     // Change database user
     if (($v_dbuser != $_POST['v_dbuser']) && (empty($_SESSION['error_msg']))) {
         $v_dbuser = preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);
-        $v_dbuser = escapeshellarg($v_dbuser);
-        exec (VESTA_CMD."v-change-database-user ".$v_username." ".$v_database." ".$v_dbuser, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-        $v_dbuser = $user."_".preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);
+        v_exec('v-change-database-user', [$v_username, $v_database, $v_dbuser]);
+        $v_dbuser = $user . '_' . $v_dbuser;
     }
 
     // Change database password
@@ -74,11 +63,9 @@ if (!empty($_POST['save'])) {
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
         fclose($fp);
-        exec (VESTA_CMD."v-change-database-password ".$v_username." ".$v_database." ".$v_password, $output, $return_var);
-        check_return_code($return_var,$output);    
-        unset($output);
+        v_exec('v-change-database-password', [$v_username, $v_database, $v_password]);
         unlink($v_password);
-        $v_password = escapeshellarg($_POST['v_password']);
+        $v_password = $_POST['v_password'];
     }
 
     // Set success message

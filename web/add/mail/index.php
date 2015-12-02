@@ -14,7 +14,7 @@ if (!empty($_POST['ok'])) {
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit();
+        exit;
     }
 
     // Check empty fields
@@ -53,19 +53,16 @@ if (!empty($_POST['ok'])) {
 
     // Set domain name to lowercase and remove www prefix
     $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
-    $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
 
     // Add mail domain
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-mail-domain ".$user." ".$v_domain." ".$v_antispam." ".$v_antivirus." ".$v_dkim, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
+        v_exec('v-add-mail-domain', [$user, $v_domain, $v_antispam, $v_antivirus, $v_dkim]);
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('MAIL_DOMAIN_CREATED_OK',htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
+        $_SESSION['ok_msg'] = __('MAIL_DOMAIN_CREATED_OK', htmlentities($_POST['v_domain']), htmlentities($_POST['v_domain']));
         unset($v_domain);
     }
 }
@@ -77,7 +74,7 @@ if (!empty($_POST['ok_acc'])) {
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit();
+        exit;
     }
 
     // Check empty fields
@@ -92,17 +89,16 @@ if (!empty($_POST['ok_acc'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = __('Field "%s" can not be blank.', $error_msg);
     }
 
     // Protect input
-    $v_domain = escapeshellarg($_POST['v_domain']);
-    $v_domain = strtolower($v_domain);
-    $v_account = escapeshellarg($_POST['v_account']);
-    $v_quota = escapeshellarg($_POST['v_quota']);
+    $v_domain = strtolower($_POST['v_domain']);
+    $v_account = $_POST['v_account'];
+    $v_quota = $_POST['v_quota'];
     $v_aliases = $_POST['v_aliases'];
     $v_fwd = $_POST['v_fwd'];
-    if (empty($_POST['v_quota'])) $v_quota = 0;
+    if (empty($_POST['v_quota'])) $v_quota = '0';
     if ((!empty($_POST['v_quota'])) || (!empty($_POST['v_aliases'])) || (!empty($_POST['v_fwd'])) ) $v_adv = 'yes';
 
     // Add Mail Account
@@ -111,65 +107,55 @@ if (!empty($_POST['ok_acc'])) {
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
         fclose($fp);
-        exec (VESTA_CMD."v-add-mail-account ".$user." ".$v_domain." ".$v_account." ".$v_password." ".$v_quota, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
+        v_exec('v-add-mail-account', [$user, $v_domain, $v_account, $v_password, $v_quota]);
         unlink($v_password);
-        $v_password = escapeshellarg($_POST['v_password']);
+        $v_password = $_POST['v_password'];
     }
 
     // Add Aliases
     if ((!empty($_POST['v_aliases'])) && (empty($_SESSION['error_msg']))) {
-        $valiases = preg_replace("/\n/", " ", $_POST['v_aliases']);
-        $valiases = preg_replace("/,/", " ", $valiases);
+        $valiases = preg_replace('/\n/', ' ', $_POST['v_aliases']);
+        $valiases = preg_replace('/,/', ' ', $valiases);
         $valiases = preg_replace('/\s+/', ' ',$valiases);
         $valiases = trim($valiases);
-        $aliases = explode(" ", $valiases);
+        $aliases = explode(' ', $valiases);
         foreach ($aliases as $alias) {
-            $alias = escapeshellarg($alias);
             if (empty($_SESSION['error_msg'])) {
-                exec (VESTA_CMD."v-add-mail-account-alias ".$user." ".$v_domain." ".$v_account." ".$alias, $output, $return_var);
-                check_return_code($return_var,$output);
-                unset($output);
+                v_exec('v-add-mail-account-alias', [$user, $v_domain, $v_account, $alias]);
             }
         }
     }
 
     // Add Forwarders
     if ((!empty($_POST['v_fwd'])) && (empty($_SESSION['error_msg']))) {
-        $vfwd = preg_replace("/\n/", " ", $_POST['v_fwd']);
-        $vfwd = preg_replace("/,/", " ", $vfwd);
+        $vfwd = preg_replace('/\n/', ' ', $_POST['v_fwd']);
+        $vfwd = preg_replace('/,/', ' ', $vfwd);
         $vfwd = preg_replace('/\s+/', ' ',$vfwd);
         $vfwd = trim($vfwd);
-        $fwd = explode(" ", $vfwd);
+        $fwd = explode(' ', $vfwd);
         foreach ($fwd as $forward) {
-            $forward = escapeshellarg($forward);
             if (empty($_SESSION['error_msg'])) {
-                exec (VESTA_CMD."v-add-mail-account-forward ".$user." ".$v_domain." ".$v_account." ".$forward, $output, $return_var);
-                check_return_code($return_var,$output);
-                unset($output);
+                v_exec('v-add-mail-account-forward', [$user, $v_domain, $v_account, $forward]);
             }
         }
     }
 
     // Add fwd_only flag
     if ((!empty($_POST['v_fwd_only'])) && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-add-mail-account-fwd-only ".$user." ".$v_domain." ".$v_account, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
+        v_exec('v-add-mail-account-fwd-only', [$user, $v_domain, $v_account]);
     }
 
     // Get webmail url
     if (empty($_SESSION['error_msg'])) {
-        list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-        $webmail = "http://".$http_host."/webmail/";
+        list($http_host, $port) = explode(':', $_SERVER['HTTP_HOST'].':');
+        $webmail = "http://$http_host/webmail/";
         if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('MAIL_ACCOUNT_CREATED_OK',htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]));
-        $_SESSION['ok_msg'] .= " / <a href=".$webmail." target='_blank'>" . __('open webmail') . "</a>";
+        $_SESSION['ok_msg'] = __('MAIL_ACCOUNT_CREATED_OK', htmlentities(strtolower($_POST['v_account'])), htmlentities($_POST['v_domain']), htmlentities(strtolower($_POST['v_account'])), htmlentities($_POST['v_domain']));
+        $_SESSION['ok_msg'] .= " / <a href=$webmail target='_blank'>" . __('open webmail') . '</a>';
         unset($v_account);
         unset($v_password);
         unset($v_password);

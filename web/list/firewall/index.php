@@ -19,10 +19,9 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-exec (VESTA_CMD."v-list-firewall json", $output, $return_var);
-$data = json_decode(implode('', $output), true);
+v_exec('v-list-firewall', ['json'], false, $output);
+$data = json_decode($output, true);
 $data = array_reverse($data, true);
-unset($output);
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_firewall.html');
 
 // Back uri

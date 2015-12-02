@@ -1,6 +1,8 @@
 <?php
 // Functions for internationalization
 
+require_once(__DIR__.'/exec.php');
+
 /**
  * Translates string to given language in first parameter, key given in second parameter (dynamically loads required language). Works like spritf from second parameter
  * @global array $LANG Associative array of language pharses
@@ -16,19 +18,19 @@ function _translate() {
     $key = $args[1];
 
     if (!isset($LANG[$l])) {
-        require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$l.'.php');
+        require_once(__DIR__."/i18n/$l.php");
     }
 
     if (!isset($LANG[$l][$key])) {
-        $text=$key;
+        $text = $key;
     } else {
-        $text=$LANG[$l][$key];
+        $text = $LANG[$l][$key];
     }
 
     array_shift($args);
-    if (count($args)>1) {
+    if (count($args) > 1) {
         $args[0] = $text;
-        return call_user_func_array("sprintf",$args);
+        return call_user_func_array('sprintf', $args);
     } else {
         return $text;
     }
@@ -42,8 +44,8 @@ function _translate() {
  */
 function __() {
     $args = func_get_args();
-    array_unshift($args,$_SESSION['language']);
-    return call_user_func_array("_translate",$args);
+    array_unshift($args, $_SESSION['language']);
+    return call_user_func_array('_translate', $args);
 }
 
 /**
@@ -86,16 +88,15 @@ function detect_user_language($fallback='en') {
     arsort($accept_langs_sorted);
 
     // List languages
-    exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
-    $languages = json_decode(implode('', $output), true);
-    unset($output);
+    v_exec('v-list-sys-languages', ['json'], false, $output);
+    $languages = json_decode($output, true);
 
     // Find best matching language
-    foreach ($accept_langs_sorted as $user_lang => $dummy) {
+    foreach ($accept_langs_sorted as $req_lang => $dummy) {
         $decision = '';
         foreach ($languages as $prov_lang) {
             if (strlen($decision) > strlen($prov_lang)) continue;
-            if (strpos($user_lang, $prov_lang) !== false) {
+            if (stripos($req_lang, $prov_lang) !== false) {
                 $decision = $prov_lang;
             }
         }

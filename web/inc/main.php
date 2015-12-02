@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n.php');
+require_once(__DIR__ . '/exec.php');
+require_once(__DIR__ . '/i18n.php');
 
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
@@ -24,8 +25,6 @@ if (isset($_SESSION['user'])) {
         $_SESSION['token'] = $token;
     }
 }
-
-define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
 
 $i = 0;
 
@@ -60,10 +59,10 @@ if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
 }
 
 function get_favourites(){
-    exec (VESTA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
-//    $data = json_decode(implode('', $output).'}', true);
-    $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data,true);
+    v_exec('v-list-user-favourites', [$_SESSION['user'], 'json'], false, $output);
+//    $data = json_decode($output.'}', true);
+    $data = json_decode($output, true);
+    $data = array_reverse($data, true);
     $favourites = array();
 
     foreach($data['Favourites'] as $key => $favourite){
@@ -71,7 +70,7 @@ function get_favourites(){
 
         $items = explode(',', $favourite);
         foreach($items as $item){
-            if($item)
+            if ($item)
                 $favourites[$key][trim($item)] = 1;
         }
     }
@@ -79,34 +78,15 @@ function get_favourites(){
     $_SESSION['favourites'] = $favourites;
 }
 
-
-
-function check_error($return_var) {
-    if ( $return_var > 0 ) {
-        header("Location: /error/");
-        exit;
-    }
-}
-
-function check_return_code($return_var,$output) {
-   if ($return_var != 0) {
-        $error = implode('<br>', $output);
-        if (empty($error)) $error = __('Error code:',$return_var);
-        $_SESSION['error_msg'] = $error;
-    }
-}
-
 function top_panel($user, $TAB) {
     global $panel;
-    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
-    exec ($command, $output, $return_var);
-    if ( $return_var > 0 ) {
-        header("Location: /error/");
+    $return_var = v_exec('v-list-user', [$user, 'json'], false, $output);
+    if ($return_var > 0) {
+        header('Location: /error/');
         exit;
     }
-    $panel = json_decode(implode('', $output), true);
-    unset($output);
-    if ( $user == 'admin' ) {
+    $panel = json_decode($output, true);
+    if ($user == 'admin') {
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/panel.html');
     } else {
         include($_SERVER['DOCUMENT_ROOT'].'/templates/user/panel.html');

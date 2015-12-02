@@ -19,7 +19,7 @@ if (!empty($_POST['ok'])) {
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit();
+        exit;
     }
 
     // Check empty fields
@@ -38,13 +38,12 @@ if (!empty($_POST['ok'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
 
-    // Protect input
-    $v_ip = escapeshellarg($_POST['v_ip']);
-    $v_netmask = escapeshellarg($_POST['v_netmask']);
-    $v_name = escapeshellarg($_POST['v_name']);
-    $v_nat = escapeshellarg($_POST['v_nat']);
-    $v_interface = escapeshellarg($_POST['v_interface']);
-    $v_owner = escapeshellarg($_POST['v_owner']);
+    $v_ip = $_POST['v_ip'];
+    $v_netmask = $_POST['v_netmask'];
+    $v_name = $_POST['v_name'];
+    $v_nat = $_POST['v_nat'];
+    $v_interface = $_POST['v_interface'];
+    $v_owner = $_POST['v_owner'];
     $v_shared = $_POST['v_shared'];
 
     // Check shared checkmark
@@ -53,16 +52,11 @@ if (!empty($_POST['ok'])) {
     } else {
         $ip_status = 'dedicated';
         $v_dedicated = 'yes';
-
     }
 
     // Add IP
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." '".$ip_status."' ".$v_name." ".$v_nat, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-        $v_owner = $_POST['v_owner'];
-        $v_interface = $_POST['v_interface'];
+        v_exec('v-add-sys-ip', [$v_ip, $v_netmask, $v_interface, $v_owner, $ip_status, $v_name, $v_nat]);
     }
 
     // Flush field values on success
@@ -82,14 +76,12 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // List network interfaces
-exec (VESTA_CMD."v-list-sys-interfaces 'json'", $output, $return_var);
-$interfaces = json_decode(implode('', $output), true);
-unset($output);
+v_exec('v-list-sys-interfaces', ['json'], false, $output);
+$interfaces = json_decode($output, true);
 
 // List users
-exec (VESTA_CMD."v-list-sys-users 'json'", $output, $return_var);
-$users = json_decode(implode('', $output), true);
-unset($output);
+v_exec('v-list-sys-users',  ['json'], false, $output);
+$users = json_decode($output, true);
 
 // Display body
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_ip.html');

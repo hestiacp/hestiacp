@@ -10,7 +10,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit();
+    exit;
 }
 
 // Check user
@@ -22,10 +22,7 @@ if ($_SESSION['user'] != 'admin') {
 $ipchain = $_POST['ipchain'];
 /*if (!empty($_POST['ipchain'])) {
     $ipchain = $_POST['ipchain'];
-    list($ip,$chain) = split(":",$ipchain);
-    $v_ip = escapeshellarg($ip);
-    $v_chain = escapeshellarg($chain);
-
+    list($ip, $chain) = explode(':', $ipchain);
 }*/
 
 $action = $_POST['action'];
@@ -37,10 +34,8 @@ switch ($action) {
 }
 
 foreach ($ipchain as $value) {
-    list($ip,$chain) = split(":",$value);
-    $v_ip    = escapeshellarg($ip);
-    $v_chain = escapeshellarg($chain);
-    exec (VESTA_CMD.$cmd." ".$v_ip." ".$v_chain, $output, $return_var);
+    list($ip, $chain) = explode(':', $value);
+    v_exec($cmd, [$ip, $chain], false);
 }
 
 header("Location: /list/firewall/banlist");

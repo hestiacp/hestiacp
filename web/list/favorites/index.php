@@ -5,20 +5,20 @@ error_reporting(NULL);
     echo '<br> Favorites: <br>';
 
     // Data
-    exec (VESTA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
+    v_exec('v-list-user-favourites', [$_SESSION['user'], 'json'], false, $output);
 
 
-//    print_r(implode('', $output));
+//    print_r($output);
 //    $json = '{ "Favourites": { "USER": "", "WEB": "bulletfarm.com", "DNS": "", "MAIL": "", "DB": "", "CRON": "", "BACKUP": "", "IP": "", "PACKAGE": "", "FIREWALL": ""}}';
 //    $data = json_decode($json, true);
 
 
-    $data = json_decode(implode('', $output).'}', true);
-    $data = array_reverse($data,true);
+    $data = json_decode($output.'}', true);
+    $data = array_reverse($data, true);
 
     print_r($data);
 //    $data = array_reverse($data,true);
 
-//    $data = json_decode(implode('', $output), true);
+//    $data = json_decode($output, true);
 
 ?>

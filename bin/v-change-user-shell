@@ -2,14 +2,14 @@
 # info: change user shell
 # options: USER SHELL
 #
-# The function changes system shell of a user. Shell gives abilty to use ssh.
+# The function changes system shell of a user. Shell gives ability to use ssh.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 shell=$2
 

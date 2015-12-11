@@ -9,12 +9,12 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 job=$2
 restart=$3
 
-# Inlcudes
+# Includes
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 

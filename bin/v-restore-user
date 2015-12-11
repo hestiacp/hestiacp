@@ -12,7 +12,7 @@
 # Import VESTA variable for cron launch
 source /etc/profile
 
-# Argument defenition
+# Argument definition
 user=$1
 backup=$2
 web=$3

@@ -2,14 +2,14 @@
 # info: list system users
 # options: [FORMAT]
 #
-# The function for obtainig the list of all server's users.
+# The function for obtaining the list of all server's users.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 format=${1-shell}
 
 # Json function

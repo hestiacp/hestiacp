@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 alias=$2
 ip=$3
@@ -54,7 +54,7 @@ if [ "$domain_lvl" -eq 1 ] || [ "${#top_domain}" -le '6' ]; then
     exit
 fi
 
-# Adding toplevel domain and then its sub
+# Adding top-level domain and then its sub
 $BIN/v-add-dns-domain $user $top_domain $ip '' '' '' '' $restart >> /dev/null
 
 # Checking top-level domain

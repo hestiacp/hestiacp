@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cron reports
-# opions: NONE
+# options: NONE
 #
 # The script for enabling restart cron tasks
 

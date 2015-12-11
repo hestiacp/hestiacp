@@ -12,7 +12,7 @@
 # Importing system variables
 source /etc/profile
 
-# Argument defenition
+# Argument definition
 user=$1
 notify=${2-no}
 
@@ -853,7 +853,7 @@ msg="$msg\n$(date "+%F %T") Runtime: $run_time $min"
 touch $USER_DATA/backup.conf
 sed -i "/$user.$DATE.tar/d" $USER_DATA/backup.conf
 
-# Regestering new backup
+# Registering new backup
 backup_str="BACKUP='$user.$DATE.tar'"
 backup_str="$backup_str TYPE='$BACKUP_SYSTEM' SIZE='$size'"
 backup_str="$backup_str WEB='${web_list// /,}'"

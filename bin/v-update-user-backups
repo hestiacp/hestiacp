@@ -13,7 +13,7 @@
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Argument defenition
+# Argument definition
 user=$1
 type="${2-$BACKUP_SYSTEM}"
 

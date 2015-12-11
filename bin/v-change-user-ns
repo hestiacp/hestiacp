@@ -2,14 +2,14 @@
 # info: change user nameservers
 # options: USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]
 #
-# The function for changing default nameservers for speciefic user.
+# The function for changing default nameservers for specific user.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 ns1=$(echo $2 | sed -e 's/\.*$//g' -e 's/^\.*//g')
 ns2=$(echo $3 | sed -e 's/\.*$//g' -e 's/^\.*//g')

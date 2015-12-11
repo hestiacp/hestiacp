@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 key=$(echo "$2"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 

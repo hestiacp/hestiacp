@@ -13,7 +13,7 @@
 # Importing system variables
 source /etc/profile
 
-# Argument defenition
+# Argument definition
 rule=$1
 action=$(echo $2|tr '[:lower:]' '[:upper:]')
 ip=$3

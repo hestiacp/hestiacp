@@ -2,14 +2,14 @@
 # info: update domain statistics
 # options: USER DOMAIN
 #
-# The function runs log analyzer for speciefic webdomain.
+# The function runs log analyzer for specific webdomain.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")

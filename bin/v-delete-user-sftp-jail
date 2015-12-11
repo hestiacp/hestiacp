@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete user sftp jail
-# opions: USER
+# options: USER
 #
 # The script enables sftp jailed environment
 
@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 
 # Includes

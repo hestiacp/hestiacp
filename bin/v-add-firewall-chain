@@ -12,7 +12,7 @@
 # Importing system variables
 source /etc/profile
 
-# Argument defenition
+# Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 port=$2
 protocol=${4-TCP}

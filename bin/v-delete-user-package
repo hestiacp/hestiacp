@@ -2,7 +2,7 @@
 # info: delete user package
 # options: PACKAGE
 #
-# The function for deleting user package. It does not allow to delete pacakge
+# The function for deleting user package. It does not allow to delete package
 # if it is in use.
 
 
@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 package=$1
 
 # Includes

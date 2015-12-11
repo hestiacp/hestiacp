@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system firewall
-# opions: NONE
+# options: NONE
 #
 # The script enables firewall
 

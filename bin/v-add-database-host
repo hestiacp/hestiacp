@@ -13,7 +13,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 type=$1
 host=$2
 dbuser=$3
@@ -76,7 +76,7 @@ esac
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Concatentating db host string
+# Concatenating db host string
 case $type in
     mysql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'";
            str="$str CHARSETS='$charsets' MAX_DB='$max_db' U_SYS_USERS=''";

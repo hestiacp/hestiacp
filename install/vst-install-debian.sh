@@ -501,7 +501,7 @@ rm -rf /usr/local/vesta > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
-#                     Package Exludes                      #
+#                     Package Excludes                     #
 #----------------------------------------------------------#
 
 # Excluding packages
@@ -626,7 +626,7 @@ chmod 755 /usr/bin/rssh
 #                     Configure VESTA                      #
 #----------------------------------------------------------#
 
-# Downlading sudo configuration
+# Downloading sudo configuration
 mkdir -p /etc/sudoers.d
 wget $vestacp/sudo/admin -O /etc/sudoers.d/admin
 chmod 440 /etc/sudoers.d/admin
@@ -642,7 +642,7 @@ source /root/.bash_profile
 # Configuring logrotate for vesta logs
 wget $vestacp/logrotate/vesta -O /etc/logrotate.d/vesta
 
-# Buidling directory tree and creating some blank files for vesta
+# Building directory tree and creating some blank files for vesta
 mkdir -p $VESTA/conf $VESTA/log $VESTA/ssl $VESTA/data/ips \
     $VESTA/data/queue $VESTA/data/users $VESTA/data/firewall
 touch $VESTA/data/queue/backup.pipe $VESTA/data/queue/disk.pipe \

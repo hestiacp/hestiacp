@@ -1,15 +1,15 @@
 #!/bin/bash
 # info: update user package
-# options: PACAKGE
+# options: PACKAGE
 #
-# The function propogates package to connected users.
+# The function propagates package to connected users.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 package=$1
 
 # Includes

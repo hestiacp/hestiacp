@@ -2,14 +2,14 @@
 # info: add mail domain antispam support
 # options: USER DOMAIN
 #
-# The function enables spamassasin for incomming emails.
+# The function enables spamassasin for incoming emails.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')

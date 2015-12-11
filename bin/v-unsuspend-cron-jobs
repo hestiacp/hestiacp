@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: unuspend sys cron
+# info: unsuspend sys cron
 # options: USER [RESTART]
 #
 # The function unsuspends all suspended cron jobs.
@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 restart=$2
 

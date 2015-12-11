@@ -2,14 +2,14 @@
 # info: change password for http auth user
 # options: USER DOMAIN AUTH_USER AUTH_PASSWORD
 #
-# The call is used for chaning http auth user password
+# The call is used for changing http auth user password
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 auth_user=$3
@@ -20,7 +20,7 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
 
-# Definining htpasswd file
+# Defining htpasswd file
 htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
 
 

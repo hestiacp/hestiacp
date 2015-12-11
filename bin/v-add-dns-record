@@ -12,7 +12,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
@@ -101,7 +101,7 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Upddate counters
+# Update counters
 records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f1 -d ' ')"
 update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 increase_user_value "$user" '$U_DNS_RECORDS'

@@ -2,7 +2,7 @@
 # info: add system quota
 # options: NONE
 #
-# The script enables filesystem quota on /home patition
+# The script enables filesystem quota on /home partition
 
 
 #----------------------------------------------------------#

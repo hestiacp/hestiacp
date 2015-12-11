@@ -12,7 +12,7 @@
 # Importing system variables
 source /etc/profile
 
-# Argument defenition
+# Argument definition
 ip=$1
 chain=$(echo $2|tr '[:lower:]' '[:upper:]')
 

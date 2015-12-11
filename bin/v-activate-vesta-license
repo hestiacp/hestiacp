@@ -2,18 +2,18 @@
 # info: activate vesta license
 # options: MODULE LICENSE
 #
-# The function activates and register vesta license
+# The function activates and registers the vesta license
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 module=$(echo $1 | tr '[:lower:]' '[:upper:]')
 license=$2
 
-# Importing system enviroment
+# Importing system environment
 source /etc/profile
 
 # Includes

@@ -13,7 +13,7 @@ if ($_SESSION['user'] == 'admin') {
 }
 
 if ((!empty($_SESSION['user'])) && ($_SESSION['user'] != 'admin')) {
-    if (preg_match("/^".$user."/i", $backup)) {
+    if (strpos($backup, $user.'.') === 0) {
         header('Content-type: application/gzip');
         header("Content-Disposition: attachment; filename=\"".$backup."\";" ); 
         header("X-Accel-Redirect: /backup/" . $backup);

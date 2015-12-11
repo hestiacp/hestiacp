@@ -6,8 +6,9 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if ($_SESSION['user'] == 'admin') {
-    v_exec('v-delete-cron-vesta-autoupdate', [], false);
+    exec (VESTA_CMD."v-delete-cron-vesta-autoupdate", $output, $return_var);
     $_SESSION['error_msg'] = __('Autoupdate has been successfully disabled');
+    unset($output);
 }
 
 header("Location: /list/updates/");

@@ -16,17 +16,19 @@ if ($_SESSION['user'] != 'admin') {
 // Check token
 if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     header('location: /login/');
-    exit;
+    exit();
 }
 
 if (!empty($_GET['rule'])) {
-    $v_rule = $_GET['rule'];
-    v_exec('v-delete-firewall-rule', [$v_rule]);
+    $v_rule = escapeshellarg($_GET['rule']);
+    exec (VESTA_CMD."v-delete-firewall-rule ".$v_rule, $output, $return_var);
 }
+check_return_code($return_var,$output);
+unset($output);
 
 $back = $_SESSION['back'];
 if (!empty($back)) {
-    header("Location: $back");
+    header("Location: ".$back);
     exit;
 }
 

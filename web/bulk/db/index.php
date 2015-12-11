@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit;
+    exit();
 }
 
 $database = $_POST['database'];
@@ -34,7 +34,8 @@ if ($_SESSION['user'] == 'admin') {
 }
 
 foreach ($database as $value) {
-    v_exec($cmd, [$user, $value], false);
+    $value = escapeshellarg($value);
+    exec (VESTA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
 }
 
 header("Location: /list/db/");

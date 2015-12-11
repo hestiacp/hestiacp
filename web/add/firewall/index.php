@@ -20,7 +20,7 @@ if (!empty($_POST['ok'])) {
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit;
+        exit();
     }
 
     // Check empty fields
@@ -39,17 +39,21 @@ if (!empty($_POST['ok'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
 
-    $v_action = $_POST['v_action'];
-    $v_protocol = $_POST['v_protocol'];
-    $v_port = str_replace(' ', ',', $_POST['v_port']);
+    // Protect input
+    $v_action = escapeshellarg($_POST['v_action']);
+    $v_protocol = escapeshellarg($_POST['v_protocol']);
+    $v_port = str_replace(" ",",", $_POST['v_port']);
     $v_port = preg_replace('/\,+/', ',', $v_port);
-    $v_port = trim($v_port, ',');
-    $v_ip = $_POST['v_ip'];
-    $v_comment = $_POST['v_comment'];
+    $v_port = trim($v_port, ",");
+    $v_port = escapeshellarg($v_port);
+    $v_ip = escapeshellarg($_POST['v_ip']);
+    $v_comment = escapeshellarg($_POST['v_comment']);
 
     // Add firewall rule
     if (empty($_SESSION['error_msg'])) {
-        v_exec('v-add-firewall-rule', [$v_action, $v_ip, $v_port, $v_protocol, $v_comment]);
+        exec (VESTA_CMD."v-add-firewall-rule ".$v_action." ".$v_ip." ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Flush field values on success

@@ -31,12 +31,15 @@ if (!empty($_POST['ok'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
 
-    $v_chain = $_POST['v_chain'];
-    $v_ip = $_POST['v_ip'];
+    // Protect input
+    $v_chain = escapeshellarg($_POST['v_chain']);
+    $v_ip = escapeshellarg($_POST['v_ip']);
 
     // Add firewall ban
     if (empty($_SESSION['error_msg'])) {
-        v_exec('v-add-firewall-ban', [$v_ip, $v_chain]);
+        exec (VESTA_CMD."v-add-firewall-ban ".$v_ip." ".$v_chain, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Flush field values on success

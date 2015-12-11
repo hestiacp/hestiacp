@@ -5,17 +5,17 @@ error_reporting(NULL);
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 
-if ($_REQUEST['ajax'] == 1) {
+if($_REQUEST['ajax'] == 1){
     // Data
-    v_exec('v-list-user-notifications', [$user, 'json'], false, $output);
-    $data = json_decode($output, true);
-    $data = array_reverse($data, true);
-    foreach ($data as $key => $note) {
+    exec (VESTA_CMD."v-list-user-notifications $user json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    $data = array_reverse($data,true);
+    foreach($data as $key => $note){
         $note['ID'] = $key;
         $data[$key] = $note;
     }
     echo json_encode($data);
-    exit;
+    exit();
 }
 
 
@@ -28,9 +28,9 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-v_exec('v-list-user-notifications', [$user, 'json'], false, $output);
-$data = json_decode($output, true);
-$data = array_reverse($data, true);
+exec (VESTA_CMD."v-list-user-notifications $user json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
+$data = array_reverse($data,true);
 if ($_SESSION['user'] == 'admin') {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_notifications.html');
 } else {

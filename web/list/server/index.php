@@ -15,50 +15,60 @@ if ($_SESSION['user'] != 'admin') {
 if (isset($_GET['cpu'])) {
     $TAB = 'CPU';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
-    v_exec('v-list-sys-cpu-status', [], false, $output);
-    echo $output . "\n";
+    exec (VESTA_CMD.'v-list-sys-cpu-status', $output, $return_var);
+    foreach($output as $file) {
+        echo $file . "\n";
+    }
     echo "    </pre>\n</body>\n</html>\n";
-    exit;
+    exit();
 }
 
 // Memory info
 if (isset($_GET['mem'])) {
     $TAB = 'MEMORY';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
-    v_exec('v-list-sys-memory-status', [], false, $output);
-    echo $output . "\n";
+    exec (VESTA_CMD.'v-list-sys-memory-status', $output, $return_var);
+    foreach($output as $file) {
+        echo $file . "\n";
+    }
     echo "    </pre>\n</body>\n</html>\n";
-    exit;
+    exit();
 }
 
 // Disk info
 if (isset($_GET['disk'])) {
     $TAB = 'MEMORY';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
-    v_exec('v-list-sys-disk-status', [], false, $output);
-    echo $output . "\n";
+    exec (VESTA_CMD.'v-list-sys-disk-status', $output, $return_var);
+    foreach($output as $file) {
+        echo $file . "\n";
+    }
     echo "    </pre>\n</body>\n</html>\n";
-    exit;
+    exit();
 }
 
 // Network info
 if (isset($_GET['net'])) {
     $TAB = 'MEMORY';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
-    v_exec('v-list-sys-network-status', [], false, $output);
-    echo $output . "\n";
+    exec (VESTA_CMD.'v-list-sys-network-status', $output, $return_var);
+    foreach($output as $file) {
+        echo $file . "\n";
+    }
     echo "    </pre>\n</body>\n</html>\n";
-    exit;
+    exit();
 }
 
 // Web info
 if (isset($_GET['web'])) {
     $TAB = 'WEB';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
-    v_exec('v-list-sys-web-status', [], false, $output);
-    echo $output . "\n";
+    exec (VESTA_CMD.'v-list-sys-web-status', $output, $return_var);
+    foreach($output as $file) {
+        echo $file . "\n";
+    }
     echo "    </pre>\n</body>\n</html>\n";
-    exit;
+    exit();
 }
 
 
@@ -66,34 +76,40 @@ if (isset($_GET['web'])) {
 if (isset($_GET['dns'])) {
     $TAB = 'DNS';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
-    $return_var = v_exec('v-list-sys-dns-status', [], false, $output);
-    echo $output . "\n";
+    exec (VESTA_CMD.'v-list-sys-dns-status', $output, $return_var);
+    foreach($output as $file) {
+        echo $file . "\n";
+    }
     echo "    </pre>\n</body>\n</html>\n";
-    exit;
+    exit();
 }
 
 // Mail info
 if (isset($_GET['mail'])) {
     $TAB = 'MAIL';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
-    $return_var = v_exec('v-list-sys-mail-status', [], false, $output);
-    if ($return_var == 0) {
-        echo $output . "\n";
+    exec (VESTA_CMD.'v-list-sys-mail-status', $output, $return_var);
+    if ($return_var == 0 ) {
+        foreach($output as $file) {
+            echo $file . "\n";
+        }
     }
     echo "    </pre>\n</body>\n</html>\n";
-    exit;
+    exit();
 }
 
 // DB info
 if (isset($_GET['db'])) {
     $TAB = 'DB';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
-    $return_var = v_exec('v-list-sys-db-status', [], false, $output);
-    if ($return_var == 0) {
-        echo $output . "\n";
+    exec (VESTA_CMD.'v-list-sys-db-status', $output, $return_var);
+    if ($return_var == 0 ) {
+        foreach($output as $file) {
+            echo $file . "\n";
+        }
     }
     echo "    </pre>\n</body>\n</html>\n";
-    exit;
+    exit();
 }
 
 
@@ -104,12 +120,12 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-v_exec('v-list-sys-info', ['json'], false, $output);
-$sys = json_decode($output, true);
-
-v_exec('v-list-sys-services', ['json'], false, $output);
-$data = json_decode($output, true);
-
+exec (VESTA_CMD."v-list-sys-info json", $output, $return_var);
+$sys = json_decode(implode('', $output), true);
+unset($output);
+exec (VESTA_CMD."v-list-sys-services json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
+unset($output);
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_services.html');
 
 // Back uri

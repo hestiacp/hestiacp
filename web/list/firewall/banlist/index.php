@@ -19,9 +19,10 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-v_exec('v-list-firewall-ban', ['json'], false, $output);
-$data = json_decode($output, true);
+exec (VESTA_CMD."v-list-firewall-ban json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
 $data = array_reverse($data, true);
+unset($output);
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_firewall_banlist.html');
 
 // Back uri

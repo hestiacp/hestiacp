@@ -9,9 +9,9 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check query
 $q = $_GET['q'];
 if (empty($q)) {
-    $back = getenv('HTTP_REFERER');
+    $back=getenv("HTTP_REFERER");
     if (!empty($back)) {
-        header("Location: $back");
+        header("Location: ".$back);
         exit;
     }
     header("Location: /");
@@ -29,12 +29,13 @@ $lang = 'ru_RU.utf8';
 
 // Data
 if ($_SESSION['user'] == 'admin') {
-    v_exec('v-search-object', [$q, 'json'], false, $output);
-    $data = json_decode($output, true);
+    $q = escapeshellarg($q);
+    exec (VESTA_CMD."v-search-object ".$q." json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_search.html');
 } else {
-    v_exec('v-search-user-object', [$user, $q, 'json'], false, $output);
-    $data = json_decode($output, true);
+    exec (VESTA_CMD."v-search-user-object ".$user." ".$q." json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_search.html');
 }
 

@@ -9,12 +9,14 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Edit as someone else?
 if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
-    $user = $_GET['user'];
+    $user=escapeshellarg($_GET['user']);
 }
 
 // List backup exclustions
-v_exec('v-list-user-backup-exclusions', [$user, 'json'], true, $output);
-$data = json_decode($output, true);
+exec (VESTA_CMD."v-list-user-backup-exclusions ".$user." 'json'", $output, $return_var);
+check_return_code($return_var,$output);
+$data = json_decode(implode('', $output), true);
+unset($output);
 
 // Parse web
 $v_username = $user;
@@ -68,10 +70,9 @@ if (!empty($_POST['save'])) {
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit;
+        exit();
     }
 
-    // TODO: Use array?
     $v_web = $_POST['v_web'];
     $v_web_tmp = str_replace("\r\n", ",", $_POST['v_web']);
     $v_web_tmp = rtrim($v_web_tmp, ",");
@@ -111,7 +112,9 @@ if (!empty($_POST['save'])) {
     unset($mktemp_output);
 
     // Save changes
-    v_exec('v-update-user-backup-exclusions', [$user, $tmp]);
+    exec (VESTA_CMD."v-update-user-backup-exclusions ".$user." ".$tmp, $output, $return_var);
+    check_return_code($return_var,$output);
+    unset($output);
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {

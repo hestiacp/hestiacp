@@ -13,9 +13,10 @@ top_panel($user,$TAB);
 
 // Data
 if ($_SESSION['user'] == 'admin') {
-    v_exec('v-list-sys-ips', ['json'], false, $output);
-    $data = json_decode($output, true);
+    exec (VESTA_CMD."v-list-sys-ips json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
     $data = array_reverse($data, true);
+    unset($output);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_ip.html');
 }
 

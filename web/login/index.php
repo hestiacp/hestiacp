@@ -21,9 +21,9 @@ if (isset($_GET['logout'])) {
 // Login as someone else
 if (isset($_SESSION['user'])) {
     if ($_SESSION['user'] == 'admin' && !empty($_GET['loginas'])) {
-        $return_var = v_exec('v-list-user', [$_GET['loginas'], 'json'], false, $output);
-        if ($return_var == 0) {
-            $data = json_decode($output, true);
+        exec (VESTA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
+        if ( $return_var == 0 ) {
+            $data = json_decode(implode('', $output), true);
             reset($data);
             $_SESSION['look'] = key($data);
             $_SESSION['look_alert'] = 'yes';
@@ -35,7 +35,7 @@ if (isset($_SESSION['user'])) {
 
 // Basic auth
 if (isset($_POST['user']) && isset($_POST['password'])) {
-    $v_user = $_POST['user'];
+    $v_user = escapeshellarg($_POST['user']);
 
     // Send password via tmp file
     $v_password = exec('mktemp -p /tmp');
@@ -44,21 +44,24 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     fclose($fp);
 
     // Check user & password
-    $return_var = v_exec('v-check-user-password', [$v_user, $v_password, $_SERVER['REMOTE_ADDR']]);
+    exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." '".$_SERVER["REMOTE_ADDR"]."'",  $output, $return_var);
+    unset($output);
 
     // Remove tmp file
     unlink($v_password);
 
     // Check API answer
-    if ($return_var > 0) {
+    if ( $return_var > 0 ) {
         $ERROR = "<a class=\"error\">".__('Invalid username or password')."</a>";
+
     } else {
+
         // Make root admin user
         if ($_POST['user'] == 'root') $v_user = 'admin';
 
         // Get user speciefic parameters
-        v_exec('v-list-user', [$v_user, 'json'], false, $output);
-        $data = json_decode($output, true);
+        exec (VESTA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
+        $data = json_decode(implode('', $output), true);
 
         // Define session user
         $_SESSION['user'] = key($data);
@@ -72,7 +75,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 
         // Redirect request to control panel interface
         if (!empty($_SESSION['request_uri'])) {
-            header('Location: '.$_SESSION['request_uri']);
+            header("Location: ".$_SESSION['request_uri']);
             unset($_SESSION['request_uri']);
             exit;
         } else {
@@ -83,8 +86,8 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 }
 
 // Check system configuration
-v_exec('v-list-sys-config', ['json'], false, $output);
-$data = json_decode($output, true);
+exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
 $sys_arr = $data['config'];
 foreach ($sys_arr as $key => $value) {
     $_SESSION[$key] = $value;

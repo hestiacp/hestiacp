@@ -49,7 +49,7 @@
 
     <div class="l-center units">
 
-    <div class="l-unit">
+    <div class="l-unit header">
       <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['domain'])?></div>
     </div>
 
@@ -78,8 +78,8 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
@@ -87,6 +87,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
                     <p class="confirmation"><?=__('DELETE_RECORD_CONFIRMATION',$data[$key]['RECORD'])?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
 
             </div>
@@ -128,7 +129,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
           <table class='data'></table>
           <!-- /form -->
           <div class="l-unit__col l-unit__col--left clearfix"></div>
-          <div class="data-count l-unit__col l-unit__col--right clearfix">
+          <div class="data-count l-unit__col l-unit__col--right total clearfix">
             <?php
               if ( $i == 1) {
                 echo __('1 record');
@@ -136,6 +137,9 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
                 echo __('%s records',$i);
               }
             ?>
+          </div>
+          <div class="data-count l-unit__col l-unit__col--right back clearfix">
+            <a class="button cancel" href="/list/dns/">back</a>
           </div>
       </div>
     </div>

@@ -108,10 +108,12 @@ VE.callbacks.click.do_delete = function(evt, elm) {
  * @param custom_config Custom configuration parameters passed to dialog initialization (optional)
  */
 VE.helpers.createConfirmationDialog = function(elm, dialog_title, confirmed_location_url, custom_config) {
+
     var custom_config = !custom_config ? {} : custom_config;
     var config = {
         modal: true,
-        autoOpen: true,
+        //autoOpen: true,
+        resizable: false,
         width: 360,
         title: dialog_title,
         close: function() {
@@ -121,15 +123,27 @@ VE.helpers.createConfirmationDialog = function(elm, dialog_title, confirmed_loca
             "OK": function(event, ui) {
                  location.href = confirmed_location_url;
             },
-            "Cancel": function() {
+            Cancel: function() {
                 $(this).dialog("close");
-                $(this).dialog("destroy");
             }
+        },
+        create:function () {
+            $(this).closest(".ui-dialog")
+                .find(".ui-button:first")
+                .addClass("submit");
+            $(this).closest(".ui-dialog")
+                .find(".ui-button")
+                .eq(1) // the first button
+                .addClass("cancel");
         }
     }
+
+
+    var reference_copied = $(elm[0]).clone();
+    console.log(reference_copied);
     config = $.extend(config, custom_config);
-    var reference_copied = $(elm).clone();
     $(reference_copied).dialog(config);
+
 }
 
 /*
@@ -141,7 +155,7 @@ VE.helpers.warn = function(msg) {
 
 VE.helpers.extendPasswordFields = function() {
     var references = ['.password'];
-    
+
     $(document).ready(function() {
         $(references).each(function(i, ref) {
             VE.helpers.initAdditionalPasswordFieldElements(ref);
@@ -234,69 +248,29 @@ VE.helpers.refresh_timer = {
 }
 
 VE.navigation.enter_focused = function() {
-    if($(VE.navigation.state.menu_selector + '.focus a').attr('href')){
-        location.href=($(VE.navigation.state.menu_selector + '.focus a').attr('href'));
-    }
-}
-
-/*
-VE.navigation.move_focus_left = function(){
-    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
-    if(index == -1)
-        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector)));
-    if(index > 0){
-        $(VE.navigation.state.menu_selector).removeClass('focus');
-        $($(VE.navigation.state.menu_selector)[index-1]).addClass('focus');
+    if($('.units').hasClass('active')){
+        location.href=($('.units.active .l-unit.focus .actions-panel__col.actions-panel__edit a').attr('href'));
     } else {
-        $($(VE.navigation.state.menu_selector)[0]).addClass('focus');
-    }
-
-    
-}
-
-VE.navigation.move_focus_right = function(){
-    var max_index = $(VE.navigation.state.menu_selector).length-1;
-    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
-    if(index == -1)
-        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))) || 0;
-
-    if(index < max_index){
-        $(VE.navigation.state.menu_selector).removeClass('focus');
-        $($(VE.navigation.state.menu_selector)[index+1]).addClass('focus');
+        if($(VE.navigation.state.menu_selector + '.focus a').attr('href')){
+            location.href=($(VE.navigation.state.menu_selector + '.focus a').attr('href'));
+        }
     }
 }
-
-VE.navigation.switch_menu = function(){
-    if(VE.navigation.state.active_menu == 0){
-        VE.navigation.state.active_menu = 1;
-        VE.navigation.state.menu_selector = '.l-stat__col';
-        VE.navigation.state.menu_active_selector = '.l-stat__col--active';
-        $('.l-menu').removeClass('active');
-        $('.l-stat').addClass('active');
-    } else {
-        VE.navigation.state.active_menu = 0;
-        VE.navigation.state.menu_selector = '.l-menu__item';
-        VE.navigation.state.menu_active_selector = '.l-menu__item--active';
-        $('.l-menu').addClass('active');
-        $('.l-stat').removeClass('active');
-    }
-
-
-    var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
-    if(index == -1){
-        index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))) || 0;
-        if(index == -1)
-           index = 0;
-        $($(VE.navigation.state.menu_selector)[index]).addClass('focus');
-    }
-}
-*/
-
 
 VE.navigation.move_focus_left = function(){
     var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
     if(index == -1)
         index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector)));
+
+    if($('.units').hasClass('active')){
+        $('.units').removeClass('active');
+        if(VE.navigation.state.active_menu == 0){
+            $('.l-menu').addClass('active');
+        } else {
+            $('.l-stat').addClass('active');
+        }
+        index++;
+    }
 
     $(VE.navigation.state.menu_selector).removeClass('focus');
 
@@ -312,13 +286,69 @@ VE.navigation.move_focus_right = function(){
     var index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector+'.focus')));
     if(index == -1)
         index = parseInt($(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))) || 0;
-
     $(VE.navigation.state.menu_selector).removeClass('focus');
+
+    if($('.units').hasClass('active')){
+        $('.units').removeClass('active');
+        if(VE.navigation.state.active_menu == 0){
+            $('.l-menu').addClass('active');
+        } else {
+            $('.l-stat').addClass('active');
+        }
+        index--;
+    }
 
     if(index < max_index){
         $($(VE.navigation.state.menu_selector)[index+1]).addClass('focus');
     } else {
         VE.navigation.switch_menu('first');
+    }
+}
+
+VE.navigation.move_focus_down = function(){
+    var max_index = $('.units .l-unit:not(.header)').length-1;
+    var index = parseInt($('.units .l-unit').index($('.units .l-unit.focus')));
+
+    if($('.l-menu').hasClass('active') || $('.l-stat').hasClass('active')){
+        $('.l-menu').removeClass('active');
+        $('.l-stat').removeClass('active');
+        $('.units').addClass('active');
+        index--;
+
+        if(index == -2)
+            index = -1;
+    }
+
+    if(index < max_index){
+        $('.units .l-unit.focus').removeClass('focus');
+        $($('.units .l-unit:not(.header)')[index+1]).addClass('focus');
+
+        $('html, body').animate({
+            scrollTop: $('.units .l-unit.focus').offset().top - 200
+        }, 80);
+    }
+}
+
+VE.navigation.move_focus_up = function(){
+    var index = parseInt($('.units .l-unit:not(.header)').index($('.units .l-unit.focus')));
+
+    if(index == -1)
+        index = 0;
+
+    if($('.l-menu').hasClass('active') || $('.l-stat').hasClass('active')){
+        $('.l-menu').removeClass('active');
+        $('.l-stat').removeClass('active');
+        $('.units').addClass('active');
+        index++;
+    }
+
+    if(index > 0){
+        $('.units .l-unit.focus').removeClass('focus');
+        $($('.units .l-unit:not(.header)')[index-1]).addClass('focus');
+
+        $('html, body').animate({
+            scrollTop: $('.units .l-unit.focus').offset().top - 200
+        }, 80);
     }
 }
 
@@ -405,8 +435,6 @@ VE.notifications.mark_seen = function(id){
 }
 
 
-
-
 VE.navigation.init = function(){
     if($('.l-menu__item.l-menu__item--active').length){
 //        VE.navigation.switch_menu();
@@ -418,6 +446,18 @@ VE.navigation.init = function(){
     } else {
         $('.l-stat').addClass('active');
     }
+}
+
+VE.navigation.shortcut = function(elm){
+  var action = elm.attr('key-action');
+
+  if(action == 'js'){
+    var e = elm.find('.data-controls');
+    VE.core.dispatch(true, e, 'click');
+  }
+  if(action == 'href') {
+    location.href=elm.find('a').attr('href');
+  }
 }
 
 VE.helpers.extendPasswordFields();

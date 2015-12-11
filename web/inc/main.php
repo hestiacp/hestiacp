@@ -286,6 +286,11 @@ function display_error_block() {
                                 Ok: function() {
                                     $( this ).dialog( "close" );
                                 }
+                            },
+                            create:function () {
+                                $(this).closest(".ui-dialog")
+                                .find(".ui-button:first")
+                                .addClass("submit");
                             }
                         });
                     });

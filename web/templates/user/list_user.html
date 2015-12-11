@@ -93,7 +93,7 @@ sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<?if($_SESSION['favourites']['
             <?
               if ($key == $user) {
             ?>
-                <div class="actions-panel__col actions-panel__loginas"><a href="/logout""><?=__('logout')?> <i></i></a></div>
+                <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/logout""><?=__('logout')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
               <?
                 if (!empty($_SESSION['look_alert'])) {
               ?>
@@ -117,10 +117,10 @@ sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<?if($_SESSION['favourites']['
                     unset($_SESSION['look_alert']);
                 }
               } else { ?>
-                <div class="actions-panel__col actions-panel__loginas"><a href="/login/?loginas=<?=$key?>""><?=__('login as')?> <i></i></a></div>
+                <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/login/?loginas=<?=$key?>""><?=__('login as')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
               <?}?>
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/user/?user=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -128,6 +128,7 @@ sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<?if($_SESSION['favourites']['
                     <p class="confirmation"><?=__('DELETE_USER_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
             </div>
             <!-- /.actiona-panel -->

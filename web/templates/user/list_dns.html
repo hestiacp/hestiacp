@@ -79,10 +79,10 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__logs"><a href="/list/dns/?domain=<?=$key?>"><?=__('list records',$data[$key]['RECORDS'])?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__add"><a href="/add/dns/?domain=<?=$key?>"><?=__('add record')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/dns/?domain=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=$key?>"><?=__('list records',$data[$key]['RECORDS'])?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
+              <div class="actions-panel__col actions-panel__add shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=$key?>"><?=__('add record')?> <i></i></a><span class="shortcut">&nbsp;N</span></div>
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -90,6 +90,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
                     <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
             </div>
             <!-- /.actions-panel -->

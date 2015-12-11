@@ -1,6 +1,5 @@
 <?php
 error_reporting(NULL);
-session_start();
 $TAB = 'USER';
 
 // Main include

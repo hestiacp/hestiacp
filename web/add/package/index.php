@@ -19,7 +19,7 @@ if (!empty($_POST['ok'])) {
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit;
+        exit();
     }
 
     // Check empty fields
@@ -57,23 +57,24 @@ if (!empty($_POST['ok'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
 
-    $v_package = $_POST['v_package'];
-    $v_web_template = $_POST['v_web_template'];
-    $v_backend_template = $_POST['v_backend_template'];
-    $v_proxy_template = $_POST['v_proxy_template'];
-    $v_dns_template = $_POST['v_dns_template'];
-    $v_shell = $_POST['v_shell'];
-    $v_web_domains = $_POST['v_web_domains'];
-    $v_web_aliases = $_POST['v_web_aliases'];
-    $v_dns_domains = $_POST['v_dns_domains'];
-    $v_dns_records = $_POST['v_dns_records'];
-    $v_mail_domains = $_POST['v_mail_domains'];
-    $v_mail_accounts = $_POST['v_mail_accounts'];
-    $v_databases = $_POST['v_databases'];
-    $v_cron_jobs = $_POST['v_cron_jobs'];
-    $v_backups = $_POST['v_backups'];
-    $v_disk_quota = $_POST['v_disk_quota'];
-    $v_bandwidth = $_POST['v_bandwidth'];
+    // Protect input
+    $v_package = escapeshellarg($_POST['v_package']);
+    $v_web_template = escapeshellarg($_POST['v_web_template']);
+    $v_backend_template = escapeshellarg($_POST['v_backend_template']);
+    $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
+    $v_dns_template = escapeshellarg($_POST['v_dns_template']);
+    $v_shell = escapeshellarg($_POST['v_shell']);
+    $v_web_domains = escapeshellarg($_POST['v_web_domains']);
+    $v_web_aliases = escapeshellarg($_POST['v_web_aliases']);
+    $v_dns_domains = escapeshellarg($_POST['v_dns_domains']);
+    $v_dns_records = escapeshellarg($_POST['v_dns_records']);
+    $v_mail_domains = escapeshellarg($_POST['v_mail_domains']);
+    $v_mail_accounts = escapeshellarg($_POST['v_mail_accounts']);
+    $v_databases = escapeshellarg($_POST['v_databases']);
+    $v_cron_jobs = escapeshellarg($_POST['v_cron_jobs']);
+    $v_backups = escapeshellarg($_POST['v_backups']);
+    $v_disk_quota = escapeshellarg($_POST['v_disk_quota']);
+    $v_bandwidth = escapeshellarg($_POST['v_bandwidth']);
     $v_ns1 = trim($_POST['v_ns1'], '.');
     $v_ns2 = trim($_POST['v_ns2'], '.');
     $v_ns3 = trim($_POST['v_ns3'], '.');
@@ -89,46 +90,43 @@ if (!empty($_POST['ok'])) {
     if (!empty($v_ns6)) $v_ns .= ",".$v_ns6;
     if (!empty($v_ns7)) $v_ns .= ",".$v_ns7;
     if (!empty($v_ns8)) $v_ns .= ",".$v_ns8;
-    $v_time = date('H:i:s');
-    $v_date = date('Y-m-d');
+    $v_ns = escapeshellarg($v_ns);
+    $v_time = escapeshellarg(date('H:i:s'));
+    $v_date = escapeshellarg(date('Y-m-d'));
 
     // Create temporary dir
     if (empty($_SESSION['error_msg'])) {
-        exec('mktemp -d', $output, $return_var);
+        exec ('mktemp -d', $output, $return_var);
         $tmpdir = $output[0];
-        check_return_code($return_var, $output);
+        check_return_code($return_var,$output);
         unset($output);
     }
 
     // Create package file
     if (empty($_SESSION['error_msg'])) {
-        $a_pkg = [
-            'WEB_TEMPLATE'     => $v_web_template,
-            'BACKEND_TEMPLATE' => !empty($_SESSION['WEB_BACKEND']) ? $v_backend_template : null,
-            'PROXY_TEMPLATE'   => !empty($_SESSION['PROXY_SYSTEM']) ? $v_proxy_template : null,
-            'DNS_TEMPLATE'     => $v_dns_template,
-            'WEB_DOMAINS'      => $v_web_domains,
-            'WEB_ALIASES'      => $v_web_aliases,
-            'DNS_DOMAINS'      => $v_dns_domains,
-            'DNS_RECORDS'      => $v_dns_records,
-            'MAIL_DOMAINS'     => $v_mail_domains,
-            'MAIL_ACCOUNTS'    => $v_mail_accounts,
-            'DATABASES'        => $v_databases,
-            'CRON_JOBS'        => $v_cron_jobs,
-            'DISK_QUOTA'       => $v_disk_quota,
-            'BANDWIDTH'        => $v_bandwidth,
-            'NS'               => $v_ns,
-            'SHELL'            => $v_shell,
-            'BACKUPS'          => $v_backups,
-            'TIME'             => $v_time,
-            'DATE'             => $v_date,
-        ];
-
-        $pkg = '';
-        foreach ($a_pkg as $key => $value) {
-            if (is_null($value)) continue;
-            $pkg .= $key . '=' . escapeshellarg($value) . "\n";
+        $pkg = "WEB_TEMPLATE=".$v_web_template."\n";
+        if (!empty($_SESSION['WEB_BACKEND'])) {
+            $pkg .= "BACKEND_TEMPLATE=".$v_backend_template."\n";
         }
+        if (!empty($_SESSION['PROXY_SYSTEM'])) {
+            $pkg .= "PROXY_TEMPLATE=".$v_proxy_template."\n";
+        }
+        $pkg .= "DNS_TEMPLATE=".$v_dns_template."\n";
+        $pkg .= "WEB_DOMAINS=".$v_web_domains."\n";
+        $pkg .= "WEB_ALIASES=".$v_web_aliases."\n";
+        $pkg .= "DNS_DOMAINS=".$v_dns_domains."\n";
+        $pkg .= "DNS_RECORDS=".$v_dns_records."\n";
+        $pkg .= "MAIL_DOMAINS=".$v_mail_domains."\n";
+        $pkg .= "MAIL_ACCOUNTS=".$v_mail_accounts."\n";
+        $pkg .= "DATABASES=".$v_databases."\n";
+        $pkg .= "CRON_JOBS=".$v_cron_jobs."\n";
+        $pkg .= "DISK_QUOTA=".$v_disk_quota."\n";
+        $pkg .= "BANDWIDTH=".$v_bandwidth."\n";
+        $pkg .= "NS=".$v_ns."\n";
+        $pkg .= "SHELL=".$v_shell."\n";
+        $pkg .= "BACKUPS=".$v_backups."\n";
+        $pkg .= "TIME=".$v_time."\n";
+        $pkg .= "DATE=".$v_date."\n";
 
         $fp = fopen($tmpdir."/".$_POST['v_package'].".pkg", 'w');
         fwrite($fp, $pkg);
@@ -137,15 +135,18 @@ if (!empty($_POST['ok'])) {
 
     // Add new package
     if (empty($_SESSION['error_msg'])) {
-        v_exec('v-add-user-package', [$tmpdir, $v_package]);
+        exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
-    // Remove tmpdir
-    safe_exec('rm', ['-rf', $tmpdir]);
+    // Remove tmpdir 
+    exec ('rm -rf '.$tmpdir, $output, $return_var);
+    unset($output);
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('PACKAGE_CREATED_OK', htmlentities($_POST['v_package']), htmlentities($_POST['v_package']));
+        $_SESSION['ok_msg'] = __('PACKAGE_CREATED_OK',htmlentities($_POST['v_package']),htmlentities($_POST['v_package']));
         unset($v_package);
     }
 
@@ -159,28 +160,33 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // List web temmplates
-v_exec('v-list-web-templates', ['json'], false, $output);
-$web_templates = json_decode($output, true);
+exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
+$web_templates = json_decode(implode('', $output), true);
+unset($output);
 
 // List web templates for backend
 if (!empty($_SESSION['WEB_BACKEND'])) {
-    v_exec('v-list-web-templates-backend', ['json'], false, $output);
-    $backend_templates = json_decode($output, true);
+    exec (VESTA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    $backend_templates = json_decode(implode('', $output), true);
+    unset($output);
 }
 
 // List web templates for proxy
 if (!empty($_SESSION['PROXY_SYSTEM'])) {
-    v_exec('v-list-web-templates-proxy', ['json'], false, $output);
-    $proxy_templates = json_decode($output, true);
+    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    $proxy_templates = json_decode(implode('', $output), true);
+    unset($output);
 }
 
 // List DNS templates
-v_exec('v-list-dns-templates', ['json'], false, $output);
-$dns_templates = json_decode($output, true);
+exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
+$dns_templates = json_decode(implode('', $output), true);
+unset($output);
 
 // List system shells
-v_exec('v-list-sys-shells', ['json'], false, $output);
-$shells = json_decode($output, true);
+exec (VESTA_CMD."v-list-sys-shells json", $output, $return_var);
+$shells = json_decode(implode('', $output), true);
+unset($output);
 
 // Set default values
 if (empty($v_web_template)) $v_web_template = 'default';
@@ -188,17 +194,17 @@ if (empty($v_backend_template)) $v_backend_template = 'default';
 if (empty($v_proxy_template)) $v_proxy_template = 'default';
 if (empty($v_dns_template)) $v_dns_template = 'default';
 if (empty($v_shell)) $v_shell = 'nologin';
-if (empty($v_web_domains)) $v_web_domains = '1';
-if (empty($v_web_aliases)) $v_web_aliases = '1';
-if (empty($v_dns_domains)) $v_dns_domains = '1';
-if (empty($v_dns_records)) $v_dns_records = '1';
-if (empty($v_mail_domains)) $v_mail_domains = '1';
-if (empty($v_mail_accounts)) $v_mail_accounts = '1';
-if (empty($v_databases)) $v_databases = '1';
-if (empty($v_cron_jobs)) $v_cron_jobs = '1';
-if (empty($v_backups)) $v_backups = '1';
-if (empty($v_disk_quota)) $v_disk_quota = '1000';
-if (empty($v_bandwidth)) $v_bandwidth = '1000';
+if (empty($v_web_domains)) $v_web_domains = "'1'";
+if (empty($v_web_aliases)) $v_web_aliases = "'1'";
+if (empty($v_dns_domains)) $v_dns_domains = "'1'";
+if (empty($v_dns_records)) $v_dns_records = "'1'";
+if (empty($v_mail_domains)) $v_mail_domains = "'1'";
+if (empty($v_mail_accounts)) $v_mail_accounts = "'1'";
+if (empty($v_databases)) $v_databases = "'1'";
+if (empty($v_cron_jobs)) $v_cron_jobs = "'1'";
+if (empty($v_backups)) $v_backups = "'1'";
+if (empty($v_disk_quota)) $v_disk_quota = "'1000'";
+if (empty($v_bandwidth)) $v_bandwidth = "'1000'";
 if (empty($v_ns1)) $v_ns1 = 'ns1.example.ltd';
 if (empty($v_ns2)) $v_ns2 = 'ns2.example.ltd';
 

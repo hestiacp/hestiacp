@@ -14,18 +14,20 @@ top_panel($user,$TAB);
 
 // Data
 if (empty($_GET['domain'])){
-    v_exec('v-list-mail-domains', [$user, 'json'], false, $output);
-    $data = json_decode($output, true);
+    exec (VESTA_CMD."v-list-mail-domains $user json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
     $data = array_reverse($data, true);
+    unset($output);
     if ($_SESSION['user'] == 'admin') {
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_mail.html');
     } else {
         include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_mail.html');
     }
 } else {
-    v_exec('v-list-mail-accounts', [$user, $_GET['domain'], 'json'], false, $output);
-    $data = json_decode($output, true);
+    exec (VESTA_CMD."v-list-mail-accounts '".$user."' '".escapeshellarg($_GET['domain'])."' json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
     $data = array_reverse($data, true);
+    unset($output);
     if ($_SESSION['user'] == 'admin') {
         include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_mail_acc.html');
     } else {

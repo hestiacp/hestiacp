@@ -31,7 +31,7 @@ $_SESSION['back'] = '';
 if (!isset($_POST['generate'])) {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/generate_ssl.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
-    exit;
+    exit();
 }
 
 // Check input
@@ -41,7 +41,6 @@ if (empty($_POST['v_state'])) $errors[] = __('domain');
 if (empty($_POST['v_locality'])) $errors[] = __('city');
 if (empty($_POST['v_org'])) $errors[] = __('organization');
 if (empty($_POST['v_email'])) $errors[] = __('email');
-
 $v_domain = $_POST['v_domain'];
 $v_email = $_POST['v_email'];
 $v_country = $_POST['v_country'];
@@ -62,24 +61,44 @@ if (!empty($errors[0])) {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/generate_ssl.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
     unset($_SESSION['error_msg']);
-    exit;
+    exit();
 }
 
-$return_var = v_exec('v-generate-ssl-cert', [$v_domain, $v_email, $v_country, $v_state, $v_locality, $v_org, 'IT', 'json'], true, $output);
+// Protect input
+$v_domain = escapeshellarg($_POST['v_domain']);
+$v_email = escapeshellarg($_POST['v_email']);
+$v_country = escapeshellarg($_POST['v_country']);
+$v_state = escapeshellarg($_POST['v_state']);
+$v_locality = escapeshellarg($_POST['v_locality']);
+$v_org = escapeshellarg($_POST['v_org']);
+
+exec (VESTA_CMD."v-generate-ssl-cert ".$v_domain." ".$v_email." ".$v_country." ".$v_state." ".$v_locality." ".$v_org." IT json", $output, $return_var);
+
+// Revert to raw values
+$v_domain = $_POST['v_domain'];
+$v_email = $_POST['v_email'];
+$v_country = $_POST['v_country'];
+$v_state = $_POST['v_state'];
+$v_locality = $_POST['v_locality'];
+$v_org = $_POST['v_org'];
 
 // Check return code
 if ($return_var != 0) {
+    $error = implode('<br>', $output);
+    if (empty($error)) $error = __('Error code:',$return_var);
+    $_SESSION['error_msg'] = $error;
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/generate_ssl.html');
     include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
     unset($_SESSION['error_msg']);
-    exit;
+    exit();
 }
 
 // OK message
 $_SESSION['ok_msg'] = __('SSL_GENERATED_OK');
 
 // Parse output
-$data = json_decode($output, true);
+$data = json_decode(implode('', $output), true);
+unset($output);
 $v_crt = $data[$v_domain]['CRT'];
 $v_key = $data[$v_domain]['KEY'];
 $v_csr = $data[$v_domain]['CSR'];

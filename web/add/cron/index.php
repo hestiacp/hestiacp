@@ -13,7 +13,7 @@ if (!empty($_POST['ok'])) {
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit;
+        exit();
     }
 
     // Check empty fields
@@ -35,16 +35,18 @@ if (!empty($_POST['ok'])) {
     }
 
     // Protect input
-    $v_min = $_POST['v_min'];
-    $v_hour = $_POST['v_hour'];
-    $v_day = $_POST['v_day'];
-    $v_month = $_POST['v_month'];
-    $v_wday = $_POST['v_wday'];
-    $v_cmd = $_POST['v_cmd'];
+    $v_min = escapeshellarg($_POST['v_min']);
+    $v_hour = escapeshellarg($_POST['v_hour']);
+    $v_day = escapeshellarg($_POST['v_day']);
+    $v_month = escapeshellarg($_POST['v_month']);
+    $v_wday = escapeshellarg($_POST['v_wday']);
+    $v_cmd = escapeshellarg($_POST['v_cmd']);
 
     // Add cron job
     if (empty($_SESSION['error_msg'])) {
-        v_exec('v-add-cron-job', [$user, $v_min, $v_hour, $v_day, $v_month, $v_wday, $v_cmd]);
+        exec (VESTA_CMD."v-add-cron-job ".$user." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Flush field values on success
@@ -56,6 +58,7 @@ if (!empty($_POST['ok'])) {
         unset($v_month);
         unset($v_wday);
         unset($v_cmd);
+        unset($output);
     }
 }
 

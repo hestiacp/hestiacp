@@ -19,7 +19,7 @@ if (!empty($_POST['ok'])) {
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit;
+        exit();
     }
 
     // Check empty fields
@@ -48,15 +48,16 @@ if (!empty($_POST['ok'])) {
     // Check password length
     if (empty($_SESSION['error_msg'])) {
         $pw_len = strlen($_POST['v_password']);
-        if ($pw_len < 6) $_SESSION['error_msg'] = __('Password is too short.', $error_msg);
+        if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
     }
 
-    $v_username = $_POST['v_username'];
-    $v_email = $_POST['v_email'];
-    $v_package = $_POST['v_package'];
-    $v_language = $_POST['v_language'];
-    $v_fname = $_POST['v_fname'];
-    $v_lname = $_POST['v_lname'];
+    // Protect input
+    $v_username = escapeshellarg($_POST['v_username']);
+    $v_email = escapeshellarg($_POST['v_email']);
+    $v_package = escapeshellarg($_POST['v_package']);
+    $v_language = escapeshellarg($_POST['v_language']);
+    $v_fname = escapeshellarg($_POST['v_fname']);
+    $v_lname = escapeshellarg($_POST['v_lname']);
     $v_notify = $_POST['v_notify'];
 
 
@@ -66,14 +67,18 @@ if (!empty($_POST['ok'])) {
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
         fclose($fp);
-        v_exec('v-add-user', [$v_username, $v_password, $v_email, $v_package, $v_fname, $v_lname]);
+        exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
         unlink($v_password);
-        $v_password = $_POST['v_password'];
+        $v_password = escapeshellarg($_POST['v_password']);
     }
 
     // Set language
     if (empty($_SESSION['error_msg'])) {
-        v_exec('v-change-user-language', [$v_username, $v_language]);
+        exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Send email to the new user
@@ -81,6 +86,7 @@ if (!empty($_POST['ok'])) {
         $to = $_POST['v_notify'];
         $subject = _translate($_POST['v_language'],"Welcome to Vesta Control Panel");
         $hostname = exec('hostname');
+        unset($output);
         $from = _translate($_POST['v_language'],'MAIL_FROM',$hostname);
         if (!empty($_POST['v_fname'])) {
             $mailtext = _translate($_POST['v_language'],'GREETINGS_GORDON_FREEMAN',$_POST['v_fname'],$_POST['v_lname']);
@@ -112,13 +118,15 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // List hosting packages
-$return_var = v_exec('v-list-user-packages', ['json'], false, $output);
+exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
 check_error($return_var);
-$data = json_decode($output, true);
+$data = json_decode(implode('', $output), true);
+unset($output);
 
 // List languages
-v_exec('v-list-sys-languages', ['json'], false, $output);
-$languages = json_decode($output, true);
+exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+$languages = json_decode(implode('', $output), true);
+unset($output);
 
 // Display body
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_user.html');

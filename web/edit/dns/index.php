@@ -15,18 +15,20 @@ if (empty($_GET['domain'])) {
 
 // Edit as someone else?
 if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
-    $user = $_GET['user'];
+    $user=escapeshellarg($_GET['user']);
 }
-$v_username = $user;
 
 // List dns domain
 if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
-    $v_domain = $_GET['domain'];
-
-    v_exec('v-list-dns-domain', [$user, $v_domain, 'json'], true, $output);
-    $data = json_decode($output, true);
+    $v_domain = escapeshellarg($_GET['domain']);
+    exec (VESTA_CMD."v-list-dns-domain ".$user." ".$v_domain." json", $output, $return_var);
+    check_return_code($return_var,$output);
+    $data = json_decode(implode('', $output), true);
+    unset($output);
 
     // Parse dns domain
+    $v_username = $user;
+    $v_domain = $_GET['domain'];
     $v_ip = $data[$v_domain]['IP'];
     $v_template = $data[$v_domain]['TPL'];
     $v_ttl = $data[$v_domain]['TTL'];
@@ -42,19 +44,24 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
     }
 
     // List dns templates
-    v_exec('v-list-dns-templates', ['json'], false, $output);
-    $templates = json_decode($output, true);
+    exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
+    $templates = json_decode(implode('', $output), true);
+    unset($output);
 }
 
 // List dns record
 if ((!empty($_GET['domain'])) && (!empty($_GET['record_id'])))  {
-    $v_domain = $_GET['domain'];
-    $v_record_id = $_GET['record_id'];
-
-    v_exec('v-list-dns-records', [$user, $v_domain, 'json'], true, $output);
-    $data = json_decode($output, true);
+    $v_domain = escapeshellarg($_GET['domain']);
+    $v_record_id = escapeshellarg($_GET['record_id']);
+    exec (VESTA_CMD."v-list-dns-records ".$user." ".$v_domain." 'json'", $output, $return_var);
+    check_return_code($return_var,$output);
+    $data = json_decode(implode('', $output), true);
+    unset($output);
 
     // Parse dns record
+    $v_username = $user;
+    $v_domain = $_GET['domain'];
+    $v_record_id = $_GET['record_id'];
     $v_rec = $data[$v_record_id]['RECORD'];
     $v_type = $data[$v_record_id]['TYPE'];
     $v_val = $data[$v_record_id]['VALUE'];
@@ -71,51 +78,63 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id'])))  {
 
 // Check POST request for dns domain
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['record_id']))) {
-    $v_domain = $_POST['v_domain'];
+    $v_domain = escapeshellarg($_POST['v_domain']);
 
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit;
+        exit();
     }
 
     // Change domain IP
     if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
-        $v_ip = $_POST['v_ip'];
-        v_exec('v-change-dns-domain-ip', [$v_username, $v_domain, $v_ip, 'no']);
+        $v_ip = escapeshellarg($_POST['v_ip']);
+        exec (VESTA_CMD."v-change-dns-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
+        check_return_code($return_var,$output);
         $restart_dns = 'yes';
+        unset($output);
     }
 
     // Change domain template
     if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
-        $v_template = $_POST['v_template'];
-        v_exec('v-change-dns-domain-tpl', [$v_username, $v_domain, $v_template, 'no']);
+        $v_template = escapeshellarg($_POST['v_template']);
+        exec (VESTA_CMD."v-change-dns-domain-tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
         $restart_dns = 'yes';
     }
 
     // Change SOA record
     if (($v_soa != $_POST['v_soa']) && (empty($_SESSION['error_msg']))) {
-        $v_soa = $_POST['v_soa'];
-        v_exec('v-change-dns-domain-soa', [$v_username, $v_domain, $v_soa, 'no']);
+        $v_soa = escapeshellarg($_POST['v_soa']);
+        exec (VESTA_CMD."v-change-dns-domain-soa ".$v_username." ".$v_domain." ".$v_soa." 'no'", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
         $restart_dns = 'yes';
     }
 
     // Change expiriation date
     if (($v_exp != $_POST['v_exp']) && (empty($_SESSION['error_msg']))) {
-        $v_exp = $_POST['v_exp'];
-        v_exec('v-change-dns-domain-exp', [$v_username, $v_domain, $v_exp, 'no']);
+        $v_exp = escapeshellarg($_POST['v_exp']);
+        exec (VESTA_CMD."v-change-dns-domain-exp ".$v_username." ".$v_domain." ".$v_exp." 'no'", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Change domain ttl
     if (($v_ttl != $_POST['v_ttl']) && (empty($_SESSION['error_msg']))) {
-        $v_ttl = $_POST['v_ttl'];
-        v_exec('v-change-dns-domain-ttl', [$v_username, $v_domain, $v_ttl, 'no']);
+        $v_ttl = escapeshellarg($_POST['v_ttl']);
+        exec (VESTA_CMD."v-change-dns-domain-ttl ".$v_username." ".$v_domain." ".$v_ttl." 'no'", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
         $restart_dns = 'yes';
     }
 
     // Restart dns server
     if (!empty($restart_dns) && (empty($_SESSION['error_msg']))) {
-        v_exec('v-restart-dns');
+        exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Set success message
@@ -130,30 +149,38 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
-        exit;
+        exit();
     }
 
-    $v_domain = $_POST['v_domain'];
-    $v_record_id = $_POST['v_record_id'];
+    // Protect input
+    $v_domain = escapeshellarg($_POST['v_domain']);
+    $v_record_id = escapeshellarg($_POST['v_record_id']);
 
     // Change dns record
     if (($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) && (empty($_SESSION['error_msg']))) {
+        $v_val = escapeshellarg($_POST['v_val']);
+        $v_priority = escapeshellarg($_POST['v_priority']);
+        exec (VESTA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
+        check_return_code($return_var,$output);
         $v_val = $_POST['v_val'];
-        $v_priority = $_POST['v_priority'];
-        v_exec('v-change-dns-record', [$v_username, $v_domain, $v_record_id, $v_val, $v_priority]);
+        unset($output);
         $restart_dns = 'yes';
     }
 
     // Change dns record id
     if (($_GET['record_id'] != $_POST['v_record_id']) && (empty($_SESSION['error_msg']))) {
-        $v_old_record_id = $_GET['record_id'];
-        v_exec('v-change-dns-record-id', [$v_username, $v_domain, $v_old_record_id, $v_record_id]);
+        $v_old_record_id = escapeshellarg($_GET['record_id']);
+        exec (VESTA_CMD."v-change-dns-record-id ".$v_username." ".$v_domain." ".$v_old_record_id." ".$v_record_id, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
         $restart_dns = 'yes';
     }
 
     // Restart dns server
     if (!empty($restart_dns) && (empty($_SESSION['error_msg']))) {
-        v_exec('v-restart-dns');
+        exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Set success message

@@ -18,8 +18,9 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-v_exec('v-list-user-packages', ['json'], false, $output);
-$data = json_decode($output, true);
+exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
+$data = json_decode(implode('', $output), true);
+unset($output);
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_packages.html');
 
 // Back uri

@@ -12,7 +12,7 @@ $action = $_POST['action'];
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit;
+    exit();
 }
 
 switch ($action) {
@@ -22,7 +22,8 @@ switch ($action) {
 }
 
 foreach ($backup as $value) {
-    v_exec($cmd, [$user, $value], false);
+    $value = escapeshellarg($value);
+    exec (VESTA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
 }
 
 header("Location: /list/backup/");

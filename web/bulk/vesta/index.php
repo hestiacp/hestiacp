@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit;
+    exit();
 }
 
 
@@ -23,7 +23,8 @@ if ($_SESSION['user'] == 'admin') {
         default: header("Location: /list/updates/"); exit;
     }
     foreach ($pkg as $value) {
-        v_exec($cmd, [$value], false);
+        $value = escapeshellarg($value);
+        exec (VESTA_CMD.$cmd." ".$value, $output, $return_var);
     }
 }
 

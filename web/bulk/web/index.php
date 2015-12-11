@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit;
+    exit();
 }
 
 $domain = $_POST['domain'];
@@ -34,14 +34,15 @@ if ($_SESSION['user'] == 'admin') {
 }
 
 foreach ($domain as $value) {
-    v_exec($cmd, [$user, $value, 'no'], false);
-    $restart = 'yes';
+    $value = escapeshellarg($value);
+    exec (VESTA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
+    $restart='yes';
 }
 
 if (isset($restart)) {
-    v_exec('v-restart-web', [], false);
-    v_exec('v-restart-proxy', [], false);
-    v_exec('v-restart-dns', [], false);
+    exec (VESTA_CMD."v-restart-web", $output, $return_var);
+    exec (VESTA_CMD."v-restart-proxy", $output, $return_var);
+    exec (VESTA_CMD."v-restart-dns", $output, $return_var);
 }
 
 header("Location: /list/web/");

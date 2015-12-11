@@ -11,16 +11,17 @@ if ((!isset($_SESSION['FILEMANAGER_KEY'])) || (empty($_SESSION['FILEMANAGER_KEY'
 
 // Check login_as feature
 if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
-    $user = $_SESSION['look'];
+    $user=$_SESSION['look'];
 }
 
 if (empty($panel)) {
-    $return_var = v_exec('v-list-user', [$user, 'json'], false, $output);
-    if ($return_var > 0) {
+    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
+    exec ($command, $output, $return_var);
+    if ( $return_var > 0 ) {
         header("Location: /error/");
         exit;
     }
-    $panel = json_decode($output, true);
+    $panel = json_decode(implode('', $output), true);
 }
 
 $path_a = !empty($_REQUEST['dir_a']) ? $_REQUEST['dir_a'] : '';

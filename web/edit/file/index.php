@@ -31,22 +31,24 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
 <div id="message" style="display:none; position: absoulte;background-color: green; color: white; padding: 10px;"></div>
 <div id="error-message" style="display:none; position: absoulte;background-color: red; color: white; padding: 10px;"></div>
 
-<?php
+<?php 
+
     if (!empty($_REQUEST['path'])) {
         $content = '';
         $path = $_REQUEST['path'];
         if (!empty($_POST['save'])) {
-            $fn = tempnam('/tmp', 'vst-save-file-');
+            $fn = tempnam ('/tmp', 'vst-save-file-');
             if ($fn) {
                 $contents = $_POST['contents'];
                 $contents = preg_replace("/\r/", "", $contents);
-                $f = fopen($fn, 'w+');
+                $f = fopen ($fn, 'w+');
                 fwrite($f, $contents);
                 fclose($f);
                 chmod($fn, 0644);
 
                 if ($f) {
-                    $return_var = v_exec('v-copy-fs-file', [$user, $fn, $path]);
+                    exec (VESTA_CMD . "v-copy-fs-file {$user} {$fn} ".escapeshellarg($path), $output, $return_var);
+                    $error = check_return_code($return_var, $output);
                     if ($return_var != 0) {
                         print('<p style="color: white">Error while saving file</p>');
                         exit;
@@ -56,12 +58,12 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
             }
         }
 
-        $return_var = v_exec('v-open-fs-file', [$user, $path], false, $content);
+        exec (VESTA_CMD . "v-open-fs-file {$user} ".escapeshellarg($path), $content, $return_var);
         if ($return_var != 0) {
             print 'Error while opening file'; // todo: handle this more styled
             exit;
         }
-        $content = $content . "\n";
+        $content = implode("\n", $content)."\n";
     } else {
         $content = '';
     }

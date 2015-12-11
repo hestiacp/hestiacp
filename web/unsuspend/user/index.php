@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     header('location: /login/');
-    exit;
+    exit();
 }
 
 // Check user
@@ -19,13 +19,15 @@ if ($_SESSION['user'] != 'admin') {
 }
 
 if (!empty($_GET['user'])) {
-    $v_username = $_GET['user'];
-    v_exec('v-unsuspend-user', [$v_username]);
+    $v_username = escapeshellarg($_GET['user']);
+    exec (VESTA_CMD."v-unsuspend-user ".$v_username, $output, $return_var);
 }
+check_return_code($return_var,$output);
+unset($output);
 
-$back = getenv('HTTP_REFERER');
+$back=getenv("HTTP_REFERER");
 if (!empty($back)) {
-    header("Location: $back");
+    header("Location: ".$back);
     exit;
 }
 

@@ -42,7 +42,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         $i++;
         if (!empty($_POST['arg' . $i]))
         {
-            $args[] = $_POST['arg' . $i];
+            $args[] = escapeshellarg($_POST['arg' . $i]);
             continue;
         }
         break;

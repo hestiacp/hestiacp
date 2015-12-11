@@ -31,5 +31,5 @@ bash vst-install.sh
 
 License
 ----------------------------
-Vesta is licensed under  [GPL v3 ](https://github.com/serghey-rodin/vesta/blob/master/LICENSE.txt) license
+Vesta is licensed under  [GPL v3 ](https://github.com/serghey-rodin/vesta/blob/master/LICENSE) license
 

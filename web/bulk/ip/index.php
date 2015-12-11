@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit();
+    exit;
 }
 
 $ip = $_POST['ip'];
@@ -17,11 +17,11 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'reread IP': exec(VESTA_CMD."v-update-sys-ip", $output, $return_var);
-                header("Location: /list/ip/");
-                exit;
-            break;
-        case 'delete': $cmd='v-delete-sys-ip';
+        case 'reread IP': $cmd = 'v-update-sys-ip';
+            v_exec($cmd, [], false);
+            header('Location: /list/ip/');
+            exit;
+        case 'delete': $cmd = 'v-delete-sys-ip';
             break;
         default: header("Location: /list/ip/"); exit;
     }
@@ -31,8 +31,7 @@ if ($_SESSION['user'] == 'admin') {
 }
 
 foreach ($ip as $value) {
-    $value = escapeshellarg($value);
-    exec (VESTA_CMD.$cmd." ".$value, $output, $return_var);
+    v_exec($cmd, [$value], false);
 }
 
 header("Location: /list/ip/");

@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit();
+    exit;
 }
 
 $service = $_POST['service'];
@@ -27,16 +27,14 @@ if ($_SESSION['user'] == 'admin') {
     }
 
     if ((!empty($_POST['system'])) && ($action == 'restart')) {
-        exec (VESTA_CMD."v-restart-system yes", $output, $return_var);
+        v_exec('v-restart-system', ['yes'], false);
         $_SESSION['error_srv'] = 'The system is going down for reboot NOW!';
-        unset($output);
         header("Location: /list/server/");
         exit;
     }
 
     foreach ($service as $value) {
-        $value = escapeshellarg($value);
-        exec (VESTA_CMD.$cmd." ".$value, $output, $return_var);
+        v_exec($cmd, [$value], false);
     }
 }
 

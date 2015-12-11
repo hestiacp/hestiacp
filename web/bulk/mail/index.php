@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit();
+    exit;
 }
 
 $domain = $_POST['domain'];
@@ -58,21 +58,18 @@ if ($_SESSION['user'] == 'admin') {
 if (empty($account)) {
     foreach ($domain as $value) {
         // Mail
-        $value = escapeshellarg($value);
-        exec (VESTA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
+        v_exec($cmd, [$user, $value], false);
         $restart = 'yes';
     }
 } else {
     foreach ($account as $value) {
         // Mail Account
-        $value = escapeshellarg($value);
-        $dom = escapeshellarg($domain);
-        exec (VESTA_CMD.$cmd." ".$user." ".$dom." ".$value, $output, $return_var);
+        v_exec($cmd, [$user, $domain, $value], false);
         $restart = 'yes';
     }
 }
 
-if (empty($account)) { 
+if (empty($account)) {
     header("Location: /list/mail/");
     exit;
 } else {

@@ -14,28 +14,24 @@ top_panel($user,$TAB);
 // Data
 if ($user == 'admin') {
     if (empty($_GET['user'])) {
-        exec (VESTA_CMD."v-list-users-stats json", $output, $return_var);
-        $data = json_decode(implode('', $output), true);
+        v_exec('v-list-users-stats', ['json'], false, $output);
+        $data = json_decode($output, true);
         $data = array_reverse($data, true);
-        unset($output);
     } else {
-        $v_user = escapeshellarg($_GET['user']);
-        exec (VESTA_CMD."v-list-user-stats $v_user json", $output, $return_var);
-        $data = json_decode(implode('', $output), true);
+        $v_user = $_GET['user'];
+        v_exec('v-list-user-stats', [$v_user, 'json'], false, $output);
+        $data = json_decode($output, true);
         $data = array_reverse($data, true);
-        unset($output);
     }
 
-    exec (VESTA_CMD."v-list-sys-users 'json'", $output, $return_var);
-    $users = json_decode(implode('', $output), true);
-    unset($output);
+    v_exec('v-list-sys-users', ['json'], false, $output);
+    $users = json_decode($output, true);
 
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_stats.html');
 } else {
-    exec (VESTA_CMD."v-list-user-stats $user json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
+    v_exec('v-list-user-stats', [$user, 'json'], false, $output);
+    $data = json_decode($output, true);
     $data = array_reverse($data, true);
-    unset($output);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_stats.html');
 }
 

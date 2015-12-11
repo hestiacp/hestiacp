@@ -8,14 +8,15 @@ if (empty($argv[1])) {
 
 $options = getopt("s:f:");
 
+require_once(__DIR__.'/exec.php');
 
-define('NO_AUTH_REQUIRED',true);
+define('NO_AUTH_REQUIRED', true);
 include("/usr/local/vesta/web/inc/main.php");
 
 // Set system language
-exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
-$data = json_decode(implode('', $output), true);
-if (!empty( $data['config']['LANGUAGE'])) {
+v_exec('v-list-sys-config', ['json'], false, $output);
+$data = json_decode($output, true);
+if (!empty($data['config']['LANGUAGE'])) {
     $_SESSION['language'] = $data['config']['LANGUAGE'];
 } else {
     $_SESSION['language'] = 'en';

@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit();
+    exit;
 }
 
 $job = $_POST['job'];
@@ -24,19 +24,15 @@ if ($_SESSION['user'] == 'admin') {
         case 'unsuspend': $cmd='v-unsuspend-cron-job';
             break;
         case 'delete-cron-reports': $cmd='v-delete-cron-reports';
-            exec (VESTA_CMD.$cmd." ".$user, $output, $return_var);
+            v_exec($cmd, [$user], false);
             $_SESSION['error_msg'] = __('Cronjob email reporting has been successfully diabled');
-            unset($output);
             header("Location: /list/cron/");
             exit;
-            break;
         case 'add-cron-reports': $cmd='v-add-cron-reports';
-            exec (VESTA_CMD.$cmd." ".$user, $output, $return_var);
+            v_exec($cmd, [$user], false);
             $_SESSION['error_msg'] = __('Cronjob email reporting has been successfully enabled');
-            unset($output);
             header("Location: /list/cron/");
             exit;
-            break;
         default: header("Location: /list/cron/"); exit;
     }
 } else {
@@ -44,31 +40,26 @@ if ($_SESSION['user'] == 'admin') {
         case 'delete': $cmd='v-delete-cron-job';
             break;
         case 'delete-cron-reports': $cmd='v-delete-cron-reports';
-            exec (VESTA_CMD.$cmd." ".$user, $output, $return_var);
+            v_exec($cmd, [$user], false);
             $_SESSION['error_msg'] = __('Cronjob email reporting has been successfully diabled');
-            unset($output);
             header("Location: /list/cron/");
             exit;
-            break;
         case 'add-cron-reports': $cmd='v-add-cron-reports';
-            exec (VESTA_CMD.$cmd." ".$user, $output, $return_var);
+            v_exec($cmd, [$user], false);
             $_SESSION['error_msg'] = __('Cronjob email reporting has been successfully enabled');
-            unset($output);
             header("Location: /list/cron/");
             exit;
-            break;
         default: header("Location: /list/cron/"); exit;
     }
 }
 
 foreach ($job as $value) {
-    $value = escapeshellarg($value);
-    exec (VESTA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
+    v_exec($cmd, [$user, $value, 'no'], false);
     $restart = 'yes';
 }
 
 if (!empty($restart)) {
-    exec (VESTA_CMD."v-restart-cron", $output, $return_var);
+    v_exec('v-restart-cron', [], false);
 }
 
 header("Location: /list/cron/");

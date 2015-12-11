@@ -12,11 +12,10 @@ include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 top_panel($user,$TAB);
 
 // Data
-exec (VESTA_CMD."v-list-user-log $user json", $output, $return_var);
+$return_var = v_exec('v-list-user-log', [$user, 'json'], false, $output);
 check_error($return_var);
-$data = json_decode(implode('', $output), true);
+$data = json_decode($output, true);
 $data = array_reverse($data);
-unset($output);
 
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_log.html');
 

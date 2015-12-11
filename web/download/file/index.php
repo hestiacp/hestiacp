@@ -8,7 +8,7 @@ if ((!isset($_SESSION['FILEMANAGER_KEY'])) || (empty($_SESSION['FILEMANAGER_KEY'
 
 $user = $_SESSION['user'];
 if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
-    $user=$_SESSION['look'];
+    $user = $_SESSION['look'];
 }
 
 if (!empty($_REQUEST['path'])) {
@@ -16,10 +16,10 @@ if (!empty($_REQUEST['path'])) {
     header("Content-type: application/octet-stream");
     header("Content-Transfer-Encoding: binary");
     header("Content-disposition: attachment;filename=".basename($path));
-    passthru (VESTA_CMD . "v-open-fs-file " . $user . " " . escapeshellarg($path));
+    // TODO: Implement `v_passthru`?
+    passthru(VESTA_CMD.'v-open-fs-file '.build_shell_args([$user, $path]));
     exit;
-}
-else {
+} else {
     die('File not found');
 }
 

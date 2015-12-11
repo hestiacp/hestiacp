@@ -2,6 +2,7 @@
 
 //session_start();
 
+require_once(__DIR__.'/../inc/exec.php');
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check login_as feature
@@ -1104,9 +1105,7 @@ class UploadHandler
                 } else {
                     chmod($uploaded_file, 0644);
                     //move_uploaded_file($uploaded_file, $file_path);
-                    exec (VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} {$file_path}", $output, $return_var);
-
-                    $error = check_return_code($return_var, $output);
+                    $return_var = v_exec('v-copy-fs-file', [USERNAME, $uploaded_file, $file_path]);
                     if ($return_var != 0) {
                         //var_dump(VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}");
                         //var_dump($path);

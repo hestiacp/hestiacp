@@ -10,13 +10,12 @@ include($_SERVER['DOCUMENT_ROOT']."/file_manager/fm_core.php");
 
 // todo: set in session?
 if (empty($panel)) {
-    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
-    exec ($command, $output, $return_var);
-    if ( $return_var > 0 ) {
+    $return_var = v_exec('v-list-user', [$user, 'json'], false, $output);
+    if ($return_var > 0) {
         header("Location: /error/");
         exit;
     }
-    $panel = json_decode(implode('', $output), true);
+    $panel = json_decode($output, true);
 }
 
 $fm = new FileManager($user);
@@ -31,27 +30,23 @@ switch ($_REQUEST['action']) {
         break;
     case 'check_file_type':
         $dir = $_REQUEST['dir'];
-        
         print json_encode($fm->checkFileType($dir));
         break;
     case 'rename_file':
         $dir = $_REQUEST['dir'];
         $item = $_REQUEST['item'];
         $target_name = $_REQUEST['target_name'];
-
         print json_encode($fm->renameFile($dir, $item, $target_name));
         break;
     case 'rename_directory':
         $dir = $_REQUEST['dir'];
         $item = $_REQUEST['item'];
         $target_name = $_REQUEST['target_name'];
-
         print json_encode($fm->renameDirectory($dir, $item, $target_name));
         break;
     case 'delete_files':
         $dir = $_REQUEST['dir'];
         $item = $_REQUEST['item'];
-
         print json_encode($fm->deleteItem($dir, $item));
         break;
     case 'create_file':
@@ -64,7 +59,6 @@ switch ($_REQUEST['action']) {
         $dirname = $_REQUEST['dirname'];
         print json_encode($fm->createDir($dir, $dirname));
         break;
-    
     case 'open_file':
         $dir = $_REQUEST['dir'];
         print json_encode($fm->open_file($dir));

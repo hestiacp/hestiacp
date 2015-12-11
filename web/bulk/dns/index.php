@@ -9,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
     header('location: /login/');
-    exit();
+    exit;
 }
 
 $domain = $_POST['domain'];
@@ -58,25 +58,22 @@ if ($_SESSION['user'] == 'admin') {
 if (empty($record)) {
     foreach ($domain as $value) {
         // DNS
-        $value = escapeshellarg($value);
-        exec (VESTA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
+        v_exec($cmd, [$user, $value, 'no'], false);
         $restart = 'yes';
     }
 } else {
     foreach ($record as $value) {
         // DNS Record
-        $value = escapeshellarg($value);
-        $dom = escapeshellarg($domain);
-        exec (VESTA_CMD.$cmd." ".$user." ".$dom." ".$value." no", $output, $return_var);
+        v_exec($cmd, [$user, $domain, $value, 'no'], false);
         $restart = 'yes';
     }
 }
 
 if (!empty($restart)) {
-    exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+    v_exec('v-restart-dns', [], false);
 }
 
-if (empty($record)) { 
+if (empty($record)) {
     header("Location: /list/dns/");
     exit;
 } else {

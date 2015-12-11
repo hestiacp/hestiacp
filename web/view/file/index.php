@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
@@ -16,11 +16,11 @@ if (!empty($_REQUEST['path'])) {
     $path = $_REQUEST['path'];
     if (!empty($_REQUEST['raw'])) {
         header('content-type: image/jpeg');
-        passthru (VESTA_CMD . "v-open-fs-file " . $user . " " . escapeshellarg($_REQUEST['path']));
+        // TODO: Implement `v_passthru`?
+        passthru(VESTA_CMD.'v-open-fs-file '.build_shell_args([$user, $_REQUEST['path']]));
         exit;
     }
-}
-else {
+} else {
     die('File not found');
 }
 

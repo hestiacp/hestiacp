@@ -22,7 +22,7 @@
 
     <div class="l-center">
       <?php
-        $back = getenv("HTTP_REFERER");
+        $back = getenv('HTTP_REFERER');
         if (empty($back)) {
           $back = "location.href='/list/package/'";
         } else {

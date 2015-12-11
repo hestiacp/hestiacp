@@ -28,8 +28,8 @@ $lang = 'ru_RU.utf8';
 //setlocale(LC_ALL, $lang);
 
 // Data
+$q = escapeshellarg($q);
 if ($_SESSION['user'] == 'admin') {
-    $q = escapeshellarg($q);
     exec (VESTA_CMD."v-search-object ".$q." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_search.html');

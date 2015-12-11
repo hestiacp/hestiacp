@@ -876,7 +876,7 @@ fi
 
 if [ "$phpfpm" = 'yes' ]; then
     wget $vestacp/php-fpm/www.conf -O /etc/php-fpm.d/www.conf
-    chkconfig nginx on
+    chkconfig php-fpm on
     service php-fpm start
     check_result $? "php-fpm start failed"
 fi

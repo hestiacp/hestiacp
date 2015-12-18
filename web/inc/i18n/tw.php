@@ -301,6 +301,7 @@ $LANG['tw'] = array(
     'web domains'  => '網站網域',
     'web aliases'  => '網站次網域',
     'dns records'  => 'DNS記錄',
+    'DNS Domains' => 'DNS網域',
     'mail domains'  => '信箱網域',
     'mail accounts'  => '信箱帳號',
     'accounts'  => '帳號',

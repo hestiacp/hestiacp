@@ -273,6 +273,7 @@ $LANG['tw'] = array(
     'Statistics Auth'  => '統計驗證',
     'Account'  => '帳號',
     'Prefix will be automaticaly added to username'  => '前綴 %s 將會自動加到使用者名稱',
+    'Path' => '路徑',
     'Send FTP credentials to email'  => '將FTP登入資料傳送到使用者信箱',
     'Expiration Date'  => '到期日期',
     'YYYY-MM-DD'  => 'YYYY-MM-DD',

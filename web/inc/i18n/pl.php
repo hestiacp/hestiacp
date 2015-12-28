@@ -588,15 +588,15 @@ $LANG['pl'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'skróty klawiszowe są zainspirowane wspaniałym managerem plików GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
 
-    'Licence Key' => 'Licence Key',
-    'Enter License Key' => 'Enter License Key',
-    'Buy Licence' => 'Buy Licence',
-    'Buy Lifetime License' => 'Buy Lifetime License',
-    'Disable and Cancel Licence' => 'Disable and Cancel Licence',
-    'Licence Activated' => 'Licence Activated',
-    'Licence Deactivated' => 'Licence Deactivated',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restrict users so that they cannot use SSH and access only their home directory.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'This is a commercial module, you would need to purchace license key to enable it.'
+    'Licence Key' => 'Klucz licencyjny',
+    'Enter License Key' => 'Wpisz klucz licencyjny',
+    'Buy Licence' => 'Kup licencję',
+    'Buy Lifetime License' => 'Kup wieczystą licencję',
+    'Disable and Cancel Licence' => 'Wyłącz i anuluj licencję',
+    'Licence Activated' => 'Aktywowano licencję',
+    'Licence Deactivated' => 'Zdezaktywowano licencję',
+    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Daj użytkownikowi dostęp tylko do jego katalogu domowego przez SSH.',
+    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Przeglądaj, kopiuj, edytuj i zarządzaj wszystkimi plikami należącymi do twojej domeny przy użyciu kompletnego Menedżera Plików.',
+    'This is a commercial module, you would need to purchace license key to enable it.' => 'To jest moduł komercyjny. Żeby go aktywować trzeba zakupić klucz licencyjny.'
 
 );

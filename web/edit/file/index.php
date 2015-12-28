@@ -74,7 +74,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
 <input type="submit" name="save" value="Save" class="save" />
 
 
-<textarea name="contents" class="editor" id="editor" rows="4" style="display:none;width: 100%; height: 100%;"><?php echo $content ?></textarea>
+<textarea name="contents" class="editor" id="editor" rows="4" style="display:none;width: 100%; height: 100%;"><?=htmlentities($content)?></textarea>
 
 </form>
 

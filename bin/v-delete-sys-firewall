@@ -1,0 +1,48 @@
+#!/bin/bash
+# info: delete system firewall
+# options: NONE
+#
+# The script disables firewall support
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+if [ -z "$FIREWALL_SYSTEM" ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Stopping firewall
+$BIN/v-stop-firewall
+
+# Updating FIREWALL_SYSTEM value
+if [ -z "$(grep FIREWALL_SYSTEM $VESTA/conf/vesta.conf)" ]; then
+    echo "FIREWALL_SYSTEM=''" >> $VESTA/conf/vesta.conf
+else
+    sed -i "s/FIREWALL_SYSTEM=.*/FIREWALL_SYSTEM=''/g" $VESTA/conf/vesta.conf
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

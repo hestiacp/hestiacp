@@ -1,0 +1,124 @@
+#!/bin/bash
+# info: deleting user favourites
+# options: USER SYSTEM OBJECT
+#
+# The function deletes object from users favourites
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+system=$(echo "$2" |tr '[:lower:]' '[:upper:]')
+object=$3
+email=$3
+id=$3
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER SYSTEM OBJECT'
+case $system in 
+    MAIL_ACC)   validate_format 'email' ;;
+    CRON)       validate_format 'id' ;;
+    DNS_REC)    validate_format 'id' ;;
+    *)          validate_format 'object'
+esac
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Checking system
+case $system in
+    USER)       check='ok' ;;
+    WEB)        check='ok' ;;
+    DNS)        check='ok' ;;
+    DNS_REC)    check='ok' ;;
+    MAIL)       check='ok' ;;
+    MAIL_ACC)   check='ok' ;;
+    DB)         check='ok' ;;
+    CRON)       check='ok' ;;
+    BACKUP)     check='ok' ;;
+    IP)         check='ok' ;;
+    PACKAGE)    check='ok' ;;
+    FIREWALL)   check='ok' ;;
+    *)      check_args '2' '0' 'USER SYSTEM OBJECT'
+esac
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Flushing vars
+USER=''
+WEB=''
+DNS=''
+DNS_REC=''
+MAIL=''
+MAIL_ACC=''
+DB=''
+CRON=''
+BACKUP=''
+IP=''
+PACKAGE=''
+FIREWALL=''
+
+# Creating config just in case
+touch $USER_DATA/favourites.conf
+
+# Reading current values
+source $USER_DATA/favourites.conf
+
+# Assigning current system value
+eval value=\$$system
+
+# Checking if object is new
+check_fav=$(echo "$value" |tr ',' '\n'| grep "^$object$")
+if [ -z "$check_fav" ]; then
+    exit 0
+fi
+
+# Deleting object from favorites
+value=$(echo "$value" |\
+    sed -e "s/,/\n/g"|\
+    sed -e "s/^$object$//g"|\
+    sed -e "/^$/d"|\
+    sed -e ':a;N;$!ba;s/\n/,/g')
+
+# Updating sytem
+eval $system=$value
+
+# Updating user favorites
+echo "USER='$USER'
+WEB='$WEB'
+DNS='$DNS'
+DNS_REC='$DNS_REC'
+MAIL='$MAIL'
+MAIL_ACC='$MAIL_ACC'
+DB='$DB'
+CRON='$CRON'
+BACKUP='$BACKUP'
+IP='$IP'
+PACKAGE='$PACKAGE'
+FIREWALL='$FIREWALL'" > $USER_DATA/favourites.conf
+
+# Changing file permission
+chmod 640 $USER_DATA/favourites.conf
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_history "deleted starred $object from $system listing"
+log_event "$OK" "$EVENT"
+
+exit

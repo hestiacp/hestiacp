@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns domain
-# options: USER DOMAIN IP [NS1] [NS2] [NS3] [NS4] [RESTART]
+# options: USER DOMAIN IP [NS1] [NS2] [NS3] [..] [NS8] [RESTART]
 #
 # The function adds DNS zone with records defined in the template. If the exp
 # argument isn't stated, the expiration date value will be set to next year.
@@ -13,7 +13,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
@@ -24,7 +24,11 @@ ns1=$4
 ns2=$5
 ns3=$6
 ns4=$7
-restart=$8
+ns5=$8
+ns6=$9
+ns7=${10}
+ns8=${11}
+restart=${12}
 
 # Includes
 source $VESTA/func/main.sh
@@ -36,14 +40,13 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN IP [NS1] [NS2] [NS3] [NS4]'
+check_args '3' "$#" 'USER DOMAIN IP [NS1] [NS2] [NS3] [..] [NS8] [RESTART]'
 validate_format 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_domain_new 'dns'
 is_package_full 'DNS_DOMAINS'
-
 template=$(get_user_value '$DNS_TEMPLATE')
 is_dns_template_valid
 
@@ -64,6 +67,23 @@ if [ ! -z "$ns4" ]; then
     ns4=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
     validate_format 'ns4'
 fi
+if [ ! -z "$ns5" ]; then
+    ns5=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns5'
+fi
+if [ ! -z "$ns6" ]; then
+    ns6=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns6'
+fi
+if [ ! -z "$ns7" ]; then
+    ns7=$(echo ${10} | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns7'
+fi
+
+if [ ! -z "$ns8" ]; then
+    ns8=$(echo ${11} | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns8'
+fi
 
 
 #----------------------------------------------------------#
@@ -81,6 +101,7 @@ if [ -z $ns2 ]; then
 fi
 soa="$ns1"
 exp=$(date +%F -d "+ 1 year")
+serial=$(date +'%Y%m%d01')
 ttl=14400
 
 # Reading template
@@ -88,13 +109,25 @@ template_data=$(cat $DNSTPL/$template.tpl)
 
 # Deleting unused nameservers
 if [ -z "$ns3" ]; then
-    template_data=$(echo "$template_data" | grep -v %ns3%)
+    template_data=$(echo "$template_data" |grep -v %ns3%)
 fi
 if [ -z "$ns4" ]; then
-    template_data=$(echo "$template_data" | grep -v %ns4%)
+    template_data=$(echo "$template_data" |grep -v %ns4%)
+fi
+if [ -z "$ns5" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns5%)
+fi
+if [ -z "$ns6" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns6%)
+fi
+if [ -z "$ns7" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns7%)
+fi
+if [ -z "$ns8" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns8%)
 fi
 
-# Add dns zone to the user config
+# Adding dns zone to the user config
 echo "$template_data" |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
@@ -103,6 +136,10 @@ echo "$template_data" |\
         -e "s/%ns2%/$ns2/g" \
         -e "s/%ns3%/$ns3/g" \
         -e "s/%ns4%/$ns4/g" \
+        -e "s/%ns5%/$ns5/g" \
+        -e "s/%ns6%/$ns6/g" \
+        -e "s/%ns7%/$ns7/g" \
+        -e "s/%ns8%/$ns8/g" \
         -e "s/%time%/$TIME/g" \
         -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
 
@@ -111,13 +148,13 @@ records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
 
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
-dns_rec="$dns_rec SOA='$soa' RECORDS='$records' SUSPENDED='no' TIME='$TIME'"
-dns_rec="$dns_rec DATE='$DATE'"
+dns_rec="$dns_rec SOA='$soa' SERIAL='$serial' SRC='' RECORDS='$records'"
+dns_rec="$dns_rec SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
 
 echo "$dns_rec" >> $USER_DATA/dns.conf
 chmod 660 $USER_DATA/dns.conf
 
-# Create system configs
+# Creating system configs
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
     if [ -e '/etc/named.conf' ]; then
         dns_conf='/etc/named.conf'
@@ -135,14 +172,14 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
     # Updating domain dns zone
     update_domain_zone
 
-    # Set permissions
-    chmod 640 $conf
-    chown root:$dns_group $conf
+    # Changing permissions
+    chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
+    chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db
 fi
 
 # Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
-    cmd="$BIN/v-add-remote-dns-domain $user $domain no"
+    cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
     echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
 fi
 
@@ -158,9 +195,7 @@ increase_user_value "$user" '$U_DNS_RECORDS' "$records"
 # Restart named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "DNS restart failed"
 fi
 
 # Logging

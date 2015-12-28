@@ -2,7 +2,7 @@
 # info: delete user
 # options: USER
 #
-# This function deletes a certain user and all his resourses such as domains,
+# This function deletes a certain user and all his resources such as domains,
 # databases, cron jobs, etc.
 
 
@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 restart=$2
 

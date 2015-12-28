@@ -1,0 +1,75 @@
+#!/bin/bash
+# info: list dns status
+# options: [FORMAT]
+#
+# The function lists dns server status
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+#format=${1-shell}
+
+# Includes
+#source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking dns system
+if [ -z "$DNS_SYSTEM" ]; then
+    exit
+fi
+
+# Checking statistics-file on RHEL/CentOS
+if [ -e "/etc/named/named.conf" ]; then
+    conf="/etc/named/named.conf"
+    dump_file='/var/named/data/named_stats.txt'
+    dump_option="    dump-file           \"$dump_file\";"
+    opt_check=$(grep $dump_file $conf |grep -v //)
+    if [ -z "$opt_check" ]; then
+        sed -i "s|options {|options {\n$dump_option|" $conf
+        service named restart >/dev/null 2>&1
+    fi
+fi
+if [ -e "/etc/named.conf" ]; then
+    conf="/etc/named.conf"
+    dump_file='/var/named/data/named_stats.txt'
+    dump_option="    dump-file           \"$dump_file\";"
+    opt_check=$(grep $dump_file $conf |grep -v //)
+    if [ -z "$opt_check" ]; then
+        sed -i "s|options {|options {\n$dump_option|" $conf
+        service named restart >/dev/null 2>&1
+    fi
+fi
+
+# Checking statistics-file on Debian/Ubuntu
+if [ -e "/etc/bind/named.conf" ]; then
+    conf="/etc/bind/named.conf.options"
+    dump_file='/var/cache/bind/named.stats'
+    #dump_option="    dump-file           \"$dump_file\";"
+    #opt_check=$(grep $dump_file $conf |grep -v //)
+    #if [ -z "$opt_check" ]; then
+    #    sed -i "s|options {|options {\n$dump_option|" $conf
+    #    service named restart >/dev/null 2>&1
+    #fi
+fi
+
+# Generating dns stats
+rm -f $dump_file 2>/dev/null
+/usr/sbin/rndc stats 2>/dev/null
+
+# Displaying dns status
+if [ -e "$dump_file" ]; then
+    cat $dump_file
+fi
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 id=$3
@@ -27,79 +27,53 @@ source $VESTA/conf/vesta.conf
 check_args '3' "$#" 'USER DOMAIN ID'
 validate_format 'user' 'domain' 'id'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
-
 if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
-    echo "Error: dns-cluster.conf doesn't exist"
-    log_event "$E_NOTEXIST $EVENT"
-    exit $E_NOTEXIST
+    check_result $E_NOTEXIST "dns-cluster.conf doesn't exist"
 fi
-
-number_of_proc=$(ps auxf | grep -v grep | grep $VESTA/bin/$SCRIPT | wc -l)
-if [ "$number_of_proc" -gt 2 ]; then
-    echo "Error: another sync process already exists"
-    log_event "$E_EXISTS $EVENT"
-    exit $E_EXISTS
+if [ "$(ps auxf |grep -v grep |grep $BIN/$SCRIPT |wc -l)" -gt 2 ]; then
+    check_result $E_EXISTS "another sync process already running"
 fi
+remote_dns_health_check
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-old_ifs="$IFS"
-IFS=$'\n'
 
 # Starting cluster loop
-for cluster_str in $(cat $VESTA/conf/dns-cluster.conf); do
+IFS=$'\n'
+for cluster in $(cat $VESTA/conf/dns-cluster.conf); do
 
-    # Get host values
-    eval $cluster_str
+    # Parsing remote host parameters
+    eval $cluster
 
-    # Check connection type
-    if [ -z "TYPE" ]; then
-        TYPE='api'
-    fi
-
-    # Switch on connection type
-    case $TYPE in
-        ssh) send_cmd="send_ssh_cmd" ;;
-        *)  send_cmd="send_api_cmd" ;;
-    esac
-
-    # Check host connection
-    $send_cmd v-list-sys-config
-    if [ $? -ne 0 ]; then
-        echo "Error: $TYPE connection to $HOST failed"
-        log_event "$E_CONNECT $EVENT"
-        exit $E_CONNECT
-    fi
-
-    # Check recipient dns user
-    if [ -z "$DNS_USER" ]; then
-        DNS_USER='dns-cluster'
-    fi
-    $send_cmd v-list-user $DNS_USER
-    if [ $? -ne 0 ]; then
-        echo "Error: dns user $DNS_USER doesn't exist"
-        log_event "$E_NOTEXIST $EVENT"
-        exit $E_NOTEXIST
-    fi
+    # Syncing serial
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+    cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'domain' 'no'
+    check_result $? "$HOST connection failed (soa sync)" $E_CONNECT
 
     # Sync domain
-    $send_cmd v-delete-dns-record $DNS_USER $domain $id 'scheduled'
+    cluster_cmd v-delete-dns-record $DNS_USER $domain $id 'no'
+    #check_result $? "$HOST connection failed (delete)" $E_CONNECT
+
+    # Rebuilding dns zone
+    cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
+    check_result $? "$HOST connection failed (rebuild)" $E_CONNECT
 
 done
 
-# Update pipe
-pipe="$VESTA/data/queue/dns-cluster.pipe"
-str=$(grep -n "$SCRIPT $1 $2 $3$" $pipe | cut -f1 -d: | head -n1)
-if [ ! -z "$str" ]; then
-    sed -i "$str d"  $pipe
-fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Updating pipe
+pipe="$VESTA/data/queue/dns-cluster.pipe"
+str=$(grep -n "$SCRIPT $1 $2 $3$" $pipe | cut -f1 -d: | head -n1)
+if [ ! -z "$str" ]; then
+    sed -i "$str d"  $pipe
+fi
 
 exit

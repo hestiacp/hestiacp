@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: unuspend sys cron
+# info: unsuspend sys cron
 # options: USER [RESTART]
 #
 # The function unsuspends all suspended cron jobs.
@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 restart=$2
 
@@ -41,12 +41,10 @@ done
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart crond
+# Restarting crond
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-cron
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Cron restart failed" >/dev/null
 fi
 
 # Logging

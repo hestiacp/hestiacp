@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 data_file=$3
@@ -47,12 +47,10 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart named
+# Restarting named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Bind restart failed" >/dev/null
 fi
 
 # Logging

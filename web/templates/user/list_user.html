@@ -7,6 +7,13 @@
             echo '<a class="l-sort__create-btn" href="/add/web/" title="'.str_replace(' ', '&nbsp;', __('Add Web Domain')).'"></a>';
           }
         ?>
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Username')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=__('Bandwidth')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -22,7 +29,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
                 <form action="/bulk/user/" method="post" id="objects">
@@ -37,8 +44,6 @@
                       <option value="rebuild db"><?=__('rebuild db')?></option>
                       <option value="rebuild cron"><?=__('rebuild cron')?></option>
                       <option value="update counters"><?=__('update counters')?></option>
-                      <option value="suspend"><?= __('suspend')?></option>
-                      <option value="unsuspend"><?=__('unsuspend')?></option>
                       <option value="delete"><?=__('delete')?></option>
                     </select>
                   </div>
@@ -59,7 +64,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -74,7 +79,9 @@
           }
       ?>
 
-      <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; ?>">
+      <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended';  if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="user" 
+sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" 
+sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<?if($_SESSION['favourites']['USER'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
@@ -86,7 +93,7 @@
             <?
               if ($key == $user) {
             ?>
-                <div class="actions-panel__col actions-panel__loginas"><a href="/logout""><?=__('logout')?> <i></i></a></div>
+                <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/logout""><?=__('logout')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
               <?
                 if (!empty($_SESSION['look_alert'])) {
               ?>
@@ -110,19 +117,10 @@
                     unset($_SESSION['look_alert']);
                 }
               } else { ?>
-                <div class="actions-panel__col actions-panel__loginas"><a href="/login/?loginas=<?=$key?>""><?=__('login as')?> <i></i></a></div>
+                <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/login/?loginas=<?=$key?>""><?=__('login as')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
               <?}?>
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/user/?user=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-              </div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -130,6 +128,7 @@
                     <p class="confirmation"><?=__('DELETE_USER_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
             </div>
             <!-- /.actiona-panel -->
@@ -143,6 +142,9 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -328,7 +330,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!--div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 

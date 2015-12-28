@@ -1,6 +1,11 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <a href="/add/cron/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add Cron Job'))?>"></a>
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Command')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -26,7 +31,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td class="step-right">
                 <form action="/bulk/cron/" method="post" id="objects">
@@ -59,7 +64,7 @@
 
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?
         foreach ($data as $key => $value) {
           ++$i;
@@ -74,8 +79,9 @@
           }
       ?>
 
-
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['CRON'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="cron" 
+sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>" 
+sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo '0';  ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
@@ -84,8 +90,8 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                 <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
                   <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
                   <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
@@ -93,8 +99,9 @@
                     <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut">&nbsp;S</span>
               </div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
@@ -102,6 +109,7 @@
                     <p class="confirmation"><?=__('DELETE_CRON_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
 
 
@@ -117,6 +125,9 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?=__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -140,7 +151,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!--div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 
@@ -151,6 +162,7 @@
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit-ft">
+          <table class='data'></table>
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php

@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 restart=$2
 
@@ -41,14 +41,6 @@ done
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Restart dns server
-#if [ "$restart" != 'no' ]; then
-#    $BIN/v-restart-dns
-#    if [ $? -ne 0 ]; then
-#        exit $E_RESTART
-#    fi
-#fi
 
 # Logging
 log_event "$OK" "$EVENT"

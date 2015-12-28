@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: rebuild dns domain
-# options: USER DOMAIN [RESTART]
+# options: USER DOMAIN [RESTART] [UPDATE_SERIAL]
 #
 # The function rebuilds DNS configuration files.
 
@@ -9,10 +9,11 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 restart=$3
+update_serial=$4
 
 # Includes
 source $VESTA/func/main.sh
@@ -25,7 +26,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [RESTART] [UPDATE_SERIAL]'
 validate_format 'user' 'domain'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -59,10 +60,15 @@ if [ -e '/etc/bind/named.conf' ]; then
     dns_conf='/etc/bind/named.conf'
 fi
 
-# Remove old user's zone
+# Deleting old user's zone
 sed -i "/\/$user\/conf\/dns\/$domain/d" $dns_conf
 
-# Starting loop
+# Updating zone serial
+if [ "$update_serial" != 'no' ]; then
+    update_domain_serial
+fi
+
+# Rebuiling zone config
 rebuild_dns_domain_conf
 
 
@@ -75,12 +81,10 @@ update_user_value "$user" '$U_DNS_DOMAINS' "$user_domains"
 update_user_value "$user" '$U_DNS_RECORDS' "$user_records"
 update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
 
-# Restart named
+# Restarting named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns "$restart"
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Bind restart failed" >/dev/null
 fi
 
 # Logging

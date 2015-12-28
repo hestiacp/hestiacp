@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 job=$2
 min=$3
@@ -64,11 +64,9 @@ sync_cron_jobs
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart crond
+# Restarting crond
 $BIN/v-restart-cron
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+check_result $? "Cron restart failed" >/dev/null
 
 # Logging
 log_history "changed cron job $job"

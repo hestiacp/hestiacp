@@ -29,8 +29,10 @@
           $back = "location.href='".$back."'";
         }
       ?>
+
         <form id="vstobjects" name="v_add_web" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="ok" value="Add" />
             <script type="text/javascript">
                 $(function() {
                     $("#v_domain").change(function() {

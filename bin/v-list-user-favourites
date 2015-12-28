@@ -1,0 +1,105 @@
+#!/bin/bash
+# info: list user favourites
+# options: USER [FORMAT]
+#
+# The function for getting the list of favourite user objects
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+format=${2-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# Json function
+json_list_favourites() {
+    i=1
+    fileds_count=$(echo "$fields" | wc -w)
+    fvrt_data=$(cat $USER_DATA/favourites.conf 2>/dev/null)
+    echo '{'
+    eval $fvrt_data
+    for field in $fields; do
+        eval value=$field
+        if [ $i -eq 1 ]; then
+            echo -e "\t\"$value\": {"
+        else
+            if [ $fileds_count -eq $i ]; then
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
+            else
+                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
+            fi
+        fi
+    (( ++i))
+    done
+    #if [ -n "$value" ]; then
+        echo -e '        }'
+    #fi
+    echo -e '}'
+}
+
+# Shell function
+shell_list_favourites() {
+    line=$(cat $USER_DATA/favourites.conf 2>/dev/null)
+    eval $line
+    for field in $fields; do
+        eval key="$field"
+        if [ -z "$key" ]; then
+            key='NULL'
+        fi
+        echo "${field//$/}: $key "
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking args
+check_args '1' "$#" 'USER [FORMAT]'
+validate_format 'user'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Flushing vars
+USER=''
+WEB=''
+DNS=''
+DNS_REC=''
+MAIL=''
+MAIL_ACC=''
+DB=''
+CRON=''
+BACKUP=''
+IP=''
+PACKAGE=''
+FIREWALL=''
+
+# Defining fileds to select
+OBJ='Favourites'
+fields='$OBJ $USER $WEB $DNS $DNS_REC $MAIL $MAIL_ACC $DB $CRON $BACKUP
+    $IP $PACKAGE $FIREWALL'
+
+# Listing favourites
+case $format in
+    json)   json_list_favourites ;;
+    plain)  shell_list_favourites ;;
+    shell)  shell_list_favourites | column -t ;;
+    *)      check_args '1' '0' 'USER [FORMAT]'
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

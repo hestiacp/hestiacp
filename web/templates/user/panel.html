@@ -1,5 +1,9 @@
+  <div class="hidden" id="token" token="<?=$_SESSION['token']?>"></div>
   <a href="#" class="to-top">
     <i class="l-icon-to-top"></i>
+  </a>
+  <a href="#" class="to-shortcuts">
+    <i class="l-icon-shortcuts"></i>
   </a>
   <div class="l-header">
     <div class="l-center">
@@ -8,6 +12,7 @@
       <div class="l-menu clearfix">
         <div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/"><?=__('Statistics')?></a></div>
         <div class="l-menu__item <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/log/"><?=__('Log')?></a></div>
+        <?php if ((isset($_SESSION['FILEMANAGER_KEY'])) && (!empty($_SESSION['FILEMANAGER_KEY']))) {?><div class="l-menu__item <?php if($TAB == 'FILEMANAGER' ) echo 'l-menu__item--active' ?>"><a href="/list/directory/"><?=__('File Manager')?></a></div><?php }?>
       </div>
       <!-- /.l-menu -->
 

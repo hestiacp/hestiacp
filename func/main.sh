@@ -2,16 +2,6 @@
 DATE=$(date +%F)
 TIME=$(date +%T)
 SCRIPT=$(basename $0)
-A1=$1
-A2=$2
-A3=$3
-A4=$4
-A5=$5
-A6=$6
-A7=$7
-A8=$8
-A9=$9
-EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 HOMEDIR='/home'
 BACKUP='/backup'
 BACKUP_GZIP=5
@@ -51,6 +41,16 @@ E_RRD=18
 E_UPDATE=19
 E_RESTART=20
 
+# Event string for logger
+EVENT="$DATE $TIME $SCRIPT"
+for ((I=1; I <= $# ; I++)); do
+    if [[ "$HIDE" != $I ]]; then
+        EVENT="$EVENT '$(eval echo \$${I})'"
+    else
+        EVENT="$EVENT '******'"
+    fi
+done
+
 # Log event function
 log_event() {
     if [ "$1" -eq 0 ]; then
@@ -77,6 +77,20 @@ log_history() {
     curr_str=$(grep "ID=" $log | cut -f 2 -d \' | sort -n | tail -n1)
     id="$((curr_str +1))"
     echo "ID='$id' DATE='$DATE' TIME='$TIME' CMD='$cmd' UNDO='$undo'" >> $log
+}
+
+# Result checker
+check_result() {
+    if [ $1 -ne 0 ]; then
+        echo "Error: $2"
+        if [ ! -z "$3" ]; then
+            log_event $3 $EVENT
+            exit $3
+        else
+            log_event $1 $EVENT
+            exit $1
+        fi
+    fi
 }
 
 # Argument list checker
@@ -292,7 +306,7 @@ get_object_value() {
 
 # Update object value
 update_object_value() {
-    row=$(grep -n "$2='$3'" $USER_DATA/$1.conf)
+    row=$(grep -nF "$2='$3'" $USER_DATA/$1.conf)
     lnr=$(echo $row | cut -f 1 -d ':')
     object=$(echo $row | sed "s/^$lnr://")
     eval "$object"
@@ -327,7 +341,7 @@ search_objects() {
 
 # Get user value
 get_user_value() {
-    grep "^${1//$/}=" $USER_DATA/user.conf| cut -f 2 -d \'
+    grep "^${1//$/}=" $USER_DATA/user.conf |awk -F "'" '{print $2}'
 }
 
 # Update user value in user.conf
@@ -613,14 +627,7 @@ validate_format_ip_status() {
 
 # Email address
 validate_format_email() {
-    local_part=$(echo $1 | cut  -s -f1 -d\@)
-    remote_host=$(echo $1 | cut -s -f2 -d\@)
-    mx_failed=1
-    if [ ! -z "$remote_host" ] && [ ! -z "$local_part" ]; then
-        /usr/bin/host -t mx "$remote_host" &> /dev/null
-        mx_failed="$?"
-    fi
-    if [ "$mx_failed" -eq 1 ]; then
+    if [[ ! "$1" =~ "@" ]] ; then
         echo "Error: email $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
@@ -677,7 +684,7 @@ validate_format_domain() {
 validate_format_domain_alias() {
     exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [[ "$1" =~ "^[0-9]+$" ]]; then
-        echo "Error: domain alias $1 is not valid"
+        echo "Error: $2 $1 is not valid"
         log_event "$E_INVALID" "$EVENT"
         exit $E_INVALID
     fi
@@ -923,6 +930,7 @@ validate_format(){
             ns2)            validate_format_domain "$arg" 'name_server';;
             ns3)            validate_format_domain "$arg" 'name_server';;
             ns4)            validate_format_domain "$arg" 'name_server';;
+            object)         validate_format_name_s "$arg" 'object';;
             package)        validate_format_name "$arg" "$arg_name" ;;
             password)       validate_format_password "$arg" ;;
             port)           validate_format_int "$arg" 'port' ;;

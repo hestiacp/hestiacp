@@ -1,7 +1,14 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <a href="/add/db/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add Database'))?>"></a>
-
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Database')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-user"><span class="name"><?=__('User')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-server"><span class="name"><?=__('Host')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -16,22 +23,22 @@
                 if ($data[$key]['TYPE'] == 'mysql'){
                   $mysql = 1;
 
-                  $db_admin_link = "http://".$http_host."/phpmyadmin/";
+                  $db_myadmin_link = "http://".$http_host."/phpmyadmin/";
                   if (!empty($_SESSION['DB_PMA_URL']))
-                    $db_admin_link = $_SESSION['DB_PMA_URL'];
+                    $db_myadmin_link = $_SESSION['DB_PMA_URL'];
                 }
                 if ($data[$key]['TYPE'] == 'pgsql'){
                   $pgsql = 1;
-                  $db_admin_link = "http://".$http_host."/phppgadmin/";
+                  $db_pgadmin_link = "http://".$http_host."/phppgadmin/";
                   if (!empty($_SESSION['DB_PGA_URL']))
-                    $db_admin_link = $_SESSION['DB_PGA_URL'];
+                    $db_pgadmin_link = $_SESSION['DB_PGA_URL'];
                 }
               }
               if($mysql){
-                echo '<td class="step-right"><a class="vst" href="'.$db_admin_link.'">phpMyAdmin</td>';
+                echo '<td class="step-right"><a class="vst" href="'.$db_myadmin_link.'" target="_blank">phpMyAdmin</td>';
               }
               if($pgsql){
-                echo '<td class="step-right"><a class="vst" href="'.$db_admin_link.'">phpPgAdmin</td>';
+                echo '<td class="step-right"><a class="vst" href="'.$db_pgadmin_link.'" target="_blank">phpPgAdmin</td>';
               }
             ?>
               <td class="l-sort-toolbar__search-box step-left">
@@ -46,7 +53,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
                 <form action="/bulk/db/" method="post" id="objects">
@@ -78,7 +85,7 @@
 
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         foreach ($data as $key => $value) {
@@ -102,7 +109,9 @@
       ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['DB'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="db" 
+sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" 
+sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-star="<? if($_SESSION['favourites']['DB'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
@@ -111,8 +120,8 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/db/?database=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                 <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
                   <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
                   <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -120,8 +129,9 @@
                     <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut">&nbsp;S</span>
               </div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -129,6 +139,7 @@
                     <p class="confirmation"><?=__('DELETE_DATABASE_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
             </div>
             <!-- /.actiona-panel -->
@@ -142,6 +153,9 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?=__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -170,7 +184,7 @@
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('User')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['DBUSER'])?></b>
+                      <b><?=$data[$key]['DBUSER']?></b>
                     </div>
                   </div>
                 </td>
@@ -209,7 +223,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 
@@ -220,6 +234,7 @@
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit-ft">
+          <table class='data'></table>
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php

@@ -31,6 +31,7 @@
       ?>
         <form id="vstobjects" name="v_edit_dns" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
             <table class='data'>
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -64,27 +65,6 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".htmlentities($v_ip);  ?>>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Template');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_template">
-                                        <?php
-                                            foreach ($templates as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                                $svalue = "'".$value."'";
-                                                if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
-                                                    echo ' selected' ;
-                                                }
-                                                echo ">".htmlentities($value)."</option>\n";
-                                            }
-                                        ?> 
-                                    </select>
                                 </td>
                             </tr>
                             <tr>

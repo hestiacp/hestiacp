@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=admin
 
 # Includes
@@ -34,7 +34,7 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Define time somewhere at nigth
+# Define time somewhere at night
 min=$(gen_password '012345' '2')
 hour=$(gen_password '1234567' '1')
 day='*'
@@ -66,11 +66,9 @@ sync_cron_jobs
 # Increasing cron value
 increase_user_value $user '$U_CRON_JOBS'
 
-# Restart crond
+# Restarting crond
 $BIN/v-restart-cron
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+check_result $? "Cron restart failed" >/dev/null
 
 # Logging
 log_history "added cron job $job"

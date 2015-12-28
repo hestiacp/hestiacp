@@ -1,4 +1,29 @@
 <?php
+
+//session_start();
+
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+
+// Check login_as feature
+$user = $_SESSION['user'];
+if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
+    $user=$_SESSION['look'];
+}
+
+
+define('USERNAME', $user);
+
+
+/*
+// Check user session
+if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
+    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
+    header("Location: /login/");
+    exit;
+}
+*/
+
+
 /*
  * jQuery File Upload Plugin PHP Class 8.1.0
  * https://github.com/blueimp/jQuery-File-Upload
@@ -84,7 +109,7 @@ class UploadHandler
             // The php.ini settings upload_max_filesize and post_max_size
             // take precedence over the following max_file_size setting:
             'max_file_size' => null,
-            'min_file_size' => 1,
+            'min_file_size' => null,
             // The maximum number of files for the upload directory:
             'max_number_of_files' => null,
             // Defines which files are handled as image files:
@@ -210,7 +235,7 @@ class UploadHandler
     protected function get_upload_path($file_name = null, $version = null) {
         $relocate_directory = $_GET['dir'];
         if (empty($relocate_directory)) {
-            $relocate_directory = '/home/admin/';
+            $relocate_directory = '/home/admin/'; // fallback dir
         }
         if ($relocate_directory[strlen($relocate_directory) -1] != '/') {
             $relocate_directory .= '/';
@@ -444,9 +469,19 @@ class UploadHandler
             1
         );
     }
+    
+    protected function sanitizeFileName($file) {
+        // (|\\?*<\":>+[]/')
+        // \|\\\?\*\<\"\'\:\>\+\[\]
+        $file = preg_replace("/'/", '', $file);
+
+        return $file;
+    }
 
     protected function get_unique_filename($file_path, $name, $size, $type, $error,
             $index, $content_range) {
+        $name = $this->sanitizeFileName($name);
+
         while(is_dir($this->get_upload_path($name))) {
             $name = $this->upcount_name($name);
         }
@@ -1041,7 +1076,9 @@ class UploadHandler
     }
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
-            $index = null, $content_range = null) {
+        $index = null, $content_range = null) {
+
+
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
@@ -1065,7 +1102,21 @@ class UploadHandler
                         FILE_APPEND
                     );
                 } else {
-                    move_uploaded_file($uploaded_file, $file_path);
+                    chmod($uploaded_file, 0644);
+                    //move_uploaded_file($uploaded_file, $file_path);
+                    exec (VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} {$file_path}", $output, $return_var);
+
+                    $error = check_return_code($return_var, $output);
+                    if ($return_var != 0) {
+                        //var_dump(VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}");
+                        //var_dump($path);
+                        //var_dump($output);
+                        $file->error = 'Error while saving file';
+                        /*var_dump(VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} {$file_path}");
+                        var_dump($return_var);
+                        var_dump($output);
+                        die();*/
+                    }
                 }
             } else {
                 // Non-multipart uploads (PUT method support)
@@ -1076,18 +1127,19 @@ class UploadHandler
                 );
             }
             $file_size = $this->get_file_size($file_path, $append_file);
-            //var_dump($file_size);die();
+
             if ($file_size === $file->size) {
                 $file->url = $this->get_download_url($file->name);
-                if ($this->is_valid_image_file($file_path)) {
-                    $this->handle_image_file($file_path, $file);
-                }
+                // uncomment if images also need to be resized
+                //if ($this->is_valid_image_file($file_path)) {
+                //    $this->handle_image_file($file_path, $file);
+                //}
             } else {
-                $file->size = $file_size;
-                if (!$content_range && $this->options['discard_aborted_uploads']) {
-                    unlink($file_path);
-                    $file->error = $this->get_error_message('abort');
-                }
+                //$file->size = $file_size;
+                //if (!$content_range && $this->options['discard_aborted_uploads']) {
+                //    unlink($file_path);
+                //    $file->error = $this->get_error_message('abort');
+                //}
             }
             $this->set_additional_file_properties($file);
         }
@@ -1113,7 +1165,7 @@ class UploadHandler
     protected function body($str) {
         echo $str;
     }
-    
+
     protected function header($str) {
         header($str);
     }

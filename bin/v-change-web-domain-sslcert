@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change domain ssl certificate
-# options: USER DOMAIN SSL_DIR
+# options: USER DOMAIN SSL_DIR [RESTART]
 #
 # The function changes SSL domain certificate and the key. If ca file present
 # it will be replaced as well.
@@ -10,11 +10,12 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ssl_dir=$3
+restart=$4
 
 # Includes
 source $VESTA/func/main.sh
@@ -26,7 +27,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN SSL_DIR'
+check_args '3' "$#" 'USER DOMAIN SSL_DIR [RESTART]'
 validate_format 'user' 'domain' 'ssl_dir'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -69,15 +70,15 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart web server
-$BIN/v-restart-web
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+# Restarting web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web
+    check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        check_result $? "Proxy restart failed" >/dev/null
+    fi
 fi
 
 # Logging

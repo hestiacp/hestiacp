@@ -44,7 +44,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?
         foreach ($data as $key => $value) {
           ++$i;
@@ -74,12 +74,12 @@
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <? if ($data[$key]['UPDATED'] == 'no') {
-                   echo '<div class="actions-panel__col actions-panel__update"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a></div>';
+                   echo '<div class="actions-panel__col actions-panel__update shortcut-u" key-action="href"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a><span class="shortcut">&nbsp;U</span></div>';
                  }
               ?>
-              <div class="actions-panel__col actions-panel__download"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('download')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__configure"><a href="/list/backup/?backup=<?=$key?>"><?=__('configure restore settings')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('download')?> <i></i></a><span class="shortcut">&nbsp;D</span></div>
+              <div class="actions-panel__col actions-panel__configure shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>"><?=__('configure restore settings')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -87,6 +87,7 @@
                     <p class="confirmation"><?=__('DELETE_BACKUP_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
             </div>
             <!-- /.actions-panel -->
@@ -142,7 +143,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div -->
       <!-- /.l-separator -->
       <? } ?>
 
@@ -154,6 +155,7 @@
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit-ft">
+          <table class='data'></table>
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php

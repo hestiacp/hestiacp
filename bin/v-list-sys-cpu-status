@@ -1,0 +1,42 @@
+#!/bin/bash
+# info: list system cpu info
+# options: [FORMAT]
+#
+# The function lists cpu information
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+#format=${1-shell}
+
+# Includes
+#source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Displaying top 30
+top -b -n1 | head -n 37
+echo -en "\n-------------------------------------"
+echo -en  "-------------------------------------\n\n"
+
+# Displaying process tree
+pstree -s
+echo -en "\n-------------------------------------"
+echo -en  "-------------------------------------\n\n"
+
+# Displaying CPU information
+grep 'model name' /proc/cpuinfo|cut -f 2 -d : | sed "s/ //"
+echo
+lscpu 2>/dev/null
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

@@ -9,8 +9,8 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system enviroment  as we run this script 
-# mostly by cron wich not read it by itself
+# Importing system environment  as we run this script
+# mostly by cron which not read it by itself
 source /etc/profile
 
 # Includes
@@ -21,6 +21,8 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+$BIN/v-check-vesta-license >/dev/null
 
 if [ -z "$BACKUP_SYSTEM" ]; then
     exit

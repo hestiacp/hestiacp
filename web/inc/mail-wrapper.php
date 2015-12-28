@@ -32,5 +32,3 @@ $mailtext = file_get_contents("php://stdin");
 if ((!empty($to)) && (!empty($subject))) {
     send_email($to,$subject,$mailtext,$from);
 }
-
-?>

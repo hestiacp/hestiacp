@@ -12,7 +12,7 @@
 # Import VESTA variable for cron launch
 source /etc/profile
 
-# Argument defenition
+# Argument definition
 user=$1
 backup=$2
 web=$3
@@ -649,7 +649,7 @@ if [ "$db" != 'no' ]; then
 
     # Create domain list
     db_list=$(tar -tf $BACKUP/$backup | grep "^./db" |\
-        grep db.conf | cut -f 3 -d '/')
+        grep db.conf | cut -f 3 -d '/' |sort -u)
     if [ ! -z "$db" ]; then
         db_include_list=$(mktemp)
         for db_include in ${db//,/ }; do

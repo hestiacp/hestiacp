@@ -1,7 +1,11 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <a href="/add/package/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add Package'))?>"></a>
-
+        <ul class="context-menu sort-order" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Package Name')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -17,7 +21,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
                 <form action="/bulk/package/" method="post" id="objects">
@@ -45,14 +49,16 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?php
         foreach ($data as $key => $value) {
            ++$i;
       ?>
 
 
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended';?>">
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo ' l-unit--starred'; ?>" 
+v_unit_id="<?=$key?>" v_section="package" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" 
+sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="package[]" value="<?php echo $key ?>">
@@ -61,8 +67,8 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/package/?package=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -70,6 +76,7 @@
                     <p class="confirmation"><?=__('DELETE_PACKAGE_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
 
             </div>
@@ -84,6 +91,9 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -254,7 +264,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 

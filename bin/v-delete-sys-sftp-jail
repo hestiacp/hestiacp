@@ -1,0 +1,89 @@
+#!/bin/bash
+# info: delete system sftp jail
+# options: NONE
+#
+# The script enables sftp jailed environment
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system environment  as we run this script
+# mostly by cron which do not read it by itself
+source /etc/profile
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+#if [ -z "$SFTPJAIL_KEY" ]; then
+#    exit
+#fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking users
+for user in $(grep "$HOMEDIR" /etc/passwd |cut -f 1 -d:); do
+    $BIN/v-delete-user-sftp-jail $user
+done
+
+# Checking sshd directives
+config='/etc/ssh/sshd_config'
+sftp_n=$(grep -n "Subsystem.*sftp" $config |grep -v internal |grep ":#")
+sftp_i=$(grep -n "Subsystem.*sftp" $config |grep internal |grep -v ":#")
+
+# Backing up config
+cp $config $config.bak-$(date +%s)
+
+# Enabling normal sftp
+if [ ! -z "$sftp_n" ]; then
+    fline=$(echo $sftp_n |cut -f 1 -d :)
+    sed -i "${fline}s/#Subsystem/Subsystem sftp/" $config
+    restart='yes'
+fi
+
+# Disabling jailed sftp
+if [ ! -z "$sftp_i" ]; then
+    fline=$(echo $sftp_i |cut -f 1 -d :)
+    lline=$((fline + 5))
+    sed -i "${fline},${lline}d" $config
+    restart='yes'
+fi
+
+# Validating opensshd config
+if [ "$restart" = 'yes' ]; then
+    subj="OpenSSH restart failed"
+    email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f 2 -d \')
+    send_mail="$VESTA/web/inc/mail-wrapper.php"
+    /usr/sbin/sshd -t >/dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+        mail_text="OpenSSH can not be restarted. Please check config:
+            \n\n$(/usr/sbin/sshd -t)"
+        echo -e "$mail_text" | $send_mail -s "$subj" $email
+    else
+        service ssh restart >/dev/null 2>&1
+        service sshd restart >/dev/null 2>&1
+    fi
+fi
+
+# Deleting v-add-sys-sftp-jail from startup
+sed -i "/v-add-sys-sftp-jail/d" /etc/rc.local 2>/dev/null
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$EVENT"
+
+exit

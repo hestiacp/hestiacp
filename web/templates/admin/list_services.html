@@ -12,6 +12,9 @@
                   <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
                 </form>
               </td>
+              <td class="step-right">
+                <a class="vst" href="/list/server/?cpu" target="_blank" > <?=__('show: CPU / MEM / NET / DISK');?> </a>
+              </td>
               <td class="toggle-all">
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
@@ -43,11 +46,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
-
-
-
-
+    <div class="l-center units">
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
@@ -57,7 +56,7 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__restart"><a href="/restart/service/?srv=<?php echo $sys['sysinfo']['HOSTNAME'] ?>"><?=__('restart')?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__restart shortcut-r" key-action="href"><a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>"><?=__('restart')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
             </div>
             <!-- /.actions-panel -->
           </div>
@@ -111,12 +110,6 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
-      <!-- /.l-separator -->
-
-
-
-
 
 
 
@@ -140,14 +133,14 @@
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" type="checkbox" name="service[]" value="<?php echo $key ?>">
+            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="service[]" value="<?php echo $key ?>">
             <label for="check<?php echo $i ?>" class="check-label"></label>
           </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__<?=$action?>"><a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__($action)?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__restart"><a href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('restart')?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__<?=$action?> shortcut-s" key-action="href"><a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__($action)?> <i></i></a><span class="shortcut">&nbsp;S</span></div>
+              <div class="actions-panel__col actions-panel__restart shortcut-r" key-action="href"><a href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('restart')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
             </div>
             <!-- /.actions-panel -->
           </div>
@@ -198,7 +191,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div -->
       <!-- /.l-separator -->
       <?}?>
 

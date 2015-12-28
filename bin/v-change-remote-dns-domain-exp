@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: change remote dns domain expiriation date
+# info: change remote dns domain expiration date
 # options: USER DOMAIN
 #
 # The function synchronize dns domain with the remote server.
@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 
@@ -28,79 +28,42 @@ validate_format 'user' 'domain'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
-
 if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
-    echo "Error: dns-cluster.conf doesn't exist"
-    log_event "$E_NOTEXIST $EVENT"
-    exit $E_NOTEXIST
+    check_result $E_NOTEXIST "dns-cluster.conf doesn't exist"
 fi
-
-number_of_proc=$(ps auxf | grep -v grep | grep $VESTA/bin/$SCRIPT | wc -l)
-if [ "$number_of_proc" -gt 2 ]; then
-    echo "Error: another sync process already exists"
-    log_event "$E_EXISTS $EVENT"
-    exit $E_EXISTS
+if [ "$(ps auxf |grep -v grep |grep $BIN/$SCRIPT |wc -l)" -gt 2 ]; then
+    check_result $E_EXISTS "another sync process already running"
 fi
+remote_dns_health_check
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-old_ifs="$IFS"
 IFS=$'\n'
+for cluster in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
 
-# Check remote dns nodes
-remote_dns_health_check
+    # Parsing remote host parameters
+    eval $cluster
 
-for cluster_str in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
-
-    # Get host values
-    eval $cluster_str
-
-    # Check connection type
-    if [ -z "TYPE" ]; then
-        TYPE='api'
-    fi
-
-    # Switch on connection type
-    case $TYPE in
-        ssh) send_cmd="send_ssh_cmd" ;;
-        *)  send_cmd="send_api_cmd" ;;
-    esac
-
-    # Check recipient dns user
-    if [ -z "$DNS_USER" ]; then
-        DNS_USER='dns-cluster'
-    fi
-
-    # Check dns exceptions
-    if [ -z "$DNS_CLUSTER_IGNORE" ]; then
-        DNS_CLUSTER_IGNORE='dns-cluster'
-    fi
-
-    # Sync domain
+    # Syncing domain
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    eval $str
-    $send_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'scheduled'
-    if [ $? -ne 0 ]; then
-        echo "Error: $TYPE connection to $HOST failed"
-        log_event "$E_CONNECT $EVENT"
-        exit $E_CONNECT
-    fi
+    cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'no'
+    check_result $? "$HOST connection failed (exp insert)" $E_CONNECT
 
 done
-
-# Update pipe
-pipe="$VESTA/data/queue/dns-cluster.pipe"
-str=$(grep -n "$SCRIPT $1 $2 $3$" $pipe | cut -f1 -d: | head -n1)
-if [ ! -z "$str" ]; then
-    sed -i "$str d"  $pipe
-fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Updating pipe
+pipe="$VESTA/data/queue/dns-cluster.pipe"
+str=$(grep -n "$SCRIPT $1 $2 $3$" $pipe | cut -f1 -d: | head -n1)
+if [ ! -z "$str" ]; then
+    sed -i "$str d"  $pipe
+fi
 
 exit

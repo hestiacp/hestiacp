@@ -12,7 +12,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 
@@ -40,7 +40,7 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS_USER'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Definining statistic dir
+# Defining statistic dir
 rm -f $HOMEDIR/$user/web/$domain/stats/.htpasswd
 rm -f $HOMEDIR/$user/web/$domain/stats/.htaccess
 

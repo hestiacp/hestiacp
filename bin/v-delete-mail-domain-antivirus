@@ -2,14 +2,14 @@
 # info: delete mail domain antivirus support
 # options: USER DOMAIN
 #
-# The function disables clamav scan for incomming emails.
+# The function disables clamav scan for incoming emails.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')

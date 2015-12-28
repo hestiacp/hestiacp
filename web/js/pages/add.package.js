@@ -1,7 +1,7 @@
 App.Actions.PACKAGE.enable_unlimited = function(elm, source_elm) {
     $(elm).data('checked', true);
     $(elm).data('prev_value', $(elm).val()); // save prev value in order to restore if needed
-    $(elm).val(App.Constants.UNLIM_VALUE);
+    $(elm).val(App.Constants.UNLIM_TRANSLATED_VALUE);
     $(elm).attr('disabled', true);
     $(source_elm).css('opacity', '1');
 }
@@ -70,6 +70,9 @@ App.Listeners.PACKAGE.checkbox_unlimited_feature();
 $('form[name="v_add_package"]').bind('submit', function(evt) {
     $('input:disabled').each(function(i, elm) {
         $(elm).attr('disabled', false);
+        if (App.Helpers.isUnlimitedValue($(elm).val())) {
+            $(elm).val(App.Constants.UNLIM_VALUE);
+        }
     });
 });
 

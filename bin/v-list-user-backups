@@ -2,14 +2,14 @@
 # info: list user backups
 # options: USER [FORMAT]
 #
-# The function for obtainig the list of available user backups.
+# The function for obtaining the list of available user backups.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 format=${2-shell}
 

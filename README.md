@@ -13,17 +13,23 @@ Connect to your server as root via SSH
 ssh root@your.server
 ```
 
-Download the installation script
+Download the installation script, and run it:
+```bash
+curl http://vestacp.com/pub/vst-install.sh | bash
+```
+
+If the above example does not work, try this 2 step method:
+
+Download the installation script:
 ```bash
 curl -O http://vestacp.com/pub/vst-install.sh
 ```
-
-Run it
+Then run it:
 ```bash
 bash vst-install.sh
 ```
 
 License
 ----------------------------
-Vesta is licensed under  [GPL v3 ](https://github.com/serghey-rodin/vesta/blob/master/LICENSE.txt) license
+Vesta is licensed under  [GPL v3 ](https://github.com/serghey-rodin/vesta/blob/master/LICENSE) license
 

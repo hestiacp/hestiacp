@@ -2,9 +2,12 @@
       <div class="l-sort clearfix noselect">
         <a href="/add/web/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add Web Domain'))?>"></a>
         <ul class="context-menu sort-order" style="display:none;">
-          <li entity="date"><span class="name active">date</span><span class="up">&nbsp;</span></li>
-          <li entity="name"><span class="name">name</span><span class="up">&nbsp;</span></li>
-          <li entity="ip"><span class="name">ip</span><span class="up">&nbsp;</span></li>
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Domain')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-ip" sort_as_int="1"><span class="name"><?=__('IP Address')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=__('Bandwidth')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -21,7 +24,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
                 <form action="/bulk/web/" method="post" id="objects">
@@ -29,8 +32,6 @@
                 <div class="l-select">
                   <select name="action">
                     <option value=""><?=__('apply to selected')?></option>
-                    <option value="suspend"><?=__('suspend')?></option>
-                    <option value="unsuspend"><?=__('unsuspend')?></option>
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
@@ -98,6 +99,11 @@
                             $ftp_user = str_replace(':', ', ', $ftp_user);
                         }
 
+                        $backend_support='no';
+                        if (!empty($data[$key]['BACKEND'])) {
+                            $backend_support='yes';
+                        }
+
                         $proxy_support='no';
                         if (!empty($data[$key]['PROXY'])) {
                             $proxy_support='yes';
@@ -116,7 +122,9 @@
 
 
 
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended';?>" id="web-unit-<?=$i?>">
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['WEB'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="web" 
+id="web-unit-<?=$i?>" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-date="<?=strtotime($data[$key]['DATE'])?>" sort-name="<?=$key?>"  
+sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['favourites']['WEB'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
@@ -125,21 +133,12 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/web/?domain=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__logs"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" target="_blank"><?=__('view logs')?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" target="_blank"><?=__('view logs')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
               <? if (!empty($data[$key]['STATS'])) { ?>
-                  <div class="actions-panel__col actions-panel__logs"><a href="http://<?=$key?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a></div>
+                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a><span class="shortcut">&nbsp;W</span></div>
               <? } ?>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action ?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-              </div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -147,6 +146,7 @@
                     <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
 
 
@@ -162,6 +162,9 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -199,6 +202,7 @@
                   </div>
                 </td>
                 <td>
+                  <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>.
                   <? if($proxy_support == 'no'){ ?>
                     <div class="l-unit__stat-cols clearfix disabled last"><?=__('Proxy Support')?></div>
                   <? } else {?>
@@ -208,6 +212,19 @@
                         <b><?=__($proxy_support)?></b>
                       </div>
                     </div>
+                  <? } ?>
+                  <? } ?>
+                  <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>.
+                  <? if($backend_support == 'no'){ ?>
+                    <div class="l-unit__stat-cols clearfix disabled last"><?=__('Backend Support')?></div>
+                  <? } else {?>
+                    <div class="l-unit__stat-cols clearfix last">
+                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backend Support')?>:</div>
+                      <div class="l-unit__stat-col l-unit__stat-col--right">
+                        <b><?=__($backend_support)?></b>
+                      </div>
+                    </div>
+                  <? } ?>
                   <? } ?>
                 </td>
               </tr>
@@ -226,12 +243,22 @@
                   <? } ?>
                 </td>
                 <td>
+                  <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>.
                   <div class="l-unit__stat-cols clearfix last">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Proxy Template')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <b><?=$data[$key]['PROXY']?></b>
                     </div>
                   </div>
+                  <? } ?>
+                  <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>.
+                  <div class="l-unit__stat-cols clearfix last">
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backend Template')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['BACKEND']?></b>
+                    </div>
+                  </div>
+                  <? } ?>
                 </td>
               </tr>
               <tr>
@@ -279,7 +306,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!--div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 
@@ -290,6 +317,7 @@
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit">
+          <table class='data'></table>
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php

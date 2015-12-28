@@ -1,12 +1,12 @@
 #!/bin/bash
 # info: delete system quota
-# opions: NONE
+# options: NONE
 #
-# The script disables filesystem quota on /home patition
+# The script disables filesystem quota on /home partition
 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                  Variable & Function                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -23,29 +23,34 @@ source $VESTA/conf/vesta.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting usrquota on /home partition
-mnt=$(df -P /home |awk '{print $6}' |tail -n1)
-lnr=$(cat -n /etc/fstab |awk '{print $1,$3}' |grep "$mnt$" |cut -f 1 -d ' ')
-options=$(sed -n ${lnr}p /etc/fstab |awk '{print $4}')
-if [ ! -z "$(echo $options |grep usrquota)" ]; then
-    sed -i "$lnr s/,usrquota//" /etc/fstab
+# Deleting group and user quota on /home partition
+mnt=$(df -P /home | awk '{print $6}' | tail -n1)
+lnr=$(cat -n /etc/fstab | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
+opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
+fnd='usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt='
+if [ ! -z "$(echo $opt | grep $fnd)" ]; then
+    rep=$(echo $(echo $opt | tr ',' '\n' | grep -v $fnd) | tr ' ' ',')
+    sed -i "$lnr s/$opt/$rep/" /etc/fstab
     mount -o remount $mnt
 fi
 
-# Disabling fs quota
-if [ -z "$(quotaon -pa|grep " $mnt "|grep user|grep 'off')" ]; then
-    quotaoff $mnt
+# Disabling group and user quota
+quotaoff=$(which --skip-alias --skip-functions quotaoff 2>/dev/null)
+if [ $? -eq 0 ]; then
+    if [ ! -z "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is on')" ]; then
+        $quotaoff $mnt
+    fi
 fi
 
-# Deleting quota index
-if [ -e "$mnt/aquota.user" ]; then
-    rm $mnt/aquota.user
-fi
+# Deleting v1 + v2 group and user quota index
+for idx in $(echo 'quota.user quota.group aquota.user aquota.group'); do
+    [ -e "$mnt/$idx" ] && rm -f $mnt/$idx
+done
 
-# Deleting weekly cron job
+# Deleting cron job
 rm -f /etc/cron.daily/quotacheck
 
-# Updating DISK_QUOTA value
+# Updating vesta.conf value
 if [ -z "$(grep DISK_QUOTA $VESTA/conf/vesta.conf)" ]; then
     echo "DISK_QUOTA='no'" >> $VESTA/conf/vesta.conf
 else

@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 format=${1-shell}
 
 # Includes
@@ -117,9 +117,9 @@ fi
 service=$DNS_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     if [ "$service" == 'bind' ] || [ "$service" == 'bind9' ]; then
-        service='named'
+        proc_name='named'
     fi
-    get_srv_state $service
+    get_srv_state $service $proc_name
     str="$str\nNAME='$service' SYSTEM='dns server' STATE='$state' CPU='$cpu'"
     str="$str MEM='$mem' RTIME='$rtime'"
 fi
@@ -170,14 +170,24 @@ fi
 service=$DB_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     for db in ${DB_SYSTEM//,/ }; do
+        db_proc_name=''
         service="$db"
-        if [ "$service" == 'mysql' ]; then
-            db_proc_name='mysqld'
+        if [ "$service" = 'mysql' ]; then
+            if [ -e "/etc/redhat-release" ]; then
+                service='mysqld'
+                db_proc_name='mysqld'
+                if [ -e "/usr/lib/systemd/system/mariadb.service" ]; then
+                    service='mariadb'
+                fi
+            fi
         fi
         if [ "$service" == 'pgsql' ]; then
             service='postgresql'
             db_proc_name='postmaster'
             if [ ! -e "/etc/redhat-release" ]; then
+                db_proc_name='postgres'
+            fi
+            if [ ! -e '/etc/init.d/postgresql' ]; then
                 db_proc_name='postgres'
             fi
         fi

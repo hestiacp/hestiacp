@@ -1,9 +1,9 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <ul class="context-menu sort-order" style="display:none;">
-          <li entity="date"><span class="name active">date</span><span class="up">&nbsp;</span></li>
-          <li entity="name"><span class="name">name</span><span class="up">&nbsp;</span></li>
-          <li entity="ip"><span class="name">ip</span><span class="up">&nbsp;</span></li>
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-name"><span class="name"><?=__('Name')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix width-100p">
           <span class="title edit display-inline-block float-left"><b><?=__('Search Results')?></b></span>
@@ -17,7 +17,7 @@
                 </form>
               </td>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
             </tr>
           </table>
@@ -51,10 +51,15 @@
           } else {
             $object = strtolower($data[$key]['TYPE']." ".$data[$key]['KEY']);
           }
+
+          $uniq_id = $data[$key]['TYPE'].'-';
+          if($data[$key]['KEY'] == 'ACCOUNT'){
+            $uniq_id .= 'acc-';
+          }
+          $uniq_id .= sha1($data[$key]['RESULT']);
         ?>
 
-
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>" id="web-unit-<?=$i?>">
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred';?>" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$data[$key]['RESULT']?>">
         <div class="l-unit-toolbar clearfix">
           <!--div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="check<?=$i?>">
@@ -68,7 +73,7 @@
               if ($data[$key]['USER'] != $user && $data[$key]['KEY'] == 'ACCOUNT') {
                 if ($key == $user) {
             ?>
-                  <div class="actions-panel__col actions-panel__loginas"><a href="/logout""><?=__('logout')?> <i></i></a></div>
+                  <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/logout""><?=__('logout')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
                 <?
                   if (!empty($_SESSION['look_alert'])) {
                 ?>
@@ -92,7 +97,7 @@
                       unset($_SESSION['look_alert']);
                   }
                 } else { ?>
-                  <div class="actions-panel__col actions-panel__loginas"><a href="/login/?loginas=<?=$data[$key]['USER']?>&token=<?=$_SESSION['token']?>""><?=__('login as')?> <i></i></a></div>
+                  <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/login/?loginas=<?=$data[$key]['USER']?>&token=<?=$_SESSION['token']?>""><?=__('login as')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
             <?  }
               }
             ?>
@@ -115,43 +120,10 @@
                 $edit_lnk = '/edit/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
               }
             ?>
-              <div class="actions-panel__col actions-panel__edit"><a href="<?=$edit_lnk?>"><?=__('edit')?> <i></i></a></div>
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="<?=$edit_lnk?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
               <? if (!empty($data[$key]['STATS'])) { ?>
-                  <div class="actions-panel__col actions-panel__logs"><a href="http://<?=$data[$key]['RESULT']?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a></div>
+                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$data[$key]['RESULT']?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a><span class="shortcut">&nbsp;W</span></div>
               <? } ?>
-
-
-              <?
-                if ($data[$key]['KEY'] == 'RECORD') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&record_id='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_RECORD_CONFIRMATION';
-                }
-                if ($data[$key]['KEY'] == 'ACCOUNT') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?domain='.$data[$key]['PARENT'].'&account='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_USER_CONFIRMATION';
-                }
-                if ($data[$key]['KEY'] == 'JOB') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?job='.$data[$key]['LINK'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_CRON_CONFIRMATION';
-                }
-                  if ($data[$key]['KEY'] == 'DATABASE') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?database='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_DATABASE_CONFIRMATION';
-                }
-                if (($data[$key]['KEY'] != 'RECORD') && ($data[$key]['KEY'] != 'ACCOUNT') && ($data[$key]['KEY'] != 'JOB') && ($data[$key]['KEY'] != 'DATABASE') ) {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$data[$key]['TYPE'].'/?'.strtolower($data[$key]['KEY']).'='.$data[$key]['RESULT'].'&user='.$data[$key]['USER'];
-                  $cnfrm = 'SUSPEND_DOMAIN_CONFIRMATION';
-                }
-              ?>
-              <div class="actions-panel__col actions-panel__suspend">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="<?=$spnd_lnk?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($cnfrm, $data[$key]['RESULT'])?></p>
-                  </div>
-                </a>
-              </div>
 
               <?
                 if ($data[$key]['KEY'] == 'RECORD') {
@@ -175,7 +147,7 @@
                   $cnfrm = 'DELETE_DOMAIN_CONFIRMATION';
                 }
               ?>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="<?=$delete_lnk?>&token=<?=$_SESSION['token']?>" />
@@ -183,6 +155,7 @@
                     <p class="confirmation"><?=__($cnfrm, $data[$key]['RESULT'])?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
             </div>
             <!-- /.actiona-panel -->
@@ -196,6 +169,9 @@
             <?=translate_date($data[$key]['DATE'])?>
           </div>
           <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="text-center">
+            <i class="l-icon-star"></i>
+          </div>
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
@@ -235,7 +211,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!--div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
 
@@ -246,6 +222,7 @@
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit">
+          <table class='data'></table>
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php

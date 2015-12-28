@@ -11,10 +11,11 @@ is_web_template_valid() {
 
 # Proxy template check
 is_proxy_template_valid() {
-    t="$WEBTPL/$PROXY_SYSTEM/$template.tpl"
-    s="$WEBTPL/$PROXY_SYSTEM/$template.stpl"
+    proxy=$1
+    t="$WEBTPL/$PROXY_SYSTEM/$proxy.tpl"
+    s="$WEBTPL/$PROXY_SYSTEM/$proxy.stpl"
     if [ ! -e $t ] || [ ! -e $s ]; then
-        echo "Error: proxy template $template not found"
+        echo "Error: proxy template $proxy not found"
         log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
@@ -84,65 +85,73 @@ is_dns_template_valid() {
 is_domain_new() {
     type="$1"
     dom=${2-$domain}
-
-    web=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/web.conf)
-    dns=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/dns.conf)
-    mail=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/mail.conf)
+    object=${3-domain}
 
     # Check web domain
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        web=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/web.conf)
+    fi
     if [ ! -z "$web" ] && [ "$type" == 'web' ]; then
-        echo "Error: domain $dom exist"
+        echo "Error: $object $dom exist"
         log_event "$E_EXISTS" "$EVENT"
         exit $E_EXISTS
     fi
     if [ ! -z "$web" ]; then
         web_user=$(echo "$web" |cut -f 7 -d /)
         if [ "$web_user" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
     fi
 
     # Check dns domain
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        dns=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/dns.conf)
+    fi
     if [ ! -z "$dns" ] && [ "$type" == 'dns' ]; then
-        echo "Error: domain $dom exist"
+        echo "Error: $object $dom exist"
         log_event "$E_EXISTS" "$EVENT"
         exit $E_EXISTS
     fi
     if [ ! -z "$dns" ]; then
         dns_user=$(echo "$dns" |cut -f 7 -d /)
         if [ "$dns_user" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
     fi
 
     # Check mail domain
+    if [ ! -z "$MAIL_SYSTEM" ]; then
+        mail=$(grep -F -H "DOMAIN='$dom'" $VESTA/data/users/*/mail.conf)
+    fi
     if [ ! -z "$mail" ] && [ "$type" == 'mail' ]; then
-        echo "Error: domain $dom exist"
+        echo "Error: $object $dom exist"
         log_event "$E_EXISTS" "$EVENT"
         exit $E_EXISTS
     fi
     if [ ! -z "$mail" ]; then
         mail_user=$(echo "$mail" |cut -f 7 -d /)
         if [ "$mail_user" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
     fi
 
     # Check web aliases
-    web_alias=$(grep -w $dom $VESTA/data/users/*/web.conf)
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        web_alias=$(grep -w $dom $VESTA/data/users/*/web.conf)
+    fi
     if [ ! -z "$web_alias" ]; then
-        c1=$(grep -H "'$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
-        c2=$(grep -H "'$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
-        c3=$(grep -H ",$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
-        c4=$(grep -H ",$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c1=$(grep -HF "'$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c2=$(grep -HF "'$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c3=$(grep -HF ",$dom," $VESTA/data/users/*/web.conf | cut -f 7 -d /)
+        c4=$(grep -HF ",$dom'" $VESTA/data/users/*/web.conf | cut -f 7 -d /)
         if [ ! -z "$c1" ] && [ "$type" == "web"  ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
@@ -153,34 +162,34 @@ is_domain_new() {
         fi
 
         if [ ! -z "$c2" ] && [ "$type" == "web"  ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
         if [ ! -z "$c2" ] && [ "$c2" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
 
         if [ ! -z "$c3" ] && [ "$type" == "web"  ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
         if [ ! -z "$c3" ] && [ "$c3" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
 
         if [ ! -z "$c4" ] && [ "$type" == "web"  ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
         if [ ! -z "$c4" ] && [ "$c4" != "$user" ]; then
-            echo "Error: domain $dom exist"
+            echo "Error: $object $dom exist"
             log_event "$E_EXISTS" "$EVENT"
             exit $E_EXISTS
         fi
@@ -206,11 +215,44 @@ is_mail_new() {
 
 # Update domain zone
 update_domain_zone() {
-    conf="$HOMEDIR/$user/conf/dns/$domain.db"
-    line=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+    domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+    eval $domain_param
+    SOA=$(idn --quiet -a -t "$SOA")
+    if [ -z "$SERIAL" ]; then
+        SERIAL=$(date +'%Y%m%d01')
+    fi
+    zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
+    echo "\$TTL $TTL
+@    IN    SOA    $SOA.    root.$domain_idn. (
+                                            $SERIAL
+                                            7200
+                                            3600
+                                            1209600
+                                            180 )
+" > $zn_conf
     fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
-    if [ -e $conf ]; then
-        zn_serial=$(head $conf|grep 'SOA' -A1|tail -n 1|sed "s/ //g")
+    while read line ; do
+        IFS=$'\n'
+        for key in $(echo $line|sed "s/' /'\n/g"); do
+            eval ${key%%=*}="${key#*=}"
+        done
+
+        RECORD=$(idn --quiet -a -t "$RECORD")
+        if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
+            VALUE=$(idn --quiet -a -t "$VALUE")
+        fi
+
+        if [ "$SUSPENDED" != 'yes' ]; then
+            eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $zn_conf
+        fi
+    done < $USER_DATA/dns/$domain.conf
+}
+
+# Update zone serial
+update_domain_serial() {
+    zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
+    if [ -e $zn_conf ]; then
+        zn_serial=$(head $zn_conf |grep 'SOA' -A1 |tail -n 1 |sed "s/ //g")
         s_date=$(echo ${zn_serial:0:8})
         c_date=$(date +'%Y%m%d')
         if [ "$s_date" == "$c_date" ]; then
@@ -227,32 +269,8 @@ update_domain_zone() {
     else
         serial="$(date +'%Y%m%d01')"
     fi
-
-    eval $line
-    SOA=$(idn --quiet -a -t "$SOA")
-    echo "\$TTL $TTL
-@    IN    SOA    $SOA.    root.$domain_idn. (
-                                            $serial
-                                            7200
-                                            3600
-                                            1209600
-                                            180 )
-" > $conf
-    while read line ; do
-        IFS=$'\n'
-        for key in $(echo $line|sed "s/' /'\n/g"); do
-            eval ${key%%=*}="${key#*=}"
-        done
-
-        RECORD=$(idn --quiet -a -t "$RECORD")
-        if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
-            VALUE=$(idn --quiet -a -t "$VALUE")
-        fi
-
-        if [ "$SUSPENDED" != 'yes' ]; then
-            eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $conf
-        fi
-    done < $USER_DATA/dns/$domain.conf
+    add_object_key "dns" 'DOMAIN' "$domain" 'SERIAL' 'RECORDS'
+    update_object_value 'dns' 'DOMAIN' "$domain" '$SERIAL' "$serial"
 }
 
 # Get next DNS record ID
@@ -305,6 +323,7 @@ add_web_config() {
 
 # Get config top and bottom line numbers
 get_web_config_brds() {
+
     serv_line=$(egrep -ni "Name %domain_idn%($| )" $tpl_file |cut -f 1 -d :)
     if [ -z "$serv_line" ]; then
         log_event "$E_PARSING" "$EVENT"
@@ -315,15 +334,14 @@ get_web_config_brds() {
     bfr_line=$((serv_line - 1))
     aftr_line=$((last_line - serv_line - 1))
 
-    str=$(egrep -ni "Name $domain_idn($| )" $conf | cut -f 1 -d :)
+    str=$(grep -niF "Name $domain_idn" $conf |egrep "$domain_idn$|$domain_idn ")
+    str=$(echo "$str" |cut -f 1 -d :)
     top_line=$((str - serv_line + 1))
     bottom_line=$((top_line + last_line -1))
-
     multi=$(sed -n "$top_line,$bottom_line p" $conf |grep ServerAlias |wc -l)
     if [ "$multi" -ge 2 ]; then
         bottom_line=$((bottom_line + multi -1))
     fi
-
 }
 
 # Replace web config

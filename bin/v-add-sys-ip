@@ -5,7 +5,7 @@
 # The function adds ip address into a system. It also creates rc scripts. You
 # can specify ip name which will be used as root domain for temporary aliases.
 # For example, if you set a1.myhosting.com as name, each new domain created on
-# this  ip will automaticaly receive alias $domain.a1.myhosting.com. Of course
+# this  ip will automatically receive alias $domain.a1.myhosting.com. Of course
 # you must have wildcard record *.a1.myhosting.com pointed to ip. This feature 
 # is very handy when customer wants to test domain before dns migration.
 
@@ -14,7 +14,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 ip=${1// /}
 netmask=$2
 interface="${3-eth0}"
@@ -161,16 +161,12 @@ fi
 
 # Restarting web server
 $BIN/v-restart-web
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
 if [ ! -z "$PROXY_SYSTEM" ]; then
     $BIN/v-restart-proxy
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Proxy restart failed" >/dev/null
 fi
 
 # Restarting firewall

@@ -12,7 +12,7 @@
 # Importing system variables
 source /etc/profile
 
-# Argument defenition
+# Argument definition
 action=$(echo $1|tr '[:lower:]' '[:upper:]')
 ip=$2
 port_ext=$3
@@ -52,7 +52,7 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 get_next_fw_rule
 validate_format 'rule'
 is_object_new '../../data/firewall/rules' 'RULE' "$rule"
-if [ ! -z "$comment"]; then
+if [ ! -z "$comment" ]; then
     validate_format 'comment'
 fi
 

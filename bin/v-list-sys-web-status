@@ -1,0 +1,49 @@
+#!/bin/bash
+# info: list web status
+# options: [FORMAT]
+#
+# The function lists web server status
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+#format=${1-shell}
+
+# Includes
+#source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking web system
+if [ -z "$WEB_SYSTEM" ]; then
+    exit
+fi
+
+# Displaying proxy status
+if [ "$PROXY_SYSTEM" = 'nginx' ]; then
+    echo "<h2>$PROXY_SYSTEM STATUS</h2>"| tr '[:lower:]' '[:upper:]'
+    wget -qO-  http://localhost:8084/
+    echo "<br><br><br>"
+fi
+
+# Displaying web server status
+echo "<h2>$WEB_SYSTEM STATUS</h2>"| tr '[:lower:]' '[:upper:]'
+if [ "$WEB_SYSTEM" != 'nginx' ]; then
+    wget -qO-  http://localhost:8081/server-status/ |\
+        egrep -v "html|DOCTYPE|h1>|title|head"
+else
+    wget -qO-  http://localhost:8084/
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

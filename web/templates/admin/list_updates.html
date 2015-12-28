@@ -5,9 +5,9 @@
             <tr>
               <td class="step-right">
                 <? if($autoupdate == 'Enabled') {
-                     echo '<a class="vst" href="/delete/cron/autoupdate/&token='.$_SESSION['token'].'">'.__('disable autoupdate').'</a>';
+                     echo '<a class="vst" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'">'.__('disable autoupdate').'</a>';
                    } else {
-                     echo '<a class="vst" href="/add/cron/autoupdate/&token='.$_SESSION['token'].'">'.__('enable autoupdate').'</a>';
+                     echo '<a class="vst" href="/add/cron/autoupdate/?token='.$_SESSION['token'].'">'.__('enable autoupdate').'</a>';
                    } ?>
               </td>
               <td class="l-sort-toolbar__search-box step-left">
@@ -20,9 +20,6 @@
               <td class="toggle-all">
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('DATE')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
                 <form action="/bulk/vesta/" method="post">
@@ -50,7 +47,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center">
+    <div class="l-center units">
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -78,7 +75,7 @@
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <? if ($data[$key]['UPDATED'] == 'no') {
-                   echo '<div class="actions-panel__col actions-panel__update"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a></div>';
+                   echo '<div class="actions-panel__col actions-panel__update shortcut-u" key-action="href"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a><span class="shortcut">&nbsp;U</span></div>';
                  }
               ?>
             </div>
@@ -137,7 +134,7 @@
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <div class="l-separator"></div>
+      <!-- div class="l-separator"></div -->
       <!-- /.l-separator -->
       <?}?>
 

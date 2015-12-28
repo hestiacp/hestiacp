@@ -1,20 +1,24 @@
 #!/bin/bash
 # info: change user nameservers
-# options: USER NS1 NS2 [NS3] [NS4]
+# options: USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]
 #
-# The function for changing default nameservers for speciefic user.
+# The function for changing default nameservers for specific user.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 ns1=$(echo $2 | sed -e 's/\.*$//g' -e 's/^\.*//g')
 ns2=$(echo $3 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-ns3=$4
-ns4=$5
+ns3=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns4=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns5=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns6=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns7=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+ns8=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
 
 # Includes
 source $VESTA/func/main.sh
@@ -26,10 +30,10 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 # Checking args
-check_args '3' "$#" 'USER NS1 NS2 [NS3] [NS4]'
+check_args '3' "$#" 'USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]'
 
 # Checking argument format
-validate_format 'user' 'ns1' 'ns2' 
+validate_format 'user' 'ns1' 'ns2'
 if [ ! -z "$ns3" ]; then
     ns3=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
     validate_format 'ns3'
@@ -38,7 +42,22 @@ if [ ! -z "$ns4" ]; then
     ns4=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
     validate_format 'ns4'
 fi
-
+if [ ! -z "$ns5" ]; then
+    ns5=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns5'
+fi
+if [ ! -z "$ns6" ]; then
+    ns6=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns6'
+fi
+if [ ! -z "$ns7" ]; then
+    ns7=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns7'
+fi
+if [ ! -z "$ns8" ]; then
+    ns8=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    validate_format 'ns8'
+fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -48,7 +67,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Merging values
-ns="$ns1,$ns2,$ns3,$ns4"
+ns="$ns1,$ns2,$ns3,$ns4,$ns5,$ns6,$ns7,$ns8"
 ns=$(echo "$ns" | sed -e "s/,,//g" -e "s/,$//")
 
 # Changing ns values
@@ -60,7 +79,7 @@ update_user_value "$user" '$NS' "$ns"
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed user nameservers to $ns1, $ns2"
+log_history "updated nameservers $ns1 $ns2 $ns3 $ns4 $ns5 $ns6 $ns7 $ns8"
 log_event "$OK" "$EVENT"
 
 exit

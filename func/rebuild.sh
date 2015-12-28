@@ -176,22 +176,22 @@ rebuild_web_domain_conf() {
     fi
 
     # Set folder permissions
-    chmod 551 $HOMEDIR/$user/web/$domain
-    chmod 751 $HOMEDIR/$user/web/$domain/private
-    chmod 751 $HOMEDIR/$user/web/$domain/cgi-bin
-    chmod 751 $HOMEDIR/$user/web/$domain/public_html
-    chmod 751 $HOMEDIR/$user/web/$domain/public_shtml
-    chmod 751 $HOMEDIR/$user/web/$domain/document_errors
-    chmod 551 $HOMEDIR/$user/web/$domain/stats
-    chmod 551 $HOMEDIR/$user/web/$domain/logs
+    chmod 551 $HOMEDIR/$user/web/$domain \
+        $HOMEDIR/$user/web/$domain/stats \
+        $HOMEDIR/$user/web/$domain/logs
+    chmod 751 $HOMEDIR/$user/web/$domain/private \
+        $HOMEDIR/$user/web/$domain/cgi-bin \
+        $HOMEDIR/$user/web/$domain/public_html \
+        $HOMEDIR/$user/web/$domain/public_shtml \
+        $HOMEDIR/$user/web/$domain/document_errors
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
     # Set ownership
-    chown $user:$user $HOMEDIR/$user/web/$domain
-    chown $user:$user $HOMEDIR/$user/web/$domain/private
-    chown $user:$user $HOMEDIR/$user/web/$domain/cgi-bin
-    chown $user:$user $HOMEDIR/$user/web/$domain/public_html
-    chown $user:$user $HOMEDIR/$user/web/$domain/public_shtml
+    chown $user:$user $HOMEDIR/$user/web/$domain \
+        $HOMEDIR/$user/web/$domain/private \
+        $HOMEDIR/$user/web/$domain/cgi-bin \
+        $HOMEDIR/$user/web/$domain/public_html \
+        $HOMEDIR/$user/web/$domain/public_shtml
     chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
@@ -367,6 +367,39 @@ rebuild_web_domain_conf() {
             chmod u-w /etc/shadow
         fi
     done
+
+    # Adding http auth protection
+    htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
+    htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+    docroot="$HOMEDIR/$user/web/$domain/public_html"
+    for auth_user in ${AUTH_USER//:/ }; do
+        # Parsing auth user variables
+        position=$(echo $AUTH_USER | tr ':' '\n' | grep -n '' |\
+            grep ":$auth_user$" | cut -f 1 -d:)
+        auth_hash=$(echo $AUTH_HASH | tr ':' '\n' | grep -n '' |\
+            grep "^$position:" | cut -f 2 -d :)
+
+        # Adding http auth user
+        touch $htpasswd
+        sed -i "/^$auth_user:/d" $htpasswd
+        echo "$auth_user:$auth_hash" >> $htpasswd
+
+        # Checking web server include
+        if [ ! -e "$htaccess" ]; then
+            if [ "$WEB_SYSTEM" != 'nginx' ]; then
+                echo "<Directory $docroot>" > $htaccess
+                echo "    AuthUserFile $htpasswd" >> $htaccess
+                echo "    AuthName \"$domain access\"" >> $htaccess
+                echo "    AuthType Basic" >> $htaccess
+                echo "    Require valid-user" >> $htaccess
+                echo "</Directory>" >> $htaccess
+            else
+                echo "auth_basic  \"$domain password access\";" > $htaccess
+                echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+            fi
+        fi
+    done
+    chmod 640 $htpasswd $htaccess >/dev/null 2>&1
 }
 
 # DNS domain rebuild
@@ -515,6 +548,9 @@ rebuild_mail_domain_conf() {
         fi
 
         if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+            if [ "$QUOTA" = 'unlimited' ]; then
+                QUOTA=0
+            fi
             str="$account:$MD5:$user:mail::$HOMEDIR/$user:$QUOTA"
             echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
             for malias in ${ALIAS//,/ }; do

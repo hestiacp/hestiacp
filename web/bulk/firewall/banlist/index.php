@@ -19,13 +19,14 @@ if ($_SESSION['user'] != 'admin') {
     exit;
 }
 
-if (!empty($_POST['ipchain'])) {
+$ipchain = $_POST['ipchain'];
+/*if (!empty($_POST['ipchain'])) {
     $ipchain = $_POST['ipchain'];
     list($ip,$chain) = split(":",$ipchain);
     $v_ip = escapeshellarg($ip);
     $v_chain = escapeshellarg($chain);
 
-}
+}*/
 
 $action = $_POST['action'];
 
@@ -36,6 +37,9 @@ switch ($action) {
 }
 
 foreach ($ipchain as $value) {
+    list($ip,$chain) = split(":",$value);
+    $v_ip    = escapeshellarg($ip);
+    $v_chain = escapeshellarg($chain);
     exec (VESTA_CMD.$cmd." ".$v_ip." ".$v_chain, $output, $return_var);
 }
 

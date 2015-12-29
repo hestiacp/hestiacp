@@ -32,6 +32,17 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         exit;
     }
     
+    // Define the command to use
+    if (isset($_POST['cmd']))
+    {
+        $cmd = escapeshellarg($_POST['cmd']);
+    } else
+    {
+        // If there's no command, just exit.
+        echo 'No command specified.';
+        exit;
+    }
+    
     // Prepare for iteration
     $args = [];
     $i = 0;

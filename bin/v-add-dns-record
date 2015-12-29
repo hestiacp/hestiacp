@@ -12,7 +12,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
@@ -82,6 +82,7 @@ sort_dns_records
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    update_domain_serial
     update_domain_zone
 fi
 
@@ -100,7 +101,7 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Upddate counters
+# Update counters
 records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f1 -d ' ')"
 update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 increase_user_value "$user" '$U_DNS_RECORDS'
@@ -108,9 +109,7 @@ increase_user_value "$user" '$U_DNS_RECORDS'
 # Restart named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? $E_RESTART 'dns failed to restart'
 fi
 
 # Logging

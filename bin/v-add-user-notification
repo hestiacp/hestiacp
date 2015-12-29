@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: add user notification
+# options: USER TOPIC NOTICE [TYPE]
+#
+# The function adds user notification.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+topic=$(echo $2 |sed "s/'/%quote%/g")
+notice=$(echo $3 |sed "s/'/%quote%/g")
+type=$4
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER TOPIC NOTICE [TYPE]'
+validate_format 'user' 'topic' 'notice'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining notification id
+if [ -e "$USER_DATA/notifications.conf" ]; then
+    nid=$(grep "NID=" $USER_DATA/notifications.conf |cut -f 2 -d \')
+    nid=$(echo "$nid" |sort -n |tail -n1)
+    if [ ! -z "$nid" ]; then
+        nid="$((nid +1))"
+    else
+        nid=1
+    fi
+else
+    nid=1
+fi
+
+# Concatenating string
+str="NID='$nid' TOPIC='$topic' NOTICE='$notice' TYPE='$type'"
+str="$str ACK='no' TIME='$TIME' DATE='$DATE'"
+
+# Adding to config
+echo "$str" >> $USER_DATA/notifications.conf
+
+# Changing permissions
+chmod 660 $USER_DATA/notifications.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Updating notification counter
+if [ -z "$(grep NOTIFICATIONS $USER_DATA/user.conf)" ]; then
+    sed -i "s/^TIME/NOTIFICATIONS='yes'\nTIME/g" $USER_DATA/user.conf
+else
+    update_user_value "$user" '$NOTIFICATIONS' "yes"
+fi
+
+exit

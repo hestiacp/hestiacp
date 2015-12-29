@@ -1,0 +1,66 @@
+#!/bin/bash
+# info: add user sftp jail
+# options: USER
+#
+# The script enables sftp jailed environment
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+validate_format 'user'
+if [ -z "$SFTPJAIL_KEY" ]; then
+    exit
+fi
+user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
+if [ -z "$user_str" ]; then
+    exit
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining user homedir
+home="$(echo $user_str |cut -f 6 -d :)"
+
+# Adding chroot directory
+if [ ! -d "/chroot/$user/$home" ]; then
+    mkdir -p /chroot/$user/$home
+    chmod 750 /chroot/$user
+    chmod 775 /chroot/$user/$home
+    chown root:sftp-only /chroot/$user
+    chown $user:sftp-only /chroot/$user/$home
+fi
+
+# Adding user to sftp group
+usermod -a -G sftp-only $user
+
+# Mouting home directory
+if [ -z "$(mount |grep $home)" ]; then
+    mount -o bind $home /chroot/$user/$home/
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+#log_event "$OK" "$EVENT"
+
+exit

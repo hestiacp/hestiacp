@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 language=$2
 
@@ -19,9 +19,14 @@ source $VESTA/conf/vesta.conf
 
 
 is_language_valid() {
-    if [ ! -e "$VESTA/web/inc/i18n/$language.php" ]; then
-        echo "Error: language $language not exist"
-        log_event "$E_NOTEXIST $EVENT"
+    if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
+        echo "Error: language $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
+    if [ ! -e "$VESTA/web/inc/i18n/$1.php" ]; then
+        echo "Error: language $1 doesn't exist"
+        log_event "$E_NOTEXIST" "$EVENT"
         exit $E_NOTEXIST
     fi
 }

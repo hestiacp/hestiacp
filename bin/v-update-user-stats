@@ -9,10 +9,10 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 
-# Importing system enviroment  as we run this script 
+# Importing system environment  as we run this script
 #       mostly by cron wich not read it by itself
 source /etc/profile
 

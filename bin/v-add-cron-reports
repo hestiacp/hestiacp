@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cron reports
-# opions: user
+# options: user
 #
 # The script for enabling reports on cron tasks and administrative
 # notifications.
@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 
 # Includes
@@ -46,9 +46,7 @@ sync_cron_jobs
 
 # Restart crond
 $BIN/v-restart-cron
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+check_result $? "Cron restart failed" >/dev/null
 
 # Logging
 log_history "enabled cron reporting"

@@ -2,14 +2,14 @@
 # info: delete backup exclusion
 # options: USER [SYSTEM]
 #
-# The function for deleteing backup exclusion
+# The function for deleting backup exclusion
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 system=$(echo $2 | tr '[:lower:]' '[:upper:]')
 

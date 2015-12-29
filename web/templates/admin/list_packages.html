@@ -4,6 +4,7 @@
         <ul class="context-menu sort-order" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-name"><span class="name"><?=__('Package Name')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -55,7 +56,9 @@
       ?>
 
 
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_COOKIE['packages-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="packages-<?=sha1($key)?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>">
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo ' l-unit--starred'; ?>" 
+v_unit_id="<?=$key?>" v_section="package" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" 
+sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="package[]" value="<?php echo $key ?>">
@@ -64,8 +67,8 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/package/?package=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -73,6 +76,7 @@
                     <p class="confirmation"><?=__('DELETE_PACKAGE_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
 
             </div>

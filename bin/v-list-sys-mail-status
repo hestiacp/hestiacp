@@ -1,0 +1,46 @@
+#!/bin/bash
+# info: list mail status
+# options: [FORMAT]
+#
+# The function lists mail server status
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+#format=${1-shell}
+
+# Includes
+#source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking mail system
+if [ -z "$MAIL_SYSTEM" ]; then
+    exit
+fi
+
+# Displaying exim queue status
+echo "Exim queue status"
+exim -bp
+echo -en "\n-------------------------------------"
+echo -en  "-------------------------------------\n\n"
+
+# Displaying exim stats
+if [ -e "/var/log/exim4/mainlog" ]; then
+    eximstats /var/log/exim4/mainlog 2>/dev/null
+else
+    eximstats /var/log/exim/main.log 2>/dev/null
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

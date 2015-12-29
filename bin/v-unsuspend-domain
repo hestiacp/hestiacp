@@ -1,0 +1,89 @@
+#!/bin/bash
+# info: unsuspend web/dns/mail domain
+# options: USER DOMAIN
+#
+# The function unsuspends web/dns/mail domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+restart="${3-yes}"
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+validate_format 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Working on Web domain
+if [ ! -z "$WEB_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |grep "SUSPENDED='yes")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
+        $BIN/v-unsuspend-web-domain $user $domain 'no'
+        check_result $? "can't suspend web" > /dev/null
+    fi
+fi
+
+# Working on DNS domain
+if [ ! -z "$DNS_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='yes")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
+        $BIN/v-unsuspend-dns-domain $user $domain 'no'
+        check_result $? "can't suspend dns" > /dev/null
+    fi
+fi
+
+# Working on Mail domain
+if [ ! -z "$MAIL_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf |grep "SUSPENDED='yes")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
+        $BIN/v-unsuspend-mail-domain $user $domain
+        check_result $? "can't suspend mail" > /dev/null
+    fi
+fi
+
+# Checking domain search result
+if [ -z "$domain_found" ]; then
+    echo "Error: domain $domain doesn't exist"
+    log_event "$E_NOTEXIST" "$EVENT"
+    exit $E_NOTEXIST
+fi
+
+# Restarting services
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web
+    check_result $? "can't restart web" > /dev/null
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        check_result $? "can't restart proxy" > /dev/null
+    fi
+    $BIN/v-restart-dns
+    check_result $? "can't restart dns" > /dev/null
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

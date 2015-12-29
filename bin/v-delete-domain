@@ -9,14 +9,13 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 restart="${3-yes}"
 
 # Includes
 source $VESTA/func/main.sh
-source $VESTA/func/ip.sh
 source $VESTA/conf/vesta.conf
 
 
@@ -34,51 +33,53 @@ is_object_unsuspended 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Web domain
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    check_web=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
-    if [  ! -z "$check_web" ]; then
+# Working on Web domain
+if [ ! -z "$WEB_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |grep "SUSPENDED='no")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
         $BIN/v-delete-web-domain $user $domain 'no'
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
+        check_result $? "can't suspend web" > /dev/null
     fi
 fi
 
-# DNS domain
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    check_dns=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    if [  ! -z "$check_dns" ]; then
+# Working on DNS domain
+if [ ! -z "$DNS_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='no")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
         $BIN/v-delete-dns-domain $user $domain 'no'
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
+        check_result $? "can't suspend dns" > /dev/null
     fi
 fi
 
-# Mail domain
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    check_mail=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
-    if [  ! -z "$check_mail" ]; then
+# Working on Mail domain
+if [ ! -z "$MAIL_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf |grep "SUSPENDED='no")
+    if [  ! -z "$str" ]; then
+        domain_found='yes'
         $BIN/v-delete-mail-domain $user $domain
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
+        check_result $? "can't suspend mail" > /dev/null
     fi
 fi
 
-# Check domain status
-if [ -z "$check_web" ] && [ -z "$check_dns" ] && [ -z "$check_mail" ]; then
+# Checking domain search result
+if [ -z "$domain_found" ]; then
     echo "Error: domain $domain doesn't exist"
     log_event "$E_NOTEXIST" "$EVENT"
     exit $E_NOTEXIST
 fi
 
-# Restart services
+# Restarting services
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
-    $BIN/v-restart-proxy
+    check_result $? "can't restart web" > /dev/null
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        check_result $? "can't restart proxy" > /dev/null
+    fi
     $BIN/v-restart-dns
+    check_result $? "can't restart dns" > /dev/null
 fi
 
 

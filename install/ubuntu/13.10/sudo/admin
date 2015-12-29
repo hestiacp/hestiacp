@@ -1,0 +1,8 @@
+# Created by vesta installer
+Defaults env_keep="VESTA"
+Defaults:admin !syslog
+Defaults:admin !requiretty
+Defaults:root !requiretty
+
+admin   ALL=(ALL)       ALL
+admin   ALL=NOPASSWD:/usr/local/vesta/bin/*

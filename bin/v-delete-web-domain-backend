@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
@@ -52,12 +52,10 @@ rm -f $pool/$backend.conf
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart backend server
+# Restarting backend server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web-backend
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Backend restart failed" >/dev/null
 fi
 
 # Logging

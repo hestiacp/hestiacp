@@ -12,7 +12,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
@@ -84,6 +84,12 @@ if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
         tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
         conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
         del_web_config
+    fi
+
+    # Deleting domain from proxy cache pool
+    pool="/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf"
+    if [ -e "$pool" ]; then
+        sed -i "/=$domain:/d" $pool
     fi
 fi
 
@@ -162,18 +168,14 @@ if [ "$SSL" = 'yes' ]; then
     decrease_user_value "$user" '$U_WEB_SSL'
 fi
 
-# Restart web server
+# Restarting web server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Web restart failed" >/dev/null
 
     if [ ! -z "$PROXY_SYSTEM" ]; then
         $BIN/v-restart-proxy
-        if [ $? -ne 0 ]; then
-            exit $E_RESTART
-        fi
+        check_result $? "Proxy restart failed" >/dev/null
     fi
 fi
 

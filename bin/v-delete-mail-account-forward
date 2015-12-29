@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: delte mail account forward
+# info: delete mail account forward
 # options: USER DOMAIN ACCOUNT EMAIL
 #
 # The function add delete email account forward address.
@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')

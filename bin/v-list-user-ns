@@ -2,14 +2,14 @@
 # info: list user nameservers
 # options: USER [FORMAT]
 #
-# Function for obtainig the list of user's DNS servers.
+# Function for obtaining the list of user's DNS servers.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 format=${2-shell}
 

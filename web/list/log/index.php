@@ -1,7 +1,6 @@
 <?php
 // Init
 error_reporting(NULL);
-session_start();
 $TAB = 'LOG';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 

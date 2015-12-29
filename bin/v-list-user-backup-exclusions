@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 format=${2-shell}
 USER=''
@@ -73,6 +73,14 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Flush variables
+WEB=''
+DNS=''
+MAIL=''
+DB=''
+CRON=''
+USER=''
 
 # Defining fileds to select
 touch $USER_DATA/backup-excludes.conf

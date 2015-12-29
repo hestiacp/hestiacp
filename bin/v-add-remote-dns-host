@@ -9,12 +9,17 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 host=$1
+HOST=$host
 port=$2
+PORT=$port
 user=$3
-password=$4
+USER=$user
+password=$4; HIDE=4
+PASSWORD=$password
 type=${5-api}
+TYPE="$type"
 dns_user=${6-dns-cluster}
 DNS_USER=$dns_user
 
@@ -22,10 +27,6 @@ DNS_USER=$dns_user
 source $VESTA/func/main.sh
 source $VESTA/func/remote.sh
 source $VESTA/conf/vesta.conf
-
-# Hiding passwords
-A4='******'
-EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
 
 #----------------------------------------------------------#
@@ -61,35 +62,25 @@ else
     sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $VESTA/conf/vesta.conf
 fi
 
-# Enabling restart queue
-HOST=$host
-PORT=$port
-USER=$user
-PASSWORD=$password
-case $type in
-    ssh) send_cmd="send_ssh_cmd" ;;
-    *)  send_cmd="send_api_cmd" ;;
-esac
-$send_cmd v-add-cron-restart-job
+# Enabling remote dns-cluster queue
+cluster_cmd v-add-cron-restart-job
+check_result $? "$HOST connection failed" $E_CONNECT
 
-# Sync current zones
+# Syncing all domains
 $BIN/v-sync-dns-cluster $host
-return_code=$?
-if [ "$return_code" -ne 0 ]; then
-    exit $return_code
-fi
-
-# Add dns-cluster cron job
-cmd="sudo /usr/local/vesta/bin/v-update-sys-queue dns-cluster"
-check_cron=$(grep "$cmd" $VESTA/data/users/admin/cron.conf 2> /dev/null)
-if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
-    $BIN/v-add-cron-job admin '*/5' '*' '*' '*' '*' "$cmd"
-fi
+check_result $? "$HOST sync failed" $E_CONNECT
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Adding local  dns-cluster cron job
+cmd="sudo /usr/local/vesta/bin/v-update-sys-queue dns-cluster"
+check_cron=$(grep "$cmd" $VESTA/data/users/admin/cron.conf 2> /dev/null)
+if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
+    $BIN/v-add-cron-job admin '*/5' '*' '*' '*' '*' "$cmd"
+fi
 
 # Logging
 log_event "$OK" "$EVENT"

@@ -9,8 +9,9 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
+restart=$2
 
 # Includes
 source $VESTA/func/main.sh
@@ -41,10 +42,10 @@ done
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Restart named
-$BIN/v-restart-dns
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
+# Restarting named
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-dns
+    check_result $? "Bind restart failed" >/dev/null
 fi
 
 # Logging

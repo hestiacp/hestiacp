@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
@@ -46,15 +46,6 @@ is_object_suspended 'dns' 'DOMAIN' "$domain"
 update_object_value 'dns' 'DOMAIN' "$domain" '$SUSPENDED' 'no'
 decrease_user_value "$user" '$SUSPENDED_DNS'
 sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/dns/$domain.conf
-
-
-# Restart named
-#if [ "$restart" != 'no' ]; then
-#    $BIN/v-restart-dns
-#    if [ $? -ne 0 ]; then
-#        exit $E_RESTART
-#    fi
-#fi
 
 # Logging
 log_event "$OK" "$EVENT"

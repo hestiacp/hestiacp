@@ -1,6 +1,9 @@
 <?php
+session_start();
 
-// Check system settiongs
+require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n.php');
+
+// Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
     session_destroy();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
@@ -13,60 +16,12 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
-
 }
 
 if (isset($_SESSION['user'])) {
-    require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
     if(!isset($_SESSION['token'])){
         $token = uniqid(mt_rand(), true);
         $_SESSION['token'] = $token;
-    }
-}
-
-
-/**
- * Translates string by a given key in first parameter to current session language. Works like sprintf
- * @global array $LANG Associative array of language pharses
- * @return string Translated string
- * @see _translate()
- */
-function __() {
-   $args = func_get_args();
-   array_unshift($args,$_SESSION['language']);
-   return call_user_func_array("_translate",$args);
-}
-
-/**
- * Translates string to given language in first parameter, key given in second parameter (dynamically loads required language). Works like spritf from second parameter
- * @global array $LANG Associative array of language pharses
- * @return string Translated string
- */
-function _translate() {
-    global $LANG;
-
-    $args = func_get_args();
-    $l = $args[0];
-
-    if (!$l) return 'NO LANGUAGE DEFINED';
-    $key = $args[1];
-
-    if (!isset($LANG[$l])) {
-        require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$l.'.php');
-    }
-
-    if (!isset($LANG[$l][$key])) {
-        $text=$key;
-    } else {
-        $text=$LANG[$l][$key];
-    }
-
-    array_shift($args);
-    if (count($args)>1) {
-        $args[0] = $text;
-        return call_user_func_array("sprintf",$args);
-    } else {
-        return $text;
     }
 }
 
@@ -88,6 +43,9 @@ if (isset($_SESSION['language'])) {
         case 'es':
             setlocale(LC_ALL, 'es_ES.utf8');
             break;
+        case 'ja':
+            setlocale(LC_ALL, 'ja_JP.utf8');
+            break;
         default:
             setlocale(LC_ALL, 'en_US.utf8');
     }
@@ -100,6 +58,27 @@ if (isset($_SESSION['user'])) {
 if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
     $user = $_SESSION['look'];
 }
+
+function get_favourites(){
+    exec (VESTA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
+//    $data = json_decode(implode('', $output).'}', true);
+    $data = json_decode(implode('', $output), true);
+    $data = array_reverse($data,true);
+    $favourites = array();
+
+    foreach($data['Favourites'] as $key => $favourite){
+        $favourites[$key] = array();
+
+        $items = explode(',', $favourite);
+        foreach($items as $item){
+            if($item)
+                $favourites[$key][trim($item)] = 1;
+        }
+    }
+
+    $_SESSION['favourites'] = $favourites;
+}
+
 
 
 function check_error($return_var) {
@@ -144,6 +123,7 @@ function humanize_time($usage) {
         $usage = $usage / 60;
         if ( $usage > 24 ) {
              $usage = $usage / 24;
+
             $usage = number_format($usage);
             if ( $usage == 1 ) {
                 $usage = $usage." ".__('day');
@@ -164,29 +144,6 @@ function humanize_time($usage) {
         } else {
             $usage = $usage." ".__('minutes');
         }
-    }
-    return $usage;
-}
-
-function humanize_usage($usage) {
-    if ( $usage > 1024 ) {
-        $usage = $usage / 1024;
-        if ( $usage > 1024 ) {
-                $usage = $usage / 1024 ;
-                if ( $usage > 1024 ) {
-                    $usage = $usage / 1024 ;
-                    $usage = number_format($usage, 2);
-                    $usage = $usage." ".__('pb');
-                } else {
-                    $usage = number_format($usage, 2);
-                    $usage = $usage." ".__('tb');
-                }
-        } else {
-            $usage = number_format($usage, 2);
-            $usage = $usage." ".__('gb');
-        }
-    } else {
-        $usage = $usage." ".__('mb');
     }
     return $usage;
 }
@@ -212,23 +169,24 @@ function humanize_usage_size($usage) {
 
 function humanize_usage_measure($usage) {
     $measure = 'kb';
+
     if ( $usage > 1024 ) {
         $usage = $usage / 1024;
         if ( $usage > 1024 ) {
                 $usage = $usage / 1024 ;
                 if ( $usage > 1024 ) {
-                    $measure = __('pb');
+                    $measure = 'pb';
                 } else {
-                    $measure = __('tb');
+                    $measure = 'tb';
                 }
         } else {
-            $measure = __('gb');
+            $measure = 'gb';
         }
     } else {
-        $measure = __('mb');
+        $measure = 'mb';
     }
 
-    return $measure;
+    return __($measure);
 }
 
 
@@ -282,6 +240,11 @@ function display_error_block() {
                                 Ok: function() {
                                     $( this ).dialog( "close" );
                                 }
+                            },
+                            create:function () {
+                                $(this).closest(".ui-dialog")
+                                .find(".ui-button:first")
+                                .addClass("submit");
                             }
                         });
                     });
@@ -340,4 +303,3 @@ function list_timezones() {
     }
     return $timezone_list;
 }
-?>

@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 
 # Includes
@@ -31,12 +31,20 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Updating disk quota
-soft=$(get_user_value '$DISK_QUOTA')
-soft=$((soft * 1000))
-hard=$((soft + 50000))
+# Had quota equals package value. Soft quota equals 90% of package value for warnings.
+quota=$(get_user_value '$DISK_QUOTA')
+soft=$(echo "$quota * 1024 * 0.90"|bc |cut -f 1 -d .)
+hard=$(echo "$quota * 1024"|bc |cut -f 1 -d .)
 
+# Searching home mount point
 mnt=$(df -P /home |awk '{print $6}' |tail -n1)
-setquota $user $soft $hard 0 0 $mnt
+
+# Checking unlinmited quota
+if [ "$quota" = 'unlimited' ]; then
+    setquota $user 0 0 0 0 $mnt 2>/dev/null
+else
+    setquota $user $soft $hard 0 0 $mnt 2>/dev/null
+fi
 
 
 #----------------------------------------------------------#

@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 restart="$3"
@@ -71,12 +71,10 @@ rm -f $USER_DATA/dns/$domain.conf
 decrease_user_value "$user" '$U_DNS_DOMAINS'
 decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 
-# Restart named
+# Restarting named
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-dns $restart
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Bind restart failed" >/dev/null
 fi
 
 # Logging

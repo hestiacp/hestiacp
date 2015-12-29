@@ -1,12 +1,12 @@
 #!/bin/bash
 # info: add system quota
-# opions: NONE
+# options: NONE
 #
-# The script enables filesystem quota on /home patition
+# The script enables filesystem quota on /home partition
 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                 Variable & Function                      #
 #----------------------------------------------------------#
 
 # Includes
@@ -19,21 +19,15 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 # Checking quota package
-if [ ! -e "/usr/sbin/setquota" ]; then
+quota=$(which --skip-alias --skip-functions quota 2>/dev/null)
+if [ $? -ne 0 ]; then
     if [ -e "/etc/redhat-release" ]; then
         yum -y install quota >/dev/null 2>&1
-        result=$?
+        check_result $? "quota package installation failed" $E_UPDATE
     else
         export DEBIAN_FRONTEND=noninteractive
         apt-get -y install quota >/dev/null 2>&1
-        result=$?
-    fi
-
-    # Checking installation status
-    if [ "$result" -ne 0 ]; then
-        echo "Error: quota package wasn't successfully installed"
-        log_event "$E_UPDATE" "$EVENT"
-        exit $E_UPDATE
+        check_result $? "quota package installation failed" $E_UPDATE
     fi
 fi
 
@@ -42,38 +36,40 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding usrquota option on /home partition
-mnt=$(df -P /home |awk '{print $6}' |tail -n1)
-lnr=$(cat -n /etc/fstab |awk '{print $1,$3}' |grep "$mnt$" |cut -f 1 -d ' ')
-options=$(sed -n ${lnr}p /etc/fstab |awk '{print $4}')
-if [ -z "$(echo $options |grep usrquota)" ]; then
-    sed -i "$lnr s/$options/$options,usrquota/" /etc/fstab
+# Adding group and user quota on /home partition
+mnt=$(df -P /home | awk '{print $6}' | tail -n1)
+lnr=$(cat -n /etc/fstab | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
+opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
+fnd='usrquota\|grpquota\|usrjquota=aquota.user\|grpjquota=aquota.group\|jqfmt=vfsv0'
+if [ $(echo $opt | tr ',' '\n' | grep -x $fnd | wc -l) -ne 5 ]; then
+    old=$(echo $(echo $opt | tr ',' '\n' | grep -v 'usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt=') | tr ' ' ',')
+    new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
+    sed -i "$lnr s/$opt/$old,$new/" /etc/fstab
     mount -o remount $mnt
 fi
 
-# Adding aquota.user file
-if [ ! -e "$mnt/aquota.user" ]; then
-    quotacheck -cu $mnt >/dev/null 2>&1
+# Adding v2 group and user quota index
+if [ ! -e "$mnt/aquota.user" ] || [ ! -e "$mnt/aquota.group" ]; then
+    quotaoff $mnt
+    quotacheck -cug $mnt >/dev/null 2>&1
+    quotacheck -aug >/dev/null 2>&1
 fi
 
-# Building fs quota index
-quotacheck -um $mnt
+# Adding quotacheck on reboot
+touch /forcequotacheck
 
-# Adding weekly cron job
-echo "quotacheck -um $mnt" > /etc/cron.daily/quotacheck
+# Adding cron job
+echo '#!/bin/bash' > /etc/cron.daily/quotacheck
+echo 'touch /forcequotacheck' >> /etc/cron.daily/quotacheck
 chmod a+x /etc/cron.daily/quotacheck
 
-# Enabling fs quota
-if [ ! -z "$(quotaon -pa|grep " $mnt "|grep user|grep 'off')" ]; then
+# Enabling group and user quota
+if [ ! -z "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ]; then
     quotaon $mnt
-    if [ $? -ne 0 ]; then
-        echo "Error: quota can't be enabled on $mnt partition"
-        log_event "$E_DISK" "$EVENT"
-        exit $E_DISK
-    fi
+    check_result $? "quota can't be enabled in $mnt" $E_DISK
 fi
 
-# Updating DISK_QUOTA value
+# Updating vesta.conf value
 if [ -z "$(grep DISK_QUOTA $VESTA/conf/vesta.conf)" ]; then
     echo "DISK_QUOTA='yes'" >> $VESTA/conf/vesta.conf
 else

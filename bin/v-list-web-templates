@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 format=${1-shell}
 
 # Includes
@@ -18,8 +18,8 @@ source $VESTA/conf/vesta.conf
 
 # Json function
 json_list_wtpl() {
-    templates=$(ls -t $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
-    templates=$(echo "$templates" | grep "\.tpl" |cut -f 1 -d  '.' )
+    templates=$(ls -v $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
+    templates=$(echo "$templates" | grep '\.tpl' | sed 's/\.tpl$//')
     t_counter=$(echo "$templates" | wc -w)
     i=1
     echo '['
@@ -36,8 +36,8 @@ json_list_wtpl() {
 
 # Shell function
 shell_list_wtpl() {
-    templates=$(ls -t $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
-    templates=$(echo "$templates" | grep "\.tpl" |cut -f 1 -d  '.' )
+    templates=$(ls -v $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
+    templates=$(echo "$templates" | grep '\.tpl' | sed 's/\.tpl$//')
     if [ -z "$nohead" ]; then
         echo "Templates"
         echo "----------"

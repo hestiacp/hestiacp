@@ -9,22 +9,18 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ftp_user=${1}_${3}
-password=$4
+password=$4; HIDE=4
 ftp_path=$5
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
-
-# Hiding password
-A4='******'
-EVENT="$DATE $TIME $SCRIPT $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $A9"
 
 
 #----------------------------------------------------------#
@@ -93,6 +89,11 @@ fi
 # Set ftp user password
 echo "$ftp_user:$password" | /usr/sbin/chpasswd
 ftp_md5=$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)
+
+# Adding jailed sftp env
+if [ ! -z "$SFTPJAIL_KEY" ]; then
+    $BIN/v-add-user-sftp-jail $ftp_user
+fi
 
 
 #----------------------------------------------------------#

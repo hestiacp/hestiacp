@@ -9,11 +9,11 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
 domain_idn=$(idn -t --quiet -a "$domain")
-template=$3
+template=${3-default}
 
 # Includes
 source $VESTA/func/main.sh
@@ -67,9 +67,7 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
 # Restart backend server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web-backend
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Web backend restart failed" >/dev/null
 fi
 
 # Logging

@@ -47,37 +47,34 @@ if [ -z "$ip" ]; then
     fi
 fi
 
-# Web domain
+# Working on web domain
 if [ ! -z "$WEB_SYSTEM" ]; then
     $BIN/v-add-web-domain $user $domain $ip 'no'
-    return_code=$?
+    check_result $? "can't add web domain" >/dev/null
 fi
 
-# Proxy support
-if [ ! -z "$PROXY_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
-    extentions="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
-    extentions="$extentions,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav"
-    extentions="$extentions,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm"
-    $BIN/v-add-web-domain-proxy $user $domain 'default' "$extentions" 'no'
+# Working on DNS domain
+if [ ! -z "$DNS_SYSTEM" ]; then
+    $BIN/v-add-dns-domain $user $domain $ip "" "" "" "" "" 'no'
+    check_result $? "can't add dns domain" >/dev/null
 fi
 
-# DNS domain
-if [ ! -z "$DNS_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
-    $BIN/v-add-dns-domain $user $domain $ip 'no'
-    return_code=$?
-fi
-
-# Mail domain
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$return_code" -eq 0 ]; then
+# Working on mail domain
+if [ ! -z "$MAIL_SYSTEM" ]; then
     $BIN/v-add-mail-domain $user $domain
-    return_code=$?
+    check_result $? "can't add mail domain" >/dev/null
 fi
 
-# Restart services
-if [ "$restart" != 'no' ] && [ "$return_code" -eq 0 ]; then
+# Restarting services
+if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
-    $BIN/v-restart-proxy
+    check_result $? "can't restart web" > /dev/null
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        check_result $? "can't restart proxy" > /dev/null
+    fi
     $BIN/v-restart-dns
+    check_result $? "can't restart dns" > /dev/null
 fi
 
 
@@ -85,4 +82,4 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-exit $return_code
+exit

@@ -58,7 +58,7 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?=$ip?>&chain=<?=$chain?>&token=<?=$_SESSION['token']?>" />
@@ -66,6 +66,7 @@
                     <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
 
             </div>
@@ -114,6 +115,9 @@
                 echo __('%s IP addresses',$i);
               }
             ?>
+          </div>
+          <div class="data-count l-unit__col l-unit__col--right back clearfix">
+            <a class="button cancel" href="/list/firewall/">back</a>
           </div>
       </div>
     </div>

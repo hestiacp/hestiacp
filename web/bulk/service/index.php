@@ -23,14 +23,14 @@ if ($_SESSION['user'] == 'admin') {
             break;
         case 'restart': $cmd='v-restart-service';
             break;
-        default: header("Location: /list/services/"); exit;
+        default: header("Location: /list/server/"); exit;
     }
 
     if ((!empty($_POST['system'])) && ($action == 'restart')) {
         exec (VESTA_CMD."v-restart-system yes", $output, $return_var);
         $_SESSION['error_srv'] = 'The system is going down for reboot NOW!';
         unset($output);
-        header("Location: /list/services/");
+        header("Location: /list/server/");
         exit;
     }
 
@@ -40,4 +40,4 @@ if ($_SESSION['user'] == 'admin') {
     }
 }
 
-header("Location: /list/services/");
+header("Location: /list/server/");

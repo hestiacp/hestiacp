@@ -7,6 +7,7 @@
           <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-user"><span class="name"><?=__('User')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-server"><span class="name"><?=__('Host')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -22,13 +23,13 @@
                 if ($data[$key]['TYPE'] == 'mysql'){
                   $mysql = 1;
 
-                  $db_admin_link = "http://".$http_host."/phpmyadmin/";
+                  $db_myadmin_link = "http://".$http_host."/phpmyadmin/";
                   if (!empty($_SESSION['DB_PMA_URL']))
                     $db_myadmin_link = $_SESSION['DB_PMA_URL'];
                 }
                 if ($data[$key]['TYPE'] == 'pgsql'){
                   $pgsql = 1;
-                  $db_admin_link = "http://".$http_host."/phppgadmin/";
+                  $db_pgadmin_link = "http://".$http_host."/phppgadmin/";
                   if (!empty($_SESSION['DB_PGA_URL']))
                     $db_pgadmin_link = $_SESSION['DB_PGA_URL'];
                 }
@@ -108,7 +109,9 @@
       ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE['db-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="db-<?=sha1($key)?>"" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>">
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['DB'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="db" 
+sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" 
+sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-star="<? if($_SESSION['favourites']['DB'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
@@ -117,8 +120,8 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/db/?database=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                 <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
                   <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
                   <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -126,8 +129,9 @@
                     <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut">&nbsp;S</span>
               </div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -135,6 +139,7 @@
                     <p class="confirmation"><?=__('DELETE_DATABASE_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
             </div>
             <!-- /.actiona-panel -->

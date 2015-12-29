@@ -1,0 +1,63 @@
+#!/bin/bash
+# info: delete user sftp jail
+# options: USER
+#
+# The script enables sftp jailed environment
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+validate_format 'user'
+user_str=$(grep "^$user:" /etc/passwd)
+if [ -z "$user_str" ]; then
+    exit
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining user homedir
+home="$(echo $user_str |cut -f 6 -d :)"
+
+# Unmounting home directory
+mount_dir=$(mount |grep /chroot/$user/ |awk '{print $3}')
+if [ ! -z "$mount_dir" ]; then
+    umount -f $mount_dir 2>/dev/null
+    if [ $? -ne 0 ]; then
+        gpasswd -d $user sftp-only >/dev/null 2>&1
+        exit 1
+    fi
+fi
+
+# Deleting chroot dir
+rmdir $mount_dir 2>/dev/null
+rm -rf /chroot/$user
+
+# Deleting user from sftp group
+gpasswd -d $user sftp-only >/dev/null 2>&1
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+#log_event "$OK" "$EVENT"
+
+exit

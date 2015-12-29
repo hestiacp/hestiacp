@@ -1,0 +1,51 @@
+#!/bin/bash
+# info: change file permission
+# options: USER FILE PERMISSIONS
+#
+# The function changes file access permissions on the file system
+
+user=$1
+src_file=$2
+permissions=$3
+
+# Checking arguments
+if [ -z "$permissions" ]; then
+    echo "Usage: USER FILE PERMISSIONS"
+    exit 1
+fi
+
+# Checking vesta user
+if [ ! -e "$VESTA/data/users/$user" ]; then
+    echo "Error: vesta user $user doesn't exist"
+    exit 3
+fi
+
+# Checking user homedir
+homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
+if [ -z $homedir ]; then
+    echo "Error: user home directory doesn't exist"
+    exit 12
+fi
+
+# Checking source file
+if [ ! -f "$src_file" ]; then
+    echo "Error: source file doesn't exist $src_file"
+    exit 3
+fi
+
+# Checking source path
+rpath=$(readlink -f "$src_file")
+if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+    echo "Error: invalid source path $src_file"
+    exit 2
+fi
+
+# Changing file permissions
+sudo -u $user chmod $permissions "$src_file" >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "Error: access permission on $src_file was not changed"
+    exit 3
+fi
+
+# Exiting
+exit

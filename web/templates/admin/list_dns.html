@@ -7,6 +7,7 @@
           <li entity="sort-name"><span class="name"><?=__('Domain')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-ip"><span class="name"><?=__('IP address')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-records"><span class="name"><?=__('Records')?></span><span class="up">&nbsp;</span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -68,7 +69,9 @@
           }
       ?>
 
-      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_COOKIE['dns-'.sha1($key)] == 1) echo ' l-unit--starred'; ?>" uniq-id="dns-<?=sha1($key)?>" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$key]['RECORDS']?>" >
+      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" 
+v_section="dns" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" 
+sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$key]['RECORDS']?>" sort-star="<?if($_SESSION['favourites']['DNS'][$key] == 1) echo '1'; else echo '0';?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
@@ -77,10 +80,10 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__logs"><a href="/list/dns/?domain=<?=$key?>"><?=__('list records',$data[$key]['RECORDS'])?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__add"><a href="/add/dns/?domain=<?=$key?>"><?=__('add record')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__edit"><a href="/edit/dns/?domain=<?=$key?>"><?=__('edit')?> <i></i></a></div>
-              <div class="actions-panel__col actions-panel__suspend">
+              <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=$key?>"><?=__('list records',$data[$key]['RECORDS'])?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
+              <div class="actions-panel__col actions-panel__add shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=$key?>"><?=__('add record')?> <i></i></a><span class="shortcut">&nbsp;N</span></div>
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                 <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
                   <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
                   <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -88,8 +91,9 @@
                     <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut">&nbsp;S</span>
               </div>
-              <div class="actions-panel__col actions-panel__delete">
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
                   <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
@@ -97,6 +101,7 @@
                     <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
                   </div>
                 </a>
+                <span class="shortcut delete">&nbsp;Del</span>
               </div>
             </div>
             <!-- /.actions-panel -->
@@ -158,13 +163,20 @@
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Expire')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Serial')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=translate_date($data[$key]['EXP'])?></b>
+                      <b><?=$data[$key]['SERIAL']?></b>
                     </div>
                   </div>
                 </td>
                 <td>
+
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Expire')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">
+                      <b><?=$data[$key]['EXP']?></b>
+                    </div>
+                  </div>
                 </td>
               </tr>
 

@@ -31,6 +31,7 @@
       ?>
         <form id="vstobjects" name="v_edit_web" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
             <script language="javascript">
                 function WEBrandom() {
                     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -147,7 +148,7 @@
                             <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Backend Template') . " <span class='optional''> / " . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+                                    <?php print __('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>

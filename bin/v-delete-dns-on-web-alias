@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(echo $2 | sed -e 's/\.*$//g' -e 's/^\.*//g')
 domain_idn=$(idn -t --quiet -a "$domain")

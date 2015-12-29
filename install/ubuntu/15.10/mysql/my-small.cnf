@@ -1,0 +1,40 @@
+[client]
+port=3306
+socket=/var/run/mysqld/mysqld.sock
+
+[mysqld_safe]
+socket=/var/run/mysqld/mysqld.sock
+
+[mysqld]
+user=mysql
+pid-file=/var/run/mysqld/mysqld.pid
+socket=/var/run/mysqld/mysqld.sock
+port=3306
+basedir=/usr
+datadir=/var/lib/mysql
+tmpdir=/tmp
+lc-messages-dir=/usr/share/mysql
+log_error=/var/log/mysql/error.log
+
+symbolic-links=0
+
+skip-external-locking
+key_buffer_size = 16K
+max_allowed_packet = 1M
+table_open_cache = 4
+sort_buffer_size = 64K
+read_buffer_size = 256K
+read_rnd_buffer_size = 256K
+net_buffer_length = 2K
+thread_stack = 240K
+
+#innodb_use_native_aio = 0
+innodb_file_per_table
+
+max_connections=30
+max_user_connections=20
+wait_timeout=10
+interactive_timeout=50
+long_query_time=5
+
+!includedir /etc/mysql/conf.d/

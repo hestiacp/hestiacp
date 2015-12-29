@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list web domain access log
-# options: USER DOMAIN [LINES]
+# options: USER DOMAIN [LINES] [FORMAT]
 #
 # The function of obtaining raw access web domain logs.
 
@@ -9,36 +9,69 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$2
-lines=${3-70}
+ttl=${3-70}
+format=${4-shell}
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
 
+# Json function
+json_list_log() {
+    i=1
+    echo '['
+    for str in $lines; do
+        str=$(echo "$str" |sed -e 's/"/\\"/g')
+        if [ "$i" -lt "$counter" ]; then
+            echo -e  "\t\"$str\","
+        else
+            echo -e  "\t\"$str\""
+        fi
+        (( ++i))
+    done
+    echo "]"
+}
+
+# Shell function
+shell_list_log() {
+    echo "$lines"
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+check_args '2' "$#" 'USER DOMAIN [LINES] [FORMAT]'
+validate_format 'user' 'domain' 'ttl'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Check number of output lines
-if [ "$lines" -gt '3000' ]; then
+if [ "$ttl" -gt '3000' ]; then
     read_cmd="cat"
 else
-    read_cmd="tail -n $lines"
+    read_cmd="tail -n $ttl"
 fi
 
-$read_cmd /var/log/$WEB_SYSTEM/domains/$domain.log
+lines=$($read_cmd /var/log/$WEB_SYSTEM/domains/$domain.log)
+counter=$(echo "$lines" |wc -l)
+IFS=$'\n'
+
+# Listing logs
+case $format in
+    json)   json_list_log ;;
+    plain)  shell_list_log ;;
+    shell)  shell_list_log ;;
+esac
 
 
 #----------------------------------------------------------#

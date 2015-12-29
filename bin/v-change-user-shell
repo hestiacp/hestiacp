@@ -2,14 +2,14 @@
 # info: change user shell
 # options: USER SHELL
 #
-# The function changes system shell of a user. Shell gives abilty to use ssh.
+# The function changes system shell of a user. Shell gives ability to use ssh.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 shell=$2
 
@@ -36,8 +36,17 @@ is_object_unsuspended 'user' 'USER' "$user"
 shell_path=$(grep -w "$shell" /etc/shells | head -n1)
 
 # Changing passwd file
-/usr/bin/chsh -s "$shell_path" "$user" &>/dev/null
+/usr/bin/chsh -s "$shell_path" "$user" >/dev/null 2>&1
 shell=$(basename $shell_path)
+
+# Adding jailed sftp env
+if [ ! -z "$SFTPJAIL_KEY" ]; then
+    if [[ "$shell" =~ nologin ]] || [[ "$shell" =~ rssh ]]; then
+        $BIN/v-add-user-sftp-jail $user >/dev/null 2>&1
+    else
+        $BIN/v-delete-user-sftp-jail $user >/dev/null 2>&1
+    fi
+fi
 
 
 #----------------------------------------------------------#

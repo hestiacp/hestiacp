@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 job=$2
 
@@ -52,11 +52,9 @@ sync_cron_jobs
 # Decreasing cron value
 decrease_user_value "$user" '$U_CRON_JOBS'
 
-# Restart crond
+# Restarting crond
 $BIN/v-restart-cron
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+check_result $? "Restart restart failed" >/dev/null
 
 # Logging
 log_history "deleted cron job $job"

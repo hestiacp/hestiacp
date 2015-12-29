@@ -11,7 +11,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
@@ -63,41 +63,39 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 # Checking proxy
-if [ ! -z "$PROXY" ]; then
+if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
     tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
     conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
     del_web_config
     add_web_config
 
+    # Checking proxy SSL
+    if [ "$SSL" = 'yes' ]; then
+        tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+        conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+        del_web_config
+        add_web_config
+    fi
 fi
 
-# Checking proxy SSL
-if [ ! -z "$PROXY" ] && [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
-    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-    del_web_config
-    add_web_config
-fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Update config
+# Updating config
 update_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
 increase_user_value "$user" '$SUSPENDED_WEB'
 
-# Restart web server
+# Restarting web server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
-    fi
+    check_result $? "Web restart failed" >/dev/null
 
-    $BIN/v-restart-proxy
-    if [ $? -ne 0 ]; then
-        exit $E_RESTART
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        check_result $? "Proxy restart failed" >/dev/null
     fi
 fi
 

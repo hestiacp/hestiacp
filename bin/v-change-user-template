@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 type=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 template=$3
@@ -37,7 +37,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 case $type in 
     WEB) is_web_template_valid;
         update_user_value "$user" '$WEB_TEMPLATE' "$template";;
-    PROXY) is_proxy_template_valid;
+    PROXY) is_proxy_template_valid $template;
         update_user_value "$user" '$PROXY_TEMPLATE' "$template";;
     DNS) is_dns_template_valid;
         update_user_value "$user" '$DNS_TEMPLATE' "$template";;

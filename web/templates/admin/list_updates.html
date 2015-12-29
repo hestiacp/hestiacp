@@ -75,7 +75,7 @@
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <? if ($data[$key]['UPDATED'] == 'no') {
-                   echo '<div class="actions-panel__col actions-panel__update"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a></div>';
+                   echo '<div class="actions-panel__col actions-panel__update shortcut-u" key-action="href"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a><span class="shortcut">&nbsp;U</span></div>';
                  }
               ?>
             </div>

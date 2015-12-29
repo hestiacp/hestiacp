@@ -1,7 +1,6 @@
 <?php
-session_start();
-$TAB = 'IP';
 error_reporting(NULL);
+$TAB = 'IP';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

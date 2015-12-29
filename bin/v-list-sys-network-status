@@ -1,0 +1,40 @@
+#!/bin/bash
+# info: list system network status
+# options: [FORMAT]
+#
+# The function lists network status
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+#format=${1-shell}
+
+# Includes
+#source $VESTA/func/main.sh
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Displaying network stats
+ss -s 
+echo -en "\n-------------------------------------"
+echo -en  "-------------------------------------\n\n"
+
+# Displaying network usage
+lsof -itcp -n -P
+echo -en "\n-------------------------------------"
+echo -en  "-------------------------------------\n\n"
+
+# Displaying network interfaces
+ifconfig
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

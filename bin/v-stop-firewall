@@ -40,6 +40,15 @@ echo "$iptables -F INPUT" >> $tmp
 # Deleting vesta chain
 echo "$iptables -X vesta" >> $tmp
 
+# Deleting custom chains
+chains=$(cat $VESTA/data/firewall/chains.conf 2>/dev/null)
+IFS=$'\n'
+for chain in $chains; do
+    eval $chain
+    echo "$iptables -F fail2ban-$CHAIN" >> $tmp
+    echo "$iptables -X fail2ban-$CHAIN" >> $tmp
+done
+
 # Applying rules
 bash $tmp 2>/dev/null
 

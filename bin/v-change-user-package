@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 package=$2
 force=$3
@@ -148,6 +148,7 @@ U_DATABASES='$U_DATABASES'
 U_CRON_JOBS='$U_CRON_JOBS'
 U_BACKUPS='$U_BACKUPS'
 LANGUAGE='$LANGUAGE'
+NOTIFICATIONS='$NOTIFICATIONS'
 TIME='$TIME'
 DATE='$DATE'" > $USER_DATA/user.conf
 }

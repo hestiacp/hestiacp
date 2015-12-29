@@ -74,14 +74,8 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
     }
 }
 
-// Set system language
-exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
-$data = json_decode(implode('', $output), true);
-if (!empty( $data['config']['LANGUAGE'])) {
-    $_SESSION['language'] = $data['config']['LANGUAGE'];
-} else {
-    $_SESSION['language'] = 'en';
-}
+// Detect language
+if (empty($_SESSION['language'])) $_SESSION['language'] = detect_user_language();
 
 if (empty($_GET['action'])) {
     require_once '../templates/header.html';

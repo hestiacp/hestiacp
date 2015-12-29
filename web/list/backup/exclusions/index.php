@@ -1,6 +1,6 @@
 <?php
-session_start();
-$TAB = 'BACKUP EXCLUSIONS';
+error_reporting(NULL);
+$TAB = 'BACKUP';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

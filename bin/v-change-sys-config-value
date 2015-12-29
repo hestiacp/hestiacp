@@ -10,7 +10,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 key=$(echo "$1" | tr '[:lower:]' '[:upper:]' )
 value=$2
 

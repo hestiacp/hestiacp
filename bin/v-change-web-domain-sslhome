@@ -5,11 +5,12 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument defenition
+# Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain_idn=$(idn -t --quiet -a "$domain")
 ssl_home=$3
+restart=$4
 
 # Includes
 source $VESTA/func/main.sh
@@ -21,7 +22,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN SSL_HOME'
+check_args '3' "$#" 'USER DOMAIN SSL_HOME [RESTART]'
 validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -55,7 +56,7 @@ esac
 replace_web_config
 
 # Checking proxy config
-if [ ! -z "$PROXY" ]; then
+if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
     tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
     conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
     replace_web_config
@@ -69,15 +70,15 @@ fi
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
 
-# Restart web server
-$BIN/v-restart-web
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
-fi
+# Restarting web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web
+    check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy
-if [ $? -ne 0 ]; then
-    exit $E_RESTART
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        check_result $? "Proxy restart failed" >/dev/null
+    fi
 fi
 
 # Logging

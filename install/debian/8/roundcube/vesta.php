@@ -40,7 +40,16 @@ class rcube_vesta_password {
         $send .= PHP_EOL;
         $send .= $postdata . PHP_EOL . PHP_EOL;
 
-        $fp = fsockopen('ssl://' . $vesta_host, $vesta_port);
+        //$fp = fsockopen('ssl://' . $vesta_host, $vesta_port);
+        $errno = "";
+        $errstr = "";
+        $context = stream_context_create();
+
+        $result = stream_context_set_option($context, 'ssl', 'verify_peer', false);
+        $result = stream_context_set_option($context, 'ssl', 'verify_host', false);
+        $result = stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
+
+        $fp = stream_socket_client('ssl://' . $vesta_host . ':'.$vesta_port, $errno, $errstr, 60, STREAM_CLIENT_CONNECT, $context);
         fputs($fp, $send);
         $result = fread($fp, 2048);
         fclose($fp);

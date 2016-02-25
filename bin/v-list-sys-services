@@ -116,9 +116,7 @@ fi
 # DNS
 service=$DNS_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
-    if [ "$service" == 'bind' ] || [ "$service" == 'bind9' ]; then
-        proc_name='named'
-    fi
+    proc_name='named'
     get_srv_state $service $proc_name
     str="$str\nNAME='$service' SYSTEM='dns server' STATE='$state' CPU='$cpu'"
     str="$str MEM='$mem' RTIME='$rtime'"

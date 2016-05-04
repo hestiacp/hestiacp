@@ -479,7 +479,7 @@ if [ "$USER" != '*' ]; then
     set -f
     i=0
 
-    for udir in $(ls -a |egrep -v "conf|web|dns|mail|^\.\.$|^\.$"); do
+    for udir in $(ls -a |egrep -v "^conf$|^web$|^dns$|^mail$|^\.\.$|^\.$"); do
         exclusion=$(echo "$USER" |tr ',' '\n' |grep "^$udir$")
         if [ -z "$exclusion" ]; then
             ((i ++))

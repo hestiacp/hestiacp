@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [SYSTEM]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -72,6 +72,6 @@ if [ -z "$system" ]; then
 else
     log_history "deleted $system exlusion"
 fi
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -2,7 +2,7 @@
 # info: add web domain backend
 # options: USER DOMAIN [TEMPLATE] [RESTART]
 #
-# The call is used for adding web backend configuration for user
+# The call is used for adding web backend configuration.
 
 
 #----------------------------------------------------------#
@@ -12,8 +12,8 @@
 # Argument definition
 user=$1
 domain=$2
-domain_idn=$(idn -t --quiet -a "$domain")
 template=${3-default}
+restart=$4
 
 # Includes
 source $VESTA/func/main.sh
@@ -26,20 +26,23 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [TEMPLATE] [RESTART]'
-validate_format 'user' 'domain'
-is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$WEB_BACKEND" 'WEB_BACKEND'
+is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_web_backend_template_valid $template
-is_web_backend_pool_valid
-if [ -e "$pool/$backend.conf" ]; then
-    exit
-fi
+is_backend_template_valid "$template"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Defining pool directory
+prepare_web_backend
+
+# Checking backend configuration
+if [ -e "$pool/$backend_type.conf" ]; then
+    exit
+fi
 
 # Allocating backend port
 backend_port=9000
@@ -56,8 +59,7 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
     sed -e "s|%backend_port%|$backend_port|" \
         -e "s|%user%|$user|"\
         -e "s|%domain%|$domain|"\
-        -e "s|%domain_idn%|$domain_idn|"\
-        -e "s|%backend%|$backend|g" > $pool/$backend.conf
+        -e "s|%backend%|$backend_type|g" > $pool/$backend_type.conf
 
 
 #----------------------------------------------------------#
@@ -72,6 +74,6 @@ fi
 
 # Logging
 log_history "added $WEB_BACKEND backend configuration for $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

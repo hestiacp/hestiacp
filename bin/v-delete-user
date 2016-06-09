@@ -27,7 +27,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ "$user" = 'admin' ]; then
@@ -89,6 +89,11 @@ fi
 sed -i "/ $user$/d" $VESTA/data/queue/disk.pipe
 sed -i "/ $user$/d" $VESTA/data/queue/traffic.pipe
 
+# Deleting sftp jail
+if [ ! -z "$SFTPJAIL_KEY" ]; then
+    $BIN/v-delete-user-sftp-jail $user
+fi
+
 # Deleting system user
 /usr/sbin/userdel -f $user >> /dev/null 2>&1
 
@@ -122,6 +127,6 @@ fi
 
 # Logging
 log_history "deleted system user $user" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

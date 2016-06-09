@@ -28,7 +28,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [NOTIFY]'
-validate_format 'user'
+is_format_valid 'user'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -69,7 +69,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
         echo -e "$mail_text" |$send_mail -s "$subj" $email
         echo "Error: LA is too high"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_LA" "$EVENT"
+        log_event "$E_LA" "$ARGUMENTS"
         exit $E_LA
     fi
     la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
@@ -81,7 +81,7 @@ tmpdir=$(mktemp -p $BACKUP -d)
 if [ "$?" -ne 0 ]; then
     echo "Can't create tmp dir $tmpdir" |$send_mail -s "$subj" $email
     echo "Error: can't create tmp dir"
-    log_event "$E_NOTEXIST" "$EVENT"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 
@@ -167,30 +167,30 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         # Backup vhost config
         tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
         conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
-        get_web_config_brds
+        get_web_config_lines $tpl_file $conf
         sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
 
         # Backup ssl vhost
         if [ "$SSL" = 'yes' ]; then
             tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
             conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-            get_web_config_brds
+            get_web_config_lines $tpl_file $conf
             sed -n "$top_line,$bottom_line p" $conf > conf/s$WEB_SYSTEM.conf
         fi
 
         # Backup proxy config
-        if [ ! -z "$PROXY" ]; then
+        if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
             tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
             conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-            get_web_config_brds
+            get_web_config_lines $tpl_file $conf
             sed -n "$top_line,$bottom_line p" $conf > conf/$PROXY_SYSTEM.conf
         fi
 
         # Backup ssl proxy config
-        if [ ! -z "$PROXY" ] && [ "$SSL" = 'yes' ] ; then
+        if [ ! -z "$PROXY_SYSTEM" ] && [ "$SSL" = 'yes' ]; then
             tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
             conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-            get_web_config_brds
+            get_web_config_lines $tpl_file $conf
             sed -n "$top_line,$bottom_line p" $conf > conf/s$PROXY_SYSTEM.conf
         fi
 
@@ -514,14 +514,14 @@ size="$(du -shm $tmpdir |cut -f 1)"
 
 # Get current time
 end_time=$(date '+%s')
-DATE=$(date +%F)
-TIME=$(date +%T)
-
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Defining local storage function
 local_backup(){
 
-    rm -f $BACKUP/$user.$DATE.tar
+    rm -f $BACKUP/$user.$date.tar
 
     # Checking retention
     backup_list=$(ls -lrt $BACKUP/ |awk '{print $9}' |grep "^$user\.")
@@ -548,18 +548,18 @@ local_backup(){
             $send_mail -s "$subj" $email
         echo "Error: Not enough disk space"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_DISK" "$EVENT"
+        log_event "$E_DISK" "$ARGUMENTS"
         exit $E_DISK
     fi
 
     # Creating final tarball
     cd $tmpdir
-    tar -cf $BACKUP/$user.$DATE.tar .
-    chmod 640 $BACKUP/$user.$DATE.tar
-    chown admin:$user $BACKUP/$user.$DATE.tar
+    tar -cf $BACKUP/$user.$date.tar .
+    chmod 640 $BACKUP/$user.$date.tar
+    chown admin:$user $BACKUP/$user.$date.tar
     localbackup='yes'
-    echo -e "$(date "+%F %T") Local: $BACKUP/$user.$DATE.tar"
-    msg="$msg\n$(date "+%F %T") Local: $BACKUP/$user.$DATE.tar"
+    echo -e "$(date "+%F %T") Local: $BACKUP/$user.$date.tar"
+    msg="$msg\n$(date "+%F %T") Local: $BACKUP/$user.$date.tar"
     U_BACKUPS=$(ls $BACKUP/ |grep "^$user." |wc -l)
     update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 }
@@ -586,16 +586,12 @@ ftp_backup() {
         echo "$ftp_conf_error" |$send_mail -s "$subj" $email
         echo "Error: $VESTA/conf/ftp.backup.conf doesn't exist"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_NOTEXIST" "$EVENT"
+        log_event "$E_NOTEXIST" "$ARGUMENTS"
         exit $E_NOTEXIST
     fi
 
     # Parse config
     source $VESTA/conf/ftp.backup.conf
-
-    # Set current data
-    DATE=$(date +%F)
-    TIME=$(date +%T)
 
     # Set default port
     if [ -z "$(grep 'PORT=' $VESTA/conf/ftp.backup.conf)" ]; then
@@ -609,13 +605,13 @@ ftp_backup() {
             $send_mail -s "$subj" $email
         echo "Error: Parsing error"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_PARSING" "$EVENT"
+        log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
 
 
     # Debug info
-    echo -e "$(date "+%F %T") Remote: ftp://$HOST$BPATH/$user.$DATE.tar"
+    echo -e "$(date "+%F %T") Remote: ftp://$HOST$BPATH/$user.$date.tar"
 
     # Checking ftp connection
     fconn=$(ftpc)
@@ -626,7 +622,7 @@ ftp_backup() {
             $send_mail -s "$subj" $email
         echo "Error: can't login to ftp ftp://$USERNAME@$HOST"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_CONNECT" "$EVENT"
+        log_event "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
     fi
 
@@ -641,7 +637,7 @@ ftp_backup() {
             $send_mail -s "$subj" $email
         echo "Error: cant's create ftp folder ftp://$HOST$BPATH"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_FTP" "$EVENT"
+        log_event "$E_FTP" "$ARGUMENTS"
         exit $E_FTP
     fi
 
@@ -661,13 +657,13 @@ ftp_backup() {
     # Uploading backup archive
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        ftpc "cd $BPATH" "put $user.$DATE.tar"
+        ftpc "cd $BPATH" "put $user.$date.tar"
     else
         cd $tmpdir
-        tar -cf $BACKUP/$user.$DATE.tar .
+        tar -cf $BACKUP/$user.$date.tar .
         cd $BACKUP/
-        ftpc "cd $BPATH" "put $user.$DATE.tar"
-        rm -f $user.$DATE.tar
+        ftpc "cd $BPATH" "put $user.$date.tar"
+        rm -f $user.$date.tar
     fi
 }
 
@@ -737,16 +733,12 @@ sftp_backup() {
         echo "$sftp_conf_error" |$send_mail -s "$subj" $email
         echo "Error: $VESTA/conf/sftp.backup.conf doesn't exist"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_NOTEXIST" "$EVENT"
+        log_event "$E_NOTEXIST" "$ARGUMENTS"
         exit $E_NOTEXIST
     fi
 
     # Parse config
     source $VESTA/conf/sftp.backup.conf
-
-    # Set current data
-    DATE=$(date +%F)
-    TIME=$(date +%T)
 
     # Set default port
     if [ -z "$(grep 'PORT=' $VESTA/conf/sftp.backup.conf)" ]; then
@@ -760,12 +752,12 @@ sftp_backup() {
             $send_mail -s "$subj" $email
         echo "Error: Parsing error"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_PARSING" "$EVENT"
+        log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
 
     # Debug info
-    echo -e "$(date "+%F %T") Remote: sftp://$HOST/$BPATH/$user.$DATE.tar"
+    echo -e "$(date "+%F %T") Remote: sftp://$HOST/$BPATH/$user.$date.tar"
 
     # Checking network connection and write permissions
     sftmpdir="$BPATH/vst.bK76A9SUkt"
@@ -781,7 +773,7 @@ sftp_backup() {
                 $send_mail -s "$subj" $email;;
         esac
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$rc" "$EVENT"
+        log_event "$rc" "$ARGUMENTS"
         exit "$rc"
     fi
 
@@ -799,16 +791,16 @@ sftp_backup() {
     fi
 
     # Uploading backup archive
-    echo -e "$(date "+%F %T") Uploading $user.$DATE.tar ..."
+    echo -e "$(date "+%F %T") Uploading $user.$date.tar ..."
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        sftpc "cd $BPATH" "put $user.$DATE.tar" > /dev/null 2>&1
+        sftpc "cd $BPATH" "put $user.$date.tar" > /dev/null 2>&1
     else
         cd $tmpdir
-        tar -cf $BACKUP/$user.$DATE.tar .
+        tar -cf $BACKUP/$user.$date.tar .
         cd $BACKUP/
-        sftpc "cd $BPATH" "put $user.$DATE.tar" > /dev/null 2>&1
-        rm -f $user.$DATE.tar
+        sftpc "cd $BPATH" "put $user.$date.tar" > /dev/null 2>&1
+        rm -f $user.$date.tar
     fi
 }
 
@@ -851,10 +843,10 @@ msg="$msg\n$(date "+%F %T") Runtime: $run_time $min"
 
 # Removing duplicate
 touch $USER_DATA/backup.conf
-sed -i "/$user.$DATE.tar/d" $USER_DATA/backup.conf
+sed -i "/$user.$date.tar/d" $USER_DATA/backup.conf
 
 # Registering new backup
-backup_str="BACKUP='$user.$DATE.tar'"
+backup_str="BACKUP='$user.$date.tar'"
 backup_str="$backup_str TYPE='$BACKUP_SYSTEM' SIZE='$size'"
 backup_str="$backup_str WEB='${web_list// /,}'"
 backup_str="$backup_str DNS='${dns_list// /,}'"
@@ -862,7 +854,7 @@ backup_str="$backup_str MAIL='${mail_list// /,}'"
 backup_str="$backup_str DB='${db_list// /,}'"
 backup_str="$backup_str CRON='$cron_list'"
 backup_str="$backup_str UDIR='${udir_list// /,}'"
-backup_str="$backup_str RUNTIME='$run_time' TIME='$TIME' DATE='$DATE'"
+backup_str="$backup_str RUNTIME='$run_time' TIME='$time' DATE='$date'"
 echo "$backup_str" >> $USER_DATA/backup.conf
 
 # Removing old backups
@@ -881,6 +873,6 @@ if [ "$notify" != 'no' ]; then
 fi
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

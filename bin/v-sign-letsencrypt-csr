@@ -1,0 +1,112 @@
+#!/bin/bash
+# info: sing letsencrypt csr
+# options: USER DOMAIN CSR_DIR [FORMAT]
+#
+# The function signs certificate request using LetsEncript API
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+csr="$3/$domain.csr"
+format=$4
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# encode base64
+encode_base64() {
+    cat |base64 |tr '+/' '-_' |tr -d '\r\n='
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN CSR'
+is_format_valid 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
+    check_result $E_NOTEXIST "LetsEncrypt key doesn't exist"
+fi
+check_domain=$(grep -w "$domain'" $USER_DATA/web.conf)
+if [ -z "$check_domain" ]; then
+    check_result $E_NOTEXIST "domain $domain doesn't exist"
+fi
+if [ ! -e "$csr" ]; then
+    check_result $E_NOTEXIST "$csr doesn't exist"
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+source $USER_DATA/ssl/le.conf
+api='https://acme-v01.api.letsencrypt.org'
+r_domain=$(echo "$check_domain" |cut -f 2 -d \')
+key="$USER_DATA/ssl/user.key"
+exponent="$EXPONENT"
+modulus="$MODULUS"
+thumb="$THUMB"
+
+# Defining JWK header
+header='{"e":"'$exponent'","kty":"RSA","n":"'"$modulus"'"}'
+header='{"alg":"RS256","jwk":'"$header"'}'
+
+# Requesting nonce
+nonce=$(curl -s -I "$api/directory" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+protected=$(echo -n '{"nonce":"'"$nonce"'"}' |encode_base64)
+
+# Defining ACME query (request challenge)
+csr=$(openssl req -in $csr -outform DER |encode_base64)
+query='{"resource":"new-cert","csr":"'$csr'"}'
+payload=$(echo -n "$query" |encode_base64)
+signature=$(printf "%s" "$protected.$payload" |\
+    openssl dgst -sha256 -binary -sign "$key" |encode_base64)
+data='{"header":'"$header"',"protected":"'"$protected"'",'
+data=$data'"payload":"'"$payload"'","signature":"'"$signature"'"}'
+
+# Sending request to LetsEncrypt API
+answer=$(mktemp)
+curl -s -d "$data" "$api/acme/new-cert" -o $answer
+if [ ! -z "$(grep Error $answer)" ]; then
+    detail="$(cat $answer |tr ',' '\n' |grep detail |cut -f 4 -d \")"
+    detail=$(echo "$detail" |awk -F "::" '{print $2}')
+    rm $answer
+    check_result $E_LIMIT "$detail"
+fi
+
+# Printing certificate
+crt=$(cat "$answer" |openssl base64 -e)
+rm $answer
+if [ "$format" != 'json' ]; then
+    echo "-----BEGIN CERTIFICATE-----"
+    echo "$crt"
+    echo "-----END CERTIFICATE-----"
+else
+    echo -e "{\n\t\"$domain\": {\n\t\t\"CRT\":\""
+    echo -n '-----BEGIN CERTIFICATE-----\n'
+    echo -n "$crt" |sed ':a;N;$!ba;s/\n/\\n/g'
+    echo -n '-----END CERTIFICATE-----'
+    echo -e  "\"\n\t\t}\n\t}"
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -1,0 +1,97 @@
+#!/bin/bash
+# info: adding letsencrypt ssl cetificate for domain
+# options: USER DOMAIN [ALIASES] [RESTART]
+#
+# The function turns on SSL support for a domain. Parameter ssl_dir is a path
+# to directory where 2 or 3 ssl files can be found. Certificate file 
+# domain.tld.crt and its key domain.tld.key  are mandatory. Certificate
+# authority domain.tld.ca file is optional. If home directory  parameter
+# (ssl_home) is not set, https domain uses public_shtml as separate
+# documentroot directory.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+aliases=$3
+restart=$4
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Registering LetsEncrypt user account
+$BIN/v-add-letsencrypt-user $user
+check_result $? "LE account registration" >/dev/null
+source $USER_DATA/ssl/le.conf
+email=$EMAIL
+
+# Validating domain and aliases
+i=1
+for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
+    $BIN/v-check-letsencrypt-domain $user $alias
+    check_result $? "LE domain validation" >/dev/null
+    if [ "$i" -gt 6 ]; then
+        check_result $E_LIMIT "LE can't sign more than 6 domains"
+    fi
+    i=$((i++))
+done
+
+# Generating CSR
+ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "$email" "US" "California" \
+    "San Francisco" "Vesta" "IT" "$aliases" |tail -n1 |awk '{print $2}')
+
+# Signing CSR
+crt=$($BIN/v-sign-letsencrypt-csr $user $domain $ssl_dir)
+check_result $? "$crt"
+echo "$crt" > $ssl_dir/$domain.crt
+
+# Dowloading CA certificate
+le_certs='https://letsencrypt.org/certs'
+x1='lets-encrypt-x1-cross-signed.pem.txt'
+x3='lets-encrypt-x3-cross-signed.pem.txt'
+issuer=$(openssl x509 -text -in $ssl_dir/$domain.crt |grep "Issuer:")
+if [ -z "$(echo $issuer|grep X3)" ]; then
+    curl -s $le_certs/$x1 > $ssl_dir/$domain.ca
+else
+    curl -s $le_certs/$x3 > $ssl_dir/$domain.ca
+fi
+
+# Adding SSL
+$BIN/v-delete-web-domain-ssl $user $domain >/dev/null 2>&1
+$BIN/v-add-web-domain-ssl $user $domain $ssl_dir
+check_result $? "SSL install" >/dev/null
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

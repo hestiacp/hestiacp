@@ -1,0 +1,145 @@
+#!/bin/bash
+# info: check letsencrypt domain
+# options: USER DOMAIN
+#
+# The function check and validates domain with LetsEncript
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# encode base64
+encode_base64() {
+    cat |base64 |tr '+/' '-_' |tr -d '\r\n='
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
+    check_result $E_NOTEXIST "LetsEncrypt key doesn't exist"
+fi
+check_domain=$(grep -w "$domain'" $USER_DATA/web.conf)
+if [ -z "$check_domain" ]; then
+    check_result $E_NOTEXIST "domain $domain doesn't exist"
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+source $USER_DATA/ssl/le.conf
+api='https://acme-v01.api.letsencrypt.org'
+r_domain=$(echo "$check_domain" |cut -f 2 -d \')
+key="$USER_DATA/ssl/user.key"
+exponent="$EXPONENT"
+modulus="$MODULUS"
+thumb="$THUMB"
+
+# Defining JWK header
+header='{"e":"'$exponent'","kty":"RSA","n":"'"$modulus"'"}'
+header='{"alg":"RS256","jwk":'"$header"'}'
+
+# Requesting nonce
+nonce=$(curl -s -I "$api/directory" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+protected=$(echo -n '{"nonce":"'"$nonce"'"}' |encode_base64)
+
+# Defining ACME query (request challenge)
+query='{"resource":"new-authz","identifier"'
+query=$query':{"type":"dns","value":"'"$domain"'"}}'
+payload=$(echo -n "$query" |encode_base64)
+signature=$(printf "%s" "$protected.$payload" |\
+    openssl dgst -sha256 -binary -sign "$key" |encode_base64)
+data='{"header":'"$header"',"protected":"'"$protected"'",'
+data=$data'"payload":"'"$payload"'","signature":"'"$signature"'"}'
+
+# Sending request to LetsEncrypt API
+answer=$(curl -s -i -d "$data" "$api/acme/new-authz")
+
+# Checking http answer status
+status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
+if [[ "$status" -ne "201" ]]; then
+    check_result $E_CONNECT "LetsEncrypt challenge request $status"
+fi
+
+# Parsing domain nonce,token and uri
+nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+protected=$(echo -n '{"nonce":"'"$nonce"'"}' |encode_base64)
+token=$(echo "$answer" |tr ',' '\n' |grep -A 3 http-01 |grep token)
+token=$(echo "$token" |cut -f 4 -d \")
+uri=$(echo "$answer" |tr ',' '\n' |grep -A 3 http-01 |grep uri)
+uri=$(echo "$uri" |cut -f 4 -d \")
+
+# Adding location wrapper for request challenge
+if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
+    conf="$HOMEDIR/$user/conf/web/nginx.$r_domain.conf_letsencrypt"
+    if [ ! -e "$conf" ]; then
+        echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' > $conf
+        echo '    default_type text/plain;' >> $conf
+        echo '    return 200 "$1.'$thumb'";' >> $conf
+        echo '}' >> $conf
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            $BIN/v-restart-proxy
+            check_result $? "Proxy restart failed" >/dev/null
+        else
+            $BIN/v-restart-web
+            check_result $? "Web restart failed" >/dev/null
+        fi
+    fi
+else
+    acme="$HOMEDIR/$user/web/$r_domain/public_html/.well-known/acme-challenge"
+    echo "$token" > $acme/$token.$thumb
+    chown -R $user:$user $HOMEDIR/$user/web/$r_domain/public_html/.well-known
+fi
+
+# Defining ACME query (request validation)
+query='{"resource":"challenge","type":"http-01","keyAuthorization"'
+query=$query':"'$token.$thumb'","token":"'$token'"}'
+payload=$(echo -n "$query" |encode_base64)
+signature=$(printf "%s" "$protected.$payload" |\
+    openssl dgst -sha256 -binary -sign "$key" |encode_base64)
+data='{"header":'"$header"',"protected":"'"$protected"'",'
+data=$data'"payload":"'"$payload"'","signature":"'"$signature"'"}'
+
+# Sending request to LetsEncrypt API
+answer=$(curl -s -i -d "$data" "$uri")
+
+# Checking domain validation status
+status=$(echo $answer |tr ',' '\n' |grep status |cut -f 4 -d \")
+location=$(echo "$answer" |grep Location: |awk '{print $2}' |tr -d '\r\n')
+while [ "$status" = 'pending' ] ; do
+    answer=$(curl -s -i "$location")
+    status=$(echo "$answer" |tr ',' '\n' |grep status |cut -f 4 -d \")
+done
+if [ "$status" = 'invalid' ]; then
+    detail="$(echo $answer |tr ',' '\n' |grep detail |cut -f 4 -d \")"
+    check_result $E_CONNECT "$detail"
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -1,0 +1,111 @@
+#!/bin/bash
+# info: register letsencrypt user account
+# options: USER [EMAIL]
+#
+# The function creates and register LetsEncript account key
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+email=$2
+key_size=2048
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# encode base64
+encode_base64() {
+    cat |base64 |tr '+/' '-_' |tr -d '\r\n='
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [EMAIL]'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+if [ -e "$USER_DATA/ssl/le.conf" ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+api='https://acme-v01.api.letsencrypt.org'
+agreement='https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf'
+if [ -z "$email" ]; then
+    email=$(get_user_value '$CONTACT')
+fi
+
+# Generating key
+key="$USER_DATA/ssl/user.key"
+if [ ! -e "$key" ]; then
+    openssl genrsa -out $key $key_size >/dev/null 2>&1
+    chmod 600 $key
+fi
+
+# Defining key exponent
+exponent=$(openssl pkey -inform perm -in "$key" -noout -text_pub |\
+    grep Exponent: |cut -f 2 -d '(' |cut -f 1 -d ')' |sed -e 's/x//' |\
+    xxd -r -p |encode_base64)
+
+# Defining key modulus
+modulus=$(openssl rsa -in "$key" -modulus -noout |\
+    sed -e 's/^Modulus=//' |xxd -r -p |encode_base64)
+
+# Defining key thumb
+thumb='{"e":"'$exponent'","kty":"RSA","n":"'"$modulus"'"}'
+thumb="$(echo -n "$thumb" |openssl dgst -sha256 -binary |encode_base64)"
+
+# Defining JWK header
+header='{"e":"'$exponent'","kty":"RSA","n":"'"$modulus"'"}'
+header='{"alg":"RS256","jwk":'"$header"'}'
+
+# Requesting nonce
+nonce=$(curl -s -I "$api/directory" |grep Nonce |cut -f 2 -d \ |tr -d '\r\n')
+protected=$(echo -n '{"nonce":"'"$nonce"'"}' |encode_base64)
+
+# Defining registration query
+query='{"resource":"new-reg","contact":["mailto:'"$email"'"],'
+query=$query'"agreement":"'$agreement'"}'
+payload=$(echo -n "$query" |encode_base64)
+signature=$(printf "%s" "$protected.$payload" |\
+    openssl dgst -sha256 -binary -sign "$key" |encode_base64)
+data='{"header":'"$header"',"protected":"'"$protected"'",'
+data=$data'"payload":"'"$payload"'","signature":"'"$signature"'"}'
+
+# Sending request to LetsEncrypt API
+answer=$(curl -s -i -d "$data" "$api/acme/new-reg")
+status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
+
+# Checking http answer status
+if [[ "$status" -ne "201" ]] && [[ "$status" -ne "409" ]]; then
+    check_result $E_CONNECT "LetsEncrypt account registration $status"
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Adding le.conf
+echo "EMAIL='$email'" > $USER_DATA/ssl/le.conf
+echo "EXPONENT='$exponent'" >> $USER_DATA/ssl/le.conf
+echo "MODULUS='$modulus'" >> $USER_DATA/ssl/le.conf
+echo "THUMB='$thumb'" >> $USER_DATA/ssl/le.conf
+chmod 660  $USER_DATA/ssl/le.conf
+
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

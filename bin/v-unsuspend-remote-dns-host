@@ -22,7 +22,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'HOST'
-validate_format 'host'
+is_format_valid 'host'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 is_object_suspended "../../conf/dns-cluster" 'HOST' "$host"
@@ -41,6 +41,6 @@ update_object_value "../../conf/dns-cluster" 'HOST' "$host" '$SUSPENDED' 'no'
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -24,7 +24,7 @@ source $VESTA/conf/vesta.conf
 
 check_args '0' "$#" 'IP'
 if [ ! -z "$ip" ]; then
-    validate_format 'ip'
+    is_format_valid 'ip'
     is_ip_valid
 fi
 
@@ -60,6 +60,6 @@ done
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

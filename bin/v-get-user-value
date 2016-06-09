@@ -22,7 +22,7 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER KEY'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 

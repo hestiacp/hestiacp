@@ -60,6 +60,6 @@ if [ "$module" = 'SFTPJAIL' ]; then
 fi
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

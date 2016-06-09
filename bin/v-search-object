@@ -71,7 +71,7 @@ shell_list_search() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'OBJECT [FORMAT]'
-validate_format 'object'
+is_format_valid 'object'
 
 
 #----------------------------------------------------------#
@@ -253,6 +253,6 @@ rm $conf
 #----------------------------------------------------------#
 
 # Logging
-#log_event "$OK" "$EVENT"
+#log_event "$OK" "$ARGUMENTS"
 
 exit

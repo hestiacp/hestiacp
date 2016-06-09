@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [RESTART]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ "$user" = 'admin' ]; then
@@ -90,6 +90,6 @@ update_user_value "$user" '$SUSPENDED' 'yes'
 increase_user_value 'admin' '$SUSPENDED_USERS'
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

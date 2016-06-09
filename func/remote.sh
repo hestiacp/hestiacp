@@ -111,7 +111,7 @@ remote_dns_health_check() {
 
             # Deleting tmp file
             rm -f $tmpfile
-            log_event "$E_CONNECT" "$EVENT"
+            log_event "$E_CONNECT" "$ARGUMENTS"
 
             # Suspending remote host
             dconf="../../conf/dns-cluster"

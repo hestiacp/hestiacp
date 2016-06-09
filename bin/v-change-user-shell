@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER SHELL'
-validate_format 'user' 'shell'
+is_format_valid 'user' 'shell'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -58,6 +58,6 @@ update_user_value "$user" '$SHELL' "$shell"
 
 # Logging
 log_history "changed $user shell to $shell" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

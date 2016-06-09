@@ -34,7 +34,7 @@ fi
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN ACCOUNT'
-validate_format 'user' 'domain' 'account'
+is_format_valid 'user' 'domain' 'account'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -45,7 +45,7 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
 if [ -z "$fwd" ]; then
     echo "Error: forward doesn't exist"
-    log_event "$E_NOTEXIST $EVENT"
+    log_event "$E_NOTEXIST $ARGUMENTS"
     exit $E_NOTEXIST
 fi
 
@@ -71,6 +71,6 @@ update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD_ONLY' "yes"
 
 # Logging
 log_history "added fwd_only flag for $account@$domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

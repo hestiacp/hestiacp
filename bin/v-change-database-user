@@ -27,7 +27,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DATABASE DBUSER [DBPASS]'
-validate_format 'user' 'database' 'dbuser'
+is_format_valid 'user' 'database' 'dbuser'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -86,6 +86,6 @@ fi
 
 # Logging
 log_history "changed $database database user to $dbuser"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

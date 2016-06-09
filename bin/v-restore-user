@@ -40,7 +40,7 @@ source $VESTA/conf/vesta.conf
 is_backup_valid() {
     if [ ! -e "$BACKUP/$backup" ]; then
         echo "Error: backup doesn't exist"
-        log_event "$E_NOTEXIST" "$EVENT"
+        log_event "$E_NOTEXIST" "$ARGUMENTS"
         exit $E_NOTEXIST
     fi
 }
@@ -52,7 +52,7 @@ is_backup_valid() {
 
 args_usage='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
 check_args '2' "$#" "$args_usage"
-validate_format 'user' 'backup'
+is_format_valid 'user' 'backup'
 is_backup_valid
 is_backup_available
 
@@ -92,7 +92,7 @@ if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
     echo "Not enough disk space to run restore" | $send_mail -s "$subj" $email
     echo "Error: Not enough disk space"
     sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-    log_event "$E_DISK" "$EVENT"
+    log_event "$E_DISK" "$ARGUMENTS"
     exit $E_DISK
 fi
 
@@ -107,7 +107,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
         echo "LoadAverage $i is above threshold" |$send_mail -s "$subj" $email
         echo "Error: LA is too high"
         sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        log_event "$E_LA" "$EVENT"
+        log_event "$E_LA" "$ARGUMENTS"
         exit $E_LA
     fi
     (( ++i))
@@ -118,7 +118,7 @@ tmpdir=$(mktemp -p $BACKUP -d)
 if [ "$?" -ne 0 ]; then
     echo "Can't create tmp dir $tmpdir" | $send_mail -s "$subj" $email
     echo "Error: can't create tmp dir"
-    log_event "$E_NOTEXIST" "$EVENT"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 
@@ -208,7 +208,7 @@ if [ "$web" != 'no' ]; then
                 echo "Web domain $domain belongs to another user" |\
                     $send_mail -s "$subj" $email
                 rm -rf $tmpdir
-                log_event "$E_EXISTS" "$EVENT"
+                log_event "$E_EXISTS" "$ARGUMENTS"
                 exit $E_EXISTS
             fi
 
@@ -236,7 +236,7 @@ if [ "$web" != 'no' ]; then
                     echo "Error: no avaiable IP address"
                     echo "No available IP address" |\
                         $send_mail -s "$subj" $email
-                    log_event "$E_NOTEXIST" "$EVENT"
+                    log_event "$E_NOTEXIST" "$ARGUMENTS"
                     exit $E_NOTEXIST
                 fi
                 echo "$IP" > $tmpdir/ip_mapping.$domain
@@ -250,7 +250,7 @@ if [ "$web" != 'no' ]; then
                     echo "Error: no avaiable web template"
                     echo "No available web template" |\
                         $send_mail -s "$subj" $email
-                    log_event "$E_NOTEXIST" "$EVENT"
+                    log_event "$E_NOTEXIST" "$ARGUMENTS"
                     exit $E_NOTEXIST
                 fi
             fi
@@ -263,7 +263,7 @@ if [ "$web" != 'no' ]; then
                         echo "Error: no avaiable proxy template"
                         echo "No available proxy tpl" |\
                             $send_mail -s "$subj" $email
-                        log_event "$E_NOTEXIST" "$EVENT"
+                        log_event "$E_NOTEXIST" "$ARGUMENTS"
                         exit $E_NOTEXIST
                     fi
                 fi
@@ -467,7 +467,7 @@ if [ "$dns" != 'no' ]; then
                 echo "DNS domain $domain belongs to another user" |\
                     $send_mail -s "$subj" $email
                 rm -rf $tmpdir
-                log_event "$E_EXISTS" "$EVENT"
+                log_event "$E_EXISTS" "$ARGUMENTS"
                 exit $E_EXISTS
             fi
 
@@ -487,7 +487,7 @@ if [ "$dns" != 'no' ]; then
             if [ -z "$IP" ]; then
                 echo "Error: no avaiable IP address"
                 echo "No available IP address" | $send_mail -s "$subj" $email
-                log_event "$E_NOTEXIST" "$EVENT"
+                log_event "$E_NOTEXIST" "$ARGUMENTS"
                 exit $E_NOTEXIST
             fi
 
@@ -507,7 +507,7 @@ if [ "$dns" != 'no' ]; then
                     echo "Error: no avaiable dns template"
                     echo "No available dns template" |\
                         $send_mail -s "$subj" $email
-                    log_event "$E_NOTEXIST" "$EVENT"
+                    log_event "$E_NOTEXIST" "$ARGUMENTS"
                     exit $E_NOTEXIST
                 fi
             fi
@@ -595,7 +595,7 @@ if [ "$mail" != 'no' ]; then
                 echo "Mail domain $domain belongs to another user" |\
                     $send_mail -s "$subj" $email
                 rm -rf $tmpdir
-                log_event "$E_EXISTS" "$EVENT"
+                log_event "$E_EXISTS" "$ARGUMENTS"
                 exit $E_EXISTS
             fi
 
@@ -844,6 +844,6 @@ $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

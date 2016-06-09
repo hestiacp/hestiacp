@@ -24,7 +24,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -66,7 +66,7 @@ fi
 # Checking domain search result
 if [ -z "$domain_found" ]; then
     echo "Error: domain $domain doesn't exist"
-    log_event "$E_NOTEXIST" "$EVENT"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 

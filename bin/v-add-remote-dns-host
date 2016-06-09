@@ -35,7 +35,7 @@ source $VESTA/conf/vesta.conf
 
 args_usage='HOST PORT USER PASSWORD [TYPE] [DNS_USER]'
 check_args '4' "$#" "$args_usage"
-validate_format 'host' 'port' 'user' 'type' 'dns_user'
+is_format_valid 'host' 'port' 'user' 'type' 'dns_user'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_password_valid
 is_dnshost_new
@@ -46,10 +46,15 @@ is_dnshost_alive
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Concatentating dns host string
 str="HOST='$host' PORT='$port' USER='$user' PASSWORD='$password'"
 str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
-str="$str TIME='$TIME' DATE='$DATE'"
+str="$str TIME='$time' DATE='$date'"
 
 # Adding host to dns-cluster.conf
 echo "$str" >> $VESTA/conf/dns-cluster.conf
@@ -83,6 +88,6 @@ if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
 fi
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

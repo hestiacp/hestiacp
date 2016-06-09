@@ -151,7 +151,7 @@ init_ftp_variables() {
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] ||\
         [ -z "$BPATH" ]; then
         echo "Error: Parsing error"
-        log_event "$E_PARSING" "$EVENT"
+        log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
 }
@@ -163,7 +163,7 @@ check_ftp_connection(){
              rm $ftmpdir"
     if [ ! -z "$(ftpc "$command")" ] ; then
         echo "Error: FTP error"
-        log_event "$E_FTP" "$EVENT"
+        log_event "$E_FTP" "$ARGUMENTS"
         exit $E_FTP
     fi
 }
@@ -176,11 +176,11 @@ check_ftp_connection(){
 
 check_args '1' "$#" 'USER'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 la=$(cat /proc/loadavg |cut -f 1 -d ' '|cut -f 1 -d '.')
 if [ "$la" -ge "$BACKUP_LA_LIMIT" ]; then
-    log_event "$E_LA" "$EVENT"
+    log_event "$E_LA" "$ARGUMENTS"
     exit $E_LA
 fi
 
@@ -215,7 +215,7 @@ if [ "$type" = 'ftp' ]; then
         cd $tmpdir
         if [ ! -z "$(ftpc "get $backup")" ]; then
             echo "Error: FTP transfer error"
-            log_event "$E_FTP" "$EVENT"
+            log_event "$E_FTP" "$ARGUMENTS"
             exit $E_FTP
         fi
         get_backup_info $tmpdir/$backup $type >> $tmp_file
@@ -242,7 +242,7 @@ if [ "$type" = 'ftp,local' ] || [ "$type" = 'local,ftp' ]; then
             cd $tmpdir
             if [ ! -z "$(ftpc "get $backup")" ]; then
                 echo "Error: FTP transfer error"
-                log_event "$E_FTP" "$EVENT"
+                log_event "$E_FTP" "$ARGUMENTS"
                 exit $E_FTP
             fi
             get_backup_info $tmpdir/$backup ftp >> $tmp_file
@@ -273,6 +273,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

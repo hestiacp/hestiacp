@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'DOMAIN USER [IP]'
-validate_format 'domain' 'user'
+is_format_valid 'domain' 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ ! -z "$ip" ]; then
@@ -36,7 +36,7 @@ fi
 owner=$(v-search-domain-owner $domain)
 if [ -z "$owner" ]; then
     echo "Error: domain $domain doesn't exist"
-    log_event "$E_NOTEXIST" "$EVENT"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 if [ "$owner" = "$user" ]; then
@@ -168,6 +168,6 @@ $BIN/v-update-user-counters $user
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

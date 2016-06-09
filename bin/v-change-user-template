@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER TYPE TEMPLATE'
-validate_format 'user' 'template'
+is_format_valid 'user' 'template'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -51,6 +51,6 @@ esac
 
 # Logging
 log_history "changed $type template to $template"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

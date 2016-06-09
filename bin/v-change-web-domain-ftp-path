@@ -27,7 +27,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN FTP_USER FTP_PATH'
-validate_format 'user' 'domain' 'ftp_user'
+is_format_valid 'user' 'domain' 'ftp_user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -36,13 +36,13 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
     echo "Error: account $ftp_user doesn't exist"
-    log_event "$E_NOTEXIST" "$EVENT"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 ftp_path_a=$(readlink -f "$HOMEDIR/$user/web/$domain/$ftp_path")
 if [ -z "$(echo $ftp_path_a |grep $HOMEDIR/$user/web/$domain)" ]; then
     echo "Error: absolute path $ftp_path_a is invalid"
-    log_event "$E_INVALID" "$EVENT"
+    log_event "$E_INVALID" "$ARGUMENTS"
     exit $E_INVALID
 fi
 
@@ -84,6 +84,6 @@ update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
 log_history "changed path to $ftp_path_a for $ftp_user@$domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

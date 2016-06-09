@@ -78,7 +78,7 @@ for host in $hosts; do
         # Checking empty vars
         if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
             echo "Error: config is broken"
-            log_event "$E_PARSING" "$EVENT"
+            log_event "$E_PARSING" "$ARGUMENTS"
             exit $E_PARSING
         fi
 

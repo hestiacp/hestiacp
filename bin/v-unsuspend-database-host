@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'TYPE HOST'
-validate_format 'type' 'host'
+is_format_valid 'type' 'host'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid "../../conf/$type" 'HOST' "$host"
 is_object_suspended "../../conf/$type" 'HOST' "$host"
@@ -42,6 +42,6 @@ update_object_value "../../conf/$type" 'HOST' "$host" '$SUSPENDED' 'no'
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

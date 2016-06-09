@@ -24,7 +24,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP USER'
-validate_format 'ip' 'user'
+is_format_valid 'ip' 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_ip_valid
@@ -77,6 +77,6 @@ fi
 
 # Logging
 log_history "changed owner of $ip to $user" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -29,7 +29,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP CHAIN'
-validate_format 'ip' 'chain'
+is_format_valid 'ip' 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 
@@ -59,8 +59,13 @@ fi
 # Adding chain
 $BIN/v-add-firewall-chain $chain
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Adding ip to banlist
-echo "IP='$ip' CHAIN='$chain' TIME='$TIME' DATE='$DATE'" >> $conf
+echo "IP='$ip' CHAIN='$chain' TIME='$time' DATE='$date'" >> $conf
 $iptables -I fail2ban-$chain 1 -s $ip \
     -j REJECT --reject-with icmp-port-unreachable 2>/dev/null
 
@@ -73,6 +78,6 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

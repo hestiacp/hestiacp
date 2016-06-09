@@ -32,7 +32,7 @@ docroot="$HOMEDIR/$user/web/$domain/public_html"
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -42,7 +42,7 @@ is_password_valid
 get_domain_values 'web'
 if [ ! -z "$(echo "$AUTH_USER" |tr : '\n' |grep ^$auth_user$)" ]; then
     echo "Error: auth user $auth_user already exists"
-    log_event "$E_EXISTS" "$EVENT"
+    log_event "$E_EXISTS" "$ARGUMENTS"
     exit $E_EXISTS
 fi
 
@@ -100,6 +100,6 @@ update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_HASH' "$auth_hash"
 
 # Logging
 log_history "added http auth user $httpauth_user on $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

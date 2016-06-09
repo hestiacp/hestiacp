@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER JOB'
-validate_format 'user' 'job'
+is_format_valid 'user' 'job'
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -58,6 +58,6 @@ check_result $? "Restart restart failed" >/dev/null
 
 # Logging
 log_history "deleted cron job $job"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

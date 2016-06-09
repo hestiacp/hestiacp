@@ -84,6 +84,6 @@ sed -i "/v-add-sys-sftp-jail/d" /etc/rc.local 2>/dev/null
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

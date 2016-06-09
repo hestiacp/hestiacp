@@ -18,57 +18,55 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_backup() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    line=$(grep "BACKUP='$backup'" $conf)
+fields="\$BACKUP \$TYPE \$SIZE \$WEB \$DNS \$DB \$MAIL \$CRON \$UDIR"
+fields="$fields \$RUNTIME \$TIME \$DATE"
 
-    # Print top bracket
+# JSON list function
+json_list() {
     echo '{'
-
-    # Assing key=value
-    eval $line
-
-    # Starting output loop
-    for field in $fields; do
-        # Parsing key=value
-        eval value=$field
-
-        # Checking first field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"$value\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"$value\","
-            fi
-        fi
-        # Updating iterator
-        (( ++i))
-    done
-
-    # If there was any output
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    # Printing bottom json bracket
-    echo -e "}"
+    echo '    "'$BACKUP'": {
+        "TYPE": "'$TYPE'",
+        "SIZE": "'$SIZE'",
+        "WEB": "'$WEB'",
+        "DNS": "'$DNS'",
+        "MAIL": "'$MAIL'",
+        "DB": "'$DB'",
+        "CRON": "'$CRON'",
+        "UDIR": "'$UDIR'",
+        "RUNTIME": "'$RUNTIME'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
 }
 
-# Shell function
-shell_list_backup() {
-    line=$(grep "BACKUP='$backup'" $conf)
+# SHELL list function
+shell_list() {
+    echo "BACKUP:         $BACKUP"
+    echo "TYPE:           $TYPE"
+    echo "SIZE:           $SIZE mb"
+    echo "RUNTIME:        $RUNTIME min"
+    echo "WEB:            ${WEB//,/ }"
+    echo "DNS:            ${DNS//,/ }"
+    echo "MAIL:           ${MAIL//,/ }"
+    echo "DB:             ${DB//,/ }"
+    echo "CRON:           $CRON"
+    echo "UDIR:           ${UDIR//,/ }"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
 
-    # Parsing key=value
-    eval $line
+# PLAIN list function
+plain_list() {
+    echo -ne "$BACKUP\t$TYPE\t$SIZE\t$WEB\t$DNS\t$MAIL\t$DB\t$CRON\t"
+    echo -e "$UDIR\t$RUNTIME\t$TIME\t$DATE"
+}
 
-    # Print result line
-    for field in $fields; do
-        eval key="$field"
-        echo "${field//$/}: $key "
-    done
+# CSV list function
+csv_list() {
+    echo "BACKUP,TYPE,SIZE,WEB,DNS,MAIL,DB,CRON,UDIR,RUNTIME,TIME,DATE"
+    echo -n "$BACKUP,$TYPE,$SIZE,\"$WEB\",\"$DNS\",\"$MAIL\",\"$DB\","
+    echo "\"$CRON\",\"$UDIR\",$RUNTIME,$TIME,$DATE"
 }
 
 
@@ -85,18 +83,15 @@ is_object_valid 'backup' 'BACKUP' "$backup"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config and fields to select
-conf=$USER_DATA/backup.conf
+# Parsing backup config
+eval $(grep "BACKUP='$backup'" $USER_DATA/backup.conf)
 
-fields="\$BACKUP \$TYPE \$SIZE \$WEB \$DNS \$DB \$MAIL \$CRON \$UDIR"
-fields="$fields \$RUNTIME \$TIME \$DATE"
-
-# Listing backup
-case $format in 
-    json)   json_list_backup ;;
-    plain)  nohead=1; shell_list_backup ;;
-    shell)  shell_list_backup |column -t ;;
-    *)      check_args '2' '0' 'USER BACKUP [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

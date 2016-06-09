@@ -16,13 +16,77 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep DOMAIN $USER_DATA/mail.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        echo -n '    "'$DOMAIN'": {
+        "ANTIVIRUS": "'$ANTIVIRUS'",
+        "ANTISPAM": "'$ANTISPAM'",
+        "DKIM": "'$DKIM'",
+        "CATCHALL": "'$CATCHALL'",
+        "ACCOUNTS": "'$ACCOUNTS'",
+        "U_DISKL": "'$U_DISK'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done < <(cat $USER_DATA/mail.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "DOMAIN   ANTIVIRUS   ANTISPAM   DKIM  ACC   DISK   SPND   DATE"
+    echo "------   ---------   --------   ----  ---   ----   ---   ----"
+    while read str; do
+        eval $str
+        echo -n "$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK "
+        echo "$SUSPENDED $DATE"
+    done < <(cat $USER_DATA/mail.conf)
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$CATCHALL\t"
+        echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $USER_DATA/mail.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,CATCHALL,ACCOUNTS,U_DISK,"
+    echo "SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$CATCHALL,$ACCOUNTS,"
+        echo "'$U_DISK,$SUSPENDED,$TIME,$DATE"
+        echo
+    done < <(cat $USER_DATA/mail.conf)
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -30,18 +94,12 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fileds to select
-conf=$USER_DATA/mail.conf
-fields="\$DOMAIN \$ANTIVIRUS \$ANTISPAM \$DKIM \$ACCOUNTS \$U_DISK \$CATCHALL"
-fields="$fields \$SUSPENDED \$TIME \$DATE"
-
-# Listing domains
-case $format in 
+# Listing data
+case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell) fields='$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK $DATE';
-            shell_list | column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]'
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

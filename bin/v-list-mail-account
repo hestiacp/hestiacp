@@ -18,43 +18,49 @@ format=${4-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_account() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    line=$(grep "ACCOUNT='$account'" $conf)
+# JSON list function
+json_list() {
     echo '{'
-    eval $line
-    for field in $fields; do
-        eval value=$field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"$value\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"$value\","
-            fi
-        fi
-        (( ++i))
-    done
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    echo -e "}"
+    echo '    "'$account'": {
+        "ALIAS": "'$ALIAS'",
+        "FWD": "'$FWD'",
+        "FWD_ONLY": "'$FWD_ONLY'",
+        "AUTOREPLY": "'$AUTOREPLY'",
+        "QUOTA": "'$QUOTA'",
+        "U_DISK": "'$U_DISK'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
 }
 
-# Shell function
-shell_list_account() {
-    line=$(grep "ACCOUNT='$account'" $conf)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        if [ -z "$key" ]; then
-            key=NULL
-        fi
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    echo "ACCOUNT:        $account"
+    echo "ALIAS:          $ALIAS"
+    echo "FORWARD:        $FWD"
+    echo "FORWARD_ONLY:   $FWD_ONLY"
+    echo "AUTOREPLY:      $AUTOREPLY"
+    echo "QUOTA:          $QUOTA"
+    echo "DISK:           $U_DISK"
+    echo "SUSPENDED:      $SUSPENDED"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$account\t$ALIAS\t$FWD\t$FWD_ONLY\t$AUTOREPLY\t$QUOTA\t"
+    echo -e "$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo -n  "ACCOUNT,ALIAS,FWD,FWD_ONLY,AUTOREPLY,QUOTA,U_DISK"
+    echo "SUSPENDED,TIME,DATE"
+    echo -n "$ACCOUNT,\"$ALIAS\",\"$FWD\",$FWD_ONLY,$AUTOREPLY,$QUOTA,"
+    echo "$U_DISK,$SUSPENDED,$TIME,$DATE"
 }
 
 
@@ -63,6 +69,7 @@ shell_list_account() {
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN ACCOUNT [FORMAT]'
+is_format_valid 'user' 'domain' 'account'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
@@ -73,17 +80,15 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config and fields to select
-conf=$USER_DATA/mail/$domain.conf
-fields="\$ACCOUNT \$ALIAS \$FWD \$FWD_ONLY \$QUOTA \$AUTOREPLY \$U_DISK"
-fields="$fields \$SUSPENDED \$TIME \$DATE"
+# Parsing mail account
+eval $(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
 
-# Listing domains
-case $format in 
-    json)   json_list_account ;;
-    plain)  nohead=1; shell_list_account ;;
-    shell)  shell_list_account |column -t ;;
-    *)      check_args '2' '0' 'USER DOMAIN ACCOUNT [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

@@ -15,31 +15,43 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_iface() {
-    dev=$(cat /proc/net/dev |grep : |cut -f 1 -d : |tr -d ' ' |grep -v lo)
-    int_counter=$(echo "$dev" | wc -l)
+# JSON list function
+json_list() {
+    objects=$(echo "$interfaces" |wc -l)
     i=1
     echo '['
-    for interface in $dev; do
-        if [ "$i" -lt "$int_counter" ]; then
-            echo -e  "\t\"$interface\","
+    for interface in $interfaces; do
+        echo -n '    "'$interfaces'"'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
         else
-            echo -e  "\t\"$interface\""
+            echo
         fi
-        (( ++i))
+        ((i++))
     done
-    echo "]"
+    echo ']'
 }
 
-# Shell function
-shell_list_iface() {
-    dev=$(cat /proc/net/dev |grep : |cut -f 1 -d : |tr -d ' ' |grep -v lo)
-    if [ -z "$nohead" ]; then
-        echo "INTERFACES"
-        echo "----------"
-    fi
-    for interface in $dev; do
+# SHELL list function
+shell_list() {
+    echo "INTERFACE"
+    echo "---------"
+    for interface in $interfaces; do
+        echo "$interface"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for interface in $interfaces; do
+        echo "$interface"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "INTERFACE"
+    for interface in $interfaces; do
         echo "$interface"
     done
 }
@@ -49,12 +61,15 @@ shell_list_iface() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Listing domains
-case $format in 
-    json)   json_list_iface ;;
-    plain)  nohead=1; shell_list_iface ;;
-    shell)  shell_list_iface ;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
+# Defining interface list
+interfaces=$(cat /proc/net/dev |grep : |cut -f 1 -d : |tr -d ' ' |grep -v lo)
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list;;
 esac
 
 

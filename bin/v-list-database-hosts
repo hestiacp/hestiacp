@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list database servers
-# options: TYPE [FORMAT]
+# info: list database hosts
+# options: [FORMAT]
 #
-# The function for obtaining the list of all hosts of the same databases' type.
+# The function for obtaining the list of all configured database hosts.
 
 
 #----------------------------------------------------------#
@@ -10,37 +10,122 @@
 #----------------------------------------------------------#
 
 # Argument definition
-type=${1-mysql}
-format=${2-shell}
+format=${1-shell}
 
 # Includes
 source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=0
+    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
+        if [ -e "$VESTA/conf/$type.conf" ]; then
+            db_hosts=$(grep HOST $VESTA/conf/$type.conf |wc -l)
+            objects=$((objects + db_hosts))
+        fi
+    done
+
+    echo "{"
+    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
+        if [ -e "$VESTA/conf/$type.conf" ]; then
+            for str in $(cat $VESTA/conf/$type.conf); do
+                eval $str
+        echo -n '    "'$HOST'": {
+        "HOST": "'$HOST'",
+        "TYPE": "'$type'",
+        "CHARSETS": "'$CHARSETS'",
+        "MAX_DB": "'$MAX_DB'",
+        "U_SYS_USERS": "'$U_SYS_USERS'",
+        "U_DB_BASES": "'$U_DB_BASES'",
+        "TPL": "'$TPL'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+                if [ "$i" -lt "$objects" ]; then
+                    echo ','
+                else
+                    echo
+                fi
+                ((i++))
+            done
+        fi
+    done
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "HOST   TYPE   MAX_DB   DB_USED   SPND   TIME   DATE"
+    echo "----   ----   ------   -------   ----   ----   ----"
+    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
+        if [ -e "$VESTA/conf/$type.conf" ]; then
+            for str in $(cat $VESTA/conf/$type.conf); do
+                eval $str
+                echo "$HOST $type $MAX_DB $U_DB_BASES $SUSPENDED $TIME $DATE"
+            done
+        fi
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
+        if [ -e "$VESTA/conf/$type.conf" ]; then
+            for str in $(cat $VESTA/conf/$type.conf); do
+                eval $str
+                echo -ne "$HOST\t$type\t$CHARSETS\t$MAX_DB\t$U_SYS_USERS\t"
+                echo -e "$U_DB_BASES\t$TPL\t$SUSPENDED\t$TIME\t$DATE"
+            done
+        fi
+    done
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo -n "HOST,TYPE,CHARSETS,MAX_DB,U_SYS_USERS,"
+    echo "U_DB_BASES,TPL,SUSPENDED,TIME,DATE"
+    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
+        if [ -e "$VESTA/conf/$type.conf" ]; then
+            for str in $(cat $VESTA/conf/$type.conf); do
+                eval $str
+                echo -n "$HOST,$type,\"$CHARSETS\",$MAX_DB,\"$U_SYS_USERS\","
+                echo "$U_DB_BASES,$TPL,$SUSPENDED,$TIME,$DATE"
+            done
+        fi
+    done
+}
+
+# Type format validator
+is_type_format_valid() {
+    exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
+    if [[ "$1" =~ $exclude ]]; then
+        check_result $E_INVALID "invalid type extention format :: $1"
+    fi
+}
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
-#check_args '1' "$#" 'TYPE [FORMAT]'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fileds to select
-conf=$VESTA/conf/$type.conf
-fields='$HOST $CHARSETS $MAX_DB $U_SYS_USERS $U_DB_BASES $TPL $SUSPENDED'
-fields="$fields \$TIME \$DATE"
-
-# Listing database
-case $format in 
+# Listing data
+case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list;;
-    shell)  fields='$HOST $MAX_DB $U_DB_BASES $SUSPENDED $DATE';
-            shell_list | column -t ;;
-    *)      check_args '2' '0' 'TYPE [FORMAT]'
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

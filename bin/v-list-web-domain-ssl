@@ -17,19 +17,25 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_ssl() {
-    i='1'       # iterator
+# JSON list function
+json_list() {
     echo '{'
     echo -e "\t\"$domain\": {"
     echo "        \"CRT\": \"$crt\","
     echo "        \"KEY\": \"$key\","
-    echo "        \"CA\": \"$ca\""
+    echo "        \"CA\": \"$ca\","
+    echo "        \"SUBJECT\": \"$subj\","
+    echo "        \"ALIASES\": \"$alt_dns\","
+    echo "        \"NOT_BEFORE\": \"$before\","
+    echo "        \"NOT_AFTER\": \"$after\","
+    echo "        \"SIGNATURE\": \"$signature\","
+    echo "        \"PUB_KEY\": \"$pub_key\","
+    echo "        \"ISSUER\": \"$issuer\""
     echo -e "\t}\n}"
 }
 
-# Shell function
-shell_list_ssl() {
+# SHELL list function
+shell_list() {
     if [ ! -z "$crt" ]; then
         echo -e "$crt"
     fi
@@ -39,6 +45,50 @@ shell_list_ssl() {
     if [ ! -z "$ca" ]; then
         echo -e "\n$ca"
     fi
+    if [ ! -z "$crt" ]; then
+        echo
+        echo
+        echo "SUBJECT:        $subj"
+        if [ ! -z "$alt_dns" ]; then
+            echo "ALIASES:        ${alt_dns//,/ }"
+        fi
+        echo "VALID FROM:     $before"
+        echo "VALID TIL:      $after"
+        echo "SIGNATURE:      $signature"
+        echo "PUB_KEY:        $pub_key"
+        echo "ISSUER:         $issuer"
+    fi
+}
+
+# PLAIN list function
+plain_list() {
+    if [ ! -z "$crt" ]; then
+        echo -e "$crt"
+    fi
+    if [ ! -z "$key" ]; then
+        echo -e "\n$key"
+    fi
+    if [ ! -z "$ca" ]; then
+        echo -e "\n$ca"
+    fi
+    if [ ! -z "$crt" ]; then
+        echo "$subj"
+        echo "${alt_dns//,/ }"
+        echo "$before"
+        echo "$after"
+        echo "$signature"
+        echo "$pub_key"
+        echo "$issuer"
+    fi
+
+}
+
+# CSV list function
+csv_list() {
+    echo -n "CRT,KEY,CA,SUBJECT,ALIASES,NOT_BEFORE,NOT_AFTER,SIGNATURE,"
+    echo "PUB_KEY,ISSUER"
+    echo -n "\"$crt\",\"$key\",\"$ca\",\"$subj\",\"${alt_dns//,/ }\","
+    echo "\"$before\",\"$after\",\"$signature\",\"$pub_key\",\"$issuer\""
 }
 
 
@@ -50,27 +100,42 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Parsing domain SSL certificate
 if [ -e "$USER_DATA/ssl/$domain.crt" ]; then
-    crt=$(cat $USER_DATA/ssl/$domain.crt | sed ':a;N;$!ba;s/\n/\\n/g' )
+    crt=$(cat $USER_DATA/ssl/$domain.crt |sed ':a;N;$!ba;s/\n/\\n/g')
+
+    info=$(openssl x509 -text -in $USER_DATA/ssl/$domain.crt)
+    subj=$(echo "$info" |grep Subject: |cut -f 2 -d =)
+    before=$(echo "$info" |grep Before: |sed -e "s/.*Before: //")
+    after=$(echo "$info" |grep "After :" |sed -e "s/.*After : //")
+    signature=$(echo "$info" |grep "Algorithm:" |head -n1 )
+    signature=$(echo "$signature"| sed -e "s/.*Algorithm: //")
+    pub_key=$(echo "$info" |grep Public-Key: |cut -f2 -d \( | tr -d \))
+    issuer=$(echo "$info" |grep Issuer: |sed -e "s/.*Issuer: //")
+    alt_dns=$(echo "$info" |grep DNS |sed -e 's/DNS:/\n/g' |tr -d ',')
+    alt_dns=$(echo "$alt_dns" |tr -d ' ' |sed -e "/^$/d")
+    alt_dns=$(echo "$alt_dns" |sed -e ':a;N;$!ba;s/\n/,/g')
 fi
 
 if [ -e "$USER_DATA/ssl/$domain.key" ]; then
-    key=$(cat $USER_DATA/ssl/$domain.key | sed ':a;N;$!ba;s/\n/\\n/g' )
+    key=$(cat $USER_DATA/ssl/$domain.key |sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-    ca=$(cat $USER_DATA/ssl/$domain.ca | sed ':a;N;$!ba;s/\n/\\n/g' )
+    ca=$(cat $USER_DATA/ssl/$domain.ca |sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
-# Listing domains
+# Listing data
 case $format in
-    json)   json_list_ssl ;;
-    plain)  nohead=1; shell_list_ssl ;;
-    shell)  shell_list_ssl ;;
-    *)      check_args '1' '0' '[FORMAT]'
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

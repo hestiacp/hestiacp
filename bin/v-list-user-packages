@@ -15,53 +15,85 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_pkgs() {
-    echo '{'
-    fileds_count=$(echo "$fields" | wc -w)
-    for package in $(ls  --sort=time  $VESTA/data/packages |grep .pkg); do
+
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(echo "$packages" |wc -l)
+    echo "{"
+    for package in $packages; do
         PACKAGE=${package/.pkg/}
-        pkg_data=$(cat $VESTA/data/packages/$package)
-        eval $pkg_data
-        if [ -n "$data" ]; then
-            echo -e '        },'
+        source $VESTA/data/packages/$package
+        echo -n '    "'$PACKAGE'": {
+        "WEB_TEMPLATE": "'$WEB_TEMPLATE'",
+        "PROXY_TEMPLATE": "'$PROXY_TEMPLATE'",
+        "DNS_TEMPLATE": "'$DNS_TEMPLATE'",
+        "WEB_DOMAINS": "'$WEB_DOMAINS'",
+        "WEB_ALIASES": "'$WEB_ALIASES'",
+        "DNS_DOMAINS": "'$DNS_DOMAINS'",
+        "DNS_RECORDS": "'$DNS_RECORDS'",
+        "MAIL_DOMAINS": "'$MAIL_DOMAINS'",
+        "MAIL_ACCOUNTS": "'$MAIL_ACCOUNTS'",
+        "DATABASES": "'$DATABASES'",
+        "CRON_JOBS": "'$CRON_JOBS'",
+        "DISK_QUOTA": "'$DISK_QUOTA'",
+        "BANDWIDTH": "'$BANDWIDTH'",
+        "NS": "'$NS'",
+        "SHELL": "'$SHELL'",
+        "BACKUPS": "'$BACKUPS'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
         fi
-        i=1
-        for field in $fields; do
-            eval value=$field
-            if [ $i -eq 1 ]; then
-                (( ++i))
-                echo -e "\t\"$value\": {"
-            else
-                if [ $i -lt $fileds_count ]; then
-                    (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    data=1
-                fi
-            fi
-        done
+        ((i++))
     done
-    if [ -n "$data" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+    echo '}'
 }
 
-# Shell fnction
-shell_list_pkgs() {
-    for package in $(ls -t $VESTA/data/packages |grep .pkg); do
+# SHELL list function
+shell_list() {
+    echo "PKG   TPL   WEB   DNS   MAIL   DB   SHELL   DISK   BW"
+    echo "---   ---   ---   ---   ----   --   -----   ----   --"
+    for package in $packages; do
+        source $VESTA/data/packages/$package
         PACKAGE=${package/.pkg/}
-        pkg_descr=$(cat $VESTA/data/packages/$package)
-        eval $pkg_descr
-        if [ -z "$nohead" ]; then
-            echo '----------'
-        fi
-        for field in $fields; do
-            eval value=$field
-            echo -e "${field//$/}: $value"
-        done
+        package_data=$(cat $VESTA/data/packages/$package)
+        package_data=$(echo "$package_data" |sed -e 's/unlimited/unlim/g')
+        eval $package_data
+        echo -n "$PACKAGE $WEB_TEMPLATE $WEB_DOMAINS $DNS_DOMAINS "
+        echo "$MAIL_DOMAINS $DATABASES $SHELL $DISK_QUOTA $BANDWIDTH"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for package in $packages; do
+        source $VESTA/data/packages/$package
+        PACKAGE=${package/.pkg/}
+        echo -ne "$PACKAGE\t$WEB_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
+        echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
+        echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$DATABASES\t$CRON_JOBS\t"
+        echo -e "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t$TIME\t$DATE"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo -n "PACKAGE,WEB_TEMPLATE,PROXY_TEMPLATE,DNS_TEMPLATE,"
+    echo -n "WEB_DOMAINS,WEB_ALIASES,DNS_DOMAINS,DNS_RECORDS,"
+    echo -n "MAIL_DOMAINS,MAIL_ACCOUNTS,DATABASES,CRON_JOBS,"
+    echo "DISK_QUOTA,BANDWIDTH,NS,SHELL,BACKUPS,TIME,DATE"
+    for package in $packages; do
+        PACKAGE=${package/.pkg/}
+        echo -n "$PACKAGE,$WEB_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
+        echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
+        echo -n "$MAIL_DOMAINS,$MAIL_ACCOUNTS,$DATABASES,$CRON_JOBS,"
+        echo "$DISK_QUOTA,$BANDWIDTH,\"$NS\",$SHELL,$BACKUPS,$TIME,$DATE"
     done
 }
 
@@ -70,18 +102,15 @@ shell_list_pkgs() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fields
-fields='$PACKAGE $WEB_TEMPLATE $BACKEND_TEMPLATE $PROXY_TEMPLATE
-    $DNS_TEMPLATE $WEB_DOMAINS $WEB_ALIASES $DNS_DOMAINS $DNS_RECORDS
-    $MAIL_DOMAINS $MAIL_ACCOUNTS $DATABASES $CRON_JOBS $DISK_QUOTA $BANDWIDTH
-    $NS $SHELL $BACKUPS $TIME $DATE'
+# Parsing packages
+packages=$(ls --sort=time $VESTA/data/packages |grep .pkg)
 
-# Listing domains
+# Listing data
 case $format in
-    json)   json_list_pkgs ;;
-    plain)  nohead=1; shell_list_pkgs ;;
-    shell)  shell_list_pkgs | column -t ;;
-    *)      check_args '1' '0' '[FORMAT]'
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

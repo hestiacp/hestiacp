@@ -1,9 +1,8 @@
 #!/bin/bash
-# info: list web domain
+# info: list mail domain
 # options: USER DOMAIN [FORMAT]
 #
-# The function of obtaining the list of domain parameters. This call, just as
-# all v_list_* calls, supports 3 formats - json, shell and plain.
+# The function of obtaining the list of domain parameters.
 
 
 #----------------------------------------------------------#
@@ -18,41 +17,50 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_domain() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    line=$(grep "DOMAIN='$domain'" $conf)
+# JSON list function
+json_list() {
+    eval $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
     echo '{'
-    eval $line
-    for field in $fields; do
-        eval value=$field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"$value\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"$value\","
-            fi
-        fi
-        (( ++i))
-    done
-
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    echo -e "}"
+    echo '    "'$DOMAIN'": {
+        "ANTIVIRUS": "'$ANTIVIRUS'",
+        "ANTISPAM": "'$ANTISPAM'",
+        "DKIM": "'$DKIM'",
+        "CATCHALL": "'$CATCHALL'",
+        "ACCOUNTS": "'$ACCOUNTS'",
+        "U_DISKL": "'$U_DISK'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
 }
 
-# Shell function
-shell_list_domain() {
-    line=$(grep "DOMAIN='$domain'" $conf)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    echo "DOMAIN:         $DOMAIN"
+    echo "ANTIVIRUS:      $ANTIVIRUS"
+    echo "ANTISPAM:       $ANTISPAM"
+    echo "DKIM:           $DKIM"
+    echo "CATCHALL:       $CATCHALL"
+    echo "ACCOUNTS:       $ACCOUNTS"
+    echo "DISK:           $U_DISK"
+    echo "SUSPENDED:      $SUSPENDED"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$CATCHALL\t"
+    echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,CATCHALL,ACCOUNTS,U_DISK,"
+    echo "SUSPENDED,TIME,DATE"
+    echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$CATCHALL,$ACCOUNTS,$U_DISK"
+    echo "$SUSPENDED,$TIME,$DATE"
 }
 
 
@@ -61,6 +69,7 @@ shell_list_domain() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 
@@ -69,17 +78,15 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fileds to select
-conf=$USER_DATA/mail.conf
-fields='$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK $CATCHALL
-$SUSPENDED $TIME $DATE'
+# Parsing mail domain
+eval $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
 
-# Listing domains
-case $format in 
-    json)   json_list_domain ;;
-    plain)  nohead=1; shell_list_domain ;;
-    shell)  shell_list_domain |column -t ;;
-    *)      check_args '2' '0' 'USER DOMAIN [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

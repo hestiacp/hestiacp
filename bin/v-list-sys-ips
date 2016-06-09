@@ -2,7 +2,7 @@
 # info: list system ips
 # options: [FORMAT]
 #
-# The function for obtaining the list of system ip's.
+# The function for obtaining the list of system ip adresses.
 
 
 #----------------------------------------------------------#
@@ -15,62 +15,66 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_ips() {
+# JSON list function
+json_list() {
     echo '{'
-    ip_list=$(ls --sort=time $VESTA/data/ips/)
-    fileds_count=$(echo "$fields" | wc -w)
-    for IP in $ip_list; do
-        ip_data=$(cat $VESTA/data/ips/$IP)
-        eval $ip_data
-        if [ -n "$data" ]; then
-            echo -e '        },'
+    ip_count=$(ls $VESTA/data/ips/ |wc -l)
+    i=1
+    while read IP; do
+        source $VESTA/data/ips/$IP
+        echo -n '    "'$IP'": {
+        "OWNER": "'$OWNER'",
+        "STATUS": "'$STATUS'",
+        "NAME": "'$NAME'",
+        "U_SYS_USERS": "'$U_SYS_USERS'",
+        "U_WEB_DOMAINS": "'$U_WEB_DOMAINS'",
+        "INTERFACE": "'$INTERFACE'",
+        "NETMASK": "'$NETMASK'",
+        "NAT": "'$NAT'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+        }'
+        if [ "$i" -lt "$ip_count" ]; then
+            echo ','
+        else
+            echo
         fi
-        i=1
-        for field in $fields; do
-            eval value=$field
-            if [ $i -eq 1 ]; then
-                (( ++i))
-                echo -e "\t\"$value\": {"
-            else
-                if [ $i -lt $fileds_count ]; then
-                    (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"$value\","
-                else
-                    echo -e "\t\t\"${field//$/}\": \"$value\""
-                    data=1
-                fi
-            fi
-        done
-    done
-    if [ -n "$data" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+        ((i++))
+    done < <(ls $VESTA/data/ips/)
+    echo '}'
 }
 
-# Shell function
-shell_list_ips() {
-    ip_list=$(ls $VESTA/data/ips/)
-    if [ -z "$nohead" ]; then
-        echo "${fields//$/}"
-        for a in $fields; do
-            echo -e "--------- \c"
-        done
-        echo
-    fi
-
-    for IP in $ip_list; do
+# SHELL list function
+shell_list() {
+    echo "IP   MASK   NAT   STATUS   WEB  DATE"
+    echo "--   ----   ---   ------   ---  ----"
+    while read IP; do
         source $VESTA/data/ips/$IP
-        for field in $fields; do
-            eval value=$field
-            if [ -z "$value" ]; then
-                value='NULL'
-            fi
-            echo -n "$value "
-        done
-        echo
-    done
+        if [ -z "$NAT" ]; then
+            NAT='no'
+        fi
+        echo "$IP $NETMASK $NAT $STATUS $U_WEB_DOMAINS $DATE"
+    done < <(ls $VESTA/data/ips/)
+}
+
+# PLAIN list function
+plain_list() {
+    while read IP; do
+        source $VESTA/data/ips/$IP
+        echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
+        echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
+    done < <(ls $VESTA/data/ips/)
+}
+
+# CSV list function
+csv_list() {
+    echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
+    echo "NETMASK,NAT,TIME,DATE"
+    while read IP; do
+        source $VESTA/data/ips/$IP
+        echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
+        echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
+    done < <(ls $VESTA/data/ips/)
 }
 
 
@@ -78,18 +82,12 @@ shell_list_ips() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fileds to select
-conf=$VESTA/data/ips/*
-fields="\$IP \$OWNER \$STATUS \$NAME \$U_SYS_USERS \$U_WEB_DOMAINS"
-fields="$fields \$INTERFACE \$NETMASK \$NAT \$TIME \$DATE"
-
-# Listing ip addresses
-case $format in 
-    json)   json_list_ips ;;
-    plain)  nohead=1; shell_list_ips ;;
-    shell)  fields='$IP $NETMASK $NAT $OWNER $U_WEB_DOMAINS';
-            shell_list_ips | column -t ;;
-    *)      check_args '1' '0' '[FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

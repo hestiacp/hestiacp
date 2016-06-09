@@ -17,56 +17,67 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json func
-json_list_dns() {
-    echo '{'
-    fileds_count=$(echo $fields| wc -w )
-    while read line; do
-        IFS=$'\n'
-        eval $line
-        if [ -n "$data" ]; then
-            echo -e '        },'
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep ID $USER_DATA/dns/$domain.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        echo -n '    "'$ID'": {
+        "RECORD": "'$RECORD'",
+        "TYPE": "'$TYPE'",
+        "PRIORITY": "'$PRIORITY'",
+        "VALUE": "'$VALUE'",
+        "ID": "'$ID'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
         fi
-        i=1
-        IFS=' '
-        for field in $fields; do
-            eval value=\"$field\"
-            value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-            if [ $i -eq 1 ]; then
-                (( ++i))
-                echo -e "\t\"$value\": {"
-            else
-                if [ $i -lt $fileds_count ]; then
-                    (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    data=1
-                fi
-            fi
-        done
-    done < $conf
-    if [ -n "$data" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+        ((i++))
+    done < <(cat $USER_DATA/dns/$domain.conf)
+    echo '}'
 }
 
-# Shell function
-shell_list_dns() {
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "ID^RECORD^TYPE^VALUE^DATE"
+    echo "--^------^----^-----^----"
+    while read str; do
+        eval $str
+        echo "$ID^$RECORD^$TYPE^${VALUE:0:30}^$DATE"
+    done < <(cat $USER_DATA/dns/$domain.conf)
+}
 
-    if [ -z "$nohead" ] ; then
-        echo "${fields//$/}"
-        for a in $fields; do
-            echo -e "------ \c"
-        done
-        echo
-    fi
-    while read line ; do
-        IFS=$'\n'
-        eval $line
-        eval echo "$fields" | sed "s/%quote%/'/g"
-    done < $conf
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
+        echo -ne "$ID\t$RECORD\t$TYPE\t$PRIORITY\t$VALUE\t"
+        echo -e "$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $USER_DATA/dns/$domain.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "ID,RECORD,TYPE,PRIORITY,VALUE,SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
+        echo -n "$ID,$RECORD,$TYPE,$PRIORITY,\"$VALUE\","
+        echo "$SUSPENDED,$TIME,$DATE"
+    done < <(cat $USER_DATA/dns/$domain.conf)
 }
 
 
@@ -75,7 +86,7 @@ shell_list_dns() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [FORMAT]'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 
@@ -84,17 +95,12 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config and fields
-conf=$USER_DATA/dns/$domain.conf
-fields='$ID $RECORD $TYPE $PRIORITY $VALUE $ID $SUSPENDED $TIME $DATE'
-
-# Listing domains
-case $format in 
-    json)   json_list_dns ;;
-    plain)  nohead=1; shell_list_dns ;;
-    shell)  fields='$ID $RECORD $TYPE $VALUE';
-            shell_list_dns | column -t ;;
-    *)      check_args '2' '0' 'USER DOMAIN [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t -s '^';;
 esac
 
 

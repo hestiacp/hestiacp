@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list database server
+# info: list database host
 # options: TYPE HOST [FORMAT]
 #
-# The function for obtaining database server parameters.
+# The function for obtaining database host parameters.
 
 
 #----------------------------------------------------------#
@@ -17,40 +17,58 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_dbhost() {
-    i=1
-    fields_count=$(echo "$fields" | wc -w)
-    line=$(grep "HOST='$host'" $conf)
+# JSON list function
+json_list() {
     echo '{'
-    eval $line
-    for field in $fields; do
-        eval value=$field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$fields_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-            fi
-        fi
-        (( ++i))
-    done
-    if [ -n "$value" ]; then
-        echo -e "\t}"
-    fi
-    echo -e "}"
+    echo '    "'$HOST'": {
+        "HOST": "'$HOST'",
+        "TYPE": "'$type'",
+        "CHARSETS": "'$CHARSETS'",
+        "MAX_DB": "'$MAX_DB'",
+        "U_SYS_USERS": "'$U_SYS_USERS'",
+        "U_DB_BASES": "'$U_DB_BASES'",
+        "TPL": "'$TPL'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
 }
 
-# Shell function
-shell_list_dbhost() {
-    line=$(grep "HOST='$host'" $conf)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        echo "${field//$/}: $key"
-    done
+# SHELL list function
+shell_list() {
+    echo "HOST:           $HOST"
+    echo "TYPE:           $type"
+    echo "CHARSETS:       $CHARSETS"
+    echo "MAX_DB:         $MAX_DB"
+    echo "U_DB_BASES:     $U_DB_BASES"
+    echo "U_SYS_USERS:    $U_SYS_USERS"
+    echo "TPL:            $TPL"
+    echo "SUSPENDED:      $SUSPENDED"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$HOST\t$type\t$CHARSETS\t$MAX_DB\t$U_SYS_USERS\t"
+    echo -e "$U_DB_BASES\t$TPL\t$SUSPENDED\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo -n "HOST,TYPE,CHARSETS,MAX_DB,U_SYS_USERS,"
+    echo "U_DB_BASES,TPL,SUSPENDED,TIME,DATE'"
+    echo -n "$HOST,$type,\"$CHARSETS\",$MAX_DB,\"$U_SYS_USERS\","
+    echo "$U_DB_BASES,$TPL,$SUSPENDED,$TIME,$DATE"
+}
+
+# Type format validator
+is_type_format_valid() {
+    exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
+    if [[ "$1" =~ $exclude ]]; then
+        check_result $E_INVALID "invalid type extention format :: $1"
+    fi
 }
 
 
@@ -59,7 +77,7 @@ shell_list_dbhost() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'TYPE HOST [FORMAT]'
-validate_format 'host'
+is_type_format_valid "$type"
 is_object_valid "../../conf/$type" 'HOST' "$host"
 
 
@@ -67,17 +85,15 @@ is_object_valid "../../conf/$type" 'HOST' "$host"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fileds to select
-conf=$VESTA/conf/$type.conf
-fields='$HOST $CHARSETS $MAX_DB $U_SYS_USERS $U_DB_BASES $TPL $SUSPENDED'
-fields="$fields \$TIME \$DATE"
+# Parsing hosts
+eval $(grep "HOST='$host'" $VESTA/conf/$type.conf)
 
-# Listing database
-case $format in 
-    json)   json_list_dbhost ;;
-    plain)  nohead=1; shell_list_dbhost ;;
-    shell)  shell_list_dbhost | column -t;;
-    *)      check_args '2' '0' 'TYPE HOST [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

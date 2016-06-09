@@ -15,14 +15,12 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_sh() {
-    shells=$(grep -v '#' /etc/shells)
+# JSON list function
+json_list() {
     sh_counter=$(echo "$shells" | wc -l)
     i=1
     echo '['
     for shell in $shells; do
-        shell=$(basename $shell)
         if [ "$i" -lt "$sh_counter" ]; then
             echo -e  "\t\"$shell\","
         else
@@ -33,15 +31,26 @@ json_list_sh() {
     echo "]"
 }
 
-# Shell function
-shell_list_sh() {
-    shells=$(grep -v '#' /etc/shells)
-    if [ -z "$nohead" ]; then
-        echo "SHELLS"
-        echo "----------"
-    fi
+# SHELL list function
+shell_list() {
+    echo "SHELL"
+    echo "-----"
     for shell in $shells; do
-        shell=$(basename $shell)
+        echo "$shell"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for shell in $shells; do
+        echo "$shell"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "SHELL"
+    for shell in $shells; do
         echo "$shell"
     done
 }
@@ -51,12 +60,15 @@ shell_list_sh() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Listing domains
-case $format in 
-    json)   json_list_sh ;;
-    plain)  nohead=1; shell_list_sh ;;
-    shell)  shell_list_sh ;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
+# Defining system shells
+shells=$(grep -v '#' /etc/shells |awk -F '/' '{print $NF}' |sort -u)
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

@@ -15,30 +15,84 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep HOST $VESTA/conf/dns-cluster.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        echo -n '    "'$HOST'": {
+        "PORT": "'$PORT'",
+        "TYPE": "'$TYPE'",
+        "USER": "'$USER'",
+        "DNS_USER": "'$DNS_USER'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done < <(cat $VESTA/conf/dns-cluster.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "HOST   PORT   TYPE   USER  DNS_USER   SPND   DATE"
+    echo "----   ----   ----   ----  --------   ----   ----"
+    while read str; do
+        eval $str
+        echo "$HOST $PORT $TYPE $USER $DNS_USER $SUSPENDED $DATE"
+    done < <(cat $VESTA/conf/dns-cluster.conf)
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        echo -ne "$HOST\t$PORT\t$TYPE\t$USER\t$DNS_USER\t"
+        echo -e "$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $VESTA/conf/dns-cluster.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "HOST,PORT,TYPE,USER,DNS_USER,SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        echo "$HOST,$PORT,$TYPE,$USER,$DNS_USER,$SUSPENDED,$TIME,$DATE"
+    done < <(cat $VESTA/conf/dns-cluster.conf)
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
+
+if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
+    exit
+fi
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Check config
-conf=$VESTA/conf/dns-cluster.conf
-if [ ! -e "$conf" ]; then
-    exit
-fi
-
-# Defining fileds to select
-fields='$HOST $USER $DNS_USER $SUSPENDED $TIME $DATE'
-
+# Listing data
 case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  shell_list| column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]';;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

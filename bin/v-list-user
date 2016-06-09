@@ -1,57 +1,151 @@
 #!/bin/bash
-# info: list system user
+# info: list user parameters
 # options: USER [FORMAT]
 #
-# The function for obtaining the list of all user's parameters.
+# The function to obtain user parameters.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Argument definition
+user=$1
+format=${2-shell}
+
 # Includes
 source $VESTA/func/main.sh
 
-# Argument definition
-user=$1
-USER="$user"
-format=${2-shell}
-
-# Json function
-json_list_user() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    source $VESTA/data/users/$user/user.conf
-    echo '{'
-    for field in $fields; do
-        eval value=$field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-            fi
-        fi
-        (( ++i))
-    done
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    echo -e "}"
+# JSON list function
+json_list() {
+        echo '{
+    "'$USER'": {
+        "FNAME": "'$FNAME'",
+        "LNAME": "'$LNAME'",
+        "PACKAGE": "'$PACKAGE'",
+        "WEB_TEMPLATE": "'$WEB_TEMPLATE'",
+        "BACKEND_TEMPLATE": "'$BACKEND_TEMPLATE'",
+        "PROXY_TEMPLATE": "'$PROXY_TEMPLATE'",
+        "DNS_TEMPLATE": "'$DNS_TEMPLATE'",
+        "WEB_DOMAINS": "'$WEB_DOMAINS'",
+        "WEB_ALIASES": "'$WEB_ALIASES'",
+        "DNS_DOMAINS": "'$DNS_DOMAINS'",
+        "DNS_RECORDS": "'$DNS_RECORDS'",
+        "MAIL_DOMAINS": "'$MAIL_DOMAINS'",
+        "MAIL_ACCOUNTS": "'$MAIL_ACCOUNTS'",
+        "DATABASES": "'$DATABASES'",
+        "CRON_JOBS": "'$CRON_JOBS'",
+        "DISK_QUOTA": "'$DISK_QUOTA'",
+        "BANDWIDTH": "'$BANDWIDTH'",
+        "HOME": "'$HOME'",
+        "NS": "'$NS'",
+        "SHELL": "'$SHELL'",
+        "BACKUPS": "'$BACKUPS'",
+        "CONTACT": "'$CONTACT'",
+        "CRON_REPORTS": "'$CRON_REPORTS'",
+        "RKEY": "'$RKEY'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "SUSPENDED_USERS": "'$SUSPENDED_USERS'",
+        "SUSPENDED_WEB": "'$SUSPENDED_WEB'",
+        "SUSPENDED_DNS": "'$SUSPENDED_DNS'",
+        "SUSPENDED_MAIL": "'$SUSPENDED_MAIL'",
+        "SUSPENDED_DB": "'$SUSPENDED_DB'",
+        "SUSPENDED_CRON": "'$SUSPENDED_CRON'",
+        "IP_AVAIL": "'$IP_AVAIL'",
+        "IP_OWNED": "'$IP_OWNED'",
+        "U_USERS": "'$U_USERS'",
+        "U_DISK": "'$U_DISK'",
+        "U_DISK_DIRS": "'$U_DISK_DIRS'",
+        "U_DISK_WEB": "'$U_DISK_WEB'",
+        "U_DISK_MAIL": "'$U_DISK_MAIL'",
+        "U_DISK_DB": "'$U_DISK_DB'",
+        "U_BANDWIDTH": "'$U_BANDWIDTH'",
+        "U_WEB_DOMAINS": "'$U_WEB_DOMAINS'",
+        "U_WEB_SSL": "'$U_WEB_SSL'",
+        "U_WEB_ALIASES": "'$U_WEB_ALIASES'",
+        "U_DNS_DOMAINS": "'$U_DNS_DOMAINS'",
+        "U_DNS_RECORDS": "'$U_DNS_RECORDS'",
+        "U_MAIL_DOMAINS": "'$U_MAIL_DOMAINS'",
+        "U_MAIL_DKIM": "'$U_MAIL_DKIM'",
+        "U_MAIL_ACCOUNTS": "'$U_MAIL_ACCOUNTS'",
+        "U_DATABASES": "'$U_DATABASES'",
+        "U_CRON_JOBS": "'$U_CRON_JOBS'",
+        "U_BACKUPS": "'$U_BACKUPS'",
+        "LANGUAGE": "'$LANGUAGE'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+        }
+}'
 }
 
-# Shell function
-shell_list_user() {
-    source $VESTA/data/users/$user/user.conf
-    for field in $fields; do
-        eval key="$field"
-        if [ -z "$key" ]; then
-            key='NULL'
-        fi
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    echo "USERNAME:       $USER"
+    echo "FULL NAME:      $FNAME $LNAME"
+    echo "EMAIL:          $CONTACT"
+    echo "LANGUAGE:       $LANGUAGE"
+    echo "SUSPENDED:      $SUSPENDED"
+    echo "PACKAGE:        $PACKAGE"
+    echo "SHELL:          $SHELL"
+    echo "WEB DOMAINS:    $U_WEB_DOMAINS/$WEB_DOMAINS"
+    echo "WEB ALIASES:    $U_WEB_ALIASES/$WEB_ALIASES"
+    echo "DNS DOMAINS:    $U_DNS_DOMAINS/$DNS_DOMAINS"
+    echo "DNS RECORDS:    $U_DNS_RECORDS/$DNS_RECORDS"
+    echo "MAIL DOMAINS:   $U_MAIL_DOMAINS/$MAIL_DOMAINS"
+    echo "MAIL ACCOUNTS:  $U_MAIL_ACCOUNTS/$MAIL_ACCOUNTS"
+    echo "BACKUPS:        $U_BACKUPS/$BACKUPS"
+    echo "DATABASES:      $U_DATABASES/$DATABASES"
+    echo "CRON_JOBS:      $U_CRON_JOBS/$CRON_JOBS"
+    echo "DISK:           $U_DISK/$DISK_QUOTA"
+    echo "BANDWIDTH:      $U_BANDWIDTH/$BANDWIDTH"
+    echo "IP ADDRESSES    $IP_AVAIL/$IP_OWNED"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$USER\t$FNAME\t$LNAME\t$PACKAGE\t$WEB_TEMPLATE\t"
+    echo -ne "$BACKEND_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
+    echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
+    echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$DATABASES\t$CRON_JOBS\t"
+    echo -ne "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$HOME\t$SHELL\t$BACKUPS\t"
+    echo -ne "$CONTACT\t$CRON_REPORTS\t$RKEY\t$SUSPENDED\t"
+    echo -ne "$SUSPENDED_USERS\t$SUSPENDED_WEB\t$SUSPENDED_DNS\t"
+    echo -ne "$SUSPENDED_MAIL\t$SUSPENDED_DB\t$SUSPENDED_CRON\t"
+    echo -ne "$IP_AVAIL\t$IP_OWNED\t$U_USERS\t$U_DISK\t$U_DISK_DIRS\t"
+    echo -ne "$U_DISK_WEB\t$U_DISK_MAIL\t$U_DISK_DB\t$U_BANDWIDTH\t"
+    echo -ne "$U_WEB_DOMAINS\t$U_WEB_SSL\t$U_WEB_ALIASES\t"
+    echo -ne "$U_DNS_DOMAINS\t$U_DNS_RECORDS\t$U_MAIL_DOMAINS\t"
+    echo -ne "$U_MAIL_DKIM\t$U_MAIL_ACCOUNTS\t$U_DATABASES\t"
+    echo -e "'$U_CRON_JOBS\t$U_BACKUPS\t$LANGUAGE\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo -n "USER,FNAME,LNAME,PACKAGE,WEB_TEMPLATE,BACKEND_TEMPLATE,"
+    echo -n "PROXY_TEMPLATE,DNS_TEMPLATE,WEB_DOMAINS,WEB_ALIASES,"
+    echo -n "DNS_DOMAINS,DNS_RECORDS,MAIL_DOMAINS,MAIL_ACCOUNTS,"
+    echo -n "DATABASES,CRON_JOBS,DISK_QUOTA,BANDWIDTH,NS,HOME,SHELL,"
+    echo -n "BACKUPS,CONTACT,CRON_REPORTS,RKEY,SUSPENDED,SUSPENDED_USERS,"
+    echo -n "SUSPENDED_WEB,SUSPENDED_DNS,SUSPENDED_MAIL,SUSPENDED_DB,"
+    echo -n "SUSPENDED_CRON,IP_AVAIL,IP_OWNED,U_USERS,U_DISK,U_DISK_DIRS,"
+    echo -n "U_DISK_WEB,U_DISK_MAIL,U_DISK_DB,U_BANDWIDTH,U_WEB_DOMAINS,"
+    echo -n "U_WEB_SSL,U_WEB_ALIASES,U_DNS_DOMAINS,U_DNS_RECORDS,"
+    echo -n "U_MAIL_DOMAINS,U_MAIL_DKIM,U_MAIL_ACCOUNTS,U_DATABASES"
+    echo "U_CRON_JOBS,U_BACKUPS,LANGUAGE,TIME,DATE"
+    echo -n "$USER,\"$FNAME\",\"$LNAME\",$PACKAGE,$WEB_TEMPLATE,"
+    echo -n "$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,$WEB_DOMAINS,"
+    echo -n "$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,$MAIL_DOMAINS,"
+    echo -n "$MAIL_ACCOUNTS,$DATABASES,$CRON_JOBS,$DISK_QUOTA,$BANDWIDTH,"
+    echo -n "\"$NS\",$HOME,$SHELL,$BACKUPS,$CONTACT,$CRON_REPORTS,\"$RKEY\","
+    echo -n "$SUSPENDED,$SUSPENDED_USERS,$SUSPENDED_WEB,$SUSPENDED_DNS,"
+    echo -n "$SUSPENDED_MAIL,$SUSPENDED_DB,$SUSPENDED_CRON,$IP_AVAIL,"
+    echo -n "$IP_OWNED,$U_USERS,$U_DISK,$U_DISK_DIRS,$U_DISK_WEB,"
+    echo -n "$U_DISK_MAIL,$U_DISK_DB,$U_BANDWIDTH,$U_WEB_DOMAINS,$U_WEB_SSL,"
+    echo -n "$U_WEB_ALIASES,$U_DNS_DOMAINS,$U_DNS_RECORDS,$U_MAIL_DOMAINS,"
+    echo -n "$U_MAIL_DKIM,$U_MAIL_ACCOUNTS,$U_DATABASES,$U_CRON_JOBS,"
+    echo "$U_BACKUPS,$LANGUAGE,$TIME,$DATE"
 }
 
 
@@ -60,7 +154,6 @@ shell_list_user() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -69,26 +162,16 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Defining config
-conf=$USER_DATA/user.conf
+USER=$user
 HOME=$HOMEDIR/$user
+source $VESTA/data/users/$user/user.conf
 
-# Defining fileds to select
-fields='$USER $FNAME $LNAME $PACKAGE $WEB_TEMPLATE $BACKEND_TEMPLATE
-    $PROXY_TEMPLATE $DNS_TEMPLATE $WEB_DOMAINS $WEB_ALIASES $DNS_DOMAINS
-    $DNS_RECORDS $MAIL_DOMAINS $MAIL_ACCOUNTS $DATABASES $CRON_JOBS
-    $DISK_QUOTA $BANDWIDTH $NS $SHELL $BACKUPS $CONTACT $CRON_REPORTS
-    $RKEY $SUSPENDED $SUSPENDED_USERS $SUSPENDED_WEB $SUSPENDED_DNS
-    $SUSPENDED_MAIL $SUSPENDED_DB $SUSPENDED_CRON $IP_AVAIL $IP_OWNED
-    $U_USERS $U_DISK $U_DISK_DIRS $U_DISK_WEB $U_DISK_MAIL $U_DISK_DB
-    $U_BANDWIDTH $U_WEB_DOMAINS $U_WEB_SSL $U_WEB_ALIASES $U_DNS_DOMAINS
-    $U_DNS_RECORDS $U_MAIL_DOMAINS $U_MAIL_DKIM $U_MAIL_ACCOUNTS $U_DATABASES
-    $U_CRON_JOBS $U_BACKUPS $LANGUAGE $HOME $NOTIFICATIONS $TIME $DATE'
-
-# Listing user
-case $format in 
-    json)   json_list_user ;;
-    plain)  nohead=1; shell_list_user ;;
-    shell)  shell_list_user | column -t ;;
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

@@ -15,10 +15,16 @@ format=${1-shell}
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Define json function
-json_list_rrd() {
+# JSON list function
+json_list() {
     i=1
     echo "{"
+
+    # Generating timestamp
+    time_n_date=$(date +'%T %F')
+    TIME=$(echo "$time_n_date" |cut -f 1 -d \ )
+    DATE=$(echo "$time_n_date" |cut -f 2 -d \ )
+
     for type in $rrd_types; do
         for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
             if [ "$i" -ne 1 ]; then
@@ -61,12 +67,37 @@ json_list_rrd() {
     echo "}"
 }
 
-# Define jshell function
-shell_list_rrd() {
-    if [  -z "$nohead" ]; then
-        echo "PATH"
-        echo "---------"
-    fi
+# SHELL list function
+shell_list() {
+       echo "TYPE   VAL_1   VAL_2   VAL_3   TIME   DATE"
+       echo "----   -----   -----   -----   ----   ----"
+    for type in $rrd_types; do
+        for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
+            rrd_type=$(echo  "$rrd" |tr '[:lower:]' '[:upper:]')
+            rrd_data=$(rrdtool fetch "$RRD/$type/$rrd.rrd" AVERAGE -e 0 -s 0)
+            rrd_data=$(echo "$rrd_data" |tail -n 1)
+            rrd_timestamp=$(echo "$rrd_data" |cut -f 1 -d :)
+            rrd_time=$(date -d "@$rrd_timestamp" +%F)
+            rrd_date=$(date -d "@$rrd_timestamp" +%T)
+            rrd_val1=$(echo "$rrd_data" |awk '{print $2}' |cut -d. -f1)
+            rrd_val2=$(echo "$rrd_data" |awk '{print $3}' |cut -d. -f1)
+            rrd_val3=$(echo "$rrd_data" |awk '{print $4}' |cut -d. -f1)
+            if [ -z "$rrd_val1" ]; then
+                rrd_val1="-nan"
+            fi
+            if [ -z "$rrd_val2" ]; then
+                rrd_val2="-nan"
+            fi
+            if [ -z "$rrd_val3" ]; then
+                rrd_val3="-nan"
+            fi
+            echo "$rrd_type $rrd_val1 $rrd_val2 $rrd_val3 $rrd_time $rrd_date"
+        done
+    done
+}
+
+# PLAIN list function
+plain_list() {
     for type in $rrd_types; do
         for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
             echo "$RRD/$type/$rrd.rrd"
@@ -74,39 +105,53 @@ shell_list_rrd() {
     done
 }
 
+# CSV list function
+csv_list() {
+    for type in $rrd_types; do
+        echo "RRD"
+        for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
+            echo "$RRD/$type/$rrd.rrd"
+        done
+    done
+}
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking enabled systems
+# Definng rrd charts
 rrd_types="la mem net"
 
-if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+# Checking web system
+if [ ! -z "$WEB_SYSTEM" ]; then
     rrd_types="$rrd_types web"
 fi
 
-if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+# Checking mail system
+if [ ! -z "$MAIL_SYSTEM" ]; then
     rrd_types="$rrd_types mail"
 fi
 
-if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+# Checking db system
+if [ ! -z "$DB_SYSTEM" ]; then
     rrd_types="$rrd_types db"
 fi
 
-if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
+# Checking ftp system
+if [ ! -z "$FTP_SYSTEM" ]; then
     rrd_types="$rrd_types ftp"
 fi
 
+# Adding ssh
 rrd_types="$rrd_types ssh"
 
-
-# Listing domains
+# Listing data
 case $format in
-    json)   json_list_rrd ;;
-    plain)  nohead=1; shell_list_rrd ;;
-    shell)  shell_list_rrd | column -t ;;
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

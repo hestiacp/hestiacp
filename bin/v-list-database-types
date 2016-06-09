@@ -16,31 +16,40 @@ format=${1-shell}
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Json function
-json_list_dbtypes() {
-    types=$(echo "${DB_SYSTEM//,/ }")
-    t_counter=$(echo "$types" | wc -w)
+# JSON list function
+json_list() {
+    objects=$(echo "${DB_SYSTEM//,/ }" |wc -w)
     i=1
     echo '['
-    for type in $types; do
-        if [ "$i" -lt "$t_counter" ]; then
-            echo -e  "\t\"$type\","
+    for type in ${DB_SYSTEM//,/ }; do
+        echo -n '    "'$type'"'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
         else
-            echo -e  "\t\"$type\""
+            echo
         fi
-        (( ++i))
+        ((i++))
     done
     echo "]"
 }
 
-# Shell function
-shell_list_dbtypes() {
-    types=$(echo "${DB_SYSTEM//,/ }")
-    if [ -z "$nohead" ]; then
-        echo "TYPES"
-        echo "----------"
-    fi
-    for type in $types; do
+# SHELL list function
+shell_list() {
+    echo -e "TYPE\n----"
+    echo "$DB_SYSTEM" |sed -e "s/,/\n/"
+}
+
+# PLAIN list function
+plain_list() {
+    for type in ${DB_SYSTEM//,/ }; do
+        echo "$type"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "TYPE"
+    for type in ${DB_SYSTEM//,/ }; do
         echo "$type"
     done
 }
@@ -50,12 +59,12 @@ shell_list_dbtypes() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Listing domains
-case $format in 
-    json)   json_list_dbtypes ;;
-    plain)  nohead=1; shell_list_dbtypes ;;
-    shell)  shell_list_dbtypes ;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list;;
 esac
 
 

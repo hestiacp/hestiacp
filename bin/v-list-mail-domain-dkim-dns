@@ -17,24 +17,38 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_dkim_dns() {
+# JSON list function
+json_list() {
     echo '{'
     echo -e "\t\"_domainkey\": {"
-    echo "        \"TTL\": \"3600\","
-    echo "        \"TXT\": \"'t=y; o=~;'\""
+    echo "            \"TTL\": \"3600\","
+    echo "            \"TXT\": \"'t=y; o=~;'\""
     echo -e "\t},"
     echo -e "\n\t\"mail._domainkey\": {"
-    echo "        \"TTL\": \"3600\","
-    echo "        \"TXT\": \"'$pub'\""
+    echo "            \"TTL\": \"3600\","
+    echo "            \"TXT\": \"\\\"$pub\\\"\""
     echo -e "\t}\n}"
-
 }
 
-# Shell function
-shell_list_dkim_dns() {
-    echo "_domainkey      3600    IN    TXT    \"t=y; o=~;\""
-    echo "mail._domainkey 3600    IN    TXT    \"k=rsa; p=$pub\""
+# SHELL list function
+shell_list() {
+    echo "RECORD            TTL         TYPE      VALUE"
+    echo "------            ---         ----      -----"
+    echo "_domainkey        3600   IN   TXT      \"t=y; o=~;\""
+    echo "mail._domainkey   3600   IN   TXT      \"k=rsa; p=$pub\""
+}
+
+# PLAIN list function
+plain_list() {
+    echo -e "_domainkey\t3600\tIN\tTXT\t\"t=y; o=~;\""
+    echo -e "mail._domainkey\t3600\tIN\tTXT\t\"k=rsa; p=$pub\""
+}
+
+# CSV list function
+csv_list() {
+    echo "RECORD,TTL,IN,TYPE,VALUE"
+    echo "_domainkey,3600,IN,TXT,\"\"t=y; o=~;\"\""
+    echo "mail._domainkey,3600,IN,TXT,\"\"k=rsa; p=$pub\"\""
 }
 
 
@@ -51,19 +65,20 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Check pub key
+# Parsing domain keys
 if [ -e "$USER_DATA/mail/$domain.pub" ]; then
-    pub=$(cat $USER_DATA/mail/$domain.pub | sed ':a;N;$!ba;s/\n/\\n/g')
+    pub=$(cat $USER_DATA/mail/$domain.pub |grep -v "KEY-----")
+    pub=$(echo "$pub" |sed ':a;N;$!ba;s/\n/\\n/g')
 else
     pub="DKIM-SUPPORT-IS-NOT-ACTIVATED"
 fi
 
-# Listing domains
+# Listing data
 case $format in
-    json)   json_list_dkim_dns ;;
-    plain)  shell_list_dkim_dns ;;
-    shell)  shell_list_dkim_dns ;;
-    *)      check_args '1' '0' '[FORMAT]'
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t -s '^';;
 esac
 
 

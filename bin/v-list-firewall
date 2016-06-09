@@ -15,25 +15,77 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep RULE $VESTA/data/firewall/rules.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        echo -n '    "'$RULE'": {
+        "ACTION": "'$ACTION'",
+        "PROTOCOL": "'$PROTOCOL'",
+        "PORT": "'$PORT'",
+        "IP": "'$IP'",
+        "COMMENT": "'$COMMENT'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done < <(cat $VESTA/data/firewall/rules.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "RULE^ACTION^PROTO^PORT^IP^SPND^DATE"
+    echo "----^------^-----^----^--^----^----"
+    while read str; do
+        eval $str
+        echo "$RULE^$ACTION^$PROTOCOL^$PORT^$IP^$SUSPENDED^$DATE"
+    done < <(cat $VESTA/data/firewall/rules.conf)
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP\t$COMMENT\t"
+        echo -e "$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $VESTA/data/firewall/rules.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "RULE,ACTION,PROTOCOL,PORT,IP,COMMENT,SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        echo -n "$RULE,$ACTION,$PROTOCOL,$PORT,$IP,\"$COMMENT\","
+        echo "$SUSPENDED,$TIME,$DATE"
+    done < <(cat $VESTA/data/firewall/rules.conf)
+}
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$VESTA/data/firewall/rules.conf
-
-# Defining fileds to select
-fields="\$RULE \$ACTION \$PROTOCOL \$PORT \$IP \$COMMENT"
-fields="$fields \$RULE \$SUSPENDED \$TIME \$DATE"
-
-# Listing domains
-case $format in 
+# Listing data
+case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields="\$ACTION \$PROTOCOL \$PORT \$IP";
-            shell_list | column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]'
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t -s '^' ;;
 esac
 
 

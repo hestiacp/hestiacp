@@ -16,43 +16,55 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_favourites() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    fvrt_data=$(cat $USER_DATA/favourites.conf 2>/dev/null)
+# JSON list function
+json_list() {
     echo '{'
-    eval $fvrt_data
-    for field in $fields; do
-        eval value=$field
-        if [ $i -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ $fileds_count -eq $i ]; then
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-            fi
-        fi
-    (( ++i))
-    done
-    #if [ -n "$value" ]; then
-        echo -e '        }'
-    #fi
-    echo -e '}'
+    echo '    "Favourites": {
+        "USER": "'$USER'",
+        "WEB": "'$WEB'",
+        "DNS": "'$DN'",
+        "DNS_REC": "'$DNS_REC'",
+        "MAIL": "'$MAIL'",
+        "MAIL_ACC": "'$MAIL_ACC'",
+        "DB": "'$DB'",
+        "CRON": "'$CRON'",
+        "BACKUP": "'$BACKUP'",
+        "IP": "'$IP'",
+        "PACKAGE": "'$PACKAGE'",
+        "FIREWALL": "'$FIREWALL'"
+        }'
+    echo '}'
 }
 
-# Shell function
-shell_list_favourites() {
-    line=$(cat $USER_DATA/favourites.conf 2>/dev/null)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        if [ -z "$key" ]; then
-            key='NULL'
-        fi
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    echo "USER:           $USER"
+    echo "WEB:            $WEB"
+    echo "DNS:            $DNS"
+    echo "DNS RECORD:     $DNS_REC"
+    echo "MAIL:           $MAIL"
+    echo "MAIL USER:      $MAIL_ACC"
+    echo "DATABASE:       $DB"
+    echo "CRON:           $CRON"
+    echo "BACKUP:         $BACKUP"
+    echo "IP:             $IP"
+    echo "PACKAGE:        $PACKAGE"
+    echo "FIREWALL:       $FIREWALL"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$USER\t$WEB\t$DNS\t$DNS_REC\t$MAIL\t$MAIL_ACC\t$DB\t$CRON\t"
+    echo -e "$BACKUP\t$IP\t$PACKAGE\t$FIREWALL"
+}
+
+# CSV list function
+csv_list() {
+    echo -n "USER,WEB,DNS,DNS_REC,MAIL,MAIL_ACC,DB,CRON,BACKUP,IP,"
+    echo "PACKAGE,FIREWALL"
+    echo -n "\"$USER\",\"$WEB\",\"$DNS\",\"$DNS_REC\",\"$MAIL\","
+    echo -n "\"$MAIL_ACC\",\"$DB\",\"$CRON\",\"$BACKUP\",\"$IP\","
+    echo "\"$PACKAGE\",\"$FIREWALL\""
 }
 
 
@@ -62,7 +74,7 @@ shell_list_favourites() {
 
 # Checking args
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -84,17 +96,17 @@ IP=''
 PACKAGE=''
 FIREWALL=''
 
-# Defining fileds to select
-OBJ='Favourites'
-fields='$OBJ $USER $WEB $DNS $DNS_REC $MAIL $MAIL_ACC $DB $CRON $BACKUP
-    $IP $PACKAGE $FIREWALL'
+# Parsing user favourites
+if [ -e "$VESTA/data/users/$user/favourites.conf" ]; then
+    source $VESTA/data/users/$user/favourites.conf
+fi
 
-# Listing favourites
+# Listing data
 case $format in
-    json)   json_list_favourites ;;
-    plain)  shell_list_favourites ;;
-    shell)  shell_list_favourites | column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]'
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

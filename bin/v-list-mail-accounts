@@ -17,13 +17,90 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep ACCOUNT $USER_DATA/mail/$domain.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        echo -n '    "'$ACCOUNT'": {
+        "ALIAS": "'$ALIAS'",
+        "FWD": "'$FWD'",
+        "FWD_ONLY": "'$FWD_ONLY'",
+        "AUTOREPLY": "'$AUTOREPLY'",
+        "QUOTA": "'$QUOTA'",
+        "U_DISK": "'$U_DISK'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done < <(cat $USER_DATA/mail/$domain.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "ACCOUNT   ALIAS   FWD   DISK  DATE"
+    echo "-------   -----   ---   ----  ----"
+    while read str; do
+        eval $str
+        if [ -z "$ALIAS" ]; then
+            ALIAS='no'
+        else
+            if [ "${#ALIAS}" -gt 12 ]; then
+                ALIAS="${ALIAS:0:12}..."
+            fi
+        fi
+        if [ -z "$FWD" ]; then
+            FWD='no'
+        else
+            if [ "${#FWD}" -gt 20 ]; then
+                FWD="${FWD:0:20}..."
+            fi
+        fi
+        echo "$ACCOUNT $ALIAS $FWD $U_DISK $DATE"
+    done < <(cat $USER_DATA/mail/$domain.conf)
+}
+
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        echo -ne "$ACCOUNT\t$ALIAS\t$FWD\t$FWD_ONLY\t$AUTOREPLY\t"
+        echo -e "$QUOTA\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $USER_DATA/mail/$domain.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo -n "ACCOUNT,ALIAS,FWD,FWD_ONLY,AUTOREPLY,QUOTA,U_DISK,"
+    echo "SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        echo -n "$ACCOUNT,\"$ALIAS\",\"$FWD\",$FWD_ONLY,$AUTOREPLY,"
+        echo "$QUOTA,$U_DISK,$SUSPENDED,$TIME,$DATE"
+    done < <(cat $USER_DATA/mail/$domain.conf)
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [FORMAT]'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 
@@ -32,18 +109,12 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fileds to select
-conf=$USER_DATA/mail/$domain.conf
-fields="\$ACCOUNT \$ALIAS \$FWD \$FWD_ONLY \$QUOTA \$AUTOREPLY \$U_DISK"
-fields="$fields \$SUSPENDED \$TIME \$DATE"
-
-# Listing domain accounts
-case $format in 
-    json)  json_list ;;
-    plain) nohead=1; shell_list ;;
-    shell) fields='$ACCOUNT $AUTOREPLY $QUOTA $U_DISK $SUSPENDED $TIME $DATE';
-           shell_list | column -t ;;
-    *)     check_args '1' '0' 'USER [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

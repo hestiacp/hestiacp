@@ -17,40 +17,46 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_db() {
-    i=1
-    last_word=$(echo "$fields" | wc -w)
-    line=$(grep "DB='$database'" $conf)
+# JSON list function
+json_list() {
     echo '{'
-    eval $line
-    for field in $fields; do
-        eval value=$field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$last_word" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-            fi
-        fi
-        (( ++i))
-    done
-    if [ -n "$value" ]; then
-        echo -e "\t}"
-    fi
-    echo -e '}'
+    echo '    "'$database'": {
+        "DATABASE": "'$DB'",
+        "DBUSER": "'$DBUSER'",
+        "HOST": "'$HOST'",
+        "TYPE": "'$TYPE'",
+        "CHARSET": "'$CHARSET'",
+        "U_DISK": "'$U_DISK'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
 }
 
-# Shell list for single database
-shell_list_db() {
-    line=$(grep "DB='$database'" $conf)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    echo "DATABASE:       $DB"
+    echo "DB USER:        $DBUSER"
+    echo "HOST:           $HOST"
+    echo "TYPE:           $TYPE"
+    echo "CHARSET:        $CHARSET"
+    echo "DISK:           $U_DISK"
+    echo "SUSPENDED:      $SUSPENDED"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$DB\t$DBUSER\t$HOST\t$TYPE\t$CHARSET\t$U_DISK\t"
+    echo -e "$SUSPENDED\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo "DATABASE,DBUSER,HOST,TYPE,CHARSET,U_DISK,SUSPENDED,TIME,DATE"
+    echo "$DB,$DBUSER,$HOST,$TYPE,$CHARSET,$U_DISK,$SUSPENDED,$TIME,$DATE"
 }
 
 
@@ -59,7 +65,7 @@ shell_list_db() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DATABASE [FORMAT]'
-validate_format 'user' 'database'
+is_format_valid 'user' 'database'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
 
@@ -68,17 +74,15 @@ is_object_valid 'db' 'DB' "$database"
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Parsing database
+eval $(grep "DB='$database'" $USER_DATA/db.conf)
 
-# Defining fileds to select
-conf=$USER_DATA/db.conf
-fields='$DB $DBUSER $HOST $TYPE $CHARSET $U_DISK $SUSPENDED $TIME $DATE'
-
-# Listing database
-case $format in 
-    json)   json_list_db ;;
-    plain)  shell_list_db ;;
-    shell)  shell_list_db | column -t ;;
-    *)      check_args '2' '0' 'USER DATABASE [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

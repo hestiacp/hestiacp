@@ -16,12 +16,76 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        echo -n '    "'$BACKUP'": {
+        "TYPE": "'$TYPE'",
+        "SIZE": "'$SIZE'",
+        "WEB": "'$WEB'",
+        "DNS": "'$DNS'",
+        "MAIL": "'$MAIL'",
+        "DB": "'$DB'",
+        "CRON": "'$CRON'",
+        "UDIR": "'$UDIR'",
+        "RUNTIME": "'$RUNTIME'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done < <(cat $USER_DATA/backup.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "BACKUP   TYPE   SIZE  TIME  DATE"
+    echo "------   ----   ---   ----  ----"
+    while read str; do
+        eval $str
+        echo "$BACKUP $TYPE $SIZE $RUNTIME $DATE"
+    done < <(cat $USER_DATA/backup.conf)
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        echo -ne "$BACKUP\t$TYPE\t$SIZE\t$WEB\t$DNS\t$MAIL\t$CRON\t$UDIR\t"
+        echo -e "$RUNTIME\t$TIME\t$DATE"
+    done < <(cat $USER_DATA/backup.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "BACKUP,TYPE,SIZE,WEB,DNS,MAIL,CRON,UDIR,RUNTIME,TIME,DATE"
+    while read str; do
+        eval $str
+        echo -n "$BACKUP,$TYPE,$SIZE,\"$WEB\",\"$DNS\",\"$MAIL\",\"$CRON\","
+        echo "\"$UDIR\",$RUNTIME,$TIME,$DATE"
+    done < <(cat $USER_DATA/backup.conf)
+}
+
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -35,17 +99,12 @@ if [ ! -e "$conf" ]; then
     touch $conf
 fi
 
-# Defining fileds to select
-fields="\$BACKUP \$TYPE \$SIZE \$WEB \$DNS \$DB \$MAIL \$CRON \$UDIR"
-fields="$fields \$RUNTIME \$TIME \$DATE"
-
-# Listing domains
-case $format in 
+# Listing data
+case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$BACKUP $TYPE $SIZE $RUNTIME $TIME $DATE';
-            shell_list |column -t;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

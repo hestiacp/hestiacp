@@ -18,8 +18,8 @@ format=${4-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_msg() {
+# JSON list function
+json_list() {
     i='1'       # iterator
     echo '{'
     echo -e "\t\"$account\": {"
@@ -27,11 +27,20 @@ json_list_msg() {
     echo -e "\t}\n}"
 }
 
-# Shell function
-shell_list_msg() {
-    if [ ! -z "$msg" ]; then
-        echo -e "$msg"
-    fi
+# SHELL list function
+shell_list() {
+    echo "$msg"
+}
+
+# PLAIN list function
+plain_list() {
+    echo "$msg"
+}
+
+# CSV list function
+csv_list() {
+    echo "MSG"
+    echo "$msg"
 }
 
 
@@ -39,7 +48,8 @@ shell_list_msg() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+check_args '3' "$#" 'USER DOMAIN ACCOUNT [FORMAT]'
+is_format_valid 'user' 'domain' 'account'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
@@ -56,12 +66,12 @@ if [ -e "$USER_DATA/mail/$account@$domain.msg" ]; then
         sed ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
-# Listing domains
+# Listing data
 case $format in
-    json)   json_list_msg ;;
-    plain)  nohead=1; shell_list_msg ;;
-    shell)  shell_list_msg ;;
-    *)      check_args '1' '0' '[FORMAT]'
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

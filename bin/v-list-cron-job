@@ -2,7 +2,7 @@
 # info: list cron job
 # options: USER JOB [FORMAT]
 #
-# The function of obtaining cron job settings.
+# The function of obtaining cron job parameters.
 
 
 #----------------------------------------------------------#
@@ -17,44 +17,46 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_job() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    line=$(grep "JOB='$job'" $conf)
-    echo '{'
-    eval $line
-    for field in $fields; do
-        eval value=$field
-        value=$(echo "$value"|sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"$value\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"$value\","
-            fi
-        fi
-        (( ++i))
-    done
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    echo -e "}"
+# JSON list function
+json_list() {
+    echo "{"
+    echo -n '    "'$job'": {
+        "MIN": "'$MIN'",
+        "HOUR": "'$HOUR'",
+        "DAY": "'$HOUR'",
+        "MONTH": "'$MONTH'",
+        "WDAY": "'$WDAY'",
+        "CMD": "'$CMD'",
+        "JOB": "'$JOB'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo
+    echo '}'
 }
 
-# Shell function
-shell_list_job() {
-    line=$(grep "JOB='$job'" $conf)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        if [ -z "$key" ]; then
-            key=NULL
-        fi
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    echo "MINUTE:         $MIN"
+    echo "HOUR:           $HOUR"
+    echo "DAY:            $DAY"
+    echo "DAY OF WEEK:    $WDAY"
+    echo "COMMAND:        $CMD"
+    echo "SUSPENDED:      $SUSPENDED"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -e  "$MIN\t$HOUR\t$DAY\t$WDAY\t$CMD\t$SUSPENDED\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo  "MIN,HOUR,DAY,WDAY,CMD,SUSPENDED,TIME,DATE"
+    echo  "$MIN,$HOUR,$DAY,$WDAY,\"$CMD\",$SUSPENDED,$TIME,$DATE'"
 }
 
 
@@ -63,6 +65,8 @@ shell_list_job() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER JOB [FORMAT]'
+is_format_valid 'user'
+is_number_format_valid  "$job" "job_id"
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -70,17 +74,27 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config and fields to select
+# Defining config
 conf=$USER_DATA/cron.conf
-fields="\$JOB \$MIN \$HOUR \$DAY \$MONTH \$WDAY \$CMD \$SUSPENDED"
-fields="$fields \$TIME \$DATE"
 
-# Listing domains
-case $format in 
-    json)   json_list_job ;;
-    plain)  nohead=1; shell_list_job ;;
-    shell)  shell_list_job |column -t ;;
-    *)      check_args '2' '0' 'USER JOB [FORMAT]'
+# Checking job id
+cron_line=$(grep "JOB='$job'" $conf)
+if [ -z "$cron_line" ]; then
+    check_result $E_NOTEXIST "cron job $job doesn't exist"
+fi
+
+# Parsing cron job
+eval $cron_line
+
+# Replacing quoted and backslahed text
+CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

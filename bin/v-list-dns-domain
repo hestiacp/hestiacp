@@ -2,8 +2,7 @@
 # info: list dns domain
 # options: USER DOMAIN [FORMAT]
 #
-# The function of obtaining the list of domain parameters. This call, just as
-# all v_list_* calls, supports 3 formats - json, shell and plain.
+# The function of obtaining the list of dns domain parameters.
 
 
 #----------------------------------------------------------#
@@ -18,57 +17,52 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_domain() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    line=$(grep "DOMAIN='$domain'" $conf)
-
-    # Print top bracket
+# JSON list function
+json_list() {
     echo '{'
-
-    # Assing key=value
-    eval $line
-
-    # Starting output loop
-    for field in $fields; do
-        # Parsing key=value
-        eval value=$field
-
-        # Checking first field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"$value\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"$value\","
-            fi
-        fi
-        # Updating iterator
-        (( ++i))
-    done
-
-    # If there was any output
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    # Printing bottom json bracket
-    echo -e "}"
+    echo '    "'$DOMAIN'": {
+        "IP": "'$IP'",
+        "TPL": "'$TPL'",
+        "TTL": "'$TTL'",
+        "EXP": "'$EXP'",
+        "SOA": "'$SOA'",
+        "SERIAL": "'$SERIAL'",
+        "SRC": "'$SRC'",
+        "RECORDS": "'$RECORDS'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
 }
 
-# Shell function
-shell_list_domain() {
-    line=$(grep "DOMAIN='$domain'" $conf)
+# SHELL list function
+shell_list() {
+    echo "DOMAIN:         $DOMAIN"
+    echo "IP:             $IP"
+    echo "TEMPLATE:       $TPL"
+    echo "TTL:            $TTL"
+    echo "EXP:            $EXP"
+    echo "SOA:            $SOA"
+    echo "SERIAL:         $SERIAL"
+    echo "RECORDS:        $RECORDS"
+    echo "SUSPENDED:      $SUSPENDED"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
 
-    # Parsing key=value
-    eval $line
 
-    # Print result line
-    for field in $fields; do
-        eval key="$field"
-        echo "${field//$/}: $key "
-    done
+# PLAIN list function
+plain_list() {
+    echo -ne "$DOMAIN\t$IP\t$TPL\t$TTL\t$EXP\t$SOA\t$SERIAL\t$RECORDS\t"
+    echo -e "$SUSPENDED\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo "DOMAIN,IP,TPL,TTL,EXP,SOA,SERIAL,RECORDS,SUSPENDED,TIME,DATE"
+    echo -n "$DOMAIN,$IP,$TPL,$TTL,$EXP,$SOA,$SERIAL,$RECORDS,$SUSPENDED,"
+    echo "$TIME,$DATE"
 }
 
 
@@ -85,17 +79,15 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config and fields to select
-conf=$USER_DATA/dns.conf
-fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SERIAL $SRC $RECORDS
-    $SUSPENDED $TIME $DATE'
+# Parsing domain
+eval $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 
-# Listing domains
-case $format in 
-    json)   json_list_domain ;;
-    plain)  nohead=1; shell_list_domain ;;
-    shell)  shell_list_domain |column -t ;;
-    *)      check_args '2' '0' 'USER DOMAIN [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

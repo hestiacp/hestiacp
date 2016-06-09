@@ -26,7 +26,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [RESTART]'
-validate_format 'user'
+is_format_valid 'user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -36,128 +36,43 @@ is_object_unsuspended 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-user_domains=0
-user_ssl=0
-user_aliases=0
-suspended_web=0
-conf=$USER_DATA/web.conf
-fields='$DOMAIN'
-nohead=1
-domain_counter=0
+# Deleting old configs
+sed -i "/.*\/$user\//d" /etc/$WEB_SYSTEM/conf.d/vesta.conf
+rm -f $HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf
+rm -f $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    sed -i "/.*\/$user\//d" /etc/$PROXY_SYSTEM/conf.d/vesta.conf
+    rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
+    rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
+fi
+if [ ! -z "$WEB_BACKEND" ]; then
+    if [ "$WEB_BACKEND_POOL" = 'user' ]; then
+        prepare_web_backend
+        rm -f $pool/$backend_type.conf
+    else
+        for domain in $(v-list-web-domains $user plain |cut -f 1); do
+            prepare_web_backend
+            rm -f $pool/$backend_type.conf
+        done
+    fi
+fi
 
-# Adding log directory
-mkdir -p /var/log/$WEB_SYSTEM/domains
-chmod 771 /var/log/$WEB_SYSTEM/domains
-
-# Clean up old config
-rm -f $HOMEDIR/$user/conf/tmp_*.conf
-
-
-# Starting loop
-for domain in $(shell_list); do
-    template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
+# Starting rebuild loop for each web domain
+for domain in $(v-list-web-domains $user plain |cut -f 1); do
     if [ ! -z "$WEB_BACKEND" ]; then
+        template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
         $BIN/v-add-web-domain-backend $user $domain $template
     fi
-
-    ((++ domain_counter))
     rebuild_web_domain_conf
 done
-
-# Touch vesta configs
-web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
-touch $web_conf
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
-    touch $proxy_conf
-fi
-
-# Checking if there is at least 1 domain
-if [ "$domain_counter" -lt 1 ]; then
-    # Deleting web configs
-    rm -f $HOMEDIR/$user/conf/web/*
-    sed -i "/.*\/$user\/.*$WEB_SYSTEM.conf/d" $web_conf
-    if [ ! -z "$PROXY_SYSTEM" ]; then
-        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
-    fi
-else
-    # Clean web configs
-    sed -i "/.*\/$user\/.*.conf/d" $web_conf
-    if [ ! -z  "$PROXY_SYSTEM" ]; then
-        sed -i "/.*\/$user\/.*.conf/d" $proxy_conf
-    fi
-
-    # Renaming tmp config
-    tmp_conf="$HOMEDIR/$user/conf/web/tmp_$WEB_SYSTEM.conf"
-    conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
-    mv $tmp_conf $conf
-
-    # Checking include
-    web_include=$(grep "$conf" $web_conf )
-    if [ -z "$web_include" ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
-        echo "Include $conf" >> $web_conf
-    fi
-    if [ -z "$web_include" ] && [ "$WEB_SYSTEM" = 'nginx' ]; then
-        echo "include $conf;" >> $web_conf
-    fi
-
-    # Checking SSL
-    if [ "$ssl_change" = 'yes' ]; then
-        tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$WEB_SYSTEM.conf"
-        conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-        mv $tmp_conf $conf
-        ssl_include=$(grep "$conf" $web_conf )
-        if [ -z "$ssl_include" ] && [ "$WEB_SYSTEM" != 'nginx' ]; then
-            echo "Include $conf" >> $web_conf
-        fi
-        if [ -z "$ssl_include" ] && [ "$WEB_SYSTEM" = 'nginx' ]; then
-            echo "include $conf;" >> $web_conf
-        fi
-    fi
-
-    # Checking proxy
-    if [ ! -z "$PROXY_SYSTEM" ]; then
-        if [ "$proxy_change" = 'yes' ]; then
-            tmp_conf="$HOMEDIR/$user/conf/web/tmp_$PROXY_SYSTEM.conf"
-            conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-            mv $tmp_conf $conf
-            proxy_include=$(grep "$conf" $proxy_conf )
-            if [ -z "$proxy_include" ]; then
-                echo "include $conf;" >> $proxy_conf
-            fi
-        else
-            conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-            sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $proxy_conf
-            rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
-        fi
-
-        # Checking SSL proxy
-        if [ "$proxy_change" = 'yes' ] && [ "$ssl_change" = 'yes' ]; then
-            tmp_conf="$HOMEDIR/$user/conf/web/tmp_s$PROXY_SYSTEM.conf"
-            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-            mv $tmp_conf $conf
-            proxy_include=$(grep "$conf" $proxy_conf )
-            if [ -z "$proxy_include" ]; then
-                echo "include $conf;" >> $proxy_conf
-            fi
-        else
-            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-            sed -i "/.*\/$user\/.*s$PROXY_SYSTEM.conf/d" $proxy_conf
-            rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
-        fi
-    fi
-fi
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Updating counters
-update_user_value "$user" '$SUSPENDED_WEB' "$suspended_web"
-update_user_value "$user" '$U_WEB_DOMAINS' "$user_domains"
-update_user_value "$user" '$U_WEB_SSL' "$user_ssl"
-update_user_value "$user" '$U_WEB_ALIASES' "$user_aliases"
+# Updating user counters
+$BIN/v-update-user-counters $user
 
 # Restarting web server
 if [ "$restart" != 'no' ]; then
@@ -171,6 +86,6 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

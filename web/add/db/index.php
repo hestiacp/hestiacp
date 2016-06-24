@@ -121,13 +121,11 @@ $db_types = split(",",$_SESSION['DB_SYSTEM']);
 
 // List available database servers
 $db_hosts = array();
-foreach ($db_types as $db_type ) {
-    exec (VESTA_CMD."v-list-database-hosts ".$db_type." 'json'", $output, $return_var);
-    $db_hosts_tmp = json_decode(implode('', $output), true);
-    $db_hosts = array_merge($db_hosts, $db_hosts_tmp);
-    unset($db_hosts_tmp);
-    unset($output);
-}
+exec (VESTA_CMD."v-list-database-hosts 'json'", $output, $return_var);
+$db_hosts_tmp = json_decode(implode('', $output), true);
+$db_hosts = array_merge($db_hosts, $db_hosts_tmp);
+unset($db_hosts_tmp);
+unset($output);
 
 // Display body
 include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_db.html');

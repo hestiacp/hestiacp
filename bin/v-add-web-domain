@@ -103,6 +103,9 @@ chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
 
 # Addding PHP-FPM backend
 if [ ! -z "$BACKEND_SYSTEM" ]; then
+    if [ -z "$BACKEND_TEMPLATE" ]; then
+        update_user_value "$user" '$BACKEND_TEMPLATE' "default"
+    fi
     $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE
     check_result $? "Backend error" >/dev/null
 fi

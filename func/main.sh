@@ -769,8 +769,8 @@ is_format_valid() {
                 package)        is_object_format_valid "$arg" "$arg_name" ;;
                 password)       is_password_format_valid "$arg" ;;
                 port)           is_int_format_valid "$arg" 'port' ;;
-                port_ext)       is_fw_protocol_format_valid "$arg";;
-                protocol)       is_fw_port_format_valid "$arg" ;;
+                port_ext)       is_fw_port_format_valid "$arg";;
+                protocol)       is_fw_protocol_format_valid "$arg" ;;
                 proxy_ext)      is_extention_format_valid "$arg" ;;
                 quota)          is_int_format_valid "$arg" 'quota' ;;
                 record)         is_common_format_valid "$arg" 'record';;

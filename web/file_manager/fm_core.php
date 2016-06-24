@@ -1,7 +1,7 @@
 <?php
 
 class FileManager {
-    
+
     protected $delimeter = '|';
     protected $info_positions = array(
         'TYPE'          => 0,
@@ -13,38 +13,26 @@ class FileManager {
         'SIZE'          => 6,
         'NAME'          => 7
     );
-    
+
     protected $user  = null;
     public $ROOT_DIR = null;
-    
+
     public function setRootDir($root = null) {
         if (null != $root) {
-            $root = realpath($root);        
+            $root = realpath($root);
         }
         $this->ROOT_DIR = $root;
     }
-    
+
     public function __construct($user) {
         $this->user = $user;
     }
-    
-    /*public function init() {
-        $path = !empty($_REQUEST['dir']) ? $_REQUEST['dir'] : '';
-        $start_url = !empty($path) ? $this->ROOT_DIR . '/' . $path : $this->ROOT_DIR;
-        $listing = $this->getDirectoryListing($path);
-         
-        return $data = array(
-            'result'     => true,
-            'ROOT_DIR'   => $this->ROOT_DIR,
-            'TAB_A_PATH' => $start_url,
-            'TAB_B_PATH' => $this->ROOT_DIR, // second tab always loads home dir
-            'listing'    => $listing
-        );
-    }*/
-    
+
     public function checkFileType($dir) {
         $dir = $this->formatFullPath($dir);
+
         exec(VESTA_CMD . "v-get-fs-file-type {$this->user} {$dir}", $output, $return_var);
+
         $error = self::check_return_code($return_var, $output);
         if (empty($error)) {
             return array(
@@ -59,7 +47,7 @@ class FileManager {
             );
         }
     }
-    
+
     public function formatFullPath($path_part = '') {
         if (substr($path_part, 0, strlen($this->ROOT_DIR)) === $this->ROOT_DIR) {
             $path = $path_part;
@@ -71,13 +59,13 @@ class FileManager {
         //$path = str_replace(' ', '\ ', $path);
         return escapeshellarg($path);
     }
-    
+
     function deleteItem($dir, $item) {
         $dir = $this->formatFullPath($item);
         exec (VESTA_CMD . "v-delete-fs-directory {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -89,29 +77,16 @@ class FileManager {
                 'message'  => $error
             );
         }
-        
-        /*if (is_readable($item)) {
-            unlink($item);
-        }
-        if (is_readable($item)) {
-            return array(
-                'result'  => false,
-                'message' => 'item was not deleted'
-            );
-        }
-        return array(
-            'result' => true
-        );*/
     }
-    
+
     function copyFile($item, $dir, $target_dir, $filename) {
         $src = $this->formatFullPath($item);
         $dst = $this->formatFullPath($target_dir);
-    
+
         exec (VESTA_CMD . "v-copy-fs-file {$this->user} {$src} {$dst}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -124,17 +99,15 @@ class FileManager {
             );
         }
     }
-    
-    
+
     function copyDirectory($item, $dir, $target_dir, $filename) {
         $src = $this->formatFullPath($item);
         $dst = $this->formatFullPath($target_dir);
-    
+
         exec (VESTA_CMD . "v-copy-fs-directory {$this->user} {$src} {$dst}", $output, $return_var);
 
-
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -147,25 +120,23 @@ class FileManager {
             );
         }
     }
-    
+
     static function check_return_code($return_var, $output) {
         if ($return_var != 0) {
             $error = implode('<br>', $output);
             return $error;
-            //if (empty($error)) $error = __('Error code:',$return_var);
-            //$_SESSION['error_msg'] = $error;
         }
-        
+
         return null;
     }
-    
+
     function createFile($dir, $filename) {
         $dir = $this->formatFullPath($dir . '/' . $filename);
 
         exec (VESTA_CMD . "v-add-fs-file {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -178,19 +149,17 @@ class FileManager {
             );
         }
     }
-    
+
     function packItem($item, $dir, $target_dir, $filename) {
         $item     = $this->formatFullPath($item);
         $dst_item = $this->formatFullPath($target_dir);
-        
+
         $dst_item = str_replace('.tar.gz', '', $dst_item);
-        
-        //$item = str_replace($dir . '/', '', $item);
-//var_dump(VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$item}");die();
+
         exec (VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -205,18 +174,16 @@ class FileManager {
     }
 
     function backupItem($item) {
-        
         $src_item     = $this->formatFullPath($item);
-        
+
         $dst_item_name = $item . '~' . date('Ymd_His');
 
         $dst_item = $this->formatFullPath($dst_item_name);
 
-//print VESTA_CMD . "v-add-fs-archive {$this->user} {$item} {$dst_item}";die();
         exec (VESTA_CMD . "v-copy-fs-file {$this->user} {$src_item} {$dst_item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result'   => true,
@@ -231,7 +198,7 @@ class FileManager {
         }
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -244,7 +211,7 @@ class FileManager {
             );
         }
     }
-    
+
     function unpackItem($item, $dir, $target_dir, $filename) {
         $item     = $this->formatFullPath($item);
         $dst_item = $this->formatFullPath($target_dir);
@@ -252,7 +219,7 @@ class FileManager {
         exec (VESTA_CMD . "v-extract-fs-archive {$this->user} {$item} {$dst_item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -265,17 +232,15 @@ class FileManager {
             );
         }
     }
-    
+
     function renameFile($dir, $item, $target_name) {
         $item     = $this->formatFullPath($dir . '/' . $item);
         $dst_item = $this->formatFullPath($dir . '/' . $target_name);
-        
-//        var_dump(VESTA_CMD . "v-move-fs-file {$this->user} {$item} {$dst_item}");die();
 
         exec (VESTA_CMD . "v-move-fs-file {$this->user} {$item} {$dst_item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -288,6 +253,7 @@ class FileManager {
             );
         }
     }
+
     function renameDirectory($dir, $item, $target_name) {
         $item     = $this->formatFullPath($dir . $item);
         $dst_item = $this->formatFullPath($dir . $target_name);
@@ -298,11 +264,10 @@ class FileManager {
             );
         }
 
-
         exec (VESTA_CMD . "v-move-fs-directory {$this->user} {$item} {$dst_item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -315,14 +280,14 @@ class FileManager {
             );
         }
     }
-    
+
     function createDir($dir, $dirname) {
         $dir = $this->formatFullPath($dir . '/' . $dirname);
 
         exec (VESTA_CMD . "v-add-fs-directory {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
-        
+
         if (empty($error)) {
             return array(
                 'result' => true
@@ -335,14 +300,36 @@ class FileManager {
             );
         }
     }
-    
+
+    function chmodItem($dir, $item, $permissions) {
+        $item       = $this->formatFullPath($dir . $item);
+        $permissions = escapeshellarg($permissions);
+
+        exec (VESTA_CMD . "v-change-fs-file-permission {$this->user} {$item} {$permissions}", $output, $return_var);
+
+        $error = self::check_return_code($return_var, $output);
+
+        if (empty($error)) {
+            return array(
+                'result' => true
+            );
+        }
+        else {
+            return array(
+                'result'   => false,
+                'message'  => $error
+            );
+        }
+    }
+
     function getDirectoryListing($dir = '') {
         $dir = $this->formatFullPath($dir);
+
         exec (VESTA_CMD . "v-list-fs-directory {$this->user} {$dir}", $output, $return_var);
 
         return $this->parseListing($output);
     }
-    
+
     public function ls($dir = '') {
         $listing = $this->getDirectoryListing($dir);
 
@@ -351,7 +338,7 @@ class FileManager {
             'listing' => $listing
         );
     }
-    
+
     public function open_file($dir = '') {
         $listing = $this->getDirectoryListing($dir);
 
@@ -360,14 +347,14 @@ class FileManager {
             'listing' => $listing
         );
     }
-    
+
     public function parseListing($raw) {
         $data = array();
         foreach ($raw as $o) {
             $info = explode($this->delimeter, $o);
             $data[] = array(
                 'type'          => $info[$this->info_positions['TYPE']],
-                'permissions'   => $info[$this->info_positions['PERMISSIONS']],
+                'permissions'   => str_pad($info[$this->info_positions['PERMISSIONS']], 3, "0", STR_PAD_LEFT),
                 'date'          => $info[$this->info_positions['DATE']],
                 'time'          => $info[$this->info_positions['TIME']],
                 'owner'         => $info[$this->info_positions['OWNER']],
@@ -376,7 +363,7 @@ class FileManager {
                 'name'          => $info[$this->info_positions['NAME']]
             );
         }
-        
+
         return $data;
     }
 

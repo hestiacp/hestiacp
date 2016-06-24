@@ -309,6 +309,7 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 .confirm-box { background-color: #333; width: 480px; font-family: arial; margin-left: 50px; border-radius: 3px; box-shadow: 0 2px 11px 0 rgba(0, 0, 0, 0.5); }
 /*.confirm-box.replace { height: 230px; }*/
 .confirm-box .message { color: #EBE697; font-size: 16px; padding: 25px; margin-bottom: 60px; display: inline-block; }
+.confirm-box .results,
 .confirm-box .warning { color: #FF9500; font-size: 16px; padding: 25px; }
 .confirm-box .warning .title, 
 .confirm-box .message .title { color: #48B1B7; }
@@ -345,6 +346,13 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 .confirm-box.rename.warning .warning { display: inline-block; }
 .confirm-box.rename.warning .controls.replace { display: inline-block; }
 .confirm-box.rename.warning .message { padding-bottom: 0; }
+
+.confirm-box.chmod .message { margin-bottom: 0; }
+.confirm-box.chmod .warning { padding: 10px 25px; }
+.confirm-box.chmod ul { padding: 10px 25px; }
+.confirm-box.chmod ul:last-of-type { margin-bottom: 38px; }
+.confirm-box.chmod li { list-style-type: none; }
+
 
 /*.confirm-box.archive { height: 468px; }*/
 .confirm-box.archive .message { margin-bottom: 38px; }

@@ -284,7 +284,7 @@ FM.openAndSync = function(dir, box, callback, forceOppositeSync) {
     if (tab == 'A') {
         opposite_tab = 'B';
     }
-    
+
     var oppositeSyncNeeded = false;
 
     if (FM.TAB_A_CURRENT_PATH == FM.TAB_B_CURRENT_PATH) {
@@ -751,19 +751,20 @@ FM.checkBulkStatus = function(bulkStatuses, acc) {
         if (msg != '') {
             status = false;
         }
-    }
 
-    if (status == true) {
-        FM.popupClose();
+        if (status == true) {
+            FM.popupClose();
+        }
+        else {
+            $('#popup .results').show().html(msg);
+            $('#popup .ok').hide();
+        }
+
+        var box = FM['TAB_' + tab];
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+//        FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box, function(){}, true);
+        FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box, function(){}, false);
     }
-    else {
-        $('#popup .results').show().html(msg);
-        $('#popup .ok').hide();
-    }
-    
-    var box = FM['TAB_' + tab];
-    var tab = FM.getTabLetter(FM.CURRENT_TAB);
-    FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box, function(){}, true);
 }
 
 FM.bulkPopupClose = function() {
@@ -816,14 +817,13 @@ FM.bulkCopyDo = function() {
                 numberOfItems++;
             }
         });
-        
 
         var bulkStatuses = [];
         $.each(acc, function(i, o) {
             var ref = $(o);
             var src = $(ref).find('.source').val();
             src = $.parseJSON(src);
-          
+
             if (FM.isItemPseudo(src)) {
                 //cfr_html += '<div>'+src.name+'</div>';
                 return;
@@ -841,21 +841,21 @@ FM.bulkCopyDo = function() {
                 );*/
                 return;
             }
-            
+
             var dest = FM['TAB_' + opposite_tab + '_CURRENT_PATH' ];
             if (dest == '') {
                 dest = GLOBAL.ROOT_DIR;
             }
-            
+
             var action = FM.isItemFile(src) ? 'copy_file' : 'copy_directory';
-            
+
             var params = {
                 item: src.full_path,
                 filename: src.name,
                 dir:  FM['TAB_' + tab + '_CURRENT_PATH'],
                 dir_target: dest
             };
-            
+
             App.Ajax.request(action, params, function(reply) {
                 if (reply.result == true) {
                     bulkStatuses.push(true);
@@ -864,7 +864,7 @@ FM.bulkCopyDo = function() {
                     //FM.showError('copy-items', reply.message);
                     bulkStatuses.push(reply.message);
                 }
-                
+
                 FM.checkBulkStatus(bulkStatuses, acc);
             });
         });
@@ -888,7 +888,7 @@ FM.bulkCopy = function() {
                 numberOfItems++;
             }
         });
-        
+
         var tab = FM.getTabLetter(FM.CURRENT_TAB);
         var opposite_tab = 'A';
         if (tab == 'A') {
@@ -905,7 +905,6 @@ FM.bulkCopy = function() {
         //popup_bulk_copy
 
         FM.popupOpen(tpl.finalize());
-
     }
 }
 
@@ -1191,6 +1190,7 @@ FM.selectItem = function(item, box) {
     }
 
 }
+
 FM.isItemPseudo = function(item) {
     if (item.name == '.' || item.name == '..') {
         return true;
@@ -1199,7 +1199,7 @@ FM.isItemPseudo = function(item) {
 }
 
 FM.itemIsArchieve = function(item) {
-    
+
     if ($.inArray(item.filetype, FM.SUPPORTED_ARCHIEVES) != -1) {
         return true;
     }
@@ -1385,7 +1385,7 @@ FM.renameItems = function() {
 
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
-    
+
     if (FM.isItemPseudo(src)) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
@@ -1396,6 +1396,228 @@ FM.renameItems = function() {
     tpl.set(':FILENAME', src.name);
     tpl.set(':NEW_NAME', src.name);
     FM.popupOpen(tpl.finalize());
+}
+
+FM.confirmChmod = function() {
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    var box = FM['TAB_' + tab];
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
+    if (!selected) {
+        return FM.displayError(
+            App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
+        );
+    }
+
+    var src = selected.find('.source').val();
+    src = $.parseJSON(src);
+
+    var ro = $('input[name="read-by-owner"]').is(':checked') ? 4 : 0;
+    var wo = $('input[name="write-by-owner"]').is(':checked') ? 2 : 0;
+    var eo = $('input[name="execute-by-owner"]').is(':checked') ? 1 : 0;
+
+    var rg = $('input[name="read-by-group"]').is(':checked') ? 4 : 0;
+    var wg = $('input[name="write-by-group"]').is(':checked') ? 2 : 0;
+    var eg = $('input[name="execute-by-group"]').is(':checked') ? 1 : 0;
+
+    var re = $('input[name="read-by-others"]').is(':checked') ? 4 : 0;
+    var we = $('input[name="write-by-others"]').is(':checked') ? 2 : 0;
+    var ee = $('input[name="execute-by-others"]').is(':checked') ? 1 : 0;
+
+    var o = ro+wo+eo;
+    var g = rg+wg+eg;
+    var e = re+we+ee;
+
+    var permissions = o + "" + g + "" + e + "";
+
+    var action = FM.isItemFile(src) ? 'chmod_item' : 'chmod_item';
+
+    var params = {
+        dir:  FM['TAB_' + tab + '_CURRENT_PATH'] + '/',
+        item: src.name,
+        permissions: permissions
+    };
+
+    App.Ajax.request(action, params, function(reply) {
+        if (reply.result == true) {
+            FM.popupClose();
+            FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+        }
+        else {
+            FM.showError('chmod-items', reply.message);
+        }
+    });
+}
+
+
+FM.confirmBulkChmod = function() {
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    var box = FM['TAB_' + tab];
+    var acc = $(FM.CURRENT_TAB).find('.dir.selected');
+    if (acc.length > 0) {
+        //FM.popupClose();
+
+        var cfr_html = '';
+        var numberOfItems = 0;
+        $.each(acc, function(i, o) {
+            var ref = $(o);
+            var src = $(ref).find('.source').val();
+            src = $.parseJSON(src);
+
+            if (!FM.isItemPseudo(o)) {
+                cfr_html += '<div>'+src.name+'</div>';
+                numberOfItems++;
+            }
+        });
+
+
+        var ro = $('input[name="read-by-owner"]').is(':checked') ? 4 : 0;
+        var wo = $('input[name="write-by-owner"]').is(':checked') ? 2 : 0;
+        var eo = $('input[name="execute-by-owner"]').is(':checked') ? 1 : 0;
+
+        var rg = $('input[name="read-by-group"]').is(':checked') ? 4 : 0;
+        var wg = $('input[name="write-by-group"]').is(':checked') ? 2 : 0;
+        var eg = $('input[name="execute-by-group"]').is(':checked') ? 1 : 0;
+
+        var re = $('input[name="read-by-others"]').is(':checked') ? 4 : 0;
+        var we = $('input[name="write-by-others"]').is(':checked') ? 2 : 0;
+        var ee = $('input[name="execute-by-others"]').is(':checked') ? 1 : 0;
+
+        var o = ro+wo+eo;
+        var g = rg+wg+eg;
+        var e = re+we+ee;
+
+        var permissions = o + "" + g + "" + e + "";
+
+        var action = 'chmod_item';
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+
+
+        var bulkStatuses = [];
+        $.each(acc, function(i, o) {
+
+            var ref = $(o);
+            var src = $(ref).find('.source').val();
+            src = $.parseJSON(src);
+
+            if (FM.isItemPseudo(src)) {
+                return;
+            }
+
+            var params = {
+                dir:  FM['TAB_' + tab + '_CURRENT_PATH'] + '/',
+                item: src.name,
+                permissions: permissions
+            };
+
+            App.Ajax.request(action, params, function(reply) {
+                if (reply.result == true) {
+                    bulkStatuses.push(true);
+                }
+                else {
+                    bulkStatuses.push(reply.message);
+                }
+            });
+        });
+
+
+    var status = true;
+    var msg    = '';
+    $.each(bulkStatuses, function(i, o) {
+        if (o != true) {
+            msg += '<p>'+o+'</p>';
+        }
+    });
+
+    if (msg != '') {
+       status = false;
+    }
+
+    if (status == true) {
+        FM.popupClose();
+        FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+    }
+    else {
+        $('#popup .message').show().html(msg);
+        $('#popup .ok').hide();
+    }
+
+//    FM.popupClose();
+//    FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+    }
+}
+
+
+FM.chmodItems = function() {
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
+    if (selected.length == 0) {
+        return FM.displayError(
+            App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
+        );
+    }
+
+    if (selected.length > 1) { // multi operation
+        return FM.bulkChmod();
+    }
+
+
+    var src = selected.find('.source').val();
+    src = $.parseJSON(src);
+
+    var mode = selected.find('.mode').text();
+
+    var tpl = Tpl.get('popup_chmod', 'FM');
+    tpl.set(':FILENAME', src.name);
+
+    tpl.set(':READ_BY_OWNER', mode[0] & 4 ? "checked" : "");
+    tpl.set(':WRITE_BY_OWNER', mode[0] & 2 ? "checked" : "");
+    tpl.set(':EXECUTE_BY_OWNER', mode[0] & 1 ? "checked" : "");
+
+    tpl.set(':READ_BY_GROUP', mode[1] & 4 ? "checked" : "");
+    tpl.set(':WRITE_BY_GROUP', mode[1] & 2 ? "checked" : "");
+    tpl.set(':EXECUTE_BY_GROUP', mode[1] & 1 ? "checked" : "");
+
+    tpl.set(':READ_BY_OTHERS', mode[2] & 4 ? "checked" : "");
+    tpl.set(':WRITE_BY_OTHERS', mode[2] & 2 ? "checked" : "");
+    tpl.set(':EXECUTE_BY_OTHERS', mode[2] & 1 ? "checked" : "");
+
+    FM.popupOpen(tpl.finalize());
+}
+
+FM.bulkChmod = function() {
+    var acc = $(FM.CURRENT_TAB).find('.dir.selected');
+    if (acc.length > 0) {
+        FM.popupClose();
+
+        var cfr_html = '';
+        var numberOfItems = 0;
+        $.each(acc, function(i, o) {
+            var ref = $(o);
+            var src = $(ref).find('.source').val();
+            src = $.parseJSON(src);
+
+            if (!FM.isItemPseudo(src)) {
+                cfr_html += '<div>'+src.name+'</div>';
+                numberOfItems++;
+            }
+        });
+
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+        var opposite_tab = 'A';
+        if (tab == 'A') {
+            opposite_tab = 'B';
+        }
+        var dest = FM['TAB_' + opposite_tab + '_CURRENT_PATH' ];
+        if (dest == '') {
+            dest = GLOBAL.ROOT_DIR;
+        }
+
+        var tpl = Tpl.get('popup_bulk_chmod', 'FM');
+        tpl.set(':NUMBER_OF_ITEMS', numberOfItems);
+        //popup_bulk_copy
+
+        FM.popupOpen(tpl.finalize());
+    }
 }
 
 FM.isPopupOpened = function() {

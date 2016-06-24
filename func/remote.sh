@@ -106,7 +106,7 @@ remote_dns_health_check() {
             else
                 subj="DNS sync failed"
                 email=$($BIN/v-get-user-value admin CONTACT)
-                cat $tmpfile |$send_mail -s "$subj" $email
+                cat $tmpfile |$SENDMAIL -s "$subj" $email
             fi
 
             # Deleting tmp file

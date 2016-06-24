@@ -406,9 +406,13 @@ rebuild_dns_domain_conf() {
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
 
-    # Get domain values
-    domain_idn=$(idn -t --quiet -a "$domain")
     get_domain_values 'mail'
+
+    if [[ "$domain" = *[![:ascii:]]* ]]; then
+        domain_idn=$(idn -t --quiet -a $domain)
+    else
+        domain_idn=$domain
+    fi
 
     if [ "$SUSPENDED" = 'yes' ]; then
         SUSPENDED_MAIL=$((SUSPENDED_MAIL +1))
@@ -526,8 +530,8 @@ rebuild_mysql_database() {
     eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
-        if [ ! -z "$send_mail" ]; then
-            echo "Can't parse MySQL DB config" | $send_mail -s "$subj" $email
+        if [ ! -z "$SENDMAIL" ]; then
+            echo "Can't parse MySQL DB config" | $SENDMAIL -s "$subj" $email
         fi
         log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
@@ -537,9 +541,9 @@ rebuild_mysql_database() {
     mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: Database connection to $HOST failed"
-        if [ ! -z "$send_mail" ]; then
+        if [ ! -z "$SENDMAIL" ]; then
             echo "Database connection to MySQL host $HOST failed" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         log_event  "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
@@ -569,8 +573,8 @@ rebuild_pgsql_database() {
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: postgresql config parsing failed"
-        if [ ! -z "$send_mail" ]; then
-            echo "Can't parse PostgreSQL config" | $send_mail -s "$subj" $email
+        if [ ! -z "$SENDMAIL" ]; then
+            echo "Can't parse PostgreSQL config" | $SENDMAIL -s "$subj" $email
         fi
         log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
@@ -580,9 +584,9 @@ rebuild_pgsql_database() {
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
     if [ '0' -ne "$?" ];  then
         echo "Error: Connection failed"
-        if [ ! -z "$send_mail" ]; then
+        if [ ! -z "$SENDMAIL" ]; then
             echo "Database connection to PostgreSQL host $HOST failed" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         log_event "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT

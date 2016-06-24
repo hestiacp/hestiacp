@@ -5,17 +5,10 @@
 # Web template check
 is_web_template_valid() {
     if [ ! -z "$WEB_SYSTEM" ]; then
-        template=$1
-        if [ -z "$template" ]; then
-            template=$(grep WEB_TEMPLATE $USER_DATA/user.conf |cut -f2 -d \')
-            if [ -z "$template" ]; then
-                template="default"
-            fi
-        fi
-        tpl="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.tpl"
-        stpl="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.stpl"
+        tpl="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$1.tpl"
+        stpl="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$1.stpl"
         if [ ! -e "$tpl" ] || [ ! -e "$stpl" ]; then
-            check_result $E_NOTEXIST "$template web template doesn't exist"
+            check_result $E_NOTEXIST "$1 web template doesn't exist"
         fi
     fi
 }
@@ -23,25 +16,20 @@ is_web_template_valid() {
 # Proxy template check
 is_proxy_template_valid() {
     if [ ! -z "$PROXY_SYSTEM" ]; then
-        proxy=$1
-        if [ -z "$proxy" ]; then
-            proxy=$(grep PROXY_TEMPLATE $USER_DATA/user.conf |cut -f2 -d \')
-            if [ -z "$proxy" ]; then
-                proxy="default"
-            fi
-        fi
-        tpl="$WEBTPL/$PROXY_SYSTEM/$proxy.tpl"
-        stpl="$WEBTPL/$PROXY_SYSTEM/$proxy.stpl"
+        tpl="$WEBTPL/$PROXY_SYSTEM/$1.tpl"
+        stpl="$WEBTPL/$PROXY_SYSTEM/$1.stpl"
         if [ ! -e "$tpl" ] || [ ! -e "$stpl" ]; then
-            check_result $E_NOTEXIST "$proxy proxy template doesn't exist"
+            check_result $E_NOTEXIST "$1 proxy template doesn't exist"
         fi
     fi
 }
 
 # Backend template check
 is_backend_template_valid() {
-    if [ ! -e "$WEBTPL/$WEB_BACKEND/$1.tpl" ]; then
-        check_result $E_NOTEXIST "$backend backend template doesn't exist"
+    if [ ! -z "$WEB_BACKEND" ]; then
+        if [ ! -e "$WEBTPL/$WEB_BACKEND/$1.tpl" ]; then
+            check_result $E_NOTEXIST "$1 backend template doesn't exist"
+        fi
     fi
 }
 
@@ -210,7 +198,7 @@ add_web_config() {
             -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
             -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
             -e "s|%user%|$user|g" \
-            -e "s|%group%|$group|g" \
+            -e "s|%group%|$user|g" \
             -e "s|%home%|$HOMEDIR|g" \
             -e "s|%docroot%|$HOMEDIR/$user/web/$domain/public_html|g" \
             -e "s|%sdocroot%|$HOMEDIR/$user/web/$domain/public_html|g" \
@@ -225,7 +213,7 @@ add_web_config() {
     chmod 640 $conf
 
     if [ -z "$(grep "$conf" /etc/$1/conf.d/vesta.conf)" ]; then
-        if [ "$WEB_SYSTEM" != 'nginx' ]; then
+        if [ "$1" != 'nginx' ]; then
             echo "Include $conf" >> /etc/$1/conf.d/vesta.conf
         else
             echo "include $conf;" >> /etc/$1/conf.d/vesta.conf
@@ -265,6 +253,10 @@ get_web_config_lines() {
 
 # Replace web config
 replace_web_config() {
+    conf="$HOMEDIR/$user/conf/web/$1.conf"
+    if [[ "$2" =~ stpl$ ]]; then
+        conf="$HOMEDIR/$user/conf/web/s$1.conf"
+    fi
     get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
     sed -i  "$top_line,$bottom_line s|$old|$new|g" $conf
 }
@@ -355,9 +347,8 @@ is_web_domain_cert_valid() {
 
 # DNS template check
 is_dns_template_valid() {
-    t="$DNSTPL/$template.tpl"
-    if [ ! -e $t ]; then
-        check_result $E_NOTEXIST "dns template $template doesn't exist"
+    if [ ! -e "$DNSTPL/$1.tpl" ]; then
+        check_result $E_NOTEXIST "$1 dns template doesn't exist"
     fi
 }
 

@@ -30,7 +30,7 @@ mysql_connect() {
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
             echo -e "Can't connect to MySQL $HOST\n$(cat $err)" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         echo "Error: Connection to $HOST failed"
         log_event  "$E_CONNECT" "$ARGUMENTS"
@@ -49,7 +49,7 @@ mysql_dump() {
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
             echo -e "Can't dump database $database\n$(cat $err)" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
@@ -72,7 +72,7 @@ psql_connect() {
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
             echo -e "Can't connect to PostgreSQL $HOST\n$(cat /tmp/e.psql)" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         echo "Error: Connection to $HOST failed"
         log_event  "$E_CONNECT" "$ARGUMENTS"
@@ -90,7 +90,7 @@ psql_dump() {
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
             echo -e "Can't dump database $database\n$(cat /tmp/e.psql)" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
@@ -243,8 +243,7 @@ is_dbhost_new() {
 
 # Get database values
 get_database_values() {
-    db_str=$(grep "DB='$database'" $USER_DATA/db.conf)
-    eval $db_str
+    eval $(grep "DB='$database'" $USER_DATA/db.conf)
 }
 
 # Change MySQL database password

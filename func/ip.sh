@@ -33,7 +33,8 @@ is_ip_key_empty() {
     eval $string
     eval value="$key"
     if [ ! -z "$value" ] && [ "$value" != '0' ]; then
-        check_result $E_EXISTS "$key is not empty = $value"
+        key="$(echo $key|sed -e "s/\$U_//")"
+        check_result $E_EXISTS "IP is in use / $key = $value"
     fi
 }
 
@@ -133,7 +134,6 @@ get_ip_value() {
 }
 
 
-
 # Get real ip address
 get_real_ip() {
     if [ -e "$VESTA/data/ips/$1" ]; then
@@ -142,8 +142,6 @@ get_real_ip() {
         nat=$(grep -H "^NAT='$1'" $VESTA/data/ips/*)
         if [ ! -z "$nat" ]; then
             echo "$nat" |cut -f 1 -d : |cut -f 7 -d /
-        else
-            get_user_ip
         fi
     fi
 }
@@ -222,16 +220,21 @@ get_user_ip() {
 
 # Validate ip address
 is_ip_valid() {
-    if [ ! -z $1 ]; then
-        if [ -e "$VESTA/data/ips/$1" ]; then
-            ip_data=$(cat $VESTA/data/ips/$1)
-            local_ip="$1"
+    local_ip="$1"
+    if [ ! -e "$VESTA/data/ips/$1" ]; then
+        nat=$(grep -H "^NAT='$1'" $VESTA/data/ips/*)
+        if [ -z "$nat" ]; then
+            check_result $E_NOTEXIST "IP $1 doesn't exist"
         else
-            nat=$(grep -H "^NAT='$1'" $VESTA/data/ips/*)
-            check_result $? "IP $1 doesn't exist" $E_NOTEXIST
             nat=$(echo "$nat" |cut -f1 -d: |cut -f7 -d/)
-            ip_data=$(cat $VESTA/data/ips/$nat)
             local_ip=$nat
+        fi
+    fi
+    if [ ! -z $2 ]; then
+        if [ -z "$nat" ]; then
+            ip_data=$(cat $VESTA/data/ips/$1)
+        else
+            ip_data=$(cat $VESTA/data/ips/$nat)
         fi
         ip_owner=$(echo "$ip_data" |grep OWNER= |cut -f2 -d \')
         ip_status=$(echo "$ip_data" |grep STATUS= |cut -f2 -d \')
@@ -242,7 +245,5 @@ is_ip_valid() {
         if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
             check_result $E_FORBIDEN "$user user can't use IP $1"
         fi
-    else
-        get_user_ip
     fi
 }

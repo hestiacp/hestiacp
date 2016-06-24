@@ -35,14 +35,14 @@ if (!empty($_POST['ok'])) {
     $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
     $v_ip = escapeshellarg($_POST['v_ip']);
-    if (!empty($_POST['v_ns1'])) $v_ns1 = escapeshellarg($_POST['v_ns1']);
-    if (!empty($_POST['v_ns2'])) $v_ns2 = escapeshellarg($_POST['v_ns2']);
-    if (!empty($_POST['v_ns3'])) $v_ns3 = escapeshellarg($_POST['v_ns3']);
-    if (!empty($_POST['v_ns4'])) $v_ns4 = escapeshellarg($_POST['v_ns4']);
-    if (!empty($_POST['v_ns5'])) $v_ns5 = escapeshellarg($_POST['v_ns5']);
-    if (!empty($_POST['v_ns6'])) $v_ns6 = escapeshellarg($_POST['v_ns6']);
-    if (!empty($_POST['v_ns7'])) $v_ns7 = escapeshellarg($_POST['v_ns7']);
-    if (!empty($_POST['v_ns8'])) $v_ns8 = escapeshellarg($_POST['v_ns8']);
+    $v_ns1 = escapeshellarg($_POST['v_ns1']);
+    $v_ns2 = escapeshellarg($_POST['v_ns2']);
+    $v_ns3 = escapeshellarg($_POST['v_ns3']);
+    $v_ns4 = escapeshellarg($_POST['v_ns4']);
+    $v_ns5 = escapeshellarg($_POST['v_ns5']);
+    $v_ns6 = escapeshellarg($_POST['v_ns6']);
+    $v_ns7 = escapeshellarg($_POST['v_ns7']);
+    $v_ns8 = escapeshellarg($_POST['v_ns8']);
 
     // Add dns domain
     if (empty($_SESSION['error_msg'])) {

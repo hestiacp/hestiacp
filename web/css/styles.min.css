@@ -676,6 +676,7 @@ input[type="checkbox"] {
   position: fixed;
   width: 100%;
   z-index: 100;
+  height: 34px
 }
 .l-header a {
   font-size: 12px;
@@ -695,6 +696,8 @@ input[type="checkbox"] {
 
 .l-menu {
   float: left;
+  position: fixed;
+  margin-left: 70px;
 }
 .l-menu__item {
   float: left;
@@ -1591,13 +1594,17 @@ div.l-content > div.l-separator:nth-of-type(4) {
   display: none;
 }
 
+body.mobile .l-unit-toolbar__col--right {
+  display: block;
+}
+
 .l-unit-toolbar .shortcut {
   display: none;
 }
 
 .units.active .l-unit.focus .l-unit-toolbar .shortcut {
   display: block;
-  background-color: #c8c7c6;
+  background-color: #69a298;
   border-radius: 13px;
   color: #fff;
   cursor: pointer;
@@ -2090,11 +2097,11 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 36px;
   background-position: -216px 560px;
   cursor: pointer;
-  display: none;
+  visibility: hidden;
 }
 .l-unit--starred .l-icon-star {
-  display: inline-block;
   background-position: -174px 560px;
+  visibility: visible;
 }
 
 .units.compact .l-icon-star {
@@ -2111,7 +2118,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit:hover .l-icon-star {
-  display: inline-block;
+  visibility: visible;
 }
 
 
@@ -2140,7 +2147,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   background-position: -198px -281px;
 }
 
-
+body.mobile .l-icon-to-top,
+body.mobile .l-icon-shortcuts {
+  display: none;
+}
 
 
 .l-icon-star-orange {
@@ -2373,6 +2383,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .jump-top {
   margin-top: -60px;
 }
+.jump-small-top {
+  margin-top: -12px;
+}
+.float-right {
+    display: inline-block;
+    float: right;
+}
 
 .data a {
   text-decoration: none;
@@ -2410,11 +2427,13 @@ label {
   border-color: #f1f1f1;
   background-color: #f1f1f1;
 }
-
-
-.vst-input.long{
-  width: 580px;
+.vst-input.long {
+  width: 832px;
 }
+.vst-input.short {
+  width: 200px;
+}
+
 .vst-list {
   background-color: #fff;
   border: 1px solid #ccc;
@@ -2669,6 +2688,11 @@ td.hint {
   border: 1px solid #D1D70D;
   background-color: #D1D70D;
 }
+a.button.cancel {
+  padding: 8px 38px;
+  text-transform: capitalize;
+}
+
 
 .ui-dialog button.cancel {
   color: #000;
@@ -2987,6 +3011,7 @@ form#vstobjects.suspended {
   width: 800px;
   border: 1px solid #333;
   font-size: 13px;
+  z-index: 120;
 }
 .shortcuts .header {
   border-bottom: 1px solid #333;
@@ -3012,7 +3037,6 @@ form#vstobjects.suspended {
 }
 .shortcuts .close:hover {
   background-color: #000;
-  
 }
 .shortcuts .close:active {
   background-color: #55c9c0;
@@ -3130,4 +3154,117 @@ form#vstobjects.suspended {
 
 .ui-dialog .ui-dialog-content {
   padding: 10px 26px 30px !important;
+}
+
+.helper-container {
+  float: right;
+  height: 293px;
+  margin-bottom: -450px;
+  margin-top: 459px;
+  padding-top: 3px;
+  width: 563px;
+}
+
+.context-helper {
+  text-transform: uppercase;
+#  text-decoration: underline;
+  color: #777;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: bold;
+  float: right;
+}
+.context-helper:hover {
+  color: #55C9C0;
+}
+.context-helper:active {
+  color: #ff6701;
+}
+
+
+.cron-helper-tabs {
+/*  margin-top: 30px;*/
+  border: 1px solid #d9d9d9 !important;
+}
+
+.cron-helper-tabs a {
+  color: #777;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 30px;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+.cron-helper-tabs a:hover {
+  color: #ff6701;
+}
+.cron-helper-tabs a:active {
+  color: #55C9C0;
+}
+.cron-helper-tabs .ui-tabs-selected a {
+  color: #ff6701;
+}
+
+.cron-helper-tabs select {
+  font-size: 15px !important;
+}
+.cron-helper-tabs select.short {
+  background-position: -388px -604px;
+  min-width: 30px;
+  width: 70px;
+}
+
+.cron-helper-tabs p {
+  color: #777;
+  font-size: 12px;
+}
+.cron-helper-tabs p span{
+  padding-right: 15px;
+  padding-left: 25px;
+}
+.cron-helper-tabs p span.first{
+  display: inline-block;
+  padding-right: 15px;
+  width: 100px;
+  padding-left: 0;
+}
+
+.cron-helper-tabs .button {
+  width: auto;
+  background-color: #55C9C0;
+  border: 1px solid #55C9C0;
+}
+.cron-helper-tabs .button:hover {
+  background-color: #5BD8CF;
+  border: 1px solid #5BD8CF;
+}
+.cron-helper-tabs .button:active {
+  background-color: #4FBCB4;
+  border: 1px solid #4FBCB4;
+}
+
+.context-helper-close {
+  background: rgba(0, 0, 0, 0) url("/images/sprite.png?1446554103") repeat scroll -408px -469px;
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: 32px;
+  padding-top: 11px;
+  width: 46px;
+  filter: contrast(50%);
+}
+.context-helper-close:hover {
+  background-color: #aaa;
+  filter: none;
+}
+.context-helper-close:active {
+  background-color: #999;
+  filter: none;
+}
+
+@media screen and (max-width: 950px) {
+  .helper-container {
+    display: none;
+  }
 }

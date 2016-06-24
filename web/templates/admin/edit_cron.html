@@ -29,6 +29,326 @@
           $back = "location.href='".$back."'";
         }
       ?>
+
+                                <div class="vst-text step-top helper-container">
+                                    <div id="tabs"  class="cron-helper-tabs">
+                                      <ul>      
+                                        <li><a href="#tabs-1"><?=__('Minutes')?></a></li>
+                                        <li><a href="#tabs-2"><?=__('Hourly')?></a></li>
+                                        <li><a href="#tabs-3"><?=__('Daily')?></a></li>
+                                        <li><a href="#tabs-4"><?=__('Weekly')?></a></li>
+                                        <li><a href="#tabs-5"><?=__('Monthly')?></a></li>
+                                      </ul>
+                                      <div id="tabs-1">
+                                        <form>
+                                            <input type="hidden" name="h_hour" value="*" />
+                                            <input type="hidden" name="h_day" value="*" />
+                                            <input type="hidden" name="h_month" value="*" />
+                                            <input type="hidden" name="h_wday" value="*" />
+                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                                <select name="h_min" class="vst-list">
+                                                    <option value="*"  selected="selected"><?=__('every minute')?></option>
+                                                    <option value="*/2"><?=__('every two minutes')?></option>
+                                                    <option value="*/5"><?=__('every')?> 5</option>
+                                                    <option value="*/10"><?=__('every')?> 10</option>
+                                                    <option value="*/15"><?=__('every')?> 15</option>
+                                                    <option value="*/30"><?=__('every')?> 30</option>
+                                                </select>
+                                            </p>
+                                            <p class="step-top">
+                                                <input type="submit" value="<?=__('Generate')?>" class="button">
+                                            </p>
+                                        </form>
+                                      </div>
+
+
+                                      <div id="tabs-2">
+                                        <form>
+                                            <input type="hidden" name="h_day" value="*" />
+                                            <input type="hidden" name="h_month" value="*" />
+                                            <input type="hidden" name="h_wday" value="*" />
+                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                                <select name="h_hour" class="vst-list">
+                                                    <option value="*" selected="selected"><?=__('every hour')?></option>
+                                                    <option value="*/2"><?=__('every two hours')?></option>
+                                                    <option value="*/6"><?=__('every')?> 6</option>
+                                                    <option value="*/12"><?=__('every')?> 12</option>
+                                                </select>
+                                            </p>
+
+                                            <p><span class="first"><?=__('Minute')?>:</span>
+                                                <select name="h_min" class="vst-list short">
+                                                    <option value="0" selected="selected">00</option>
+                                                    <option value="15">15</option>
+                                                    <option value="30">30</option>
+                                                    <option value="45">45</option>
+                                                </select>
+                                            </p>
+
+                                            <p class="step-top">
+                                                <input type="submit" value="<?=__('Generate')?>" class="button">
+                                            </p>
+                                        </form>
+                                      </div>
+
+
+                                      <div id="tabs-3">
+                                        <form>
+                                            <input type="hidden" name="h_month" value="*" />
+                                            <input type="hidden" name="h_wday" value="*" />
+                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                                <select name="h_day" class="vst-list">
+                                                    <option value="*" selected="selected"><?=__('every day')?></option>
+                                                    <option value="1-31/2"><?=__('every odd day')?></option>
+                                                    <option value="*/2"><?=__('every even day')?></option>
+                                                    <option value="*/3"><?=__('every')?> 3</option>
+                                                    <option value="*/5"><?=__('every')?> 5</option>
+                                                    <option value="*/10"><?=__('every')?> 10</option>
+                                                    <option value="*/15"><?=__('every')?> 15</option>
+                                                </select>
+                                            </p>
+
+                                            <p><span class="first"><?=__('Hour')?>:</span>
+                                                <select name="h_hour" class="vst-list short">
+                                                    <option value="0">00</option>
+                                                    <option value="1">01</option>
+                                                    <option value="2">02</option>
+                                                    <option value="3">03</option>
+                                                    <option value="4">04</option>
+                                                    <option value="5">05</option>
+                                                    <option value="6">06</option>
+                                                    <option value="7">07</option>
+                                                    <option value="8">08</option>
+                                                    <option value="9">09</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12"  selected="selected">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                    <option value="18">18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                    <option value="21">21</option>
+                                                    <option value="22">22</option>
+                                                    <option value="23">23</option>
+                                                </select>
+
+                                                <span><?=__('Minute')?>:</span>
+                                                <select name="h_min" class="vst-list  short">
+                                                    <option value="0" selected="selected">00</option>
+                                                    <option value="1">01</option>
+                                                    <option value="2">02</option>
+                                                    <option value="5">05</option>
+                                                    <option value="10">10</option>
+                                                    <option value="15">15</option>
+                                                    <option value="20">20</option>
+                                                    <option value="25">25</option>
+                                                    <option value="30">30</option>
+                                                    <option value="35">35</option>
+                                                    <option value="40">40</option>
+                                                    <option value="45">45</option>
+                                                    <option value="50">50</option>
+                                                    <option value="55">55</option>
+                                                </select>
+                                            </p>
+                                            <p class="step-top">
+                                                <input type="submit" value="<?=__('Generate')?>" class="button">
+                                            </p>
+                                        </form>
+                                      </div>
+
+                                      <div id="tabs-4">
+                                        <form>
+                                            <input type="hidden" name="h_month" value="*" />
+                                            <input type="hidden" name="h_day" value="*" />
+
+                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                                <select name="h_wday" class="vst-list">
+                                                    <option value="*" selected="selected"><?=__('every day')?></option>
+                                                    <option value="1,2,3,4,5"><?=__('weekdays (5 days)')?></option>
+                                                    <option value="0,6"><?=__('weekend (2 days)')?></option>
+                                                    <option value="1"><?=__('Monday')?></option>
+                                                    <option value="2"><?=__('Tuesday')?></option>
+                                                    <option value="3"><?=__('Wednesday')?></option>
+                                                    <option value="4"><?=__('Thursday')?></option>
+                                                    <option value="5"><?=__('Friday')?></option>
+                                                    <option value="6"><?=__('Saturday')?></option>
+                                                    <option value="0"><?=__('Sunday')?></option>
+                                                </select>
+                                            </p>
+
+                                            <p><span class="first"><?=__('Hour')?>:</span>
+                                                <select name="h_hour" class="vst-list short">
+                                                    <option value="0">00</option>
+                                                    <option value="1">01</option>
+                                                    <option value="2">02</option>
+                                                    <option value="3">03</option>
+                                                    <option value="4">04</option>
+                                                    <option value="5">05</option>
+                                                    <option value="6">06</option>
+                                                    <option value="7">07</option>
+                                                    <option value="8">08</option>
+                                                    <option value="9">09</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12"  selected="selected">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                    <option value="18">18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                    <option value="21">21</option>
+                                                    <option value="22">22</option>
+                                                    <option value="23">23</option>
+                                                </select>
+                                                <span><?=__('Minute')?>:</span>
+                                                <select name="h_min" class="vst-list short">
+                                                    <option value="0" selected="selected">00</option>
+                                                    <option value="1">01</option>
+                                                    <option value="2">02</option>
+                                                    <option value="5">05</option>
+                                                    <option value="10">10</option>
+                                                    <option value="15">15</option>
+                                                    <option value="20">20</option>
+                                                    <option value="25">25</option>
+                                                    <option value="30">30</option>
+                                                    <option value="35">35</option>
+                                                    <option value="40">40</option>
+                                                    <option value="45">45</option>
+                                                    <option value="50">50</option>
+                                                    <option value="55">55</option>
+                                                </select>
+                                            </p>
+
+                                            <p class="step-top">
+                                                <input type="submit" value="<?=__('Generate')?>" class="button">
+                                            </p>
+                                        </form>
+                                      </div>
+
+                                      
+                                      <div id="tabs-5">
+                                        <form>
+                                            <input type="hidden" name="h_wday" value="*" />
+
+                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                                <select name="h_month" class="vst-list">
+                                                    <option value="*" selected="selected"><?=__('every month')?></option>
+                                                    <option value="1-11/2"><?=__('every odd month')?></option>
+                                                    <option value="*/2"><?=__('every even month')?></option>
+                                                    <option value="*/3"><?=__('every')?> 3</option>
+                                                    <option value="*/6"><?=__('every')?> 6</option>
+                                                    <option value="1"><?=__('Jan')?></option>
+                                                    <option value="2"><?=__('Feb')?></option>
+                                                    <option value="3"><?=__('Mar')?></option>
+                                                    <option value="4"><?=__('Apr')?></option>
+                                                    <option value="5"><?=__('May')?></option>
+                                                    <option value="6"><?=__('Jun')?></option>
+                                                    <option value="7"><?=__('Jul')?></option>
+                                                    <option value="8"><?=__('Aug')?></option>
+                                                    <option value="9"><?=__('Sep')?></option>
+                                                    <option value="10"><?=__('Oct')?></option>
+                                                    <option value="11"><?=__('Nov')?></option>
+                                                    <option value="12"><?=__('Dec')?></option>
+                                                </select>
+                                            </p>
+
+                                            <p><span class="first"><?=__('Date')?>:</span>
+                                                <select name="h_day" class="vst-list short">
+                                                    <option value="1" selected="selected">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                    <option value="18">18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                    <option value="21">21</option>
+                                                    <option value="22">22</option>
+                                                    <option value="23">23</option>
+                                                    <option value="24">24</option>
+                                                    <option value="25">25</option>
+                                                    <option value="26">26</option>
+                                                    <option value="27">27</option>
+                                                    <option value="28">28</option>
+                                                    <option value="29">29</option>
+                                                    <option value="30">30</option>
+                                                    <option value="31">31</option>
+                                                </select>
+
+                                                <span><?=__('Hour')?>:</span>
+                                                <select name="h_hour" class="vst-list short">
+                                                    <option value="0">00</option>
+                                                    <option value="1">01</option>
+                                                    <option value="2">02</option>
+                                                    <option value="3">03</option>
+                                                    <option value="4">04</option>
+                                                    <option value="5">05</option>
+                                                    <option value="6">06</option>
+                                                    <option value="7">07</option>
+                                                    <option value="8">08</option>
+                                                    <option value="9">09</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12"  selected="selected">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                    <option value="18">18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                    <option value="21">21</option>
+                                                    <option value="22">22</option>
+                                                    <option value="23">23</option>
+                                                </select>
+
+                                                <span><?=__('Minute')?>:</span>
+                                                <select name="h_min" class="vst-list short">
+                                                    <option value="0" selected="selected">00</option>
+                                                    <option value="1">01</option>
+                                                    <option value="2">02</option>
+                                                    <option value="5">05</option>
+                                                    <option value="10">10</option>
+                                                    <option value="15">15</option>
+                                                    <option value="20">20</option>
+                                                    <option value="25">25</option>
+                                                    <option value="30">30</option>
+                                                    <option value="35">35</option>
+                                                    <option value="40">40</option>
+                                                    <option value="45">45</option>
+                                                    <option value="50">50</option>
+                                                    <option value="55">55</option>
+                                                </select>
+                                            </p>
+                                            <p class="step-top">
+                                                <input type="submit" value="<?=__('Generate')?>" class="button">
+                                            </p>
+                                        </form>
+                                      </div>
+                                    </div>
+                                </div>
+
+
         <form id="vstobjects" name="v_edit_cron" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
@@ -47,6 +367,18 @@
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2" width="600px">
+
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Command');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input long" name="v_cmd" <?php if (isset($v_cmd)) echo "value='".htmlentities($v_cmd)."'"; ?>>
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Minute');?>
@@ -54,7 +386,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_min" <?php if (isset($v_min)) echo "value=".htmlentities($v_min); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_min" <?php if (isset($v_min)) echo "value=".htmlentities($v_min); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -64,7 +396,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_hour" <?php if (isset($v_hour)) echo "value=".htmlentities($v_hour); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_hour" <?php if (isset($v_hour)) echo "value=".htmlentities($v_hour); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -74,7 +406,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_day" <?php if (isset($v_day)) echo "value=".htmlentities($v_day); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_day" <?php if (isset($v_day)) echo "value=".htmlentities($v_day); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -84,7 +416,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_month" <?php if (isset($v_month)) echo "value=".htmlentities($v_month); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_month" <?php if (isset($v_month)) echo "value=".htmlentities($v_month); ?>>
                                 </td>
                             </tr>
                             <tr>
@@ -94,17 +426,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_wday" <?php if (isset($v_wday)) echo "value=".htmlentities($v_wday); ?>>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Command');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input long" name="v_cmd" <?php if (isset($v_cmd)) echo "value='".htmlentities($v_cmd)."'"; ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_wday" <?php if (isset($v_wday)) echo "value=".htmlentities($v_wday); ?>>
                                 </td>
                             </tr>
                         </table>
@@ -123,3 +445,36 @@
             </table>
         </form>
     </div>
+
+
+<script>
+  $(function() {
+    $( "#tabs" ).tabs();
+    $('.context-helper').click(function(){ $('#tabs').toggle(); $('.context-helper').toggle();  });
+    $('.context-helper-close').click(function(){ $('#tabs').toggle(); $('.context-helper').toggle(); });
+                            
+    $('.helper-container form').submit(function(){
+      $('#vstobjects input[name=v_min]').val($(this).find(':input[name=h_min]').val()).effect('highlight');
+      $('#vstobjects input[name=v_hour]').val($(this).find(':input[name=h_hour]').val()).effect('highlight');
+      $('#vstobjects input[name=v_day]').val($(this).find(':input[name=h_day]').val()).effect('highlight');
+      $('#vstobjects input[name=v_month]').val($(this).find(':input[name=h_month]').val()).effect('highlight');
+      $('#vstobjects input[name=v_wday]').val($(this).find(':input[name=h_wday]').val()).effect('highlight');
+                                
+      return false;
+    })
+
+   /*
+    TODO:
++        1 css
++        2 hover all buttons
++        3 button
++        4 blink form on Generation
++        5 close button
++        6 translation
+        7 user version
+        8 edit cron /user
+        9 russian cron html
+   */
+
+  });
+</script>

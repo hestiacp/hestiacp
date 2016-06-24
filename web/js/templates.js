@@ -94,7 +94,6 @@ App.Templates.html = {
                         </div>'],
         popup_rename: ['<div class="confirm-box rename warning">\
                             <div class="message">'+App.Constants.FM_RENAME+': <span class="title">"~!:FILENAME~!"</span></div>\
-                            <!-- div class="warning">'+App.Constants.FM_FILE+' <span class="title">"reading.txt"</span> '+App.Constants.FM_ALREADY_EXISTS+'</div -->\
                             <div class="warning warning-message"></div>\
                             <div class="actions">\
                                 <input type="text" id="rename-title" class="new-title"  value="~!:NEW_NAME~!" />\
@@ -106,6 +105,53 @@ App.Templates.html = {
                             <div class="controls replace">\
                                 <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
                                 <p class="ok" onClick="FM.confirmRename();">'+App.Constants.FM_RENAME+'</p>\
+                            </div>\
+                        </div>'],
+
+        popup_chmod: ['<div class="confirm-box chmod warning">\
+                            <div class="message">'+App.Constants.FM_CHMOD+': <span class="title">"~!:FILENAME~!"</span></div>\
+                            <div class="warning warning-message"></div>\
+                            <div class="actions">\
+                                <ul>\
+                                    <li><label><input type="checkbox" name="read-by-owner" value="1" ~!:READ_BY_OWNER~! /> '+App.Constants.FM_READ_BY_OWNER+'</label></li>\
+                                    <li><label><input type="checkbox" name="write-by-owner" value="1" ~!:WRITE_BY_OWNER~! /> '+App.Constants.FM_WRITE_BY_OWNER+'</label></li>\
+                                    <li><label><input type="checkbox" name="execute-by-owner" value="1" ~!:EXECUTE_BY_OWNER~! /> '+App.Constants.FM_EXECUTE_BY_OWNER+'</label></li>\
+                                </ul><ul>\
+                                    <li><label><input type="checkbox" name="read-by-group" value="1" ~!:READ_BY_GROUP~! /> '+App.Constants.FM_READ_BY_GROUP+'</label></li>\
+                                    <li><label><input type="checkbox" name="write-by-group" value="1" ~!:WRITE_BY_GROUP~! /> '+App.Constants.FM_WRITE_BY_GROUP+'</label></li>\
+                                    <li><label><input type="checkbox" name="execute-by-group" value="1" ~!:EXECUTE_BY_GROUP~! /> '+App.Constants.FM_EXECUTE_BY_GROUP+'</label></li>\
+                                </ul><ul>\
+                                    <li><label><input type="checkbox" name="read-by-others" value="1" ~!:READ_BY_OTHERS~! /> '+App.Constants.FM_READ_BY_OTHERS+'</label></li>\
+                                    <li><label><input type="checkbox" name="write-by-others" value="1" ~!:WRITE_BY_OTHERS~! /> '+App.Constants.FM_WRITE_BY_OTHERS+'</label></li>\
+                                    <li><label><input type="checkbox" name="execute-by-others" value="1" ~!:EXECUTE_BY_OTHERS~! /> '+App.Constants.FM_EXECUTE_BY_OTHERS+'</label></li>\
+                                </ul>\
+                            </div>\
+                            <div class="controls">\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmChmod();">'+App.Constants.FM_OK+'</p>\
+                            </div>\
+                        </div>'],
+        popup_bulk_chmod: ['<div class="confirm-box chmod warning">\
+                            <div class="message">'+App.Constants.FM_CHMOD+' (~!:NUMBER_OF_ITEMS~!)</div>\
+                            <div class="warning warning-message"></div>\
+                            <div class="actions">\
+                                <ul>\
+                                    <li><label><input type="checkbox" name="read-by-owner" value="1" checked /> '+App.Constants.FM_READ_BY_OWNER+'</label></li>\
+                                    <li><label><input type="checkbox" name="write-by-owner" value="1" checked /> '+App.Constants.FM_WRITE_BY_OWNER+'</label></li>\
+                                    <li><label><input type="checkbox" name="execute-by-owner" value="1" checked /> '+App.Constants.FM_EXECUTE_BY_OWNER+'</label></li>\
+                                </ul><ul>\
+                                    <li><label><input type="checkbox" name="read-by-group" value="1" checked /> '+App.Constants.FM_READ_BY_GROUP+'</label></li>\
+                                    <li><label><input type="checkbox" name="write-by-group" value="1" checked /> '+App.Constants.FM_WRITE_BY_GROUP+'</label></li>\
+                                    <li><label><input type="checkbox" name="execute-by-group" value="1" checked /> '+App.Constants.FM_EXECUTE_BY_GROUP+'</label></li>\
+                                </ul><ul>\
+                                    <li><label><input type="checkbox" name="read-by-others" value="1" checked /> '+App.Constants.FM_READ_BY_OTHERS+'</label></li>\
+                                    <li><label><input type="checkbox" name="write-by-others" value="1" checked /> '+App.Constants.FM_WRITE_BY_OTHERS+'</label></li>\
+                                    <li><label><input type="checkbox" name="execute-by-others" value="1" checked /> '+App.Constants.FM_EXECUTE_BY_OTHERS+'</label></li>\
+                                </ul>\
+                            </div>\
+                            <div class="controls">\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmBulkChmod();">'+App.Constants.FM_OK+'</p>\
                             </div>\
                         </div>'],
 

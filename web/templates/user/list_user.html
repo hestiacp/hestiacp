@@ -106,6 +106,15 @@ sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<?if($_SESSION['favourites']['
                           Ok: function() {
                             $( this ).dialog( "close" );
                           },
+                        },
+                        create:function () {
+                          $(this).closest(".ui-dialog")
+                            .find(".ui-button:first")
+                            .addClass("submit");
+                          $(this).closest(".ui-dialog")
+                            .find(".ui-button")
+                            .eq(1) // the first button
+                            .addClass("cancel");
                         }
                       });
                     });

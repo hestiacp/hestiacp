@@ -12,6 +12,8 @@
 <div class="download button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.downloadFiles()" title="<?=__('DOWNLOAD')?>"></div>
 <div class="rename button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.renameItems()"><?=__('RENAME')?></div>
 <div class="rename button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.renameItems()"title="<?=__('RENAME')?>"></div>
+<div class="rights button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.chmodItems()"><?=__('RIGHTS')?></div>
+<div class="rights button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.chmodItems()"title="<?=__('RIGHTS')?>"></div>
 <div class="copy button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.copyItems()"><?=__('COPY')?></div>
 <div class="copy button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.copyItems()" title="<?=__('COPY')?>"></div>
 <div class="archive button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.packItem()"><?=__('ARCHIVE')?></div>

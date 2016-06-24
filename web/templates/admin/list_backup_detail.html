@@ -16,11 +16,11 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
-                <form action="/bulk/restore/" method="post">
+                <form action="/bulk/restore/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <input type="hidden" name="backup" value="<?=htmlentities($_GET['backup']); ?>">
                 <div class="l-select">
-                  <select name="action" id="">
+                  <select name="action">
                     <option value=""><?=__('apply to selected')?></option>
                     <option value="restore"><?php print __('restore') ?></option>
                   </select>
@@ -52,6 +52,7 @@
         $web = explode(',',$data[$backup]['WEB']);
         foreach ($web as $key) {
           if (!empty($key)) {
+            ++$i;
       ?>
 
       <div class="l-unit">
@@ -334,7 +335,6 @@
       <!-- div class="l-separator"></div-->
       <!-- /.l-separator -->
       <? }} ?>
-
 
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">

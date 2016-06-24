@@ -108,7 +108,16 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                           Ok: function() {
                             $( this ).dialog( "close" );
                           },
-                        }
+                        },
+                        create:function () {
+                            $(this).closest(".ui-dialog")
+                                .find(".ui-button:first")
+                                .addClass("submit");
+                            $(this).closest(".ui-dialog")
+                                .find(".ui-button")
+                                .eq(1) // the first button
+                                .addClass("cancel");
+                            }
                       });
                     });
                   </script>
@@ -153,12 +162,10 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="l-unit__date">
             <?=translate_date($data[$key]['DATE'])?>
           </div>
-          <div class="l-unit__suspended""><?__('suspended')?></div>
-
+          <div class="l-unit__suspended""><?=__('suspended')?></div>
           <div class="text-center">
             <i class="l-icon-star"></i>
           </div>
-
         </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">

@@ -25,10 +25,8 @@ source $VESTA/conf/vesta.conf
 
 check_args '2' "$#" 'IP IP_NAME'
 is_format_valid 'ip'
-if [ ! -z "$ip_name" ]; then
-    is_format_valid 'ip_name'
-fi
-is_ip_valid
+is_format_valid 'ip_name'
+is_ip_valid "$ip"
 
 
 #----------------------------------------------------------#

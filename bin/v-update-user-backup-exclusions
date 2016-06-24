@@ -19,9 +19,7 @@ source $VESTA/conf/vesta.conf
 
 is_file_available() {
     if [ ! -e "$vfile" ]; then
-        echo "Error: file $vfile doesn't exist"
-        log_event "$E_NOTEXIST" "$ARGUMENTS"
-        exit $E_NOTEXIST
+        check_result $E_NOTEXIST "file $vfile doesn't exist"
     fi
 }
 
@@ -29,9 +27,7 @@ is_file_valid() {
     exclude="[!$#&;()\]"
     vcontent=$(cat $vfile)
     if [[ "$vcontent" =~ $exclude ]]; then
-        echo "Error: invalid characters in the exlusion list"
-        log_event "$E_INVALID" "$ARGUMENTS"
-        exit $E_INVALID
+        check_result $E_INVALID "invalid characters in the exlusion list"
     fi
 }
 

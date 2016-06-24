@@ -35,7 +35,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_web_template_valid
+is_web_template_valid "$template"
 
 
 #----------------------------------------------------------#
@@ -44,7 +44,7 @@ is_web_template_valid
 
 # Parsing domain values
 get_domain_values 'web'
-ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip $IP)
 
 # Deleting domain
 del_web_config "$WEB_SYSTEM" "$TPL.tpl"
@@ -53,7 +53,6 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 # Defining variables for new vhost config
-TPL=$template
 prepare_web_domain_values
 add_web_config "$WEB_SYSTEM" "$TPL.tpl"
 if [ "$SSL" = 'yes' ]; then

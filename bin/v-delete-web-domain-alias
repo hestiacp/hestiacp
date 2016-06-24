@@ -35,11 +35,8 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
-ip=$(get_real_ip $IP)
-if [ -z "$(echo $ALIAS | tr ',' '\n' | grep ^$dom_alias$)" ]; then
-    echo "Error: alias $dom_alias doesn't exist"
-    log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit $E_NOTEXIST
+if [ -z "$(echo $ALIAS |tr ',' '\n' |grep ^$dom_alias$)" ]; then
+    check_result $E_NOTEXIST "alias $dom_alias doesn't exist"
 fi
 
 
@@ -48,6 +45,7 @@ fi
 #----------------------------------------------------------#
 
 # Preparing domain values for the template substitution
+local_ip=$(get_real_ip $IP)
 ALIAS=$(echo "$ALIAS" |\
     sed -e "s/,/\n/g"|\
     sed -e "s/^$dom_alias$//g"|\

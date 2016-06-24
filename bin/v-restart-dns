@@ -19,15 +19,13 @@ send_email_report() {
     else
         dns_conf='/etc/bind/named.conf'
     fi
-
-    send_mail="$VESTA/web/inc/mail-wrapper.php"
     email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $DNS_SYSTEM restart failed"
     /usr/sbin/named-checkconf $dns_conf >> $tmpfile 2>&1
     service $DNS_SYSTEM restart >> $tmpfile 2>&1
-    cat $tmpfile | $send_mail -s "$subj" $email
+    cat $tmpfile |$SENDMAIL -s "$subj" $email
     rm -f $tmpfile
 }
 
@@ -56,8 +54,7 @@ if [ $? -ne 0 ]; then
     service $DNS_SYSTEM restart >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         send_email_report
-        echo "Error: $DNS_SYSTEM restart failed"
-        exit $E_RESTART
+        check_result $E_RESTART "$DNS_SYSTEM restart failed"
     fi
 fi
 

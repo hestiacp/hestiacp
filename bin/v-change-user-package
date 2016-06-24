@@ -40,51 +40,37 @@ is_package_avalable() {
     # Checking usage agains package limits
     if [ "$WEB_DOMAINS" != 'unlimited' ]; then
         if [ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ]; then
-            echo "Error: Package doesn't cover WEB_DOMAIN usage"
-            log_event "$E_LIMIT" "$ARGUMENTS"
-            exit $E_LIMIT
+            check_result $E_LIMIT "Package doesn't cover WEB_DOMAIN usage"
         fi
     fi
     if [ "$DNS_DOMAINS" ! = 'unlimited' ]; then
         if [ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ]; then
-            echo "Error: Package doesn't cover DNS_DOMAIN usage"
-            log_event "$E_LIMIT" "$ARGUMENTS"
-            exit $E_LIMIT
+            check_result $E_LIMIT "Package doesn't cover DNS_DOMAIN usage"
         fi
     fi
     if [ "$MAIL_DOMAINS" != 'unlimited' ]; then
         if [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ]; then
-            echo "Error: Package doesn't cover MAIL_DOMAIN usage"
-            log_event "$E_LIMIT" "$ARGUMENTS"
-            exit $E_LIMIT
+            check_result $E_LIMIT "Package doesn't cover MAIL_DOMAIN usage"
         fi
     fi
     if [ "$DATABASES" != 'unlimited' ]; then
         if [ "$DATABASES" -lt "$U_DATABASES" ]; then
-            echo "Error: Package doesn't cover DATABASE usage"
-            log_event "$E_LIMIT" "$ARGUMENTS"
-            exit $E_LIMIT
+            check_result $E_LIMIT "Package doesn't cover DATABASE usage"
         fi
     fi
     if [ "$CRON_JOBS" != 'unlimited' ]; then
         if [ "$CRON_JOBS" -lt "$U_CRON_JOBS" ]; then
-            echo "Error: Package doesn't cover CRON usage"
-            log_event "$E_LIMIT" "$ARGUMENTS"
-            exit $E_LIMIT
+            check_result $E_LIMIT "Package doesn't cover CRON usage"
         fi
     fi
     if [ "$DISK_QUOTA" != 'unlimited' ]; then
         if [ "$DISK_QUOTA" -lt "$U_DISK" ]; then
-            echo "Error: Package doesn't cover DISK usage"
-            log_event "$E_LIMIT" "$ARGUMENTS"
-            exit $E_LIMIT
+            check_result $E_LIMIT "Package doesn't cover DISK usage"
         fi
     fi
     if [ "$BANDWIDTH" != 'unlimited' ]; then
         if [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]; then
-            echo "Error: Package doesn't cover BANDWIDTH usage"
-            log_event "$E_LIMIT" "$ARGUMENTS"
-            exit $E_LIMIT
+            check_result $E_LIMIT "Package doesn't cover BANDWIDTH usage"
         fi
     fi
 }

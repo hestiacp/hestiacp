@@ -12,7 +12,6 @@
 # Argument definition
 domain=$1
 domain=$(echo $domain |sed -e 's/\.*$//g' -e 's/^\.*//g')
-domain=$(echo $domain |tr '[:upper:]' '[:lower:]')
 domain_alias=$domain
 email=$2
 country=$3
@@ -70,6 +69,15 @@ is_format_valid 'domain_alias' 'format'
 #                       Action                             #
 #----------------------------------------------------------#
 
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+else
+    domain_idn=$domain
+fi
+if [[ "$email" = *[![:ascii:]]* ]]; then
+    email=$(idn -t --quiet -a $email)
+fi
+
 # Create temporary work directory
 workdir=$(mktemp -d)
 cd $workdir
@@ -79,7 +87,7 @@ openssl genrsa $KEY_SIZE > $domain.key 2>/dev/null
 
 # Generate the CSR
 subj="/C=$country/ST=$state/localityName=$city/O=$org"
-subj="$subj/organizationalUnitName=$org_unit/commonName=$domain"
+subj="$subj/organizationalUnitName=$org_unit/commonName=$domain_idn"
 subj="$subj/emailAddress=$email"
 if [ -z "$aliases" ]; then
     openssl req -sha256\
@@ -87,7 +95,7 @@ if [ -z "$aliases" ]; then
         -batch \
         -subj "$subj" \
         -key $domain.key \
-        -out $domain.csr >/dev/null 2>&1
+        -out $domain.csr #>/dev/null 2>&1
 else
     for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
         dns_aliases="${dns_aliases}DNS:$alias,"
@@ -117,6 +125,7 @@ openssl x509 -req -sha256 \
     -in $domain.csr \
     -signkey $domain.key \
     -out $domain.crt >/dev/null 2>&1
+
 
 # Listing certificates
 if [ -e "$domain.crt" ]; then

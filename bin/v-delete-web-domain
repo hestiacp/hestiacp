@@ -17,15 +17,6 @@ user=$1
 domain=$2
 restart=$3
 
-# Additional argument formatting
-if [[ "$domain" =~ [[:upper:]] ]]; then
-    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
-fi
-domain_idn="$domain"
-if [[ "$domain" = *[![:ascii:]]* ]]; then
-    domain_idn=$(idn -t --quiet -a $tmp_alias)
-fi
-
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
@@ -57,6 +48,10 @@ fi
 
 # Parsing domain values
 get_domain_values 'web'
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
 local_ip=$(get_real_ip $IP)
 
 # Deleting domain from web.conf

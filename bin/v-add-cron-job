@@ -17,7 +17,7 @@ hour=$3
 day=$4
 month=$5
 wday=$6
-command=$(echo $7 | sed "s/'/%quote%/g")
+command=$(echo $7 |sed "s/'/%quote%/g")
 job=$8
 restart=$9
 
@@ -25,8 +25,7 @@ restart=$9
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Assigning new value
-A7="$command"
+HIDE=7
 
 
 #----------------------------------------------------------#

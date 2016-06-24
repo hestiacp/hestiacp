@@ -43,9 +43,7 @@ get_domain_values 'web'
 # Checking config
 config="$HOMEDIR/$user/conf/web/$STATS.$domain.conf"
 if [ ! -e "$config" ]; then
-    echo "Error: Parsing error"
-    log_event "$E_PARSING" "$ARGUMENTS"
-    exit $E_PARSING
+    check_result $E_NOTEXISTS "$config doesn't exist"
 fi
 
 # Checking statistics directory

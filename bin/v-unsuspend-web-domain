@@ -41,7 +41,7 @@ is_object_suspended 'web' 'DOMAIN' "$domain"
 # Parsing domain values
 get_domain_values 'web'
 SUSPENDED='no'
-ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip $IP)
 
 # Preparing domain values for the template substitution
 prepare_web_domain_values

@@ -38,7 +38,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
-is_package_full 'MAIL_USER'
+is_package_full 'MAIL_ACCOUNTS'
 is_mail_new "$account"
 is_password_valid
 
@@ -48,7 +48,7 @@ is_password_valid
 #----------------------------------------------------------#
 
 # Generating hashed password
-salt=$(gen_password "$PW_MATRIX" "8")
+salt=$(generate_password "$PW_MATRIX" "8")
 md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<<$password)"
 
 # Adding account info into password file

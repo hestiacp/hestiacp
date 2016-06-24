@@ -17,8 +17,13 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
+if [[ "$domain" =~ [[:upper:]] ]]; then
+    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
+fi
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
 ip=$3
 ns1=$4
 ns2=$5
@@ -48,7 +53,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_domain_new 'dns'
 is_package_full 'DNS_DOMAINS'
 template=$(get_user_value '$DNS_TEMPLATE')
-is_dns_template_valid
+is_dns_template_valid $template
 
 if [ ! -z "$ns1" ]; then
     ns1=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')

@@ -40,8 +40,8 @@ time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Define time somewhere at night
-min=$(gen_password '012345' '2')
-hour=$(gen_password '1234567' '1')
+min=$(generate_password '012345' '2')
+hour=$(generate_password '1234567' '1')
 day='*'
 month='*'
 wday='*'

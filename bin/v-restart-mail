@@ -14,14 +14,13 @@ source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
 send_email_report() {
-    send_mail="$VESTA/web/inc/mail-wrapper.php"
     email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $MAIL_SYSTEM restart failed"
     service $MAIL_SYSTEM configtest >> $tmpfile 2>&1
     service $MAIL_SYSTEM restart >> $tmpfile 2>&1
-    cat $tmpfile | $send_mail -s "$subj" $email
+    cat $tmpfile |$SENDMAIL -s "$subj" $email
     rm -f $tmpfile
 }
 
@@ -48,8 +47,7 @@ fi
 service $MAIL_SYSTEM restart >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
-    echo "Error: $MAIL_SYSTEM restart failed"
-    exit $E_RESTART
+    check_result $E_RESTART "$MAIL_SYSTEM restart failed"
 fi
 
 # Update restart queue

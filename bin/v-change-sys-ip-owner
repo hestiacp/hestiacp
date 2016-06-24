@@ -27,10 +27,9 @@ check_args '2' "$#" 'IP USER'
 is_format_valid 'ip' 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_ip_valid
+is_ip_valid "$ip"
 is_ip_key_empty '$U_WEB_DOMAINS'
 is_ip_key_empty '$U_SYS_USERS'
-
 
 #----------------------------------------------------------#
 #                       Action                             #

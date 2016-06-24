@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 
 check_args '2' "$#" 'IP IP_STATUS'
 is_format_valid 'ip' 'ip_status'
-is_ip_valid
+is_ip_valid "$ip"
 if [ "$ip_status" = "$(get_ip_value '$STATUS')" ]; then
     echo "Error: status $ip_status is already set"
     log_event "$E_EXISTS" "$ARGUMENTS"

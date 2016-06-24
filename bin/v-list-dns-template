@@ -82,7 +82,7 @@ csv_list() {
 
 check_args '1' "$#" 'TEMPLATE [FORMAT]'
 is_format_valid 'template'
-is_dns_template_valid
+is_dns_template_valid "$template"
 
 
 #----------------------------------------------------------#

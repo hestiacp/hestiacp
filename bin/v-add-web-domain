@@ -61,7 +61,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
 is_domain_new 'web' "$domain,$aliases"
-is_ip_valid "$ip"
+is_ip_valid "$ip" "$user"
 
 
 #----------------------------------------------------------#
@@ -133,8 +133,8 @@ fi
 
 # Increasing counters
 increase_ip_value "$local_ip"
-increase_user_value "$user" '$U_WEB_DOMAINS' "$alias_number"
-increase_user_value "$user" '$U_WEB_ALIASES'
+increase_user_value "$user" '$U_WEB_DOMAINS'
+increase_user_value "$user" '$U_WEB_ALIASES' "$alias_number"
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')

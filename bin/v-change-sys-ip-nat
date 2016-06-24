@@ -26,10 +26,8 @@ source $VESTA/conf/vesta.conf
 
 check_args '2' "$#" 'IP NAT_IP [RESTART]'
 is_format_valid 'ip'
-if [ ! -z "$nat_ip" ]; then
-    is_format_valid 'nat_ip'
-fi
-is_ip_valid
+is_format_valid 'nat_ip'
+is_ip_valid "$ip"
 
 
 #----------------------------------------------------------#

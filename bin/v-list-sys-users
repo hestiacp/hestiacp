@@ -18,7 +18,7 @@ source $VESTA/func/main.sh
 
 # JSON list function
 json_list() {
-    objects=$(echo "$users" |wc -l)
+    objects=$(grep @ /etc/passwd |wc -l)
     i=1
     echo '['
     while read user; do

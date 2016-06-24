@@ -80,7 +80,6 @@ $BIN/v-suspend-database $owner $database > /dev/null 2>&1
 eval $db_data
 dump="$tmpdir/$database.$TYPE.sql"
 grants="$tmpdir/$database.$TYPE.$DBUSER"
-send_mail='/bin/true'
 case $TYPE in
     mysql) dump_mysql_database ;;
     pgsql) dump_pgsql_database ;;

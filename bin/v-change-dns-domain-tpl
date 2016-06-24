@@ -35,7 +35,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
-is_dns_template_valid
+is_dns_template_valid "$template"
 
 
 #----------------------------------------------------------#
@@ -52,8 +52,31 @@ for nameserver in ${ns//,/ };do
     (( ++i))
 done
 
+# Reading template
+template_data=$(cat $DNSTPL/$template.tpl)
+
+# Deleting unused nameservers
+if [ -z "$ns3" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns3%)
+fi
+if [ -z "$ns4" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns4%)
+fi
+if [ -z "$ns5" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns5%)
+fi
+if [ -z "$ns6" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns6%)
+fi
+if [ -z "$ns7" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns7%)
+fi
+if [ -z "$ns8" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns8%)
+fi
+
 # Changing tpl
-cat $DNSTPL/$template.tpl |\
+echo "$template_data" |\
     sed -e "s/%ip%/$ip/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
         -e "s/%domain%/$domain/g" \

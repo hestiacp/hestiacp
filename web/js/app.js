@@ -1007,17 +1007,21 @@ hover_menu = function() {
         nav_a.css({'min-height': 111 - st + 'px'});
         nav_context.css({'margin-top': 215 - st + 'px'});
         sep_2.css({'box-shadow':'none'});
+        sep_2.css({'background-color': '#ddd'});
+        sep_2.css({'height': '1px'});
     }
 
     if(st > 112){
         sep_1.css({'margin-top': '100px'});
-        sep_2.css({'margin-top': '145px'});
+        sep_2.css({'margin-top': '130px'});
+        sep_2.css({'height': '15px'});
+        sep_2.css({'background-color': '#fff'});
         nav_a.css({'height': '0'});
         nav_a.css({'min-height': '0'});
         nav_context.css({'margin-top': '101px'});
         nav_a.find('ul').css({'visibility': 'hidden'});
         nav_main.css({'padding-top': '27px'});
-        sep_2.css({'box-shadow':'0 2px 5px  0 rgba(0, 0, 0, 0.6)'});
+        sep_2.css({'box-shadow':'0 5px 3px 0 rgba(200, 200, 200, 0.5)'});
     }
 
     if(st == 0){

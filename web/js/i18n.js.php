@@ -26,6 +26,7 @@ App.Constants.FM_CLOSE                          = '<?=__('Close')?>';
 App.Constants.FM_COPY                           = '<?=__('Copy') ?>';
 App.Constants.FM_CANCEL                         = '<?=__('Cancel')?>';
 App.Constants.FM_RENAME                         = '<?=__('Rename')?>';
+App.Constants.FM_CHMOD                          = '<?=__('Change Rights')?>';
 App.Constants.FM_DELETE                         = '<?=__('Delete')?>';
 App.Constants.FM_CONFIRM_DELETE_BULK            = '<?=__('Delete items')?>';
 App.Constants.FM_EXTRACT                        = '<?=__('Extract')?>';
@@ -49,4 +50,13 @@ App.Constants.FM_CREATE_FILE                    = '<?=__('Create file')?>';
 App.Constants.FM_CREATE_DIRECTORY               = '<?=__('Create directory')?>';
 App.Constants.FM_TRANSLATED_DATES               = {'Jan': '<?=__('Jan')?>', 'Feb': '<?=__('Feb')?>','Mar': '<?=__('Mar')?>','Apr': '<?=__('Apr')?>','May': '<?=__('May')?>','Jun': '<?=__('Jun')?>','Jul': '<?=__('Jul')?>','Aug': '<?=__('Aug')?>','Sep': '<?=__('Sep')?>','Oct': '<?=__('Oct')?>','Nov': '<?=__('Nov')?>','Dec': '<?=__('Dec')?>'};
 
+App.Constants.FM_READ_BY_OWNER                  = '<?=__('read by owner')?>';
+App.Constants.FM_WRITE_BY_OWNER                 = '<?=__('write by owner')?>';
+App.Constants.FM_EXECUTE_BY_OWNER               = '<?=__('execute/search by owner')?>';
+App.Constants.FM_READ_BY_GROUP                  = '<?=__('read by group')?>';
+App.Constants.FM_WRITE_BY_GROUP                 = '<?=__('write by group')?>';
+App.Constants.FM_EXECUTE_BY_GROUP               = '<?=__('execute/search by group')?>';
+App.Constants.FM_READ_BY_OTHERS                 = '<?=__('read by others')?>';
+App.Constants.FM_WRITE_BY_OTHERS                = '<?=__('write by others')?>';
+App.Constants.FM_EXECUTE_BY_OTHERS              = '<?=__('execute/search by others')?>';
 

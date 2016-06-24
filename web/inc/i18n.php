@@ -69,7 +69,7 @@ function detect_user_language($fallback='en') {
 
     // Sort Accept-Language by `q` value
     $accept_langs = explode(',', preg_replace('/\s/', '', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'])));
-    $accept_langs_sorted = [];
+    $accept_langs_sorted = array() ;
     foreach ($accept_langs as $lang) {
         $div = explode(';q=', $lang, 2);
         if (count($div) < 2) {

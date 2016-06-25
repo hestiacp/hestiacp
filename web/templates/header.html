@@ -18,13 +18,13 @@
     var frmname = '';
 
     function checkedAll(frmname) {
-        if ($('.l-unit.selected').length > 0) {
-            $('.l-unit').removeClass("selected");
+        if ($('.l-unit.selected:not(.header)').length > 0) {
+            $('.l-unit:not(.header)').removeClass("selected");
             $('.ch-toggle').attr("checked", false);
             $('.toggle-all').removeClass('clicked-on');
         }
         else {
-            $('.l-unit').addClass("selected");
+            $('.l-unit:not(.header)').addClass("selected");
             $('.ch-toggle').attr("checked", true);
             $('.toggle-all').addClass('clicked-on');
         }

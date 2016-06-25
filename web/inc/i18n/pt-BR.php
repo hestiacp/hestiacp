@@ -4,7 +4,7 @@
  * Diego Hernandes (diego@he.rnand.es)
  */
 
-$LANG['pt'] = array(
+$LANG['pt-BR'] = array(
     'Packages'  => 'Pacotes',
     'IP'  => 'IP',
     'Graphs'  => 'Gráficos',
@@ -121,7 +121,7 @@ $LANG['pt'] = array(
     'Editing Firewall Rule' => 'Editando Regra de Firewall',
     'Adding IP Address to Banlist' => 'Adicionando endereço IP na lista negra',
 
-    'active'  => 'activo',
+    'active'  => 'ativo',
     'spnd'  => 'suspenso',
     'suspended'  => 'suspenso',
     'running'  => 'em execução',
@@ -546,6 +546,7 @@ $LANG['pt'] = array(
     'already exists' => 'já existe',
     'Create file' => 'Criar arquivo',
     'Create directory' => 'Criar diretório',
+
     'Add New object' => 'Adicionar novo objeto',
     'Save Form' => 'Salvar formulário',
     'Cancel saving form' => 'Cancelar salvamento do formulário',
@@ -561,8 +562,6 @@ $LANG['pt'] = array(
     'Move backward through top menu' => 'Mover para trás através do menu superior',
     'Move forward through top menu' => 'Mover para frente através do menu superior',
     'Enter focused element' => 'Enter focused element',
-    'Move up through elements list' => 'Move up through elements list',
-    'Move down through elements list' => 'Move down through elements list',
 
     'Upload' => 'Enviar',
     'New File' => 'Novo Arquivo',
@@ -589,34 +588,7 @@ $LANG['pt'] = array(
     'Select All Files' => 'Selecionar Todos os Arquivos',
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'atalhos são inspirados pela magnífica GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> Gerenciador de Arquivos',
-    'Minutes' => 'Minutes',
-    'Hourly' => 'Hourly',
-    'Daily' => 'Daily',
-    'Weekly' => 'Weekly',
-    'Monthly' => 'Monthly',
-    'Run Command' => 'Run Command',
-    'every month' => 'every month',
-    'every odd month' => 'every odd month',
-    'every even month' => 'every even month',
-    'every day' => 'every day',
-    'every odd day' => 'every odd day',
-    'every even day' => 'every even day',
-    'weekdays (5 days)' => 'weekdays (5 days)',
-    'weekend (2 days)' => 'weekend (2 days)',
-    'Monday' => 'Monday',
-    'Tuesday' => 'Tuesday',
-    'Wednesday' => 'Wednesday',
-    'Thursday' => 'Thursday',
-    'Friday' => 'Friday',
-    'Saturday' => 'Saturday',
-    'Sunday' => 'Sunday',
-    'every hour' => 'every hour',
-    'every two hours' => 'every two hours',
-    'every minute' => 'every minute',
-    'every two minutes' => 'every two minutes',
-    'every' => 'every',
-    'Hour' => 'Hour',
-    'Minute' => 'Minute',
+
     'Licence Key' => 'Chave de Licença',
     'Enter License Key' => 'Digite a Chave de Licença',
     'Buy Licence' => 'Comprar Licença',
@@ -627,4 +599,5 @@ $LANG['pt'] = array(
     'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restringir usuários para que eles não possam usar SSH e acessar apenas seu diretório home.',
     'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copiar, editar, ver, e recuperar todos os arquivos de seu domínio web usando o completo Gerenciador de Arquivos.',
     'This is a commercial module, you would need to purchace license key to enable it.' => 'Éste é um módulo comercial que você poderia comprar uma chave de licença para habilita-lo.'
+
 );

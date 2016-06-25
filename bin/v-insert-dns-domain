@@ -34,7 +34,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 eval $data
 domain="$DOMAIN"
 if [ "$flush" = 'no' ]; then
-    is_domain_new 'dns'
+    is_domain_new 'dns' $domain
 fi
 
 

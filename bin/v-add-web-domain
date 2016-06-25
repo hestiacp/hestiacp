@@ -55,13 +55,17 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-check_args '2' "$#" 'USER DOMAIN [IP] [ALIASES] [PROXY_EXTENTIONS] [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENTIONS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
 is_domain_new 'web' "$domain,$aliases"
-is_ip_valid "$ip" "$user"
+if [ ! -z "$ip" ]; then
+    is_ip_valid "$ip" "$user"
+else
+    get_user_ip
+fi
 
 
 #----------------------------------------------------------#
@@ -102,12 +106,19 @@ chmod 751 $HOMEDIR/$user/web/$domain $HOMEDIR/$user/web/$domain/*
 chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
 
 # Addding PHP-FPM backend
-if [ ! -z "$BACKEND_SYSTEM" ]; then
+if [ ! -z "$WEB_BACKEND" ]; then
     if [ -z "$BACKEND_TEMPLATE" ]; then
-        update_user_value "$user" '$BACKEND_TEMPLATE' "default"
+        BACKEND_TEMPLATE='default'
+        if [ -z "$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)" ]; then
+            sed -i "s/^DNS_TEMPL/BACKEND_TEMPLATE='default'\nDNS_TEMPL/g" \
+                $USER_DATA/user.conf
+        else
+            update_user_value "$user" '$BACKEND_TEMPLATE' "default"
+        fi
     fi
     $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE
     check_result $? "Backend error" >/dev/null
+    prepare_web_backend
 fi
 
 # Preparing domain aliases

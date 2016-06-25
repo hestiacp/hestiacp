@@ -47,7 +47,7 @@ is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_domain_new 'mail'
+is_domain_new 'mail' "$domain"
 is_package_full 'MAIL_DOMAINS'
 
 

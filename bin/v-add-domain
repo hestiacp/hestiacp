@@ -39,7 +39,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Get ip if it wasn't defined
 if [ -z "$ip" ]; then
-    get_user_ip $user
+    get_user_ip
     if [ -z "$ip" ]; then
         check_result $E_NOTEXIST "no avaiable IP address"
     fi

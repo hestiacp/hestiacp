@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list vesta autoupdate settings
-# options: NONE
+# options: [FORMAT]
 #
 # The function for obtaining autoupdate setings.
 

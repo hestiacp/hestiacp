@@ -137,8 +137,10 @@ if [ "$type" = 'sftp' ]; then
     if [ -z $port ]; then
         port=22
     fi
-    sftmpdir="$path/vst.bK76A9SUkt"
-    sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+    if sftpc "mkdir $path" > /dev/null 2>&1 ; then
+        sftmpdir="$path/vst.bK76A9SUkt"
+        sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+    fi
     rc=$?
     if [[ "$rc" != 0 ]]; then
         case $rc in

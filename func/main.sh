@@ -463,16 +463,24 @@ sync_cron_jobs() {
 
 # User format validator
 is_user_format_valid() {
-    if ! [[ "$1" =~ ^[a-zA-Z0-9][-|\.|_|a-zA-Z0-9]{0,28}[a-zA-Z0-9]$ ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+    if [ ${#1} -eq 1 ]; then
+        if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+            echo "invalid $2 format :: $1"
+        fi
+    else
+        if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]
+            then
+            echo "invalid $2 format :: $1"
+        fi
     fi
 }
 
 # Domain format validator
 is_domain_format_valid() {
     object_name=${2-domain}
-    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-    if [[ "$1" =~ $exclude ]]; then
+    mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
+    mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
+    if ! [[ "$1" =~ ^${mask1}${mask2}$ ]]; then
         check_result $E_INVALID "invalid $object_name format :: $1"
     fi
 }

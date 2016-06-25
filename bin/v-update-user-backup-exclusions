@@ -24,9 +24,8 @@ is_file_available() {
 }
 
 is_file_valid() {
-    exclude="[!$#&;()\]"
-    vcontent=$(cat $vfile)
-    if [[ "$vcontent" =~ $exclude ]]; then
+    exclude="[!|#|$|^|&|(|)|{|}|<|>|?|\|\"|;|%|\`]"
+    if [[ "$(cat $vfile)" =~ $exclude ]]; then
         check_result $E_INVALID "invalid characters in the exlusion list"
     fi
 }

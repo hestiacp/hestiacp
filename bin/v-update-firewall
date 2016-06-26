@@ -64,6 +64,19 @@ tmp=$(mktemp)
 echo "$iptables -P INPUT ACCEPT" >> $tmp
 echo "$iptables -F INPUT" >> $tmp
 
+# Enabling stateful support
+if [ "$conntrack" != 'no' ]; then
+    str="$iptables -A INPUT -m state"
+    str="$str --state ESTABLISHED,RELATED -j ACCEPT"
+    echo "$str" >> $tmp
+fi
+
+# Handling local traffic
+for ip in $(ls $VESTA/data/ips); do
+    echo "$iptables -A INPUT -s $ip -j ACCEPT" >> $tmp
+done
+echo "$iptables -A INPUT -s 127.0.0.1 -j ACCEPT" >> $tmp
+
 # Pasring iptables rules
 IFS=$'\n'
 for line in $(sort -r -n -k 2 -t \' $rules); do
@@ -99,25 +112,6 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
         echo "$iptables -A INPUT $proto $port $ip $state $action" >> $tmp
     fi
 done
-
-# Handling local traffic
-for ip in $(ls $VESTA/data/ips); do
-    echo "$iptables -A INPUT -s $ip -j ACCEPT" >> $tmp
-done
-echo "$iptables -A INPUT -s 127.0.0.1 -j ACCEPT" >> $tmp
-IFS=$'\n'
-for p_rule in $(cat $ports); do
-    eval $p_rule
-    rule="$iptables -A INPUT -p $PROTOCOL"
-    echo "$rule --sport $PORT -j ACCEPT" >> $tmp
-done
-
-# Enabling stateful support
-if [ "$conntrack" != 'no' ]; then
-    str="$iptables -A INPUT -p tcp -m state"
-    str="$str --state ESTABLISHED,RELATED -j ACCEPT"
-    echo "$str" >> $tmp
-fi
 
 # Switching chain policy to DROP
 echo "$iptables -P INPUT DROP" >> $tmp

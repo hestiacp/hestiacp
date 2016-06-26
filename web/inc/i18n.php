@@ -67,6 +67,7 @@ function detect_user_language($fallback='en') {
         return $user_lang;
     }
 
+
     // Sort Accept-Language by `q` value
     $accept_langs = explode(',', preg_replace('/\s/', '', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'])));
     $accept_langs_sorted = array() ;
@@ -109,4 +110,14 @@ function detect_user_language($fallback='en') {
     // Store result for reusing
     $user_lang = $fallback;
     return $user_lang;
+}
+
+/**
+ * Detects user language .
+ * @param string Fallback language (default: 'en')
+ * @return string Language code (such as 'en' and 'ja')
+ */
+
+function detect_login_language(){
+
 }

@@ -94,7 +94,19 @@ foreach ($sys_arr as $key => $value) {
 }
 
 // Detect language
-if (empty($_SESSION['language'])) $_SESSION['language'] = detect_user_language();
+if (empty($_SESSION['language'])) {
+    $output = '';
+    exec (VESTA_CMD."v-list-sys-config json", $output, $return_var);
+    $config = json_decode(implode('', $output), true);
+    $lang = $config['config']['LANGUAGE'];
+
+    $output = '';
+    exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+    $languages = json_decode(implode('', $output), true);
+    if(in_array($lang, $languages)){
+        $_SESSION['language'] = $lang;
+    }
+}
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
 require_once('../templates/header.html');

@@ -165,14 +165,13 @@ if [ ! -z "$PROXY_SYSTEM" ] && [ "$PROXY_SYSTEM" != 'remote' ]; then
     data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
-# Checking DNS system
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'remote' ]; then
-    if [ "$DNS_SYSTEM" == 'bind' ] || [ "$DNS_SYSTEM" == 'bind9' ]; then
-        proc_name='named'
-    fi
-    get_srv_state $DNS_SYSTEM $proc_name
-    data="$data\nNAME='$DNS_SYSTEM' SYSTEM='dns server' STATE='$state'"
-    data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+# DNS
+service=$DNS_SYSTEM
+if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
+    proc_name='named'
+    get_srv_state $service $proc_name
+    str="$str\nNAME='$service' SYSTEM='dns server' STATE='$state' CPU='$cpu'"
+    str="$str MEM='$mem' RTIME='$rtime'"
 fi
 
 # Checking MAIL system

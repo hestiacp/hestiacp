@@ -74,7 +74,7 @@
               if ($data[$key]['USER'] != $user && $data[$key]['KEY'] == 'ACCOUNT') {
                 if ($key == $user) {
             ?>
-                  <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/logout""><?=__('logout')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
+                  <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/logout"><?=__('logout')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
                 <?
                   if (!empty($_SESSION['look_alert'])) {
                 ?>
@@ -203,7 +203,7 @@
           <div class="l-unit__date">
             <?=translate_date($data[$key]['DATE'])?>
           </div>
-          <div class="l-unit__suspended""><?__('suspended')?></div>
+          <div class="l-unit__suspended"><?__('suspended')?></div>
           <div class="text-center">
             <i class="l-icon-star"></i>
           </div>

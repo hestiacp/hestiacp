@@ -12,7 +12,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
 }
 
 $path = $_REQUEST['path'];
-if (!empty($path) && file_exists($path)) {
+if (!empty($path)) {
     header("Content-type: application/octet-stream");
     header("Content-Transfer-Encoding: binary");
     header("Content-disposition: attachment;filename=".basename($path));

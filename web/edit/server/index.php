@@ -59,7 +59,7 @@ exec (VESTA_CMD."v-list-database-hosts pgsql json", $output, $return_var);
 $v_pgsql_hosts = json_decode(implode('', $output), true);
 unset($output);
 foreach ($v_pgsql_hosts as $key => $value) {
-    $v_psql = 'yes';
+    $v_pgsql = 'yes';
 }
 
 // List backup settings
@@ -207,7 +207,7 @@ if (!empty($_POST['save'])) {
 
     // Update phpPgAdmin url
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_psql_url'] != $_SESSION['DB_PGA_URL']) {
+        if ($_POST['v_pgsql_url'] != $_SESSION['DB_PGA_URL']) {
             exec (VESTA_CMD."v-change-sys-config-value DB_PGA_URL '".escapeshellarg($_POST['v_pgsql_url'])."'", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);

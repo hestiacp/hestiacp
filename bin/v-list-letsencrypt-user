@@ -16,36 +16,33 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# JSON list function
-json_list() {
-    echo '{'
-    echo '    "'$user'": {
-        "EMAIL": "'$EMAIL'",
-        "EXPONENT": "'$EXPONENT'",
-        "MODULUS": "'$MODULUS'",
-        "THUMB: "'$THUMB'"
-    }'
-    echo '}'
+# Json function
+json_list_conf() {
+    lines=$(wc -l $USER_DATA/ssl/le.conf | cut -f 1 -d ' ')
+    i='0'
+    IFS=$'\n'
+    echo -e "{\n\t\"LETSENCRYPT\": {"
+    for str in $(cat $USER_DATA/ssl/le.conf); do
+        (( ++i))
+        key=${str%%=*}
+        value=${str#*=}
+        if [ "$i" -lt "$lines" ]; then
+            echo -e "\t\t\"$key\": \"${value//\'/}\","
+        else
+            echo -e "\t\t\"$key\": \"${value//\'/}\""
+        fi
+    done
+    echo -e "\t}\n}"
 }
 
-# SHELL list function
-shell_list() {
-    echo "USER:           $user"
-    echo "EMAIL:          $EMAIL"
-    echo "THUMB:          $THUMB"
-    echo "EXPONENT:       $EXPONENT"
-    echo "MODULUS:        $MODULUS"
-}
-
-# PLAIN list function
-plain_list() {
-    echo -e "$user\t$EMAIL\t$EXPONENT\t$MODULUS\t$THUMB"
-}
-
-# CSV list function
-csv_list() {
-    echo "USER,EMAIL,EXPONENT,MODULUS,THUMB"
-    echo "$user,$EMAIL,$EXPONENT,$MODULUS,$THUMB"
+# Shell function
+shell_list_conf() {
+    IFS=$'\n'
+    for str in $(cat $USER_DATA/ssl/le.conf); do
+        key=${str%%=*}
+        value=${str#*=}
+        echo "$key: ${value//\'/}"
+    done
 }
 
 
@@ -56,7 +53,7 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_object_valid 'user' 'USER' "$user"
 if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
-    check_result $E_NOTEXIST "LetsEncrypt user account doesn't exist"
+        check_result $E_NOTEXIST "LetsEncrypt user account doesn't exist"
 fi
 
 
@@ -64,14 +61,11 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-source $USER_DATA/ssl/le.conf
-
-# Listing data
-case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+# Listing system config
+case $format in 
+    json)   json_list_conf ;;
+    plain)  shell_list_conf ;;
+    shell)  shell_list_conf | column -t ;;
 esac
 
 

@@ -29,14 +29,14 @@ encode_base64() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-is_format_valid 'user' 'domain'
+validate_format 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
     check_result $E_NOTEXIST "LetsEncrypt key doesn't exist"
 fi
-check_domain=$(grep -w "$domain'" $USER_DATA/web.conf)
+check_domain=$(grep -w "$domain" $USER_DATA/web.conf)
 if [ -z "$check_domain" ]; then
     check_result $E_NOTEXIST "domain $domain doesn't exist"
 fi
@@ -48,7 +48,7 @@ fi
 
 source $USER_DATA/ssl/le.conf
 api='https://acme-v01.api.letsencrypt.org'
-r_domain=$(echo "$check_domain" |cut -f 2 -d \')
+r_domain=$(echo "$check_domain" |cut -f 2 -d \'|tail -n1)
 key="$USER_DATA/ssl/user.key"
 exponent="$EXPONENT"
 modulus="$MODULUS"
@@ -77,16 +77,15 @@ answer=$(curl -s -i -d "$data" "$api/acme/new-authz")
 # Checking http answer status
 status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
 if [[ "$status" -ne "201" ]]; then
+    echo -e "$(date) $domain $status\n$answer\n$(dig @8.8.8.8 $domain +short)" >> /tmp/le-log.txt
     check_result $E_CONNECT "LetsEncrypt challenge request $status"
 fi
 
 # Parsing domain nonce,token and uri
 nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
 protected=$(echo -n '{"nonce":"'"$nonce"'"}' |encode_base64)
-token=$(echo "$answer" |tr ',' '\n' |grep -A 3 http-01 |grep token)
-token=$(echo "$token" |cut -f 4 -d \")
-uri=$(echo "$answer" |tr ',' '\n' |grep -A 3 http-01 |grep uri)
-uri=$(echo "$uri" |cut -f 4 -d \")
+token=$(echo "$answer" |grep -A 3 http-01 |grep token |cut -f 4 -d \")
+uri=$(echo "$answer" |grep -A 3 http-01 |grep uri |cut -f 4 -d \")
 
 # Adding location wrapper for request challenge
 if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
@@ -96,19 +95,25 @@ if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
         echo '    default_type text/plain;' >> $conf
         echo '    return 200 "$1.'$thumb'";' >> $conf
         echo '}' >> $conf
-        if [ ! -z "$PROXY_SYSTEM" ]; then
-            $BIN/v-restart-proxy
-            check_result $? "Proxy restart failed" >/dev/null
-        else
-            $BIN/v-restart-web
-            check_result $? "Web restart failed" >/dev/null
-        fi
     fi
+    echo $conf
 else
     acme="$HOMEDIR/$user/web/$r_domain/public_html/.well-known/acme-challenge"
     echo "$token" > $acme/$token.$thumb
     chown -R $user:$user $HOMEDIR/$user/web/$r_domain/public_html/.well-known
 fi
+
+# Restarting web server
+if [ -z "$PROXY_SYSTEM" ]; then
+    $BIN/v-restart-web
+    check_result $? "Proxy restart failed" >/dev/null
+else
+    $BIN/v-restart-proxy
+    $BIN/v-restart-web
+    check_result $? "Web restart failed" >/dev/null
+fi
+
+sleep 30
 
 # Defining ACME query (request validation)
 query='{"resource":"challenge","type":"http-01","keyAuthorization"'
@@ -123,7 +128,7 @@ data=$data'"payload":"'"$payload"'","signature":"'"$signature"'"}'
 answer=$(curl -s -i -d "$data" "$uri")
 
 # Checking domain validation status
-status=$(echo $answer |tr ',' '\n' |grep status |cut -f 4 -d \")
+status=$(echo $answer |grep status |cut -f 4 -d \")
 location=$(echo "$answer" |grep Location: |awk '{print $2}' |tr -d '\r\n')
 while [ "$status" = 'pending' ] ; do
     answer=$(curl -s -i "$location")
@@ -140,6 +145,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$ARGUMENTS"
+log_event "$OK" "$EVENT"
 
 exit

@@ -39,7 +39,7 @@ fi
 
 # Creating user_list
 if [ -z "$user" ]; then
-    user_list=$(ls $VESTA/data/users)
+    user_list=$(grep '@' /etc/passwd |cut -f1 -d:)
 else
     user_list="$user"
 fi

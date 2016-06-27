@@ -579,7 +579,7 @@ body {
   color: #929292;
 }
 
-.body-login {
+.body-login, .body-reset {
   height: auto;
   padding-top: 10%;
   /*background: url(/images/edit_bg.png);*/

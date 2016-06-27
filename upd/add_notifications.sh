@@ -8,6 +8,8 @@ if [ ! -e '/usr/local/vesta/data/users/admin/notifications.conf' ]; then
     /usr/local/vesta/bin/v-add-user-notification admin "Keyboard Control" "You can use your keyboard to perform many of the same actions you perform using the mouse, such as navigating to or selecting menus, and items."
     /usr/local/vesta/bin/v-add-user-notification admin "Release 0.9.8-16" "We are focused on continuously improving the quality of Vesta releases, and we’ve been working hard to ensure this is a stable release. <a href='http://vestacp.com/roadmap/#0.9.8-16'>release notes</a>"
 else
+    sed -i "/0.9.8-15/d" /usr/local/vesta/data/users/admin/notifications.conf
+    sed -i "/Monitoring Tools/d" /usr/local/vesta/data/users/admin/notifications.conf
     /usr/local/vesta/bin/v-add-user-notification admin "Keyboard Control" "You can use your keyboard to perform many of the same actions you perform using the mouse, such as navigating to or selecting menus, and items."
     /usr/local/vesta/bin/v-add-user-notification admin "Release 0.9.8-16" "We are focused on continuously improving the quality of Vesta releases, and we’ve been working hard to ensure this is a stable release. <a href='http://vestacp.com/roadmap/#0.9.8-16'>release notes</a>"
 fi

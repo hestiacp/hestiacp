@@ -37,7 +37,7 @@ if (isset($_GET['mem'])) {
 
 // Disk info
 if (isset($_GET['disk'])) {
-    $TAB = 'MEMORY';
+    $TAB = 'DISK';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-disk-status', $output, $return_var);
     foreach($output as $file) {
@@ -49,7 +49,7 @@ if (isset($_GET['disk'])) {
 
 // Network info
 if (isset($_GET['net'])) {
-    $TAB = 'MEMORY';
+    $TAB = 'NETWORK';
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-network-status', $output, $return_var);
     foreach($output as $file) {

@@ -749,7 +749,7 @@ is_format_valid() {
                 fname)          is_name_format_valid "$arg" "first name" ;;
                 ftp_password)   is_password_format_valid "$arg" ;;
                 ftp_user)       is_user_format_valid "$arg" "$arg_name" ;;
-                host)           is_domain_format_valid "$arg" "$arg_name" ;;
+                host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;
                 ip)             is_ip_format_valid "$arg" ;;

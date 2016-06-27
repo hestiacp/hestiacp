@@ -32,7 +32,7 @@ server {
         }
     }
 
-    location ^~ /lib/ {
+    location ~ ^/lib.*\.(gif|png|ico|jpg)$ {
         expires 30d;
     }
 

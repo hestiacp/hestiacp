@@ -21,7 +21,6 @@ if($_GET['delete'] == 1){
 } else {
     $v_username = escapeshellarg($user);
     $v_id = escapeshellarg((int)$_GET['notification_id']);
-    echo VESTA_CMD."v-acknowledge-user-notification ".$v_username." ".$v_id;
     exec (VESTA_CMD."v-acknowledge-user-notification ".$v_username." ".$v_id, $output, $return_var);
     check_return_code($return_var,$output);
     unset($output);

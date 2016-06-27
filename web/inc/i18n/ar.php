@@ -76,7 +76,7 @@ $LANG['ar'] = array(
     'list accounts'  => 'عرض الحسابات',
     'add account'  => 'إضافة حساب',
     'open webmail'  => 'فتح برنامج البريد من المتصفح ',
-    'list fail2ban' => 'عرض قائمة المحظورين للدخول الخاطئ',
+    'list fail2ban' => 'list fail2ban', // please make it as short as "list fail2ban"  'عرض قائمة المحظورين للدخول الخاطئ',
     'open %s'  => 'فتح %s',
     'download'  => 'تنزيل',
     'restore'  => 'استرجاع',
@@ -90,6 +90,8 @@ $LANG['ar'] = array(
     'reread IP' => 'إعادة قراءة IP',
     'enable autoupdate' => 'تمكين التحديث التلقائي',
     'disable autoupdate' => 'تعطيل التحديث التلقائي',
+    'turn on notifications' => 'turn on notific.',
+    'turn off notifications' => 'turn off notific.',
 
     'Adding User'  => 'جاري إضافة مستخدم',
     'Editing User'  => 'جاري تعديل المستخدم',

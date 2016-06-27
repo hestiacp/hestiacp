@@ -733,9 +733,12 @@ input[type="checkbox"] {
 .lang-ru .l-menu__item a {
   padding: 11px 18px;
 }
-.lang-tr .l-menu__item a,
-.lang-ar .l-menu__item a {
+.lang-el .l-menu__item a,
+.lang-tr .l-menu__item a {
   padding: 11px 15px;
+}
+.lang-ar .l-menu__item a {
+  padding: 11px 11px;
 }
 .lang-ar .l-menu__item a {
   line-height: 35px;
@@ -1683,7 +1686,7 @@ body.mobile .l-unit-toolbar__col--right {
 .lang-ar .actions-panel__col a {
   font-size: 15px;
   font-weight: normal;
-  line-height: 29px;
+  line-height: 31px;
 }
 
 
@@ -2967,8 +2970,11 @@ form#vstobjects.suspended {
   -o-transition: width .2s ease-out;
   transition: width .2s ease-out;
 }
+.lang-ru .search-input.activated{
+  width: 70px;
+}
 .search-input.activated{
-  width: 150px;
+  width: 130px;
   visibility: visible;
 }
 .search-input:focus {

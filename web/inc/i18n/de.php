@@ -53,7 +53,7 @@ $LANG['de'] = array(
     'Save'  => 'Speichern',
     'Submit'  => 'Übermitteln',
 
-    'toggle all'  => 'Alle wählen/abwählen',
+    'toggle all'  => 'alle', // please make it as short as "toggle all" 'Alle wählen/abwählen', 
     'apply to selected'  => 'Auswählen',
     'rebuild'  => 'Erneuern',
     'rebuild web'  => 'Web erneuern',
@@ -90,8 +90,8 @@ $LANG['de'] = array(
     'reread IP' => 'IP aktualisieren',
     'enable autoupdate' => 'Autoupdate aktivieren',
     'disable autoupdate' => 'Autoupdate deaktivieren',
-    'turn on notifications' => 'Benachrichtigungen aktivieren',
-    'turn off notifications' => 'Benachrichtigungen deaktivieren',
+    'turn on notifications' => 'turn on notifications', // please make it as short as "turn on notifications" 'Benachrichtigungen aktivieren',
+    'turn off notifications' => 'turn off notifications', // please make it as short as "turn off notifications" 'Benachrichtigungen deaktivieren',
 
     'Adding User'  => 'Benutzer anlegen',
     'Editing User'  => 'Benutzer bearbeiten',

@@ -55,7 +55,7 @@ $LANG['ro'] = array(
     'Save' => 'Salvează',
     'Submit' => 'OK',
 
-    'toggle all' => 'selectează toate',
+    'toggle all' => 'toate',
     'apply to selected' => 'aplică la selectat',
     'rebuild' => 'reconstrui',
     'rebuild web' => 'reconstrui WEB',

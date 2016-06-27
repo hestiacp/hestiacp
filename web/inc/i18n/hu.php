@@ -94,8 +94,8 @@ $LANG['hu'] = array(
     'reread IP' => 'IP újraolvasása',
     'enable autoupdate' => 'automatikus frissítés engedélyezése',
     'disable autoupdate' => 'automatikus frissítés tiltása',
-    'turn on notifications' => 'értesítések bekapcsolása',
-    'turn off notifications' => 'értesítések kikapcsolása',
+    'turn on notifications' => 'értesít. bekapcsolása',
+    'turn off notifications' => 'értesít. kikapcsolása',
 
     'Adding User'  => 'Felhasználó hozzáadása',
     'Editing User'  => 'Felhasználó szerkesztése',

@@ -92,8 +92,8 @@ $LANG['ru'] = array(
     'reread IP' => 'перечитать IP',
     'enable autoupdate' => 'включить автообновление',
     'disable autoupdate' => 'выключить автообновление',
-    'turn on notifications' => 'включить уведомления',
-    'turn off notifications' => 'выключить уведомления',
+    'turn on notifications' => 'вкл. уведомления',
+    'turn off notifications' => 'выкл. уведомления',
 
     'Adding User' => 'Добавление аккаунта',
     'Editing User' => 'Редактирование аккаунта',

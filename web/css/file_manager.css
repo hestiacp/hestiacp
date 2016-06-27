@@ -545,7 +545,7 @@ input[type="checkbox"] {
 }
 
 
-@media (max-width: 1320px) {
+@media (max-width: 1450px) {
   .menu div.button.mkfile,
   .menu div.button.mkdir { display: none; }
   .menu div.button.mkfile.small,
@@ -553,14 +553,14 @@ input[type="checkbox"] {
   .listing li .filename-holder { max-width: 30%; }
 }
 
-@media (max-width: 1270px) {
+@media (max-width: 1320px) {
   .menu div.button.del { display: none; }
   .menu div.button.del.small { display: inline-block; }
   .listing li .filename-holder { max-width: 25%; }
 }
 
 
-@media (max-width: 1220px) {
+@media (max-width: 1290px) {
   .menu div.button { display: none; }
   .menu div.button.medium,
   .menu div.button.small { display: inline-block; }

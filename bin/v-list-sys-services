@@ -170,8 +170,8 @@ service=$DNS_SYSTEM
 if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
     proc_name='named'
     get_srv_state $service $proc_name
-    str="$str\nNAME='$service' SYSTEM='dns server' STATE='$state' CPU='$cpu'"
-    str="$str MEM='$mem' RTIME='$rtime'"
+    data="$data\nNAME='$service' SYSTEM='dns server' STATE='$state'"
+    data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
 # Checking MAIL system
@@ -265,8 +265,8 @@ if [ ! -z "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
     if [ "$?" -eq 0 ]; then
         state="running"
     fi
-    str="$str\nNAME='$FIREWALL_SYSTEM' SYSTEM='firewall'"
-    str="$str STATE='$state' CPU='0' MEM='0' RTIME='0'"
+    data="$data\nNAME='$FIREWALL_SYSTEM' SYSTEM='firewall'"
+    data="$data STATE='$state' CPU='0' MEM='0' RTIME='0'"
 fi
 
 # Checking FIREWALL Fail2ban extention

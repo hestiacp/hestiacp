@@ -518,7 +518,7 @@ $LANG['tw'] = array(
     'every two minutes' => 'every two minutes',
     'every' => 'every',
     'Hour' => 'Hour',
-    'Minute' => 'Minute'
+    'Minute' => 'Minute',
     'PASSWORD_RESET_REQUEST' => "重置密碼請點擊連結:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n或者您可以到 https://%s/reset/?action=code&user=%s 輸入密碼重設代碼:\n%s\n\n如果您沒有要求重設密碼，請忽略此郵件\n\n—\nVesta Control Panel\n",
     'Jan' => '1月',
     'Feb' => '2月',

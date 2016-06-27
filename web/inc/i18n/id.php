@@ -93,8 +93,8 @@ $LANG['id'] = array(
     'reread IP' => 'baca ulang IP',
     'enable autoupdate' => 'mengaktifkan autoupdate',
     'disable autoupdate' => 'menonaktifkan autoupdate',
-    'turn on notifications' => 'mengaktifkan notifikasi',
-    'turn off notifications' => 'menonaktifkan notifikasi',
+    'turn on notifications' => 'mengaktifkan notifik.',
+    'turn off notifications' => 'menonaktifkan notifik.',
 
     'Adding User'  => 'Menambah User',
     'Editing User'  => 'Menyunting User',
@@ -501,7 +501,7 @@ $LANG['id'] = array(
     'FileManager' => 'FileManager',
     'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
 
-    'sort by' => 'sortir berdasarkan',
+    'sort by' => 'sortir',
     'Date' => 'Tanggal',
     'Starred' => 'Bintangi',
     'Name' => 'Nama',

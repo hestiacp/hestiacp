@@ -636,7 +636,8 @@ wget $vestacp/logrotate/vesta -O /etc/logrotate.d/vesta
 
 # Buidling directory tree and creating some blank files for vesta
 mkdir -p $VESTA/conf $VESTA/log $VESTA/ssl $VESTA/data/ips \
-    $VESTA/data/queue $VESTA/data/users $VESTA/data/firewall
+    $VESTA/data/queue $VESTA/data/users $VESTA/data/firewall \
+    $VESTA/data/sessions
 touch $VESTA/data/queue/backup.pipe $VESTA/data/queue/disk.pipe \
     $VESTA/data/queue/webstats.pipe $VESTA/data/queue/restart.pipe \
     $VESTA/data/queue/traffic.pipe $VESTA/log/system.log \
@@ -646,6 +647,8 @@ chmod -R 750 $VESTA/data/queue
 chmod 660 $VESTA/log/*
 rm -f /var/log/vesta
 ln -s /usr/local/vesta/log /var/log/vesta
+chown admin:admin $VESTA/data/sessions
+chmod 770 $VESTA/data/sessions
 
 # Generating vesta configuration
 rm -f $VESTA/conf/vesta.conf 2>/dev/null

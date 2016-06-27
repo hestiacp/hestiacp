@@ -503,7 +503,7 @@ $LANG['fa'] = array(
     'FileManager' => 'مدیریت پرونده',
     'show: CPU / MEM / NET / DISK' => 'نمايش: شبكه / حاقظه / پردازنده / ديسك',
 
-    'sort by' => 'مرتب سازی بر اساس',
+    'sort by' =>  'sort by', // please make it as short as "sort by" 'مرتب سازی بر اساس',
     'Date' => 'تاریخ',
     'Starred' => 'ستاره دار',
     'Name' => 'نام',

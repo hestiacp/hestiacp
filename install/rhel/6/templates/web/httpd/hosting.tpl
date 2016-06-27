@@ -14,15 +14,16 @@
     <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes +ExecCGI
-        php_admin_value upload_tmp_dir %home%/%user%/tmp
         php_admin_value upload_max_filesize 10M
         php_admin_value max_execution_time 20
         php_admin_value post_max_size  8M
         php_admin_value memory_limit 32M
         php_admin_flag mysql.allow_persistent  off
         php_admin_flag safe_mode off
+        php_admin_value sendmail_path "/usr/sbin/sendmail -t -i -f info@%domain%"
+        php_admin_value open_basedir %docroot%:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp:/usr/share:/etc/phpMyAdmin:/etc/phpmyadmin:/var/lib/phpmyadmin:/etc/roundcubemail:/etc/roundcube:/var/lib/roundcube
+        php_admin_value upload_tmp_dir %home%/%user%/tmp
         php_admin_value session.save_path %home%/%user%/tmp
-        php_admin_value sendmail_path '/usr/sbin/sendmail -t -i -f %email%'
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All

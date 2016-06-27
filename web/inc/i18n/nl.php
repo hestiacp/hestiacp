@@ -54,7 +54,7 @@ $LANG['nl'] = array(
     'Save'  => 'Opslaan',
     'Submit'  => 'Versturen',
 
-    'toggle all'  => '(de)selecteer alles',
+    'toggle all'  => 'alles',
     'apply to selected'  => 'met geselecteerde',
     'rebuild'  => 'herstellen',
     'rebuild web'  => 'herstel web',

@@ -498,7 +498,7 @@ $LANG['pt-BR'] = array(
     'FileManager' => 'Gerenciador de Arquivo',
     'show: CPU / MEM / NET / DISK' => 'mostrar: CPU / MEM / NET / DISK',
 
-    'sort by' => 'ordenar por',
+    'sort by' => 'ordenar',
     'Date' => 'Data',
     'Starred' => 'Estreado',
     'Name' => 'Nome',

@@ -53,7 +53,7 @@ $LANG['es'] = array(
     'Save'  => 'Guardar',
     'Submit'  => 'Confirmar',
 
-    'toggle all'  => 'seleccionar todos',
+    'toggle all'  => 'todos',
     'apply to selected'  => 'confirmar selección',
     'rebuild'  => 'reconstruir',
     'rebuild web'  => 'reconstruir web',
@@ -90,8 +90,8 @@ $LANG['es'] = array(
     'reread IP' => 'releer IP',
     'enable autoupdate' => 'activar autoupdate',
     'disable autoupdate' => 'desactivar autoupdate',
-    'turn on notifications' => 'activar la notificación',
-    'turn off notifications' => 'desactivar las notificaciones',
+    'turn on notifications' => 'activar la notific.',
+    'turn off notifications' => 'desactivar las notific.',
 
     'Adding User'  => 'Añadiendo Usuario',
     'Editing User'  => 'Editando Usuario',

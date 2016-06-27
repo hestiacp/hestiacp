@@ -1,7 +1,8 @@
 <?php
 /**
  * Vesta turkish language file
- * info@ozgurbozkurt.com (ozgur@forum.vestacp.com) 
+ * 2014.11.01 Özgür Bozkurt (info@ozgurbozkurt.com/ozgur@forum.vestacp.com)
+ * 2016.06.27 Selim Can CABA (info@selimcancaba.com)
  */
 
 $LANG['tr'] = array(

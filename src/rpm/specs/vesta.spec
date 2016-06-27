@@ -53,7 +53,7 @@ fi
 %config(noreplace) %{_vestadir}/web/css/uploadify.css
 
 %changelog
-* Mon June 27 2016 Serghey Rodin <builder@vestacp.com> - 0.9.8-16
+* Mon Jun 27 2016 Serghey Rodin <builder@vestacp.com> - 0.9.8-16
 - Full keyboard control
 - Cron Helper
 - LetsEncrypt Support cli-only

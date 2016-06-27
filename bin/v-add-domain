@@ -53,7 +53,7 @@ fi
 
 # Working on DNS domain
 if [ ! -z "$DNS_SYSTEM" ]; then
-    $BIN/v-add-dns-domain $user $domain $ip "" "" "" "" "" 'no'
+    $BIN/v-add-dns-domain $user $domain $ip "" "" "" "" "" '' '' '' 'no'
     check_result $? "can't add dns domain" >/dev/null
 fi
 

@@ -1073,7 +1073,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   overflow: hidden;
   top: 42px;
   width: 201px;
-  background-color: #959593;
+  background-color: #5c5c5c;
   list-style-type: none;
   padding-left: 0;
   box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.3);
@@ -1082,7 +1082,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding: 0;
 }
 .context-menu li {
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid #777;
   color: #fff;
   cursor: pointer;
   font-size: 12px;
@@ -1651,6 +1651,10 @@ body.mobile .l-unit-toolbar__col--right {
   border-right: 1px solid #d8d7d7;
   position: relative;
 }
+.selected .actions-panel__col {
+  -webkit-filter: contrast(80%);
+  filter: contrast(80%);
+}
 .actions-panel__col i {
   background-image: url("/images/sprite.png?1446554103");
   background-repeat: no-repeat;
@@ -2105,6 +2109,10 @@ body.mobile .l-unit-toolbar__col--right {
 .l-unit--starred .l-icon-star {
   background-position: -174px 560px;
   visibility: visible;
+}
+.selected .l-icon-star {
+  filter: contrast(70%);
+  -webkit-filter:  contrast(70%);
 }
 
 .units.compact .l-icon-star {

@@ -365,6 +365,13 @@ if [ -z "$servername" ]; then
     servername=$(hostname -f)
 fi
 
+# Set FQND if it wasn't set
+mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
+mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
+if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
+    servername="$servername.example.com"
+fi
+
 # Set email if it wasn't set
 if [ -z "$email" ]; then
     email="admin@$servername"
@@ -1170,6 +1177,9 @@ check_result $? "vesta start failed"
 
 # Adding notifications
 $VESTA/upd/add_notifications.sh
+
+# Adding cronjob for autoupdates
+$VESTA/bin/v-add-cron-vesta-autoupdate
 
 
 #----------------------------------------------------------#

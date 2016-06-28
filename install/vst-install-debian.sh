@@ -1132,7 +1132,7 @@ $VESTA/bin/v-update-sys-ip
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 
 # Get public ip
-pub_ip=$(wget vestacp.com/what-is-my-ip/ -O - 2>/dev/null)
+pub_ip=$(curl vestacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
 fi

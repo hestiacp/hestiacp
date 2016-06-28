@@ -314,7 +314,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
 
     # Creating dns domain restore list
     backup_domains=$(tar -tf $BACKUP/$backup |grep "^./dns")
-    backup_domains=$(echo "$backup_domains" |grep domain_data.tar.gz)
+    backup_domains=$(echo "$backup_domains" |grep "dns.conf$")
     backup_domains=$(echo "$backup_domains" |cut -f 3 -d /)
     if [ -z "$dns" ] || [ "$dns" = '*' ]; then
         domains="$backup_domains"
@@ -394,7 +394,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
     # Creating mail domain restore list
     backup_domains=$(tar -tf $BACKUP/$backup |grep "^./mail")
-    backup_domains=$(echo "$backup_domains" |grep domain_data.tar.gz)
+    backup_domains=$(echo "$backup_domains" |grep "mail.conf$")
     backup_domains=$(echo "$backup_domains" |cut -f 3 -d /)
     if [ -z "$mail" ] || [ "$mail" = '*' ]; then
         domains="$backup_domains"

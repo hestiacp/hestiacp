@@ -380,11 +380,16 @@ if [ -z "$servername" ]; then
     servername=$(hostname -f)
 fi
 
-# Set FQND if it wasn't set
+# Set FQDN if it wasn't set
 mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
 mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
 if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
-    servername="$servername.example.com"
+    if [ ! -z "$servername" ]; then
+        servername="$servername.example.com"
+    else
+        servername="example.com"
+    fi
+    echo "127.0.0.1 $servername" >> /etc/hosts
 fi
 
 # Set email if it wasn't set

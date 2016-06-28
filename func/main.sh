@@ -502,8 +502,17 @@ is_alias_format_valid() {
 is_ip_format_valid() {
     object_name=${2-ip}
     ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-    if ! [[ $1 =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
+    ip_clean=$(echo "${1%/[0-9][0-9]}")
+    ip_clean=$(echo "${1%/[0-9]}")
+    if ! [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
         check_result $E_INVALID "invalid $object_name format :: $1"
+    fi
+    if [ $1 != "$ip_clean" ]; then
+        ip_cidr="$ip_clean/"
+        ip_cidr=$(echo "${1#$ip_cidr}")
+        if [[ "$ip_cidr" -gt 32 ]]; then
+            check_result $E_INVALID "invalid $object_name format :: $1"
+        fi
     fi
 }
 

@@ -1185,6 +1185,7 @@ fi
 update-rc.d vesta defaults
 service vesta start
 check_result $? "vesta start failed"
+chown admin:admin $VESTA/data/sessions
 
 # Adding notifications
 $VESTA/upd/add_notifications.sh

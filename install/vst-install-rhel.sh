@@ -1255,6 +1255,7 @@ fi
 chkconfig vesta on
 service vesta start
 check_result $? "vesta start failed"
+chown admin:admin $VESTA/data/sessions
 
 # Adding notifications
 $VESTA/upd/add_notifications.sh

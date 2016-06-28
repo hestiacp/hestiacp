@@ -273,9 +273,8 @@ del_web_config() {
 
     web_domains=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
     if [ "$web_domains" -eq '0' ]; then
-        sed -i "/.*\/$user\/.*$WEB_SYSTEM.conf/d" /etc/$1/conf.d/vesta.conf
-        rm -f $HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf
-        rm -f $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf
+        sed -i "/.*\/$user\/.*$1.conf/d" /etc/$1/conf.d/vesta.conf
+        rm -f $conf
     fi
 }
 

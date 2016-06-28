@@ -25,7 +25,7 @@ json_list() {
         eval $str
         echo -n '    "'$IP'": {
         "IP": "'$IP'",
-        "CHAIN": "'$COMMENT'",
+        "CHAIN": "'$CHAIN'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'

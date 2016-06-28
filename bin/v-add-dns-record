@@ -26,6 +26,11 @@ if [ -z "$priority" ]; then
     priority=10
 fi
 
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
+
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh

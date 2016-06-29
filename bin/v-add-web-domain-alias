@@ -51,6 +51,7 @@ is_package_full 'WEB_ALIASES'
 get_domain_values 'web'
 
 # Preparing domain values for the template substitution
+local_ip=$(get_real_ip $IP)
 if [ -z "$ALIAS" ]; then
     ALIAS="$dom_alias"
 else

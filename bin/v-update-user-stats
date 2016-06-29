@@ -75,8 +75,8 @@ for user in $user_list; do
     # Compiling report string
     s="DATE='$DATE' TIME='$TIME' PACKAGE='$PACKAGE' IP_OWNED='$IP_OWNED'"
     s="$s DISK_QUOTA='$DISK_QUOTA' U_DISK='$U_DISK'"
-    s="$s U_DISK_DIRS='$U_DISK_DIRS' U_DISK_WEB='$U_DISK_WEB''"
-    s="$s U_DISK_MAIL='$U_DISK_MAIL U_DISK_DB='$U_DISK_DB'"
+    s="$s U_DISK_DIRS='$U_DISK_DIRS' U_DISK_WEB='$U_DISK_WEB'"
+    s="$s U_DISK_MAIL='$U_DISK_MAIL' U_DISK_DB='$U_DISK_DB'"
     s="$s BANDWIDTH='$BANDWIDTH' U_BANDWIDTH='$U_BANDWIDTH'"
     s="$s U_WEB_DOMAINS='$U_WEB_DOMAINS' U_WEB_SSL='$U_WEB_SSL'"
     s="$s U_WEB_ALIASES='$U_WEB_ALIASES' U_DNS_DOMAINS='$U_DNS_DOMAINS'"
@@ -130,7 +130,7 @@ done
 # Updating overall stats
 stats="$VESTA/data/users/admin/overall_stats.log"
 
-s="DATE='$DATE' TIME='$TIME' PACKAGE='default' IP_OWNED='$TOTAL_IP_OWNED'" 
+s="DATE='$DATE' TIME='$TIME' PACKAGE='default' IP_OWNED='$TOTAL_IP_OWNED'"
 s="$s DISK_QUOTA='0' U_DISK='$TOTAL_U_DISK' U_DISK_DIRS='$TOTAL_U_DISK_DIRS'"
 s="$s U_DISK_WEB='$TOTAL_U_DISK_WEB' U_DISK_MAIL='$TOTAL_U_DISK_MAIL'"
 s="$s U_DISK_DB='$TOTAL_U_DISK_DB' BANDWIDTH='0'"

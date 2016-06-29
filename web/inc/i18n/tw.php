@@ -2,10 +2,10 @@
 /**
  * Vesta language file
  * This language file is translate by
- * Clark’s Computer Knowledge Journal (http://www.clark-chen.com)
+ * Clark's Computer Knowledge Journal (https://www.clark-chen.com)
+ * Clark's Hosting Service (https://host.clark-chen.com)
  * Clark Chen (clark@clark-chen.com)
  * Github - https://github.com/ttcttctw/Vesta-Control-Panel-Traditional-Chinese-Translation/blob/master/tw.php
- * VestaCP Forum - https://forum.vestacp.com/viewtopic.php?f=16&t=8480
  */
 $LANG['tw'] = array(
     'Packages'  => '方案設定',
@@ -346,7 +346,9 @@ $LANG['tw'] = array(
     'stats password'  => '統計密碼',
     'ftp user password'  => 'FTP使用者帳號密碼',
     'ftp user'  => 'FTP使用者',
-    'Last 70 lines of %s.%s.log' => '最後70行的 %s.%s.記錄',
+    'Last 70 lines of %s.%s.log' => '%s.%s.log 的最後70行',
+    'AccessLog' => '存取記錄',
+    'ErrorLog' => '錯誤紀錄',
     'Download AccessLog' => '下載存取記錄',
     'Download ErrorLog' => '下載錯誤記錄',
     'Country' => '國家',
@@ -556,6 +558,7 @@ $LANG['tw'] = array(
     'name' => '名稱',
     'Initializing' => '正在初始化',
     'UPLOAD' => '上傳',
+    'RIGHTS' => '權限',
     'NEW FILE' => '新增檔案',
     'NEW DIR' => '新增資料夾',
     'DELETE' => '刪除',
@@ -595,6 +598,16 @@ $LANG['tw'] = array(
     'Add New object' => '新增',
     'Save Form' => '儲存設定',
     'Cancel saving form' => '不要儲存設定',
+    'Change Rights' => '修改權限',
+    'read by owner' => '擁有者可讀',
+    'write by owner' => '擁有者可寫',
+    'execute/search by owner' => '擁有者可執行',
+    'read by group' => '群組可讀',
+    'write by group' => '群組可寫',
+    'execute/search by group' => '群組可執行',
+    'read by others' => '所有人可讀',
+    'write by others' => '所有人可寫',
+    'execute/search by others' => '所有人可執行',
     'Go to USER list' => '回到使用者列表',
     'Go to WEB list' => '回到網站列表',
     'Go to DNS list' => '回到DNS列表',
@@ -606,7 +619,9 @@ $LANG['tw'] = array(
     'Display/Close shortcuts' => '顯示/關閉 快捷鍵列表',
     'Move backward through top menu' => '在頂置選單中向左移動',
     'Move forward through top menu' => '在頂置選單中向右移動',
-    'Enter focused element' => '進去選擇的選項',
+    'Enter focused element' => '進入選擇的選項',
+    'Move up through elements list' => '往上查看列表',
+    'Move down through elements list' => '往下查看列表',
     'Upload' => '上傳',
     'New File' => '新增檔案',
     'New Folder' => '新增資料夾',

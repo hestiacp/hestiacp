@@ -21,7 +21,7 @@ json_list() {
     i=1
     echo '['
     for interface in $interfaces; do
-        echo -n '    "'$interfaces'"'
+        echo -n '    "'$interface'"'
         if [ "$i" -lt "$objects" ]; then
             echo ','
         else

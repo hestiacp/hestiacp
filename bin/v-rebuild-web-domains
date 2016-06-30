@@ -50,7 +50,7 @@ if [ ! -z "$WEB_BACKEND" ]; then
         prepare_web_backend
         rm -f $pool/$backend_type.conf
     else
-        for domain in $(v-list-web-domains $user plain |cut -f 1); do
+        for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
             prepare_web_backend
             rm -f $pool/$backend_type.conf
         done
@@ -58,7 +58,7 @@ if [ ! -z "$WEB_BACKEND" ]; then
 fi
 
 # Starting rebuild loop for each web domain
-for domain in $(v-list-web-domains $user plain |cut -f 1); do
+for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
     if [ ! -z "$WEB_BACKEND" ]; then
         template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
         $BIN/v-add-web-domain-backend $user $domain $template

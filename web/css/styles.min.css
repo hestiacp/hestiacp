@@ -1175,6 +1175,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-sort-toolbar td:nth-of-type(2) {
 /* ///  padding-right: 60px;*/
+  padding-right: 20px; 
 }
 .l-sort-toolbar td:last-of-type {
 /* ///  padding-left: 40px; */
@@ -3246,6 +3247,7 @@ form#vstobjects.suspended {
   width: auto;
   background-color: #55C9C0;
   border: 1px solid #55C9C0;
+  text-transform: capitalize;
 }
 .cron-helper-tabs .button:hover {
   background-color: #5BD8CF;

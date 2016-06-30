@@ -30,7 +30,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [ALIASES] [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'

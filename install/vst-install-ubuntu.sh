@@ -1121,12 +1121,10 @@ $VESTA/bin/v-update-sys-ip
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 
 # Get public ip
-pub_ip=$(curl vestacp.com/what-is-my-ip/)
+pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
-fi
-if [ -z "$pub_ip" ]; then
-    ip=$main_ip
+    ip=$pub_ip
 fi
 
 # Firewall configuration

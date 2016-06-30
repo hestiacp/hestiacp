@@ -1338,7 +1338,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit--suspended .l-unit__name,
 .l-unit--suspended b,
-.l-unit--outdated .l-unit__name, 
+.l-unit--outdated .l-unit__name,
 .l-unit--outdated b {
   color: #c0c0c0;
 }
@@ -2878,12 +2878,10 @@ div.l-content.collapsed .l-sort {
   margin-top: 94px;
 }
 
-.l-content > .l-center .l-unit:nth-of-type(1) {
-  padding-top: 260px;
-}
-
-.l-content > .l-center .l-unit-ft:nth-of-type(1) {
-  padding-top: 260px;
+.l-content > .units.l-center::before {
+  content: '';
+  display: block;
+  height: 260px;
 }
 
 form#vstobjects {

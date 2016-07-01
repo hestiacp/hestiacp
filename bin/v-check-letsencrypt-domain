@@ -36,8 +36,8 @@ is_object_unsuspended 'user' 'USER' "$user"
 if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
     check_result $E_NOTEXIST "LetsEncrypt key doesn't exist"
 fi
-check_domain=$(grep -w "$domain" $USER_DATA/web.conf)
-if [ -z "$check_domain" ]; then
+rdomain=$(egrep "'$domain'|'$domain,|,$domain,|,$domain'" $USER_DATA/web.conf)
+if [ -z "$rdomain" ]; then
     check_result $E_NOTEXIST "domain $domain doesn't exist"
 fi
 
@@ -48,7 +48,7 @@ fi
 
 source $USER_DATA/ssl/le.conf
 api='https://acme-v01.api.letsencrypt.org'
-r_domain=$(echo "$check_domain" |cut -f 2 -d \')
+r_domain=$(echo "$rdomain" |cut -f 2 -d \')
 key="$USER_DATA/ssl/user.key"
 exponent="$EXPONENT"
 modulus="$MODULUS"

@@ -17,13 +17,12 @@
 ?>
 
 <?php
-if (!empty($_SESSION['error_msg'])):
+// todo: display all the dialogs?
+
+if (!empty($_SESSION['look_alert'])):
 ?>
-  <div>
-    <div id="dialog-message" title="">
-      <p><?=htmlentities($_SESSION['error_msg'])?></p>
-    </div>
-    <script>
+  <script>
+    $(function() {
       $('#dialog:ui-dialog').dialog('destroy');
       $('#dialog-message').dialog({
         modal: true,
@@ -31,15 +30,40 @@ if (!empty($_SESSION['error_msg'])):
           Ok: function() {
             $(this).dialog('close');
           }
-        },
-        create: function() {
-          $(this)
-          .closest('.ui-dialog')
-          .find('.ui-button:first')
-          .addClass('submit');
         }
       });
+    });
+  </script>
+  <div id="dialog-message" title="<?=__('Welcome')?>">
+    <p class="confirmation"><?=__('LOGGED_IN_AS', $_SESSION['look'])?></p>
+  </div>
+<?php
+  unset($_SESSION['look_alert']);
+elseif (!empty($_SESSION['error_msg'])):
+?>
+  <div>
+    <script>
+      $(function() {
+        $('#dialog:ui-dialog').dialog('destroy');
+        $('#dialog-message').dialog({
+          modal: true,
+          buttons: {
+            Ok: function() {
+              $(this).dialog('close');
+            }
+          },
+          create: function() {
+            $(this)
+            .closest('.ui-dialog')
+            .find('.ui-button:first')
+            .addClass('submit');
+          }
+        });
+      });
     </script>
+    <div id="dialog-message" title="">
+      <p><?=htmlentities($_SESSION['error_msg'])?></p>
+    </div>
   </div>
 <?php
   unset($_SESSION['error_msg']);

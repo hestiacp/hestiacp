@@ -1,24 +1,24 @@
-    <script>
-        function elementHideShow(elementToHideOrShow){
-            var el = document.getElementById(elementToHideOrShow);
-            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  <script>
+    function elementHideShow(elementToHideOrShow){
+      var el = document.getElementById(elementToHideOrShow);
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    $(document).ready(function(){
+      $('select[name=v_filemanager]').change(function(){
+        if($(this).val() == 'yes'){
+          $('.filemanager.description').show();
+        } else {
+          $('.filemanager.description').hide();
         }
+      });
 
-        $(document).ready(function(){
-            $('select[name=v_filemanager]').change(function(){
-                if($(this).val() == 'yes'){
-                    $('.filemanager.description').show();
-                } else {
-                    $('.filemanager.description').hide();
-                }
-            });
-
-            $('select[name=v_sftp]').change(function(){
-                if($(this).val() == 'yes'){
-                    $('.sftp.description').show();
-                } else {
-                    $('.sftp.description').hide();
-                }
-            });
-         });
-    </script>
+      $('select[name=v_sftp]').change(function(){
+        if($(this).val() == 'yes'){
+          $('.sftp.description').show();
+        } else {
+          $('.sftp.description').hide();
+        }
+      });
+     });
+  </script>

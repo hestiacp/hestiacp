@@ -1,42 +1,42 @@
-    <script>
-        function WEBrandom() {
-            var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-            var string_length = 10;
-            var webrandom = '';
-            for (var i = 0; i < string_length; i++) {
-                var rnum = Math.floor(Math.random() * chars.length);
-                webrandom += chars.substr(rnum, 1);
-            }
-            document.v_edit_web.v_stats_password.value = webrandom;
-        }
+  <script>
+    function WEBrandom() {
+      var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+      var string_length = 10;
+      var webrandom = '';
+      for (var i = 0; i < string_length; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        webrandom += chars.substr(rnum, 1);
+      }
+      document.v_edit_web.v_stats_password.value = webrandom;
+    }
 
-        function FTPrandom(elm) {
-            var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-            var string_length = 10;
-            var ftprandomstring = '';
-            for (var i = 0; i < string_length; i++) {
-                var rnum = Math.floor(Math.random() * chars.length);
-                ftprandomstring += chars.substr(rnum, 1);
-            }
+    function FTPrandom(elm) {
+      var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+      var string_length = 10;
+      var ftprandomstring = '';
+      for (var i = 0; i < string_length; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        ftprandomstring += chars.substr(rnum, 1);
+      }
 
-            $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
-            App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
-        }
+      $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
+      App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
+    }
 
-        function elementHideShow(elementToHideOrShow){
-            var el = document.getElementById(elementToHideOrShow);
-            el.style.display = el.style.display === 'none' ? 'block' : 'none';
-        }
+    function elementHideShow(elementToHideOrShow){
+      var el = document.getElementById(elementToHideOrShow);
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
 
-        $('#vstobjects').bind('submit', function(evt) {
-            $('input[disabled]').each(function(i, elm) {
-                var copy_elm = $(elm).clone(true);
-                $(copy_elm).attr('type', 'hidden');
-                $(copy_elm).removeAttr('disabled');
-                $(elm).after(copy_elm);
-            });
-        });
+    $('#vstobjects').bind('submit', function(evt) {
+      $('input[disabled]').each(function(i, elm) {
+        var copy_elm = $(elm).clone(true);
+        $(copy_elm).attr('type', 'hidden');
+        $(copy_elm).removeAttr('disabled');
+        $(elm).after(copy_elm);
+      });
+    });
 
-        GLOBAL.FTP_USER_PREFIX = <?=json_encode($user.'_')?>;
-    </script>
-    <script src="/js/pages/edit.web.js"></script>
+    GLOBAL.FTP_USER_PREFIX = <?=json_encode($user.'_')?>;
+  </script>
+  <script src="/js/pages/edit.web.js"></script>

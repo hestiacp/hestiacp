@@ -268,36 +268,6 @@ function send_email($to,$subject,$mailtext,$from) {
     mail($to, $subject, $message, $header);
 }
 
-function display_error_block() {
-    if (!empty($_SESSION['error_msg'])) {
-        echo '
-            <div>
-                <script type="text/javascript">
-                    $(function() {
-                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                        $( "#dialog-message" ).dialog({
-                            modal: true,
-                            buttons: {
-                                Ok: function() {
-                                    $( this ).dialog( "close" );
-                                }
-                            },
-                            create:function () {
-                                $(this).closest(".ui-dialog")
-                                .find(".ui-button:first")
-                                .addClass("submit");
-                            }
-                        });
-                    });
-                </script>
-                <div id="dialog-message" title="">
-                    <p>'. htmlentities($_SESSION['error_msg']) .'</p>
-                </div>
-            </div>'."\n";
-        unset($_SESSION['error_msg']);
-    }
-}
-
 function list_timezones() {
     $tz = new DateTimeZone('HAST');
     $timezone_offsets['HAST'] = $tz->getOffset(new DateTime);

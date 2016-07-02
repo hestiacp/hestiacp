@@ -45,11 +45,7 @@
             </tr>
           </table>
         </div>
-
       </div>
-
-      <? display_error_block(); ?>
-
       <!-- /.l-sort -->
     </div>
 
@@ -72,8 +68,8 @@
           }
       ?>
 
-      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['FIREWALL'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="firewall" 
-sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>" 
+      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['FIREWALL'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="firewall"
+sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>"
 sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>" sort-star="<? if($_SESSION['favourites']['FIREWALL'][$key] == 1) echo '1'; else echo '2'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">

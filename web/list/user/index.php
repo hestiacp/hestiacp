@@ -13,7 +13,6 @@ if ($user == 'admin') {
 }
 $data = json_decode(implode('', $output), true);
 $data = array_reverse($data,true);
-display_error_block();
 
 // Render page
 render_page($user, $TAB, '*/list_user');

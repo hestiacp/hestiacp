@@ -32,26 +32,7 @@
         <form id="vstobjects" name="v_add_db" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="ok" value="Add" />
-            <script type="text/javascript">
-                function elementHideShow(elementToHideOrShow) {
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-                function randomString() {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var randomstring = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        randomstring += chars.substring(rnum,rnum+1);
-                    }
-                    document.v_add_db.v_password.value = randomstring;
-                }
-            </script>
+
             <table class="data mode-add">
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -68,7 +49,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Database');?> 
+                                    <?php print __('Database');?>
                                 </td>
                             </tr>
                             <tr>
@@ -79,7 +60,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('User');?> 
+                                    <?php print __('User');?>
                                 </td>
                             </tr>
                             <tr>
@@ -100,7 +81,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Type');?> 
+                                    <?php print __('Type');?>
                                 </td>
                             </tr>
                             <tr>
@@ -112,13 +93,13 @@
                                                 if ((!empty($v_type)) && ( $value == $v_type )) echo ' selected';
                                                 echo ">".htmlentities($value)."</option>";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Host');?> 
+                                    <?php print __('Host');?>
                                 </td>
                             </tr>
                             <tr>
@@ -130,14 +111,14 @@
                                                 if ((!empty($v_host)) && ( $key == $v_host )) echo ' selected';
                                                 echo ">".htmlentities($key)."</option>";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Charset');?> 
+                                    <?php print __('Charset');?>
                                 </td>
                             </tr>
                             <tr>
@@ -183,7 +164,7 @@
                                 </td>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Send login credentials to email address') ?> 
+                                    <?php print __('Send login credentials to email address') ?>
                                 </td>
                             </tr>
                             <tr>
@@ -207,9 +188,3 @@
             </table>
         </form>
     </div>
-
-    <script type="text/javascript">
-        GLOBAL.DB_USER_PREFIX = '<?php echo $user; ?>_';
-        GLOBAL.DB_DBNAME_PREFIX = '<?php echo $user; ?>_';
-    </script>
-    <script type="text/javascript" src="/js/pages/add.db.js"></script>

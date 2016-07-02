@@ -33,16 +33,7 @@
         <form id="vstobjects" name="v_configure_server" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
-            <script type="text/javascript">
-                function elementHideShow(elementToHideOrShow) {
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-            </script>
+
             <table class="data mode-add">
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -54,7 +45,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Hostname') ?> 
+                                    <?php print __('Hostname') ?>
                                 </td>
                             </tr>
                             <tr>
@@ -82,7 +73,7 @@
                                                 }
                                                 echo ">".$value."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                     <br><br>
                                 </td>
@@ -106,7 +97,7 @@
                                                 }
                                                 echo ">".$value."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                     <br><br>
                                 </td>
@@ -121,10 +112,10 @@
                             <tr>
                                 <td class="vst-text input-label step-left">
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="web">
-                                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?> 
+                                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Proxy Server') ?> 
+                                                <?php print __('Proxy Server') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -133,10 +124,10 @@
                                                 <br><br>
                                             </td>
                                         </tr>
-                                        <?php } ?> 
+                                        <?php } ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Web Server') ?> 
+                                                <?php print __('Web Server') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -145,10 +136,10 @@
                                                 <br><br>
                                             </td>
                                         </tr>
-                                        <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?> 
+                                        <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Backend Server') ?> 
+                                                <?php print __('Backend Server') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -159,7 +150,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Backend Pool Mode') ?> 
+                                                <?php print __('Backend Pool Mode') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -169,7 +160,7 @@
                                             </td>
                                         </tr>
 
-                                        <?php } ?> 
+                                        <?php } ?>
                                     </table>
                                 </td>
                             </tr>
@@ -187,7 +178,7 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('DNS Server') ?> 
+                                                <?php print __('DNS Server') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -215,10 +206,10 @@
                                                   $i = 0;
                                                   foreach ($dns_cluster as $key => $value) {
                                                       $i++;
-                                         ?> 
+                                         ?>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Host'). ' #'.$i  ?> 
+                                                <?php print __('Host'). ' #'.$i  ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -227,7 +218,7 @@
                                                 <br><br>
                                             </td>
                                         </tr>
-                                        <?php }} ?> 
+                                        <?php }} ?>
                                     </table>
                                 </td>
                             </tr>
@@ -245,7 +236,7 @@
                                     <table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('MAIL Server') ?> 
+                                                <?php print __('MAIL Server') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -254,10 +245,10 @@
                                                 <br><br>
                                             </td>
                                         </tr>
-                                        <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?> 
+                                        <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Antivirus') ?> 
+                                                <?php print __('Antivirus') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -266,11 +257,11 @@
                                                 <br><br>
                                             </td>
                                         </tr>
-                                        <?php } ?> 
-                                        <?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?> 
+                                        <?php } ?>
+                                        <?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('AntiSpam') ?> 
+                                                <?php print __('AntiSpam') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -279,10 +270,10 @@
                                                 <br><br>
                                             </td>
                                         </tr>
-                                        <?php } ?> 
+                                        <?php } ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Webmail URL') ?> 
+                                                <?php print __('Webmail URL') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -324,7 +315,7 @@
                                         <?php if ($v_mysql == 'yes') { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('phpMyAdmin URL') ?> 
+                                                <?php print __('phpMyAdmin URL') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -338,10 +329,10 @@
                                                   $i = 0;
                                                   foreach ($v_mysql_hosts as $key => $value) {
                                                       $i++;
-                                         ?> 
+                                         ?>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Host'). ' #'.$i  ?> 
+                                                <?php print __('Host'). ' #'.$i  ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -352,7 +343,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Password') ?> 
+                                                <?php print __('Password') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -364,7 +355,7 @@
 
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Maximum Number Of Databases') ?> 
+                                                <?php print __('Maximum Number Of Databases') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -375,7 +366,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Current Number Of Databases') ?> 
+                                                <?php print __('Current Number Of Databases') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -384,7 +375,7 @@
                                                 <br><br><br><br>
                                             </td>
                                         </tr>
-                                        <?php }} ?> 
+                                        <?php }} ?>
 
 
                                         <tr>
@@ -404,7 +395,7 @@
                                         <?php if ($v_pgsql == 'yes') { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('phpPgAdmin URL') ?> 
+                                                <?php print __('phpPgAdmin URL') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -418,10 +409,10 @@
                                                   $i = 0;
                                                   foreach ($v_pgsql_hosts as $key => $value) {
                                                       $i++;
-                                         ?> 
+                                         ?>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Host'). ' #'.$i  ?> 
+                                                <?php print __('Host'). ' #'.$i  ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -432,7 +423,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Maximum Number Of Databases') ?> 
+                                                <?php print __('Maximum Number Of Databases') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -443,7 +434,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Current Number Of Databases') ?> 
+                                                <?php print __('Current Number Of Databases') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -452,7 +443,7 @@
                                                 <br><br><br><br>
                                             </td>
                                         </tr>
-                                        <?php }} ?> 
+                                        <?php }} ?>
                                     </table>
                                 </td>
                             </tr>
@@ -470,7 +461,7 @@
                                     <table style="display:<?php if (empty($v_backup_adv)) echo 'none';?> ;" id="backup">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Local backup') ?> 
+                                                <?php print __('Local backup') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -484,7 +475,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Compression level') ?> 
+                                                <?php print __('Compression level') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -505,7 +496,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Directory') ?> 
+                                                <?php print __('Directory') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -524,7 +515,7 @@
                                             <td class="vst-text input-label step-left">
                                                 <table style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;" id="remote_backup">
                                                     <td class="vst-text">
-                                                        <?php print __('Protocol') ?> 
+                                                        <?php print __('Protocol') ?>
                                                     </td>
                                                     </tr>
                                                     <tr>
@@ -538,7 +529,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Host') ?> 
+                                                            <?php print __('Host') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -549,7 +540,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Username') ?> 
+                                                            <?php print __('Username') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -560,7 +551,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Password') ?> 
+                                                            <?php print __('Password') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -571,7 +562,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Directory') ?> 
+                                                            <?php print __('Directory') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -599,7 +590,7 @@
                                     <table style="display:<?php if (empty($v_adv) && $_GET['lead'] != 'filemanager' && $_GET['lead'] != 'sftp') echo 'none';?> ;" id="vesta">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Version') ?> 
+                                                <?php print __('Version') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -638,7 +629,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Reseller Role') ?> 
+                                                <?php print __('Reseller Role') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -651,7 +642,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Backup Migration Manager') ?> 
+                                                <?php print __('Backup Migration Manager') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -690,7 +681,7 @@
                                                                 '.__('Licence Key').': <input type="text" class="vst-input" name="v_sftp_licence" value="'.$licence_key.'" /><br>
                                                             </div>';
                                                     } else {
-                                                        echo 
+                                                        echo
                                                             __('Restrict users so that they cannot use SSH and access only their home directory.').' '.__('This is a commercial module, you would need to purchace license key to enable it.').
                                                             '<div class="licence">
                                                                 '.__('Enter License Key').': <input type="text" class="vst-input" name="v_sftp_licence" /><br>
@@ -712,7 +703,7 @@
 
                                         <tr>
                                             <td class="vst-text" id="module-filemanager">
-                                                <?php print __('File Manager') ?> 
+                                                <?php print __('File Manager') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -778,23 +769,3 @@
             </table>
         </form>
     </div>
-
-<script>
-    $(document).ready(function(){
-        $('select[name=v_filemanager]').change(function(){
-            if($(this).val() == 'yes'){
-                $('.filemanager.description').show();
-            } else {
-                $('.filemanager.description').hide();
-            }
-        });
-
-        $('select[name=v_sftp]').change(function(){
-            if($(this).val() == 'yes'){
-                $('.sftp.description').show();
-            } else {
-                $('.sftp.description').hide();
-            }
-        });
-     });
-</script>

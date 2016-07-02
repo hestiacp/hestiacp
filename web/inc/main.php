@@ -95,6 +95,33 @@ function check_return_code($return_var,$output) {
     }
 }
 
+function render_page($user, $TAB, $page) {
+    $__template_dir = dirname(__DIR__) . '/templates/';
+    $__template_base = $__template_dir . str_replace('*', $_SESSION['user'] === 'admin' ? 'admin' : 'user', $page);
+
+    // Header
+    include($__template_dir . 'header.html');
+
+    // Panel
+    top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
+
+    // Extarct global variables
+    // I think those variables should be passed via arguments
+    //*
+    extract($GLOBALS, EXTR_SKIP);
+    /*/
+    $variables = array_filter($GLOBALS, function($key){return preg_match('/^(v_|[a-z])[a-z\d]+$/', $key);}, ARRAY_FILTER_USE_KEY);
+    extract($variables, EXTR_OVERWRITE);
+    //*/
+
+    // Body
+    @include($__template_base . '.html');
+
+    // Footer
+    $JS_FILE = $__template_base . '.js.html';
+    include($__template_dir . 'footer.html');
+}
+
 function top_panel($user, $TAB) {
     global $panel;
     $command = VESTA_CMD."v-list-user '".$user."' 'json'";
@@ -107,7 +134,7 @@ function top_panel($user, $TAB) {
     unset($output);
 
 
-    // getting notifications 
+    // getting notifications
     $command = VESTA_CMD."v-list-user-notifications '".$user."' 'json'";
     exec ($command, $output, $return_var);
     $notifications = json_decode(implode('', $output), true);
@@ -118,7 +145,7 @@ function top_panel($user, $TAB) {
         }
     }
     unset($output);
-    
+
 
     if ( $user == 'admin' ) {
         include(dirname(__FILE__).'/../templates/admin/panel.html');

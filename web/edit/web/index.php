@@ -694,7 +694,7 @@ if (isset($v_ftp_users_updated)) {
 }
 
 // Render page
-render_page($user, $TAB, '*/edit_web');
+render_page($user, $TAB, 'edit_web');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

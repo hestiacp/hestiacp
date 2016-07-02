@@ -28,7 +28,7 @@ $data = json_decode(implode('', $output), true);
 $data = array_reverse($data,true);
 
 // Render page
-render_page($user, $TAB, '*/list_notifications');
+render_page($user, $TAB, 'list_notifications');
 
 // Back uri
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];

@@ -48,7 +48,7 @@ if (!empty($_POST['ok'])) {
 }
 
 // Render
-render_page($user, $TAB, 'admin/add_firewall_banlist');
+render_page($user, $TAB, 'add_firewall_banlist');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

@@ -123,7 +123,7 @@ if (!empty($_POST['save'])) {
 
 
 // Render page
-render_page($user, $TAB, 'admin/edit_backup_exclusions');
+render_page($user, $TAB, 'edit_backup_exclusions');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

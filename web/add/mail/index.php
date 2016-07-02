@@ -182,12 +182,12 @@ if (!empty($_POST['ok_acc'])) {
 if (empty($_GET['domain'])) {
     // Display body for mail domain
 
-    render_page($user, $TAB, 'admin/add_mail');
+    render_page($user, $TAB, 'add_mail');
 } else {
     // Display body for mail account
 
     $v_domain = $_GET['domain'];
-    render_page($user, $TAB, 'admin/add_mail_acc');
+    render_page($user, $TAB, 'add_mail_acc');
 }
 
 // Flush session messages

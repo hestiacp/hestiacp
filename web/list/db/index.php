@@ -12,7 +12,7 @@ $data = array_reverse($data, true);
 unset($output);
 
 // Render page
-render_page($user, $TAB, '*/list_db');
+render_page($user, $TAB, 'list_db');
 
 // Back uri
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];

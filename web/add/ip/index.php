@@ -85,7 +85,7 @@ $users = json_decode(implode('', $output), true);
 unset($output);
 
 // Render
-render_page($user, $TAB, 'admin/add_ip');
+render_page($user, $TAB, 'add_ip');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

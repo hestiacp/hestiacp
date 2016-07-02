@@ -12,14 +12,14 @@ if (empty($_GET['backup'])){
     $data = array_reverse($data,true);
     unset($output);
 
-    render_page($user, $TAB, 'admin/list_backup');
+    render_page($user, $TAB, 'list_backup');
 } else {
     exec (VESTA_CMD."v-list-user-backup $user ".escapeshellarg($_GET['backup'])." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data,true);
     unset($output);
 
-    render_page($user, $TAB, 'admin/list_backup_detail');
+    render_page($user, $TAB, 'list_backup_detail');
 }
 
 // Back uri

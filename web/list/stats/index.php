@@ -5,7 +5,7 @@ $TAB = 'STATS';
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-// Data & Render page
+// Data
 if ($user == 'admin') {
     if (empty($_GET['user'])) {
         exec (VESTA_CMD."v-list-users-stats json", $output, $return_var);
@@ -23,16 +23,15 @@ if ($user == 'admin') {
     exec (VESTA_CMD."v-list-sys-users 'json'", $output, $return_var);
     $users = json_decode(implode('', $output), true);
     unset($output);
-
-    render_page($user, $TAB, 'admin/list_stats');
 } else {
     exec (VESTA_CMD."v-list-user-stats $user json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data, true);
     unset($output);
-
-    render_page($user, $TAB, 'user/list_stats');
 }
+
+// Render page
+render_page($user, $TAB, 'list_stats');
 
 // Back uri
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];

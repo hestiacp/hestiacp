@@ -198,10 +198,10 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
 // Render page
 if (empty($_GET['record_id']))  {
     // Display body for dns domain
-    render_page($user, $TAB, '*/edit_dns');
+    render_page($user, $TAB, 'edit_dns');
 } else {
     // Display body for dns record
-    render_page($user, $TAB, 'admin/edit_dns_rec');
+    render_page($user, $TAB, 'edit_dns_rec');
 }
 
 // Flush session messages

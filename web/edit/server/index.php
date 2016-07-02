@@ -422,7 +422,7 @@ foreach ($sys_arr as $key => $value) {
 }
 
 // Render page
-render_page($user, $TAB, 'admin/edit_server');
+render_page($user, $TAB, 'edit_server');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

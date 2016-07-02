@@ -82,7 +82,7 @@ if (!empty($_POST['save'])) {
 }
 
 // Render page
-render_page($user, $TAB, 'admin/edit_db');
+render_page($user, $TAB, 'edit_db');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

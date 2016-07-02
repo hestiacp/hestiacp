@@ -23,7 +23,7 @@ $_SESSION['back'] = '';
 
 // Check POST
 if (!isset($_POST['generate'])) {
-    render_page($user, $TAB, 'admin/generate_ssl');
+    render_page($user, $TAB, 'generate_ssl');
     exit;
 }
 
@@ -51,7 +51,7 @@ if (!empty($errors[0])) {
         }
     }
     $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
-    render_page($user, $TAB, 'admin/generate_ssl');
+    render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);
     exit;
 }
@@ -79,7 +79,7 @@ if ($return_var != 0) {
     $error = implode('<br>', $output);
     if (empty($error)) $error = __('Error code:',$return_var);
     $_SESSION['error_msg'] = $error;
-    render_page($user, $TAB, 'admin/generate_ssl');
+    render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);
     exit;
 }
@@ -98,6 +98,6 @@ $v_csr = $data[$v_domain]['CSR'];
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];
 
 // Render page
-render_page($user, $TAB, 'admin/list_ssl');
+render_page($user, $TAB, 'list_ssl');
 
 unset($_SESSION['ok_msg']);

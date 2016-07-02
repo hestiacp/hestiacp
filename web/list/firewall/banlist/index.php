@@ -18,7 +18,7 @@ $data = array_reverse($data, true);
 unset($output);
 
 // Render page
-render_page($user, $TAB, 'admin/list_firewall_banlist');
+render_page($user, $TAB, 'list_firewall_banlist');
 
 // Back uri
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];

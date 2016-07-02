@@ -183,13 +183,8 @@ if (!empty($_POST['save'])) {
     }
 }
 
-
 // Render page
-if ($_SESSION['user'] == 'admin') {
-    render_page($user, $TAB, 'admin/edit_user');
-} else {
-    render_page($user, $TAB, 'user/edit_user');
-}
+render_page($user, $TAB, 'edit_user');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

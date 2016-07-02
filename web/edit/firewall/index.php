@@ -81,7 +81,7 @@ if (!empty($_POST['save'])) {
 }
 
 // Render page
-render_page($user, $TAB, 'admin/edit_firewall');
+render_page($user, $TAB, 'edit_firewall');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

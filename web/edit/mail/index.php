@@ -307,10 +307,10 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
 // Render page
 if (empty($_GET['account']))  {
     // Display body for mail domain
-    render_page($user, $TAB, 'admin/edit_mail');
+    render_page($user, $TAB, 'edit_mail');
 } else {
     // Display body for mail account
-    render_page($user, $TAB, 'admin/edit_mail_acc');
+    render_page($user, $TAB, 'edit_mail_acc');
 }
 
 // Flush session messages

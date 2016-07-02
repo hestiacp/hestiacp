@@ -64,7 +64,7 @@ if (!empty($_POST['ok'])) {
 }
 
 // Render
-render_page($user, $TAB, 'admin/add_firewall');
+render_page($user, $TAB, 'add_firewall');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

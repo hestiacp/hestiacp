@@ -11,7 +11,7 @@ $data = json_decode(implode('', $output), true);
 $data = array_reverse($data,true);
 
 // Render page
-render_page($user, $TAB, '*/list_web');
+render_page($user, $TAB, 'list_web');
 
 // Back uri
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];

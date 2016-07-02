@@ -121,7 +121,7 @@ $db_hosts = array_merge($db_hosts, $db_hosts_tmp);
 unset($db_hosts_tmp);
 unset($output);
 
-render_page($user, $TAB, 'admin/add_db');
+render_page($user, $TAB, 'add_db');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

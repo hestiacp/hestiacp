@@ -12,14 +12,14 @@ if (empty($_GET['domain'])){
     $data = array_reverse($data, true);
     unset($output);
 
-    render_page($user, $TAB, '*/list_dns');
+    render_page($user, $TAB, 'list_dns');
 } else {
     exec (VESTA_CMD."v-list-dns-records '".$user."' '".escapeshellarg($_GET['domain'])."' 'json'", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data, true);
     unset($output);
 
-    render_page($user, $TAB, '*/list_dns_rec');
+    render_page($user, $TAB, 'list_dns_rec');
 }
 
 // Back uri

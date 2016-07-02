@@ -166,12 +166,12 @@ if (empty($_GET['domain'])) {
         unset($output);
     }
 
-    render_page($user, $TAB, 'admin/add_dns');
+    render_page($user, $TAB, 'add_dns');
 } else {
     // Display body for dns record
 
     $v_domain = $_GET['domain'];
-    render_page($user, $TAB, 'admin/add_dns_rec');
+    render_page($user, $TAB, 'add_dns_rec');
 }
 
 

@@ -19,7 +19,7 @@ $data = array_reverse($data, true);
 unset($output);
 
 // Render page
-render_page($user, $TAB, 'admin/list_ip');
+render_page($user, $TAB, 'list_ip');
 
 // Back uri
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];

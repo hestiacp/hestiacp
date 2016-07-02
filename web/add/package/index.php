@@ -202,7 +202,7 @@ if (empty($v_ns1)) $v_ns1 = 'ns1.example.ltd';
 if (empty($v_ns2)) $v_ns2 = 'ns2.example.ltd';
 
 // Render page
-render_page($user, $TAB, 'admin/add_package');
+render_page($user, $TAB, 'add_package');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

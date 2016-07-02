@@ -76,7 +76,7 @@ if (!empty($_POST['save'])) {
 }
 
 // Render page
-render_page($user, $TAB, 'admin/edit_cron');
+render_page($user, $TAB, 'edit_cron');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

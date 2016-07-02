@@ -13,4 +13,4 @@ $data = array_reverse($data);
 unset($output);
 
 // Render page
-render_page($user, $TAB, 'admin/list_log');
+render_page($user, $TAB, 'list_log');

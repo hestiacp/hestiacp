@@ -122,7 +122,7 @@ $languages = json_decode(implode('', $output), true);
 unset($output);
 
 // Render page
-render_page($user, $TAB, 'admin/add_user');
+render_page($user, $TAB, 'add_user');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

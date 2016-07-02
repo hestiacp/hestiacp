@@ -97,7 +97,6 @@ function check_return_code($return_var,$output) {
 
 function render_page($user, $TAB, $page) {
     $__template_dir = dirname(__DIR__) . '/templates/';
-    $__template_base = $__template_dir . str_replace('*', $_SESSION['user'] === 'admin' ? 'admin' : 'user', $page);
 
     // Header
     include($__template_dir . 'header.html');
@@ -115,7 +114,16 @@ function render_page($user, $TAB, $page) {
     //*/
 
     // Body
-    @include($__template_base . '.html');
+    if (($_SESSION['user'] !== 'admin') && (@include($__template_dir . "user/$page.html"))) {
+        // User page exists
+        // Use user page
+        $__template_base = $__template_dir . "user/$page";
+    } else {
+        // Not admin or user page doesn't exist
+        // Use admin page
+        $__template_base = $__template_dir . "admin/$page";
+        include($__template_base . '.html');
+    }
 
     // Footer
     $JS_FILE = $__template_base . '.js.html';

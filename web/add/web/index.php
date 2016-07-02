@@ -347,7 +347,7 @@ $stats = json_decode(implode('', $output), true);
 unset($output);
 
 // Render page
-render_page($user, $TAB, 'admin/add_web');
+render_page($user, $TAB, 'add_web');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

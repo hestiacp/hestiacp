@@ -99,7 +99,7 @@ if (!empty($_POST['save'])) {
 }
 
 // Render page
-render_page($user, $TAB, 'admin/edit_ip');
+render_page($user, $TAB, 'edit_ip');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

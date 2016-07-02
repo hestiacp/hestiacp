@@ -12,7 +12,7 @@
 
     $(document).ready(function(){
       $('.add-ns-button').click(function(){
-        var n = $("input[name^=v_ns]").length;
+        var n = $('input[name^=v_ns]').length;
         if(n < 8){
         var t = $($('input[name=v_ns1]').parents('tr')[0]).clone(true, true);
         t.find('input').attr({value:'', name:'v_ns'+(n+1)});

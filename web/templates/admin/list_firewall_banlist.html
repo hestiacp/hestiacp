@@ -47,7 +47,7 @@
         foreach ($data as $key => $value) {
           ++$i;
           list($ip,$chain) = explode(":",$key);
-          
+
       ?>
 
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended';?>">
@@ -83,7 +83,7 @@
           <div class="l-unit__stats">
             <div class="clearfix l-unit__stat-col--left wide"><b><?=$data[$key]['DATE']?></b> &nbsp; <?=$data[$key]['TIME']?> </div>
             <div class="clearfix l-unit__stat-col--left"></div>
-            <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$value['CHAIN']?></b></div>
+            <div class="clearfix l-unit__stat-col--left wide-3"><b><?=__($value['CHAIN'])?></b></div>
             <div class="clearfix l-unit__stat-col--left"><b><?=$ip?></b></div>
           </div>
           <!-- /.l-unit__stats -->

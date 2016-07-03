@@ -10,25 +10,30 @@ function _translate() {
     global $LANG;
 
     $args = func_get_args();
+
     $l = $args[0];
+    if (empty($l)) return 'NO LANGUAGE DEFINED';
 
-    if (!$l) return 'NO LANGUAGE DEFINED';
     $key = $args[1];
+    if (empty($key)) return '';
 
+    // No translation needed
+    if (!preg_match('/[a-z]/i', $key)) {
+        return $key;
+    }
+
+    // Load language file (if not loaded yet)
     if (!isset($LANG[$l])) {
-        require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$l.'.php');
+        require_once($_SERVER['DOCUMENT_ROOT']."/inc/i18n/$l.php");
     }
 
-    if (!isset($LANG[$l][$key])) {
-        $text=$key;
-    } else {
-        $text=$LANG[$l][$key];
-    }
+    //if (!isset($LANG[$l][$key])) file_put_contents('/somewhere/something.log', "$key\n", FILE_APPEND);
+    $text = isset($LANG[$l][$key]) ? $LANG[$l][$key] : $key;
 
     array_shift($args);
-    if (count($args)>1) {
+    if (count($args) > 1) {
         $args[0] = $text;
-        return call_user_func_array("sprintf",$args);
+        return call_user_func_array('sprintf', $args);
     } else {
         return $text;
     }
@@ -42,8 +47,8 @@ function _translate() {
  */
 function __() {
     $args = func_get_args();
-    array_unshift($args,$_SESSION['language']);
-    return call_user_func_array("_translate",$args);
+    array_unshift($args, $_SESSION['language']);
+    return call_user_func_array('_translate', $args);
 }
 
 /**

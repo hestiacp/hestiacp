@@ -72,11 +72,11 @@
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
-                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
+                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Backend Template') . "<span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']). "</span>" ;?>
@@ -94,15 +94,15 @@
                                                 if ((!empty($v_backend_template)) && ( $value == $_POST['v_backend_template'])){
                                                     echo 'selected' ;
                                                 }
-                                                echo ">".$value."</option>\n";
+                                                echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
-                            <?php echo ""; }?> 
+                            <?php echo ""; }?>
 
-                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Proxy Template')  . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>" ;?>
@@ -123,11 +123,11 @@
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
-                            <?php echo ""; }?> 
+                            <?php echo ""; }?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('DNS Template') . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>" ;?>
@@ -147,7 +147,7 @@
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
@@ -170,7 +170,7 @@
                                             }
                                             echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>

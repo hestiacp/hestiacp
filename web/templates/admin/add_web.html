@@ -142,7 +142,7 @@
                                 <textarea size="20" class="vst-textinput" name="v_aliases" id="v_aliases" ><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
                             </td>
                         </tr>
-                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
+                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
                         <tr>
                             <td class="vst-text step-top" >
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if ($v_proxy !== 'off') echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support');?></label>
@@ -153,7 +153,7 @@
                                 <table style="display:<?php if ($v_proxy == 'off') { echo 'none';} else {echo 'block';}?>;" id="proxytable" >
                                     <tr>
                                         <td class="vst-text input-label step-left">
-                                            <?php print __('Proxy Extentions');?>
+                                            <?php print __('Proxy Extensions');?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -164,7 +164,7 @@
                                 </table>
                             </td>
                         </tr>
-                        <?php echo ""; }?> 
+                        <?php echo ""; }?>
                         <tr>
                             <td class="step-top vst-text">
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if($v_ssl == 'yes' || $v_ssl == 'on') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
@@ -242,7 +242,7 @@
                                             }
                                             echo ">" . htmlentities(__($value)) . "</option>\n";
                                         }
-                                    ?> 
+                                    ?>
                                 </select>
                             </td>
                         </tr>

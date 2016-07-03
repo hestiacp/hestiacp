@@ -68,7 +68,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Database');?> 
+                                    <?php print __('Database');?>
                                 </td>
                             </tr>
                             <tr>
@@ -79,7 +79,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('User');?> 
+                                    <?php print __('User');?>
                                 </td>
                             </tr>
                             <tr>
@@ -100,7 +100,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Type');?> 
+                                    <?php print __('Type');?>
                                 </td>
                             </tr>
                             <tr>
@@ -112,32 +112,32 @@
                                                 if ((!empty($v_type)) && ( $value == $v_type )) echo ' selected';
                                                 echo ">".htmlentities($value)."</option>";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Host');?> 
+                                    <?php print __('Host');?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_host">
                                         <?php
-                                            foreach ($db_hosts as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
-                                                if ((!empty($v_host)) && ( $key == $v_host )) echo ' selected';
-                                                echo ">".htmlentities($key)."</option>";
+                                            foreach ($db_hosts as $value) {
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                if ((!empty($v_host)) && ( $value == $v_host )) echo ' selected';
+                                                echo ">".htmlentities($value)."</option>";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Charset');?> 
+                                    <?php print __('Charset');?>
                                 </td>
                             </tr>
                             <tr>
@@ -183,7 +183,7 @@
                                 </td>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Send login credentials to email address') ?> 
+                                    <?php print __('Send login credentials to email address') ?>
                                 </td>
                             </tr>
                             <tr>

@@ -28,12 +28,12 @@ json_list() {
         fi
     done
 
-    echo "{"
+    echo "["
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
         if [ -e "$VESTA/conf/$type.conf" ]; then
             for str in $(cat $VESTA/conf/$type.conf); do
                 eval $str
-        echo -n '    "'$HOST'": {
+        echo -n '    {
         "HOST": "'$HOST'",
         "TYPE": "'$type'",
         "CHARSETS": "'$CHARSETS'",
@@ -54,7 +54,7 @@ json_list() {
             done
         fi
     done
-    echo '}'
+    echo ']'
 }
 
 # SHELL list function

@@ -46,21 +46,15 @@ foreach ($dns_cluster as $key => $value) {
     $v_dns_cluster = 'yes';
 }
 
-// List MySQL hosts
-exec (VESTA_CMD."v-list-database-hosts mysql json", $output, $return_var);
-$v_mysql_hosts = json_decode(implode('', $output), true);
+// List Database hosts
+exec (VESTA_CMD."v-list-database-hosts json", $output, $return_var);
+$db_hosts = json_decode(implode('', $output), true);
 unset($output);
-foreach ($v_mysql_hosts as $key => $value) {
-    $v_mysql = 'yes';
-}
-
-// List PostgreSQL hosts
-exec (VESTA_CMD."v-list-database-hosts pgsql json", $output, $return_var);
-$v_pgsql_hosts = json_decode(implode('', $output), true);
-unset($output);
-foreach ($v_pgsql_hosts as $key => $value) {
-    $v_pgsql = 'yes';
-}
+$v_mysql_hosts = array_values(array_filter($db_hosts, function($host){return $host['TYPE'] === 'mysql';}));
+$v_mysql = count($v_mysql_hosts) ? 'yes' : 'no';
+$v_pgsql_hosts = array_values(array_filter($db_hosts, function($host){return $host['TYPE'] === 'pgsql';}));
+$v_pgsql = count($v_pgsql_hosts) ? 'yes' : 'no';
+unset($db_hosts);
 
 // List backup settings
 $v_backup_dir = "/backup";

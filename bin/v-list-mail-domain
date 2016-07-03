@@ -27,7 +27,7 @@ json_list() {
         "DKIM": "'$DKIM'",
         "CATCHALL": "'$CATCHALL'",
         "ACCOUNTS": "'$ACCOUNTS'",
-        "U_DISKL": "'$U_DISK'",
+        "U_DISK": "'$U_DISK'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"

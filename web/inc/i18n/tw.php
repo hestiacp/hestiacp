@@ -155,6 +155,7 @@ $LANG['tw'] = array(
     'SSL Domains'  => 'SSL網域',
     'Web Aliases'  => '網站次網域',
     'per domain'  => '(每網域)',
+    'DNS Domains'  => 'DNS網域',
     'DNS domains'  => 'DNS網域',
     'DNS records'   => 'DNS紀錄',
     'Name Servers'  => '域名服務器',
@@ -306,7 +307,6 @@ $LANG['tw'] = array(
     'web domains'  => '網站網域',
     'web aliases'  => '網站次網域',
     'dns records'  => 'DNS記錄',
-    'DNS Domains' => 'DNS網域',
     'mail domains'  => '信箱網域',
     'mail accounts'  => '信箱帳號',
     'accounts'  => '帳號',
@@ -646,7 +646,7 @@ $LANG['tw'] = array(
     'Select Bunch of Files' => '選取多個檔案',
     'Add File to the Current Selection' => '增加檔案到已選取的列表',
     'Select All Files' => '選取所有檔案',
-    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' => 
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         "快捷鍵是的想法是由 magnificent GNU <a href='https://www.midnight-commander.org/'>Midnight Commander</a> 檔案管理器 啟發的<br> 繁體中文翻譯是由 <a href='https://host.clark-chen.com'>Clark's 虛擬主機服務</a> 總工程師 <a href='https://www.clark-chen.com/'>Clark Chen</a> 提供。",
     'Save' => '儲存',
     'Licence Key' => '授權金鑰',

@@ -11,7 +11,7 @@
 
 keygen()
 {
-    cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -n 1
+    < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;
 }
 KEYS='/usr/local/vesta/data/keys/'
 HASH=$(keygen)

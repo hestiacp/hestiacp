@@ -390,6 +390,13 @@ $LANG['ja'] = array(
     'VESTA' => 'VESTA',
     'Add one more Name Server' => 'ネームサーバーを追加',
 
+    'web domain' => 'ウェブドメイン',
+    'dns domain' => 'DNSドメイン',
+    'dns record' => 'DNSレコード',
+    'mail domain' => 'メールドメイン',
+    'mail account' => 'メールアカウント',
+    'cron job' => 'Cronジョブ',
+
     'cron' => 'Cron',
     'user dir' => 'ユーザーディレクトリ',
 

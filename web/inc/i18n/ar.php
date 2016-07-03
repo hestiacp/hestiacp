@@ -390,6 +390,13 @@ $LANG['ar'] = array(
     'VESTA' => 'VESTA',
     'Add one more Name Server' => 'إضافة مخدم أسماء (NS) جديد',
 
+    'web domain' => 'web domain',
+    'dns domain' => 'dns domain',
+    'dns record' => 'dns record',
+    'mail domain' => 'mail domain',
+    'mail account' => 'mail account',
+    'cron job' => 'cron job',
+
     'cron' => 'cron',
     'user dir' => 'user dir',
 

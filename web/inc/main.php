@@ -95,6 +95,10 @@ function check_return_code($return_var,$output) {
     }
 }
 
+function insert_scripts() {
+    @include_once(dirname(__DIR__) . '/templates/scripts.html');
+}
+
 function render_page($user, $TAB, $page) {
     $__template_dir = dirname(__DIR__) . '/templates/';
 
@@ -115,18 +119,14 @@ function render_page($user, $TAB, $page) {
 
     // Body
     if (($_SESSION['user'] !== 'admin') && (@include($__template_dir . "user/$page.html"))) {
-        // User page exists
-        // Use user page
-        $__template_base = $__template_dir . "user/$page";
+        // User page loaded
     } else {
         // Not admin or user page doesn't exist
-        // Use admin page
-        $__template_base = $__template_dir . "admin/$page";
-        include($__template_base . '.html');
+        // Load admin page
+        @include($__template_dir . "admin/$page.html");
     }
 
     // Footer
-    $JS_FILE = $__template_base . '.js.html';
     include($__template_dir . 'footer.html');
 }
 

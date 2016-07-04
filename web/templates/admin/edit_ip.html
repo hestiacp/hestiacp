@@ -142,3 +142,11 @@
             </table>
         </form>
     </div>
+
+<?php insert_scripts(); ?>
+    <script>
+      function elementHideShow(elementToHideOrShow){
+        var el = document.getElementById(elementToHideOrShow);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+    </script>

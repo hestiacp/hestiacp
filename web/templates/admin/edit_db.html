@@ -12,9 +12,7 @@
               }
             ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -32,26 +30,6 @@
         <form id="vstobjects" name="v_edit_db" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
-            <script type="text/javascript">
-                function elementHideShow(elementToHideOrShow) {
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-                function randomString() {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var randomstring = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        randomstring += chars.substring(rnum,rnum+1);
-                    }
-                    document.v_edit_db.v_password.value = randomstring;
-                }
-            </script>
 
            <table class='data'>
                 <tr class="data-add">
@@ -146,8 +124,26 @@
             </table>
         </form>
     </div>
-    <script type="text/javascript">
-        GLOBAL.DB_USER_PREFIX = '<?php echo $user; ?>_';
-        GLOBAL.DB_DBNAME_PREFIX = '<?php echo $user; ?>_';
+
+<?php insert_scripts(); ?>
+    <script>
+      function elementHideShow(elementToHideOrShow){
+        var el = document.getElementById(elementToHideOrShow);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+
+      function randomString() {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var string_length = 10;
+        var randomstring = '';
+        for (var i = 0; i < string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          randomstring += chars.substr(rnum, 1);
+        }
+        document.v_edit_db.v_password.value = randomstring;
+      }
+
+      GLOBAL.DB_USER_PREFIX = <?=json_encode($user.'_')?>;
+      GLOBAL.DB_DBNAME_PREFIX = <?=json_encode($user.'_')?>;
     </script>
-    <script type="text/javascript" src="/js/pages/edit.db.js"></script>
+    <script src="/js/pages/edit.db.js"></script>

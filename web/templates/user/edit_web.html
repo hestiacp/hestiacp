@@ -12,9 +12,7 @@
               }
             ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -32,40 +30,7 @@
         <form id="vstobjects" name="v_edit_web" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
-            <script language="javascript">
-                function WEBrandom() {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var webrandom = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        webrandom += chars.substring(rnum,rnum+1);
-                    }
-                    document.v_edit_web.v_stats_password.value = webrandom;
-                }
 
-                function FTPrandom(elm) {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var ftprandomstring = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        ftprandomstring += chars.substring(rnum,rnum+1);
-                    }
-
-                    $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
-                    App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
-                }
-
-                function elementHideShow(elementToHideOrShow){
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-            </script>
             <table class='data'>
                 <tr class="data-add">
                     <td class="data-dotted">
@@ -124,7 +89,7 @@
                                     <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
                                 </td>
                             </tr>
-                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support');?></label>
@@ -146,7 +111,7 @@
                                     </table>
                                 </td>
                             </tr>
-                            <?php echo ""; }?> 
+                            <?php echo ""; }?>
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
@@ -176,7 +141,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Certificate');?> 
+                                                <?php print __('SSL Certificate');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -225,7 +190,7 @@
                                                 }
                                             echo ">". htmlentities(__($value)) ."</option>\n";
                                             }
-                                    ?> 
+                                    ?>
                                     </select>
                                 </td>
                             </tr>
@@ -359,7 +324,7 @@
 
         <div id="templates" class="hidden">
             <table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
-                <tr> 
+                <tr>
                     <td class="vst-text input-label">
                         <?php print __('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?=__('delete')?>)</a>
                         <input type="hidden"  class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
@@ -414,16 +379,47 @@
         </table>
         </div>
     </div>
-        <script type="text/javascript">
-            GLOBAL.FTP_USER_PREFIX = '<?php echo $user; ?>_';
-            $('#vstobjects').bind('submit', function(evt) {
-                $('input[disabled]').each(function(i, elm) {
-                    var copy_elm = $(elm).clone(true);
-                    $(copy_elm).attr('type', 'hidden');
-                    $(copy_elm).removeAttr('disabled');
-                    $(elm).after(copy_elm);
-                });
-            });
-        </script>
-        <script type="text/javascript" src="/js/pages/edit.web.js"></script>
 
+<?php insert_scripts(); ?>
+    <script>
+      function WEBrandom() {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var string_length = 10;
+        var webrandom = '';
+        for (var i = 0; i < string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          webrandom += chars.substr(rnum, 1);
+        }
+        document.v_edit_web.v_stats_password.value = webrandom;
+      }
+
+      function FTPrandom(elm) {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var string_length = 10;
+        var webrandom = '';
+        for (var i = 0; i < string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          webrandom += chars.substr(rnum, 1);
+        }
+
+        $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
+        App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
+      }
+
+      function elementHideShow(elementToHideOrShow){
+        var el = document.getElementById(elementToHideOrShow);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+
+      $('#vstobjects').bind('submit', function(evt) {
+        $('input[disabled]').each(function(i, elm) {
+          var copy_elm = $(elm).clone(true);
+          $(copy_elm).attr('type', 'hidden');
+          $(copy_elm).removeAttr('disabled');
+          $(elm).after(copy_elm);
+        });
+      });
+
+      GLOBAL.FTP_USER_PREFIX = <?=json_encode($user.'_')?>;
+    </script>
+    <script src="/js/pages/edit.web.js"></script>

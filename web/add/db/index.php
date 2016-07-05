@@ -1,9 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'DB';
+
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check POST request
@@ -107,17 +107,11 @@ if (!empty($_POST['ok'])) {
     }
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
 // Get user email
 $v_db_email = $panel[$user]['CONTACT'];
 
 // List avaiable database types
-$db_types = split(",",$_SESSION['DB_SYSTEM']);
+$db_types = split(',', $_SESSION['DB_SYSTEM']);
 
 // List available database servers
 $db_hosts = array();
@@ -127,13 +121,8 @@ $db_hosts = array_merge($db_hosts, $db_hosts_tmp);
 unset($db_hosts_tmp);
 unset($output);
 
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_db.html');
+render_page($user, $TAB, 'add_db');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
-?>

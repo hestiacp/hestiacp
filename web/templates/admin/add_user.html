@@ -12,9 +12,7 @@
                     }
                   ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
 
@@ -34,24 +32,6 @@
         <form id="vstobjects" name="v_add_user" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="ok" value="Add" />
-            <script type="text/javascript">
-                $(function() {
-                    $("#v_email").change(function() {
-                        document.getElementById('v_notify').value = document.getElementById('v_email').value;
-                    });
-                });
-
-                function randomString() {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var randomstring = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        randomstring += chars.substring(rnum,rnum+1);
-                    }
-                    document.v_add_user.v_password.value = randomstring;
-                }
-            </script>
 
             <table class="data mode-add">
                 <tr class="data-add">
@@ -112,7 +92,7 @@
                                                 }
                                                 echo ">".htmlentities($key)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
@@ -189,3 +169,23 @@
             </table>
         </form>
     </div>
+
+<?php insert_scripts(); ?>
+    <script>
+      $(function() {
+        $('#v_email').change(function() {
+          document.getElementById('v_notify').value = document.getElementById('v_email').value;
+        });
+      });
+
+      function randomString() {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var string_length = 10;
+        var randomstring = '';
+        for (var i = 0; i < string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          randomstring += chars.substr(rnum, 1);
+        }
+        document.v_add_user.v_password.value = randomstring;
+      }
+    </script>

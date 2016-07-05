@@ -12,9 +12,7 @@
                     }
                   ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -32,16 +30,6 @@
         <form id="vstobjects" name="v_add_ip" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="ok" value="Add" />
-            <script type="text/javascript">
-                function elementHideShow(elementToHideOrShow) {
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-            </script>
 
             <table class="data mode-add">
                 <tr class="data-add">
@@ -157,3 +145,11 @@
             </table>
         </form>
       </div>
+
+<?php insert_scripts(); ?>
+    <script>
+      function elementHideShow(elementToHideOrShow) {
+        var el = document.getElementById(elementToHideOrShow);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+    </script>

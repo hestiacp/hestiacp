@@ -95,6 +95,41 @@ function check_return_code($return_var,$output) {
     }
 }
 
+function insert_scripts() {
+    @include_once(dirname(__DIR__) . '/templates/scripts.html');
+}
+
+function render_page($user, $TAB, $page) {
+    $__template_dir = dirname(__DIR__) . '/templates/';
+
+    // Header
+    include($__template_dir . 'header.html');
+
+    // Panel
+    top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
+
+    // Extarct global variables
+    // I think those variables should be passed via arguments
+    //*
+    extract($GLOBALS, EXTR_SKIP);
+    /*/
+    $variables = array_filter($GLOBALS, function($key){return preg_match('/^(v_|[a-z])[a-z\d]+$/', $key);}, ARRAY_FILTER_USE_KEY);
+    extract($variables, EXTR_OVERWRITE);
+    //*/
+
+    // Body
+    if (($_SESSION['user'] !== 'admin') && (@include($__template_dir . "user/$page.html"))) {
+        // User page loaded
+    } else {
+        // Not admin or user page doesn't exist
+        // Load admin page
+        @include($__template_dir . "admin/$page.html");
+    }
+
+    // Footer
+    include($__template_dir . 'footer.html');
+}
+
 function top_panel($user, $TAB) {
     global $panel;
     $command = VESTA_CMD."v-list-user '".$user."' 'json'";
@@ -107,7 +142,7 @@ function top_panel($user, $TAB) {
     unset($output);
 
 
-    // getting notifications 
+    // getting notifications
     $command = VESTA_CMD."v-list-user-notifications '".$user."' 'json'";
     exec ($command, $output, $return_var);
     $notifications = json_decode(implode('', $output), true);
@@ -118,7 +153,7 @@ function top_panel($user, $TAB) {
         }
     }
     unset($output);
-    
+
 
     if ( $user == 'admin' ) {
         include(dirname(__FILE__).'/../templates/admin/panel.html');
@@ -239,36 +274,6 @@ function send_email($to,$subject,$mailtext,$from) {
     $header .= "Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
     $message = $mailtext;
     mail($to, $subject, $message, $header);
-}
-
-function display_error_block() {
-    if (!empty($_SESSION['error_msg'])) {
-        echo '
-            <div>
-                <script type="text/javascript">
-                    $(function() {
-                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                        $( "#dialog-message" ).dialog({
-                            modal: true,
-                            buttons: {
-                                Ok: function() {
-                                    $( this ).dialog( "close" );
-                                }
-                            },
-                            create:function () {
-                                $(this).closest(".ui-dialog")
-                                .find(".ui-button:first")
-                                .addClass("submit");
-                            }
-                        });
-                    });
-                </script>
-                <div id="dialog-message" title="">
-                    <p>'. htmlentities($_SESSION['error_msg']) .'</p>
-                </div>
-            </div>'."\n";
-        unset($_SESSION['error_msg']);
-    }
 }
 
 function list_timezones() {

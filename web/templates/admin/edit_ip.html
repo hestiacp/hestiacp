@@ -12,9 +12,7 @@
               }
             ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -32,16 +30,6 @@
         <form id="vstobjects" name="v_edit_ip" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
-            <script type="text/javascript">
-                function elementHideShow(elementToHideOrShow) {
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-            </script>
 
             <table class='data'>
                 <tr class="data-add">
@@ -60,7 +48,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('IP address'); ?> 
+                                    <?php print __('IP address'); ?>
                                 </td>
                             </tr>
                             <tr>
@@ -70,7 +58,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Netmask');?> 
+                                    <?php print __('Netmask');?>
                                 </td>
                             </tr>
                             <tr>
@@ -80,7 +68,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Interface'); ?> 
+                                    <?php print __('Interface'); ?>
                                 </td>
                             </tr>
                             <tr>
@@ -154,3 +142,11 @@
             </table>
         </form>
     </div>
+
+<?php insert_scripts(); ?>
+    <script>
+      function elementHideShow(elementToHideOrShow){
+        var el = document.getElementById(elementToHideOrShow);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+    </script>

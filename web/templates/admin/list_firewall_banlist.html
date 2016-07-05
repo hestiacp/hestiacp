@@ -30,11 +30,7 @@
             </tr>
           </table>
         </div>
-
       </div>
-
-      <? display_error_block(); ?>
-
       <!-- /.l-sort -->
     </div>
 
@@ -47,7 +43,7 @@
         foreach ($data as $key => $value) {
           ++$i;
           list($ip,$chain) = explode(":",$key);
-          
+
       ?>
 
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended';?>">

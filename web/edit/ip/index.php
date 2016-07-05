@@ -1,10 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'IP';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
@@ -59,7 +58,7 @@ if (!empty($_POST['save'])) {
         exec (VESTA_CMD."v-change-sys-ip-status ".$v_ip." 'dedicated'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
-        $v_dedicated = 'yes'; 
+        $v_dedicated = 'yes';
     }
     if (($v_ipstatus == 'dedicated') && (!empty($_POST['v_shared'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-change-sys-ip-status ".$v_ip." 'shared'", $output, $return_var);
@@ -99,18 +98,9 @@ if (!empty($_POST['save'])) {
     }
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_ip.html');
+// Render page
+render_page($user, $TAB, 'edit_ip');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

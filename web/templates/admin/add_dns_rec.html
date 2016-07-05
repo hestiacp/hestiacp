@@ -12,9 +12,7 @@
                     }
                   ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -122,7 +120,8 @@
         </form>
       </div>
 
-        <script type="text/javascript">
-            GLOBAL.DNS_REC_PREFIX = '<?php echo $_GET['domain']; ?>';
-        </script>
-        <script type="text/javascript" src="/js/pages/add.dns.record.js"></script>
+<?php insert_scripts(); ?>
+    <script>
+      GLOBAL.DNS_REC_PREFIX = <?=json_encode($_GET['domain'])?>;
+    </script>
+    <script src="/js/pages/add.dns.record.js"></script>

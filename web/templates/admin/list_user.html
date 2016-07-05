@@ -54,11 +54,7 @@
             </tr>
           </table>
         </div>
-
       </div>
-
-      <? display_error_block(); ?>
-
       <!-- /.l-sort -->
     </div>
 
@@ -81,8 +77,8 @@
           }
       ?>
 
-      <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user" 
-v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" 
+      <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user"
+v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
 sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['favourites']['USER'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
@@ -96,38 +92,9 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
               if ($key == $user) {
             ?>
                 <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/logout"><?=__('logout')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
-              <?
-                if (!empty($_SESSION['look_alert'])) {
-              ?>
-                  <script type="text/javascript">
-                    $(function() {
-                      $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                      $( "#dialog-message" ).dialog({
-                        modal: true,
-                        buttons: {
-                          Ok: function() {
-                            $( this ).dialog( "close" );
-                          },
-                        },
-                        create:function () {
-                            $(this).closest(".ui-dialog")
-                                .find(".ui-button:first")
-                                .addClass("submit");
-                            $(this).closest(".ui-dialog")
-                                .find(".ui-button")
-                                .eq(1) // the first button
-                                .addClass("cancel");
-                            }
-                      });
-                    });
-                  </script>
-                  <div id="dialog-message" title="<?=__('Welcome')?>">
-                    <p class="confirmation"><?=__('LOGGED_IN_AS',$key)?></p>
-                  </div>
-                  <?
-                    unset($_SESSION['look_alert']);
-                }
-              } else { ?>
+<?php
+              } else {
+?>
                 <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>""><?=__('login as').' '.$key?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
               <?}?>
               <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>

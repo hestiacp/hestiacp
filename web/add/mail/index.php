@@ -1,10 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'MAIL';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 
@@ -179,26 +178,18 @@ if (!empty($_POST['ok_acc'])) {
     }
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
+// Render page
+if (empty($_GET['domain'])) {
+    // Display body for mail domain
 
-// Panel
-top_panel($user,$TAB);
+    render_page($user, $TAB, 'add_mail');
+} else {
+    // Display body for mail account
 
-// Display body for mail domain
-if (empty($_GET['domain']))  {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_mail.html');
-}
-
-// Display body for mail account
-if (!empty($_GET['domain']))  {
     $v_domain = $_GET['domain'];
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_mail_acc.html');
+    render_page($user, $TAB, 'add_mail_acc');
 }
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

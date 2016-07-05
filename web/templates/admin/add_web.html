@@ -12,9 +12,7 @@
                     }
                   ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -33,44 +31,6 @@
         <form id="vstobjects" name="v_add_web" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="ok" value="Add" />
-            <script type="text/javascript">
-                $(function() {
-                    $("#v_domain").change(function() {
-                        var prefix = 'www.';
-                        document.getElementById('v_aliases').value = prefix + document.getElementById('v_domain').value;
-                    });
-                });
-                function WEBrandom() {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var webrandom = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        webrandom += chars.substring(rnum,rnum+1);
-                    }
-                    document.v_add_web.v_stats_password.value = webrandom;
-                }
-
-                function FTPrandom(elm) {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var ftprandomstring = '';
-                    for (var i=0; i<string_length; i++) {
-                        var rnum = Math.floor(Math.random() * chars.length);
-                        ftprandomstring += chars.substring(rnum,rnum+1);
-                    }
-                    $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
-                }
-
-                function elementHideShow(elementToHideOrShow){
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-            </script>
 
             <table class="data mode-add">
                 <tr class="data-add">
@@ -142,7 +102,7 @@
                                 <textarea size="20" class="vst-textinput" name="v_aliases" id="v_aliases" ><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
                             </td>
                         </tr>
-                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
+                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
                         <tr>
                             <td class="vst-text step-top" >
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if ($v_proxy !== 'off') echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support');?></label>
@@ -164,7 +124,7 @@
                                 </table>
                             </td>
                         </tr>
-                        <?php echo ""; }?> 
+                        <?php echo ""; }?>
                         <tr>
                             <td class="step-top vst-text">
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if($v_ssl == 'yes' || $v_ssl == 'on') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
@@ -242,7 +202,7 @@
                                             }
                                             echo ">" . htmlentities(__($value)) . "</option>\n";
                                         }
-                                    ?> 
+                                    ?>
                                 </select>
                             </td>
                         </tr>
@@ -429,14 +389,49 @@
         </div>
       </div>
 
+<?php insert_scripts(); ?>
+    <script>
+      $(function() {
+        $('#v_domain').change(function() {
+          var prefix = 'www.';
+          document.getElementById('v_aliases').value = prefix + document.getElementById('v_domain').value;
+        });
+      });
 
-    <script type="text/javascript">
-        GLOBAL.FTP_USER_PREFIX  = '<?php echo $user; ?>_';
-        GLOBAL.FTP_USER_PREPATH = '<?php echo $v_ftp_user_prepath; ?>';
-        $('#vstobjects').bind('submit', function(evt) {
-                $('input[disabled]').each(function(i, elm) {
-                    $(elm).removeAttr('disabled');
-                });
-            });
+      function WEBrandom() {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var string_length = 10;
+        var webrandom = '';
+        for (var i = 0; i < string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          webrandom += chars.substr(rnum, 1);
+        }
+        document.v_add_web.v_stats_password.value = webrandom;
+      }
+
+      function FTPrandom(elm) {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var string_length = 10;
+        var ftprandomstring = '';
+        for (var i = 0; i < string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          ftprandomstring += chars.substr(rnum, 1);
+        }
+        $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
+      }
+
+      function elementHideShow(elementToHideOrShow){
+        var el = document.getElementById(elementToHideOrShow);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+
+      $('#vstobjects').bind('submit', function(evt) {
+        $('input[disabled]').each(function(i, elm) {
+          $(elm).removeAttr('disabled');
+        });
+      });
+
+      GLOBAL.FTP_USER_PREFIX  = <?=json_encode($user)?>;
+      GLOBAL.FTP_USER_PREPATH = <?=json_encode($v_ftp_user_prepath)?>;
     </script>
-    <script type="text/javascript" src="/js/pages/add.web.js"></script>
+    <script src="/js/pages/add.web.js"></script>

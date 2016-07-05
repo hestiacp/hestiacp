@@ -12,9 +12,7 @@
                     }
                   ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -32,53 +30,6 @@
         <form id="vstobjects" name="v_add_mail_acc" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="ok_acc" value="add" />
-            <script type="text/javascript">
-                function elementHideShow(elementToHideOrShow) {
-                    var el = document.getElementById(elementToHideOrShow);
-                    if (el.style.display == "block") {
-                        el.style.display = "none";
-                    } else {
-                        el.style.display = "block";
-                    }
-                }
-                function randomString() {
-                    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-                    var string_length = 10;
-                    var randomstring = '';
-                    for (var i=0; i<string_length; i++) {
-                      var rnum = Math.floor(Math.random() * chars.length);
-                      randomstring += chars.substring(rnum,rnum+1);
-                    }
-                    document.v_add_mail_acc.v_password.value = randomstring;
-
-                    if($('input[name=v_password]').attr('type') == 'text')
-                      $('#v_password').text(randomstring);
-                    else
-                      $('#v_password').text(Array(randomstring.length+1).join('*'));
-                  }
-                $(document).ready(function() {
-                    $('#v_account').text($('input[name=v_account]').val());
-                    $('#v_password').text($('input[name=v_password]').val());
-
-                    $('input[name=v_account]').change(function(){
-                      $('#v_account').text($(this).val());
-                    });
-
-                    $('input[name=v_password]').change(function(){
-                      if($('input[name=v_password]').attr('type') == 'text')
-                        $('#v_password').text($(this).val());
-                      else
-                        $('#v_password').text(Array($(this).val().length+1).join('*'));
-                    });
-
-                    $('.toggle-psw-visibility-icon').click(function(){
-                      if($('input[name=v_password]').attr('type') == 'text')
-                        $('#v_password').text($('input[name=v_password]').val());
-                      else
-                        $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
-                    });
-                });
-            </script>
 
             <table class="data mode-add">
             <tr class="data-add">
@@ -229,4 +180,51 @@
     </table>
     </form>
   </div>
-  <script type="text/javascript" src="/js/pages/edit.package.js"></script>
+
+<?php insert_scripts(); ?>
+    <script>
+      function elementHideShow(elementToHideOrShow) {
+        var el = document.getElementById(elementToHideOrShow);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+
+      function randomString() {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var string_length = 10;
+        var randomstring = '';
+        for (var i = 0; i < string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          randomstring += chars.substr(rnum, 1);
+        }
+        document.v_add_mail_acc.v_password.value = randomstring;
+
+        if($('input[name=v_password]').attr('type') == 'text')
+          $('#v_password').text(randomstring);
+        else
+          $('#v_password').text(Array(randomstring.length+1).join('*'));
+      }
+
+      $(document).ready(function() {
+        $('#v_account').text($('input[name=v_account]').val());
+        $('#v_password').text($('input[name=v_password]').val());
+
+        $('input[name=v_account]').change(function(){
+          $('#v_account').text($(this).val());
+        });
+
+        $('input[name=v_password]').change(function(){
+          if($('input[name=v_password]').attr('type') == 'text')
+          $('#v_password').text($(this).val());
+          else
+          $('#v_password').text(Array($(this).val().length+1).join('*'));
+        });
+
+        $('.toggle-psw-visibility-icon').click(function(){
+          if($('input[name=v_password]').attr('type') == 'text')
+          $('#v_password').text($('input[name=v_password]').val());
+          else
+          $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
+        });
+      });
+    </script>
+    <script src="/js/pages/edit.package.js"></script>

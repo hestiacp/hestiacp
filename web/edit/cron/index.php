@@ -54,7 +54,7 @@ if (!empty($_POST['save'])) {
     }
 
     $v_username = $user;
-    $v_job = escapeshellarg($_GET['job']); 
+    $v_job = escapeshellarg($_GET['job']);
     $v_min = escapeshellarg($_POST['v_min']);
     $v_hour = escapeshellarg($_POST['v_hour']);
     $v_day = escapeshellarg($_POST['v_day']);
@@ -75,18 +75,9 @@ if (!empty($_POST['save'])) {
     }
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_cron.html');
+// Render page
+render_page($user, $TAB, 'edit_cron');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

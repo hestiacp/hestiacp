@@ -1,10 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'IP';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
@@ -75,12 +74,6 @@ if (!empty($_POST['ok'])) {
     }
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
 // List network interfaces
 exec (VESTA_CMD."v-list-sys-interfaces 'json'", $output, $return_var);
 $interfaces = json_decode(implode('', $output), true);
@@ -91,12 +84,9 @@ exec (VESTA_CMD."v-list-sys-users 'json'", $output, $return_var);
 $users = json_decode(implode('', $output), true);
 unset($output);
 
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_ip.html');
+// Render
+render_page($user, $TAB, 'add_ip');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

@@ -1,11 +1,10 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 unset($_SESSION['error_msg']);
 $TAB = 'WEB';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check domain argument
@@ -694,22 +693,9 @@ if (isset($v_ftp_users_updated)) {
     }
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
-// Display body
-if ($_SESSION['user'] == 'admin') {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_web.html');
-} else {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_web.html');
-}
+// Render page
+render_page($user, $TAB, 'edit_web');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

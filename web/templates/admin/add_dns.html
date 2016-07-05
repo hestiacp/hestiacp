@@ -12,9 +12,7 @@
                     }
                   ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -32,16 +30,6 @@
         <form id="vstobjects" name="v_add_dns" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="ok" value="Add" />
-            <script language="javascript">
-                function elementHideShow(elementToHideOrShow){
-                    var el = document.getElementById(elementToHideOrShow);
-                        if (el.style.display == "block") {
-                            el.style.display = "none";
-                        } else {
-                            el.style.display = "block";
-                        }
-                }
-            </script>
 
             <table class="data mode-add">
                 <tr class="data-add">
@@ -190,33 +178,40 @@
             </table>
         </form>
     </div>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $('.add-ns-button').click(function(){
-                  var n = $("input[name^=v_ns]").length;
-                  if(n < 8){
-                    var t = $($('input[name=v_ns1]').parents('tr')[0]).clone(true, true);
-                    t.find('input').attr({value:'', name:'v_ns'+(n+1)});
-                    t.find('span').show();
-                    $('tr.add-ns').before(t);
-                  }
-                  if( n == 7 ) {
-                    $('.add-ns').hide();
-                  }
-                });
 
-                $('.remove-ns').click(function(){
-                    $(this).parents('tr')[0].remove();
-                    $('input[name^=v_ns]').each(function(i, ns){
-                        $(ns).attr({name: 'v_ns'+(i+1)});
-                        i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
-                    })
-                    $('.add-ns').show()
-                })
+<?php insert_scripts(); ?>
+    <script>
+      function elementHideShow(elementToHideOrShow){
+        var el = document.getElementById(elementToHideOrShow);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
 
-                $('input[name^=v_ns]').each(function(i, ns){
-                  i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
-                })
+      $(document).ready(function(){
+        $('.add-ns-button').click(function(){
+          var n = $('input[name^=v_ns]').length;
+          if(n < 8){
+          var t = $($('input[name=v_ns1]').parents('tr')[0]).clone(true, true);
+          t.find('input').attr({value:'', name:'v_ns'+(n+1)});
+          t.find('span').show();
+          $('tr.add-ns').before(t);
+          }
+          if( n == 7 ) {
+          $('.add-ns').hide();
+          }
+        });
 
-            });
-        </script>
+        $('.remove-ns').click(function(){
+          $(this).parents('tr')[0].remove();
+          $('input[name^=v_ns]').each(function(i, ns){
+            $(ns).attr({name: 'v_ns'+(i+1)});
+            i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+          })
+          $('.add-ns').show()
+        });
+
+        $('input[name^=v_ns]').each(function(i, ns){
+          i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+        });
+
+      });
+    </script>

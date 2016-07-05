@@ -1,10 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'PACKAGE';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
@@ -140,7 +139,7 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
-    // Remove tmpdir 
+    // Remove tmpdir
     exec ('rm -rf '.$tmpdir, $output, $return_var);
     unset($output);
 
@@ -152,12 +151,6 @@ if (!empty($_POST['ok'])) {
 
 }
 
-
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
 
 // List web temmplates
 exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
@@ -208,12 +201,9 @@ if (empty($v_bandwidth)) $v_bandwidth = "'1000'";
 if (empty($v_ns1)) $v_ns1 = 'ns1.example.ltd';
 if (empty($v_ns2)) $v_ns2 = 'ns2.example.ltd';
 
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_package.html');
+// Render page
+render_page($user, $TAB, 'add_package');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

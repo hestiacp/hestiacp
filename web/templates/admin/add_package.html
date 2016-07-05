@@ -12,9 +12,7 @@
                     }
                   ?>
         </div>
-
       </div>
-      <? display_error_block() ?>
     </div>
 
     <div class="l-separator"></div>
@@ -72,11 +70,11 @@
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
-                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?> 
+                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Backend Template') . "<span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']). "</span>" ;?>
@@ -96,13 +94,13 @@
                                                 }
                                                 echo ">".$value."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
-                            <?php echo ""; }?> 
+                            <?php echo ""; }?>
 
-                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?> 
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Proxy Template')  . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>" ;?>
@@ -123,11 +121,11 @@
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
-                            <?php echo ""; }?> 
+                            <?php echo ""; }?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('DNS Template') . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>" ;?>
@@ -147,7 +145,7 @@
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
@@ -170,7 +168,7 @@
                                             }
                                             echo ">".htmlentities($value)."</option>\n";
                                             }
-                                        ?> 
+                                        ?>
                                     </select>
                                 </td>
                             </tr>
@@ -380,34 +378,35 @@
             </table>
         </form>
       </div>
-        <script type="text/javascript" src="/js/pages/add.package.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $('.add-ns-button').click(function(){
-                  var n = $("input[name^=v_ns]").length;
-                  if(n < 8){
-                    var t = $($('input[name=v_ns1]').parents('tr')[0]).clone(true, true);
-                    t.find('input').attr({value:'', name:'v_ns'+(n+1)});
-                    t.find('span').show();
-                    $('tr.add-ns').before(t);
-                  }
-                  if( n == 7 ) {
-                    $('.add-ns').hide();
-                  }
-                });
 
-                $('.remove-ns').click(function(){
-                    $(this).parents('tr')[0].remove();
-                    $('input[name^=v_ns]').each(function(i, ns){
-                        $(ns).attr({name: 'v_ns'+(i+1)});
-                        i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
-                    })
-                    $('.add-ns').show()
-                })
+<?php insert_scripts(); ?>
+    <script>
+      $(document).ready(function(){
+        $('.add-ns-button').click(function(){
+          var n = $('input[name^=v_ns]').length;
+          if(n < 8){
+          var t = $($('input[name=v_ns1]').parents('tr')[0]).clone(true, true);
+          t.find('input').attr({value:'', name:'v_ns'+(n+1)});
+          t.find('span').show();
+          $('tr.add-ns').before(t);
+          }
+          if( n == 7 ) {
+          $('.add-ns').hide();
+          }
+        });
 
-                $('input[name^=v_ns]').each(function(i, ns){
-                  i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
-                })
+        $('.remove-ns').click(function(){
+          $(this).parents('tr')[0].remove();
+          $('input[name^=v_ns]').each(function(i, ns){
+            $(ns).attr({name: 'v_ns'+(i+1)});
+            i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+          });
+          $('.add-ns').show();
+        });
 
-            });
-        </script>
+        $('input[name^=v_ns]').each(function(i, ns){
+          i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
+        });
+      });
+    </script>
+    <script src="/js/pages/add.package.js"></script>

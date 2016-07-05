@@ -1,15 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
-session_start();
 $TAB = 'WEB';
+
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
 
 // Prepare values
 if (!empty($_GET['domain'])) {
@@ -29,9 +23,8 @@ $_SESSION['back'] = '';
 
 // Check POST
 if (!isset($_POST['generate'])) {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/generate_ssl.html');
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
-    exit();
+    render_page($user, $TAB, 'generate_ssl');
+    exit;
 }
 
 // Check input
@@ -58,10 +51,9 @@ if (!empty($errors[0])) {
         }
     }
     $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/generate_ssl.html');
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
+    render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);
-    exit();
+    exit;
 }
 
 // Protect input
@@ -87,10 +79,9 @@ if ($return_var != 0) {
     $error = implode('<br>', $output);
     if (empty($error)) $error = __('Error code:',$return_var);
     $_SESSION['error_msg'] = $error;
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/generate_ssl.html');
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
+    render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);
-    exit();
+    exit;
 }
 
 // OK message
@@ -106,6 +97,7 @@ $v_csr = $data[$v_domain]['CSR'];
 // Back uri
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];
 
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_ssl.html');
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
+// Render page
+render_page($user, $TAB, 'list_ssl');
+
 unset($_SESSION['ok_msg']);

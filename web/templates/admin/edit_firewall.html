@@ -60,28 +60,28 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Action'); ?> 
+                                    <?php print __('Action'); ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_action">
-                                        <option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?php print __('DROP') ?></option>
-                                        <option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>><?php print __('ACCEPT') ?></option>
+                                        <option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?=__('DROP')?></option>
+                                        <option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>><?=__('ACCEPT')?></option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Protocol') ?> 
+                                    <?php print __('Protocol') ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_protocol">
-                                        <option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?php print __('TCP') ?></option>
-                                        <option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>><?php print __('UDP') ?></option>
-                                        <option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>><?php print __('ICMP') ?></option>
+                                        <option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?=__('TCP')?></option>
+                                        <option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>><?=__('UDP')?></option>
+                                        <option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>><?=__('ICMP')?></option>
                                     </select>
                                 </td>
                             </tr>

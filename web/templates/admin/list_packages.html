@@ -56,8 +56,8 @@
       ?>
 
 
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo ' l-unit--starred'; ?>" 
-v_unit_id="<?=$key?>" v_section="package" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" 
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo ' l-unit--starred'; ?>"
+v_unit_id="<?=$key?>" v_section="package" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
 sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
@@ -110,7 +110,7 @@ sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else ec
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Template')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['WEB_TEMPLATE'])?></b>
+                      <b><?=$data[$key]['WEB_TEMPLATE']?></b>
                     </div>
                   </div>
                 </td>
@@ -126,7 +126,7 @@ sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else ec
                   <div class="l-unit__stat-cols clearfix last">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backups')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['BACKUPS'])?></b>
+                      <b><?=$data[$key]['BACKUPS']?></b>
                     </div>
                   </div>
                 </td>
@@ -138,7 +138,7 @@ sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else ec
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Proxy Template')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['PROXY_TEMPLATE'])?></b>
+                      <b><?=$data[$key]['PROXY_TEMPLATE']?></b>
                     </div>
                   </div>
                   <? } ?>
@@ -155,7 +155,12 @@ sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else ec
                   <div class="l-unit__stat-cols clearfix last">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Bandwidth')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
+<?php if (preg_match('/[a-z]/i', $data[$key]['BANDWIDTH'])): ?>
+                      <b><?=__($data[$key]['BANDWIDTH'])?></b>
+<?php else: ?>
                       <b><?=humanize_usage_size($data[$key]['BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['BANDWIDTH'])?>
+
+<?php endif; ?>
                     </div>
                   </div>
                 </td>
@@ -166,7 +171,7 @@ sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else ec
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS Template')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['DNS_TEMPLATE'])?></b>
+                      <b><?=$data[$key]['DNS_TEMPLATE']?></b>
                     </div>
                   </div>
                 </td>
@@ -182,7 +187,12 @@ sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else ec
                   <div class="l-unit__stat-cols clearfix last">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Disk')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
+<?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
+                      <b><?=__($data[$key]['DISK_QUOTA'])?></b>
+<?php else: ?>
                       <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?>
+
+<?php endif; ?>
                     </div>
                   </div>
                 </td>
@@ -193,7 +203,7 @@ sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else ec
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSH Access')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['SHELL'])?></b>
+                      <b><?=$data[$key]['SHELL']?></b>
                     </div>
                   </div>
                 </td>

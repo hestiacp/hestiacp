@@ -1,69 +1,4 @@
-<?php
-    // Insert script elements if it isn't loaded yet
-    insert_scripts();
-?>
   </div>
-
-  <script>
-    $(function() {
-      hover_menu();
-    });
-  </script>
-
-<?php
-// Dialogs
-// todo: display all the dialogs?
-
-if (!empty($_SESSION['look_alert'])):
-?>
-  <script>
-    $(function() {
-      $('#dialog:ui-dialog').dialog('destroy');
-      $('#dialog-message').dialog({
-        modal: true,
-        buttons: {
-          Ok: function() {
-            $(this).dialog('close');
-          }
-        }
-      });
-    });
-  </script>
-  <div id="dialog-message" title="<?=__('Welcome')?>">
-    <p class="confirmation"><?=__('LOGGED_IN_AS', $_SESSION['look'])?></p>
-  </div>
-<?php
-  unset($_SESSION['look_alert']);
-elseif (!empty($_SESSION['error_msg'])):
-?>
-  <div>
-    <script>
-      $(function() {
-        $('#dialog:ui-dialog').dialog('destroy');
-        $('#dialog-message').dialog({
-          modal: true,
-          buttons: {
-            Ok: function() {
-              $(this).dialog('close');
-            }
-          },
-          create: function() {
-            $(this)
-            .closest('.ui-dialog')
-            .find('.ui-button:first')
-            .addClass('submit');
-          }
-        });
-      });
-    </script>
-    <div id="dialog-message" title="">
-      <p><?=htmlentities($_SESSION['error_msg'])?></p>
-    </div>
-  </div>
-<?php
-  unset($_SESSION['error_msg']);
-endif;
-?>
 
   <div title="Confirmation" class="confirmation-text-redirect hidden">
     <p class="confirmation"><?=__('LEAVE_PAGE_CONFIRMATION')?></p>
@@ -73,6 +8,7 @@ endif;
     <div class="header">
       <div class="title">Shortcuts</div>
       <div class="close"></div>
+
     </div>
     <ul>
       <li><span class="key">a</span><?=__('Add New object')?></li>

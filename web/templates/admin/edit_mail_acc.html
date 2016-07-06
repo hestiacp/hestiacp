@@ -41,7 +41,7 @@
                                     <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo $v_status ?></b></td></tr>
+                            <tr><td class="data-<?=$v_status?>"><b><?=__($v_status)?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
@@ -141,23 +141,3 @@
         </table>
     </form>
 </div>
-
-<?php insert_scripts(); ?>
-    <script>
-      function elementHideShow(elementToHideOrShow){
-        var el = document.getElementById(elementToHideOrShow);
-        el.style.display = el.style.display === 'none' ? 'block' : 'none';
-      }
-
-      function randomString() {
-        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-        var string_length = 10;
-        var randomstring = '';
-        for (var i = 0; i < string_length; i++) {
-          var rnum = Math.floor(Math.random() * chars.length);
-          randomstring += chars.substr(rnum, 1);
-        }
-        document.v_edit_mail_acc.v_password.value = randomstring;
-      }
-    </script>
-    <script src="/js/pages/edit.mail_acc.js"></script>

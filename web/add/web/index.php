@@ -59,7 +59,7 @@ if (!empty($_POST['ok'])) {
     $aliases = implode(",",$aliases_arr);
     $aliases = escapeshellarg($aliases);
 
-    // Define proxy extentions
+    // Define proxy extensions
     $v_proxy_ext = $_POST['v_proxy_ext'];
     $proxy_ext = preg_replace("/\n/", ",", $v_proxy_ext);
     $proxy_ext = preg_replace("/\r/", ",", $proxy_ext);

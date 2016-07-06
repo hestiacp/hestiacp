@@ -3,6 +3,8 @@
 session_start();
 
 define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
+define('JS_LATEST_UPDATE', '1467758417');
+
 $i = 0;
 
 require_once(dirname(__FILE__).'/i18n.php');
@@ -95,12 +97,9 @@ function check_return_code($return_var,$output) {
     }
 }
 
-function insert_scripts() {
-    @include_once(dirname(__DIR__) . '/templates/scripts.html');
-}
-
 function render_page($user, $TAB, $page) {
     $__template_dir = dirname(__DIR__) . '/templates/';
+    $__pages_js_dir = dirname(__DIR__) . '/js/pages/';
 
     // Header
     include($__template_dir . 'header.html');
@@ -125,6 +124,12 @@ function render_page($user, $TAB, $page) {
         // Load admin page
         @include($__template_dir . "admin/$page.html");
     }
+
+    // Including common js files
+    @include_once(dirname(__DIR__) . '/templates/scripts.html');
+    // Including page specific js file
+    if(file_exists($__pages_js_dir.$page.'.js'))
+       echo '<script type="text/javascript" src="/js/pages/'.$page.'.js?'.JS_LATEST_UPDATE.'"></script>';
 
     // Footer
     include($__template_dir . 'footer.html');

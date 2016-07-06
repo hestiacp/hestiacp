@@ -48,19 +48,19 @@
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_chain">
-                                        <option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?php print __('SSH') ?></option>
-                                        <option value="WEB" <?php if ((!empty($v_chain)) && ( $v_chain == "'WEB'" )) echo 'selected'?>><?php print __('WEB') ?></option>
-                                        <option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?php print __('FTP') ?></option>
-                                        <option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?php print __('DNS') ?></option>
-                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?php print __('MAIL') ?></option>
-                                        <option value="DB" <?php if ((!empty($v_chain)) && ( $v_chain == "'DB'" )) echo 'selected'?>><?php print __('DB') ?></option>
-                                        <option value="VESTA" <?php if ((!empty($v_chain)) && ( $v_chain == "'VESTA'" )) echo 'selected'?>><?php print __('VESTA') ?></option>
+                                        <option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?=__('SSH')?></option>
+                                        <option value="WEB" <?php if ((!empty($v_chain)) && ( $v_chain == "'WEB'" )) echo 'selected'?>><?=__('WEB')?></option>
+                                        <option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?=__('FTP')?></option>
+                                        <option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?=__('DNS')?></option>
+                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?=__('MAIL')?></option>
+                                        <option value="DB" <?php if ((!empty($v_chain)) && ( $v_chain == "'DB'" )) echo 'selected'?>><?=__('DB')?></option>
+                                        <option value="VESTA" <?php if ((!empty($v_chain)) && ( $v_chain == "'VESTA'" )) echo 'selected'?>><?=__('VESTA')?></option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('IP address');?> <span class="optional">(<?php print __('CDIR format is supported');?>)</span>
+                                    <?=__('IP address')?> <span class="optional">(<?=__('CIDR format is supported')?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -84,11 +84,3 @@
             </table>
         </from>
       </div>
-
-<?php insert_scripts(); ?>
-    <script>
-      function elementHideShow(elementToHideOrShow) {
-        var el = document.getElementById(elementToHideOrShow);
-        el.style.display = el.style.display === 'none' ? 'block' : 'none';
-      }
-    </script>

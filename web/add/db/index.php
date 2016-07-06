@@ -114,15 +114,19 @@ $v_db_email = $panel[$user]['CONTACT'];
 $db_types = split(',', $_SESSION['DB_SYSTEM']);
 
 // List available database servers
-$db_hosts = array();
-exec (VESTA_CMD."v-list-database-hosts 'json'", $output, $return_var);
-$db_hosts_tmp = json_decode(implode('', $output), true);
-$db_hosts = array_merge($db_hosts, $db_hosts_tmp);
-unset($db_hosts_tmp);
+exec (VESTA_CMD."v-list-database-hosts json", $output, $return_var);
+$db_hosts_tmp1 = json_decode(implode('', $output), true);
+$db_hosts_tmp2 = array_map(function($host){return $host['HOST'];}, $db_hosts_tmp1);
+$db_hosts = array_values(array_unique($db_hosts_tmp2));
 unset($output);
+unset($db_hosts_tmp1);
+unset($db_hosts_tmp2);
 
 render_page($user, $TAB, 'add_db');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
+
+// Footer
+include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

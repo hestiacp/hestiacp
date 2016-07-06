@@ -12,6 +12,7 @@
 <!-- link rel="shortcut icon" href="/2008/site/images/favicon.ico" type="image/x-icon" / -->
 <link rel="stylesheet" href="/css/jquery.arcticmodal.css">
 <link rel="stylesheet" href="/css/jquery.fileupload.css">
+<script> GLOBAL = {}; </script>
 </head>
 <body>
     <a href="#" class="to-shortcuts">

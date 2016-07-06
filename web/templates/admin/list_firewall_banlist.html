@@ -79,7 +79,7 @@
           <div class="l-unit__stats">
             <div class="clearfix l-unit__stat-col--left wide"><b><?=$data[$key]['DATE']?></b> &nbsp; <?=$data[$key]['TIME']?> </div>
             <div class="clearfix l-unit__stat-col--left"></div>
-            <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$value['CHAIN']?></b></div>
+            <div class="clearfix l-unit__stat-col--left wide-3"><b><?=__($value['CHAIN'])?></b></div>
             <div class="clearfix l-unit__stat-col--left"><b><?=$ip?></b></div>
           </div>
           <!-- /.l-unit__stats -->
@@ -114,7 +114,7 @@
             ?>
           </div>
           <div class="data-count l-unit__col l-unit__col--right back clearfix">
-            <a class="button cancel" href="/list/firewall/">back</a>
+            <a class="button cancel" href="/list/firewall/"><?=__('Back')?></a>
           </div>
       </div>
     </div>

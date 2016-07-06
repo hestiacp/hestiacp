@@ -77,3 +77,36 @@ $('form[name="v_quota"]').bind('submit', function(evt) {
 });
 
 
+randomString = function() {
+    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+    var string_length = 10;
+    var randomstring = '';
+    for (var i = 0; i < string_length; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        randomstring += chars.substr(rnum, 1);
+    }
+    document.v_edit_mail_acc.v_password.value = randomstring;
+}
+
+$(document).ready(function() {
+    $('#v_account').text($('input[name=v_account]').val());
+    $('#v_password').text($('input[name=v_password]').val());
+
+    $('input[name=v_account]').change(function(){
+        $('#v_account').text($(this).val());
+    });
+  
+    $('input[name=v_password]').change(function(){
+        if($('input[name=v_password]').attr('type') == 'text')
+            $('#v_password').text($(this).val());
+        else
+            $('#v_password').text(Array($(this).val().length+1).join('*'));
+    });
+                                       
+    $('.toggle-psw-visibility-icon').click(function(){
+        if($('input[name=v_password]').attr('type') == 'text')
+            $('#v_password').text($('input[name=v_password]').val());
+        else
+            $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
+     });
+});

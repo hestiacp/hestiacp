@@ -1,8 +1,70 @@
-    <script src="/js/jquery-1.7.2.min.js?1446554103"></script>
-    <script src="/js/jquery.cookie.js?1446554103"></script>
-    <script src="/js/jquery-ui-1.8.20.custom.min.js?1467113876"></script>
-    <script src="/js/hotkeys.js?1446554103"></script>
-    <script src="/js/events.js?1446554103"></script>
-    <script src="/js/app.js?1446554103"></script>
-    <script src="/js/templates.js?1446554103"></script>
-    <script src="/js/jquery.finder.js"></script>
+  <script type="text/javascript" src="/js/jquery-1.7.2.min.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script type="text/javascript" src="/js/jquery.cookie.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script type="text/javascript" src="/js/hotkeys.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script type="text/javascript" src="/js/events.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script type="text/javascript" src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script type="text/javascript" src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script type="text/javascript" src="/js/templates.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script type="text/javascript" src="/js/jquery.finder.js?<?=JS_LATEST_UPDATE?>"></script>
+
+  <script>
+    $(function() {
+      hover_menu();
+    });
+  </script>
+
+<?php
+// Dialogs
+// todo: display all the dialogs?
+
+if (!empty($_SESSION['look_alert'])):
+?>
+  <script>
+    $(function() {
+      $('#dialog:ui-dialog').dialog('destroy');
+      $('#dialog-message').dialog({
+        modal: true,
+        buttons: {
+          Ok: function() {
+            $(this).dialog('close');
+          }
+        }
+      });
+    });
+  </script>
+  <div id="dialog-message" title="<?=__('Welcome')?>">
+    <p class="confirmation"><?=__('LOGGED_IN_AS', $_SESSION['look'])?></p>
+  </div>
+<?php
+  unset($_SESSION['look_alert']);
+elseif (!empty($_SESSION['error_msg'])):
+?>
+  <div>
+    <script>
+      $(function() {
+        $('#dialog:ui-dialog').dialog('destroy');
+        $('#dialog-message').dialog({
+          modal: true,
+          buttons: {
+            Ok: function() {
+              $(this).dialog('close');
+            }
+          },
+          create: function() {
+            $(this)
+            .closest('.ui-dialog')
+            .find('.ui-button:first')
+            .addClass('submit');
+          }
+        });
+      });
+    </script>
+    <div id="dialog-message" title="">
+      <p><?=htmlentities($_SESSION['error_msg'])?></p>
+    </div>
+  </div>
+<?php
+  unset($_SESSION['error_msg']);
+endif;
+?>

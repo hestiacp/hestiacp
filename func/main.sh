@@ -602,10 +602,10 @@ is_dns_record_format_valid() {
         is_ip_format_valid "$1"
     fi
     if [ "$rtype" = 'NS' ]; then
-        is_domain_format_valid "$1" 'ns_record'
+        is_domain_format_valid "${1::-1}" 'ns_record'
     fi
     if [ "$rtype" = 'MX' ]; then
-        is_domain_format_valid "$1" 'mx_record'
+        is_domain_format_valid "${1::-1}" 'mx_record'
         is_int_format_valid "$priority" 'priority_record'
     fi
 

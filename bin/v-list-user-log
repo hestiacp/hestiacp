@@ -27,7 +27,7 @@ json_list() {
         echo -n '    "'$ID'": {
         "CMD": "'$CMD'",
         "UNDO": "'$UNDO'",
-        "DATE": "'$DATE'",
+        "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
         if [ "$i" -lt "$objects" ]; then

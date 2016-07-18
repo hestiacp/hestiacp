@@ -14,9 +14,13 @@
 # Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
 template=$3
 restart=$4
+
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
 
 # Includes
 source $VESTA/func/main.sh
@@ -43,8 +47,7 @@ is_dns_template_valid "$template"
 #----------------------------------------------------------#
 
 # Defining variables
-ip=$(get_object_value 'dns' 'DOMAIN' "$domain" '$IP')
-
+get_domain_values 'dns'
 i=1
 ns=$(get_user_value '$NS')
 for nameserver in ${ns//,/ };do
@@ -77,13 +80,17 @@ fi
 
 # Changing tpl
 echo "$template_data" |\
-    sed -e "s/%ip%/$ip/g" \
+    sed -e "s/%ip%/$IP/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
         -e "s/%domain%/$domain/g" \
         -e "s/%ns1%/$ns1/g" \
         -e "s/%ns2%/$ns2/g" \
         -e "s/%ns3%/$ns3/g" \
         -e "s/%ns4%/$ns4/g" \
+        -e "s/%ns5%/$ns5/g" \
+        -e "s/%ns6%/$ns6/g" \
+        -e "s/%ns7%/$ns7/g" \
+        -e "s/%ns8%/$ns8/g" \
         -e "s/%time%/$TIME/g" \
         -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
 records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"

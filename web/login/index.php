@@ -3,11 +3,8 @@
 define('NO_AUTH_REQUIRED',true);
 
 
-
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-
-//echo $_SESSION['request_uri'];
 
 
 $TAB = 'LOGIN';
@@ -16,6 +13,8 @@ $TAB = 'LOGIN';
 if (isset($_GET['logout'])) {
     session_destroy();
 }
+
+
 
 
 // Login as someone else
@@ -71,7 +70,16 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         get_favourites();
 
         // Define language
-        if (!empty($data[$v_user]['LANGUAGE'])) $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
+        $output = '';
+        exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+        $languages = json_decode(implode('', $output), true);
+        if(in_array($data[$v_user]['LANGUAGE'], $languages)){
+            $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
+        }
+        else {
+            $_SESSION['language'] = 'en';
+        }
+
 
         // Redirect request to control panel interface
         if (!empty($_SESSION['request_uri'])) {
@@ -105,6 +113,9 @@ if (empty($_SESSION['language'])) {
     $languages = json_decode(implode('', $output), true);
     if(in_array($lang, $languages)){
         $_SESSION['language'] = $lang;
+    }
+    else {
+        $_SESSION['language'] = 'en';
     }
 }
 

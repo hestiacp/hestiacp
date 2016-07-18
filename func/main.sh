@@ -478,9 +478,8 @@ is_user_format_valid() {
 # Domain format validator
 is_domain_format_valid() {
     object_name=${2-domain}
-    mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
-    mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
-    if ! [[ "$1" =~ ^${mask1}${mask2}$ ]]; then
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
+    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ \.\. ]]; then
         check_result $E_INVALID "invalid $object_name format :: $1"
     fi
 }

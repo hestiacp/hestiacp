@@ -200,8 +200,8 @@ add_web_config() {
             -e "s|%user%|$user|g" \
             -e "s|%group%|$user|g" \
             -e "s|%home%|$HOMEDIR|g" \
-            -e "s|%docroot%|$HOMEDIR/$user/web/$domain/public_html|g" \
-            -e "s|%sdocroot%|$HOMEDIR/$user/web/$domain/public_html|g" \
+            -e "s|%docroot%|$docroot|g" \
+            -e "s|%sdocroot%|$sdocroot|g" \
             -e "s|%ssl_crt%|$ssl_crt|g" \
             -e "s|%ssl_key%|$ssl_key|g" \
             -e "s|%ssl_pem%|$ssl_pem|g" \

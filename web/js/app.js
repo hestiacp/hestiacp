@@ -1042,12 +1042,12 @@ hover_menu = function() {
 function checkedAll(frmname) {
     if ($('.l-unit.selected:not(.header)').length > 0) {
         $('.l-unit:not(.header)').removeClass("selected");
-        $('.ch-toggle').attr("checked", false);
+        $('.ch-toggle').prop("checked", false);
         $('.toggle-all').removeClass('clicked-on');
     }
     else {
         $('.l-unit:not(.header)').addClass("selected");
-        $('.ch-toggle').attr("checked", true);
+        $('.ch-toggle').prop("checked", true);
         $('.toggle-all').addClass('clicked-on');
     }
 }

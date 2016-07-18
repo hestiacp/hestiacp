@@ -58,6 +58,7 @@ if (!empty($_POST['ok'])) {
     $aliases_arr = array_filter($aliases_arr);
     $aliases = implode(",",$aliases_arr);
     $aliases = escapeshellarg($aliases);
+    if (empty($_POST['v_aliases'])) $aliases = 'none';
 
     // Define proxy extensions
     $v_proxy_ext = $_POST['v_proxy_ext'];

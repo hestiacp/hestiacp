@@ -121,9 +121,10 @@ if [ ! -z "$WEB_BACKEND" ]; then
 fi
 
 # Preparing domain variables
-ALIAS="$aliases"
 if [ "$aliases" != 'none' ]; then
     ALIAS="www.$domain,$aliases,$(get_ip_alias $domain)"
+else
+    ALIAS=''
 fi
 prepare_web_domain_values
 
@@ -157,7 +158,7 @@ time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Adding domain in web.conf
-echo "DOMAIN='$domain' IP='$ip' IP6='' ALIAS='$aliases' TPL='$WEB_TEMPLATE' \
+echo "DOMAIN='$domain' IP='$ip' IP6='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE' \
 SSL='no' SSL_HOME='same' FTP_USER='' FTP_MD5='' BACKEND='$BACKEND_TEMPLATE' \
 PROXY='$PROXY_TEMPLATE' PROXY_EXT='$PROXY_EXT' STATS='' STATS_USER='' \
 STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0' SUSPENDED='no' \

@@ -1125,6 +1125,14 @@ check_result $? "can't create admin user"
 $VESTA/bin/v-change-user-shell admin bash
 $VESTA/bin/v-change-user-language admin $lang
 
+# RoundCube permissions fix
+if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+	if [ ! -d "/var/log/roundcube" ]; then
+		mkdir /var/log/roundcube
+	fi
+    chown admin:admin /var/log/roundcube
+fi
+
 # Configuring system ips
 $VESTA/bin/v-update-sys-ip
 

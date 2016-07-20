@@ -589,7 +589,7 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF'
+    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA'
     if [ -z "$(echo $known_dnstype |grep -w $1)" ]; then
         check_result $E_INVALID "invalid dns record type format :: $1"
     fi

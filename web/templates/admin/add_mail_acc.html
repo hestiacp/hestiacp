@@ -132,6 +132,7 @@
             <td class="mail-infoblock-td">
                 <div class="mail-infoblock">
                 <table>
+                    <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
                     <tr>
                         <td><?=__('Username')?>:</td>
                         <td><span id="v_account">william.cage</span>@<?=htmlentities($v_domain)?></td>
@@ -142,7 +143,7 @@
                     </tr>
                     <tr>
                         <td><?=__('IMAP hostname')?>:</td>
-                        <td><?=htmlentities($v_domain)?></td>
+                        <td><?=$hostname?></td>
                     </tr>
                     <tr>
                         <td><?=__('IMAP port')?>:</td>
@@ -158,7 +159,7 @@
                     </tr>
                     <tr>
                         <td><?=__('SMTP hostname')?></td>
-                        <td><?=htmlentities($v_domain)?></td>
+                        <td><?=$hostname?></td>
                     </tr>
                     <tr>
                         <td><?=__('SMTP port')?>:</td>

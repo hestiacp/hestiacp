@@ -1069,6 +1069,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
+    sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
     chmod a+r /etc/roundcube/main.inc.php
     if [ "$release" -eq 8 ]; then

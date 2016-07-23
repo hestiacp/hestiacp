@@ -271,8 +271,8 @@ del_web_config() {
     get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
     sed -i "$top_line,$bottom_line d" $conf
 
-    web_domains=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
-    if [ "$web_domains" -eq '0' ]; then
+    web_domain=$(grep $domain $USER_DATA/web.conf |wc -l)
+    if [ "$web_domain" -eq '0' ]; then
         sed -i "/.*\/$user\/.*$1.conf/d" /etc/$1/conf.d/vesta.conf
         rm -f $conf
     fi

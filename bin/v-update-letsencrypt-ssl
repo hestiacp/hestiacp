@@ -28,29 +28,27 @@ users=$(ls $VESTA/data/users/*/ssl/le.conf |cut -f 7 -d /)
 # Checking users
 for user in $users; do
     # Checking user certificates
-    for crt in $(ls $VESTA/data/users/$user/ssl/*.crt 2>/dev/null); do
+    for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
         # Checking certificate issuer
-        crt_data=$(openssl x509 -text -in $crt)
-        issuer=$(echo "$crt_data" |grep Issuer: |grep Encrypt)
-        if [ ! -z "$issuer" ]; then
-            expire=$(echo "$crt_data" |grep "Not After")
-            expire=$(echo "$expire" |cut -f 2,3,4 -d :)
-            expire=$(date -d "$expire" +%s)
-            now=$(date +%s)
-            expire=$((expire - now))
-            expire=$((expire / 86400))
-            domain=$(basename $crt |sed -e "s/.crt$//")
-            if [[ "$expire" -lt 31 ]]; then
-                aliases=$(echo "$crt_data" |grep DNS:)
-                aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//")
-                aliases=$(echo "$aliases" |tr ' ' '\n' |sed "/^$/d")
-                aliases=$(echo "$aliases" |grep -v "^$domain$")
-                if [ ! -z "$aliases" ]; then
-                    aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')
-                    $BIN/v-add-letsencrypt-domain $user $domain $aliases
-                else
-                    $BIN/v-add-letsencrypt-domain $user $domain
-                fi
+        crt_data=$(openssl x509 -text -in "$VESTA/data/users/$user/ssl/$domain.crt")
+
+        expire=$(echo "$crt_data" |grep "Not After")
+        expire=$(echo "$expire" |cut -f 2,3,4 -d :)
+        expire=$(date -d "$expire" +%s)
+        now=$(date +%s)
+        expire=$((expire - now))
+        expire=$((expire / 86400))
+        domain=$(basename $crt |sed -e "s/.crt$//")
+        if [[ "$expire" -lt 31 ]]; then
+            aliases=$(echo "$crt_data" |grep DNS:)
+            aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//")
+            aliases=$(echo "$aliases" |tr ' ' '\n' |sed "/^$/d")
+            aliases=$(echo "$aliases" |grep -v "^$domain$")
+            if [ ! -z "$aliases" ]; then
+                aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')
+                $BIN/v-add-letsencrypt-domain $user $domain $aliases
+            else
+                $BIN/v-add-letsencrypt-domain $user $domain
             fi
         fi
     done

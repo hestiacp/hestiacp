@@ -1,0 +1,60 @@
+#!/bin/bash
+# info: deleting letsencrypt ssl cetificate for domain
+# options: USER DOMAIN [RESTART]
+#
+# The function turns off letsencrypt SSL support for a domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+restart=$3
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$LETSENCRYPT'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Delete SSL
+$BIN/v-delete-web-domain-ssl $user $domain >/dev/null 2>&1
+check_result $? "SSL delete" >/dev/null
+
+update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restarting web
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
+fi
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

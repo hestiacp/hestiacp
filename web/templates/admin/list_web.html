@@ -57,6 +57,7 @@
 
     <div class="l-center units narrow">
                 <?php
+                    $ips = json_decode(shell_exec(VESTA_CMD.'v-list-sys-ips json'), true);
                     foreach ($data as $key => $value) {
                         ++$i;
                         if ($data[$key]['SUSPENDED'] == 'yes') {
@@ -178,7 +179,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
           </div>
           <!-- /.l-unit__name -->
           <div class="l-unit__ip">
-            <?=str_replace('.', '<span>.</span>', $data[$key]['IP'])?>
+            <?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$data[$key]['IP']} → {$ips[$data[$key]['IP']]['NAT']}"; ?>
           </div>
           <!-- /.l-unit__ip -->
           <div class="l-unit__stats">

@@ -132,6 +132,21 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
     }
 }
 
+App.Actions.WEB.toggle_letsencrypt = function(elm) {
+    if ($(elm).attr('checked')) {
+        $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
+        $('input[name=v_ssl]').prop('checked', true);
+        $('#ssltable').show();
+        $('#generate-csr').hide();
+    }
+    else {
+        $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').removeAttr('disabled');
+        $('input[name=v_ssl]').prop('checked', false);
+        $('#ssltable').hide();
+        $('#generate-csr').show();
+    }
+}
+
 App.Actions.WEB.randomPasswordGenerated = function(elm) { 
     return App.Actions.WEB.passwordChanged(elm);
 }

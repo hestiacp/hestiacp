@@ -18,8 +18,8 @@ if (!empty($_POST['ok'])) {
     // Check for empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
     if (empty($_POST['v_ip'])) $errors[] = __('ip');
-    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))) $errors[] = __('ssl certificate');
-    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))) $errors[] = __('ssl key');
+    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))&& (empty($_POST['v_letsencrypt']))) $errors[] = __('ssl certificate');
+    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))&& (empty($_POST['v_letsencrypt']))) $errors[] = __('ssl key');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {

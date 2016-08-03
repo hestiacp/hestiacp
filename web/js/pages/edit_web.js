@@ -174,11 +174,14 @@ App.Actions.WEB.passwordChanged = function(elm) {
 App.Listeners.WEB.keypress_ftp_username();
 App.Listeners.WEB.keypress_ftp_path();
 
-$('.v-ftp-user-psw').on('keypress', function(evt) {
-    var elm = $(evt.target);
-    App.Actions.WEB.passwordChanged(elm);
-});
 
+$(function() {
+    $('.v-ftp-user-psw').on('keypress', function (evt) {
+        var elm = $(evt.target);
+        App.Actions.WEB.passwordChanged(elm);
+    });
+    App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'))
+});
 
 function WEBrandom() {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';

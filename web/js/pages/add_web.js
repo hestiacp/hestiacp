@@ -178,6 +178,7 @@ $(function() {
         var prefix = 'www.';
         document.getElementById('v_aliases').value = prefix + document.getElementById('v_domain').value;
     });
+    App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'))
 });
 
 function WEBrandom() {

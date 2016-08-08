@@ -436,6 +436,7 @@ check_result $? "Can't install EPEL repository"
 if [ "$remi" = 'yes' ]; then
     rpm -Uvh --force $vestacp/remi-release.rpm
     check_result $? "Can't install REMI repository"
+    sed -i "s/enabled=0/enabled=1/g" /etc/yum.repos.d/remi.repo
 fi
 
 # Installing Nginx repository
@@ -605,7 +606,7 @@ fi
 
 # Installing rpm packages
 if [ -z "$disable_remi" ]; then 
-    yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta,remi" \
+    yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta,remi*"\
         install $software
 else
     yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta" \

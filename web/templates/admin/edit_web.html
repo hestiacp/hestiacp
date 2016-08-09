@@ -66,7 +66,7 @@
                                     <select class="vst-list" name="v_ip">
                                         <?php
                                             foreach ($ips as $ip => $value) {
-                                                $display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$ip} → {$value['NAT']}");
+                                                $display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
                                                 $ip_selected = ((!empty($v_ip) && $ip == $v_ip) || $v_ip == "'{$ip}'")  ? 'selected' : '';
                                                 echo "\n\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
                                             }

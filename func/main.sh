@@ -479,7 +479,7 @@ is_user_format_valid() {
 is_domain_format_valid() {
     object_name=${2-domain}
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ \.\. ]]; then
+    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ "\.\." ]]; then
         check_result $E_INVALID "invalid $object_name format :: $1"
     fi
 }

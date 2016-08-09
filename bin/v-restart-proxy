@@ -12,6 +12,7 @@
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
+PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
 send_email_report() {
     email=$(grep CONTACT $VESTA/data/users/admin/user.conf)

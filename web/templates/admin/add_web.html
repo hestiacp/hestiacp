@@ -62,14 +62,10 @@
                             <td>
                                 <select class="vst-list" name="v_ip">
                                     <?php
-                                        foreach ($ips as $key => $value) {
-                                            $display_ip = $key;
-                                            if (!empty($value['NAT'])) $display_ip = $value['NAT'];
-                                            echo "\t\t\t\t<option value=\"".htmlentities($display_ip)."\"";
-                                            if ((!empty($v_ip)) && ( $display_ip == $_POST['v_ip'])){
-                                                echo ' selected';
-                                            }
-                                            echo ">".htmlentities($display_ip)."</option>\n";
+                                        foreach ($ips as $ip => $value) {
+                                            $display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$ip} → {$value['NAT']}");
+                                            $ip_selected = (!empty($v_ip) && $ip == $_POST['v_ip']) ? 'selected' : '';
+                                            echo "\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
                                         }
                                     ?>
                                 </select>

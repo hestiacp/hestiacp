@@ -37,17 +37,29 @@ switch ($_REQUEST['action']) {
 
     case 'rename_file':
         $dir = $_REQUEST['dir'];
-        $item = $_REQUEST['item'];
-        $target_name = $_REQUEST['target_name'];
-        print json_encode($fm->renameFile($dir, $item, $target_name));
+        $item = $dir . '/' . $_REQUEST['item'];
+        $target_name = $dir . '/' . $_REQUEST['target_name'];
+        print json_encode($fm->renameFile($item, $target_name));
         break;
 
     case 'rename_directory':
         $dir = $_REQUEST['dir'];
+        $item = $dir.$_REQUEST['item'];
+        $target_name = $dir.$_REQUEST['target_name'];
+
+        print json_encode($fm->renameDirectory($item, $target_name));
+        break;
+
+    case 'move_file':
         $item = $_REQUEST['item'];
         $target_name = $_REQUEST['target_name'];
+        print json_encode($fm->renameFile($item, $target_name));
+        break;
 
-        print json_encode($fm->renameDirectory($dir, $item, $target_name));
+    case 'move_directory':
+        $item = $_REQUEST['item'];
+        $target_name = $_REQUEST['target_name'];
+        print json_encode($fm->renameDirectory($item, $target_name));
         break;
 
     case 'delete_files':
@@ -98,11 +110,9 @@ switch ($_REQUEST['action']) {
         break;
 
     case 'pack_item':
-        $dir = $_REQUEST['dir'];
-        $target_dir = $_REQUEST['dir_target'];
-        $filename   = $_REQUEST['filename'];
-        $item       = $_REQUEST['item'];
-        print json_encode($fm->packItem($item, $dir, $target_dir, $filename));
+        $items       = $_REQUEST['items'];
+        $dst_item   = $_REQUEST['dst_item'];
+        print json_encode($fm->packItem($items, $dst_item));
         break;
 
     case 'backup':

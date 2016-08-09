@@ -88,6 +88,7 @@
         <li><span class="key">F7</span><?=__('New Folder')?></li>
         <li><span class="key">d</span><?=__('Download')?></li>
         <li><span class="key">F2 / Shift+F6</span><?=__('Rename')?></li>
+        <li><span class="key">m</span><?=__('Move')?></li>
         <li><span class="key">F5</span><?=__('Copy')?></li>
         <li><span class="key">a</span><?=__('Archive')?></li>
         <li><span class="key">F8 / Del</span><?=__('Delete')?></li>
@@ -104,6 +105,7 @@
         <li><span class="key">Home</span><?=__('Go to the Top of the File List')?></li>
         <li><span class="key">End</span><?=__('Go to the Last File')?></li>
         <li class="step-top"><span class="key">Enter</span><?=__('Open File / Enter Directory')?></li>
+        <li><span class="key">F4</span><?=__('Edit File')?></li>
         <li><span class="key">Backspace</span><?=__('Go to Parent Directory')?></li>
         <li class="step-top"><span class="key">Insert / Space</span><?=__('Select Current File')?></li>
         <li><span class="key">Shift + click</span><?=__('Select Bunch of Files')?></li>
@@ -124,15 +126,17 @@
         <script type="text/javascript" src="/js/templates.js"></script>
         <script type="text/javascript" src="/js/floating_layer.js"></script>
         <script src="/js/ripple.js"></script>
-        <script src="/js/jquery.iframe-transport.js"></script>
-        <script src="/js/jquery.fileupload.js"></script>
-        <script src="/js/jquery.arcticmodal.js"></script>
-        
+
         <?php if (!empty($GLOBAL_JS)): ?>
             <?php echo $GLOBAL_JS; ?>
         <?php endif; ?>
 
         <script type="text/javascript" src="/js/file_manager.js"></script>
+
+        <script src="/js/jquery.iframe-transport.js"></script>
+        <script src="/js/jquery.fileupload.js"></script>
+        <script src="/js/jquery.arcticmodal.js"></script>
+
         <script type="text/javascript">
         $(function () {
             'use strict';
@@ -145,11 +149,10 @@
                     singleFileUploads: false,
                     add: function (e, data) {
                         FM.setTabActive(FM['TAB_'+letter]);
-                        
+
                         var tab = FM.getTabLetter(FM.CURRENT_TAB);
                         var file_relocation = FM['TAB_'+tab+'_CURRENT_PATH'];
-                        
-                        
+
 
                         $('#file_upload_' + letter).fileupload("option", "url", url + '?dir=' + file_relocation);
                         acc = $('<div>');
@@ -192,28 +195,10 @@
                         //console.log(data);
                     },
                     always: function(e, data) {
-                        /*if (show_msg) {
-                            clearTimeout(window.ht_fd);
-                            var info = $('.warning-box.inform').clone(true);
-                            $(info).attr('id', 'file-upload-msg');
-                            $(info).find('.message').text('Bla bla bla');
-                            $(info).find('.message-small').html(acc);
-                            $(info).find('.close').bind('click', function() {
-                                $('#file-upload-msg').remove();
-                            });
-                            
-                            $('body').append($(info).removeClass('hidden'));
-                        
-                            window.ht_fd = setTimeout(function() {
-                                $('#file-upload-msg').fadeOut();
-                            }, 3000);
-                        }*/
-                        
                         var tab = FM.getTabLetter(FM.CURRENT_TAB);
                         var box = FM['TAB_' + tab];
                         FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
 
-                        //$('.file-upload-button-' + tab).removeClass('progress');
                         $('.file-upload-button-' + tab).addClass('done');
 
                         setTimeout(function() {
@@ -282,8 +267,6 @@
             
             $(".listing-left").selectable({
                 selected: function (event, ui) {
-					//console.log(ui);
-					//console.log($(".listing-left .selected"));
 					FM.setTabActive(FM.TAB_A, 'skip_highlights');
 					
 					$(".listing-left .active").removeClass('active');
@@ -298,7 +281,6 @@
                     $(ui.selected).addClass('active');
                     
                     
-                    //$(ui.selected).addClass('active');
                     checkIfArchive(ui.selected);
                     $(".listing-left .ui-selected").addClass('selected');
                     
@@ -311,17 +293,6 @@
 					
 					FM.preselectedItems.A = [];
 
-                    /*FM.setTabActive(FM.TAB_A, 'skip_highlights');
-                    $(".listing-left .selected, .listing-left .ui-selectee").each(function(i, o) {
-                        if (!$(o).hasClass('ui-selected')) {
-                            $(o).removeClass('selected');
-                            $(o).removeClass('active');
-                        }
-                    });
-                    $(ui.selected).addClass('selected');
-                    $(ui.selected).addClass('active');
-                    checkIfArchive(ui.selected);
-                    $(".listing-left .ui-selected").addClass('selected');*/
                 },
                 unselected: function (event, ui) {
 					FM.setTabActive(FM.TAB_A, 'skip_highlights');
@@ -336,15 +307,6 @@
 						FM['CURRENT_A_LINE'] = 0;
 					}
 					
-                    /*$(".listing-left .selected, .listing-left .ui-selectee").each(function(i, o) {
-                        if (!$(o).hasClass('ui-selected')) {
-                            $(o).removeClass('selected');
-                            $(o).removeClass('active');
-                        }
-                    });
-                    FM.setTabActive(FM.TAB_A, 'skip_highlights');
-                    $(ui.unselected).removeClass('selected');
-                    $(ui.selected).addClass('active');*/
                 }
             });
             $(".listing-right").selectable({
@@ -394,30 +356,6 @@
 
 
             });
-            /*$(".listing-right").selectable({
-                selected: function (event, ui) {
-                    $(".listing-left .selected").each(function(i, o) {
-                        if (!$(o).hasClass('ui-selected')) {
-                            $(o).removeClass('selected');
-                        }
-                    });
-                    FM.setTabActive(FM.TAB_B, 'skip_highlights');
-                    $(ui.selected).addClass('selected');
-                    checkIfArchive(ui.selected);
-                    $(".listing-left .ui-selected").addClass('selected');
-                },
-                unselected: function (event, ui) {
-                    $(".listing-left .selected").each(function(i, o) {
-                        if (!$(o).hasClass('ui-selected')) {
-                            $(o).removeClass('selected');
-                        }
-                    });
-                    FM.setTabActive(FM.TAB_B, 'skip_highlights');
-                    $(ui.unselected).removeClass('selected');
-                }
-            });*/
-           
-            
         });
         </script>
 </body>

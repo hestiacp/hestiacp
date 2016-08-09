@@ -797,9 +797,9 @@ App.Ajax.request = function(method, data, callback, onError){
     }*/
     //App.Helpers.setAjaxBusy(method, data);
     data = data || {};
-    
+
     var prgs = $('.progress-container');
-    
+
     switch (method) {
         case 'cd':
             prgs.find('title').text('Opening dir');
@@ -825,8 +825,12 @@ App.Ajax.request = function(method, data, callback, onError){
             prgs.find('title').text('Renaming file');
             prgs.show();
             break;
+        case 'copy_file':
+        case 'copy_directory':
+            prgs.find('title').text('Copying files');
+            prgs.show();
+            break;
         default:
-        
             break;
     }
 

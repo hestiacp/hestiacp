@@ -150,13 +150,18 @@ class FileManager {
         }
     }
 
-    function packItem($item, $dir, $target_dir, $filename) {
-        $item     = $this->formatFullPath($item);
-        $dst_item = $this->formatFullPath($target_dir);
+    function packItem($items, $dst_item) {
+	$items_arr = explode(',', $items);
+	foreach($items_arr as $key => $item){
+	    $items_arr[$key] = $this->formatFullPath($item);
+	}
+	$items = implode(' ', $items_arr);
 
+        $dst_item = $this->formatFullPath($dst_item);
         $dst_item = str_replace('.tar.gz', '', $dst_item);
 
-        exec (VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$item}", $output, $return_var);
+//	echo VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$items}";
+        exec (VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$items}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -233,9 +238,12 @@ class FileManager {
         }
     }
 
-    function renameFile($dir, $item, $target_name) {
-        $item     = $this->formatFullPath($dir . '/' . $item);
-        $dst_item = $this->formatFullPath($dir . '/' . $target_name);
+    function renameFile($item, $target_name) {
+//        $item     = $this->formatFullPath($dir . '/' . $item);
+//        $dst_item = $this->formatFullPath($dir . '/' . $target_name);
+
+        $item     = $this->formatFullPath($item);
+        $dst_item = $this->formatFullPath($target_name);
 
         exec (VESTA_CMD . "v-move-fs-file {$this->user} {$item} {$dst_item}", $output, $return_var);
 
@@ -254,9 +262,9 @@ class FileManager {
         }
     }
 
-    function renameDirectory($dir, $item, $target_name) {
-        $item     = $this->formatFullPath($dir . $item);
-        $dst_item = $this->formatFullPath($dir . $target_name);
+    function renameDirectory($item, $target_name) {
+        $item     = $this->formatFullPath($item);
+        $dst_item = $this->formatFullPath($target_name);
 
         if ($item == $dst_item) {
             return array(

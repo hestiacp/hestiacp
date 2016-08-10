@@ -158,9 +158,7 @@ class FileManager {
 	$items = implode(' ', $items_arr);
 
         $dst_item = $this->formatFullPath($dst_item);
-        $dst_item = str_replace('.tar.gz', '', $dst_item);
 
-//	echo VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$items}";
         exec (VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$items}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);

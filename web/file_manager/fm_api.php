@@ -110,7 +110,7 @@ switch ($_REQUEST['action']) {
         break;
 
     case 'pack_item':
-        $items       = $_REQUEST['items'];
+        $items      = $_REQUEST['items'];
         $dst_item   = $_REQUEST['dst_item'];
         print json_encode($fm->packItem($items, $dst_item));
         break;

@@ -188,6 +188,21 @@ App.Templates.html = {
                             </div>\
                         </div>'],
 
+        popup_bulk_pack: ['<div class="confirm-box pack warning">\
+                            <div class="message">'+App.Constants.FM_PACK+' (~!:NUMBER_OF_ITEMS~!)</div>\
+                            <div class="actions">\
+                                <input type="text" id="pack-destination" class="new-title" value="~!:DST_DIRNAME~!">\
+                            </div>\
+                            <div class="warning warning-message"></div>\
+                            <!-- div class="actions">\
+                                <label><input type="checkbox" name="overwrite" class="title" />Overwrite exising files</label>\
+                            </div -->\
+                            <div class="controls">\
+                                <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
+                                <p class="ok" onClick="FM.confirmPackItem();">'+App.Constants.FM_PACK_BUTTON+'</p>\
+                            </div>\
+                        </div>'],
+
         popup_unpack: ['<div class="confirm-box unpack warning">\
                             <div class="message">'+App.Constants.FM_EXTRACT+' <span class="title">"~!:FILENAME~!"</span> '+App.Constants.FM_INTO_KEYWORD+':</div>\
                             <div class="actions">\

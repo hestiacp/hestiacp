@@ -1141,7 +1141,6 @@ FM.unpackItem = function() {
             App.Constants.FM_NO_FILE_SELECTED
         );
     }
-    
 
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
@@ -1157,12 +1156,12 @@ FM.unpackItem = function() {
             App.Constants.FM_FILE_TYPE_NOT_SUPPORTED
         );
     }
-    
+
     var dst = FM['TAB_' + tab + '_CURRENT_PATH'];
     if (dst == '') {
         dst = GLOBAL.ROOT_DIR;
     }
-    
+
     var tpl = Tpl.get('popup_unpack', 'FM');
     tpl.set(':FILENAME', src.name);
     tpl.set(':DST_DIRNAME', (dst).replace('//', '/'));
@@ -1172,36 +1171,32 @@ FM.unpackItem = function() {
 FM.packItem = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
-    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
     if (selected.length == 0) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_SELECTED
         );
     }
-    
 
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
-    
-    if (FM.isItemPseudo(src)) {
-        return FM.displayError(
-            App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
-        );
-    }
-    
-    if (FM.isItemPseudo(src)) {
+
+    if (FM.isItemPseudo(src) && selected.length <=1 ) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
         );
     }
 
-    
     var dst = FM['TAB_' + tab + '_CURRENT_PATH'];
     if (dst == '') {
         dst = GLOBAL.ROOT_DIR;
     }
-    
+
     var tpl = Tpl.get('popup_pack', 'FM');
+    if(selected.length > 1){
+        tpl = Tpl.get('popup_bulk_pack', 'FM');
+    }
+    tpl.set(':NUMBER_OF_ITEMS', selected.length);
     tpl.set(':FILENAME', src.name);
     tpl.set(':DST_DIRNAME', (dst + '/' + src.name + '.tar.gz').replace('//', '/'));
     FM.popupOpen(tpl.finalize());

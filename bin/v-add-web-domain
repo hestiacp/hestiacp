@@ -120,12 +120,21 @@ if [ ! -z "$WEB_BACKEND" ]; then
     check_result $? "Backend error" >/dev/null
 fi
 
-# Preparing domain variables
-if [ "$aliases" != 'none' ]; then
-    ALIAS="www.$domain,$aliases,$(get_ip_alias $domain)"
-else
+# Preparing domain aliases
+if [ "$aliases" = 'none' ]; then
     ALIAS=''
+else
+    ALIAS="www.$domain"
+    if [ ! -z "$aliases" ]; then
+        ALIAS="$ALIAS,$aliases"
+    fi
+    ip_alias=$(get_ip_alias $domain)
+    if [ ! -z "$ip_alias" ]; then
+        ALIAS="$ALIAS,$ip_alias"
+    fi
 fi
+
+# Preparing domain variables
 prepare_web_domain_values
 
 # Adding web server config

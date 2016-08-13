@@ -90,7 +90,7 @@ check_result $? "SSL install" >/dev/null
 if [ ! -z "$LETSENCRYPT" ]; then
    update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
 else
-   add_object_key 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
+   add_object_key 'web' 'DOMAIN' "$domain" 'LETSENCRYPT' 'yes'
 fi
 
 

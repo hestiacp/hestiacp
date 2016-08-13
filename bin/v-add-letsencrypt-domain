@@ -88,9 +88,9 @@ $BIN/v-add-web-domain-ssl $user $domain $ssl_dir
 check_result $? "SSL install" >/dev/null
 
 if [ ! -z "$LETSENCRYPT" ]; then
-    add_object_key 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
+   update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
 else
-    update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
+   add_object_key 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
 fi
 
 

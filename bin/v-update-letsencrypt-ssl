@@ -27,6 +27,7 @@ users=$($BIN/v-list-users | tail -n+3 | awk '{ print $1 }')
 
 # Checking users
 for user in $users; do
+    USER_DATA=$VESTA/data/users/$user
     # Checking user certificates
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
         # Checking certificate issuer

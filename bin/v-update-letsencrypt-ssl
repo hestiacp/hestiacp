@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 # Defining user list
-users=$(ls $VESTA/data/users/*/ssl/le.conf |cut -f 7 -d /)
+users=$($BIN/v-list-users | tail -n+3 | awk '{ print $1 }')
 
 # Checking users
 for user in $users; do

@@ -1097,7 +1097,7 @@ if [ "$clamd" = 'yes' ]; then
     wget $vestacp/clamav/freshclam.conf -O /etc/freshclam.conf
     mkdir -p /var/log/clamav
     mkdir -p /var/run/clamav
-    chown clam:clam /var/log/clamav
+    chown clam:clam /var/log/clamav /var/run/clamav
     chown -R clam:clam /var/lib/clamav
     if [ "$release" -eq '7' ]; then
         wget $vestacp/clamav/clamd.service -O \
@@ -1105,6 +1105,10 @@ if [ "$clamd" = 'yes' ]; then
         systemctl --system daemon-reload
     fi
     /usr/bin/freshclam
+    if [ "$release" -eq '7' ]; then
+        sed -i "s/nofork/foreground/" /usr/lib/systemd/system/clamd.service
+        systemctl daemon-reload
+    fi
     chkconfig clamd on
     service clamd start
     #check_result $? "clamd start failed"

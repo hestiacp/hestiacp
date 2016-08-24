@@ -24,7 +24,7 @@ source $VESTA/func/main.sh
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN KEY'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 
@@ -42,6 +42,6 @@ get_object_value 'dns' 'DOMAIN' "$domain" "$key"
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit 

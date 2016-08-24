@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'DATABASE USER'
-validate_format 'database' 'user'
+is_format_valid 'database' 'user'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -34,7 +34,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 owner=$(echo $database | cut -f 1 -d '_')
 if [ ! -e "$VESTA/data/users/$owner" ]; then
     echo "Error: database owner doesn't exist"
-    log_event "$E_NOTEXIST" "$EVENT"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 
@@ -47,7 +47,7 @@ fi
 db_data=$(grep "DB='$database'" $VESTA/data/users/$owner/db.conf)
 if [ -z "$db_data" ]; then
     echo "Error: database $database doesn't exist"
-    log_event "$E_NOTEXIST" "$EVENT"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 
@@ -56,7 +56,7 @@ new_db=$(echo $database | sed "s/^${owner}_/${user}_/")
 check_db=$(grep "DB='$new_db'" $VESTA/data/users/$user/db.conf)
 if [ ! -z "$check_db" ]; then
     echo "Error: $new_db database exists"
-    log_event "$E_EXISTS" "$EVENT"
+    log_event "$E_EXISTS" "$ARGUMENTS"
     exit $E_EXISTS
 fi
 
@@ -69,7 +69,7 @@ fi
 tmpdir=$(mktemp -p $BACKUP -d)
 if [ "$?" -ne 0 ]; then
     echo "Error: can't create $tmpdir"
-    log_event "$E_NOTEXIST" "$EVENT"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 
@@ -80,7 +80,6 @@ $BIN/v-suspend-database $owner $database > /dev/null 2>&1
 eval $db_data
 dump="$tmpdir/$database.$TYPE.sql"
 grants="$tmpdir/$database.$TYPE.$DBUSER"
-send_mail='/bin/true'
 case $TYPE in
     mysql) dump_mysql_database ;;
     pgsql) dump_pgsql_database ;;
@@ -120,6 +119,6 @@ $BIN/v-update-user-counters $user
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

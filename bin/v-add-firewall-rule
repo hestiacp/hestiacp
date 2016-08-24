@@ -47,13 +47,13 @@ sort_fw_rules() {
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]'
-validate_format 'action' 'protocol' 'port_ext' 'ip'
+is_format_valid 'action' 'protocol' 'port_ext' 'ip'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 get_next_fw_rule
-validate_format 'rule'
+is_format_valid 'rule'
 is_object_new '../../data/firewall/rules' 'RULE' "$rule"
 if [ ! -z "$comment" ]; then
-    validate_format 'comment'
+    is_format_valid 'comment'
 fi
 
 
@@ -61,10 +61,15 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Concatenating rule
 str="RULE='$rule' ACTION='$action' PROTOCOL='$protocol' PORT='$port_ext'"
 str="$str IP='$ip' COMMENT='$comment' SUSPENDED='no'"
-str="$str TIME='$TIME' DATE='$DATE'"
+str="$str TIME='$time' DATE='$date'"
 
 # Adding to config
 echo "$str" >> $VESTA/data/firewall/rules.conf
@@ -84,6 +89,6 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -16,89 +16,59 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_user_ips() {
+# JSON list function
+json_list() {
     echo '{'
-    fileds_count=$(echo "$fields" | wc -w)
-    for IP in $(ls $VESTA/data/ips/); do
+    ip_count=$(echo "$ips" |wc -l)
+    i=1
+    for IP in $ips; do
         source $VESTA/data/ips/$IP
-        if [ "$OWNER" = "$user" ]; then
-            if [ -n "$data" ]; then
-                echo -e '        },'
-            fi
-            i=1
-            for field in $fields; do
-                eval value=$field
-                if [ $i -eq 1 ]; then
-                    (( ++i))
-                    echo -e "\t\"$value\": {"
-                else
-                    if [ $i -lt $fileds_count ]; then
-                        (( ++i))
-                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                    else
-                        echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                        data=1
-                    fi
-                fi
-            done
+        echo -n '    "'$IP'": {
+        "OWNER": "'$OWNER'",
+        "STATUS": "'$STATUS'",
+        "NAME": "'$NAME'",
+        "NAT": "'$NAT'"
+        }'
+        if [ "$i" -lt "$ip_count" ]; then
+            echo ','
         else
-            if  [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
-                if [ -n "$data" ]; then
-                    echo -e '        },'
-                fi
-                i=1
-
-                for field in $fields; do
-                    eval value=$field
-                    if [ $i -eq 1 ]; then
-                        (( ++i))
-                        echo -e "\t\"$value\": {"
-                    else
-                        if [ $i -lt $fileds_count ]; then
-                            (( ++i))
-                            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                        else
-                            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                            data=1
-                        fi
-                    fi
-                done
-            fi
+            echo
         fi
+        ((i++))
     done
-    if [ -n "$data" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
-
+    echo '}'
 }
 
-# Shell function
-shell_list_user_ips() {
-    for IP in $(ls $VESTA/data/ips/); do
+# SHELL list function
+shell_list() {
+    echo "IP  NAT  OWNER   STATUS   NAME"
+    echo "--  ---  -----   ------   ---"
+    for IP in $ips; do
         source $VESTA/data/ips/$IP
-        if [ "$OWNER" = "$user" ]; then
-            for field in $fields; do
-                eval value=$field
-                if [ -z "$value" ]; then
-                    value='NULL'
-                fi
-                echo -n "$value "
-            done
-            echo
-        else
-            if  [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
-                for field in $fields; do
-                    eval value=$field
-                    if [ -z "$value" ]; then
-                        value='NULL'
-                    fi
-                    echo -n "$value "
-                done
-                echo
-            fi
+        if [ -z "$NAT" ]; then
+            NAT='no'
         fi
+        if [ -z "$NAME" ]; then
+            NAME='no'
+        fi
+        echo "$IP $NAT $OWNER $STATUS $NAME"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for IP in $ips; do
+        source $VESTA/data/ips/$IP
+        echo -e "$IP\t$OWNER\t$STATUS\t$NAME\t$NAT"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "IP,OWNER,STATUS,NAME,NAT"
+    for IP in $ips; do
+        source $VESTA/data/ips/$IP
+        echo "$IP,$OWNER,$STATUS,$NAME,$NAT"
     done
 }
 
@@ -108,7 +78,7 @@ shell_list_user_ips() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -117,14 +87,21 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Defining fileds to select
+owner='admin'
+owner_ips=$(grep -A 1 -H  "OWNER='$owner'" $VESTA/data/ips/*)
+owner_ips=$(echo "$owner_ips" |grep "STATUS='shared'")
+owner_ips=$(echo "$owner_ips" |cut -f 7 -d / |cut -f 1 -d -)
+user_ips=$(grep -H "OWNER='$user'" $VESTA/data/ips/*)
+user_ips=$(echo "$user_ips" |cut -f 7 -d / |cut -f 1 -d :)
+ips=$(echo -e "$user_ips\n$owner_ips" |sort -u |sed "/^$/d")
 fields='$IP $OWNER $STATUS $NAME $NAT'
 
-# Listing ips
+# Listing data
 case $format in
-    json)   json_list_user_ips ;;
-    plain)  nohead=1; shell_list_user_ips ;;
-    shell)  shell_list_user_ips | column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]' ;;
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

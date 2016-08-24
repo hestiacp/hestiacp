@@ -19,7 +19,7 @@ source $VESTA/conf/vesta.conf
 is_timezone_valid() {
     if [ ! -e "/usr/share/zoneinfo/$timezone" ]; then
         echo "Error: tz file $timezone doesn't exist"
-        log_event $E_NOTEXIST "$EVENT"
+        log_event $E_NOTEXIST "$ARGUMENTS"
         exit $E_NOTEXIST
     fi
 }
@@ -67,6 +67,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

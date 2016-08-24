@@ -16,13 +16,78 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep DOMAIN $USER_DATA/dns.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        echo -n '    "'$DOMAIN'": {
+        "IP": "'$IP'",
+        "TPL": "'$TPL'",
+        "TTL": "'$TTL'",
+        "EXP": "'$EXP'",
+        "SOA": "'$SOA'",
+        "SERIAL": "'$SERIAL'",
+        "SRC": "'$SRC'",
+        "RECORDS": "'$RECORDS'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done < <(cat $USER_DATA/dns.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "DOMAIN   IP   TPL   TTL   REC   SPND   DATE"
+    echo "------   --   ---   ---   ---   ----   ----"
+    while read str; do
+        eval $str
+        echo "$DOMAIN $IP $TPL $TTL $RECORDS $SUSPENDED $DATE"
+    done < <(cat $USER_DATA/dns.conf)
+}
+
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        echo -ne "$DOMAIN\t$IP\t$TPL\t$TTL\t$EXP\t$SOA\t$SERIAL\t"
+        echo -e "$SRC\t$RECORDS\t$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $USER_DATA/dns.conf)
+}
+
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "DOMAIN,IP,TPL,TTL,EXP,SOA,SERIAL,SRC,RECORDS,SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        echo -n "$DOMAIN,$IP,$TPL,$TTL,$EXP,$SOA,$SERIAL,"
+        echo "$SRC,$RECORDS,$SUSPENDED,$TIME,$DATE"
+    done < <(cat $USER_DATA/dns.conf)
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -30,18 +95,12 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config and fields
-conf=$USER_DATA/dns.conf
-fields='$DOMAIN $IP $TPL $TTL $EXP $SOA $SERIAL $SRC $RECORDS
-    $SUSPENDED $TIME $DATE'
-
-# Listing domains
-case $format in 
+# Listing data
+case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$DOMAIN $IP $TPL $EXP $DATE';
-            shell_list| column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]';;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

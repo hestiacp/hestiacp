@@ -106,12 +106,12 @@ remote_dns_health_check() {
             else
                 subj="DNS sync failed"
                 email=$($BIN/v-get-user-value admin CONTACT)
-                cat $tmpfile |$send_mail -s "$subj" $email
+                cat $tmpfile |$SENDMAIL -s "$subj" $email
             fi
 
             # Deleting tmp file
             rm -f $tmpfile
-            log_event "$E_CONNECT" "$EVENT"
+            log_event "$E_CONNECT" "$ARGUMENTS"
 
             # Suspending remote host
             dconf="../../conf/dns-cluster"

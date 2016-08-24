@@ -15,30 +15,41 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_dnstpl() {
-    templates=$(ls -t $DNSTPL |grep '\.tpl' |cut -f 1 -d  '.')
-    t_counter=$(echo "$templates" | wc -w)
+# JSON list function
+json_list() {
+    objects=$(echo "$templates" |wc -l)
     i=1
-    echo '['
+    echo "["
     for template in $templates; do
-        if [ "$i" -lt "$t_counter" ]; then
-            echo -e  "\t\"$template\","
+        echo -n '    "'$template'"'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
         else
-            echo -e  "\t\"$template\""
+            echo
         fi
-        (( ++i))
+        ((i++))
     done
     echo "]"
+
 }
 
-# Shell function
-shell_list_dnstpl() {
-    templates=$(ls -t $DNSTPL |grep '\.tpl' |cut -f 1 -d  '.')
-    if [ -z "$nohead" ]; then
-        echo "Templates"
-        echo "----------"
-    fi
+# SHELL list function
+shell_list() {
+    echo "TEMPLATE"
+    echo "--------"
+    ls -t $DNSTPL |grep '\.tpl' |cut -f 1 -d  '.'
+}
+
+# PLAIN list function
+plain_list() {
+    for template in $templates; do
+        echo "$template"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "TEMPLATE"
     for template in $templates; do
         echo "$template"
     done
@@ -49,12 +60,15 @@ shell_list_dnstpl() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Listing domains
-case $format in 
-    json)   json_list_dnstpl;;
-    plain)  nohead=1; shell_list_dnstpl ;;
-    shell)  shell_list_dnstpl ;;
-    *)      check_args '1' '0' '[FORMAT] [LIMIT] [OFFSET]';;
+# Defining template list
+templates=$(ls -t $DNSTPL |grep '\.tpl' |cut -f 1 -d  '.')
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list;;
 esac
 
 

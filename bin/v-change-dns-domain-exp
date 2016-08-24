@@ -26,7 +26,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN EXP'
-validate_format 'user' 'domain' 'exp'
+is_format_valid 'user' 'domain' 'exp'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -58,6 +58,6 @@ fi
 
 # Logging
 log_history "changed whois expiration date for $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

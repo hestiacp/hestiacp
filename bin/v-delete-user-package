@@ -22,7 +22,7 @@ is_package_in_use() {
     check_package=$(grep "PACKAGE='$package'" $USER_DATA/*/user.conf)
     if [ ! -z "$check_package" ]; then
         echo "Error: package $package is in use"
-        log_event "$E_INUSE" "$EVENT"
+        log_event "$E_INUSE" "$ARGUMENTS"
         exit $E_INUSE
     fi
 }
@@ -32,7 +32,7 @@ is_package_in_use() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'PACKAGE'
-validate_format 'package'
+is_format_valid 'package'
 is_package_valid
 is_package_in_use
 
@@ -50,6 +50,6 @@ rm -f $VESTA/data/packages/$package.pkg
 #----------------------------------------------------------#
 
 log_history "deleted user package $package" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list backup host
-# options: TYPE [FORMAT]
+# options: TYPE HOST [FORMAT]
 #
 # The function for obtaining the list of backup host parameters.
 
@@ -10,46 +10,55 @@
 #----------------------------------------------------------#
 
 # Argument definition
-TYPE=$1
+type=$1
 format=${2-shell}
 
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_ftp_host() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    ip_data=$(cat $VESTA/conf/$TYPE.backup.conf)
+# JSON list function
+json_list() {
     echo '{'
-    echo -e "\t\"$TYPE\": {"
-    eval $ip_data
-    for field in $fields; do
-        eval value=$field
-        if [ $fileds_count -eq $i ]; then
-            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-        else
-            echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-        fi
-    (( ++i))
-    done
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+    echo '    "'$type'": {
+        "HOST": "'$HOST'",
+        "USERNAME": "'$USERNAME'",
+        "PORT": "'$PORT'",
+        "TYPE": "'$type'",
+        "BPATH": "'$BPATH'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
 }
 
-# Shell function
-shell_list_ftp_host() {
-    line=$(cat $VESTA/conf/$TYPE.backup.conf)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        if [ -z "$key" ]; then
-            key='NULL'
-        fi
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    echo "HOST:           $HOST"
+    echo "USERNAME:       $USERNAME"
+    echo "PORT:           $PORT"
+    echo "TYPE:           $type"
+    echo "PATH:           $BPATH"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -e "$HOST\t$USERNAME\t$PORT\t$type\t$BPATH\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo "HOST,USERNAME,PORT,TYPE,PATH,TIME,DATE"
+    echo "$HOST,$USERNAME,$PORT,$type,$BPATH,$TIME,$DATE"
+}
+
+# Type format validator
+is_type_format_valid() {
+    exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
+    if [[ "$1" =~ $exclude ]]; then
+        check_result $E_INVALID "invalid type extention format :: $1"
+    fi
 }
 
 
@@ -58,25 +67,27 @@ shell_list_ftp_host() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'TYPE [FORMAT]'
+is_type_format_valid "$type"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ ! -e "$VESTA/conf/$TYPE.backup.conf" ]; then
+# Checking backup config
+if [ ! -e "$VESTA/conf/$type.backup.conf" ]; then
     exit
 fi
 
-# Defining fileds to select
-fields='$HOST $USERNAME $PORT $TYPE $BPATH $TIME $DATE'
+# Parsing backup config
+source "$VESTA/conf/$type.backup.conf"
 
-# Listing database
-case $format in 
-    json)   json_list_ftp_host ;;
-    plain)  nohead=1; shell_list_ftp_host;;
-    shell)  shell_list_ftp_host | column -t ;;
-    *)      check_args '2' '0' '[FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

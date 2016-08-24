@@ -25,7 +25,7 @@ check_args '1' "$#" 'TYPE [HOST]'
 types=$(echo "$BACKUP_SYSTEM" |sed "s/,/\n/g" |grep "^$type$")
 if [ -z "$types" ]; then
     echo "Error: invalid backup type"
-    log_event "$E_INVALID" "$EVENT"
+    log_event "$E_INVALID" "$ARGUMENTS"
     exit $E_INVALID
 fi
 
@@ -51,6 +51,6 @@ bckp=$(echo "$BACKUP_SYSTEM" |\
 sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

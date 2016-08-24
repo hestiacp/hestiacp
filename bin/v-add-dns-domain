@@ -17,8 +17,13 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
+if [[ "$domain" =~ [[:upper:]] ]]; then
+    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
+fi
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
 ip=$3
 ns1=$4
 ns2=$5
@@ -41,48 +46,48 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN IP [NS1] [NS2] [NS3] [..] [NS8] [RESTART]'
-validate_format 'user' 'domain' 'ip'
+is_format_valid 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_domain_new 'dns'
+is_domain_new 'dns' "$domain"
 is_package_full 'DNS_DOMAINS'
 template=$(get_user_value '$DNS_TEMPLATE')
-is_dns_template_valid
+is_dns_template_valid $template
 
 if [ ! -z "$ns1" ]; then
     ns1=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns1'
+    is_format_valid 'ns1'
 fi
 if [ ! -z "$ns2" ]; then
     ns2=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns2'
+    is_format_valid 'ns2'
 fi
 
 if [ ! -z "$ns3" ]; then
     ns3=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns3'
+    is_format_valid 'ns3'
 fi
 if [ ! -z "$ns4" ]; then
     ns4=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns4'
+    is_format_valid 'ns4'
 fi
 if [ ! -z "$ns5" ]; then
     ns5=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns5'
+    is_format_valid 'ns5'
 fi
 if [ ! -z "$ns6" ]; then
     ns6=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns6'
+    is_format_valid 'ns6'
 fi
 if [ ! -z "$ns7" ]; then
     ns7=$(echo ${10} | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns7'
+    is_format_valid 'ns7'
 fi
 
 if [ ! -z "$ns8" ]; then
     ns8=$(echo ${11} | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns8'
+    is_format_valid 'ns8'
 fi
 
 
@@ -127,6 +132,11 @@ if [ -z "$ns8" ]; then
     template_data=$(echo "$template_data" |grep -v %ns8%)
 fi
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Adding dns zone to the user config
 echo "$template_data" |\
     sed -e "s/%ip%/$ip/g" \
@@ -140,8 +150,8 @@ echo "$template_data" |\
         -e "s/%ns6%/$ns6/g" \
         -e "s/%ns7%/$ns7/g" \
         -e "s/%ns8%/$ns8/g" \
-        -e "s/%time%/$TIME/g" \
-        -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+        -e "s/%time%/$time/g" \
+        -e "s/%date%/$date/g" > $USER_DATA/dns/$domain.conf
 
 chmod 660 $USER_DATA/dns/$domain.conf
 records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
@@ -149,7 +159,7 @@ records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
 dns_rec="$dns_rec SOA='$soa' SERIAL='$serial' SRC='' RECORDS='$records'"
-dns_rec="$dns_rec SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+dns_rec="$dns_rec SUSPENDED='no' TIME='$time' DATE='$date'"
 
 echo "$dns_rec" >> $USER_DATA/dns.conf
 chmod 660 $USER_DATA/dns.conf
@@ -200,6 +210,6 @@ fi
 
 # Logging
 log_history "added dns domain $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

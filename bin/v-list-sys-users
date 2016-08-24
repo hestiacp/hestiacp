@@ -16,32 +16,44 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_users() {
-    users=$(grep @ /etc/passwd|cut -f 1 -d :)
-    int_counter=$(echo "$users" | wc -l)
+# JSON list function
+json_list() {
+    objects=$(grep @ /etc/passwd |wc -l)
     i=1
     echo '['
-    for user in $users; do
-        if [ "$i" -lt "$int_counter" ]; then
+    while read user; do
+        if [ "$i" -lt "$objects" ]; then
             echo -e  "\t\"$user\","
         else
             echo -e  "\t\"$user\""
         fi
         (( ++i))
-    done
+    done < <(grep @ /etc/passwd |cut -f 1 -d :)
     echo "]"
 }
 
-# Shell function
-shell_list_users() {
-    if [ -z "$nohead" ]; then
-        echo "USERS"
-        echo "----------"
-    fi
-    for user in $(grep @ /etc/passwd|cut -f 1 -d :); do
+# SHELL list function
+shell_list() {
+    echo "USER"
+    echo "----"
+    while read user; do
         echo "$user"
-    done
+    done < <(grep @ /etc/passwd |cut -f 1 -d :)
+}
+
+# PLAIN list function
+plain_list() {
+    while read user; do
+        echo "$user"
+    done < <(grep @ /etc/passwd |cut -f 1 -d :)
+}
+
+# CSV list function
+csv_list() {
+    echo "USER"
+    while read user; do
+        echo "$user"
+    done < <(grep @ /etc/passwd |cut -f 1 -d :)
 }
 
 
@@ -49,12 +61,12 @@ shell_list_users() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Listing domains
+# Listing data
 case $format in
-    json)   json_list_users ;;
-    plain)  nohead=1; shell_list_users ;;
-    shell)  shell_list_users ;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

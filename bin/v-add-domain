@@ -25,9 +25,9 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 check_args '2' "$#" 'USER DOMAIN [IP] [RESTART]'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 if [ ! -z "$ip" ] ; then
-    validate_format 'ip'
+    is_format_valid 'ip'
 fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -39,11 +39,9 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Get ip if it wasn't defined
 if [ -z "$ip" ]; then
-    ip=$(get_user_ip $user)
+    get_user_ip
     if [ -z "$ip" ]; then
-        echo "Error: no avaiable IP address"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
+        check_result $E_NOTEXIST "no avaiable IP address"
     fi
 fi
 
@@ -55,7 +53,7 @@ fi
 
 # Working on DNS domain
 if [ ! -z "$DNS_SYSTEM" ]; then
-    $BIN/v-add-dns-domain $user $domain $ip "" "" "" "" "" 'no'
+    $BIN/v-add-dns-domain $user $domain $ip "" "" "" "" "" '' '' '' 'no'
     check_result $? "can't add dns domain" >/dev/null
 fi
 

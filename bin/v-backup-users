@@ -27,7 +27,7 @@ $BIN/v-check-vesta-license >/dev/null
 if [ -z "$BACKUP_SYSTEM" ]; then
     exit
 fi
-for user in $(ls $VESTA/data/users); do
+for user in $(grep '@' /etc/passwd |cut -f1 -d:); do
     check_suspend=$(grep "SUSPENDED='no'" $VESTA/data/users/$user/user.conf)
     log=$VESTA/log/backup.log
     if [ ! -z "$check_suspend" ]; then
@@ -44,6 +44,6 @@ done
 #----------------------------------------------------------#
 
 # No Logging
-#log_event "$OK" "$EVENT"
+#log_event "$OK" "$ARGUMENTS"
 
 exit

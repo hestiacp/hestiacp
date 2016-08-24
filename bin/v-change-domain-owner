@@ -1,6 +1,6 @@
 #!/bin/bash
-# info: change ip owner
-# options: DOMAIN USER [IP]
+# info: change domain owner
+# options: DOMAIN USER
 #
 # The function of changing domain ownership.
 
@@ -12,7 +12,6 @@
 # Argument definition
 domain=$1
 user=$2
-ip=$3
 
 # Includes
 source $VESTA/func/ip.sh
@@ -24,20 +23,13 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'DOMAIN USER [IP]'
-validate_format 'domain' 'user'
+check_args '2' "$#" 'DOMAIN USER'
+is_format_valid 'domain' 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-if [ ! -z "$ip" ]; then
-    is_ip_valid
-    is_ip_avalable
-fi
-
 owner=$(v-search-domain-owner $domain)
 if [ -z "$owner" ]; then
-    echo "Error: domain $domain doesn't exist"
-    log_event "$E_NOTEXIST" "$EVENT"
-    exit $E_NOTEXIST
+    check_result $E_NOTEXIST "domain $domain doesn't exist"
 fi
 if [ "$owner" = "$user" ]; then
     exit
@@ -168,6 +160,6 @@ $BIN/v-update-user-counters $user
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

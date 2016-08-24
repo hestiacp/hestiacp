@@ -19,14 +19,14 @@ format=${4-shell}
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-
-# Json function
-json_list_log() {
+# JSON list function
+json_list() {
     i=1
+    objects=$(echo "$lines" |wc -l)
     echo '['
     for str in $lines; do
         str=$(echo "$str" |sed -e 's/"/\\"/g')
-        if [ "$i" -lt "$counter" ]; then
+        if [ "$i" -lt "$objects" ]; then
             echo -e  "\t\"$str\","
         else
             echo -e  "\t\"$str\""
@@ -36,17 +36,29 @@ json_list_log() {
     echo "]"
 }
 
-# Shell function
-shell_list_log() {
+# SHELL list function
+shell_list() {
     echo "$lines"
 }
+
+# PLAIN list function
+plain_list() {
+    echo "$lines"
+}
+
+# CSV list function
+csv_list() {
+    echo "LOG"
+    echo "$lines"
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [LINES] [FORMAT]'
-validate_format 'user' 'domain' 'ttl'
+is_format_valid 'user' 'domain' 'ttl'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 
@@ -63,14 +75,14 @@ else
 fi
 
 lines=$($read_cmd /var/log/$WEB_SYSTEM/domains/$domain.error.log)
-counter=$(echo "$lines" |wc -l)
 IFS=$'\n'
 
-# Listing logs
+# Listing data
 case $format in
-    json)   json_list_log ;;
-    plain)  shell_list_log ;;
-    shell)  shell_list_log ;;
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

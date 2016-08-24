@@ -1,17 +1,10 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'MAIL';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
 
 // Check domain argument
 if (empty($_GET['domain'])) {
@@ -205,7 +198,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
     // Change quota
     if (($v_quota != $_POST['v_quota']) && (empty($_SESSION['error_msg']))) {
         if (empty($_POST['v_quota'])) {
-            $v_quota = 0; 
+            $v_quota = 0;
         } else {
             $v_quota = escapeshellarg($_POST['v_quota']);
         }
@@ -310,19 +303,16 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
     }
 }
 
-// Display body for mail domain
-if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_mail.html');
-}
 
-// Display body for mail account
-if ((!empty($_GET['domain'])) && (!empty($_GET['account'])))  {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_mail_acc.html');
+// Render page
+if (empty($_GET['account']))  {
+    // Display body for mail domain
+    render_page($user, $TAB, 'edit_mail');
+} else {
+    // Display body for mail account
+    render_page($user, $TAB, 'edit_mail_acc');
 }
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

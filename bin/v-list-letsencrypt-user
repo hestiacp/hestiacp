@@ -1,0 +1,82 @@
+#!/bin/bash
+# info: list letsencrypt key
+# options: USER [FORMAT]
+#
+# The function for obtaining the letsencrypt key thumbprint
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+format=${2-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# JSON list function
+json_list() {
+    echo '{'
+    echo '    "'$user'": {
+        "EMAIL": "'$EMAIL'",
+        "EXPONENT": "'$EXPONENT'",
+        "MODULUS": "'$MODULUS'",
+        "THUMB: "'$THUMB'"
+    }'
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "USER:           $user"
+    echo "EMAIL:          $EMAIL"
+    echo "THUMB:          $THUMB"
+    echo "EXPONENT:       $EXPONENT"
+    echo "MODULUS:        $MODULUS"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -e "$user\t$EMAIL\t$EXPONENT\t$MODULUS\t$THUMB"
+}
+
+# CSV list function
+csv_list() {
+    echo "USER,EMAIL,EXPONENT,MODULUS,THUMB"
+    echo "$user,$EMAIL,$EXPONENT,$MODULUS,$THUMB"
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [FORMAT]'
+is_object_valid 'user' 'USER' "$user"
+if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
+    check_result $E_NOTEXIST "LetsEncrypt user account doesn't exist"
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+source $USER_DATA/ssl/le.conf
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

@@ -94,7 +94,7 @@ EOF
 
 if [ "$type" != 'local' ];then
     check_args '4' "$#" "TYPE HOST USERNAME PASSWORD [PATH] [PORT]"
-    validate_format 'host'
+    is_format_valid 'host'
     is_password_valid
     if [ "$type" = 'sftp' ]; then
         which expect >/dev/null 2>&1
@@ -117,7 +117,7 @@ if [ "$type" = 'ftp' ]; then
         grep -i -e failed -e error -e "can't" -e "not conn" -e "incorrect")
     if [ ! -z "$ferror" ]; then
         echo "Error: can't login to ftp $user@$host"
-        log_event "$E_CONNECT" "$EVENT"
+        log_event "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
     fi
 
@@ -129,7 +129,7 @@ if [ "$type" = 'ftp' ]; then
         echo "$ftp_result"
         rm -rf $tmpdir
         echo "Error: can't create $ftmpdir folder on the ftp"
-        log_event "$E_FTP" "$EVENT"
+        log_event "$E_FTP" "$ARGUMENTS"
         exit $E_FTP
     fi
 fi
@@ -137,15 +137,17 @@ if [ "$type" = 'sftp' ]; then
     if [ -z $port ]; then
         port=22
     fi
-    sftmpdir="$path/vst.bK76A9SUkt"
-    sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+    if sftpc "mkdir $path" > /dev/null 2>&1 ; then
+        sftmpdir="$path/vst.bK76A9SUkt"
+        sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+    fi
     rc=$?
     if [[ "$rc" != 0 ]]; then
         case $rc in
             $E_CONNECT) echo "Error: can't login to sftp $user@$host";;
             $E_FTP) echo "Error: can't create temp folder on the sftp host";;
         esac
-        log_event "$rc" "$EVENT"
+        log_event "$rc" "$ARGUMENTS"
         exit "$rc"
     fi
 fi
@@ -153,13 +155,12 @@ fi
 
 # Adding backup host
 if [ $type != 'local' ]; then
-    echo "HOST='$host'
-    USERNAME='$user'
-    PASSWORD='$password'
-    BPATH='$path'
-    PORT='$port'
-    TIME='$TIME'
-    DATE='$DATE'" > $VESTA/conf/$type.backup.conf
+    time_n_date=$(date +'%T %F')
+    time=$(echo "$time_n_date" |cut -f 1 -d \ )
+    date=$(echo "$time_n_date" |cut -f 2 -d \ )
+    str="HOST='$host'\nUSERNAME='$user'\nPASSWORD='$password'"
+    str="$str\nBPATH='$path'\nPORT='$port'\nTIME='$time'\nDATE='$date'"
+    echo -e "$str" > $VESTA/conf/$type.backup.conf
     chmod 660 $VESTA/conf/$type.backup.conf
 fi
 
@@ -181,6 +182,6 @@ else
 fi
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

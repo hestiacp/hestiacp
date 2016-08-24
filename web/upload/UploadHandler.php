@@ -1078,7 +1078,6 @@ class UploadHandler
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
         $index = null, $content_range = null) {
 
-
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
@@ -1103,7 +1102,7 @@ class UploadHandler
                     );
                 } else {
                     chmod($uploaded_file, 0644);
-                    //move_uploaded_file($uploaded_file, $file_path);
+//                    move_uploaded_file($uploaded_file, $file_path);
                     exec (VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} {$file_path}", $output, $return_var);
 
                     $error = check_return_code($return_var, $output);
@@ -1111,11 +1110,11 @@ class UploadHandler
                         //var_dump(VESTA_CMD . "v-copy-fs-file {$user} {$fn} {$path}");
                         //var_dump($path);
                         //var_dump($output);
-                        $file->error = 'Error while saving file';
-                        /*var_dump(VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} {$file_path}");
-                        var_dump($return_var);
-                        var_dump($output);
-                        die();*/
+                        $file->error = 'Error while saving file ';
+//                        var_dump(VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} {$file_path}");
+//                        var_dump($return_var);
+//                        var_dump($output);
+//                        exit();
                     }
                 }
             } else {

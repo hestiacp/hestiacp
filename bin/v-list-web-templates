@@ -16,15 +16,13 @@ format=${1-shell}
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Json function
-json_list_wtpl() {
-    templates=$(ls -v $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
-    templates=$(echo "$templates" | grep '\.tpl' | sed 's/\.tpl$//')
-    t_counter=$(echo "$templates" | wc -w)
+# JSON list function
+json_list() {
+    objects=$(echo "$templates" |wc -w)
     i=1
     echo '['
     for template in $templates; do
-        if [ "$i" -lt "$t_counter" ]; then
+        if [ "$i" -lt "$objects" ]; then
             echo -e  "\t\"$template\","
         else
             echo -e  "\t\"$template\""
@@ -34,31 +32,45 @@ json_list_wtpl() {
     echo "]"
 }
 
-# Shell function
-shell_list_wtpl() {
-    templates=$(ls -v $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
-    templates=$(echo "$templates" | grep '\.tpl' | sed 's/\.tpl$//')
-    if [ -z "$nohead" ]; then
-        echo "Templates"
-        echo "----------"
-    fi
+# SHELL list function
+shell_list() {
+    echo "TEMPLATE"
+    echo "--------"
+    for template in $templates; do
+        echo "$template"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for template in $templates; do
+        echo "$template"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "TEMPLATE"
     for template in $templates; do
         echo "$template"
     done
 }
 
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Listing domains
+# Parsing templates
+templates=$(ls -v $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/)
+templates=$(echo "$templates" |grep '\.tpl' |sed 's/\.tpl$//')
+
+# Listing data
 case $format in
-    json)   json_list_wtpl ;;
-    plain)  nohead=1; shell_list_wtpl ;;
-    shell)  shell_list_wtpl ;;
-    *)      check_args '1' '0' '[FORMAT]'
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

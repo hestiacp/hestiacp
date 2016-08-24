@@ -21,12 +21,12 @@ source $VESTA/conf/vesta.conf
 is_language_valid() {
     if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
         echo "Error: language $1 is not valid"
-        log_event "$E_INVALID" "$EVENT"
+        log_event "$E_INVALID" "$ARGUMENTS"
         exit $E_INVALID
     fi
     if [ ! -e "$VESTA/web/inc/i18n/$1.php" ]; then
         echo "Error: language $1 doesn't exist"
-        log_event "$E_NOTEXIST" "$EVENT"
+        log_event "$E_NOTEXIST" "$ARGUMENTS"
         exit $E_NOTEXIST
     fi
 }
@@ -37,7 +37,7 @@ is_language_valid() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER LANGUAGE'
-validate_format 'user' 'language'
+is_format_valid 'user' 'language'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_language_valid $language
@@ -61,6 +61,6 @@ fi
 
 # Logging
 log_history "changed language to $language"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

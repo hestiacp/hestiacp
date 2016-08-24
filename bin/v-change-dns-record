@@ -12,12 +12,15 @@
 # Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
 id=$3
 dvalue=$(idn -t --quiet -u "$4" )
 priority=$5
 restart=$6
+
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
 
 # Includes
 source $VESTA/func/main.sh
@@ -30,7 +33,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN ID VALUE [PRIORITY] [RESTART]'
-validate_format 'user' 'domain' 'id' 'dvalue'
+is_format_valid 'user' 'domain' 'id' 'dvalue'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -67,9 +70,14 @@ is_dns_nameserver_valid "$domain" "$TYPE" "$dvalue"
 # Deleting old record
 sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Adding record
 dns_rec="ID='$id' RECORD='$RECORD' TYPE='$TYPE' PRIORITY='$priority'"
-dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date'"
 echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
 
 # Sorting records
@@ -104,6 +112,6 @@ fi
 
 # Logging
 log_history "changed dns record on $domain to $dvalue"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

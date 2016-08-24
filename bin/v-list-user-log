@@ -16,48 +16,71 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json func
-json_list_history() {
-    echo '{'
-    fileds_count=$(echo $fields| wc -w )
-    while read line; do
-        IFS=$'\n'
-        eval $line
-        if [ -n "$data" ]; then
-            echo -e '        },'
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(echo "$logs" |wc -l)
+    echo "{"
+    for str in $logs; do
+        eval $str
+        echo -n '    "'$ID'": {
+        "CMD": "'$CMD'",
+        "UNDO": "'$UNDO'",
+        "DATE": "'$DATE'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
         fi
-        i=1
-        IFS=' '
-        for field in $fields; do
-            eval value=\"$field\"
-            value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-            if [ $i -eq 1 ]; then
-                (( ++i))
-                echo -e "\t\"$value\": {"
-            else
-                if [ $i -lt $fileds_count ]; then
-                    (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    data=1
-                fi
-            fi
-        done
-    done < $conf
-    if [ -n "$data" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+        ((i++))
+    done
+    echo '}'
 }
 
+shell_list() {
+    IFS=$'\n'
+    echo "DATE~TIME~CMD"
+    echo "----~----~---"
+    for str in $logs; do
+        eval $str
+        if [ -z "$DATE" ]; then
+            DATE='no'
+        fi
+        if [ -z "$TIME" ]; then
+            TIME='no'
+        fi
+        echo "$DATE~$TIME~$CMD"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    for str in $logs; do
+        eval $str
+        echo -e "$ID\t$CMD\t$UNDO\t$TIME\t$DATE"
+    done
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "ID,CMD,UNDO,TIME,DATE"
+    for str in $logs; do
+        eval $str
+        echo "$ID,\"$CMD\",\"$UNDO\",$TIME,$DATE"
+    done
+}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -65,19 +88,14 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/history.log
+# Parsing history log
+logs=$(tail -n 300 $USER_DATA/history.log 2>/dev/null)
 
-# Defining fileds to select
-fields="\$ID \$DATE \$TIME \$CMD \$UNDO"
-
-# Listing domains
-case $format in 
-    json)   json_list_history ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$ID~$DATE~$TIME~$CMD';
-            shell_list |column -t -s '~';;
-    *)      check_args '1' '0' 'USER [FORMAT]'
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t -s '~';;
 esac
 
 

@@ -227,7 +227,7 @@ procmail:
 autoreplay:
   driver = accept
   require_files = /etc/exim4/domains/$domain/autoreply.${local_part}.msg
-  condition = ${if exists{/etc/exim4/domains/$domain/autoreply.${local_part}.msg}}{yes}{no}}
+  condition = ${if exists{/etc/exim4/domains/$domain/autoreply.${local_part}.msg}{yes}{no}}
   retry_use_local_part
   transport = userautoreply
   unseen
@@ -244,7 +244,7 @@ aliases:
 localuser_fwd_only:
   driver = accept
   transport = devnull
-  condition = ${if exists{/etc/exim/domains/$domain/fwd_only}{${lookup{$local_part}lsearch{/etc/exim/domains/$domain/fwd_only}{true}{false}}}}
+  condition = ${if exists{/etc/exim4/domains/$domain/fwd_only}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/fwd_only}{true}{false}}}}
 
 localuser_spam:
   driver = accept

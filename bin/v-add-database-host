@@ -38,7 +38,7 @@ is_mysql_host_alive() {
     rm $mycnf
     if [ '0' -ne "$?" ]; then
         echo "Error: MySQL connection to $host failed"
-        log_event "$E_CONNECT" "$EVENT"
+        log_event "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
     fi
 }
@@ -48,7 +48,7 @@ is_pgsql_host_alive() {
     psql -h $host -U $dbuser -c "SELECT VERSION()" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: PostgreSQL connection to $host failed"
-        log_event "$E_CONNECT" "$EVENT"
+        log_event "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
     fi
 }
@@ -60,7 +60,7 @@ is_pgsql_host_alive() {
 
 args_usage='TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
 check_args '4' "$#" "$args_usage"
-validate_format 'host' 'dbuser' 'max_db' 'charsets' 'template'
+is_format_valid 'host' 'dbuser' 'max_db' 'charsets' 'template'
 #is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 #is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
@@ -76,17 +76,21 @@ esac
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Concatenating db host string
 case $type in
     mysql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'";
            str="$str CHARSETS='$charsets' MAX_DB='$max_db' U_SYS_USERS=''";
-           str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'";;
+           str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$time' DATE='$date'";;
     pgsql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'";
            str="$str CHARSETS='$charsets' TPL='$template' MAX_DB='$max_db'";
            str="$str U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no'";
-           str="$str TIME='$TIME' DATE='$DATE'";;
+           str="$str TIME='$time' DATE='$date'";;
 esac
-
 
 
 #----------------------------------------------------------#
@@ -110,6 +114,6 @@ else
 fi
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

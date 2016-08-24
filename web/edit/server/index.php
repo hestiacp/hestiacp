@@ -1,8 +1,8 @@
 <?php
-// Init
 error_reporting(NULL);
 $TAB = 'SERVER';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
@@ -46,21 +46,15 @@ foreach ($dns_cluster as $key => $value) {
     $v_dns_cluster = 'yes';
 }
 
-// List MySQL hosts
-exec (VESTA_CMD."v-list-database-hosts mysql json", $output, $return_var);
-$v_mysql_hosts = json_decode(implode('', $output), true);
+// List Database hosts
+exec (VESTA_CMD."v-list-database-hosts json", $output, $return_var);
+$db_hosts = json_decode(implode('', $output), true);
 unset($output);
-foreach ($v_mysql_hosts as $key => $value) {
-    $v_mysql = 'yes';
-}
-
-// List PostgreSQL hosts
-exec (VESTA_CMD."v-list-database-hosts pgsql json", $output, $return_var);
-$v_pgsql_hosts = json_decode(implode('', $output), true);
-unset($output);
-foreach ($v_pgsql_hosts as $key => $value) {
-    $v_psql = 'yes';
-}
+$v_mysql_hosts = array_values(array_filter($db_hosts, function($host){return $host['TYPE'] === 'mysql';}));
+$v_mysql = count($v_mysql_hosts) ? 'yes' : 'no';
+$v_pgsql_hosts = array_values(array_filter($db_hosts, function($host){return $host['TYPE'] === 'pgsql';}));
+$v_pgsql = count($v_pgsql_hosts) ? 'yes' : 'no';
+unset($db_hosts);
 
 // List backup settings
 $v_backup_dir = "/backup";
@@ -207,7 +201,7 @@ if (!empty($_POST['save'])) {
 
     // Update phpPgAdmin url
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_psql_url'] != $_SESSION['DB_PGA_URL']) {
+        if ($_POST['v_pgsql_url'] != $_SESSION['DB_PGA_URL']) {
             exec (VESTA_CMD."v-change-sys-config-value DB_PGA_URL '".escapeshellarg($_POST['v_pgsql_url'])."'", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
@@ -421,18 +415,9 @@ foreach ($sys_arr as $key => $value) {
     $_SESSION[$key] = $value;
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_server.html');
+// Render page
+render_page($user, $TAB, 'edit_server');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

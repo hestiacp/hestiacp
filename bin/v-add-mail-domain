@@ -13,8 +13,13 @@
 user=$1
 domain=$(idn -t --quiet -u "$2" )
 domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
+if [[ "$domain" =~ [[:upper:]] ]]; then
+    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
+fi
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
@@ -38,11 +43,11 @@ fi
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE]'
-validate_format 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
+is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_domain_new 'mail'
+is_domain_new 'mail' "$domain"
 is_package_full 'MAIL_DOMAINS'
 
 
@@ -50,10 +55,15 @@ is_package_full 'MAIL_DOMAINS'
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Adding domain to mail.conf
 s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
-s="$s ACCOUNTS='0' U_DISK='0' CATCHALL='' SUSPENDED='no' TIME='$TIME'"
-s="$s DATE='$DATE'"
+s="$s CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='no' TIME='$time'"
+s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf
 
@@ -134,6 +144,6 @@ fi
 
 # Logging
 log_history "added mail domain $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

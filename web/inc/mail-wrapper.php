@@ -2,14 +2,19 @@
 <?php
 error_reporting(NULL);
 if (empty($argv[1])) {
-    echo "Error: not enough arguments\n";
+    echo "ERROR: not enough arguments\n";
+    echo "USAGE: mail-wrapper.php -s SUBJECT EMAIL [NOTIFY]\n";
     exit(3);
 }
 
 $options = getopt("s:f:");
 
+if ((!empty($argv[4])) && ($argv[4] == 'no')) {
+     exit;
+}
 
 define('NO_AUTH_REQUIRED',true);
+
 include("/usr/local/vesta/web/inc/main.php");
 
 // Set system language

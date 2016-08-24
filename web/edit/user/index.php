@@ -1,10 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'USER';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 
@@ -38,7 +37,7 @@ $v_fname = $data[$v_username]['FNAME'];
 $v_lname = $data[$v_username]['LNAME'];
 $v_shell = $data[$v_username]['SHELL'];
 $v_ns = $data[$v_username]['NS'];
-$nameservers = explode(", ", $v_ns);
+$nameservers = explode(",", $v_ns);
 $v_ns1 = $nameservers[0];
 $v_ns2 = $nameservers[1];
 $v_ns3 = $nameservers[2];
@@ -184,28 +183,9 @@ if (!empty($_POST['save'])) {
     }
 }
 
-
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-
-// Panel
-if (!empty($_SESSION['look'])) {
-    top_panel($user,$TAB);
-} else {
-    top_panel($_SESSION['user'],$TAB);
-}
-
-// Display body
-if ($_SESSION['user'] == 'admin') {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_user.html');
-} else {
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_user.html');
-}
+// Render page
+render_page($user, $TAB, 'edit_user');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

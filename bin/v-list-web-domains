@@ -2,7 +2,7 @@
 # info: list web domains
 # options: USER [FORMAT]
 #
-# The function of obtaining the list of all user domains.
+# The function to obtain the list of all user web domains.
 
 
 #----------------------------------------------------------#
@@ -16,13 +16,89 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        echo -n '    "'$DOMAIN'": {
+        "IP": "'$IP'",
+        "IP6": "'$IP6'",
+        "U_DISK": "'$U_DISK'",
+        "U_BANDWIDTH": "'$U_BANDWIDTH'",
+        "TPL": "'$TPL'",
+        "ALIAS": "'$ALIAS'",
+        "STATS": "'$STATS'",
+        "STATS_USER": "'$STATS_USER'",
+        "SSL": "'$SSL'",
+        "SSL_HOME": "'$SSL_HOME'",
+        "FTP_USER": "'$FTP_USER'",
+        "FTP_PATH": "'$FTP_PATH'",
+        "AUTH_USER": "'$AUTH_USER'",
+        "BACKEND": "'$BACKEND'",
+        "PROXY": "'$PROXY'",
+        "PROXY_EXT": "'$PROXY_EXT'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done < <(cat $USER_DATA/web.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "DOMAIN   IP   TPL   SSL   DISK   BW   SPND   DATE"
+    echo "------   --   ---   ---   ----   --   ----   ----"
+    while read str; do
+        eval $str
+        echo "$DOMAIN $IP $TPL $SSL $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
+    done < <(cat $USER_DATA/web.conf)
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        echo -ne "$DOMAIN\t$IP\t$IP6\t$U_DISK\t$U_BANDWIDTH\t$TPL\t"
+        echo -ne "$ALIAS\t$STATS\t$STATS_USER\t$SSL\t$SSL_HOME\t"
+        echo -ne "$FTP_USER\t$FTP_PATH\t$AUTH_USER\t$BACKEND\t$PROXY\t"
+        echo -e "$PROXY_EXT\t$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $USER_DATA/web.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo -n "DOMAIN,IP,IP6,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,"
+    echo -n "SSL,SSL_HOME,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,"
+    echo "PROXY_EXT,SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        echo -n "$DOMAIN,$IP,$IP6,$U_DISK,$U_BANDWIDTH,$TPL,"
+        echo -n "\"$ALIAS\",$STATS,\"$STATS_USER\",$SSL,$SSL_HOME,"
+        echo -n "\"$FTP_USER\",\"$FTP_PATH\",\"$AUTH_USER\",$BACKEND,$PROXY,"
+        echo "\"$PROXY_EXT\",$SUSPENDED,$TIME,$DATE"
+    done < <(cat $USER_DATA/web.conf)
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -30,21 +106,12 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/web.conf
-
-# Defining fileds to select
-fields="\$DOMAIN \$IP \$IP6 \$U_DISK \$U_BANDWIDTH \$TPL \$ALIAS \$STATS"
-fields="$fields \$STATS_USER \$SSL \$SSL_HOME \$FTP_USER \$FTP_PATH \$AUTH_USER"
-fields="$fields \$BACKEND \$PROXY \$PROXY_EXT \$SUSPENDED \$TIME \$DATE"
-
-# Listing domains
-case $format in 
+# Listing data
+case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$DOMAIN $IP $U_DISK $U_BANDWIDTH $TPL $DATE';
-            shell_list | column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]'
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

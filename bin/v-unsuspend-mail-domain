@@ -26,7 +26,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
@@ -53,6 +53,6 @@ sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/mail/$domain.conf
 decrease_user_value "$user" '$SUSPENDED_MAIL'
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

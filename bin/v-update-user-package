@@ -22,7 +22,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'PACKAGE'
-validate_format 'package'
+is_format_valid 'package'
 is_package_valid
 
 
@@ -42,6 +42,6 @@ done
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

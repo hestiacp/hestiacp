@@ -16,13 +16,73 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep "DB=" $USER_DATA/db.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        echo -n '    "'$DB'": {
+        "DATABASE": "'$DB'",
+        "DBUSER": "'$DBUSER'",
+        "HOST": "'$HOST'",
+        "TYPE": "'$TYPE'",
+        "CHARSET": "'$CHARSET'",
+        "U_DISK": "'$U_DISK'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done < <(cat $USER_DATA/db.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "DATABASE   USER   HOST   TYPE   DISK   SPND   DATE"
+    echo "--------   ----   ----   ----   ----   ----   ----"
+    while read str; do
+        eval $str
+        echo "$DB $DBUSER $HOST $TYPE $U_DISK $SUSPENDED $DATE"
+    done < <(cat $USER_DATA/db.conf)
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        echo -ne "$DB\t$DBUSER\t$HOST\t$TYPE\t$CHARSET\t$U_DISK\t"
+        echo -e "$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $USER_DATA/db.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "DATABASE,DBUSER,HOST,TYPE,CHARSET,U_DISK,SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        echo "$DB,$DBUSER,$HOST,$TYPE,$CHARSET,$U_DISK,$SUSPENDED,$TIME,$DATE"
+    done < <(cat $USER_DATA/db.conf)
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -30,17 +90,12 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining fileds to select
-conf=$USER_DATA/db.conf
-fields='$DB $DBUSER $HOST $TYPE $CHARSET $U_DISK $SUSPENDED $TIME $DATE'
-
-# Listing databases
-case $format in 
+# Listing data
+case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields='$DB $DBUSER $HOST $TYPE $U_DISK $DATE';
-            shell_list | column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]'
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

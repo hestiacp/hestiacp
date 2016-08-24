@@ -668,14 +668,6 @@ var _DEBUG_LEVEL = 'ALL';
 // possible levels: ALL, IMPORTANT
 var Error = {FATAL: 1, WARNING: 0, NORMAL: -1};
 
-//
-//  GLOBAL SETTINGS
-//
-GLOBAL = {};
-GLOBAL.FTP_USER_PREFIX  = 'admin_';
-GLOBAL.DB_USER_PREFIX   = 'admin_';
-GLOBAL.DB_DBNAME_PREFIX = 'admin_';
-GLOBAL.AJAX_URL = '';
 
 /**
  * Init debug, grabs console object if accessible, or makes dummy debugger
@@ -699,6 +691,11 @@ var fb = _DEBUG && 'undefined' != typeof(console) ? console : {
     count       : function(){},
     msg         : function(){}
 };
+
+var checked = false;
+var frmname = '';
+var lastScrollTop = 0;
+
 
 //
 var App = {
@@ -800,9 +797,9 @@ App.Ajax.request = function(method, data, callback, onError){
     }*/
     //App.Helpers.setAjaxBusy(method, data);
     data = data || {};
-    
+
     var prgs = $('.progress-container');
-    
+
     switch (method) {
         case 'cd':
             prgs.find('title').text('Opening dir');
@@ -828,8 +825,12 @@ App.Ajax.request = function(method, data, callback, onError){
             prgs.find('title').text('Renaming file');
             prgs.show();
             break;
+        case 'copy_file':
+        case 'copy_directory':
+            prgs.find('title').text('Copying files');
+            prgs.show();
+            break;
         default:
-        
             break;
     }
 
@@ -1007,17 +1008,21 @@ hover_menu = function() {
         nav_a.css({'min-height': 111 - st + 'px'});
         nav_context.css({'margin-top': 215 - st + 'px'});
         sep_2.css({'box-shadow':'none'});
+        sep_2.css({'background-color': '#ddd'});
+        sep_2.css({'height': '1px'});
     }
 
     if(st > 112){
         sep_1.css({'margin-top': '100px'});
-        sep_2.css({'margin-top': '145px'});
+        sep_2.css({'margin-top': '130px'});
+        sep_2.css({'height': '15px'});
+        sep_2.css({'background-color': '#fff'});
         nav_a.css({'height': '0'});
         nav_a.css({'min-height': '0'});
         nav_context.css({'margin-top': '101px'});
         nav_a.find('ul').css({'visibility': 'hidden'});
         nav_main.css({'padding-top': '27px'});
-        sep_2.css({'box-shadow':'0 2px 5px  0 rgba(0, 0, 0, 0.6)'});
+        sep_2.css({'box-shadow':'0 5px 3px 0 rgba(200, 200, 200, 0.5)'});
     }
 
     if(st == 0){
@@ -1036,3 +1041,32 @@ hover_menu = function() {
 
     lastScrollTop = st;
 }
+
+
+function checkedAll(frmname) {
+    if ($('.l-unit.selected:not(.header)').length > 0) {
+        $('.l-unit:not(.header)').removeClass("selected");
+        $('.ch-toggle').prop("checked", false);
+        $('.toggle-all').removeClass('clicked-on');
+    }
+    else {
+        $('.l-unit:not(.header)').addClass("selected");
+        $('.ch-toggle').prop("checked", true);
+        $('.toggle-all').addClass('clicked-on');
+    }
+}
+
+function doSearch(url) {
+    var url = url || '/search/';
+    var loc = url + '?q=' + $('.search-input').val();
+
+    location.href = loc;
+    return false;
+}
+
+
+function elementHideShow(elementToHideOrShow){
+    var el = document.getElementById(elementToHideOrShow);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+

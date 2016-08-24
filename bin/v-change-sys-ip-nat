@@ -25,11 +25,9 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP NAT_IP [RESTART]'
-validate_format 'ip'
-if [ ! -z "$nat_ip" ]; then
-    validate_format 'nat_ip'
-fi
-is_ip_valid
+is_format_valid 'ip'
+is_format_valid 'nat_ip'
+is_ip_valid "$ip"
 
 
 #----------------------------------------------------------#
@@ -82,6 +80,6 @@ fi
 
 # Logging
 log_history "changed associated nat address on $ip to $nat_ip" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

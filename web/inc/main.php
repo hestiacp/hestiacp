@@ -1,7 +1,29 @@
 <?php
+
 session_start();
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n.php');
+define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
+define('JS_LATEST_UPDATE', '1467758417');
+
+$i = 0;
+
+require_once(dirname(__FILE__).'/i18n.php');
+
+
+// Saving user IPs to the session for preventing session hijacking
+$user_combined_ip = $_SERVER['REMOTE_ADDR'] .'|'. $_SERVER['HTTP_CLIENT_IP'] .'|'. $_SERVER['HTTP_X_FORWARDED_FOR'] .'|'. $_SERVER['HTTP_X_FORWARDED'] .'|'. $_SERVER['HTTP_FORWARDED_FOR'] .'|'. $_SERVER['HTTP_FORWARDED'];
+
+if(!isset($_SESSION['user_combined_ip'])){
+    $_SESSION['user_combined_ip'] = $user_combined_ip;
+}
+
+// Checking user to use session from the same IP he has been logged in
+if($_SESSION['user_combined_ip'] != $user_combined_ip){
+    session_destroy();
+    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
+    header("Location: /login/");
+    exit;
+}
 
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
@@ -24,10 +46,6 @@ if (isset($_SESSION['user'])) {
         $_SESSION['token'] = $token;
     }
 }
-
-define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
-
-$i = 0;
 
 if (isset($_SESSION['language'])) {
     switch ($_SESSION['language']) {
@@ -80,7 +98,6 @@ function get_favourites(){
 }
 
 
-
 function check_error($return_var) {
     if ( $return_var > 0 ) {
         header("Location: /error/");
@@ -89,11 +106,49 @@ function check_error($return_var) {
 }
 
 function check_return_code($return_var,$output) {
-   if ($return_var != 0) {
+    if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) $error = __('Error code:',$return_var);
         $_SESSION['error_msg'] = $error;
     }
+}
+
+function render_page($user, $TAB, $page) {
+    $__template_dir = dirname(__DIR__) . '/templates/';
+    $__pages_js_dir = dirname(__DIR__) . '/js/pages/';
+
+    // Header
+    include($__template_dir . 'header.html');
+
+    // Panel
+    top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
+
+    // Extarct global variables
+    // I think those variables should be passed via arguments
+    //*
+    extract($GLOBALS, EXTR_SKIP);
+    /*/
+    $variables = array_filter($GLOBALS, function($key){return preg_match('/^(v_|[a-z])[a-z\d]+$/', $key);}, ARRAY_FILTER_USE_KEY);
+    extract($variables, EXTR_OVERWRITE);
+    //*/
+
+    // Body
+    if (($_SESSION['user'] !== 'admin') && (@include($__template_dir . "user/$page.html"))) {
+        // User page loaded
+    } else {
+        // Not admin or user page doesn't exist
+        // Load admin page
+        @include($__template_dir . "admin/$page.html");
+    }
+
+    // Including common js files
+    @include_once(dirname(__DIR__) . '/templates/scripts.html');
+    // Including page specific js file
+    if(file_exists($__pages_js_dir.$page.'.js'))
+       echo '<script type="text/javascript" src="/js/pages/'.$page.'.js?'.JS_LATEST_UPDATE.'"></script>';
+
+    // Footer
+    include($__template_dir . 'footer.html');
 }
 
 function top_panel($user, $TAB) {
@@ -106,10 +161,25 @@ function top_panel($user, $TAB) {
     }
     $panel = json_decode(implode('', $output), true);
     unset($output);
+
+
+    // getting notifications
+    $command = VESTA_CMD."v-list-user-notifications '".$user."' 'json'";
+    exec ($command, $output, $return_var);
+    $notifications = json_decode(implode('', $output), true);
+    foreach($notifications as $message){
+        if($message['ACK'] == 'no'){
+            $panel[$user]['NOTIFICATIONS'] = 'yes';
+            break;
+        }
+    }
+    unset($output);
+
+
     if ( $user == 'admin' ) {
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/panel.html');
+        include(dirname(__FILE__).'/../templates/admin/panel.html');
     } else {
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/user/panel.html');
+        include(dirname(__FILE__).'/../templates/user/panel.html');
     }
 }
 
@@ -225,36 +295,6 @@ function send_email($to,$subject,$mailtext,$from) {
     $header .= "Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
     $message = $mailtext;
     mail($to, $subject, $message, $header);
-}
-
-function display_error_block() {
-    if (!empty($_SESSION['error_msg'])) {
-        echo '
-            <div>
-                <script type="text/javascript">
-                    $(function() {
-                        $( "#dialog:ui-dialog" ).dialog( "destroy" );
-                        $( "#dialog-message" ).dialog({
-                            modal: true,
-                            buttons: {
-                                Ok: function() {
-                                    $( this ).dialog( "close" );
-                                }
-                            },
-                            create:function () {
-                                $(this).closest(".ui-dialog")
-                                .find(".ui-button:first")
-                                .addClass("submit");
-                            }
-                        });
-                    });
-                </script>
-                <div id="dialog-message" title="">
-                    <p>'. htmlentities($_SESSION['error_msg']) .'</p>
-                </div>
-            </div>'."\n";
-        unset($_SESSION['error_msg']);
-    }
 }
 
 function list_timezones() {

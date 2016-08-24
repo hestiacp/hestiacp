@@ -27,10 +27,10 @@ source $VESTA/conf/vesta.conf
 
 check_args '3' "$#" 'USER SYSTEM OBJECT'
 case $system in 
-    MAIL_ACC)   validate_format 'email' ;;
-    CRON)       validate_format 'id' ;;
-    DNS_REC)    validate_format 'id' ;;
-    *)          validate_format 'object'
+    MAIL_ACC)   is_format_valid 'email' ;;
+    CRON)       is_format_valid 'id' ;;
+    DNS_REC)    is_format_valid 'id' ;;
+    *)          is_format_valid 'object'
 esac
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -119,6 +119,6 @@ chmod 640 $USER_DATA/favourites.conf
 
 # Logging
 log_history "deleted starred $object from $system listing"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

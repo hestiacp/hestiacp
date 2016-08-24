@@ -33,30 +33,30 @@ source $VESTA/conf/vesta.conf
 check_args '3' "$#" 'USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]'
 
 # Checking argument format
-validate_format 'user' 'ns1' 'ns2'
+is_format_valid 'user' 'ns1' 'ns2'
 if [ ! -z "$ns3" ]; then
     ns3=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns3'
+    is_format_valid 'ns3'
 fi
 if [ ! -z "$ns4" ]; then
     ns4=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns4'
+    is_format_valid 'ns4'
 fi
 if [ ! -z "$ns5" ]; then
     ns5=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns5'
+    is_format_valid 'ns5'
 fi
 if [ ! -z "$ns6" ]; then
     ns6=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns6'
+    is_format_valid 'ns6'
 fi
 if [ ! -z "$ns7" ]; then
     ns7=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns7'
+    is_format_valid 'ns7'
 fi
 if [ ! -z "$ns8" ]; then
     ns8=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-    validate_format 'ns8'
+    is_format_valid 'ns8'
 fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -80,6 +80,6 @@ update_user_value "$user" '$NS' "$ns"
 
 # Logging
 log_history "updated nameservers $ns1 $ns2 $ns3 $ns4 $ns5 $ns6 $ns7 $ns8"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

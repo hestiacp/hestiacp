@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER TYPE TEMPLATE'
-validate_format 'user' 'template'
+is_format_valid 'user' 'template'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -35,11 +35,11 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 case $type in 
-    WEB) is_web_template_valid;
+    WEB) is_web_template_valid $template;
         update_user_value "$user" '$WEB_TEMPLATE' "$template";;
     PROXY) is_proxy_template_valid $template;
         update_user_value "$user" '$PROXY_TEMPLATE' "$template";;
-    DNS) is_dns_template_valid;
+    DNS) is_dns_template_valid $template;
         update_user_value "$user" '$DNS_TEMPLATE' "$template";;
     *) check_args '1' '0' 'USER TYPE TEMPLATE'
 esac
@@ -51,6 +51,6 @@ esac
 
 # Logging
 log_history "changed $type template to $template"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

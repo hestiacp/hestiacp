@@ -65,7 +65,7 @@ for db in $(echo $DB_SYSTEM| tr ',' '\n'); do
             fi
 
             # Checking PostgreSQL
-            if [ "$db" = 'pgsql' ]; then
+            if [ "$db" = 'pgsql' ] && [ ! -z "$(which psql)" ]; then
                 echo "PostgreSQL $HOST status"
                 export PGPASSWORD="$PASSWORD"
                 psql -h $HOST -U $USER -c "SELECT * FROM pg_stat_activity"

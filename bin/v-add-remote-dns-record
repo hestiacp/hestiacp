@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN ID'
-validate_format 'user' 'domain' 'id'
+is_format_valid 'user' 'domain' 'id'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"

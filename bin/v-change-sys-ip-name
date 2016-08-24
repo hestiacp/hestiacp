@@ -24,11 +24,9 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP IP_NAME'
-validate_format 'ip'
-if [ ! -z "$ip_name" ]; then
-    validate_format 'ip_name'
-fi
-is_ip_valid
+is_format_valid 'ip'
+is_format_valid 'ip_name'
+is_ip_valid "$ip"
 
 
 #----------------------------------------------------------#
@@ -45,6 +43,6 @@ update_ip_value '$NAME' "$ip_name"
 
 # Logging
 log_history "changed associated dns on $ip to $domain" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

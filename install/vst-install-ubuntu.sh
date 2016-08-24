@@ -365,6 +365,18 @@ if [ -z "$servername" ]; then
     servername=$(hostname -f)
 fi
 
+# Set FQDN if it wasn't set
+mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
+mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
+if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
+    if [ ! -z "$servername" ]; then
+        servername="$servername.example.com"
+    else
+        servername="example.com"
+    fi
+    echo "127.0.0.1 $servername" >> /etc/hosts
+fi
+
 # Set email if it wasn't set
 if [ -z "$email" ]; then
     email="admin@$servername"
@@ -636,7 +648,8 @@ wget $vestacp/logrotate/vesta -O /etc/logrotate.d/vesta
 
 # Buidling directory tree and creating some blank files for vesta
 mkdir -p $VESTA/conf $VESTA/log $VESTA/ssl $VESTA/data/ips \
-    $VESTA/data/queue $VESTA/data/users $VESTA/data/firewall
+    $VESTA/data/queue $VESTA/data/users $VESTA/data/firewall \
+    $VESTA/data/sessions
 touch $VESTA/data/queue/backup.pipe $VESTA/data/queue/disk.pipe \
     $VESTA/data/queue/webstats.pipe $VESTA/data/queue/restart.pipe \
     $VESTA/data/queue/traffic.pipe $VESTA/log/system.log \
@@ -646,6 +659,8 @@ chmod -R 750 $VESTA/data/queue
 chmod 660 $VESTA/log/*
 rm -f /var/log/vesta
 ln -s /usr/local/vesta/log /var/log/vesta
+chown admin:admin $VESTA/data/sessions
+chmod 770 $VESTA/data/sessions
 
 # Generating vesta configuration
 rm -f $VESTA/conf/vesta.conf 2>/dev/null
@@ -1106,12 +1121,10 @@ $VESTA/bin/v-update-sys-ip
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 
 # Get public ip
-pub_ip=$(wget vestacp.com/what-is-my-ip/ -O - 2>/dev/null)
+pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
-fi
-if [ -z "$pub_ip" ]; then
-    ip=$main_ip
+    ip=$pub_ip
 fi
 
 # Firewall configuration
@@ -1164,9 +1177,13 @@ fi
 update-rc.d vesta defaults
 service vesta start
 check_result $? "vesta start failed"
+chown admin:admin $VESTA/data/sessions
 
 # Adding notifications
 $VESTA/upd/add_notifications.sh
+
+# Adding cronjob for autoupdates
+$VESTA/bin/v-add-cron-vesta-autoupdate
 
 
 #----------------------------------------------------------#

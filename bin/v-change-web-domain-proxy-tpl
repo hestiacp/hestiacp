@@ -32,7 +32,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN TEMPLATE [EXTENTIONS] [RESTART]'
-validate_format 'user' 'domain' 'template'
+is_format_valid 'user' 'domain' 'template'
 is_system_enabled "$PROXY_SYSTEM" 'PROXY_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -48,38 +48,21 @@ is_proxy_template_valid $template
 
 # Parsing domain values
 get_domain_values 'web'
-tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
-old_tpl=$PROXY
-conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip $IP)
 
 # Delete old vhost
-del_web_config
+del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+if [ "$SSL" = 'yes' ]; then
+    del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+fi
 
 # Add new vhost
 PROXY="$template"
 PROXY_EXT="$extentions"
-tpl_file="$WEBTPL/$PROXY_SYSTEM/$template.tpl"
-upd_web_domain_values
-add_web_config
-chown root:$user $conf
-chmod 640 $conf
-
-# Checking SSL
+prepare_web_domain_values
+add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$PROXY_SYSTEM/$old_tpl.stpl"
-    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-    del_web_config
-
-    tpl_file="$WEBTPL/$PROXY_SYSTEM/$template.stpl"
-    add_web_config
-    chown root:$user $conf
-    chmod 640 $conf
-fi
-
-# Running template trigger
-if [ -x $WEBTPL/$PROXY_SYSTEM/$template.sh ]; then
-    $WEBTPL/$PROXY_SYSTEM/$template.sh $user $domain $ip $HOMEDIR $docroot
+    add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
 
 
@@ -99,6 +82,6 @@ fi
 
 # Logging
 log_history "changed proxy template for $domain to $template"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

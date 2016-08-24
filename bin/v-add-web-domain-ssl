@@ -34,7 +34,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN SSL_DIR [SSL_HOME] [RESTART]'
-validate_format 'user' 'domain' 'ssl_dir'
+is_format_valid 'user' 'domain' 'ssl_dir'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
 is_object_valid 'user' 'USER' "$user"
@@ -60,22 +60,6 @@ if [ -e "$ssl_dir/$domain.ca" ]; then
 fi
 chmod 660 $USER_DATA/ssl/$domain.*
 
-# Parsing domain values
-get_domain_values 'web'
-conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
-SSL_HOME="$ssl_home"
-ip=$(get_real_ip $IP)
-
-# Preparing domain values for the template substitution
-upd_web_domain_values
-
-# Adding domain to the web config
-add_web_config
-
-chown root:$user $conf
-chmod 640 $conf
-
 # Adding certificate to user dir
 cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/ssl.$domain.crt
 cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/ssl.$domain.key
@@ -84,32 +68,20 @@ if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
     cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/ssl.$domain.ca
 fi
 
-# Running template trigger
-if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh ]; then
-    $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh \
-        $user $domain $ip $HOMEDIR $sdocroot
-fi
+# Parsing domain values
+get_domain_values 'web'
+local_ip=$(get_real_ip $IP)
 
-# Checking web config
-web_conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
-if [ -z "$(grep "$conf" $web_conf)" ]; then
-    echo "Include $conf" >> $web_conf
-fi
+# Preparing domain values for the template substitution
+SSL_HOME="$ssl_home"
+prepare_web_domain_values
 
-# Checking proxy
+# Adding domain to the web config
+add_web_config "$WEB_SYSTEM" "$TPL.stpl"
+
+# Checking proxy config
 if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
-    add_web_config
-
-    chown root:$user $conf
-    chmod 640 $conf
-
-    # Checking proxy config
-    proxy_conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
-    if [ -z "$(grep "$conf" $proxy_conf )" ]; then
-        echo "include $conf;" >> $proxy_conf
-    fi
+    add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
 
 
@@ -137,6 +109,6 @@ fi
 
 # Logging
 log_history "enabled ssl support for $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

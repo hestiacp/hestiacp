@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER TOPIC NOTICE [TYPE]'
-validate_format 'user' 'topic' 'notice'
+is_format_valid 'user' 'topic' 'notice'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -46,9 +46,14 @@ else
     nid=1
 fi
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Concatenating string
 str="NID='$nid' TOPIC='$topic' NOTICE='$notice' TYPE='$type'"
-str="$str ACK='no' TIME='$TIME' DATE='$DATE'"
+str="$str ACK='no' TIME='$time' DATE='$date'"
 
 # Adding to config
 echo "$str" >> $USER_DATA/notifications.conf

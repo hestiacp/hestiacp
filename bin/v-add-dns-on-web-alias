@@ -26,7 +26,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER ALIAS IP [RESTART]'
-validate_format 'user' 'alias' 'ip'
+is_format_valid 'user' 'alias' 'ip'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -40,7 +40,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 # Define additional vars
 sub_domain=$(echo "$alias" |awk -F '.' '{print $1}')

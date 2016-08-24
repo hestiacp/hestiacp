@@ -40,6 +40,9 @@ ndev=$(cat /proc/net/dev)
 ifaces=$(echo "$ndev" |grep : |cut -f 1 -d : | sed "s/ //g")
 
 # Parsing excludes
+if [ -z "$RRD_IFACE_EXCLUDE" ]; then
+    RRD_IFACE_EXCLUDE='lo'
+fi
 for exclude in $(echo ${RRD_IFACE_EXCLUDE//,/ }); do
     ifaces=$(echo "$ifaces" |grep -vw "$exclude" )
 done

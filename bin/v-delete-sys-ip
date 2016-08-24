@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'IP'
-validate_format 'ip'
+is_format_valid 'ip'
 is_ip_valid "$ip"
 is_ip_key_empty '$U_WEB_DOMAINS'
 is_ip_key_empty '$U_SYS_USERS'
@@ -43,7 +43,7 @@ cidr=$(convert_netmask $NETMASK)
 interface=$(/sbin/ip addr | grep "$ip/$cidr" | awk '{print $NF}')
 if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
     echo "Error: can't delete main IP address"
-    log_event "$E_FORBIDEN" "$EVENT"
+    log_event "$E_FORBIDEN" "$ARGUMENTS"
     exit $E_FORBIDEN
 fi
 
@@ -52,7 +52,7 @@ if [ ! -z "$interface" ]; then
     /sbin/ip addr del $ip/$cidr dev $INTERFACE
     if [ "$?" -ne 0 ]; then
         echo "Error: can't delete system ip"
-        log_event "$E_FORBIDEN" "$EVENT"
+        log_event "$E_FORBIDEN" "$ARGUMENTS"
         exit $E_FORBIDEN
     fi
 fi
@@ -138,6 +138,6 @@ fi
 
 # Logging
 log_history "deleted system ip address $ip"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

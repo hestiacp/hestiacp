@@ -1,9 +1,11 @@
 <?php
 // Init
 error_reporting(NULL);
-session_start();
 $TAB = 'SEARCH';
+
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];
+
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check query
@@ -18,26 +20,14 @@ if (empty($q)) {
     exit;
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
-$lang = 'ru_RU.utf8';
-//setlocale(LC_ALL, $lang);
-
 // Data
 $q = escapeshellarg($q);
-if ($_SESSION['user'] == 'admin') {
-    exec (VESTA_CMD."v-search-object ".$q." json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_search.html');
-} else {
-    exec (VESTA_CMD."v-search-user-object ".$user." ".$q." json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/user/list_search.html');
-}
+$command = $_SESSION['user'] == 'admin'
+           ? "v-search-object $q json"
+           : "v-search-user-object $user $q json";
 
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
+exec (VESTA_CMD . $command, $output, $return_var);
+$data = json_decode(implode('', $output), true);
+
+// Render page
+render_page($user, $TAB, 'list_search');

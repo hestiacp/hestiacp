@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'HOST'
-validate_format 'host'
+is_format_valid 'host'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 
@@ -60,6 +60,6 @@ fi
 
 # Logging
 log_history "deleted remote dns server $host" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

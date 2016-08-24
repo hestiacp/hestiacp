@@ -22,7 +22,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER'
-validate_format 'user'
+is_format_valid 'user'
 if [ -z "$SFTPJAIL_KEY" ]; then
     exit
 fi
@@ -51,7 +51,7 @@ fi
 usermod -a -G sftp-only $user
 
 # Mouting home directory
-if [ -z "$(mount |grep $home)" ]; then
+if [ -z "$(mount |grep /chroot/$user/$home)" ]; then
     mount -o bind $home /chroot/$user/$home/
 fi
 
@@ -61,6 +61,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-#log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

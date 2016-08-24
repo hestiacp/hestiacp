@@ -1,10 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'USER';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
@@ -111,12 +110,6 @@ if (!empty($_POST['ok'])) {
 }
 
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
 // List hosting packages
 exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
 check_error($return_var);
@@ -128,12 +121,9 @@ exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
 $languages = json_decode(implode('', $output), true);
 unset($output);
 
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_user.html');
+// Render page
+render_page($user, $TAB, 'add_user');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

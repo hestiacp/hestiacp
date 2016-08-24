@@ -14,9 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 record=$(idn -t --quiet -u "$3" )
 record=$(echo "$record" | tr '[:upper:]' '[:lower:]')
 rtype=$(echo "$4"| tr '[:lower:]' '[:upper:]')
@@ -26,6 +24,11 @@ id=$7
 restart=$8
 if [ -z "$priority" ]; then
     priority=10
+fi
+
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
 fi
 
 # Includes
@@ -52,7 +55,7 @@ fi
 #----------------------------------------------------------#
 
 check_args '5' "$#" 'USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART]'
-validate_format 'user' 'domain' 'record' 'rtype' 'dvalue'
+is_format_valid 'user' 'domain' 'record' 'rtype' 'dvalue'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -60,7 +63,7 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_package_full 'DNS_RECORDS'
 get_next_dnsrecord
-validate_format 'id'
+is_format_valid 'id'
 is_object_new "dns/$domain" 'ID' "$id"
 is_dns_fqnd "$rtype" "$dvalue"
 is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
@@ -70,10 +73,15 @@ is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Adding record
 zone="$USER_DATA/dns/$domain.conf"
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
-dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
+dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date'"
 echo "$dns_rec" >> $zone
 chmod 660 $zone
 
@@ -114,6 +122,6 @@ fi
 
 # Logging
 log_history "added $rtype dns record $record for $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

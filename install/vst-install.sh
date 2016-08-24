@@ -44,6 +44,11 @@ case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
     *)          type="rhel" ;;
 esac
 
+# Fallback to Ubuntu
+if [ ! -e "/etc/redhat-release" ]; then
+    type='ubuntu'
+fi
+
 # Check wget
 if [ -e '/usr/bin/wget' ]; then
     wget http://vestacp.com/pub/vst-install-$type.sh -O vst-install-$type.sh

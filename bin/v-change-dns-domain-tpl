@@ -14,9 +14,13 @@
 # Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
 template=$3
 restart=$4
+
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
 
 # Includes
 source $VESTA/func/main.sh
@@ -29,13 +33,13 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN TEMPLATE [RESTART]'
-validate_format 'user' 'domain' 'template'
+is_format_valid 'user' 'domain' 'template'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
-is_dns_template_valid
+is_dns_template_valid "$template"
 
 
 #----------------------------------------------------------#
@@ -43,8 +47,7 @@ is_dns_template_valid
 #----------------------------------------------------------#
 
 # Defining variables
-ip=$(get_object_value 'dns' 'DOMAIN' "$domain" '$IP')
-
+get_domain_values 'dns'
 i=1
 ns=$(get_user_value '$NS')
 for nameserver in ${ns//,/ };do
@@ -52,15 +55,42 @@ for nameserver in ${ns//,/ };do
     (( ++i))
 done
 
+# Reading template
+template_data=$(cat $DNSTPL/$template.tpl)
+
+# Deleting unused nameservers
+if [ -z "$ns3" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns3%)
+fi
+if [ -z "$ns4" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns4%)
+fi
+if [ -z "$ns5" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns5%)
+fi
+if [ -z "$ns6" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns6%)
+fi
+if [ -z "$ns7" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns7%)
+fi
+if [ -z "$ns8" ]; then
+    template_data=$(echo "$template_data" |grep -v %ns8%)
+fi
+
 # Changing tpl
-cat $DNSTPL/$template.tpl |\
-    sed -e "s/%ip%/$ip/g" \
+echo "$template_data" |\
+    sed -e "s/%ip%/$IP/g" \
         -e "s/%domain_idn%/$domain_idn/g" \
         -e "s/%domain%/$domain/g" \
         -e "s/%ns1%/$ns1/g" \
         -e "s/%ns2%/$ns2/g" \
         -e "s/%ns3%/$ns3/g" \
         -e "s/%ns4%/$ns4/g" \
+        -e "s/%ns5%/$ns5/g" \
+        -e "s/%ns6%/$ns6/g" \
+        -e "s/%ns7%/$ns7/g" \
+        -e "s/%ns8%/$ns8/g" \
         -e "s/%time%/$TIME/g" \
         -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
 records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
@@ -98,6 +128,6 @@ fi
 
 # Logging
 log_history "changed dns template for $domain to $template" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

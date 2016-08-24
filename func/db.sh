@@ -4,7 +4,7 @@ mysql_connect() {
     eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
-        log_event "$E_PARSING" "$EVENT"
+        log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
 
@@ -30,10 +30,10 @@ mysql_connect() {
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
             echo -e "Can't connect to MySQL $HOST\n$(cat $err)" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         echo "Error: Connection to $HOST failed"
-        log_event  "$E_CONNECT" "$EVENT"
+        log_event  "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
     fi
 }
@@ -49,10 +49,10 @@ mysql_dump() {
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
             echo -e "Can't dump database $database\n$(cat $err)" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         echo "Error: dump $database failed"
-        log_event  "$E_DB" "$EVENT"
+        log_event  "$E_DB" "$ARGUMENTS"
         exit $E_DB
     fi
 }
@@ -64,7 +64,7 @@ psql_connect() {
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: postgresql config parsing failed"
-        log_event "$E_PARSING" "$EVENT"
+        log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
 
@@ -72,10 +72,10 @@ psql_connect() {
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
             echo -e "Can't connect to PostgreSQL $HOST\n$(cat /tmp/e.psql)" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         echo "Error: Connection to $HOST failed"
-        log_event  "$E_CONNECT" "$EVENT"
+        log_event  "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
     fi
 }
@@ -90,10 +90,10 @@ psql_dump() {
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
             echo -e "Can't dump database $database\n$(cat /tmp/e.psql)" |\
-                $send_mail -s "$subj" $email
+                $SENDMAIL -s "$subj" $email
         fi
         echo "Error: dump $database failed"
-        log_event  "$E_DB" "$EVENT"
+        log_event  "$E_DB" "$ARGUMENTS"
         exit $E_DB
     fi
 }
@@ -137,7 +137,7 @@ is_charset_valid() {
 
     if [ -z "$(echo $CHARSETS | grep -wi $charset )" ]; then
         echo "Error: charset $charset not exist"
-        log_event "$E_NOTEXIST" "$EVENT"
+        log_event "$E_NOTEXIST" "$ARGUMENTS"
         exit $E_NOTEXIST
     fi
 }
@@ -235,7 +235,7 @@ is_dbhost_new() {
         check_host=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
         if [ ! -z "$check_host" ]; then
             echo "Error: db host exist"
-            log_event "$E_EXISTS" "$EVENT"
+            log_event "$E_EXISTS" "$ARGUMENTS"
             exit $E_EXISTS
         fi
     fi
@@ -243,8 +243,7 @@ is_dbhost_new() {
 
 # Get database values
 get_database_values() {
-    db_str=$(grep "DB='$database'" $USER_DATA/db.conf)
-    eval $db_str
+    eval $(grep "DB='$database'" $USER_DATA/db.conf)
 }
 
 # Change MySQL database password
@@ -345,7 +344,7 @@ is_dbhost_free() {
     eval $host_str
     if [ 0 -ne "$U_DB_BASES" ]; then
         echo "Error: host $HOST is used"
-        log_event "$E_INUSE" "$EVENT"
+        log_event "$E_INUSE" "$ARGUMENTS"
         exit $E_INUSE
     fi
 }

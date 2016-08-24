@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list vesta autoupdate settings
-# options: NONE
+# options: [FORMAT]
 #
 # The function for obtaining autoupdate setings.
 
@@ -16,8 +16,8 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_autoupdate() {
+# JSON list function
+json_list() {
     echo '['
     if [ -z "$check_cron" ]; then
         echo -e  "\t\"Disabled\","
@@ -27,12 +27,28 @@ json_list_autoupdate() {
     echo "]"
 }
 
-# Shell function
-shell_list_autoupdate() {
-    if [ -z "$nohead" ]; then
-        echo "AUTOUPDATE"
-        echo "----------"
+# SHELL list function
+shell_list() {
+    echo -n "AUTOUPDATE:     "
+    if [ -z "$check_cron" ]; then
+        echo "Disabled"
+    else
+        echo "Enabled"
     fi
+}
+
+# PLAIN list function
+plain_list() {
+    if [ -z "$check_cron" ]; then
+        echo "Disabled"
+    else
+        echo "Enabled"
+    fi
+}
+
+# CSV list function
+csv_list() {
+    echo "AUTOUPDATE"
     if [ -z "$check_cron" ]; then
         echo "Disabled"
     else
@@ -48,13 +64,14 @@ shell_list_autoupdate() {
 # Check cron tab
 check_cron=$(grep 'v-update-sys-vesta-all' $USER_DATA/cron.conf)
 
-# Listing domains
-case $format in 
-    json)   json_list_autoupdate ;;
-    plain)  nohead=1; shell_list_autoupdate ;;
-    shell)  shell_list_autoupdate ;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list;;
 esac
+
 
 
 #----------------------------------------------------------#

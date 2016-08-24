@@ -1,6 +1,6 @@
 Name:           vesta-php
 Version:        0.9.8
-Release:        15
+Release:        16
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -52,6 +52,9 @@ fi
 %attr(755,root,root) /usr/local/vesta/php
 
 %changelog
+* Wed Jul 31 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-16
+- New session save path
+
 * Wed Jul 31 2013 Serghey Rodin <builder@vestacp.com> - 0.9.8-1
 - Upgraded to 5.4.17
 

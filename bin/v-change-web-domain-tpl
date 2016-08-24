@@ -29,13 +29,13 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN TEMPLATE [RESTART]'
-validate_format 'user' 'domain' 'template'
+is_format_valid 'user' 'domain' 'template'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_web_template_valid
+is_web_template_valid "$template"
 
 
 #----------------------------------------------------------#
@@ -44,45 +44,19 @@ is_web_template_valid
 
 # Parsing domain values
 get_domain_values 'web'
-ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip $IP)
 
 # Deleting domain
-tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
-old_tpl=$TPL
-conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
-del_web_config
-
-# Deleting ssl vhost
+del_web_config "$WEB_SYSTEM" "$TPL.tpl"
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
-    conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-    del_web_config
+    del_web_config "$WEB_SYSTEM" "$TPL.stpl"
 fi
 
 # Defining variables for new vhost config
-upd_web_domain_values
-tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.tpl"
-
-# Adding domain to the web conf
-add_web_config
-
-# Running template trigger
-if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh ]; then
-    $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh \
-        $user $domain $ip $HOMEDIR $docroot
-fi
-
-# Checking SSL
+prepare_web_domain_values
+add_web_config "$WEB_SYSTEM" "$TPL.tpl"
 if [ "$SSL" = 'yes' ]; then
-    conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.stpl"
-    add_web_config
-
-    # Running template trigger
-    if [ -x $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh ]; then
-        $WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$template.sh \
-            "$user" "$domain" "$ip" "$HOMEDIR" "$sdocroot"
-    fi
+    add_web_config "$WEB_SYSTEM" "$TPL.stpl"
 fi
 
 
@@ -101,6 +75,6 @@ fi
 
 # Logging
 log_history "changed web domain template for $domain to $template" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -28,7 +28,7 @@ if [ -z $homedir ]; then
 fi
 
 # Checking source file
-if [ ! -f "$src_file" ]; then
+if [ ! -fe "$src_file" ]; then
     echo "Error: source file doesn't exist $src_file"
     exit 3
 fi
@@ -41,7 +41,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Changing file permissions
-sudo -u $user chmod $permissions "$src_file" >/dev/null 2>&1
+sudo -u $user chmod -R $permissions "$src_file" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: access permission on $src_file was not changed"
     exit 3

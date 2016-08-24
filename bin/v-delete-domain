@@ -24,7 +24,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -35,7 +35,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Working on Web domain
 if [ ! -z "$WEB_SYSTEM" ]; then
-    str=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |grep "SUSPENDED='no")
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
     if [  ! -z "$str" ]; then
         domain_found='yes'
         $BIN/v-delete-web-domain $user $domain 'no'
@@ -45,7 +45,7 @@ fi
 
 # Working on DNS domain
 if [ ! -z "$DNS_SYSTEM" ]; then
-    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='no")
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     if [  ! -z "$str" ]; then
         domain_found='yes'
         $BIN/v-delete-dns-domain $user $domain 'no'
@@ -55,7 +55,7 @@ fi
 
 # Working on Mail domain
 if [ ! -z "$MAIL_SYSTEM" ]; then
-    str=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf |grep "SUSPENDED='no")
+    str=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
     if [  ! -z "$str" ]; then
         domain_found='yes'
         $BIN/v-delete-mail-domain $user $domain
@@ -65,9 +65,7 @@ fi
 
 # Checking domain search result
 if [ -z "$domain_found" ]; then
-    echo "Error: domain $domain doesn't exist"
-    log_event "$E_NOTEXIST" "$EVENT"
-    exit $E_NOTEXIST
+    check_result $E_NOTEXISTS "domain $domain doesn't exist"
 fi
 
 # Restarting services

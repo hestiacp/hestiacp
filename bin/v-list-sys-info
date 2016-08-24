@@ -15,6 +15,38 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
+# JSON list function
+json_list() {
+    echo '{'
+    echo '    "sysinfo": {
+        "HOSTNAME": "'$HOSTNAME'",
+        "OS": "'$OS'",
+        "VERSION": "'$VERSION'",
+        "ARCH": "'$ARCH'",
+        "UPTIME": "'$UPTIME'",
+        "LOADAVERAGE": "'$LOADAVERAGE'"
+        }'
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "HOSTNAME   OS   VER   ARCH  UPTIME   LA"
+    echo "--------   --   ---   ----  ------   --"
+    echo "$HOSTNAME $OS $VERSION $ARCH $UPTIME $LOADAVERAGE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -e "$HOSTNAME\t$OS\t$VERSION\t$ARCH\t$UPTIME\t$LOADAVERAGE"
+}
+
+# CSV list function
+csv_list() {
+    echo "HOSTNAME,OS,VERSION,ARCH,UPTIME,LOADAVERAGE"
+    echo "$HOSTNAME,$OS,$VERSION,$ARCH,$UPTIME,$LOADAVERAGE"
+}
+
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -30,13 +62,13 @@ if [ -e '/etc/redhat-release' ]; then
     else
         OS="RHEL"
     fi
-    VERSION=$(cat /etc/redhat-release | tr ' ' '\n' |grep [0-9])
+    VERSION=$(cat /etc/redhat-release| tr ' ' '\n' |grep [0-9])
 else
     if [ "$(lsb_release -si)" == "Ubuntu" ] && [ -e '/etc/debian_version' ]; then
         OS="Ubuntu"
         VERSION=$(grep DISTRIB_RELEASE /etc/lsb-release| cut -f 2 -d '=')
     else
-        distro=$(head -n1 /etc/issue | cut -f 1 -d ' ')
+        distro=$(head -n1 /etc/issue |cut -f 1 -d ' ')
         if [ "$distro" = 'Debian' ]; then
             OS="Debian"
             VERSION=$(cat /etc/debian_version)
@@ -52,35 +84,18 @@ ARCH=$(arch)
 
 # Check uptime
 UPTIME=$(cat /proc/uptime |cut -f 1 -d ' '|cut -f 1 -d .)
-UPTIME="$(echo $UPTIME / 60 | bc)"
+UPTIME="$(echo $UPTIME / 60 |bc)"
 
 # Check LoadAverage
 LOADAVERAGE=$(cat /proc/loadavg |cut -f 1 -d ' ')
 
-# Create tmp file
-tmp_file=$(mktemp)
-
-# Define key/value pairs
-str="SYS='sysinfo' HOSTNAME='$HOSTNAME' OS='$OS' VERSION='$VERSION'"
-str="$str ARCH='$ARCH' UPTIME='$UPTIME' LOADAVERAGE='$LOADAVERAGE'"
-
-# Defining config
-echo -e "$str" > $tmp_file
-conf=$tmp_file
-
-# Defining fileds to select
-fields="\$SYS \$HOSTNAME \$OS \$VERSION \$ARCH \$UPTIME \$LOADAVERAGE"
-
-# Listing services
+# Listing data
 case $format in
     json)   json_list ;;
-    plain)  nohead=1; shell_list ;;
-    shell)  fields="\$HOSTNAME \$OS \$VERSION \$ARCH \$UPTIME \$LOADAVERAGE"
-            shell_list | column -t ;;
-    *)      check_args '1' '0' 'USER [FORMAT]'
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
-
-rm -f $tmp_file
 
 #----------------------------------------------------------#
 #                       Vesta                              #

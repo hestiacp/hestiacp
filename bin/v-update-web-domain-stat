@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -43,9 +43,7 @@ get_domain_values 'web'
 # Checking config
 config="$HOMEDIR/$user/conf/web/$STATS.$domain.conf"
 if [ ! -e "$config" ]; then
-    echo "Error: Parsing error"
-    log_event "$E_PARSING" "$EVENT"
-    exit $E_PARSING
+    check_result $E_NOTEXISTS "$config doesn't exist"
 fi
 
 # Checking statistics directory
@@ -146,6 +144,6 @@ chown -R $user:$(groups $user| cut -f 3 -d ' ') $dir
 #----------------------------------------------------------#
 
 # No Logging
-#log_event "$OK" "$EVENT"
+#log_event "$OK" "$ARGUMENTS"
 
 exit

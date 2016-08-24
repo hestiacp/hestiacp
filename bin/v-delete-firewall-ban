@@ -29,7 +29,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP CHAIN'
-validate_format 'ip' 'chain'
+is_format_valid 'ip' 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 
@@ -59,6 +59,6 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

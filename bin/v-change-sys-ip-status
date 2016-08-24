@@ -24,21 +24,16 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP IP_STATUS'
-validate_format 'ip' 'ip_status'
-is_ip_valid
+is_format_valid 'ip' 'ip_status'
+is_ip_valid "$ip"
 if [ "$ip_status" = "$(get_ip_value '$STATUS')" ]; then
-    echo "Error: status $ip_status is already set"
-    log_event "$E_EXISTS" "$EVENT"
-    exit $E_EXISTS
+    check_result "$E_EXISTS" "status $ip_status is already set"
 fi
-
 web_domains=$(get_ip_value '$U_WEB_DOMAINS')
 sys_user=$(get_ip_value '$U_SYS_USERS')
 ip_owner=$(get_ip_value '$OWNER')
 if [ "$web_domains" -ne '0' ] && [ "$sys_user" != "$ip_owner" ]; then
-    echo "Error: ip $ip is used"
-    log_event "$E_INUSE" "$EVENT"
-    exit $E_INUSE
+    check_result "$E_INUSE" "ip $ip is used"
 fi
 
 
@@ -56,6 +51,6 @@ update_ip_value '$STATUS' "$ip_status"
 
 # Logging
 log_history "changed $ip status to $ip_status" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

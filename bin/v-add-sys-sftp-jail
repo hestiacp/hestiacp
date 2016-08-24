@@ -58,12 +58,11 @@ fi
 if [ "$restart" = 'yes' ]; then
     subj="OpenSSH restart failed"
     email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f 2 -d \')
-    send_mail="$VESTA/web/inc/mail-wrapper.php"
     /usr/sbin/sshd -t >/dev/null 2>&1
     if [ "$?" -ne 0 ]; then
         mail_text="OpenSSH can not be restarted. Please check config:
             \n\n$(/usr/sbin/sshd -t)"
-        echo -e "$mail_text" | $send_mail -s "$subj" $email
+        echo -e "$mail_text" |$SENDMAIL -s "$subj" $email
     else
         service ssh restart >/dev/null 2>&1
         service sshd restart >/dev/null 2>&1
@@ -101,6 +100,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

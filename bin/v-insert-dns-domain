@@ -27,14 +27,14 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DATA [SRC] [FLUSH] [RESTART]'
-validate_format 'user' 'data'
+is_format_valid 'user' 'data'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 eval $data
 domain="$DOMAIN"
 if [ "$flush" = 'no' ]; then
-    is_domain_new 'dns'
+    is_domain_new 'dns' $domain
 fi
 
 
@@ -54,10 +54,15 @@ if [ "$flush" ! = 'no' ]; then
     sed -i "/DOMAIN='$DOMAIN'/d" $USER_DATA/dns.conf 2> /dev/null
 fi
 
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
 # Prepare values for the insert
 dns_rec="DOMAIN='$DOMAIN' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
 dns_rec="$dns_rec SOA='$SOA' SERIAL="$SERIAL" SRC='$src' RECORDS='$RECORDS'"
-dns_rec="$dns_rec SUSPENDED='$SUSPENDED' TIME='$TIME' DATE='$DATE'"
+dns_rec="$dns_rec SUSPENDED='$SUSPENDED' TIME='$time' DATE='$date'"
 echo "$dns_rec" >> $USER_DATA/dns.conf
 
 # Set permission
@@ -75,6 +80,6 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

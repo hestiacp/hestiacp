@@ -50,11 +50,7 @@
           </table>
           <!--  -->
         </div>
-
       </div>
-
-      <? display_error_block() ?>
-
       <!-- /.l-sort -->
     </div>
 
@@ -78,7 +74,7 @@
           } else {
             $status = 'active';
             $spnd_action = 'suspend' ;
-            $spnd_confirmation = 'SUSPEND_DOMAIN_CONFIRMATION' ;
+            $spnd_confirmation = 'UNSUSPEND_DOMAIN_CONFIRMATION' ;
           }
           if (empty($data[$key]['CATCHALL'])) {
             $data[$key]['CATCHALL'] = '/dev/null';
@@ -86,8 +82,8 @@
       ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="mail" 
-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>" 
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="mail"
+sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favourites']['MAIL'][$key] == 1) echo "1"; else echo "0"; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
@@ -133,7 +129,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
           <div class="l-unit__date">
             <?=translate_date($data[$key]['DATE'])?>
           </div>
-          <div class="l-unit__suspended""><?=__('suspended')?></div>
+          <div class="l-unit__suspended"><?=__('suspended')?></div>
           <div class="text-center">
             <i class="l-icon-star"></i>
           </div>

@@ -36,14 +36,14 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DATABASE DBUSER DBPASS [TYPE] [HOST] [CHARSET]'
-validate_format 'user' 'database' 'dbuser' 'charset'
+is_format_valid 'user' 'database' 'dbuser' 'charset'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_type_valid "$DB_SYSTEM" "$type"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_new 'db' 'DB' "$database"
 get_next_dbhost
-is_object_valid "../../../conf/$type" 'DBHOST' "$host"
+is_object_valid "../../../conf/$type" 'HOST' "$host"
 is_object_unsuspended "../../../conf/$type" 'DBHOST' "$host"
 #is_charset_valid
 is_package_full 'DATABASES'
@@ -66,14 +66,15 @@ esac
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Update time and date
-DATE=$(date +%F)
-TIME=$(date +%T)
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Adding db to db conf
 str="DB='$database' DBUSER='$dbuser' MD5='$md5' HOST='$host' TYPE='$type'"
-str="$str CHARSET='$charset' U_DISK='0' SUSPENDED='no' TIME='$TIME'"
-str="$str DATE='$DATE'"
+str="$str CHARSET='$charset' U_DISK='0' SUSPENDED='no' TIME='$time'"
+str="$str DATE='$date'"
 echo "$str" >> $USER_DATA/db.conf
 chmod 660 $USER_DATA/db.conf
 
@@ -83,6 +84,6 @@ increase_user_value "$user" '$U_DATABASES'
 
 # Logging
 log_history "added $type database $database"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -12,15 +12,15 @@
                 </form>
               </td>
               <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
+                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onchange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
-                <form action="/bulk/restore/" method="post">
+                <form action="/bulk/restore/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <input type="hidden" name="backup" value="<?=htmlentities($_GET['backup']); ?>">
                 <div class="l-select">
-                  <select name="action" id="">
+                  <select name="action">
                     <option value=""><?=__('apply to selected')?></option>
                     <option value="restore"><?php print __('restore') ?></option>
                   </select>
@@ -30,11 +30,7 @@
             </tr>
           </table>
         </div>
-
       </div>
-
-      <? display_error_block(); ?>
-
       <!-- /.l-sort -->
     </div>
 
@@ -52,6 +48,7 @@
         $web = explode(',',$data[$backup]['WEB']);
         foreach ($web as $key) {
           if (!empty($key)) {
+            ++$i;
       ?>
 
       <div class="l-unit">
@@ -335,7 +332,6 @@
       <!-- /.l-separator -->
       <? }} ?>
 
-
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
@@ -393,7 +389,7 @@
             ?>
           </div>
           <div class="data-count l-unit__col l-unit__col--right back clearfix">
-            <a class="button cancel" href="/list/backup/">back</a>
+            <a class="button cancel" href="/list/backup/"><?=__('Back')?></a>
           </div>
         </div>
       </div>

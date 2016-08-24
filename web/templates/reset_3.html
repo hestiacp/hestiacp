@@ -13,8 +13,8 @@
                                             <tr>
                                                 <td style="padding: 12px 0 0 2px;">
                                                     <input type="hidden" name="action" value="confirm" >
-                                                    <input type="hidden" name="user" value="<?php echo $_GET['user'];?>" >
-                                                    <input type="hidden" name="code" value="<?php echo $_GET['code'];?>" >
+                                                    <input type="hidden" name="user" value="<?=htmlentities($_GET['user'], ENT_QUOTES|ENT_HTML5)?>" >
+                                                    <input type="hidden" name="code" value="<?=htmlentities($_GET['code'], ENT_QUOTES|ENT_HTML5)?>" >
                                                     <?php print __('New Password');?>
                                                 </td>
                                             </tr>

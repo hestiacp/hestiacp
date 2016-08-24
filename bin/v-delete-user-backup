@@ -23,7 +23,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER BACKUP'
-validate_format 'user' 'backup'
+is_format_valid 'user' 'backup'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -48,6 +48,6 @@ update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 
 # Logging
 log_history "deleted backup archive $backup"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

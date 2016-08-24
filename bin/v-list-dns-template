@@ -17,55 +17,62 @@ format=${2-shell}
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 
-# Json func
-json_list_dns() {
-    echo '{'
-    fileds_count=$(echo $fields| wc -w )
-    while read line; do
-        IFS=$'\n'
-        eval $line
-        if [ -n "$data" ]; then
-            echo -e '        },'
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep ID $DNSTPL/$template.tpl |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        echo -n '    "'$ID'": {
+        "RECORD": "'$RECORD'",
+        "TYPE": "'$TYPE'",
+        "PRIORITY": "'$PRIORITY'",
+        "VALUE": "'$VALUE'",
+        "ID": "'$ID'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
         fi
-        i=1
-        IFS=' '
-        for field in $fields; do
-            eval value=\"$field\"
-            value=$(echo "$value" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-            if [ $i -eq 1 ]; then
-                (( ++i))
-                echo -e "\t\"$value\": {"
-            else
-                if [ $i -lt $fileds_count ]; then
-                    (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    data=1
-                fi
-            fi
-        done
-    done < $conf
-    if [ -n "$data" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+        ((i++))
+    done < <(cat $DNSTPL/$template.tpl)
+    echo '}'
 }
 
-# Shell function
-shell_list_dns() {
-    if [ -z "$nohead" ] ; then
-        echo "${fields//$/}"
-        for a in $fields; do
-            echo -e "------ \c"
-        done
-        echo
-    fi
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "ID^RECORD^TYPE^VALUE"
+    echo "--^------^----^-----"
+    while read str; do
+        eval $str
+        echo "$ID^$RECORD^$TYPE^$VALUE"
+    done < <(cat $DNSTPL/$template.tpl)
+}
 
-    while read line ; do
-        eval $line
-        eval echo "$fields" | sed "s/%quote%/'/g"
-    done < $conf
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
+        echo -e "$ID\t$RECORD\t$TYPE\t$PRIORITY\t$VALUE"
+    done < <(cat $DNSTPL/$template.tpl)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "ID,RECORD,TYPE,PRIORITY,VALUE"
+    while read str; do
+        eval $str
+        VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
+        echo "$ID,$RECORD,$TYPE,$PRIORITY,\"$VALUE\""
+    done < <(cat $DNSTPL/$template.tpl)
 }
 
 
@@ -74,24 +81,20 @@ shell_list_dns() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'TEMPLATE [FORMAT]'
-validate_format 'template'
-is_dns_template_valid
+is_format_valid 'template'
+is_dns_template_valid "$template"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config and fields
-conf=$DNSTPL/$template.tpl
-fields='$RECORD $TYPE $PRIORITY $VALUE'
-
-# Listing templates
-case $format in 
-    json)   json_list_dns ;;
-    plain)  nohead=1; shell_list_dns ;;
-    shell)  shell_list_dns | column -t ;;
-    *)      check_args '1' '0' 'TEMPLATE [FORMAT]';;
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t -s '^';;
 esac
 
 

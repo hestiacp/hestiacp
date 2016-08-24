@@ -24,7 +24,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'KEY VALUE'
-validate_format 'key'
+is_format_valid 'key'
 
 
 #----------------------------------------------------------#
@@ -50,6 +50,6 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

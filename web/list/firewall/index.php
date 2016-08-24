@@ -1,6 +1,5 @@
 <?php
 error_reporting(NULL);
-
 $TAB = 'FIREWALL';
 
 // Main include
@@ -12,22 +11,14 @@ if ($_SESSION['user'] != 'admin') {
     exit;
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
 // Data
 exec (VESTA_CMD."v-list-firewall json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 $data = array_reverse($data, true);
 unset($output);
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_firewall.html');
+
+// Render page
+render_page($user, $TAB, 'list_firewall');
 
 // Back uri
 $_SESSION['back'] = $_SERVER['REQUEST_URI'];
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
-

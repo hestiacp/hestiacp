@@ -28,7 +28,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN ACCOUNT ALIAS'
-validate_format 'user' 'domain' 'account' 'malias'
+is_format_valid 'user' 'domain' 'account' 'malias'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -39,7 +39,7 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
 if [ -z "$(echo $aliases | grep -w $malias)" ]; then
     echo "Error: alias $malias doesn't exist"
-    log_event "$E_NOTEXIST $EVENT"
+    log_event "$E_NOTEXIST $ARGUMENTS"
     exit $E_NOTEXIST
 fi
 
@@ -69,6 +69,6 @@ update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
 
 # Logging
 log_history "deleted alias $malias on $account@$domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

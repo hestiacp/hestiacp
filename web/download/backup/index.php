@@ -3,10 +3,10 @@
 error_reporting(NULL);
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-$backup = $_GET['backup'];
+$backup = basename($_GET['backup']);
 
 // Check if the backup exists
-if (!file_exists($backup)) {
+if (!file_exists('/backup/'.$backup)) {
     exit(0);
 }
 

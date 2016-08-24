@@ -1,10 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'DNS';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check domain name
@@ -195,30 +194,16 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
     }
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
 
-// Panel
-top_panel($user,$TAB);
-
-// Display body for dns domain
-if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
-    if ($_SESSION['user'] == 'admin') {
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_dns.html');
-    } else {
-        include($_SERVER['DOCUMENT_ROOT'].'/templates/user/edit_dns.html');
-    }
-}
-
-// List dns record
-if ((!empty($_GET['domain'])) && (!empty($_GET['record_id'])))  {
+// Render page
+if (empty($_GET['record_id']))  {
+    // Display body for dns domain
+    render_page($user, $TAB, 'edit_dns');
+} else {
     // Display body for dns record
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_dns_rec.html');
+    render_page($user, $TAB, 'edit_dns_rec');
 }
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

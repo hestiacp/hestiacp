@@ -16,53 +16,71 @@ format=${2-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json list function
-json_list_cron() {
-    echo '{'
-    fileds_count=$(echo $fields| wc -w )
-    while read line; do
-        eval $line
-        if [ -n "$data" ]; then
-            echo -e '        },'
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep JOB $USER_DATA/cron.conf |wc -l)
+    echo "{"
+    while read str; do
+        eval $str
+        CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        echo -n '    "'$JOB'": {
+        "MIN": "'$MIN'",
+        "HOUR": "'$HOUR'",
+        "DAY": "'$DAY'",
+        "MONTH": "'$MONTH'",
+        "WDAY": "'$WDAY'",
+        "CMD": "'$CMD'",
+        "JOB": "'$JOB'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
         fi
-        i=1
-        IFS=' '
-        for field in $fields; do
-            eval value=\"$field\"
-            value=$(echo "$value"|sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-            if [ $i -eq 1 ]; then
-                (( ++i))
-                echo -e "\t\"$value\": {"
-            else
-                if [ $i -lt $fileds_count ]; then
-                    (( ++i))
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-                else
-                    echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-                    data=1
-                fi
-            fi
-        done
-    done < $conf
-    if [ -n "$data" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+        ((i++))
+    done < <(cat $USER_DATA/cron.conf)
+    echo '}'
 }
 
-# Shell list function
-shell_list_cron() {
-    if [ -z "$nohead" ] ; then
-        echo "${fields//$/}"
-        for a in $fields; do
-            echo -e "------ \c"
-        done
-        echo
-    fi
-    while read line ; do
-        eval $line
-        eval echo "$fields" | sed -e "s/%quote%/'/g"
-    done < $conf
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "JOB^MIN^HOUR^MONTH^WDAY^COMMAND"
+    echo "---^---^----^-----^----^-------"
+    while read str; do
+        eval $str
+        CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        echo "$JOB^$MIN^$HOUR^$MONTH^$WDAY^$CMD"
+    done < <(cat $USER_DATA/cron.conf)
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        eval $str
+        CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        echo -ne "$JOB\t$MIN\t$HOUR\t$MONTH\t$WDAY\t$CMD\t"
+        echo -e "$SUSPENDED\t$TIME\t$DATE"
+    done < <(cat $USER_DATA/cron.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo  "MIN,HOUR,DAY,WDAY,CMD,SUSPENDED,TIME,DATE"
+    while read str; do
+        eval $str
+        CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        echo -n "$JOB,$MIN,$HOUR,$MONTH,$WDAY,\"$CMD\","
+        echo "$SUSPENDED,$TIME,$DATE"
+    done < <(cat $USER_DATA/cron.conf)
 }
 
 
@@ -71,7 +89,7 @@ shell_list_cron() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -79,23 +97,12 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/cron.conf
-
-# Defining fileds to select
-fields='$JOB $MIN $HOUR $DAY $MONTH $WDAY $CMD $JOB $SUSPENDED $TIME $DATE'
-
-# Listing domains
-case $format in 
-    json)   json_list_cron ;;
-    plain)  nohead=1;
-            fields="\"\$JOB\" \"\$SUSPENDED\" \"\$MIN\" \"\$HOUR\" \"\$DAY\""
-            fields="$fields \"\$MONTH\" \"\$WDAY\" \"\$CMD\" ";
-            fields="$fields \"\$TIME\" \"\$DATE\""
-            shell_list_cron ;;
-    shell)  fields='$JOB~$SUSPENDED~$MIN~$HOUR~$DAY~$MONTH~$WDAY~$CMD';
-            shell_list_cron |column -t -s '~';;
-    *)      check_args '1' '0' 'USER [FORMAT]' ;;
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t -s '^';;
 esac
 
 

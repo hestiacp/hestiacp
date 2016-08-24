@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [FLUSH]'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
     check_result $E_NOTEXIST "dns-cluster.conf doesn't exist"

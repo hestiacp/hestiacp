@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: list system config
+# info: list system configuration
 # options: [FORMAT]
 #
 # The function for obtaining the list of system parameters.
@@ -12,33 +12,167 @@
 # Argument definition
 format=${1-shell}
 
-# Json function
-json_list_conf() {
-    lines=$(wc -l $VESTA/conf/vesta.conf | cut -f 1 -d ' ')
-    i='0'
-    IFS=$'\n'
-    echo -e "{\n\t\"config\": {"
-    for str in $(cat $VESTA/conf/vesta.conf); do
-        (( ++i))
-        key=${str%%=*}
-        value=${str#*=}
-        if [ "$i" -lt "$lines" ]; then
-            echo -e "\t\t\"$key\": \"${value//\'/}\","
-        else
-            echo -e "\t\t\"$key\": \"${value//\'/}\""
-        fi
-    done
-    echo -e "\t}\n}"
+source $VESTA/conf/vesta.conf
+
+# JSON list function
+json_list() {
+    echo '{
+    "config": {
+        "WEB_SYSTEM": "'$WEB_SYSTEM'",
+        "WEB_RGROUPS": "'$WEB_RGROUPS'",
+        "WEB_PORT": "'$WEB_PORT'",
+        "WEB_SSL": "'$WEB_SSL'",
+        "WEB_SSL_PORT": "'$WEB_SSL_PORT'",
+        "WEB_BACKEND": "'$WEB_BACKEND'",
+        "PROXY_SYSTEM": "'$PROXY_SYSTEM'",
+        "PROXY_PORT": "'$PROXY_PORT'",
+        "PROXY_SSL_PORT": "'$PROXY_SSL_PORT'",
+        "FTP_SYSTEM": "'$FTP_SYSTEM'",
+        "MAIL_SYSTEM": "'$MAIL_SYSTEM'",
+        "IMAP_SYSTEM": "'$IMAP_SYSTEM'",
+        "ANTIVIRUS_SYSTEM": "'$ANTIVIRUS_SYSTEM'",
+        "ANTISPAM_SYSTEM": "'$ANTISPAM_SYSTEM'",
+        "DB_SYSTEM": "'$DB_SYSTEM'",
+        "DNS_SYSTEM": "'$DNS_SYSTEM'",
+        "DNS_CLUSTER": "'$DNS_CLUSTER'",
+        "STATS_SYSTEM": "'$STATS_SYSTEM'",
+        "BACKUP_SYSTEM": "'$BACKUP_SYSTEM'",
+        "CRON_SYSTEM": "'$CRON_SYSTEM'",
+        "DISK_QUOTA": "'$DISK_QUOTA'",
+        "FIREWALL_SYSTEM": "'$FIREWALL_SYSTEM'",
+        "FIREWALL_EXTENSION": "'$FIREWALL_EXTENSION'",
+        "FILEMANAGER_KEY": "'$FILEMANAGER_KEY'",
+        "SFTPJAIL_KEY": "'$SFTPJAIL_KEY'",
+        "REPOSITORY": "'$REPOSITORY'",
+        "VERSION": "'$VERSION'",
+        "LANGUAGE": "'$LANGUAGE'",
+        "BACKUP_GZIP": "'$BACKUP_GZIP'",
+        "BACKUP": "'$BACKUP'",
+        "MAIL_URL": "'$MAIL_URL'",
+        "DB_PMA_URL": "'$DB_PMA_URL'",
+        "DB_PGA_URL": "'$DB_PGA_URL'"
+    }
+}'
 }
 
-# Shell function
-shell_list_conf() {
-    IFS=$'\n'
-    for str in $(cat $VESTA/conf/vesta.conf); do
-        key=${str%%=*}
-        value=${str#*=}
-        echo "$key: ${value//\'/}"
-    done
+# Shell list
+shell_list() {
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        echo "WEB Server:     $WEB_SYSTEM:$WEB_PORT ($WEB_RGROUPS)"
+        echo "SSL Support:    $WEB_SSL:$WEB_SSL_PORT"
+    fi
+    if [ ! -z "$WEB_BACKEND" ]; then
+        echo "WEB Backend:    $WEB_BACKEND"
+    fi
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        echo "Proxy Server:   $PROXY_SYSTEM:$PROXY_PORT"
+        echo "Proxy SSL:      $PROXY_SYSTEM:$PROXY_SSL_PORT"
+    fi
+    if [ ! -z "$STATS_SYSTEM" ]; then
+        echo "Web Stats:      ${STATS_SYSTEM//,/, }"
+    fi
+    if [ ! -z "$FTP_SYSTEM" ]; then
+        echo "FTP Server:     $FTP_SYSTEM"
+    fi
+    if [ ! -z "$MAIL_SYSTEM" ]; then
+        echo -n "Mail Server:    $MAIL_SYSTEM"
+        if [ ! -z "$IMAP_SYSTEM" ]; then
+            echo -n " + $IMAP_SYSTEM"
+        fi
+        if [ ! -z "$ANTIVIRUS_SYSTEM" ]; then
+            echo -n " + $ANTIVIRUS_SYSTEM"
+        fi
+        if [ ! -z "$ANTISPAM_SYSTEM" ]; then
+            echo -n " + $ANTISPAM_SYSTEM"
+        fi
+        echo
+        if [ ! -z "$MAIL_URL" ]; then
+            echo "Web Mail:       hostname + $MAIL_URL"
+        fi
+    fi
+    if [ ! -z "$DB_SYSTEM" ]; then
+        echo "Database:       ${DB_SYSTEM//,/, }"
+        if [ ! -z "$DB_PMA_URL" ]; then
+            echo "PMA URL:        $DB_PMA_URL"
+        fi
+        if [ ! -z "$DB_PGA_URL" ]; then
+            echo "PGA URL:        $DB_PGA_URL"
+        fi
+    fi
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        echo -n "DNS server:     $DNS_SYSTEM"
+        if [ ! -z "$DNS_CLUSTER" ]; then
+            echo -n " (cluster)"
+        fi
+        echo
+    fi
+    if [ ! -z "$CRON_SYSTEM" ]; then
+        echo "CRON:           $CRON_SYSTEM"
+    fi
+    if [ ! -z "$FIREWALL_SYSTEM" ]; then
+        echo -n "Firewall:       $FIREWALL_SYSTEM"
+        if [ ! -z "$FIREWALL_EXTENSION" ]; then
+            echo -n "+ $FIREWALL_EXTENSION"
+        fi
+        echo
+    fi
+    if [ ! -z "$BACKUP_SYSTEM" ]; then
+        echo "Backups:        ${BACKUP_SYSTEM//,/, }"
+        if [ ! -z "$BACKUP" ]; then
+            echo "Backup Dir:     $BACKUP"
+        fi
+    fi
+    if [ ! -z "$DISK_QUOTA" ]; then
+        echo "Disk Quota:     $DISK_QUOTA"
+    fi
+    if [ ! -z "$FILEMANAGER_KEY" ]; then
+        echo "FileManager:    $FILEMANAGER_KEY"
+    fi
+    if [ ! -z "$SFTPJAIL_KEY" ]; then
+        echo "SFTP Chroot:    $SFTPJAIL_KEY"
+    fi
+    if [ ! -z "$LANGUAGE" ] && [ "$LANGUAGE" != 'en' ]; then
+        echo "Language:       $LANGUAGE"
+    fi
+    echo "Version:        $VERSION"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$WEB_SYSTEM\t$WEB_RGROUPS\t$WEB_PORT\t$WEB_SSL\t"
+    echo -ne "$WEB_SSL_PORT\t$WEB_BACKEND\t$PROXY_SYSTEM\t$PROXY_PORT\t"
+    echo -ne "$PROXY_SSL_PORT\t$FTP_SYSTEM\t$MAIL_SYSTEM\t$IMAP_SYSTEM\t"
+    echo -ne "$ANTIVIRUS_SYSTEM\t$ANTISPAM_SYSTEM\t$DB_SYSTEM\t"
+    echo -ne "$DNS_SYSTEM\t$DNS_CLUSTER\t$STATS_SYSTEM\t$BACKUP_SYSTEM\t"
+    echo -ne "$CRON_SYSTEM\t$DISK_QUOTA\t$FIREWALL_SYSTEM\t"
+    echo -ne "$FIREWALL_EXTENSION\t$FILEMANAGER_KEY\t$SFTPJAIL_KEY\t"
+    echo -ne "$REPOSITORY\t$VERSION\t$LANGUAGE\t$BACKUP_GZIP\t$BACKUP\t"
+    echo -e "$MAIL_URL\t$DB_PMA_URL\t$DB_PGA_URL"
+}
+
+
+# CSV list
+csv_list() {
+    echo -n "'WEB_SYSTEM','WEB_RGROUPS','WEB_PORT','WEB_SSL',"
+    echo -n "'WEB_SSL_PORT','WEB_BACKEND','PROXY_SYSTEM','PROXY_PORT',"
+    echo -n "'PROXY_SSL_PORT','FTP_SYSTEM','MAIL_SYSTEM','IMAP_SYSTEM',"
+    echo -n "'ANTIVIRUS_SYSTEM','ANTISPAM_SYSTEM','DB_SYSTEM',"
+    echo -n "'DNS_SYSTEM','DNS_CLUSTER','STATS_SYSTEM','BACKUP_SYSTEM',"
+    echo -n "'CRON_SYSTEM','DISK_QUOTA','FIREWALL_SYSTEM',"
+    echo -n "'FIREWALL_EXTENSION','FILEMANAGER_KEY','SFTPJAIL_KEY',"
+    echo -n "'REPOSITORY','VERSION','LANGUAGE','BACKUP_GZIP','BACKUP',"
+    echo -n "'MAIL_URL','DB_PMA_URL','DB_PGA_URL'"
+    echo
+    echo -n "'$WEB_SYSTEM','$WEB_RGROUPS','$WEB_PORT','$WEB_SSL',"
+    echo -n "'$WEB_SSL_PORT','$WEB_BACKEND','$PROXY_SYSTEM','$PROXY_PORT',"
+    echo -n "'$PROXY_SSL_PORT','$FTP_SYSTEM','$MAIL_SYSTEM','$IMAP_SYSTEM',"
+    echo -n "'$ANTIVIRUS_SYSTEM','$ANTISPAM_SYSTEM','$DB_SYSTEM',"
+    echo -n "'$DNS_SYSTEM','$DNS_CLUSTER','$STATS_SYSTEM','$BACKUP_SYSTEM',"
+    echo -n "'$CRON_SYSTEM','$DISK_QUOTA','$FIREWALL_SYSTEM',"
+    echo -n "'$FIREWALL_EXTENSION','$FILEMANAGER_KEY','$SFTPJAIL_KEY',"
+    echo -n "'$REPOSITORY','$VERSION','$LANGUAGE','$BACKUP_GZIP','$BACKUP',"
+    echo -n "'$MAIL_URL','$DB_PMA_URL','$DB_PGA_URL'"
+    echo
 }
 
 
@@ -46,11 +180,12 @@ shell_list_conf() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Listing system config
-case $format in 
-    json)   json_list_conf ;;
-    plain)  shell_list_conf ;;
-    shell)  shell_list_conf | column -t ;;
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  shell_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

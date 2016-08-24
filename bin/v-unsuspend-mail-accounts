@@ -25,7 +25,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -48,6 +48,6 @@ done
 #----------------------------------------------------------#
 
 # No Logging
-#log_event "$OK" "$EVENT"
+#log_event "$OK" "$ARGUMENTS"
 
 exit

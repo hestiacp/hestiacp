@@ -16,32 +16,43 @@ format=${1-shell}
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
 
-# Json function
-json_list_st() {
-    stats=$(echo "${STATS_SYSTEM//,/ } none")
-    st_counter=$(echo "$stats" | wc -w)
+# JSON list function
+json_list() {
+    objects=$(echo "$stats" | wc -w)
     i=1
     echo '['
-    for st in $stats; do
-        if [ "$i" -lt "$st_counter" ]; then
-            echo -e  "\t\"$st\","
+    for str in $stats; do
+        if [ "$i" -lt "$objects" ]; then
+            echo -e  "\t\"$str\","
         else
-            echo -e  "\t\"$st\""
+            echo -e  "\t\"$str\""
         fi
         (( ++i))
     done
     echo "]"
 }
 
-# Shell function
-shell_list_st() {
-    stats=$(echo "none ${STATS_SYSTEM//,/ }")
-    if [ -z "$nohead" ]; then
-        echo "STATS"
-        echo "----------"
-    fi
-    for st in $stats; do
-        echo "$st"
+# SHELL list function
+shell_list() {
+    echo "PARSER"
+    echo "------"
+    for parser in $stats; do
+        echo "$parser"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for parser in $stats; do
+        echo "$parser"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "PARSER"
+    for parser in $stats; do
+        echo "$parser"
     done
 }
 
@@ -50,12 +61,15 @@ shell_list_st() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Listing domains
-case $format in 
-    json)   json_list_st ;;
-    plain)  nohead=1; shell_list_st ;;
-    shell)  shell_list_st ;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
+# Parsing stats system
+stats=$(echo "none ${STATS_SYSTEM//,/ }")
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

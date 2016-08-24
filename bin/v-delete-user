@@ -27,7 +27,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ "$user" = 'admin' ]; then
@@ -38,67 +38,56 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking web system is enabled
+# Deleting web domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     $BIN/v-unsuspend-web-domains $user $restart
     $BIN/v-delete-web-domains $user $restart
-    rv="$?"
-    if [ "$rv" -ne '0' ]; then
-        exit $rv
-    fi
+    check_result "$?" "web domain deletion failed"
 fi
 
-# Checking dns system is enabled
+# Deleting dns domains
 if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
     $BIN/v-unsuspend-dns-domains $user $restart
     $BIN/v-delete-dns-domains $user $restart
-    rv="$?"
-    if [ "$rv" -ne '0' ]; then
-        exit $rv
-    fi
+    check_result "$?" "dns domain deletion failed"
 fi
 
-# Checking mail system is enabled
+# Deleting mail domains
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
     $BIN/v-unsuspend-mail-domains $user
     $BIN/v-delete-mail-domains $user
-    rv="$?"
-    if [ "$rv" -ne '0' ]; then
-        exit $rv
-    fi
+    check_result "$?" "mail domain deletion failed"
 fi
 
-# Checking db system is enabled
+# Deleting databases
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     $BIN/v-unsuspend-databases $user
     $BIN/v-delete-databases $user
-    rv="$?"
-    if [ "$rv" -ne '0' ]; then
-        exit $rv
-    fi
+    check_result "$?" "database deletion failed"
 fi
 
-# Checking ip
+# Releasing user ips
 $BIN/v-delete-user-ips "$user"
-rv="$?"
-if [ "$rv" -ne '0' ]; then
-    exit $rv
-fi
+check_result "$?" "user ip release failed"
 
 # Deleteing user pipes
 sed -i "/ $user$/d" $VESTA/data/queue/disk.pipe
 sed -i "/ $user$/d" $VESTA/data/queue/traffic.pipe
 
+# Deleting sftp jail
+if [ ! -z "$SFTPJAIL_KEY" ]; then
+    $BIN/v-delete-user-sftp-jail $user
+fi
+
 # Deleting system user
 /usr/sbin/userdel -f $user >> /dev/null 2>&1
-
-if [ "$?" != 0 ]; then
+if [ $? -ne 0 ]; then
     sed -i "/^$user:/d" /etc/passwd
     sed -i "/^$user:/d" /etc/shadow
 fi
 
 /usr/sbin/groupdel $user >> /dev/null 2>&1
-if [ "$?" != 0 ]; then
+if [ $? -ne 0 ]; then
     sed -i "/^$user:/d" /etc/group
 fi
 
@@ -122,6 +111,6 @@ fi
 
 # Logging
 log_history "deleted system user $user" '' 'admin'
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

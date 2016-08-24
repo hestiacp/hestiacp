@@ -27,7 +27,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '0' "$#" '[USER] [IP_STATUS]'
-validate_format 'user' 'ip_status'
+is_format_valid 'user' 'ip_status'
 is_object_valid 'user' 'USER' "$user" "$user"
 
 

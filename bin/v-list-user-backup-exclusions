@@ -12,52 +12,134 @@
 # Argument definition
 user=$1
 format=${2-shell}
-USER=''
 
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_backup_xld() {
-    set -f
-    echo '{'
-    fields_count=$(echo "$fields" | wc -w)
+# JSON list function
+json_list() {
     i=1
-    source $USER_DATA/backup-excludes.conf
-    for field in $fields; do
-        eval value=$field
+    echo '{'
+    echo '    "WEB": {'
+    objects=$(echo "${WEB//,/ }" |wc -w)
+    for object in $(echo "${WEB//,/ }"); do
         j=1
-        echo -e "\t\"${field//$/}\": {"
-        for exlcude in ${value//,/ }; do
-            exlcude_obj=$(echo $exlcude |cut -f 1 -d:)
-            exclude_param=$(echo $exlcude |sed -e "s/$exlcude_obj://")
-            if [ "$exlcude_obj" = "$exclude_param" ]; then
-                exclude_param=''
-            fi
-            if [ $j -lt "$(echo ${value//,/ } |wc -w)" ]; then
-                echo -e "\t\t\"$exlcude_obj\": \"$exclude_param\","
+        object_keys=$(echo ${object//:/ } |wc -w)
+        for key in $(echo "${object/:/ }"); do
+            if [ "$j" -eq 1 ]; then
+                echo -n "        \"$key\": "
+                if [ "$object_keys" -eq 1 ]; then
+                    echo -n '""'
+                fi
             else
-                echo -e "\t\t\"$exlcude_obj\": \"$exclude_param\""
+                echo -n "\"${key//:/,}\""
             fi
-            (( ++j))
+            ((j++))
         done
-        if [ $i -lt $fields_count ]; then
-            echo -e "\t},"
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
         else
-            echo -e "\t}"
+            echo
         fi
-        (( ++i))
+        ((i++))
     done
+    echo '    },'
+    i=1
+    echo '    "MAIL": {'
+    objects=$(echo "${MAIL//,/ }" |wc -w)
+    for object in $(echo "${MAIL//,/ }"); do
+        j=1
+        object_keys=$(echo ${object//:/ } |wc -w)
+        for key in $(echo "${object/:/ }"); do
+            if [ "$j" -eq 1 ]; then
+                echo -n "        \"$key\": "
+                if [ "$object_keys" -eq 1 ]; then
+                    echo -n '""'
+                fi
+            else
+                echo -n "\"${key//:/,}\""
+            fi
+            ((j++))
+        done
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done
+    echo '    },'
+    i=1
+    echo '    "DB": {'
+    objects=$(echo "${DB//,/ }" |wc -w)
+    for object in $(echo "${DB//,/ }"); do
+        j=1
+        object_keys=$(echo ${object//:/ } |wc -w)
+        for key in $(echo "${object/:/ }"); do
+            if [ "$j" -eq 1 ]; then
+                echo -n "        \"$key\": "
+                if [ "$object_keys" -eq 1 ]; then
+                    echo -n '""'
+                fi
+            else
+                echo -n "\"${key//:/,}\""
+            fi
+            ((j++))
+        done
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done
+    echo '    },'
+    i=1
+    echo '    "USER": {'
+    objects=$(echo "${USER//,/ }" |wc -w)
+    for object in $(echo "${USER//,/ }"); do
+        j=1
+        object_keys=$(echo ${object//:/ } |wc -w)
+        for key in $(echo "${object/:/ }"); do
+            if [ "$j" -eq 1 ]; then
+                echo -n "        \"$key\": "
+                if [ "$object_keys" -eq 1 ]; then
+                    echo -n '""'
+                fi
+            else
+                echo -n "\"${key//:/,}\""
+            fi
+            ((j++))
+        done
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done
+    echo '    }'
     echo '}'
+
 }
 
-# Shell function
-shell_list_backup_xld() {
-    source $USER_DATA/backup-excludes.conf
-    for field in $fields; do
-        eval value=$field
-        echo -e "${field//$/}: $value"
-    done
+# SHELL list function
+shell_list() {
+    echo "WEB:            $WEB"
+    echo "MAIL:           $MAIL"
+    echo "DB:             $DB"
+    echo "USER DIRS:      $USER"
+}
+
+# PLAIN list function
+plain_list() {
+    echo  "$WEB\t$MAIL\t$DB\t$USER"
+}
+
+# CSV list function
+csv_list() {
+    echo "WEB,MAIL,DB,USER"
+    echo "\"$WEB\",\"$MAIL\",\"$DB\",\"$USER\""
 }
 
 
@@ -66,7 +148,7 @@ shell_list_backup_xld() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
-validate_format 'user'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -74,24 +156,23 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Flush variables
+# Flushing variables
 WEB=''
-DNS=''
 MAIL=''
 DB=''
-CRON=''
 USER=''
 
-# Defining fileds to select
-touch $USER_DATA/backup-excludes.conf
-fields="\$WEB \$DNS \$MAIL \$DB \$CRON \$USER"
+# Parsing backup exclusion list
+if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+    source $USER_DATA/backup-excludes.conf
+fi
 
-# Listing backup exclusions
+# Listing data
 case $format in
-    json)   json_list_backup_xld ;;
-    plain)  nohead=1; shell_list_backup_xld ;;
-    shell)  shell_list_backup_xld;;
-    *)      check_args '1' '0' '[FORMAT]'
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

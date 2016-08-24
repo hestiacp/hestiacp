@@ -29,7 +29,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [RESTART]'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
@@ -42,42 +42,29 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Parsing domain values
 get_domain_values 'web'
-tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
-conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
 SUSPENDED='yes'
-ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip $IP)
 
 # Preparing domain values for the template substitution
-upd_web_domain_values
+prepare_web_domain_values
 
-# Recreating vhost
-del_web_config
-add_web_config
-
-# Check SSL
+# Rebuilding vhost
+del_web_config "$WEB_SYSTEM" "$TPL.tpl"
+add_web_config "$WEB_SYSTEM" "$TPL.tpl"
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
-    conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-    del_web_config
-    add_web_config
+    del_web_config "$WEB_SYSTEM" "$TPL.stpl"
+    add_web_config "$WEB_SYSTEM" "$TPL.stpl"
 fi
 
-# Checking proxy
+# Rebuilding proxy configuration
 if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
-    conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-    del_web_config
-    add_web_config
-
-    # Checking proxy SSL
+    del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+    add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     if [ "$SSL" = 'yes' ]; then
-        tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
-        conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-        del_web_config
-        add_web_config
+        del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+        add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
     fi
 fi
-
 
 
 #----------------------------------------------------------#
@@ -100,6 +87,6 @@ if [ "$restart" != 'no' ]; then
 fi
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: generate self signed certificate and CSR request
-# options: DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [FORMAT]
+# options: DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]
 #
 # The function generates self signed SSL certificate and CSR request
 
@@ -11,8 +11,7 @@
 
 # Argument definition
 domain=$1
-domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+domain=$(echo $domain |sed -e 's/\.*$//g' -e 's/^\.*//g')
 domain_alias=$domain
 email=$2
 country=$3
@@ -20,7 +19,8 @@ state=$4
 city=$5
 org=$6
 org_unit=$7
-format=${8-shell}
+aliases=$8
+format=${9-shell}
 KEY_SIZE=2048
 DAYS=365
 
@@ -35,7 +35,8 @@ json_list_ssl() {
     echo -e "\t\"$domain\": {"
     echo "        \"CRT\": \"$crt\","
     echo "        \"KEY\": \"$key\","
-    echo "        \"CSR\": \"$csr\""
+    echo "        \"CSR\": \"$csr\","
+    echo "        \"DIR\": \"$workdir\""
     echo -e "\t}\n}"
 }
 
@@ -50,51 +51,73 @@ shell_list_ssl() {
     if [ ! -z "$csr" ]; then
         echo -e "\n$csr"
     fi
+    echo -e "\nDirectory: $workdir"
 }
+
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '7' "$#" 'DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [FORMAT]'
-validate_format 'domain_alias' 'format'
+args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]'
+check_args '7' "$#" "$args_usage"
+is_format_valid 'domain_alias' 'format'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+else
+    domain_idn=$domain
+fi
+if [[ "$email" = *[![:ascii:]]* ]]; then
+    email=$(idn -t --quiet -a $email)
+fi
+
 # Create temporary work directory
 workdir=$(mktemp -d)
 cd $workdir
 
 # Generate private key
-export PASSPHRASE=gen_password
-openssl genrsa -des3 \
-    -out $domain.key \
-    -passout env:PASSPHRASE $KEY_SIZE 2>/dev/null
+openssl genrsa $KEY_SIZE > $domain.key 2>/dev/null
 
 # Generate the CSR
 subj="/C=$country/ST=$state/localityName=$city/O=$org"
-subj="$subj/organizationalUnitName=$org_unit/commonName=$domain"
+subj="$subj/organizationalUnitName=$org_unit/commonName=$domain_idn"
 subj="$subj/emailAddress=$email"
+if [ -z "$aliases" ]; then
+    openssl req -sha256\
+        -new \
+        -batch \
+        -subj "$subj" \
+        -key $domain.key \
+        -out $domain.csr #>/dev/null 2>&1
+else
+    for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
+        dns_aliases="${dns_aliases}DNS:$alias,"
+    done
+    dns_aliases=$(echo $dns_aliases |sed "s/,$//")
 
-openssl req -sha256\
-    -new \
-    -batch \
-    -subj "$subj" \
-    -key $domain.key \
-    -out $domain.csr \
-    -passin env:PASSPHRASE >/dev/null 2>&1
+    if [ -e "/etc/ssl/openssl.cnf" ]; then
+        ssl_conf='/etc/ssl/openssl.cnf'
+    else
+        ssl_conf="/etc/pki/tls/openssl.cnf"
+    fi
 
-# Remove passphrase
-cp $domain.key $domain.key.tmp
-openssl rsa \
-    -in $domain.key.tmp \
-    -out $domain.key \
-    -passin env:PASSPHRASE >/dev/null 2>&1
-rm $domain.key.tmp
+    openssl req -sha256\
+        -new \
+        -batch \
+        -subj "$subj" \
+        -key $domain.key \
+        -reqexts SAN \
+        -config  <(cat $ssl_conf \
+            <(printf "[SAN]\nsubjectAltName=$dns_aliases")) \
+        -out $domain.csr >/dev/null 2>&1
+fi
 
 # Generate the cert 1 year
 openssl x509 -req -sha256 \
@@ -102,6 +125,7 @@ openssl x509 -req -sha256 \
     -in $domain.csr \
     -signkey $domain.key \
     -out $domain.crt >/dev/null 2>&1
+
 
 # Listing certificates
 if [ -e "$domain.crt" ]; then
@@ -124,7 +148,7 @@ case $format in
 esac
 
 # Delete tmp dir
-rm -rf $workdir
+#rm -rf $workdir
 
 
 #----------------------------------------------------------#
@@ -132,6 +156,6 @@ rm -rf $workdir
 #----------------------------------------------------------#
 
 # Logging
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -11,50 +11,57 @@
 
 # Argument definition
 ip=$1
-IP=$ip
 format=${2-shell}
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/ip.sh
 
-# Json function
-json_list_ip() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    ip_data=$(cat $VESTA/data/ips/$IP)
+# JSON list function
+json_list() {
     echo '{'
-    eval $ip_data
-    for field in $fields; do
-        eval value=$field
-        if [ $i -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ $fileds_count -eq $i ]; then
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
-            fi
-        fi
-    (( ++i))
-    done
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    echo -e '}'
+    echo '    "'$ip'": {
+        "OWNER": "'$OWNER'",
+        "STATUS": "'$STATUS'",
+        "NAME": "'$NAME'",
+        "U_SYS_USERS": "'$U_SYS_USERS'",
+        "U_WEB_DOMAINS": "'$U_WEB_DOMAINS'",
+        "INTERFACE": "'$INTERFACE'",
+        "NETMASK": "'$NETMASK'",
+        "NAT": "'$NAT'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+        }'
+    echo '}'
 }
 
-# Shell function
-shell_list_ip() {
-    line=$(cat $VESTA/data/ips/$IP)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        if [ -z "$key" ]; then
-            key='NULL'
-        fi
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    echo "IP:             $ip"
+    echo "NETMASK:        $NETMASK"
+    echo "INTERFACE:      $INTERFACE"
+    echo "NAT:            $NAT"
+    echo "OWNER:          $OWNER"
+    echo "STATUS:         $STATUS"
+    echo "NAME:           $NAME"
+    echo "USERS:          $U_SYS_USERS"
+    echo "DOMAINS:        $U_WEB_DOMAINS"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
+    echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
+    echo "NETMASK,NAT,TIME,DATE"
+    echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
+    echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
 }
 
 
@@ -62,26 +69,26 @@ shell_list_ip() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Checking args
 check_args '1' "$#" 'IP [FORMAT]'
-validate_format 'ip'
-is_ip_valid
+is_format_valid 'ip'
+if [ ! -e "$VESTA/data/ips/$ip" ]; then
+    check_result $E_NOTEXIST "ip $ip doesn't exist"
+fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-conf=$VESTA/data/ips/$IP
 
-# Defining fileds to select
-fields='$IP $OWNER $STATUS $NAME $U_SYS_USERS $U_WEB_DOMAINS $INTERFACE
-    $NETMASK $NAT $TIME $DATE'
+# Parsing ip
+source $VESTA/data/ips/$ip
 
-# Listing ip
-case $format in 
-    json)   json_list_ip ;;
-    plain)  shell_list_ip ;;
-    shell)  shell_list_ip | column -t ;;
-    *)      check_args '1' '0' 'IP [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

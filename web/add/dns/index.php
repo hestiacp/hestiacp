@@ -1,10 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'DNS';
 
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check POST request for dns domain
@@ -35,14 +34,14 @@ if (!empty($_POST['ok'])) {
     $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
     $v_ip = escapeshellarg($_POST['v_ip']);
-    if (!empty($_POST['v_ns1'])) $v_ns1 = escapeshellarg($_POST['v_ns1']);
-    if (!empty($_POST['v_ns2'])) $v_ns2 = escapeshellarg($_POST['v_ns2']);
-    if (!empty($_POST['v_ns3'])) $v_ns3 = escapeshellarg($_POST['v_ns3']);
-    if (!empty($_POST['v_ns4'])) $v_ns4 = escapeshellarg($_POST['v_ns4']);
-    if (!empty($_POST['v_ns5'])) $v_ns5 = escapeshellarg($_POST['v_ns5']);
-    if (!empty($_POST['v_ns6'])) $v_ns6 = escapeshellarg($_POST['v_ns6']);
-    if (!empty($_POST['v_ns7'])) $v_ns7 = escapeshellarg($_POST['v_ns7']);
-    if (!empty($_POST['v_ns8'])) $v_ns8 = escapeshellarg($_POST['v_ns8']);
+    $v_ns1 = escapeshellarg($_POST['v_ns1']);
+    $v_ns2 = escapeshellarg($_POST['v_ns2']);
+    $v_ns3 = escapeshellarg($_POST['v_ns3']);
+    $v_ns4 = escapeshellarg($_POST['v_ns4']);
+    $v_ns5 = escapeshellarg($_POST['v_ns5']);
+    $v_ns6 = escapeshellarg($_POST['v_ns6']);
+    $v_ns7 = escapeshellarg($_POST['v_ns7']);
+    $v_ns8 = escapeshellarg($_POST['v_ns8']);
 
     // Add dns domain
     if (empty($_SESSION['error_msg'])) {
@@ -138,12 +137,6 @@ if (!empty($_POST['ok_rec'])) {
 }
 
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
 $v_ns1 = str_replace("'", "", $v_ns1);
 $v_ns2 = str_replace("'", "", $v_ns2);
 $v_ns3 = str_replace("'", "", $v_ns3);
@@ -154,8 +147,9 @@ $v_ns7 = str_replace("'", "", $v_ns7);
 $v_ns8 = str_replace("'", "", $v_ns8);
 
 
-// Display body for dns domain
 if (empty($_GET['domain'])) {
+    // Display body for dns domain
+
     if (empty($v_ttl)) $v_ttl = 14400;
     if (empty($v_exp)) $v_exp = date('Y-m-d', strtotime('+1 year'));
     if (empty($v_ns1)) {
@@ -171,18 +165,16 @@ if (empty($_GET['domain'])) {
         $v_ns8 = str_replace("'", "", $nameservers[7]);
         unset($output);
     }
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_dns.html');
+
+    render_page($user, $TAB, 'add_dns');
+} else {
+    // Display body for dns record
+
+    $v_domain = $_GET['domain'];
+    render_page($user, $TAB, 'add_dns_rec');
 }
 
-// Display body for dns record
-if (!empty($_GET['domain'])) {
-    $v_domain = $_GET['domain'];
-    include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_dns_rec.html');
-}
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

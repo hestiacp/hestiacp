@@ -2,16 +2,10 @@
 // Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'DB';
 
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
+// Main include
+include($_SERVER['DOCUMENT_ROOT'].'/inc/main.php');
 
 // Check database id
 if (empty($_GET['database'])) {
@@ -75,7 +69,7 @@ if (!empty($_POST['save'])) {
         fwrite($fp, $_POST['v_password']."\n");
         fclose($fp);
         exec (VESTA_CMD."v-change-database-password ".$v_username." ".$v_database." ".$v_password, $output, $return_var);
-        check_return_code($return_var,$output);    
+        check_return_code($return_var,$output);
         unset($output);
         unlink($v_password);
         $v_password = escapeshellarg($_POST['v_password']);
@@ -87,12 +81,9 @@ if (!empty($_POST['save'])) {
     }
 }
 
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/edit_db.html');
+// Render page
+render_page($user, $TAB, 'edit_db');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
-
-// Footer
-include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');

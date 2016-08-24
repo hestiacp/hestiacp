@@ -36,7 +36,7 @@
                 <form action="/bulk/mail/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
-                  <select name="" id="">
+                  <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
                     <option value="suspend"><?=__('suspend')?></option>
                     <option value="unsuspend"><?=__('unsuspend')?></option>
@@ -49,11 +49,7 @@
           </table>
           <!--  -->
         </div>
-
       </div>
-
-      <? display_error_block() ?>
-
       <!-- /.l-sort -->
     </div>
 
@@ -83,7 +79,7 @@
 
 
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] == 1) echo ' l-unit--starred'; ?>"
- v_unit_id="<?=$key."@".$_GET['domain']?>" v_section="mail_acc" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?$data[$key]['U_DISK']?>" 
+ v_unit_id="<?=$key."@".$_GET['domain']?>" v_section="mail_acc" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?$data[$key]['U_DISK']?>"
 sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
@@ -126,7 +122,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
           <div class="l-unit__date">
             <?=translate_date($data[$key]['DATE'])?>
           </div>
-          <div class="l-unit__suspended""><?=__('suspended')?></div>
+          <div class="l-unit__suspended"><?=__('suspended')?></div>
           <div class="text-center">
             <i class="l-icon-star"></i>
           </div>
@@ -216,7 +212,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
             ?>
           </div>
           <div class="data-count l-unit__col l-unit__col--right back clearfix">
-            <a class="button cancel" href="/list/mail/">back</a>
+            <a class="button cancel" href="/list/mail/"><?=__('Back')?></a>
           </div>
         </div>
       </div>

@@ -17,8 +17,8 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_ssl() {
+# JSON list function
+json_list() {
     echo '{'
     echo -e "\t\"$domain\": {"
     echo "        \"PEM\": \"$pem\","
@@ -26,14 +26,21 @@ json_list_ssl() {
     echo -e "\t}\n}"
 }
 
-# Shell function
-shell_list_ssl() {
-    if [ ! -z "$pem" ]; then
-        echo -e "$pem"
-    fi
-    if [ ! -z "$pub" ]; then
-        echo -e "\n$pub"
-    fi
+# SHELL list function
+shell_list() {
+    echo -e "$pem"
+    echo -e "\n$pub"
+}
+
+# PLAIN list function
+plain_list() {
+    echo "$pem\t$pub"
+}
+
+# CSV list function
+csv_list() {
+    echo "PEM,PUB"
+    echo "\"$pem\",\"$pub\""
 }
 
 
@@ -42,6 +49,7 @@ shell_list_ssl() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 
@@ -49,20 +57,22 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Parsing domain keys
 if [ -e "$USER_DATA/mail/$domain.pem" ]; then
-    pem=$(cat $USER_DATA/mail/$domain.pem | sed ':a;N;$!ba;s/\n/\\n/g')
+    pem=$(cat $USER_DATA/mail/$domain.pem |sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 if [ -e "$USER_DATA/mail/$domain.pub" ]; then
-    pub=$(cat $USER_DATA/mail/$domain.pub | sed ':a;N;$!ba;s/\n/\\n/g')
+    pub=$(cat $USER_DATA/mail/$domain.pub |sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
-# Listing domains
+# Listing data
 case $format in
-    json)   json_list_ssl ;;
-    plain)  nohead=1; shell_list_ssl ;;
-    shell)  shell_list_ssl ;;
-    *)      check_args '1' '0' '[FORMAT]'
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

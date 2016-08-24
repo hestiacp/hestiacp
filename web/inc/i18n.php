@@ -10,25 +10,30 @@ function _translate() {
     global $LANG;
 
     $args = func_get_args();
+
     $l = $args[0];
+    if (empty($l)) return 'NO LANGUAGE DEFINED';
 
-    if (!$l) return 'NO LANGUAGE DEFINED';
     $key = $args[1];
+    if (empty($key)) return '';
 
+    // No translation needed
+    if (!preg_match('/[a-z]/i', $key)) {
+        return $key;
+    }
+
+    // Load language file (if not loaded yet)
     if (!isset($LANG[$l])) {
-        require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$l.'.php');
+        require_once($_SERVER['DOCUMENT_ROOT']."/inc/i18n/$l.php");
     }
 
-    if (!isset($LANG[$l][$key])) {
-        $text=$key;
-    } else {
-        $text=$LANG[$l][$key];
-    }
+    //if (!isset($LANG[$l][$key])) file_put_contents('/somewhere/something.log', "$key\n", FILE_APPEND);
+    $text = isset($LANG[$l][$key]) ? $LANG[$l][$key] : $key;
 
     array_shift($args);
-    if (count($args)>1) {
+    if (count($args) > 1) {
         $args[0] = $text;
-        return call_user_func_array("sprintf",$args);
+        return call_user_func_array('sprintf', $args);
     } else {
         return $text;
     }
@@ -42,8 +47,8 @@ function _translate() {
  */
 function __() {
     $args = func_get_args();
-    array_unshift($args,$_SESSION['language']);
-    return call_user_func_array("_translate",$args);
+    array_unshift($args, $_SESSION['language']);
+    return call_user_func_array('_translate', $args);
 }
 
 /**
@@ -67,9 +72,10 @@ function detect_user_language($fallback='en') {
         return $user_lang;
     }
 
+
     // Sort Accept-Language by `q` value
     $accept_langs = explode(',', preg_replace('/\s/', '', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'])));
-    $accept_langs_sorted = [];
+    $accept_langs_sorted = array() ;
     foreach ($accept_langs as $lang) {
         $div = explode(';q=', $lang, 2);
         if (count($div) < 2) {
@@ -109,4 +115,14 @@ function detect_user_language($fallback='en') {
     // Store result for reusing
     $user_lang = $fallback;
     return $user_lang;
+}
+
+/**
+ * Detects user language .
+ * @param string Fallback language (default: 'en')
+ * @return string Language code (such as 'en' and 'ja')
+ */
+
+function detect_login_language(){
+
 }

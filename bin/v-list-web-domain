@@ -1,9 +1,8 @@
 #!/bin/bash
-# info: list web domain
+# info: list web domain parameters
 # options: USER DOMAIN [FORMAT]
 #
-# The function of obtaining the list of domain parameters. This call, just as
-# all v_list_* calls, supports 3 formats - json, shell and plain.
+# The function to obtain web domain parameters.
 
 
 #----------------------------------------------------------#
@@ -18,43 +17,87 @@ format=${3-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_domain() {
-    i=1
-    fileds_count=$(echo "$fields" | wc -w)
-    line=$(grep "DOMAIN='$domain'" $conf)
+# JSON list function
+json_list() {
     echo '{'
-    eval $line
-    for field in $fields; do
-        eval value=$field
-        if [ "$i" -eq 1 ]; then
-            echo -e "\t\"$value\": {"
-        else
-            if [ "$fileds_count" -eq "$i" ]; then
-                echo -e "\t\t\"${field//$/}\": \"$value\""
-            else
-                echo -e "\t\t\"${field//$/}\": \"$value\","
-            fi
-        fi
-        (( ++i))
-    done
-    if [ -n "$value" ]; then
-        echo -e '        }'
-    fi
-    echo -e "}"
+    echo '    "'$DOMAIN'": {
+        "IP": "'$IP'",
+        "IP6": "'$IP6'",
+        "U_DISK": "'$U_DISK'",
+        "U_BANDWIDTH": "'$U_BANDWIDTH'",
+        "TPL": "'$TPL'",
+        "ALIAS": "'$ALIAS'",
+        "STATS": "'$STATS'",
+        "STATS_USER": "'$STATS_USER'",
+        "SSL": "'$SSL'",
+        "SSL_HOME": "'$SSL_HOME'",
+        "FTP_USER": "'$FTP_USER'",
+        "FTP_PATH": "'$FTP_PATH'",
+        "AUTH_USER": "'$AUTH_USER'",
+        "BACKEND": "'$BACKEND'",
+        "PROXY": "'$PROXY'",
+        "PROXY_EXT": "'$PROXY_EXT'",
+        "DOCUMENT_ROOT": "'$HOMEDIR/$user/web/$domain/public_html'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
 }
 
-# Shell function
-shell_list_domain() {
-    line=$(grep "DOMAIN='$domain'" $conf)
-    eval $line
-    for field in $fields; do
-        eval key="$field"
-        if [ -z "$key" ]; then
-            key='NULL'
-        fi
-        echo "${field//$/}: $key "
-    done
+# SHELL list function
+shell_list() {
+    source $VESTA/conf/vesta.conf
+    echo "DOMAIN:         $DOMAIN"
+    echo "ALIAS:          ${ALIAS//,/ }"
+    echo "IP:             $IP"
+    if [ ! -z "$IP6" ]; then
+        echo "IP6:            $IP6"
+    fi
+    if [ ! -z "$SSL" ] && [ "$SSL" != 'no' ]; then
+        echo "SSL:            $SSL / $SSL_HOME"
+    fi
+    echo "TEMPLATE:       $TPL"
+    if [ ! -z "$WEB_BACKEND" ]; then
+        echo "BACKEND:        $BACKEND"
+    fi
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        echo "PROXY:          $PROXY"
+        echo "PROXY EXT:      ${PROXY_EXT//,/ }"
+    fi
+    if [ ! -z "$STATS" ]; then
+        echo "STATS:          $STATS"
+    fi
+    if [ ! -z "$FTP_USER" ]; then
+        echo "FTP_USER:       ${FTP_USER//,/, }"
+    fi
+    if [ ! -z "$AUTH_USER" ]; then
+        echo "HTTP_AUTH:      $AUTH_USER"
+    fi
+    echo "DISK:           $U_DISK"
+    echo "BW:             $U_BANDWIDTH"
+    echo "SUSPENDED:      $SUSPENDED"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$DOMAIN\t$IP\t$IP6\t$U_DISK\t$U_BANDWIDTH\t$TPL\t"
+    echo -ne "$ALIAS\t$STATS\t$STATS_USER\t$SSL\t$SSL_HOME\t"
+    echo -ne "$FTP_USER\t$FTP_PATH\t$AUTH_USER\t$BACKEND\t$PROXY\t"
+    echo -e "$PROXY_EXT\t$SUSPENDED\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo -n "DOMAIN,IP,IP6,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,SSL,"
+    echo -n "SSL_HOME,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,PROXY_EXT,"
+    echo "SUSPENDED,TIME,DATE"
+    echo -n "$DOMAIN,$IP,$IP6,$U_DISK,$U_BANDWIDTH,$TPL,\"$ALIAS\",$STATS"
+    echo -n "\"$STATS_USER\",$SSL,$SSL_HOME,\"$FTP_USER\",\"$FTP_PATH\","
+    echo -n "\"$AUTH_USER\",$BACKEND,$PROXY,\"$PROXY_EXT\",$SUSPENDED,$TIME,"
+    echo  "$DATE"
 }
 
 
@@ -71,23 +114,15 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config
-conf=$USER_DATA/web.conf
+# Parsing domain
+eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-# Defining fileds to select
-fields='$DOMAIN $IP $IP6 $U_DISK $U_BANDWIDTH $TPL $ALIAS $STATS $STATS_USER
-    $SSL $SSL_HOME $FTP_USER $FTP_PATH $BACKEND $PROXY $PROXY_EXT $AUTH_USER
-    $DOCUMENT_ROOT $SUSPENDED $TIME $DATE'
-
-# Defining document root
-DOCUMENT_ROOT="$HOMEDIR/$user/web/$domain/public_html"
-
-# Listing domains
-case $format in 
-    json)   json_list_domain ;;
-    plain)  nohead=1; shell_list_domain ;;
-    shell)  shell_list_domain |column -t;;
-    *)      check_args '2' '0' 'USER DOMAIN [FORMAT]'
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
 esac
 
 

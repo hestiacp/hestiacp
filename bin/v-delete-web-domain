@@ -14,8 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 restart=$3
 
 # Includes
@@ -30,7 +29,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-validate_format 'user' 'domain'
+is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -42,58 +41,44 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get template name
-get_domain_values 'web'
-tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
-conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
-ip=$(get_real_ip $IP)
-
-# Deleting domain
-del_web_config
-
-# Checking aliases
-if [ ! -z "$ALIAS" ]; then
-    aliases=$(echo $ALIAS | tr ',' '\n' | wc -l )
-else
-    aliases=0
-fi
-
-# Checking SSL
-if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
-    conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-    del_web_config
-
-    # Deleting SSL certificates
-    rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
-    rm -f $USER_DATA/ssl/$domain.*
-fi
-
-# Checking backend
+# Deleting web backend
 if [ ! -z "$WEB_BACKEND" ]; then
     $BIN/v-delete-web-domain-backend $user $domain $restart
 fi
 
-# Checking proxy
+# Parsing domain values
+get_domain_values 'web'
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
+local_ip=$(get_real_ip $IP)
+
+# Deleting domain from web.conf
+sed -i "/DOMAIN='$domain'/ d" $USER_DATA/web.conf
+
+# Deleting vhost configuration
+del_web_config "$WEB_SYSTEM" "$TPL.tpl"
+
+# Deleting SSL configuration and certificates
+if [ "$SSL" = 'yes' ]; then
+    del_web_config "$WEB_SYSTEM" "$TPL.stpl"
+    rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
+    rm -f $USER_DATA/ssl/$domain.*
+fi
+
+# Deleting proxy
 if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
-    conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-    del_web_config
-
+    del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     if [ "$SSL" = 'yes' ]; then
-        tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
-        conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-        del_web_config
+        del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
     fi
-
-    # Deleting domain from proxy cache pool
-    pool="/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf"
-    if [ -e "$pool" ]; then
-        sed -i "/=$domain:/d" $pool
+    if [ -e "/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf" ]; then
+        sed -i "/=$domain:/d" /etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf
     fi
 fi
 
-# Checking stats
+# Deleting web stats
 if [ ! -z "$STATS" ] && [ "$STATS" != 'no' ]; then
     sed -i "/ $domain$/d" $VESTA/data/queue/webstats.pipe
     rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
@@ -111,61 +96,28 @@ if [ ! -z "$FTP_USER" ]; then
     done
 fi
 
-# Deleting directory
-rm -rf $HOMEDIR/$user/web/$domain
-
 # Deleting logs
 rm -f /var/log/$WEB_SYSTEM/domains/$domain.log*
 rm -f /var/log/$WEB_SYSTEM/domains/$domain.bytes
 rm -f /var/log/$WEB_SYSTEM/domains/$domain.error*
+
+# Deleting directory
+rm -rf $HOMEDIR/$user/web/$domain
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-# Deleting domain
-sed -i "/DOMAIN='$domain'/ d" $USER_DATA/web.conf
-
-# Checking last SSL domain
-conf="/etc/$WEB_SYSTEM/conf.d/vesta.conf"
-ssl_dom=$(grep "SSL='yes'" $USER_DATA/web.conf | wc -l)
-if [ "$ssl_dom" -eq '0' ]; then
-    sed -i "/.*\/$user\/.*s$WEB_SYSTEM.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf
-fi
-
-# Checking last domain
-domains=$(wc -l $USER_DATA/web.conf | cut -f1 -d ' ')
-if [ "$domains" -eq '0' ]; then
-    sed -i "/.*\/$user\/.*$WEB_SYSTEM.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf
-fi
-
-# Proxy
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    # Checking last SSL proxy
-    conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
-    last_sproxy=$(grep "SSL='yes'" $USER_DATA/web.conf)
-    if [ -z "$last_sproxy" ]; then
-        sed -i "/.*\/$user\/.*s$PROXY_SYSTEM.conf/d" $conf
-        rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
-    fi
-
-    # Checking last proxy
-    last_proxy=$(grep -v "PROXY=''" $USER_DATA/web.conf)
-    if [ -z "$last_proxy" ]; then
-        sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
-        rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
-    fi
-fi
-
-# Decrease counters
-decrease_ip_value "$ip"
+# Decreasing user counters
+decrease_ip_value "$local_ip"
 decrease_user_value "$user" '$U_WEB_DOMAINS'
-decrease_user_value "$user" '$U_WEB_ALIASES' "$aliases"
 if [ "$SSL" = 'yes' ]; then
     decrease_user_value "$user" '$U_WEB_SSL'
+fi
+if [ ! -z "$ALIAS" ]; then
+    aliases=$(echo $ALIAS | tr ',' '\n' | wc -l )
+    decrease_user_value "$user" '$U_WEB_ALIASES' "$aliases"
 fi
 
 # Restarting web server
@@ -173,6 +125,7 @@ if [ "$restart" != 'no' ]; then
     $BIN/v-restart-web
     check_result $? "Web restart failed" >/dev/null
 
+    # Restartinh proxy server
     if [ ! -z "$PROXY_SYSTEM" ]; then
         $BIN/v-restart-proxy
         check_result $? "Proxy restart failed" >/dev/null
@@ -181,6 +134,6 @@ fi
 
 # Logging
 log_history "deleted web domain $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

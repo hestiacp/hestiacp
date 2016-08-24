@@ -16,13 +16,13 @@ format=${1-shell}
 # Includes
 source $VESTA/func/main.sh
 
-# Json function
-json_list_lang() {
-    int_counter=$(echo "$languages" | wc -l)
+# JSON list function
+json_list() {
+    objects=$(echo "$languages" |wc -l)
     i=1
     echo '['
     for lang in $languages; do
-        if [ "$i" -lt "$int_counter" ]; then
+        if [ "$i" -lt "$objects" ]; then
             echo -e  "\t\"$lang\","
         else
             echo -e  "\t\"$lang\""
@@ -32,12 +32,25 @@ json_list_lang() {
     echo "]"
 }
 
-# Shell function
-shell_list_lang() {
-    if [ -z "$nohead" ]; then
-        echo "LANGUAGES"
-        echo "----------"
-    fi
+# SHELL list function
+shell_list() {
+    echo "LANGUAGE"
+    echo "--------"
+    for lang in $languages; do
+        echo "$lang"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for lang in $languages; do
+        echo "$lang"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "LANGUAGE"
     for lang in $languages; do
         echo "$lang"
     done
@@ -48,15 +61,15 @@ shell_list_lang() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Check languages
-languages=$(ls $VESTA/web/inc/i18n/|cut -f 1 -d .)
+# Defining language list
+languages=$(ls $VESTA/web/inc/i18n/ |cut -f 1 -d .)
 
-# Listing domains
+# Listing data
 case $format in
-    json)   json_list_lang ;;
-    plain)  nohead=1; shell_list_lang ;;
-    shell)  shell_list_lang ;;
-    *)      check_args '1' '0' '[FORMAT]' ;;
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list;;
 esac
 
 

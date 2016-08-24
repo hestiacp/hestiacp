@@ -25,10 +25,10 @@ source $VESTA/conf/vesta.conf
 tmpdir=$(mktemp -d --dry-run)
 mkdir $tmpdir
 cd $tmpdir
-wget http://c.vestacp.com/$VERSION/rhel/templates.tar.gz -q
+wget http://c.vestacp.com/rhel/7/templates.tar.gz -q
 if [ "$?" -ne 0 ]; then
     echo "Error: can't download template.tar.gz"
-    log_event "$E_CONNECT" "$EVENT"
+    log_event "$E_CONNECT" "$ARGUMENTS"
     rm -rf $tmpdir
     exit $E_CONNECT
 fi

@@ -19,19 +19,14 @@ source $VESTA/conf/vesta.conf
 
 is_file_available() {
     if [ ! -e "$vfile" ]; then
-        echo "Error: file $vfile doesn't exist"
-        log_event "$E_NOTEXIST" "$EVENT"
-        exit $E_NOTEXIST
+        check_result $E_NOTEXIST "file $vfile doesn't exist"
     fi
 }
 
 is_file_valid() {
-    exclude="[!$#&;()\]"
-    vcontent=$(cat $vfile)
-    if [[ "$vcontent" =~ $exclude ]]; then
-        echo "Error: invalid characters in the exlusion list"
-        log_event "$E_INVALID" "$EVENT"
-        exit $E_INVALID
+    exclude="[!|#|$|^|&|(|)|{|}|<|>|?|\|\"|;|%|\`]"
+    if [[ "$(cat $vfile)" =~ $exclude ]]; then
+        check_result $E_INVALID "invalid characters in the exlusion list"
     fi
 }
 
@@ -41,7 +36,7 @@ is_file_valid() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER FILE'
-validate_format 'user' 'vfile'
+is_format_valid 'user' 'vfile'
 is_object_valid 'user' 'USER' "$user"
 is_file_available
 is_file_valid
@@ -78,6 +73,6 @@ chmod 660 $USER_DATA/backup-excludes.conf
 
 # Logging
 log_history "updated exlusion list"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

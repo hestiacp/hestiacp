@@ -1,0 +1,66 @@
+#!/bin/bash
+# info: update letsencrypt ssl certificates
+# options: NONE
+#
+# The function for renew letsencrypt expired ssl certificate for all users
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system enviroment  as we run this script
+# mostly by cron wich not read it by itself
+source /etc/profile
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining user list
+users=$(ls $VESTA/data/users/*/ssl/le.conf |cut -f 7 -d /)
+
+# Checking users
+for user in $users; do
+    # Checking user certificates
+    for crt in $(ls $VESTA/data/users/$user/ssl/*.crt 2>/dev/null); do
+        # Checking certificate issuer
+        crt_data=$(openssl x509 -text -in $crt)
+        issuer=$(echo "$crt_data" |grep Issuer: |grep Encrypt)
+        if [ ! -z "$issuer" ]; then
+            expire=$(echo "$crt_data" |grep "Not After")
+            expire=$(echo "$expire" |cut -f 2,3,4 -d :)
+            expire=$(date -d "$expire" +%s)
+            now=$(date +%s)
+            expire=$((expire - now))
+            expire=$((expire / 86400))
+            domain=$(basename $crt |sed -e "s/.crt$//")
+            if [[ "$expire" -lt 31 ]]; then
+                aliases=$(echo "$crt_data" |grep DNS:)
+                aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//")
+                aliases=$(echo "$aliases" |tr ' ' '\n' |sed "/^$/d")
+                aliases=$(echo "$aliases" |grep -v "^$domain$")
+                if [ ! -z "$aliases" ]; then
+                    aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')
+                    $BIN/v-add-letsencrypt-domain $user $domain $aliases
+                else
+                    $BIN/v-add-letsencrypt-domain $user $domain
+                fi
+            fi
+        fi
+    done
+done
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# No Logging
+#log_event "$OK" "$EVENT"
+
+exit

@@ -26,8 +26,8 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-validate_format 'user' 'domain'
-is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_format_valid 'user' 'domain'
+is_system_enabled "$PROXY_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
@@ -41,19 +41,11 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$PROXY'
 
 # Defining domain parameters
 get_domain_values 'web'
-tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
-conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    del_web_config
-fi
+del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
 
 # Checking SSL
 if [ "$SSL" = 'yes' ]; then
-    tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
-    conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-    if [ ! -z "$PROXY_SYSTEM" ]; then
-        del_web_config
-    fi
+    del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
 
 
@@ -65,25 +57,6 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' ''
 update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' ''
 
-if [ -z "$PROXY_SYSTEM" ]; then
-    exit
-fi
-
-# Checking last SSL proxy
-conf="/etc/$PROXY_SYSTEM/conf.d/vesta.conf"
-last_sproxy=$(grep "SSL='yes'" $USER_DATA/web.conf)
-if [ -z "$last_sproxy" ]; then
-    sed -i "/.*\/$user\/.*s$PROXY_SYSTEM.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
-fi
-
-# Checking last proxy
-last_proxy=$(grep -v "PROXY=''" $USER_DATA/web.conf)
-if [ -z "$last_proxy" ]; then
-    sed -i "/.*\/$user\/.*$PROXY_SYSTEM.conf/d" $conf
-    rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
-fi
-
 # Restart proxy server
 if [ "$restart" != 'no' ]; then
     $BIN/v-restart-proxy
@@ -92,6 +65,6 @@ fi
 
 # Logging
 log_history "disabled proxy support for $domain"
-log_event "$OK" "$EVENT"
+log_event "$OK" "$ARGUMENTS"
 
 exit

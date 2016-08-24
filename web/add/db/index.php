@@ -1,9 +1,9 @@
 <?php
-// Init
 error_reporting(NULL);
 ob_start();
-session_start();
 $TAB = 'DB';
+
+// Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check POST request
@@ -107,30 +107,22 @@ if (!empty($_POST['ok'])) {
     }
 }
 
-// Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/header.html');
-
-// Panel
-top_panel($user,$TAB);
-
 // Get user email
 $v_db_email = $panel[$user]['CONTACT'];
 
 // List avaiable database types
-$db_types = split(",",$_SESSION['DB_SYSTEM']);
+$db_types = split(',', $_SESSION['DB_SYSTEM']);
 
 // List available database servers
-$db_hosts = array();
-foreach ($db_types as $db_type ) {
-    exec (VESTA_CMD."v-list-database-hosts ".$db_type." 'json'", $output, $return_var);
-    $db_hosts_tmp = json_decode(implode('', $output), true);
-    $db_hosts = array_merge($db_hosts, $db_hosts_tmp);
-    unset($db_hosts_tmp);
-    unset($output);
-}
+exec (VESTA_CMD."v-list-database-hosts json", $output, $return_var);
+$db_hosts_tmp1 = json_decode(implode('', $output), true);
+$db_hosts_tmp2 = array_map(function($host){return $host['HOST'];}, $db_hosts_tmp1);
+$db_hosts = array_values(array_unique($db_hosts_tmp2));
+unset($output);
+unset($db_hosts_tmp1);
+unset($db_hosts_tmp2);
 
-// Display body
-include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/add_db.html');
+render_page($user, $TAB, 'add_db');
 
 // Flush session messages
 unset($_SESSION['error_msg']);
@@ -138,4 +130,3 @@ unset($_SESSION['ok_msg']);
 
 // Footer
 include($_SERVER['DOCUMENT_ROOT'].'/templates/footer.html');
-?>

@@ -285,6 +285,7 @@ $LANG['vi'] = array(
     'DNS Support'  => 'Hỗ trỡ DNS',
     'Mail Support'  => 'Hỗ trợ email',
     'Advanced options'  => 'Cấu hình nâng cao',
+    'Basic options'  => 'Basic options',
     'Aliases'  => 'Ánh xạ',
     'SSL Certificate'  => 'Chứng chỉ SSL',
     'SSL Key'  => 'SSL Key',

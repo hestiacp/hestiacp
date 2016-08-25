@@ -285,6 +285,7 @@ $LANG['bs'] = array(
     'DNS Support'  => 'DNS podrška',
     'Mail Support'  => 'Mail podrška',
     'Advanced options'  => 'Dodatne opcije',
+    'Basic options'  => 'Basic options',
     'Aliases'  => 'Aliasi',
     'SSL Certificate'  => 'SSL certifikat',
     'SSL Key'  => 'SSL Key',

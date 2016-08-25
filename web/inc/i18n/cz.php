@@ -286,6 +286,7 @@ $LANG['cz'] = array(
     'DNS Support'  => 'DNS podpora',
     'Mail Support'  => 'Mail podpora',
     'Advanced options'  => 'Pokročilé nastavení',
+    'Basic options'  => 'Basic options',
     'Aliases'  => 'Aliasy',
     'SSL Certificate'  => 'SSL certifikát',
     'SSL Key'  => 'SSL klíč',

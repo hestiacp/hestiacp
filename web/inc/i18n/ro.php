@@ -286,6 +286,7 @@ $LANG['ro'] = array(
     'DNS Support' => 'Support DNS',
     'Mail Support' => 'Support E-mail',
     'Advanced options' => 'Opțiuni avansate',
+    'Basic options'  => 'Basic options',
     'Aliases' => 'Aliasuri',
     'SSL Certificate' => 'Certificat SSL',
     'SSL Key' => 'Cheia SSL',

@@ -286,6 +286,7 @@ $LANG['nl'] = array(
     'DNS Support'  => 'DNS Ondersteuning',
     'Mail Support'  => 'Mail Ondersteuning',
     'Advanced options'  => 'Geavanceerde opties',
+    'Basic options'  => 'Basic options',
     'Aliases'  => 'Aliassen',
     'SSL Certificate'  => 'SSL Certificaat',
     'SSL Key'  => 'SSL Sleutel',

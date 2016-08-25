@@ -286,6 +286,7 @@ $LANG['ua'] = array(
     'DNS Support' => 'Підтримка DNS',
     'Mail Support' => 'Підтримка пошти',
     'Advanced options' => 'Додаткові опції',
+    'Basic options'  => 'Basic options',
     'Aliases' => 'Аліаси',
     'SSL Certificate' => 'SSL сертификат',
     'SSL Key' => 'Ключ SSL сертифікату',

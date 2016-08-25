@@ -237,9 +237,6 @@ class FileManager {
     }
 
     function renameFile($item, $target_name) {
-//        $item     = $this->formatFullPath($dir . '/' . $item);
-//        $dst_item = $this->formatFullPath($dir . '/' . $target_name);
-
         $item     = $this->formatFullPath($item);
         $dst_item = $this->formatFullPath($target_name);
 
@@ -366,7 +363,7 @@ class FileManager {
                 'owner'         => $info[$this->info_positions['OWNER']],
                 'group'         => $info[$this->info_positions['GROUP']],
                 'size'          => $info[$this->info_positions['SIZE']],
-                'name'          => $info[$this->info_positions['NAME']]
+                'name'          => htmlspecialchars($info[$this->info_positions['NAME']], ENT_QUOTES)
             );
         }
 

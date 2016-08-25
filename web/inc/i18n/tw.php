@@ -288,6 +288,7 @@ $LANG['tw'] = array(
     'DNS Support'  => 'DNS支援',
     'Mail Support'  => '信箱支援',
     'Advanced options'  => '進階選項',
+    'Basic options'  => 'Basic options',
     'Aliases'  => '次網域',
     'SSL Certificate'  => 'SSL憑證',
     'SSL Key'  => 'SSL密鑰',

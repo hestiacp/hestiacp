@@ -289,6 +289,7 @@ $LANG['hu'] = array(
     'DNS Support'  => 'DNS támogatás',
     'Mail Support'  => 'Mail támogatás',
     'Advanced options'  => 'Haladó beállítások',
+    'Basic options'  => 'Basic options',
     'Aliases'  => 'Aliaszok',
     'SSL Certificate'  => 'SSL igazolás',
     'SSL Key'  => 'SSL kulcs',

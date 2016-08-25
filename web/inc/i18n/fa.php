@@ -287,6 +287,7 @@ $LANG['fa'] = array(
     'DNS Support'  => 'پشتیبانی DNS',
     'Mail Support'  => 'پشتیبانی ایمیل',
     'Advanced options'  => 'گزینه های پیشرفته',
+    'Basic options'  => 'Basic options',
     'Aliases'  => 'نام مستعار',
     'SSL Certificate'  => 'گواهینامه SSL',
     'SSL Key'  => 'کلید SSL',

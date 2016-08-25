@@ -286,6 +286,7 @@ $LANG['ru'] = array(
     'DNS Support' => 'Поддержка DNS',
     'Mail Support' => 'Поддержка почты',
     'Advanced options' => 'Дополнительные опции',
+    'Basic options'  => 'Базовые опции',
     'Aliases' => 'Алиасы',
     'SSL Certificate' => 'SSL сертификат',
     'SSL Key' => 'Ключ SSL сертификата',

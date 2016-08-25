@@ -285,6 +285,7 @@ $LANG['cn'] = array(
     'DNS Support'  => 'DNS支持',
     'Mail Support'  => 'Mail支持',
     'Advanced options'  => '高级选项',
+    'Basic options'  => 'Basic options',
     'Aliases'  => '别名',
     'SSL Certificate'  => 'SSL证书',
     'SSL Key'  => 'SSL Key',

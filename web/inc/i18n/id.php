@@ -288,6 +288,7 @@ $LANG['id'] = array(
     'DNS Support'  => 'Dukungan DNS',
     'Mail Support'  => 'Dukungan Mail',
     'Advanced options'  => 'Opsi lanjutan',
+    'Basic options'  => 'Basic options',
     'Aliases'  => 'Alias',
     'SSL Certificate'  => 'Sertifikat SSL',
     'SSL Key'  => 'Kunci SSL',

@@ -548,6 +548,10 @@ $(document).ready(function(){
 
             VE.navigation.init();
 
+
+            $('.button').attr('title','ctrl+Enter');
+            $('.button.cancel').attr('title','ctrl+Backspace');
+
             VE.core.register();
             if (location.href.search(/list/) != -1) {
                 var shift_select_ref = $('body').finderSelect({

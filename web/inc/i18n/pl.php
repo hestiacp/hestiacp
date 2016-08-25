@@ -285,6 +285,7 @@ $LANG['pl'] = array(
     'DNS Support'  => 'Wsparcie dla DNS',
     'Mail Support'  => 'Wsparcie dla poczty email',
     'Advanced options'  => 'Ustawienia zaawansowane',
+    'Basic options'  => 'Basic options',
     'Aliases'  => 'Aliasy',
     'SSL Certificate'  => 'Certyfikat SSL',
     'SSL Key'  => 'Klucz SSL',

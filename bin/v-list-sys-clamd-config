@@ -1,0 +1,73 @@
+#!/bin/bash
+# info: list clamd config parameters
+# options: [FORMAT]
+#
+# The function for obtaining the list of clamd config parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# JSON list function
+json_list() {
+    echo '{
+    "CONFIG": {
+        "config_path": "'$config_path'"
+        }
+}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "config_path:    $config_path"
+}
+
+# PLAIN list function
+plain_list() {
+    echo "$config_path"
+}
+
+# CSV list function
+csv_list() {
+    echo "config_path"
+    echo "$config_path"
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config path
+if [ -e '/etc/clamav/clamd.conf' ]; then
+    config_path='/etc/clamav/clamd.conf'
+else
+    if [ -e '/etc/clamd.conf' ]; then
+        config_path='/etc/clamd.conf'
+    fi
+    if [ -e '/etc/clamd.d/clamd.conf' ]; then
+        config_path='/etc/clamav/clamd.conf'
+    fi
+fi
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

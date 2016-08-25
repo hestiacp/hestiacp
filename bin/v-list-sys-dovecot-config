@@ -1,0 +1,103 @@
+#!/bin/bash
+# info: list dovecot config parameters
+# options: [FORMAT]
+#
+# The function for obtaining the list of dovecot config parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# JSON list function
+json_list() {
+    echo '{
+    "CONFIG": {
+        "config_path": "'$config_path'",
+        "config_path1": "'$config_path1'",
+        "config_path2": "'$config_path2'",
+        "config_path3": "'$config_path3'",
+        "config_path4": "'$config_path4'",
+        "config_path5": "'$config_path5'",
+        "config_path6": "'$config_path6'",
+        "config_path7": "'$config_path7'",
+        "config_path8": "'$config_path8'"
+        }
+}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "config_path:    $config_path"
+    echo "config_path1:   $config_path1"
+    echo "config_path2:   $config_path2"
+    echo "config_path3:   $config_path3"
+    echo "config_path4:   $config_path4"
+    echo "config_path5:   $config_path5"
+    echo "config_path6:   $config_path6"
+    echo "config_path7:   $config_path7"
+    echo "config_path8:   $config_path8"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -en "$config_path\t"
+    echo -en "$config_path1\t"
+    echo -en "$config_path2\t"
+    echo -en "$config_path3\t"
+    echo -en "$config_path4\t"
+    echo -en "$config_path5\t"
+    echo -en "$config_path6\t"
+    echo -en "$config_path7\t"
+    echo -e "$config_path8\t"
+}
+
+# CSV list function
+csv_list() {
+    echo -n "config_path,config_path1,config_path2,config_path3,"
+    echo "config_path4,config_path5,config_path6,config_path7,config_path8"
+    echo -n "$config_path,$config_path1,$config_path2,$config_path3,"
+    echo -n "$config_path4,$config_path5,$config_path6,$config_path7,"
+    echo "$config_path8"
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config path
+if [ -e '/etc/dovecot.conf' ]; then
+    config_path='/etc/dovecot.conf'
+else
+    config_path='/etc/dovecot/dovecot.conf'
+    config_path1='/etc/dovecot/conf.d/10-auth.conf'
+    config_path2='/etc/dovecot/conf.d/10-logging.conf'
+    config_path3='/etc/dovecot/conf.d/10-mail.conf'
+    config_path4='/etc/dovecot/conf.d/10-master.conf'
+    config_path5='/etc/dovecot/conf.d/10-ssl.conf'
+    config_path6='/etc/dovecot/conf.d/20-imap.conf'
+    config_path7='/etc/dovecot/conf.d/20-pop3.conf'
+    config_path8='/etc/dovecot/conf.d/auth-passwdfile.conf.ext'
+fi
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

@@ -1,0 +1,88 @@
+#!/bin/bash
+# info: list nginx config parameters
+# options: [FORMAT]
+#
+# The function for obtaining the list of nginx config parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# JSON list function
+json_list() {
+    eval $(echo "$config" |egrep "$keys" |tr -d ';'| awk '{print $1"="$2}')
+    echo '{
+    "CONFIG": {
+        "worker_processes": "'$worker_processes'",
+        "worker_connections": "'$worker_connections'",
+        "send_timeout": "'$send_timeout'",
+        "proxy_connect_timeout": "'$proxy_connect_timeout'",
+        "proxy_send_timeout": "'$proxy_send_timeout'",
+        "proxy_read_timeout": "'$proxy_read_timeout'",
+        "client_max_body_size": "'$client_max_body_size'",
+        "gzip": "'$gzip'",
+        "gzip_comp_level": "'$gzip_comp_level'",
+        "charset": "'$charset'",
+        "config_path": "'$config_path'"
+        }
+}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "$config" |egrep "$keys" |tr -d ';'
+    echo "config_path    $config_path"
+}
+
+# PLAIN list function
+plain_list() {
+    echo "$config" |egrep "$keys" |tr -d ';'
+    echo "config_path $config_path"
+}
+
+# CSV list function
+csv_list() {
+    echo "$keys" |sed "s/ |/,/g"
+    echo "$config" |egrep "$keys" |awk '{print $2}' |tr -d ';' |tr '\n' ','
+    echo
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config path
+config_path='/etc/nginx/nginx.conf'
+
+# Defining keys
+keys="worker_processes |worker_connections |send_timeout"
+keys="$keys |proxy_connect_timeout |proxy_send_timeout"
+keys="$keys |proxy_read_timeout |client_max_body_size"
+keys="$keys |gzip |gzip_comp_level |charset "
+
+
+# Reading nginx config
+config=$(cat $config_path)
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

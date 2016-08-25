@@ -1,0 +1,213 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left subtitle">
+            <table class="width-100p">
+                <tbody><tr>
+                  <td>
+                      <span class="vst selected"><?=__('Configuring Server')?> / <?php print $v_service_name ?></span>
+                    <a href="/edit/server/php/" class="vst"><?= __('Configure')." php.ini"?></a>
+                  </td>
+                    <?php
+                      if (!empty($_SESSION['error_msg'])) {
+                        echo "<td><span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span></td>";
+                      } else {
+                        if (!empty($_SESSION['ok_msg'])) {
+                          echo "<td><span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span></td>";
+                        }
+                      }
+                    ?>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/server/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+
+        <form id="vstobjects" name="v_configure_server" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
+
+            <table class="data mode-add">
+                <tr class="data-add">
+                    <td class="data-dotted">
+                        <table class="data-col1">
+                            <tr><td></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted">
+                        <table class="data-col2" width="600px"  id="basic-options">
+                            <tr>
+                                <td class="vst-text step-top">
+                                    worker_processes
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="worker_processes" prev_value="<?=htmlentities($v_worker_processes)?>" name="v_worker_processes" value="<?=htmlentities($v_worker_processes)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    worker_connections
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="worker_connections" prev_value="<?=htmlentities($v_worker_connections)?>" name="v_worker_connections" value="<?=htmlentities($v_worker_connections)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    client_max_body_size
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="client_max_body_size" prev_value="<?=htmlentities($v_client_max_body_size)?>" name="v_client_max_body_size" value="<?=htmlentities($v_client_max_body_size)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text">
+                                    send_timeout
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="send_timeout" prev_value="<?=htmlentities($v_send_timeout)?>" name="v_send_timeout"  value="<?=htmlentities($v_send_timeout)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    proxy_connect_timeout
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="proxy_connect_timeout" prev_value="<?=htmlentities($v_proxy_connect_timeout)?>" name="v_proxy_connect_timeout" value="<?=htmlentities($v_proxy_connect_timeout)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    proxy_send_timeout
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="proxy_send_timeout" prev_value="<?=htmlentities($v_proxy_send_timeout)?>" name="v_proxy_send_timeout" value="<?=htmlentities($v_proxy_send_timeout)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    proxy_read_timeout
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="proxy_read_timeout" prev_value="<?=htmlentities($v_proxy_read_timeout)?>" name="v_proxy_read_timeout" value="<?=htmlentities($v_proxy_read_timeout)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    gzip
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="gzip" prev_value="<?=htmlentities($v_gzip)?>" name="v_gzip" value="<?=htmlentities($v_gzip)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    gzip_comp_level
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="gzip_comp_level" prev_value="<?=htmlentities($v_gzip_comp_level)?>" name="v_gzip_comp_level" value="<?=htmlentities($v_gzip_comp_level)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    charset
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="charset" prev_value="<?=htmlentities($v_charset)?>" name="v_charset" value="<?=htmlentities($v_charset)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <a href="javascript:toggleOptions();" class="vst-advanced"><?php print __('Advanced options');?></a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="data-col2" width="600px" style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advanced-options">
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <a href="javascript:toggleOptions();" class="vst-advanced"><?php print __('Basic options');?></a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config"><?php echo $v_config;?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label" style="text-transform: capitalize;">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"> <?php print __('restart');?></label>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                        <table class="data-col2">
+                            <tr>
+                                <td class="step-top" width="116px">
+                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                </td>
+                                <td class="step-top">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>

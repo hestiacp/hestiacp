@@ -1,0 +1,47 @@
+#!/bin/bash
+# info: open config
+# options: CONFIG
+#
+# The function opens/reads config files on the file system
+
+src_file=$1
+
+# Checking arguments
+if [ -z "$src_file" ]; then
+    echo "Usage: CONFIG"
+    exit 1
+fi
+
+# Checking vesta user
+if [ ! -e "$VESTA/data/users/$user" ]; then
+    echo "Error: vesta user $user doesn't exist"
+    exit 3
+fi
+
+# Checking file on fs
+if [ ! -e "$src_file" ]; then
+    echo "Error: $src_file file doesn't exist"
+    exit 3
+fi
+
+# Checking path
+if [ ! -z "$src_file" ]; then
+    rpath=$(readlink -f "$src_file")
+    services="nginx|apache|httpd|php|ftp|bind|named|exim|dovecot|spamassassin"
+    services="$services|clam|mysql|postgresql|pgsql|cron|fail2ban|iptables"
+    spath=$(echo "$rpath" |egrep "$services")
+    if [ -z "$spath" ]; then
+        echo "Error: invalid source path $src_file"
+        exit 2
+    fi
+fi
+
+# Reading conf
+cat "$src_file" 2>/dev/null
+if [ $? -ne 0 ]; then
+    echo "Error: file $src_file was not opened"
+    exit 3
+fi
+
+# Exiting
+exit

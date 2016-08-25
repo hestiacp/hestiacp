@@ -1,0 +1,119 @@
+#!/bin/bash
+# info: change service config
+# options: CONFIG SERVICE [RESTART]
+#
+# The function for changing service confguration.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+src=$1
+service=$2
+restart=$3
+echo "$0 $*" >/tmp/t.log
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'CONFIG SERVICE [RESTART]'
+if [ ! -e "$src" ]; then
+    check_result "$E_NOTEXIST" "$src config doesn't exist"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining dst config path
+case $service in
+    nginx)          dst='/etc/nginx/nginx.conf';;
+    httpd)          dst='/etc/httpd/conf/httpd.conf';;
+    apache2)        dst='/etc/apache2/apache2.conf';;
+    exim)           dst='/etc/exim/exim.conf';;
+    exim4)          dst='/etc/exim4/exim4.conf.template';;
+    vsftpd)         dst=$(find /etc/vsftpd* -name 'vsftpd.conf');;
+    proftpd)        dst=$(find /etc/proftpd* -name 'proftpd.conf');;
+    php)            dst=$(find /etc/php* -name php.ini);;
+    mysql)          dst=$(find /etc/my* -name my.cnf);;
+    mariadb)        dst=$(find /etc/my* -name my.cnf);;
+    postgresql)     dst=$($BIN/v-list-sys-pgsql-config plain |cut -f 1);;
+    postgresql-hba) dst=$($BIN/v-list-sys-pgsql-config plain |cut -f 2);;
+    dovecot)        dst=$(find /etc/dovecot* -name dovecot.conf);;
+    dovecot-1)      dst='/etc/dovecot/conf.d/10-auth.conf';;
+    dovecot-2)      dst='/etc/dovecot/conf.d/10-logging.conf';;
+    dovecot-3)      dst='/etc/dovecot/conf.d/10-mail.conf';;
+    dovecot-4)      dst='/etc/dovecot/conf.d/10-master.conf';;
+    dovecot-5)      dst='/etc/dovecot/conf.d/10-ssl.conf';;
+    dovecot-6)      dst='/etc/dovecot/conf.d/20-imap.conf';;
+    dovecot-7)      dst='/etc/dovecot/conf.d/20-pop3.conf';;
+    dovecot-8)      dst='/etc/dovecot/conf.d/auth-passwdfile.conf.ext';;
+    named)          dst='/etc/named.conf';;
+    bind9)          dst='/etc/bind/named.conf';;
+    bind9-opt)      dst='/etc/bind/named.conf.options';;
+    spamd)          dst=$($BIN/v-list-sys-spamd-config plain);;
+    spamassassin)   dst=$($BIN/v-list-sys-spamd-config plain);;
+    clamd)          dst=$($BIN/v-list-sys-clamd-config plain);;
+    cron)           dst='/etc/crontab';;
+    crond)          dst='/etc/crontab';;
+    fail2ban)       dst='/etc/fail2ban/jail.local';;
+    *)              check_result $E_NOTEXIST "service $service doesn't exist"
+esac
+
+# Checking config path
+for config in $dst; do
+    if [ ! -e "$config" ]; then
+        check_result $E_NOTEXIST "$service config doesn't exist"
+    fi
+done
+
+# Checking diff between src and dst configs
+for config in $dst; do
+    diff -q $src $config >/dev/null
+
+    if [ $? -ne 0 ]; then
+        cp $config $config.vst.back
+        cp $src $config
+        update="yes"
+    fi
+done
+
+# Restarting service
+if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
+    if [ "$service" = 'php' ]; then
+        if [ "$WEB_SYSTEM" = "nginx" ]; then
+            service=$WEB_BACKEND
+        else
+            service=$WEB_SYSTEM
+        fi
+    fi
+    if [[ "$service" =~ - ]]; then
+        service=$(echo ${service%-*})
+    fi
+
+    service $service restart >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        for config in $dst; do
+            mv -f $config.vst.back $config
+        done
+        check_result $E_RESTART "$service failed to start with new config"
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -28,12 +28,7 @@ is_format_valid 'user' 'domain'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
-if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
-    check_result $E_NOTEXIST "dns-cluster.conf doesn't exist"
-fi
-if [ "$(ps auxf |grep -v grep |grep $BIN/$SCRIPT |wc -l)" -gt 2 ]; then
-    check_result $E_EXISTS "another sync process already running"
-fi
+is_procces_running
 remote_dns_health_check
 
 

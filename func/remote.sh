@@ -1,3 +1,13 @@
+# Check if script already running or not
+is_procces_running() {
+    SCRIPT=$(basename $0)
+    for pid in $(pidof -x $SCRIPT); do
+        if [ $pid != $$ ]; then
+            check_result $E_INUSE "$SCRIPT is already running"
+        fi
+    done
+}
+
 send_api_cmd() {
     answer=$(curl -s -k \
         --data-urlencode "user=$USER" \

@@ -51,7 +51,7 @@ fi
 
 dvalue=${dvalue//\"/}
 
-if [[ "dvalue" =~ [^\;\s] ]]; then
+if [[ "$dvalue" =~ [\;[:space:]] ]]; then
     dvalue='"'"$dvalue"'"'
 fi
 

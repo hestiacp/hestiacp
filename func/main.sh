@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
@@ -448,6 +449,7 @@ sync_cron_jobs() {
     rm -f $crontab
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > $crontab
+        echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
     fi
     while read line; do
         eval $line

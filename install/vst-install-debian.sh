@@ -10,6 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.vestacp.com'
 CHOST='c.vestacp.com'
 VERSION='debian'
+VESTA='/usr/local/vesta'
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 arch=$(uname -i)
 os='debian'
@@ -506,10 +507,10 @@ mv -f /root/.my.cnf $vst_backups/mysql > /dev/null 2>&1
 
 # Backup vesta
 service vesta stop > /dev/null 2>&1
-cp -r /usr/local/vesta/* $vst_backups/vesta > /dev/null 2>&1
+cp -r $VESTA/* $vst_backups/vesta > /dev/null 2>&1
 apt-get -y remove vesta vesta-nginx vesta-php > /dev/null 2>&1
 apt-get -y purge vesta vesta-nginx vesta-php > /dev/null 2>&1
-rm -rf /usr/local/vesta > /dev/null 2>&1
+rm -rf $VESTA > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
@@ -641,10 +642,10 @@ wget $vestacp/sudo/admin -O /etc/sudoers.d/admin
 chmod 440 /etc/sudoers.d/admin
 
 # Configuring system env
-echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh
+echo "export VESTA='$VESTA'" > /etc/profile.d/vesta.sh
 chmod 755 /etc/profile.d/vesta.sh
 source /etc/profile.d/vesta.sh
-echo 'PATH=$PATH:/usr/local/vesta/bin' >> /root/.bash_profile
+echo 'PATH=$PATH:'$VESTA'/bin' >> /root/.bash_profile
 echo 'export PATH' >> /root/.bash_profile
 source /root/.bash_profile
 
@@ -663,7 +664,7 @@ chmod 750 $VESTA/conf $VESTA/data/users $VESTA/data/ips $VESTA/log
 chmod -R 750 $VESTA/data/queue
 chmod 660 $VESTA/log/*
 rm -f /var/log/vesta
-ln -s /usr/local/vesta/log /var/log/vesta
+ln -s $VESTA/log /var/log/vesta
 chown admin:admin $VESTA/data/sessions
 chmod 770 $VESTA/data/sessions
 
@@ -1163,19 +1164,19 @@ $VESTA/bin/v-add-domain admin $servername
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
-command='sudo /usr/local/vesta/bin/v-update-sys-queue disk'
+command="sudo $VESTA/bin/v-update-sys-queue disk"
 $VESTA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-sys-queue traffic'
+command="sudo $VESTA/bin/v-update-sys-queue traffic"
 $VESTA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-sys-queue webstats'
+command="sudo $VESTA/bin/v-update-sys-queue webstats"
 $VESTA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-sys-queue backup'
+command="sudo $VESTA/bin/v-update-sys-queue backup"
 $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-backup-users'
+command="sudo $VESTA/bin/v-backup-users"
 $VESTA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-user-stats'
+command="sudo $VESTA/bin/v-update-user-stats"
 $VESTA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-sys-rrd'
+command="sudo $VESTA/bin/v-update-sys-rrd"
 $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 service cron restart
 

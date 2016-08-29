@@ -45,7 +45,7 @@ is_backend_template_valid $template
 prepare_web_backend
 
 # Deleting backend
-rm -f $pool/$backend.conf
+rm -f $pool/$backend_type.conf
 
 # Allocating backend port
 backend_port=9000
@@ -63,10 +63,10 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
         -e "s|%user%|$user|"\
         -e "s|%domain%|$domain|"\
         -e "s|%domain_idn%|$domain_idn|"\
-        -e "s|%backend%|$backend|g" > $pool/$backend.conf
+        -e "s|%backend%|$backend_type|g" > $pool/$backend_type.conf
 
 # Checking backend pool configuration
-if [ "$backend" = "$user" ]; then
+if [ "$backend_type" = "$user" ]; then
     conf=$USER_DATA/web.conf
     fields='$DOMAIN'
     nohead=1

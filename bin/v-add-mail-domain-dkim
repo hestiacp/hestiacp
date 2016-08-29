@@ -63,11 +63,11 @@ fi
 # Adding dns records
 if [ ! -z "$DNS_SYSTEM" ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
     p=$(cat $USER_DATA/mail/$domain.pub |grep -v ' KEY---' |tr -d '\n')
-    record='_domainkey'
+    record="_domainkey.$domain_idn"
     policy="\"t=y; o=~;\""
     $BIN/v-add-dns-record $user $domain $record TXT "$policy"
 
-    record='mail._domainkey'
+    record="mail._domainkey.$domain_idn"
     selector="\"k=rsa\; p=$p\""
     $BIN/v-add-dns-record $user $domain $record TXT "$selector"
 fi

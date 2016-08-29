@@ -467,12 +467,12 @@ sync_cron_jobs() {
 is_user_format_valid() {
     if [ ${#1} -eq 1 ]; then
         if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
-            echo "invalid $2 format :: $1"
+            check_result $E_INVALID "invalid $2 format :: $1"
         fi
     else
         if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]
             then
-            echo "invalid $2 format :: $1"
+            check_result $E_INVALID "invalid $2 format :: $1"
         fi
     fi
 }

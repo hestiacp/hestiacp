@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
@@ -448,6 +449,7 @@ sync_cron_jobs() {
     rm -f $crontab
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > $crontab
+        echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
     fi
     while read line; do
         eval $line
@@ -465,12 +467,12 @@ sync_cron_jobs() {
 is_user_format_valid() {
     if [ ${#1} -eq 1 ]; then
         if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
-            echo "invalid $2 format :: $1"
+            check_result $E_INVALID "invalid $2 format :: $1"
         fi
     else
         if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]
             then
-            echo "invalid $2 format :: $1"
+            check_result $E_INVALID "invalid $2 format :: $1"
         fi
     fi
 }
@@ -588,7 +590,7 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF'
+    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA'
     if [ -z "$(echo $known_dnstype |grep -w $1)" ]; then
         check_result $E_INVALID "invalid dns record type format :: $1"
     fi
@@ -611,7 +613,7 @@ is_dns_record_format_valid() {
 
 # Email format validator
 is_email_format_valid() {
-    if [[ ! "$1" =~ "@" ]] ; then
+    if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
         check_result $E_INVALID "invalid email format :: $1"
     fi
 }

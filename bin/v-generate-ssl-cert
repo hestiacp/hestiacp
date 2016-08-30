@@ -21,7 +21,7 @@ org=$6
 org_unit=$7
 aliases=$8
 format=${9-shell}
-KEY_SIZE=2048
+KEY_SIZE=4096
 DAYS=365
 
 # Includes

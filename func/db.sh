@@ -387,7 +387,7 @@ get_mysql_disk_usage() {
     query="SELECT SUM( data_length + index_length ) / 1024 / 1024 \"Size\"
         FROM information_schema.TABLES WHERE table_schema='$database'"
     usage=$(mysql_query "$query" |tail -n1)
-    if [ "$usage" == 'NULL' ] || [ "${usage:0:1}" -eq '0' ]; then
+    if [ "$usage" == '' ] || [ "$usage" == 'NULL' ] || [ "${usage:0:1}" -eq '0' ]; then
         usage=1
     fi
     export LC_ALL=C

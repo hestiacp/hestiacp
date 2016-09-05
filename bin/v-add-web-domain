@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add web domain
-# options: USER DOMAIN [IP] [ALIASES] [PROXY_EXTENTIONS] [RESTART]
+# options: USER DOMAIN [IP] [ALIASES] [PROXY_EXTENSIONS] [RESTART]
 #
 # The function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
@@ -55,7 +55,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENTIONS]'
+check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

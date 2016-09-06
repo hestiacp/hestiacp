@@ -54,7 +54,7 @@ $LANG['vi'] = array(
     'Restore All'  => 'Khôi phục tất cả',
     'Add Package'  => 'Thêm gói Hosting',
     'Add IP'  => 'Thêm địa chỉ IP',
-    'Add Rule' => 'Thêm luạt',
+    'Add Rule' => 'Thêm luật',
     'Ban IP Address' => 'Chặn địa chỉ IP',
     'Search'  => 'Tìm kiếm',
     'Add one more FTP Account' => 'Thêm tài khoản FTP',
@@ -68,7 +68,7 @@ $LANG['vi'] = array(
     'Save'  => 'Lưu lại',
     'Submit'  => 'Gửi',
 
-    'toggle all'  => 'chọn cả',
+    'toggle all'  => 'chọn tất cả',
     'apply to selected'  => 'Hành động',
     'rebuild'  => 'Tạo lại',
     'rebuild web'  => 'Tạo lại web',

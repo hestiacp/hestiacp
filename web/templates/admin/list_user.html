@@ -2,9 +2,9 @@
       <div class="l-sort clearfix noselect">
         <?php
           if ($user == 'admin') {
-            echo '<a class="l-sort__create-btn" href="/add/user/" title="'.str_replace(' ', '&nbsp;', __('Add User')).'"></a>';
+            echo '<a class="l-sort__create-btn" href="/add/user/" title="'.__('Add User').'"></a>';
           } else {
-            echo '<a class="l-sort__create-btn" href="/add/web/" title="'.str_replace(' ', '&nbsp;', __('Add Web Domain')).'"></a>';
+            echo '<a class="l-sort__create-btn" href="/add/web/" title="'.__('Add Web Domain').'"></a>';
           }
         ?>
         <ul class="context-menu sort-order" style="display:none;">

@@ -2,6 +2,7 @@
 /**
  * Vesta language file
  * 浩浩 (github@myrevery.com)
+ * Kevin (kevin@kvm.la)
  */
 
 $LANG['cn'] = array(

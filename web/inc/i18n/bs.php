@@ -700,6 +700,9 @@ $LANG['bs'] = array(
 
     'Minutes' => 'Minuta',
     'Hourly' => 'Sahati',
+    'Daily' => 'Dayly',
+    'Weekly' => 'Weekly',
+    'Monthly' => 'Monthly',
     'Run Command' => 'Pokreni komandu',
     'every month' => 'every month',
     'every odd month' => 'every odd month',

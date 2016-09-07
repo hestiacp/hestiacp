@@ -702,6 +702,9 @@ $LANG['ua'] = array(
 
     'Minutes' => 'Щохвилини',
     'Hourly' => 'Щогодини',
+    'Daily' => 'Dayly',
+    'Weekly' => 'Weekly',
+    'Monthly' => 'Monthly',
     'Run Command' => 'Виконати команду',
     'every month' => 'кожний місяць',
     'every odd month' => 'кожний непарний місяць',

@@ -702,6 +702,9 @@ $LANG['tr'] = array(
 
     'Minutes' => 'Dakikalık',
     'Hourly' => 'Saatlik',
+    'Daily' => 'Dayly',
+    'Weekly' => 'Weekly',
+    'Monthly' => 'Monthly',
     'Run Command' => 'Komutu Çalıştır',
     'every month' => 'her ay',
     'every odd month' => 'her tek ay',

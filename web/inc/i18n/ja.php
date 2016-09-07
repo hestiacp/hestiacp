@@ -701,6 +701,9 @@ $LANG['ja'] = array(
 
     'Minutes' => '分毎',
     'Hourly' => '時間毎',
+    'Daily' => 'Dayly',
+    'Weekly' => 'Weekly',
+    'Monthly' => 'Monthly',
     'Run Command' => '実行時',
     'every month' => '毎月',
     'every odd month' => '奇数月',

@@ -699,6 +699,9 @@ $LANG['es'] = array(
 
     'Minutes' => 'Minutos',
     'Hourly' => 'Hora',
+    'Daily' => 'Dayly',
+    'Weekly' => 'Weekly',
+    'Monthly' => 'Monthly',
     'Run Command' => 'Ejecutar Comando',
     'every month' => 'cada mes',
     'every odd month' => 'cada mes impar',

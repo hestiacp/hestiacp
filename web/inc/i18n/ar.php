@@ -701,6 +701,9 @@ $LANG['ar'] = array(
 
     'Minutes' => 'دقائق',
     'Hourly' => 'ساعي',
+    'Daily' => 'Dayly',
+    'Weekly' => 'Weekly',
+    'Monthly' => 'Monthly',
     'Run Command' => 'أمر التنفيذ',
     'every month' => 'كل شهر',
     'every odd month' => 'كل شهر فردي',

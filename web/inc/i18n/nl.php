@@ -702,6 +702,9 @@ $LANG['nl'] = array(
 
     'Minutes' => 'Minuten',
     'Hourly' => 'Ieder Uur',
+    'Daily' => 'Dayly',
+    'Weekly' => 'Weekly',
+    'Monthly' => 'Monthly',
     'Run Command' => 'Voer commando uit',
     'every month' => 'elke maand',
     'every odd month' => 'every odd month',

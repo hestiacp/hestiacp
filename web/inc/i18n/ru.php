@@ -701,6 +701,9 @@ $LANG['ru'] = array(
     'This is a commercial module, you would need to purchace license key to enable it.' => 'Это коммерческий модуль, чтобы включить его, вам необходимо приобрести лицензию.',
 
     'Minutes' => 'по минутам',
+    'Daily' => 'Dayly',
+    'Weekly' => 'Weekly',
+    'Monthly' => 'Monthly',
     'Hourly' => 'по часам',
     'Run Command' => 'Выполнять',
     'every month' => 'каждый месяц',

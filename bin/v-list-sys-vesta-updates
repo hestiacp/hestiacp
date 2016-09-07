@@ -81,7 +81,7 @@ else
     TIME=$(date -d @$pkg_date +"%T")
 fi
 UPDATED='yes'
-if [ ! -z "$latest" ] && [ "$latest" != "vesta-$VERSION-$RELEASE" ]; then
+if [ ! -z "$latest" ] && [ "$latest" \> "vesta-$VERSION-$RELEASE" ]; then
     UPDATED='no'
 fi
 data="NAME='vesta' VERSION='$VERSION' RELEASE='$RELEASE' ARCH='$ARCH'"

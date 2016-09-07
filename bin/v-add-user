@@ -65,10 +65,13 @@ echo "$user:$password" | /usr/sbin/chpasswd
 mkdir $HOMEDIR/$user/conf
 
 if [ ! -z "$WEB_SYSTEM" ]; then
+    nginxuser=$(ps -eo user,comm|grep nginx|uniq|grep -v "root"|awk '{ print $1}')
     mkdir $HOMEDIR/$user/conf/web $HOMEDIR/$user/web $HOMEDIR/$user/tmp
-    chmod 751 $HOMEDIR/$user/conf/web $HOMEDIR/$user/web
-    chmod 771 $HOMEDIR/$user/tmp
-    chown $user:$user $HOMEDIR/$user/web $HOMEDIR/$user/tmp
+    chmod 751 $HOMEDIR/$user/conf/web 
+    chmod 710 $HOMEDIR/$user/web
+    chmod 700 $HOMEDIR/$user/tmp
+    chown $user:$nginxuser $HOMEDIR/$user/web 
+    chown $user:$user $HOMEDIR/$user/tmp
 fi
 
 if [ ! -z "$MAIL_SYSTEM" ]; then

@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: updating ssl certificate for domain
+# options: USER DOMAIN SSL_DIR [RESTART]
+#
+# The function updates the SSL certificate for a domain. Parameter ssl_dir is a path
+# to directory where 2 or 3 ssl files can be found. Certificate file 
+# domain.tld.crt and its key domain.tld.key  are mandatory. Certificate
+# authority domain.tld.ca file is optional. 
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$(idn -t --quiet -u "$2" )
+domain_idn=$(idn -t --quiet -a "$domain")
+ssl_dir=$3
+restart="$4"
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/ip.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN SSL_DIR [RESTART]'
+validate_format 'user' 'domain' 'ssl_dir'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
+is_web_domain_cert_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Adding certificate to user data directory
+cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
+cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key
+cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.pem
+if [ -e "$ssl_dir/$domain.ca" ]; then
+    cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
+    echo >> $USER_DATA/ssl/$domain.pem
+    cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
+fi
+chmod 660 $USER_DATA/ssl/$domain.*
+
+
+
+# Adding certificate to user dir
+cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/ssl.$domain.crt
+cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/ssl.$domain.key
+cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/ssl.$domain.pem
+if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
+    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/ssl.$domain.ca
+fi
+
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restarting web server
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web
+    check_result $? "Web restart failed" >/dev/null
+
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        check_result $? "Proxy restart failed" >/dev/null
+    fi
+fi
+
+# Logging
+log_history "update ssl certificate for $domain"
+log_event "$OK" "$EVENT"
+
+exit

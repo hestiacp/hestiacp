@@ -223,7 +223,7 @@ add_web_config() {
     trigger="${2/.*pl/.sh}"
     if [ -x "$WEBTPL/$1/$WEB_BACKEND/$trigger" ]; then
         $WEBTPL/$1/$WEB_BACKEND/$trigger \
-            $user $domain $ip $HOMEDIR $HOMEDIR/$user/web/$domain/public_html
+            $user $domain $local_ip $HOMEDIR $HOMEDIR/$user/web/$domain/public_html
     fi
 }
 

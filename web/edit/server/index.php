@@ -303,7 +303,7 @@ if (!empty($_POST['save'])) {
     // Change remote backup host
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] == $v_backup_type) && (!isset($v_backup_new))) {
-            if (($_POST['v_backup_host'] != $v_backup_host) || ($_POST['v_backup_username'] != $v_backup_username) || ($_POST['v_backup_password'] || $v_backup_password) || ($_POST['v_backup_bpath'] == $v_backup_bpath)){
+            if (($_POST['v_backup_host'] != $v_backup_host) || ($_POST['v_backup_username'] != $v_backup_username) || ($_POST['v_backup_password'] != $v_backup_password) || ($_POST['v_backup_bpath'] != $v_backup_bpath)){
                 $v_backup_host = escapeshellarg($_POST['v_backup_host']);
                 $v_backup_type = escapeshellarg($_POST['v_backup_type']);
                 $v_backup_username = escapeshellarg($_POST['v_backup_username']);

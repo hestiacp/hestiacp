@@ -246,6 +246,7 @@ $LANG['en'] = array(
     'MySQL Usage on localhost'  => 'MySQL Usage on localhost',
     'PostgreSQL Usage on localhost'  => 'PostgreSQL Usage on localhost',
     'Bandwidth Usage eth0'  => 'Bandwidth Usage eth0',
+    'Bandwidth Usage eth1'  => 'Bandwidth Usage eth1',
     'Exim Usage'  => 'Exim Usage',
     'FTP Usage'  => 'FTP Usage',
     'SSH Usage'  => 'SSH Usage',

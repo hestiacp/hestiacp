@@ -99,7 +99,7 @@ get_srv_state() {
 
         # Calculating memory usage
         mem=$(echo "$pids" |awk '{sum += $3} END {print sum/1024 }')
-        mem=$(printf "%.0f\n" $mem)
+        mem=$(echo "${mem%%.*}")
 
         # Searching pid file
         pid_file=''

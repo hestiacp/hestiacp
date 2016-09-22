@@ -485,7 +485,7 @@ local_backup(){
         # Removing old backup
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar$//")
-            echo -e "$(date "+%F %T") Roated: $backup_date" |\
+            echo -e "$(date "+%F %T") Rotated: $backup_date" |\
                 tee -a $BACKUP/$user.log
             rm -f $BACKUP/$backup
         done
@@ -592,7 +592,7 @@ ftp_backup() {
         backups_rm_number=$((backups_count - BACKUPS + 1))
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do 
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar$//")
-            echo -e "$(date "+%F %T") Roated ftp backup: $backup_date" |\
+            echo -e "$(date "+%F %T") Rotated ftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
             ftpc "cd $BPATH" "delete $backup"
         done
@@ -727,7 +727,7 @@ sftp_backup() {
         backups_rm_number=$((backups_count - BACKUPS + 1))
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar.*$//")
-            echo -e "$(date "+%F %T") Roated sftp backup: $backup_date" |\
+            echo -e "$(date "+%F %T") Rotated sftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
             sftpc "cd $BPATH" "rm $backup" > /dev/null 2>&1
         done

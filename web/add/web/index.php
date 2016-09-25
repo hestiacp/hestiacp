@@ -149,9 +149,11 @@ if (!empty($_POST['ok'])) {
     // Add Lets Encrypt support
 
      if ((!empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
-         exec (VESTA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." '' 'no'", $output, $return_var);
-         check_return_code($return_var,$output);
-         unset($output);
+        exec (VESTA_CMD."v-list-web-domain ".$user." ".$v_domain." json", $output, $return_var);
+        $data = json_decode(implode('', $output), true);
+        exec (VESTA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." '".$data['ALIAS']."' 'no'", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
      }
      else {
          // Add SSL certificates only if Lets Encrypt is off

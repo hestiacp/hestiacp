@@ -1,6 +1,6 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/edit/backup/exclusions/" class="l-sort__create-btn edit" title="<?=str_replace(' ', '&nbsp;', __('Configure'))?>"></a>
+        <a href="/edit/backup/exclusions/" class="l-sort__create-btn edit" title="<?=__('Configure')?>"></a>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -77,7 +77,7 @@
                       <?
                         if (empty($value)) echo __('no exclusions');
                         foreach ($value as $ex_key => $ex_value) {
-                         echo '<b>'.$ex_key.':</b>'.$ex_value.'<br>';
+                         echo '<b>'.$ex_key.' </b>'.$ex_value.'<br>';
                         }
                       ?>
                     </div>

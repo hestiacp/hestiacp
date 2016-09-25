@@ -18,6 +18,7 @@ source $VESTA/func/main.sh
 
 # JSON list function
 json_list() {
+    set -f
     i=1
     echo '{'
     echo '    "WEB": {'
@@ -27,7 +28,7 @@ json_list() {
         object_keys=$(echo ${object//:/ } |wc -w)
         for key in $(echo "${object/:/ }"); do
             if [ "$j" -eq 1 ]; then
-                echo -n "        \"$key\": "
+                echo -n "        \"${key}\": "
                 if [ "$object_keys" -eq 1 ]; then
                     echo -n '""'
                 fi

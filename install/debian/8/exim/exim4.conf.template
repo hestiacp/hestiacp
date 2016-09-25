@@ -8,6 +8,9 @@
 #SPAM_SCORE = 50
 #CLAMD =  yes
 
+add_environment=<; PATH=/bin:/usr/bin
+keep_environment=
+
 domainlist local_domains = dsearch;/etc/exim4/domains/
 domainlist relay_to_domains = dsearch;/etc/exim4/domains/
 hostlist relay_from_hosts = 127.0.0.1

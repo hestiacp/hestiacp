@@ -16,6 +16,8 @@
 <div class="rights button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.chmodItems()"title="<?=__('RIGHTS')?>"></div>
 <div class="copy button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.copyItems()"><?=__('COPY')?></div>
 <div class="copy button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.copyItems()" title="<?=__('COPY')?>"></div>
+<div class="move button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.moveItems()"><?=__('MOVE')?></div>
+<div class="move button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.moveItems()" title="<?=__('MOVE')?>"></div>
 <div class="archive button" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.packItem()"><?=__('ARCHIVE')?></div>
 <div class="archive button small" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.packItem()" title="<?=__('ARCHIVE')?>"></div>
 <div class="extract button extract-btn" onClick="FM.setTabActive(FM['TAB_<?php echo $pre_tab ?>']);FM.unpackItem()"><?=__('EXTRACT')?></div>

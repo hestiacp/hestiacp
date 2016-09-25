@@ -6,11 +6,11 @@
 
 user=$1
 archive=$2
-src=$3
+src0=$3
 
 # Checking arguments
-if [ -z "$src" ]; then
-    echo "Usage: USER ARCHIVE SOURCE"
+if [ -z "$src0" ]; then
+    echo "Usage: USER ARCHIVE FILE [FILE_2] [FILE_3] [FILE ...]"
     exit 1
 fi
 
@@ -21,36 +21,56 @@ if [ ! -e "$VESTA/data/users/$user" ]; then
 fi
 
 # Checking user homedir
-homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
+homedir=$(grep "^$user:" /etc/passwd |cut -f 6 -d :)
 if [ -z $homedir ]; then
     echo "Error: user home directory doesn't exist"
     exit 12
 fi
 
 # Checking archive
-if [ -e "$archive.tar.gz" ]; then
-    echo "Error: archive already exist $archive.tar.gz"
+if [ -e "$archive" ]; then
+    echo "Error: archive already exist $archive"
     exit 1
 fi
 
 # Checking source path
-rpath=$(readlink -f "$src")
-if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
-    echo "Error: invalid source path $src"
-    exit 1
-fi
+IFS=$'\n'
+i=1
+for src in $*; do
+    if [ "$i" -gt 2 ]; then
+        rpath=$(readlink -f "$src")
+        if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+            echo "Error: invalid source path $src"
+            exit 1
+        fi
+    fi
+    ((i++))
+done
 
-# Parsing current directory
-d=$(dirname "$src")
+i=1
+for src in $*; do
+    if [ "$i" -gt 2 ]; then
+        # Deleting leading home path
+        src=$(echo "$src"| sed -e "s|/home/$user/||")
 
-# Removing leading file path
-f=$(echo "$src" |sed -e "s|$d/||")
+        # Creating tar.gz archive
+        sudo -u $user tar -rf "${archive/.gz/}" -C /home/$user $src >\
+            /dev/null 2>&1
+        if [ "$?" -ne 0 ]; then
+            echo "Error: archive $archive was not created"
+            exit 3
+        fi
+    fi
+    ((i++))
+done
 
-# Creating tar.gz archive
-sudo -u $user tar -czf "$archive.tar.gz" -C $d $f >/dev/null 2>&1
-if [ "$?" -ne 0 ]; then
-    echo "Error: archive $archive.tar.gz was not created"
-    exit 3
+# Checking gzip
+if [[ "$archive" =~ \.gz$ ]]; then
+    sudo -u $user gzip "${archive/.gz/}" >/dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+        echo "Error: archive $archive was not gziped"
+        exit 3
+    fi
 fi
 
 exit

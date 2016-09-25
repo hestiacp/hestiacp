@@ -10,6 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.vestacp.com'
 CHOST='c.vestacp.com'
 VERSION='debian'
+VESTA='/usr/local/vesta'
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 arch=$(uname -i)
 os='debian'
@@ -28,7 +29,7 @@ if [ "$release" -eq 8 ]; then
         mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect"
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
@@ -40,7 +41,7 @@ else
         mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect"
 fi
 
 # Defining help function
@@ -506,10 +507,10 @@ mv -f /root/.my.cnf $vst_backups/mysql > /dev/null 2>&1
 
 # Backup vesta
 service vesta stop > /dev/null 2>&1
-cp -r /usr/local/vesta/* $vst_backups/vesta > /dev/null 2>&1
+cp -r $VESTA/* $vst_backups/vesta > /dev/null 2>&1
 apt-get -y remove vesta vesta-nginx vesta-php > /dev/null 2>&1
 apt-get -y purge vesta vesta-nginx vesta-php > /dev/null 2>&1
-rm -rf /usr/local/vesta > /dev/null 2>&1
+rm -rf $VESTA > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
@@ -606,9 +607,6 @@ rm -f /usr/sbin/policy-rc.d
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 service ssh restart
 
-# AppArmor
-#aa-complain /usr/sbin/named
-
 # Disable awstats cron
 rm -f /etc/cron.d/awstats
 
@@ -644,10 +642,10 @@ wget $vestacp/sudo/admin -O /etc/sudoers.d/admin
 chmod 440 /etc/sudoers.d/admin
 
 # Configuring system env
-echo "export VESTA='/usr/local/vesta'" > /etc/profile.d/vesta.sh
+echo "export VESTA='$VESTA'" > /etc/profile.d/vesta.sh
 chmod 755 /etc/profile.d/vesta.sh
 source /etc/profile.d/vesta.sh
-echo 'PATH=$PATH:/usr/local/vesta/bin' >> /root/.bash_profile
+echo 'PATH=$PATH:'$VESTA'/bin' >> /root/.bash_profile
 echo 'export PATH' >> /root/.bash_profile
 source /root/.bash_profile
 
@@ -666,7 +664,7 @@ chmod 750 $VESTA/conf $VESTA/data/users $VESTA/data/ips $VESTA/log
 chmod -R 750 $VESTA/data/queue
 chmod 660 $VESTA/log/*
 rm -f /var/log/vesta
-ln -s /usr/local/vesta/log /var/log/vesta
+ln -s $VESTA/log /var/log/vesta
 chown admin:admin $VESTA/data/sessions
 chmod 770 $VESTA/data/sessions
 
@@ -965,6 +963,12 @@ if [ "$named" = 'yes' ]; then
     sed -i "s%listen-on%//listen%" /etc/bind/named.conf.options
     chown root:bind /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf
+    aa-complain /usr/sbin/named 2>/dev/null
+    echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2>/dev/null
+    service apparmor status >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        service apparmor restart
+    fi
     update-rc.d bind9 defaults
     service bind9 start
     check_result $? "bind9 start failed"
@@ -1033,6 +1037,10 @@ if [ "$clamd" = 'yes' ]; then
     wget $vestacp/clamav/clamd.conf -O /etc/clamav/clamd.conf
     /usr/bin/freshclam
     update-rc.d clamav-daemon defaults
+    if [ ! -d "/var/run/clamav" ]; then
+        mkdir /var/run/clamav
+    fi
+    chown -R clamav:clamav /var/run/clamav
     service clamav-daemon start
     check_result $? "clamav-daeom start failed"
 fi
@@ -1047,6 +1055,9 @@ if [ "$spamd" = 'yes' ]; then
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
     service spamassassin start
     check_result $? "spamassassin start failed"
+    if [[ $(systemctl list-unit-files | grep spamassassin) =~ "disabled" ]]; then
+        systemctl enable spamassassin
+    fi
 fi
 
 
@@ -1069,6 +1080,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
+    sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
     chmod a+r /etc/roundcube/main.inc.php
     if [ "$release" -eq 8 ]; then
@@ -1125,6 +1137,14 @@ check_result $? "can't create admin user"
 $VESTA/bin/v-change-user-shell admin bash
 $VESTA/bin/v-change-user-language admin $lang
 
+# RoundCube permissions fix
+if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+	if [ ! -d "/var/log/roundcube" ]; then
+		mkdir /var/log/roundcube
+	fi
+    chown admin:admin /var/log/roundcube
+fi
+
 # Configuring system ips
 $VESTA/bin/v-update-sys-ip
 
@@ -1160,19 +1180,19 @@ $VESTA/bin/v-add-domain admin $servername
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
-command='sudo /usr/local/vesta/bin/v-update-sys-queue disk'
+command="sudo $VESTA/bin/v-update-sys-queue disk"
 $VESTA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-sys-queue traffic'
+command="sudo $VESTA/bin/v-update-sys-queue traffic"
 $VESTA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-sys-queue webstats'
+command="sudo $VESTA/bin/v-update-sys-queue webstats"
 $VESTA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-sys-queue backup'
+command="sudo $VESTA/bin/v-update-sys-queue backup"
 $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-backup-users'
+command="sudo $VESTA/bin/v-backup-users"
 $VESTA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-user-stats'
+command="sudo $VESTA/bin/v-update-user-stats"
 $VESTA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
-command='sudo /usr/local/vesta/bin/v-update-sys-rrd'
+command="sudo $VESTA/bin/v-update-sys-rrd"
 $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 service cron restart
 

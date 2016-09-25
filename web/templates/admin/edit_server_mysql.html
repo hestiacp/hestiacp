@@ -1,0 +1,155 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left subtitle">
+            <table class="width-100p">
+                <tbody><tr>
+                  <td>
+                      <span class="vst selected"><?=__('Configuring Server')?> / <?php print $v_service_name ?></span>
+                  </td>
+                    <?php
+                      if (!empty($_SESSION['error_msg'])) {
+                        echo "<td><span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span></td>";
+                      } else {
+                        if (!empty($_SESSION['ok_msg'])) {
+                          echo "<td><span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span></td>";
+                        }
+                      }
+                    ?>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/server/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+
+        <form id="vstobjects" name="v_configure_server" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
+
+            <table class="data mode-add">
+                <tr class="data-add">
+                    <td class="data-dotted">
+                        <table class="data-col1">
+                            <tr><td></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted">
+                        <table class="data-col2" width="600px"  id="basic-options">
+                            <tr>
+                                <td class="vst-text step-top">
+                                    max_connections
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="max_connections" prev_value="<?=htmlentities($v_max_connections)?>" name="v_max_connections" value="<?=htmlentities($v_max_connections)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    max_user_connections
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="max_user_connections" prev_value="<?=htmlentities($v_max_user_connections)?>" name="v_max_user_connections" value="<?=htmlentities($v_max_user_connections)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    wait_timeout
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="memory_limit" prev_value="<?=htmlentities($v_wait_timeout)?>" name="v_wait_timeout" value="<?=htmlentities($v_wait_timeout)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text">
+                                    interactive_timeout
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="interactive_timeout" prev_value="<?=htmlentities($v_interactive_timeout)?>" name="v_interactive_timeout" value="<?=htmlentities($v_interactive_timeout)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    max_allowed_packet
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" regexp="max_allowed_packet" prev_value="<?=htmlentities($v_max_allowed_packet)?>" name="v_display_errors" value="<?=htmlentities($v_max_allowed_packet)?>">
+                                    <br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <a href="javascript:toggleOptions();" class="vst-advanced"><?=__('Advanced options')?></a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="data-col2" width="600px" style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advanced-options">
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <a href="javascript:toggleOptions();" class="vst-advanced"><?=__('Basic options')?></a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config"><?php echo $v_config;?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label" style="text-transform: capitalize;">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"> <?php print __('restart');?></label>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <table class="data-col2">
+                            <tr>
+                                <td class="step-top" width="116px">
+                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                </td>
+                                <td class="step-top">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>

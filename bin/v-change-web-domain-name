@@ -1,0 +1,97 @@
+#!/bin/bash
+# info: change web domain name
+# options: USER DOMAIN NEW_DOMAIN [RESTART]
+#
+# The call is used for changing the domain name.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+new_domain=$3
+restart=$4
+
+domain_idn="$domain"
+if [[ "$domain" = *[![:ascii:]]* ]]; then
+    domain_idn=$(idn -t --quiet -a $domain)
+fi
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/func/ip.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN NEW_DOMAIN [RESTART]'
+is_format_valid 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+check_new_domain=$(grep "DOMAIN='$new_domain'" $VESTA/data/users/*/web.conf)
+if [ ! -z "$check_new_domain" ]; then
+    check_result $E_EXISTS "$new_domain already exists"
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Fetching domain variables
+get_domain_values 'web'
+
+# Changing domain in web.conf
+sed -i "s/DOMAIN='$domain'/DOMAIN='$new_domain'/" $USER_DATA/web.conf
+new_alias=$(echo "$ALIAS,$domain" |\
+    sed -e "s/,/\n/g"|\
+    sed -e "s/^$new_domain$//g"|\
+    sed -e "/^$/d"|\
+    sed -e ':a;N;$!ba;s/\n/,/g')
+
+# Updating domain alias
+if [ "$ALIAS" != "$new_alias" ]; then
+    sed -i "s/ALIAS='$ALIAS'/ALIAS='$new_alias'/" $USER_DATA/web.conf
+fi
+
+# Moving document root and domain logs
+mv $HOMEDIR/$user/web/$domain $HOMEDIR/$user/web/$new_domain/
+cd /var/log/$WEB_SYSTEM/domains
+mv $domain.log $new_domain.log
+mv $domain.error.log $new_domain.error.log
+mv $domain.bytes $new_domain.bytes
+rm -f $HOMEDIR/$user/web/$new_domain/logs/$domain.*
+
+# Updating domain certificates
+if [ -e "$USER_DATA/ssl/$domain.crt" ]; then
+    cd $USER_DATA/ssl
+    mv $domain.crt $new_domain.crt
+    mv $domain.ca $new_domain.ca
+    mv $domain.pem $new_domain.pem
+    mv $domain.key $new_domain.key
+    rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Rebuilding vhosts
+$BIN/v-rebuild-web-domains $user $restart
+
+# Logging
+log_history "changed web domain name $old_domain to $new_domain"
+log_event "$OK" "$EVENT"
+
+exit

@@ -314,7 +314,6 @@ FM.open = function(dir, box, callback) {
         'dir': dir
     };
     App.Ajax.request('cd', params, function(reply) {
-        //var tab = FM.getTabLetter(FM.CURRENT_TAB);
         FM.preselectedItems[tab] = [];
         if (reply.result == true) {
             var html = FM.generate_listing(reply.listing, box);
@@ -324,17 +323,16 @@ FM.open = function(dir, box, callback) {
         }
 
         callback && callback(reply);
-        
+
         var current_pwd = dir.trim() == '' ? FM.ROOT_DIR : dir;
-    
+
         FM.updateTopLevelPathBar(box, tab, current_pwd);
-        
-        
+
         var path_a = FM['TAB_A_CURRENT_PATH'] == '' ? FM.ROOT_DIR : FM['TAB_A_CURRENT_PATH'];
         var path_b = FM['TAB_B_CURRENT_PATH'] == '' ? FM.ROOT_DIR : FM['TAB_B_CURRENT_PATH'];
         var url = '/list/directory/?dir_a='+path_a+'&dir_b='+path_b;
         history.pushState({}, null, url);
-        
+
         if (FM['CURRENT_' + tab + '_LINE'] == -1) {
            FM.setActive(0, FM.CURRENT_TAB);
         }
@@ -653,10 +651,13 @@ FM.generate_listing = function(reply, box) {
 
         var t_index = tab + '_' + i;
 
+        o.name = o.name.replace('"', '\"');
+        o.full_path = o.full_path.replace('"', '\"');
+
         var tpl = Tpl.get('entry_line', 'FM');
         tpl.set(':CL_ACTION_1', cl_act);
-        tpl.set(':SOURCE', $.toJSON(o));
         tpl.set(':NAME', o.name);
+        tpl.set(':SOURCE', $.toJSON(o));
         tpl.set(':PERMISSIONS', o.permissions);
         tpl.set(':OWNER', o.owner);
         tpl.set(':SIZE_VALUE', o.type == 'f' ? FM.humanFileSizeValue(o.size) : '&nbsp;');
@@ -738,7 +739,7 @@ FM.bulkOperation = function(ref) {
     $(ref).find('option[value=-1]').attr('selected', true);
 }
 
-FM.checkBulkStatus = function(bulkStatuses, acc) {
+FM.checkBulkStatus = function(bulkStatuses, acc, dont_reload) {
     var status = true;
     var msg    = '';
     if (bulkStatuses.length == acc.length) {
@@ -760,10 +761,11 @@ FM.checkBulkStatus = function(bulkStatuses, acc) {
             $('#popup .ok').hide();
         }
 
-        var box = FM['TAB_' + tab];
         var tab = FM.getTabLetter(FM.CURRENT_TAB);
-//        FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box, function(){}, true);
-        FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box, function(){}, false);
+        var box = FM['TAB_' + tab];
+	if(!dont_reload){
+	    FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+	}
     }
 }
 
@@ -803,8 +805,6 @@ FM.humanFileSizeUnit = function(size) {
 FM.bulkCopyDo = function() {
     var acc = $(FM.CURRENT_TAB).find('.dir.selected');
     if (acc.length > 0) {
-        //FM.popupClose();
-
         var cfr_html = '';
         var numberOfItems = 0;
         $.each(acc, function(i, o) {
@@ -825,7 +825,6 @@ FM.bulkCopyDo = function() {
             src = $.parseJSON(src);
 
             if (FM.isItemPseudo(src)) {
-                //cfr_html += '<div>'+src.name+'</div>';
                 return;
             }
 
@@ -836,9 +835,6 @@ FM.bulkCopyDo = function() {
             }
 
             if (FM.isItemPseudo(src)) {
-                /*return FM.displayError(
-                    App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
-                );*/
                 return;
             }
 
@@ -856,16 +852,18 @@ FM.bulkCopyDo = function() {
                 dir_target: dest
             };
 
+
             App.Ajax.request(action, params, function(reply) {
                 if (reply.result == true) {
                     bulkStatuses.push(true);
                 }
                 else {
-                    //FM.showError('copy-items', reply.message);
                     bulkStatuses.push(reply.message);
                 }
-
-                FM.checkBulkStatus(bulkStatuses, acc);
+                FM.checkBulkStatus(bulkStatuses, acc, true);
+		if(bulkStatuses.length == acc.length){
+		    FM.open(FM['TAB_' + opposite_tab + '_CURRENT_PATH'], FM['TAB_' + opposite_tab]);
+		}
             });
         });
     }
@@ -960,7 +958,6 @@ FM.bulkRemoveDo = function() {
                     bulkStatuses.push(true);
                 }
                 else {
-                    //FM.showError('copy-items', reply.message);
                     bulkStatuses.push(reply.message);
                 }
                 
@@ -994,76 +991,6 @@ FM.bulkRemove = function() {
         //tpl.set(':DST_FILENAME', dest);
 
         FM.popupOpen(tpl.finalize());
-    }
-}
-
-
-FM.bulkRemove11111 = function() {
-    var acc = $(FM.CURRENT_TAB).find('.dir.selected');
-    if (acc.length > 0) {
-        //FM.popupClose();
-        
-        var cfr_html = '';
-        
-        $.each(acc, function(i, o) {
-            var ref = $(o);
-            var src = $(ref).find('.source').val();
-            src = $.parseJSON(src);
-          
-            if (!FM.isItemPseudo(o)) {
-                cfr_html += '<div>'+src.name+'</div>';
-            }
-        });
-        
-        var tpl = Tpl.get('popup_bulk', 'FM');
-        tpl.set(':ACTION', App.Constants.FM_YOU_ARE_REMOVING);
-        tpl.set(':TEXT',   cfr_html);
-       
-        FM.popupOpen(tpl.finalize());
-        
-        var bulkStatuses = [];
-        $.each(acc, function(i, o) {
-            var ref = $(o);
-            var src = $(ref).find('.source').val();
-            src = $.parseJSON(src);
-
-            var tab = FM.getTabLetter(FM.CURRENT_TAB);
-
-            var opposite_tab = 'A';
-            if (tab == 'A') {
-                opposite_tab = 'B';
-            }
-
-            if (FM.isItemPseudo(src)) {
-                return;
-                /*return FM.displayError(
-                    App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
-                );*/
-            }
-            
-            var dest = FM['TAB_' + opposite_tab + '_CURRENT_PATH' ];
-            if (dest == '') {
-                dest = GLOBAL.ROOT_DIR;
-            }
-            
-            var params = {
-                item: src.full_path,
-                dir:  FM['TAB_' + tab + '_CURRENT_PATH']
-            };
-            
-            App.Ajax.request('delete_files', params, function(reply) {
-                if (reply.result == true) {
-                    bulkStatuses.push(true);
-                }
-                else {
-                    //FM.showError('copy-items', reply.message);
-                    bulkStatuses.push(reply.message);
-                }
-                
-                FM.checkBulkStatus(bulkStatuses, acc);
-            });
-        });
-
     }
 }
 
@@ -1217,7 +1144,6 @@ FM.unpackItem = function() {
             App.Constants.FM_NO_FILE_SELECTED
         );
     }
-    
 
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
@@ -1233,12 +1159,12 @@ FM.unpackItem = function() {
             App.Constants.FM_FILE_TYPE_NOT_SUPPORTED
         );
     }
-    
+
     var dst = FM['TAB_' + tab + '_CURRENT_PATH'];
     if (dst == '') {
         dst = GLOBAL.ROOT_DIR;
     }
-    
+
     var tpl = Tpl.get('popup_unpack', 'FM');
     tpl.set(':FILENAME', src.name);
     tpl.set(':DST_DIRNAME', (dst).replace('//', '/'));
@@ -1248,36 +1174,32 @@ FM.unpackItem = function() {
 FM.packItem = function() {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
-    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
     if (selected.length == 0) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_SELECTED
         );
     }
-    
 
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
-    
-    if (FM.isItemPseudo(src)) {
-        return FM.displayError(
-            App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
-        );
-    }
-    
-    if (FM.isItemPseudo(src)) {
+
+    if (FM.isItemPseudo(src) && selected.length <=1 ) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
         );
     }
 
-    
     var dst = FM['TAB_' + tab + '_CURRENT_PATH'];
     if (dst == '') {
         dst = GLOBAL.ROOT_DIR;
     }
-    
+
     var tpl = Tpl.get('popup_pack', 'FM');
+    if(selected.length > 1){
+        tpl = Tpl.get('popup_bulk_pack', 'FM');
+    }
+    tpl.set(':NUMBER_OF_ITEMS', selected.length);
     tpl.set(':FILENAME', src.name);
     tpl.set(':DST_DIRNAME', (dst + '/' + src.name + '.tar.gz').replace('//', '/'));
     FM.popupOpen(tpl.finalize());
@@ -1346,15 +1268,15 @@ FM.confirmRename = function() {
 
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
-    
+
     var target_name = $('#rename-title').val();
-    
+
     if (target_name.trim().length == 0) {
         return FM.displayError(
             App.Constants.FM_FILE_NAME_CANNOT_BE_EMPTY
         );
     }
-    
+
     var action = FM.isItemFile(src) ? 'rename_file' : 'rename_directory';
 
     var params = {
@@ -1362,7 +1284,7 @@ FM.confirmRename = function() {
         target_name: target_name,
         dir:  FM['TAB_' + tab + '_CURRENT_PATH'] + '/'
     };
-    
+
     App.Ajax.request(action, params, function(reply) {
         if (reply.result == true) {
             FM.popupClose();
@@ -1396,6 +1318,198 @@ FM.renameItems = function() {
     tpl.set(':FILENAME', src.name);
     tpl.set(':NEW_NAME', src.name);
     FM.popupOpen(tpl.finalize());
+}
+
+FM.confirmMove = function() {
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    var box = FM['TAB_' + tab];
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
+    if (!selected) {
+        return FM.displayError(
+            App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
+        );
+    }
+
+    var src = selected.find('.source').val();
+    src = $.parseJSON(src);
+
+    var target_name = $('#dst-name').val();
+
+    if (target_name.trim().length == 0) {
+        return FM.displayError(
+            App.Constants.FM_FILE_NAME_CANNOT_BE_EMPTY
+        );
+    }
+
+    var opposite_tab = 'A';
+    if (tab == 'A') {
+        opposite_tab = 'B';
+    }
+    var opposite_box = FM['TAB_' + opposite_tab];
+
+    var action = FM.isItemFile(src) ? 'move_file' : 'move_directory';
+
+    var params = {
+        item: FM['TAB_' + tab + '_CURRENT_PATH'] + '/' + src.name,
+        target_name: target_name
+    };
+
+    App.Ajax.request(action, params, function(reply) {
+        if (reply.result == true) {
+            FM.popupClose();
+            FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
+            FM.openAndSync(FM['TAB_' + opposite_tab + '_CURRENT_PATH'], opposite_box);
+        }
+        else {
+            FM.showError('rename-items', reply.message);
+        }
+    });
+}
+
+
+FM.moveItems = function() {
+    var tab = FM.getTabLetter(FM.CURRENT_TAB);
+    var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
+    if (selected.length == 0) {
+        return FM.displayError(
+            App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
+        );
+    }
+
+    if (selected.length > 1) { // multi operation
+        return FM.bulkMove();
+    }
+
+    var src = selected.find('.source').val();
+    src = $.parseJSON(src);
+
+    if (FM.isItemPseudo(src)) {
+        return FM.displayError(
+            App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
+        );
+    }
+
+    var opposite_tab = 'A';
+    if (tab == 'A') {
+        opposite_tab = 'B';
+    }
+
+    var dst = FM['TAB_' + opposite_tab + '_CURRENT_PATH'];
+    if (dst == '') {
+        dst = GLOBAL.ROOT_DIR;
+    }
+
+    var tpl = Tpl.get('popup_move', 'FM');
+    tpl.set(':FILENAME', src.full_path);
+    tpl.set(':DST_NAME', (dst + '/' + src.name).replace('//', '/'));
+    FM.popupOpen(tpl.finalize());
+}
+
+FM.bulkMove = function() {
+    var acc = $(FM.CURRENT_TAB).find('.dir.selected');
+    if (acc.length > 0) {
+        FM.popupClose();
+
+        var cfr_html = '';
+        var numberOfItems = 0;
+        $.each(acc, function(i, o) {
+            var ref = $(o);
+            var src = $(ref).find('.source').val();
+            src = $.parseJSON(src);
+
+            if (!FM.isItemPseudo(src)) {
+                cfr_html += '<div>'+src.name+'</div>';
+                numberOfItems++;
+            }
+        });
+
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+        var opposite_tab = 'A';
+        if (tab == 'A') {
+            opposite_tab = 'B';
+        }
+        var dest = FM['TAB_' + opposite_tab + '_CURRENT_PATH' ];
+        if (dest == '') {
+            dest = GLOBAL.ROOT_DIR;
+        }
+
+        var tpl = Tpl.get('popup_bulk_move', 'FM');
+        tpl.set(':NUMBER_OF_ITEMS', numberOfItems);
+        tpl.set(':DST_NAME', dest);
+        //popup_bulk_copy
+
+        FM.popupOpen(tpl.finalize());
+    }
+}
+
+FM.bulkMoveDo = function() {
+    var acc = $(FM.CURRENT_TAB).find('.dir.selected');
+    if (acc.length > 0) {
+        //FM.popupClose();
+
+        var cfr_html = '';
+        var numberOfItems = 0;
+        $.each(acc, function(i, o) {
+            var ref = $(o);
+            var src = $(ref).find('.source').val();
+            src = $.parseJSON(src);
+
+            if (!FM.isItemPseudo(o)) {
+                cfr_html += '<div>'+src.name+'</div>';
+                numberOfItems++;
+            }
+        });
+
+        var bulkStatuses = [];
+        $.each(acc, function(i, o) {
+            var ref = $(o);
+            var src = $(ref).find('.source').val();
+            src = $.parseJSON(src);
+
+	    var target_name = $('#dst-name').val();
+	    if (target_name.trim().length == 0) {
+	        return FM.displayError(
+	            App.Constants.FM_FILE_NAME_CANNOT_BE_EMPTY
+	        );
+	    }
+
+            var tab = FM.getTabLetter(FM.CURRENT_TAB);
+            var opposite_tab = 'A';
+            if (tab == 'A') {
+                opposite_tab = 'B';
+            }
+
+            if (FM.isItemPseudo(src)) {
+                return;
+            }
+
+            var dest = FM['TAB_' + opposite_tab + '_CURRENT_PATH' ];
+            if (dest == '') {
+                dest = GLOBAL.ROOT_DIR;
+            }
+	    var action = FM.isItemFile(src) ? 'move_file' : 'move_directory';
+
+	    var params = {
+	        item: FM['TAB_' + tab + '_CURRENT_PATH'] + '/' + src.name,
+    		target_name: target_name
+	    };
+
+            App.Ajax.request(action, params, function(reply) {
+                if (reply.result == true) {
+                    bulkStatuses.push(true);
+                }
+                else {
+                    //FM.showError('copy-items', reply.message);
+                    bulkStatuses.push(reply.message);
+                }
+
+                FM.checkBulkStatus(bulkStatuses, acc);
+		if(bulkStatuses.length == acc.length){
+		    FM.open(FM['TAB_' + opposite_tab + '_CURRENT_PATH'], FM['TAB_' + opposite_tab]);
+		}
+            });
+        });
+    }
 }
 
 FM.confirmChmod = function() {
@@ -1540,9 +1654,6 @@ FM.confirmBulkChmod = function() {
         $('#popup .message').show().html(msg);
         $('#popup .ok').hide();
     }
-
-//    FM.popupClose();
-//    FM.openAndSync(FM['TAB_' + tab + '_CURRENT_PATH'], box);
     }
 }
 
@@ -1635,6 +1746,7 @@ FM.popupOpen = function(html) {
 }
 
 FM.popupClose = function() {
+    $('#reload-in-time').remove();
     clearTimeout(FM.Env.errorMessageHideTimeout);
     return $('#popup').flayer_close();
 }
@@ -1651,22 +1763,22 @@ FM.copyItems = function() {
     if (selected.length > 1) { // multi operation
         return FM.bulkCopy();
     }
-    
+
 
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
-    
+
     if (FM.isItemPseudo(src)) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
         );
     }
-    
+
     var opposite_tab = 'A';
     if (tab == 'A') {
         opposite_tab = 'B';
     }
-    
+
     var dst = FM['TAB_' + opposite_tab + '_CURRENT_PATH'];
     if (dst == '') {
         dst = GLOBAL.ROOT_DIR;
@@ -1687,7 +1799,7 @@ FM.confirmUnpackItem = function () {
             App.Constants.FM_NO_FILE_SELECTED
         );
     }
-    
+
     var opposite_tab = 'A';
     if (tab == 'A') {
         opposite_tab = 'B';
@@ -1695,7 +1807,7 @@ FM.confirmUnpackItem = function () {
 
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
-    
+
     if (FM.isItemPseudo(src)) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_SELECTED
@@ -1707,12 +1819,12 @@ FM.confirmUnpackItem = function () {
             App.Constants.FM_FILE_TYPE_NOT_SUPPORTED
         );
     }
-    
+
     var dst = FM['TAB_' + tab + '_CURRENT_PATH'];
     if (dst == '') {
         dst = GLOBAL.ROOT_DIR;
     }
-    
+
     var params = {
         item: src.full_path,
         filename: src.name,
@@ -1735,45 +1847,58 @@ FM.confirmUnpackItem = function () {
 FM.confirmPackItem = function () {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var box = FM['TAB_' + tab];
-    var selected = $(FM['TAB_' + tab] ).find('.dir.active');
+    var selected = $(FM['TAB_' + tab] ).find('.dir.active, .dir.selected');
     if (selected.length == 0) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
         );
     }
-    
+    if (selected.length == 1) {
+        var ref = $(selected[0]);
+        var src = $(ref).find('.source').val();
+        src = $.parseJSON(src);
+
+        if (FM.isItemPseudo(src)) {
+            return FM.displayError(
+                App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
+            );
+        }
+    }
+
+    if (selected.length > 0) {
+        var files_arr = [];
+        $.each(selected, function(i, o) {
+            var ref = $(o);
+            var src = $(ref).find('.source').val();
+            src = $.parseJSON(src);
+
+            if (!FM.isItemPseudo(o)) {
+                files_arr.push(src.full_path);
+            }
+        });
+    }
+
+
+
     var opposite_tab = 'A';
     if (tab == 'A') {
         opposite_tab = 'B';
-    }
-
-    var src = selected.find('.source').val();
-    src = $.parseJSON(src);
-    
-    if (FM.isItemPseudo(src)) {
-        return FM.displayError(
-            App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
-        );
     }
 
     var dst = FM['TAB_' + tab + '_CURRENT_PATH'];
     if (dst == '') {
         dst = GLOBAL.ROOT_DIR;
     }
-    
+
     var params = {
-        item: src.full_path,
-        filename: src.name,
-        dir:  FM['TAB_' + tab + '_CURRENT_PATH'],
-        dir_target: $('#pack-destination').val()
+        items: files_arr.join(','),
+        dst_item: $('#pack-destination').val()
     };
 
-    
     App.Ajax.request('pack_item', params, function(reply) {
         if (reply.result == true) {
             FM.popupClose();
             FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], FM['TAB_' + tab]);
-            FM.open(FM['TAB_' + opposite_tab + '_CURRENT_PATH'], FM['TAB_' + opposite_tab]);
         }
         else {
             FM.showError('unpack_item', reply.message);
@@ -1784,7 +1909,7 @@ FM.confirmPackItem = function () {
 FM.confirmCopyItems = function () {
     var tab = FM.getTabLetter(FM.CURRENT_TAB);
     var selected = $(FM['TAB_' + tab] ).find('.dir.selected');
-    
+
     if (!selected) {
         return FM.displayError(
             App.Constants.FM_NO_FILE_OR_DIRECTORY_SELECTED
@@ -1822,7 +1947,6 @@ FM.confirmCopyItems = function () {
     App.Ajax.request(action, params, function(reply) {
         if (reply.result == true) {
             FM.popupClose();
-            // FM.open(FM['TAB_' + tab + '_CURRENT_PATH'], FM['TAB_' + tab]);
             FM.openAndSync(FM['TAB_' + opposite_tab + '_CURRENT_PATH'], FM['TAB_' + opposite_tab]);
         }
         else {
@@ -1962,12 +2086,11 @@ FM.triggerRefreshActionTrick = function() {
     $('#reload-in-time').remove();
     FM.Env.RELOAD_IN_TIME = true;
     var tpl = Tpl.get('reload_in_time', 'FM');
-    //tpl.set(':TIME_LEFT', FM.RELOAD_IN_TIME_SECONDS + 1);
-    
+
     $('body').append(tpl.finalize());
-    
+
     var ref = $('#reload-in-time').find('.reload-in-time-counter');
-    
+
     var timeleft = FM.RELOAD_IN_TIME_SECONDS;
     FM.Env.reload_in_time_interval = 
     setInterval(function() {
@@ -2293,6 +2416,32 @@ $(document).ready(function() {
         'target':           document
     });
 
+    shortcut.add("F4",function() {
+        var tab = FM.getTabLetter(FM.CURRENT_TAB);
+        var elm = $(FM.CURRENT_TAB).find('.dir:eq('+FM['CURRENT_'+tab+'_LINE']+')');
+
+        if (elm.length == 1) {
+            var src = $.parseJSON($(elm).find('.source').val());
+
+            if (src.type == 'd') {
+            }
+            else {
+                if(FM.IMG_FILETYPES.indexOf(src.filetype) >= 0 && src.filetype.length > 0) {
+                    FM.fotoramaOpen(tab, 'img-' + elm.index());
+                }
+                else {
+                    FM.openFile(src.full_path, FM.CURRENT_TAB, elm);
+                }
+            }
+        }
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': false,
+        'target':           document
+    });
+
+
     shortcut.add("Enter",function() {
         if (FM.isPopupOpened()) {
             return FM.handlePopupSubmit();
@@ -2356,6 +2505,16 @@ $(document).ready(function() {
         'disable_in_input': true,
         'target':           document
     });
+
+    shortcut.add("m",function() {
+        FM.moveItems();
+    },{
+        'type':             'keydown',
+        'propagate':        false,
+        'disable_in_input': true,
+        'target':           document
+    });
+
 
     shortcut.add("shift+F6",function() {
         FM.renameItems();

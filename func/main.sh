@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
@@ -97,7 +98,7 @@ check_result() {
 # Argument list checker
 check_args() {
     if [ "$1" -gt "$2" ]; then
-        echo "Usage: $SCRIPT $3"
+        echo "Usage: $(basename $0) $3"
         check_result $E_ARGS "not enought arguments" >/dev/null
     fi
 }
@@ -448,6 +449,7 @@ sync_cron_jobs() {
     rm -f $crontab
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > $crontab
+        echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
     fi
     while read line; do
         eval $line
@@ -465,12 +467,12 @@ sync_cron_jobs() {
 is_user_format_valid() {
     if [ ${#1} -eq 1 ]; then
         if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
-            echo "invalid $2 format :: $1"
+            check_result $E_INVALID "invalid $2 format :: $1"
         fi
     else
         if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]
             then
-            echo "invalid $2 format :: $1"
+            check_result $E_INVALID "invalid $2 format :: $1"
         fi
     fi
 }
@@ -479,7 +481,7 @@ is_user_format_valid() {
 is_domain_format_valid() {
     object_name=${2-domain}
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ \.\. ]]; then
+    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ "\.\." ]]; then
         check_result $E_INVALID "invalid $object_name format :: $1"
     fi
 }
@@ -501,15 +503,14 @@ is_alias_format_valid() {
 is_ip_format_valid() {
     object_name=${2-ip}
     ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-    ip_clean=$(echo "${1%/[0-9][0-9]}")
-    ip_clean=$(echo "${1%/[0-9]}")
+    ip_clean=$(echo "${1%/*}")
     if ! [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
         check_result $E_INVALID "invalid $object_name format :: $1"
     fi
     if [ $1 != "$ip_clean" ]; then
         ip_cidr="$ip_clean/"
         ip_cidr=$(echo "${1#$ip_cidr}")
-        if [[ "$ip_cidr" -gt 32 ]]; then
+        if [[ "$ip_cidr" -gt 32 ]] || [[ "$ip_cidr" =~ [:alnum:] ]]; then
             check_result $E_INVALID "invalid $object_name format :: $1"
         fi
     fi
@@ -589,7 +590,7 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF'
+    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA'
     if [ -z "$(echo $known_dnstype |grep -w $1)" ]; then
         check_result $E_INVALID "invalid dns record type format :: $1"
     fi
@@ -601,10 +602,10 @@ is_dns_record_format_valid() {
         is_ip_format_valid "$1"
     fi
     if [ "$rtype" = 'NS' ]; then
-        is_domain_format_valid "$1" 'ns_record'
+        is_domain_format_valid "${1::-1}" 'ns_record'
     fi
     if [ "$rtype" = 'MX' ]; then
-        is_domain_format_valid "$1" 'mx_record'
+        is_domain_format_valid "${1::-1}" 'mx_record'
         is_int_format_valid "$priority" 'priority_record'
     fi
 
@@ -612,7 +613,7 @@ is_dns_record_format_valid() {
 
 # Email format validator
 is_email_format_valid() {
-    if [[ ! "$1" =~ "@" ]] ; then
+    if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
         check_result $E_INVALID "invalid email format :: $1"
     fi
 }

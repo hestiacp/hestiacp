@@ -111,7 +111,7 @@ if [ "$?" -eq 4 ]; then
 else
     retval=1
 fi
-echo_result "CRON: Dublicate cron job check" "$retval" "$tmpfile" "$cmd"
+echo_result "CRON: Duplicate cron job check" "$retval" "$tmpfile" "$cmd"
 
 # Add second cron job
 cmd="v_add_cron_job $user 2 2 2 2 2 echo 2"
@@ -142,14 +142,14 @@ cmd="v_add_sys_ip 198.18.0.123 255.255.255.255 $interface $user"
 $cmd > $tmpfile 2>> $tmpfile
 echo_result "IP: Adding ip 198.18.0.123" "$?" "$tmpfile" "$cmd"
 
-# Add dublicate ip
+# Add duplicate ip
 $cmd > $tmpfile 2>> $tmpfile
 if [ "$?" -eq 4 ]; then
     retval=0
 else
     retval=1
 fi
-echo_result "IP: Dublicate ip address check" "$retval" "$tmpfile" "$cmd"
+echo_result "IP: Duplicate ip address check" "$retval" "$tmpfile" "$cmd"
 
 # Delete ip address
 cmd="v_delete_sys_ip 198.18.0.123"
@@ -172,28 +172,28 @@ cmd="v_add_web_domain $user $domain 198.18.0.125"
 $cmd > $tmpfile 2>> $tmpfile
 echo_result "WEB: Adding domain $domain on 198.18.0.125" "$?" "$tmpfile" "$cmd"
 
-# Add dublicate
+# Add duplicate
 $cmd > $tmpfile 2>> $tmpfile
 if [ "$?" -eq 4 ]; then
     retval=0
 else
     retval=1
 fi
-echo_result "WEB: Dublicate web domain check" "$retval" "$tmpfile" "$cmd"
+echo_result "WEB: Duplicate web domain check" "$retval" "$tmpfile" "$cmd"
 
 # Add web domain alias
 cmd="v_add_web_domain_alias $user $domain v3.$domain"
 $cmd > $tmpfile 2>> $tmpfile
 echo_result "WEB: Adding alias v3.$domain" "$?" "$tmpfile" "$cmd"
 
-# Alias dublicate
+# Alias duplicate
 $cmd > $tmpfile 2>> $tmpfile
 if [ "$?" -eq 4 ]; then
     retval=0
 else
     retval=1
 fi
-echo_result "WEB: Dublicate web alias check" "$retval" "$tmpfile" "$cmd"
+echo_result "WEB: Duplicate web alias check" "$retval" "$tmpfile" "$cmd"
 
 # Add web domain elog
 cmd="v_add_web_domain_elog $user $domain"
@@ -252,28 +252,28 @@ cmd="v_add_dns_domain $user $domain 198.18.0.125"
 $cmd > $tmpfile 2>> $tmpfile
 echo_result "DNS: Adding dns domain $domain" "$?" "$tmpfile" "$cmd"
 
-# Add dublicate
+# Add duplicate
 $cmd > $tmpfile 2>> $tmpfile
 if [ "$?" -eq 4 ]; then
     retval=0
 else
     retval=1
 fi
-echo_result "DNS: Dublicate domain check" "$retval" "$tmpfile" "$cmd"
+echo_result "DNS: Duplicate domain check" "$retval" "$tmpfile" "$cmd"
 
 # Add dns domain record
 cmd="v_add_dns_domain_record $user $domain test A 198.18.0.125 20"
 $cmd > $tmpfile 2>> $tmpfile
 echo_result "DNS: Adding dns domain record" "$?" "$tmpfile" "$cmd"
 
-# Add dublicate
+# Add duplicate
 $cmd > $tmpfile 2>> $tmpfile
 if [ "$?" -eq 4 ]; then
     retval=0
 else
     retval=1
 fi
-echo_result "DNS: Dublicate record check" "$retval" "$tmpfile" "$cmd"
+echo_result "DNS: Duplicate record check" "$retval" "$tmpfile" "$cmd"
 
 # Delete dns domain record
 cmd="v_delete_dns_domain_record $user $domain 20"

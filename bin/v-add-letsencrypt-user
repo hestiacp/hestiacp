@@ -12,7 +12,7 @@
 # Argument definition
 user=$1
 email=$2
-key_size=2048
+key_size=4096
 
 # Includes
 source $VESTA/func/main.sh

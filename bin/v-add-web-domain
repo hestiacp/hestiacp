@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add web domain
-# options: USER DOMAIN [IP] [ALIASES] [PROXY_EXTENTIONS] [RESTART]
+# options: USER DOMAIN [IP] [ALIASES] [PROXY_EXTENSIONS] [RESTART]
 #
 # The function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
@@ -55,7 +55,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENTIONS]'
+check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -120,12 +120,21 @@ if [ ! -z "$WEB_BACKEND" ]; then
     check_result $? "Backend error" >/dev/null
 fi
 
-# Preparing domain variables
-if [ "$aliases" != 'none' ]; then
-    ALIAS="www.$domain,$aliases,$(get_ip_alias $domain)"
-else
+# Preparing domain aliases
+if [ "$aliases" = 'none' ]; then
     ALIAS=''
+else
+    ALIAS="www.$domain"
+    if [ ! -z "$aliases" ]; then
+        ALIAS="$ALIAS,$aliases"
+    fi
+    ip_alias=$(get_ip_alias $domain)
+    if [ ! -z "$ip_alias" ]; then
+        ALIAS="$ALIAS,$ip_alias"
+    fi
 fi
+
+# Preparing domain variables
 prepare_web_domain_values
 
 # Adding web server config

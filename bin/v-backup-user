@@ -485,7 +485,7 @@ local_backup(){
         # Removing old backup
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar$//")
-            echo -e "$(date "+%F %T") Roated: $backup_date" |\
+            echo -e "$(date "+%F %T") Rotated: $backup_date" |\
                 tee -a $BACKUP/$user.log
             rm -f $BACKUP/$backup
         done
@@ -509,8 +509,6 @@ local_backup(){
     localbackup='yes'
     echo -e "$(date "+%F %T") Local: $BACKUP/$user.$date.tar" |\
         tee -a $BACKUP/$user.log
-    U_BACKUPS=$(ls $BACKUP/ |grep "^$user." |wc -l)
-    update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 }
 
 
@@ -594,7 +592,7 @@ ftp_backup() {
         backups_rm_number=$((backups_count - BACKUPS + 1))
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do 
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar$//")
-            echo -e "$(date "+%F %T") Roated ftp backup: $backup_date" |\
+            echo -e "$(date "+%F %T") Rotated ftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
             ftpc "cd $BPATH" "delete $backup"
         done
@@ -729,7 +727,7 @@ sftp_backup() {
         backups_rm_number=$((backups_count - BACKUPS + 1))
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar.*$//")
-            echo -e "$(date "+%F %T") Roated sftp backup: $backup_date" |\
+            echo -e "$(date "+%F %T") Rotated sftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
             sftpc "cd $BPATH" "rm $backup" > /dev/null 2>&1
         done
@@ -807,11 +805,14 @@ chmod 660 $USER_DATA/backup.conf
 # Deleting task from queue
 sed -i "/v-backup-user $user /d" $VESTA/data/queue/backup.pipe
 
+U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
+update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
+
 # Send notification
 if [ -e "$BACKUP/$user.log" ]; then
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
-    cat $BACKUP/$user.log #|$SENDMAIL -s "$subj" $email $notify
+    cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify
     rm $BACKUP/$user.log
 fi
 

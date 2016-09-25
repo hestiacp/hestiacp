@@ -488,7 +488,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
         echo -e "$(date "+%F %T") $database" |tee -a $tmpdir/restore.log
 
         # Checking database existance
-        check_config=$(grep "DB='$db'" $USER_DATA/db.conf)
+        check_config=$(grep "DB='$database'" $USER_DATA/db.conf)
 
         # Unpacking database container
         tar xf $BACKUP/$backup -C $tmpdir ./db/$database

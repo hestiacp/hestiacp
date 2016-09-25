@@ -49,6 +49,12 @@ if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     fi
 fi
 
+dvalue=${dvalue//\"/}
+
+if [[ "$dvalue" =~ [\;[:space:]] ]]; then
+    dvalue='"'"$dvalue"'"'
+fi
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

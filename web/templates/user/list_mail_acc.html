@@ -1,6 +1,6 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Add Mail Account'))?>"></a>
+        <a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" class="l-sort__create-btn" title="<?=__('Add Mail Account')?>"></a>
         <ul class="context-menu sort-order" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-name"><span class="name"><?=__('Account')?></span><span class="up">&nbsp;</span></li>
@@ -142,7 +142,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Quota')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><? echo __($data[$key]['QUOTA'])?></b>
+                      <b><?=__(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <?=__(humanize_usage_measure($data[$key]['QUOTA'])) ?>
                     </div>
                   </div>
                 </td>

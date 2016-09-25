@@ -5,8 +5,8 @@ listen.allowed_clients = 127.0.0.1
 user = %user%
 group = %user%
 
-listen.owner = %user%
-listen.group = nginx
+listen.owner = www-data
+listen.group = www-data
 
 pm = dynamic
 pm.max_children = 50

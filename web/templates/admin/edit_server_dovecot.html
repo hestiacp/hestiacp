@@ -1,0 +1,171 @@
+    <div class="l-center edit">
+      <div class="l-sort clearfix">
+        <div class="l-sort-toolbar clearfix float-left subtitle">
+            <table class="width-100p">
+                <tbody><tr>
+                  <td>
+                      <span class="vst selected"><?=__('Configuring Server')?> / <?php print $v_service_name ?></span>
+                  </td>
+                    <?php
+                      if (!empty($_SESSION['error_msg'])) {
+                        echo "<td><span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span></td>";
+                      } else {
+                        if (!empty($_SESSION['ok_msg'])) {
+                          echo "<td><span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span></td>";
+                        }
+                      }
+                    ?>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+
+    <div class="l-center">
+      <?php
+        $back = $_SESSION['back'];
+        if (empty($back)) {
+          $back = "location.href='/list/server/'";
+        } else {
+          $back = "location.href='".$back."'";
+        }
+      ?>
+
+        <form id="vstobjects" name="v_configure_server" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="save" value="save" />
+
+            <table class="data mode-add">
+                <tr class="data-add">
+                    <td class="data-dotted">
+                        <table class="data-col1">
+                            <tr><td></td></tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="data-col2" width="600px">
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config"><?php echo $v_config;?></textarea>
+                                </td>
+                            </tr>
+                            <?php if (!empty($v_config_path1)) {
+                            ?>
+
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path1 ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config1"><?php echo $v_config1;?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path2 ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config2"><?php echo $v_config2;?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path3 ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config3"><?php echo $v_config3;?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path4 ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config4"><?php echo $v_config4;?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path5 ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config5"><?php echo $v_config5;?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path6 ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config6"><?php echo $v_config6;?></textarea>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path7 ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config7"><?php echo $v_config7;?></textarea>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print $v_config_path8 ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea class="vst-textinput console" name="v_config8"><?php echo $v_config8;?></textarea>
+                                </td>
+                            </tr>
+
+                            <?php } ?>
+
+
+                            <td class="vst-text input-label" style="text-transform: capitalize;">
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"> <?php print __('restart');?></label>
+                            </td>
+                        </table>
+
+
+                        <table class="data-col2">
+                            <tr>
+                                <td class="step-top" width="116px">
+                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                </td>
+                                <td class="step-top">
+                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>

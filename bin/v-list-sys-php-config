@@ -1,0 +1,94 @@
+#!/bin/bash
+# info: list php config parameters
+# options: [FORMAT]
+#
+# The function for obtaining the list of php config parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# JSON list function
+json_list() {
+    eval $(echo "$config"|egrep "$keys"|\
+        sed -e "s/[ ]*=/=/" -e "s/=[ ]*/=\'/" -e "s/$/'/")
+    echo '{
+    "CONFIG": {
+        "memory_limit": "'$memory_limit'",
+        "max_execution_time": "'$max_execution_time'",
+        "max_input_time": "'$max_input_time'",
+        "upload_max_filesize": "'$upload_max_filesize'",
+        "post_max_size": "'$post_max_size'",
+        "display_errors": "'$display_errors'",
+        "error_reporting": "'$error_reporting'",
+        "config_path": "'$config_path'"
+        }
+}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "$config" |egrep "$keys" |tr -d '='
+    echo "config_path $config_path"
+}
+
+# PLAIN list function
+plain_list() {
+    echo "$config" |egrep "$keys" |tr -d '='
+    echo "config_path $config_path"
+}
+
+# CSV list function
+csv_list() {
+    echo "$keys" |sed "s/ |/,/g"
+    echo "$config" |egrep "$keys" |tr -d '=' |awk '{print $2}' |tr '\n' ','
+    echo
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config path
+config_path=$(find /etc/php* -name php.ini)
+config_count=$(echo "$config_path" |wc -l)
+if [ "$config_count" -gt 1  ]; then
+    if [ "$WEB_SYSTEM" = "nginx" ]; then
+        config_path=$(echo "$config_path"| grep fpm)
+    else
+        config_path=$(echo "$config_path"| grep apache)
+    fi
+fi
+
+
+# Defining keys
+keys="memory_limit |max_execution_time |max_input_time"
+keys="$keys |upload_max_filesize |post_max_size"
+keys="$keys |display_errors |error_reporting "
+
+# Reading config
+config=$(cat $config_path|grep -v "^;")
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

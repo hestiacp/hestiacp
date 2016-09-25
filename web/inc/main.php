@@ -20,6 +20,7 @@ if(!isset($_SESSION['user_combined_ip'])){
 // Checking user to use session from the same IP he has been logged in
 if($_SESSION['user_combined_ip'] != $user_combined_ip){
     session_destroy();
+    session_start();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
@@ -28,6 +29,7 @@ if($_SESSION['user_combined_ip'] != $user_combined_ip){
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
     session_destroy();
+    session_start();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;

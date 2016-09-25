@@ -23,7 +23,7 @@ json_list() {
     echo -n '    "'$job'": {
         "MIN": "'$MIN'",
         "HOUR": "'$HOUR'",
-        "DAY": "'$HOUR'",
+        "DAY": "'$DAY'",
         "MONTH": "'$MONTH'",
         "WDAY": "'$WDAY'",
         "CMD": "'$CMD'",

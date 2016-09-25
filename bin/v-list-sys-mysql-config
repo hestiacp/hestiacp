@@ -1,0 +1,82 @@
+#!/bin/bash
+# info: list mysql config parameters
+# options: [FORMAT]
+#
+# The function for obtaining the list of mysql config parameters.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+# JSON list function
+json_list() {
+    eval $(echo "$config"|egrep "$keys"|\
+        sed -e "s/[ ]*=/=/" -e "s/=[ ]*/=\'/" -e "s/$/'/")
+    echo '{
+    "CONFIG": {
+        "max_user_connections": "'$max_user_connections'",
+        "max_connections": "'$max_connections'",
+        "wait_timeout": "'$wait_timeout'",
+        "interactive_timeout": "'$interactive_timeout'",
+        "max_allowed_packet": "'$max_allowed_packet'",
+        "config_path": "'$config_path'"
+        }
+}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "$config" |egrep "$keys" |tr '=' ' '
+    echo "config_path $config_path"
+}
+
+# PLAIN list function
+plain_list() {
+    echo "$config" |egrep "$keys" |tr '=' ' '
+    echo "config_path $config_path"
+}
+
+# CSV list function
+csv_list() {
+    echo "$keys" |sed "s/|/,/g"
+    echo "$config" |egrep "$keys" |tr '=' ' ' |awk '{print $2}' |tr '\n' ','
+    echo
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Defining config path
+config_path=$(find /etc/my* -name my.cnf)
+
+# Defining keys
+keys="max_user_connections|max_connections|wait_timeout|interactive_timeout"
+keys="${keys}|max_allowed_packet"
+
+# Reading config
+config=$(cat $config_path|grep -v "^;")
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

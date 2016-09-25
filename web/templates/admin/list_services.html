@@ -1,6 +1,6 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/edit/server/" class="l-sort__create-btn edit" title="<?=str_replace(' ', '&nbsp;', __('Configure'))?>"></a>
+        <a href="/edit/server/" class="l-sort__create-btn edit" title="<?=__('Configure')?>"></a>
 
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -53,6 +53,7 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__configure shortcut-enter" key-action="href"><a href="/edit/server/"><?=__('configure')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
               <div class="actions-panel__col actions-panel__restart shortcut-r" key-action="href"><a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>"><?=__('restart')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
             </div>
             <!-- /.actions-panel -->
@@ -136,6 +137,7 @@
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
+              <div class="actions-panel__col actions-panel__configure shortcut-enter" key-action="href"><a href="/edit/server/<? echo $key ?>/"><?=__('configure')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
               <div class="actions-panel__col actions-panel__<?=$action?> shortcut-s" key-action="href"><a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__($action)?> <i></i></a><span class="shortcut">&nbsp;S</span></div>
               <div class="actions-panel__col actions-panel__restart shortcut-r" key-action="href"><a href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('restart')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
             </div>
@@ -169,8 +171,7 @@
                 <td>
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('CPU')?>: <b><?=$cpu?></b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right"><?=__('Memory')?>: <b><?=$data[$key]['MEM']?> <?=__('mb')?></b>
-                    </div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"><?=__('Memory')?>: <b><?=$data[$key]['MEM']?> <?=__('mb')?></b></div>
                   </div>
                 </td>
                 <td>

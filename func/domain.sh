@@ -223,7 +223,7 @@ add_web_config() {
     trigger="${2/.*pl/.sh}"
     if [ -x "$WEBTPL/$1/$WEB_BACKEND/$trigger" ]; then
         $WEBTPL/$1/$WEB_BACKEND/$trigger \
-            $user $domain $ip $HOMEDIR $HOMEDIR/$user/web/$domain/public_html
+            $user $domain $local_ip $HOMEDIR $HOMEDIR/$user/web/$domain/public_html
     fi
 }
 
@@ -237,7 +237,7 @@ get_web_config_lines() {
     fi
 
     vhost_lines=$(grep -niF "name $domain_idn" $2)
-    vhost_lines=$(echo "$vhost_lines" |egrep "$domain_idn$|$domain_idn ")
+    vhost_lines=$(echo "$vhost_lines" |egrep "$domain_idn($| |;)") #"
     vhost_lines=$(echo "$vhost_lines" |cut -f 1 -d :)
     if [ -z "$vhost_lines" ]; then
         check_result $E_PARSING "can't parse config $2"
@@ -271,8 +271,8 @@ del_web_config() {
     get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
     sed -i "$top_line,$bottom_line d" $conf
 
-    web_domains=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
-    if [ "$web_domains" -eq '0' ]; then
+    web_domain=$(grep $domain $USER_DATA/web.conf |wc -l)
+    if [ "$web_domain" -eq '0' ]; then
         sed -i "/.*\/$user\/.*$1.conf/d" /etc/$1/conf.d/vesta.conf
         rm -f $conf
     fi
@@ -281,29 +281,21 @@ del_web_config() {
 # SSL certificate verification
 is_web_domain_cert_valid() {
     if [ ! -e "$ssl_dir/$domain.crt" ]; then
-        echo "Error: $ssl_dir/$domain.crt not found"
-        log_event "$E_NOTEXIST" "$ARGUMENTS"
-        exit $E_NOTEXIST
+        check_result $E_NOTEXIST "$ssl_dir/$domain.crt not found"
     fi
 
     if [ ! -e "$ssl_dir/$domain.key" ]; then
-        echo "Error: $ssl_dir/$domain.key not found"
-        log_event "$E_NOTEXIST" "$ARGUMENTS"
-        exit $E_NOTEXIST
+        check_result $E_NOTEXIST "$ssl_dir/$domain.key not found"
     fi
 
     crt_vrf=$(openssl verify $ssl_dir/$domain.crt 2>&1)
-    if [ ! -z "$(echo $crt_vrf | grep 'unable to load')" ]; then
-        echo "Error: SSL Certificate is not valid"
-        log_event "$E_INVALID" "$ARGUMENTS"
-        exit $E_INVALID
+    if [ ! -z "$(echo $crt_vrf |grep 'unable to load')" ]; then
+        check_result $E_INVALID "SSL Certificate is not valid"
     fi
 
-    if [ ! -z "$(echo $crt_vrf | grep 'unable to get local issuer')" ]; then
+    if [ ! -z "$(echo $crt_vrf |grep 'unable to get local issuer')" ]; then
         if [ ! -e "$ssl_dir/$domain.ca" ]; then
-            echo "Error: Certificate Authority not found"
-            log_event "$E_NOTEXIST" "$ARGUMENTS"
-            exit $E_NOTEXIST
+            check_result $E_NOTEXIST "Certificate Authority not found"
         fi
     fi
 
@@ -313,17 +305,16 @@ is_web_domain_cert_valid() {
         s2=$(openssl x509 -text -in $ssl_dir/$domain.ca 2>/dev/null)
         s2=$(echo "$s2" |grep Subject  |awk -F = '{print $6}' |head -n1)
         if [ "$s1" != "$s2" ]; then
-            echo "Error: SSL intermediate chain is not valid"
-            log_event "$E_NOTEXIST" "$ARGUMENTS"
-            exit $E_NOTEXIST
+            check_result $E_NOTEXIST "SSL intermediate chain is not valid"
         fi
     fi
 
-    key_vrf=$(grep 'PRIVATE KEY' $ssl_dir/$domain.key | wc -l)
+    key_vrf=$(grep 'PRIVATE KEY' $ssl_dir/$domain.key |wc -l)
     if [ "$key_vrf" -ne 2 ]; then
-        echo "Error: SSL Key is not valid"
-        log_event "$E_INVALID" "$ARGUMENTS"
-        exit $E_INVALID
+        check_result $E_INVALID "SSL Key is not valid"
+    fi
+    if [ ! -z "$(grep 'ENCRYPTED' $ssl_dir/$domain.key)" ]; then
+        check_result $E_FORBIDEN "SSL Key is protected (remove pass_phrase)"
     fi
 
     openssl s_server -quiet -cert $ssl_dir/$domain.crt \
@@ -332,11 +323,7 @@ is_web_domain_cert_valid() {
     sleep 0.5
     disown &> /dev/null
     kill $pid &> /dev/null
-    if [ "$?" -ne '0' ]; then
-        echo "Error: ssl certificate key pair is not valid"
-        log_event "$E_INVALID" "$ARGUMENTS"
-        exit $E_INVALID
-    fi
+    check_result $? "ssl certificate key pair is not valid" $E_INVALID
 }
 
 

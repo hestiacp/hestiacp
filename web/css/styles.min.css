@@ -1169,9 +1169,15 @@ div.l-content > div.l-separator:nth-of-type(4) {
   vertical-align: middle;
 }
 
+.l-sort-toolbar.subtitle  {
+  padding-left: 96px;
+}
+
+
 .l-sort-toolbar td:first-of-type {
   padding-left: 40px;
 }
+
 
 .l-sort-toolbar td.step-right:first-of-type {
   padding-right: 20px;
@@ -1963,18 +1969,18 @@ body.mobile .l-unit-toolbar__col--right {
   background-position: -1px -442px;
 }
 .actions-panel__configure:hover a {
-  background-color: #afafac;
-  color: #fff;
-}
-.actions-panel__configure:active a {
   background-color: #55c9c0;
   color: #fff;
 }
+.actions-panel__configure:active a {
+  background-color: #afafac;
+  color: #fff;
+}
 .actions-panel__configure:hover a i {
-  background-position: -41px -442px;
+  background-position: -81px -442px;
 }
 .actions-panel__configure:active a i {
-  background-position: -81px -442px;
+  background-position: -41px -442px;
 }
 .actions-panel__configure--active a {
   background-color: #55c9c0;
@@ -2524,6 +2530,17 @@ a.vst-text:active b{
 .vst-textinput:disabled {
   background-color: #f1f1f1;
 }
+.vst-textinput.console{
+  font-size: 13px;
+  width: 630px;
+  height: 300px;
+  font-family:"Lucida Console", Monaco, monospace;
+  white-space: pre;
+}
+#advanced-options .console{
+  width: 833px;
+  height: 600px;
+}
 .generate {
   color: #2C9491;
   text-decoration: underline;
@@ -2929,6 +2946,7 @@ form#vstobjects.suspended {
   padding: 3px 14px 3px 27px;
   position: absolute;
   text-transform: uppercase;
+  white-space: nowrap;
   word-break: keep-all;
   z-index: -1;
 }

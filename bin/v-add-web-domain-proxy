@@ -12,8 +12,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 template=$3
 default_extentions="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,\
 exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm"
@@ -51,6 +50,7 @@ is_proxy_template_valid $template
 
 # Defining domain parameters
 get_domain_values 'web'
+prepare_web_domain_values
 local_ip=$(get_real_ip $IP)
 
 # Preparing domain values for the template substitution

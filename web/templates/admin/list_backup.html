@@ -1,6 +1,6 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/schedule/backup/" class="l-sort__create-btn" title="<?=str_replace(' ', '&nbsp;', __('Create Backup'))?>"></a>
+        <a href="/schedule/backup/" class="l-sort__create-btn" title="<?=__('Create Backup')?>"></a>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -19,7 +19,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="step-right">
-                <form action="/bulk/backup/" method="post">
+                <form action="/bulk/backup/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">

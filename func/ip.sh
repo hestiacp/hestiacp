@@ -87,9 +87,9 @@ increase_ip_value() {
     fi
 
     sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
-        $VESTA/data/ips/$ip
+        $VESTA/data/ips/$sip
     sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" \
-        $VESTA/data/ips/$ip
+        $VESTA/data/ips/$sip
 }
 
 # Decrease ip value

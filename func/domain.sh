@@ -360,6 +360,11 @@ update_domain_zone() {
     if [ -z "$SERIAL" ]; then
         SERIAL=$(date +'%Y%m%d01')
     fi
+    if [[ "$domain" = *[![:ascii:]]* ]]; then
+        domain_idn=$(idn -t --quiet -a $domain)
+    else
+        domain_idn=$domain
+    fi
     zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
     echo "\$TTL $TTL
 @    IN    SOA    $SOA.    root.$domain_idn. (

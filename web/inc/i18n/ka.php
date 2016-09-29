@@ -582,7 +582,7 @@ $LANG['ka'] = array(
     'Name' => 'სახელით',
 
 
-    'File Manager' => 'ფაილების მართვა',
+    'File Manager' => 'ფაილები',
     'type' => 'ტიპი',
     'size' => 'ზომა',
     'date' => 'თარიღი',

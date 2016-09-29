@@ -11,7 +11,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
+domain=$2
 stats_user=$3
 password=$4; HIDE=4
 
@@ -43,15 +43,21 @@ is_password_valid
 stats_dir="$HOMEDIR/$user/web/$domain/stats"
 
 # Adding htaccess file
-echo "AuthUserFile $stats_dir/.htpasswd
-AuthName \"Web Statistics\"
-AuthType Basic
-Require valid-user" > $stats_dir/.htaccess
+if [ "$WEB_SYSTEM" = 'nginx' ]; then
+    echo "auth_basic \"Web Statistics\";" > $stats_dir/auth.conf
+    echo "auth_basic_user_file $stats_dir/.htpasswd;" >> $stats_dir/auth.conf
+else
+    echo "AuthUserFile $stats_dir/.htpasswd" > $stats_dir/.htaccess
+    echo "AuthName \"Web Statistics\"" >> $stats_dir/.htaccess
+    echo "AuthType Basic" >> $stats_dir/.htaccess
+    echo "Require valid-user" >> $stats_dir/.htaccess
+fi
 
 # Generating htaccess user and password
-rm -f $stats_dir/.htpasswd
-htpasswd -bc $stats_dir/.htpasswd "$stats_user" "$password" &>/dev/null
-stats_crypt=$(grep $stats_user: $stats_dir/.htpasswd |cut -f 2 -d :)
+salt=$(generate_password "$PW_MATRIX" "8")
+stats_pass=$($BIN/v-generate-password-hash md5 $salt $password)
+echo "$stats_user:$stats_pass" > $stats_dir/.htpasswd
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #
@@ -59,7 +65,7 @@ stats_crypt=$(grep $stats_user: $stats_dir/.htpasswd |cut -f 2 -d :)
 
 # Adding stats user in config
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS_USER' "$stats_user"
-update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' "$stats_crypt"
+update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' "$stats_pass"
 
 # Logging
 log_history "added password protection for web stats on $domain"

@@ -252,10 +252,16 @@ rebuild_web_domain_conf() {
 
         if [ ! -z "$STATS_USER" ]; then
             stats_dir="$HOMEDIR/$user/web/$domain/stats"
-            echo "AuthUserFile $stats_dir/.htpasswd" > $stats_dir/.htaccess
-            echo "AuthName \"Web Statistics\"" >> $stats_dir/.htaccess
-            echo "AuthType Basic" >> $stats_dir/.htaccess
-            echo "Require valid-user" >> $stats_dir/.htaccess
+            if [ "$WEB_SYSTEM" = 'nginx' ]; then
+                echo "auth_basic \"Web Statistics\";" > $stats_dir/auth.conf
+                echo "auth_basic_user_file $stats_dir/.htpasswd;" >> \
+                    $stats_dir/auth.conf
+            else
+                echo "AuthUserFile $stats_dir/.htpasswd" > $stats_dir/.htaccess
+                echo "AuthName \"Web Statistics\"" >> $stats_dir/.htaccess
+                echo "AuthType Basic" >> $stats_dir/.htaccess
+                echo "Require valid-user" >> $stats_dir/.htaccess
+            fi
             echo "$STATS_USER:$STATS_CRYPT" > $stats_dir/.htpasswd
         fi
     fi

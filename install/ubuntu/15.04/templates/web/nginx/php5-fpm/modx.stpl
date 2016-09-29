@@ -6,7 +6,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-	
+
     ssl         on;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
@@ -35,13 +35,13 @@ server {
         rewrite ^/(.*)$ /index.php?q=$1;
     }
 
-	location ~ \.php$ {
-        	try_files $uri =404;
-            fastcgi_pass %backend_lsnr%;
-            fastcgi_index index.php;
-		    fastcgi_param SCRIPT_FILENAME $request_filename;
-            include /etc/nginx/fastcgi_params;
-        }
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass %backend_lsnr%;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $request_filename;
+        include /etc/nginx/fastcgi_params;
+    }
 
     error_page  403 /error/404.html;
     error_page  404 /error/404.html;
@@ -54,6 +54,11 @@ server {
     location ~* "/\.(htaccess|htpasswd)$" {
         deny    all;
         return  404;
+    }
+
+    location /vstats/ {
+        alias   %home%/%user%/web/%domain%/stats/;
+        include %home%/%user%/web/%domain%/stats/auth.conf*;
     }
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;

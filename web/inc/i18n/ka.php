@@ -7,13 +7,13 @@
 $LANG['ka'] = array(
     'Packages'  => 'პაკეტები',
     'IP'  => 'IP',
-    'Graphs'  => 'გრაფიკები',
+    'Graphs'  => 'გრაფები',
     'Statistics'  => 'სტატისტიკა',
-    'Log'  => 'ჟურნალი',
+    'Log'  => 'ლოგი',
     'Server'  => 'სერვერი',
     'Services'  => 'სერვისები',
     'Firewall' => 'ფაირვოლი',
-    'Updates'  => 'განახლებები',
+    'Updates'  => 'განახლება',
     'Log in'  => 'შესვლა',
     'Log out'  => 'გამოსვლა',
 
@@ -573,7 +573,7 @@ $LANG['ka'] = array(
     'Web Config Editor' => 'ვების კონფიგურაციის რედაქტორი',
     'Template Manager' => 'შაბლონების მართვა',
     'Backup Migration Manager' => 'მარქაფების მიგრაციის მართვა',
-    'FileManager' => 'ფაილების მართვა',
+    'FileManager' => 'ფაილები',
     'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
 
     'sort by' => 'დალაგება',

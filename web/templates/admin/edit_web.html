@@ -346,6 +346,7 @@
                                         <tr>
                                             <td class="step-left">
                                                 <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?php print !empty($v_ftp_pre_path) ? htmlentities($v_ftp_pre_path) : '/'; ?>">
+                                                <input type="hidden"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path_prev]" <?php if (!empty($v_ftp_path)) echo "value=".($v_ftp_path[0] != '/' ? '/' : '').htmlentities($v_ftp_path); ?>>
                                                 <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path]" <?php if (!empty($v_ftp_path)) echo "value=".($v_ftp_path[0] != '/' ? '/' : '').htmlentities($v_ftp_path); ?>>
                                                 <br /><span class="ftp-path-prefix"><?php print $v_ftp_pre_path ?></span><span class="ftp-path-value v-ftp-path-hint"></span>
                                             </td>

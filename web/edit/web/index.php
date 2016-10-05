@@ -581,10 +581,10 @@ if (!empty($_POST['save'])) {
                 // Change FTP account path
                 $v_ftp_username = $user . '_' . $v_ftp_user_data['v_ftp_user']; //preg_replace("/^".$user."_/", "", $v_ftp_user_data['v_ftp_user']);
                 $v_ftp_username = escapeshellarg($v_ftp_username);
-                //if (!empty($v_ftp_user_data['v_ftp_path'])) {
                     $v_ftp_path = escapeshellarg(trim($v_ftp_user_data['v_ftp_path']));
-                    exec (VESTA_CMD."v-change-web-domain-ftp-path ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_path, $output, $return_var);
-                //}
+                    if(escapeshellarg(trim($v_ftp_user_data['v_ftp_path_prev'])) != $v_ftp_path) {
+                        exec (VESTA_CMD."v-change-web-domain-ftp-path ".$v_username." ".$v_domain." ".$v_ftp_username." ".$v_ftp_path, $output, $return_var);
+                    }
 
                 // Change FTP account password
                 if (!empty($v_ftp_user_data['v_ftp_password'])) {

@@ -113,7 +113,7 @@
                                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Proxy Server') ?> / <a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><?=__('configure')?> <i></i></a>
+                                                <?php print __('Proxy Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -125,7 +125,7 @@
                                         <?php } ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Web Server') ?> / <a href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><?=__('configure')?> <i></i></a>
+                                                <?php print __('Web Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -137,7 +137,7 @@
                                         <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Backend Server') ?> / <a href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><?=__('configure')?> <i></i></a>
+                                                <?php print __('Backend Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -176,7 +176,7 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('DNS Server') ?> / <a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><?=__('configure')?> <i></i></a>
+                                                <?php print __('DNS Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -234,7 +234,7 @@
                                     <table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('MAIL Server') ?> / <a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><?=__('configure')?> <i></i></a>
+                                                <?php print __('MAIL Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -246,7 +246,7 @@
                                         <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Antivirus') ?> / <a href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><?=__('configure')?> <i></i></a>
+                                                <?php print __('Antivirus') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -259,7 +259,7 @@
                                         <?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('AntiSpam') ?> / <a href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><?=__('configure')?> <i></i></a>
+                                                <?php print __('AntiSpam') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -298,7 +298,7 @@
                                     <table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('MySQL Support');?> / <a href="/edit/server/mysql/"><?=__('configure')?> <i></i></a>
+                                                <?php print __('MySQL Support');?> / <a class="generate" href="/edit/server/mysql/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>

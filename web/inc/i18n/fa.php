@@ -733,6 +733,14 @@ $LANG['fa'] = [
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
+    'Vesta SSL' => 'Vesta SSL',
+    'SUBJECT' => 'SUBJECT',
+    'ALIASES' => 'ALIASES',
+    'NOT_BEFORE' => 'NOT_BEFORE',
+    'NOT_AFTER' => 'NOT_AFTER',
+    'SIGNATURE' => 'SIGNATURE',
+    'PUB_KEY' => 'PUB_KEY',
+    'ISSUER' => 'ISSUER',
 
 // Texts below doesn't exist in en.php
     '70 خط اخر  %s.%s.log' => 'هفتاد خط انتهايي از %s.%s.log',

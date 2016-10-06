@@ -734,6 +734,14 @@ $LANG['hu'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
+    'Vesta SSL' => 'Vesta SSL',
+    'SUBJECT' => 'SUBJECT',
+    'ALIASES' => 'ALIASES',
+    'NOT_BEFORE' => 'NOT_BEFORE',
+    'NOT_AFTER' => 'NOT_AFTER',
+    'SIGNATURE' => 'SIGNATURE',
+    'PUB_KEY' => 'PUB_KEY',
+    'ISSUER' => 'ISSUER',
 
 // Texts below doesn't exist in en.php
     'Bandwidth Usage eth1' => 'eth1 sávszélesség használat',

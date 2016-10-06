@@ -736,4 +736,13 @@ $LANG['ar'] = array(
     'MainDomain' => 'النطاق الرئيسي',
     'SubDomain' => 'النطاق الفرعي (الجزء الاول الذي يضاف إلى النطاق الرئيسي)',
     'Add Sub Domain' => 'إضافة نطاق فرعي'
+
+    'Vesta SSL' => 'Vesta SSL',
+    'SUBJECT' => 'SUBJECT',
+    'ALIASES' => 'ALIASES',
+    'NOT_BEFORE' => 'NOT_BEFORE',
+    'NOT_AFTER' => 'NOT_AFTER',
+    'SIGNATURE' => 'SIGNATURE',
+    'PUB_KEY' => 'PUB_KEY',
+    'ISSUER' => 'ISSUER',
 );

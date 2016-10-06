@@ -738,4 +738,11 @@ $LANG['bs'] = array(
     'PUB_KEY' => 'PUB_KEY',
     'ISSUER' => 'ISSUER',
 
+    'Use server hostname' => 'Koristi server hostname',
+    'Use domain hostname' => 'Koristi hostname domena',
+    'Use STARTTLS' => 'Koristi STARTTLS',
+    'Use SSL' => 'Koristi SSL',
+    'No encryption' => 'Bez enkripcije',
+    'Do not use encryption' => 'Nemoj koristiti enkripciju',
+
 );

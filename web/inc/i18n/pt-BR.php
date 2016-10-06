@@ -738,4 +738,12 @@ $LANG['pt-BR'] = array(
     'SIGNATURE' => 'SIGNATURE',
     'PUB_KEY' => 'PUB_KEY',
     'ISSUER' => 'ISSUER',
+
+    'Use server hostname' => 'Use server hostname',
+    'Use domain hostname' => 'Use domain hostname',
+    'Use STARTTLS' => 'Use STARTTLS',
+    'Use SSL' => 'Use SSL',
+    'No encryption' => 'No encryption',
+    'Do not use encryption' => 'Do not use encryption',
+
 );

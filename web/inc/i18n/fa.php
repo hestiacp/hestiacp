@@ -742,6 +742,13 @@ $LANG['fa'] = [
     'PUB_KEY' => 'PUB_KEY',
     'ISSUER' => 'ISSUER',
 
+    'Use server hostname' => 'Use server hostname',
+    'Use domain hostname' => 'Use domain hostname',
+    'Use STARTTLS' => 'Use STARTTLS',
+    'Use SSL' => 'Use SSL',
+    'No encryption' => 'No encryption',
+    'Do not use encryption' => 'Do not use encryption',
+
 // Texts below doesn't exist in en.php
     '70 خط اخر  %s.%s.log' => 'هفتاد خط انتهايي از %s.%s.log',
 ];

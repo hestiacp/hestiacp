@@ -308,9 +308,20 @@ if (!empty($_POST['save'])) {
             unset($output);
             $restart_web = 'yes';
             $restart_proxy = 'yes';
-            $v_ssl_crt = $_POST['v_ssl_crt'];
-            $v_ssl_key = $_POST['v_ssl_key'];
-            $v_ssl_ca = $_POST['v_ssl_ca'];
+
+            exec (VESTA_CMD."v-list-web-domain-ssl ".$user." '".$v_domain."' json", $output, $return_var);
+            $ssl_str = json_decode(implode('', $output), true);
+            unset($output);
+            $v_ssl_crt = $ssl_str[$v_domain]['CRT'];
+            $v_ssl_key = $ssl_str[$v_domain]['KEY'];
+            $v_ssl_ca = $ssl_str[$v_domain]['CA'];
+            $v_ssl_subject = $ssl_str[$v_domain]['SUBJECT'];
+            $v_ssl_aliases = $ssl_str[$v_domain]['ALIASES'];
+            $v_ssl_not_before = $ssl_str[$v_domain]['NOT_BEFORE'];
+            $v_ssl_not_after = $ssl_str[$v_domain]['NOT_AFTER'];
+            $v_ssl_signature = $ssl_str[$v_domain]['SIGNATURE'];
+            $v_ssl_pub_key = $ssl_str[$v_domain]['PUB_KEY'];
+            $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
 
             // Cleanup certificate tempfiles
             if (!empty($_POST['v_ssl_crt'])) {
@@ -374,10 +385,20 @@ if (!empty($_POST['save'])) {
             $v_ssl = 'yes';
             $restart_web = 'yes';
             $restart_proxy = 'yes';
-            $v_ssl_crt = $_POST['v_ssl_crt'];
-            $v_ssl_key = $_POST['v_ssl_key'];
-            $v_ssl_ca = $_POST['v_ssl_ca'];
-            $v_ssl_home = $_POST['v_ssl_home'];
+
+            exec (VESTA_CMD."v-list-web-domain-ssl ".$user." '".$v_domain."' json", $output, $return_var);
+            $ssl_str = json_decode(implode('', $output), true);
+            unset($output);
+            $v_ssl_crt = $ssl_str[$v_domain]['CRT'];
+            $v_ssl_key = $ssl_str[$v_domain]['KEY'];
+            $v_ssl_ca = $ssl_str[$v_domain]['CA'];
+            $v_ssl_subject = $ssl_str[$v_domain]['SUBJECT'];
+            $v_ssl_aliases = $ssl_str[$v_domain]['ALIASES'];
+            $v_ssl_not_before = $ssl_str[$v_domain]['NOT_BEFORE'];
+            $v_ssl_not_after = $ssl_str[$v_domain]['NOT_AFTER'];
+            $v_ssl_signature = $ssl_str[$v_domain]['SIGNATURE'];
+            $v_ssl_pub_key = $ssl_str[$v_domain]['PUB_KEY'];
+            $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
 
             // Cleanup certificate tempfiles
             if (!empty($_POST['v_ssl_crt'])) {

@@ -112,12 +112,12 @@ use_ssl = function() {
 	$('#td_smtp_encryption').html('SSL');
 }
 
-use_no_encryption = function(domain, no_encyption) {
+use_no_encryption = function(domain, no_encryption) {
 	use_hostname(domain);
 	$('#td_imap_port').html('143');
-	$('#td_imap_encryption').html(no_encyption);
+	$('#td_imap_encryption').html(no_encryption);
 	$('#td_smtp_port').html('25');
-	$('#td_smtp_encryption').html(no_encyption);
+	$('#td_smtp_encryption').html(no_encryption);
 }
 
 $(document).ready(function() {

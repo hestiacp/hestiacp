@@ -42,6 +42,13 @@ if ( $v_ssl == 'yes' ) {
     $v_ssl_crt = $ssl_str[$v_domain]['CRT'];
     $v_ssl_key = $ssl_str[$v_domain]['KEY'];
     $v_ssl_ca = $ssl_str[$v_domain]['CA'];
+    $v_ssl_subject = $ssl_str[$v_domain]['SUBJECT'];
+    $v_ssl_aliases = $ssl_str[$v_domain]['ALIASES'];
+    $v_ssl_not_before = $ssl_str[$v_domain]['NOT_BEFORE'];
+    $v_ssl_not_after = $ssl_str[$v_domain]['NOT_AFTER'];
+    $v_ssl_signature = $ssl_str[$v_domain]['SIGNATURE'];
+    $v_ssl_pub_key = $ssl_str[$v_domain]['PUB_KEY'];
+    $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
 }
 $v_ssl_home = $data[$v_domain]['SSL_HOME'];
 $v_backend_template = $data[$v_domain]['BACKEND'];

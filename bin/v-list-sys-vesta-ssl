@@ -1,0 +1,130 @@
+#!/bin/bash
+# info: list vesta ssl certificate
+# options: [FORMAT]
+#
+# The function of obtaining vesta ssl files.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $VESTA/func/main.sh
+
+# JSON list function
+json_list() {
+    echo '{'
+    echo -e "\t\"VESTA\": {"
+    echo "        \"CRT\": \"$crt\","
+    echo "        \"KEY\": \"$key\","
+    echo "        \"CA\": \"$ca\","
+    echo "        \"SUBJECT\": \"$subj\","
+    echo "        \"ALIASES\": \"$alt_dns\","
+    echo "        \"NOT_BEFORE\": \"$before\","
+    echo "        \"NOT_AFTER\": \"$after\","
+    echo "        \"SIGNATURE\": \"$signature\","
+    echo "        \"PUB_KEY\": \"$pub_key\","
+    echo "        \"ISSUER\": \"$issuer\""
+    echo -e "\t}\n}"
+}
+
+# SHELL list function
+shell_list() {
+    if [ ! -z "$crt" ]; then
+        echo -e "$crt"
+    fi
+    if [ ! -z "$key" ]; then
+        echo -e "\n$key"
+    fi
+    if [ ! -z "$crt" ]; then
+        echo
+        echo
+        echo "SUBJECT:        $subj"
+        if [ ! -z "$alt_dns" ]; then
+            echo "ALIASES:        ${alt_dns//,/ }"
+        fi
+        echo "VALID FROM:     $before"
+        echo "VALID TIL:      $after"
+        echo "SIGNATURE:      $signature"
+        echo "PUB_KEY:        $pub_key"
+        echo "ISSUER:         $issuer"
+    fi
+}
+
+# PLAIN list function
+plain_list() {
+    if [ ! -z "$crt" ]; then
+        echo -e "$crt"
+    fi
+    if [ ! -z "$key" ]; then
+        echo -e "\n$key"
+    fi
+    if [ ! -z "$ca" ]; then
+        echo -e "\n$ca"
+    fi
+    if [ ! -z "$crt" ]; then
+        echo "$subj"
+        echo "${alt_dns//,/ }"
+        echo "$before"
+        echo "$after"
+        echo "$signature"
+        echo "$pub_key"
+        echo "$issuer"
+    fi
+
+}
+
+# CSV list function
+csv_list() {
+    echo -n "CRT,KEY,CA,SUBJECT,ALIASES,NOT_BEFORE,NOT_AFTER,SIGNATURE,"
+    echo "PUB_KEY,ISSUER"
+    echo -n "\"$crt\",\"$key\",\"$ca\",\"$subj\",\"${alt_dns//,/ }\","
+    echo "\"$before\",\"$after\",\"$signature\",\"$pub_key\",\"$issuer\""
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Parsing SSL certificate
+crt=$(cat $VESTA/ssl/certificate.crt |sed ':a;N;$!ba;s/\n/\\n/g')
+key=$(cat $VESTA/ssl/certificate.crt |sed ':a;N;$!ba;s/\n/\\n/g')
+
+# Parsing SSL certificate details without CA
+info=$(openssl x509 -text -in $VESTA/ssl/certificate.crt)
+subj=$(echo "$info" |grep Subject: |cut -f 2 -d =)
+before=$(echo "$info" |grep Before: |sed -e "s/.*Before: //")
+after=$(echo "$info" |grep "After :" |sed -e "s/.*After : //")
+signature=$(echo "$info" |grep "Algorithm:" |head -n1 )
+signature=$(echo "$signature"| sed -e "s/.*Algorithm: //")
+pub_key=$(echo "$info" |grep Public-Key: |cut -f2 -d \( | tr -d \))
+issuer=$(echo "$info" |grep Issuer: |sed -e "s/.*Issuer: //")
+alt_dns=$(echo "$info" |grep DNS |sed -e 's/DNS:/\n/g' |tr -d ',')
+alt_dns=$(echo "$alt_dns" |tr -d ' ' |sed -e "/^$/d")
+alt_dns=$(echo "$alt_dns" |sed -e ':a;N;$!ba;s/\n/,/g')
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+exit

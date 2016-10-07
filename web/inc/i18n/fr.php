@@ -746,6 +746,8 @@ $LANG['fr'] = array(
     'No encryption' => 'No encryption',
     'Do not use encryption' => 'Do not use encryption',
 
+	'maximum 16 characters length, including prefix' => 'maximum 16 characters length, including prefix',
+
 // Texts below doesn't exist in en.php
     'disk' => 'disque',
     'traffic' => 'traffic',

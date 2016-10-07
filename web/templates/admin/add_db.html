@@ -42,7 +42,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="step-top hint" style="color:#777;" >
-                                    <?php print __('Prefix will be automaticaly added to database name and database user',$user."_");?>
+                                    <?php print __('Prefix will be automaticaly added to database name and database user',"<b>".$user."_</b>");?>
                                 </td>
                             </tr>
                             <tr>
@@ -58,7 +58,10 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('User');?>
+                                    <?php
+                                        print __('User');
+                                        if (is_it_mysql_or_mariadb()=='mysql') echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".__('maximum 16 characters length, including prefix').")</small></em>";
+                                    ?>
                                 </td>
                             </tr>
                             <tr>

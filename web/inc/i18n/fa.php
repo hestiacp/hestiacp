@@ -749,6 +749,8 @@ $LANG['fa'] = [
     'No encryption' => 'No encryption',
     'Do not use encryption' => 'Do not use encryption',
 
+	'maximum 16 characters length, including prefix' => 'maximum 16 characters length, including prefix',
+
 // Texts below doesn't exist in en.php
     '70 خط اخر  %s.%s.log' => 'هفتاد خط انتهايي از %s.%s.log',
 ];

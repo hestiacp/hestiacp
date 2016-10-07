@@ -750,6 +750,8 @@ $LANG['hu'] = array(
     'No encryption' => 'No encryption',
     'Do not use encryption' => 'Do not use encryption',
 
+	'maximum 16 characters length, including prefix' => 'maximum 16 characters length, including prefix',
+
 // Texts below doesn't exist in en.php
     'Bandwidth Usage eth1' => 'eth1 sávszélesség használat',
 );

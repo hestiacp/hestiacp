@@ -834,6 +834,9 @@ if [ "$apache" = 'yes'  ]; then
     update-rc.d apache2 defaults
     service apache2 start
     check_result $? "apache2 start failed"
+else
+    update-rc.d apache2 disable >/dev/null 2>&1
+    service apache2 stop >/dev/null 2>&1
 fi
 
 

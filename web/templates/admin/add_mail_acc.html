@@ -143,15 +143,15 @@
                     </tr>
                     <tr>
                         <td><?=__('IMAP hostname')?>:</td>
-                        <td><?=$hostname?></td>
+                        <td id="td_imap_hostname"><?=$hostname?></td>
                     </tr>
                     <tr>
                         <td><?=__('IMAP port')?>:</td>
-                        <td>143</td>
+                        <td id="td_imap_port">143</td>
                     </tr>
                     <tr>
                         <td><?=__('IMAP security')?>:</td>
-                        <td><?=__('STARTTLS')?></td>
+                        <td id="td_imap_encryption"><?=__('STARTTLS')?></td>
                     </tr>
                     <tr>
                         <td><?=__('IMAP auth method')?>:</td>
@@ -159,20 +159,28 @@
                     </tr>
                     <tr>
                         <td><?=__('SMTP hostname')?></td>
-                        <td><?=$hostname?></td>
+                        <td id="td_smtp_hostname"><?=$hostname?></td>
                     </tr>
                     <tr>
                         <td><?=__('SMTP port')?>:</td>
-                        <td>587</td>
+                        <td id="td_smtp_port">587</td>
                     </tr>
                     <tr>
                         <td><?=__('SMTP security')?>:</td>
-                        <td><?=__('STARTTLS')?></td>
+                        <td id="td_smtp_encryption"><?=__('STARTTLS')?></td>
                     </tr>
                     <tr>
                         <td><?=__('SMTP auth method')?>:</td>
                         <td><?=__('Normal password')?></td>
                     </tr>
+                </table>
+		<br />
+                <table>
+					<tr><td>&#8226; <a href="javascript:use_hostname('<?=$hostname?>');" class="generate"><?php print __('Use server hostname');?></a></td></tr>
+					<tr><td>&#8226; <a href="javascript:use_hostname('<?=$v_domain?>');" class="generate"><?php print __('Use domain hostname');?></a></td></tr>
+					<tr><td>&#8226; <a href="javascript:use_starttls();" class="generate"><?php print __('Use STARTTLS');?></a></td></tr>
+					<tr><td>&#8226; <a href="javascript:use_ssl();" class="generate"><?php print __('Use SSL');?></a></td></tr>
+					<tr><td>&#8226; <a href="javascript:use_no_encryption('<?=$v_domain?>', '<?php print __('No encryption');?>');" class="generate"><?php print __('Do not use encryption');?></a></td></tr>
                 </table>
                 </div>
             </td>

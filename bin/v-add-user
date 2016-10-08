@@ -74,7 +74,8 @@ fi
 
 if [ ! -z "$MAIL_SYSTEM" ]; then
     mkdir $HOMEDIR/$user/conf/mail $HOMEDIR/$user/mail
-    chmod 751 $HOMEDIR/$user/mail $HOMEDIR/$user/conf/mail
+    chmod 751 $HOMEDIR/$user/mail 
+    chmod 755 $HOMEDIR/$user/conf/mail
 fi
 
 if [ ! -z "$DNS_SYSTEM" ]; then

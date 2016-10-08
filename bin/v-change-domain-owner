@@ -27,7 +27,7 @@ check_args '2' "$#" 'DOMAIN USER'
 is_format_valid 'domain' 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-owner=$(v-search-domain-owner $domain)
+owner=$($BIN/v-search-domain-owner $domain)
 if [ -z "$owner" ]; then
     check_result $E_NOTEXIST "domain $domain doesn't exist"
 fi

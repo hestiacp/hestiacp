@@ -36,17 +36,113 @@ source $VESTA/func/db.sh
 source $VESTA/func/rebuild.sh
 source $VESTA/conf/vesta.conf
 
-# Check backup function
-is_backup_valid() {
-    if [ ! -e "$1" ]; then
-        check_result $E_NOTEXIST "backup $1 doesn't exist"
-    fi
-}
-
 # Check backup ownership function
 is_backup_available() {
     if ! [[ $2 =~ ^$1.[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].tar$ ]]; then
          check_result $E_FORBIDEN "permission denied"
+    fi
+}
+
+# Defining ftp command function
+ftpc() {
+    /usr/bin/ftp -n $HOST $PORT <<EOF
+    quote USER $USERNAME
+    quote PASS $PASSWORD
+    binary
+    $1
+    $2
+    $3
+    quit
+EOF
+}
+
+# FTP backup download function
+ftp_download() {
+    source $VESTA/conf/ftp.backup.conf
+    if [ -z "$PORT" ]; then
+        PORT='21'
+    fi
+    ftpc "cd $BPATH" "get $1"
+}
+
+# sftp command function
+sftpc() {
+    expect -f "-" <<EOF "$@"
+        set timeout 60
+        set count 0
+        spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
+            -o Port=$PORT $USERNAME@$HOST
+        expect {
+            "password:" {
+                send "$PASSWORD\r"
+                exp_continue
+            }
+
+            -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
+                set count \$argc
+                set output "Disconnected."
+                set rc $E_FTP
+                exp_continue
+            }
+
+            -re ".*denied.*(publickey|password)." {
+                set output "Permission denied, wrong publickey or password."
+                set rc $E_CONNECT
+            }
+
+            -re "\[0-9]*%" {
+                exp_continue
+            }
+
+            "sftp>" {
+                if {\$count < \$argc} {
+                    set arg [lindex \$argv \$count]
+                    send "\$arg\r"
+                    incr count
+                } else {
+                    incr count
+                } else {
+                    send "exit\r"
+                    set output "Disconnected."
+                    if {[info exists rc] != 1} {
+                        set rc $OK
+                    }
+                }
+                exp_continue
+            }
+            timeout {
+                set output "Connection timeout."
+                set rc $E_CONNECT
+            }
+        }
+
+        if {[info exists output] == 1} {
+            puts "\$output"
+        }
+
+    exit \$rc
+EOF
+}
+
+# SFTP backup download function
+sftp_download() {
+    source $VESTA/conf/sftp.backup.conf
+    if [ -z "$PORT" ]; then
+        PORT='22'
+    fi
+    cd $BACKUP
+    sftpc "cd $BPATH" "get $1" > /dev/null 2>&1
+
+}
+
+# Google backup download function
+google_download() {
+    source $VESTA/conf/google.backup.conf
+    gsutil="$VESTA/3rdparty/gsutil/gsutil"
+    export BOTO_CONFIG="$VESTA/conf/.google.backup.boto"
+    ${gsutil} cp gs://$BUCKET/$BPATH/$1 $BACKUP/ > /dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+        check_result "$E_CONNECT" "gsutil failed to download $1"
     fi
 }
 
@@ -58,13 +154,31 @@ is_backup_available() {
 args_usage='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
 check_args '2' "$#" "$args_usage"
 is_format_valid 'user' 'backup'
-is_backup_valid "$BACKUP/$backup"
 is_backup_available "$user" "$backup"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Checking local backup
+if [ ! -e "$BACKUP/$backup" ]; then
+    if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
+        google_download $backup
+        downloaded='yes'
+    fi
+    if [[ "$BACKUP_SYSTEM" =~ "sftp" ]] && [ -z "$downloaded" ]; then
+        sftp_download $backup
+        downloaded='yes'
+    fi
+    if [[ "$BACKUP_SYSTEM" =~ "ftp" ]] && [ -z "$downloaded" ]; then
+        ftp_download $backup
+        downloaded='yes'
+    fi
+    if [ -z "$downloaded" ]; then
+        check_result $E_NOTEXIST "backup $backup doesn't exist"
+    fi
+fi
 
 # Checking user existance on the server
 check_user=$(is_object_valid 'user' 'USER' "$user")

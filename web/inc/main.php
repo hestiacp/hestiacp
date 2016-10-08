@@ -345,3 +345,12 @@ function list_timezones() {
     }
     return $timezone_list;
 }
+
+function is_it_mysql_or_mariadb() {
+	exec (VESTA_CMD."v-list-sys-services json", $output, $return_var);
+	$data = json_decode(implode('', $output), true);
+	unset($output);
+	$mysqltype='mysql';
+	if (isset($data['mariadb'])) $mysqltype='mariadb';
+	return $mysqltype;
+}

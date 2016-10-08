@@ -271,7 +271,7 @@ del_web_config() {
     get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
     sed -i "$top_line,$bottom_line d" $conf
 
-    web_domain=$(grep $domain $USER_DATA/web.conf |wc -l)
+    web_domain=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
     if [ "$web_domain" -eq '0' ]; then
         sed -i "/.*\/$user\/.*$1.conf/d" /etc/$1/conf.d/vesta.conf
         rm -f $conf
@@ -359,6 +359,11 @@ update_domain_zone() {
     SOA=$(idn --quiet -a -t "$SOA")
     if [ -z "$SERIAL" ]; then
         SERIAL=$(date +'%Y%m%d01')
+    fi
+    if [[ "$domain" = *[![:ascii:]]* ]]; then
+        domain_idn=$(idn -t --quiet -a $domain)
+    else
+        domain_idn=$domain
     fi
     zn_conf="$HOMEDIR/$user/conf/dns/$domain.db"
     echo "\$TTL $TTL
@@ -506,12 +511,12 @@ is_mail_domain_new() {
 is_mail_new() {
     check_acc=$(grep "ACCOUNT='$1'" $USER_DATA/mail/$domain.conf)
     if [ ! -z "$check_acc" ]; then
-        check_result $E_EXIST "mail account $1 is already exists"
+        check_result $E_EXISTS "mail account $1 is already exists"
     fi
     check_als=$(awk -F "ALIAS='" '{print $2}' $USER_DATA/mail/$domain.conf )
     check_als=$(echo "$check_als" | cut -f 1 -d "'" | grep -w $1)
     if [ ! -z "$check_als" ]; then
-        check_result $E_EXIST "mail alias $1 is already exists"
+        check_result $E_EXISTS "mail alias $1 is already exists"
     fi
 }
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: rebuild dns domains
+# info: rebuild web domains
 # options: USER [RESTART]
 #
 # The function rebuilds web configuration files.

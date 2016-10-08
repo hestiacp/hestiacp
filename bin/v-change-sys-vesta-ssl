@@ -1,0 +1,77 @@
+#!/bin/bash
+# info: change vesta ssl certificate
+# options: SSL_DIR [RESTART]
+#
+# The function changes vesta SSL certificate and the key.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+domain='certificate'
+ssl_dir=$1
+restart=$2
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'SSL_DIR [RESTART]'
+is_format_valid 'ssl_dir'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking new certificate
+certificate=$(cat $ssl_dir/$domain.crt |grep -n END)
+certificate_count=$(echo "$certificate" |wc -l)
+if [ "$certificate_count" -gt 1 ]; then
+    crt_end=$(echo "$certificate" |head -n1 |cut -f 1 -d :)
+    crt_lines=$(wc -l $ssl_dir/$domain.crt |cut -f1 -d ' ')
+    pem_begin=$((crt_lines - crt_end))
+    mv $ssl_dir/$domain.crt $ssl_dir/$domain.crt_full
+    head -n $crt_end $ssl_dir/$domain.crt_full > $ssl_dir/$domain.crt
+    tail -n $pem_begin $ssl_dir/$domain.crt_full > $ssl_dir/$domain.ca
+    is_web_domain_cert_valid
+    mv -f $ssl_dir/$domain.crt_full $ssl_dir/$domain.crt
+    rm -f $ssl_dir/$domain.ca
+else
+    is_web_domain_cert_valid
+fi
+
+# Moving old certificate
+mv $VESTA/ssl/certificate.crt $VESTA/ssl/certificate.crt.back
+mv $VESTA/ssl/certificate.key $VESTA/ssl/certificate.key.back
+
+# Adding new certificate
+cp -f $ssl_dir/certificate.crt $VESTA/ssl/certificate.crt
+cp -f $ssl_dir/certificate.key $VESTA/ssl/certificate.key
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Restarting web server
+if [ "$restart" != 'no' ]; then
+    kill -HUP $(cat /var/run/vesta-nginx.pid)
+    $BIN/v-restart-mail
+    if [ ! -z "$IMAP_SYSTEM" ]; then
+        v-restart-service "$IMAP_SYSTEM"
+    fi
+fi
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -2,7 +2,7 @@
 # info: delete system sftp jail
 # options: NONE
 #
-# The script enables sftp jailed environment
+# The script disables sftp jailed environment
 
 
 #----------------------------------------------------------#

@@ -745,5 +745,6 @@ $LANG['bs'] = array(
     'No encryption' => 'Bez enkripcije',
     'Do not use encryption' => 'Nemoj koristiti enkripciju',
 
-	'maximum 16 characters length, including prefix' => 'maximum 16 characters length, including prefix',
+    'maximum characters length, including prefix' => 'maksimalna dužina sme biti %s karaktera, uključujući i prefix',
+
 );

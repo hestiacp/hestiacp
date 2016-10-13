@@ -30,8 +30,9 @@ for user in $users; do
     USER_DATA=$VESTA/data/users/$user
     # Checking user certificates
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
+        crt="$VESTA/data/users/$user/ssl/$domain.crt"
         # Checking certificate issuer
-        crt_data=$(openssl x509 -text -in "$VESTA/data/users/$user/ssl/$domain.crt")
+        crt_data=$(openssl x509 -text -in "$crt")
 
         expire=$(echo "$crt_data" |grep "Not After")
         expire=$(echo "$expire" |cut -f 2,3,4 -d :)

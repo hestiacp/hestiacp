@@ -1285,6 +1285,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 28px;
   min-width: 208px;
   padding-left: 4px;
+  appearance:none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+  padding-left: 10px;
 }
 .l-select select:focus {
   border: 0;
@@ -2465,6 +2469,7 @@ label {
   font-size: 19px;
   font-weight: normal;
   height: 43px;
+  cursor: pointer;
   margin: 2px 6px 0 0;
   min-width: 138px;
   padding: 8px 1px 6px 10px;
@@ -2475,7 +2480,6 @@ label {
   -moz-appearance:none;
   -webkit-appearance:none;
   text-shadow: 0 0 0 #555;
-  cursor: pointer;
 }
 
 .vst-list.long-2 {
@@ -2502,6 +2506,9 @@ label {
   margin-left: -14px;
   background-position: -210px -604px;
   text-shadow: none !important;
+}
+.vst-list.flat:hover {
+  color: #ff6701;
 }
 
 a.vst-text,
@@ -2547,6 +2554,9 @@ a.vst-text:active b{
   height: 300px;
   font-family:"Lucida Console", Monaco, monospace;
   white-space: pre;
+}
+.vst-textinput.short {
+  width: 360px;
 }
 #advanced-options .console{
   width: 833px;
@@ -2823,8 +2833,8 @@ a.button.cancel {
   font-size: 12px;
   color: #777;
   border: 1px solid #d9d9d9;
-  padding: 7px 5px 12px 20px;
-  margin-top: 17px;
+  padding: 0px 5px 12px 20px;
+  margin-top: 64px;
   width: 334px;
   overflow: hidden;
 }
@@ -2843,6 +2853,12 @@ a.button.cancel {
 .mail-infoblock div {
   width: 190px;
   white-space: nowrap;
+}
+.mail-infoblock a {
+  color: #2c9491;
+}
+.mail-infoblock a:hover {
+  color: #ff6701;
 }
 
 .additional-info {

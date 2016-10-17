@@ -86,7 +86,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
+                                <textarea size="20" class="vst-textinput short" name="v_aliases"><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
                             </td>
                         </tr>
                         <tr>
@@ -193,6 +193,15 @@
                             <td><?=__('SMTP auth method')?>:</td>
                             <td><div><?=__('Normal password')?></div></td>
                         </tr>
+			<?
+			  list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+			  $webmail = "http://".$http_host."/webmail/";
+			  if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
+			  ?>
+                        <tr>
+                            <td><?=__('Webmail URL')?>:</td>
+                            <td><div><a class="vst" href="<?=$webmail?>" target="_blank"><?=$webmail?> <i></i></a></div></td>
+			</tr>
                     </table>
                 </div>
             </td>

@@ -731,4 +731,22 @@ $LANG['nl'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
+    'Vesta SSL' => 'Vesta SSL',
+    'SUBJECT' => 'SUBJECT',
+    'ALIASES' => 'ALIASES',
+    'NOT_BEFORE' => 'NOT_BEFORE',
+    'NOT_AFTER' => 'NOT_AFTER',
+    'SIGNATURE' => 'SIGNATURE',
+    'PUB_KEY' => 'PUB_KEY',
+    'ISSUER' => 'ISSUER',
+
+    'Use server hostname' => 'Use server hostname',
+    'Use domain hostname' => 'Use domain hostname',
+    'Use STARTTLS' => 'Use STARTTLS',
+    'Use SSL' => 'Use SSL',
+    'No encryption' => 'No encryption',
+    'Do not use encryption' => 'Do not use encryption',
+
+    'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
+
 );

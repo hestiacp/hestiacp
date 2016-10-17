@@ -3,7 +3,7 @@
 session_start();
 
 define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
-define('JS_LATEST_UPDATE', '1467758417');
+define('JS_LATEST_UPDATE', '1476144160');
 
 $i = 0;
 
@@ -344,4 +344,27 @@ function list_timezones() {
         $timezone_list[$timezone] = "$timezone [ $current_time ] ${pretty_offset}";
     }
     return $timezone_list;
+}
+
+/**
+ * A function that tells is it MySQL installed on the system, or it is MariaDB.
+ *
+ * Explaination:
+ * $_SESSION['DB_SYSTEM'] has 'mysql' value even if MariaDB is installed, so you can't figure out is it really MySQL or it's MariaDB.
+ * So, this function will make it clear.
+ * 
+ * If MySQL is installed, function will return 'mysql' as a string.
+ * If MariaDB is installed, function will return 'mariadb' as a string.
+ * 
+ * Hint: if you want to check if PostgreSQL is installed - check value of $_SESSION['DB_SYSTEM']
+ *
+ * @return string
+ */
+function is_it_mysql_or_mariadb() {
+    exec (VESTA_CMD."v-list-sys-services json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    unset($output);
+    $mysqltype='mysql';
+    if (isset($data['mariadb'])) $mysqltype='mariadb';
+    return $mysqltype;
 }

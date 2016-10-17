@@ -113,7 +113,7 @@
                                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Proxy Server') ?>
+                                                <?php print __('Proxy Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -125,7 +125,7 @@
                                         <?php } ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Web Server') ?>
+                                                <?php print __('Web Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -137,7 +137,7 @@
                                         <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Backend Server') ?>
+                                                <?php print __('Backend Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -176,7 +176,7 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('DNS Server') ?>
+                                                <?php print __('DNS Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -234,7 +234,7 @@
                                     <table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('MAIL Server') ?>
+                                                <?php print __('MAIL Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -246,7 +246,7 @@
                                         <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Antivirus') ?>
+                                                <?php print __('Antivirus') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -259,7 +259,7 @@
                                         <?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('AntiSpam') ?>
+                                                <?php print __('AntiSpam') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -298,7 +298,7 @@
                                     <table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('MySQL Support');?>
+                                                <?php print __('MySQL Support');?> / <a class="generate" href="/edit/server/mysql/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -575,6 +575,106 @@
                                     </table>
                                 </td>
                             </tr>
+
+                            <tr>
+                                <td class="vst-text input-label step-top">
+                                    <a href="javascript:elementHideShow('ssl');" class="vst-text">
+                                        <b><?php print __('Vesta SSL');?> <!-- span style="color:#ff6701;font-size:10px; padding:0 10px;">preview</span--><img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="ssl">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('SSL Certificate');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo htmlentities($v_ssl_crt); ?></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('SSL Key');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo htmlentities($v_ssl_key); ?></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table class="additional-info">
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('SUBJECT')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_subject?>
+                                                        </td>
+                                                    </tr>
+                                                    <? if($v_ssl_aliases){?>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('ALIASES')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_aliases?>
+                                                        </td>
+                                                    </tr>
+                                                    <? } ?>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('NOT_BEFORE')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_not_before?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('NOT_AFTER')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_not_after?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('SIGNATURE')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_signature?>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('PUB_KEY')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_pub_key?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('ISSUER')?>
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_issuer?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
 
                             <tr>
                                 <td class="vst-text input-label step-top">

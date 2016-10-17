@@ -235,6 +235,72 @@
                                                 <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo htmlentities($v_ssl_ca); ?></textarea>
                                             </td>
                                         </tr>
+
+                                        <tr>
+                                            <td>
+                                                <table class="additional-info">
+                                                <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('SUBJECT')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_subject?>
+                                                        </td>
+                                                    </tr>
+                                                    <? if($v_ssl_aliases){?>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('ALIASES')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_aliases?>
+                                                        </td>
+                                                    </tr>
+                                                    <? } ?>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('NOT_BEFORE')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_not_before?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('NOT_AFTER')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_not_after?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('SIGNATURE')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_signature?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('PUB_KEY')?>:
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_pub_key?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <?=__('ISSUER')?>
+                                                        </td>
+                                                        <td class="details">
+                                                            <?=$v_ssl_issuer?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
                                     </table>
                                 </td>
                             </tr>
@@ -346,6 +412,7 @@
                                         <tr>
                                             <td class="step-left">
                                                 <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?php print !empty($v_ftp_pre_path) ? htmlentities($v_ftp_pre_path) : '/'; ?>">
+                                                <input type="hidden"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path_prev]" <?php if (!empty($v_ftp_path)) echo "value=".($v_ftp_path[0] != '/' ? '/' : '').htmlentities($v_ftp_path); ?>>
                                                 <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path]" <?php if (!empty($v_ftp_path)) echo "value=".($v_ftp_path[0] != '/' ? '/' : '').htmlentities($v_ftp_path); ?>>
                                                 <br /><span class="ftp-path-prefix"><?php print $v_ftp_pre_path ?></span><span class="ftp-path-value v-ftp-path-hint"></span>
                                             </td>

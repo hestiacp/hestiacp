@@ -728,4 +728,23 @@ $LANG['bs'] = array(
 
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
+
+    'Vesta SSL' => 'Vesta SSL',
+    'SUBJECT' => 'SUBJECT',
+    'ALIASES' => 'ALIASES',
+    'NOT_BEFORE' => 'NOT_BEFORE',
+    'NOT_AFTER' => 'NOT_AFTER',
+    'SIGNATURE' => 'SIGNATURE',
+    'PUB_KEY' => 'PUB_KEY',
+    'ISSUER' => 'ISSUER',
+
+    'Use server hostname' => 'Koristi server hostname',
+    'Use domain hostname' => 'Koristi hostname domena',
+    'Use STARTTLS' => 'Koristi STARTTLS',
+    'Use SSL' => 'Koristi SSL',
+    'No encryption' => 'Bez enkripcije',
+    'Do not use encryption' => 'Nemoj koristiti enkripciju',
+
+    'maximum characters length, including prefix' => 'maksimalna dužina sme biti %s karaktera, uključujući i prefix',
+
 );

@@ -78,6 +78,21 @@ foreach ($backup_types as $backup_type) {
     }
 }
 
+// List ssl certificate info
+exec (VESTA_CMD."v-list-sys-vesta-ssl json", $output, $return_var);
+$ssl_str = json_decode(implode('', $output), true);
+unset($output);
+$v_ssl_crt = $ssl_str['VESTA']['CRT'];
+$v_ssl_key = $ssl_str['VESTA']['KEY'];
+$v_ssl_ca = $ssl_str['VESTA']['CA'];
+$v_ssl_subject = $ssl_str['VESTA']['SUBJECT'];
+$v_ssl_aliases = $ssl_str['VESTA']['ALIASES'];
+$v_ssl_not_before = $ssl_str['VESTA']['NOT_BEFORE'];
+$v_ssl_not_after = $ssl_str['VESTA']['NOT_AFTER'];
+$v_ssl_signature = $ssl_str['VESTA']['SIGNATURE'];
+$v_ssl_pub_key = $ssl_str['VESTA']['PUB_KEY'];
+$v_ssl_issuer = $ssl_str['VESTA']['ISSUER'];
+
 // Check POST request
 if (!empty($_POST['save'])) {
 
@@ -178,7 +193,6 @@ if (!empty($_POST['save'])) {
         }
     }
 
-
     // Update webmail url
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_mail_url'] != $_SESSION['MAIL_URL']) {
@@ -230,7 +244,6 @@ if (!empty($_POST['save'])) {
             $v_backup_adv = 'yes';
         }
     }
-
 
     // Change backup gzip level
     if (empty($_SESSION['error_msg'])) {
@@ -323,7 +336,6 @@ if (!empty($_POST['save'])) {
         }
     }
 
-
     // Delete remote backup host
     if (empty($_SESSION['error_msg'])) {
         if ((empty($_POST['v_backup_host'])) && (!empty($v_backup_host))) {
@@ -337,6 +349,49 @@ if (!empty($_POST['save'])) {
             if (empty($_SESSION['error_msg'])) $v_backup_bpath = '';
             $v_backup_adv = '';
             $v_backup_remote_adv = '';
+        }
+    }
+
+    // Update SSL certificate
+    if ((!empty($_POST['v_ssl_crt'])) && (empty($_SESSION['error_msg']))) {
+        if (($v_ssl_crt != str_replace("\r\n", "\n",  $_POST['v_ssl_crt'])) || ($v_ssl_key != str_replace("\r\n", "\n",  $_POST['v_ssl_key']))) {
+            exec ('mktemp -d', $mktemp_output, $return_var);
+            $tmpdir = $mktemp_output[0];
+
+            // Certificate
+            if (!empty($_POST['v_ssl_crt'])) {
+                $fp = fopen($tmpdir."/certificate.crt", 'w');
+                fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_ssl_crt']));
+                fwrite($fp, "\n");
+                fclose($fp);
+            }
+
+            // Key
+            if (!empty($_POST['v_ssl_key'])) {
+                $fp = fopen($tmpdir."/certificate.key", 'w');
+                fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_key']));
+                fwrite($fp, "\n");
+                fclose($fp);
+            }
+
+            exec (VESTA_CMD."v-change-sys-vesta-ssl ".$tmpdir, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+
+            // List ssl certificate info
+            exec (VESTA_CMD."v-list-sys-vesta-ssl json", $output, $return_var);
+            $ssl_str = json_decode(implode('', $output), true);
+            unset($output);
+            $v_ssl_crt = $ssl_str['VESTA']['CRT'];
+            $v_ssl_key = $ssl_str['VESTA']['KEY'];
+            $v_ssl_ca = $ssl_str['VESTA']['CA'];
+            $v_ssl_subject = $ssl_str['VESTA']['SUBJECT'];
+            $v_ssl_aliases = $ssl_str['VESTA']['ALIASES'];
+            $v_ssl_not_before = $ssl_str['VESTA']['NOT_BEFORE'];
+            $v_ssl_not_after = $ssl_str['VESTA']['NOT_AFTER'];
+            $v_ssl_signature = $ssl_str['VESTA']['SIGNATURE'];
+            $v_ssl_pub_key = $ssl_str['VESTA']['PUB_KEY'];
+            $v_ssl_issuer = $ssl_str['VESTA']['ISSUER'];
         }
     }
 
@@ -375,7 +430,6 @@ if (!empty($_POST['save'])) {
         }
     }
 
-
     // activating filemanager licence
     if (empty($_SESSION['error_msg'])) {
         if($_SESSION['FILEMANAGER_KEY'] != $_POST['v_filemanager_licence'] && $_POST['v_filemanager'] == 'yes'){
@@ -410,10 +464,13 @@ if (!empty($_POST['save'])) {
 // Check system configuration
 exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
+unset($output);
+
 $sys_arr = $data['config'];
 foreach ($sys_arr as $key => $value) {
     $_SESSION[$key] = $value;
 }
+
 
 // Render page
 render_page($user, $TAB, 'edit_server');

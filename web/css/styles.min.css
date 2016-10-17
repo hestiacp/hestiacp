@@ -2808,7 +2808,7 @@ a.button.cancel {
   vertical-align: top;
 }
 .mail-infoblock {
-  padding-top: 76px;
+  padding-top: 80px;
   margin-left: -100px;
   font-size: 12px;
   color: #777;
@@ -2816,10 +2816,25 @@ a.button.cancel {
 .mail-infoblock td {
   color: #777;
   font-size: 14px;
-  height: 20px;
+  height: 18px;
   padding-right: 25px;
   font-weight: normal;
 }
+
+.additional-info {
+    margin-left: 30px;
+    margin-top: 30px;
+    width: 547px;
+}
+.additional-info td {
+    font-size: 12px;
+    height: 22px;
+    font-weight: normal;
+}
+.additional-info td.details {
+    padding-left: 20px;
+}
+
 
 
 :focus {outline:none;}

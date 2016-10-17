@@ -1089,6 +1089,28 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$release" -eq 8 ]; then
         mv -f /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
         mv -f /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
+
+        # RoundCube tinyMCE fix
+        tinymceFixArchiveURL=$vestacp/roundcube/roundcube-tinymce.tar.gz
+        tinymceParentFolder=/usr/share/roundcube/program/js
+        tinymceFolder=$tinymceParentFolder/tinymce
+        tinymceBadJS=$tinymceFolder/tiny_mce.js
+        tinymceFixArchive=$tinymceParentFolder/roundcube-tinymce.tar.gz
+        if [[ -L "$tinymceFolder" && -d "$tinymceFolder" ]]; then
+            if [ -f "$tinymceBadJS" ]; then
+                wget $tinymceFixArchiveURL -O $tinymceFixArchive
+                if [[ -f "$tinymceFixArchive" && -s "$tinymceFixArchive" ]]; then
+                    rm $tinymceFolder
+                    tar -xzf $tinymceFixArchive -C $tinymceParentFolder
+                    rm $tinymceFixArchive
+                    chown -R root:root $tinymceFolder
+                else
+                    echo "File roundcube-tinymce.tar.gz is not downloaded, RoundCube tinyMCE fix is not applied"
+                    rm $tinymceFixArchive
+                fi
+            fi
+        fi
+
     fi
 fi
 

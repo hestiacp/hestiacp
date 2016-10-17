@@ -747,6 +747,46 @@ sftp_backup() {
     fi
 }
 
+google_backup() {
+
+    # Defining google settings
+    source $VESTA/conf/google.backup.conf
+    gsutil="$VESTA/3rdparty/gsutil/gsutil"
+    export BOTO_CONFIG="$VESTA/conf/.google.backup.boto"
+
+    # Debug info
+    echo -e "$(date "+%F %T") Remote: gs://$BUCKET/$BPATH/$user.$date.tar"
+
+    # Checking retention
+    backup_list=$(${gsutil} ls gs://$BUCKET/$BPATH/$user.* 2>/dev/null)
+    backups_count=$(echo "$backup_list" |wc -l)
+    if [ "$backups_count" -ge "$BACKUPS" ]; then
+        backups_rm_number=$((backups_count - BACKUPS + 1))
+        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do 
+            echo -e "$(date "+%F %T") Roated gcp backup: $backup"
+            $gsutil rm $backup > /dev/null 2>&1
+        done
+    fi
+
+    # Uploading backup archive
+    echo -e "$(date "+%F %T") Uploading $user.$date.tar ..."
+    if [ "$localbackup" = 'yes' ]; then
+        cd $BACKUP
+        ${gsutil} cp $user.$date.tar gs://$BUCKET/$BPATH/ > /dev/null 2>&1
+    else
+        cd $tmpdir
+        tar -cf $BACKUP/$user.$date.tar .
+        cd $BACKUP/
+        ${gsutil} cp $user.$date.tar gs://$BUCKET/$BPATH/ > /dev/null 2>&1
+        rc=$?
+        rm -f $user.$date.tar
+        if [ "$rc" -ne 0 ]; then
+            check_result "$E_CONNECT" "gsutil failed to upload $user.$date.tar"
+        fi
+    fi
+}
+
+
 echo -e "\n-- SUMMARY --" |tee -a $BACKUP/$user.log
 
 # Switching on backup system types
@@ -755,6 +795,7 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
         local) local_backup ;;
         ftp)   ftp_backup ;;
         sftp)  sftp_backup ;;
+        google) google_backup ;;
     esac
 done
 

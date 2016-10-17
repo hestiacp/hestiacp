@@ -730,10 +730,28 @@ $LANG['ar'] = array(
     'webalizer' => 'محلل الويب webalizer',
     'awstats' => 'احصائيات الويب awstats',
 
+    'Vesta SSL' => 'Vesta SSL',
+    'SUBJECT' => 'SUBJECT',
+    'ALIASES' => 'ALIASES',
+    'NOT_BEFORE' => 'NOT_BEFORE',
+    'NOT_AFTER' => 'NOT_AFTER',
+    'SIGNATURE' => 'SIGNATURE',
+    'PUB_KEY' => 'PUB_KEY',
+    'ISSUER' => 'ISSUER',
+
+    'Use server hostname' => 'Use server hostname',
+    'Use domain hostname' => 'Use domain hostname',
+    'Use STARTTLS' => 'Use STARTTLS',
+    'Use SSL' => 'Use SSL',
+    'No encryption' => 'No encryption',
+    'Do not use encryption' => 'Do not use encryption',
+
+    'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
 // Texts below doesn't exist in en.php
     '%s rule' => 'قواعد %s',
     'MainDomain' => 'النطاق الرئيسي',
     'SubDomain' => 'النطاق الفرعي (الجزء الاول الذي يضاف إلى النطاق الرئيسي)',
     'Add Sub Domain' => 'إضافة نطاق فرعي'
+
 );

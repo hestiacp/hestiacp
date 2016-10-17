@@ -137,6 +137,55 @@
                         </tr>
                     </table>
                 </td>
+
+            <td class="mail-infoblock-td">
+                <div class="mail-infoblock">
+                <table>
+                    <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
+                    <tr>
+                        <td><?=__('Username')?>:</td>
+                        <td><span id="v_account">william.cage</span>@<?=htmlentities($v_domain)?></td>
+                    </tr>
+                    <tr>
+                        <td><?=__('Password')?>:</td>
+                        <td id="v_password">******</td>
+                    </tr>
+                    <tr>
+                        <td><?=__('IMAP hostname')?>:</td>
+                        <td><?=$hostname?></td>
+                    </tr>
+                    <tr>
+                        <td><?=__('IMAP port')?>:</td>
+                        <td>143</td>
+                    </tr>
+                    <tr>
+                        <td><?=__('IMAP security')?>:</td>
+                        <td><?=__('STARTTLS')?></td>
+                    </tr>
+                    <tr>
+                        <td><?=__('IMAP auth method')?>:</td>
+                        <td><?=__('Normal password')?></td>
+                    </tr>
+                    <tr>
+                        <td><?=__('SMTP hostname')?></td>
+                        <td><?=$hostname?></td>
+                    </tr>
+                    <tr>
+                        <td><?=__('SMTP port')?>:</td>
+                        <td>587</td>
+                    </tr>
+                    <tr>
+                        <td><?=__('SMTP security')?>:</td>
+                        <td><?=__('STARTTLS')?></td>
+                    </tr>
+                    <tr>
+                        <td><?=__('SMTP auth method')?>:</td>
+                        <td><?=__('Normal password')?></td>
+                    </tr>
+                </table>
+                </div>
+            </td>
+
             </tr>
         </table>
     </form>

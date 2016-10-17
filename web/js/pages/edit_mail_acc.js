@@ -86,6 +86,11 @@ randomString = function() {
         randomstring += chars.substr(rnum, 1);
     }
     document.v_edit_mail_acc.v_password.value = randomstring;
+
+    if($('input[name=v_password]').attr('type') == 'text')
+        $('#v_password').text(randomstring);
+    else
+        $('#v_password').text(Array(randomstring.length+1).join('*'));
 }
 
 $(document).ready(function() {

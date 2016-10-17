@@ -24,7 +24,6 @@ App.Actions.MAIL_ACC.disable_unlimited = function(elm, source_elm) {
     $(source_elm).css('opacity', '0.5');
 }
 
-// 
 App.Actions.MAIL_ACC.toggle_unlimited_feature = function(evt) {
     var elm = $(evt.target);
     var ref = elm.prev('.vst-input');
@@ -93,33 +92,6 @@ randomString = function() {
         $('#v_password').text(Array(randomstring.length+1).join('*'));
 }
 
-use_hostname = function(domain) {
-	$('#td_imap_hostname').html(domain);
-	$('#td_smtp_hostname').html(domain);
-}
-
-use_starttls = function() {
-	$('#td_imap_port').html('143');
-	$('#td_imap_encryption').html('STARTTLS');
-	$('#td_smtp_port').html('587');
-	$('#td_smtp_encryption').html('STARTTLS');
-}
-
-use_ssl = function() {
-	$('#td_imap_port').html('993');
-	$('#td_imap_encryption').html('SSL');
-	$('#td_smtp_port').html('465');
-	$('#td_smtp_encryption').html('SSL');
-}
-
-use_no_encryption = function(domain, no_encryption) {
-	use_hostname(domain);
-	$('#td_imap_port').html('143');
-	$('#td_imap_encryption').html(no_encryption);
-	$('#td_smtp_port').html('25');
-	$('#td_smtp_encryption').html(no_encryption);
-}
-
 $(document).ready(function() {
     $('#v_account').text($('input[name=v_account]').val());
     $('#v_password').text($('input[name=v_password]').val());
@@ -140,5 +112,37 @@ $(document).ready(function() {
             $('#v_password').text($('input[name=v_password]').val());
         else
             $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
-     });
+    });
+
+    $('#mail_configuration').change(function(evt){
+        var opt = $(evt.target).find('option:selected');
+
+        switch(opt.attr('v_type')){
+            case 'hostname':
+                $('#td_imap_hostname').html(opt.attr('domain'));
+                $('#td_smtp_hostname').html(opt.attr('domain'));
+                break;
+            case 'starttls':
+                $('#td_imap_port').html('143');
+                $('#td_imap_encryption').html('STARTTLS');
+                $('#td_smtp_port').html('587');
+                $('#td_smtp_encryption').html('STARTTLS');
+                break;
+            case 'ssl':
+                $('#td_imap_port').html('993');
+                $('#td_imap_encryption').html('SSL');
+                $('#td_smtp_port').html('465');
+                $('#td_smtp_encryption').html('SSL');
+                break;
+            case 'no_encription':
+                $('#td_imap_hostname').html(opt.attr('domain'));
+                $('#td_smtp_hostname').html(opt.attr('domain'));
+
+                $('#td_imap_port').html('143');
+                $('#td_imap_encryption').html(opt.attr('no_encription'));
+                $('#td_smtp_port').html('25');
+                $('#td_smtp_encryption').html(opt.attr('no_encription'));
+                break;
+        }
+    });
 });

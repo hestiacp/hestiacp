@@ -107,11 +107,43 @@ $(document).ready(function() {
         else
             $('#v_password').text(Array($(this).val().length+1).join('*'));
     });
-                                       
+
     $('.toggle-psw-visibility-icon').click(function(){
         if($('input[name=v_password]').attr('type') == 'text')
             $('#v_password').text($('input[name=v_password]').val());
         else
             $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
-     });
+    });
+
+    $('#mail_configuration').change(function(evt){
+        var opt = $(evt.target).find('option:selected');
+
+        switch(opt.attr('v_type')){
+            case 'hostname':
+                $('#td_imap_hostname').html(opt.attr('domain'));
+                $('#td_smtp_hostname').html(opt.attr('domain'));
+                break;
+            case 'starttls':
+                $('#td_imap_port').html('143');
+                $('#td_imap_encryption').html('STARTTLS');
+                $('#td_smtp_port').html('587');
+                $('#td_smtp_encryption').html('STARTTLS');
+                break;
+            case 'ssl':
+                $('#td_imap_port').html('993');
+                $('#td_imap_encryption').html('SSL');
+                $('#td_smtp_port').html('465');
+                $('#td_smtp_encryption').html('SSL');
+                break;
+            case 'no_encription':
+                $('#td_imap_hostname').html(opt.attr('domain'));
+                $('#td_smtp_hostname').html(opt.attr('domain'));
+
+                $('#td_imap_port').html('143');
+                $('#td_imap_encryption').html(opt.attr('no_encription'));
+                $('#td_smtp_port').html('25');
+                $('#td_smtp_encryption').html(opt.attr('no_encription'));
+                break;
+        }
+    });
 });

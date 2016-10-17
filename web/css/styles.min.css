@@ -2475,7 +2475,7 @@ label {
   -moz-appearance:none;
   -webkit-appearance:none;
   text-shadow: 0 0 0 #555;
-  /*color: transparent !important;*/
+  cursor: pointer;
 }
 
 .vst-list.long-2 {
@@ -2491,6 +2491,17 @@ label {
 .vst-list:focus {
   border: 1px solid #55C9C0;
   color: #333;
+}
+
+.vst-list.flat {
+  border: 1px solid #fff; 
+  color: #2c9491;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 11px;
+  margin-left: -14px;
+  background-position: -210px -604px;
+  text-shadow: none !important;
 }
 
 a.vst-text,
@@ -2808,17 +2819,22 @@ a.button.cancel {
   vertical-align: top;
 }
 .mail-infoblock {
-  padding-top: 80px;
-  margin-left: -100px;
+  margin-left: -110px;
   font-size: 12px;
   color: #777;
+  border: 1px solid #d9d9d9;
+  padding: 7px 5px 12px 20px;
+  margin-top: 17px;
+  width: 334px;
 }
 .mail-infoblock td {
   color: #777;
   font-size: 14px;
   height: 18px;
-  padding-right: 25px;
   font-weight: normal;
+}
+.mail-infoblock td:first-child{
+  padding-right: 15px;
 }
 
 .additional-info {

@@ -2826,6 +2826,10 @@ a.button.cancel {
   padding: 7px 5px 12px 20px;
   margin-top: 17px;
   width: 334px;
+  overflow: hidden;
+}
+.mail-infoblock:hover {
+  overflow: visible;
 }
 .mail-infoblock td {
   color: #777;
@@ -2835,6 +2839,10 @@ a.button.cancel {
 }
 .mail-infoblock td:first-child{
   padding-right: 15px;
+}
+.mail-infoblock div {
+  width: 190px;
+  white-space: nowrap;
 }
 
 .additional-info {

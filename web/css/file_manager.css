@@ -270,8 +270,11 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 .confirm-box .controls .keep-original:hover { color: #FFCC00; }
 .confirm-box .controls .keep-original:active { color: #6DB8D3; }
 
+.confirm-box .chmod-mask,
 .confirm-box .new-title { background-color: #292929; border: 1px solid #111; color: #eee; font-family: Arial; font-size: 16px; margin-bottom: 73px; margin-left: 27px; padding: 10px 14px; width: 396px; }
+.confirm-box .chmod-mask:focus,
 .confirm-box .new-title:focus { border: 1px solid #FFCC00; box-shadow: 0 0 5px 0 rgba(255, 204, 0 , 0.3); }
+.confirm-box .chmod-mask { width: 28px; margin: -12px 0 42px 57px; }
 
 .confirm-box.rename .message { margin-bottom: 36px; }
 .confirm-box.rename .controls.replace { display: none; }

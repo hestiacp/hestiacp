@@ -75,8 +75,8 @@ chgrp $user $htpasswd $htaccess
 sed -i "/^$auth_user:/d" $htpasswd
 echo "$auth_user:$auth_hash" >> $htpasswd
 
-cp -p "$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess" "$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.conf_htaccess"
-cp -p "$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd" "$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.htpasswd"
+ln -s "$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess" "$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.conf_htaccess"
+ln -s "$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd" "$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.htpasswd"
 
 # Restarting web server
 if [ "$restart" != 'no' ] && [ "$restart_required" = 'yes' ]; then

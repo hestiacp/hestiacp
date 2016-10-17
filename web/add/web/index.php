@@ -89,7 +89,7 @@ if (!empty($_POST['ok'])) {
     if (!empty($v_domain)) $v_ftp_user_prepath .= $v_domain;
 
     // Set advanced option checkmark
-    if (empty($_POST['v_proxy'])) $v_adv = 'yes';
+    if (!empty($_POST['v_proxy'])) $v_adv = 'yes';
     if (!empty($_POST['v_ftp'])) $v_adv = 'yes';
     if ($_POST['v_proxy_ext'] != $v_proxy_ext) $v_adv = 'yes';
     if ((!empty($_POST['v_aliases'])) && ($_POST['v_aliases'] != 'www.'.$_POST['v_domain'])) $v_adv = 'yes';

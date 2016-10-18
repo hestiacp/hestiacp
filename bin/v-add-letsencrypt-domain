@@ -38,7 +38,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-
+is_object_value_empty 'web' 'DOMAIN' "$domain" '$LETSENCRYPT'
+get_domain_values 'web'
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -55,8 +56,8 @@ i=1
 for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
     $BIN/v-check-letsencrypt-domain $user $alias
     check_result $? "LE domain validation" >/dev/null
-    if [ "$i" -gt 6 ]; then
-        check_result $E_LIMIT "LE can't sign more than 6 domains"
+    if [ "$i" -gt 100 ]; then
+        check_result $E_LIMIT "LE can't sign more than 100 domains"
     fi
     i=$((i++))
 done
@@ -86,10 +87,22 @@ $BIN/v-delete-web-domain-ssl $user $domain >/dev/null 2>&1
 $BIN/v-add-web-domain-ssl $user $domain $ssl_dir
 check_result $? "SSL install" >/dev/null
 
+if [ -z "$LETSENCRYPT" ]; then
+   add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
+fi
+
+update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
+
+# Restarting web
+if [ "$restart" != 'no' ]; then
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
+fi
+
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

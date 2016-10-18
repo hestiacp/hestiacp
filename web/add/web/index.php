@@ -18,8 +18,8 @@ if (!empty($_POST['ok'])) {
     // Check for empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
     if (empty($_POST['v_ip'])) $errors[] = __('ip');
-    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))) $errors[] = __('ssl certificate');
-    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))) $errors[] = __('ssl key');
+    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))&& (empty($_POST['v_letsencrypt']))) $errors[] = __('ssl certificate');
+    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))&& (empty($_POST['v_letsencrypt']))) $errors[] = __('ssl key');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -79,6 +79,7 @@ if (!empty($_POST['ok'])) {
     $v_ssl_key = $_POST['v_ssl_key'];
     $v_ssl_ca = $_POST['v_ssl_ca'];
     $v_ssl_home = $data[$v_domain]['SSL_HOME'];
+    $v_letsencrypt = $_POST['v_letsencrypt'];
     $v_stats = escapeshellarg($_POST['v_stats']);
     $v_stats_user = $data[$v_domain]['STATS_USER'];
     $v_stats_password = $data[$v_domain]['STATS_PASSWORD'];
@@ -96,6 +97,7 @@ if (!empty($_POST['ok'])) {
     if ((!empty($_POST['v_ssl'])) || (!empty($_POST['v_elog']))) $v_adv = 'yes';
     if ((!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key']))) $v_adv = 'yes';
     if ((!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
+    if ((!empty($_POST['v_letsencrypt']))) $v_adv = 'yes';
 
     // Check advanced features
     if (empty($_POST['v_dns'])) $v_dns = 'off';
@@ -144,42 +146,53 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
-    // Add SSL certificates
-    if ((!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
-        exec ('mktemp -d', $output, $return_var);
-        $tmpdir = $output[0];
-        unset($output);
+    // Add Lets Encrypt support
 
-        // Save certificate
-        if (!empty($_POST['v_ssl_crt'])) {
-            $fp = fopen($tmpdir."/".$_POST['v_domain'].".crt", 'w');
-            fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_crt']));
-            fwrite($fp, "\n");
-            fclose($fp);
-        }
-
-        // Save private key
-        if (!empty($_POST['v_ssl_key'])) {
-            $fp = fopen($tmpdir."/".$_POST['v_domain'].".key", 'w');
-            fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_key']));
-            fwrite($fp, "\n");
-            fclose($fp);
-        }
-
-        // Save CA bundle
-        if (!empty($_POST['v_ssl_ca'])) {
-            $fp = fopen($tmpdir."/".$_POST['v_domain'].".ca", 'w');
-            fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_ca']));
-            fwrite($fp, "\n");
-            fclose($fp);
-        }
-
-        $v_ssl_home = escapeshellarg($_POST['v_ssl_home']);
-        exec (VESTA_CMD."v-add-web-domain-ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
+     if ((!empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
+        exec (VESTA_CMD."v-list-web-domain ".$user." ".$v_domain." json", $output, $return_var);
+        $data = json_decode(implode('', $output), true);
+        exec (VESTA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." '".$data['ALIAS']."' 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
-    }
+     }
+     else {
+         // Add SSL certificates only if Lets Encrypt is off
+         if ((!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+             exec ('mktemp -d', $output, $return_var);
+             $tmpdir = $output[0];
+             unset($output);
 
+             // Save certificate
+             if (!empty($_POST['v_ssl_crt'])) {
+                 $fp = fopen($tmpdir."/".$_POST['v_domain'].".crt", 'w');
+                 fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_crt']));
+                 fwrite($fp, "\n");
+                 fclose($fp);
+             }
+
+             // Save private key
+             if (!empty($_POST['v_ssl_key'])) {
+                 $fp = fopen($tmpdir."/".$_POST['v_domain'].".key", 'w');
+                 fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_key']));
+                 fwrite($fp, "\n");
+                 fclose($fp);
+             }
+
+             // Save CA bundle
+             if (!empty($_POST['v_ssl_ca'])) {
+                 $fp = fopen($tmpdir."/".$_POST['v_domain'].".ca", 'w');
+                 fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_ca']));
+                 fwrite($fp, "\n");
+                 fclose($fp);
+             }
+
+             $v_ssl_home = escapeshellarg($_POST['v_ssl_home']);
+             exec (VESTA_CMD."v-add-web-domain-ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
+             check_return_code($return_var,$output);
+             unset($output);
+         }
+
+     }
     // Add web stats
     if ((!empty($_POST['v_stats'])) && ($_POST['v_stats'] != 'none' ) && (empty($_SESSION['error_msg']))) {
         $v_stats = escapeshellarg($_POST['v_stats']);

@@ -58,7 +58,7 @@ shell_list() {
     if [ ! -z "$SSL" ] && [ "$SSL" != 'no' ]; then
         echo "SSL:            $SSL / $SSL_HOME"
         if [ ! -z "$LETSENCRYPT" ] && [ "$LETSENCRYPT" != 'no' ]; then
-         echo "LETSENCRYPT:        $LETSENCRYPT"
+         echo "LETSENCRYPT:    $LETSENCRYPT"
         fi
     fi
     echo "TEMPLATE:       $TPL"

@@ -35,6 +35,7 @@ json_list() {
         "STATS_USER": "'$STATS_USER'",
         "SSL": "'$SSL'",
         "SSL_HOME": "'$SSL_HOME'",
+        "LETSENCRYPT": "'$LETSENCRYPT'",
         "FTP_USER": "'$FTP_USER'",
         "FTP_PATH": "'$FTP_PATH'",
         "AUTH_USER": "'$AUTH_USER'",
@@ -58,11 +59,11 @@ json_list() {
 # SHELL list function
 shell_list() {
     IFS=$'\n'
-    echo "DOMAIN   IP   TPL   SSL   DISK   BW   SPND   DATE"
-    echo "------   --   ---   ---   ----   --   ----   ----"
+    echo "DOMAIN   IP   TPL   SSL   LETSENCRYPT   DISK   BW   SPND   DATE"
+    echo "------   --   ---   ---   -----------   ----   --   ----   ----"
     while read str; do
         eval $str
-        echo "$DOMAIN $IP $TPL $SSL $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
+        echo "$DOMAIN $IP $TPL $SSL $LETSENCRYPT $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
     done < <(cat $USER_DATA/web.conf)
 }
 
@@ -72,7 +73,7 @@ plain_list() {
     while read str; do
         eval $str
         echo -ne "$DOMAIN\t$IP\t$IP6\t$U_DISK\t$U_BANDWIDTH\t$TPL\t"
-        echo -ne "$ALIAS\t$STATS\t$STATS_USER\t$SSL\t$SSL_HOME\t"
+        echo -ne "$ALIAS\t$STATS\t$STATS_USER\t$SSL\t$SSL_HOME\t$LETSENCRYPT\t"
         echo -ne "$FTP_USER\t$FTP_PATH\t$AUTH_USER\t$BACKEND\t$PROXY\t"
         echo -e "$PROXY_EXT\t$SUSPENDED\t$TIME\t$DATE"
     done < <(cat $USER_DATA/web.conf)
@@ -82,12 +83,12 @@ plain_list() {
 csv_list() {
     IFS=$'\n'
     echo -n "DOMAIN,IP,IP6,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,"
-    echo -n "SSL,SSL_HOME,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,"
+    echo -n "SSL,SSL_HOME,LETSENCRYPT,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,"
     echo "PROXY_EXT,SUSPENDED,TIME,DATE"
     while read str; do
         eval $str
         echo -n "$DOMAIN,$IP,$IP6,$U_DISK,$U_BANDWIDTH,$TPL,"
-        echo -n "\"$ALIAS\",$STATS,\"$STATS_USER\",$SSL,$SSL_HOME,"
+        echo -n "\"$ALIAS\",$STATS,\"$STATS_USER\",$SSL,$SSL_HOME,$LETSENCRYPT,"
         echo -n "\"$FTP_USER\",\"$FTP_PATH\",\"$AUTH_USER\",$BACKEND,$PROXY,"
         echo "\"$PROXY_EXT\",$SUSPENDED,$TIME,$DATE"
     done < <(cat $USER_DATA/web.conf)

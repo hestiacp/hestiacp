@@ -180,14 +180,18 @@
                             <?php echo ""; }?>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
-                                    <a class="generate" target="_blank" href="/generate/ssl/?domain=<?php echo $v_domain ?>"><?php print __('Generate CSR') ?></a>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="step-left">
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
-                                        <tr>
+  				      <tr>
+					  <td class="input-label vst-text">
+					      <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
+					  </td>
+				      </tr>
+                                      <tr>
                                             <td class="vst-text input-label">
                                                 <?php print __('SSL Home Directory');?>
                                             </td>
@@ -208,6 +212,7 @@
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print __('SSL Certificate');?>
+						<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?php echo $v_domain ?>"><?php print __('Generate CSR') ?></a></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -327,12 +332,12 @@
                                     </select>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="vst-text input-label">
+                            <tr  class="stats-auth" style="<? if ($v_stats == 'none') { ?>display:none"<? } ?>>
+                                <td class="vst-text input-label step-left">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');"><?php print __('Statistics Authorization');?></label>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="stats-auth">
                                 <td class="step-left">
                                     <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
                                         <tr>

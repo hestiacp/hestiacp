@@ -266,6 +266,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                   <? } ?>
                 </td>
               </tr>
+                <td></td>
                 <tr>
                     <td>
                         <? if(empty($data[$key]['LETSENCRYPT']) || $data[$key]['LETSENCRYPT'] == 'no') { ?>
@@ -280,8 +281,6 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                         <? } ?>
                     </td>
                 </tr>
-                <td></td>
-                <td></td>
               <tr>
                 <td>
                   <div class="l-unit__stat-cols clearfix graph">

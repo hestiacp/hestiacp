@@ -154,14 +154,14 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
 App.Actions.WEB.toggle_letsencrypt = function(elm) {
     if ($(elm).attr('checked')) {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
-        $('input[name=v_ssl]').prop('checked', true);
-        $('#ssltable').show();
+//        $('input[name=v_ssl]').prop('checked', true);
+//        $('#ssltable').show();
         $('#generate-csr').hide();
     }
     else {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').removeAttr('disabled');
-        $('input[name=v_ssl]').prop('checked', false);
-        $('#ssltable').hide();
+//        $('input[name=v_ssl]').prop('checked', false);
+//        $('#ssltable').hide();
         $('#generate-csr').show();
     }
 }
@@ -179,6 +179,16 @@ $(function() {
         document.getElementById('v_aliases').value = prefix + document.getElementById('v_domain').value;
     });
     App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'))
+
+    $('select[name="v_stats"]').change(function(evt){
+        var select = $(evt.target);
+
+        if(select.val() == 'none'){
+            $('.stats-auth').hide();
+        } else {
+            $('.stats-auth').show();
+        }
+    });
 });
 
 function WEBrandom() {

@@ -747,5 +747,6 @@ $LANG['tr'] = array(
     'No encryption' => 'No encryption',
     'Do not use encryption' => 'Do not use encryption',
 
-	'maximum 16 characters length, including prefix' => 'maximum 16 characters length, including prefix',
+    'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
+
 );

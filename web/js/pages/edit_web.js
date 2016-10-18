@@ -183,6 +183,15 @@ $(function() {
     if ($('input[name=v_letsencrypt]').attr('checked')) {
         App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'))
     }
+    $('select[name="v_stats"]').change(function(evt){
+        var select = $(evt.target);
+
+        if(select.val() == 'none'){
+            $('.stats-auth').hide();
+        } else {
+            $('.stats-auth').show();
+        }
+    });
 });
 
 function WEBrandom() {

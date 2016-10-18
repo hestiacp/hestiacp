@@ -1525,25 +1525,8 @@ FM.confirmChmod = function() {
     var src = selected.find('.source').val();
     src = $.parseJSON(src);
 
-    var ro = $('input[name="read-by-owner"]').is(':checked') ? 4 : 0;
-    var wo = $('input[name="write-by-owner"]').is(':checked') ? 2 : 0;
-    var eo = $('input[name="execute-by-owner"]').is(':checked') ? 1 : 0;
-
-    var rg = $('input[name="read-by-group"]').is(':checked') ? 4 : 0;
-    var wg = $('input[name="write-by-group"]').is(':checked') ? 2 : 0;
-    var eg = $('input[name="execute-by-group"]').is(':checked') ? 1 : 0;
-
-    var re = $('input[name="read-by-others"]').is(':checked') ? 4 : 0;
-    var we = $('input[name="write-by-others"]').is(':checked') ? 2 : 0;
-    var ee = $('input[name="execute-by-others"]').is(':checked') ? 1 : 0;
-
-    var o = ro+wo+eo;
-    var g = rg+wg+eg;
-    var e = re+we+ee;
-
-    var permissions = o + "" + g + "" + e + "";
-
-    var action = FM.isItemFile(src) ? 'chmod_item' : 'chmod_item';
+    var permissions = $('.chmod input.chmod-mask').val();
+    var action = 'chmod_item';
 
     var params = {
         dir:  FM['TAB_' + tab + '_CURRENT_PATH'] + '/',
@@ -1583,24 +1566,7 @@ FM.confirmBulkChmod = function() {
             }
         });
 
-
-        var ro = $('input[name="read-by-owner"]').is(':checked') ? 4 : 0;
-        var wo = $('input[name="write-by-owner"]').is(':checked') ? 2 : 0;
-        var eo = $('input[name="execute-by-owner"]').is(':checked') ? 1 : 0;
-
-        var rg = $('input[name="read-by-group"]').is(':checked') ? 4 : 0;
-        var wg = $('input[name="write-by-group"]').is(':checked') ? 2 : 0;
-        var eg = $('input[name="execute-by-group"]').is(':checked') ? 1 : 0;
-
-        var re = $('input[name="read-by-others"]').is(':checked') ? 4 : 0;
-        var we = $('input[name="write-by-others"]').is(':checked') ? 2 : 0;
-        var ee = $('input[name="execute-by-others"]').is(':checked') ? 1 : 0;
-
-        var o = ro+wo+eo;
-        var g = rg+wg+eg;
-        var e = re+we+ee;
-
-        var permissions = o + "" + g + "" + e + "";
+        var permissions = $('.chmod input.chmod-mask').val();
 
         var action = 'chmod_item';
         var tab = FM.getTabLetter(FM.CURRENT_TAB);
@@ -1693,6 +1659,29 @@ FM.chmodItems = function() {
     tpl.set(':EXECUTE_BY_OTHERS', mode[2] & 1 ? "checked" : "");
 
     FM.popupOpen(tpl.finalize());
+    $('.chmod input.chmod-mask').val(mode);
+
+    $('.chmod input[type=checkbox]').click(function(){
+        var ro = $('input[name="read-by-owner"]').is(':checked') ? 4 : 0;
+        var wo = $('input[name="write-by-owner"]').is(':checked') ? 2 : 0;
+        var eo = $('input[name="execute-by-owner"]').is(':checked') ? 1 : 0;
+
+        var rg = $('input[name="read-by-group"]').is(':checked') ? 4 : 0;
+        var wg = $('input[name="write-by-group"]').is(':checked') ? 2 : 0;
+        var eg = $('input[name="execute-by-group"]').is(':checked') ? 1 : 0;
+
+        var re = $('input[name="read-by-others"]').is(':checked') ? 4 : 0;
+        var we = $('input[name="write-by-others"]').is(':checked') ? 2 : 0;
+        var ee = $('input[name="execute-by-others"]').is(':checked') ? 1 : 0;
+
+        var o = ro+wo+eo;
+        var g = rg+wg+eg;
+        var e = re+we+ee;
+
+        var permissions = o + "" + g + "" + e + "";
+
+        $('.chmod input.chmod-mask').val(permissions);
+    });
 }
 
 FM.bulkChmod = function() {
@@ -1728,6 +1717,28 @@ FM.bulkChmod = function() {
         //popup_bulk_copy
 
         FM.popupOpen(tpl.finalize());
+
+        $('.chmod input[type=checkbox]').click(function(){
+            var ro = $('input[name="read-by-owner"]').is(':checked') ? 4 : 0;
+            var wo = $('input[name="write-by-owner"]').is(':checked') ? 2 : 0;
+            var eo = $('input[name="execute-by-owner"]').is(':checked') ? 1 : 0;
+
+            var rg = $('input[name="read-by-group"]').is(':checked') ? 4 : 0;
+            var wg = $('input[name="write-by-group"]').is(':checked') ? 2 : 0;
+            var eg = $('input[name="execute-by-group"]').is(':checked') ? 1 : 0;
+
+            var re = $('input[name="read-by-others"]').is(':checked') ? 4 : 0;
+            var we = $('input[name="write-by-others"]').is(':checked') ? 2 : 0;
+            var ee = $('input[name="execute-by-others"]').is(':checked') ? 1 : 0;
+
+            var o = ro+wo+eo;
+            var g = rg+wg+eg;
+            var e = re+we+ee;
+
+            var permissions = o + "" + g + "" + e + "";
+
+            $('.chmod input.chmod-mask').val(permissions);
+        });
     }
 }
 
@@ -2448,10 +2459,10 @@ $(document).ready(function() {
         }
         var tab = FM.getTabLetter(FM.CURRENT_TAB);
         var elm = $(FM.CURRENT_TAB).find('.dir:eq('+FM['CURRENT_'+tab+'_LINE']+')');
-        
+
         if (elm.length == 1) {
             var src = $.parseJSON($(elm).find('.source').val());
-            
+
             if (src.type == 'd') {
                 FM.open(src.full_path, FM.CURRENT_TAB);
             }
@@ -2646,6 +2657,9 @@ $(document).ready(function() {
     $('.shortcuts .close').click(function(){
         $('.shortcuts').hide();
     });
+
+
+
 
 });
 

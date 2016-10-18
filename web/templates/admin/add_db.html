@@ -60,7 +60,8 @@
                                 <td class="vst-text input-label">
                                     <?php
                                         print __('User');
-                                        if (is_it_mysql_or_mariadb()=='mysql') echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".__('maximum 16 characters length, including prefix').")</small></em>";
+                                        // if (is_it_mysql_or_mariadb()=='mysql')
+                                        echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".__('maximum characters length, including prefix', 16).")</small></em>";
                                     ?>
                                 </td>
                             </tr>

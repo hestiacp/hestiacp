@@ -2,7 +2,7 @@
 # info: delete user sftp jail
 # options: USER
 #
-# The script enables sftp jailed environment
+# The script disables sftp jailed environment for USER
 
 
 #----------------------------------------------------------#

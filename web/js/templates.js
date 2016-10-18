@@ -143,6 +143,7 @@ App.Templates.html = {
                                     <li><label><input type="checkbox" name="write-by-others" value="1" ~!:WRITE_BY_OTHERS~! /> '+App.Constants.FM_WRITE_BY_OTHERS+'</label></li>\
                                     <li><label><input type="checkbox" name="execute-by-others" value="1" ~!:EXECUTE_BY_OTHERS~! /> '+App.Constants.FM_EXECUTE_BY_OTHERS+'</label></li>\
                                 </ul>\
+                                <input type="text" name="mask" class="chmod-mask" maxlength="3" />\
                             </div>\
                             <div class="controls">\
                                 <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\
@@ -166,6 +167,7 @@ App.Templates.html = {
                                     <li><label><input type="checkbox" name="write-by-others" value="1" checked /> '+App.Constants.FM_WRITE_BY_OTHERS+'</label></li>\
                                     <li><label><input type="checkbox" name="execute-by-others" value="1" checked /> '+App.Constants.FM_EXECUTE_BY_OTHERS+'</label></li>\
                                 </ul>\
+                                <input type="text" name="mask" class="chmod-mask" maxlength="3" value="777" />\
                             </div>\
                             <div class="controls">\
                                 <p class="cancel" onClick="FM.popupClose();">'+App.Constants.FM_CANCEL+'</p>\

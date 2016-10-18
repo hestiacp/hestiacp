@@ -2,7 +2,7 @@
 # info: deactivate vesta license
 # options: MODULE LICENSE
 #
-# The function activates and register vesta license
+# The function deactivates vesta license
 
 
 #----------------------------------------------------------#

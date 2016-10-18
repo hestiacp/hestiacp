@@ -1285,6 +1285,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 28px;
   min-width: 208px;
   padding-left: 4px;
+  appearance:none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+  padding-left: 10px;
 }
 .l-select select:focus {
   border: 0;
@@ -1324,7 +1328,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-bottom: none;
 }
 
-.l-unit-ftl {
+.l-unit-ft {
   color: #929292;
   padding: 0 0 0 15px;
 }
@@ -2465,6 +2469,7 @@ label {
   font-size: 19px;
   font-weight: normal;
   height: 43px;
+  cursor: pointer;
   margin: 2px 6px 0 0;
   min-width: 138px;
   padding: 8px 1px 6px 10px;
@@ -2475,7 +2480,6 @@ label {
   -moz-appearance:none;
   -webkit-appearance:none;
   text-shadow: 0 0 0 #555;
-  /*color: transparent !important;*/
 }
 
 .vst-list.long-2 {
@@ -2491,6 +2495,23 @@ label {
 .vst-list:focus {
   border: 1px solid #55C9C0;
   color: #333;
+}
+
+.vst-list.flat {
+  border: 1px solid #fff; 
+  color: #2c9491;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 11px;
+  margin-left: -14px;
+  background-position: -210px -604px;
+  text-shadow: none !important;
+}
+.vst-list.flat:hover {
+  color: #ff6701;
+}
+.vst-list.flat option {
+  color: #555;
 }
 
 a.vst-text,
@@ -2536,6 +2557,9 @@ a.vst-text:active b{
   height: 300px;
   font-family:"Lucida Console", Monaco, monospace;
   white-space: pre;
+}
+.vst-textinput.short {
+  width: 360px;
 }
 #advanced-options .console{
   width: 833px;
@@ -2808,17 +2832,36 @@ a.button.cancel {
   vertical-align: top;
 }
 .mail-infoblock {
-  padding-top: 80px;
-  margin-left: -100px;
+  margin-left: -110px;
   font-size: 12px;
   color: #777;
+  border: 1px solid #d9d9d9;
+  padding: 0px 5px 12px 20px;
+  margin-top: 64px;
+  width: 334px;
+  overflow: hidden;
+}
+.mail-infoblock:hover {
+  overflow: visible;
 }
 .mail-infoblock td {
   color: #777;
   font-size: 14px;
   height: 18px;
-  padding-right: 25px;
   font-weight: normal;
+}
+.mail-infoblock td:first-child{
+  padding-right: 15px;
+}
+.mail-infoblock div {
+  width: 190px;
+  white-space: nowrap;
+}
+.mail-infoblock a {
+  color: #2c9491;
+}
+.mail-infoblock a:hover {
+  color: #ff6701;
 }
 
 .additional-info {

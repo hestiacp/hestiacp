@@ -180,7 +180,9 @@ $(function() {
         var elm = $(evt.target);
         App.Actions.WEB.passwordChanged(elm);
     });
-    App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'))
+    if ($('input[name=v_letsencrypt]').attr('checked')) {
+        App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'))
+    }
 });
 
 function WEBrandom() {

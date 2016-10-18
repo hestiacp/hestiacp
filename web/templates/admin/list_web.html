@@ -248,7 +248,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                   <? } ?>
                 </td>
                   <td>
-                      <? if($data[$key]['LETSENCRYPT'] == 'no'){ ?>
+                      <? if(empty($data[$key]['LETSENCRYPT']) || $data[$key]['LETSENCRYPT'] == 'no') { ?>
                       <div class="l-unit__stat-cols clearfix disabled"><?=__('Lets Encrypt Support')?></div>
                       <? } else {?>
                       <div class="l-unit__stat-cols clearfix">

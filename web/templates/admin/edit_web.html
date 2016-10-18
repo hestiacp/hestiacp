@@ -181,7 +181,7 @@
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label> /
-                                    <a class="generate" id="generate-csr" target="_blank" href="/generate/ssl/?domain=<?php echo $v_domain ?>"><?php print __('Generate CSR') ?></a>
+                                    <a class="generate" target="_blank" href="/generate/ssl/?domain=<?php echo $v_domain ?>"><?php print __('Generate CSR') ?></a>
                                 </td>
                             </tr>
                             <tr>
@@ -235,11 +235,11 @@
                                                 <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo htmlentities($v_ssl_ca); ?></textarea>
                                             </td>
                                         </tr>
-
+                                        <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename'];
+					if ($v_ssl != 'no' ) { ?>
                                         <tr>
                                             <td>
                                                 <table class="additional-info">
-                                                <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
                                                     <tr>
                                                         <td>
                                                             <?=__('SUBJECT')?>:
@@ -301,12 +301,8 @@
                                                 </table>
                                             </td>
                                         </tr>
+					<? } // if ssl is enabled ?>
                                     </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="step-top vst-text">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
                                 </td>
                             </tr>
                             <tr>

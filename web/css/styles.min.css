@@ -2510,6 +2510,9 @@ label {
 .vst-list.flat:hover {
   color: #ff6701;
 }
+.vst-list.flat option {
+  color: #555;
+}
 
 a.vst-text,
 a.vst-text b{

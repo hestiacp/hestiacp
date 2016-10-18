@@ -274,6 +274,17 @@ if (!empty($_POST['save'])) {
         $restart_web = 'yes';
         $restart_proxy = 'yes';
      }
+     else{
+         // Delete SSL certificate
+         if (( $v_ssl == 'yes' ) && (empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+             exec (VESTA_CMD."v-delete-web-domain-ssl ".$v_username." ".$v_domain." 'no'", $output, $return_var);
+             check_return_code($return_var,$output);
+             unset($output);
+             $v_ssl = 'no';
+             $restart_web = 'yes';
+             $restart_proxy = 'yes';
+         }
+     }
 
      // Enable Lets Encrypt support
      if (( $v_letsencrypt == 'no' || empty( $v_letsencrypt)) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {

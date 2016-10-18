@@ -59,7 +59,7 @@ json_list() {
 # SHELL list function
 shell_list() {
     IFS=$'\n'
-    echo "DOMAIN   IP   TPL   SSL   LETSENCRYPT   DISK   BW   SPND      DATE"
+    echo "DOMAIN   IP   TPL   SSL   LETSENCRYPT   DISK   BW   SPND      DATE   "
     echo "------   --   ---   ---   -----------   ----   --   ----   ----------"
     while read str; do
         eval $str

@@ -1177,6 +1177,11 @@ $VESTA/bin/v-update-sys-ip
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 copy_of_ip=$ip
 
+# Firewall configuration
+if [ "$iptables" = 'yes' ]; then
+    $VESTA/bin/v-update-firewall
+fi
+
 # Get public ip
 pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
 
@@ -1185,15 +1190,9 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     ip=$pub_ip
 fi
 
-# Firewall configuration
-if [ "$iptables" = 'yes' ]; then
-    $VESTA/bin/v-update-firewall
-fi
-
 # Configuring libapache2-mod-remoteip
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
-    # Get public ip after firewall update
-    copy_of_pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
+    copy_of_pub_ip=$pub_ip
     echo "<IfModule mod_remoteip.c>" > /etc/apache2/mods-available/remoteip.conf
     echo "  RemoteIPHeader X-Real-IP" >> /etc/apache2/mods-available/remoteip.conf
     if [ "$copy_of_ip" != "127.0.0.1" ] && [ "$copy_of_pub_ip" != "127.0.0.1" ]; then

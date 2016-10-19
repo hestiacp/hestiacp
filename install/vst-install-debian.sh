@@ -1206,6 +1206,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
         echo "  RemoteIPInternalProxy $copy_of_pub_ip" >> /etc/apache2/mods-available/remoteip.conf
     fi
     echo "</IfModule>" >> /etc/apache2/mods-available/remoteip.conf
+    sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
     a2enmod remoteip
     service apache2 restart
 fi

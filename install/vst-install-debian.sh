@@ -20,7 +20,7 @@ vestacp="http://$CHOST/$VERSION/$release"
 
 if [ "$release" -eq 8 ]; then
     software="nginx apache2 apache2-utils apache2.2-common
-        apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
+        apache2-suexec-custom libapache2-mod-ruid2
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
         php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
         proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
@@ -32,7 +32,7 @@ if [ "$release" -eq 8 ]; then
         bsdmainutils cron vesta vesta-nginx vesta-php expect"
 else
     software="nginx apache2 apache2-utils apache2.2-common
-        apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
+        apache2-suexec-custom libapache2-mod-ruid2
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
         php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
         proftpd-basic proftpd-mod-vroot bind9 exim4 exim4-daemon-heavy
@@ -527,7 +527,6 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/apache2-suexec-custom//")
     software=$(echo "$software" | sed -e "s/apache2.2-common//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php5//")
 fi
@@ -830,6 +829,7 @@ if [ "$apache" = 'yes'  ]; then
     a2enmod ssl
     a2enmod actions
     a2enmod ruid2
+    a2enmod headers
     mkdir -p /etc/apache2/conf.d
     echo > /etc/apache2/conf.d/vesta.conf
     echo "# Powered by vesta" > /etc/apache2/sites-available/default
@@ -1164,9 +1164,9 @@ $VESTA/bin/v-change-user-language admin $lang
 
 # RoundCube permissions fix
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
-	if [ ! -d "/var/log/roundcube" ]; then
-		mkdir /var/log/roundcube
-	fi
+    if [ ! -d "/var/log/roundcube" ]; then
+        mkdir /var/log/roundcube
+    fi
     chown admin:admin /var/log/roundcube
 fi
 
@@ -1175,17 +1175,39 @@ $VESTA/bin/v-update-sys-ip
 
 # Get main ip
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
+copy_of_ip=$ip
+
+# Firewall configuration
+if [ "$iptables" = 'yes' ]; then
+    $VESTA/bin/v-update-firewall
+fi
 
 # Get public ip
 pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
+
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
     ip=$pub_ip
 fi
 
-# Firewall configuration
-if [ "$iptables" = 'yes' ]; then
-    $VESTA/bin/v-update-firewall
+# Configuring libapache2-mod-remoteip
+if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
+    copy_of_pub_ip=$pub_ip
+    echo "<IfModule mod_remoteip.c>" > /etc/apache2/mods-available/remoteip.conf
+    echo "  RemoteIPHeader X-Real-IP" >> /etc/apache2/mods-available/remoteip.conf
+    if [ "$copy_of_ip" != "127.0.0.1" ] && [ "$copy_of_pub_ip" != "127.0.0.1" ]; then
+        echo "  RemoteIPInternalProxy 127.0.0.1" >> /etc/apache2/mods-available/remoteip.conf
+    fi
+    if [ ! -z "$copy_of_ip" ] && [ "$copy_of_ip" != "$copy_of_pub_ip" ]; then
+        echo "  RemoteIPInternalProxy $copy_of_ip" >> /etc/apache2/mods-available/remoteip.conf
+    fi
+    if [ ! -z "$copy_of_pub_ip" ]; then
+        echo "  RemoteIPInternalProxy $copy_of_pub_ip" >> /etc/apache2/mods-available/remoteip.conf
+    fi
+    echo "</IfModule>" >> /etc/apache2/mods-available/remoteip.conf
+    sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
+    a2enmod remoteip
+    service apache2 restart
 fi
 
 # Configuring mysql host

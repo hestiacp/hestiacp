@@ -61,7 +61,7 @@ $v_backup_dir = "/backup";
 if (!empty($_SESSION['BACKUP'])) $v_backup_dir = $_SESSION['BACKUP'];
 $v_backup_gzip = '5';
 if (!empty($_SESSION['BACKUP_GZIP'])) $v_backup_gzip = $_SESSION['BACKUP_GZIP'];
-$backup_types = split(",",$_SESSION['BACKUP_SYSTEM']);
+$backup_types = explode(",",$_SESSION['BACKUP_SYSTEM']);
 foreach ($backup_types as $backup_type) {
     if ($backup_type == 'local') {
         $v_backup = 'yes';

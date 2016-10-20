@@ -78,8 +78,12 @@ sed -i "/^$auth_user:/d" $htpasswd
 echo "$auth_user:$auth_hash" >> $htpasswd
 
 # Symbolic link for secure web templates
-ln -s $htpasswd $shtpasswd 
+if [ ! -L $shtpasswd ]; then
+  ln -s $htpasswd $shtpasswd 
+fi
+if [ ! -L $shtaccess ]; then
 ln -s $htaccess $shtaccess
+fi
 
 # Restarting web server
 if [ "$restart" != 'no' ] && [ "$restart_required" = 'yes' ]; then

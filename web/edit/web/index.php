@@ -267,26 +267,26 @@ if (!empty($_POST['save'])) {
     // Disable Lets Encrypt support
 
      if (( $v_letsencrypt == 'yes' ) && (empty($_POST['v_letsencrypt'])) && (!empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." '' 'no'", $output, $return_var);
+        exec (VESTA_CMD."v-delete-letsencrypt-domain ".$user." ".$v_domain." '' 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_letsencrypt = 'no';
         $restart_web = 'yes';
         $restart_proxy = 'yes';
      }
-     else {
-        // Delete SSL certificate
-        if (( $v_ssl == 'yes' ) && (empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
-            exec (VESTA_CMD."v-list-web-domain ".$user." ".$v_domain." json", $output, $return_var);
-            $data = json_decode(implode('', $output), true);
-            exec (VESTA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." '".$data['ALIAS']."' 'no'", $output, $return_var);
-            check_return_code($return_var,$output);
-            unset($output);
-            $v_ssl = 'no';
-            $restart_web = 'yes';
-            $restart_proxy = 'yes';
-        }
+     else{
+         // Delete SSL certificate
+         if (( $v_ssl == 'yes' ) && (empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+             exec (VESTA_CMD."v-delete-web-domain-ssl ".$v_username." ".$v_domain." 'no'", $output, $return_var);
+             check_return_code($return_var,$output);
+             unset($output);
+             $v_ssl = 'no';
+             $restart_web = 'yes';
+             $restart_proxy = 'yes';
+         }
      }
+
+     // Enable Lets Encrypt support
      if (( $v_letsencrypt == 'no' || empty( $v_letsencrypt)) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
         exec (VESTA_CMD."v-list-web-domain ".$user." ".$v_domain." json", $output, $return_var);
         $data = json_decode(implode('', $output), true);

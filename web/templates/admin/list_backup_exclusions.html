@@ -16,7 +16,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
-                <form action="/bulk/backup/exclusions/" method="post">
+                <form action="/bulk/backup/exclusions/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="" id="">

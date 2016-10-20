@@ -27,7 +27,7 @@
                 <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td>
-                <form action="/bulk/dns/" method="post">
+                <form action="/bulk/dns/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">
@@ -65,7 +65,7 @@
           }
       ?>
 
-      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>"
+      <div class="l-unit <? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>"
 v_section="dns" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
 sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$key]['RECORDS']?>" sort-star="<?if($_SESSION['favourites']['DNS'][$key] == 1) echo '1'; else echo '0';?>">
         <div class="l-unit-toolbar clearfix">

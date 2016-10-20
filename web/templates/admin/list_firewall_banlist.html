@@ -17,7 +17,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
-                <form action="/bulk/firewall/banlist/" method="post">
+                <form action="/bulk/firewall/banlist/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">

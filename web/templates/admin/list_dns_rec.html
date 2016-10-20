@@ -16,7 +16,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
-                <form action="/bulk/dns/" method="post">
+                <form action="/bulk/dns/" method="post" id="objects">
                 <input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>" />
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">

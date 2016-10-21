@@ -242,7 +242,13 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                     <div class="l-unit__stat-cols clearfix">
                       <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSL Support')?>:</div>
                       <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=__($data[$key]['SSL'])?></b>
+                        <b>
+                            <? if(empty($data[$key]['LETSENCRYPT'])){
+                                echo __($data[$key]['SSL']);
+                            } else {
+                                echo __('Lets Encrypt');
+                            }?>
+                        </b>
                       </div>
                     </div>
                   <? } ?>
@@ -266,7 +272,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                   <? } ?>
                 </td>
               </tr>
-                <tr>
+                <!--tr>
                     <td></td>
                     <td>
                         <? if(empty($data[$key]['LETSENCRYPT']) || $data[$key]['LETSENCRYPT'] == 'no') { ?>
@@ -280,7 +286,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                         </div>
                         <? } ?>
                     </td>
-                </tr>
+                </tr-->
               <tr>
                 <td>
                   <div class="l-unit__stat-cols clearfix graph">

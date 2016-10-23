@@ -31,6 +31,6 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/web/snginx.%domain%.conf*;
+    include %home%/%user%/conf/web/snginx.%domain_idn%.conf*;
 }
 

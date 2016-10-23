@@ -33,6 +33,6 @@ server {
 
     disable_symlinks if_not_owner from=%docroot%;
 
-    include %home%/%user%/conf/web/snginx.%domain%.conf*;
+    include %home%/%user%/conf/web/snginx.%domain_idn%.conf*;
 }
 

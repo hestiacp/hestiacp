@@ -32,7 +32,7 @@
     SSLCertificateKeyFile %ssl_key%
     %ssl_ca_str%SSLCertificateChainFile %ssl_ca%
 
-    IncludeOptional %home%/%user%/conf/web/shttpd.%domain%.conf*
+    IncludeOptional %home%/%user%/conf/web/shttpd.%domain_idn%.conf*
 
 </VirtualHost>
 

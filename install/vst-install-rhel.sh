@@ -1159,6 +1159,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     cd /usr/share/roundcubemail/plugins/password
     wget $vestacp/roundcube/vesta.php -O drivers/vesta.php
     wget $vestacp/roundcube/config.inc.php -O config.inc.php
+    sed -i "s/localhost/$servername/g" /usr/share/roundcubemail/plugins/password/config.inc.php
     chmod a+r /etc/roundcubemail/*
     chmod -f 777 /var/log/roundcubemail
     r="$(gen_pass)"

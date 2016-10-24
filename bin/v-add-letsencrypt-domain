@@ -91,7 +91,9 @@ if [ -z "$LETSENCRYPT" ]; then
    add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
 fi
 
+# Updating letsencrypt key
 update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

@@ -59,11 +59,11 @@ json_list() {
 # SHELL list function
 shell_list() {
     IFS=$'\n'
-    echo "DOMAIN   IP   TPL   SSL   LETSENCRYPT   DISK   BW   SPND      DATE   "
-    echo "------   --   ---   ---   -----------   ----   --   ----   ----------"
+    echo "DOMAIN   IP   TPL   SSL   DISK   BW   SPND   DATE"
+    echo "------   --   ---   ---   ----   --   ----   -----"
     while read str; do
         eval $str
-        echo "$DOMAIN $IP $TPL $SSL $LETSENCRYPT $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
+        echo "$DOMAIN $IP $TPL $SSL $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
     done < <(cat $USER_DATA/web.conf)
 }
 

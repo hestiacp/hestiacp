@@ -739,13 +739,13 @@ $LANG['pt-BR'] = array(
     'PUB_KEY' => 'PUB_KEY',
     'ISSUER' => 'ISSUER',
 
-    'Use server hostname' => 'Use server hostname',
-    'Use domain hostname' => 'Use domain hostname',
-    'Use STARTTLS' => 'Use STARTTLS',
-    'Use SSL' => 'Use SSL',
-    'No encryption' => 'No encryption',
-    'Do not use encryption' => 'Do not use encryption',
+    'Use server hostname' => 'Usar hostname do servidor',
+    'Use domain hostname' => 'Usar hostname do dominio',
+    'Use STARTTLS' => 'Usar STARTTLS',
+    'Use SSL' => 'Usar SSL',
+    'No encryption' => 'Nenhuma criptografia',
+    'Do not use encryption' => 'Não usar criptografia',
 
-    'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
+    'maximum characters length, including prefix' => 'comprimento máximo de % caracteres, incluindo o prefixo',
 
 );

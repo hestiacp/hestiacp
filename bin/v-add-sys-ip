@@ -145,8 +145,10 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
 
     #mod_remoteip
     remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
-    if [ $( grep -ic "$ip" $remoteip_conf ) -eq 0 ]; then
-        sed -i "s/<\/IfModule>/RemoteIPInternalProxy $ip\n<\/IfModule>/g" $remoteip_conf
+    if [ -e "$remoteip_conf" ]; then
+        if [ $( grep -ic "$ip" $remoteip_conf ) -eq 0 ]; then
+            sed -i "s/<\/IfModule>/RemoteIPInternalProxy $ip\n<\/IfModule>/g" $remoteip_conf
+        fi
     fi
 fi
 

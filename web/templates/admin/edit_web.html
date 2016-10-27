@@ -192,6 +192,11 @@
 					  </td>
 				      </tr>
                                       <tr>
+                                          <td class="vst-text input-label lets-encrypt-note <? if($v_letencrypt  == 'yes' || $v_letencrypt == 'on') echo ' enabled';?>" >
+                                              <?= __('Your certificate will be automatically issued in 5 minutes')?>
+                                          </td>
+                                      </tr>
+                                      <tr>
                                             <td class="vst-text input-label">
                                                 <?php print __('SSL Home Directory');?>
                                             </td>

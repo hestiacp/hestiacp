@@ -2623,6 +2623,15 @@ a.vst-text:active b{
   margin: 2px 6px 0 3px;
   padding: 5px;
 }
+.lets-encrypt-note {
+  color: #89a40a !important;
+  font-style: italic;
+  font-weight: normal !important;
+  height: 30px;
+  padding-top: 10px;
+  vertical-align: top;
+}
+
 .additional-control {
   margin-left: 17px;
   color: #2C9491;
@@ -2695,6 +2704,7 @@ td.hint {
   font-style: italic;
   font-weight: normal;
 }
+.ftp-path-prefix { padding-top: 7px; }
 
 .ui-button,
 .button {

@@ -142,6 +142,14 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
         rpaf_str="$rpaf_str $ip"
         sed -i "s/.*RPAFproxy_ips.*/$rpaf_str/" $rpaf_conf
     fi
+
+    #mod_remoteip
+    remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+    if [ -e "$remoteip_conf" ]; then
+        if [ $( grep -ic "$ip" $remoteip_conf ) -eq 0 ]; then
+            sed -i "s/<\/IfModule>/RemoteIPInternalProxy $ip\n<\/IfModule>/g" $remoteip_conf
+        fi
+    fi
 fi
 
 

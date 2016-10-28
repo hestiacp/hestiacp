@@ -135,15 +135,15 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
 App.Actions.WEB.toggle_letsencrypt = function(elm) {
     if ($(elm).attr('checked')) {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
-        $('input[name=v_ssl]').prop('checked', true);
-        $('#ssltable').show();
         $('#generate-csr').hide();
+	if(!$('.lets-encrypt-note').hasClass('enabled')){
+	    $('.lets-encrypt-note').show();
+	}
     }
     else {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').removeAttr('disabled');
-        $('input[name=v_ssl]').prop('checked', false);
-        $('#ssltable').hide();
         $('#generate-csr').show();
+	$('.lets-encrypt-note').hide();
     }
 }
 
@@ -180,9 +180,8 @@ $(function() {
         var elm = $(evt.target);
         App.Actions.WEB.passwordChanged(elm);
     });
-    if ($('input[name=v_letsencrypt]').attr('checked')) {
-        App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'))
-    }
+    App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'));
+
     $('select[name="v_stats"]').change(function(evt){
         var select = $(evt.target);
 

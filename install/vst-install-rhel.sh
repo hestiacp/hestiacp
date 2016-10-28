@@ -1159,6 +1159,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     cd /usr/share/roundcubemail/plugins/password
     wget $vestacp/roundcube/vesta.php -O drivers/vesta.php
     wget $vestacp/roundcube/config.inc.php -O config.inc.php
+    sed -i "s/localhost/$servername/g" /usr/share/roundcubemail/plugins/password/config.inc.php
     chmod a+r /etc/roundcubemail/*
     chmod -f 777 /var/log/roundcubemail
     r="$(gen_pass)"
@@ -1226,16 +1227,16 @@ $VESTA/bin/v-update-sys-ip
 # Get main ip
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 
+# Firewall configuration
+if [ "$iptables" = 'yes' ]; then
+    $VESTA/bin/v-update-firewall
+fi
+
 # Get public ip
 pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
     ip=$pub_ip
-fi
-
-# Firewall configuration
-if [ "$iptables" = 'yes' ]; then
-    $VESTA/bin/v-update-firewall
 fi
 
 # Configuring mysql host

@@ -99,6 +99,12 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
         new_ips=$(echo "$rpaf_str" | sed "s/$ip//")
         sed -i "s/$ips/$new_ips/g" $rpaf_conf
     fi
+    
+    #mod_remoteip
+    remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+    if [ -e "$remoteip_conf" ]; then
+        sed -i "s/RemoteIPInternalProxy $ip//g" $remoteip_conf
+    fi
 fi
 
 

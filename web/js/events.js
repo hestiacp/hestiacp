@@ -406,12 +406,16 @@ VE.notifications.get_list = function(){
             acc.push(tpl.finalize());
         });
 
+        if(!Object.keys(data).length){
+            var tpl = Tpl.get('notification_empty', 'WEB');
+            acc.push(tpl.finalize());
+        }
+
         $('.notification-container').html(acc.done()).show();
 
         $('.notification-container .mark-seen').click(function(event){
-            /// TODO add token
-            VE.notifications.mark_seen($(event.target).attr('id').replace("notification-", ""));
-//            VE.notifications.delete($(event.target).attr('id').replace("notification-", ""));
+//            VE.notifications.mark_seen($(event.target).attr('id').replace("notification-", ""));
+            VE.notifications.delete($(event.target).attr('id').replace("notification-", ""));
         });
 
     });
@@ -419,10 +423,12 @@ VE.notifications.get_list = function(){
 
 
 VE.notifications.delete = function(id){
-    $('#notification-'+id).parents('li').remove();
+    $('#notification-'+id).parents('li').hide();
     $.ajax({
         url: "/delete/notification/?delete=1&notification_id="+id+"&token="+$('#token').attr('token')
     });
+    if($('.notification-container li:visible').length == 0)
+        $('.l-profile__notifications').removeClass('updates').removeClass('active');
 }
 
 VE.notifications.mark_seen = function(id){

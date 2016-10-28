@@ -6,13 +6,18 @@ App.Templates.html = {
     WEB: {
         hint: [''],
         notification: [
-                    '<li class="~!:UNSEEN~!"><span class="mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
-                        <span class="title"><span class="icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
+                    '<li class="~!:UNSEEN~!"><span class="unselectable mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
+                        <span class="title"><span class="unselectable icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
                         ~!:NOTICE~!\
                     </li>'
+        ],
+        notification_empty: [
+                    '<li class="empty">\
+                        '+App.Constants.NOTIFICATIONS_EMPTY+'\
+                    </li>'
         ]
-
     },
+
     // file manager
     //
 

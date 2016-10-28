@@ -749,4 +749,5 @@ $LANG['es'] = array(
 
     'maximum characters length, including prefix' => 'usar un máximo de %s, incluyendo prefijo',
 
+    'no notifications' => 'no notifications',
 );

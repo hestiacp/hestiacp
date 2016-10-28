@@ -750,4 +750,5 @@ $LANG['bs'] = array(
 
     'maximum characters length, including prefix' => 'maksimalna dužina sme biti %s karaktera, uključujući i prefix',
 
+    'no notifications' => 'no notifications',
 );

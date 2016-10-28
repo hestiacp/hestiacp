@@ -753,4 +753,5 @@ $LANG['ro'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s caractere, incluzând prefixul',
 
+    'no notifications' => 'no notifications',
 );

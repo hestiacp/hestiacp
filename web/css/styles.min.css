@@ -595,6 +595,15 @@ a {
   text-decoration: line-through;
 }
 
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .clearfix:before,
 .clearfix:after {
   content: '';
@@ -830,6 +839,8 @@ input[type="checkbox"] {
   font-size: 12px;
   padding: 0;
   color: #7f7f7f;
+  max-height: 95%;
+  overflow: auto;
 }
 .notification-container .unseen {
   color: #ABABAB;
@@ -840,21 +851,33 @@ input[type="checkbox"] {
   border-bottom: 1px solid #555;
   padding: 10px 15px 24px;
 }
+.notification-container li.empty {
+  padding-top: 50px;
+  height: 50px;
+  font-size: 15px;
+  font-style: italic;
+  text-align: center;
+  color: #999;
+}
+
 .notification-container .mark-seen {
-  background-color: #abc04b;
-  border: 2px solid #454545;
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0) url("/images/sprite.png?1446554103") repeat scroll -426px 165px;
+  border: 3px solid #454545;
   cursor: pointer;
   display: none;
   float: right;
-  height: 7px;
+  height:11px;
   margin-right: -5px;
   margin-top: 0;
-  width: 7px;
+  width: 11px;
+  opacity: 0.5;
+  border-radius: 10px;
 }
 .notification-container .mark-seen:hover {
   background-color: #333;
-  border-color: #abc04b;
+  border-color: #333;
+
+  opacity: 0.8;
 }
 .notification-container .mark-seen:active {
   background-color: #777;

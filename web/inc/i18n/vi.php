@@ -750,4 +750,5 @@ $LANG['vi'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
+    'no notifications' => 'no notifications',
 );

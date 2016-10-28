@@ -63,3 +63,4 @@ App.Constants.FM_READ_BY_OTHERS                 = '<?=__('read by others')?>';
 App.Constants.FM_WRITE_BY_OTHERS                = '<?=__('write by others')?>';
 App.Constants.FM_EXECUTE_BY_OTHERS              = '<?=__('execute/search by others')?>';
 
+App.Constants.NOTIFICATIONS_EMPTY               = '<?=__('no notifications')?>';

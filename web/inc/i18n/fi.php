@@ -753,6 +753,7 @@ $LANG['fi'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
+    'no notifications' => 'no notifications',
 // Texts below doesn't exist in en.php
     'traffic' => 'tiedonsiirto',
     'disk' => 'levytila',

@@ -751,4 +751,5 @@ $LANG['pt-BR'] = array(
 
     'maximum characters length, including prefix' => 'comprimento máximo de % caracteres, incluindo o prefixo',
 
+    'no notifications' => 'no notifications',
 );

@@ -587,6 +587,7 @@ $LANG['id'] = array(
     'Starred' => 'Bintangi',
     'Name' => 'Nama',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'File Manager',
     'size' => 'ukuran',
@@ -754,5 +755,4 @@ $LANG['id'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

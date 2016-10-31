@@ -587,6 +587,7 @@ $LANG['fa'] = [
     'Starred' => 'ستاره دار',
     'Name' => 'نام',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'مدیریت پرونده',
     'size' => 'اندازه',
@@ -753,8 +754,6 @@ $LANG['fa'] = [
     'Do not use encryption' => 'Do not use encryption',
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
-
-    'no notifications' => 'no notifications',
 
 // Texts below doesn't exist in en.php
     '70 خط اخر  %s.%s.log' => 'هفتاد خط انتهايي از %s.%s.log',

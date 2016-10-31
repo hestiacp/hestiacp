@@ -585,6 +585,7 @@ $LANG['ru'] = array(
     'Starred' => 'Избранные',
     'Name' => 'Имя',
 
+    'save to favorites' => 'добавить в избранное',
 
     'File Manager' => 'Файлы',
     'size' => 'размер',
@@ -752,5 +753,4 @@ $LANG['ru'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

@@ -586,6 +586,7 @@ $LANG['ro'] = array(
     'Starred' => 'Importante',
     'Name' => 'Nume',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'Manager de fișiere',
     'size' => 'mărime',
@@ -753,5 +754,4 @@ $LANG['ro'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s caractere, incluzând prefixul',
 
-    'no notifications' => 'no notifications',
 );

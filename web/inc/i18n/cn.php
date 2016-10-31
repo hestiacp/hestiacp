@@ -585,6 +585,8 @@ $LANG['cn'] = array(
     'Starred' => '星标',
     'Name' => '名称',
 
+    'save to favorites' => 'save to favorites',
+
     'File Manager' => '文件管理',
     'type' => '类型',
     'size' => '大小',
@@ -751,5 +753,4 @@ $LANG['cn'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

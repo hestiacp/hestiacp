@@ -585,6 +585,7 @@ $LANG['el'] = array(
     'Starred' => 'Starred',
     'Name' => 'Name',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'File Manager',
     'size' => 'size',
@@ -752,5 +753,4 @@ $LANG['el'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

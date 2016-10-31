@@ -584,6 +584,7 @@ $LANG['ja'] = array(
     'Starred' => 'スター付き',
     'Name' => '名前',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'ファイルマネージャー',
     'size' => '容量',
@@ -751,5 +752,4 @@ $LANG['ja'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

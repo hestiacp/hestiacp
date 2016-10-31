@@ -585,6 +585,7 @@ $LANG['tr'] = array(
     'Starred' => 'Yıldızlı',
     'Name' => 'İsim',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'Dosya Yöneticisi',
     'size' => 'boyut',
@@ -752,5 +753,4 @@ $LANG['tr'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

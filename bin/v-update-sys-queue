@@ -48,12 +48,13 @@ fi
 
 # Defining pipe functions
 case $queue in
-    restart)        bash $VESTA/data/queue/$queue.pipe ;;
+    restart)        bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1;;
     webstats)       bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
     backup)         bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
-    disk)           bash $VESTA/data/queue/$queue.pipe ;;
-    traffic)        bash $VESTA/data/queue/$queue.pipe ;;
+    disk)           bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1;;
+    traffic)        bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1;;
     dns-cluster)    bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+    letsencrypt)    bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
     *)              check_args '1' '0' 'QUEUE' ;;
 esac
 

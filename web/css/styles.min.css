@@ -1346,9 +1346,11 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 
-.l-unit--outdated {
-  background-color: #9B3D35;
-  color: #fff;
+.units .l-unit.l-unit--outdated {
+  background-color: #ffcaca;
+  color: #555;
+  border-left: 5px solid #ff6f6f;
+  border-bottom: 1px solid #fff;
 }
 
 .l-unit--suspended .l-unit__name,
@@ -1356,6 +1358,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit--outdated .l-unit__name,
 .l-unit--outdated b {
   color: #c0c0c0;
+}
+
+.l-unit--outdated .l-unit__name {
+  color: #333;
+}
+.l-unit--outdated b {
+  color: #555;
 }
 
 .l-unit--suspended .l-percent {
@@ -1381,7 +1390,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit--outdated.selected {
   background: #765D5D !important;
-  color: #FEF482 !important;
+  color: #333 !important;
 }
 
 
@@ -1394,7 +1403,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit--suspended.selected .l-percent__fill,
 .l-unit--suspended.selected .l-unit__name,
 .l-unit--suspended.selected .l-unit__name span {
-  color: #b2ac87 !important;
+  color: #333 !important;
 }
 
 .l-unit.selected .l-percent {
@@ -1484,7 +1493,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit.l-unit--outdated .l-unit__date {
-  color: #fff7ae;
+  color: #d24c4c;
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;

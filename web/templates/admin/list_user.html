@@ -28,9 +28,6 @@
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
-              </td>
               <td>
                 <form action="/bulk/user/" method="post" id="objects">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -50,6 +47,9 @@
                     </select>
                   </div>
                   <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+              </td>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
             </tr>
           </table>

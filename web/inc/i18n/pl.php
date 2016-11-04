@@ -584,6 +584,7 @@ $LANG['pl'] = array(
     'Starred' => 'Gwiazdka',
     'Name' => 'Nazwa',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'Manager Plików',
     'size' => 'rozmiar',
@@ -751,5 +752,4 @@ $LANG['pl'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

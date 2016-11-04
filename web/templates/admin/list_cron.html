@@ -19,7 +19,7 @@
                 }
               ?>
               </td>
-              <td class="l-sort-toolbar__search-box">
+              <td class="l-sort-toolbar__search-box step-left">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
@@ -30,10 +30,7 @@
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
-              </td>
-              <td class="step-right">
+              <td class="">
                 <form action="/bulk/cron/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
@@ -47,6 +44,9 @@
                   </select>
                 </div>
                 <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+              </td>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
             </tr>
           </table>
@@ -122,7 +122,7 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
           </div>
           <div class="l-unit__suspended"><?=__('suspended')?></div>
           <div class="text-center">
-            <i class="l-icon-star"></i>
+            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
           </div>
         </div>
         <!-- /.l-unit__col -->

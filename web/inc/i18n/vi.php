@@ -584,6 +584,7 @@ $LANG['vi'] = array(
     'Starred' => 'Đánh dấu',
     'Name' => 'Tên',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'Quản lý tệp',
     'size' => 'size',
@@ -750,5 +751,4 @@ $LANG['vi'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

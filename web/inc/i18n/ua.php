@@ -585,6 +585,7 @@ $LANG['ua'] = array(
     'Starred' => 'Вибране',
     'Name' => "Ім'я",
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'Файловий менеджер',
     'size' => 'розмір',
@@ -752,5 +753,4 @@ $LANG['ua'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

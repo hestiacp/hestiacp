@@ -27,6 +27,8 @@ for ip in $(ls /usr/local/vesta/data/ips); do
 done
 echo "</IfModule>" >> $conf
 
+sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
+
 # Restarting apache
 /usr/sbin/apachectl restart > /dev/null 2>&1
 

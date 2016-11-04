@@ -584,6 +584,7 @@ $LANG['ar'] = array(
     'Starred' => 'المحدد بنجمة',
     'Name' => 'الاسم',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'مدير الملفات',
     'size' => 'الحجم',
@@ -750,8 +751,6 @@ $LANG['ar'] = array(
     'Do not use encryption' => 'Do not use encryption',
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
-
-    'no notifications' => 'no notifications',
 
 // Texts below doesn't exist in en.php
     '%s rule' => 'قواعد %s',

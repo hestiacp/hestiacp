@@ -584,6 +584,7 @@ $LANG['bs'] = array(
     'Starred' => 'Označen zvjezdicom',
     'Name' => 'Ime',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'File Manager',
     'size' => 'veličina',
@@ -750,5 +751,4 @@ $LANG['bs'] = array(
 
     'maximum characters length, including prefix' => 'maksimalna dužina sme biti %s karaktera, uključujući i prefix',
 
-    'no notifications' => 'no notifications',
 );

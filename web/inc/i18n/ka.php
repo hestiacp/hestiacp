@@ -584,6 +584,7 @@ $LANG['ka'] = array(
     'Starred' => 'ვარსკვლავებით',
     'Name' => 'სახელით',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'ფაილები',
     'type' => 'ტიპი',
@@ -751,5 +752,4 @@ $LANG['ka'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

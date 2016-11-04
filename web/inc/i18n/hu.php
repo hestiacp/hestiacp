@@ -588,6 +588,7 @@ $LANG['hu'] = array(
     'Starred' => 'Starred',
     'Name' => 'Name',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'File Manager',
     'size' => 'size',
@@ -755,7 +756,6 @@ $LANG['hu'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 // Texts below doesn't exist in en.php
     'Bandwidth Usage eth1' => 'eth1 sávszélesség használat',
 );

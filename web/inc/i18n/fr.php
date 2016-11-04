@@ -584,6 +584,7 @@ $LANG['fr'] = array(
     'Starred' => 'Favoris',
     'Name' => 'Nom',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'Fichiers',
     'size' => 'taille',
@@ -751,7 +752,6 @@ $LANG['fr'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 // Texts below doesn't exist in en.php
     'disk' => 'disque',
     'traffic' => 'traffic',

@@ -20,9 +20,6 @@
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
-              </td>
               <td>
                 <form action="/bulk/package/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -33,6 +30,9 @@
                   </select>
                 </div>
                 <input type="submit" class="l-sort-toolbar__filter-apply" value="" />
+              </td>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
             </tr>
           </table>
@@ -88,7 +88,7 @@ sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else ec
           </div>
           <div class="l-unit__suspended"><?__('suspended')?></div>
           <div class="text-center">
-            <i class="l-icon-star"></i>
+            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
           </div>
         </div>
         <!-- /.l-unit__col -->

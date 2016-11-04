@@ -584,6 +584,7 @@ $LANG['pt-BR'] = array(
     'Starred' => 'Estreado',
     'Name' => 'Nome',
 
+    'save to favorites' => 'save to favorites',
 
     'File Manager' => 'Gerenciador de Arquivos',
     'size' => 'tamanho',
@@ -751,5 +752,4 @@ $LANG['pt-BR'] = array(
 
     'maximum characters length, including prefix' => 'comprimento máximo de % caracteres, incluindo o prefixo',
 
-    'no notifications' => 'no notifications',
 );

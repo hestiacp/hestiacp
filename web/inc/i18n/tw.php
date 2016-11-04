@@ -608,6 +608,8 @@ $LANG['tw'] = array(
     'Starred' => '加註星號',
     'Name' => '名稱',
 
+    'save to favorites' => 'save to favorites',
+
     'File Manager' => '檔案管理器',
     'size' => '大小',
     'date' => '日期',
@@ -774,5 +776,4 @@ $LANG['tw'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-    'no notifications' => 'no notifications',
 );

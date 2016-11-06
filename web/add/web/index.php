@@ -47,6 +47,16 @@ if (!empty($_POST['ok'])) {
     // Define domain ip address
     $v_ip = escapeshellarg($_POST['v_ip']);
 
+    $v_public_ip = $v_ip;
+    $v_temp_ip = $_POST['v_ip'];
+    exec (VESTA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
+    $ips = json_decode(implode('', $output), true);
+    unset($output);
+    if (isset($ips[$v_temp_ip]) && isset($ips[$v_temp_ip]['NAT']) && trim($ips[$v_temp_ip]['NAT'])!='') {
+        $v_public_ip = trim($ips[$v_temp_ip]['NAT']);
+        $v_public_ip = escapeshellarg($v_public_ip);
+    }
+
     // Define domain aliases
     $v_aliases = $_POST['v_aliases'];
     $aliases = preg_replace("/\n/", ",", $v_aliases);
@@ -114,7 +124,7 @@ if (!empty($_POST['ok'])) {
 
     // Add DNS domain
     if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip, $output, $return_var);
+        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_public_ip, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }

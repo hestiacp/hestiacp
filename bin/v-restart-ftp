@@ -30,6 +30,11 @@ send_email_report() {
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Exit
+if [ "$1" = "no" ]; then
+    exit
+fi
+
 # Schedule restart
 if [ "$1" = 'scheduled' ]; then
     echo "$BIN/$SCRIPT now" >> $VESTA/data/queue/restart.pipe

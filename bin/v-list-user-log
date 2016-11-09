@@ -24,7 +24,6 @@ json_list() {
     echo "{"
     for str in $logs; do
         eval $str
-        CMD=${CMD//\"/\\\"}
         echo -n '    "'$ID'": {
         "CMD": "'$CMD'",
         "UNDO": "'$UNDO'",

@@ -110,7 +110,6 @@ else
     $BIN/v-restart-web
     check_result $? "Web restart failed" >/dev/null
 fi
-sleep 30
 
 # Defining ACME query (request validation)
 query='{"resource":"challenge","type":"http-01","keyAuthorization"'
@@ -125,11 +124,18 @@ data=$data'"payload":"'"$payload"'","signature":"'"$signature"'"}'
 answer=$(curl -s -i -d "$data" "$uri")
 
 # Checking domain validation status
-status=$(echo $answer |grep status |cut -f 4 -d \")
+i=1
+status=$(echo $answer |tr ',' '\n' |grep status |cut -f 4 -d \")
 location=$(echo "$answer" |grep Location: |awk '{print $2}' |tr -d '\r\n')
-while [ "$status" = 'pending' ] ; do
+while [ "$status" = 'pending' ]; do
     answer=$(curl -s -i "$location")
+    detail="$(echo $answer |tr ',' '\n' |grep detail |cut -f 4 -d \")"
     status=$(echo "$answer" |tr ',' '\n' |grep status |cut -f 4 -d \")
+    sleep 1
+    i=$((i + 1))
+    if [ "$i" -gt 60 ]; then
+        check_result $E_CONNECT "$detail"
+    fi
 done
 if [ "$status" = 'invalid' ]; then
     detail="$(echo $answer |tr ',' '\n' |grep detail |cut -f 4 -d \")"

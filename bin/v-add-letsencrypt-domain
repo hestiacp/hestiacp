@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: adding letsencrypt ssl cetificate for domain
-# options: USER DOMAIN [ALIASES] [RESTART]
+# options: USER DOMAIN [ALIASES] [RESTART] [NOTIFY]
 #
 # The function turns on SSL support for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file 
@@ -19,6 +19,7 @@ user=$1
 domain=$2
 aliases=$3
 restart=$4
+notify=$5
 
 # Includes
 source $VESTA/func/main.sh
@@ -30,7 +31,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [ALIASES] [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [ALIASES] [RESTART] [NOTIFY]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
@@ -38,16 +39,23 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_value_empty 'web' 'DOMAIN' "$domain" '$LETSENCRYPT'
-get_domain_values 'web'
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Parsing domain data
+get_domain_values 'web'
+
 # Registering LetsEncrypt user account
 $BIN/v-add-letsencrypt-user $user
-check_result $? "LE account registration" >/dev/null
+if [ "$?" -ne 0  ]; then
+    send_notice "LETSENCRYPT" "Account registration failed"
+    check_result $E_CONNECT "LE account registration" >/dev/null
+fi
+
+# Parsing LetsEncrypt account data
 source $USER_DATA/ssl/le.conf
 email=$EMAIL
 
@@ -55,20 +63,29 @@ email=$EMAIL
 i=1
 for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
     $BIN/v-check-letsencrypt-domain $user $alias
-    check_result $? "LE domain validation" >/dev/null
+    if [ "$?" -ne 0 ]; then
+        send_notice "LETSENCRYPT" "$alias validation failed"
+        check_result $E_INVALID "LE domain validation" >/dev/null
+    fi
+
+    # Checking LE limits per account
     if [ "$i" -gt 100 ]; then
+        send_notice 'LETSENCRYPT' 'Limit of domains per account is reached'
         check_result $E_LIMIT "LE can't sign more than 100 domains"
     fi
     i=$((i++))
 done
-
+exit
 # Generating CSR
 ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "$email" "US" "California" \
     "San Francisco" "Vesta" "IT" "$aliases" |tail -n1 |awk '{print $2}')
 
 # Signing CSR
 crt=$($BIN/v-sign-letsencrypt-csr $user $domain $ssl_dir)
-check_result $? "$crt"
+if [ "$?" -ne 0 ]; then
+    send_notice "LETSENCRYPT" "$alias validation failed"
+    check_result "$E_INVALID" "LE $domain validation"
+fi
 echo "$crt" > $ssl_dir/$domain.crt
 
 # Dowloading CA certificate
@@ -85,13 +102,15 @@ fi
 # Adding SSL
 $BIN/v-delete-web-domain-ssl $user $domain >/dev/null 2>&1
 $BIN/v-add-web-domain-ssl $user $domain $ssl_dir
-check_result $? "SSL install" >/dev/null
-
-if [ -z "$LETSENCRYPT" ]; then
-   add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
+if [ "$?" -ne '0' ]; then
+    send_notice 'LETSENCRYPT' "$domain certificate installation failed"
+    check_result $? "SSL install" >/dev/null
 fi
 
 # Updating letsencrypt key
+if [ -z "$LETSENCRYPT" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
+fi
 update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
 
 
@@ -100,11 +119,13 @@ update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
 #----------------------------------------------------------#
 
 # Restarting web
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web $restart
-    check_result $? "Web restart failed" >/dev/null
+$BIN/v-restart-web $restart
+if [ "$?" -ne 0  ]; then
+    send_notice 'LETSENCRYPT' "web server needs to be restarted manually"
 fi
 
+# Notifying user
+send_notice 'LETSENCRYPT' "$domain SSL has been installed successfully"
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

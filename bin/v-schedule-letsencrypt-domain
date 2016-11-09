@@ -1,0 +1,62 @@
+#!/bin/bash
+# info: adding cronjob for letsencrypt cetificate installation
+# options: USER DOMAIN [ALIASES]
+#
+# The function adds cronjob for letsencrypt ssl certificate installation
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+aliases=$3
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [ALIASES]'
+is_format_valid 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Parsing domain aliases
+if [ -z "$aliases" ]; then
+    get_domain_values 'web'
+    aliases="$ALIAS"
+fi
+
+# Adding cronjob scheduler for LE
+$BIN/v-add-cron-letsencrypt-job
+
+# Adding LE task
+echo "$BIN/v-add-letsencrypt-domain $user $domain '$aliases' yes yes" \
+    >> $VESTA/data/queue/letsencrypt.pipe
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

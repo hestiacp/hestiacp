@@ -110,6 +110,7 @@ is_system_enabled() {
     fi
 }
 
+
 # User package check
 is_package_full() {
     case "$1" in
@@ -365,6 +366,40 @@ decrease_user_value() {
         new=0
     fi
     sed -i "s/$key='$old'/$key='$new'/g" $conf
+}
+
+# Notify user
+send_notice() {
+    topic=$1
+    notice=$2
+
+    if [ "$notify" = 'yes' ]; then
+        touch $USER_DATA/notifications.conf
+        chmod 660 $USER_DATA/notifications.conf
+
+        time_n_date=$(date +'%T %F')
+        time=$(echo "$time_n_date" |cut -f 1 -d \ )
+        date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+        nid=$(grep "NID=" $USER_DATA/notifications.conf |cut -f 2 -d \')
+        nid=$(echo "$nid" |sort -n |tail -n1)
+        if [ ! -z "$nid" ]; then
+            nid="$((nid +1))"
+        else
+            nid=1
+        fi
+
+        str="NID='$nid' TOPIC='$topic' NOTICE='$notice' TYPE='$type'"
+        str="$str ACK='no' TIME='$time' DATE='$date'"
+
+        echo "$str" >> $USER_DATA/notifications.conf
+
+        if [ -z "$(grep NOTIFICATIONS $USER_DATA/user.conf)" ]; then
+            sed -i "s/^TIME/NOTIFICATIONS='yes'\nTIME/g" $USER_DATA/user.conf
+        else
+            update_user_value "$user" '$NOTIFICATIONS' "yes"
+        fi
+    fi
 }
 
 # Recalculate U_DISK value

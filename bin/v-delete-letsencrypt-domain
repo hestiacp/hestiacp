@@ -39,20 +39,20 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$LETSENCRYPT'
 #----------------------------------------------------------#
 
 # Delete SSL
-$BIN/v-delete-web-domain-ssl $user $domain >/dev/null 2>&1
+$BIN/v-delete-web-domain-ssl $user $domain $restart >/dev/null 2>&1
 check_result $? "SSL delete" >/dev/null
 
-update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
 
+# Updating letsencrypt flag
+update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
+
 # Restarting web
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web $restart
-    check_result $? "Web restart failed" >/dev/null
-fi
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

@@ -51,6 +51,7 @@ get_domain_values 'web'
 # Registering LetsEncrypt user account
 $BIN/v-add-letsencrypt-user $user
 if [ "$?" -ne 0  ]; then
+    sed -i "/ $domain /d" $VESTA/data/queue/letsencrypt.pipe
     send_notice "LETSENCRYPT" "Account registration failed"
     check_result $E_CONNECT "LE account registration" >/dev/null
 fi
@@ -64,18 +65,20 @@ i=1
 for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
     $BIN/v-check-letsencrypt-domain $user $alias
     if [ "$?" -ne 0 ]; then
+        sed -i "/ $domain /d" $VESTA/data/queue/letsencrypt.pipe
         send_notice "LETSENCRYPT" "$alias validation failed"
         check_result $E_INVALID "LE domain validation" >/dev/null
     fi
 
     # Checking LE limits per account
     if [ "$i" -gt 100 ]; then
+        sed -i "/ $domain /d" $VESTA/data/queue/letsencrypt.pipe
         send_notice 'LETSENCRYPT' 'Limit of domains per account is reached'
         check_result $E_LIMIT "LE can't sign more than 100 domains"
     fi
     i=$((i++))
 done
-exit
+
 # Generating CSR
 ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "$email" "US" "California" \
     "San Francisco" "Vesta" "IT" "$aliases" |tail -n1 |awk '{print $2}')
@@ -83,6 +86,7 @@ ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "$email" "US" "California" \
 # Signing CSR
 crt=$($BIN/v-sign-letsencrypt-csr $user $domain $ssl_dir)
 if [ "$?" -ne 0 ]; then
+    sed -i "/ $domain /d" $VESTA/data/queue/letsencrypt.pipe
     send_notice "LETSENCRYPT" "$alias validation failed"
     check_result "$E_INVALID" "LE $domain validation"
 fi
@@ -103,6 +107,7 @@ fi
 $BIN/v-delete-web-domain-ssl $user $domain >/dev/null 2>&1
 $BIN/v-add-web-domain-ssl $user $domain $ssl_dir
 if [ "$?" -ne '0' ]; then
+    sed -i "/ $domain /d" $VESTA/data/queue/letsencrypt.pipe
     send_notice 'LETSENCRYPT' "$domain certificate installation failed"
     check_result $? "SSL install" >/dev/null
 fi
@@ -126,6 +131,9 @@ fi
 
 # Notifying user
 send_notice 'LETSENCRYPT' "$domain SSL has been installed successfully"
+
+# Deleteing task from queue
+sed -i "/ $domain /d" $VESTA/data/queue/letsencrypt.pipe
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

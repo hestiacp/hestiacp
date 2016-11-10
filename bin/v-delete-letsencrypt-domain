@@ -54,6 +54,12 @@ update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 $BIN/v-restart-web $restart
 check_result $? "Web restart failed" >/dev/null
 
+# Restarting proxy
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    $BIN/v-restart-web $restart >/dev/null
+    check_result $? "Proxy restart failed" >/dev/null
+fi
+
 # Logging
 log_event "$OK" "$ARGUMENTS"
 

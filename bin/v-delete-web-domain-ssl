@@ -62,6 +62,9 @@ chown -R $user:$user $tmpdir
 #----------------------------------------------------------#
 
 # Update config
+if [ ! -z "$LETSENCRYPT" ]; then
+    update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
+fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL' 'no'
 
 # Decreasing domain value

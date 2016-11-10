@@ -157,16 +157,12 @@ if (!empty($_POST['ok'])) {
     }
 
     // Add Lets Encrypt support
-
      if ((!empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-list-web-domain ".$user." ".$v_domain." json", $output, $return_var);
-        $data = json_decode(implode('', $output), true);
-        exec (VESTA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." '".$data['ALIAS']."' 'no'", $output, $return_var);
+        exec (VESTA_CMD."v-schedule-letsencrypt-domain ".$user." ".$v_domain, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
-     }
-     else {
-         // Add SSL certificates only if Lets Encrypt is off
+     } else {
+        // Add SSL certificates only if Lets Encrypt is off
          if ((!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
              exec ('mktemp -d', $output, $return_var);
              $tmpdir = $output[0];
@@ -201,8 +197,8 @@ if (!empty($_POST['ok'])) {
              check_return_code($return_var,$output);
              unset($output);
          }
-
      }
+
     // Add web stats
     if ((!empty($_POST['v_stats'])) && ($_POST['v_stats'] != 'none' ) && (empty($_SESSION['error_msg']))) {
         $v_stats = escapeshellarg($_POST['v_stats']);
@@ -238,13 +234,6 @@ if (!empty($_POST['ok'])) {
         check_return_code($return_var,$output);
         unset($output);
     }
-
-    // Restart backend server
-    //if ((!empty($_SESSION['WEB_BACKEND'])) && (empty($_SESSION['error_msg']))) {
-    //    exec (VESTA_CMD."v-restart-web-backend", $output, $return_var);
-    //    check_return_code($return_var,$output);
-    //    unset($output);
-    //}
 
     // Restart proxy server
     if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
@@ -354,7 +343,6 @@ if (!empty($_POST['ok'])) {
         unset($v_ftp);
     }
 }
-
 
 // Define user variables
 $v_ftp_user_prepath = $panel[$user]['HOME'] . "/web";

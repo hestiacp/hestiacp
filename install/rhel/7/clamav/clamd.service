@@ -4,6 +4,8 @@ After = syslog.target nss-lookup.target network.target
 
 [Service]
 Type = simple
+ExecStartPre = /usr/bin/mkdir -p /var/run/clamav
+ExecStartPre = /usr/bin/chown -R clam:clam /var/run/clamav
 ExecStart = /usr/sbin/clamd -c /etc/clamd.conf
 Restart = on-failure
 PrivateTmp = true

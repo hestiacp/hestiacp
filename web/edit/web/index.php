@@ -432,6 +432,8 @@ if (!empty($_POST['save'])) {
             exec (VESTA_CMD."v-change-web-domain-sslhome ".$user." ".$v_domain." ".$v_ssl_home." 'no'", $output, $return_var);
             check_return_code($return_var,$output);
             $v_ssl_home = $_POST['v_ssl_home'];
+            $restart_web = 'yes';
+            $restart_proxy = 'yes';
             unset($output);
         }
     }

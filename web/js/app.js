@@ -1044,7 +1044,7 @@ hover_menu = function() {
 
 
 function checkedAll(frmname) {
-    if ($('.l-unit.selected:not(.header)').length > 0) {
+    if ($('.l-unit.selected:not(.header)').length > 0 || !$('.l-unit').length ) {
         $('.l-unit:not(.header)').removeClass("selected");
         $('.ch-toggle').prop("checked", false);
         $('.toggle-all').removeClass('clicked-on');

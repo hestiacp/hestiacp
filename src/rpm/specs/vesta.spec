@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        16
+Release:        17
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -53,6 +53,10 @@ fi
 %config(noreplace) %{_vestadir}/web/css/uploadify.css
 
 %changelog
+* Mon Nov 14 2016 Serghey Rodin <builder@vestacp.com> - 0.9.8-17
+- Let's Encrupt support
+- System Config Editor
+
 * Mon Jun 27 2016 Serghey Rodin <builder@vestacp.com> - 0.9.8-16
 - Full keyboard control
 - Cron Helper

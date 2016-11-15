@@ -1,6 +1,6 @@
 Name:           vesta-php
 Version:        0.9.8
-Release:        16
+Release:        17
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL

@@ -11,6 +11,11 @@ if [ ! -e "/etc/apache2/mods-available/remoteip.load" ]; then
     exit
 fi
 
+if [ -f "/etc/apache2/mods-enabled/remoteip.load" ]; then
+    echo "RemoteIP is already activated"
+    exit
+fi
+
 # Disabling rpaf
 /usr/sbin/a2dismod rpaf > /dev/null 2>&1
 rm -f /etc/apache2/mods-enabled/rpaf.conf

@@ -1045,6 +1045,13 @@ if [ "$clamd" = 'yes' ]; then
         mkdir /var/run/clamav
     fi
     chown -R clamav:clamav /var/run/clamav
+    if [ -f "/etc/systemd/system/multi-user.target.wants/clamav-daemon.service" ]; then
+        file="/etc/systemd/system/multi-user.target.wants/clamav-daemon.service"
+        if [ $( grep -ic "mkdir" $file ) -eq 0 ]; then
+            sed -i "s/\[Service\]/\[Service\]\nExecStartPre = \/bin\/mkdir -p \/var\/run\/clamav\nExecStartPre = \/bin\/chown -R clamav:clamav \/var\/run\/clamav/g" $file
+        fi
+    fi
+
     service clamav-daemon start
     check_result $? "clamav-daeom start failed"
 fi

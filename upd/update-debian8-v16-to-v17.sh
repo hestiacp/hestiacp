@@ -11,6 +11,22 @@ servername=$(hostname -f)
 
 apt-get update > /dev/null 2>&1
 
+
+# PATH fix
+if [ $( grep -ic "VESTA" /etc/profile.d/vesta.sh ) -eq 0 ]; then
+    echo "export VESTA='$VESTA'" > /etc/profile.d/vesta.sh
+fi
+if [ $( grep -ic "vesta" /root/.bash_profile ) -eq 0 ]; then
+    echo 'PATH=$PATH:'$VESTA'/bin' >> /root/.bash_profile
+fi
+
+
+# Linking /var/log/vesta
+if [ ! -L "/var/log/vesta" ]; then
+    ln -s $VESTA/log /var/log/vesta
+fi
+
+
 if [ -f "/etc/roundcube/plugins/password/config.inc.php" ]; then
 
     # Roundcube Vesta password driver - changing password_vesta_host (in config) to server hostname 

@@ -129,6 +129,6 @@ if [ -f "/lib/systemd/system/clamav-daemon.service" ]; then
             mkdir /var/run/clamav
         fi
         chown -R clamav:clamav /var/run/clamav
-        service clamav-daemon restart /dev/null 2>&1
+        service clamav-daemon restart > /dev/null 2>&1
     fi
 fi

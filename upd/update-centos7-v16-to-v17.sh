@@ -71,6 +71,14 @@ if [ -f "/etc/clamd.conf" ] ; then
     chown clam:clam /var/log/clamav /var/run/clamav
     if [ "$release" -eq '7' ]; then
         sed -i "s/nofork/foreground/" /usr/lib/systemd/system/clamd.service
+        file="/usr/lib/systemd/system/clamd.service"
+        if [ $( grep -ic "mkdir" $file ) -eq 0 ]; then
+            sed -i "s/Type = simple/Type = simple\nExecStartPre = \/usr\/bin\/mkdir -p \/var\/run\/clamav\nExecStartPre = \/usr\/bin\/chown -R clam:clam \/var\/run\/clamav/g" $file
+            if [ ! -d "/var/run/clamav" ]; then
+                mkdir /var/run/clamav
+            fi
+            chown -R clam:clam /var/run/clamav
+        fi
         systemctl daemon-reload
     fi
 fi

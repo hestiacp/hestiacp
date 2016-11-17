@@ -63,22 +63,24 @@ fi
 
 
 # RoundCube tinyMCE fix
-tinymceFixArchiveURL=$vestacp/roundcube/roundcube-tinymce.tar.gz
-tinymceParentFolder=/usr/share/roundcube/program/js
-tinymceFolder=$tinymceParentFolder/tinymce
-tinymceBadJS=$tinymceFolder/tiny_mce.js
-tinymceFixArchive=$tinymceParentFolder/roundcube-tinymce.tar.gz
-if [[ -L "$tinymceFolder" && -d "$tinymceFolder" ]]; then
-    if [ -f "$tinymceBadJS" ]; then
-        wget $tinymceFixArchiveURL -O $tinymceFixArchive
-        if [[ -f "$tinymceFixArchive" && -s "$tinymceFixArchive" ]]; then
-            rm $tinymceFolder
-            tar -xzf $tinymceFixArchive -C $tinymceParentFolder
-            rm $tinymceFixArchive
-            chown -R root:root $tinymceFolder
-        else
-            echo "File roundcube-tinymce.tar.gz is not downloaded, RoundCube tinyMCE fix is not applied"
-            rm $tinymceFixArchive
+if [ "$release" -eq '8' ]; then
+    tinymceFixArchiveURL=$vestacp/roundcube/roundcube-tinymce.tar.gz
+    tinymceParentFolder=/usr/share/roundcube/program/js
+    tinymceFolder=$tinymceParentFolder/tinymce
+    tinymceBadJS=$tinymceFolder/tiny_mce.js
+    tinymceFixArchive=$tinymceParentFolder/roundcube-tinymce.tar.gz
+    if [[ -L "$tinymceFolder" && -d "$tinymceFolder" ]]; then
+        if [ -f "$tinymceBadJS" ]; then
+            wget $tinymceFixArchiveURL -O $tinymceFixArchive
+            if [[ -f "$tinymceFixArchive" && -s "$tinymceFixArchive" ]]; then
+                rm $tinymceFolder
+                tar -xzf $tinymceFixArchive -C $tinymceParentFolder
+                rm $tinymceFixArchive
+                chown -R root:root $tinymceFolder
+            else
+                echo "File roundcube-tinymce.tar.gz is not downloaded, RoundCube tinyMCE fix is not applied"
+                rm $tinymceFixArchive
+            fi
         fi
     fi
 fi
@@ -95,12 +97,34 @@ if [ -f "$file" ] && [ $( grep -ic "NAT=''" $file ) -eq 1 ]; then
 fi
 
 
+# Installing libmail-dkim-perl for better DKIM handling in Spamassassin
 file="/etc/exim4/exim4.conf.template"
 if [ -f "$file" ]; then
     apt-get -y install libmail-dkim-perl > /dev/null 2>&1
 fi
 
 
+# Switching to mod_remoteip
 if [ ! -f "/etc/apache2/mods-enabled/remoteip.load" ]; then
     $VESTA/upd/switch_rpath.sh 
+fi
+
+
+# Removing AllowSupplementaryGroups from clamav.conf
+if [ -f "/etc/clamav/clamd.conf" ]; then
+    file="/etc/clamav/clamd.conf"
+    if [ $( grep -ic "# AllowSupplementaryGroups" $file ) -eq 0 ]; then
+        sed -i "s/AllowSupplementaryGroups/# AllowSupplementaryGroups/g" $file
+        service clamav-daemon restart
+    fi
+fi
+
+
+# Fixing /var/run/clamav permissions
+if [ -f "/etc/systemd/system/multi-user.target.wants/clamav-daemon.service" ]; then
+    file="/etc/systemd/system/multi-user.target.wants/clamav-daemon.service"
+    if [ $( grep -ic "mkdir" $file ) -eq 0 ]; then
+        sed -i "s/\[Service\]/\[Service\]\nExecStartPre = \/bin\/mkdir -p \/var\/run\/clamav\nExecStartPre = \/bin\/chown -R clamav:clamav \/var\/run\/clamav/g" $file
+        service clamav-daemon restart
+    fi
 fi

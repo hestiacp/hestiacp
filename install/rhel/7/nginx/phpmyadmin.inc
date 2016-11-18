@@ -13,6 +13,6 @@ location /phpmyadmin {
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
     location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
-        root /usr/share/;
+        alias /usr/share/phpMyAdmin/$1;
     }
 }

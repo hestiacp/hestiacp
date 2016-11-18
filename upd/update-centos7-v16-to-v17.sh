@@ -13,7 +13,7 @@ servername=$(hostname -f)
 
 
 # PATH fix
-if [ $( grep -ic "VESTA" /etc/profile.d/vesta.sh ) -eq 0 ]; then
+if [ ! -f "/etc/profile.d/vesta.sh" ]; then
     echo "export VESTA='$VESTA'" > /etc/profile.d/vesta.sh
 fi
 if [ $( grep -ic "vesta" /root/.bash_profile ) -eq 0 ]; then
@@ -68,18 +68,19 @@ fi
 
 # Fix for clamav: /var/run ownership and foreground option
 if [ -f "/etc/clamd.conf" ] ; then
-    chown clam:clam /var/log/clamav /var/run/clamav
+    if [ ! -d "/var/run/clamav" ]; then
+        mkdir /var/run/clamav
+    fi
+    chown -R clam:clam /var/run/clamav
+    chown -R clam:clam /var/log/clamav
     if [ "$release" -eq '7' ]; then
         sed -i "s/nofork/foreground/" /usr/lib/systemd/system/clamd.service
         file="/usr/lib/systemd/system/clamd.service"
         if [ $( grep -ic "mkdir" $file ) -eq 0 ]; then
             sed -i "s/Type = simple/Type = simple\nExecStartPre = \/usr\/bin\/mkdir -p \/var\/run\/clamav\nExecStartPre = \/usr\/bin\/chown -R clam:clam \/var\/run\/clamav/g" $file
-            if [ ! -d "/var/run/clamav" ]; then
-                mkdir /var/run/clamav
-            fi
-            chown -R clam:clam /var/run/clamav
         fi
         systemctl daemon-reload
+        /bin/systemctl restart clamd.service
     fi
 fi
 

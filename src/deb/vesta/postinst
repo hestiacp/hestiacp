@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Run triggers only on updates
+if [ ! -e "/usr/local/vesta/data/users/admin" ]; then
+    exit
+fi
+
 # Run SUDO trigger
 if [ -x "/usr/local/vesta/upd/add_sudo.sh" ]; then
     /usr/local/vesta/upd/add_sudo.sh

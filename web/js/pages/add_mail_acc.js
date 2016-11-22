@@ -114,7 +114,7 @@ $(document).ready(function() {
             $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
     });
 
-    $('#mail_configuration').change(function(evt){
+    $('#mail_configuration').on('change',function(evt){
         var opt = $(evt.target).find('option:selected');
 
         switch(opt.attr('v_type')){

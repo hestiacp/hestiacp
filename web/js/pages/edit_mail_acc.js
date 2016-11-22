@@ -135,7 +135,7 @@ $(document).ready(function() {
                 $('#td_smtp_port').html('465');
                 $('#td_smtp_encryption').html('SSL');
                 break;
-            case 'no_encriptyon':
+            case 'no_encryption':
                 $('#td_imap_hostname').html(opt.attr('domain'));
                 $('#td_smtp_hostname').html(opt.attr('domain'));
 

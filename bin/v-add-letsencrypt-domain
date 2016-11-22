@@ -112,6 +112,14 @@ if [ "$?" -ne '0' ]; then
     check_result $? "SSL install" >/dev/null
 fi
 
+# Adding LE autorenew cronjob
+if [ -z "$(grep v-update-lets $VESTA/data/users/admin/cron.conf)" ]; then
+    min=$(generate_password '012345' '2')
+    hour=$(generate_password '1234567' '1')
+    cmd="sudo $BIN/v-update-letsencrypt-ssl"
+    $BIN/v-add-cron-job admin "$min" "$hour" '*' '*' '*' "$cmd" > /dev/null
+fi
+
 # Updating letsencrypt key
 if [ -z "$LETSENCRYPT" ]; then
     add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'

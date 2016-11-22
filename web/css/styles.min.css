@@ -2432,6 +2432,11 @@ body.mobile .l-icon-shortcuts {
 label {
   cursor: pointer;
 }
+
+label:hover {
+  color: #333;
+}
+
 .vst-input {
   background-color: #fff;
   border: 1px solid #cfcfcf;

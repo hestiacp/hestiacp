@@ -1,5 +1,5 @@
 [%backend%]
-listen = /var/run/php5-%backend%.sock
+listen = /var/run/php/php7.0-fpm.sock
 listen.allowed_clients = 127.0.0.1
 
 user = %user%

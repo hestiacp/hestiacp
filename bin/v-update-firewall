@@ -173,6 +173,14 @@ else
     fi
 fi
 
+# Worarkound for OpenVZ
+if [ -e "/proc/vz/veinfo" ]; then
+    dig @8.8.8.8 google.com +time=1 +tries=1 >/dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+        $BIN/v-stop-firewall
+    fi
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

@@ -47,7 +47,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".htmlentities($v_ip); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -57,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_netmask" <?php if (!empty($v_netmask)) echo "value=".htmlentities($v_netmask); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_netmask" value="<?=htmlentities(trim($v_netmask, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -114,7 +114,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_name" <?php if (!empty($v_name)) echo "value=".htmlentities($v_name); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -124,7 +124,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_nat" <?php if (!empty($v_nat)) echo "value=".htmlentities($v_nat); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_nat" value="<?=htmlentities(trim($v_nat, "'"))?>">
                                 </td>
                             </tr>
 
@@ -133,10 +133,10 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
+                                    <input type="submit" name="ok" value="<?=__('Add')?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

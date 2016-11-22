@@ -76,7 +76,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_port" <?php if (!empty($v_port)) echo "value=".htmlentities($v_port); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_port" value="<?=htmlentities(trim($v_port, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -86,7 +86,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".htmlentities($v_ip); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -96,7 +96,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_comment" maxlength="255" <?php if (!empty($v_comment)) echo "value=".htmlentities($v_comment); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
                                 </td>
                             </tr>
 
@@ -104,10 +104,10 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
+                                    <input type="submit" name="ok" value="<?=__('Add')?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

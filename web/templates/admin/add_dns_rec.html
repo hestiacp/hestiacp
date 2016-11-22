@@ -46,7 +46,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php echo "value=".htmlentities($v_domain);  ?> disabled ><input type="hidden" name="v_domain" <?php echo "value=".htmlentities($v_domain);  ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled >
+                                    <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -56,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_rec" <?php if (!empty($v_rec)) echo "value=".htmlentities($v_rec); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>">
                                     <small class="hint"></small>
                                 </td>
                             </tr>
@@ -91,7 +92,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_val" <?php if (!empty($v_val)) echo "value=".htmlentities($v_val); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -101,17 +102,17 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_priority" <?php if (!empty($v_priority)) echo "value=".htmlentities($v_priority); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_priority" value="<?=htmlentities(trim($v_priority, "'"))?>">
                                 </td>
                             </tr>
                         </table>
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" name="ok_rec" value="<?php print __('Add');?>" class="button">
+                                    <input type="submit" name="ok_rec" value="<?=__('Add')?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

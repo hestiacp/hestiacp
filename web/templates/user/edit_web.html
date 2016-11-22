@@ -41,7 +41,7 @@
                                     <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
+                            <tr><td class="data-<?=$v_status ?>"><b><?=__($v_status) ?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
@@ -53,7 +53,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".htmlentities($v_domain);  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".htmlentities($v_domain);  ?>>
+                                  <input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+                                  <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -81,7 +82,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
+                                    <textarea size="20" class="vst-textinput" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -118,12 +119,12 @@
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print __('SSL Certificate');?>
-                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?php echo $v_domain ?>"><?php print __('Generate CSR') ?></a></span>
+                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentites(trim($v_domain, "'"))?>"><?=__('Generate CSR')?></a></span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo htmlentities($v_ssl_crt); ?></textarea>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
@@ -133,7 +134,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo htmlentities($v_ssl_key); ?></textarea>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
@@ -143,7 +144,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?php if (!empty($v_ssl_ca)) echo htmlentities($v_ssl_ca); ?></textarea>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <?
@@ -253,7 +254,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_stats_user" <?php if (!empty($v_stats_user)) echo "value=".htmlentities($v_stats_user);  ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
                                             </td>
                                         </tr>
                                         <tr>
@@ -263,7 +264,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input password" name="v_stats_password" <?php if (!empty($v_stats_password)) echo "value=".htmlentities($v_stats_password);  ?> id="v_password">
+                                                <input type="text" size="20" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
                                             </td>
                                         </tr>
                                     </table>
@@ -301,7 +302,7 @@
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="text" size="20" class="vst-input v-ftp-user" <?php print $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?> name="v_ftp_user[<?php print $i ?>][v_ftp_user]" <?php if (!empty($v_ftp_user)) echo "value=".htmlentities($v_ftp_user); ?>>
+                                                <input type="text" size="20" class="vst-input v-ftp-user" <?php print $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?> name="v_ftp_user[<?php print $i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
                                                 <small class="hint"></small>
                                             </td>
                                         </tr>
@@ -312,7 +313,7 @@
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?php print $i ?>][v_ftp_password]" <?php if (!empty($v_ftp_password)) echo "value=".htmlentities($v_ftp_password); ?>>
+                                                <input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?php print $i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
                                             </td>
                                         </tr>
 
@@ -323,10 +324,10 @@
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?php print !empty($v_ftp_pre_path) ? htmlentities($v_ftp_pre_path) : '/'; ?>">
-                                                <input type="hidden"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path_prev]" <?php if (!empty($v_ftp_path)) echo "value=".($v_ftp_path[0] != '/' ? '/' : '').htmlentities($v_ftp_path); ?>>
-                                                <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path]" <?php if (!empty($v_ftp_path)) echo "value=".($v_ftp_path[0] != '/' ? '/' : '').htmlentities($v_ftp_path); ?>>
-                                                <br /><span class="ftp-path-prefix"><?php print $v_ftp_pre_path ?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+                                                <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?php print !empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
+                                                <input type="hidden"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path_prev]" value="<?=($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'"))?>">
+                                                <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[<?php print $i ?>][v_ftp_path]" value="<?=($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'"))?>">
+                                                <br /><span class="ftp-path-prefix"><?=$v_ftp_pre_path ?></span><span class="ftp-path-value v-ftp-path-hint"></span>
                                             </td>
                                         </tr>
                                         <?php if ($ftp_user['is_new'] == 1): ?>
@@ -337,7 +338,7 @@
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="text"  class="vst-input vst-email-alert-on-psw" name="v_ftp_user[<?php print $i ?>][v_ftp_email]" <?php if (!empty($v_ftp_email)) echo "value=".htmlentities($v_ftp_email); ?>>
+                                                <input type="text"  class="vst-input vst-email-alert-on-psw" name="v_ftp_user[<?php print $i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
                                             </td>
                                         </tr>
                                         <?php endif; ?>
@@ -355,10 +356,10 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>
@@ -408,7 +409,7 @@
                     <td class="step-left">
                         <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="">
                         <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-                        <br /><span class="ftp-path-prefix"><?php print $v_ftp_pre_path_new_user ?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+                        <br /><span class="ftp-path-prefix"><?=$v_ftp_pre_path_new_user ?></span><span class="ftp-path-value v-ftp-path-hint"></span>
                     </td>
                 </tr>
                 <tr>

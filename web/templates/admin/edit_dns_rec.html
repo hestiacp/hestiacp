@@ -22,7 +22,7 @@
       <?php
         $back = $_SESSION['back'];
         if (empty($back)) {
-          $back = "location.href='/list/dns/?domain=".$_GET['domain']."'";
+          $back = "location.href='/list/dns/?domain=".htmlentities($_GET['domain'])."'";
         } else {
           $back = "location.href='".$back."'";
         }
@@ -40,20 +40,20 @@
                                     <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status) ?></b></td></tr>
+                            <tr><td class="data-<?php echo $v_status ?>"><b><?= __($v_status) ?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2">
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Domain');?>
+                                    <?=__('Domain');?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php echo "value=".htmlentities($v_domain);  ?> disabled >
-                                    <input type="hidden" name="v_domain" <?php echo "value=".htmlentities($v_domain); 	 ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled >
+                                    <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -63,7 +63,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_rec" <?php if (!empty($v_rec)) echo "value=".htmlentities($v_rec); ?> disabled> <input type="hidden" name="v_record_id" <?php if (!empty($v_record_id)) echo "value=".htmlentities($v_record_id); ?>>
+                                  <input type="text" size="20" class="vst-input" name="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>" disabled>
+                                  <input type="hidden" name="v_record_id" value="<?=htmlentities($v_record_id)?>">
                                 </td>
                             </tr>
                             <tr>
@@ -73,7 +74,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_type" <?php if (!empty($v_rec)) echo "value=".htmlentities($v_type); ?> disabled>
+                                    <input type="text" size="20" class="vst-input" name="v_type" value="<?=htmlentities(trim($v_type, "'"))?>" disabled>
                                 </td>
                             </tr>
                             <tr>
@@ -83,17 +84,17 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_val" <?php if (!empty($v_val)) echo "value='".htmlentities($v_val)."'"; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Priority');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                    <?php print __('Priority');?> <span class="optional">(<?=__('optional');?>)</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_priority" <?php if (!empty($v_priority)) echo "value=".htmlentities($v_priority); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_priority" value="<?=htmlentities(trim($v_priority, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -103,7 +104,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_record_id" <?php if (!empty($v_record_id)) echo "value=".htmlentities($v_record_id); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
                                 </td>
                             </tr>
 
@@ -111,10 +112,10 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

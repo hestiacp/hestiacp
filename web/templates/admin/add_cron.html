@@ -368,7 +368,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="30" class="vst-input long" name="v_cmd" <?php if (!empty($v_cmd)) echo "value=".htmlentities($v_cmd).""; ?>>
+                                    <input type="text" size="30" class="vst-input long" name="v_cmd" value="<?=htmlentities(trim($v_cmd, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -378,7 +378,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input short" name="v_min" <?php if (!empty($v_min)) echo "value=".htmlentities($v_min); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_min" value="<?=htmlentities(trim($v_min, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -388,7 +388,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input short" name="v_hour" <?php if (!empty($v_hour)) echo "value=".htmlentities($v_hour); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_hour" value="<?=htmlentities(trim($v_hour, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -398,7 +398,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input short" name="v_day" <?php if (!empty($v_day)) echo "value=".htmlentities($v_day); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_day" value="<?=htmlentities(trim($v_day, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -408,7 +408,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input short" name="v_month" <?php if (!empty($v_month)) echo "value=".htmlentities($v_month); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_month" value="<?=htmlentities(trim($v_month, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -418,17 +418,17 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input short" name="v_wday" <?php if (!empty($v_wday)) echo "value=".htmlentities($v_wday); ?>>
+                                    <input type="text" size="20" class="vst-input short" name="v_wday" value="<?=htmlentities(trim($v_wday, "'"))?>">
                                 </td>
                             </tr>
                         </table>
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
+                                    <input type="submit" name="ok" value="<?=__('Add')?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

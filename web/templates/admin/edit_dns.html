@@ -52,7 +52,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_domain" <?php if (!empty($v_domain)) echo "value=".htmlentities($v_domain);  ?> disabled> <input type="hidden" name="v_domain" <?php if (!empty($v_domain)) echo "value=".htmlentities($v_domain);  ?>>
+                                  <input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+                                  <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -62,7 +63,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" <?php if (!empty($v_ip)) echo "value=".htmlentities($v_ip);  ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -93,7 +94,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_exp" <?php if (!empty($v_exp)) echo "value=".htmlentities($v_exp); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -103,7 +104,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_soa" <?php if (!empty($v_soa)) echo "value=".htmlentities($v_soa); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_soa" value="<?=htmlentities(trim($v_soa, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -113,17 +114,17 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ttl" <?php if (!empty($v_ttl)) echo "value=".htmlentities($v_ttl); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
                                 </td>
                             </tr>
                         </table>
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

@@ -57,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea class="vst-textinput console" name="v_config"><?php echo $v_config;?></textarea>
+                                    <textarea class="vst-textinput console" name="v_config"><?=$v_config?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -72,10 +72,10 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

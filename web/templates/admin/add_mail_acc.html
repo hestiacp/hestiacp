@@ -47,7 +47,8 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_domain" <?php echo "value=".htmlentities($v_domain);  ?> disabled ><input type="hidden" name="v_domain" <?php echo "value=".htmlentities($v_domain);  ?>>
+                                <input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled >
+                                <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
                             </td>
                         </tr>
                         <tr>
@@ -57,7 +58,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_account" <?php if (!empty($v_account)) echo "value=".htmlentities($v_account); ?>>
+                                <input type="text" size="20" class="vst-input" name="v_account" value="<?=htmlentities(trim($v_account, "'"))?>">
                             </td>
                         </tr>
                         <tr>
@@ -85,7 +86,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text" size="20" class="vst-input" name="v_quota" <?php if (!empty($v_quota)) echo "value=".htmlentities($v_quota); ?>>
+                                            <input type="text" size="20" class="vst-input" name="v_quota" value="<?=htmlentities(trim($v_quota, "'"))?>">
                                             <img class="unlim-trigger" id="unlim-quota" src="/images/unlim.png" />
                                         </td>
                                     </tr>
@@ -96,7 +97,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <textarea size="20" class="vst-textinput" name="v_aliases"><?php if (!empty($v_aliases)) echo htmlentities($v_aliases);  ?></textarea>
+                                        <textarea size="20" class="vst-textinput" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -106,7 +107,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <textarea size="20" class="vst-textinput" name="v_fwd"><?php if (!empty($v_fwd)) echo htmlentities($v_fwd);  ?></textarea>
+                                        <textarea size="20" class="vst-textinput" name="v_fwd"><?=htmlentities(trim($v_fwd, "'"))?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -121,10 +122,10 @@
                 <table class="data-col2">
                     <tr>
                         <td class="step-top" width="116px">
-                            <input type="submit" name="ok_acc" value="<?php print __('Add');?>" class="button">
+                            <input type="submit" name="ok_acc" value="<?=__('Add')?>" class="button">
                         </td>
                         <td class="step-top">
-                            <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                            <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                         </td>
                     </tr>
                 </table>
@@ -140,13 +141,13 @@
                                     <option v_type="hostname" domain="<?=$v_domain?>"><?=__('Use domain hostname')?></option>
                                     <option v_type="starttls"><?=__('Use STARTTLS')?></option>
                                     <option v_type="ssl"><?=__('Use SSL')?></option>
-                                    <option v_type="no_encryption" domain="<?=$v_domain?>" no_encryption="<?=__('No encryption')?>"><?=__('No encryption')?></option>
+                                    <option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" encryption="<?=__('No encryption')?>"><?=__('No encryption')?></option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <td><?=__('Username')?>:</td>
-                            <td><div><span id="v_account">william.cage</span>@<?=htmlentities($v_domain)?></div></td>
+                            <td><div><span id="v_account">william.cage</span>@<?=htmlentities(trim($v_domain, "'"))?></div></td>
                         </tr>
                         <tr>
                             <td><?=__('Password')?>:</td>

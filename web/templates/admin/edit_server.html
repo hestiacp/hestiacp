@@ -48,7 +48,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_hostname" <?php if (!empty($v_hostname)) echo "value=".$v_hostname; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_hostname" value="<?=htmlentities(trim($v_hostname, "'"))?>">
                                     <br><br>
                                 </td>
                             </tr>
@@ -499,7 +499,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_backup_dir" <?php if (!empty($v_backup_dir)) echo "value=".$v_backup_dir; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>">
                                                 <br><br>
                                             </td>
                                         </tr>                                        <tr>
@@ -532,7 +532,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_host" <?php if (!empty($v_backup_host)) echo "value=".$v_backup_host; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
                                                             <br><br>
                                                         </td>
                                                     </tr>
@@ -543,7 +543,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_username" <?php if (!empty($v_backup_username)) echo "value=".$v_backup_username; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_username" value="<?=trim($v_backup_username, "'")?>">
                                                             <br><br>
                                                         </td>
                                                     </tr>
@@ -554,7 +554,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_password" <?php if (!empty($v_backup_password)) echo "value=".$v_backup_password; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_password" value="<?=trim($v_backup_password, "'")?>">
                                                             <br><br>
                                                         </td>
                                                     </tr>
@@ -565,7 +565,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_bpath" <?php if (!empty($v_backup_bpath)) echo "value=".$v_backup_bpath; ?>>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_bpath" value="<?=trim($v_backup_bpath, "'")?>">
                                                             <br><br>
                                                         </td>
                                                     </tr>
@@ -593,7 +593,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?php if (!empty($v_ssl_crt)) echo htmlentities($v_ssl_crt); ?></textarea>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
@@ -603,7 +603,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" name="v_ssl_key"><?php if (!empty($v_ssl_key)) echo htmlentities($v_ssl_key); ?></textarea>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
@@ -776,7 +776,7 @@
                                                         $licence_key = $_GET['sftp_licence_key'] != '' ? $_GET['sftp_licence_key'] : $_SESSION['SFTPJAIL_KEY'];
                                                         echo __('Restrict users so that they cannot use SSH and access only their home directory.').'
                                                             <div class="licence">
-                                                                '.__('Licence Key').': <input type="text" class="vst-input" name="v_sftp_licence" value="'.$licence_key.'" /><br>
+                                                                '.__('Licence Key').': <input type="text" class="vst-input" name="v_sftp_licence" value="'.htmlentities($licence_key).'" /><br>
                                                             </div>';
                                                     } else {
                                                         echo
@@ -824,7 +824,7 @@
                                                         $licence_key = $_GET['filemanager_licence_key'] != '' ? $_GET['filemanager_licence_key'] : $_SESSION['FILEMANAGER_KEY'];
                                                         echo __('Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.').
                                                             '<div class="licence">
-                                                                '.__('Licence Key').': <input type="text" class="vst-input" name="v_filemanager_licence" value="'.$licence_key.'" /><br>
+                                                                '.__('Licence Key').': <input type="text" class="vst-input" name="v_filemanager_licence" value="'.htmlentities($licence_key).'" /><br>
                                                             </div>';
                                                     } else {
                                                         echo __('Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.').' '.
@@ -855,10 +855,10 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

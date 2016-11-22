@@ -49,7 +49,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_username" <?php if (!empty($v_username)) echo "value=".htmlentities($v_username);  ?> tabindex="1" >
+                                    <input type="text" size="20" class="vst-input" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>" tabindex="1" >
                                 </td>
                             </tr>
                             <tr>
@@ -59,7 +59,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password"  <?php if (!empty($v_password)) echo "value=".htmlentities($v_password);  ?> tabindex="2" >
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="2" >
                                 </td>
                             </tr>
                             <tr>
@@ -69,7 +69,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' <?php if (!empty($v_email)) echo "value=".htmlentities($v_email); ?> tabindex="3" >
+                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="3" >
                                 </td>
                             </tr>
                             <tr>
@@ -129,7 +129,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=".htmlentities($v_fname); ?> tabindex="6" >
+                                    <input type="text" size="20" class="vst-input" name="v_fname" value="<?=htmlentities(trim($v_fname, "'"))?>" tabindex="6" >
                                 </td>
                             </tr>
                             <tr>
@@ -139,7 +139,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=".htmlentities($v_lname); ?> tabindex="7" >
+                                    <input type="text" size="20" class="vst-input" name="v_lname" value="<?=htmlentities(trim($v_lname, "'"))?>" tabindex="7" >
                                 </td>
                             </tr>
                             <tr>
@@ -149,7 +149,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text"  class="vst-input" name="v_notify" id="v_notify" <?php if (!empty($v_notify)) echo "value=".htmlentities($v_notify); ?> tabindex="8" >
+                                    <input type="text"  class="vst-input" name="v_notify" id="v_notify" value="<?=htmlentities(trim($v_notify, "'"))?>" tabindex="8" >
                                 </td>
                             </tr>
 
@@ -157,10 +157,10 @@
                     <table class="data-col2">
                         <tr>
                             <td class="step-top" width="116px">
-                                <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
+                                <input type="submit" name="ok" value="<?=__('Add')?>" class="button">
                             </td>
                             <td class="step-top">
-                                <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                             </td>
                         </tr>
                     </table>

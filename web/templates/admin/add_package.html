@@ -20,8 +20,6 @@
 
     <div class="l-center">
         <?php
-            echo 'reading-read '.$v_ns5;
-
           $back = $_SESSION['back'];
           if (empty($back)) {
             $back = "location.href='/list/package/'";
@@ -48,7 +46,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_package" <?php if (!empty($v_package)) echo "value=".htmlentities($v_package);  ?> >
+                                    <input type="text" size="20" class="vst-input" name="v_package" value="<?=htmlentities(trim($v_package, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -179,7 +177,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_web_domains" <?php if (isset($v_web_domains)) echo "value=".htmlentities($v_web_domains); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_web_domains" value="<?=htmlentities(trim($v_web_domains, "'"))?>">
                                     <img class="unlim-trigger" id="unlim-web-domains" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -190,7 +188,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_web_aliases" <?php if (isset($v_web_aliases)) echo "value=".htmlentities($v_web_aliases); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_web_aliases" value="<?=htmlentities(trim($v_web_aliases, "'"))?>">
                                     <img id="unlim-web-aliases" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -201,7 +199,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_dns_domains" <?php if (isset($v_dns_domains)) echo "value=".htmlentities($v_dns_domains); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_dns_domains" value="<?=htmlentities(trim($v_dns_domains, "'"))?>">
                                     <img id="unlim-dns-domain" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -212,7 +210,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_dns_records" <?php if (isset($v_dns_records)) echo "value=".htmlentities($v_dns_records); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_dns_records" value="<?=htmlentities(trim($v_dns_records, "'"))?>">
                                     <img id="unlim-dns-records" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -223,7 +221,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_mail_domains" <?php if (isset($v_mail_domains)) echo "value=".htmlentities($v_mail_domains); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_mail_domains" value="<?=htmlentities(trim($v_mail_domains, "'"))?>">
                                     <img id="unlim-mail-domains" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -234,7 +232,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_mail_accounts" <?php if (isset($v_mail_accounts)) echo "value=".htmlentities($v_mail_accounts); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
                                     <img id="unlim-mail-accounts" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -245,7 +243,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_databases" <?php if (isset($v_databases)) echo "value=".htmlentities($v_databases); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
                                     <img id="unlim-databases" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -256,7 +254,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_cron_jobs" <?php if (isset($v_cron_jobs)) echo "value=".htmlentities($v_cron_jobs); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_cron_jobs" value="<?=htmlentities(trim($v_cron_jobs, "'"))?>">
                                     <img id="unlim-cron-jobs" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -267,7 +265,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_backups" <?php if (isset($v_backups)) echo "value=".htmlentities($v_backups); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -277,7 +275,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_disk_quota" <?php if (isset($v_disk_quota)) echo "value=".htmlentities($v_disk_quota); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_disk_quota" value="<?=htmlentities(trim($v_disk_quota, "'"))?>">
                                     <img id="unlim-disk-quota" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -288,7 +286,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_bandwidth" <?php if (isset($v_bandwidth)) echo "value=".htmlentities($v_bandwidth); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_bandwidth" value="<?=htmlentities(trim($v_bandwidth, "'"))?>">
                                     <img name="unlim-bandwidth" class="unlim-trigger" src="/images/unlim.png" />
                                 </td>
                             </tr>
@@ -299,20 +297,20 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".htmlentities($v_ns1); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
                                     <span class="remove-ns additional-control delete"><?=__('delete')?></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".htmlentities($v_ns2); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
                                     <span class="remove-ns additional-control delete"><?=__('delete')?></span>
                                 </td>
                             </tr>
                             <?  if($v_ns3)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities($v_ns3).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -320,7 +318,7 @@
                                 if($v_ns4)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities($v_ns4).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -328,7 +326,7 @@
                                 if($v_ns5)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities($v_ns5).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -336,7 +334,7 @@
                                 if($v_ns6)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities($v_ns6).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -344,7 +342,7 @@
                                 if($v_ns7)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities($v_ns7).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -352,7 +350,7 @@
                                 if($v_ns8)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities($v_ns8).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -366,10 +364,10 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" name="ok" value="<?php print __('Add');?>" class="button">
+                                    <input type="submit" name="ok" value="<?=__('Add')?>" class="button">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

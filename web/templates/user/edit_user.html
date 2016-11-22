@@ -41,7 +41,7 @@
                                     <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status); ?></b></td></tr>
+                            <tr><td class="data-<?=$v_status?>"><b><?=__($v_status)?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
@@ -53,7 +53,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_user" <?php if (!empty($v_username)) echo "value=".htmlentities($v_username);  ?> disabled> <input type="hidden" name="v_username" <?php if (!empty($v_username)) echo "value=".htmlentities($v_username);  ?>>
+                                  <input type="text" size="20" class="vst-input" name="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
+                                  <input type="hidden" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -63,7 +64,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" <?php if (!empty($v_password)) echo "value=".htmlentities($v_password);  ?>>
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -73,7 +74,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" <?php if (!empty($v_email)) echo "value=".htmlentities($v_email); ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -107,7 +108,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_fname" <?php if (!empty($v_fname)) echo "value=\"".htmlentities($v_fname)."\""; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_fname" value="<?=htmlentities(trim($v_fname, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -117,7 +118,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_lname" <?php if (!empty($v_lname)) echo "value=\"".htmlentities($v_lname)."\""; ?>>
+                                    <input type="text" size="20" class="vst-input" name="v_lname" value="<?=htmlentities(trim($v_lname, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -128,31 +129,21 @@
 
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo 'value="'.htmlentities($v_ns1).'"'; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
                                                 <span class="remove-ns additional-control delete"><?=__('delete')?></span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo 'value="'.htmlentities($v_ns2).'"'; ?>>
+                                                <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
                                                 <span class="remove-ns additional-control delete"><?=__('delete')?></span>
                                             </td>
                                         </tr>
 
-                            <!-- tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns1" <?php if (!empty($v_ns1)) echo "value=".htmlentities($v_ns1); ?>>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns2" <?php if (!empty($v_ns2)) echo "value=".htmlentities($v_ns2); ?>>
-                                </td>
-                            </tr -->
                             <?  if($v_ns3)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities($v_ns3).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -160,7 +151,7 @@
                                 if($v_ns4)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities($v_ns4).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -168,7 +159,7 @@
                                 if($v_ns5)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities($v_ns5).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -176,7 +167,7 @@
                                 if($v_ns6)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities($v_ns6).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -184,7 +175,7 @@
                                 if($v_ns7)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities($v_ns7).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -192,7 +183,7 @@
                                 if($v_ns8)
                                   echo '<tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities($v_ns8).'">
+                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
                                         <span class="remove-ns additional-control delete">'.__('delete').'</span>
                                     </td>
                                 </tr>';
@@ -207,10 +198,10 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

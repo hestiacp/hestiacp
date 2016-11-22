@@ -50,7 +50,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea class="vst-textinput" name="v_web" placeholder="<?php echo __('WEB_EXCLUSIONS') ?>"><?php if (isset($v_web)) echo htmlentities($v_web); ?></textarea>
+                                    <textarea class="vst-textinput" name="v_web" placeholder="<?php echo __('WEB_EXCLUSIONS') ?>"><?=htmlentities(trim($v_web, "'"))?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -60,7 +60,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea class="vst-textinput" name="v_mail" placeholder="<?php echo __('MAIL_EXCLUSIONS') ?>"><?php if (isset($v_mail)) echo htmlentities($v_mail); ?></textarea>
+                                    <textarea class="vst-textinput" name="v_mail" placeholder="<?php echo __('MAIL_EXCLUSIONS') ?>"><?=htmlentities(trim($v_mail, "'"))?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -70,7 +70,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea class="vst-textinput" name="v_db" placeholder="<?php echo __('DB_EXCLUSIONS') ?>"><?php if (isset($v_db)) echo htmlentities($v_db); ?></textarea>
+                                    <textarea class="vst-textinput" name="v_db" placeholder="<?php echo __('DB_EXCLUSIONS') ?>"><?=htmlentities(trim($v_db, "'"))?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -80,17 +80,17 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <textarea size="20" class="vst-textinput" name="v_userdir" placeholder="<?php echo __('USER_EXCLUSIONS') ?>"><?php if (isset($v_userdir)) echo htmlentities($v_userdir); ?></textarea>
+                                    <textarea size="20" class="vst-textinput" name="v_userdir" placeholder="<?php echo __('USER_EXCLUSIONS') ?>"><?=htmlentities(trim($v_userdir, "'"))?></textarea>
                                 </td>
                             </tr>
                         </table>
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?php print __('Save');?>">
+                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
                                 </td>
                                 <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="<?php echo $back ?>">
+                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
                                 </td>
                             </tr>
                         </table>

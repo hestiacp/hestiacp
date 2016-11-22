@@ -21,10 +21,10 @@
       <a href="/" class="l-logo"></a>
       <!-- /.l-logo -->
       <div class="l-menu clearfix">
-        <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=$_GET['domain']?>&type=access"><?=__('AccessLog')?></a></div>
-        <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=$_GET['domain']?>&type=error"><?=__('ErrorLog')?></a></div>
-        <div class="l-menu__item"><a href="/download/web-log/?domain=<?=$_GET['domain']?>&type=access"><?=__('Download AccessLog')?></a></div>
-        <div class="l-menu__item"><a href="/download/web-log/?domain=<?=$_GET['domain']?>&type=error"><?=__('Download ErrorLog')?></a></div>
+        <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><?=__('AccessLog')?></a></div>
+        <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><?=__('ErrorLog')?></a></div>
+        <div class="l-menu__item"><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><?=__('Download AccessLog')?></a></div>
+        <div class="l-menu__item"><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><?=__('Download ErrorLog')?></a></div>
       </div>
       <!-- /.l-menu -->
       <div class="l-profile">
@@ -36,5 +36,5 @@
   </div>
   <!-- /.l-header -->
 
-  <div style="color: #ff6701; padding: 10px 0 20px 20px; background: #fff; "><?php echo __('Last 70 lines of %s.%s.log',$_GET['domain'],$_GET['type']) ;?></div>
+  <div style="color: #ff6701; padding: 10px 0 20px 20px; background: #fff; "><?php echo __('Last 70 lines of %s.%s.log',htmlentities($_GET['domain']),htmlentities($_GET['type'])) ;?></div>
   <pre style="margin-left: 20px; color: #555; font-family: arial; font-size: 14px; line-height: 30px;">

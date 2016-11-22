@@ -132,3 +132,6 @@ if [ -f "/lib/systemd/system/clamav-daemon.service" ]; then
         service clamav-daemon restart > /dev/null 2>&1
     fi
 fi
+
+# Dovecot logrorate script
+wget $vestacp/logrotate/dovecot -O /etc/logrotate.d/dovecot

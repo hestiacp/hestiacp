@@ -94,3 +94,6 @@ if [ -f "$file" ] && [ $( grep -ic "NAT=''" $file ) -eq 1 ]; then
         v-change-sys-ip-nat $ip $pub_ip
     fi
 fi
+
+# Dovecot logrorate script
+wget $vestacp/logrotate/dovecot -O /etc/logrotate.d/dovecot

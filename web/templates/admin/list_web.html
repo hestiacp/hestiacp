@@ -243,10 +243,10 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                       <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSL Support')?>:</div>
                       <div class="l-unit__stat-col l-unit__stat-col--right">
                         <b>
-                            <? if(empty($data[$key]['LETSENCRYPT'])){
-                                echo __($data[$key]['SSL']);
-                            } else {
+                            <? if($data[$key]['LETSENCRYPT'] == 'yes'){
                                 echo __('Lets Encrypt');
+                            } else {
+                                echo __($data[$key]['SSL']);
                             }?>
                         </b>
                       </div>

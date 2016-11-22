@@ -90,6 +90,9 @@ prepare_web_backend() {
     if [ -d "/etc/php5/fpm/pool.d" ]; then
         pool="/etc/php5/fpm/pool.d"
     fi
+    if [ -d "/etc/php/fpm/pool.d" ]; then
+        pool="/etc/php/fpm/pool.d"
+    fi
     if [ ! -e "$pool" ]; then
         pool=$(find /etc/php* -type d \( -name "pool.d" -o -name "*fpm.d" \))
         if [ ! -e "$pool" ]; then

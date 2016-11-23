@@ -153,7 +153,8 @@ fi
 
 # Checking WEB Backend
 if [ ! -z "$WEB_BACKEND" ] && [ "$WEB_BACKEND" != 'remote' ]; then
-    get_srv_state $WEB_BACKEND
+    proc_name=$(ls /usr/sbin/php*fpm* |cut -f 4 -d /)
+    get_srv_state $proc_name
     data="$data\nNAME='$WEB_BACKEND' SYSTEM='backend server' STATE='$state'"
     data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi

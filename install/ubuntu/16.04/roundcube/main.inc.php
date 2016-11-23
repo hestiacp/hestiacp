@@ -448,7 +448,7 @@ $rcmail_config['create_default_folders'] = true;
 $rcmail_config['protect_default_folders'] = true;
 
 // if in your system 0 quota means no limit set this option to true 
-$rcmail_config['quota_zero_as_unlimited'] = false;
+$rcmail_config['quota_zero_as_unlimited'] = true;
 
 // Make use of the built-in spell checker. It is based on GoogieSpell.
 // Since Google only accepts connections over https your PHP installatation
@@ -724,8 +724,8 @@ $rcmail_config['htmleditor'] = 0;
 // show pretty dates as standard
 $rcmail_config['prettydate'] = true;
 
-// save compose message every 300 seconds (5min)
-$rcmail_config['draft_autosave'] = 300;
+// save compose message every 30 seconds
+$rcmail_config['draft_autosave'] = 30;
 
 // default setting if preview pane is enabled
 $rcmail_config['preview_pane'] = false;

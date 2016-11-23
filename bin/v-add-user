@@ -67,7 +67,6 @@ mkdir $HOMEDIR/$user/conf
 if [ ! -z "$WEB_SYSTEM" ]; then
     mkdir $HOMEDIR/$user/conf/web $HOMEDIR/$user/web $HOMEDIR/$user/tmp
     chmod 751 $HOMEDIR/$user/conf/web 
-    chmod 710 $HOMEDIR/$user/web
     chmod 700 $HOMEDIR/$user/tmp
     chown $user:$user $HOMEDIR/$user/web $HOMEDIR/$user/tmp
 fi

@@ -5,7 +5,7 @@ listen.allowed_clients = 127.0.0.1
 user = %user%
 group = %user%
 
-listen.owner = www-data
+listen.owner = %user%
 listen.group = www-data
 
 pm = dynamic

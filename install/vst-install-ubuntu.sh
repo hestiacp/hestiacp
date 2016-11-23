@@ -17,7 +17,21 @@ os='ubuntu'
 release="$(lsb_release -r|awk '{print $2}')"
 codename="$(lsb_release -c|awk '{print $2}')"
 vestacp="http://$CHOST/$VERSION/$release"
-software="nginx apache2 apache2-utils apache2.2-common
+
+if [ "$release" = '16.04' ]; then
+    software="nginx apache2 apache2-utils apache2.2-common
+        apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
+        libapache2-mod-fcgid libapache2-mod-php php php-common php-cgi
+        php-mysql php-curl php-fpm php-pgsql awstats webalizer vsftpd
+        proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
+        spamassassin dovecot-imapd dovecot-pop3d roundcube-core
+        roundcube-mysql roundcube-plugins mysql-server mysql-common
+        mysql-client postgresql postgresql-contrib phppgadmin phpmyadmin mc
+        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
+        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
+        bsdmainutils cron vesta vesta-nginx vesta-php expect"
+else
+    software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
         php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
@@ -28,6 +42,7 @@ software="nginx apache2 apache2-utils apache2.2-common
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron vesta vesta-nginx vesta-php expect"
+fi
 
 # Defining help function
 help() {
@@ -433,7 +448,7 @@ apt-key add deb_signing.key
 # Creating backup directory tree
 mkdir -p $vst_backups
 cd $vst_backups
-mkdir nginx apache2 php5 php5-fpm vsftpd proftpd bind exim4 dovecot clamd
+mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql mongodb vesta
 
 # Backing up nginx configuration
@@ -446,13 +461,10 @@ cp -r /etc/apache2/* $vst_backups/apache2 > /dev/null 2>&1
 rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backing up PHP configuration
-cp /etc/php.ini $vst_backups/php > /dev/null 2>&1
-cp -r /etc/php.d  $vst_backups/php > /dev/null 2>&1
-
-# Backing up PHP configuration
+service php7.0-fpm stop >/dev/null 2>&1
 service php5-fpm stop >/dev/null 2>&1
-cp /etc/php5/* $vst_backups/php5 > /dev/null 2>&1
-rm -f /etc/php5/fpm/pool.d/* >/dev/null 2>&1
+cp -r /etc/php5/* $vst_backups/php/ > /dev/null 2>&1
+cp -r /etc/php/* $vst_backups/php/ > /dev/null 2>&1
 
 # Backing up Bind configuration
 service bind9 stop > /dev/null 2>&1
@@ -489,6 +501,12 @@ killall -9 mysqld > /dev/null 2>&1
 mv /var/lib/mysql $vst_backups/mysql/mysql_datadir > /dev/null 2>&1
 cp -r /etc/mysql/* $vst_backups/mysql > /dev/null 2>&1
 mv -f /root/.my.cnf $vst_backups/mysql > /dev/null 2>&1
+if [ "$release" = '16.04' ] && [ -e '/etc/init.d/mysql' ]; then
+    mkdir -p /var/lib/mysql > /dev/null 2>&1
+    chown mysql:mysql /var/lib/mysql
+    mysqld --initialize-insecure
+fi
+
 
 # Backup vesta
 service vesta stop > /dev/null 2>&1
@@ -519,9 +537,11 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php5//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$phpfpm" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/php5-fpm//")
+    software=$(echo "$software" | sed -e "s/php-fpm//")
 fi
 if [ "$vsftpd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/vsftpd//")
@@ -557,11 +577,14 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mysql-common//')
     software=$(echo "$software" | sed -e 's/php5-mysql//')
     software=$(echo "$software" | sed -e 's/phpMyAdmin//')
+    software=$(echo "$software" | sed -e 's/php-mysql//')
+    software=$(echo "$software" | sed -e 's/phpmyadmin//')
 fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
     software=$(echo "$software" | sed -e 's/php5-pgsql//')
+    software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
@@ -689,7 +712,7 @@ if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_SSL_PORT='443'" >> $VESTA/conf/vesta.conf
     echo "WEB_SSL='openssl'"  >> $VESTA/conf/vesta.conf
     if [ "$phpfpm" = 'yes' ]; then
-        echo "WEB_BACKEND='php5-fpm'" >> $VESTA/conf/vesta.conf
+        echo "WEB_BACKEND='php-fpm'" >> $VESTA/conf/vesta.conf
     fi
     echo "STATS_SYSTEM='webalizer,awstats'" >> $VESTA/conf/vesta.conf
 fi
@@ -845,9 +868,11 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-    wget $vestacp/php5-fpm/www.conf -O /etc/php5/fpm/pool.d/www.conf
-    update-rc.d php5-fpm defaults
-    service php5-fpm start
+    pool=$(find /etc/php* -type d \( -name "pool.d" -o -name "*fpm.d" \))
+    wget $vestacp/php-fpm/www.conf -O $pool/www.conf
+    php_fpm=$(ls /usr/sbin/php*fpm* |cut -f 4 -d /)
+    update-rc.d $php_fpm defaults
+    service $php_fpm start
     check_result $? "php-fpm start failed"
 fi
 
@@ -1067,8 +1092,15 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
+
+    if [ "$release" = '16.04' ]; then
+        mv /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
+        mv /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
+    fi
+
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
     php5enmod mcrypt 2>/dev/null
+    phpenmod mcrypt 2>/dev/null
     service apache2 restart
 fi
 

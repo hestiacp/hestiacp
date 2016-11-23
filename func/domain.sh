@@ -84,20 +84,9 @@ is_web_alias_new() {
 
 # Prepare web backend
 prepare_web_backend() {
-    if [ -d "/etc/php-fpm.d" ]; then
-        pool="/etc/php-fpm.d"
-    fi
-    if [ -d "/etc/php5/fpm/pool.d" ]; then
-        pool="/etc/php5/fpm/pool.d"
-    fi
-    if [ -d "/etc/php/7.0/fpm/pool.d" ]; then
-        pool="/etc/php/7.0/fpm/pool.d"
-    fi
+    pool=$(find /etc/php* -type d \( -name "pool.d" -o -name "*fpm.d" \))
     if [ ! -e "$pool" ]; then
-        pool=$(find /etc/php* -type d \( -name "pool.d" -o -name "*fpm.d" \))
-        if [ ! -e "$pool" ]; then
-            check_result $E_NOTEXIST "php-fpm pool doesn't exist"
-        fi
+        check_result $E_NOTEXIST "php-fpm pool doesn't exist"
     fi
 
     backend_type="$domain"

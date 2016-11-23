@@ -8,7 +8,7 @@
 #   RHEL 5, 6, 7
 #   CentOS 5, 6, 7
 #   Debian 7, 8
-#   Ubuntu 12.04 - 15.04
+#   Ubuntu 12.04 - 16.04
 #
 
 # Am I root?

@@ -273,7 +273,7 @@ fi
 #                       Brief Info                         #
 #----------------------------------------------------------#
 
-# Printing nice ascii aslogo
+# Printing nice ASCII logo
 clear
 echo
 echo ' _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|'
@@ -508,7 +508,7 @@ if [ "$release" = '16.04' ] && [ -e '/etc/init.d/mysql' ]; then
 fi
 
 
-# Backup vesta
+# Backup Vesta
 service vesta stop > /dev/null 2>&1
 cp -r $VESTA/* $vst_backups/vesta > /dev/null 2>&1
 apt-get -y remove vesta vesta-nginx vesta-php > /dev/null 2>&1
@@ -607,7 +607,7 @@ chmod a+x /usr/sbin/policy-rc.d
 apt-get -y install $software
 check_result $? "apt-get install failed"
 
-# Restore  policy
+# Restore policy
 rm -f /usr/sbin/policy-rc.d
 
 
@@ -625,8 +625,8 @@ rm -f /etc/cron.d/awstats
 # Set directory color
 echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 
-# Register /sbin/nologin
-echo "/sbin/nologin" >> /etc/shells
+# Register /usr/sbin/nologin
+echo "/usr/sbin/nologin" >> /etc/shells
 
 # NTP Synchronization
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
@@ -662,10 +662,10 @@ echo 'PATH=$PATH:'$VESTA'/bin' >> /root/.bash_profile
 echo 'export PATH' >> /root/.bash_profile
 source /root/.bash_profile
 
-# Configuring logrotate for vesta logs
+# Configuring logrotate for Vesta logs
 wget $vestacp/logrotate/vesta -O /etc/logrotate.d/vesta
 
-# Buidling directory tree and creating some blank files for vesta
+# Buidling directory tree and creating some blank files for Vesta
 mkdir -p $VESTA/conf $VESTA/log $VESTA/ssl $VESTA/data/ips \
     $VESTA/data/queue $VESTA/data/users $VESTA/data/firewall \
     $VESTA/data/sessions
@@ -681,12 +681,12 @@ ln -s $VESTA/log /var/log/vesta
 chown admin:admin $VESTA/data/sessions
 chmod 770 $VESTA/data/sessions
 
-# Generating vesta configuration
+# Generating Vesta configuration
 rm -f $VESTA/conf/vesta.conf 2>/dev/null
 touch $VESTA/conf/vesta.conf
 chmod 660 $VESTA/conf/vesta.conf
 
-# WEB stack
+# Web stack
 if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
     echo "WEB_SYSTEM='apache2'" >> $VESTA/conf/vesta.conf
     echo "WEB_RGROUPS='www-data'" >> $VESTA/conf/vesta.conf
@@ -892,7 +892,7 @@ done
 
 
 #----------------------------------------------------------#
-#                    Configure VSFTPD                      #
+#                    Configure Vsftpd                      #
 #----------------------------------------------------------#
 
 if [ "$vsftpd" = 'yes' ]; then
@@ -929,14 +929,14 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
-    # MySQL configuration
+    # Configuring MySQL/MariaDB
     wget $vestacp/mysql/$mycnf -O /etc/mysql/my.cnf
     mysql_install_db
     update-rc.d mysql defaults
     service mysql start
     check_result $? "mysql start failed"
 
-    # Securing MySQL installation
+    # Securing MySQL/MariaDB installation
     mysqladmin -u root password $vpass
     echo -e "[client]\npassword='$vpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
@@ -1074,7 +1074,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                   Configure RoundCube                    #
+#                   Configure Roundcube                    #
 #----------------------------------------------------------#
 
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
@@ -1146,16 +1146,16 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1
 fi
 
-# Adding vesta account
+# Adding Vesta admin account
 $VESTA/bin/v-add-user admin $vpass $email default System Administrator
 check_result $? "can't create admin user"
 $VESTA/bin/v-change-user-shell admin bash
 $VESTA/bin/v-change-user-language admin $lang
 
-# Configuring system ips
+# Configuring system IPs
 $VESTA/bin/v-update-sys-ip
 
-# Get main ip
+# Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 
 # Firewall configuration
@@ -1163,20 +1163,20 @@ if [ "$iptables" = 'yes' ]; then
     $VESTA/bin/v-update-firewall
 fi
 
-# Get public ip
+# Get public IP
 pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
     ip=$pub_ip
 fi
 
-# Configuring mysql host
+# Configuring MySQL host
 if [ "$mysql" = 'yes' ]; then
     $VESTA/bin/v-add-database-host mysql localhost root $vpass
     $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 fi
 
-# Configuring pgsql host
+# Configuring PostgreSQL host
 if [ "$postgresql" = 'yes' ]; then
     $VESTA/bin/v-add-database-host pgsql localhost postgres $vpass
     $VESTA/bin/v-add-database admin db db $(gen_pass) pgsql
@@ -1203,7 +1203,7 @@ command="sudo $VESTA/bin/v-update-sys-rrd"
 $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 service cron restart
 
-# Building inititall rrd images
+# Building initital rrd images
 $VESTA/bin/v-update-sys-rrd
 
 # Enabling file system quota
@@ -1211,7 +1211,7 @@ if [ "$quota" = 'yes' ]; then
     $VESTA/bin/v-add-sys-quota
 fi
 
-# Starting vesta service
+# Starting Vesta service
 update-rc.d vesta defaults
 service vesta start
 check_result $? "vesta start failed"
@@ -1231,7 +1231,7 @@ $VESTA/bin/v-add-cron-vesta-autoupdate
 # Sending install notification to vestacp.com
 wget vestacp.com/notify/?$codename -O /dev/null -q
 
-# Comparing hostname and ip
+# Comparing hostname and IP
 host_ip=$(host $servername| head -n 1 | awk '{print $NF}')
 if [ "$host_ip" = "$ip" ]; then
     ip="$servername"

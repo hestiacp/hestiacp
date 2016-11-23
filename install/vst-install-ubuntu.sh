@@ -416,7 +416,7 @@ check_result $? 'apt-get upgrade failed'
 
 # Installing nginx repo
 apt=/etc/apt/sources.list.d
-echo "deb http://nginx.org/packages/ubuntu/ $codename nginx" > $apt/nginx.list
+echo "deb http://nginx.org/packages/mainline/ubuntu/ $codename nginx" > $apt/nginx.list
 wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
 
@@ -436,7 +436,7 @@ cd $vst_backups
 mkdir nginx apache2 php5 php5-fpm vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql mongodb vesta
 
-# Backing up Nginx configuration
+# Backing up nginx configuration
 service nginx stop > /dev/null 2>&1
 cp -r /etc/nginx/* $vst_backups/nginx >/dev/null 2>&1
 

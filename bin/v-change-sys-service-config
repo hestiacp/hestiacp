@@ -88,15 +88,16 @@ done
 
 # Restarting service
 if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
+    if [[ "$service" =~ - ]]; then
+        service=$(echo ${service%-*})
+    fi
+
     if [ "$service" = 'php' ]; then
         if [ "$WEB_SYSTEM" = "nginx" ]; then
-            service=$WEB_BACKEND
+            service=$(ls /usr/sbin/php*fpm* |cut -f 4 -d /)
         else
             service=$WEB_SYSTEM
         fi
-    fi
-    if [[ "$service" =~ - ]]; then
-        service=$(echo ${service%-*})
     fi
 
     service $service restart >/dev/null 2>&1

@@ -38,7 +38,7 @@ fi
 
 # Adding group and user quota on /home partition
 mnt=$(df -P /home | awk '{print $6}' | tail -n1)
-lnr=$(cat -n /etc/fstab | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
+lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
 opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
 fnd='usrquota\|grpquota\|usrjquota=aquota.user\|grpjquota=aquota.group\|jqfmt=vfsv0'
 if [ $(echo $opt | tr ',' '\n' | grep -x $fnd | wc -l) -ne 5 ]; then

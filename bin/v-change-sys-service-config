@@ -44,6 +44,7 @@ case $service in
     proftpd)        dst=$(find /etc/proftpd* -name 'proftpd.conf');;
     php)            dst=$(find /etc/php* -name php.ini);;
     mysql)          dst=$(find /etc/my* -name my.cnf);;
+    mysqld)         dst=$(find /etc/my* -name my.cnf);;
     mariadb)        dst=$(find /etc/my* -name my.cnf);;
     postgresql)     dst=$($BIN/v-list-sys-pgsql-config plain |cut -f 1);;
     postgresql-hba) dst=$($BIN/v-list-sys-pgsql-config plain |cut -f 2);;

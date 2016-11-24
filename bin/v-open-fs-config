@@ -29,6 +29,7 @@ if [ ! -z "$src_file" ]; then
     rpath=$(readlink -f "$src_file")
     services="nginx|apache|httpd|php|ftp|bind|named|exim|dovecot|spamassassin"
     services="$services|clam|mysql|postgresql|pgsql|cron|fail2ban|iptables"
+    services="$services|my.cnf"
     spath=$(echo "$rpath" |egrep "$services")
     if [ -z "$spath" ]; then
         echo "Error: invalid source path $src_file"

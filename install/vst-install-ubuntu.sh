@@ -461,8 +461,8 @@ cp -r /etc/apache2/* $vst_backups/apache2 > /dev/null 2>&1
 rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backing up PHP configuration
-service php7.0-fpm stop >/dev/null 2>&1
-service php5-fpm stop >/dev/null 2>&1
+service php7.0-fpm stop > /dev/null 2>&1
+service php5-fpm stop > /dev/null 2>&1
 cp -r /etc/php5/* $vst_backups/php/ > /dev/null 2>&1
 cp -r /etc/php/* $vst_backups/php/ > /dev/null 2>&1
 
@@ -476,7 +476,7 @@ cp /etc/vsftpd.conf $vst_backups/vsftpd > /dev/null 2>&1
 
 # Backing up ProFTPD configuration
 service proftpd stop > /dev/null 2>&1
-cp /etc/proftpd.conf $vst_backups/proftpd >/dev/null 2>&1
+cp /etc/proftpd.conf $vst_backups/proftpd > /dev/null 2>&1
 
 # Backing up Exim configuration
 service exim4 stop > /dev/null 2>&1
@@ -517,7 +517,7 @@ rm -rf $VESTA > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
-#                     Package Exludes                      #
+#                     Package Excludes                     #
 #----------------------------------------------------------#
 
 # Excluding packages
@@ -645,7 +645,7 @@ chmod 755 /usr/bin/rssh
 
 
 #----------------------------------------------------------#
-#                     Configure VESTA                      #
+#                     Configure Vesta                      #
 #----------------------------------------------------------#
 
 
@@ -665,7 +665,7 @@ source /root/.bash_profile
 # Configuring logrotate for Vesta logs
 wget $vestacp/logrotate/vesta -O /etc/logrotate.d/vesta
 
-# Buidling directory tree and creating some blank files for Vesta
+# Building directory tree and creating some blank files for Vesta
 mkdir -p $VESTA/conf $VESTA/log $VESTA/ssl $VESTA/data/ips \
     $VESTA/data/queue $VESTA/data/users $VESTA/data/firewall \
     $VESTA/data/sessions
@@ -744,7 +744,7 @@ if [ "$exim" = 'yes' ]; then
     fi
 fi
 
-# CRON daemon
+# Cron daemon
 echo "CRON_SYSTEM='cron'" >> $VESTA/conf/vesta.conf
 
 # Firewall stack
@@ -1158,7 +1158,7 @@ $VESTA/bin/v-update-sys-ip
 # Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 
-# Firewall configuration
+# Configuring firewall
 if [ "$iptables" = 'yes' ]; then
     $VESTA/bin/v-update-firewall
 fi
@@ -1170,7 +1170,7 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     ip=$pub_ip
 fi
 
-# Configuring MySQL host
+# Configuring MySQL/MariaDB host
 if [ "$mysql" = 'yes' ]; then
     $VESTA/bin/v-add-database-host mysql localhost root $vpass
     $VESTA/bin/v-add-database admin default default $(gen_pass) mysql

@@ -64,7 +64,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities($v_password)?>">
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
                                 </td>
                             </tr>
                             <tr>

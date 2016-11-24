@@ -65,7 +65,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities($v_password)?>">
+                                <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
                             </td>
                          </tr>
                         <tr>
@@ -109,7 +109,7 @@
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_autoreply" <?php if ($v_autoreply == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('autoreplytable');"> <?php print __('Autoreply');?></label>
                             </td>
                         </tr>
-                        <tr>%20autofocuse=true%20onFocus=%27alert%28123%29%27%20x=%27%20autofocuse=true%20onFocus=%27alert%28123%29%27%20x=%27
+                        <tr>
                             <td class="step-left">
                                 <table style="display:<?php if ($v_autoreply == 'yes') { echo 'block';} else {echo 'none';}?> ;" id="autoreplytable">
                                     <tr>
@@ -192,15 +192,15 @@
                             <td><?=__('SMTP auth method')?>:</td>
                             <td><div><?=__('Normal password')?></div></td>
                         </tr>
-			<?
-			  list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-			  $webmail = "http://".$http_host."/webmail/";
-			  if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
-			  ?>
+                        <?
+                          list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+                          $webmail = "http://".$http_host."/webmail/";
+                          if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
+                          ?>
                         <tr>
                             <td><?=__('Webmail URL')?>:</td>
                             <td><div><a class="vst" href="<?=$webmail?>" target="_blank"><?=$webmail?> <i></i></a></div></td>
-			</tr>
+                        </tr>
                     </table>
                 </div>
             </td>

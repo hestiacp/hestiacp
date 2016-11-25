@@ -73,12 +73,12 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)) echo "checked=yes"; ?>> <?php print __('DNS Support');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS '] != "0") echo "checked=yes"; ?> <?php if($panel[$user]['DNS_DOMAINS'] == "0") echo "disabled" ?> ><?php print __('DNS Support');?></label>
                             </td>
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)) echo "checked=yes"; ?>> <?php print __('Mail Support');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS '] != "0") echo "checked=yes"; ?> <?php if($panel[$user]['MAIL_DOMAINS'] == "0") echo "disabled" ?> ><?php print __('Mail Support');?></label>
                             </td>
                         </tr>
                         <tr>

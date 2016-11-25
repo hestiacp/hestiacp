@@ -993,6 +993,19 @@ input[type="checkbox"] {
   margin-right: -8px;
 }
 
+.l-stat__col a.disabled {
+	cursor: default;
+	text-decoration: none;
+}
+
+.l-stat__col a.disabled:hover {
+	border: none;
+}
+
+.l-stat__col a.disabled .l-stat__col-title, .l-stat__col a.disabled li {
+    color: #e0e0e0;
+}
+
 .l-separator.selected,
 .l-separator {
   height: 1px;
@@ -2512,7 +2525,7 @@ label:hover {
 }
 
 .vst-list.flat {
-  border: 1px solid #fff; 
+  border: 1px solid #fff;
   color: #2c9491;
   text-transform: uppercase;
   font-weight: bold;

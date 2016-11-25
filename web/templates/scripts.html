@@ -15,6 +15,54 @@
     });
   </script>
 
+  <?php if($panel[$user]['WEB_DOMAINS'] == "0") { ?>
+  <script>
+  	$('a[href^="/list/web"]').addClass('disabled').click(function() {
+  		return false;
+  	});
+  </script>
+  <?php } ?>
+
+  <?php if($panel[$user]['DNS_DOMAINS'] == "0") { ?>
+  <script>
+  	$('a[href^="/list/dns"]').addClass('disabled').click(function() {
+  		return false;
+  	});
+  </script>
+  <?php } ?>
+
+  <?php if($panel[$user]['MAIL_DOMAINS'] == "0") { ?>
+  <script>
+  	$('a[href^="/list/mail"]').addClass('disabled').click(function() {
+  		return false;
+  	});
+  </script>
+  <?php } ?>
+
+  <?php if($panel[$user]['DATABASES'] == "0") { ?>
+  <script>
+  	$('a[href^="/list/db"]').addClass('disabled').click(function() {
+  		return false;
+  	});
+  </script>
+  <?php } ?>
+
+  <?php if($panel[$user]['CRON_JOBS'] == "0") { ?>
+  <script>
+  	$('a[href^="/list/cron"]').addClass('disabled').click(function() {
+  		return false;
+  	});
+  </script>
+  <?php } ?>
+
+  <?php if($panel[$user]['BACKUPS'] == "0") { ?>
+  <script>
+  	$('a[href^="/list/backup"]').addClass('disabled').click(function() {
+  		return false;
+  	});
+  </script>
+  <?php } ?>
+
 <?php
 // Dialogs
 // todo: display all the dialogs?

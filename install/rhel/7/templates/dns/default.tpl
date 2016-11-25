@@ -13,3 +13,4 @@ ID='12' RECORD='pop' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%tim
 ID='13' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='14' RECORD='@' TYPE='MX' PRIORITY='10' VALUE='mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='15' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% ?all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='16' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='"v=DMARC1; p=none"' SUSPENDED='no' TIME='%time%' DATE='%date%'

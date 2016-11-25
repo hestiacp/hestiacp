@@ -932,7 +932,9 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring MySQL/MariaDB
     wget $vestacp/mysql/$mycnf -O /etc/mysql/my.cnf
-    mysql_install_db
+    if [ "$release" != '16.04' ]; then
+        mysql_install_db
+    fi
     update-rc.d mysql defaults
     service mysql start
     check_result $? "mysql start failed"

@@ -64,6 +64,7 @@ csv_list() {
 # Parsing proxy templates
 if [ ! -z "$PROXY_SYSTEM" ]; then
     templates=$(ls -t $WEBTPL/$PROXY_SYSTEM |\
+        grep ".tpl$" |\
         cut -f1 -d . |\
         grep -v proxy_ip |\
         sort -u )

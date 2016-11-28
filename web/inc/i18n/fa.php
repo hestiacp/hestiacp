@@ -7,7 +7,7 @@
  * َAnd Ham3D (hamed334@gmail.com)
  */
 
-$LANG['fa'] = [
+$LANG['fa'] = array(
     'Packages' => 'بسته ها',
     'IP' => 'آي پي',
     'Graphs' => 'نمودار ها',
@@ -754,4 +754,4 @@ $LANG['fa'] = [
     'Do not use encryption' => 'از رمزگزاری استفاده نشود',
 
     'maximum characters length, including prefix' => 'بیشینه %s کاراکتر طول, شامل پیشوند',
-];
+);

@@ -71,16 +71,16 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr>
+                        <?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?><tr>
                             <td class="vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS'] != "0") echo "checked=yes"; ?> <?php if($panel[$user]['DNS_DOMAINS'] == "0") echo "disabled" ?> ><?php print __('DNS Support');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS'] != "0") echo "checked=yes"; ?>> <?php print __('DNS Support');?></label>
                             </td>
-                        </tr>
-                        <tr>
+                        </tr><?php } ?>
+                        <?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?><tr>
                             <td class="vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS'] != "0") echo "checked=yes"; ?> <?php if($panel[$user]['MAIL_DOMAINS'] == "0") echo "disabled" ?> ><?php print __('Mail Support');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS'] != "0") echo "checked=yes"; ?>> <?php print __('Mail Support');?></label>
                             </td>
-                        </tr>
+                        </tr><?php } ?>
                         <tr>
                             <td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
                                 <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print __('Advanced options');?></a>

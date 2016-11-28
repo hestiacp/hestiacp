@@ -44,6 +44,8 @@ $LANG['hu'] = array(
     'NETWORK'  => 'NETWORK',
     'Web Log Manager'  => 'Web Log Manager',
 
+    'no notifications'  => 'no notifications',
+
     'Add User'  => 'Új felhasználó',
     'Add Domain'  => 'Új domain',
     'Add Web Domain'  => 'Új Web Domain',
@@ -111,6 +113,7 @@ $LANG['hu'] = array(
     'disable autoupdate' => 'automatikus frissítés tiltása',
     'turn on notifications' => 'értesít. bekapcsolása',
     'turn off notifications' => 'értesít. kikapcsolása',
+    'configure' => 'configure',
 
     'Adding User'  => 'Felhasználó hozzáadása',
     'Editing User'  => 'Felhasználó szerkesztése',
@@ -253,6 +256,7 @@ $LANG['hu'] = array(
     'MySQL Usage on localhost'  => 'MySQL használat a localhoston',
     'PostgreSQL Usage on localhost'  => 'PostgreSQL használat a localhoston',
     'Bandwidth Usage eth0'  => 'eth0 sávszélesség használat',
+    'Bandwidth Usage eth1' => 'eth1 sávszélesség használat',
     'Exim Usage' => 'Exim használat',
     'FTP Usage'  => 'FTP használat',
     'SSH Usage'  => 'SSH használat',
@@ -452,7 +456,7 @@ $LANG['hu'] = array(
     'PACKAGE_CREATED_OK'  => 'A(z) <a href="/edit/package/?package=%s"><b>%s</b></a> csomag sikeresen létrehozva.',
     'SSL_GENERATED_OK' => 'A tanúsítvány sikeresen létrehozva.',
     'RULE_CREATED_OK' => 'Szabály sikeresen létrehozva.',
-    'BANLIST_CREATED_OK' => 'IP address has been banned successfully',    // I'm not sure about this text
+    'BANLIST_CREATED_OK' => 'IP address has been banned successfully',
     'Autoupdate has been successfully enabled' => 'Az automatikus frissítés bekapcsolva.',
     'Autoupdate has been successfully disabled' => 'Az automatikus frissítés kikapcsolva.',
     'Cronjob email reporting has been successfully enabled' => 'Cronjob e-mail jelentés bekapcsolva.',
@@ -709,9 +713,6 @@ $LANG['hu'] = array(
 
     'Minutes' => 'Minutes',
     'Hourly' => 'Hourly',
-    'Daily' => 'Dayly',
-    'Weekly' => 'Weekly',
-    'Monthly' => 'Monthly',
     'Run Command' => 'Run Command',
     'every month' => 'every month',
     'every odd month' => 'every odd month',
@@ -756,6 +757,4 @@ $LANG['hu'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
-// Texts below doesn't exist in en.php
-    'Bandwidth Usage eth1' => 'eth1 sávszélesség használat',
 );

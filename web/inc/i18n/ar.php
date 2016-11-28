@@ -41,6 +41,8 @@ $LANG['ar'] = array(
     'NETWORK'  => 'الشبكة',
     'Web Log Manager'  => 'مدير سجلات الويب',
 
+    'no notifications'  => 'no notifications',
+
     'Add User'  => 'إضافة مستخدم',
     'Add Domain'  => 'إضافة نطاق',
     'Add Web Domain'  => 'إضافة نطاق',
@@ -61,7 +63,7 @@ $LANG['ar'] = array(
     'Add one more FTP Account' => 'إضافة حساب FTP إضافي',
     'Overall Statistics'  => 'إحصائيات عامة',
     'Daily'  => 'يومي',
-    'Weekly'  => 'أسبوعي',
+    'Weekly'  => 'اسبوعي',
     'Monthly'  => 'شهري',
     'Yearly'  => 'سنوي',
     'Add'  => 'إضافة',
@@ -108,6 +110,7 @@ $LANG['ar'] = array(
     'disable autoupdate' => 'تعطيل التحديث التلقائي',
     'turn on notifications' => 'تمكين التبليغات.',
     'turn off notifications' => 'تعطيل التبليغات.',
+    'configure' => 'configure',
 
     'Adding User'  => 'جاري إضافة مستخدم',
     'Editing User'  => 'جاري تعديل المستخدم',
@@ -250,6 +253,7 @@ $LANG['ar'] = array(
     'MySQL Usage on localhost'  => 'استخدام قاعدة بيانات MySql على المضيف المحلي',
     'PostgreSQL Usage on localhost'  => 'PostgreSQL استخدام قاعدة بيانات على المضيف المحلي',
     'Bandwidth Usage eth0'  => 'eth0 استخدام سعة النطاق على منفذ',
+    'Bandwidth Usage eth1'  => 'eth1 استخدام سعة النطاق على منفذ',
     'Exim Usage'  => 'استخدام Exim',
     'FTP Usage'  => 'استخدام FTP',
     'SSH Usage'  => 'استخدام SSH',
@@ -449,7 +453,7 @@ $LANG['ar'] = array(
     'PACKAGE_CREATED_OK'  => 'الحزمة <a href="/edit/package/?package=%s"><b>%s</b></a> تم إنشائها بنجاح.',
     'SSL_GENERATED_OK' => 'تم إنشاء الشهادة بنجاح.',
     'RULE_CREATED_OK' => 'تم إنشاء القاعدة بنجاح.',
-    'BANLIST_CREATED_OK' => 'تم حجب عنوان الأي بي بنجاح',    // I'm not sure about this text
+    'BANLIST_CREATED_OK' => 'تم حجب عنوان الأي بي بنجاح',
     'Autoupdate has been successfully enabled' => 'تم تفيعل التحديث التلقائي بنجاح',
     'Autoupdate has been successfully disabled' => 'تم تعطيل التحديث التلقائي بنجاح',
     'Cronjob email reporting has been successfully enabled' => 'تم تمكين إعداد التقارير البريد الإلكتروني بنجاح',
@@ -525,7 +529,7 @@ $LANG['ar'] = array(
     'Confirm Password'  => 'تأكيد كلمة المرور',
     'Reset'  => 'إعادة تعيين',
     'Reset Code'  => 'كود إعادة تعيين',
-    'RESET_NOTICE'  => '',    // should we add something here?
+    'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'لقد تم إرسال كود إعادة تعيين كلمة المرور لعنوان بريدك الإلكتروني<br>',
     'MAIL_RESET_SUBJECT'  => 'تم إعادة تعيين كلمة المرور %s',
     'PASSWORD_RESET_REQUEST' => "لإعادة تعيين كلمة مرور لوحة التحكم , برجاء اتباع الرابط التالي link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, بامكانك أيضا اتباع الرابط التالي https://%s/reset/?action=code&user=%s وادخال كود إعادة التعيين التالي code:\n%s\n\n إذا لم تطلب إعادة تعيين كلمة المرور, برجاء تجاهل هذه الرسالة وتقبل اعتذارنا.\n\n--\nVesta Control Panel\n",
@@ -603,7 +607,7 @@ $LANG['ar'] = array(
     'ARCHIVE' => 'ضغط',
     'EXTRACT' => 'فك ضغط',
     'DOWNLOAD' => 'تنزيل',
-    'Are you sure?' => 'هل أنت متأكد ?',    // unused?
+    'Are you sure?' => 'هل أنت متأكد ?',
     'Hit' => 'نقر',
     'to reload the page' => 'لإعادة تحميل الصفحة',
     'Directory name cannot be empty' => 'اسم المجلد يجب ان لايكون فارغ',
@@ -625,7 +629,7 @@ $LANG['ar'] = array(
     'Create' => 'إنشاء',
     'Compress' => 'ضغط',
     'OK' => 'موافق',
-    'YOU ARE COPYING' => 'تقوم بالنسخ ',    // unused?
+    'YOU ARE COPYING' => 'تقوم بالنسخ ',
     'YOU ARE REMOVING' => 'تقوم بالحذف',
     'Delete items' => 'حذف العناصر',
     'Copy files' => 'نسخ الملفات',
@@ -706,9 +710,6 @@ $LANG['ar'] = array(
 
     'Minutes' => 'دقائق',
     'Hourly' => 'ساعي',
-    'Daily' => 'يومي',
-    'Weekly' => 'اسبوعي',
-    'Monthly' => 'شهري',
     'Run Command' => 'أمر التنفيذ',
     'every month' => 'كل شهر',
     'every odd month' => 'كل شهر فردي',
@@ -753,10 +754,10 @@ $LANG['ar'] = array(
 
     'maximum characters length, including prefix' => 'الحد الأقصى لعدد الحروف هو %s يشمل البادئة',
 
+
 // Texts below doesn't exist in en.php
     '%s rule' => 'قواعد %s',
     'MainDomain' => 'النطاق الرئيسي',
     'SubDomain' => 'النطاق الفرعي (الجزء الاول الذي يضاف إلى النطاق الرئيسي)',
-    'Add Sub Domain' => 'إضافة نطاق فرعي'
-
+    'Add Sub Domain' => 'إضافة نطاق فرعي',
 );

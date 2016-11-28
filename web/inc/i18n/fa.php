@@ -43,6 +43,8 @@ $LANG['fa'] = array(
     'NETWORK' => 'شبکه',
     'Web Log Manager' => 'مدیریت وب نوشت',
 
+    'no notifications'  => 'no notifications',
+
     'Add User' => 'افزودن كاربر',
     'Add Domain' => 'افزودن دامنه',
     'Add Web Domain' => 'افزودن دامنه وب',
@@ -63,7 +65,7 @@ $LANG['fa'] = array(
     'Add one more FTP Account' => 'افزودن يك حساب FTP ديگر',
     'Overall Statistics' => 'آمار كلي',
     'Daily' => 'روزانه',
-    'Weekly' => 'هفتگي',
+    'Weekly' => 'هفتگی',
     'Monthly' => 'ماهانه',
     'Yearly' => 'ساليانه',
     'Add' => 'افزودن',
@@ -110,6 +112,7 @@ $LANG['fa'] = array(
     'disable autoupdate' => 'غير فعال كردن بروزرساني خودكار',
     'turn on notifications' => 'نمايش اعلان ها',
     'turn off notifications' => 'مخفي سازي اعلان ها',
+    'configure' => 'configure',
 
     'Adding User' => 'افزودن كاربر',
     'Editing User' => 'ويرايش كاربر',
@@ -252,6 +255,7 @@ $LANG['fa'] = array(
     'MySQL Usage on localhost' => 'مصرف MySQL در localhost',
     'PostgreSQL Usage on localhost' => 'مصرف PostgreSQL در localhost',
     'Bandwidth Usage eth0' => 'پهناي باند مصرفي eth0',
+    'Bandwidth Usage eth1'  => 'پهناي باند مصرفي eth1',
     'Exim Usage' => 'مصرف Exim',
     'FTP Usage' => 'مصرف FTP',
     'SSH Usage' => 'مصرف SSH',
@@ -527,7 +531,7 @@ $LANG['fa'] = array(
     'Confirm Password' => 'تاييد گذرواژه',
     'Reset' => 'بازيابي',
     'Reset Code' => 'رمز بازيابي',
-    'RESET_NOTICE' => 'اعلان بازیابی',    // should we add something here?
+    'RESET_NOTICE' => 'اعلان بازیابی',
     'RESET_CODE_SENT' => 'رمز بازیابی گذرواژه به ایملتان ارسال گردید.<br>',
     'MAIL_RESET_SUBJECT' => 'بازیابی گذرواژه در %s',
     'PASSWORD_RESET_REQUEST' => "براي بازيابي گذرواژه كنترل پنلتان, لطفا از اين راهنما :\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nاستفاده كنيد ويا از طريق, اين پيوند https://%s/reset/?action=code&user=%s با وارد كردن دستور:\n%s گذرواژه خود را بازيابي كنيد.\n\nدرصورتي كه شما درخواستبازيابي گذروایه نداده ايد، اين پيغام را ناديده بگيريد و عذر خواهي ما را پزيرا باشيد.\n\n--\nكنترل پنل وستا\n",
@@ -605,7 +609,7 @@ $LANG['fa'] = array(
     'ARCHIVE' => 'بايگاني',
     'EXTRACT' => 'بيرون كشيدن',
     'DOWNLOAD' => 'بارگیری',
-    'Are you sure?' => 'آیا اطمینان دارید؟',    // unused?
+    'Are you sure?' => 'آیا اطمینان دارید؟',
     'Hit' => 'اصابت',
     'to reload the page' => 'براي بارگذاری تازه صفحه',
     'Directory name cannot be empty' => 'نام پوشه نميتواند خالي باشد',
@@ -627,7 +631,7 @@ $LANG['fa'] = array(
     'Create' => 'ايجاد',
     'Compress' => 'فشرده سازي',
     'OK' => 'تاييد',
-    'YOU ARE COPYING' => 'درحال کپی کردن هستید',    // unused?
+    'YOU ARE COPYING' => 'درحال کپی کردن هستید',
     'YOU ARE REMOVING' => 'درحال حذف کردن هستید',
     'Delete items' => 'حذف موارد',
     'Copy files' => 'کپی فایلها',
@@ -708,9 +712,6 @@ $LANG['fa'] = array(
 
     'Minutes' => 'دقیقه',
     'Hourly' => 'ساعتی',
-    'Daily' => 'روزانه',
-    'Weekly' => 'هفتگی',
-    'Monthly' => 'ماهانه',
     'Run Command' => 'اجرای دستور',
     'every month' => 'هر ماه',
     'every odd month' => 'ماه های فرد',
@@ -754,4 +755,5 @@ $LANG['fa'] = array(
     'Do not use encryption' => 'از رمزگزاری استفاده نشود',
 
     'maximum characters length, including prefix' => 'بیشینه %s کاراکتر طول, شامل پیشوند',
+
 );

@@ -15,12 +15,13 @@ $LANG['tw'] = array(
     'Graphs'  => '資源使用圖表',
     'Statistics'  => '統計資料',
     'Log'  => '系統紀錄',
+    'Server' => '伺服器',
     'Services'  => '服務',
     'Firewall' => '防火牆',
-    'Server' => '伺服器',
     'Updates'  => '系統更新',
     'Log in'  => '登入',
     'Log out'  => '登出',
+
     'USER'  => '使用者管理',
     'WEB'  => '網站管理',
     'DNS'  => 'DNS 管理',
@@ -44,6 +45,8 @@ $LANG['tw'] = array(
     'NETWORK'  => '網路',
     'Web Log Manager'  => 'Web 日誌管理員',
 
+    'no notifications'  => 'no notifications',
+
     'Add User'  => '新增使用者',
     'Add Domain'  => '新增網域',
     'Add Web Domain'  => '新增網站網域',
@@ -63,9 +66,9 @@ $LANG['tw'] = array(
     'Search'  => '搜尋',
     'Add one more FTP Account' => '新增 FTP 帳號',
     'Overall Statistics'  => '整理統計資料',
-    'Daily'  => '每天',
-    'Weekly'  => '每週',
-    'Monthly'  => '每月',
+    'Daily'  => '天',
+    'Weekly'  => '周',
+    'Monthly'  => '月',
     'Yearly'  => '每年',
     'Add'  => '新增',
     'Back'  => '返回',
@@ -111,6 +114,7 @@ $LANG['tw'] = array(
     'disable autoupdate' => '停用自動更新',
     'turn on notifications' => '啟用通知',
     'turn off notifications' => '停用通知',
+    'configure' => 'configure',
 
     'Adding User'  => '新增使用者',
     'Editing User'  => '編輯使用者',
@@ -253,6 +257,7 @@ $LANG['tw'] = array(
     'MySQL Usage on localhost'  => '本機 MySQL 使用情形',
     'PostgreSQL Usage on localhost'  => '本機 PostgreSQL 使用情形',
     'Bandwidth Usage eth0'  => 'eth0 頻寬使用情形',
+    'Bandwidth Usage eth1'  => 'eth1 頻寬使用情形',
     'Exim Usage'  => 'Exim 使用情形',
     'FTP Usage'  => 'FTP 使用情形',
     'SSH Usage'  => 'SSH 使用情形',
@@ -404,8 +409,10 @@ $LANG['tw'] = array(
     'mail domain' => 'mail 紀錄',
     'mail account' => 'mail 帳號',
     'cron job' => '任務排程',
+
     'cron' => '任務排程',
     'user dir' => '使用者資料夾',
+
     'unlimited'  => '無限制',
     '1 account'  => '1 個帳號',
     '%s accounts'  => '%s 個帳號',
@@ -501,12 +508,12 @@ $LANG['tw'] = array(
     'RESTORE_SCHEDULED'  => '您的要求已加入隊列中，回復完成後會再以電子郵件通知您',
     'RESTORE_EXISTS'  => '已經有一個回復正在執行中，請等待備份完成後再操作',
 
-    'WEB_EXCLUSIONS' => "輸入網域名稱，每行一個網域。如要排除備份所有網域請使用*。排除特定的資料夾請依照這個格式: Example.com:public_html/cache:public_html/tmp",
-    'DNS_EXCLUSIONS' => "輸入網域名稱，每行一個網域。如要排除備份所有網域請使用*",
-    'MAIL_EXCLUSIONS' => "輸入網域名稱，每行一個網域。如要排除備份所有網域請使用*。要排除特定使用者請依照這個格式: Example.com:info:support:postmaster",
-    'DB_EXCLUSIONS' => "輸入完整資料庫名城，每行一個資料庫。如要排除備份所有資料庫請使用*",
-    'CRON_EXCLUSIONS' => "要排除備份所有任務排程請使用*",
-    'USER_EXCLUSIONS' => "輸入要排除備份的資料夾名稱，每行一個資料夾。如要排除備份所有資料夾請使用*",
+    'WEB_EXCLUSIONS' => '輸入網域名稱，每行一個網域。如要排除備份所有網域請使用*。排除特定的資料夾請依照這個格式: Example.com:public_html/cache:public_html/tmp',
+    'DNS_EXCLUSIONS' => '輸入網域名稱，每行一個網域。如要排除備份所有網域請使用*',
+    'MAIL_EXCLUSIONS' => '輸入網域名稱，每行一個網域。如要排除備份所有網域請使用*。要排除特定使用者請依照這個格式: Example.com:info:support:postmaster',
+    'DB_EXCLUSIONS' => '輸入完整資料庫名城，每行一個資料庫。如要排除備份所有資料庫請使用*',
+    'CRON_EXCLUSIONS' => '要排除備份所有任務排程請使用*',
+    'USER_EXCLUSIONS' => '輸入要排除備份的資料夾名稱，每行一個資料夾。如要排除備份所有資料夾請使用*',
 
     'Welcome to Vesta Control Panel'  => '歡迎來到 Vesta 管理系統',
     'MAIL_FROM'  => 'Vesta 管理系統 <noreply@%s>',
@@ -517,7 +524,7 @@ $LANG['tw'] = array(
     'FTP login credentials'  => 'FTP 登入資料',
     'FTP_ACCOUNT_READY' => "FTP帳號已成功建立，並可以開始使用了!\n\n主機名稱: %s\n使用者名稱: %s_%s\n密碼: %s\n\n--\nVesta Control Panel\n",
 
-    'Database Credentials'  => "資料庫 登入資料",
+    'Database Credentials'  => '資料庫 登入資料',
     'DATABASE_READY' => "資料庫已加入成功!\n\n資料庫名稱: %s\n使用者名稱: %s\n密碼: %s\n%s\n\n--\nVesta Control Panel\n",
 
     'forgot password'  => '忘記密碼',
@@ -530,28 +537,6 @@ $LANG['tw'] = array(
     'RESET_CODE_SENT'  => '密買重設代碼已發送到您的信箱<br>',
     'MAIL_RESET_SUBJECT'  => '密碼重置在 %s',
     'PASSWORD_RESET_REQUEST' => "重置密碼請點擊連結:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n或者您可以到 https://%s/reset/?action=code&user=%s 輸入密碼重設代碼:\n%s\n\n如果您沒有要求重設密碼，請忽略此郵件\n\n—\nVesta Control Panel\n",
-
-    'Run Command' => '執行指令',
-    'every month' => '每月',
-    'every odd month' => '每個單數月',
-    'every even month' => '每個偶數月',
-    'every day' => '每天',
-    'every odd day' => '每次單數日',
-    'every even day' => '每次偶數日',
-    'weekdays (5 days)' => '平常日 (五天)',
-    'weekend (2 days)' => '週末 (兩天)',
-    'Monday' => '星期一',
-    'Tuesday' => '星期二',
-    'Wednesday' => '星期三',
-    'Thursday' => '星期四',
-    'Friday' => '星期五',
-    'Saturday' => '星期六',
-    'Sunday' => '星期日',
-    'every hour' => '每小時',
-    'every two hours' => '每兩小時',
-    'every minute' => '每分鐘',
-    'every two minutes' => '每兩分鐘',
-    'every' => '每',
 
     'Jan' => '1月',
     'Feb' => '2月',
@@ -607,7 +592,9 @@ $LANG['tw'] = array(
     'Date' => '日期',
     'Starred' => '加註星號',
     'Name' => '名稱',
+
     'save to favorites' => '存到我的最愛',
+
     'File Manager' => '檔案管理員',
     'size' => '大小',
     'date' => '日期',
@@ -646,7 +633,7 @@ $LANG['tw'] = array(
     'Create' => '新增',
     'Compress' => '壓縮',
     'OK' => '確定',
-    'YOU ARE COPYING' => '您正在複製',    // unused?
+    'YOU ARE COPYING' => '您正在複製',
     'YOU ARE REMOVING' => '您正在移動',
     'Delete items' => '刪除',
     'Copy files' => '複製檔案',
@@ -711,9 +698,9 @@ $LANG['tw'] = array(
     'Select Bunch of Files' => '選取多個檔案',
     'Add File to the Current Selection' => '新增檔案到已選取的列表',
     'Select All Files' => '選取所有檔案',
-    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' => 
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         "快捷鍵的想法是由 magnificent GNU <a href='https://www.midnight-commander.org/'>Midnight Commander</a> 檔案管理員啟發的",
-    'Save' => '儲存',
+
     'Licence Key' => '授權金鑰',
     'Enter License Key' => '輸入授權金鑰',
     'Buy Licence' => '購買授權',
@@ -727,9 +714,6 @@ $LANG['tw'] = array(
 
     'Minutes' => '分',
     'Hourly' => '小時',
-    'Daily' => '天',
-    'Weekly' => '周',
-    'Monthly' => '月',
     'Run Command' => '執行命令',
     'every month' => '每月',
     'every odd month' => '奇數月',

@@ -42,6 +42,8 @@ $LANG['fi'] = array(
     'NETWORK'  => 'VERKKO',
     'Web Log Manager'  => 'Web Log Manager',
 
+    'no notifications'  => 'no notifications',
+
     'Add User' => 'Lisää käyttäjä',
     'Add Domain' => 'Lisää domaini',
     'Add Web Domain' => 'Lisää Web domain',
@@ -61,9 +63,9 @@ $LANG['fi'] = array(
     'Search' => 'Haku',
     'Add one more FTP Account' => 'Lisää vielä yhden FTP käyttäjä',
     'Overall Statistics' => 'Kokonaistilastot',
-    'Daily' => 'Päivä',
-    'Weekly' => 'Viikko',
-    'Monthly' => 'Kuukausi',
+    'Daily' => 'Päivittäin',
+    'Weekly' => 'Viikottain',
+    'Monthly' => 'Kuukausittain',
     'Yearly' => 'Vuosi',
     'Add' => 'Lisää',
     'Back' => 'Takaisin',
@@ -109,6 +111,7 @@ $LANG['fi'] = array(
     'disable autoupdate' => 'älä päivitä automaattisesti',
     'turn on notifications' => 'päälle ilmoitus',
     'turn off notifications' => 'sammuta ilmoitus',
+    'configure' => 'configure',
 
     'Adding User' => 'Lisätään käyttäjää',
     'Editing User' => 'Muokataan käyttäjää',
@@ -251,6 +254,7 @@ $LANG['fi'] = array(
     'MySQL Usage on localhost' => 'MySQL-käyttö @ localhost',
     'PostgreSQL Usage on localhost' => 'PostgreSQL-käyttö @ localhost',
     'Bandwidth Usage eth0' => 'Kaistankäyttö eth0',
+    'Bandwidth Usage eth1' => 'Kaistankäyttö eth1',
     'Exim Usage'  => 'Exim-käyttö',
     'FTP Usage' => 'FTP-käyttö',
     'SSH Usage' => 'SSH-käyttö',
@@ -450,7 +454,7 @@ $LANG['fi'] = array(
     'PACKAGE_CREATED_OK' => 'Paketti <a href="/edit/package/?package=%s"><b>%s</b></a> lisättiin onnistuneesti.',
     'SSL_GENERATED_OK' => 'Sertifikaatti lisättiin onnistuneesti.',
     'RULE_CREATED_OK' => 'Sääntö lisättiin onnistuneesti.',
-    'BANLIST_CREATED_OK' => 'IP address has been banned successfully',    // I'm not sure about this text
+    'BANLIST_CREATED_OK' => 'IP address has been banned successfully',
     'Autoupdate has been successfully enabled' => 'Automaattinen päivitys otettu käyttöön',
     'Autoupdate has been successfully disabled' => 'Automaattinen päivitys poistettu käytöstä',
     'Cronjob email reporting has been successfully enabled' => 'Cronjob sähköposti raportointi on onnistuneesti mahdollistanut',
@@ -705,11 +709,8 @@ $LANG['fi'] = array(
     'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
     'This is a commercial module, you would need to purchace license key to enable it.' => 'This is a commercial module, you would need to purchace license key to enable it.',
 
-    'Minutes' => 'Minuutittain', // fuzzy
+    'Minutes' => 'Minuutittain',    // fuzzy
     'Hourly' => 'Tunneittain',
-    'Daily' => 'Päivittäin',
-    'Weekly' => 'Viikottain',
-    'Monthly' => 'Kuukausittain',
     'Run Command' => 'Aja Komento',
     'every month' => 'joka kuukausi',
     'every odd month' => 'joka toinen kuukausi',
@@ -754,8 +755,8 @@ $LANG['fi'] = array(
 
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
+
 // Texts below doesn't exist in en.php
     'traffic' => 'tiedonsiirto',
     'disk' => 'levytila',
-    'Bandwidth Usage eth1' => 'Kaistankäyttö eth1',
 );

@@ -7,7 +7,7 @@
  * َAnd Ham3D (hamed334@gmail.com)
  */
 
-$LANG['fa'] = [
+$LANG['fa'] = array(
     'Packages' => 'بسته ها',
     'IP' => 'آی پی',
     'Graphs' => 'نمودار ها',
@@ -42,6 +42,8 @@ $LANG['fa'] = [
     'DISK' => 'دیسک',
     'NETWORK' => 'شبکه',
     'Web Log Manager' => 'مدیریت وب نوشت',
+
+    'no notifications'  => 'no notifications',
 
     'Add User' => 'افزودن كاربر',
     'Add Domain' => 'افزودن دامنه',
@@ -110,6 +112,7 @@ $LANG['fa'] = [
     'disable autoupdate' => 'از کار انداختن بروزرسانی خودكار',
     'turn on notifications' => 'نمایش اعلان ها',
     'turn off notifications' => 'مخفی سازی اعلان ها',
+    'configure' => 'configure',
 
     'Adding User' => 'افزودن كاربر',
     'Editing User' => 'ویرایش كاربر',
@@ -252,6 +255,7 @@ $LANG['fa'] = [
     'MySQL Usage on localhost' => 'مصرف MySQL در میزبان محلی',
     'PostgreSQL Usage on localhost' => 'مصرف PostgreSQL در میزبان محلی',
     'Bandwidth Usage eth0' => 'پهنای باند مصرفی eth0',
+    'Bandwidth Usage eth1' => 'پهنای باند مصرفی eth1',
     'Exim Usage' => 'مصرف Exim',
     'FTP Usage' => 'مصرف FTP',
     'SSH Usage' => 'مصرف SSH',
@@ -527,7 +531,7 @@ $LANG['fa'] = [
     'Confirm Password' => 'تایید گذرواژه',
     'Reset' => 'بازیابی',
     'Reset Code' => 'رمز بازیابی',
-    'RESET_NOTICE' => 'اعلان بازیابی',    // should we add something here?
+    'RESET_NOTICE' => 'اعلان بازیابی',
     'RESET_CODE_SENT' => 'رمز بازیابی گذرواژه به ایملتان ارسال گردید.<br>',
     'MAIL_RESET_SUBJECT' => 'بازیابی گذرواژه در %s',
     'PASSWORD_RESET_REQUEST' => "برای بازیابی گذرواژه كنترل پنلتان, لطفا از این راهنما :\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nاستفاده كنید ویا از طریق, این پیوند https://%s/reset/?action=code&user=%s با وارد كردن دستور:\n%s گذرواژه خود را بازیابی كنید.\n\nدرصورتی كه شما درخواستبازیابی گذروایه نداده اید، این پیغام را نادیده بگیرید و عذر خواهی ما را پزیرا باشید.\n\n--\nكنترل پنل وستا\n",
@@ -605,7 +609,7 @@ $LANG['fa'] = [
     'ARCHIVE' => 'بایگانی',
     'EXTRACT' => 'بیرون كشیدن',
     'DOWNLOAD' => 'بارگیری',
-    'Are you sure?' => 'آیا اطمینان دارید؟',    // unused?
+    'Are you sure?' => 'آیا اطمینان دارید؟',
     'Hit' => 'اصابت',
     'to reload the page' => 'برای بارگذاری تازه صفحه',
     'Directory name cannot be empty' => 'نام پوشه نباید خالی باشد',
@@ -627,7 +631,7 @@ $LANG['fa'] = [
     'Create' => 'آفریدن',
     'Compress' => 'فشرده سازی',
     'OK' => 'تایید',
-    'YOU ARE COPYING' => 'درحال کپی کردن هستید',    // unused?
+    'YOU ARE COPYING' => 'درحال کپی کردن هستید',
     'YOU ARE REMOVING' => 'درحال پاک کردن کردن هستید',
     'Delete items' => 'پاک کردن موارد',
     'Copy files' => 'کپی فایلها',
@@ -708,9 +712,6 @@ $LANG['fa'] = [
 
     'Minutes' => 'دقیقه',
     'Hourly' => 'ساعتی',
-    'Daily' => 'روزانه',
-    'Weekly' => 'هفتگی',
-    'Monthly' => 'ماهانه',
     'Run Command' => 'اجرای دستور',
     'every month' => 'هر ماه',
     'every odd month' => 'ماه های فرد',
@@ -754,4 +755,5 @@ $LANG['fa'] = [
     'Do not use encryption' => 'از رمزگزاری استفاده نشود',
 
     'maximum characters length, including prefix' => 'بیشینه %s کاراکتر طول, شامل پیشوند',
-];
+
+);

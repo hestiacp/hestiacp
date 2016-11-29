@@ -3123,13 +3123,14 @@ form#vstobjects.suspended {
   background: rgba(50, 50, 50, 0.9);
   display: inline-block;
   position: fixed;
-  right: 20%;
+  left: 50%;
   bottom: 0;
   color: #eee;
   width: 800px;
   border: 1px solid #333;
   font-size: 13px;
   z-index: 120;
+  transform: translate(-50%, 0);
 }
 .shortcuts .header {
   border-bottom: 1px solid #333;

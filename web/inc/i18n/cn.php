@@ -41,6 +41,8 @@ $LANG['cn'] = array(
     'NETWORK'  => '网络',
     'Web Log Manager'  => 'Web 日志管理',
 
+    'no notifications'  => 'no notifications',
+
     'Add User'  => '添加用户',
     'Add Domain'  => '添加域名',
     'Add Web Domain' => '添加网站域名',
@@ -108,6 +110,7 @@ $LANG['cn'] = array(
     'disable autoupdate' => '停用自动更新',
     'turn on notifications' => '启用通知',
     'turn off notifications' => '停用通知',
+    'configure' => 'configure',
 
     'Adding User'  => '添加用户',
     'Editing User'  => '编辑用户',
@@ -250,6 +253,7 @@ $LANG['cn'] = array(
     'MySQL Usage on localhost'  => 'MySQL用量 (localhost)',
     'PostgreSQL Usage on localhost'  => 'PostgreSQL用量 (localhost)',
     'Bandwidth Usage eth0'  => '网络流量 (eth0)',
+    'Bandwidth Usage eth1'  => '网络流量 (eth1)',
     'Exim Usage'  => 'Exim 用量',
     'FTP Usage'  => 'FTP 用量',
     'SSH Usage'  => 'SSH 用量',
@@ -500,12 +504,12 @@ $LANG['cn'] = array(
     'RESTORE_SCHEDULED'  => '您的要求已加入队列中，恢复完成后会以电子邮件通知您',
     'RESTORE_EXISTS'  => '已经有一个恢复正在执行，请等待恢复完成后再操作',
 
-    'WEB_EXCLUSIONS' => "输入域名，每行一个。要排除所有域名请使用 *。要排除特定目录使用以下格式: domain.com:public_html/cache:public_html/tmp",
-    'DNS_EXCLUSIONS' => "输入域名，每行一个。要排除所有域名请使用 *",
-    'MAIL_EXCLUSIONS' => "输入域名，每行一个。要排除所有域名请使用 *。要排除特定帐户使用以下格式: domain.com:info:support:postmaster",
-    'DB_EXCLUSIONS' => "输入完整数据库名称，每行一个。要排除所有数据库请使用 *",
-    'CRON_EXCLUSIONS' => "要排除所有任务请使用 *",
-    'USER_EXCLUSIONS' => "输入目录名称，每行一个。要排除所有目录请使用 *",
+    'WEB_EXCLUSIONS' => '输入域名，每行一个。要排除所有域名请使用 *。要排除特定目录使用以下格式: domain.com:public_html/cache:public_html/tmp',
+    'DNS_EXCLUSIONS' => '输入域名，每行一个。要排除所有域名请使用 *',
+    'MAIL_EXCLUSIONS' => '输入域名，每行一个。要排除所有域名请使用 *。要排除特定帐户使用以下格式: domain.com:info:support:postmaster',
+    'DB_EXCLUSIONS' => '输入完整数据库名称，每行一个。要排除所有数据库请使用 *',
+    'CRON_EXCLUSIONS' => '要排除所有任务请使用 *',
+    'USER_EXCLUSIONS' => '输入目录名称，每行一个。要排除所有目录请使用 *',
 
     'Welcome to Vesta Control Panel'  => '欢迎来到 Vesta 管理系统',
     'MAIL_FROM'  => 'Vesta 管理系统 <noreply@%s>',
@@ -516,7 +520,7 @@ $LANG['cn'] = array(
     'FTP login credentials'  => 'FTP 登录信息',
     'FTP_ACCOUNT_READY' => "FTP账户已创建成功，并可以开始使用了！\n\n主机名称: %s\n用户名称: %s_%s\n密码: %s\n\n--\nVesta Control Panel\n",
 
-    'Database Credentials'  => "数据库登录信息",
+    'Database Credentials'  => '数据库登录信息',
     'DATABASE_READY' => "数据库已添加成功！\n\n数据库名称: %s\n用户名称: %s\n密码: %s\n%s\n\n--\nVesta Control Panel\n",
 
     'forgot password'  => '忘记密码',
@@ -525,7 +529,7 @@ $LANG['cn'] = array(
     'Confirm Password'  => '确认密码',
     'Reset'  => '重置',
     'Reset Code'  => '重置代码',
-    'RESET_NOTICE'  => '',    // should we add something here?
+    'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => '密码重置代码已发送到您的邮箱<br>',
     'MAIL_RESET_SUBJECT'  => '密码重置在 %s',
     'PASSWORD_RESET_REQUEST' => '重置密码请点击链接:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n或者您可以到 https://%s/reset/?action=code&user=%s 输入密码重置代码:\n%s\n\n如果您没有要求重置密码，请忽略此邮件\n\n--\nVesta Control Panel\n',
@@ -588,7 +592,6 @@ $LANG['cn'] = array(
     'save to favorites' => '收藏',
 
     'File Manager' => '文件管理',
-    'type' => '类型',
     'size' => '大小',
     'date' => '日期',
     'name' => '名称',
@@ -626,7 +629,7 @@ $LANG['cn'] = array(
     'Create' => '创建',
     'Compress' => '压缩',
     'OK' => '确定',
-    'YOU ARE COPYING' => 'YOU ARE COPYING',    // unused?
+    'YOU ARE COPYING' => 'YOU ARE COPYING',
     'YOU ARE REMOVING' => 'YOU ARE REMOVING',
     'Delete items' => '删除这些项目',
     'Copy files' => '复制这些文件',
@@ -691,7 +694,7 @@ $LANG['cn'] = array(
     'Select Bunch of Files' => '选择多个文件',
     'Add File to the Current Selection' => '将文件添加到当前选中区内',
     'Select All Files' => '选择所有文件',
-    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' => 
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         '快捷键的灵感来自旖旎的 GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> 文件管理器',
 
     'Licence Key' => '许可密匙',
@@ -707,9 +710,6 @@ $LANG['cn'] = array(
 
     'Minutes' => '分钟',
     'Hourly' => '小时',
-    'Daily' => '按天',
-    'Weekly' => '按周',
-    'Monthly' => '按月',
     'Run Command' => '运行指令于',
     'every month' => '每个月',
     'every odd month' => '每个奇数月',
@@ -735,6 +735,7 @@ $LANG['cn'] = array(
 
     'webalizer' => 'Webalizer',
     'awstats' => 'AWStats',
+
     'Vesta SSL' => 'Vesta SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',

@@ -40,6 +40,8 @@ $LANG['pt-BR'] = array(
     'NETWORK'  => 'NETWORK',
     'Web Log Manager'  => 'Gerenciador de Log Web',
 
+    'no notifications'  => 'no notifications',
+
     'Add User'  => 'Adicionar Usuário',
     'Add Domain'  => 'Adicionar Domínio',
     'Add Web Domain'  => 'Adicionar Domínio Web',
@@ -59,9 +61,9 @@ $LANG['pt-BR'] = array(
     'Search'  => 'Pesquisar',
     'Add one more FTP Account' => 'Adicionar mais uma conta FTP',
     'Overall Statistics'  => 'Estatísticas Gerais',
-    'Daily'  => 'Diariamente',
-    'Weekly'  => 'Semanalmente',
-    'Monthly'  => 'Mensalmente',
+    'Daily'  => 'Dia',
+    'Weekly'  => 'Semana',
+    'Monthly'  => 'Mês',
     'Yearly'  => 'Anualmente',
     'Add'  => 'Adicionar',
     'Back'  => 'Voltar',
@@ -107,6 +109,7 @@ $LANG['pt-BR'] = array(
     'disable autoupdate' => 'desabilitar atualização automática',
     'turn on notifications' => 'ativar notificações',
     'turn off notifications' => 'desativar notificações',
+    'configure' => 'configure',
 
     'Adding User'  => 'Adicionando Usuário',
     'Editing User'  => 'Editando Usuário',
@@ -249,6 +252,7 @@ $LANG['pt-BR'] = array(
     'MySQL Usage on localhost'  => 'Uso do MySQL em localhost',
     'PostgreSQL Usage on localhost'  => 'Uso do PostgreSQL em localhost',
     'Bandwidth Usage eth0'  => 'Uso de Banda em eth0',
+    'Bandwidth Usage eth1'  => 'Uso de Banda em eth1',
     'Exim Usage'  => 'Uso do Exim',
     'FTP Usage'  => 'Uso do FTP',
     'SSH Usage'  => 'Uso do SSH',
@@ -705,9 +709,6 @@ $LANG['pt-BR'] = array(
 
     'Minutes' => 'Minutos',
     'Hourly' => 'Hora',
-    'Daily' => 'Dia',
-    'Weekly' => 'Semana',
-    'Monthly' => 'Mês',
     'Run Command' => 'Executar Comando',
     'every month' => 'todo mês',
     'every odd month' => 'todo mês impar',

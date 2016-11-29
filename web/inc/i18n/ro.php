@@ -42,6 +42,8 @@ $LANG['ro'] = array(
     'NETWORK'  => 'REȚEA',
     'Web Log Manager'  => 'Web Log Manager',
 
+    'no notifications'  => 'no notifications',
+
     'Add User' => 'Adăugare utilizator',
     'Add Domain' => 'Adăugare domeniu',
     'Add Web Domain' => 'Adăugare domeniu web',
@@ -109,6 +111,7 @@ $LANG['ro'] = array(
     'disable autoupdate' => 'dezactivează actualizarea automată',
     'turn on notifications' => 'activează notificările',
     'turn off notifications' => 'dezactivează notificările',
+    'configure' => 'configure',
 
     'Adding User' => 'Adăugare utilizator',
     'Editing User' => 'Editare utilizator',
@@ -251,6 +254,7 @@ $LANG['ro'] = array(
     'MySQL Usage on localhost' => 'Utilizare MySQL în localhost',
     'PostgreSQL Usage on localhost' => 'Utilizare PostgreSQL în localhost',
     'Bandwidth Usage eth0' => 'Utilizare bandă rețea eth0',
+    'Bandwidth Usage eth1' => 'Utilizare bandă rețea eth1',
     'Exim Usage'  => 'Utilizare Exim',
     'FTP Usage' => 'FTP ',
     'SSH Usage' => 'SSH',
@@ -450,7 +454,7 @@ $LANG['ro'] = array(
     'PACKAGE_CREATED_OK' => 'Pachetul <a href="/edit/package/?package=%s"><b>%s</b></a> a fost creat cu succes.',
     'SSL_GENERATED_OK' => 'Certificatul SSL a fost generat cu succes.',
     'RULE_CREATED_OK' => 'Regula a fost creată cu succes.',
-    'BANLIST_CREATED_OK' => 'Adresa IP a fost blocată cu succes.',    // I'm not sure about this text
+    'BANLIST_CREATED_OK' => 'Adresa IP a fost blocată cu succes.',
     'Autoupdate has been successfully enabled' => 'Auto actualizarea a fost activată cu succes',
     'Autoupdate has been successfully disabled' => 'Auto actualizarea a fost dezactivată cu success',
     'Cronjob email reporting has been successfully enabled' => 'Raportarea cron prin email a fost activată cu succes',
@@ -526,7 +530,7 @@ $LANG['ro'] = array(
     'Confirm Password' => 'Repetarea parolei',
     'Reset' => 'Resetează',
     'Reset Code' => 'Cod de resetare',
-    'RESET_NOTICE' => '',    // should we add something here?
+    'RESET_NOTICE' => '',
     'RESET_CODE_SENT' => 'Codul de resetare a fost trimis la email-ul dvs..<br>',
     'MAIL_RESET_SUBJECT' => 'Schimbarea parolei %s',
     'PASSWORD_RESET_REQUEST'=>"Pentru schimbarea parolei, vă rugăm faceți clic aici:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n\n\nDacă nu ați solicitat o procedură de resetarea parolei, vă rugăm să ignorați această scrisoare.\n\n--\nPanoul de control Vesta\n",
@@ -604,7 +608,7 @@ $LANG['ro'] = array(
     'ARCHIVE' => 'ARHIVARE',
     'EXTRACT' => 'EXTRAGERE',
     'DOWNLOAD' => 'DESCĂRCARE',
-    'Are you sure?' => 'Ești sigur?',    // unused?
+    'Are you sure?' => 'Ești sigur?',
     'Hit' => 'Apasă',
     'to reload the page' => 'pentru a reîncărca pagina',
     'Directory name cannot be empty' => 'Numele de director nu poate rămâne gol',
@@ -626,7 +630,7 @@ $LANG['ro'] = array(
     'Create' => 'Creare',
     'Compress' => 'Compresare',
     'OK' => 'OK',
-    'YOU ARE COPYING' => 'COPIEZI',    // unused?
+    'YOU ARE COPYING' => 'COPIEZI',
     'YOU ARE REMOVING' => 'STERGI',
     'Delete items' => 'Stergere elemente',
     'Copy files' => 'Copiere fișiere',
@@ -691,8 +695,8 @@ $LANG['ro'] = array(
     'Select Bunch of Files' => 'Selectează grup de fișiere',
     'Add File to the Current Selection' => 'Adăugare fișier la selecţia curenta',
     'Select All Files' => 'Selectează toate fișierele',
-    'scurtăturile sunt inspirate de magnificul GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
-        'scurtăturile sunt inspirate de magnificul GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
+    'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
+    'scurtăturile sunt inspirate de magnificul GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
     'Licence Key' => 'Licență',
     'Enter License Key' => 'Introduceți licența',
@@ -707,9 +711,6 @@ $LANG['ro'] = array(
 
     'Minutes' => 'Minute',
     'Hourly' => 'Oral',
-    'Daily' => 'Zilnic',
-    'Weekly' => 'Săptămânal',
-    'Monthly' => 'Lunar',
     'Run Command' => 'Execută comanda',
     'every month' => 'în fiecare lună',
     'every odd month' => 'în fiecare lună impară',

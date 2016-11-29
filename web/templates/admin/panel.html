@@ -48,62 +48,74 @@
             </ul>
           </a>
         </div>
-        <div class="l-stat__col <?php if($TAB == 'WEB' ) echo 'l-stat__col--active' ?>">
-          <a href="/list/web/">
-            <div class="l-stat__col-title"><?=__('WEB')?></div>
-            <ul>
-              <li><?=__('domains')?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?></span></li>
-              <li><?=__('aliases')?>: <span><?=$panel[$user]['U_WEB_ALIASES']?></span></li>
-              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_WEB']?></span></li>
-            </ul>
-          </a>
-        </div>
-        <div class="l-stat__col <?php if($TAB == 'DNS' ) echo 'l-stat__col--active' ?>">
-          <a href="/list/dns/">
-            <div class="l-stat__col-title"><?=__('DNS')?></div>
-            <ul>
-              <li><?=__('domains')?>: <span><?=$panel[$user]['U_DNS_DOMAINS']?></span></li>
-              <li><?=__('records')?>: <span><?=$panel[$user]['U_DNS_RECORDS']?></span></li>
-              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_DNS']?></span></li>
-            </ul>
-          </a>
-        </div>
-        <div class="l-stat__col <?php if($TAB == 'MAIL' ) echo 'l-stat__col--active' ?>">
-          <a href="/list/mail/">
-            <div class="l-stat__col-title"><?=__('MAIL')?></div>
-            <ul>
-              <li><?=__('domains')?>: <span><?=$panel[$user]['U_MAIL_DOMAINS']?></span></li>
-              <li><?=__('accounts')?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?></span></li>
-              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_MAIL']?></span></li>
-            </ul>
-          </a>
-        </div>
-        <div class="l-stat__col <?php if($TAB == 'DB' ) echo 'l-stat__col--active' ?>">
-          <a href="/list/db/">
-            <div class="l-stat__col-title"><?=__('DB')?></div>
-            <ul>
-              <li><?=__('databases')?>: <span><?=$panel[$user]['U_DATABASES']?></span></li>
-              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_DB']?></span></li>
-            </ul>
-          </a>
-        </div>
-        <div class="l-stat__col <?php if($TAB == 'CRON' ) echo 'l-stat__col--active' ?>">
-          <a href="/list/cron/">
-            <div class="l-stat__col-title"><?=__('CRON')?></div>
-            <ul>
-              <li><?=__('jobs')?>: <span><?=$panel[$user]['U_CRON_JOBS']?></span></li>
-              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_CRON']?></span></li>
-            </ul>
-          </a>
-        </div>
-        <div class="l-stat__col <?php if($TAB == 'BACKUP' ) echo 'l-stat__col--active' ?>">
-          <a href="/list/backup/">
-            <div class="l-stat__col-title"><?=__('BACKUP')?></div>
-            <ul>
-              <li><?=__('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?></span></li>
-            </ul>
-          </a>
-        </div>
+		<?php if($panel[$user]['WEB_DOMAINS'] != "0") { ?>
+	        <div class="l-stat__col <?php if($TAB == 'WEB' ) echo 'l-stat__col--active' ?>">
+	          <a href="/list/web/">
+	            <div class="l-stat__col-title"><?=__('WEB')?></div>
+	            <ul>
+	              <li><?=__('domains')?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?></span></li>
+	              <li><?=__('aliases')?>: <span><?=$panel[$user]['U_WEB_ALIASES']?></span></li>
+	              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_WEB']?></span></li>
+	            </ul>
+	          </a>
+	        </div>
+		<?php } ?>
+		<?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?>
+	        <div class="l-stat__col <?php if($TAB == 'DNS' ) echo 'l-stat__col--active' ?>">
+	          <a href="/list/dns/">
+	            <div class="l-stat__col-title"><?=__('DNS')?></div>
+	            <ul>
+	              <li><?=__('domains')?>: <span><?=$panel[$user]['U_DNS_DOMAINS']?></span></li>
+	              <li><?=__('records')?>: <span><?=$panel[$user]['U_DNS_RECORDS']?></span></li>
+	              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_DNS']?></span></li>
+	            </ul>
+	          </a>
+	        </div>
+		<?php } ?>
+		<?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?>
+	        <div class="l-stat__col <?php if($TAB == 'MAIL' ) echo 'l-stat__col--active' ?>">
+	          <a href="/list/mail/">
+	            <div class="l-stat__col-title"><?=__('MAIL')?></div>
+	            <ul>
+	              <li><?=__('domains')?>: <span><?=$panel[$user]['U_MAIL_DOMAINS']?></span></li>
+	              <li><?=__('accounts')?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?></span></li>
+	              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_MAIL']?></span></li>
+	            </ul>
+	          </a>
+	        </div>
+		<?php } ?>
+		<?php if($panel[$user]['DATABASES'] != "0") { ?>
+	        <div class="l-stat__col <?php if($TAB == 'DB' ) echo 'l-stat__col--active' ?>">
+	          <a href="/list/db/">
+	            <div class="l-stat__col-title"><?=__('DB')?></div>
+	            <ul>
+	              <li><?=__('databases')?>: <span><?=$panel[$user]['U_DATABASES']?></span></li>
+	              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_DB']?></span></li>
+	            </ul>
+	          </a>
+	        </div>
+		<?php } ?>
+		<?php if($panel[$user]['CRON_JOBS'] != "0") { ?>
+	        <div class="l-stat__col <?php if($TAB == 'CRON' ) echo 'l-stat__col--active' ?>">
+	          <a href="/list/cron/">
+	            <div class="l-stat__col-title"><?=__('CRON')?></div>
+	            <ul>
+	              <li><?=__('jobs')?>: <span><?=$panel[$user]['U_CRON_JOBS']?></span></li>
+	              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_CRON']?></span></li>
+	            </ul>
+	          </a>
+	        </div>
+		<?php } ?>
+		<?php if($panel[$user]['BACKUPS'] != "0") { ?>
+	        <div class="l-stat__col <?php if($TAB == 'BACKUP' ) echo 'l-stat__col--active' ?>">
+	          <a href="/list/backup/">
+	            <div class="l-stat__col-title"><?=__('BACKUP')?></div>
+	            <ul>
+	              <li><?=__('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?></span></li>
+	            </ul>
+	          </a>
+	        </div>
+		<?php } ?>
       </div>
       <!-- /.l-stats -->
     </div>

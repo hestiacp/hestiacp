@@ -916,16 +916,18 @@ input[type="checkbox"] {
 
 .l-stat {
   margin: 0 auto;
-  display: table;
   margin: 34px auto;
   position: fixed;
   background-color: #fff;
   z-index: 100;
   padding-top: 30px;
+  width: 100%;
+  overflow: hidden;
 }
 .l-stat__col {
-  display: table-cell;
+  display: block;
   vertical-align: top;
+  float: left;
 }
 .l-stat__col a {
   display: inline-block;
@@ -2512,7 +2514,7 @@ label:hover {
 }
 
 .vst-list.flat {
-  border: 1px solid #fff; 
+  border: 1px solid #fff;
   color: #2c9491;
   text-transform: uppercase;
   font-weight: bold;

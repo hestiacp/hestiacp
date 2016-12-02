@@ -354,7 +354,7 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 .subcontext-menu { position: absolute; background-color: yellow; padding: 10px; border: 1px solid red; }
 
 
-.shortcuts { background: rgba(50, 50, 50, 0.9); display: inline-block; position: fixed; right: 20%; bottom: 0; color: #eee; width: 810px; border: 1px solid #333; font-family: arial; font-size: 13px; }
+.shortcuts { background: rgba(50, 50, 50, 0.9); display: inline-block; position: fixed; left: 50%; bottom: 0; color: #eee; width: 810px; border: 1px solid #333; font-family: arial; font-size: 13px; transform: translate(-50%, 0) }
 .shortcuts .header { border-bottom: 1px solid #333; height: 43px; }
 .shortcuts .title { text-transform: uppercase; color: #ffcc00; padding: 7px 0 7px 14px; display: inline-block; float: left; font-size: 11px; letter-spacing: 3px; font-weight: bold; line-height: 30px; }
 .shortcuts .close { background: url("/images/sprite.png?1446554103") repeat scroll -408px -469px; cursor: pointer; display: inline-block; float: right; height: 32px; padding-top: 11px; width: 46px; }

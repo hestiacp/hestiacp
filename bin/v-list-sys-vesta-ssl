@@ -99,7 +99,7 @@ csv_list() {
 
 # Parsing SSL certificate
 crt=$(cat $VESTA/ssl/certificate.crt |sed ':a;N;$!ba;s/\n/\\n/g')
-key=$(cat $VESTA/ssl/certificate.crt |sed ':a;N;$!ba;s/\n/\\n/g')
+key=$(cat $VESTA/ssl/certificate.key |sed ':a;N;$!ba;s/\n/\\n/g')
 
 # Parsing SSL certificate details without CA
 info=$(openssl x509 -text -in $VESTA/ssl/certificate.crt)

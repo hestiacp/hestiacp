@@ -29,7 +29,7 @@ $LANG['es'] = array(
     'DNS'  => 'DNS',
     'MAIL'  => 'CORREO',
     'DB'  => 'BD',
-    'TAREAS'  => 'TAREAS',
+    'CRON'  => 'TAREAS',
     'BACKUP'  => 'RESPALDOS',
 
     'LOGIN'  => 'INICIAR SESIÓN',
@@ -352,7 +352,7 @@ $LANG['es'] = array(
     'domains'  => 'dominios',
     'aliases'  => 'alias',
     'records'  => 'registros',
-    'jobs'  => 'trabajos',
+    'jobs'  => 'tareas',
     'username'  => 'nombre de usuario',
     'password'  => 'contraseña',
     'type'  => 'tipo',

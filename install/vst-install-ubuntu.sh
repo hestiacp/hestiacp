@@ -993,6 +993,11 @@ if [ "$named" = 'yes' ]; then
     update-rc.d bind9 defaults
     service bind9 start
     check_result $? "bind9 start failed"
+
+    # Workaround for OpenVZ/Virtuozzo
+    if [ -e "/proc/vz/veinfo" ]; then
+        sed -i "s/exit 0/service bind9 restart\nexit 0/" /etc/rc.local
+    fi
 fi
 
 #----------------------------------------------------------#

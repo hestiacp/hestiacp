@@ -51,7 +51,7 @@ is_password_valid
 get_domain_values 'web'
 
 # Defining ftp user shell
-shell='/sbin/nologin'
+shell=$(which nologin)
 if [ ! -z "$FTP_SHELL" ]; then
     shell=$FTP_SHELL
 fi

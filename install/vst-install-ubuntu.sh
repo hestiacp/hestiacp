@@ -999,7 +999,7 @@ if [ "$named" = 'yes' ]; then
 
     # Workaround for OpenVZ/Virtuozzo
     if [ -e "/proc/vz/veinfo" ]; then
-        sed -i "s/exit 0/service bind9 restart\nexit 0/" /etc/rc.local
+        sed -i "s/^exit 0/service bind9 restart\nexit 0/" /etc/rc.local
     fi
 fi
 

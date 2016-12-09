@@ -25,17 +25,20 @@ mysql_connect() {
             chmod 660 $mycnf
         fi
     fi
-    err="/tmp/e.mysql"
-    mysql --defaults-file=$mycnf -e 'SELECT VERSION()' >/dev/null 2> $err
+    mysql_out=$(mktemp)
+    mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
-            echo -e "Can't connect to MySQL $HOST\n$(cat $err)" |\
+            echo -e "Can't connect to MySQL $HOST\n$(cat $mysql_out)" |\
                 $SENDMAIL -s "$subj" $email
         fi
+        rm -f $mysql_out
         echo "Error: Connection to $HOST failed"
         log_event  "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
     fi
+    mysql_ver=$(cat $mysql_out |tail -n1 |cut -f 1 -d -)
+    rm -f $mysql_out
 }
 
 mysql_query() {
@@ -199,9 +202,13 @@ add_mysql_database() {
         IDENTIFIED BY '$dbpass'"
     mysql_query "$query" > /dev/null
 
-    query="SHOW GRANTS FOR \`$dbuser\`"
-    md5=$(mysql_query "$query" 2>/dev/null)
-    md5=$(echo "$md5" |grep 'PASSWORD' |tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+    if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
+        md5=$(mysql_query "SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
+        md5=$(echo "$md5" |grep password |cut -f8 -d \')
+    else
+        md5=$(mysql_query "SHOW GRANTS FOR \`$dbuser\`" 2>/dev/null)
+        md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+    fi
 }
 
 # Create PostgreSQL database

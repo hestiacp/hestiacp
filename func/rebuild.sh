@@ -531,44 +531,20 @@ rebuild_mail_domain_conf() {
 
 # Rebuild MySQL
 rebuild_mysql_database() {
-
-    host_str=$(grep "HOST='$HOST'" $VESTA/conf/mysql.conf)
-    eval $host_str
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
-        echo "Error: mysql config parsing failed"
-        if [ ! -z "$SENDMAIL" ]; then
-            echo "Can't parse MySQL DB config" | $SENDMAIL -s "$subj" $email
-        fi
-        log_event "$E_PARSING" "$ARGUMENTS"
-        exit $E_PARSING
+    mysql_connect $HOST
+    mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" >/dev/null
+    if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
+        mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" >/dev/null
+        mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" >/dev/null
+        query="UPDATE mysql.user SET authentication_string='$MD5'"
+        query="$query WHERE User='$DBUSER'"
+    else
+        query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
     fi
-
-    query='SELECT VERSION()'
-    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
-    if [ '0' -ne "$?" ]; then
-        echo "Error: Database connection to $HOST failed"
-        if [ ! -z "$SENDMAIL" ]; then
-            echo "Database connection to MySQL host $HOST failed" |\
-                $SENDMAIL -s "$subj" $email
-        fi
-        log_event  "$E_CONNECT" "$ARGUMENTS"
-        exit $E_CONNECT
-    fi
-
-    query="CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET"
-    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
-
-    query="GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@\`%\`"
-    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
-
-    query="GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@localhost"
-    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
-
-    query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER';"
-    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
-
-    query="FLUSH PRIVILEGES;"
-    mysql -h $HOST -u $USER -p$PASSWORD -e "$query" > /dev/null 2>&1
+    mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@\`%\`" >/dev/null
+    mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@localhost" >/dev/null
+    mysql_query "$query" >/dev/null
+    mysql_query "FLUSH PRIVILEGES" >/dev/null
 }
 
 # Rebuild PostgreSQL

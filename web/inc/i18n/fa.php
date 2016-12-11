@@ -1,8 +1,10 @@
 <?php
-/**
- * Vesta Farsi/Persian language file
+ /*
+ * 
+ *Vesta Farsi/Persian language file
  * By Foad Gh (secretjail@yahoo.com / http://www.Dotserver.ir )
  * Yalda night 2015
+ * َAnd Ham3D (hamed334@gmail.com)
  */
 $LANG['fa'] = array(
     'Packages' => 'بسته ها',
@@ -19,7 +21,7 @@ $LANG['fa'] = array(
     'USER' => 'كاربر',
     'WEB' => 'وب',
     'DNS' => 'نام سرور',
-	'MAIL' => 'پستی',
+    'MAIL' => 'پستی',
     'DB' => 'پایگاه داده',
     'CRON' => 'خودكار',
     'BACKUP' => 'پشتیبان',

@@ -125,6 +125,9 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
         policy="\"t=y; o=~;\""
         $BIN/v-add-dns-record $user $domain $record TXT "$policy"
 
+        # Wait one second to avoid editing bind zone in the same unixtime second, because bind will not reload zone if new and last modification occur in the same unixtime second
+        sleep 1
+
         record='mail._domainkey'
         selector="\"k=rsa\; p=$p\""
         $BIN/v-add-dns-record $user $domain $record TXT "$selector"

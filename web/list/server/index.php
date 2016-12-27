@@ -65,6 +65,7 @@ if (isset($_GET['web'])) {
     include($_SERVER['DOCUMENT_ROOT'].'/templates/admin/list_server_info.html');
     exec (VESTA_CMD.'v-list-sys-web-status', $output, $return_var);
     foreach($output as $file) {
+        $file=str_replace('border="0"', 'border="1"', $file);
         echo $file . "\n";
     }
     echo "    </pre>\n</body>\n</html>\n";

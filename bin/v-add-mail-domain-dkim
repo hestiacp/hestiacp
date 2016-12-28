@@ -65,7 +65,7 @@ if [ ! -z "$DNS_SYSTEM" ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
     p=$(cat $USER_DATA/mail/$domain.pub |grep -v ' KEY---' |tr -d '\n')
     record="_domainkey.$domain_idn"
     policy="\"t=y; o=~;\""
-    $BIN/v-add-dns-record $user $domain $record TXT "$policy"
+    $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no'
 
     record="mail._domainkey.$domain_idn"
     selector="\"k=rsa\; p=$p\""

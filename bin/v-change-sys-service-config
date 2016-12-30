@@ -95,7 +95,8 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
 
     if [ "$service" = 'php' ]; then
         if [ "$WEB_SYSTEM" = "nginx" ]; then
-            service=$(ls /usr/sbin/php*fpm* |cut -f 4 -d /)
+            #service=$(ls /usr/sbin/php*fpm* |cut -f 4 -d /)
+            service=$(service --status-all | grep -e '.*+.*php' | sed 's/.*\ //')
         else
             service=$WEB_SYSTEM
         fi

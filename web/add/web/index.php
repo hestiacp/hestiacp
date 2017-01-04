@@ -126,7 +126,7 @@ if (!empty($_POST['ok'])) {
 
     // Add DNS domain
     if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_public_ip, $output, $return_var);
+        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_public_ip." '' '' '' '' '' '' '' '' 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }

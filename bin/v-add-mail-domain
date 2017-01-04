@@ -123,7 +123,7 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
         p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
         record='_domainkey'
         policy="\"t=y; o=~;\""
-        $BIN/v-add-dns-record $user $domain $record TXT "$policy"
+        $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no'
 
         record='mail._domainkey'
         selector="\"k=rsa\; p=$p\""

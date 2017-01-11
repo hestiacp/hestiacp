@@ -11,9 +11,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 id=$3
 newid=$4
 restart=$5
@@ -22,6 +20,10 @@ restart=$5
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -71,10 +73,8 @@ fi
 #----------------------------------------------------------#
 
 # Restarting named
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns
-    check_result $? "DNS restart failed" >/dev/null
-fi
+$BIN/v-restart-dns $restart
+check_result $? "DNS restart failed" >/dev/null
 
 # Logging
 log_history "changed dns record id on $domain"

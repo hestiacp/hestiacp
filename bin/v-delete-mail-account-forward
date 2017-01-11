@@ -11,9 +11,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 account=$3
 forward=$4
 
@@ -21,6 +19,10 @@ forward=$4
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -38,9 +40,7 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
 if [ -z "$(echo $fwd | grep -w $forward)" ]; then
-    echo "Error: forward $forward doesn't exist"
-    log_event "$E_NOTEXIST $ARGUMENTS"
-    exit $E_NOTEXIST
+    check_result $E_NOTEXIST "forward $forward doesn't exist"
 fi
 
 

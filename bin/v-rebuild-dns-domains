@@ -83,10 +83,8 @@ update_user_value "$user" '$U_DNS_RECORDS' "$user_records"
 update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
 
 # Restarting named
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns
-    check_result $? "Bind restart failed" >/dev/null
-fi
+$BIN/v-restart-dns $restart
+check_result $? "Bind restart failed" >/dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

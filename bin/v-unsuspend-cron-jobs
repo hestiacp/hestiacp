@@ -42,10 +42,8 @@ done
 #----------------------------------------------------------#
 
 # Restarting crond
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-cron
-    check_result $? "Cron restart failed" >/dev/null
-fi
+$BIN/v-restart-cron $restart
+check_result $? "Cron restart failed" >/dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

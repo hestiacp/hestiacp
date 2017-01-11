@@ -65,19 +65,13 @@ done
 #----------------------------------------------------------#
 
 # Restarting web server
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web
-    check_result $? "restart" >/dev/null 2>&1
+$BIN/v-restart-web $restart
+check_result $? "restart" >/dev/null 2>&1
 
-    if [ ! -z "$PROXY_SYSTTEM" ]; then
-        $BIN/v-restart-proxy
-        check_result $? "restart" >/dev/null 2>&1
-    fi
+$BIN/v-restart-proxy $restart
+check_result $? "restart" >/dev/null 2>&1
 
-    if [ ! -z "$WEB_BACKEND" ]; then
-        $BIN/v-restart-proxy
-        check_result $? "restart" >/dev/null 2>&1
-    fi
-fi
+$BIN/v-restart-proxy $restart
+check_result $? "restart" >/dev/null 2>&1
 
 exit

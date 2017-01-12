@@ -73,10 +73,8 @@ fi
 #----------------------------------------------------------#
 
 # Restart ftp server
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-ftp
-    check_result $? "FTP restart failed" >/dev/null
-fi
+$BIN/v-restart-ftp $restart
+check_result $? "FTP restart failed" >/dev/null
 
 # Logging
 log_history "changed associated nat address on $ip to $nat_ip" '' 'admin'

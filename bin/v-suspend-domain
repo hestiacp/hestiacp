@@ -71,16 +71,14 @@ if [ -z "$domain_found" ]; then
 fi
 
 # Restarting services
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web
-    check_result $? "can't restart web" > /dev/null
-    if [ ! -z "$PROXY_SYSTEM" ]; then
-        $BIN/v-restart-proxy
-        check_result $? "can't restart proxy" > /dev/null
-    fi
-    $BIN/v-restart-dns
-    check_result $? "can't restart dns" > /dev/null
-fi
+$BIN/v-restart-web $restat
+check_result $? "can't restart web" > /dev/null
+
+$BIN/v-restart-proxy $restart
+check_result $? "can't restart proxy" > /dev/null
+
+$BIN/v-restart-dns $restart
+check_result $? "can't restart dns" > /dev/null
 
 
 #----------------------------------------------------------#

@@ -11,17 +11,19 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 template=$3
-restart="$4"
-
+restart=$4
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/func/ip.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -143,13 +145,11 @@ fi
 
 
 # Restarting web
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web
-    check_result $? "Web restart failed" >/dev/null
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
 
-    $BIN/v-restart-web-backend
-    check_result $? "Web backend restart failed" >/dev/null
-fi
+$BIN/v-restart-web-backend $restart
+check_result $? "Web backend restart failed" >/dev/null
 
 # Logging
 log_history "changed backend template for $domain to $template"

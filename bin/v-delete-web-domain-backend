@@ -11,13 +11,16 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -66,10 +69,8 @@ rm -f $pool/$backend_type.conf
 #----------------------------------------------------------#
 
 # Restarting backend server
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web-backend
-    check_result $? "Backend restart failed" >/dev/null
-fi
+$BIN/v-restart-web-backend $restart
+check_result $? "Backend restart failed" >/dev/null
 
 # Logging
 log_history "deleting backend support for $domain"

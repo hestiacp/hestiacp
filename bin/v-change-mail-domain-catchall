@@ -11,15 +11,17 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
-email="$3"
+domain=$2
+email=$3
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -52,7 +54,6 @@ fi
 
 # Change catchall in config
 update_object_value 'mail' 'DOMAIN' "$domain" '$CATCHALL' "$email"
-
 
 # Logging
 log_history "changed catchall email for $domain to $email"

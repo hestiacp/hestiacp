@@ -11,15 +11,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
-if [[ "$domain" =~ [[:upper:]] ]]; then
-    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
-fi
-domain_idn="$domain"
-if [[ "$domain" = *[![:ascii:]]* ]]; then
-    domain_idn=$(idn -t --quiet -a $domain)
-fi
+domain=$2
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
@@ -36,6 +28,10 @@ if [ "$MAIL_SYSTEM" = 'exim4' ]; then
 else
     MAIL_USER=exim
 fi
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -126,7 +122,7 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
         $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no'
 
         record='mail._domainkey'
-        selector="\"k=rsa\; p=$p\""
+        selector="\"v=DKIM1\; k=rsa\; p=$p\""
         $BIN/v-add-dns-record $user $domain $record TXT "$selector"
     fi
 fi

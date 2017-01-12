@@ -15,16 +15,15 @@ domain=$2
 new_domain=$3
 restart=$4
 
-domain_idn="$domain"
-if [[ "$domain" = *[![:ascii:]]* ]]; then
-    domain_idn=$(idn -t --quiet -a $domain)
-fi
-
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/func/ip.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#

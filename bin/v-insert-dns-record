@@ -45,10 +45,8 @@ echo "$data" >> $USER_DATA/dns/$domain.conf
 #----------------------------------------------------------#
 
 # Restarting named
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns $restart
-    check_result $? "Bind restart failed" >/dev/null
-fi
+$BIN/v-restart-dns $restart
+check_result $? "Bind restart failed" >/dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

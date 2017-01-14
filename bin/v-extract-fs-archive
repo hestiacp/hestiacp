@@ -82,7 +82,7 @@ fi
 # Extracting ziped archive
 if [ ! -z "$(echo $src_file |grep -i  '.zip')" ]; then
     sudo -u $user mkdir -p "$dst_dir" >/dev/null 2>&1
-    sudo -u $user unzip "$src_file" -d "$dst_dir" >/dev/null 2>&1
+    sudo -u $user unzip -o "$src_file" -d "$dst_dir" >/dev/null 2>&1
     rc=$?
 fi
 

@@ -97,7 +97,8 @@ if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
     fi
 else
     acme="$HOMEDIR/$user/web/$r_domain/public_html/.well-known/acme-challenge"
-    echo "$token" > $acme/$token.$thumb
+    mkdir -p $acme
+    echo "$token.$thumb" > $acme/$token
     chown -R $user:$user $HOMEDIR/$user/web/$r_domain/public_html/.well-known
 fi
 

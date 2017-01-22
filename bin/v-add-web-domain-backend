@@ -57,8 +57,8 @@ done
 # Adding backend config
 cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
     sed -e "s|%backend_port%|$backend_port|" \
-        -e "s|%user%|$user|"\
-        -e "s|%domain%|$domain|"\
+        -e "s|%user%|$user|g"\
+        -e "s|%domain%|$domain|g"\
         -e "s|%backend%|$backend_type|g" > $pool/$backend_type.conf
 
 

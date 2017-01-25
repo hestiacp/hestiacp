@@ -151,8 +151,10 @@ if [ ! -z "$mail_data" ]; then
         exim_user="Debian-exim"
     fi
     # Chowning mail conf files to exim user
-    find $HOMEDIR/$user/conf/mail/$domain -user root \
-        -exec chown $exim_user {} \;
+    if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then
+        find $HOMEDIR/$user/conf/mail/$domain -user root \
+            -exec chown $exim_user {} \;
+    fi
 
     # Rebuild config
     $BIN/v-unsuspend-mail-domain $user $domain no >> /dev/null 2>&1

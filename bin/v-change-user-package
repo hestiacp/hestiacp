@@ -43,7 +43,7 @@ is_package_avalable() {
             check_result $E_LIMIT "Package doesn't cover WEB_DOMAIN usage"
         fi
     fi
-    if [ "$DNS_DOMAINS" ! = 'unlimited' ]; then
+    if [ "$DNS_DOMAINS" != 'unlimited' ]; then
         if [ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ]; then
             check_result $E_LIMIT "Package doesn't cover DNS_DOMAIN usage"
         fi

@@ -21,6 +21,20 @@ ssl_dir=$3
 ssl_home=${4-same}
 restart="$5"
 
+# Additional argument formatting
+if [[ "$domain" =~ [[:upper:]] ]]; then
+    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
+fi
+if [[ "$domain" =~ ^www\..* ]]; then
+    domain=$(echo "$domain" |sed -e "s/^www.//")
+fi
+if [[ "$domain" =~ .*\.$ ]]; then
+    domain=$(echo "$domain" |sed -e "s/\.$//")
+fi
+
+domain=$(idn -t --quiet -u "$domain" )
+domain_idn=$(idn -t --quiet -a "$domain")
+
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh

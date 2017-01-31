@@ -2,6 +2,7 @@
 /**
  * Plik językowy panelu Vesta
  * Marek Pikuła <marek@pikula.co>
+ * Michal Slepko <michal@slepko.pl>
  */
 
 $LANG['pl'] = array(
@@ -707,30 +708,30 @@ $LANG['pl'] = array(
     'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Przeglądaj, kopiuj, edytuj i zarządzaj wszystkimi plikami należącymi do twojej domeny przy użyciu kompletnego Menedżera Plików.',
     'This is a commercial module, you would need to purchace license key to enable it.' => 'To jest moduł komercyjny. Żeby go aktywować trzeba zakupić klucz licencyjny.',
 
-    'Minutes' => 'Minutes',
-    'Hourly' => 'Hourly',
-    'Run Command' => 'Run Command',
-    'every month' => 'every month',
-    'every odd month' => 'every odd month',
-    'every even month' => 'every even month',
-    'every day' => 'every day',
-    'every odd day' => 'every odd day',
-    'every even day' => 'every even day',
-    'weekdays (5 days)' => 'weekdays (5 days)',
-    'weekend (2 days)' => 'weekend (2 days)',
-    'Monday' => 'Monday',
-    'Tuesday' => 'Tuesday',
-    'Wednesday' => 'Wednesday',
-    'Thursday' => 'Thursday',
-    'Friday' => 'Friday',
-    'Saturday' => 'Saturday',
-    'Sunday' => 'Sunday',
-    'every hour' => 'every hour',
-    'every two hours' => 'every two hours',
-    'every minute' => 'every minute',
-    'every two minutes' => 'every two minutes',
-    'every' => 'every',
-    'Generate' => 'Generate',
+    'Minutes' => 'Minuty',
+    'Hourly' => 'Godziny',
+    'Run Command' => 'Komenda',
+    'every month' => 'co miesiąc',
+    'every odd month' => 'w nieparzyste miesiące',
+    'every even month' => 'w parzyste miesiące',
+    'every day' => 'codziennie',
+    'every odd day' => 'w dni nieparzyste',
+    'every even day' => 'w dni parzyste',
+    'weekdays (5 days)' => 'dni robocze (5 dni)',
+    'weekend (2 days)' => 'weekend (2 dni)',
+    'Monday' => 'Poniedziałek',
+    'Tuesday' => 'Wtorek',
+    'Wednesday' => 'Środa',
+    'Thursday' => 'Czwartek',
+    'Friday' => 'Piątek',
+    'Saturday' => 'Sobota',
+    'Sunday' => 'Niedziela',
+    'every hour' => 'co godzinę',
+    'every two hours' => 'co 2 godziny',
+    'every minute' => 'co minutę',
+    'every two minutes' => 'co 2 minuty',
+    'every' => 'każdy',
+    'Generate' => 'Generuj',
 
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
@@ -744,13 +745,13 @@ $LANG['pl'] = array(
     'PUB_KEY' => 'PUB_KEY',
     'ISSUER' => 'ISSUER',
 
-    'Use server hostname' => 'Use server hostname',
-    'Use domain hostname' => 'Use domain hostname',
+    'Use server hostname' => 'Użyj hostname serwera',
+    'Use domain hostname' => 'Użyj domeny serwera',
     'Use STARTTLS' => 'Use STARTTLS',
     'Use SSL' => 'Use SSL',
-    'No encryption' => 'No encryption',
-    'Do not use encryption' => 'Do not use encryption',
+    'No encryption' => 'Brak szyfrowania',
+    'Do not use encryption' => 'Nie korzystaj z szyfrowania',
 
-    'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
+    'maximum characters length, including prefix' => 'maksymalna %s ilość znaków, łącznie z prefiksem',
 
 );

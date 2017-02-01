@@ -15,15 +15,8 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | sed -e 's/\.*$//g' -e 's/^\.*//g')
-if [[ "$domain" =~ [[:upper:]] ]]; then
-    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
-fi
-domain_idn="$domain"
-if [[ "$domain" = *[![:ascii:]]* ]]; then
-    domain_idn=$(idn -t --quiet -a $domain)
-fi
+domain=$2
+domain_idn=$2
 ip=$3
 ns1=$4
 ns2=$5
@@ -39,6 +32,10 @@ restart=${12}
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -56,37 +53,35 @@ template=$(get_user_value '$DNS_TEMPLATE')
 is_dns_template_valid $template
 
 if [ ! -z "$ns1" ]; then
-    ns1=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    ns1=$(echo $4 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns1'
 fi
 if [ ! -z "$ns2" ]; then
-    ns2=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    ns2=$(echo $5 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns2'
 fi
-
 if [ ! -z "$ns3" ]; then
-    ns3=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    ns3=$(echo $6 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns3'
 fi
 if [ ! -z "$ns4" ]; then
-    ns4=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    ns4=$(echo $7 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns4'
 fi
 if [ ! -z "$ns5" ]; then
-    ns5=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    ns5=$(echo $8 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns5'
 fi
 if [ ! -z "$ns6" ]; then
-    ns6=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    ns6=$(echo $9 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns6'
 fi
 if [ ! -z "$ns7" ]; then
-    ns7=$(echo ${10} | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    ns7=$(echo ${10} |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns7'
 fi
-
 if [ ! -z "$ns8" ]; then
-    ns8=$(echo ${11} | sed -e 's/\.*$//g' -e 's/^\.*//g')
+    ns8=$(echo ${11} |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns8'
 fi
 
@@ -203,10 +198,8 @@ increase_user_value "$user" '$U_DNS_DOMAINS'
 increase_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Restart named
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns
-    check_result $? "DNS restart failed"
-fi
+$BIN/v-restart-dns $restart
+check_result $? "DNS restart failed"
 
 # Logging
 log_history "added dns domain $domain"

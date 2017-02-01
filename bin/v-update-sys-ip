@@ -100,7 +100,7 @@ for ip in $ip_list; do
     check_ifconfig=$(/sbin/ifconfig |grep "$ip")
     if [ ! -e "$VESTA/data/ips/$ip" ] && [ ! -z "$check_ifconfig" ]; then
         interface=$(/sbin/ip addr |grep $ip |awk '{print $NF}')
-        interface=$(echo $interface |cut -f 1 -d :)
+        interface=$(echo "$interface" |cut -f 1 -d : |head -n 1)
         netmask=$(/sbin/ip addr |grep $ip |cut -f 2 -d / |cut -f 1 -d \ )
         netmask=$(convert_cidr $netmask)
         $BIN/v-add-sys-ip $ip $netmask $interface

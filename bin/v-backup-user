@@ -137,7 +137,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         mkdir -p $tmpdir/web/$domain/vesta
 
         # Get domain variables
-        domain_idn=$(idn -t --quiet -a "$domain")
+        format_domain_idn
         get_domain_values 'web'
 
         # Backup web.conf
@@ -286,7 +286,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         echo -e "$(date "+%F %T") $domain" |tee -a $BACKUP/$user.log
         mkdir -p $tmpdir/mail/$domain/conf
         mkdir -p $tmpdir/mail/$domain/vesta
-        domain_idn=$(idn -t --quiet -a "$domain")
+        format_domain_idn
 
         # Backup exim config
         if [[ "$MAIL_SYSTEM" =~ exim ]]; then

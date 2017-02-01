@@ -67,10 +67,8 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
 #----------------------------------------------------------#
 
 # Restart backend server
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web-backend
-    check_result $? "Web backend restart failed" >/dev/null
-fi
+$BIN/v-restart-web-backend $restart
+check_result $? "Web backend restart failed" >/dev/null
 
 # Logging
 log_history "added $WEB_BACKEND backend configuration for $domain"

@@ -148,6 +148,18 @@ if [ ! -z "$mail_data" ]; then
     $BIN/v-unsuspend-mail-domain $user $domain no >> /dev/null 2>&1
     $BIN/v-rebuild-mail-domains $owner no
     $BIN/v-rebuild-mail-domains $user
+
+    # Checking exim username for later chowning
+    exim_user="exim";
+    check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
+    if [ "$check_exim_username" -eq 1 ]; then
+        exim_user="Debian-exim"
+    fi
+    # Chowning mail conf files to exim user
+    if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then
+        find $HOMEDIR/$user/conf/mail/$domain -user root \
+            -exec chown $exim_user {} \;
+    fi
 fi
 
 # Update counters

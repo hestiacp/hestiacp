@@ -11,11 +11,10 @@
 
 # Argument definition
 user=$1
-domain=$(echo $2 | sed -e 's/\.*$//g' -e 's/^\.*//g')
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 dom_alias=$(idn -t --quiet -u "$3" )
-dom_alias=$(echo $dom_alias | sed -e 's/\.*$//g' -e 's/^\.*//g')
-dom_alias=$(echo $dom_alias | tr '[:upper:]' '[:lower:]')
+dom_alias=$(echo $dom_alias |sed -e 's/\.*$//g' -e 's/^\.*//g')
+dom_alias=$(echo $dom_alias |tr '[:upper:]' '[:lower:]')
 dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 restart="$4"
 
@@ -23,6 +22,10 @@ restart="$4"
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -63,7 +66,7 @@ else
         fi
         if [ ! -z "$rec" ]; then
             eval "$rec"
-            $BIN/v-delete-dns-record $user "$root" "$ID"
+            $BIN/v-delete-dns-record $user "$root" "$ID" $restart
         fi
     fi
 fi

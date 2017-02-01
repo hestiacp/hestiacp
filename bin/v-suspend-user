@@ -74,16 +74,14 @@ fi
 #----------------------------------------------------------#
 
 # Restarting system services
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web
-    check_result $? "Web restart failed" >/dev/null
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
 
-    $BIN/v-restart-dns
-    check_result $? "DNS restart failed" >/dev/null
+$BIN/v-restart-dns $restart
+check_result $? "DNS restart failed" >/dev/null
 
-    $BIN/v-restart-cron
-    check_result $? "Cron restart failed" >/dev/null
-fi
+$BIN/v-restart-cron $restart
+check_result $? "Cron restart failed" >/dev/null
 
 # Changing suspend value
 update_user_value "$user" '$SUSPENDED' 'yes'

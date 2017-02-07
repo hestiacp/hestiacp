@@ -109,6 +109,16 @@ if [ ! -z "$DNS_CLUSTER" ]; then
     fi
 fi
 
+# remove trailing dot at the end of NS/CNAME/MX/PTR/SRV record
+
+if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
+    trailing_dot2=$(echo $record | grep "\.$")
+    if [ ! -z $trailing_dot2 ]; then
+        record=$(echo "${record::-1}")
+    fi
+fi
+
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

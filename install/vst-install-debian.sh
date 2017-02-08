@@ -613,8 +613,9 @@ rm -f /etc/cron.d/awstats
 # Set directory color
 echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 
-# Register /sbin/nologin
+# Register /sbin/nologin and /usr/sbin/nologin
 echo "/sbin/nologin" >> /etc/shells
+echo "/usr/sbin/nologin" >> /etc/shells
 
 # NTP Synchronization
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate

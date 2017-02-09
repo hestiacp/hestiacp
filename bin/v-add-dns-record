@@ -39,7 +39,7 @@ fi
 # Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
 if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     trailing_dot=$(echo $dvalue | grep "\.$")
-    if [ -z $trailing_dot ]; then
+    if [ -z "$trailing_dot" ]; then
         dvalue="$dvalue."
     fi
 fi

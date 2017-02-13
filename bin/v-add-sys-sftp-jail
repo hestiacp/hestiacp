@@ -45,6 +45,7 @@ fi
 
 # Enabling jailed sftp
 if [ -z "$sftp_i" ]; then
+    echo " " >> $config
     echo "Subsystem sftp internal-sftp" >> $config
     echo "Match Group sftp-only" >> $config
     echo "ChrootDirectory /chroot/%u" >> $config

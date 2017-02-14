@@ -11,14 +11,17 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain_idn=$(idn -t --quiet -a "$domain")
+domain=$2
 restart=$3
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -58,10 +61,8 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' ''
 update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' ''
 
 # Restart proxy server
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-proxy
-    check_result $? "Proxy restart failed" >/dev/null
-fi
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
 log_history "disabled proxy support for $domain"

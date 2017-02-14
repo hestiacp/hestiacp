@@ -843,3 +843,37 @@ is_format_valid() {
         fi
     done
 }
+
+# Domain argument formatting
+format_domain() {
+    if [[ "$domain" = *[![:ascii:]]* ]]; then
+        if [[ "$domain" =~ [[:upper:]] ]]; then
+            domain=$(echo "$domain" |sed 's/[[:upper:]].*/\L&/')
+        fi
+    else
+        if [[ "$domain" =~ [[:upper:]] ]]; then
+            domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
+        fi
+    fi
+    if [[ "$domain" =~ ^www\..* ]]; then
+        domain=$(echo "$domain" |sed -e "s/^www.//")
+    fi
+    if [[ "$domain" =~ .*\.$ ]]; then
+        domain=$(echo "$domain" |sed -e "s/\.$//")
+    fi
+}
+
+format_domain_idn() {
+    if [[ "$domain_idn" = *[![:ascii:]]* ]]; then
+        domain_idn=$(idn -t --quiet -a $domain_idn)
+    fi
+}
+
+format_aliases() {
+    if [ ! -z "$aliases" ] && [ "$aliases" != 'none' ]; then
+        aliases=$(echo $aliases |tr '[:upper:]' '[:lower:]' |tr ',' '\n')
+        aliases=$(echo "$aliases" |sed -e "s/\.$//" |sort -u)
+        aliases=$(echo "$aliases" |grep -v www.$domain |sed -e "/^$/d")
+        aliases=$(echo "$aliases" |tr '\n' ',' |sed -e "s/,$//")
+    fi
+}

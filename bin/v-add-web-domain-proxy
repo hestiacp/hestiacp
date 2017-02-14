@@ -72,10 +72,8 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' "$template"
 update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 
 # Restarting web server
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-proxy
-    check_result $? "Proxy restart failed" >/dev/null
-fi
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
 
 log_history "enabled proxy support for $domain"
 log_event "$OK" "$ARGUMENTS"

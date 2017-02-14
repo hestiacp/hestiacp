@@ -12,13 +12,8 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
-domain_idn=$(idn -t --quiet -a "$domain")
-dom_alias=$(idn -t --quiet -u "$3" )
-dom_alias=$(echo $dom_alias | sed -e 's/\.*$//g' -e 's/^\.*//g')
-dom_alias=$(echo $dom_alias | tr '[:upper:]' '[:lower:]')
-dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
+domain=$2
+aliases=$3
 restart="$4"
 
 # Includes
@@ -26,6 +21,11 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/func/ip.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+format_aliases
 
 
 #----------------------------------------------------------#
@@ -39,7 +39,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_domain_new 'web' "$dom_alias"
+is_domain_new 'web' "$aliases"
 is_package_full 'WEB_ALIASES'
 
 
@@ -53,9 +53,9 @@ get_domain_values 'web'
 # Preparing domain values for the template substitution
 local_ip=$(get_real_ip $IP)
 if [ -z "$ALIAS" ]; then
-    ALIAS="$dom_alias"
+    ALIAS="$aliases"
 else
-    ALIAS="$ALIAS,$dom_alias"
+    ALIAS="$ALIAS,$aliases"
 fi
 prepare_web_domain_values
 
@@ -87,17 +87,15 @@ update_object_value 'web' 'DOMAIN' "$domain" '$ALIAS' "$ALIAS"
 increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Restarting web server
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-web
-    check_result $? "Web restart failed" >/dev/null
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
 
-    if [ ! -z "$PROXY_SYSTEM" ]; then
-        $BIN/v-restart-proxy
-        check_result $? "Proxy restart failed" >/dev/null
-    fi
-fi
+# Restarting proxy server
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
 
-log_history "added $dom_alias as alias for $domain"
+
+log_history "added $aliases for $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

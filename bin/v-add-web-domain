@@ -18,36 +18,22 @@
 # Argument definition
 user=$1
 domain=$2
+domain_idn=$2
 ip=$3
 restart=$4      # will be moved to the end soon
 aliases=$5
 proxy_ext=$6
-
-# Additional argument formatting
-if [[ "$domain" =~ [[:upper:]] ]]; then
-    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
-fi
-if [[ "$domain" =~ ^www\..* ]]; then
-    domain=$(echo "$domain" |sed -e "s/^www.//")
-fi
-if [[ "$domain" =~ .*\.$ ]]; then
-    domain=$(echo "$domain" |sed -e "s/\.$//")
-fi
-domain_idn="$domain"
-if [[ "$domain" = *[![:ascii:]]* ]]; then
-    domain_idn=$(idn -t --quiet -a $domain)
-fi
-if [ ! -z "$aliases" ] && [ "$aliases" != 'none' ]; then
-    aliases=$(echo $aliases |tr '[:upper:]' '[:lower:]' |tr ',' '\n')
-    aliases=$(echo "$aliases" |sed -e "s/\.$//" |sort -u |grep -v www.$domain)
-    aliases=$(echo "$aliases" |sed -e "/^$/d" |tr '\n' ',' |sed -e "s/,$//")
-fi
 
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/func/ip.sh
 source $VESTA/conf/vesta.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+format_aliases
 
 
 #----------------------------------------------------------#
@@ -178,10 +164,8 @@ $BIN/v-restart-web $restart
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    $BIN/v-restart-proxy $restart
-    check_result $? "Proxy restart failed" >/dev/null
-fi
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
 log_history "added web domain $domain"

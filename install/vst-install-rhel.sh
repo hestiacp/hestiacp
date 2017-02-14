@@ -27,7 +27,8 @@ if [ "$release" -eq 7 ]; then
     postgresql postgresql-server postgresql-contrib phpPgAdmin e2fsprogs
     openssh-clients ImageMagick curl mc screen ftp zip unzip flex sqlite pcre
     sudo bc jwhois mailx lsof tar telnet rrdtool net-tools ntp GeoIP freetype
-    fail2ban rsyslog iptables-services which vesta vesta-nginx vesta-php expect"
+    fail2ban rsyslog iptables-services which vesta vesta-nginx vesta-php
+    vim-common expect"
 else
     software="nginx httpd mod_ssl mod_ruid2 mod_fcgid mod_extract_forwarded
     php php-common php-cli php-bcmath php-gd php-imap php-mbstring php-mcrypt
@@ -37,7 +38,7 @@ else
     postgresql-server postgresql-contrib phpPgAdmin e2fsprogs openssh-clients
     ImageMagick curl mc screen ftp zip unzip flex sqlite pcre sudo bc jwhois
     mailx lsof tar telnet rrdtool net-tools ntp GeoIP freetype fail2ban
-    which vesta vesta-nginx vesta-php expect"
+    which vesta vesta-nginx vesta-php vim-common expect"
 fi
 
 # Defining help function

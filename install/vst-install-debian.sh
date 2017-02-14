@@ -29,7 +29,7 @@ if [ "$release" -eq 8 ]; then
         mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect libmail-dkim-perl"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect libmail-dkim-perl unrar"
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
@@ -41,7 +41,7 @@ else
         mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect unrar"
 fi
 
 # Defining help function
@@ -613,8 +613,9 @@ rm -f /etc/cron.d/awstats
 # Set directory color
 echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 
-# Register /sbin/nologin
+# Register /sbin/nologin and /usr/sbin/nologin
 echo "/sbin/nologin" >> /etc/shells
+echo "/usr/sbin/nologin" >> /etc/shells
 
 # NTP Synchronization
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate

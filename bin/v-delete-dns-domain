@@ -72,10 +72,8 @@ decrease_user_value "$user" '$U_DNS_DOMAINS'
 decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Restarting named
-if [ "$restart" != 'no' ]; then
-    $BIN/v-restart-dns $restart
-    check_result $? "Bind restart failed" >/dev/null
-fi
+$BIN/v-restart-dns $restart
+check_result $? "Bind restart failed" >/dev/null
 
 # Logging
 log_history "deleted dns domain $domain"

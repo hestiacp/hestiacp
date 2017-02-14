@@ -30,6 +30,21 @@ if [ "$release" = '16.04' ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron vesta vesta-nginx vesta-php expect"
+        
+elif [ "$release" = '16.10' ]; then
+    apt-get update
+    echo "deb http://pl.archive.ubuntu.com/ubuntu/ vivid main restricted universe multiverse" >> /etc/apt/sources.list
+    software="nginx apache2 apache2-utils apache2.2-common
+        apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
+        libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
+        php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
+        proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
+        spamassassin dovecot-imapd dovecot-pop3d roundcube-core
+        roundcube-mysql roundcube-plugins mysql-server mysql-common
+        mysql-client postgresql postgresql-contrib phppgadmin phpmyadmin mc
+        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
+        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
+        bsdmainutils cron vesta vesta-nginx vesta-php expect"
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf

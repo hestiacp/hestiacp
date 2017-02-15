@@ -32,8 +32,8 @@ if [ "$release" = '16.04' ]; then
         bsdmainutils cron vesta vesta-nginx vesta-php expect"
         
 elif [ "$release" = '16.10' ]; then
+    echo "deb http://archive.ubuntu.com/ubuntu/ vivid main restricted universe multiverse" >> /etc/apt/sources.list
     apt-get update
-    echo "deb http://pl.archive.ubuntu.com/ubuntu/ vivid main restricted universe multiverse" >> /etc/apt/sources.list
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi

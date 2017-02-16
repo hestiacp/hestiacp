@@ -1171,6 +1171,8 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcubemail/config.inc.php
+    chmod 640 /etc/roundcubemail/config.inc.php
+    chown root:apache /etc/roundcubemail/config.inc.php
     if [ -e "/usr/share/roundcubemail/SQL/mysql.initial.sql" ]; then
         mysql roundcube < /usr/share/roundcubemail/SQL/mysql.initial.sql
     else

@@ -1199,6 +1199,9 @@ if [ "$fail2ban" = 'yes' ]; then
         sed -i "${fline}s/true/false/" /etc/fail2ban/jail.local
     fi
     chkconfig fail2ban on
+    /bin/mkdir -p /var/run/fail2ban
+    sed -i "s/\[Service\]/\[Service\]\nExecStartPre = \/bin\/mkdir -p \/var\/run\/fail2ban/g" /usr/lib/systemd/system/fail2ban.service
+    systemctl daemon-reload
     service fail2ban start
     check_result $? "fail2ban start failed"
 fi

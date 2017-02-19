@@ -33,8 +33,8 @@ if [ "$release" = '16.04' ]; then
 elif [ "$release" = '16.10' ]; then
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
-        libapache2-mod-fcgid libapache2-mod-php php php-common php-cgi
-        php-mysql php-curl php-fpm php-pgsql awstats webalizer vsftpd
+        libapache2-mod-fcgid libapache2-mod-php7.0 php7.0 php7.0-common php7.0-cgi
+        php7.0-mysql php7.0-curl php7.0-fpm php7.0-pgsql awstats webalizer vsftpd
         proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mysql-server mysql-common
@@ -475,7 +475,7 @@ rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 # Backing up PHP configuration
 service php7.0-fpm stop > /dev/null 2>&1
 service php5-fpm stop > /dev/null 2>&1
-cp -r /etc/php7/* $vst_backups/php/ > /dev/null 2>&1
+cp -r /etc/php7.0/* $vst_backups/php/ > /dev/null 2>&1
 cp -r /etc/php5/* $vst_backups/php/ > /dev/null 2>&1
 cp -r /etc/php/* $vst_backups/php/ > /dev/null 2>&1
 
@@ -549,12 +549,12 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-php7//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php7.0//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php5//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$phpfpm" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/php7-fpm//")
+    software=$(echo "$software" | sed -e "s/php7.0-fpm//")
     software=$(echo "$software" | sed -e "s/php5-fpm//")
     software=$(echo "$software" | sed -e "s/php-fpm//")
 fi
@@ -590,7 +590,7 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mysql-server//')
     software=$(echo "$software" | sed -e 's/mysql-client//')
     software=$(echo "$software" | sed -e 's/mysql-common//')
-    software=$(echo "$software" | sed -e 's/php7-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.0-mysql//')
     software=$(echo "$software" | sed -e 's/php5-mysql//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
     software=$(echo "$software" | sed -e 's/phpMyAdmin//')
@@ -599,7 +599,7 @@ fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
-    software=$(echo "$software" | sed -e 's/php7-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.0-pgsql//')
     software=$(echo "$software" | sed -e 's/php5-pgsql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
@@ -1130,7 +1130,6 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     fi
 
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-    php7enmod mcrypt 2>/dev/null
     php5enmod mcrypt 2>/dev/null
     phpenmod mcrypt 2>/dev/null
     service apache2 restart

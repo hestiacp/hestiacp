@@ -1115,6 +1115,8 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     fi
     wget $vestacp/roundcube/main.inc.php -O /etc/roundcube/main.inc.php
     wget $vestacp/roundcube/db.inc.php -O /etc/roundcube/db.inc.php
+    chmod 640 /etc/roundcube/debian-db-roundcube.php
+    chown root:www-data /etc/roundcube/debian-db-roundcube.php
     wget $vestacp/roundcube/vesta.php -O \
         /usr/share/roundcube/plugins/password/drivers/vesta.php
     wget $vestacp/roundcube/config.inc.php -O \
@@ -1123,10 +1125,11 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
-
     if [ "$release" = '16.04' ]; then
         mv /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
         mv /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
+        chmod 640 /etc/roundcube/debian-db-roundcube.php
+        chown root:www-data /etc/roundcube/debian-db-roundcube.php
     fi
 
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql

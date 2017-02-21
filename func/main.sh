@@ -594,9 +594,24 @@ is_common_format_valid() {
         check_result $E_INVALID "invalid $2 format :: $1"
     fi
     if [[ $1 =~ \* ]]; then
-        if [ "$(echo $1 | grep -o '*'|wc -l)" -gt 1 ]; then
-            check_result $E_INVALID "invalid $2 format :: $1"
+        if [[ "$(echo $1 | grep -o \*\. |wc -l)" -eq 0 ]] && [[ $1 != '*' ]] ; then
+                        check_result $E_INVALID "invalid $2 format :: $1"
         fi
+    fi
+    if [[ $(echo -n "$1" | tail -c 1) =~ [^a-zA-Z0-9_*@] ]]; then
+           check_result $E_INVALID "invalid $2 format :: $1"
+    fi
+    if [[ $(echo -n "$1" | grep -c '\.\.') -gt 0 ]];then
+           check_result $E_INVALID "invalid $2 format :: $1"
+    fi
+    if [[ $(echo -n "$1" | head -c 1) =~ [^a-zA-Z0-9_*@] ]]; then
+           check_result $E_INVALID "invalid $2 format :: $1"
+    fi
+    if [[ $(echo -n "$1" | grep -c '\-\-') -gt 0 ]]; then
+           check_result $E_INVALID "invalid $2 format :: $1"
+    fi
+    if [[ $(echo -n "$1" | grep -c '\_\_') -gt 0 ]]; then
+           check_result $E_INVALID "invalid $2 format :: $1"
     fi
 }
 

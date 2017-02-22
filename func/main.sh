@@ -594,7 +594,7 @@ is_common_format_valid() {
         check_result $E_INVALID "invalid $2 format :: $1"
     fi
     if [[ $1 =~ \* ]]; then
-        if [[ "$(echo $1 | grep -o \*\. |wc -l)" -eq 0 ]] && [[ $1 != '*' ]] ; then
+        if [[ "$(echo $1 | grep -o '\*\.' |wc -l)" -eq 0 ]] && [[ $1 != '*' ]] ; then
                         check_result $E_INVALID "invalid $2 format :: $1"
         fi
     fi

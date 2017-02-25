@@ -63,7 +63,7 @@ chmod a+x /etc/cron.daily/quotacheck
 
 # Enabling group and user quota
 if [ ! -z "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ]; then
-    quotaon $mnt
+    quotaon -v $mnt
     check_result $? "quota can't be enabled in $mnt" $E_DISK
 fi
 

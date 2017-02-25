@@ -809,12 +809,12 @@ current_time=$(date "+%T")
 if [ "$run_time" -lt 1 ]; then
     run_time=1
 fi
-min=miutes
+min=minutes
 if [ "$run_time" -eq 1 ]; then
     min=minute
 fi
 
-echo "$(date "+%F %T") Size: $size Mb" |tee -a $BACKUP/$user.log
+echo "$(date "+%F %T") Size: $size MB" |tee -a $BACKUP/$user.log
 echo "$(date "+%F %T") Runtime: $run_time $min" |tee -a $BACKUP/$user.log
 
 

@@ -79,7 +79,9 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         else {
             $_SESSION['language'] = 'en';
         }
-
+        
+        // Regenerate session id to prevent session fixation
+        session_regenerate_id();
 
         // Redirect request to control panel interface
         if (!empty($_SESSION['request_uri'])) {

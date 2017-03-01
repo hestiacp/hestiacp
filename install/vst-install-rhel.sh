@@ -431,7 +431,7 @@ yum -y update
 check_result $? 'yum update failed'
 
 # Installing EPEL repository
-rpm -Uvh --force $vestacp/epel-release.rpm
+yum install epel-release -y
 check_result $? "Can't install EPEL repository"
 
 # Installing Remi repository

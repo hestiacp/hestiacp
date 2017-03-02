@@ -79,10 +79,10 @@ echo "$auth_user:$auth_hash" >> $htpasswd
 
 # Symbolic link for secure web templates
 if [ ! -L $shtpasswd ]; then
-  ln -s $htpasswd $shtpasswd 
+    ln -s $htpasswd $shtpasswd 
 fi
 if [ ! -L $shtaccess ]; then
-ln -s $htaccess $shtaccess
+    ln -s $htaccess $shtaccess
 fi
 
 # Restarting web server

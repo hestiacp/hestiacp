@@ -30,7 +30,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot ".$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -43,7 +43,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config1']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot-1 " .$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -56,7 +56,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config2']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot-2 " .$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -69,7 +69,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config3']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot-3 " .$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -82,7 +82,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config4']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot-4 " .$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -95,7 +95,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config5']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot-5 " .$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -108,7 +108,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config6']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot-6 " .$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -121,7 +121,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config7']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot-7 " .$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -134,7 +134,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config8']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." dovecot-8 " .$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);

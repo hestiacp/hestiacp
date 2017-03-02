@@ -34,62 +34,68 @@ if (isset($_SESSION['user'])) {
 
 // Basic auth
 if (isset($_POST['user']) && isset($_POST['password'])) {
-    $v_user = escapeshellarg($_POST['user']);
+    if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
+        $v_user = escapeshellarg($_POST['user']);
 
-    // Send password via tmp file
-    $v_password = exec('mktemp -p /tmp');
-    $fp = fopen($v_password, "w");
-    fwrite($fp, $_POST['password']."\n");
-    fclose($fp);
+        // Send password via tmp file
+        $v_password = exec('mktemp -p /tmp');
+        $fp = fopen($v_password, "w");
+        fwrite($fp, $_POST['password']."\n");
+        fclose($fp);
 
-    // Check user & password
-    exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." ".escapeshellarg($_SERVER['REMOTE_ADDR']),  $output, $return_var);
-    unset($output);
+        // Check user & password
+        exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." ".escapeshellarg($_SERVER['REMOTE_ADDR']),  $output, $return_var);
+        unset($output);
 
-    // Remove tmp file
-    unlink($v_password);
+        // Remove tmp file
+        unlink($v_password);
 
-    // Check API answer
-    if ( $return_var > 0 ) {
-        $ERROR = "<a class=\"error\">".__('Invalid username or password')."</a>";
+        // Check API answer
+        if ( $return_var > 0 ) {
+            $ERROR = "<a class=\"error\">".__('Invalid username or password')."</a>";
 
-    } else {
-
-        // Make root admin user
-        if ($_POST['user'] == 'root') $v_user = 'admin';
-
-        // Get user speciefic parameters
-        exec (VESTA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
-        $data = json_decode(implode('', $output), true);
-
-        // Define session user
-        $_SESSION['user'] = key($data);
-        $v_user = $_SESSION['user'];
-
-        // Get user favorites
-        get_favourites();
-
-        // Define language
-        $output = '';
-        exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
-        $languages = json_decode(implode('', $output), true);
-        if(in_array($data[$v_user]['LANGUAGE'], $languages)){
-            $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
-        }
-        else {
-            $_SESSION['language'] = 'en';
-        }
-
-
-        // Redirect request to control panel interface
-        if (!empty($_SESSION['request_uri'])) {
-            header("Location: ".$_SESSION['request_uri']);
-            unset($_SESSION['request_uri']);
-            exit;
         } else {
-            header("Location: /");
-            exit;
+
+            // Make root admin user
+            if ($_POST['user'] == 'root') $v_user = 'admin';
+
+            // Get user speciefic parameters
+            exec (VESTA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
+            $data = json_decode(implode('', $output), true);
+
+            // Define session user
+            $_SESSION['user'] = key($data);
+            $v_user = $_SESSION['user'];
+
+            // Get user favorites
+            get_favourites();
+
+            // Define language
+            $output = '';
+            exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+            $languages = json_decode(implode('', $output), true);
+            if(in_array($data[$v_user]['LANGUAGE'], $languages)){
+                $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
+            }
+            else {
+                $_SESSION['language'] = 'en';
+            }
+        
+            // Regenerate session id to prevent session fixation
+            session_regenerate_id();
+
+            // Redirect request to control panel interface
+            if (!empty($_SESSION['request_uri'])) {
+                header("Location: ".$_SESSION['request_uri']);
+                unset($_SESSION['request_uri']);
+                exit;
+            } else {
+                header("Location: /");
+                exit;
+            }
         }
+    } else {
+        $ERROR = "<a class=\"error\">".__('Invalid or missing token')."</a>";
     }
 }
 
@@ -118,6 +124,9 @@ if (empty($_SESSION['language'])) {
         $_SESSION['language'] = 'en';
     }
 }
+
+// Generate CSRF token
+$_SESSION['token'] = md5(uniqid(mt_rand(), true));
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
 require_once('../templates/header.html');

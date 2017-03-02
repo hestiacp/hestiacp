@@ -85,6 +85,29 @@
                                     <textarea size="20" class="vst-textinput" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
                                 </td>
                             </tr>
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="step-left">
+                                    <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Proxy Extensions');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <?php echo ""; }?>
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>

@@ -230,8 +230,8 @@ if (!empty($_POST['save'])) {
         $restart_proxy = 'yes';
     }
 
-    // Change proxy template / Update extension list
-    if ((!empty($_SESSION['PROXY_SYSTEM'])) && (!empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
+    // Change proxy template / Update extension list (admin only)
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && (!empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg'])) && ($_SESSION['user'] == 'admin')) {
         $ext = preg_replace("/\n/", " ", $_POST['v_proxy_ext']);
         $ext = preg_replace("/,/", " ", $ext);
         $ext = preg_replace('/\s+/', ' ',$ext);

@@ -106,7 +106,7 @@
                                     </select>
                                 </td>
                             </tr>
-                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
+                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
@@ -131,8 +131,8 @@
                                     </select>
                                 </td>
                             </tr>
-                            <?php echo ""; }?>
-                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
+                            <?php }?>
+                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
@@ -178,7 +178,7 @@
                                     </table>
                                 </td>
                             </tr>
-                            <?php echo ""; }?>
+                            <?php } ?>
                             <tr>
                                 <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>

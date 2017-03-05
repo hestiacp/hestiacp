@@ -172,6 +172,10 @@ add_web_config() {
         conf="$HOMEDIR/$user/conf/web/s$1.conf"
     fi
 
+    if [ -z "$domain_idn" ]; then
+        format_domain_idn
+    fi
+
     cat $WEBTPL/$1/$WEB_BACKEND/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
@@ -228,6 +232,9 @@ get_web_config_lines() {
         check_result $E_PARSING "can't parse template $1"
     fi
 
+    if [ -z "$domain_idn" ]; then
+        format_domain_idn
+    fi
     vhost_lines=$(grep -niF "name $domain_idn" $2)
     vhost_lines=$(echo "$vhost_lines" |egrep "$domain_idn($| |;)") #"
     vhost_lines=$(echo "$vhost_lines" |cut -f 1 -d :)

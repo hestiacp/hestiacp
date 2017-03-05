@@ -12,6 +12,7 @@
 # Argument definition
 user=$1
 domain=$2
+domain_idn=$2
 template=$3
 restart=$4
 

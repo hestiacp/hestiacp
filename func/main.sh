@@ -864,6 +864,9 @@ format_domain() {
 }
 
 format_domain_idn() {
+    if [ -z "$domain_idn" ]; then
+        domain_idn=$domain
+    fi
     if [[ "$domain_idn" = *[![:ascii:]]* ]]; then
         domain_idn=$(idn -t --quiet -a $domain_idn)
     fi

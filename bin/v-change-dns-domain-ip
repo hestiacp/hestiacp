@@ -13,7 +13,7 @@
 user=$1
 domain=$2
 domain_idn=$2
-p=$3
+ip=$3
 restart=$4
 
 # Includes

@@ -1091,6 +1091,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     chmod 640 /etc/roundcube/debian-db-roundcube.php
     chmod 640 /etc/roundcube/config.inc.php
     chown root:www-data /etc/roundcube/debian-db-roundcube.php
+    chown root:www-data /etc/roundcube/config.inc.php
     wget $vestacp/roundcube/vesta.php -O \
         /usr/share/roundcube/plugins/password/drivers/vesta.php
     wget $vestacp/roundcube/config.inc.php -O \
@@ -1108,6 +1109,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         chmod 640 /etc/roundcube/debian-db-roundcube.php
         chmod 640 /etc/roundcube/config.inc.php
         chown root:www-data /etc/roundcube/debian-db-roundcube.php
+        chown root:www-data /etc/roundcube/config.inc.php
         # RoundCube tinyMCE fix
         tinymceFixArchiveURL=$vestacp/roundcube/roundcube-tinymce.tar.gz
         tinymceParentFolder=/usr/share/roundcube/program/js

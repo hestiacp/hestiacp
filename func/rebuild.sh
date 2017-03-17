@@ -227,6 +227,8 @@ rebuild_web_domain_conf() {
 
     # Adding web stats parser
     if [ ! -z "$STATS" ]; then
+        domain_idn=$domain
+        format_domain_idn
         cat $WEBTPL/$STATS/$STATS.tpl |\
             sed -e "s|%ip%|$local_ip|g" \
                 -e "s|%web_system%|$WEB_SYSTEM|g" \

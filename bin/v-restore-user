@@ -567,6 +567,9 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Rebuilding mail config
         rebuild_mail_domain_conf
+        
+        domain_idn=$domain
+        format_domain_idn
 
         # Restoring emails
         if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then

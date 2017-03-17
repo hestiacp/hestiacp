@@ -89,15 +89,21 @@ uri=$(echo "$answer" |grep -A 3 http-01 |grep uri |cut -f 4 -d \")
 # Adding location wrapper for request challenge
 if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
     conf="$HOMEDIR/$user/conf/web/nginx.$r_domain.conf_letsencrypt"
+    sconf="$HOMEDIR/$user/conf/web/snginx.$r_domain.conf_letsencrypt"
     if [ ! -e "$conf" ]; then
         echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' > $conf
         echo '    default_type text/plain;' >> $conf
         echo '    return 200 "$1.'$thumb'";' >> $conf
         echo '}' >> $conf
     fi
+    if [ ! -e "$sconf" ]; then
+        ln -s "$conf" "$sconf"
+    fi
 else
     acme="$HOMEDIR/$user/web/$r_domain/public_html/.well-known/acme-challenge"
-    mkdir -p $acme
+    if [ ! -d "$acme" ]; then
+        mkdir -p $acme
+    fi
     echo "$token.$thumb" > $acme/$token
     chown -R $user:$user $HOMEDIR/$user/web/$r_domain/public_html/.well-known
 fi

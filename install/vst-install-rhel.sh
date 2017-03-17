@@ -1171,6 +1171,8 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcubemail/config.inc.php
+    chmod 640 /etc/roundcubemail/config.inc.php
+    chown root:apache /etc/roundcubemail/config.inc.php
     if [ -e "/usr/share/roundcubemail/SQL/mysql.initial.sql" ]; then
         mysql roundcube < /usr/share/roundcubemail/SQL/mysql.initial.sql
     else
@@ -1199,6 +1201,9 @@ if [ "$fail2ban" = 'yes' ]; then
         sed -i "${fline}s/true/false/" /etc/fail2ban/jail.local
     fi
     chkconfig fail2ban on
+    /bin/mkdir -p /var/run/fail2ban
+    sed -i "s/\[Service\]/\[Service\]\nExecStartPre = \/bin\/mkdir -p \/var\/run\/fail2ban/g" /usr/lib/systemd/system/fail2ban.service
+    systemctl daemon-reload
     service fail2ban start
     check_result $? "fail2ban start failed"
 fi

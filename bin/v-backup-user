@@ -137,6 +137,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         mkdir -p $tmpdir/web/$domain/vesta
 
         # Get domain variables
+        domain_idn=$domain
         format_domain_idn
         get_domain_values 'web'
 
@@ -286,6 +287,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         echo -e "$(date "+%F %T") $domain" |tee -a $BACKUP/$user.log
         mkdir -p $tmpdir/mail/$domain/conf
         mkdir -p $tmpdir/mail/$domain/vesta
+        domain_idn=$domain
         format_domain_idn
 
         # Backup exim config
@@ -809,12 +811,12 @@ current_time=$(date "+%T")
 if [ "$run_time" -lt 1 ]; then
     run_time=1
 fi
-min=miutes
+min=minutes
 if [ "$run_time" -eq 1 ]; then
     min=minute
 fi
 
-echo "$(date "+%F %T") Size: $size Mb" |tee -a $BACKUP/$user.log
+echo "$(date "+%F %T") Size: $size MB" |tee -a $BACKUP/$user.log
 echo "$(date "+%F %T") Runtime: $run_time $min" |tee -a $BACKUP/$user.log
 
 

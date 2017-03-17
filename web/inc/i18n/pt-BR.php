@@ -40,7 +40,7 @@ $LANG['pt-BR'] = array(
     'NETWORK'  => 'NETWORK',
     'Web Log Manager'  => 'Gerenciador de Log Web',
 
-    'no notifications'  => 'no notifications',
+    'no notifications'  => 'sem notificações',
 
     'Add User'  => 'Adicionar Usuário',
     'Add Domain'  => 'Adicionar Domínio',
@@ -406,7 +406,7 @@ $LANG['pt-BR'] = array(
     'cron job' => 'tarefa',
 
     'cron' => 'cron',
-    'user dir' => 'user dir',
+    'user dir' => 'diretório do usuário',
 
     'unlimited'  => 'ilimitado',
     '1 account'  => '1 conta',
@@ -422,9 +422,9 @@ $LANG['pt-BR'] = array(
     '1 cron job'  => '1 tarefa',
     '%s cron jobs'  => '%s tarefas',
     '1 archive'  => '1 arquivo',
-    '%s archives'  => '%s aquivos',
+    '%s archives'  => '%s arquivos',
     '1 item'  => '1 item',
-    '%s items'  => '%s items',
+    '%s items'  => '%s itens',
     '1 package'  => '1 pacote',
     '%s packages'  => '%s pacotes',
     '1 IP address'  => '1 endereço IP',
@@ -628,8 +628,8 @@ $LANG['pt-BR'] = array(
     'Create' => 'Criar',
     'Compress' => 'Comprimir',
     'OK' => 'OK',
-    'YOU ARE COPYING' => 'VOCE ESTA COPIANDO',
-    'YOU ARE REMOVING' => 'VOCE ESTA EXCLUINDO',
+    'YOU ARE COPYING' => 'VOCÊ ESTÁ COPIANDO',
+    'YOU ARE REMOVING' => 'VOCÊ ESTÁ EXCLUINDO',
     'Delete items' => 'Excluir itens',
     'Copy files' => 'Copiar arquivos',
     'Move files' => 'Mover arquivos',

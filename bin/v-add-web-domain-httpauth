@@ -24,6 +24,8 @@ source $VESTA/conf/vesta.conf
 # Defining htpasswd file
 htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
 htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+shtaccess="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.conf_htaccess"
+shtpasswd="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.htpasswd"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 
 
@@ -71,14 +73,22 @@ fi
 auth_hash=$($BIN/v-generate-password-hash htpasswd htpasswd $password)
 touch $htpasswd
 chmod 640 $htpasswd $htaccess
+chgrp $user $htpasswd $htaccess
 sed -i "/^$auth_user:/d" $htpasswd
 echo "$auth_user:$auth_hash" >> $htpasswd
+
+# Symbolic link for secure web templates
+if [ ! -L $shtpasswd ]; then
+    ln -s $htpasswd $shtpasswd 
+fi
+if [ ! -L $shtaccess ]; then
+    ln -s $htaccess $shtaccess
+fi
 
 # Restarting web server
 if [ "$restart" != 'no' ] && [ "$restart_required" = 'yes' ]; then
     $BIN/v-restart-web
 fi
-
 
 #----------------------------------------------------------#
 #                       Vesta                              #

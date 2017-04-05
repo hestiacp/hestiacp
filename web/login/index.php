@@ -126,7 +126,7 @@ if (empty($_SESSION['language'])) {
 }
 
 // Generate CSRF token
-$_SESSION['token'] = md5(uniqid(mt_rand(), true));
+$_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(16)); // generate 32-character cryptographically secure token
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
 require_once('../templates/header.html');

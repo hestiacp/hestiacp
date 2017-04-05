@@ -13,6 +13,7 @@
 # Argument definition
 user=$1
 domain=$2
+domain_idn=$2
 
 # Includes
 source $VESTA/func/main.sh

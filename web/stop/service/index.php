@@ -14,10 +14,14 @@ if ($_SESSION['user'] == 'admin') {
             exec (VESTA_CMD."v-stop-service ".$v_service, $output, $return_var);
         }
     }
+    
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = __('SERVICE_ACTION_FAILED',__('stop'),$v_service);
-            $_SESSION['error_srv'] = $error;
+        if (empty($error)) {
+            $error = __('SERVICE_ACTION_FAILED', __('stop'), $v_service);
+        }
+        
+        $_SESSION['error_srv'] = $error;
     }
     unset($output);
 }

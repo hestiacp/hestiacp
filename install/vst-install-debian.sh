@@ -29,7 +29,7 @@ if [ "$release" -eq 8 ]; then
         mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect libmail-dkim-perl unrar"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect libmail-dkim-perl unrar-free"
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
@@ -41,7 +41,7 @@ else
         mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect unrar"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect unrar-free"
 fi
 
 # Defining help function
@@ -1091,6 +1091,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     chmod 640 /etc/roundcube/debian-db-roundcube.php
     chmod 640 /etc/roundcube/config.inc.php
     chown root:www-data /etc/roundcube/debian-db-roundcube.php
+    chown root:www-data /etc/roundcube/config.inc.php
     wget $vestacp/roundcube/vesta.php -O \
         /usr/share/roundcube/plugins/password/drivers/vesta.php
     wget $vestacp/roundcube/config.inc.php -O \
@@ -1108,6 +1109,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         chmod 640 /etc/roundcube/debian-db-roundcube.php
         chmod 640 /etc/roundcube/config.inc.php
         chown root:www-data /etc/roundcube/debian-db-roundcube.php
+        chown root:www-data /etc/roundcube/config.inc.php
         # RoundCube tinyMCE fix
         tinymceFixArchiveURL=$vestacp/roundcube/roundcube-tinymce.tar.gz
         tinymceParentFolder=/usr/share/roundcube/program/js

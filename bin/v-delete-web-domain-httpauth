@@ -23,7 +23,8 @@ source $VESTA/conf/vesta.conf
 # Defining htpasswd file
 htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
 htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
-
+shtaccess="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.conf_htaccess"
+shtpasswd="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.htpasswd"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -54,7 +55,7 @@ sed -i "/^$auth_user:/d" $htpasswd
 
 # Deleting password protection
 if [ "$(echo "$AUTH_USER" |tr : '\n' |wc -l)" -le 1 ]; then
-    rm -f $htaccess $htpasswd
+    rm -f $htaccess $htpasswd $shtaccess $shtpasswd
     restart_required='yes'
 fi
 

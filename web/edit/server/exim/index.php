@@ -30,7 +30,7 @@ if (!empty($_POST['save'])) {
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config']));
-        fclose($new_conf);
+        fclose($fp);
         exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." exim ".$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);

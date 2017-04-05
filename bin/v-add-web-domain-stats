@@ -16,6 +16,7 @@
 # Argument definition
 user=$1
 domain=$2
+domain_idn=$2
 type=$3
 
 # Includes

@@ -12,6 +12,7 @@
 # Argument definition
 user=$1
 domain=$2
+domain_idn=$2
 
 # Includes
 source $VESTA/func/main.sh
@@ -20,6 +21,7 @@ source $VESTA/conf/vesta.conf
 # Additional argument formatting
 format_domain
 format_domain_idn
+# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
 
 #----------------------------------------------------------#

@@ -14,8 +14,8 @@ VESTA='/usr/local/vesta'
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 arch=$(uname -i)
 os='ubuntu'
-release="$(lsb_release -r|awk '{print $2}')"
-codename="$(lsb_release -c|awk '{print $2}')"
+release="$(lsb_release -s -r)"
+codename="$(lsb_release -s -c)"
 vestacp="http://$CHOST/$VERSION/$release"
 
 if [ "$release" = '16.04' ]; then

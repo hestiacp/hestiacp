@@ -118,6 +118,17 @@
                             </table>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="vst-text input-label">
+                            <?php print __('Send login credentials to email address') ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text"  class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+                            <input type="hidden" name="v_credentials" id="v_credentials">
+                        </td>
+                    </tr>
                 </table>
                 <table class="data-col2">
                     <tr>
@@ -185,15 +196,15 @@
                             <td><?=__('SMTP auth method')?>:</td>
                             <td><div><?=__('Normal password')?></div></td>
                         </tr>
-			<?
-			  list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-			  $webmail = "http://".$http_host."/webmail/";
-			  if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
-			  ?>
+            <?
+              list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+              $webmail = "http://".$http_host."/webmail/";
+              if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
+              ?>
                         <tr>
                             <td><?=__('Webmail URL')?>:</td>
                             <td><div><a class="vst" href="<?=$webmail?>" target="_blank"><?=$webmail?> <i></i></a></div></td>
-			</tr>
+            </tr>
                     </table>
                 </div>
             </td>

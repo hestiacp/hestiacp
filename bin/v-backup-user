@@ -853,6 +853,7 @@ update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 
 # Send notification
 if [ -e "$BACKUP/$user.log" ]; then
+    cd $BACKUP
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify

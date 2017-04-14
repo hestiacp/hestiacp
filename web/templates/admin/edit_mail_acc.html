@@ -125,6 +125,17 @@
                                 </table>
                             </td>
                         </tr>
+                    <tr>
+                        <td class="vst-text input-label">
+                            <?php print __('Send login credentials to email address') ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text"  class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+                            <input type="hidden" name="v_credentials" id="v_credentials">
+                        </td>
+                    </tr>
                     </table>
                     <table class="data-col2">
                         <tr>

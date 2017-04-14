@@ -750,10 +750,11 @@ $LANG['ru'] = array(
     'Use server hostname' => 'Использовать серверное имя хоста',
     'Use domain hostname' => 'Использовать доменное имя хоста',
     'Use STARTTLS' => 'Использовать STARTTLS',
-    'Use SSL' => 'Использовать SSL',
+    'Use SSL / TLS' => 'Использовать SSL / TLS',
     'No encryption' => 'Без шифрования',
     'Do not use encryption' => 'Не использовать шифрование',
 
     'maximum characters length, including prefix' => 'максимальное %s количество символов, включая префикс',
 
+    'Email Credentials' => 'Email Credentials',
 );

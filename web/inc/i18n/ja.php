@@ -747,10 +747,11 @@ $LANG['ja'] = array(
     'Use server hostname' => 'サーバーのホスト名を使用する',
     'Use domain hostname' => 'ドメインのホスト名を使用する',
     'Use STARTTLS' => 'STARTTLSを使用する',
-    'Use SSL' => 'SSLを使用する',
+    'Use SSL / TLS' => 'SSL/TLSを使用する',
     'No encryption' => '暗号化しない',
     'Do not use encryption' => '暗号化を使用しない',
 
     'maximum characters length, including prefix' => '接頭辞込みで最大 %s 文字',
 
+    'Email Credentials' => 'Email Credentials',
 );

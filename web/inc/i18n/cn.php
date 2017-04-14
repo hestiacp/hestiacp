@@ -750,10 +750,11 @@ $LANG['cn'] = array(
     'Use server hostname' => '采用服务器主机名',
     'Use domain hostname' => '采用域名',
     'Use STARTTLS' => '采用 STARTTLS 加密',
-    'Use SSL' => '采用 SSL 加密',
+    'Use SSL / TLS' => '采用 SSL / TLS 加密',
     'No encryption' => '不加密',
     'Do not use encryption' => '不要使用加密',
 
     'maximum characters length, including prefix' => '最多 %s 个字符，包含前缀',
 
+    'Email Credentials' => 'Email Credentials',
 );

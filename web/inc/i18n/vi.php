@@ -746,10 +746,11 @@ $LANG['vi'] = array(
     'Use server hostname' => 'Sử dụng hostname của máy chủ',
     'Use domain hostname' => 'Sử dụng hostname của tên miền',
     'Use STARTTLS' => 'Sử dụng STARTTLS',
-    'Use SSL' => 'Sử dụng SSL',
+    'Use SSL / TLS' => 'Sử dụng SSL / TLS',
     'No encryption' => 'Sử dụng mã hóa',
     'Do not use encryption' => 'Không dùng mã hóa',
 
     'maximum characters length, including prefix' => 'tối đa %s ký tự, bao gồm tiền tố',
 
+    'Email Credentials' => 'Email Credentials',
 );

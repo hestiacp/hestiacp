@@ -750,9 +750,11 @@ $LANG['nl'] = array(
     'Use server hostname' => 'Gebruik server hostnaam',
     'Use domain hostname' => 'Gebruik domein hostname',
     'Use STARTTLS' => 'Gebruik STARTTLS',
-    'Use SSL' => 'Gebruik SSL',
+    'Use SSL / TLS' => 'Gebruik SSL / TLS',
     'No encryption' => 'Geen encryptie',
     'Do not use encryption' => 'Gebruik geen encryptie',
 
     'maximum characters length, including prefix' => 'maximaal %s karakters lang, inclusief prefix',
+
+    'Email Credentials' => 'Email Credentials',
 );

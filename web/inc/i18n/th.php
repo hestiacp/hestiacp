@@ -749,10 +749,11 @@ $LANG['th'] = array(
     'Use server hostname' => 'ใช้ server hostname',
     'Use domain hostname' => 'ใช้ domain hostname',
     'Use STARTTLS' => 'ใช้ STARTTLS',
-    'Use SSL' => 'ใช้ SSL',
+    'Use SSL / TLS' => 'ใช้ SSL / TLS',
     'No encryption' => 'ไม่มี encryption',
     'Do not use encryption' => 'ไม่ใช้ encryption',
 
     'maximum characters length, including prefix' => 'ความยาว charset สูงสุด %s ตัว, รวมถึงคำนำหน้า',
 
+    'Email Credentials' => 'Email Credentials',
 );

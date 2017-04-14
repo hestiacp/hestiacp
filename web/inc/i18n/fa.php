@@ -720,8 +720,9 @@ $LANG['fa'] = array(
     'Use server hostname' => 'استفاده از نام سرور میزبان',
     'Use domain hostname' => 'استفاده از نام دامنه میزبان',
     'Use STARTTLS' => 'استفاده از STARTTLS',
-    'Use SSL' => 'استفاده از SSL',
+    'Use SSL / TLS' => 'استفاده از SSL / TLS',
     'No encryption' => 'بدون رمزگذاری',
     'Do not use encryption' => 'از رمزگذاری استفاده نشود',
     'maximum characters length, including prefix' => 'بیشینه %s کاراکتر طول, شامل پیشوند',
+    'Email Credentials' => 'Email Credentials',
 );

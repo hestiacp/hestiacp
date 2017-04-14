@@ -747,10 +747,11 @@ $LANG['bs'] = array(
     'Use server hostname' => 'Koristi server hostname',
     'Use domain hostname' => 'Koristi hostname domena',
     'Use STARTTLS' => 'Koristi STARTTLS',
-    'Use SSL' => 'Koristi SSL',
+    'Use SSL / TLS' => 'Koristi SSL / TLS',
     'No encryption' => 'Bez enkripcije',
     'Do not use encryption' => 'Nemoj koristiti enkripciju',
 
     'maximum characters length, including prefix' => 'maksimalna dužina sme biti %s karaktera, uključujući i prefix',
 
+    'Email Credentials' => 'Email lozinka i podešavanja',
 );

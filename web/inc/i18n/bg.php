@@ -742,11 +742,12 @@ $LANG['bg'] = array(
     'Use server hostname' => 'Използвай сървърното хост име',
     'Use domain hostname' => 'Използвай хост името на домейн',
     'Use STARTTLS' => 'Използвай STARTTLS',
-    'Use SSL' => 'Използвай SSL',
+    'Use SSL / TLS' => 'Използвай SSL / TLS',
     'No encryption' => 'Без криптиране',
     'Do not use encryption' => 'Не използвай криптиране',
 
     'maximum characters length, including prefix' => 'максималната дължина е %s символа, включително префикса',
 
+    'Email Credentials' => 'Email Credentials',
 );
 

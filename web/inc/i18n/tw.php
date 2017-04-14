@@ -752,10 +752,11 @@ $LANG['tw'] = array(
     'Use server hostname' => '使用伺服器主機名稱',
     'Use domain hostname' => '使用網域主機名稱',
     'Use STARTTLS' => '使用 STARTTLS',
-    'Use SSL' => '使用 SSL',
+    'Use SSL / TLS' => '使用 SSL / TLS',
     'No encryption' => '不加密',
     'Do not use encryption' => '不要使用加密',
 
     'maximum characters length, including prefix' => '最多 %s 字元(包含前綴)',
 
+    'Email Credentials' => 'Email Credentials',
 );

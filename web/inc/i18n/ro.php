@@ -749,10 +749,11 @@ $LANG['ro'] = array(
     'Use server hostname' => 'Utilizează nume de host server',
     'Use domain hostname' => 'Utilizează nume de host domeniu',
     'Use STARTTLS' => 'Utilizează STARTTLS',
-    'Use SSL' => 'Utilizează SSL',
+    'Use SSL / TLS' => 'Utilizează SSL / TLS',
     'No encryption' => 'Fără encriptare',
     'Do not use encryption' => 'Nu folosi encriptare',
 
     'maximum characters length, including prefix' => 'maximum %s caractere, incluzând prefixul',
 
+    'Email Credentials' => 'Email Credentials',
 );

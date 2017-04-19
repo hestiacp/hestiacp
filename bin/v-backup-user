@@ -557,6 +557,9 @@ ftp_backup() {
         check_result "$E_PARSING" "$error"
     fi
 
+    if [ -z $BPATH ]; then
+        BPATH="/";
+    fi
 
     # Debug info
     echo -e "$(date "+%F %T") Remote: ftp://$HOST$BPATH/$user.$date.tar"

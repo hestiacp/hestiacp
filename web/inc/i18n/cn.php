@@ -1,7 +1,7 @@
 <?php
 /**
  * Vesta language file
- * 浩浩 (github@myrevery.com)
+ * 浩浩 (github@myrevery.com) Feedback: https://myrevery.com/tag/vestacp
  * Kevin (kevin@kvm.la)
  */
 
@@ -196,7 +196,7 @@ $LANG['cn'] = array(
     'SSL Home Directory' => 'SSL主目录',
     'Lets Encrypt Support'  => 'Let&#39s Encrypt 支持',
     'Lets Encrypt'  => 'Let&#39s Encrypt',
-    'Your certificate will be automatically issued in 5 minutes' => '你的证书将在5分钟后自动签发完成',
+    'Your certificate will be automatically issued in 5 minutes' => '你的证书将在5分钟内自动签发完成',
     'Proxy Support' => '代理支持',
     'Proxy Extensions' => '代理扩展名',
     'Web Statistics' => '网站统计',
@@ -756,5 +756,5 @@ $LANG['cn'] = array(
 
     'maximum characters length, including prefix' => '最多 %s 个字符，包含前缀',
 
-    'Email Credentials' => 'Email Credentials',
+    'Email Credentials' => '电子邮件证书',
 );

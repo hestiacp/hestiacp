@@ -557,10 +557,6 @@ ftp_backup() {
         check_result "$E_PARSING" "$error"
     fi
 
-    if [ -z $BPATH ]; then
-        BPATH="/";
-    fi
-
     # Debug info
     echo -e "$(date "+%F %T") Remote: ftp://$HOST$BPATH/$user.$date.tar"
 
@@ -577,8 +573,12 @@ ftp_backup() {
     fi
 
     # Check ftp permissions
-    ftpc "mkdir $BPATH" > /dev/null 2>&1
-    ftmpdir="$BPATH/vst.bK76A9SUkt"
+    if [ -z $BPATH ]; then
+            ftmpdir="vst.bK76A9SUkt"
+        else
+            ftpc "mkdir $BPATH" > /dev/null 2>&1
+            ftmpdir="$BPATH/vst.bK76A9SUkt"
+    fi
     ftpc "mkdir $ftmpdir" "rm $ftmpdir"
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" |grep -v Trying)
     if [ ! -z "$ftp_result" ] ; then
@@ -591,7 +591,11 @@ ftp_backup() {
     fi
 
     # Checking retention
-    backup_list=$(ftpc "cd $BPATH" "ls" |awk '{print $9}' |grep "^$user\.")
+    if [ -z $BPATH ]; then
+        backup_list=$(ftpc "ls" |awk '{print $9}' |grep "^$user\.")
+    else
+        backup_list=$(ftpc "cd $BPATH" "ls" |awk '{print $9}' |grep "^$user\.")
+    fi
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS + 1))
@@ -599,14 +603,22 @@ ftp_backup() {
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar$//")
             echo -e "$(date "+%F %T") Rotated ftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
-            ftpc "cd $BPATH" "delete $backup"
+            if [ -z $BPATH ]; then
+                ftpc "delete $backup"
+            else
+                ftpc "cd $BPATH" "delete $backup"
+            fi
         done
     fi
 
     # Uploading backup archive
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        ftpc "cd $BPATH" "put $user.$date.tar"
+        if [ -z $BPATH ]; then
+            ftpc "put $user.$date.tar"
+         else
+            ftpc "cd $BPATH" "put $user.$date.tar"
+        fi
     else
         cd $tmpdir
         tar -cf $BACKUP/$user.$date.tar .

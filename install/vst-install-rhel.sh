@@ -607,11 +607,12 @@ fi
 #----------------------------------------------------------#
 
 # Installing rpm packages
-if [ -z "$disable_remi" ]; then 
-    yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta,remi*"\
+if [ "$remi" = 'yes' ]; then
+    yum -y --disablerepo=* \
+        --enablerepo="*base,*updates,nginx,epel,vesta,remi*" \
         install $software
 else
-    yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta" \
+    yum -y --disablerepo=* --enablerepo="*base,*updates,nginx,epel,vesta" \
         install $software
 fi
 check_result $? "yum install failed"

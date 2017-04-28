@@ -70,6 +70,7 @@ done
 
 # Creating temporary directory
 tmpdir=$(mktemp -p $BACKUP -d)
+
 if [ "$?" -ne 0 ]; then
     echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
     check_result $E_NOTEXIST "can't create tmp dir"
@@ -478,7 +479,7 @@ local_backup(){
     rm -f $BACKUP/$user.$date.tar
 
     # Checking retention
-    backup_list=$(ls -lrt $BACKUP/ |awk '{print $9}' |grep "^$user\.")
+    backup_list=$(ls -lrt $BACKUP/ |awk '{print $9}' |grep "^$user\." | grep ".tar")
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$BACKUPS" -le "$backups_count" ]; then
         backups_rm_number=$((backups_count - BACKUPS))
@@ -623,7 +624,11 @@ ftp_backup() {
         cd $tmpdir
         tar -cf $BACKUP/$user.$date.tar .
         cd $BACKUP/
-        ftpc "cd $BPATH" "put $user.$date.tar"
+        if [ -z $BPATH ]; then
+            ftpc "put $user.$date.tar"
+        else
+            ftpc "cd $BPATH" "put $user.$date.tar"
+        fi
         rm -f $user.$date.tar
     fi
 }
@@ -721,7 +726,11 @@ sftp_backup() {
         tee -a $BACKUP/$user.log
 
     # Checking network connection and write permissions
-    sftmpdir="$BPATH/vst.bK76A9SUkt"
+    if [ -z $BPATH ]; then
+        sftmpdir="vst.bK76A9SUkt"
+    else
+        sftmpdir="$BPATH/vst.bK76A9SUkt"
+    fi
     sftpc "mkdir $BPATH" > /dev/null 2>&1
     sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
     rc=$?
@@ -738,7 +747,11 @@ sftp_backup() {
     fi
 
     # Checking retention
-    backup_list=$(sftpc "cd $BPATH" "ls -l" |awk '{print $9}'|grep "^$user\.")
+    if [ -z $BPATH ]; then
+        backup_list=$(sftpc "ls -l" |awk '{print $9}'|grep "^$user\.")
+    else
+        backup_list=$(sftpc "cd $BPATH" "ls -l" |awk '{print $9}'|grep "^$user\.")
+    fi
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS + 1))
@@ -746,7 +759,11 @@ sftp_backup() {
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar.*$//")
             echo -e "$(date "+%F %T") Rotated sftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
-            sftpc "cd $BPATH" "rm $backup" > /dev/null 2>&1
+            if [ -z $BPATH ]; then
+                sftpc "rm $backup" > /dev/null 2>&1
+            else
+                sftpc "cd $BPATH" "rm $backup" > /dev/null 2>&1
+            fi
         done
     fi
 
@@ -754,12 +771,20 @@ sftp_backup() {
     echo "$(date "+%F %T") Uploading $user.$date.tar"|tee -a $BACKUP/$user.log
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        sftpc "cd $BPATH" "put $user.$date.tar" > /dev/null 2>&1
+        if [ -z $BPATH ]; then
+            sftpc "put $user.$date.tar" "chmod 0600 $user.$date.tar" > /dev/null 2>&1
+        else
+            sftpc "cd $BPATH" "put $user.$date.tar" "chmod 0600 $user.$date.tar" > /dev/null 2>&1
+        fi
     else
         cd $tmpdir
         tar -cf $BACKUP/$user.$date.tar .
         cd $BACKUP/
-        sftpc "cd $BPATH" "put $user.$date.tar" > /dev/null 2>&1
+        if [ -z $BPATH ]; then
+            sftpc "put $user.$date.tar" "chmod 0600 $user.$date.tar" > /dev/null 2>&1
+        else
+            sftpc "cd $BPATH" "put $user.$date.tar" "chmod 0600 $user.$date.tar" > /dev/null 2>&1
+        fi
         rm -f $user.$date.tar
     fi
 }

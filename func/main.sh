@@ -737,7 +737,7 @@ is_cron_format_valid() {
             fi
         done
     fi
-    if [[ "$1" =~ ^[0-9]+$ ]] && [ "$1" -lt $limit ]; then
+    if [[ "$1" =~ ^[0-9]+$ ]] && [ "$1" -le $limit ]; then
         check_format='ok'
     fi
     if [ "$check_format" != 'ok' ]; then

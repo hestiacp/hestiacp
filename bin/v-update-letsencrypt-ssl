@@ -52,6 +52,7 @@ for user in $users; do
                 $BIN/v-add-letsencrypt-domain $user $domain
             fi
         fi
+        sleep 10
     done
 done
 

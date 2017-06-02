@@ -84,7 +84,7 @@ gen_pass() {
     echo "$PASS"
 }
 
-# Defning return code check function
+# Defining return code check function
 check_result() {
     if [ $1 -ne 0 ]; then
         echo "Error: $2"
@@ -222,7 +222,7 @@ fi
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
-    check_error 1 "Script can be run executed only by root"
+    check_result 1 "Script can be run executed only by root"
 fi
 
 # Checking admin user account
@@ -270,7 +270,7 @@ fi
 #                       Brief Info                         #
 #----------------------------------------------------------#
 
-# Printing nice ascii aslogo
+# Printing nice ascii as logo
 clear
 echo
 echo ' _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|'
@@ -704,7 +704,6 @@ chmod -R 750 $VESTA/data/queue
 chmod 660 $VESTA/log/*
 rm -f /var/log/vesta
 ln -s $VESTA/log /var/log/vesta
-chown admin:admin $VESTA/data/sessions
 chmod 770 $VESTA/data/sessions
 
 # Generating vesta configuration
@@ -973,6 +972,7 @@ if [ "$mysql" = 'yes' ]; then
 
     mkdir -p /var/lib/mysql
     chown mysql:mysql /var/lib/mysql
+    mkdir -p /etc/my.cnf.d
 
     if [ $release -ne 7 ]; then
         service='mysqld'
@@ -1282,7 +1282,7 @@ command="sudo $VESTA/bin/v-update-sys-rrd"
 $VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 service crond restart
 
-# Building inititall rrd images
+# Building initial rrd images
 $VESTA/bin/v-update-sys-rrd
 
 # Enabling file system quota

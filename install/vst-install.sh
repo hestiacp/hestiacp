@@ -41,11 +41,12 @@ fi
 case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
     Debian)     type="debian" ;;
     Ubuntu)     type="ubuntu" ;;
+    Amazon)     type="ami" ;;
     *)          type="rhel" ;;
 esac
 
 # Fallback to Ubuntu
-if [ ! -e "/etc/redhat-release" ]; then
+if [[ ! -e "/etc/redhat-release" && ! -e "/etc/system-release" ]]; then
     type='ubuntu'
 fi
 
@@ -74,3 +75,4 @@ if [ -e '/usr/bin/curl' ]; then
 fi
 
 exit
+

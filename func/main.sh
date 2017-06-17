@@ -727,10 +727,11 @@ is_cron_format_valid() {
             check_format='ok'
         fi
     fi
-    if [[ "$1" =~ ^[0-9][-|,|0-9]{0,28}[0-9]$ ]]; then
+    if [[ "$1" =~ ^[0-9][-|,|0-9]{0,70}[\/][0-9]$ ]]; then
         check_format='ok'
         crn_values=${1//,/ }
         crn_values=${crn_values//-/ }
+        crn_values=${crn_values//\// }
         for crn_vl in $crn_values; do
             if [ "$crn_vl" -gt $limit ]; then
                 check_format='invalid'

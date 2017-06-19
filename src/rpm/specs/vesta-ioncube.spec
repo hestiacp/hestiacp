@@ -29,7 +29,7 @@ install -d  %{buildroot}%{_vestadir}
 rm -rf %{buildroot}
 
 %post
-if [ $1 -ge 2 ]; then
+if [ $1 -eq 1 ]; then
     if [ -e /usr/local/vesta/ioncube/add_ioncube.sh ]; then
         /usr/local/vesta/ioncube/add_ioncube.sh
     fi

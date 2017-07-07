@@ -42,7 +42,7 @@ update_ip_value '$NAME' "$ip_name"
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed associated dns on $ip to $domain" '' 'admin'
+log_history "changed associated dns on $ip to $ip_name" '' 'admin'
 log_event "$OK" "$ARGUMENTS"
 
 exit

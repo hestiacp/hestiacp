@@ -1,8 +1,12 @@
 <?php
 /**
  * Vesta language file
- * 浩浩 (github@myrevery.com) Feedback: https://myrevery.com/tag/vestacp
- * Kevin (kevin@kvm.la)
+ * 浩浩 (github#myrevery.com) Feedback: https://myrevery.com/tag/vestacp
+ * Kevin (kevin#kvm.la)
+ * Tips:
+ * 欢迎大家参与完善此翻译档，但请慎重选择最终中文字词
+ * 首先请勿使用口语化简略词，同时还应考虑字符长度及排列方式对Web页面布局的影响
+ * 请针对显示设备的各种尺寸、比例、分辨率及不同缩放率等进行测试确保无误后再发布
  */
 
 $LANG['cn'] = array(
@@ -192,13 +196,13 @@ $LANG['cn'] = array(
     'Backup System' => '备份系统',
     'backup exclusions' => '备份排除项目',
     'template' => '模板',
-    'SSL Support' => '使用SSL',
-    'SSL Home Directory' => 'SSL站点根目录',
-    'Lets Encrypt Support'  => '使用Let&#39s Encrypt',
+    'SSL Support' => '启用SSL',
+    'SSL Home Directory' => 'SSL站点主目录',
+    'Lets Encrypt Support'  => '采用 Let&#39s Encrypt',
     'Lets Encrypt'  => 'Let&#39s Encrypt',
     'Your certificate will be automatically issued in 5 minutes' => '证书将在5分钟内自动签发完成',
-    'Proxy Support' => '使用反向代理',
-    'Proxy Extensions' => '反代的文件类型',
+    'Proxy Support' => '反向代理',
+    'Proxy Extensions' => '代理的文件扩展名',
     'Web Statistics' => '网站统计',
     'Additional FTP Account' => '额外的FTP账户',
     'Path'  => '路径',
@@ -706,9 +710,9 @@ $LANG['cn'] = array(
     'Disable and Cancel Licence' => '停用并取消许可',
     'Licence Activated' => '许可已激活',
     'Licence Deactivated' => '许可已停用',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => '限制用户 只能通过 SSH 访问自己的主目录。',
+    'Restrict users so that they cannot use SSH and access only their home directory.' => '限制用户，使他们通过 SSH 只能访问自己的主目录。',
     'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => '功能全面的文件管理器，浏览，复制，编辑，查看和检索你的 Web 文件。',
-    'This is a commercial module, you would need to purchace license key to enable it.' => '这是商业模块，请购买许可密匙再启用。',
+    'This is a commercial module, you would need to purchace license key to enable it.' => '这是商业模块，请购买许可密匙来启用它。',
 
     'Minutes' => '分钟',
     'Hourly' => '小时',
@@ -754,7 +758,7 @@ $LANG['cn'] = array(
     'No encryption' => '不加密',
     'Do not use encryption' => '不使用加密',
 
-    'maximum characters length, including prefix' => '包括前缀最多 %s 个字符',
+    'maximum characters length, including prefix' => '包含前缀最多 %s 个字符',
 
     'Email Credentials' => '电子邮件证书',
 );

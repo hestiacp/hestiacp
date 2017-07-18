@@ -47,9 +47,15 @@ for user in $users; do
             aliases=$(echo "$aliases" |grep -v "^$domain$")
             if [ ! -z "$aliases" ]; then
                 aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')
-                $BIN/v-add-letsencrypt-domain $user $domain $aliases
+                msg=$($BIN/v-add-letsencrypt-domain $user $domain $aliases)
+                if [ $? -ne 0 ]; then
+                    echo "$domain $msg"
+                fi
             else
-                $BIN/v-add-letsencrypt-domain $user $domain
+                msg==$($BIN/v-add-letsencrypt-domain $user $domain)
+                if [ $? -ne 0 ]; then
+                    echo "$domain $msg"
+                fi
             fi
         fi
         sleep 10

@@ -55,7 +55,7 @@ if [ ! -e "$key" ]; then
 fi
 
 # Defining key exponent
-exponent=$(openssl pkey -inform perm -in "$key" -noout -text_pub |\
+exponent=$(openssl pkey -inform pem -in "$key" -noout -text_pub |\
     grep Exponent: |cut -f 2 -d '(' |cut -f 1 -d ')' |sed -e 's/x//' |\
     xxd -r -p |encode_base64)
 

@@ -2,6 +2,9 @@
 /**
  * Vesta language file
  * Phuong Nguyen (ngocphuong@tetua.net)
+ *
+ * Duoc bao tri boi:
+ * Anh Tuan @tdtgit - https://duonganhtuan.com
  */
 
 $LANG['vi'] = array(

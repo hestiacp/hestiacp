@@ -88,7 +88,7 @@ psql_query() {
 }
 
 psql_dump() {
-    pg_dump -h $HOST -U $USER -c --inserts -O -x -i -f $1 $2 2>/tmp/e.psql
+    pg_dump -h $HOST -U $USER -c --inserts -O -x -f $1 $2 2>/tmp/e.psql
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then

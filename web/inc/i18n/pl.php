@@ -748,10 +748,11 @@ $LANG['pl'] = array(
     'Use server hostname' => 'Użyj hostname serwera',
     'Use domain hostname' => 'Użyj domeny serwera',
     'Use STARTTLS' => 'Use STARTTLS',
-    'Use SSL' => 'Use SSL',
+    'Use SSL / TLS' => 'Use SSL / TLS',
     'No encryption' => 'Brak szyfrowania',
     'Do not use encryption' => 'Nie korzystaj z szyfrowania',
 
     'maximum characters length, including prefix' => 'maksymalna %s ilość znaków, łącznie z prefiksem',
 
+    'Email Credentials' => 'Email Credentials',
 );

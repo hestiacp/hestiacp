@@ -62,7 +62,11 @@ ftp_download() {
     if [ -z "$PORT" ]; then
         PORT='21'
     fi
-    ftpc "cd $BPATH" "get $1"
+    if [ -z $BPATH ]; then
+        ftpc "get $1"
+    else
+        ftpc "cd $BPATH" "get $1"
+    fi
 }
 
 # sftp command function
@@ -100,8 +104,6 @@ sftpc() {
                     send "\$arg\r"
                     incr count
                 } else {
-                    incr count
-                } else {
                     send "exit\r"
                     set output "Disconnected."
                     if {[info exists rc] != 1} {
@@ -131,7 +133,11 @@ sftp_download() {
         PORT='22'
     fi
     cd $BACKUP
-    sftpc "cd $BPATH" "get $1" > /dev/null 2>&1
+    if [ -z $BPATH ]; then
+        sftpc "get $1" > /dev/null 2>&1
+    else
+        sftpc "cd $BPATH" "get $1" > /dev/null 2>&1
+    fi
 
 }
 

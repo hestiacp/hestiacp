@@ -748,12 +748,13 @@ $LANG['ar'] = array(
     'Use server hostname' => 'استخدم اسم السيرفر',
     'Use domain hostname' => 'استخدم اسم الدومين',
     'Use STARTTLS' => 'استخدم STARTTLS',
-    'Use SSL' => 'استخدم SSL',
+    'Use SSL / TLS' => 'استخدم SSL / TLS',
     'No encryption' => 'بلا تشفير',
     'Do not use encryption' => 'لا تستخدم التشفير',
 
     'maximum characters length, including prefix' => 'الحد الأقصى لعدد الحروف هو %s يشمل البادئة',
 
+    'Email Credentials' => 'Email Credentials',
 
 // Texts below doesn't exist in en.php
     '%s rule' => 'قواعد %s',

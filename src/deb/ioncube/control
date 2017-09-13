@@ -1,0 +1,10 @@
+Source: vesta-ioncube
+Package: vesta-ioncube
+Priority: optional
+Version: 0.9.8-18
+Section: admin
+Maintainer: Serghey Rodin <skid@vestacp.com>
+Homepage: https://www.ioncube.com
+Architecture: amd64
+Depends: bash, awk, sed
+Description: ionCube Loader for Vesta

@@ -2,3 +2,4 @@
 *.zip
 *.gzip
 *.gz
+.vscode

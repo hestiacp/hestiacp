@@ -103,7 +103,7 @@ decrease_ip_value() {
     current_usr=$(grep "$usr_key=" $VESTA/data/ips/$sip |cut -f 2 -d \')
 
     if [ -z "$current_web" ]; then
-        check_result $E_PARSING "Parsing errpr"
+        check_result $E_PARSING "Parsing error"
     fi
 
     new_web=$((current_web - 1))

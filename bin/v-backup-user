@@ -70,6 +70,7 @@ done
 
 # Creating temporary directory
 tmpdir=$(mktemp -p /tmp -d)
+
 if [ "$?" -ne 0 ]; then
     echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
     check_result $E_NOTEXIST "can't create tmp dir"
@@ -478,7 +479,7 @@ local_backup(){
     rm -f $BACKUP/$user.$date.tar
 
     # Checking retention
-    backup_list=$(ls -lrt $BACKUP/ |awk '{print $9}' |grep "^$user\.")
+    backup_list=$(ls -lrt $BACKUP/ |awk '{print $9}' |grep "^$user\." | grep ".tar")
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$BACKUPS" -le "$backups_count" ]; then
         backups_rm_number=$((backups_count - BACKUPS))
@@ -557,7 +558,6 @@ ftp_backup() {
         check_result "$E_PARSING" "$error"
     fi
 
-
     # Debug info
     echo -e "$(date "+%F %T") Remote: ftp://$HOST$BPATH/$user.$date.tar"
 
@@ -574,8 +574,12 @@ ftp_backup() {
     fi
 
     # Check ftp permissions
-    ftpc "mkdir $BPATH" > /dev/null 2>&1
-    ftmpdir="$BPATH/vst.bK76A9SUkt"
+    if [ -z $BPATH ]; then
+            ftmpdir="vst.bK76A9SUkt"
+        else
+            ftpc "mkdir $BPATH" > /dev/null 2>&1
+            ftmpdir="$BPATH/vst.bK76A9SUkt"
+    fi
     ftpc "mkdir $ftmpdir" "rm $ftmpdir"
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" |grep -v Trying)
     if [ ! -z "$ftp_result" ] ; then
@@ -588,7 +592,11 @@ ftp_backup() {
     fi
 
     # Checking retention
-    backup_list=$(ftpc "cd $BPATH" "ls" |awk '{print $9}' |grep "^$user\.")
+    if [ -z $BPATH ]; then
+        backup_list=$(ftpc "ls" |awk '{print $9}' |grep "^$user\.")
+    else
+        backup_list=$(ftpc "cd $BPATH" "ls" |awk '{print $9}' |grep "^$user\.")
+    fi
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS + 1))
@@ -596,19 +604,31 @@ ftp_backup() {
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar$//")
             echo -e "$(date "+%F %T") Rotated ftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
-            ftpc "cd $BPATH" "delete $backup"
+            if [ -z $BPATH ]; then
+                ftpc "delete $backup"
+            else
+                ftpc "cd $BPATH" "delete $backup"
+            fi
         done
     fi
 
     # Uploading backup archive
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        ftpc "cd $BPATH" "put $user.$date.tar"
+        if [ -z $BPATH ]; then
+            ftpc "put $user.$date.tar"
+         else
+            ftpc "cd $BPATH" "put $user.$date.tar"
+        fi
     else
         cd $tmpdir
         tar -cf $BACKUP/$user.$date.tar .
         cd $BACKUP/
-        ftpc "cd $BPATH" "put $user.$date.tar"
+        if [ -z $BPATH ]; then
+            ftpc "put $user.$date.tar"
+        else
+            ftpc "cd $BPATH" "put $user.$date.tar"
+        fi
         rm -f $user.$date.tar
     fi
 }
@@ -706,7 +726,11 @@ sftp_backup() {
         tee -a $BACKUP/$user.log
 
     # Checking network connection and write permissions
-    sftmpdir="$BPATH/vst.bK76A9SUkt"
+    if [ -z $BPATH ]; then
+        sftmpdir="vst.bK76A9SUkt"
+    else
+        sftmpdir="$BPATH/vst.bK76A9SUkt"
+    fi
     sftpc "mkdir $BPATH" > /dev/null 2>&1
     sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
     rc=$?
@@ -723,7 +747,11 @@ sftp_backup() {
     fi
 
     # Checking retention
-    backup_list=$(sftpc "cd $BPATH" "ls -l" |awk '{print $9}'|grep "^$user\.")
+    if [ -z $BPATH ]; then
+        backup_list=$(sftpc "ls -l" |awk '{print $9}'|grep "^$user\.")
+    else
+        backup_list=$(sftpc "cd $BPATH" "ls -l" |awk '{print $9}'|grep "^$user\.")
+    fi
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS + 1))
@@ -731,7 +759,11 @@ sftp_backup() {
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar.*$//")
             echo -e "$(date "+%F %T") Rotated sftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
-            sftpc "cd $BPATH" "rm $backup" > /dev/null 2>&1
+            if [ -z $BPATH ]; then
+                sftpc "rm $backup" > /dev/null 2>&1
+            else
+                sftpc "cd $BPATH" "rm $backup" > /dev/null 2>&1
+            fi
         done
     fi
 
@@ -739,12 +771,20 @@ sftp_backup() {
     echo "$(date "+%F %T") Uploading $user.$date.tar"|tee -a $BACKUP/$user.log
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        sftpc "cd $BPATH" "put $user.$date.tar" > /dev/null 2>&1
+        if [ -z $BPATH ]; then
+            sftpc "put $user.$date.tar" "chmod 0600 $user.$date.tar" > /dev/null 2>&1
+        else
+            sftpc "cd $BPATH" "put $user.$date.tar" "chmod 0600 $user.$date.tar" > /dev/null 2>&1
+        fi
     else
         cd $tmpdir
         tar -cf $BACKUP/$user.$date.tar .
         cd $BACKUP/
-        sftpc "cd $BPATH" "put $user.$date.tar" > /dev/null 2>&1
+        if [ -z $BPATH ]; then
+            sftpc "put $user.$date.tar" "chmod 0600 $user.$date.tar" > /dev/null 2>&1
+        else
+            sftpc "cd $BPATH" "put $user.$date.tar" "chmod 0600 $user.$date.tar" > /dev/null 2>&1
+        fi
         rm -f $user.$date.tar
     fi
 }
@@ -853,6 +893,7 @@ update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 
 # Send notification
 if [ -e "$BACKUP/$user.log" ]; then
+    cd $BACKUP
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify

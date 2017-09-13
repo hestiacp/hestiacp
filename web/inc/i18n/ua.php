@@ -748,10 +748,11 @@ $LANG['ua'] = array(
     'Use server hostname' => "Використовувати серверне ім'я хоста",
     'Use domain hostname' => "Використовувати доменне ім'я хоста",
     'Use STARTTLS' => 'Використовувати STARTTLS',
-    'Use SSL' => 'Використовувати SSL',
+    'Use SSL / TLS' => 'Використовувати SSL / TLS',
     'No encryption' => 'Без шифрування',
     'Do not use encryption' => 'Не використовувати шифрування',
 
     'maximum characters length, including prefix' => 'максимальна %s кількість символів, включаючи префікс',
 
+    'Email Credentials' => 'Email Credentials',
 );

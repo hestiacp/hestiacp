@@ -486,6 +486,7 @@ cp /etc/php-fpm.conf $vst_backups/php-fpm > /dev/null 2>&1
 mv -f /etc/php-fpm.d/* $vst_backups/php-fpm/ > /dev/null 2>&1
 
 # Backing up Bind configuration
+yum remove bind-chroot > /dev/null 2>&1
 service named stop > /dev/null 2>&1
 cp /etc/named.conf $vst_backups/named >/dev/null 2>&1
 
@@ -607,11 +608,12 @@ fi
 #----------------------------------------------------------#
 
 # Installing rpm packages
-if [ -z "$disable_remi" ]; then 
-    yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta,remi*"\
+if [ "$remi" = 'yes' ]; then
+    yum -y --disablerepo=* \
+        --enablerepo="*base,*updates,nginx,epel,vesta,remi*" \
         install $software
 else
-    yum -y --disablerepo=* --enablerepo="base,updates,nginx,epel,vesta" \
+    yum -y --disablerepo=* --enablerepo="*base,*updates,nginx,epel,vesta" \
         install $software
 fi
 check_result $? "yum install failed"

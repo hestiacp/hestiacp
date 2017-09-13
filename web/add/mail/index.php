@@ -94,11 +94,20 @@ if (!empty($_POST['ok_acc'])) {
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
 
+    // Validate email
+    if ((!empty($_POST['v_send_email'])) && (empty($_SESSION['error_msg']))) {
+        if (!filter_var($_POST['v_send_email'], FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error_msg'] = __('Please enter valid email address.');
+        }
+    }
+
     // Protect input
     $v_domain = escapeshellarg($_POST['v_domain']);
     $v_domain = strtolower($v_domain);
     $v_account = escapeshellarg($_POST['v_account']);
     $v_quota = escapeshellarg($_POST['v_quota']);
+    $v_send_email = $_POST['v_send_email'];
+    $v_credentials = $_POST['v_credentials'];
     $v_aliases = $_POST['v_aliases'];
     $v_fwd = $_POST['v_fwd'];
     if (empty($_POST['v_quota'])) $v_quota = 0;
@@ -163,6 +172,16 @@ if (!empty($_POST['ok_acc'])) {
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         $webmail = "http://".$http_host."/webmail/";
         if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
+    }
+
+    // Email login credentials
+    if ((!empty($v_send_email)) && (empty($_SESSION['error_msg']))) {
+        $to = $v_send_email;
+        $subject = __("Email Credentials");
+        $hostname = exec('hostname');
+        $from = __('MAIL_FROM', $hostname);
+        $mailtext = $v_credentials;
+        send_email($to, $subject, $mailtext, $from);
     }
 
     // Flush field values on success

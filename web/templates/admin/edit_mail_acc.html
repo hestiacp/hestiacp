@@ -125,6 +125,17 @@
                                 </table>
                             </td>
                         </tr>
+                    <tr>
+                        <td class="vst-text input-label">
+                            <?php print __('Send login credentials to email address') ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text"  class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+                            <input type="hidden" name="v_credentials" id="v_credentials">
+                        </td>
+                    </tr>
                     </table>
                     <table class="data-col2">
                         <tr>
@@ -147,7 +158,7 @@
                                     <option v_type="hostname" domain="<?=$hostname?>"><?=__('Use server hostname')?></option>
                                     <option v_type="hostname" domain="<?=$v_domain?>"><?=__('Use domain hostname')?></option>
                                     <option v_type="starttls"><?=__('Use STARTTLS')?></option>
-                                    <option v_type="ssl"><?=__('Use SSL')?></option>
+                                    <option v_type="ssl"><?=__('Use SSL / TLS')?></option>
                                     <option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" no_encryption="<?=__('No encryption')?>"><?=__('No encryption')?></option>
                                 </select>
                             </td>

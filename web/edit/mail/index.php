@@ -179,8 +179,17 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
         exit();
     }
 
+    // Validate email
+    if ((!empty($_POST['v_send_email'])) && (empty($_SESSION['error_msg']))) {
+        if (!filter_var($_POST['v_send_email'], FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error_msg'] = __('Please enter valid email address.');
+        }
+    }
+
     $v_domain = escapeshellarg($_POST['v_domain']);
     $v_account = escapeshellarg($_POST['v_account']);
+    $v_send_email = $_POST['v_send_email'];
+    $v_credentials = $_POST['v_credentials'];
 
     // Change password
     if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
@@ -295,6 +304,16 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
             $v_autoreply = 'yes';
             $v_autoreply_message = $_POST['v_autoreply_message'];
         }
+    }
+
+    // Email login credentials
+    if ((!empty($v_send_email)) && (empty($_SESSION['error_msg']))) {
+        $to = $v_send_email;
+        $subject = __("Email Credentials");
+        $hostname = exec('hostname');
+        $from = __('MAIL_FROM', $hostname);
+        $mailtext = $v_credentials;
+        send_email($to, $subject, $mailtext, $from);
     }
 
     // Set success message

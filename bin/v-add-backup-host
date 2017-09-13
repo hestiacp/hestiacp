@@ -122,8 +122,12 @@ if [ "$type" = 'ftp' ]; then
     fi
 
     # Checking write permissions
-    ftpc "mkdir $path" > /dev/null 2>&1
-    ftmpdir="$path/vst.bK76A9SUkt"
+    if [ -z $path ]; then
+        ftmpdir="vst.bK76A9SUkt"
+    else
+        ftpc "mkdir $path" > /dev/null 2>&1
+        ftmpdir="$path/vst.bK76A9SUkt"
+    fi
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir"|grep -v Trying)
     if [ ! -z "$ftp_result" ] ; then
         echo "$ftp_result"
@@ -137,9 +141,17 @@ if [ "$type" = 'sftp' ]; then
     if [ -z $port ]; then
         port=22
     fi
-    if sftpc "mkdir $path" > /dev/null 2>&1 ; then
-        sftmpdir="$path/vst.bK76A9SUkt"
-        sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+    if [ -z $path ]; then
+            sftmpdir="vst.bK76A9SUkt"
+            sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+    else
+        if sftpc "mkdir $path" > /dev/null 2>&1 ; then
+            sftmpdir="$path/vst.bK76A9SUkt"
+            sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+        else
+            sftmpdir="$path/vst.bK76A9SUkt"
+            sftpc "mkdir $sftmpdir" "rmdir $sftmpdir" > /dev/null 2>&1
+        fi
     fi
     rc=$?
     if [[ "$rc" != 0 ]]; then

@@ -3,3 +3,4 @@
 *.gzip
 *.gz
 .vscode
+.DS_Store

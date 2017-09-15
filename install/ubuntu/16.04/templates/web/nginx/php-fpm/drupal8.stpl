@@ -1,7 +1,7 @@
 server {
     listen      %ip%:%web_ssl_port%;
     server_name %domain_idn% %alias_idn%;
-    root        %docroot%;
+    root        %sdocroot%;
     index       index.php index.html index.htm;
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;

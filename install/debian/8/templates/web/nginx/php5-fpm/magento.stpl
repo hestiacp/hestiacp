@@ -2,7 +2,7 @@ server {
     listen      %ip%:%web_ssl_port%;
     server_name %domain_idn% %alias_idn%;
 
-    root        %docroot%/pub;
+    root        %sdocroot%/pub;
     index       index.php;
     autoindex   off;
     charset     UTF-8;
@@ -19,7 +19,7 @@ server {
 
     # PHP entry point for setup application
     location ~* ^/setup($|/) {
-        root %docroot%;
+        root %sdocroot%;
 
         location ~ ^/setup/index.php {
             fastcgi_pass   %backend_lsnr%;
@@ -39,7 +39,7 @@ server {
 
     # PHP entry point for update application
     location ~* ^/update($|/) {
-        root %docroot%;
+        root %sdocroot%;
 
         location ~ ^/update/index.php {
             fastcgi_split_path_info ^(/update/index.php)(/.+)$;
@@ -69,7 +69,7 @@ server {
             deny all;
         }
 
-        alias %docroot%/pub/;
+        alias %sdocroot%/pub/;
         add_header X-Frame-Options "SAMEORIGIN";
     }
 

@@ -7,7 +7,7 @@ server {
     error_log  /var/log/%web_system%/domains/%domain%.error.log error;
 
     location / {
-        proxy_pass      http://%ip%:%web_port%;
+        proxy_pass https://%ip%:%web_ssl_port%;
 
         proxy_cache cache;
         proxy_cache_valid 15m;
@@ -18,7 +18,7 @@ server {
 
         location ~* ^.+\.(%proxy_extentions%)$ {
             proxy_cache    off;
-            root           %docroot%;
+            root           %sdocroot%;
             access_log     /var/log/%web_system%/domains/%domain%.log combined;
             access_log     /var/log/%web_system%/domains/%domain%.bytes bytes;
             expires        max;
@@ -31,7 +31,7 @@ server {
     }
 
     location @fallback {
-        proxy_pass      http://%ip%:%web_port%;
+        proxy_pass https://%ip%:%web_ssl_port%;
     }
 
     location ~ /\.ht    {return 404;}
@@ -40,5 +40,5 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/web/nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/snginx.%domain%.conf*;
 }

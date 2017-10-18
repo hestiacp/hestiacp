@@ -41,6 +41,7 @@ for user in $users; do
         expire=$((expire / 86400))
         domain=$(basename $crt |sed -e "s/.crt$//")
         if [[ "$expire" -lt 31 ]]; then
+            sleep 10
             aliases=$(echo "$crt_data" |grep DNS:)
             aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//")
             aliases=$(echo "$aliases" |tr ' ' '\n' |sed "/^$/d")
@@ -58,7 +59,6 @@ for user in $users; do
                 fi
             fi
         fi
-        sleep 10
     done
 done
 

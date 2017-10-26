@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete user backup
-# options: USER NACKUP
+# options: USER BACKUP
 #
 # The function deletes user backup.
 

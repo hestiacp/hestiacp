@@ -730,6 +730,7 @@ $LANG['en'] = array(
     'No encryption'  => 'کوئی خفیہ کاری',
     'Do not use encryption'  => 'خفیہ کاری کا استعمال نہ کریں',
     'maximum characters length, including prefix'  => 'زیادہ سے زیادہ ٪s کو حروف لمبائی، سابقہ سم',
+    'Email Credentials' => 'ای میل کی سند',
     '%s rule' => 'قواعد %s',
     'MainDomain' => 'اہم ڈومین',
     'SubDomain' => 'ذیلی ڈومین',

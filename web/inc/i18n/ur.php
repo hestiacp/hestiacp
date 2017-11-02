@@ -5,7 +5,7 @@
  * darkworks (https://www.useotools.com)
  */
 
-$LANG['en'] = array(
+$LANG['ur'] = array(
     'Packages'  => 'پیکیجز',
     'IP'  => 'IP',
     'Graphs'  => 'گرافس',

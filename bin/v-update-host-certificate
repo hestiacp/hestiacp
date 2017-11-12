@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: update hosts certificates for exim, dovecot & vesta-web
+# info: update hosts certificates for exim, dovecot & vesta-nginx
 # options: user
 # options: hostname
 #
@@ -9,6 +9,13 @@
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
+
+whoami=$(whoami)
+if [ "$whoami" != "root" ] && [ "$whoami" != "admin" ] ; then
+    echo "You must be root or admin to execute this script";
+    exit 1;
+fi
+
 
 # Argument definition
 user=$1
@@ -33,6 +40,11 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$hostname"
 is_object_unsuspended 'web' 'DOMAIN' "$hostname"
 
+if [ ! -f "/home/$user/conf/web/ssl.$hostname.pem" ]; then
+    echo "This domain does not have certificate";
+    exit 1;
+fi
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -48,9 +60,16 @@ backup_datetime=`date '+%Y-%m-%d_%H-%M-%S'`
 cp /home/$user/conf/web/ssl.$hostname.pem $VESTA/ssl/certificate.crt
 cp /home/$user/conf/web/ssl.$hostname.key $VESTA/ssl/certificate.key
 
+# Checking exim username for later chowning
+exim_user="exim";
+check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
+if [ "$check_exim_username" -eq 1 ]; then
+    exim_user="Debian-exim"
+fi
+
 # Assign exim permissions
-chown exim:mail $VESTA/ssl/certificate.crt
-chown exim:mail $VESTA/ssl/certificate.key
+chown $exim_user:mail $VESTA/ssl/certificate.crt
+chown $exim_user:mail $VESTA/ssl/certificate.key
 
 # Restart exim, dovecot & vesta
 v-restart-mail
@@ -64,4 +83,4 @@ v-restart-web-backend
 # Logging
 log_event "$OK" "$ARGUMENTS"
 
-exit
+exit 0;

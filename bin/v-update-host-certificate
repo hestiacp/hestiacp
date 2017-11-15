@@ -73,7 +73,9 @@ chown $exim_user:mail $VESTA/ssl/certificate.key
 
 # Restart exim, dovecot & vesta
 v-restart-mail
+v-restart-service dovecot
 v-restart-service vesta
+
 
 
 #----------------------------------------------------------#

@@ -20,4 +20,8 @@ if [ -x "/usr/local/vesta/upd/fix_sessions.sh" ]; then
     /usr/local/vesta/upd/fix_sessions.sh
 fi
 
+if [ -e /usr/local/vesta/upd/fix_nginx_auth.sh ]; then
+    /usr/local/vesta/upd/fix_nginx_auth.sh
+fi
+
 exit 0

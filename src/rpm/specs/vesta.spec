@@ -39,6 +39,9 @@ if [ $1 -ge 2 ]; then
     if [ -e /usr/local/vesta/upd/fix_sessions.sh ]; then
         /usr/local/vesta/upd/fix_sessions.sh
     fi
+    if [ -e /usr/local/vesta/upd/fix_nginx_auth.sh ]; then
+        /usr/local/vesta/upd/fix_nginx_auth.sh
+    fi
 fi
 %files
 %{_vestadir}

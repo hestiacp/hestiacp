@@ -54,7 +54,7 @@ server {
 
     location /vstats/ {
         alias   %home%/%user%/web/%domain%/stats/;
-        include %home%/%user%/web/%domain%/stats/auth.conf*;
+        include %home%/%user%/conf/web/%domain%.auth
     }
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;

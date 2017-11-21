@@ -61,7 +61,7 @@ fi
 for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
     if [ ! -z "$WEB_BACKEND" ]; then
         template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
-        $BIN/v-add-web-domain-backend $user $domain $template
+        $BIN/v-add-web-domain-backend $user $domain $template $restart
     fi
     rebuild_web_domain_conf
 done

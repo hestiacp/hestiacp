@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: disable webdomain stats  authentication support
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
 #
 # The function removes authentication of statistics system. If the script is
 # called without naming a certain user, all users will be removed. After
@@ -15,6 +15,7 @@
 # Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
+restart=$3
 
 # Includes
 source $VESTA/func/main.sh
@@ -26,7 +27,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -43,6 +44,14 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS_USER'
 # Defining statistic dir
 rm -f $HOMEDIR/$user/web/$domain/stats/.htpasswd
 rm -f $HOMEDIR/$user/web/$domain/stats/.htaccess
+
+# Deleting nginx auth config
+if [ "$WEB_SYSTEM" = 'nginx' ]; then
+    conf_dir="$HOMEDIR/$user/conf/web"
+    rm -f $conf_dir/$domain.auth 2>/dev/null
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
+fi
 
 
 #----------------------------------------------------------#

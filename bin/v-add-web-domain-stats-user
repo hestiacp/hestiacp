@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add password protection to web domain statistics
-# options: USER DOMAIN STATS_USER STATS_PASSWORD
+# options: USER DOMAIN STATS_USER STATS_PASSWORD [RESTART]
 #
 # The call is used for securing the web statistics page.
 
@@ -14,6 +14,7 @@ user=$1
 domain=$2
 stats_user=$3
 password=$4; HIDE=4
+restart=$5
 
 # Includes
 source $VESTA/func/main.sh
@@ -25,7 +26,7 @@ source $VESTA/conf/vesta.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'USER DOMAIN STATS_USER STATS_PASS'
+check_args '4' "$#" 'USER DOMAIN STATS_USER STATS_PASS [RESTART]'
 is_format_valid 'user' 'domain' 'stats_user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -41,11 +42,12 @@ is_password_valid
 
 # Defining statistic dir
 stats_dir="$HOMEDIR/$user/web/$domain/stats"
+conf_dir="$HOMEDIR/$user/conf/web"
 
 # Adding htaccess file
 if [ "$WEB_SYSTEM" = 'nginx' ]; then
-    echo "auth_basic \"Web Statistics\";" > $stats_dir/auth.conf
-    echo "auth_basic_user_file $stats_dir/.htpasswd;" >> $stats_dir/auth.conf
+    echo "auth_basic \"Web Statistics\";" > $conf_dir/$domain.auth
+    echo "auth_basic_user_file $stats_dir/.htpasswd;" >> $conf_dir/$domain.auth
 else
     echo "AuthUserFile $stats_dir/.htpasswd" > $stats_dir/.htaccess
     echo "AuthName \"Web Statistics\"" >> $stats_dir/.htaccess
@@ -66,6 +68,12 @@ echo "$stats_user:$stats_pass" > $stats_dir/.htpasswd
 # Adding stats user in config
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS_USER' "$stats_user"
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' "$stats_pass"
+
+# Restarting web server
+if [ "$WEB_SYSTEM" = 'nginx' ]; then
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
+fi
 
 # Logging
 log_history "added password protection for web stats on $domain"

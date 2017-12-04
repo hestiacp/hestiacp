@@ -11,8 +11,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+domain=$2
 
 # Includes
 source $VESTA/func/main.sh
@@ -22,6 +21,9 @@ source $VESTA/conf/vesta.conf
 encode_base64() {
     cat |base64 |tr '+/' '-_' |tr -d '\r\n='
 }
+
+# Additional argument formatting
+format_domain_idn
 
 
 #----------------------------------------------------------#
@@ -64,7 +66,7 @@ protected=$(echo -n '{"nonce":"'"$nonce"'"}' |encode_base64)
 
 # Defining ACME query (request challenge)
 query='{"resource":"new-authz","identifier"'
-query=$query':{"type":"dns","value":"'"$domain"'"}}'
+query=$query':{"type":"dns","value":"'"$domain_idn"'"}}'
 payload=$(echo -n "$query" |encode_base64)
 signature=$(printf "%s" "$protected.$payload" |\
     openssl dgst -sha256 -binary -sign "$key" |encode_base64)

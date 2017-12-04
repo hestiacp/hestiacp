@@ -54,6 +54,11 @@ shell_list_ssl() {
     echo -e "\nDirectory: $workdir"
 }
 
+# Additional argument formatting
+format_domain_idn
+if [[ "$email" = *[![:ascii:]]* ]]; then
+    email=$(idn -t --quiet -a $email)
+fi
 
 
 #----------------------------------------------------------#
@@ -68,15 +73,6 @@ is_format_valid 'domain_alias' 'format'
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-if [[ "$domain" = *[![:ascii:]]* ]]; then
-    domain_idn=$(idn -t --quiet -a $domain)
-else
-    domain_idn=$domain
-fi
-if [[ "$email" = *[![:ascii:]]* ]]; then
-    email=$(idn -t --quiet -a $email)
-fi
 
 # Create temporary work directory
 workdir=$(mktemp -d)
@@ -98,10 +94,12 @@ if [ -z "$aliases" ]; then
         -out $domain.csr #>/dev/null 2>&1
 else
     for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
+        if [[ "$alias" = *[![:ascii:]]* ]]; then
+            alias=$(idn -t --quiet -a $alias)
+        fi
         dns_aliases="${dns_aliases}DNS:$alias,"
     done
     dns_aliases=$(echo $dns_aliases |sed "s/,$//")
-
     if [ -e "/etc/ssl/openssl.cnf" ]; then
         ssl_conf='/etc/ssl/openssl.cnf'
     else
@@ -129,15 +127,15 @@ openssl x509 -req -sha256 \
 
 # Listing certificates
 if [ -e "$domain.crt" ]; then
-    crt=$(cat $domain.crt | sed ':a;N;$!ba;s/\n/\\n/g' )
+    crt=$(cat $domain.crt |sed ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
 if [ -e "$domain.key" ]; then
-    key=$(cat $domain.key | sed ':a;N;$!ba;s/\n/\\n/g' )
+    key=$(cat $domain.key |sed ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
 if [ -e "$domain.csr" ]; then
-    csr=$(cat $domain.csr | sed ':a;N;$!ba;s/\n/\\n/g' )
+    csr=$(cat $domain.csr |sed ':a;N;$!ba;s/\n/\\n/g' )
 fi
 
 case $format in

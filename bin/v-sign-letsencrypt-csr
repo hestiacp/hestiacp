@@ -11,8 +11,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -u "$2" )
-domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
+domain=$2
 csr="$3/$domain.csr"
 format=$4
 
@@ -53,7 +52,6 @@ fi
 
 source $USER_DATA/ssl/le.conf
 api='https://acme-v01.api.letsencrypt.org'
-r_domain=$(echo "$check_domain" |cut -f 2 -d \')
 key="$USER_DATA/ssl/user.key"
 exponent="$EXPONENT"
 modulus="$MODULUS"

@@ -26,6 +26,9 @@ source $VESTA/func/main.sh
 source $VESTA/func/domain.sh
 source $VESTA/conf/vesta.conf
 
+# Additional argument formatting
+format_domain_idn
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

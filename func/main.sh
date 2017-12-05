@@ -862,6 +862,10 @@ format_domain() {
     if [[ "$domain" =~ .*\.$ ]]; then
         domain=$(echo "$domain" |sed -e "s/\.$//")
     fi
+    if [[ "$domain" =~ ^\. ]]; then
+        domain=$(echo "$domain" |sed -e "s/^\.//")
+    fi
+
 }
 
 format_domain_idn() {

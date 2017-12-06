@@ -484,7 +484,6 @@ local_backup(){
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$BACKUPS" -le "$backups_count" ]; then
         backups_rm_number=$((backups_count - BACKUPS))
-        (( ++backups_rm_number))
 
         # Removing old backup
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
@@ -600,7 +599,7 @@ ftp_backup() {
     fi
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
-        backups_rm_number=$((backups_count - BACKUPS + 1))
+        backups_rm_number=$((backups_count - BACKUPS))
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do 
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar$//")
             echo -e "$(date "+%F %T") Rotated ftp backup: $backup_date" |\
@@ -755,7 +754,7 @@ sftp_backup() {
     fi
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
-        backups_rm_number=$((backups_count - BACKUPS + 1))
+        backups_rm_number=$((backups_count - BACKUPS))
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar.*$//")
             echo -e "$(date "+%F %T") Rotated sftp backup: $backup_date" |\
@@ -804,7 +803,7 @@ google_backup() {
     backup_list=$(${gsutil} ls gs://$BUCKET/$BPATH/$user.* 2>/dev/null)
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
-        backups_rm_number=$((backups_count - BACKUPS + 1))
+        backups_rm_number=$((backups_count - BACKUPS))
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do 
             echo -e "$(date "+%F %T") Roated gcp backup: $backup"
             $gsutil rm $backup > /dev/null 2>&1

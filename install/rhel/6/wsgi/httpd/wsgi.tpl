@@ -38,7 +38,7 @@
         Allow from all
     </Directory>
 
-    Include %home%/%user%/conf/web/%web_system%.%domain_idn%.conf*
+    Include %home%/%user%/conf/web/%web_system%.%domain%.conf*
 
 </VirtualHost>
 

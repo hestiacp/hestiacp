@@ -76,6 +76,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account'])))  {
         $autoreply_str = json_decode(implode('', $output), true);
         unset($output);
         $v_autoreply_message = $autoreply_str[$v_account]['MSG'];
+        $v_autoreply_message=str_replace("\\n", "\n", $v_autoreply_message);
     }
 }
 

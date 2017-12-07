@@ -148,36 +148,60 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         grep "DOMAIN='$domain'" $conf > vesta/web.conf
 
         # Backup vhost config
-        tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
-        conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
-        get_web_config_lines $tpl_file $conf
-        sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
+        conf=$HOMEDIR/$user/conf/web/$domain.$WEB_SYSTEM.conf
+        if [ -e "$conf" ]; then
+            cp $conf conf/$WEB_SYSTEM.conf
+        else
+            # old style configs
+            tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
+            conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+            get_web_config_lines $tpl_file $conf
+            sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
+        fi
 
         # Backup ssl vhost
         if [ "$SSL" = 'yes' ]; then
-            tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
-            conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-            get_web_config_lines $tpl_file $conf
-            sed -n "$top_line,$bottom_line p" $conf > conf/s$WEB_SYSTEM.conf
+            conf=$HOMEDIR/$user/conf/web/$domain.$WEB_SYSTEM.ssl.conf
+            if [ -e "$conf" ]; then
+                cp $conf conf/$WEB_SYSTEM.ssl.conf
+            else
+                tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
+                conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+                get_web_config_lines $tpl_file $conf
+                sed -n "$top_line,$bottom_line p" $conf > \
+                    conf/s$WEB_SYSTEM.conf
+            fi
         fi
 
         # Backup proxy config
         if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-            tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
-            conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-            get_web_config_lines $tpl_file $conf
-            sed -n "$top_line,$bottom_line p" $conf > conf/$PROXY_SYSTEM.conf
+            conf=$HOMEDIR/$user/conf/web/$domain.$PROXY_YSTEM.conf
+            if [ -e "$conf" ]; then
+                cp $conf conf/$PROXY_SYSTEM.conf
+            else
+                tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
+                conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+                get_web_config_lines $tpl_file $conf
+                sed -n "$top_line,$bottom_line p" $conf > \
+                    conf/$PROXY_SYSTEM.conf
+            fi
         fi
 
         # Backup ssl proxy config
         if [ ! -z "$PROXY_SYSTEM" ] && [ "$SSL" = 'yes' ]; then
-            tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
-            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-            get_web_config_lines $tpl_file $conf
-            sed -n "$top_line,$bottom_line p" $conf > conf/s$PROXY_SYSTEM.conf
+            conf=$HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.ssl.conf
+            if [ -e "$conf" ]; then
+                cp $conf conf/$PROXY_SYSTEM.ssl.conf
+            else
+                tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
+                conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+                get_web_config_lines $tpl_file $conf
+                sed -n "$top_line,$bottom_line p" $conf >\
+                    conf/s$PROXY_SYSTEM.conf
+            fi
         fi
 
-        # Backup custom config
+        # Backup custom config / backup LE config
         for sconfig in $(ls $HOMEDIR/$user/conf/web/|grep ".$domain.conf"); do
             cp $HOMEDIR/$user/conf/web/$sconfig conf/
         done

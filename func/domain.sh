@@ -167,9 +167,9 @@ prepare_web_domain_values() {
 
 # Add web config
 add_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$1.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/s$1.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
     fi
 
     domain_idn=$domain
@@ -218,7 +218,8 @@ add_web_config() {
     trigger="${2/.*pl/.sh}"
     if [ -x "$WEBTPL/$1/$WEB_BACKEND/$trigger" ]; then
         $WEBTPL/$1/$WEB_BACKEND/$trigger \
-            $user $domain $local_ip $HOMEDIR $HOMEDIR/$user/web/$domain/public_html
+            $user $domain $local_ip $HOMEDIR \
+            $HOMEDIR/$user/web/$domain/public_html
     fi
 }
 
@@ -250,28 +251,48 @@ get_web_config_lines() {
 
 # Replace web config
 replace_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$1.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/s$1.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
     fi
-    get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
-    sed -i  "$top_line,$bottom_line s|$old|$new|g" $conf
+
+    if [ -e "$conf" ]; then
+        sed -i  "s|$old|$new|g" $conf
+    else
+        # fallback to old style configs
+        conf="$HOMEDIR/$user/conf/web/$1.conf"
+        if [[ "$2" =~ stpl$ ]]; then
+            conf="$HOMEDIR/$user/conf/web/s$1.conf"
+        fi
+        get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
+        sed -i  "$top_line,$bottom_line s|$old|$new|g" $conf
+    fi
 }
 
 # Delete web configuartion
 del_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$1.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/s$1.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
     fi
 
-    get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
-    sed -i "$top_line,$bottom_line d" $conf
-
-    web_domain=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
-    if [ "$web_domain" -eq '0' ]; then
-        sed -i "/.*\/$user\/.*$1.conf/d" /etc/$1/conf.d/vesta.conf
+    if [ -e "$conf" ]; then
+        sed -i "|$conf|d" /etc/$1/conf.d/vesta.conf
         rm -f $conf
+    else
+        # fallback to old style configs
+        conf="$HOMEDIR/$user/conf/web/$1.conf"
+        if [[ "$2" =~ stpl$ ]]; then
+            conf="$HOMEDIR/$user/conf/web/s$1.conf"
+        fi
+        get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
+        sed -i "$top_line,$bottom_line d" $conf
+
+        web_domain=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
+        if [ "$web_domain" -eq '0' ]; then
+            sed -i "/.*\/$user\/.*$1.conf/d" /etc/$1/conf.d/vesta.conf
+            rm -f $conf
+        fi
     fi
 }
 

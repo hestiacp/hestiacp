@@ -20,6 +20,8 @@ source $VESTA/func/main.sh
 
 # JSON list function
 json_list() {
+    TO_ESCAPE='\\';
+    msg=$(echo "$msg" |sed -e "s|${TO_ESCAPE}|${TO_ESCAPE}${TO_ESCAPE}|g" -e 's/"/\\"/g' -e "s/%quote%/'/g")
     i='1'       # iterator
     echo '{'
     echo -e "\t\"$account\": {"

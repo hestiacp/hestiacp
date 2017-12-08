@@ -277,7 +277,7 @@ del_web_config() {
     fi
 
     if [ -e "$conf" ]; then
-        sed -i "|$conf|d" /etc/$1/conf.d/vesta.conf
+        sed -i "\|$conf|d" /etc/$1/conf.d/vesta.conf
         rm -f $conf
     else
         # fallback to old style configs

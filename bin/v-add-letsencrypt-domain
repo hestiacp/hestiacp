@@ -3,7 +3,7 @@
 # options: USER DOMAIN [ALIASES] [RESTART] [NOTIFY]
 #
 # The function turns on SSL support for a domain. Parameter ssl_dir is a path
-# to directory where 2 or 3 ssl files can be found. Certificate file 
+# to directory where 2 or 3 ssl files can be found. Certificate file
 # domain.tld.crt and its key domain.tld.key  are mandatory. Certificate
 # authority domain.tld.ca file is optional. If home directory  parameter
 # (ssl_home) is not set, https domain uses public_shtml as separate
@@ -111,8 +111,9 @@ else
 fi
 
 # Adding SSL
+ssl_home=$(search_objects 'web' 'LETSENCRYPT' 'yes' 'SSL_HOME')
 $BIN/v-delete-web-domain-ssl $user $domain >/dev/null 2>&1
-$BIN/v-add-web-domain-ssl $user $domain $ssl_dir
+$BIN/v-add-web-domain-ssl $user $domain $ssl_dir $ssl_home
 if [ "$?" -ne '0' ]; then
     touch $VESTA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $VESTA/data/queue/letsencrypt.pipe

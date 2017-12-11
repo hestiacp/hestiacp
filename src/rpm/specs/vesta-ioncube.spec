@@ -30,10 +30,18 @@ rm -rf %{buildroot}
 
 %post
 if [ $1 -eq 1 ]; then
-    if [ -e /usr/local/vesta/ioncube/add_ioncube.sh ]; then
-        /usr/local/vesta/ioncube/add_ioncube.sh
+    if [ -e /usr/local/vesta/ioncube/ioncube.sh ]; then
+        /usr/local/vesta/ioncube/ioncube.sh add
     fi
 fi
+
+%preun
+if [ $1 -eq 0 ]; then
+    if [ -e /usr/local/vesta/ioncube/ioncube.sh ]; then
+        /usr/local/vesta/ioncube/ioncube.sh delete
+    fi
+fi
+
 %files
 %{_vestadir}
 

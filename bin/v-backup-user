@@ -175,7 +175,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         # Backup proxy config
         if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-            conf=$HOMEDIR/$user/conf/web/$domain.$PROXY_YSTEM.conf
+            conf=$HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.conf
             if [ -e "$conf" ]; then
                 cp $conf conf/$PROXY_SYSTEM.conf
             else

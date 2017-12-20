@@ -1,0 +1,10 @@
+Source: vesta-softaculous
+Package: vesta-softaculous
+Priority: optional
+Version: 0.9.8-18
+Section: admin
+Maintainer: Serghey Rodin <skid@vestacp.com>
+Homepage: https://www.softaculous.com
+Architecture: amd64
+Depends: bash, awk, sed, vesta-ioncube
+Description: softaculous plugin for Vesta

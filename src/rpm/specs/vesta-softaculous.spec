@@ -8,7 +8,7 @@ URL:            https://www.softaculous.com
 Vendor:         vestacp.com
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:       redhat-release >= 5
+Requires:       vesta-ioncube
 Provides:       vesta-softaculous
 
 %define         _vestadir  /usr/local/vesta/softaculous
@@ -31,8 +31,11 @@ rm -rf %{buildroot}
 %post
 if [ $1 -ge 1 ]; then
     if [ -e /usr/local/vesta/softaculous/vesta_install.inc ]; then
-        cd /usr/local/vesta/php/bin/php  vesta_install.inc
-        rm vesta_install.inc
+        if [ ! -e /usr/local/vesta/softaculous/conf/count.json ]; then
+            cd /usr/local/vesta/softaculous
+            /usr/local/vesta/php/bin/php  vesta_install.inc
+            rm vesta_install.inc
+        fi
     fi
 fi
 

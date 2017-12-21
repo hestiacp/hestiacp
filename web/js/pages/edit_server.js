@@ -14,4 +14,20 @@ $(document).ready(function(){
             $('.sftp.description').hide();
         }
     });
+
+    $('select[name=v_softaculous]').change(function(){
+        if($(this).val() == 'yes'){
+            $('.softaculous.description').show();
+        } else {
+            $('.softaculous.description').hide();
+        }
+    });
+
+    $('input[name=v_mail_relay]').change(function(){
+        if($(this).is(':checked')){
+            $('.mail-relay').show();
+        } else {
+            $('.mail-relay').hide();
+        }
+    });
 });

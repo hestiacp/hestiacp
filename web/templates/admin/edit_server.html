@@ -280,6 +280,68 @@
                                                 <br><br>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="vst-text step-top">
+                                                <label>
+                                                    <input type="checkbox" class="vst-checkbox use_relay" name="v_mail_relay"">
+                                                    <?=__('Use relay')?>
+                                                </label>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr class="mail-relay" style="display: none;">
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td class="vst-text step-left input-label">
+                                                            <?php print __('Hostname');?><br>
+                                                            <span style="font-size: 10pt; color:#777;"><?=__('enter hostname or IP address');?></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="step-left">
+                                                            <input type="text" size="20" class="vst-input v-ftp-user" name="v_relay_hostname" value="<?=htmlentities(trim($v_relay_hostname, "'"))?>">
+                                                        </td>
+                                                    </tr>
+
+
+                                                    <tr>
+                                                        <td class="vst-text step-left input-label">
+                                                            <?php print __('Port');?><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="step-left">
+                                                            <input type="text" size="20" class="vst-input v-ftp-user" name="v_relay_port" value="<?=htmlentities(trim($v_relay_port, "'"))?>">
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="vst-text step-left input-label">
+                                                            <?php print __('Username');?><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="step-left">
+                                                            <input type="text" size="20" class="vst-input v-ftp-user" name="v_relay_username" value="<?=htmlentities(trim($v_relay_username, "'"))?>">
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="vst-text step-left input-label">
+                                                            <?php print __('Password');?><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="step-left">
+                                                            <input type="text" size="20" class="vst-input v-ftp-user" name="v_relay_password" value="<?=htmlentities(trim($v_relay_password, "'"))?>">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+
                                     </table>
                                 </td>
                             </tr>
@@ -846,6 +908,38 @@
                                                 </div>
                                             </td>
                                         </tr>
+
+
+
+
+                                        <tr>
+                                            <td class="vst-text" id="module-softaculous">
+                                                <?php print __('Softaculous') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_softaculous">
+                                                    <option value='no'><?=__('no')?></option>
+                                                    <option value='yes' <? if($_GET['lead'] == 'softaculous' || $_SESSION['SOFTACULOUS'] == 'yes') echo 'selected="selected"'; ?>><?=__('yes')?></option>
+                                                </select>
+                                                <br><br>
+                                                <div class="softaculous description" <? if ($_SESSION['SOFTACULOUS'] != 'yes') { ?>style="display:none" <? } ?>>
+                                                    <h5>Web Application Installations Made Easy</h5>
+                                                    Softaculous is a great Auto Installer having 426 great scripts, 1115 PHP Classes 
+                                                    and we are still adding more. Softaculous is ideal for Web Hosting companies and 
+                                                    it could give a significant boost to your sales. These scripts cover most of the 
+                                                    uses a customer could ever have. We have covered a wide array of Categories so that 
+                                                    everyone could find the required script one would need to power their Web Site.
+                                                    <ul>
+                                                        <li>
+                                                            <a href="https://www.softaculous.com/softaculous/" class="purchase" target="_blank"><?=__('Get Premium License')?></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+
                                     </table>
                                 </td>
                             </tr>

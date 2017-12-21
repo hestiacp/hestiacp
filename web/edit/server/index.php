@@ -459,6 +459,33 @@ if (!empty($_POST['save'])) {
             }
         }
     }
+
+    // activating softaculous
+    if (empty($_SESSION['error_msg'])) {
+        if($_SESSION['SOFTACULOUS'] != $_POST['v_softaculous'] && $_POST['v_softaculous'] == 'yes'){
+            exec (VESTA_CMD."v-add-sys-softaculous", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
+                $_SESSION['ok_msg'] = __('Softaculous Activated');
+                $_SESSION['SOFTACULOUS'] = 'yes';
+            }
+        }
+    }
+
+    // disable softaculous
+    if (empty($_SESSION['error_msg'])) {
+        if($_SESSION['SOFTACULOUS'] != $_POST['v_softaculous'] && $_POST['v_softaculous'] == 'no'){
+            exec (VESTA_CMD."v-delete-sys-softaculous", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
+                $_SESSION['ok_msg'] = __('Softaculous Disabled');
+                $_SESSION['SOFTACULOUS'] = '';
+            }
+        }
+    }
+
 }
 
 // Check system configuration

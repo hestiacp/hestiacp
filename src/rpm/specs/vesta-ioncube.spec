@@ -8,7 +8,7 @@ URL:            https://www.ioncube.com
 Vendor:         ioncube.com
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:       redhat-release >= 5
+Requires:       vesta-php
 Provides:       vesta-ioncube
 
 %define         _vestadir  /usr/local/vesta/ioncube

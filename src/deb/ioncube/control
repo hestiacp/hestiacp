@@ -6,5 +6,5 @@ Section: admin
 Maintainer: Serghey Rodin <skid@vestacp.com>
 Homepage: https://www.ioncube.com
 Architecture: amd64
-Depends: bash, awk, sed
+Depends: bash, awk, sed, vesta-php
 Description: ionCube Loader for Vesta

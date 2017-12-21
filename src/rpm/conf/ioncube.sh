@@ -13,7 +13,7 @@ if [ ! -e "$VESTA/ioncube/$ioncube" ]; then
     exit
 fi
 
-if [ "$action" = 'install' ]; then
+if [ "$action" = 'add' ]; then
     if [ -z "$(grep $ioncube $php |grep -v ';')" ]; then
         echo "zend_extension = '$VESTA/ioncube/$ioncube'" >> $php
         /etc/init.d/vesta restart

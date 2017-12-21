@@ -1,0 +1,122 @@
+#!/bin/bash
+# info: add vesta softaculous
+# options: [TYPE]
+#
+# The script enables softaculous plugin
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+TYPE=$1
+
+# Includes
+source /etc/profile
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+if [ "$TYPE" = 'WEB' ]; then
+    $BIN/v-schedule-vesta-softaculous
+    exit
+else
+    cmd="v-add-vesta-softaculous"
+    check_cron=$(grep "$cmd" $VESTA/data/users/admin/cron.conf 2> /dev/null)
+    if [ ! -z "$check_cron" ]; then
+        eval $check_cron
+        $BIN/v-delete-cron-job admin $JOB
+    fi
+fi
+
+if [ "$SOFTACULOUS" = 'yes' ]; then
+    exit
+fi
+
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Cleaning yum cache
+if [ -e "/etc/redhat-release" ]; then
+    yum -q clean all
+    yum="yum -q -y --noplugins --disablerepo=* --enablerepo=vesta"
+else
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -o Dir::Etc::sourcelist="sources.list.d/vesta.list" \
+        -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" -qq
+fi
+
+# Updating php pacakge
+if [ -z "$($VESTA/php/bin/php -v|grep 'PHP 5.6')" ]; then
+    if [ -e "/etc/redhat-release" ]; then
+        $yum -y update vesta-php
+        check_result $? "vesta-php package upgrade failed" $E_UPDATE
+    else
+        apt-get -y install vesta-php
+        check_result $? "vesta-php package upgrade failed" $E_UPDATE
+    fi
+fi
+
+# Adding vesta-ioncube package
+if [ -e "/etc/redhat-release" ]; then
+    rpm -q vesta-ioncube >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        $yum -y install vesta-ioncube >/dev/null 2>&1
+        check_result $? "vesta-ioncube package installation failed" $E_UPDATE
+    fi
+else
+    dpkg -l vesta-ioncube |grep ^ii >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        apt-get -y install vesta-ioncube >/dev/null 2>&1
+        check_result $? "vesta-ioncube package installation failed" $E_UPDATE
+    fi
+fi
+
+# Adding vesta-softaculous package
+if [ -e "/etc/redhat-release" ]; then
+    rpm -q vesta-softaculous >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        $yum -y install vesta-softaculous >/dev/null 2>&1
+        check_result $? "vesta-softaculous package installation failed" $E_UPDATE
+    fi
+else
+    dpkg -l vesta-softaculous |grep ^ii >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        apt-get -y install vesta-softaculous >/dev/null 2>&1
+        check_result $? "vesta-softaculous package installation failed" $E_UPDATE
+    fi
+fi
+
+# Installing softaculous
+if [ ! -e "$VESTA/softaculous/vst_installed" ]; then
+    cd $VESTA/softaculous
+    wget -q http://c.vestacp.com/3rdparty/softaculous_install.inc
+    $VESTA/php/bin/php softaculous_install.inc
+    check_result $? "vesta-softaculous package installation failed" $E_UPDATE
+    touch $VESTA/softaculous/vst_installed
+fi
+
+# Updating SOFTACULOUS value
+if [ -z "$(grep SOFTACULOUS $VESTA/conf/vesta.conf)" ]; then
+    echo "SOFTACULOUS='yes'" >> $VESTA/conf/vesta.conf
+else
+    sed -i "s/SOFTACULOUS.*/SOFTACULOUS='yes'/g" \
+        $VESTA/conf/vesta.conf
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

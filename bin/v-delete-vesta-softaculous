@@ -1,0 +1,42 @@
+#!/bin/bash
+# info: delete vesta softaculous
+# options: NONE
+#
+# The script disables softaculous plugin
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+if [ "$SOFTACULOUS" = 'no' ] || [ -z "$SOFTACULOUS" ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Updating SOFTACULOUS value
+sed -i "s/SOFTACULOUS.*/SOFTACULOUS='no'/g" \
+        $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

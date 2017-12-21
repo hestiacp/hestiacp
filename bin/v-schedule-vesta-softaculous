@@ -1,0 +1,46 @@
+#!/bin/bash
+# info: adding cronjob for vesta-softaculous installation
+# options: NONE
+#
+# The function adds cronjob for letsencrypt ssl certificate installation
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/func/domain.sh
+source $VESTA/conf/vesta.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+
+# Adding cronjob for vesta-softaculous
+cmd="sudo /usr/local/vesta/bin/v-add-vesta-softaculous"
+check_cron=$(grep "$cmd" $VESTA/data/users/admin/cron.conf 2> /dev/null)
+if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
+    $BIN/v-add-cron-job admin '*/1' '*' '*' '*' '*' "$cmd"
+fi
+
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

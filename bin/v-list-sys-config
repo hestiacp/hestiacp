@@ -50,7 +50,8 @@ json_list() {
         "BACKUP": "'$BACKUP'",
         "MAIL_URL": "'$MAIL_URL'",
         "DB_PMA_URL": "'$DB_PMA_URL'",
-        "DB_PGA_URL": "'$DB_PGA_URL'"
+        "DB_PGA_URL": "'$DB_PGA_URL'",
+        "SOFTACULOUS": "'$SOFTACULOUS'"
     }
 }'
 }
@@ -131,6 +132,9 @@ shell_list() {
     if [ ! -z "$SFTPJAIL_KEY" ]; then
         echo "SFTP Chroot:    $SFTPJAIL_KEY"
     fi
+    if [ ! -z "$SOFTACULOUS" ]; then
+        echo "Softaculous:    $SOFTACULOUS"
+    fi
     if [ ! -z "$LANGUAGE" ] && [ "$LANGUAGE" != 'en' ]; then
         echo "Language:       $LANGUAGE"
     fi
@@ -171,7 +175,7 @@ csv_list() {
     echo -n "'$CRON_SYSTEM','$DISK_QUOTA','$FIREWALL_SYSTEM',"
     echo -n "'$FIREWALL_EXTENSION','$FILEMANAGER_KEY','$SFTPJAIL_KEY',"
     echo -n "'$REPOSITORY','$VERSION','$LANGUAGE','$BACKUP_GZIP','$BACKUP',"
-    echo -n "'$MAIL_URL','$DB_PMA_URL','$DB_PGA_URL'"
+    echo -n "'$MAIL_URL','$DB_PMA_URL','$DB_PGA_URL', '$SOFTACULOUS'"
     echo
 }
 

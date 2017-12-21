@@ -13,6 +13,7 @@
         <div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/"><?=__('Statistics')?></a></div>
         <div class="l-menu__item <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/log/"><?=__('Log')?></a></div>
         <?php if ((isset($_SESSION['FILEMANAGER_KEY'])) && (!empty($_SESSION['FILEMANAGER_KEY']))) {?><div class="l-menu__item <?php if($TAB == 'FILEMANAGER' ) echo 'l-menu__item--active' ?>"><a href="/list/directory/"><?=__('File Manager')?></a></div><?php }?>
+        <?php if ($_SESSION['SOFTACULOUS']) {?><div class="l-menu__item"><a href="/softaculous/"><?=__('Apps')?></a></div><?php }?>
       </div>
       <!-- /.l-menu -->
 

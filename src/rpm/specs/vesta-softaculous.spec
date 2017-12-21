@@ -28,17 +28,6 @@ install -d  %{buildroot}%{_vestadir}
 %clean
 rm -rf %{buildroot}
 
-%post
-if [ $1 -ge 1 ]; then
-    if [ -e /usr/local/vesta/softaculous/vesta_install.inc ]; then
-        if [ ! -e /usr/local/vesta/softaculous/conf/count.json ]; then
-            cd /usr/local/vesta/softaculous
-            /usr/local/vesta/php/bin/php  vesta_install.inc
-            rm vesta_install.inc
-        fi
-    fi
-fi
-
 
 %files
 %defattr(-,root,root)

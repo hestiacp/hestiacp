@@ -45,6 +45,12 @@ server {
         deny    all;
         return  404;
     }
+    
+    
+    location /vstats/ {
+        alias   %home%/%user%/web/%domain%/stats/;
+        include %home%/%user%/conf/web/%domain%.auth*;
+    }
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;

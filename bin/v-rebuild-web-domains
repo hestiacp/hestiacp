@@ -36,15 +36,29 @@ is_object_unsuspended 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting old configs
+# Deleting old web configs
 sed -i "/.*\/$user\//d" /etc/$WEB_SYSTEM/conf.d/vesta.conf
-rm -f $HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf
-rm -f $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf
+if [ -e "$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"  ]; then
+    rm $HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf
+fi
+if [ -e "$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf" ]; then
+    rm $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf
+fi
+
+# Deleting old proxy configs
 if [ ! -z "$PROXY_SYSTEM" ]; then
     sed -i "/.*\/$user\//d" /etc/$PROXY_SYSTEM/conf.d/vesta.conf
-    rm -f $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
-    rm -f $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
+
+    if [ -e "$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf" ]; then
+        rm $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
+    fi
+
+    if [ -e "$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf" ]; then
+        rm $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
+    fi
 fi
+
+# Deleting backend configs
 if [ ! -z "$WEB_BACKEND" ]; then
     if [ "$WEB_BACKEND_POOL" = 'user' ]; then
         prepare_web_backend

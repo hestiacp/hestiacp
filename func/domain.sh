@@ -202,7 +202,7 @@ add_web_config() {
             -e "s|%ssl_pem%|$ssl_pem|g" \
             -e "s|%ssl_ca_str%|$ssl_ca_str|g" \
             -e "s|%ssl_ca%|$ssl_ca|g" \
-    >> $conf
+    > $conf
 
     chown root:$user $conf
     chmod 640 $conf

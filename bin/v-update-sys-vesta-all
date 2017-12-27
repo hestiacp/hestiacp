@@ -22,7 +22,7 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 # Starting update loop
-for package in vesta vesta-nginx vesta-php; do
+for package in vesta vesta-nginx vesta-php vesta-ioncube vesta-softaculous; do
     $BIN/v-update-sys-vesta "$package"
 done
 

@@ -29,13 +29,12 @@ if(isset($_SERVER['HTTP_FORWARDED'])){
     $user_combined_ip .=  '|'. $_SERVER['HTTP_FORWARDED'];
 }
 
-
 if(!isset($_SESSION['user_combined_ip'])){
     $_SESSION['user_combined_ip'] = $user_combined_ip;
 }
 
 // Checking user to use session from the same IP he has been logged in
-if($_SESSION['user_combined_ip'] != $user_combined_ip){
+if($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'] != '127.0.0.1'){
     session_destroy();
     session_start();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];

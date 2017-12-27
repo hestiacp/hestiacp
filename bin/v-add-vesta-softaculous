@@ -22,8 +22,10 @@ source $VESTA/conf/vesta.conf
 #----------------------------------------------------------#
 
 if [ "$TYPE" = 'WEB' ]; then
-    $BIN/v-schedule-vesta-softaculous
-    exit
+    if [ ! -e "$VESTA/softaculous" ] && [ ! -e "$VESTA/ioncube" ]; then
+        $BIN/v-schedule-vesta-softaculous
+        exit
+    fi
 else
     cmd="v-add-vesta-softaculous"
     check_cron=$(grep "$cmd" $VESTA/data/users/admin/cron.conf 2> /dev/null)

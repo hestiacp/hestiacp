@@ -5,11 +5,11 @@ listen.allowed_clients = 127.0.0.1
 user = %user%
 group = %user%
 
-pm = dynamic
-pm.max_children = 50
-pm.start_servers = 3
-pm.min_spare_servers = 2
-pm.max_spare_servers = 10
+pm = ondemand
+pm.max_children = 2
+pm.max_requests = 4000
+pm.process_idle_timeout = 10s
+pm.status_path = /status
 
 php_admin_value[upload_tmp_dir] = /home/%user%/tmp
 php_admin_value[session.save_path] = /home/%user%/tmp

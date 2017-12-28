@@ -28,6 +28,11 @@ server {
         rewrite ^/(.+)$ /index.php?_route_=$1 last;
     }
 
+    location /vstats/ {
+        alias   %home%/%user%/web/%domain%/stats/;
+        include %home%/%user%/conf/web/%domain%.auth*;
+    }
+
     error_page  403 /error/404.html;
     error_page  404 /error/404.html;
     error_page  500 502 503 504 /error/50x.html;
@@ -39,11 +44,6 @@ server {
     location ~* "/\.(htaccess|htpasswd)$" {
         deny    all;
         return  404;
-    }
-    
-    location /vstats/ {
-        alias   %home%/%user%/web/%domain%/stats/;
-        include %home%/%user%/conf/web/%domain%.auth*;
     }
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;

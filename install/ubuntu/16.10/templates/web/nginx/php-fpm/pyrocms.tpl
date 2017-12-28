@@ -8,7 +8,7 @@ server {
     error_log   /var/log/nginx/domains/%domain%.error.log error;
 
     location /installer {
-        try_files $uri $uri/ /installer/index.php?$query_string;
+            try_files $uri $uri/ /installer/index.php?$query_string;
     }
 
     location / {

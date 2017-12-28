@@ -7,26 +7,41 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-        if (!-f $request_filename){
-                rewrite ^/([a-zA-Z0-9-]+)$ /$1.php last;
-        }
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~* "/\.(htaccess|htpasswd|git|svn|DS_Store)$" {
+        deny all;
+    }
+
+    location ~ /(readme.html|license.txt) {
+        deny all;
+    }
+
+    if (!-f $request_filename){
+        rewrite ^/([a-zA-Z0-9-]+)$ /$1.php last;
+    }
 
     location / {
-        index index.php;
-
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
-            expires     max;
+        try_files $uri $uri/ /index.php?$args;
+        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar|pdf)$ {
+            expires 1d;
         }
 
         location ~ [^/]\.php(/|$) {
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            if (!-f $document_root$fastcgi_script_name) {
-                return  404;
-            }
-
-            fastcgi_pass    %backend_lsnr%;
-            fastcgi_index   index.php;
-            include         /etc/nginx/fastcgi_params;
+            try_files $uri =404;
+            fastcgi_pass %backend_lsnr%;
+            fastcgi_index index.php;
+            include /etc/nginx/fastcgi_params;
         }
 
         location /l/ {
@@ -58,9 +73,9 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~* "/\.(htaccess|htpasswd)$" {
-        deny    all;
-        return  404;
+    location /vstats/ {
+        alias   %home%/%user%/web/%domain%/stats/;
+        include %home%/%user%/web/%domain%/stats/auth.conf*;
     }
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;

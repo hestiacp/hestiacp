@@ -1,3 +1,6 @@
+[DEFAULT]
+ignoreip = 127.0.0.1/8
+
 [ssh-iptables]
 enabled  = true
 filter   = sshd
@@ -17,12 +20,14 @@ enabled = true
 filter  = exim
 action  = vesta[name=MAIL]
 logpath = /var/log/exim4/mainlog
+maxretry = 5
 
 [dovecot-iptables]
 enabled = true
 filter  = dovecot
 action  = vesta[name=MAIL]
 logpath = /var/log/dovecot.log
+maxretry = 5
 
 [mysqld-iptables]
 enabled  = false
@@ -36,4 +41,11 @@ enabled = true
 filter  = vesta
 action  = vesta[name=VESTA]
 logpath = /var/log/vesta/auth.log
+maxretry = 5
+
+[roundcube-auth]
+enabled  = false
+filter   = roundcube-auth
+port     = http,https
+logpath  = /var/log/roundcube/errors
 maxretry = 5

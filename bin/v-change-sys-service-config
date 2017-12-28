@@ -95,7 +95,7 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
 
     if [ "$service" = 'php' ]; then
         if [ "$WEB_SYSTEM" = "nginx" ]; then
-            service=$(ls /usr/sbin/php*fpm* |cut -f 4 -d /)
+            service=$(ls /etc/init.d/php*fpm* |cut -f 4 -d / |sed -n 1p)
         else
             service=$WEB_SYSTEM
         fi

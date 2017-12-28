@@ -17,6 +17,7 @@
  * (also on the filesystem level).
  */
 
+if (!function_exists('check_file_access')) {
 function check_file_access($path)
 {
     if (is_readable($path)) {
@@ -28,6 +29,7 @@ function check_file_access($path)
         );
         return false;
     }
+}
 }
 
 // Load secret generated on postinst

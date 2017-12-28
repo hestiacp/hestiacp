@@ -49,7 +49,7 @@ for cluster in $hosts; do
     check_result $? "$HOST connection failed" $E_CONNECT
 
     # Syncing user domains
-    user_list=$(ls $VESTA/data/users |grep -v "dns-cluster")
+    user_list=$(ls -d $VESTA/data/users/*/ | sed "s#$VESTA/data/users/##" | sed s"/.$//" | grep -v "dns-cluster")
     for user in $user_list; do
         for str in $(cat $VESTA/data/users/$user/dns.conf); do
 

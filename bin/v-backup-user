@@ -821,7 +821,7 @@ google_backup() {
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS))
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do 
-            echo -e "$(date "+%F %T") Roated gcp backup: $backup"
+            echo -e "$(date "+%F %T") Rotated gcp backup: $backup"
             $gsutil rm $backup > /dev/null 2>&1
         done
     fi

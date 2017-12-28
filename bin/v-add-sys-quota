@@ -50,9 +50,7 @@ fi
 
 # Adding v2 group and user quota index
 if [ ! -e "$mnt/aquota.user" ] || [ ! -e "$mnt/aquota.group" ]; then
-    quotaoff $mnt
-    quotacheck -cug $mnt >/dev/null 2>&1
-    quotacheck -aug >/dev/null 2>&1
+    quotacheck -avcugm >/dev/null 2>&1
 fi
 
 # Adding quotacheck on reboot
@@ -65,7 +63,7 @@ chmod a+x /etc/cron.daily/quotacheck
 
 # Enabling group and user quota
 if [ ! -z "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ]; then
-    quotaon $mnt
+    quotaon -v $mnt
     check_result $? "quota can't be enabled in $mnt" $E_DISK
 fi
 

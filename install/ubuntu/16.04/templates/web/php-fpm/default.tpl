@@ -6,7 +6,7 @@ user = %user%
 group = %user%
 
 pm = ondemand
-pm.max_children = 2
+pm.max_children = 4
 pm.max_requests = 4000
 pm.process_idle_timeout = 10s
 pm.status_path = /status

@@ -1227,6 +1227,15 @@ if [ "$fail2ban" = 'yes' ]; then
         fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
         sed -i "${fline}s/true/false/" /etc/fail2ban/jail.local
     fi
+    if [ "$vsftpd" = 'yes' ]; then
+        #Create vsftpd Log File
+        if [ ! -f "/var/log/vsftpd.log" ]; then
+            touch /var/log/vsftpd.log
+        fi
+        fline=$(cat /etc/fail2ban/jail.local |grep -n vsftpd-iptables -A 2)
+        fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
+        sed -i "${fline}s/false/true/" /etc/fail2ban/jail.local
+    fi 
     chkconfig fail2ban on
     /bin/mkdir -p /var/run/fail2ban
     sed -i "s/\[Service\]/\[Service\]\nExecStartPre = \/bin\/mkdir -p \/var\/run\/fail2ban/g" /usr/lib/systemd/system/fail2ban.service

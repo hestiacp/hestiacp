@@ -112,7 +112,7 @@ acl_check_rcpt:
   require message       = relay not permitted
           domains       = +local_domains : +relay_to_domains
 
-  deny    message       = smtp auth requried
+  deny    message       = smtp auth required
          sender_domains = +local_domains
          !authenticated = *
 
@@ -145,9 +145,9 @@ acl_check_data:
 .ifdef SPAMASSASSIN
   warn   !authenticated = *
          hosts          = !+relay_from_hosts
-         condition      = ${if < {$message_size}{100K}}
+         condition      = ${if < {$message_size}{1024K}}
          condition      = ${if eq{$acl_m1}{yes}{yes}{no}}
-         spam           = nobody:true/defer_ok
+         spam           = debian-spamd:true/defer_ok
          add_header     = X-Spam-Score: $spam_score_int
          add_header     = X-Spam-Bar: $spam_bar
          add_header     = X-Spam-Report: $spam_report

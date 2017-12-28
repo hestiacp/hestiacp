@@ -118,6 +118,20 @@ set_default_value() {
     fi
 }
 
+# Define function to set default language value
+set_default_lang() {
+    if [ -z "$lang" ]; then
+        eval lang=$1
+    fi
+    lang_list="
+        ar cz el fa hu ja no pt se ua
+        bs da en fi id ka pl ro tr vi
+        cn de es fr it nl pt-BR ru tw
+        "
+    if !(echo $lang_list | grep -w $lang 1>&2>/dev/null); then
+        eval lang=$1
+    fi
+}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -213,8 +227,8 @@ fi
 set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
-set_default_value 'lang' 'en'
 set_default_value 'interactive' 'yes'
+set_default_lang 'en'
 
 # Checking software conflicts
 if [ "$phpfpm" = 'yes' ]; then

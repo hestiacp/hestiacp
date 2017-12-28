@@ -852,6 +852,11 @@ if [ "$nginx" = 'yes' ]; then
     wget $vestacp/logrotate/nginx -O /etc/logrotate.d/nginx
     echo > /etc/nginx/conf.d/vesta.conf
     mkdir -p /var/log/nginx/domains
+    if [ "$release" -eq 7 ]; then
+        mkdir /etc/systemd/system/nginx.service.d/
+        echo "[Service]" > /etc/systemd/system/nginx.service.d/limits.conf
+        echo "LimitNOFILE=500000" >> /etc/systemd/system/nginx.service.d/limits.conf
+    fi
     chkconfig nginx on
     service nginx start
     check_result $? "nginx start failed"
@@ -890,6 +895,11 @@ if [ "$apache" = 'yes'  ]; then
     chmod a+x /var/log/httpd
     mkdir -p /var/log/httpd/domains
     chmod 751 /var/log/httpd/domains
+    if [ "$release" -eq 7 ]; then
+        mkdir /etc/systemd/system/httpd.service.d/
+        echo "[Service]" > /etc/systemd/system/httpd.service.d/limits.conf
+        echo "LimitNOFILE=500000" >> /etc/systemd/system/httpd.service.d/limits.conf
+    fi
     chkconfig httpd on
     service httpd start
     check_result $? "httpd start failed"

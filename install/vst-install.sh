@@ -8,7 +8,7 @@
 #   RHEL 5, 6, 7
 #   CentOS 5, 6, 7
 #   Debian 7, 8
-#   Ubuntu 12.04 - 16.04
+#   Ubuntu 12.04 - 16.10
 #
 
 # Am I root?
@@ -21,7 +21,7 @@ fi
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ -z "$1" ]; then
     echo "Error: user admin exists"
     echo
-    echo 'Please remove admin user account before proceeding.'
+    echo 'Please remove admin user before proceeding.'
     echo 'If you want to do it automatically run installer with -f option:'
     echo "Example: bash $0 --force"
     exit 1

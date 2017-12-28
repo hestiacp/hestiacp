@@ -263,10 +263,15 @@ change_mysql_password() {
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
         IDENTIFIED BY '$dbpass'"
     mysql_query "$query" > /dev/null
-
-    query="SHOW GRANTS FOR '$DBUSER'"
-    md5=$(mysql_query "$query" 2>/dev/null)
-    md5=$(echo "$md5" |grep 'PASSWORD' |tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+    
+if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
+ 
+    md5=$(mysql_query "SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
+    md5=$(echo "$md5" |grep password |cut -f8 -d \')
+else
+    md5=$(mysql_query "SHOW GRANTS FOR \`$DBUSER\`" 2>/dev/null)
+    md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+fi
 }
 
 # Change PostgreSQL database password

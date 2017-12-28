@@ -65,9 +65,16 @@ if [ ! -z "$vst_ip_list" ] && [ "$vst_ip_num" -eq '1' ]; then
                 $BIN/v-rebuild-web-domains $user no
             done
         fi
+        if [ ! -z "$FTP_SYSTEM" ];then
+            ftpd_conf_file=$(find /etc/ -maxdepth 2 -name $FTP_SYSTEM.conf)
+            sed -i "s/$old/$new/g" $ftpd_conf_file
+        fi
 
         # Restarting web server
         $BIN/v-restart-web
+
+        # Restarting ftp server
+        $BIN/v-restart-ftp
 
         # Restarting proxy server
         if [ ! -z "$PROXY_SYSTEM" ]; then

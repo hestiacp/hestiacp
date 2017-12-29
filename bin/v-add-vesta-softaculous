@@ -105,6 +105,11 @@ if [ ! -e "$VESTA/softaculous/vst_installed" ]; then
     touch $VESTA/softaculous/vst_installed
 fi
 
+# Adding symlink
+if [ ! -e "$VESTA/web/softaculous" ]; then
+    ln -s $VESTA/softaculous/vesta $VESTA/web/softaculous
+fi
+
 # Updating SOFTACULOUS value
 if [ -z "$(grep SOFTACULOUS $VESTA/conf/vesta.conf)" ]; then
     echo "SOFTACULOUS='yes'" >> $VESTA/conf/vesta.conf

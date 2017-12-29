@@ -29,19 +29,19 @@ if [ "$release" = '16.04' ]; then
         mysql-client postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect vim-common"
 elif [ "$release" = '16.10' ]; then
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
-        libapache2-mod-fcgid libapache2-mod-php7.0 php7.0 php7.0-common php7.0-cgi
-        php7.0-mysql php7.0-curl php7.0-fpm php7.0-pgsql awstats webalizer vsftpd
-        proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
-        spamassassin dovecot-imapd dovecot-pop3d roundcube-core
+        libapache2-mod-fcgid libapache2-mod-php7.0 php7.0 php7.0-common
+        php7.0-cgi php7.0-mysql php7.0-curl php7.0-fpm php7.0-pgsql awstats
+        webalizer vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mysql-server mysql-common
         mysql-client postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect vim-common"
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
@@ -53,7 +53,7 @@ else
         mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect"
+        bsdmainutils cron vesta vesta-nginx vesta-php expect vim-common"
 fi
 
 # Defining help function
@@ -458,7 +458,8 @@ check_result $? 'apt-get upgrade failed'
 
 # Installing nginx repo
 apt=/etc/apt/sources.list.d
-echo "deb http://nginx.org/packages/mainline/ubuntu/ $codename nginx" > $apt/nginx.list
+echo "deb http://nginx.org/packages/mainline/ubuntu/ $codename nginx" \
+    > $apt/nginx.list
 wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
 
@@ -1000,11 +1001,12 @@ fi
 if [ "$postgresql" = 'yes' ]; then
     wget $vestacp/postgresql/pg_hba.conf -O /etc/postgresql/*/main/pg_hba.conf
     service postgresql restart
-    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$vpass'" 2>/dev/null
+    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$vpass'"
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
-        wget $vestacp/pga/phppgadmin.conf -O /etc/apache2/conf.d/phppgadmin.conf
+        wget $vestacp/pga/phppgadmin.conf \
+            -O /etc/apache2/conf.d/phppgadmin.conf
     fi
     wget $vestacp/pga/config.inc.php -O /etc/phppgadmin/config.inc.php
 fi
@@ -1113,7 +1115,8 @@ if [ "$spamd" = 'yes' ]; then
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
     service spamassassin start
     check_result $? "spamassassin start failed"
-    if [[ $(systemctl list-unit-files | grep spamassassin) =~ "disabled" ]]; then
+    unit_files="$(systemctl list-unit-files |grep spamassassin)"
+    if [[ "$unit_files" =~ "disabled" ]]; then
         systemctl enable spamassassin
     fi
 fi
@@ -1138,7 +1141,8 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         /etc/roundcube/plugins/password/config.inc.php
     r="$(gen_pass)"
     mysql -e "CREATE DATABASE roundcube"
-    mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
+    mysql -e "GRANT ALL ON roundcube.*
+        TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
     if [ "$release" = '16.04' ]; then
         mv /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php

@@ -868,9 +868,10 @@ if [ "$nginx" = 'yes' ]; then
     echo > /etc/nginx/conf.d/vesta.conf
     mkdir -p /var/log/nginx/domains
     if [ "$release" -eq 7 ]; then
-        mkdir /etc/systemd/system/nginx.service.d/
-        echo "[Service]" > /etc/systemd/system/nginx.service.d/limits.conf
-        echo "LimitNOFILE=500000" >> /etc/systemd/system/nginx.service.d/limits.conf
+        mkdir /etc/systemd/system/nginx.service.d
+        cd /etc/systemd/system/nginx.service.d
+        echo "[Service]" > limits.conf
+        echo "LimitNOFILE=500000" >> limits.conf
     fi
     chkconfig nginx on
     service nginx start
@@ -911,9 +912,10 @@ if [ "$apache" = 'yes'  ]; then
     mkdir -p /var/log/httpd/domains
     chmod 751 /var/log/httpd/domains
     if [ "$release" -eq 7 ]; then
-        mkdir /etc/systemd/system/httpd.service.d/
-        echo "[Service]" > /etc/systemd/system/httpd.service.d/limits.conf
-        echo "LimitNOFILE=500000" >> /etc/systemd/system/httpd.service.d/limits.conf
+        mkdir /etc/systemd/system/httpd.service.d
+        cd /etc/systemd/system/httpd.service.d
+        echo "[Service]" > limits.conf
+        echo "LimitNOFILE=500000" >> limits.conf
     fi
     chkconfig httpd on
     service httpd start
@@ -1192,12 +1194,14 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     cd /usr/share/roundcubemail/plugins/password
     wget $vestacp/roundcube/vesta.php -O drivers/vesta.php
     wget $vestacp/roundcube/config.inc.php -O config.inc.php
-    sed -i "s/localhost/$servername/g" /usr/share/roundcubemail/plugins/password/config.inc.php
+    sed -i "s/localhost/$servername/g" \
+        /usr/share/roundcubemail/plugins/password/config.inc.php
     chmod a+r /etc/roundcubemail/*
     chmod -f 777 /var/log/roundcubemail
     r="$(gen_pass)"
     mysql -e "CREATE DATABASE roundcube"
-    mysql -e "GRANT ALL ON roundcube.* TO roundcube@localhost IDENTIFIED BY '$r'"
+    mysql -e "GRANT ALL ON roundcube.* TO 
+            roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcubemail/config.inc.php
     chmod 640 /etc/roundcubemail/config.inc.php
     chown root:apache /etc/roundcubemail/config.inc.php
@@ -1239,8 +1243,12 @@ if [ "$fail2ban" = 'yes' ]; then
     fi 
     chkconfig fail2ban on
     /bin/mkdir -p /var/run/fail2ban
-    sed -i "s/\[Service\]/\[Service\]\nExecStartPre = \/bin\/mkdir -p \/var\/run\/fail2ban/g" /usr/lib/systemd/system/fail2ban.service
-    systemctl daemon-reload
+    if [ -e "/usr/lib/systemd/system/fail2ban.service" ]; then
+        exec_pre='ExecStartPre=/bin/mkdir -p /var/run/fail2ban'
+        sed -i "s|\[Service\]|[Service]\n$exec_pre|g" \
+            /usr/lib/systemd/system/fail2ban.service
+        systemctl daemon-reload
+    fi
     service fail2ban start
     check_result $? "fail2ban start failed"
 fi

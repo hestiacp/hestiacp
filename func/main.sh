@@ -875,12 +875,11 @@ format_domain() {
         domain=$(echo "$domain" |sed -e "s/^www.//")
     fi
     if [[ "$domain" =~ .*\.$ ]]; then
-        domain=$(echo "$domain" |sed -e "s/\.$//")
+        domain=$(echo "$domain" |sed -e "s/[.]*$//g")
     fi
     if [[ "$domain" =~ ^\. ]]; then
-        domain=$(echo "$domain" |sed -e "s/^\.//")
+        domain=$(echo "$domain" |sed -e "s/^[.]*//")
     fi
-
 }
 
 format_domain_idn() {
@@ -896,6 +895,9 @@ format_aliases() {
     if [ ! -z "$aliases" ] && [ "$aliases" != 'none' ]; then
         aliases=$(echo $aliases |tr '[:upper:]' '[:lower:]' |tr ',' '\n')
         aliases=$(echo "$aliases" |sed -e "s/\.$//" |sort -u)
+        aliases=$(echo "$aliases" |tr -s '.')
+        aliases=$(echo "$aliases" |sed -e "s/[.]*$//g")
+        aliases=$(echo "$aliases" |sed -e "s/^[.]*//")
         aliases=$(echo "$aliases" |grep -v www.$domain |sed -e "/^$/d")
         aliases=$(echo "$aliases" |tr '\n' ',' |sed -e "s/,$//")
     fi

@@ -16,7 +16,6 @@
 # Argument definition
 user=$1
 domain=$2
-domain_idn=$2
 ip=$3
 ns1=$4
 ns2=$5

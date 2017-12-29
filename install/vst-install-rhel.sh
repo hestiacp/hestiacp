@@ -366,7 +366,7 @@ fi
 
 # Softaculous
 if [ "$softaculous" = 'yes' ]; then
-    echo -n '   - Softaculous Plugin'
+    echo '   - Softaculous Plugin'
 fi
 
 # Firewall stack

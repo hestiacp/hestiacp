@@ -486,7 +486,7 @@ apt-key add deb_signing.key
 # Creating backup directory tree
 mkdir -p $vst_backups
 cd $vst_backups
-mkdir nginx apache2 php5 php5-fpm vsftpd proftpd bind exim4 dovecot clamd
+mkdir nginx apache2 php php5 php5-fpm vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql mongodb vesta
 
 # Backing up Nginx configuration
@@ -567,9 +567,11 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php5//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$phpfpm" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/php5-fpm//")
+    software=$(echo "$software" | sed -e "s/php-fpm//")
 fi
 if [ "$vsftpd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/vsftpd//")
@@ -605,12 +607,14 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mysql-client//')
     software=$(echo "$software" | sed -e 's/mysql-common//')
     software=$(echo "$software" | sed -e 's/php5-mysql//')
+    software=$(echo "$software" | sed -e 's/php-mysql//')
     software=$(echo "$software" | sed -e 's/phpMyAdmin//')
 fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
     software=$(echo "$software" | sed -e 's/php5-pgsql//')
+    software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
 fi
 if [ "$softaculous" = 'no' ]; then
@@ -740,8 +744,14 @@ if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_PORT='80'" >> $VESTA/conf/vesta.conf
     echo "WEB_SSL_PORT='443'" >> $VESTA/conf/vesta.conf
     echo "WEB_SSL='openssl'"  >> $VESTA/conf/vesta.conf
-    if [ "$phpfpm" = 'yes' ]; then
-        echo "WEB_BACKEND='php5-fpm'" >> $VESTA/conf/vesta.conf
+    if [ "$release" -eq 9 ]; then
+        if [ "$phpfpm" = 'yes' ]; then
+            echo "WEB_BACKEND='php-fpm'" >> $VESTA/conf/vesta.conf
+        fi
+    else
+        if [ "$phpfpm" = 'yes' ]; then
+            echo "WEB_BACKEND='php5-fpm'" >> $VESTA/conf/vesta.conf
+        fi
     fi
     echo "STATS_SYSTEM='webalizer,awstats'" >> $VESTA/conf/vesta.conf
 fi
@@ -898,10 +908,17 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-    wget $vestacp/php5-fpm/www.conf -O /etc/php5/fpm/pool.d/www.conf
-    update-rc.d php5-fpm defaults
-    service php5-fpm start
-    check_result $? "php-fpm start failed"
+    if [ "$release" -eq 9 ]; then
+        wget $vestacp/php-fpm/www.conf -O /etc/php/7.0/fpm/pool.d/www.conf
+        update-rc.d php7.0-fpm defaults
+        service php7.0-fpm start
+        check_result $? "php-fpm start failed"
+    else
+        wget $vestacp/php5-fpm/www.conf -O /etc/php5/fpm/pool.d/www.conf
+        update-rc.d php5-fpm defaults
+        service php5-fpm start
+        check_result $? "php-fpm start failed"
+    fi
 fi
 
 

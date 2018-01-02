@@ -499,7 +499,7 @@ local_backup(){
     backup_list=$(ls -lrt $BACKUP/ |awk '{print $9}' |grep "^$user\." | grep ".tar")
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$BACKUPS" -le "$backups_count" ]; then
-        backups_rm_number=$((backups_count - BACKUPS))
+        backups_rm_number=$((backups_count - BACKUPS + 1))
 
         # Removing old backup
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do

@@ -3,7 +3,7 @@
 source /etc/profile.d/vesta.sh
 source /usr/local/vesta/conf/vesta.conf
 
-sed -i "s|web/%domain%/stats/auth.*|conf/web/%domain%.auth|" \
+sed -i "s|web/%domain%/stats/auth.*|conf/web/%domain%.auth;|" \
     $VESTA/data/templates/web/nginx/*/*tpl >/dev/null 2>&1
 
 if [ "$WEB_SYSTEM" != 'nginx' ]; then

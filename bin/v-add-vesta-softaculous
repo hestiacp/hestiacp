@@ -98,6 +98,8 @@ fi
 
 # Installing softaculous
 if [ ! -e "$VESTA/softaculous/vst_installed" ]; then
+    mkdir -p /var/softaculous
+    chown -R admin:admin /var/softaculous
     cd $VESTA/softaculous
     wget -q http://c.vestacp.com/3rdparty/softaculous_install.inc
     $VESTA/php/bin/php softaculous_install.inc
@@ -105,9 +107,11 @@ if [ ! -e "$VESTA/softaculous/vst_installed" ]; then
     touch $VESTA/softaculous/vst_installed
 fi
 
-# Adding symlink
-if [ ! -e "$VESTA/web/softaculous" ]; then
-    ln -s $VESTA/softaculous/vesta $VESTA/web/softaculous
+# Enabling symlink
+if [ -e "$VESTA/disabled_plugins/softaculous" ]; then
+    if [ ! -e "$VESTA/web/softaculous" ]; then
+        mv $VESTA/disabled_plugins/softaculous $VESTA/web/softaculous
+    fi
 fi
 
 # Updating SOFTACULOUS value

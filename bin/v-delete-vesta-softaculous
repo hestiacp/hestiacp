@@ -29,7 +29,8 @@ fi
 
 # Deleting symlink
 if [ -e "$VESTA/web/softaculous" ]; then
-    rm -f $VESTA/web/softaculous
+    mkdir -p $VESTA/disabled_plugins
+    mv $VESTA/web/softaculous $VESTA/disabled_plugins
 fi
 
 # Updating SOFTACULOUS value

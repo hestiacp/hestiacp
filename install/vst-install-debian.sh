@@ -1165,13 +1165,15 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
     chmod a+r /etc/roundcube/main.inc.php
-    if [ "$release" -eq 8 ]; then
+    if [ "$release" -eq 8 ] || [ "$release" -eq 9 ]; then
         mv -f /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
         mv -f /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
         chmod 640 /etc/roundcube/debian-db-roundcube.php
         chmod 640 /etc/roundcube/config.inc.php
         chown root:www-data /etc/roundcube/debian-db-roundcube.php
         chown root:www-data /etc/roundcube/config.inc.php
+    fi
+    if [ "$release" -eq 8 ]; then
         # RoundCube tinyMCE fix
         tinymceFixArchiveURL=$vestacp/roundcube/roundcube-tinymce.tar.gz
         tinymceParentFolder=/usr/share/roundcube/program/js

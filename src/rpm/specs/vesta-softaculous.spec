@@ -1,6 +1,6 @@
 Name:           vesta-softaculous
 Version:        0.9.8
-Release:        18
+Release:        19
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        Softaculous License

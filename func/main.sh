@@ -794,7 +794,7 @@ is_format_valid() {
                 antispam)       is_boolean_format_valid "$arg" 'antispam' ;;
                 antivirus)      is_boolean_format_valid "$arg" 'antivirus' ;;
                 autoreply)      is_autoreply_format_valid "$arg" ;;
-                backup)         is_user_format_valid "$arg" 'backup' ;;
+                backup)         is_object_format_valid "$arg" 'backup' ;;
                 charset)        is_object_format_valid "$arg" "$arg_name" ;;
                 charsets)       is_common_format_valid "$arg" 'charsets' ;;
                 comment)        is_object_format_valid "$arg" 'comment' ;;

@@ -147,7 +147,6 @@
                 var url = '/upload/';
                 $('#file_upload_' + letter).fileupload({
                     singleFileUploads: false,
-		    maxChunkSize: 10000000, // ~10 MB
                     add: function (e, data) {
                         FM.setTabActive(FM['TAB_'+letter]);
 

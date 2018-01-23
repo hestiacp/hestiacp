@@ -753,9 +753,13 @@ is_cron_format_valid() {
             fi
         done
     fi
-    if [[ "$1" =~ ^[0-9]+$ ]] && [ "$1" -le $limit ]; then
-        check_format='ok'
-    fi
+    crn_values=$(echo $1 |tr "," " " | tr "-" " ")
+    for crn_vl in $crn_values
+        do
+            if [[ "$crn_vl" =~ ^[0-9]+$ ]] && [ "$crn_vl" -le $limit ]; then
+                 check_format='ok'
+              fi
+        done
     if [ "$check_format" != 'ok' ]; then
         check_result $E_INVALID "invalid $2 format :: $1"
     fi

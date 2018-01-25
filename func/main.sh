@@ -723,8 +723,12 @@ is_ip_status_format_valid() {
 
 # Cron validator
 is_cron_format_valid() {
-    limit=60
+    limit=59
     check_format=''
+    if [ "$2" = 'hour' ]; then
+        limit=23
+    fi
+    
     if [ "$2" = 'day' ]; then
         limit=31
     fi

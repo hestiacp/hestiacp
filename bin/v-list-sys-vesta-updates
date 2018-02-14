@@ -64,7 +64,7 @@ shell_list() {
 latest=$(wget -q -T 1 -t 1 http://c.vestacp.com/latest.txt -O -)
 
 # Checking installed vesta version
-if [ -e "/etc/redhat-release" ]; then
+if [ -d "/etc/sysconfig" ]; then
     rpm_format="VERSION='%{VERSION}'"
     rpm_format="$rpm_format RELEASE='%{RELEASE}'"
     rpm_format="$rpm_format ARCH='%{ARCH}'"
@@ -89,7 +89,7 @@ data="NAME='vesta' VERSION='$VERSION' RELEASE='$RELEASE' ARCH='$ARCH'"
 data="$data UPDATED='$UPDATED' DESCR='core package' TIME='$TIME' DATE='$DATE'"
 
 # Checking installed vesta-php version
-if [ -e "/etc/redhat-release" ]; then
+if [ -d "/etc/sysconfig" ]; then
     eval $(rpm --queryformat="$rpm_format" -q vesta-php)
     DATE=$(date -d @$UTIME +%F)
     TIME=$(date -d @$UTIME +%T)
@@ -107,7 +107,7 @@ data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='php interpreter'"
 data="$data TIME='$TIME' DATE='$DATE'"
 
 # Checking installed vesta-nginx version
-if [ -e "/etc/redhat-release" ]; then
+if [ -d "/etc/sysconfig" ]; then
     eval $(rpm --queryformat="$rpm_format" -q vesta-nginx)
     DATE=$(date -d @$UTIME +%F)
     TIME=$(date -d @$UTIME +%T)
@@ -126,7 +126,7 @@ data="$data TIME='$TIME' DATE='$DATE'"
 
 # Checking installed vesta-ioncube version
 if [ "$SOFTACULOUS" = 'yes' ]; then
-    if [ -e "/etc/redhat-release" ]; then
+    if [ -d "/etc/sysconfig" ]; then
         eval $(rpm --queryformat="$rpm_format" -q vesta-ioncube)
         DATE=$(date -d @$UTIME +%F)
         TIME=$(date -d @$UTIME +%T)
@@ -146,7 +146,7 @@ fi
 
 # Checking installed vesta-softaculous version
 if [ "$SOFTACULOUS" = 'yes' ]; then
-    if [ -e "/etc/redhat-release" ]; then
+    if [ -d "/etc/sysconfig" ]; then
         eval $(rpm --queryformat="$rpm_format" -q vesta-softaculous)
         DATE=$(date -d @$UTIME +%F)
         TIME=$(date -d @$UTIME +%T)

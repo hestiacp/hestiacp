@@ -46,7 +46,7 @@ fi
 #----------------------------------------------------------#
 
 # Cleaning yum cache
-if [ -e "/etc/redhat-release" ]; then
+if [ -d "/etc/sysconfig" ]; then
     yum -q clean all
     yum="yum -q -y --noplugins --disablerepo=* --enablerepo=vesta"
 else
@@ -57,7 +57,7 @@ fi
 
 # Updating php pacakge
 if [ -z "$($VESTA/php/bin/php -v|grep 'PHP 5.6')" ]; then
-    if [ -e "/etc/redhat-release" ]; then
+    if [ -d "/etc/sysconfig" ]; then
         $yum -y update vesta-php
         check_result $? "vesta-php package upgrade failed" $E_UPDATE
     else
@@ -67,7 +67,7 @@ if [ -z "$($VESTA/php/bin/php -v|grep 'PHP 5.6')" ]; then
 fi
 
 # Adding vesta-ioncube package
-if [ -e "/etc/redhat-release" ]; then
+if [ -d "/etc/sysconfig" ]; then
     rpm -q vesta-ioncube >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         $yum -y install vesta-ioncube >/dev/null 2>&1
@@ -82,7 +82,7 @@ else
 fi
 
 # Adding vesta-softaculous package
-if [ -e "/etc/redhat-release" ]; then
+if [ -d "/etc/sysconfig" ]; then
     rpm -q vesta-softaculous >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         $yum -y install vesta-softaculous >/dev/null 2>&1

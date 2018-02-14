@@ -60,8 +60,8 @@ if [ -z "$sys_ip_check" ]; then
     /sbin/ip addr add $ip/$cidr dev $interface \
         broadcast $broadcast label $iface
 
-    # Adding RHEL/CentOS/Fedora startup script
-    if [ -e "/etc/redhat-release" ]; then
+    # Adding RHEL/CentOS/Fedora/Amazon startup script
+    if [ -d "/etc/sysconfig" ]; then
         sys_ip="# Added by vesta"
         sys_ip="$sys_ip\nDEVICE=$iface"
         sys_ip="$sys_ip\nBOOTPROTO=static"

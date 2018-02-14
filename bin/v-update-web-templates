@@ -33,7 +33,11 @@ esac
 
 # Detecting release
 if [ "$version" = 'rhel' ]; then
-    release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
+    if [ -e '/etc/redhat-release' ]; then
+        release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
+    else
+        release=6
+    fi
 fi
 if [ "$version" = 'ubuntu' ]; then
     release=$(lsb_release -r |awk '{print $2}')

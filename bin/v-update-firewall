@@ -157,7 +157,7 @@ if [ ! -z "$FIREWALL_EXTENSION" ]; then
 fi
 
 # Saving rules to the master iptables file
-if [ -e "/etc/redhat-release" ]; then
+if [ -d "/etc/sysconfig" ]; then
     /sbin/iptables-save > /etc/sysconfig/iptables
     if [ -z "$(ls /etc/rc3.d/S*iptables 2>/dev/null)" ]; then
         /sbin/chkconfig iptables on

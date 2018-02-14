@@ -191,7 +191,7 @@ fi
 
 # Checking MAIL ANTIVIRUS
 if [ ! -z "$ANTIVIRUS_SYSTEM" ] && [ "$ANTIVIRUS_SYSTEM" != 'remote' ]; then
-    if [ -e "/etc/redhat-release" ]; then
+    if [ -d "/etc/sysconfig" ]; then
         if [ "$ANTIVIRUS_SYSTEM" == 'clamav' ];then
             ANTIVIRUS_SYSTEM='clamd'
         fi
@@ -220,7 +220,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
         proc_name=''
         service="$db"
         if [ "$service" = 'mysql' ]; then
-            if [ -e "/etc/redhat-release" ]; then
+            if [ -d "/etc/sysconfig" ]; then
                 service='mysqld'
                 proc_name='mysqld'
                 if [ -e "/usr/lib/systemd/system/mariadb.service" ]; then
@@ -231,7 +231,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
         if [ "$service" == 'pgsql' ]; then
             service='postgresql'
             proc_name='postmaster'
-            if [ ! -e "/etc/redhat-release" ]; then
+            if [ ! -d "/etc/sysconfig" ]; then
                 proc_name='postgres'
             fi
             if [ ! -e '/etc/init.d/postgresql' ]; then

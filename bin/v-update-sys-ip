@@ -114,6 +114,16 @@ for ip in $ip_list; do
     fi
 done
 
+# Checking NAT
+pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
+if [ ! -z "$pub_ip" ] && [ ! -e "$VESTA/data/ips/$pub_ip" ]; then
+    check_nat=$(grep -R "$pub_ip" $VESTA/data/ips/)
+    if [ -z "$check_nat" ]; then
+        ip=$(ls -t $VESTA/data/ips/|head -n1)
+        $BIN/v-change-sys-ip-nat $ip $pub_ip
+    fi
+fi
+
 
 #----------------------------------------------------------#
 #                       Vesta                              #

@@ -38,6 +38,11 @@ mysql_connect() {
         exit $E_CONNECT
     fi
     mysql_ver=$(cat $mysql_out |tail -n1 |cut -f 1 -d -)
+    mysql_fork="mysql"
+    check_mysql_fork=$(grep "MariaDB" $mysql_out)
+    if [ ! -z "$check_mysql_fork" ]; then
+        mysql_fork="mariadb"
+    fi
     rm -f $mysql_out
 }
 

@@ -535,11 +535,15 @@ rebuild_mail_domain_conf() {
 rebuild_mysql_database() {
     mysql_connect $HOST
     mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" >/dev/null
-    if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
-        mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" >/dev/null
-        mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" >/dev/null
-        query="UPDATE mysql.user SET authentication_string='$MD5'"
-        query="$query WHERE User='$DBUSER'"
+    if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ] || [ "$mysql_fork" = "mariadb" ]; then
+        mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" 
+        mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" 
+        if [ "$mysql_fork" = "mariadb" ]; then
+            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
+        else
+            query="UPDATE mysql.user SET authentication_string='$MD5'"
+            query="$query WHERE User='$DBUSER'"
+        fi
     else
         query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
     fi

@@ -536,8 +536,13 @@ rebuild_mysql_database() {
     mysql_connect $HOST
     mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" >/dev/null
     if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ] || [ "$mysql_fork" = "mariadb" ]; then
-        mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" > /dev/null
-        mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" > /dev/null
+        if [ "$mysql_fork" = "mariadb" ] && [ "$(echo $mysql_ver |cut -d '.' -f1)" -eq 5 ]; then
+            mysql_query "CREATE USER \`$DBUSER\`" > /dev/null
+            mysql_query "CREATE USER \`$DBUSER\`@localhost" > /dev/null
+        else
+            mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" > /dev/null
+            mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" > /dev/null
+        fi
         if [ "$mysql_fork" = "mariadb" ]; then
             query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
         else

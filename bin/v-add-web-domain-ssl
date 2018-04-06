@@ -120,6 +120,13 @@ check_result $? "Web restart failed" >/dev/null
 $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
+if [ ! -z "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then
+    hostname=$(hostname)
+    if [ "$hostname" = "$domain" ]; then
+        $BIN/v-update-host-certificate $user $domain
+    fi
+fi
+
 # Logging
 log_history "enabled ssl support for $domain"
 log_event "$OK" "$ARGUMENTS"

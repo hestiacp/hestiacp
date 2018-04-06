@@ -535,21 +535,30 @@ rebuild_mail_domain_conf() {
 rebuild_mysql_database() {
     mysql_connect $HOST
     mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" >/dev/null
-    if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ] || [ "$mysql_fork" = "mariadb" ]; then
-        if [ "$mysql_fork" = "mariadb" ] && [ "$(echo $mysql_ver |cut -d '.' -f1)" -eq 5 ]; then
+    if [ "$mysql_fork" = "mysql" ]; then
+        # mysql
+        if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
+            # mysql >= 5.7
+            mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" > /dev/null
+            mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" > /dev/null
+            query="UPDATE mysql.user SET authentication_string='$MD5'"
+            query="$query WHERE User='$DBUSER'"
+        else
+            # mysql < 5.7
+            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
+        fi
+    else
+        # mariadb
+        if [ "$(echo $mysql_ver |cut -d '.' -f1)" -eq 5 ]; then
+            # mariadb = 5
             mysql_query "CREATE USER \`$DBUSER\`" > /dev/null
             mysql_query "CREATE USER \`$DBUSER\`@localhost" > /dev/null
         else
+            # mariadb = 10
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" > /dev/null
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" > /dev/null
         fi
-        if [ "$mysql_fork" = "mariadb" ]; then
-            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
-        else
-            query="UPDATE mysql.user SET authentication_string='$MD5'"
-            query="$query WHERE User='$DBUSER'"
-        fi
-    else
+        # mariadb any version
         query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
     fi
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@\`%\`" >/dev/null

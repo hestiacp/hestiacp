@@ -72,11 +72,13 @@ chown $exim_user:mail $VESTA/ssl/certificate.crt
 chown $exim_user:mail $VESTA/ssl/certificate.key
 
 # Restart exim, dovecot & vesta
-v-restart-mail
-v-restart-service dovecot
-v-restart-service vesta
-
-
+$BIN/v-restart-mail
+if [ ! -z "$IMAP_SYSTEM" ]; then
+    $BIN/v-restart-service "$IMAP_SYSTEM"
+fi
+if [ -f "/var/run/vesta-nginx.pid" ]; then
+    kill -HUP $(cat /var/run/vesta-nginx.pid)
+fi
 
 #----------------------------------------------------------#
 #                       Vesta                              #

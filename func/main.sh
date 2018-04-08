@@ -278,6 +278,15 @@ is_password_valid() {
     fi
 }
 
+# Check if hash is transmitted via file
+is_hash_valid() {
+    if [[ "$hash" =~ ^/tmp/ ]]; then
+        if [ -f "$hash" ]; then
+            hash="$(head -n1 $hash)"
+        fi
+    fi
+}
+
 # Get object value
 get_object_value() {
     object=$(grep "$2='$3'" $USER_DATA/$1.conf)

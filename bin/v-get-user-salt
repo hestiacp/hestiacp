@@ -1,0 +1,118 @@
+#!/bin/bash
+# info: get user salt
+# options: USER [IP] [FORMAT]
+#
+# The function provides users salt
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+ip=${2-127.0.0.1}
+format=${3-shell}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+# JSON list function
+json_list() {
+    echo '{'
+    echo '    "'$user'": {
+        "METHOD": "'$method'",
+        "SALT": "'$salt'",
+        "TIME": "'$time'",
+        "DATE": "'$date'"
+        }'
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "METHOD:         $method"
+    echo "SALT:           $salt"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -e "$method\t$salt"
+}
+
+# CSV list function
+csv_list() {
+    echo "METHOD,SALT"
+    echo "$method, $salt"
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+check_args '1' "$#" 'USER [IP] [SALT]'
+is_format_valid 'user'
+
+# Checking user
+if [ ! -d "$VESTA/data/users/$user" ] && [ "$user" != 'root' ]; then
+    echo "Error: password missmatch"
+    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    exit 9
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Parsing user's salt
+shadow=$(grep "^$user:" /etc/shadow | cut -f 2 -d :)
+
+if echo "$shadow" | grep -qE '^\$[0-9a-z]+\$[^\$]+\$'
+then
+    salt=$(echo "$shadow" |cut -f 3 -d \$)
+    method=$(echo "$shadow" |cut -f 2 -d \$)
+    if [ "$method" -eq '1' ]; then
+        method='md5'
+    elif [ "$method" -eq '6' ]; then
+        method='sha-512'
+    else
+        echo "Error: password missmatch"
+        echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+        exit 9
+    fi
+else
+    salt=${shadow:0:2}
+    method='des'
+fi
+
+if [ -z "$salt" ]; then
+    echo "Error: password missmatch"
+    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    exit 9
+fi
+
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+
+exit

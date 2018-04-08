@@ -1,0 +1,100 @@
+#!/bin/bash
+# info: check user hash
+# options: USER HASH [IP]
+#
+# The function verifies user hash
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+hash=$2; HIDE=2
+ip=${3-127.0.0.1}
+
+# Includes
+source $VESTA/func/main.sh
+source $VESTA/conf/vesta.conf
+
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+check_args '2' "$#" 'USER HASH'
+is_format_valid 'user'
+
+# Checking user
+if [ ! -d "$VESTA/data/users/$user" ] && [ "$user" != 'root' ]; then
+    echo "Error: password missmatch"
+    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    exit 9
+fi
+
+# Checking user hash
+is_hash_valid
+
+# Checking empty hash
+if [[ -z "$hash" ]]; then
+    echo "Error: password missmatch"
+    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    exit 9
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+
+# Parsing user's salt
+shadow=$(grep "^$user:" /etc/shadow | cut -f 2 -d :)
+
+if echo "$shadow" | grep -qE '^\$[0-9a-z]+\$[^\$]+\$'
+then
+    salt=$(echo "$shadow" |cut -f 3 -d \$)
+    method=$(echo "$shadow" |cut -f 2 -d \$)
+    if [ "$method" -eq '1' ]; then
+        method='md5'
+    elif [ "$method" -eq '6' ]; then
+        method='sha-512'
+    else
+        echo "Error: password missmatch"
+        echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+        exit 9
+    fi
+else
+    salt=${shadow:0:2}
+    method='des'
+fi
+
+if [ -z "$salt" ]; then
+    echo "Error: password missmatch"
+    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    exit 9
+fi
+
+# Checking hash
+result=$(grep "^$user:$hash:" /etc/shadow 2>/dev/null)
+if [[ -z "$result" ]]; then
+    echo "Error: password missmatch"
+    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    exit 9
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+# Logging
+echo "$date $time $user $ip successfully logged in" >> $VESTA/log/auth.log
+
+exit

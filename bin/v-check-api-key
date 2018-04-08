@@ -1,0 +1,40 @@
+#!/bin/bash
+# info: check api key
+# options: KEY
+#
+# The function checks a key file in /usr/local/vesta/data/keys/
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+if [ -z "$1" ]; then
+    echo "Error: key missmatch"
+    exit 9
+fi
+key=$(basename $1)
+ip=${2-127.0.0.1}
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ ! -e $VESTA/data/keys/$key ]; then
+    echo "Error: key missmatch"
+    echo "$date $time api $ip failed to login" >> $VESTA/log/auth.log
+    exit 9
+fi
+
+
+#----------------------------------------------------------#
+#                       Vesta                              #
+#----------------------------------------------------------#
+
+echo "$date $time api $ip successfully launched" >> $VESTA/log/auth.log
+
+exit

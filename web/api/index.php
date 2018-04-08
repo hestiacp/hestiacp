@@ -4,32 +4,64 @@ define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
 if (isset($_POST['user']) || isset($_POST['hash'])) {
 
     // Authentication
-    $auth_code = 1;
     if (empty($_POST['hash'])) {
-        // Check user permission to use API
         if ($_POST['user'] != 'admin') {
-            echo 'Error: only admin is allowed to use API';
+            echo 'Error: authentication failed';
             exit;
         }
 
-        $v_user = escapeshellarg($_POST['user']);
-        $v_password = tempnam("/tmp","vst");
-        $fp = fopen($v_password, "w");
-        fwrite($fp, $_POST['password']."\n");
+        $password = $_POST['password'];
+        $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
+        $output = '';
+        exec (VESTA_CMD."v-get-user-salt admin ".$v_ip." json" , $output, $return_var);
+        $pam = json_decode(implode('', $output), true);
+        $salt = $pam['admin']['SALT'];
+        $method = $pam['admin']['METHOD'];
+
+        if ($method == 'md5' ) {
+            $hash = crypt($password, '$1$'.$salt.'$');
+        }
+        if ($method == 'sha-512' ) {
+            $hash = crypt($password, '$6$rounds=5000$'.$salt.'$');
+            $hash = str_replace('$rounds=5000','',$hash);
+        }
+        if ($method == 'des' ) {
+            $hash = crypt($password, $salt);
+        }
+
+        // Send hash via tmp file
+        $v_hash = exec('mktemp -p /tmp');
+        $fp = fopen($v_hash, "w");
+        fwrite($fp, $hash."\n");
         fclose($fp);
-        $v_ip_addr = escapeshellarg($_SERVER["REMOTE_ADDR"]);
-        exec(VESTA_CMD ."v-check-user-password ".$v_user." ".escapeshellarg($v_password)." '".$v_ip_addr."'",  $output, $auth_code);
-        unlink($v_password);
-    /* No hash auth for security reason
+
+        // Check user hash
+        exec(VESTA_CMD ."v-check-user-hash admin ".$v_hash." ".$v_ip,  $output, $return_var);
+        unset($output);
+
+        // Remove tmp file
+        unlink($v_hash);
+
+        // Check API answer
+        if ( $return_var > 0 ) {
+            echo 'Error: authentication failed';
+            exit;
+        }
     } else {
         $key = '/usr/local/vesta/data/keys/' . basename($_POST['hash']);
         if (file_exists($key) && is_file($key)) {
-            $auth_code = '0';
+            exec(VESTA_CMD ."v-check-api-key ".escapeshellarg($key)." ".$v_ip,  $output, $return_var);
+            unset($output);
+
+            // Check API answer
+            if ( $return_var > 0 ) {
+                echo 'Error: authentication failed';
+                exit;
+            }
         }
-    */
     }
 
-    if ($auth_code != 0 ) {
+    if ( $return_var > 0 ) {
         echo 'Error: authentication failed';
         exit;
     }

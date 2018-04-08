@@ -1,7 +1,7 @@
 Source: vesta-nginx
 Package: vesta-nginx
 Priority: optional
-Version: 0.9.8-19
+Version: 0.9.8-20
 Section: admin
 Maintainer: Serghey Rodin <skid@vestacp.com>
 Homepage: http://vestacp.com

@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        19
+Release:        20
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -56,6 +56,9 @@ fi
 %config(noreplace) %{_vestadir}/web/css/uploadify.css
 
 %changelog
+* Sun Apr 08 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-20
+- Hardening password checks
+
 * Wed Jan 10 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-19
 - Fixed backup restore function
 

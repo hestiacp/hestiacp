@@ -273,7 +273,7 @@ is_object_value_exist() {
 is_password_valid() {
     if [[ "$password" =~ ^/tmp/ ]]; then
         if [ -f "$password" ]; then
-            password=$(head -n1 $password)
+            password="$(head -n1 $password)"
         fi
     fi
 }

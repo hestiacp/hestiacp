@@ -44,7 +44,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         fclose($fp);
 
         // Check user & password
-        exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." ".escapeshellarg($_SERVER['REMOTE_ADDR']),  $output, $return_var);
+        exec(VESTA_CMD ."v-check-user-password ".$v_user." ".escapeshellarg($v_password)." ".escapeshellarg($_SERVER['REMOTE_ADDR']),  $output, $return_var);
         unset($output);
 
         // Remove tmp file

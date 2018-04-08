@@ -18,13 +18,15 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         fwrite($fp, $_POST['password']."\n");
         fclose($fp);
         $v_ip_addr = escapeshellarg($_SERVER["REMOTE_ADDR"]);
-        exec(VESTA_CMD ."v-check-user-password ".$v_user." ".$v_password." '".$v_ip_addr."'",  $output, $auth_code);
+        exec(VESTA_CMD ."v-check-user-password ".$v_user." ".escapeshellarg($v_password)." '".$v_ip_addr."'",  $output, $auth_code);
         unlink($v_password);
+    /* No hash auth for security reason
     } else {
         $key = '/usr/local/vesta/data/keys/' . basename($_POST['hash']);
         if (file_exists($key) && is_file($key)) {
             $auth_code = '0';
         }
+    */
     }
 
     if ($auth_code != 0 ) {

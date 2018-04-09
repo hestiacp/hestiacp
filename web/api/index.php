@@ -1,6 +1,6 @@
 <?php
 define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
-
+exit;
 if (isset($_POST['user']) || isset($_POST['hash'])) {
 
     // Authentication

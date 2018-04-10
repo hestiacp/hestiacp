@@ -50,7 +50,7 @@ if [ -z "$PROXY_SYSTEM" ] || [ "$PROXY_SYSTEM" = 'remote' ]; then
 fi
 
 # Restart system
-service $PROXY_SYSTEM restart >/dev/null 2>&1
+service $PROXY_SYSTEM reload >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
     check_result $E_RESTART "$PROXY_SYSTEM restart failed"

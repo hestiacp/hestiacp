@@ -8,6 +8,6 @@ if (!empty($_SESSION['look'])) {
     session_destroy();
 }
 
-header("Location: /");
+header("Location: /login/");
 exit;
 ?>

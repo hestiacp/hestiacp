@@ -1,5 +1,5 @@
 <?php
-
+require_once('/usr/local/vesta/web/inc/secure_login.php');
 session_start();
 
 define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');

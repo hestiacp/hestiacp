@@ -1,7 +1,7 @@
 <?php
 // Init
 define('NO_AUTH_REQUIRED',true);
-define('NO_AUTH_REQUIRED',true);
+define('NO_AUTH_REQUIRED2',true);
 
 error_reporting(NULL);
 

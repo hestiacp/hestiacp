@@ -5,6 +5,22 @@ error_reporting(NULL);
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// Checking IP of incoming connection, checking is it NAT address
+$ok=0;
+$ip=$_SERVER['REMOTE_ADDR'];
+exec (VESTA_CMD."v-list-sys-ips json", $output, $return_var);
+$output=implode('', $output);
+$arr=json_decode($output, true);
+foreach ($arr as $arr_key => $arr_val) {
+	if ($ip==$arr_key || $ip==$arr_val['NAT']) {
+		$ok=1;
+		break;
+	}
+}
+if ($ip == $_SERVER['SERVER_ADDR']) $ok=1;
+if ($ip == '127.0.0.1') $ok=1;
+if ($ok==0) exit;
+
 //
 // sourceforge.net/projects/postfixadmin/
 // md5crypt 

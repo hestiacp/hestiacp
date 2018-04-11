@@ -1,11 +1,13 @@
 <?php
 // Init
 define('NO_AUTH_REQUIRED',true);
+define('NO_AUTH_REQUIRED2',true);
 error_reporting(NULL);
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Checking IP of incoming connection, checking is it NAT address
+//echo '<pre>'; print_r($_SERVER); exit;
 $ok=0;
 $ip=$_SERVER['REMOTE_ADDR'];
 exec (VESTA_CMD."v-list-sys-ips json", $output, $return_var);
@@ -152,7 +154,7 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
             fclose($fp);
             exec (VESTA_CMD."v-change-mail-account-password '".$v_user."' ".$v_domain." ".$v_account." ".$v_new_password, $output, $return_var);
             if ($return_var == 0) {
-                echo "ok";
+                echo "==ok==";
                 exit;
             }
         }

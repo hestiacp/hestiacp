@@ -25,7 +25,7 @@ if (isset($_SESSION['user'])) {
             $_SESSION['look_alert'] = 'yes';
         }
     }
-    header("Location: /");
+    header("Location: /list/user/");
     exit;
 }
 
@@ -109,7 +109,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
                     unset($_SESSION['request_uri']);
                     exit;
                 } else {
-                    header("Location: /");
+                    header("Location: /list/user/");
                     exit;
                 }
             }

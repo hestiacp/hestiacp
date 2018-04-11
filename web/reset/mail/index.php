@@ -6,6 +6,7 @@ error_reporting(NULL);
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// Checking IP of incoming connection, checking is it NAT address
 //echo '<pre>'; print_r($_SERVER); exit;
 $ok=0;
 $ip=$_SERVER['REMOTE_ADDR'];
@@ -18,10 +19,8 @@ foreach ($arr as $arr_key => $arr_val) {
 		break;
 	}
 }
-//echo '<pre>ip='.$ip."\n".$return_var." = "; print_r($arr); exit;
 if ($ip == $_SERVER['SERVER_ADDR']) $ok=1;
 if ($ip == '127.0.0.1') $ok=1;
-//echo 'ok='.$ok."\n";
 if ($ok==0) exit;
 
 //

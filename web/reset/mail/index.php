@@ -22,6 +22,7 @@ foreach ($arr as $arr_key => $arr_val) {
 if ($ip == $_SERVER['SERVER_ADDR']) $ok=1;
 if ($ip == '127.0.0.1') $ok=1;
 if ($ok==0) exit;
+if (isset($_SERVER['HTTP_X_REAL_IP']) || isset($_SERVER['HTTP_X_FORWARDED_FOR'])) exit;
 
 //
 // sourceforge.net/projects/postfixadmin/

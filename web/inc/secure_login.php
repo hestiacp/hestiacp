@@ -8,4 +8,5 @@ if (!defined('NO_AUTH_REQUIRED2')) {
             exit;
         }
         if (!isset($_COOKIE[$login_url])) exit;
+    }
 }

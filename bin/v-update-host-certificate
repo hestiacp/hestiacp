@@ -76,9 +76,6 @@ $BIN/v-restart-mail
 if [ ! -z "$IMAP_SYSTEM" ]; then
     $BIN/v-restart-service "$IMAP_SYSTEM"
 fi
-if [ ! -z "$MAIL_SYSTEM" ]; then
-    $BIN/v-restart-service "$MAIL_SYSTEM"
-fi
 if [ ! -z "$FTP_SYSTEM" ]; then
     $BIN/v-restart-service "$FTP_SYSTEM"
 fi

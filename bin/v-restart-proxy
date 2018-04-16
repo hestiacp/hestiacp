@@ -49,18 +49,26 @@ if [ -z "$PROXY_SYSTEM" ] || [ "$PROXY_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-# Restart system
-service $PROXY_SYSTEM reload >/dev/null 2>&1
-if [ $? -ne 0 ]; then
-    send_email_report
-    check_result $E_RESTART "$PROXY_SYSTEM restart failed"
+# background restart
+if [ "$1" = 'background' ]; then
+    # Restart system
+    sleep 2
+    service $PROXY_SYSTEM restart >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        send_email_report
+        check_result $E_RESTART "$PROXY_SYSTEM restart failed"
+    fi
+    
+    # Update restart queue
+    if [ -e "$VESTA/data/queue/restart.pipe" ]; then
+        sed -i "/$SCRIPT/d" $VESTA/data/queue/restart.pipe
+    fi
+
+    exit;
 fi
 
-# Update restart queue
-if [ -e "$VESTA/data/queue/restart.pipe" ]; then
-    sed -i "/$SCRIPT/d" $VESTA/data/queue/restart.pipe
-fi
-
+touch /tmp/restart-nginx
+nohup $BIN/v-restart-proxy 'background' &>/dev/null &
 
 #----------------------------------------------------------#
 #                       Vesta                              #

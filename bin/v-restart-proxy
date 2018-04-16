@@ -52,7 +52,7 @@ fi
 # background restart
 if [ "$1" = 'background' ]; then
     # Restart system
-    sleep 2
+    sleep 20
     service $PROXY_SYSTEM restart >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         send_email_report

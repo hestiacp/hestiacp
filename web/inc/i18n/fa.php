@@ -88,6 +88,7 @@ $LANG['fa'] = array(
     'list records' => 'فهرست پیشینه های %s',
     'add record' => 'افزودن پیشینه',
     'list accounts' => 'فهرست حسابهای %s',
+    'Apps' => 'برنامه ها',
     'add account' => 'افزودن حساب',
     'open webmail' => 'بازکردن وب میل',
     'list fail2ban' => 'فهرست fail2ban',

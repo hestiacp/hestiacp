@@ -76,6 +76,9 @@ $BIN/v-restart-mail
 if [ ! -z "$IMAP_SYSTEM" ]; then
     $BIN/v-restart-service "$IMAP_SYSTEM"
 fi
+if [ ! -z "$FTP_SYSTEM" ]; then
+    $BIN/v-restart-service "$FTP_SYSTEM"
+fi
 if [ -f "/var/run/vesta-nginx.pid" ]; then
     kill -HUP $(cat /var/run/vesta-nginx.pid)
 fi

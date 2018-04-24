@@ -96,6 +96,30 @@
                                     <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
                                         <tr>
                                             <td class="vst-text input-label">
+                                                <?php print __('Proxy Template');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_proxy_template">
+                                                    <?php
+                                                        foreach ($proxy_templates as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                            $svalue = "'".$value."'";
+                                                            if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template ) || ($svalue == $v_proxy_template)){
+                                                                echo ' selected' ;
+                                                            }
+                                                            if ((empty($v_proxy_template)) && ($value == 'default')){
+                                                                echo ' selected' ;
+                                                            }
+                                                            echo ">".htmlentities($value)."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
                                                 <?php print __('Proxy Extensions');?>
                                             </td>
                                         </tr>

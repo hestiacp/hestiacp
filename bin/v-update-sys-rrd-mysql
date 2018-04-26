@@ -14,6 +14,7 @@ period=${1-daily}
 
 # Includes
 source $VESTA/func/main.sh
+source $VESTA/func/db.sh
 source $VESTA/conf/vesta.conf
 
 
@@ -66,23 +67,10 @@ for host in $hosts; do
     fi
 
     if [ "$period" = 'daily' ]; then
-        # Defining host credentials
-        host_str=$(grep "HOST='$host'" $conf)
-        for key in $host_str; do
-            eval ${key%%=*}=${key#*=}
-        done
-        sql="mysql -h $HOST -u $USER -p$PASSWORD -e"
-
-        # Checking empty vars
-        if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
-            echo "Error: config is broken"
-            log_event "$E_PARSING" "$ARGUMENTS"
-            exit $E_PARSING
-        fi
-
-        # Parsing data
-        status=$($sql "SHOW GLOBAL STATUS" 2>/dev/null); code="$?"
-        if [ '0' -ne "$code" ]; then
+        mysql_connect $host
+        query='SHOW GLOBAL STATUS'
+        status=$(mysql_query "$query" 2>/dev/null)
+        if [ $? -ne 0 ]; then
             active=0
             slow=0
         else

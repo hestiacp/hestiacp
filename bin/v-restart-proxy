@@ -53,7 +53,7 @@ fi
 if [ "$1" = 'background' ]; then
     # Restart system
     sleep 1
-    rm /tmp/restart-nginx
+    # rm /tmp/restart-nginx
     service $PROXY_SYSTEM restart >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         send_email_report
@@ -68,9 +68,9 @@ if [ "$1" = 'background' ]; then
     exit;
 fi
 
-if [ -f "/tmp/restart-nginx" ]; then
-    exit;
-fi
+# if [ -f "/tmp/restart-nginx" ]; then
+#     exit;
+# fi
 
 service $PROXY_SYSTEM reload
 if [ $? -ne 0 ]; then
@@ -78,7 +78,7 @@ if [ $? -ne 0 ]; then
     check_result $E_RESTART "$PROXY_SYSTEM reload failed"
 fi
 
-touch /tmp/restart-nginx
+# touch /tmp/restart-nginx
 nohup $BIN/v-restart-proxy 'background' &>/dev/null &
 
 #----------------------------------------------------------#

@@ -75,15 +75,15 @@ else
     method='des'
 fi
 
+# Checking salt
 if [ -z "$salt" ]; then
     echo "Error: password missmatch"
     echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
     exit 9
 fi
 
-# Checking hash
-result=$(grep "^$user:$hash:" /etc/shadow 2>/dev/null)
-if [[ -z "$result" ]]; then
+# Comparing hashes
+if [[ "$shadow" != "$hash" ]]; then
     echo "Error: password missmatch"
     echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
     exit 9

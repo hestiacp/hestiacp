@@ -52,7 +52,7 @@ fi
 # background restart
 if [ "$1" = 'background' ]; then
     # Restart system
-    sleep 1
+    sleep 15
     # rm /tmp/restart-nginx
     service $PROXY_SYSTEM restart >/dev/null 2>&1
     if [ $? -ne 0 ]; then

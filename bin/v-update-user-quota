@@ -33,7 +33,7 @@ is_object_valid 'user' 'USER' "$user"
 # Updating disk quota
 # Had quota equals package value. Soft quota equals 90% of package value for warnings.
 quota=$(get_user_value '$DISK_QUOTA')
-soft=$(echo "$quota * 1024 * 0.90"|bc |cut -f 1 -d .)
+soft=$(echo "$quota * 1024"|bc |cut -f 1 -d .)
 hard=$(echo "$quota * 1024"|bc |cut -f 1 -d .)
 
 # Searching home mount point

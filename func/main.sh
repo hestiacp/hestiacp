@@ -916,6 +916,7 @@ format_aliases() {
         aliases=$(echo "$aliases" |sed -e "s/[.]*$//g")
         aliases=$(echo "$aliases" |sed -e "s/^[.]*//")
         aliases=$(echo "$aliases" |grep -v www.$domain |sed -e "/^$/d")
+        # aliases=$(echo "$aliases" |sed -e "/^$/d")
         aliases=$(echo "$aliases" |tr '\n' ',' |sed -e "s/,$//")
     fi
 }

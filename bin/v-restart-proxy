@@ -73,10 +73,10 @@ fi
 # fi
 
 service $PROXY_SYSTEM reload
-if [ $? -ne 0 ]; then
-    send_email_report
-    check_result $E_RESTART "$PROXY_SYSTEM reload failed"
-fi
+# if [ $? -ne 0 ]; then
+#     send_email_report
+#     check_result $E_RESTART "$PROXY_SYSTEM reload failed"
+# fi
 
 # touch /tmp/restart-nginx
 nohup $BIN/v-restart-proxy 'background' &>/dev/null &

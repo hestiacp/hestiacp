@@ -21,6 +21,12 @@ protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 # Defining absolute path to iptables
 iptables="/sbin/iptables"
 
+# Get vesta port by reading nginx.conf
+vestaport=$(grep 'listen' /usr/local/vesta/nginx/conf/nginx.conf | awk '{print $2}' | sed "s|;||")
+if [ -z "$vestaport" ]; then
+    vestaport=8083
+fi
+
 # Includes
 source $VESTA/func/main.sh
 source $VESTA/conf/vesta.conf
@@ -47,7 +53,7 @@ case $chain in
     DNS)        port=53; protocol=UDP  ;;
     WEB)        port='80,443'; protocol=TCP  ;;
     DB)         port='3306,5432'; protocol=TCP  ;;
-    VESTA)      port=8083; protocol=TCP  ;;
+    VESTA)      port=$vestaport; protocol=TCP  ;;
     *)          check_args '2' "$#" 'CHAIN PORT' ;;
 esac
 

@@ -59,7 +59,7 @@ for user in $users; do
                 fi
             fi
             if [ $lecounter -gt 0 ]; then
-                sleep 10
+                sleep 60
             fi
             ((lecounter++))
         fi

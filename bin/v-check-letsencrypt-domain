@@ -101,14 +101,14 @@ if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
     if [ ! -e "$sconf" ]; then
         ln -s "$conf" "$sconf"
     fi
-else
+fi
     acme="$HOMEDIR/$user/web/$r_domain/public_html/.well-known/acme-challenge"
     if [ ! -d "$acme" ]; then
         mkdir -p $acme
     fi
     echo "$token.$thumb" > $acme/$token
     chown -R $user:$user $HOMEDIR/$user/web/$r_domain/public_html/.well-known
-fi
+
 
 # Restarting web server
 if [ -z "$PROXY_SYSTEM" ]; then

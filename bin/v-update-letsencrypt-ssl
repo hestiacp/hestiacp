@@ -58,11 +58,11 @@ for user in $users; do
                     echo "$domain $msg"
                 fi
             fi
-            if [ $lecounter -gt 0 ]; then
-                sleep 60
-            fi
-            ((lecounter++))
         fi
+        if [ $lecounter -gt 0 ]; then
+            sleep 60
+        fi
+        ((lecounter++))
     done
 done
 

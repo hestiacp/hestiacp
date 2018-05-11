@@ -3,7 +3,7 @@
 
 if [ ! -e '/etc/sudoers.d/admin' ]; then
     if [ ! -d '/etc/sudoers.d' ]; then
-        mkidr /etc/sudoers.d
+        mkdir /etc/sudoers.d
         chmod 750 /etc/sudoers.d
     fi
     echo '# Created by vesta update-trigger' > /etc/sudoers.d/admin

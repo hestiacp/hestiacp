@@ -16,7 +16,7 @@ if (!empty($_REQUEST['path'])) {
     $path = $_REQUEST['path'];
     if (!empty($_REQUEST['raw'])) {
         header('content-type: image/jpeg');
-        passthru (VESTA_CMD . "v-open-fs-file " . $user . " " . escapeshellarg($_REQUEST['path']));
+        passthru (VESTA_CMD . "v-open-fs-file " . $user . " " . escapeshellarg(htmlspecialchars($_REQUEST['path'], ENT_QUOTES, 'UTF-8')));
         exit;
     }
 }

@@ -489,7 +489,7 @@ $LANG['sr'] = array(
     'Welcome'  => 'Dobrodošli',
     'LOGGED_IN_AS'  => 'Ulogovani ste kao %s',
     'Error'  => 'Greška',
-    'Invalid username or password'  => 'Pogrešani login podaci',
+    'Invalid username or password'  => 'Pogrešni login podaci',
     'Invalid username or code'  => 'Pogrešno korisničko ime ili kod',
     'Passwords not match'  => 'Passwordi se ne poklapaju',
     'Please enter valid email address.'  => 'Potrebno je uneti validnu email adresu.',
@@ -512,8 +512,8 @@ $LANG['sr'] = array(
 
     'Welcome to Vesta Control Panel'  => 'Dobrodošli u Vesta kontrolni panel',
     'MAIL_FROM'  => 'Vesta kontrolni panel <noreply@%s>',
-    'GREETINGS_GORDON_FREEMAN' => "Poštovanje, %s %s,\n",
-    'GREETINGS' => "Poštovanje,\n",
+    'GREETINGS_GORDON_FREEMAN' => "Poštovani %s %s,\n",
+    'GREETINGS' => "Poštovani,\n",
     'ACCOUNT_READY' => "Vaš hosting nalog je kreiran i spreman za korišćenje.\n\nhttps://%s/login/\nKorisničko ime: %s\nŠifra: %s\n\n--\nVesta kontrolni panel\n",
 
     'FTP login credentials'  => 'FTP podaci',

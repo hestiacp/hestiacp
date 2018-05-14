@@ -23,7 +23,10 @@ json_list() {
     objects=$(echo "$logs" |wc -l)
     echo "{"
     for str in $logs; do
-        eval $str
+        ID=$(echo "$str" |cut -f 2 -d \')
+        DATE=$(echo "$str" |cut -f 4 -d \')
+        TIME=$(echo "$str" |cut -f 6 -d \')
+        CMD=$(echo "$str" |cut -f 8 -d \')
         CMD=${CMD//\"/\\\"}
         echo -n '    "'$ID'": {
         "CMD": "'$CMD'",
@@ -46,13 +49,9 @@ shell_list() {
     echo "DATE~TIME~CMD"
     echo "----~----~---"
     for str in $logs; do
-        eval $str
-        if [ -z "$DATE" ]; then
-            DATE='no'
-        fi
-        if [ -z "$TIME" ]; then
-            TIME='no'
-        fi
+        DATE=$(echo "$str" |cut -f 4 -d \')
+        TIME=$(echo "$str" |cut -f 6 -d \')
+        CMD=$(echo "$str" |cut -f 8 -d \')
         echo "$DATE~$TIME~$CMD"
     done
 }
@@ -61,7 +60,9 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     for str in $logs; do
-        eval $str
+        DATE=$(echo "$str" |cut -f 4 -d \')
+        TIME=$(echo "$str" |cut -f 6 -d \')
+        CMD=$(echo "$str" |cut -f 8 -d \')
         echo -e "$ID\t$CMD\t$UNDO\t$TIME\t$DATE"
     done
 }
@@ -71,7 +72,9 @@ csv_list() {
     IFS=$'\n'
     echo "ID,CMD,UNDO,TIME,DATE"
     for str in $logs; do
-        eval $str
+        DATE=$(echo "$str" |cut -f 4 -d \')
+        TIME=$(echo "$str" |cut -f 6 -d \')
+        CMD=$(echo "$str" |cut -f 8 -d \')
         echo "$ID,\"$CMD\",\"$UNDO\",$TIME,$DATE"
     done
 }

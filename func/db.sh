@@ -47,7 +47,10 @@ mysql_connect() {
 }
 
 mysql_query() {
-    mysql --defaults-file=$mycnf -e "$1" 2>/dev/null
+    sql_tmp=$(mktemp)
+    echo "$1" > $sql_tmp
+    mysql --defaults-file=$mycnf < "$sql_tmp"  2>/dev/null
+    rm -f "$sql_tmp"
 }
 
 mysql_dump() {
@@ -89,7 +92,10 @@ psql_connect() {
 }
 
 psql_query() {
-    psql -h $HOST -U $USER -c "$1" 2>/dev/null
+    sql_tmp=$(mktemp)
+    echo "$1" > $sql_tmp
+    psql -h $HOST -U $USER -f "$sql_tmp" 2>/dev/null
+    rm -f $sql_tmp
 }
 
 psql_dump() {

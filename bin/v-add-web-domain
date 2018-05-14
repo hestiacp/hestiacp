@@ -47,6 +47,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
 is_domain_new 'web' "$domain,$aliases"
+is_dir_symlink $HOMEDIR/$user/web
 if [ ! -z "$ip" ]; then
     is_ip_valid "$ip" "$user"
 else

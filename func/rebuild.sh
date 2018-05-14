@@ -71,6 +71,9 @@ rebuild_user_conf() {
         echo "$BIN/v-update-web-domains-disk $user" \
             >> $VESTA/data/queue/disk.pipe
 
+        if [[ -L "$HOMEDIR/$user/web" ]]; then
+            rm $HOMEDIR/$user/web
+        fi
         mkdir -p $HOMEDIR/$user/conf/web
         mkdir -p $HOMEDIR/$user/web
         mkdir -p $HOMEDIR/$user/tmp
@@ -105,6 +108,9 @@ rebuild_user_conf() {
         echo "$BIN/v-update-mail-domains-disk $user" \
             >> $VESTA/data/queue/disk.pipe
 
+        if [[ -L "$HOMEDIR/$user/mail" ]]; then
+            rm $HOMEDIR/$user/mail
+        fi
         mkdir -p $HOMEDIR/$user/conf/mail
         mkdir -p $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/mail

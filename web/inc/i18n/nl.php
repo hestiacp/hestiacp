@@ -16,6 +16,7 @@ $LANG['nl'] = array(
     'Services'  => 'Processen',
     'Firewall' => 'Firewall',
     'Updates'  => 'Updates',
+    'Apps' => 'Applicaties',
     'Log in'  => 'Inloggen',
     'Log out'  => 'Uitloggen',
 

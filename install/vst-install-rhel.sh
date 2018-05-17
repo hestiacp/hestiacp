@@ -636,14 +636,17 @@ fi
 #----------------------------------------------------------#
 
 # Installing rpm packages
-if [ "$remi" = 'yes' ]; then
-    yum -y --disablerepo=* \
-        --enablerepo="*base,*updates,nginx,epel,vesta,remi*" \
-        install $software
-else
-    yum -y --disablerepo=* --enablerepo="*base,*updates,nginx,epel,vesta" \
-        install $software
-fi
+#if [ "$remi" = 'yes' ]; then
+#    yum -y --disablerepo=* \
+#        --enablerepo="*base,*updates,nginx,epel,vesta,remi*" \
+#        install $software
+#else
+#    yum -y --disablerepo=* --enablerepo="*base,*updates,nginx,epel,vesta" \
+#        install $software
+#fi
+
+# Temporary fix for centos vault issue
+yum install $software
 check_result $? "yum install failed"
 
 

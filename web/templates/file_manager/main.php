@@ -21,7 +21,7 @@
 
     <div id="main">
         <div class="window active">
-            <a href="/" class="l-logo"></a>
+            <a href="/list/user/" class="l-logo"></a>
             <div class="pwd pwd-tab-A"></div>
             <div class="menu menu-left menu-A">
                 <?php $pre_tab = 'A';include($_SERVER['DOCUMENT_ROOT'].'/templates/file_manager/tab_menu.php'); ?>

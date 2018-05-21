@@ -21,6 +21,7 @@ $LANG['es'] = array(
     'Services'  => 'Servicios',
     'Firewall' => 'Cortafuegos',
     'Updates'  => 'Actualizaciones',
+    'Apps'  => 'Aplicaciones',
     'Log in'  => 'Iniciar Sesión',
     'Log out'  => 'Salir',
 

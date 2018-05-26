@@ -269,7 +269,7 @@ replace_web_config() {
     fi
 }
 
-# Delete web configuartion
+# Delete web configuration
 del_web_config() {
     conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
@@ -291,7 +291,7 @@ del_web_config() {
     # clean-up for both config styles if there is no more domains
     web_domain=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
     if [ "$web_domain" -eq '0' ]; then
-        sed -i "/.*\/$user\/.*/d" /etc/$1/conf.d/vesta.conf
+        sed -i "/.*\/$user\/conf\/web\//d" /etc/$1/conf.d/vesta.conf
         if [ -f "$conf" ]; then
             rm -f $conf
         fi

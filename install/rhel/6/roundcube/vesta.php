@@ -48,7 +48,7 @@ class rcube_vesta_password
         $context = stream_context_create();
 
         $result = stream_context_set_option($context, 'ssl', 'verify_peer', false);
-        result = stream_context_set_option($context, 'ssl', 'verify_peer_name', false);
+        $result = stream_context_set_option($context, 'ssl', 'verify_peer_name', false);
         $result = stream_context_set_option($context, 'ssl', 'verify_host', false);
         $result = stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
 

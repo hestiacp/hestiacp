@@ -50,12 +50,12 @@ domain_lvl=$(echo "$alias" |grep -o "\." |wc -l)
 # Adding second level domain
 if [ "$domain_lvl" -eq 1 ] || [ "${#top_domain}" -le '6' ]; then
     $BIN/v-add-dns-domain \
-        $user $alias $ip '' '' '' '' '' $restart >> /dev/null
+        $user $alias $ip '' '' '' '' '' '' '' '' $restart >> /dev/null
     exit
 fi
 
 # Adding top-level domain and then its sub
-$BIN/v-add-dns-domain $user $top_domain $ip '' '' '' '' $restart >> /dev/null
+$BIN/v-add-dns-domain $user $top_domain $ip '' '' '' '' '' $restart >> /dev/null
 
 # Checking top-level domain
 if [ ! -e "$USER_DATA/dns/$top_domain.conf" ]; then

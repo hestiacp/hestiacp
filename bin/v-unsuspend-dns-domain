@@ -40,7 +40,21 @@ is_object_suspended 'dns' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Creating system configs
+if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    if [ -e '/etc/named.conf' ]; then
+        dns_conf='/etc/named.conf'
+        dns_group='named'
+    else
+        dns_conf='/etc/bind/named.conf'
+        dns_group='bind'
+    fi
 
+    # Adding zone in named.conf
+    named="zone \"$domain_idn\" {type master; file"
+    named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+    echo "$named" >> $dns_conf
+fi
 
 #----------------------------------------------------------#
 #                       Vesta                              #

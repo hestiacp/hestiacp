@@ -103,7 +103,7 @@ gen_pass() {
     echo "$PASS"
 }
 
-# Defning return code check function
+# Defining return code check function
 check_result() {
     if [ $1 -ne 0 ]; then
         echo "Error: $2"
@@ -122,7 +122,7 @@ set_default_value() {
     fi
 }
 
-# Define function to set default language value
+# Defining function to set default language value
 set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
@@ -278,7 +278,7 @@ fi
 wget -q "c.vestacp.com/deb_signing.key" -O /dev/null
 check_result $? "No access to Vesta repository"
 
-# Check installed packages
+# Checking installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
 for pkg in exim4 mysql-server apache2 nginx vesta; do
@@ -319,7 +319,7 @@ echo
 echo '                                  Vesta Control Panel'
 echo -e "\n\n"
 
-echo 'Following software will be installed on your system:'
+echo 'The following software will be installed on your system:'
 
 # Web stack
 if [ "$nginx" = 'yes' ]; then
@@ -340,16 +340,16 @@ if [ "$named" = 'yes' ]; then
     echo '   - Bind DNS Server'
 fi
 
-# Mail Stack
+# Mail stack
 if [ "$exim" = 'yes' ]; then
-    echo -n '   - Exim mail server'
+    echo -n '   - Exim Mail Server'
     if [ "$clamd" = 'yes'  ] ||  [ "$spamd" = 'yes' ] ; then
         echo -n ' + '
         if [ "$clamd" = 'yes' ]; then
-            echo -n 'Antivirus '
+            echo -n 'ClamAV'
         fi
         if [ "$spamd" = 'yes' ]; then
-            echo -n 'Antispam'
+            echo -n 'SpamAssassin'
         fi
     fi
     echo
@@ -358,7 +358,7 @@ if [ "$exim" = 'yes' ]; then
     fi
 fi
 
-# DB stack
+# Database stack
 if [ "$mysql" = 'yes' ]; then
     echo '   - MySQL Database Server'
 fi
@@ -491,16 +491,16 @@ cd $vst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql mongodb vesta
 
-# Backing up nginx configuration
+# Backup nginx configuration
 service nginx stop > /dev/null 2>&1
 cp -r /etc/nginx/* $vst_backups/nginx >/dev/null 2>&1
 
-# Backing up Apache configuration
+# Backup Apache configuration
 service apache2 stop > /dev/null 2>&1
 cp -r /etc/apache2/* $vst_backups/apache2 > /dev/null 2>&1
 rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
-# Backing up PHP configuration
+# Backup PHP-FPM configuration
 service php7.0-fpm stop > /dev/null 2>&1
 service php5-fpm stop > /dev/null 2>&1
 service php-fpm stop > /dev/null 2>&1
@@ -508,11 +508,11 @@ cp -r /etc/php7.0/* $vst_backups/php/ > /dev/null 2>&1
 cp -r /etc/php5/* $vst_backups/php/ > /dev/null 2>&1
 cp -r /etc/php/* $vst_backups/php/ > /dev/null 2>&1
 
-# Backing up Bind configuration
+# Backup Bind configuration
 service bind9 stop > /dev/null 2>&1
 cp -r /etc/bind/* $vst_backups/bind > /dev/null 2>&1
 
-# Backing up Vsftpd configuration
+# Backup Vsftpd configuration
 service vsftpd stop > /dev/null 2>&1
 cp /etc/vsftpd.conf $vst_backups/vsftpd > /dev/null 2>&1
 
@@ -520,24 +520,24 @@ cp /etc/vsftpd.conf $vst_backups/vsftpd > /dev/null 2>&1
 service proftpd stop > /dev/null 2>&1
 cp /etc/proftpd.conf $vst_backups/proftpd > /dev/null 2>&1
 
-# Backing up Exim configuration
+# Backup Exim configuration
 service exim4 stop > /dev/null 2>&1
 cp -r /etc/exim4/* $vst_backups/exim4 > /dev/null 2>&1
 
-# Backing up ClamAV configuration
+# Backup ClamAV configuration
 service clamav-daemon stop > /dev/null 2>&1
 cp -r /etc/clamav/* $vst_backups/clamav > /dev/null 2>&1
 
-# Backing up SpamAssassin configuration
+# Backup SpamAssassin configuration
 service spamassassin stop > /dev/null 2>&1
 cp -r /etc/spamassassin/* $vst_backups/spamassassin > /dev/null 2>&1
 
-# Backing up Dovecot configuration
+# Backup Dovecot configuration
 service dovecot stop > /dev/null 2>&1
 cp /etc/dovecot.conf $vst_backups/dovecot > /dev/null 2>&1
 cp -r /etc/dovecot/* $vst_backups/dovecot > /dev/null 2>&1
 
-# Backing up MySQL/MariaDB configuration and data
+# Backup MySQL/MariaDB configuration and data
 service mysql stop > /dev/null 2>&1
 killall -9 mysqld > /dev/null 2>&1
 mv /var/lib/mysql $vst_backups/mysql/mysql_datadir > /dev/null 2>&1
@@ -548,7 +548,6 @@ if [ "$release" = '16.04' ] && [ -e '/etc/init.d/mysql' ]; then
     chown mysql:mysql /var/lib/mysql
     mysqld --initialize-insecure
 fi
-
 
 # Backup Vesta
 service vesta stop > /dev/null 2>&1
@@ -668,7 +667,7 @@ rm -f /usr/sbin/policy-rc.d
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 service ssh restart
 
-# Disable awstats cron
+# Disable AWStats cron
 rm -f /etc/cron.d/awstats
 
 # Set directory color
@@ -677,7 +676,7 @@ echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 # Register /usr/sbin/nologin
 echo "/usr/sbin/nologin" >> /etc/shells
 
-# NTP Synchronization
+# NTP Sync
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
 echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
 chmod 775 /etc/cron.daily/ntpdate

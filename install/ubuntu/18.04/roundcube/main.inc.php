@@ -197,7 +197,7 @@ $rcmail_config['auto_create_user'] = true;
 
 // use this folder to store log files (must be writeable for apache user)
 // This is used by the 'file' log driver.
-$rcmail_config['log_dir'] = '/var/log/roundcubemail/';
+$rcmail_config['log_dir'] = '/var/log/roundcube/';
 
 // use this folder to store temp files (must be writeable for apache user)
 $rcmail_config['temp_dir'] = '/tmp';
@@ -305,7 +305,7 @@ $rcmail_config['max_recipients'] = 0;
 $rcmail_config['max_group_members'] = 0; 
 
 // add this user-agent to message headers when sending
-$rcmail_config['useragent'] = 'Roundcube Webmail/'.RCMAIL_VERSION;
+$rcmail_config['useragent'] = 'Roundcube Webmail';
 
 // use this name to compose page titles
 $rcmail_config['product_name'] = 'Roundcube Webmail';

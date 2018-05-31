@@ -26,7 +26,7 @@ get_ip_iface() {
 }
 
 
-# Check ip address speciefic value
+# Check ip address specific value
 is_ip_key_empty() {
     key="$1"
     string=$(cat $VESTA/data/ips/$ip)

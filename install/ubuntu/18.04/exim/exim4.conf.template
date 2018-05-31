@@ -6,7 +6,7 @@
 
 #SPAMASSASSIN = yes
 #SPAM_SCORE = 50
-#CLAMD =  yes
+#CLAMD = yes
 
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =

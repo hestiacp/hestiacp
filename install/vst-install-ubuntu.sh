@@ -678,9 +678,9 @@ echo "/usr/sbin/nologin" >> /etc/shells
 
 # NTP Synchronization
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
-echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
+echo "$(which ntpdate) -s ntp.ubuntu.com" >> /etc/cron.daily/ntpdate
 chmod 775 /etc/cron.daily/ntpdate
-ntpdate -s pool.ntp.org
+ntpdate -s ntp.ubuntu.com
 
 # Setup rssh
 if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then

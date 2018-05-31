@@ -503,6 +503,7 @@ rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 # Backing up PHP configuration
 service php7.0-fpm stop > /dev/null 2>&1
 service php5-fpm stop > /dev/null 2>&1
+service php-fpm stop > /dev/null 2>&1
 cp -r /etc/php7.0/* $vst_backups/php/ > /dev/null 2>&1
 cp -r /etc/php5/* $vst_backups/php/ > /dev/null 2>&1
 cp -r /etc/php/* $vst_backups/php/ > /dev/null 2>&1

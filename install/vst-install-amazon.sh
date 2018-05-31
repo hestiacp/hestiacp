@@ -996,7 +996,7 @@ if [ "$mysql" = 'yes' ]; then
         service='mariadb'
     fi
 
-    cp -f $vestacp/$service/$mycnf /etc/
+    cp -f $vestacp/$service/$mycnf /etc/my.cnf
     chkconfig $service on
     service $service start
     if [ "$?" -ne 0 ]; then

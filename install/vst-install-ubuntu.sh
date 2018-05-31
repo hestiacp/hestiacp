@@ -1164,7 +1164,12 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
     php5enmod mcrypt 2>/dev/null
     phpenmod mcrypt 2>/dev/null
-    service apache2 restart
+    if [ "$apache" = 'yes' ]; then
+        service apache2 restart
+    fi
+    if [ "$nginx" = 'yes' ]; then
+        service nginx restart
+    fi
 fi
 
 

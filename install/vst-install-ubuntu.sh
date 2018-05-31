@@ -851,7 +851,7 @@ rm /tmp/vst.pem
 
 # Adding nologin as a valid system shell
 if [ -z "$(grep nologin /etc/shells)" ]; then
-    echo "/sbin/nologin" >> /etc/shells
+    echo "/usr/sbin/nologin" >> /etc/shells
 fi
 
 

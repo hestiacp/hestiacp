@@ -41,6 +41,7 @@ fi
 case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
     Debian)     type="debian" ;;
     Ubuntu)     type="ubuntu" ;;
+    Amazon)     type="amazon" ;;
     *)          type="rhel" ;;
 esac
 

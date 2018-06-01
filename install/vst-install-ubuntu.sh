@@ -943,6 +943,12 @@ done
 
 if [ "$vsftpd" = 'yes' ]; then
     cp -f $vestacp/vsftpd/vsftpd.conf /etc/
+    touch /var/log//vsftpd.log
+    chown root:adm /var/log/vsftpd.log
+    chmod 640 /var/log/vsftpd.log
+    touch /var/log/xferlog
+    chown root:adm /var/log/xferlog
+    chmod 640 /var/log/xferlog
     update-rc.d vsftpd defaults
     service vsftpd start
     check_result $? "vsftpd start failed"

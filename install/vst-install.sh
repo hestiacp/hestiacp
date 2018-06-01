@@ -8,7 +8,7 @@
 #   RHEL 5, 6, 7
 #   CentOS 5, 6, 7
 #   Debian 7, 8
-#   Ubuntu 12.04 - 16.10
+#   Ubuntu 12.04 - 18.04
 #
 
 # Am I root?
@@ -41,6 +41,7 @@ fi
 case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
     Debian)     type="debian" ;;
     Ubuntu)     type="ubuntu" ;;
+    Amazon)     type="amazon" ;;
     *)          type="rhel" ;;
 esac
 

@@ -1,0 +1,51 @@
+[DEFAULT]
+ignoreip = 127.0.0.1/8
+
+[ssh-iptables]
+enabled  = true
+filter   = sshd
+action   = vesta[name=SSH]
+logpath  = /var/log/auth.log
+maxretry = 5
+
+[vsftpd-iptables]
+enabled  = false
+filter   = vsftpd
+action   = vesta[name=FTP]
+logpath  = /var/log/vsftpd.log
+maxretry = 5
+
+[exim-iptables]
+enabled = true
+filter  = exim
+action  = vesta[name=MAIL]
+logpath = /var/log/exim4/mainlog
+maxretry = 5
+
+[dovecot-iptables]
+enabled = true
+filter  = dovecot
+action  = vesta[name=MAIL]
+logpath = /var/log/dovecot.log
+maxretry = 5
+
+[mysqld-iptables]
+enabled  = false
+filter   = mysqld-auth
+action   = vesta[name=DB]
+logpath  = /var/log/mysql.log
+maxretry = 5
+
+[vesta-iptables]
+enabled = true
+filter  = vesta
+action  = vesta[name=VESTA]
+logpath = /var/log/vesta/auth.log
+maxretry = 5
+
+[roundcube-auth]
+enabled  = false
+filter   = roundcube-auth
+port     = http,https
+logpath  = /var/log/roundcube/errors
+maxretry = 5

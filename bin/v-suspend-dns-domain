@@ -41,6 +41,16 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Deleting system configs
+if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
+    if [ -e '/etc/named.conf' ]; then
+        dns_conf='/etc/named.conf'
+    else
+        dns_conf='/etc/bind/named.conf'
+    fi
+
+    sed -i "/\/$user\/conf\/dns\/$domain.db\"/d" $dns_conf
+fi
 
 #----------------------------------------------------------#
 #                       Vesta                              #

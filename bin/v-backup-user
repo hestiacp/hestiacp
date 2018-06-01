@@ -69,7 +69,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
 done
 
 # Creating temporary directory
-tmpdir=$(mktemp -p /tmp -d)
+tmpdir=$(mktemp -p $BACKUP -d)
 
 if [ "$?" -ne 0 ]; then
     echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify

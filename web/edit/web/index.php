@@ -150,8 +150,8 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Change template (admin only)
-    if (($v_template != $_POST['v_template']) && ( $_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    // Change template
+    if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
         $v_template = escapeshellarg($_POST['v_template']);
         exec (VESTA_CMD."v-change-web-domain-tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
         check_return_code($return_var,$output);

@@ -229,8 +229,12 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
     (( ++i))
 done
 
+if [ -z "$BACKUP_TEMP" ]; then
+    BACKUP_TEMP=$BACKUP
+fi
+
 # Creating temporary directory
-tmpdir=$(mktemp -p $BACKUP -d)
+tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 if [ "$?" -ne 0 ]; then
     echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
     sed -i "/ $user /d" $VESTA/data/queue/backup.pipe

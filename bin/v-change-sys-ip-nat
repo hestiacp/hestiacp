@@ -34,47 +34,71 @@ is_ip_valid "$ip"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing nat ip
+# Updating IP
 if [ -z "$(grep NAT= $VESTA/data/ips/$ip)" ]; then
     sed -i "s/^TIME/NAT='$nat_ip'\nTIME/g" $VESTA/data/ips/$ip
+    old=''
+    new=$nat_ip
 else
-    update_ip_value '$NAT' "$nat_ip"
-fi
-
-# Check ftp system
-if [ "$FTP_SYSTEM" = 'vsftpd' ]; then
-
-    # Find configuration
-    if [ -e '/etc/vsftpd/vsftpd.conf' ]; then
-        conf='/etc/vsftpd/vsftpd.conf'
-    fi
-
-    if [ -e '/etc/vsftpd.conf' ]; then
-        conf='/etc/vsftpd.conf'
-    fi
-
-    # Update config
-    if [ -z "$(grep pasv_address $conf)" ]; then
-        if [ ! -z "$nat_ip" ]; then
-            echo "pasv_address=$nat_ip" >> $conf
-        fi
-    else
-        if [ ! -z "$nat_ip" ]; then
-            sed -i "s/pasv_address=.*/pasv_address='$nat_ip'/g" $conf
-        else
-            sed -i "/pasv_address/d" $conf
-        fi
+    old=$(get_ip_value '$NAT')
+    new=$nat_ip
+    sed -i "s/NAT=.*/NAT='$new'/" $VESTA/data/ips/$ip
+    if [ -z "$nat_ip" ]; then
+        new=$ip
     fi
 fi
+
+# Updating WEB configs
+if [ ! -z "$old" ] && [ ! -z "$WEB_SYSTEM" ]; then
+    sed -i "s/$old/$new/" $VESTA/data/users/*/web.conf
+    for user in $(ls $VESTA/data/users/); do
+        $BIN/v-rebuild-web-domains $user no
+    done
+    $BIN/v-restart-dns $restart
+fi
+
+# Updating DNS configs
+if [ ! -z "$old" ] && [ ! -z "$DNS_SYSTEM" ]; then
+    sed -i "s/$old/$new/" $VESTA/data/users/*/dns.conf
+    sed -i "s/$old/$new/" $VESTA/data/users/*/dns/*.conf
+    for user in $(ls $VESTA/data/users/); do
+        $BIN/v-rebuild-dns-domains $user no
+    done
+    $BIN/v-restart-dns $restart
+fi
+
+# Updating FTP
+if [ ! -z "$old" ] && [ ! -z "$FTP_SYSTEM" ]; then
+    conf=$(find /etc -name $FTP_SYSTEM.conf)
+    if [ -e "$conf" ]; then
+        sed -i "s/$old/$new/g" $conf
+        if [ "$FTP_SYSTEM" = 'vsftpd' ]; then
+            check_pasv=$(grep pasv_address $conf)
+            if [ -z "$check_pasv" ] && [ ! -z "$nat_ip" ]; then
+                echo "pasv_address=$nat_ip" >> $conf
+            fi
+            if [ ! -z "$check_pasv" ] && [ -z "$nat_ip" ]; then
+                sed -i "/pasv_address/d" $conf
+            fi
+            if [ ! -z "$check_pasv" ] && [ ! -z "$nat_ip" ]; then
+                sed -i "s/pasv_address=.*/pasv_address='$nat_ip'/g" $conf
+            fi
+        fi
+    fi
+    $BIN/v-restart-ftp $restart
+fi
+
+# Updating firewall
+if [ ! -z "$old" ] && [ ! -z "$FIREWALL_SYSTEM" ]; then
+    sed -i "s/$old/$new/g" $VESTA/data/firewall/*.conf
+    $BIN/v-update-firewall
+fi
+
 
 
 #----------------------------------------------------------#
 #                       Vesta                              #
 #----------------------------------------------------------#
-
-# Restart ftp server
-$BIN/v-restart-ftp $restart
-check_result $? "FTP restart failed" >/dev/null
 
 # Logging
 log_history "changed associated nat address on $ip to $nat_ip" '' 'admin'

@@ -52,7 +52,6 @@ if [ ! -z "$new" ]; then
         if [ -e "$old.conf" ]; then
             mv $old.conf $new.conf
             sed -i "s/$old/$new/g" $new.conf
-            $BIN/v-restart-proxy
         fi
     fi
 
@@ -67,6 +66,7 @@ if [ ! -z "$new" ]; then
         for user in $(ls $VESTA/data/users/); do
             $BIN/v-rebuild-web-domains $user no
         done
+        $BIN/v-restart-proxy
         $BIN/v-restart-web
     fi
 

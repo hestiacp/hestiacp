@@ -49,7 +49,7 @@ is_ip_valid "$ip" "$user"
 # Preparing variables for vhost replace
 get_domain_values 'web'
 old=$(get_real_ip $IP)
-new=$ip
+new=$(get_real_ip $ip)
 
 # Replacing vhost
 replace_web_config "$WEB_SYSTEM" "$TPL.tpl"

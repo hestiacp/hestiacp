@@ -18,45 +18,24 @@ release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
 vestacp="$VESTA/install/$VERSION/$release"
 
-if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
-    software="nginx apache2 apache2-utils apache2.2-common
-        apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
-        libapache2-mod-fcgid libapache2-mod-php php php-common php-cgi
-        php-mysql php-curl php-fpm php-pgsql awstats webalizer vsftpd
-        proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
-        spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        roundcube-mysql roundcube-plugins mysql-server mysql-common
-        mysql-client postgresql postgresql-contrib phppgadmin phpmyadmin mc
-        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect vim-common
-        vesta-ioncube vesta-softaculous apparmor-utils"
-elif [ "$release" = '16.10' ] || [ "$release" = '17.10' ]; then
-    software="nginx apache2 apache2-utils apache2.2-common
-        apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
-        libapache2-mod-fcgid libapache2-mod-php7.0 php7.0 php7.0-common
-        php7.0-cgi php7.0-mysql php7.0-curl php7.0-fpm php7.0-pgsql awstats
-        webalizer vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        roundcube-mysql roundcube-plugins mysql-server mysql-common
-        mysql-client postgresql postgresql-contrib phppgadmin phpmyadmin mc
-        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect vim-common
-        vesta-ioncube vesta-softaculous apparmor-utils"
-else
-    software="nginx apache2 apache2-utils apache2.2-common
-        apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-rpaf
-        libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
-        php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
-        proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
-        spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        roundcube-mysql roundcube-plugins mysql-server mysql-common
-        mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
-        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron vesta vesta-nginx vesta-php expect vim-common
-        vesta-ioncube vesta-softaculous"
+# Defining software pack for all distros
+software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
+    apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
+    cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
+    exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
+    libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf
+    libapache2-mod-ruid2 lsof mc mysql-client mysql-common mysql-server nginx
+    ntpdate php-cgi php-common php-curl php-fpm phpmyadmin php-mysql
+    phppgadmin php-pgsql postgresql postgresql-contrib proftpd-basic quota
+    roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
+    sudo vesta vesta-ioncube vesta-nginx vesta-php vesta-softaculous
+    vim-common vsftpd webalizer whois zip"
+
+# Fix for old releases
+if [[ ${release:0:2} -lt 16 ]]; then
+    software=$(echo "$software" |sed -e "s/php /php5 /")
+    software=$(echo "$software" |sed -e "s/php-/php5-/")
+    software=$(echo "$software" |sed -e "s/mod-php/mod-php5/")
 fi
 
 # Defining help function
@@ -516,7 +495,7 @@ cp -r /etc/bind/* $vst_backups/bind > /dev/null 2>&1
 service vsftpd stop > /dev/null 2>&1
 cp /etc/vsftpd.conf $vst_backups/vsftpd > /dev/null 2>&1
 
-# Backing up ProFTPD configuration
+# Backup ProFTPD configuration
 service proftpd stop > /dev/null 2>&1
 cp /etc/proftpd.conf $vst_backups/proftpd > /dev/null 2>&1
 
@@ -644,18 +623,18 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
-# Update system packages
+# Updating system
 apt-get update
 
-# Disable daemon autostart /usr/share/doc/sysv-rc/README.policy-rc.d.gz
-echo -e '#!/bin/sh \nexit 101' > /usr/sbin/policy-rc.d
-chmod a+x /usr/sbin/policy-rc.d
+# Disabling daemon autostart /usr/share/doc/sysv-rc/README.policy-rc.d.gz
+#echo -e '#!/bin/sh \nexit 101' > /usr/sbin/policy-rc.d
+#chmod a+x /usr/sbin/policy-rc.d
 
-# Install apt packages
+# Installing apt packages
 apt-get -y install $software
 check_result $? "apt-get install failed"
 
-# Restore policy
+# Restoring policy
 rm -f /usr/sbin/policy-rc.d
 
 
@@ -663,26 +642,28 @@ rm -f /usr/sbin/policy-rc.d
 #                     Configure system                     #
 #----------------------------------------------------------#
 
-# Enable SSH password auth
+# Enabling SSH password auth
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 service ssh restart
 
-# Disable AWStats cron
+# Disabling AWStats cron
 rm -f /etc/cron.d/awstats
 
 # Set directory color
 echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 
-# Register /usr/sbin/nologin
-echo "/usr/sbin/nologin" >> /etc/shells
+# Registering /usr/sbin/nologin
+if [ -z "$(grep nologin /etc/shells)" ]; then
+    echo "/usr/sbin/nologin" >> /etc/shells
+fi
 
-# NTP Sync
+# Configuring NTP
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
 echo "$(which ntpdate) -s ntp.ubuntu.com" >> /etc/cron.daily/ntpdate
 chmod 775 /etc/cron.daily/ntpdate
 ntpdate -s ntp.ubuntu.com
 
-# Setup rssh
+# Adding rssh
 if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
     echo /usr/bin/rssh >> /etc/shells
 fi
@@ -725,7 +706,6 @@ chmod -R 750 $VESTA/data/queue
 chmod 660 $VESTA/log/*
 rm -f /var/log/vesta
 ln -s $VESTA/log /var/log/vesta
-chown admin:admin $VESTA/data/sessions
 chmod 770 $VESTA/data/sessions
 
 # Generating Vesta configuration
@@ -943,7 +923,7 @@ done
 
 if [ "$vsftpd" = 'yes' ]; then
     cp -f $vestacp/vsftpd/vsftpd.conf /etc/
-    touch /var/log//vsftpd.log
+    touch /var/log/vsftpd.log
     chown root:adm /var/log/vsftpd.log
     chmod 640 /var/log/vsftpd.log
     touch /var/log/xferlog
@@ -1267,7 +1247,6 @@ fi
 
 # Adding default domain
 $VESTA/bin/v-add-domain admin $servername
-codename="$codename:$(echo $vpass:$servername | base64)"
 
 # Adding cron jobs
 command="sudo $VESTA/bin/v-update-sys-queue disk"
@@ -1320,7 +1299,7 @@ $VESTA/bin/v-add-cron-vesta-autoupdate
 wget vestacp.com/notify/?$codename -O /dev/null -q
 
 # Comparing hostname and IP
-host_ip=$(host $servername| head -n 1 | awk '{print $NF}')
+host_ip=$(host $servername| head -n 1 |awk '{print $NF}')
 if [ "$host_ip" = "$ip" ]; then
     ip="$servername"
 fi

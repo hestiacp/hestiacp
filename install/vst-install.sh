@@ -9,6 +9,7 @@
 #   CentOS 5, 6, 7
 #   Debian 7, 8
 #   Ubuntu 12.04 - 18.04
+#   Amazon Linux 2017
 #
 
 # Am I root?
@@ -44,11 +45,6 @@ case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
     Amazon)     type="amazon" ;;
     *)          type="rhel" ;;
 esac
-
-# Fallback to Ubuntu
-if [ ! -e "/etc/redhat-release" ]; then
-    type='ubuntu'
-fi
 
 # Check wget
 if [ -e '/usr/bin/wget' ]; then

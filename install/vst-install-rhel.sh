@@ -669,7 +669,7 @@ if [ -e '/etc/sysconfig/selinux' ]; then
     setenforce 0 2>/dev/null
 fi
 
-# Disablng iptables
+# Disabling iptables
 service iptables stop
 
 # Configuring NTP synchronization
@@ -903,13 +903,13 @@ if [ "$apache" = 'yes'  ]; then
         echo > proxy_ajp.conf
     fi
     if [ -e "/etc/httpd/conf.modules.d/00-dav.conf" ]; then
-        sed -i "s/^/#/" /etc/httpd/conf.modules.d/00-dav.conf
-        sed -i "s/^/#/" /etc/httpd/conf.modules.d/00-lua.conf
-        sed -i "s/^/#/" /etc/httpd/conf.modules.d/00-proxy.conf
+        cd /etc/httpd/conf.modules.d
+        sed -i "s/^/#/" 00-dav.conf 00-lua.conf 00-proxy.conf
     fi
     echo > /etc/httpd/conf.d/vesta.conf
-    touch /etc/httpd/logs/access_log /etc/httpd/logs/error_log
-    chmod 640 /etc/httpd/logs/access_log /etc/httpd/logs/error_log
+    cd /var/log/httpd
+    touch access_log error_log suexec.log
+    chmod 640 access_log error_log suexec.log
     chmod -f 777 /var/lib/php/session
     chmod a+x /var/log/httpd
     mkdir -p /var/log/httpd/domains
@@ -1035,7 +1035,7 @@ if [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
         cp -f $vestacp/pma/phpMyAdmin.conf /etc/httpd/conf.d/
     fi
-    cp -f $vestacp/pma/config.inc.conf /etc/phpMyAdmin/
+    cp -f $vestacp/pma/config.inc.conf /etc/phpMyAdmin/config.inc.php
     sed -i "s/%blowfish_secret%/$(gen_pass)/g" /etc/phpMyAdmin/config.inc.php
 fi
 
@@ -1324,7 +1324,7 @@ if [ "$quota" = 'yes' ]; then
     $VESTA/bin/v-add-sys-quota
 fi
 
-# Enabling softaculous plugin
+# Enabling Softaculous plugin
 if [ "$softaculous" = 'yes' ]; then
     $VESTA/bin/v-add-vesta-softaculous
 fi
@@ -1350,7 +1350,7 @@ $VESTA/bin/v-add-cron-vesta-autoupdate
 wget vestacp.com/notify/?$codename -O /dev/null -q
 
 # Comparing hostname and IP
-host_ip=$(host $servername| head -n 1 |awk '{print $NF}')
+host_ip=$(host $servername |head -n 1 |awk '{print $NF}')
 if [ "$host_ip" = "$ip" ]; then
     ip="$servername"
 fi

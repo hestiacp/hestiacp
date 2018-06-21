@@ -18,6 +18,7 @@ release='6'
 codename="${os}_$release"
 vestacp="$VESTA/install/$VERSION/$release"
 
+# Defining software pack for all distros
 software="nginx httpd mod_ssl mod_ruid2 mod_fcgid mod_extract_forwarded
     php php-common php-cli php-bcmath php-gd php-imap php-mbstring php-mcrypt
     php-mysql php-pdo php-soap php-tidy php-xml php-xmlrpc php-fpm php-pgsql
@@ -92,7 +93,7 @@ set_default_value() {
     fi
 }
 
-# Define function to set default language value
+# Defining function to set default language value
 set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
@@ -111,9 +112,6 @@ set_default_lang() {
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-
-# Creating temporary file
-tmpfile=$(mktemp -p /tmp)
 
 # Translating argument to --gnu-long-options
 for arg; do
@@ -226,7 +224,6 @@ if [ "$iptables" = 'no' ]; then
     fail2ban='no'
 fi
 
-
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
     check_result 1 "Script can be run executed only by root"
@@ -247,16 +244,18 @@ if [ ! -e '/usr/bin/wget' ]; then
 fi
 
 # Checking repository availability
-wget -q "http://c.vestacp.com/GPG.txt" -O /dev/null
+wget -q "c.vestacp.com/GPG.txt" -O /dev/null
 check_result $? "No access to Vesta repository"
 
 # Checking installed packages
+tmpfile=$(mktemp -p /tmp)
 rpm -qa > $tmpfile
 for pkg in exim mysql-server httpd nginx vesta; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg $conflicts"
     fi
 done
+rm -f $tmpfile
 if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
@@ -277,7 +276,7 @@ fi
 #                       Brief Info                         #
 #----------------------------------------------------------#
 
-# Printing nice ascii as logo
+# Printing nice ASCII logo
 clear
 echo
 echo ' _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|'
@@ -289,7 +288,7 @@ echo
 echo '                                  Vesta Control Panel'
 echo -e "\n\n"
 
-echo 'Following software will be installed on your system:'
+echo 'The following software will be installed on your system:'
 
 # Web stack
 if [ "$nginx" = 'yes' ]; then
@@ -310,16 +309,16 @@ if [ "$named" = 'yes' ]; then
     echo '   - Bind DNS Server'
 fi
 
-# Mail Stack
+# Mail stack
 if [ "$exim" = 'yes' ]; then
-    echo -n '   - Exim mail server'
+    echo -n '   - Exim Mail Server'
     if [ "$clamd" = 'yes'  ] ||  [ "$spamd" = 'yes' ] ; then
         echo -n ' + '
         if [ "$clamd" = 'yes' ]; then
-            echo -n 'Antivirus '
+            echo -n 'ClamAV '
         fi
         if [ "$spamd" = 'yes' ]; then
-            echo -n 'Antispam'
+            echo -n 'SpamAssassin'
         fi
     fi
     echo
@@ -328,9 +327,9 @@ if [ "$exim" = 'yes' ]; then
     fi
 fi
 
-# DB stack
+# Database stack
 if [ "$mysql" = 'yes' ]; then
-    if [ $release = 7 ]; then
+    if [ $release -ge 7 ]; then
         echo '   - MariaDB Database Server'
     else
         echo '   - MySQL Database Server'
@@ -438,7 +437,7 @@ fi
 #                  Install repositories                    #
 #----------------------------------------------------------#
 
-# Updating system packages
+# Updating system
 yum -y update
 check_result $? 'yum update failed'
 
@@ -463,7 +462,7 @@ echo "baseurl=http://$RHOST/$REPO/$release/\$basearch/" >> $vrepo
 echo "enabled=1" >> $vrepo
 echo "gpgcheck=1" >> $vrepo
 echo "gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-VESTA" >> $vrepo
-wget http://c.vestacp.com/GPG.txt -O /etc/pki/rpm-gpg/RPM-GPG-KEY-VESTA
+wget c.vestacp.com/GPG.txt -O /etc/pki/rpm-gpg/RPM-GPG-KEY-VESTA
 
 
 #----------------------------------------------------------#
@@ -476,53 +475,53 @@ cd $vst_backups
 mkdir nginx httpd php php-fpm vsftpd proftpd named exim dovecot clamd \
     spamassassin mysql postgresql mongodb vesta
 
-# Backing up Nginx configuration
+# Backup Nginx configuration
 service nginx stop > /dev/null 2>&1
 cp -r /etc/nginx/* $vst_backups/nginx > /dev/null 2>&1
 
-# Backing up Apache configuration
+# Backup Apache configuration
 service httpd stop > /dev/null 2>&1
 cp -r /etc/httpd/* $vst_backups/httpd > /dev/null 2>&1
 
-# Backing up PHP configuration
+# Backup PHP-FPM configuration
 service php-fpm stop >/dev/null 2>&1
 cp /etc/php.ini $vst_backups/php > /dev/null 2>&1
 cp -r /etc/php.d  $vst_backups/php > /dev/null 2>&1
 cp /etc/php-fpm.conf $vst_backups/php-fpm > /dev/null 2>&1
 mv -f /etc/php-fpm.d/* $vst_backups/php-fpm/ > /dev/null 2>&1
 
-# Backing up Bind configuration
+# Backup Bind configuration
 yum remove bind-chroot > /dev/null 2>&1
 service named stop > /dev/null 2>&1
 cp /etc/named.conf $vst_backups/named >/dev/null 2>&1
 
-# Backing up Vsftpd configuration
+# Backup Vsftpd configuration
 service vsftpd stop > /dev/null 2>&1
 cp /etc/vsftpd/vsftpd.conf $vst_backups/vsftpd >/dev/null 2>&1
 
-# Backing up ProFTPD configuration
+# Backup ProFTPD configuration
 service proftpd stop > /dev/null 2>&1
 cp /etc/proftpd.conf $vst_backups/proftpd >/dev/null 2>&1
 
-# Backing up Exim configuration
+# Backup Exim configuration
 service exim stop > /dev/null 2>&1
 cp -r /etc/exim/* $vst_backups/exim >/dev/null 2>&1
 
-# Backing up ClamAV configuration
+# Backup ClamAV configuration
 service clamd stop > /dev/null 2>&1
 cp /etc/clamd.conf $vst_backups/clamd >/dev/null 2>&1
 cp -r /etc/clamd.d $vst_backups/clamd >/dev/null 2>&1
 
-# Backing up SpamAssassin configuration
+# Backup SpamAssassin configuration
 service spamassassin stop > /dev/null 2>&1
 cp -r /etc/mail/spamassassin/* $vst_backups/spamassassin >/dev/null 2>&1
 
-# Backing up Dovecot configuration
+# Backup Dovecot configuration
 service dovecot stop > /dev/null 2>&1
 cp /etc/dovecot.conf $vst_backups/dovecot > /dev/null 2>&1
 cp -r /etc/dovecot/* $vst_backups/dovecot > /dev/null 2>&1
 
-# Backing up MySQL/MariaDB configuration and data
+# Backup MySQL/MariaDB configuration and data
 service mysql stop > /dev/null 2>&1
 service mysqld stop > /dev/null 2>&1
 service mariadb stop > /dev/null 2>&1
@@ -531,18 +530,18 @@ cp /etc/my.cnf $vst_backups/mysql > /dev/null 2>&1
 cp /etc/my.cnf.d $vst_backups/mysql > /dev/null 2>&1
 mv /root/.my.cnf  $vst_backups/mysql > /dev/null 2>&1
 
-# Backing up MySQL/MariaDB configuration and data
+# Backup MySQL/MariaDB configuration and data
 service postgresql stop > /dev/null 2>&1
 mv /var/lib/pgsql/data $vst_backups/postgresql/  >/dev/null 2>&1
 
-# Backing up Vesta configuration and data
+# Backup Vesta
 service vesta stop > /dev/null 2>&1
 mv $VESTA/data/* $vst_backups/vesta > /dev/null 2>&1
 mv $VESTA/conf/* $vst_backups/vesta > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
-#                     Package Exludes                      #
+#                     Package Excludes                     #
 #----------------------------------------------------------#
 
 # Excluding packages
@@ -652,7 +651,7 @@ if [ -e '/etc/sysconfig/selinux' ]; then
     setenforce 0 2>/dev/null
 fi
 
-# Disable iptables
+# Disabling iptables
 service iptables stop
 
 # Configuring NTP synchronization

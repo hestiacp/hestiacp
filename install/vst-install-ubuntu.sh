@@ -495,7 +495,7 @@ cp -r /etc/bind/* $vst_backups/bind > /dev/null 2>&1
 service vsftpd stop > /dev/null 2>&1
 cp /etc/vsftpd.conf $vst_backups/vsftpd > /dev/null 2>&1
 
-# Backing up ProFTPD configuration
+# Backup ProFTPD configuration
 service proftpd stop > /dev/null 2>&1
 cp /etc/proftpd.conf $vst_backups/proftpd > /dev/null 2>&1
 
@@ -623,18 +623,18 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
-# Update system packages
+# Updating system
 apt-get update
 
-# Disable daemon autostart /usr/share/doc/sysv-rc/README.policy-rc.d.gz
-echo -e '#!/bin/sh \nexit 101' > /usr/sbin/policy-rc.d
-chmod a+x /usr/sbin/policy-rc.d
+# Disabling daemon autostart /usr/share/doc/sysv-rc/README.policy-rc.d.gz
+#echo -e '#!/bin/sh \nexit 101' > /usr/sbin/policy-rc.d
+#chmod a+x /usr/sbin/policy-rc.d
 
-# Install apt packages
+# Installing apt packages
 apt-get -y install $software
 check_result $? "apt-get install failed"
 
-# Restore policy
+# Restoring policy
 rm -f /usr/sbin/policy-rc.d
 
 
@@ -642,26 +642,28 @@ rm -f /usr/sbin/policy-rc.d
 #                     Configure system                     #
 #----------------------------------------------------------#
 
-# Enable SSH password auth
+# Enabling SSH password auth
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 service ssh restart
 
-# Disable AWStats cron
+# Disabling AWStats cron
 rm -f /etc/cron.d/awstats
 
 # Set directory color
 echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 
-# Register /usr/sbin/nologin
-echo "/usr/sbin/nologin" >> /etc/shells
+# Registering /usr/sbin/nologin
+if [ -z "$(grep nologin /etc/shells)" ]; then
+    echo "/usr/sbin/nologin" >> /etc/shells
+fi
 
-# NTP Sync
+# Configuring NTP
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
 echo "$(which ntpdate) -s ntp.ubuntu.com" >> /etc/cron.daily/ntpdate
 chmod 775 /etc/cron.daily/ntpdate
 ntpdate -s ntp.ubuntu.com
 
-# Setup rssh
+# Adding rssh
 if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
     echo /usr/bin/rssh >> /etc/shells
 fi
@@ -704,7 +706,6 @@ chmod -R 750 $VESTA/data/queue
 chmod 660 $VESTA/log/*
 rm -f /var/log/vesta
 ln -s $VESTA/log /var/log/vesta
-chown admin:admin $VESTA/data/sessions
 chmod 770 $VESTA/data/sessions
 
 # Generating Vesta configuration

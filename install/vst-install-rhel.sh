@@ -32,7 +32,7 @@ software="awstats bc bind bind-libs bind-utils clamav-server clamav-update
 
 # Fix for old releases
 if [ "$release" -lt 7 ]; then
-    software=$(echo "$software" |sed -e "s/mariadb/mysql/")
+    software=$(echo "$software" |sed -e "s/mariadb/mysql/g")
     software=$(echo "$software" |sed -e "s/clamav-server/clamd/")
     software=$(echo "$software" |sed -e "s/clamav-update//")
     software=$(echo "$software" |sed -e "s/iptables-services//")
@@ -956,7 +956,7 @@ if [ -z "$ZONE" ]; then
     ZONE='UTC'
 fi
 for pconf in $(find /etc/php* -name php.ini); do
-    sed -i "s/;date.timezone =/date.timezone = $ZONE/g" $pconf
+    sed -i "s|;date.timezone =|date.timezone = $ZONE|g" $pconf
     sed -i 's%_open_tag = Off%_open_tag = On%g' $pconf
 done
 

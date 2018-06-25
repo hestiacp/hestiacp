@@ -2,10 +2,6 @@
 /**
  * Vesta language file
  * This language file is translate by
- * Peter Dave Hello Blog (https://www.peterdavehello.org)
- * Peter Dave Hello GitHub (https://github.com/PeterDaveHello)
- * Peter Dave Hello Twitter (https://twitter.com/PeterDaveHello)
- * Clark's Computer Knowledge Journal (https://www.clark-chen.com)
  * Clark's Hosting Service (https://host.clark-chen.com)
  * Clark Chen (clark@clark-chen.com)
  */

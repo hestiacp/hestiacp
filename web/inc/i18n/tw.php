@@ -216,6 +216,7 @@ $LANG['tw'] = array(
     'Autoreply'  => '自動回覆',
     'Forward to'  => '轉寄到',
     'Do not store forwarded mail' => '不保留已轉發的郵件',
+    'Email Credentials' => '信箱登入資訊',
     'IMAP hostname'  => 'IMAP 主機名稱',
     'IMAP port'  => 'IMAP 連接埠',
     'IMAP security'  => 'IMAP 安全性',
@@ -753,6 +754,4 @@ $LANG['tw'] = array(
     'Do not use encryption' => '不要使用加密',
 
     'maximum characters length, including prefix' => '最多 %s 字元(包含前綴)',
-
-    'Email Credentials' => '信箱登入資訊',
 );

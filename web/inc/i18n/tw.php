@@ -2,10 +2,6 @@
 /**
  * Vesta language file
  * This language file is translate by
- * Peter Dave Hello Blog (https://www.peterdavehello.org)
- * Peter Dave Hello GitHub (https://github.com/PeterDaveHello)
- * Peter Dave Hello Twitter (https://twitter.com/PeterDaveHello)
- * Clark's Computer Knowledge Journal (https://www.clark-chen.com)
  * Clark's Hosting Service (https://host.clark-chen.com)
  * Clark Chen (clark@clark-chen.com)
  */
@@ -220,6 +216,7 @@ $LANG['tw'] = array(
     'Autoreply'  => '自動回覆',
     'Forward to'  => '轉寄到',
     'Do not store forwarded mail' => '不保留已轉發的郵件',
+    'Email Credentials' => '信箱登入資訊',
     'IMAP hostname'  => 'IMAP 主機名稱',
     'IMAP port'  => 'IMAP 連接埠',
     'IMAP security'  => 'IMAP 安全性',
@@ -573,7 +570,7 @@ $LANG['tw'] = array(
     'Current Number Of Databases' => '目前的資料庫數量',
     'Local backup' => '本機備份',
     'Compression level' => '壓縮等級',
-    'Directory' => 'Directory',
+    'Directory' => '路徑',
     'Remote backup' => '遠端備份',
     'ftp' => 'FTP',
     'sftp' => 'SFTP',
@@ -740,14 +737,14 @@ $LANG['tw'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
-    'SUBJECT' => 'SUBJECT',
-    'ALIASES' => 'ALIASES',
-    'NOT_BEFORE' => 'NOT_BEFORE',
-    'NOT_AFTER' => 'NOT_AFTER',
-    'SIGNATURE' => 'SIGNATURE',
-    'PUB_KEY' => 'PUB_KEY',
-    'ISSUER' => 'ISSUER',
+    'Vesta SSL' => 'Vesta後台 SSL',
+    'SUBJECT' => '主體名稱',
+    'ALIASES' => '主體別名',
+    'NOT_BEFORE' => '有效期自',
+    'NOT_AFTER' => '有效期到',
+    'SIGNATURE' => '簽章演算法',
+    'PUB_KEY' => '公開金鑰',
+    'ISSUER' => '簽發者',
 
     'Use server hostname' => '使用伺服器主機名稱',
     'Use domain hostname' => '使用網域主機名稱',
@@ -757,6 +754,4 @@ $LANG['tw'] = array(
     'Do not use encryption' => '不要使用加密',
 
     'maximum characters length, including prefix' => '最多 %s 字元(包含前綴)',
-
-    'Email Credentials' => 'Email Credentials',
 );

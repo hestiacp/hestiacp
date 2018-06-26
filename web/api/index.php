@@ -58,6 +58,8 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
                 echo 'Error: authentication failed';
                 exit;
             }
+        } else {
+            $return_var = 1;
         }
     }
 

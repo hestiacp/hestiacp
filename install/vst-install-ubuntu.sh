@@ -1098,7 +1098,7 @@ if [ "$clamd" = 'yes' ]; then
     /usr/bin/freshclam
     update-rc.d clamav-daemon defaults
     service clamav-daemon start
-    check_result $? "clamav-daeom start failed"
+    check_result $? "clamav-daemon start failed"
 fi
 
 

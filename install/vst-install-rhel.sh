@@ -671,6 +671,8 @@ fi
 
 # Disabling iptables
 service iptables stop
+service firewalld stop >/dev/null 2>&1
+
 
 # Configuring NTP synchronization
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
@@ -1273,6 +1275,7 @@ ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
+    chkconfig firewalld off >/dev/null 2>&1
     $VESTA/bin/v-update-firewall
 fi
 

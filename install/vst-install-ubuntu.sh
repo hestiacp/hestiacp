@@ -33,9 +33,9 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
 
 # Fix for old releases
 if [[ ${release:0:2} -lt 16 ]]; then
-    software=$(echo "$software" |sed -e "s/php /php5 /")
-    software=$(echo "$software" |sed -e "s/php-/php5-/")
-    software=$(echo "$software" |sed -e "s/mod-php/mod-php5/")
+    software=$(echo "$software" |sed -e "s/php /php5 /g")
+    software=$(echo "$software" |sed -e "s/vesta-php5 /vesta-php /g")
+    software=$(echo "$software" |sed -e "s/php-/php5-/g")
 fi
 
 # Defining help function

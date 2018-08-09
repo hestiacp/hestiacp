@@ -626,15 +626,15 @@ fi
 # Updating system
 apt-get update
 
-# Disabling daemon autostart /usr/share/doc/sysv-rc/README.policy-rc.d.gz
-#echo -e '#!/bin/sh \nexit 101' > /usr/sbin/policy-rc.d
-#chmod a+x /usr/sbin/policy-rc.d
+# Disabling daemon autostart on apt-get install
+echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
+chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
 apt-get -y install $software
 check_result $? "apt-get install failed"
 
-# Restoring policy
+# Restoring autostart policy
 rm -f /usr/sbin/policy-rc.d
 
 
@@ -912,7 +912,7 @@ if [ -z "$ZONE" ]; then
     ZONE='UTC'
 fi
 for pconf in $(find /etc/php* -name php.ini); do
-    sed -i "s/;date.timezone =/date.timezone = $ZONE/g" $pconf
+    sed -i "s%;date.timezone =%date.timezone = $ZONE%g" $pconf
     sed -i 's%_open_tag = Off%_open_tag = On%g' $pconf
 done
 
@@ -1129,8 +1129,8 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     fi
     cp -f $vestacp/roundcube/main.inc.php /etc/roundcube/
     cp -f  $vestacp/roundcube/db.inc.php /etc/roundcube/
-    chmod 640 /etc/roundcube/debian-db-roundcube.php
-    chown root:www-data /etc/roundcube/debian-db-roundcube.php
+    chmod 640 /etc/roundcube/debian-db*
+    chown root:www-data /etc/roundcube/debian-db*
     cp -f $vestacp/roundcube/vesta.php \
         /usr/share/roundcube/plugins/password/drivers/
     cp -f $vestacp/roundcube/config.inc.php /etc/roundcube/plugins/password/

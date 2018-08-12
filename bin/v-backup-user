@@ -392,8 +392,9 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
         grep "DB='$database'" $conf > vesta/db.conf
 
         dump="$tmpdir/db/$database/$database.$TYPE.sql"
+        dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"
         grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
-        if [ ! -f "$dump" ]; then
+        if [ ! -f "$dumpgz" ]; then
             case $TYPE in
                 mysql) dump_mysql_database ;;
                 pgsql) dump_pgsql_database ;;

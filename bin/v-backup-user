@@ -393,13 +393,15 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 
         dump="$tmpdir/db/$database/$database.$TYPE.sql"
         grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
-        case $TYPE in
-            mysql) dump_mysql_database ;;
-            pgsql) dump_pgsql_database ;;
-        esac
+        if [ ! -f "$dump" ]; then
+            case $TYPE in
+                mysql) dump_mysql_database ;;
+                pgsql) dump_pgsql_database ;;
+            esac
 
-        # Compress dump
-        gzip -$BACKUP_GZIP $dump
+            # Compress dump
+            gzip -$BACKUP_GZIP $dump
+        fi
     done
 
     # Print total

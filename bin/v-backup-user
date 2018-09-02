@@ -39,11 +39,11 @@ is_backup_enabled
 #                       Action                             #
 #----------------------------------------------------------#
 
-# block backup if current hour is after 8 AM
+# block backup if current hour is after 6 AM
 if pgrep -x "v-backup-users" > /dev/null
 then
 hour=$(date +"%H");
-    while [ "$hour" -gt "8" ]; do
+    while [ "$hour" -gt "6" ]; do
         sleep 300
     done
 fi

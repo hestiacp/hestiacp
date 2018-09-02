@@ -805,7 +805,16 @@ is_password_format_valid() {
         check_result $E_INVALID "invalid password format :: $1"
     fi
 }
-
+# Missing function - 
+# Before: validate_format_shell 
+# After: is_format_valid_shell
+is_format_valid_shell() {	
+    if [ -z "$(grep -w $1 /etc/shells)" ]; then	
+        echo "Error: shell $1 is not valid"	
+        log_event "$E_INVALID" "$EVENT"	
+        exit $E_INVALID	
+    fi	
+}
 # Format validation controller
 is_format_valid() {
     for arg_name in $*; do
@@ -872,7 +881,9 @@ is_format_valid() {
                 restart)        is_boolean_format_valid "$arg" 'restart' ;;
                 rtype)          is_dns_type_format_valid "$arg" ;;
                 rule)           is_int_format_valid "$arg" "rule id" ;;
-                soa)            is_domain_format_valid "$arg" 'SOA' ;;
+                soa)            is_domain_format_valid "$arg" 'SOA' ;;	
+                #missing command: is_format_valid_shell
+                shell)          is_format_valid_shell "$arg" ;;
                 stats_pass)     is_password_format_valid "$arg" ;;
                 stats_user)     is_user_format_valid "$arg" "$arg_name" ;;
                 template)       is_object_format_valid "$arg" "$arg_name" ;;

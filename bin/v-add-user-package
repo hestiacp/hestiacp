@@ -30,37 +30,37 @@ is_package_new() {
 is_package_consistent() {
     source $pkg_dir/$package.pkg
     if [ "$WEB_DOMAINS" != 'unlimited' ]; then
-        is_format_valid_int $WEB_DOMAINS 'WEB_DOMAINS'
+        is_int_format_valid $WEB_DOMAINS 'WEB_DOMAINS'
     fi
     if [ "$WEB_ALIASES" != 'unlimited' ]; then
-        is_format_valid_int $WEB_ALIASES 'WEB_ALIASES'
+        is_int_format_valid $WEB_ALIASES 'WEB_ALIASES'
     fi
     if [ "$DNS_DOMAINS" != 'unlimited' ]; then
-        is_format_valid_int $DNS_DOMAINS 'DNS_DOMAINS'
+        is_int_format_valid $DNS_DOMAINS 'DNS_DOMAINS'
     fi
     if [ "$DNS_RECORDS" != 'unlimited' ]; then
-        is_format_valid_int $DNS_RECORDS 'DNS_RECORDS'
+        is_int_format_valid $DNS_RECORDS 'DNS_RECORDS'
     fi
     if [ "$MAIL_DOMAINS" != 'unlimited' ]; then
-        is_format_valid_int $MAIL_DOMAINS 'MAIL_DOMAINS'
+        is_int_format_valid $MAIL_DOMAINS 'MAIL_DOMAINS'
     fi
     if [ "$MAIL_ACCOUNTS" != 'unlimited' ]; then
-        is_format_valid_int $MAIL_ACCOUNTS 'MAIL_ACCOUNTS'
+        is_int_format_valid $MAIL_ACCOUNTS 'MAIL_ACCOUNTS'
     fi
     if [ "$DATABASES" != 'unlimited' ]; then
-        is_format_valid_int $DATABASES 'DATABASES'
+        is_int_format_valid $DATABASES 'DATABASES'
     fi
     if [ "$CRON_JOBS" != 'unlimited' ]; then
-        is_format_valid_int $CRON_JOBS 'CRON_JOBS'
+        is_int_format_valid $CRON_JOBS 'CRON_JOBS'
     fi
     if [ "$DISK_QUOTA" != 'unlimited' ]; then
-        is_format_valid_int $DISK_QUOTA 'DISK_QUOTA'
+        is_int_format_valid $DISK_QUOTA 'DISK_QUOTA'
     fi
     if [ "$BANDWIDTH" != 'unlimited' ]; then
-        is_format_valid_int $BANDWIDTH 'BANDWIDTH'
+        is_int_format_valid $BANDWIDTH 'BANDWIDTH'
     fi
     if [ "$BACKUPS" != 'unlimited' ]; then
-        is_format_valid_int $BACKUPS 'BACKUPS'
+        is_int_format_valid $BACKUPS 'BACKUPS'
     fi
     is_format_valid_shell $SHELL
 }

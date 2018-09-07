@@ -62,6 +62,11 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
                                 </td>
@@ -80,11 +85,6 @@
                                             }
                                         ?>
                                     </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
                                 </td>
                             </tr>
                             <tr>

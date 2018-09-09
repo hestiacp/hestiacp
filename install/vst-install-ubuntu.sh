@@ -236,7 +236,7 @@ fi
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
-    check_error 1 "Script can be run executed only by root"
+    check_result 1 "Script can be run executed only by root"
 fi
 
 # Checking admin user account

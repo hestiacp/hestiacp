@@ -45,7 +45,7 @@ then
 hour=$(date +"%H");
     while [ "$hour" -gt "6" ]; do
         current_date_time="`date "+%Y-%m-%d %H:%M:%S"`";
-        echo "$current_date_time - wait for backup user $user";
+        echo "$current_date_time - wait for backup user $user - hour $hour";
         sleep 300
         hour=$(date +"%H");
     done

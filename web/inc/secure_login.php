@@ -2,6 +2,10 @@
 $login_url_skip=0;
 if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/vesta/web/reset/mail/index.php') $login_url_skip=1;
 if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/vesta/web//reset/mail/index.php') $login_url_skip=1;
+if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/vesta/web/reset/mail/set-ar.php') $login_url_skip=1;
+if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/vesta/web//reset/mail/set-ar.php') $login_url_skip=1;
+if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/vesta/web/reset/mail/get-ar.php') $login_url_skip=1;
+if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/vesta/web//reset/mail/get-ar.php') $login_url_skip=1;
 
 if ($login_url_skip==0) {
     if (!isset($login_url_loaded)) {

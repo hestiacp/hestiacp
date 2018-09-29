@@ -40,10 +40,15 @@ is_backup_enabled
 #----------------------------------------------------------#
 
 # block backup if current hour is after 6 AM
+WAIT_LOOP_ENTERED=0
 if pgrep -x "v-backup-users" > /dev/null
 then
 hour=$(date +"%H");
     while [ "$hour" -gt "6" ]; do
+        if [ "$WAIT_LOOP_ENTERED" -eq 0 ]; then
+             $BIN/v-restart-web-backend
+        fi
+        WAIT_LOOP_ENTERED=1
         current_date_time="`date "+%Y-%m-%d %H:%M:%S"`";
         echo "$current_date_time - wait for backup user $user - hour $hour";
         sleep 300

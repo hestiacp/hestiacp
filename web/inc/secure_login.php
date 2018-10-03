@@ -1,4 +1,9 @@
 <?php
+if ($_SERVER['REQUEST_URI']=="/") {
+	header("Location: /webmail/");
+	exit;
+}
+
 $login_url_skip=0;
 if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/vesta/web/reset/mail/index.php') $login_url_skip=1;
 if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/vesta/web//reset/mail/index.php') $login_url_skip=1;

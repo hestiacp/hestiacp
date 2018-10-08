@@ -1,5 +1,5 @@
 <?php
-if ($_SERVER['REQUEST_URI']=="/") {
+if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI']=="/") {
 	header("Location: /webmail/");
 	exit;
 }

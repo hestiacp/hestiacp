@@ -1,7 +1,9 @@
 <?php
-if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI']=="/") {
-	header("Location: /webmail/");
-	exit;
+if (file_exists('/usr/local/vesta/web/inc/nginx_proxy')==true) {
+    if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI']=="/") {
+        header("Location: /webmail/");
+        exit;
+    }
 }
 
 $login_url_skip=0;

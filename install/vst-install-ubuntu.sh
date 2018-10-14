@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Vesta Ubuntu installer v.05
+# Hestia Ubuntu installer v.06
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
-RHOST='apt.vestacp.com'
-CHOST='c.vestacp.com'
+RHOST='apt.hestiacp.com'
+CHOST='c.hestiacp.com'
 VERSION='ubuntu'
 VESTA='/usr/local/vesta'
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
@@ -28,8 +28,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     ntpdate php-cgi php-common php-curl php-fpm phpmyadmin php-mysql
     phppgadmin php-pgsql postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo vesta vesta-ioncube vesta-nginx vesta-php vesta-softaculous
-    vim-common vsftpd webalizer whois zip"
+    sudo vesta vesta-nginx vesta-php vim-common vsftpd webalizer whois zip"
 
 # Fix for old releases
 if [[ ${release:0:2} -lt 16 ]]; then
@@ -56,7 +55,6 @@ help() {
   -t, --spamassassin      Install SpamAssassin  [yes|no]  default: yes
   -i, --iptables          Install Iptables      [yes|no]  default: yes
   -b, --fail2ban          Install Fail2ban      [yes|no]  default: yes
-  -o, --softaculous       Install Softaculous   [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
@@ -66,7 +64,7 @@ help() {
   -f, --force             Force installation
   -h, --help              Print this help
 
-  Example: bash $0 -e demo@vestacp.com -p p4ssw0rd --apache no --phpfpm yes"
+  Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --apache no --phpfpm yes"
     exit 1
 }
 
@@ -143,7 +141,6 @@ for arg; do
         --spamassassin)         args="${args}-t " ;;
         --iptables)             args="${args}-i " ;;
         --fail2ban)             args="${args}-b " ;;
-        --softaculous)          args="${args}-o " ;;
         --remi)                 args="${args}-r " ;;
         --quota)                args="${args}-q " ;;
         --lang)                 args="${args}-l " ;;
@@ -178,7 +175,6 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         i) iptables=$OPTARG ;;          # Iptables
         b) fail2ban=$OPTARG ;;          # Fail2ban
         r) remi=$OPTARG ;;              # Remi repo
-        o) softaculous=$OPTARG ;;       # Softaculous plugin
         q) quota=$OPTARG ;;             # FS Quota
         l) lang=$OPTARG ;;              # Language
         y) interactive=$OPTARG ;;       # Interactive install
@@ -212,7 +208,6 @@ else
 fi
 set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
-set_default_value 'softaculous' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
 set_default_lang 'en'
@@ -254,8 +249,8 @@ if [ ! -e '/usr/bin/wget' ]; then
 fi
 
 # Checking repository availability
-wget -q "c.vestacp.com/deb_signing.key" -O /dev/null
-check_result $? "No access to Vesta repository"
+wget -q "c.hestiacp.com/deb_signing.key" -O /dev/null
+check_result $? "No access to Hestia repository"
 
 # Checking installed packages
 tmpfile=$(mktemp -p /tmp)
@@ -289,13 +284,13 @@ fi
 # Printing nice ASCII logo
 clear
 echo
-echo ' _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|'
-echo ' _|      _|  _|        _|            _|      _|    _|'
-echo ' _|      _|  _|_|_|      _|_|        _|      _|_|_|_|'
-echo '   _|  _|    _|              _|      _|      _|    _|'
-echo '     _|      _|_|_|_|  _|_|_|        _|      _|    _|'
+echo '  _   _           _   _        ____ ____  '
+echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
+echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
+echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
+echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
-echo '                                  Vesta Control Panel'
+echo '                      Hestia Control Panel'
 echo -e "\n\n"
 
 echo 'The following software will be installed on your system:'
@@ -455,7 +450,7 @@ wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
 
 # Installing vesta repo
-echo "deb http://$RHOST/$codename/ $codename vesta" > $apt/vesta.list
+echo "deb http://$RHOST/ $codename main" > $apt/hestia.list
 wget $CHOST/deb_signing.key -O deb_signing.key
 apt-key add deb_signing.key
 
@@ -610,9 +605,6 @@ if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/php5-pgsql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
-fi
-if [ "$softaculous" = 'no' ]; then
-    software=$(echo "$software" | sed -e 's/vesta-softaculous//')
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/fail2ban//')
@@ -814,7 +806,7 @@ $VESTA/bin/v-change-sys-hostname $servername 2>/dev/null
 
 # Generating SSL certificate
 $VESTA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
-     'San Francisco' 'Vesta Control Panel' 'IT' > /tmp/vst.pem
+     'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/vst.pem
 
 # Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/vst.pem |cut -f 1 -d:)
@@ -1226,7 +1218,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
+pub_ip=$(curl -s hestiaacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     echo "$VESTA/bin/v-update-sys-ip" >> /etc/rc.local
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
@@ -1273,11 +1265,6 @@ if [ "$quota" = 'yes' ]; then
     $VESTA/bin/v-add-sys-quota
 fi
 
-# Enabling softaculous plugin
-if [ "$softaculous" = 'yes' ]; then
-    $VESTA/bin/v-add-vesta-softaculous
-fi
-
 # Starting Vesta service
 update-rc.d vesta defaults
 service vesta start
@@ -1295,8 +1282,8 @@ $VESTA/bin/v-add-cron-vesta-autoupdate
 #                   Vesta Access Info                      #
 #----------------------------------------------------------#
 
-# Sending install notification to vestacp.com
-wget vestacp.com/notify/?$codename -O /dev/null -q
+# Sending install notification to hestiacp.com
+wget hestiacp.com/notify/?os=$os\&version=$release -O /dev/null -q
 
 # Comparing hostname and IP
 host_ip=$(host $servername| head -n 1 |awk '{print $NF}')
@@ -1306,32 +1293,32 @@ fi
 
 # Sending notification to admin email
 echo -e "Congratulations, you have just successfully installed \
-Vesta Control Panel
+Hestia Control Panel
 
     https://$ip:8083
     username: admin
     password: $vpass
 
-We hope that you enjoy your installation of Vesta. Please \
+We hope that you enjoy your installation of Hestia. Please \
 feel free to contact us anytime if you have any questions.
 Thank you.
 
 --
 Sincerely yours
-vestacp.com team
+HestiaCP.com team
 " > $tmpfile
 
 send_mail="$VESTA/web/inc/mail-wrapper.php"
-cat $tmpfile | $send_mail -s "Vesta Control Panel" $email
+cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
 # Congrats
 echo '======================================================='
 echo
-echo ' _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|   '
-echo ' _|      _|  _|        _|            _|      _|    _| '
-echo ' _|      _|  _|_|_|      _|_|        _|      _|_|_|_| '
-echo '   _|  _|    _|              _|      _|      _|    _| '
-echo '     _|      _|_|_|_|  _|_|_|        _|      _|    _| '
+echo '  _   _           _   _        ____ ____  '
+echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
+echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
+echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
+echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo
 cat $tmpfile

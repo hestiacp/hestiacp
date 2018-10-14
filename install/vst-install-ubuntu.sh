@@ -16,7 +16,7 @@ arch=$(uname -i)
 os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
-vestacp="$VESTA/install/$VERSION/$release"
+vestacp="https://$VESTA/install/$VERSION/$release"
 
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
@@ -1218,7 +1218,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-pub_ip=$(curl -s hestiaacp.com/what-is-my-ip/)
+pub_ip=$(curl -s https://hestiacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     echo "$VESTA/bin/v-update-sys-ip" >> /etc/rc.local
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
@@ -1283,7 +1283,7 @@ $VESTA/bin/v-add-cron-vesta-autoupdate
 #----------------------------------------------------------#
 
 # Sending install notification to hestiacp.com
-wget hestiacp.com/notify/?os=$os\&version=$release -O /dev/null -q
+wget https://hestiacp.com/notify/?os=$os\&version=$release -O /dev/null -q
 
 # Comparing hostname and IP
 host_ip=$(host $servername| head -n 1 |awk '{print $NF}')

@@ -270,7 +270,7 @@ if [ ! -e '/usr/bin/wget' ]; then
 fi
 
 # Checking repository availability
-wget -q "$vestacp/deb_signing.key" -O /dev/null
+wget -q "https://gpg.hestiacp.com/deb_signing.key" -O /dev/null
 check_result $? "No access to Vesta repository"
 
 # Check installed packages
@@ -471,7 +471,7 @@ apt-key add /tmp/nginx_signing.key
 
 # Installing vesta repo
 echo "deb http://$RHOST/ $codename main" > $apt/hestia.list
-wget $CHOST/deb_signing.key -O deb_signing.key
+wget https://gpg.hestiacp.com/deb_signing.key -O deb_signing.key
 apt-key add deb_signing.key
 
 

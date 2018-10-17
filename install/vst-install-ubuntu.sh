@@ -1297,9 +1297,6 @@ $VESTA/bin/v-add-cron-vesta-autoupdate
 #                   Vesta Access Info                      #
 #----------------------------------------------------------#
 
-# Sending install notification to vestacp.com
-wget vestacp.com/notify/?$codename -O /dev/null -q
-
 # Comparing hostname and IP
 host_ip=$(host $servername| head -n 1 |awk '{print $NF}')
 if [ "$host_ip" = "$ip" ]; then

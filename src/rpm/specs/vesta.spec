@@ -71,7 +71,7 @@ fi
 * Thu Oct 18 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-23
 - Security fixes
 
-* Wed June 27 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-22
+* Wed Jun 27 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-22
 - Security fixes
 
 * Fri May 11 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-21

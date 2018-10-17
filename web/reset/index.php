@@ -48,7 +48,7 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
         if ( $return_var == 0 ) {
             $data = json_decode(implode('', $output), true);
             $rkey = $data[$user]['RKEY'];
-            if ($rkey == $_POST['code']) {
+            if (hash_equals($rkey, $POST[‘code’])) {
                 $v_password = tempnam("/tmp","vst");
                 $fp = fopen($v_password, "w");
                 fwrite($fp, $_POST['password']."\n");

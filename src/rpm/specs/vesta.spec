@@ -68,7 +68,7 @@ fi
 %config(noreplace) %{_vestadir}/web/css/uploadify.css
 
 %changelog
-* Thu 18 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-23
+* Thu Oct 18 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-23
 - Security fixes
 
 * Wed June 27 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-22

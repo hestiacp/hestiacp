@@ -977,8 +977,9 @@ if [ "$mysql" = 'yes' ]; then
     check_result $? "mysql start failed"
 
     # Securing MySQL/MariaDB installation
-    mysqladmin -u root password $vpass
-    echo -e "[client]\npassword='$vpass'\n" > /root/.my.cnf
+    mpass=$(gen_pass)
+    mysqladmin -u root password $mpass
+    echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
     mysql -e "DELETE FROM mysql.user WHERE User=''"
     mysql -e "DROP DATABASE test" >/dev/null 2>&1
@@ -1000,9 +1001,10 @@ fi
 #----------------------------------------------------------#
 
 if [ "$postgresql" = 'yes' ]; then
+    ppass=$(gen_pass)
     cp -f $vestacp/postgresql/pg_hba.conf /etc/postgresql/*/main/
     service postgresql restart
-    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$vpass'"
+    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
@@ -1235,13 +1237,13 @@ fi
 
 # Configuring MySQL/MariaDB host
 if [ "$mysql" = 'yes' ]; then
-    $VESTA/bin/v-add-database-host mysql localhost root $vpass
+    $VESTA/bin/v-add-database-host mysql localhost root $mpass
     $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 fi
 
 # Configuring PostgreSQL host
 if [ "$postgresql" = 'yes' ]; then
-    $VESTA/bin/v-add-database-host pgsql localhost postgres $vpass
+    $VESTA/bin/v-add-database-host pgsql localhost postgres $ppass
     $VESTA/bin/v-add-database admin db db $(gen_pass) pgsql
 fi
 
@@ -1294,9 +1296,6 @@ $VESTA/bin/v-add-cron-vesta-autoupdate
 #----------------------------------------------------------#
 #                   Vesta Access Info                      #
 #----------------------------------------------------------#
-
-# Sending install notification to vestacp.com
-wget vestacp.com/notify/?$codename -O /dev/null -q
 
 # Comparing hostname and IP
 host_ip=$(host $servername| head -n 1 |awk '{print $NF}')

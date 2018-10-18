@@ -28,4 +28,12 @@ if [ -x /usr/local/vesta/upd/fix_roundcube.sh ]; then
     /usr/local/vesta/upd/fix_roundcube.sh
 fi
 
+if [ -x /usr/local/vesta/upd/limit_sudo.sh ]; then
+    /usr/local/vesta/upd/limit_sudo.sh
+fi
+
+if [ -x /usr/local/vesta/upd/fix_dhcprenew.sh ]; then
+    /usr/local/vesta/upd/fix_dhcprenew.sh
+fi
+
 exit 0

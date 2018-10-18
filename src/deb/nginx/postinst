@@ -7,5 +7,5 @@ if [ "$1" != "configure" ]; then
 fi
 
 # Touch and set permisions on default log files on installation
-update-rc.d vesta defaults >/dev/null
-invoke-rc.d vesta start || true
+update-rc.d hestia defaults >/dev/null
+invoke-rc.d hestia start || true

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Ubuntu installer v.06
+# Hestia Ubuntu installer v1.0
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
@@ -10,13 +10,13 @@ export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.hestiacp.com'
 CHOST='c.hestiacp.com'
 VERSION='ubuntu'
-VESTA='/usr/local/vesta'
+HESTIA='/usr/local/hestia'
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 arch=$(uname -i)
 os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
-vestacp="https://$VESTA/install/$VERSION/$release"
+hestiacp="$HESTIA/install/$VERSION/$release"
 
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
@@ -28,12 +28,12 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     ntpdate php-cgi php-common php-curl php-fpm phpmyadmin php-mysql
     phppgadmin php-pgsql postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo vesta vesta-nginx vesta-php vim-common vsftpd webalizer whois zip"
+    sudo hestia hestia-nginx hestia-php vim-common vsftpd webalizer whois zip"
 
 # Fix for old releases
 if [[ ${release:0:2} -lt 16 ]]; then
     software=$(echo "$software" |sed -e "s/php /php5 /g")
-    software=$(echo "$software" |sed -e "s/vesta-php5 /vesta-php /g")
+    software=$(echo "$software" |sed -e "s/hestia-php5 /hestia-php /g")
     software=$(echo "$software" |sed -e "s/php-/php5-/g")
 fi
 
@@ -255,7 +255,7 @@ check_result $? "No access to Hestia repository"
 # Checking installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 mysql-server apache2 nginx vesta; do
+for pkg in exim4 mysql-server apache2 nginx hestia; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg $conflicts"
     fi
@@ -407,8 +407,8 @@ if [ -z "$email" ]; then
 fi
 
 # Defining backup directory
-vst_backups="/root/vst_install_backups/$(date +%s)"
-echo "Installation backup directory: $vst_backups"
+hst_backups="/root/hst_install_backups/$(date +%s)"
+echo "Installation backup directory: $hst_backups"
 
 # Printing start message and sleeping for 5 seconds
 echo -e "\n\n\n\nInstallation will take about 15 minutes ...\n"
@@ -444,7 +444,7 @@ echo "deb http://nginx.org/packages/mainline/ubuntu/ $codename nginx" \
 wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
 
-# Installing vesta repo
+# Installing hestia repo
 echo "deb http://$RHOST/ $codename main" > $apt/hestia.list
 wget https://gpg.hestiacp.com/deb_signing.key -O deb_signing.key
 apt-key add deb_signing.key
@@ -455,75 +455,75 @@ apt-key add deb_signing.key
 #----------------------------------------------------------#
 
 # Creating backup directory tree
-mkdir -p $vst_backups
-cd $vst_backups
+mkdir -p $hst_backups
+cd $hst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
-mkdir spamassassin mysql postgresql mongodb vesta
+mkdir spamassassin mysql postgresql mongodb hestia
 
 # Backup nginx configuration
 service nginx stop > /dev/null 2>&1
-cp -r /etc/nginx/* $vst_backups/nginx >/dev/null 2>&1
+cp -r /etc/nginx/* $hst_backups/nginx >/dev/null 2>&1
 
 # Backup Apache configuration
 service apache2 stop > /dev/null 2>&1
-cp -r /etc/apache2/* $vst_backups/apache2 > /dev/null 2>&1
+cp -r /etc/apache2/* $hst_backups/apache2 > /dev/null 2>&1
 rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
 service php7.0-fpm stop > /dev/null 2>&1
 service php5-fpm stop > /dev/null 2>&1
 service php-fpm stop > /dev/null 2>&1
-cp -r /etc/php7.0/* $vst_backups/php/ > /dev/null 2>&1
-cp -r /etc/php5/* $vst_backups/php/ > /dev/null 2>&1
-cp -r /etc/php/* $vst_backups/php/ > /dev/null 2>&1
+cp -r /etc/php7.0/* $hst_backups/php/ > /dev/null 2>&1
+cp -r /etc/php5/* $hst_backups/php/ > /dev/null 2>&1
+cp -r /etc/php/* $hst_backups/php/ > /dev/null 2>&1
 
 # Backup Bind configuration
 service bind9 stop > /dev/null 2>&1
-cp -r /etc/bind/* $vst_backups/bind > /dev/null 2>&1
+cp -r /etc/bind/* $hst_backups/bind > /dev/null 2>&1
 
 # Backup Vsftpd configuration
 service vsftpd stop > /dev/null 2>&1
-cp /etc/vsftpd.conf $vst_backups/vsftpd > /dev/null 2>&1
+cp /etc/vsftpd.conf $hst_backups/vsftpd > /dev/null 2>&1
 
 # Backup ProFTPD configuration
 service proftpd stop > /dev/null 2>&1
-cp /etc/proftpd.conf $vst_backups/proftpd > /dev/null 2>&1
+cp /etc/proftpd.conf $hst_backups/proftpd > /dev/null 2>&1
 
 # Backup Exim configuration
 service exim4 stop > /dev/null 2>&1
-cp -r /etc/exim4/* $vst_backups/exim4 > /dev/null 2>&1
+cp -r /etc/exim4/* $hst_backups/exim4 > /dev/null 2>&1
 
 # Backup ClamAV configuration
 service clamav-daemon stop > /dev/null 2>&1
-cp -r /etc/clamav/* $vst_backups/clamav > /dev/null 2>&1
+cp -r /etc/clamav/* $hst_backups/clamav > /dev/null 2>&1
 
 # Backup SpamAssassin configuration
 service spamassassin stop > /dev/null 2>&1
-cp -r /etc/spamassassin/* $vst_backups/spamassassin > /dev/null 2>&1
+cp -r /etc/spamassassin/* $hst_backups/spamassassin > /dev/null 2>&1
 
 # Backup Dovecot configuration
 service dovecot stop > /dev/null 2>&1
-cp /etc/dovecot.conf $vst_backups/dovecot > /dev/null 2>&1
-cp -r /etc/dovecot/* $vst_backups/dovecot > /dev/null 2>&1
+cp /etc/dovecot.conf $hst_backups/dovecot > /dev/null 2>&1
+cp -r /etc/dovecot/* $hst_backups/dovecot > /dev/null 2>&1
 
 # Backup MySQL/MariaDB configuration and data
 service mysql stop > /dev/null 2>&1
 killall -9 mysqld > /dev/null 2>&1
-mv /var/lib/mysql $vst_backups/mysql/mysql_datadir > /dev/null 2>&1
-cp -r /etc/mysql/* $vst_backups/mysql > /dev/null 2>&1
-mv -f /root/.my.cnf $vst_backups/mysql > /dev/null 2>&1
+mv /var/lib/mysql $hst_backups/mysql/mysql_datadir > /dev/null 2>&1
+cp -r /etc/mysql/* $hst_backups/mysql > /dev/null 2>&1
+mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
 if [ "$release" = '16.04' ] && [ -e '/etc/init.d/mysql' ]; then
     mkdir -p /var/lib/mysql > /dev/null 2>&1
     chown mysql:mysql /var/lib/mysql
     mysqld --initialize-insecure
 fi
 
-# Backup Vesta
-service vesta stop > /dev/null 2>&1
-cp -r $VESTA/* $vst_backups/vesta > /dev/null 2>&1
-apt-get -y remove vesta vesta-nginx vesta-php > /dev/null 2>&1
-apt-get -y purge vesta vesta-nginx vesta-php > /dev/null 2>&1
-rm -rf $VESTA > /dev/null 2>&1
+# Backup Hestia
+service hestia stop > /dev/null 2>&1
+cp -r $HESTIA/* $hst_backups/hestia > /dev/null 2>&1
+apt-get -y remove hestia hestia-nginx hestia-php > /dev/null 2>&1
+apt-get -y purge hestia hestia-nginx hestia-php > /dev/null 2>&1
+rm -rf $HESTIA > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
@@ -661,160 +661,169 @@ chmod 755 /usr/bin/rssh
 
 
 #----------------------------------------------------------#
-#                     Configure Vesta                      #
+#                     Configure Hestia                     #
 #----------------------------------------------------------#
 
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
-cp -f $vestacp/sudo/admin /etc/sudoers.d/
+cp -f $hestiacp/sudo/admin /etc/sudoers.d/
 chmod 440 /etc/sudoers.d/admin
 
+# Temporary solution for sudo fix
+echo "admin   ALL=NOPASSWD:/usr/local/hestia/bin/*" >> /etc/sudoers.d/admin
+
 # Configuring system env
-echo "export VESTA='$VESTA'" > /etc/profile.d/vesta.sh
-chmod 755 /etc/profile.d/vesta.sh
-source /etc/profile.d/vesta.sh
-echo 'PATH=$PATH:'$VESTA'/bin' >> /root/.bash_profile
+echo "export HESTIA='$HESTIA'" > /etc/profile.d/hestia.sh
+echo "export VESTA='$HESTIA'" >> /etc/profile.d/hestia.sh #Compatiblity to vesta
+chmod 755 /etc/profile.d/hestia.sh
+source /etc/profile.d/hestia.sh
+echo 'PATH=$PATH:'$HESTIA'/bin' >> /root/.bash_profile
 echo 'export PATH' >> /root/.bash_profile
 source /root/.bash_profile
 
-# Configuring logrotate for Vesta logs
-cp -f $vestacp/logrotate/vesta /etc/logrotate.d/
+# Configuring logrotate for Hestia logs
+cp -f $hestiacp/logrotate/vesta /etc/logrotate.d/hestia
 
-# Building directory tree and creating some blank files for Vesta
-mkdir -p $VESTA/conf $VESTA/log $VESTA/ssl $VESTA/data/ips \
-    $VESTA/data/queue $VESTA/data/users $VESTA/data/firewall \
-    $VESTA/data/sessions
-touch $VESTA/data/queue/backup.pipe $VESTA/data/queue/disk.pipe \
-    $VESTA/data/queue/webstats.pipe $VESTA/data/queue/restart.pipe \
-    $VESTA/data/queue/traffic.pipe $VESTA/log/system.log \
-    $VESTA/log/nginx-error.log $VESTA/log/auth.log
-chmod 750 $VESTA/conf $VESTA/data/users $VESTA/data/ips $VESTA/log
-chmod -R 750 $VESTA/data/queue
-chmod 660 $VESTA/log/*
-rm -f /var/log/vesta
-ln -s $VESTA/log /var/log/vesta
-chmod 770 $VESTA/data/sessions
+# Building directory tree and creating some blank files for Hestia
+mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \
+    $HESTIA/data/queue $HESTIA/data/users $HESTIA/data/firewall \
+    $HESTIA/data/sessions
+touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
+    $HESTIA/data/queue/webstats.pipe $HESTIA/data/queue/restart.pipe \
+    $HESTIA/data/queue/traffic.pipe $HESTIA/log/system.log \
+    $HESTIA/log/nginx-error.log $HESTIA/log/auth.log
+chmod 750 $HESTIA/conf $HESTIA/data/users $HESTIA/data/ips $HESTIA/log
+chmod -R 750 $HESTIA/data/queue
+chmod 660 $HESTIA/log/*
+rm -f /var/log/hestia
+ln -s $HESTIA/log /var/log/hestia
+chmod 770 $HESTIA/data/sessions
 
-# Generating Vesta configuration
-rm -f $VESTA/conf/vesta.conf 2>/dev/null
-touch $VESTA/conf/vesta.conf
-chmod 660 $VESTA/conf/vesta.conf
+# Generating Hestia configuration
+rm -f $HESTIA/conf/hestia.conf 2>/dev/null
+touch $HESTIA/conf/hestia.conf
+chmod 660 $HESTIA/conf/hestia.conf
+
+# Symlink to Vesta for compatibilty
+ln -s /usr/local/hestia /usr/local/vesta
+ln -s /usr/local/hestia/conf/hestia.conf /usr/local/vesta/conf/vesta.conf
+ln -s /etc/profile.d/hestia.sh /etc/profile.d/vesta.sh
 
 # Web stack
 if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
-    echo "WEB_SYSTEM='apache2'" >> $VESTA/conf/vesta.conf
-    echo "WEB_RGROUPS='www-data'" >> $VESTA/conf/vesta.conf
-    echo "WEB_PORT='80'" >> $VESTA/conf/vesta.conf
-    echo "WEB_SSL_PORT='443'" >> $VESTA/conf/vesta.conf
-    echo "WEB_SSL='mod_ssl'"  >> $VESTA/conf/vesta.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $VESTA/conf/vesta.conf
+    echo "WEB_SYSTEM='apache2'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_RGROUPS='www-data'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_SSL='mod_ssl'"  >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
-    echo "WEB_SYSTEM='apache2'" >> $VESTA/conf/vesta.conf
-    echo "WEB_RGROUPS='www-data'" >> $VESTA/conf/vesta.conf
-    echo "WEB_PORT='8080'" >> $VESTA/conf/vesta.conf
-    echo "WEB_SSL_PORT='8443'" >> $VESTA/conf/vesta.conf
-    echo "WEB_SSL='mod_ssl'"  >> $VESTA/conf/vesta.conf
-    echo "PROXY_SYSTEM='nginx'" >> $VESTA/conf/vesta.conf
-    echo "PROXY_PORT='80'" >> $VESTA/conf/vesta.conf
-    echo "PROXY_SSL_PORT='443'" >> $VESTA/conf/vesta.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $VESTA/conf/vesta.conf
+    echo "WEB_SYSTEM='apache2'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_RGROUPS='www-data'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_PORT='8080'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_SSL_PORT='8443'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_SSL='mod_ssl'"  >> $HESTIA/conf/hestia.conf
+    echo "PROXY_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
+    echo "PROXY_PORT='80'" >> $HESTIA/conf/hestia.conf
+    echo "PROXY_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
-    echo "WEB_SYSTEM='nginx'" >> $VESTA/conf/vesta.conf
-    echo "WEB_PORT='80'" >> $VESTA/conf/vesta.conf
-    echo "WEB_SSL_PORT='443'" >> $VESTA/conf/vesta.conf
-    echo "WEB_SSL='openssl'"  >> $VESTA/conf/vesta.conf
+    echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_SSL='openssl'"  >> $HESTIA/conf/hestia.conf
     if [ "$phpfpm" = 'yes' ]; then
-        echo "WEB_BACKEND='php-fpm'" >> $VESTA/conf/vesta.conf
+        echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
     fi
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $VESTA/conf/vesta.conf
+    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
 fi
 
 # FTP stack
 if [ "$vsftpd" = 'yes' ]; then
-    echo "FTP_SYSTEM='vsftpd'" >> $VESTA/conf/vesta.conf
+    echo "FTP_SYSTEM='vsftpd'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$proftpd" = 'yes' ]; then
-    echo "FTP_SYSTEM='proftpd'" >> $VESTA/conf/vesta.conf
+    echo "FTP_SYSTEM='proftpd'" >> $HESTIA/conf/hestia.conf
 fi
 
 # DNS stack
 if [ "$named" = 'yes' ]; then
-    echo "DNS_SYSTEM='bind9'" >> $VESTA/conf/vesta.conf
+    echo "DNS_SYSTEM='bind9'" >> $HESTIA/conf/hestia.conf
 fi
 
 # Mail stack
 if [ "$exim" = 'yes' ]; then
-    echo "MAIL_SYSTEM='exim4'" >> $VESTA/conf/vesta.conf
+    echo "MAIL_SYSTEM='exim4'" >> $HESTIA/conf/hestia.conf
     if [ "$clamd" = 'yes'  ]; then
-        echo "ANTIVIRUS_SYSTEM='clamav-daemon'" >> $VESTA/conf/vesta.conf
+        echo "ANTIVIRUS_SYSTEM='clamav-daemon'" >> $HESTIA/conf/hestia.conf
     fi
     if [ "$spamd" = 'yes' ]; then
-        echo "ANTISPAM_SYSTEM='spamassassin'" >> $VESTA/conf/vesta.conf
+        echo "ANTISPAM_SYSTEM='spamassassin'" >> $HESTIA/conf/hestia.conf
     fi
     if [ "$dovecot" = 'yes' ]; then
-        echo "IMAP_SYSTEM='dovecot'" >> $VESTA/conf/vesta.conf
+        echo "IMAP_SYSTEM='dovecot'" >> $HESTIA/conf/hestia.conf
     fi
 fi
 
 # Cron daemon
-echo "CRON_SYSTEM='cron'" >> $VESTA/conf/vesta.conf
+echo "CRON_SYSTEM='cron'" >> $HESTIA/conf/hestia.conf
 
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
-    echo "FIREWALL_SYSTEM='iptables'" >> $VESTA/conf/vesta.conf
+    echo "FIREWALL_SYSTEM='iptables'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
-    echo "FIREWALL_EXTENSION='fail2ban'" >> $VESTA/conf/vesta.conf
+    echo "FIREWALL_EXTENSION='fail2ban'" >> $HESTIA/conf/hestia.conf
 fi
 
 # Disk quota
 if [ "$quota" = 'yes' ]; then
-    echo "DISK_QUOTA='yes'" >> $VESTA/conf/vesta.conf
+    echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
 fi
 
 # Backups
-echo "BACKUP_SYSTEM='local'" >> $VESTA/conf/vesta.conf
+echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 
 # Language
-echo "LANGUAGE='$lang'" >> $VESTA/conf/vesta.conf
+echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version
-echo "VERSION='0.9.8'" >> $VESTA/conf/vesta.conf
+echo "VERSION='0.9.8'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
-cp -rf $vestacp/packages $VESTA/data/
+cp -rf $hestiacp/packages $HESTIA/data/
 
 # Installing templates
-cp -rf $vestacp/templates $VESTA/data/
+cp -rf $hestiacp/templates $HESTIA/data/
 
 # Copying index.html to default documentroot
-cp $VESTA/data/templates/web/skel/public_html/index.html /var/www/
+cp $HESTIA/data/templates/web/skel/public_html/index.html /var/www/
 sed -i 's/%domain%/It worked!/g' /var/www/index.html
 
 # Installing firewall rules
-cp -rf $vestacp/firewall $VESTA/data/
+cp -rf $hestiacp/firewall $HESTIA/data/
 
 # Configuring server hostname
-$VESTA/bin/v-change-sys-hostname $servername 2>/dev/null
+$HESTIA/bin/v-change-sys-hostname $servername 2>/dev/null
 
 # Generating SSL certificate
-$VESTA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
-     'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/vst.pem
+$HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
+     'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 # Parsing certificate file
-crt_end=$(grep -n "END CERTIFICATE-" /tmp/vst.pem |cut -f 1 -d:)
-key_start=$(grep -n "BEGIN RSA" /tmp/vst.pem |cut -f 1 -d:)
-key_end=$(grep -n  "END RSA" /tmp/vst.pem |cut -f 1 -d:)
+crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem |cut -f 1 -d:)
+key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
+key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
 
 # Adding SSL certificate
-cd $VESTA/ssl
-sed -n "1,${crt_end}p" /tmp/vst.pem > certificate.crt
-sed -n "$key_start,${key_end}p" /tmp/vst.pem > certificate.key
-chown root:mail $VESTA/ssl/*
-chmod 660 $VESTA/ssl/*
-rm /tmp/vst.pem
+cd $HESTIA/ssl
+sed -n "1,${crt_end}p" /tmp/hst.pem > certificate.crt
+sed -n "$key_start,${key_end}p" /tmp/hst.pem > certificate.key
+chown root:mail $HESTIA/ssl/*
+chmod 660 $HESTIA/ssl/*
+rm /tmp/hst.pem
 
 # Adding nologin as a valid system shell
 if [ -z "$(grep nologin /etc/shells)" ]; then
@@ -828,12 +837,12 @@ fi
 
 if [ "$nginx" = 'yes' ]; then
     rm -f /etc/nginx/conf.d/*.conf
-    cp -f $vestacp/nginx/nginx.conf /etc/nginx/
-    cp -f $vestacp/nginx/status.conf /etc/nginx/conf.d/
-    cp -f $vestacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
-    cp -f $vestacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $vestacp/nginx/webmail.inc /etc/nginx/conf.d/
-    cp -f $vestacp/logrotate/nginx /etc/logrotate.d/
+    cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
+    cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
+    cp -f $hestiacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
+    cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
+    cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
+    cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
     echo > /etc/nginx/conf.d/vesta.conf
     mkdir -p /var/log/nginx/domains
     update-rc.d nginx defaults
@@ -847,9 +856,9 @@ fi
 #----------------------------------------------------------#
 
 if [ "$apache" = 'yes'  ]; then
-    cp -f $vestacp/apache2/apache2.conf /etc/apache2/
-    cp -f $vestacp/apache2/status.conf /etc/apache2/mods-enabled/
-    cp -f  $vestacp/logrotate/apache2 /etc/logrotate.d/
+    cp -f $hestiacp/apache2/apache2.conf /etc/apache2/
+    cp -f $hestiacp/apache2/status.conf /etc/apache2/mods-enabled/
+    cp -f  $hestiacp/logrotate/apache2 /etc/logrotate.d/
     a2enmod rewrite
     a2enmod suexec
     a2enmod ssl
@@ -857,9 +866,9 @@ if [ "$apache" = 'yes'  ]; then
     a2enmod ruid2
     mkdir -p /etc/apache2/conf.d
     echo > /etc/apache2/conf.d/vesta.conf
-    echo "# Powered by vesta" > /etc/apache2/sites-available/default
-    echo "# Powered by vesta" > /etc/apache2/sites-available/default-ssl
-    echo "# Powered by vesta" > /etc/apache2/ports.conf
+    echo "# Powered by hestia" > /etc/apache2/sites-available/default
+    echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
+    echo "# Powered by hestia" > /etc/apache2/ports.conf
     echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
     touch /var/log/apache2/access.log /var/log/apache2/error.log
     mkdir -p /var/log/apache2/domains
@@ -881,7 +890,7 @@ fi
 
 if [ "$phpfpm" = 'yes' ]; then
     pool=$(find /etc/php* -type d \( -name "pool.d" -o -name "*fpm.d" \))
-    cp -f $vestacp/php-fpm/www.conf $pool/
+    cp -f $hestiacp/php-fpm/www.conf $pool/
     php_fpm=$(ls /etc/init.d/php*-fpm* |cut -f 4 -d /)
     ln -s /etc/init.d/$php_fpm /etc/init.d/php-fpm > /dev/null 2>&1
     update-rc.d $php_fpm defaults
@@ -909,7 +918,7 @@ done
 #----------------------------------------------------------#
 
 if [ "$vsftpd" = 'yes' ]; then
-    cp -f $vestacp/vsftpd/vsftpd.conf /etc/
+    cp -f $hestiacp/vsftpd/vsftpd.conf /etc/
     touch /var/log/vsftpd.log
     chown root:adm /var/log/vsftpd.log
     chmod 640 /var/log/vsftpd.log
@@ -929,7 +938,7 @@ fi
 
 if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
-    cp -f $vestacp/proftpd/proftpd.conf /etc/proftpd/
+    cp -f $hestiacp/proftpd/proftpd.conf /etc/proftpd/
     update-rc.d proftpd defaults
     service proftpd start
     check_result $? "proftpd start failed"
@@ -950,7 +959,7 @@ if [ "$mysql" = 'yes' ]; then
     fi
 
     # Configuring MySQL/MariaDB
-    cp -f $vestacp/mysql/$mycnf /etc/mysql/my.cnf
+    cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
     if [ "$release" != '16.04' ]; then
         mysql_install_db
     fi
@@ -975,10 +984,10 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $vestacp/pma/apache.conf /etc/phpmyadmin/
+        cp -f $hestiacp/pma/apache.conf /etc/phpmyadmin/
         ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
     fi
-    cp -f $vestacp/pma/config.inc.php /etc/phpmyadmin/
+    cp -f $hestiacp/pma/config.inc.php /etc/phpmyadmin/
     chmod 777 /var/lib/phpmyadmin/tmp
 fi
 
@@ -987,15 +996,15 @@ fi
 #----------------------------------------------------------#
 
 if [ "$postgresql" = 'yes' ]; then
-    cp -f $vestacp/postgresql/pg_hba.conf /etc/postgresql/*/main/
+    cp -f $hestiacp/postgresql/pg_hba.conf /etc/postgresql/*/main/
     service postgresql restart
     sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$vpass'"
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $vestacp/pga/phppgadmin.conf /etc/apache2/conf.d/
+        cp -f $hestiacp/pga/phppgadmin.conf /etc/apache2/conf.d/
     fi
-    cp -f $vestacp/pga/config.inc.php /etc/phppgadmin/
+    cp -f $hestiacp/pga/config.inc.php /etc/phppgadmin/
 fi
 
 
@@ -1004,7 +1013,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$named" = 'yes' ]; then
-    cp -f $vestacp/bind/named.conf /etc/bind/
+    cp -f $hestiacp/bind/named.conf /etc/bind/
     sed -i "s%listen-on%//listen%" /etc/bind/named.conf.options
     chown root:bind /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf
@@ -1030,9 +1039,9 @@ fi
 
 if [ "$exim" = 'yes' ]; then
     gpasswd -a Debian-exim mail
-    cp -f $vestacp/exim/exim4.conf.template /etc/exim4/
-    cp -f $vestacp/exim/dnsbl.conf /etc/exim4/
-    cp -f $vestacp/exim/spam-blocks.conf /etc/exim4/
+    cp -f $hestiacp/exim/exim4.conf.template /etc/exim4/
+    cp -f $hestiacp/exim/dnsbl.conf /etc/exim4/
+    cp -f $hestiacp/exim/spam-blocks.conf /etc/exim4/
     touch /etc/exim4/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then
@@ -1065,8 +1074,8 @@ fi
 
 if [ "$dovecot" = 'yes' ]; then
     gpasswd -a dovecot mail
-    cp -rf $vestacp/dovecot /etc/
-    cp -f $vestacp/logrotate/dovecot /etc/logrotate.d/
+    cp -rf $hestiacp/dovecot /etc/
+    cp -f $hestiacp/logrotate/dovecot /etc/logrotate.d/
     chown -R root:root /etc/dovecot*
     update-rc.d dovecot defaults
     service dovecot start
@@ -1081,7 +1090,7 @@ fi
 if [ "$clamd" = 'yes' ]; then
     gpasswd -a clamav mail
     gpasswd -a clamav Debian-exim
-    cp -f $vestacp/clamav/clamd.conf /etc/clamav/
+    cp -f $hestiacp/clamav/clamd.conf /etc/clamav/
     /usr/bin/freshclam
     update-rc.d clamav-daemon defaults
     service clamav-daemon start
@@ -1111,16 +1120,16 @@ fi
 
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
-        cp -f $vestacp/roundcube/apache.conf /etc/roundcube/
+        cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
     fi
-    cp -f $vestacp/roundcube/main.inc.php /etc/roundcube/
-    cp -f  $vestacp/roundcube/db.inc.php /etc/roundcube/
+    cp -f $hestiacp/roundcube/main.inc.php /etc/roundcube/
+    cp -f  $hestiacp/roundcube/db.inc.php /etc/roundcube/
     chmod 640 /etc/roundcube/debian-db*
     chown root:www-data /etc/roundcube/debian-db*
-    cp -f $vestacp/roundcube/vesta.php \
+    cp -f $hestiacp/roundcube/vesta.php \
         /usr/share/roundcube/plugins/password/drivers/
-    cp -f $vestacp/roundcube/config.inc.php /etc/roundcube/plugins/password/
+    cp -f $hestiacp/roundcube/config.inc.php /etc/roundcube/plugins/password/
     r="$(gen_pass)"
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.*
@@ -1153,7 +1162,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$fail2ban" = 'yes' ]; then
-    cp -rf $vestacp/fail2ban /etc/
+    cp -rf $hestiacp/fail2ban /etc/
     if [ "$dovecot" = 'no' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n dovecot-iptables -A 2)
         fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
@@ -1188,93 +1197,93 @@ if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     chattr -i /home/admin/conf > /dev/null 2>&1
     userdel -f admin >/dev/null 2>&1
     chattr -i /home/admin/conf >/dev/null 2>&1
-    mv -f /home/admin  $vst_backups/home/ >/dev/null 2>&1
+    mv -f /home/admin  $hst_backups/home/ >/dev/null 2>&1
     rm -f /tmp/sess_* >/dev/null 2>&1
 fi
 if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1
 fi
 
-# Adding Vesta admin account
-$VESTA/bin/v-add-user admin $vpass $email default System Administrator
+# Adding Hestia admin account
+$HESTIA/bin/v-add-user admin $vpass $email default System Administrator
 check_result $? "can't create admin user"
-$VESTA/bin/v-change-user-shell admin bash
-$VESTA/bin/v-change-user-language admin $lang
+$HESTIA/bin/v-change-user-shell admin bash
+$HESTIA/bin/v-change-user-language admin $lang
 
 # Configuring system IPs
-$VESTA/bin/v-update-sys-ip
+$HESTIA/bin/v-update-sys-ip
 
 # Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
-    $VESTA/bin/v-update-firewall
+    $HESTIA/bin/v-update-firewall
 fi
 
 # Get public IP
 pub_ip=$(curl -s https://hestiacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
-    echo "$VESTA/bin/v-update-sys-ip" >> /etc/rc.local
-    $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
+    echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
+    $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip
     ip=$pub_ip
 fi
 
 # Configuring MySQL/MariaDB host
 if [ "$mysql" = 'yes' ]; then
-    $VESTA/bin/v-add-database-host mysql localhost root $vpass
-    $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
+    $HESTIA/bin/v-add-database-host mysql localhost root $vpass
+    $HESTIA/bin/v-add-database admin default default $(gen_pass) mysql
 fi
 
 # Configuring PostgreSQL host
 if [ "$postgresql" = 'yes' ]; then
-    $VESTA/bin/v-add-database-host pgsql localhost postgres $vpass
-    $VESTA/bin/v-add-database admin db db $(gen_pass) pgsql
+    $HESTIA/bin/v-add-database-host pgsql localhost postgres $vpass
+    $HESTIA/bin/v-add-database admin db db $(gen_pass) pgsql
 fi
 
 # Adding default domain
-$VESTA/bin/v-add-domain admin $servername
+$HESTIA/bin/v-add-domain admin $servername
 
 # Adding cron jobs
-command="sudo $VESTA/bin/v-update-sys-queue disk"
-$VESTA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
-command="sudo $VESTA/bin/v-update-sys-queue traffic"
-$VESTA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
-command="sudo $VESTA/bin/v-update-sys-queue webstats"
-$VESTA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "$command"
-command="sudo $VESTA/bin/v-update-sys-queue backup"
-$VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
-command="sudo $VESTA/bin/v-backup-users"
-$VESTA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "$command"
-command="sudo $VESTA/bin/v-update-user-stats"
-$VESTA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
-command="sudo $VESTA/bin/v-update-sys-rrd"
-$VESTA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-sys-queue disk"
+$HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-sys-queue traffic"
+$HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-sys-queue webstats"
+$HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-sys-queue backup"
+$HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-backup-users"
+$HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-user-stats"
+$HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-sys-rrd"
+$HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 service cron restart
 
 # Building initital rrd images
-$VESTA/bin/v-update-sys-rrd
+$HESTIA/bin/v-update-sys-rrd
 
 # Enabling file system quota
 if [ "$quota" = 'yes' ]; then
-    $VESTA/bin/v-add-sys-quota
+    $HESTIA/bin/v-add-sys-quota
 fi
 
-# Starting Vesta service
-update-rc.d vesta defaults
-service vesta start
-check_result $? "vesta start failed"
-chown admin:admin $VESTA/data/sessions
+# Starting Hestia service
+update-rc.d hestia defaults
+service hestia start
+check_result $? "hestia start failed"
+chown admin:admin $HESTIA/data/sessions
 
 # Adding notifications
-$VESTA/upd/add_notifications.sh
+$HESTIA/upd/add_notifications.sh
 
 # Adding cronjob for autoupdates
-$VESTA/bin/v-add-cron-vesta-autoupdate
+$HESTIA/bin/v-add-cron-vesta-autoupdate
 
 
 #----------------------------------------------------------#
-#                   Vesta Access Info                      #
+#                   Hestia Access Info                     #
 #----------------------------------------------------------#
 
 # Sending install notification to hestiacp.com
@@ -1303,7 +1312,7 @@ Sincerely yours
 HestiaCP.com team
 " > $tmpfile
 
-send_mail="$VESTA/web/inc/mail-wrapper.php"
+send_mail="$HESTIA/web/inc/mail-wrapper.php"
 cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
 # Congrats

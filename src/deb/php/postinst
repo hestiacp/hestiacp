@@ -1,8 +1,0 @@
-#!/bin/bash
-
-# Run triggers only on updates
-if [ -e /usr/local/vesta/ioncube/ioncube.sh ]; then
-    /usr/local/vesta/ioncube/ioncube.sh add
-fi
-
-exit 0

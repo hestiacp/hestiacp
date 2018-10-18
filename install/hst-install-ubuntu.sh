@@ -1222,7 +1222,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-pub_ip=$(curl -s https://hestiacp.com/what-is-my-ip/)
+pub_ip=$(curl -s https://www.hestiacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip
@@ -1287,7 +1287,7 @@ $HESTIA/bin/v-add-cron-vesta-autoupdate
 #----------------------------------------------------------#
 
 # Sending install notification to hestiacp.com
-wget https://hestiacp.com/notify/?os=$os\&version=$release -O /dev/null -q
+wget https://www.hestiacp.com/notify/?os=$os\&version=$release -O /dev/null -q
 
 # Comparing hostname and IP
 host_ip=$(host $servername| head -n 1 |awk '{print $NF}')

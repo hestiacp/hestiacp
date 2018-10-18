@@ -1,14 +1,13 @@
-Source: vesta-nginx
-Package: vesta-nginx
+Source: hestia-nginx
+Package: hestia-nginx
 Priority: optional
 Version: 0.9.8-22
 Section: admin
-Maintainer: Serghey Rodin <skid@vestacp.com>
-Homepage: http://vestacp.com
+Maintainer: HestiaCP <info@hestiacp.com>
+Homepage: https://www.hestiacp.com
 Architecture: amd64
-Depends: vesta
-Description: Vesta Nginx
- Vesta is an open source hosting control panel.
- Vesta has a clean and focused interface without the clutter.
- Vesta has the latest of very innovative technologies.
-
+Depends: hestia
+Description: hestia Nginx
+ hestia is an open source hosting control panel.
+ hestia has a clean and focused interface without the clutter.
+ hestia has the latest of very innovative technologies.

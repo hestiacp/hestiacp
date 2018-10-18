@@ -1,0 +1,95 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:       hestia
+#                 internal nginx
+#                 internal php-fpm
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the hestia control panel
+# Description:       starts nginx and php-fpm using start-stop-daemon
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+NGINX_DAEMON=/usr/local/hestia/nginx/sbin/hestia-nginx
+NGINX_NAME=hestia-nginx
+NGINX_DESC=hestia-nginx
+NGINX_PID=/var/run/hestia-nginx.pid
+
+PHP_DAEMON=/usr/local/hestia/php/sbin/hestia-php
+PHP_NAME=hestia-php
+PHP_DESC=hestia-php
+PHP_PID=/var/run/hestia-php.pid
+PHP_CONF=/usr/local/hestia/php/etc/php-fpm.conf
+
+set -e
+
+. /lib/lsb/init-functions
+
+. /etc/profile.d/hestia.sh
+
+start_nginx() {
+    start-stop-daemon --start --quiet --pidfile $NGINX_PID \
+        --retry 5 --exec $NGINX_DAEMON --oknodo
+}
+
+start_php() {
+    start-stop-daemon --start --quiet --pidfile $PHP_PID \
+        --retry 5 --exec $PHP_DAEMON --oknodo
+}
+
+stop_nginx() {
+    start-stop-daemon --stop --quiet --pidfile $NGINX_PID \
+        --retry 5 --oknodo --exec $NGINX_DAEMON
+}
+
+stop_php() {
+    start-stop-daemon --stop --quiet --pidfile $PHP_PID \
+        --retry 5 --oknodo --exec $PHP_DAEMON
+}
+
+case "$1" in
+    start)
+        log_daemon_msg "Starting $NGINX_DESC" "$NGINX_NAME"
+        start_nginx
+        log_end_msg $?
+        log_daemon_msg "Starting $PHP_DESC" "$PHP_NAME"
+        start_php
+        log_end_msg $?
+        ;;
+
+    stop)
+        log_daemon_msg "Stopping $NGINX_DESC" "$NGINX_NAME"
+        stop_nginx
+        log_end_msg $?
+        log_daemon_msg "Stopping $PHP_DESC" "$PHP_NAME"
+        stop_php
+        log_end_msg $?
+        ;;
+
+    restart|force-reload|reload|configtest|testconfig)
+        log_daemon_msg "Restarting $NGINX_DESC" "$NGINX_NAME"
+        stop_nginx
+        stop_php
+        sleep 1
+        start_nginx
+        log_end_msg $?
+        log_daemon_msg "Restarting $PHP_DESC" "$PHP_NAME"
+        start_php
+        log_end_msg $?
+        ;;
+
+    status)
+        status_of_proc -p $NGINX_PID "$NGINX_DAEMON" hestia-nginx
+        status_of_proc -p $PHP_PID "$PHP_DAEMON" hestia-php
+        ;;
+
+    *)
+        echo "Usage: hestia {start|stop|restart|status}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Hestia Debian installer v.06
+# Vesta Debian installer v.05
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
-RHOST='apt.hestiacp.com'
-CHOST='c.hestiacp.com'
+RHOST='apt.vestacp.com'
+CHOST='c.vestacp.com'
 VERSION='debian'
 VESTA='/usr/local/vesta'
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
@@ -16,7 +16,7 @@ arch=$(uname -i)
 os='debian'
 release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
-vestacp="https://$CHOST/$VERSION/$release"
+vestacp="http://$CHOST/$VERSION/$release"
 
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -29,7 +29,7 @@ if [ "$release" -eq 9 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron vesta vesta-nginx vesta-php expect libmail-dkim-perl
-        unrar-free vim-common net-tools"
+        unrar-free vim-common vesta-ioncube vesta-softaculous net-tools"
 elif [ "$release" -eq 8 ]; then
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
@@ -42,7 +42,7 @@ elif [ "$release" -eq 8 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron vesta vesta-nginx vesta-php expect libmail-dkim-perl
-        unrar-free vim-common net-tools"
+        unrar-free vim-common vesta-ioncube vesta-softaculous net-tools"
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
@@ -55,7 +55,7 @@ else
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron vesta vesta-nginx vesta-php expect unrar-free
-        vim-common net-tools"
+        vim-common vesta-ioncube vesta-softaculous net-tools"
 fi
 
 # Defining help function
@@ -76,6 +76,7 @@ help() {
   -t, --spamassassin      Install SpamAssassin  [yes|no]  default: yes
   -i, --iptables          Install Iptables      [yes|no]  default: yes
   -b, --fail2ban          Install Fail2ban      [yes|no]  default: yes
+  -o, --softaculous       Install Softaculous   [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
@@ -85,7 +86,7 @@ help() {
   -f, --force             Force installation
   -h, --help              Print this help
 
-  Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --apache no --phpfpm yes"
+  Example: bash $0 -e demo@vestacp.com -p p4ssw0rd --apache no --phpfpm yes"
     exit 1
 }
 
@@ -163,6 +164,7 @@ for arg; do
         --iptables)             args="${args}-i " ;;
         --fail2ban)             args="${args}-b " ;;
         --remi)                 args="${args}-r " ;;
+        --softaculous)          args="${args}-o " ;;
         --quota)                args="${args}-q " ;;
         --lang)                 args="${args}-l " ;;
         --interactive)          args="${args}-y " ;;
@@ -196,6 +198,7 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         i) iptables=$OPTARG ;;          # Iptables
         b) fail2ban=$OPTARG ;;          # Fail2ban
         r) remi=$OPTARG ;;              # Remi repo
+        o) softaculous=$OPTARG ;;       # Softaculous plugin
         q) quota=$OPTARG ;;             # FS Quota
         l) lang=$OPTARG ;;              # Language
         y) interactive=$OPTARG ;;       # Interactive install
@@ -229,6 +232,7 @@ else
 fi
 set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
+set_default_value 'softaculous' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
 set_default_lang 'en'
@@ -270,7 +274,7 @@ if [ ! -e '/usr/bin/wget' ]; then
 fi
 
 # Checking repository availability
-wget -q "https://gpg.hestiacp.com/deb_signing.key" -O /dev/null
+wget -q "$vestacp/deb_signing.key" -O /dev/null
 check_result $? "No access to Vesta repository"
 
 # Check installed packages
@@ -305,13 +309,13 @@ fi
 # Printing nice ascii aslogo
 clear
 echo
-echo '  _   _           _   _        ____ ____  '
-echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
-echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
-echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
-echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
+echo ' _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|'
+echo ' _|      _|  _|        _|            _|      _|    _|'
+echo ' _|      _|  _|_|_|      _|_|        _|      _|_|_|_|'
+echo '   _|  _|    _|              _|      _|      _|    _|'
+echo '     _|      _|_|_|_|  _|_|_|        _|      _|    _|'
 echo
-echo '                      Hestia Control Panel'
+echo '                                  Vesta Control Panel'
 echo -e "\n\n"
 
 echo 'Following software will be installed on your system:'
@@ -470,8 +474,8 @@ wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
 
 # Installing vesta repo
-echo "deb http://$RHOST/ $codename main" > $apt/hestia.list
-wget https://gpg.hestiacp.com/deb_signing.key -O deb_signing.key
+echo "deb http://$RHOST/$codename/ $codename vesta" > $apt/vesta.list
+wget $CHOST/deb_signing.key -O deb_signing.key
 apt-key add deb_signing.key
 
 
@@ -612,6 +616,9 @@ if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/php5-pgsql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
+fi
+if [ "$softaculous" = 'no' ]; then
+    software=$(echo "$software" | sed -e 's/vesta-softaculous//')
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/fail2ban//')
@@ -978,8 +985,9 @@ if [ "$mysql" = 'yes' ]; then
     check_result $? "mysql start failed"
 
     # Securing MySQL installation
-    mysqladmin -u root password $vpass
-    echo -e "[client]\npassword='$vpass'\n" > /root/.my.cnf
+    mpass=$(gen_pass)
+    mysqladmin -u root password $mpass
+    echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
     mysql -e "DELETE FROM mysql.user WHERE User=''"
     mysql -e "DROP DATABASE test" >/dev/null 2>&1
@@ -1001,9 +1009,10 @@ fi
 #----------------------------------------------------------#
 
 if [ "$postgresql" = 'yes' ]; then
+    ppass=$(gen_pass)
     wget $vestacp/postgresql/pg_hba.conf -O /etc/postgresql/*/main/pg_hba.conf
     service postgresql restart
-    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$vpass'"
+    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
@@ -1262,7 +1271,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public ip
-pub_ip=$(curl -s https://hestiacp.com/what-is-my-ip/)
+pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
 
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $VESTA/bin/v-change-sys-ip-nat $ip $pub_ip
@@ -1291,13 +1300,13 @@ fi
 
 # Configuring mysql host
 if [ "$mysql" = 'yes' ]; then
-    $VESTA/bin/v-add-database-host mysql localhost root $vpass
+    $VESTA/bin/v-add-database-host mysql localhost root $mpass
     $VESTA/bin/v-add-database admin default default $(gen_pass) mysql
 fi
 
 # Configuring pgsql host
 if [ "$postgresql" = 'yes' ]; then
-    $VESTA/bin/v-add-database-host pgsql localhost postgres $vpass
+    $VESTA/bin/v-add-database-host pgsql localhost postgres $ppass
     $VESTA/bin/v-add-database admin db db $(gen_pass) pgsql
 fi
 
@@ -1330,6 +1339,11 @@ if [ "$quota" = 'yes' ]; then
     $VESTA/bin/v-add-sys-quota
 fi
 
+# Enabling softaculous plugin
+if [ "$softaculous" = 'yes' ]; then
+    $VESTA/bin/v-add-vesta-softaculous
+fi
+
 # Starting vesta service
 update-rc.d vesta defaults
 service vesta start
@@ -1346,9 +1360,6 @@ $VESTA/bin/v-add-cron-vesta-autoupdate
 #----------------------------------------------------------#
 #                   Vesta Access Info                      #
 #----------------------------------------------------------#
-
-# Sending install notification to hestiacp.com
-wget https://hestiacp.com/notify/?os=$os\&version=$release -O /dev/null -q
 
 # Comparing hostname and ip
 host_ip=$(host $servername| head -n 1 | awk '{print $NF}')
@@ -1370,20 +1381,20 @@ Thank you.
 
 --
 Sincerely yours
-HestiaCP.com team
+vestacp.com team
 " > $tmpfile
 
 send_mail="$VESTA/web/inc/mail-wrapper.php"
-cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
+cat $tmpfile | $send_mail -s "Vesta Control Panel" $email
 
 # Congrats
 echo '======================================================='
 echo
-echo '  _   _           _   _        ____ ____  '
-echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
-echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
-echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
-echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
+echo ' _|      _|  _|_|_|_|    _|_|_|  _|_|_|_|_|    _|_|   '
+echo ' _|      _|  _|        _|            _|      _|    _| '
+echo ' _|      _|  _|_|_|      _|_|        _|      _|_|_|_| '
+echo '   _|  _|    _|              _|      _|      _|    _| '
+echo '     _|      _|_|_|_|  _|_|_|        _|      _|    _| '
 echo
 echo
 cat $tmpfile

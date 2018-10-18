@@ -1,6 +1,6 @@
 Name:           vesta
 Version:        0.9.8
-Release:        22
+Release:        23
 Summary:        Vesta Control Panel
 Group:          System Environment/Base
 License:        GPL
@@ -45,6 +45,15 @@ if [ $1 -ge 2 ]; then
     if [ -x /usr/local/vesta/upd/fix_roundcube.sh ]; then
         /usr/local/vesta/upd/fix_roundcube.sh
     fi
+
+    if [ -x /usr/local/vesta/upd/limit_sudo.sh ]; then
+        /usr/local/vesta/upd/limit_sudo.sh
+    fi
+
+    if [ -x /usr/local/vesta/upd/fix_dhcprenew.sh ]; then
+        /usr/local/vesta/upd/fix_dhcprenew.sh
+    fi
+
 fi
 %files
 %{_vestadir}
@@ -59,6 +68,12 @@ fi
 %config(noreplace) %{_vestadir}/web/css/uploadify.css
 
 %changelog
+* Thu Oct 18 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-23
+- Security fixes
+
+* Wed Jun 27 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-22
+- Security fixes
+
 * Fri May 11 2018 Serghey Rodin <builder@vestacp.com> - 0.9.8-21
 - Additional security fixes
 

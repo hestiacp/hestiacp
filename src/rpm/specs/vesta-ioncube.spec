@@ -1,6 +1,6 @@
 Name:           vesta-ioncube
 Version:        0.9.8
-Release:        22
+Release:        23
 Summary:        ionCube Loader
 Group:          System Environment/Base
 License:        "Freely redistributable without restriction"

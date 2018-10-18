@@ -5,6 +5,6 @@ Defaults:admin !syslog
 Defaults:admin !requiretty
 Defaults:root !requiretty
 
-admin   ALL=(ALL)       ALL
+# sudo is limited to vesta scripts
 admin   ALL=NOPASSWD:/usr/local/vesta/bin/*
 admin   ALL=NOPASSWD:/usr/local/hestia/bin/*

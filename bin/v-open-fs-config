@@ -35,6 +35,11 @@ if [ ! -z "$src_file" ]; then
         echo "Error: invalid source path $src_file"
         exit 2
     fi
+    spath=$(echo "$rpath" |egrep "/etc|/var/lib")
+    if [ -z "$spath" ]; then
+        echo "Error: invalid source path $src_file"
+        exit 2
+    fi
 fi
 
 # Reading conf

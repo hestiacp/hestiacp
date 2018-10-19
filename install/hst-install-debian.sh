@@ -710,9 +710,9 @@ touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
 # Symlink to Hestia for compatibilty
-ln -s /usr/local/hestia /usr/local/vesta
+ln -s $HESTIA /usr/local/vesta
 ln -s $HESTIA/log /var/log/vesta
-ln -s /usr/local/hestia/conf/hestia.conf /usr/local/vesta/conf/vesta.conf
+ln -s $HESTIA/conf/hestia.conf /usr/local/vesta/conf/vesta.conf
 ln -s /etc/profile.d/hestia.sh /etc/profile.d/vesta.sh
 
 # WEB stack

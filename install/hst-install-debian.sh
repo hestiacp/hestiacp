@@ -429,7 +429,7 @@ if [ -z "$email" ]; then
 fi
 
 # Defining backup directory
-vst_backups="/root/vst_install_backups/$(date +%s)"
+hst_backups="/root/vst_install_backups/$(date +%s)"
 echo "Installation backup directory: $hst_backups"
 
 # Printing start message and sleeping for 5 seconds

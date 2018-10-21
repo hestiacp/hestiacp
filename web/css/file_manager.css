@@ -235,7 +235,7 @@ ul.listing { list-style-type: none; padding: 18px 0 0; margin: -4px 0 0 -1px;  b
 .context-menu.sort-order li { padding: 0; }
 .context-menu.sort-order li.last { border: none; }
 .context-menu.sort-order li:hover { background-color: #333; }
-.context-menu.sort-order span { padding: 12px 12px 12px 12px; background: ulr(/images/flat_icons.png) }
+.context-menu.sort-order span { padding: 12px 12px 12px 12px; background: url(/images/flat_icons.png) }
 .context-menu.sort-order span.up { background: url(/images/flat_icons.png) -399px -141px; padding: 12px 14px; display: inline-block; width: 16px; }
 .context-menu.sort-order span.name,
 .context-menu.sort-order span.date,

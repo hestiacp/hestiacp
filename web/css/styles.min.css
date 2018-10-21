@@ -683,7 +683,7 @@ input[type="checkbox"] {
 }
 
 .l-menu__item--active {
-  //background-color: #fff;
+  /*background-color: #fff;*/
 }
 
 .l-menu__item.l-menu__item--active a {
@@ -1249,7 +1249,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 .l-sort-toolbar .vst.selected {
   color: #ff6701;
-//  color: #92af0b;
+  /*color: #92af0b;*/
 }
 
 
@@ -2310,7 +2310,7 @@ body.mobile .l-icon-shortcuts {
 }
 .timer-container .timer-button {
   cursor: pointer;
-  text-decotation: underline;
+  text-decoration: underline;
   margin: 7px 0 0 38px;
   width: 15px;
   float: left;
@@ -3066,7 +3066,7 @@ form#vstobjects.suspended {
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
+  -user-select: none;
 }
 
 .search-input {
@@ -3091,9 +3091,11 @@ form#vstobjects.suspended {
   visibility: visible;
 }
 .search-input:focus {
-//  background-color: #e8fcff;
-//  border-color: #75c9c2;
-//  color: #333;
+/*
+  background-color: #e8fcff;
+  border-color: #75c9c2;
+  color: #333;
+*/
 }
 
 .float-left {
@@ -3288,7 +3290,7 @@ form#vstobjects.suspended {
 
 .context-helper {
   text-transform: uppercase;
-#  text-decoration: underline;
+  /*text-decoration: underline;*/
   color: #777;
   font-size: 11px;
   cursor: pointer;

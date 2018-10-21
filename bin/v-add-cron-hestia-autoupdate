@@ -45,7 +45,7 @@ hour=$(generate_password '1234567' '1')
 day='*'
 month='*'
 wday='*'
-command='sudo /usr/local/vesta/bin/v-update-sys-hestia-all'
+command='sudo /usr/local/hestia/bin/v-update-sys-hestia-all'
 
 # Concatenating cron string
 str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"

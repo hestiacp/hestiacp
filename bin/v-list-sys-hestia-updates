@@ -1,0 +1,140 @@
+#!/bin/bash
+# info: list system updates
+# options: [FORMAT]
+#
+# The function checks available updates for hestia packages.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+fields="\$NAME \$VERSION \$RELEASE \$ARCH \$UPDATED \$DESCR \$TIME \$DATE"
+
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(echo -e "$data" |grep NAME |wc -l)
+    echo "{"
+    for str in $(echo -e "$data"); do
+        eval $str
+        echo -n '    "'$NAME'": {
+        "VERSION": "'$VERSION'",
+        "RELEASE": "'$RELEASE'",
+        "ARCH": "'$ARCH'",
+        "UPDATED": "'$UPDATED'",
+        "DESCR": "'$DESCR'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "PKG   VER   REL   ARCH   UPDT   DATE"
+    echo "---   ---   ---   ----   ----   ----"
+    for str in $(echo -e "$data"); do
+        eval $str
+        echo "$NAME $VERSION $RELEASE $ARCH $UPDATED $DATE"
+    done
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking official latest version
+latest=$(wget -q -T 1 -t 1 http://gpg.hestiacp.com/latest.txt -O -)
+
+# Checking installed hestia version
+if [ -d "/etc/sysconfig" ]; then
+    rpm_format="VERSION='%{VERSION}'"
+    rpm_format="$rpm_format RELEASE='%{RELEASE}'"
+    rpm_format="$rpm_format ARCH='%{ARCH}'"
+    rpm_format="$rpm_format UTIME='%{INSTALLTIME}'\n"
+    eval $(rpm --queryformat="$rpm_format" -q hestia)
+    DATE=$(date -d @$UTIME +%F)
+    TIME=$(date -d @$UTIME +%T)
+else
+    dpkg_data=$(dpkg-query -s hestia)
+    pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia.list)
+    ARCH=$(echo "$dpkg_data"|grep Architecture |cut -f 2 -d ' ')
+    VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+    RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
+    DATE=$(date -d @$pkg_date +"%F")
+    TIME=$(date -d @$pkg_date +"%T")
+fi
+UPDATED='yes'
+if [ ! -z "$latest" ] && [ "$latest" \> "hestia-$VERSION-$RELEASE" ]; then
+    UPDATED='no'
+fi
+data="NAME='hestia' VERSION='$VERSION' RELEASE='$RELEASE' ARCH='$ARCH'"
+data="$data UPDATED='$UPDATED' DESCR='core package' TIME='$TIME' DATE='$DATE'"
+
+# Checking installed hestia-php version
+if [ -d "/etc/sysconfig" ]; then
+    eval $(rpm --queryformat="$rpm_format" -q hestia-php)
+    DATE=$(date -d @$UTIME +%F)
+    TIME=$(date -d @$UTIME +%T)
+else
+    dpkg_data=$(dpkg-query -s hestia-php)
+    pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia-php.list)
+    ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
+    VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+    RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
+    DATE=$(date -d @$pkg_date +"%F")
+    TIME=$(date -d @$pkg_date +"%T")
+fi
+data="$data\nNAME='hestia-php' VERSION='$VERSION' RELEASE='$RELEASE'"
+data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='php interpreter'"
+data="$data TIME='$TIME' DATE='$DATE'"
+
+# Checking installed hestia-nginx version
+if [ -d "/etc/sysconfig" ]; then
+    eval $(rpm --queryformat="$rpm_format" -q hestia-nginx)
+    DATE=$(date -d @$UTIME +%F)
+    TIME=$(date -d @$UTIME +%T)
+else
+    dpkg_data=$(dpkg-query -s hestia-nginx)
+    pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia-nginx.list)
+    ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
+    VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+    RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
+    DATE=$(date -d @$pkg_date +"%F")
+    TIME=$(date -d @$pkg_date +"%T")
+fi
+data="$data\nNAME='hestia-nginx' VERSION='$VERSION' RELEASE='$RELEASE'"
+data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='internal web server'"
+data="$data TIME='$TIME' DATE='$DATE'"
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -3,6 +3,7 @@
 session_start();
 
 define('VESTA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
+define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('JS_LATEST_UPDATE', '1491697868');
 
 $i = 0;

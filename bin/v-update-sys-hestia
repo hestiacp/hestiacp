@@ -1,0 +1,64 @@
+#!/bin/bash
+# info: update hestia package/configs
+# options: PACKAGE [VERSION]
+#
+# The function runs as rpm update trigger. It pulls shell script from hestia
+# server and runs it.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+package=$1
+
+# Importing system environment
+source /etc/profile
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking arg number
+check_args '1' "$#" 'PACKAGE'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ -d "/etc/sysconfig" ]; then
+    # Clean yum chache
+    yum -q clean all
+
+    # Define yum cmd
+    yum="yum -q -y --noplugins --disablerepo=* --enablerepo=hestia"
+
+    # Update hestia package
+    $yum update $package > /dev/null 2>&1
+    check_result $? "$package update failed" $E_UPDATE
+else
+    # Update repo
+    apt-get update -o Dir::Etc::sourcelist="sources.list.d/hestia.list" \
+        -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" -qq
+
+    # Update hestia package
+    apt-get install $package -qq > /dev/null 2>&1
+    check_result $? "$package update failed" $E_UPDATE
+fi
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

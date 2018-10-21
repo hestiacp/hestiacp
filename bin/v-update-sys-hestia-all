@@ -1,0 +1,33 @@
+#!/bin/bash
+# info: update all hestia packages
+# options: USER [RESTART]
+#
+# The function of updating all vesta packages
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Importing system variables
+source /etc/profile
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Starting update loop
+for package in hestia hestia-nginx hestia-php; do
+    $BIN/v-update-sys-hestia "$package"
+done
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

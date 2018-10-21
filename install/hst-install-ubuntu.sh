@@ -1282,7 +1282,7 @@ chown admin:admin $HESTIA/data/sessions
 $HESTIA/upd/add_notifications.sh
 
 # Adding cronjob for autoupdates
-$HESTIA/bin/v-add-cron-vesta-autoupdate
+$HESTIA/bin/v-add-cron-hestia-autoupdate
 
 
 #----------------------------------------------------------#

@@ -1,6 +1,6 @@
 # MySQL
 mysql_connect() {
-    host_str=$(grep "HOST='$1'" $VESTA/conf/mysql.conf)
+    host_str=$(grep "HOST='$1'" $HESTIA/conf/mysql.conf)
     eval $host_str
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
@@ -8,7 +8,7 @@ mysql_connect() {
         exit $E_PARSING
     fi
 
-    mycnf="$VESTA/conf/.mysql.$HOST"
+    mycnf="$HESTIA/conf/.mysql.$HOST"
     if [ ! -e "$mycnf" ]; then
         echo "[client]">$mycnf
         echo "host='$HOST'" >> $mycnf
@@ -70,7 +70,7 @@ mysql_dump() {
 
 # PostgreSQL
 psql_connect() {
-    host_str=$(grep "HOST='$1'" $VESTA/conf/pgsql.conf)
+    host_str=$(grep "HOST='$1'" $HESTIA/conf/pgsql.conf)
     eval $host_str
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
@@ -117,7 +117,7 @@ get_next_dbhost() {
     if [ -z "$host" ] || [ "$host" == 'default' ]; then
         IFS=$'\n'
         host='EMPTY_DB_HOST'
-        config="$VESTA/conf/$type.conf"
+        config="$HESTIA/conf/$type.conf"
         host_str=$(grep "SUSPENDED='no'" $config)
         check_row=$(echo "$host_str"|wc -l)
 
@@ -146,7 +146,7 @@ get_next_dbhost() {
 
 # Database charset validation
 is_charset_valid() {
-    host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+    host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
     eval $host_str
 
     if [ -z "$(echo $CHARSETS | grep -wi $charset )" ]; then
@@ -158,7 +158,7 @@ is_charset_valid() {
 
 # Increase database host value
 increase_dbhost_values() {
-    host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+    host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
     eval $host_str
 
     old_dbbases="U_DB_BASES='$U_DB_BASES'"
@@ -175,13 +175,13 @@ increase_dbhost_values() {
         fi
     fi
 
-    sed -i "s/$old_dbbases/$new_dbbases/g" $VESTA/conf/$type.conf
-    sed -i "s/$old_users/$new_users/g" $VESTA/conf/$type.conf
+    sed -i "s/$old_dbbases/$new_dbbases/g" $HESTIA/conf/$type.conf
+    sed -i "s/$old_users/$new_users/g" $HESTIA/conf/$type.conf
 }
 
 # Decrease database host value
 decrease_dbhost_values() {
-    host_str=$(grep "HOST='$HOST'" $VESTA/conf/$TYPE.conf)
+    host_str=$(grep "HOST='$HOST'" $HESTIA/conf/$TYPE.conf)
     eval $host_str
 
     old_dbbases="U_DB_BASES='$U_DB_BASES'"
@@ -194,8 +194,8 @@ decrease_dbhost_values() {
         sed ':a;N;$!ba;s/\n/,/g')
     new_users="U_SYS_USERS='$U_SYS_USERS'"
 
-    sed -i "s/$old_dbbases/$new_dbbases/g" $VESTA/conf/$TYPE.conf
-    sed -i "s/$old_users/$new_users/g" $VESTA/conf/$TYPE.conf
+    sed -i "s/$old_dbbases/$new_dbbases/g" $HESTIA/conf/$TYPE.conf
+    sed -i "s/$old_users/$new_users/g" $HESTIA/conf/$TYPE.conf
 }
 
 # Create MySQL database
@@ -249,8 +249,8 @@ add_pgsql_database() {
 
 # Check if database host do not exist in config 
 is_dbhost_new() {
-    if [ -e "$VESTA/conf/$type.conf" ]; then
-        check_host=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+    if [ -e "$HESTIA/conf/$type.conf" ]; then
+        check_host=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
         if [ ! -z "$check_host" ]; then
             echo "Error: db host exist"
             log_event "$E_EXISTS" "$ARGUMENTS"
@@ -363,7 +363,7 @@ dump_pgsql_database() {
 
 # Check if database server is in use
 is_dbhost_free() {
-    host_str=$(grep "HOST='$host'" $VESTA/conf/$type.conf)
+    host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
     eval $host_str
     if [ 0 -ne "$U_DB_BASES" ]; then
         echo "Error: host $HOST is used"

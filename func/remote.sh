@@ -47,9 +47,9 @@ send_ssh_cmd() {
     fi
 
     if [ "$USER" = 'root' ]; then
-        args="$VESTA/bin/$1 \"$2\" \"$3\" \"$4\" \"$5\""
+        args="$HESTIA/bin/$1 \"$2\" \"$3\" \"$4\" \"$5\""
     else
-        args="sudo $VESTA/bin/$1 \"$2\" \"$3\" \"$4\" \"$5\""
+        args="sudo $HESTIA/bin/$1 \"$2\" \"$3\" \"$4\" \"$5\""
     fi
     ssh -i $IDENTITY_FILE $USER@$HOST -p $PORT "$args" > /dev/null 2>&1
     if [ "$?" -ne '0' ]; then
@@ -72,8 +72,8 @@ send_scp_file() {
 }
 
 is_dnshost_new() {
-    if [ -e "$VESTA/conf/dns-cluster.conf" ]; then
-        check_host=$(grep "HOST='$host'" $VESTA/conf/dns-cluster.conf)
+    if [ -e "$HESTIA/conf/dns-cluster.conf" ]; then
+        check_host=$(grep "HOST='$host'" $HESTIA/conf/dns-cluster.conf)
         if [ ! -z "$check_host" ]; then
             check_result $E_EXISTS "remote dns host $host exists"
         fi
@@ -93,7 +93,7 @@ remote_dns_health_check() {
     IFS=$'\n'
 
     # Starting health-check
-    for str in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
+    for str in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
         eval $str
 
         # Checking host connection

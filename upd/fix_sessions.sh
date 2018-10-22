@@ -1,8 +1,8 @@
 #!/bin/bash
-# Fix vesta session save path
+# Fix hestia session save path
 
 # Defining vars
-VESTA='/usr/local/vesta'
+VESTA='/usr/local/hestia'
 cmd1="$VESTA/upd/fix_sessions.sh"
 cmd2="$VESTA/bin/fix_sessions.sh"
 cron="$VESTA/data/users/admin/cron.conf"

@@ -1,23 +1,23 @@
 #!/bin/bash
 
 # Check version
-source /usr/local/vesta/conf/vesta.conf
+source /usr/local/hestia/conf/hestia.conf
 if [ "$VERSION" != '0.9.7' ]; then
     exit
 fi
 
 # Rename web system service
-sed -i "s/apache/httpd/g" /usr/local/vesta/conf/vesta.conf
+sed -i "s/apache/httpd/g" /usr/local/hestia/conf/hestia.conf
 
 # Rename dns system service
-sed -i "s/bind/named/g" /usr/local/vesta/conf/vesta.conf
+sed -i "s/bind/named/g" /usr/local/hestia/conf/hestia.conf
 
 # Rename nginx config
-mv /etc/nginx/conf.d/vesta_users.conf /etc/nginx/conf.d/vesta.conf 2>/dev/null
-rm -f /etc/nginx/conf.d/vesta_ip.conf 2>/dev/null
+mv /etc/nginx/conf.d/hestia_users.conf /etc/nginx/conf.d/hestia.conf 2>/dev/null
+rm -f /etc/nginx/conf.d/hestia_ip.conf 2>/dev/null
 
 # Update user packages
-PKG=/usr/local/vesta/data/packages
+PKG=/usr/local/hestia/data/packages
 for package in $(ls $PKG); do
     default=$(grep "^TEMPLATE='" $PKG/$package | cut -f2 -d \')
     if [ ! -z "$default" ]; then
@@ -29,7 +29,7 @@ for package in $(ls $PKG); do
 done
 
 # Update users
-USR=/usr/local/vesta/data/users
+USR=/usr/local/hestia/data/users
 for user in $(ls $USR); do
     default=$(grep "^TEMPLATE='" $USR/$user/user.conf | cut -f2 -d \')
     if [ ! -z "$default" ]; then
@@ -41,10 +41,10 @@ for user in $(ls $USR); do
 done
 
 # Rename NGINX to PROXY key
-sed -i "s/NGINX/PROXY/g" /usr/local/vesta/data/users/*/web.conf
+sed -i "s/NGINX/PROXY/g" /usr/local/hestia/data/users/*/web.conf
 
 # Check template structure
-TPL='/usr/local/vesta/data/templates/web'
+TPL='/usr/local/hestia/data/templates/web'
 if [ -e "$TPL/apache" ]; then
     mv $TPL/apache $TPL/httpd
 fi
@@ -104,7 +104,7 @@ if [ -e "$TPL/webalizer.tpl" ]; then
 fi
 
 # Update proxy ip configuration
-for ip in $(ls /usr/local/vesta/data/ips); do
+for ip in $(ls /usr/local/hestia/data/ips); do
     cat $TPL/nginx/proxy_ip.tpl |\
         sed -e "s/%ip%/$ip/g" \
             -e "s/%web_port%/8080/g" \
@@ -117,6 +117,6 @@ sed -i '/Symlinks protection/d' /etc/nginx/nginx.conf
 sed -i '/disable_symlinks.*/d' /etc/nginx/nginx.conf
 
 # Update version
-sed -i 's/0.9.7/0.9.8/' /usr/local/vesta/conf/vesta.conf
+sed -i 's/0.9.7/0.9.8/' /usr/local/hestia/conf/hestia.conf
 
 exit

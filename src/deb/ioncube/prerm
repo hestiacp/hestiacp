@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Run triggers only on updates
-if [ -e /usr/local/vesta/ioncube/ioncube.sh ]; then
-    /usr/local/vesta/ioncube/ioncube.sh delete
-fi
+# Place for update riggers...
 
 exit 0

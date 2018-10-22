@@ -1,39 +1,39 @@
 #!/bin/bash
 
 # Run triggers only on updates
-if [ ! -e "/usr/local/vesta/data/users/admin" ]; then
+if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
     exit
 fi
 
 # Run SUDO trigger
-if [ -x "/usr/local/vesta/upd/add_sudo.sh" ]; then
-    /usr/local/vesta/upd/add_sudo.sh
+if [ -x "/usr/local/hestia/upd/add_sudo.sh" ]; then
+    /usr/local/hestia/upd/add_sudo.sh
 fi
 
 # Run Notification trigger
-if [ -x "/usr/local/vesta/upd/add_notifications.sh" ]; then
-    /usr/local/vesta/upd/add_notifications.sh
+if [ -x "/usr/local/hestia/upd/add_notifications.sh" ]; then
+    /usr/local/hestia/upd/add_notifications.sh
 fi
 
 # Run session save path trigger
-if [ -x "/usr/local/vesta/upd/fix_sessions.sh" ]; then
-    /usr/local/vesta/upd/fix_sessions.sh
+if [ -x "/usr/local/hestia/upd/fix_sessions.sh" ]; then
+    /usr/local/hestia/upd/fix_sessions.sh
 fi
 
-if [ -x /usr/local/vesta/upd/fix_nginx_auth.sh ]; then
-    /usr/local/vesta/upd/fix_nginx_auth.sh
+if [ -x /usr/local/hestia/upd/fix_nginx_auth.sh ]; then
+    /usr/local/hestia/upd/fix_nginx_auth.sh
 fi
 
-if [ -x /usr/local/vesta/upd/fix_roundcube.sh ]; then
-    /usr/local/vesta/upd/fix_roundcube.sh
+if [ -x /usr/local/hestia/upd/fix_roundcube.sh ]; then
+    /usr/local/hestia/upd/fix_roundcube.sh
 fi
 
-if [ -x /usr/local/vesta/upd/limit_sudo.sh ]; then
-    /usr/local/vesta/upd/limit_sudo.sh
+if [ -x /usr/local/hestia/upd/limit_sudo.sh ]; then
+    /usr/local/hestia/upd/limit_sudo.sh
 fi
 
-if [ -x /usr/local/vesta/upd/fix_dhcprenew.sh ]; then
-    /usr/local/vesta/upd/fix_dhcprenew.sh
+if [ -x /usr/local/hestia/upd/fix_dhcprenew.sh ]; then
+    /usr/local/hestia/upd/fix_dhcprenew.sh
 fi
 
 exit 0

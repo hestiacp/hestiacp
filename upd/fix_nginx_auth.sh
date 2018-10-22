@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source /etc/profile.d/vesta.sh
-source /usr/local/vesta/conf/vesta.conf
+source /etc/profile.d/hestia.sh
+source /usr/local/hestia/conf/hestia.conf
 
 sed -i "s|web/%domain%/stats/auth.*|conf/web/%domain%.auth;|" \
     $VESTA/data/templates/web/nginx/*/*tpl >/dev/null 2>&1

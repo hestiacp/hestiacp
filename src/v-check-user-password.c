@@ -43,9 +43,9 @@ int main (int argc, char** argv) {
     strftime(str, 100, "%Y-%m-%d %H:%M:%S ", ptr);
 
     /* open log file */
-    FILE* pFile = fopen ("/usr/local/vesta/log/auth.log","a+");
+    FILE* pFile = fopen ("/usr/local/hestia/log/auth.log","a+");
     if (NULL == pFile) {
-        printf("Error: can not open file /usr/local/vesta/log/auth.log \n");
+        printf("Error: can not open file /usr/local/hestia/log/auth.log \n");
         exit(12);
     }
 

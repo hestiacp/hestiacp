@@ -27,7 +27,7 @@ rm -f /etc/apache2/mods-enabled/rpaf.conf
 conf="/etc/apache2/mods-enabled/remoteip.conf"
 echo "<IfModule remoteip_module>" > $conf
 echo "    RemoteIPHeader X-Real-IP" >> $conf
-for ip in $(ls /usr/local/vesta/data/ips); do
+for ip in $(ls /usr/local/hestia/data/ips); do
     echo "    RemoteIPInternalProxy $ip" >> $conf
 done
 echo "</IfModule>" >> $conf

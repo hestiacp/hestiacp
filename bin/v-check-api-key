@@ -2,7 +2,7 @@
 # info: check api key
 # options: KEY
 #
-# The function checks a key file in /usr/local/vesta/data/keys/
+# The function checks a key file in $HESTIA/data/keys/
 
 
 #----------------------------------------------------------#
@@ -26,7 +26,7 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 if [ ! -e $VESTA/data/keys/$key ]; then
     echo "Error: key missmatch"
-    echo "$date $time api $ip failed to login" >> $VESTA/log/auth.log
+    echo "$date $time api $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 
@@ -35,6 +35,6 @@ fi
 #                       Vesta                              #
 #----------------------------------------------------------#
 
-echo "$date $time api $ip successfully launched" >> $VESTA/log/auth.log
+echo "$date $time api $ip successfully launched" >> $HESTIA/log/auth.log
 
 exit

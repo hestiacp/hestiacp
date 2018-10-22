@@ -1,4 +1,4 @@
-/usr/local/vesta/log/*.log {
+/usr/local/hestia/log/*.log {
     missingok
     notifempty
     size 30k

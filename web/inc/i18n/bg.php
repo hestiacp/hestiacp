@@ -390,7 +390,7 @@ $LANG['bg'] = array(
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'VESTA' => 'VESTA',
+    'HESTIA' => 'HESTIA',
     'Add one more Name Server' => 'Добави допълнителен сървър за имена',
 
     'web domain' => 'уеб домейн',

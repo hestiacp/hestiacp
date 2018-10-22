@@ -400,7 +400,7 @@ $LANG['tw'] = array(
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'VESTA' => 'VESTA',
+    'HESTIA' => 'HESTIA',
     'Add one more Name Server' => '新增至少一個域名伺服器',
 
     'web domain' => 'web 網域',

@@ -397,7 +397,7 @@ $LANG['el'] = array(
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'VESTA' => 'VESTA',
+    'HESTIA' => 'HESTIA',
     'Add one more Name Server' => 'Προσθέστε ένα ακόμη Name Server',
 
     'web domain' => 'web domain',

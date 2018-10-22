@@ -395,7 +395,7 @@ $LANG['ko'] = array(
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'VESTA' => 'VESTA',
+    'HESTIA' => 'HESTIA',
     'Add one more Name Server' => '하나의 네임 서버를 추가하기',
 
     'web domain' => '웹 도메인',

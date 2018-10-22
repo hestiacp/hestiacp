@@ -1,7 +1,7 @@
 <?php
 /**
  * Hestia language file
- * skid (skid@vestacp.com)
+ * HestiaCP (info@hestiacp.com)
  * orwah
  */
 
@@ -396,7 +396,7 @@ $LANG['ar'] = array(
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'VESTA' => 'فيستا',
+    'HESTIA' => 'فيستا',
     'Add one more Name Server' => 'إضافة مخدم أسماء (NS) جديد',
 
     'web domain' => 'نطاق ويب',

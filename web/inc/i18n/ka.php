@@ -395,7 +395,7 @@ $LANG['ka'] = array(
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'VESTA' => 'VESTA',
+    'HESTIA' => 'HESTIA',
     'Add one more Name Server' => 'დაამატეთ კიდევ ერთი Name Server',
 
     'web domain' => 'ვებ დომენი',

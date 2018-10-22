@@ -397,7 +397,7 @@ $LANG['ru'] = array(
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'VESTA' => 'VESTA',
+    'HESTIA' => 'HESTIA',
     'Add one more Name Server' => 'Добавить ещё один Сервер Имён',
 
     'web domain' => 'web домен',

@@ -18,7 +18,7 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'update': $cmd='v-update-sys-vesta';
+        case 'update': $cmd='v-update-sys-hestia';
             break;
         default: header("Location: /list/updates/"); exit;
     }

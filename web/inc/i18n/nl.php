@@ -398,7 +398,7 @@ $LANG['nl'] = array(
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'VESTA' => 'VESTA',
+    'HESTIA' => 'HESTIA',
     'Add one more Name Server' => 'Voeg nog een Name Server toe',
 
     'web domain' => 'web domein',

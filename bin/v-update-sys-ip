@@ -2,7 +2,7 @@
 # info: update system ip
 # options: [NONE]
 #
-# The function scans configured ip in the system and register them with vesta
+# The function scans configured ip in the system and register them with hestia
 # internal database. This call is intended for use on vps servers, where ip is
 # set by hypervizor.
 
@@ -110,7 +110,7 @@ for ip in $ips; do
 done
 
 # Updating NAT
-pub_ip=$(curl -s vestacp.com/what-is-my-ip/)
+pub_ip=$(curl -s https://www.hestiacp.com/what-is-my-ip/)
 if [ ! -e "$HESTIA/data/ips/$pub_ip" ]; then
     if [ -z "$(grep -R "$pub_ip" $HESTIA/data/ips/)" ]; then
         ip=$(ls -t $HESTIA/data/ips/ |head -n1)

@@ -9,7 +9,7 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Import VESTA variable for cron launch
+# Import Hestia variable for cron launch
 source /etc/profile
 
 # Argument definition

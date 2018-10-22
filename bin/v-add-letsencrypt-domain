@@ -87,7 +87,7 @@ done
 
 # Generating CSR
 ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "$email" "US" "California" \
-    "San Francisco" "Vesta" "IT" "$aliases" |tail -n1 |awk '{print $2}')
+    "San Francisco" "Hestia" "IT" "$aliases" |tail -n1 |awk '{print $2}')
 
 # Signing CSR
 crt=$($BIN/v-sign-letsencrypt-csr $user $domain $ssl_dir)

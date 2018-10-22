@@ -18,7 +18,7 @@ source $HESTIA/func/main.sh
 # JSON list function
 json_list() {
     echo '{'
-    echo -e "\t\"VESTA\": {"
+    echo -e "\t\"HESTIA\": {"
     echo "        \"CRT\": \"$crt\","
     echo "        \"KEY\": \"$key\","
     echo "        \"CA\": \"$ca\","

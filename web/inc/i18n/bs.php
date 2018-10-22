@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta bosnian bs_BA language file
+ * Hestia bosnian bs_BA language file
  * rumi <rumi4acc@gmail.com>
  *
  */
@@ -510,17 +510,17 @@ $LANG['bs'] = array(
     'CRON_EXCLUSIONS' => 'To exclude all jobs use *',
     'USER_EXCLUSIONS' => 'Type directory name, one per line. To exlude all dirs use *',
 
-    'Welcome to Vesta Control Panel'  => 'Dobrodošli u Vesta kontrolni panel',
-    'MAIL_FROM'  => 'Vesta kontrolni panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Dobrodošli u Hestia kontrolni panel',
+    'MAIL_FROM'  => 'Hestia kontrolni panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Đe si, %s %s,\n",
     'GREETINGS' => "Đe si, šta ima,\n",
-    'ACCOUNT_READY' => "Vaš račun je uspješno kreiran i spreman je za upotrebu.\n\nhttps://%s/login/\nKorisničko ime: %s\nŠifra: %s\n\n--\nVesta kontrolni panel\n",
+    'ACCOUNT_READY' => "Vaš račun je uspješno kreiran i spreman je za upotrebu.\n\nhttps://%s/login/\nKorisničko ime: %s\nŠifra: %s\n\n--\nHestia kontrolni panel\n",
 
     'FTP login credentials'  => 'FTP podaci',
-    'FTP_ACCOUNT_READY' => "FTP račun je uspješno kreiran. Koristite sljedeće podatke kako biste ga ispravno koristili:\n\nHostname: %s\nKorisničko ime: %s_%s\nŠifra: %s\n\n--\nVesta kontrolni panel\n",
+    'FTP_ACCOUNT_READY' => "FTP račun je uspješno kreiran. Koristite sljedeće podatke kako biste ga ispravno koristili:\n\nHostname: %s\nKorisničko ime: %s_%s\nŠifra: %s\n\n--\nHestia kontrolni panel\n",
 
     'Database Credentials'  => 'Podaci baze podataka',
-    'DATABASE_READY' => "Baza podataka je supješno kreirana. Koristite sljedeće podatke kako biste ispravno bazu koristili:\n\nDatabase: %s\nKorisničko ime: %s\nŠifra: %s\n%s\n\n--\nVesta kontrolni panel\n",
+    'DATABASE_READY' => "Baza podataka je supješno kreirana. Koristite sljedeće podatke kako biste ispravno bazu koristili:\n\nDatabase: %s\nKorisničko ime: %s\nŠifra: %s\n%s\n\n--\nHestia kontrolni panel\n",
 
     'forgot password'  => 'zaboravljena šifra',
     'Confirm'  => 'Potvrditi',
@@ -531,7 +531,7 @@ $LANG['bs'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Kod resetovane šifre je poslan na vašu mail adresu<br>',
     'MAIL_RESET_SUBJECT'  => 'Šifra je resetovan %s',
-    'PASSWORD_RESET_REQUEST' => "Za resetovanje šifre slijedite link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nIli, možete ići na https://%s/reset/?action=code&user=%s i unijeti kod:\n%s\n\nAko niste resetovali šifru, ignorišite ovu poruku i prihvatite naše izvinjenje.\n\n--\nVesta kontrolni panel\n",
+    'PASSWORD_RESET_REQUEST' => "Za resetovanje šifre slijedite link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nIli, možete ići na https://%s/reset/?action=code&user=%s i unijeti kod:\n%s\n\nAko niste resetovali šifru, ignorišite ovu poruku i prihvatite naše izvinjenje.\n\n--\nHestia kontrolni panel\n",
 
     'Jan' => 'Jan',
     'Feb' => 'Feb',
@@ -574,7 +574,7 @@ $LANG['bs'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'FileSystem Disk Quota',
-    'Vesta Control Panel Plugins' => 'Vesta kontrolni panel Plugini',
+    'Hestia Control Panel Plugins' => 'Hestia kontrolni panel Plugini',
     'preview' => 'pregled',
     'Reseller Role' => 'Reseller uloga',
     'Web Config Editor' => 'Web Config Editor',
@@ -735,7 +735,7 @@ $LANG['bs'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

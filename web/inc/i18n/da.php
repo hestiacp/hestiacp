@@ -1,9 +1,9 @@
 <?php
 /**
- * VestaCP Danish translation
+ * HestiaCP Danish translation
  * Made by Michal Skogemann for MShost (http://mshost.dk)
  * Github - https://github.com/michal78/vestacp-danish/
- * VestaCP Forum - https://forum.vestacp.com/viewtopic.php?f=10&t=9172
+ * HestiaCP Forum - https://forum.vestacp.com/viewtopic.php?f=10&t=9172
  */
 
 $LANG['da'] = array(
@@ -512,17 +512,17 @@ $LANG['da'] = array(
     'CRON_EXCLUSIONS' => 'For at udelukke alle opgaver, brug *',
     'USER_EXCLUSIONS' => 'Indtast mappenavn, et per linie. For at udelukke alle mapper, brug *',
 
-    'Welcome to Vesta Control Panel'  => 'Velkommen til Vesta Kontrolpanel',
-    'MAIL_FROM'  => 'Vesta Kontrolpanel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Velkommen til Hestia Kontrolpanel',
+    'MAIL_FROM'  => 'Hestia Kontrolpanel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Hej, %s %s,\n",
     'GREETINGS' => "Hej,\n",
-    'ACCOUNT_READY' => "Din konto er oprettet og er klar til brug.\n\nhttps://%s/login/\nBrugernavn: %s\nAdgangskode: %s\n\n--\nVesta Kontrolpanel\n",
+    'ACCOUNT_READY' => "Din konto er oprettet og er klar til brug.\n\nhttps://%s/login/\nBrugernavn: %s\nAdgangskode: %s\n\n--\nHestia Kontrolpanel\n",
 
     'FTP login credentials'  => 'FTP login oplysninger',
-    'FTP_ACCOUNT_READY' => "FTP konto blev oprettet og er klar til brug.\n\nHost: %s\nBrugernavn: %s_%s\nAdgangskode: %s\n\n--\nVesta Kontrolpanel\n",
+    'FTP_ACCOUNT_READY' => "FTP konto blev oprettet og er klar til brug.\n\nHost: %s\nBrugernavn: %s_%s\nAdgangskode: %s\n\n--\nHestia Kontrolpanel\n",
 
     'Database Credentials'  => 'Databaseoplysninger',
-    'DATABASE_READY' => "Database has been created successfully.\n\nDatabase: %s\nBruger: %s\nAdgangskode: %s\n%s\n\n--\nVesta Kontrolpanel\n",
+    'DATABASE_READY' => "Database has been created successfully.\n\nDatabase: %s\nBruger: %s\nAdgangskode: %s\n%s\n\n--\nHestia Kontrolpanel\n",
 
     'forgot password'  => 'glemt adgangskode',
     'Confirm'  => 'Bekræft',
@@ -533,7 +533,7 @@ $LANG['da'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Kode til at nultille adgangskode er blevet sendt til din email-adresse<br>',
     'MAIL_RESET_SUBJECT'  => 'Adgangskode Nulstillet %s',
-    'PASSWORD_RESET_REQUEST' => "Følg dette link for at nulstille din adgangskode:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternativt, kan du også gå til https://%s/reset/?action=code&user=%s og indtast følgende nulstillingskode:\n%s\n\nHvis du ikke selv har bedt om at få nulstillet din adgangskode, bedes du ignorere denne besked - vi beklager.\n\n--\nVesta Kontrolpanel\n",
+    'PASSWORD_RESET_REQUEST' => "Følg dette link for at nulstille din adgangskode:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternativt, kan du også gå til https://%s/reset/?action=code&user=%s og indtast følgende nulstillingskode:\n%s\n\nHvis du ikke selv har bedt om at få nulstillet din adgangskode, bedes du ignorere denne besked - vi beklager.\n\n--\nHestia Kontrolpanel\n",
 
     'Jan' => 'Jan',
     'Feb' => 'Feb',
@@ -576,7 +576,7 @@ $LANG['da'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'FilSystem Disk Quota ',
-    'Vesta Control Panel Plugins' => 'Vesta Kontrolpanel Plugins',
+    'Hestia Control Panel Plugins' => 'Hestia Kontrolpanel Plugins',
     'preview' => 'preview',
     'Reseller Role' => 'Forhandlerrolle',
     'Web Config Editor' => 'Web Config Editor',
@@ -737,7 +737,7 @@ $LANG['da'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

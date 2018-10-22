@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * drMacFaulty (wsanders@outlook.com, wsanders.eu)
  * ricardo777 (info@intio.nl, intio.nl)
  * DaniWinter (mail@daniwinter.nl, daniwinter.nl)
@@ -514,17 +514,17 @@ $LANG['nl'] = array(
     'USER_EXCLUSIONS' => 'Type mapnaam, één per mijn. Om alle mappen uit te sluiten gebruik *',
 
 
-    'Welcome to Vesta Control Panel'  => 'Welkom bij het Vesta Controlepaneel',
-    'MAIL_FROM'  => 'Vesta Controlepaneel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Welkom bij het Hestia Controlepaneel',
+    'MAIL_FROM'  => 'Hestia Controlepaneel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Hallo %s %s,\n",
     'GREETINGS' => "Hallo,\n",
-    'ACCOUNT_READY' => "Uw account is aangemaakt en klaar voor gebruik.\n\nhttps://%s/login/\nGebruikersnaam: %s\nWachtwoord: %s\n\n--\nVesta Controlepaneel\n",
+    'ACCOUNT_READY' => "Uw account is aangemaakt en klaar voor gebruik.\n\nhttps://%s/login/\nGebruikersnaam: %s\nWachtwoord: %s\n\n--\nHestia Controlepaneel\n",
 
     'FTP login credentials'  => 'FTP inloggegevens',
-    'FTP_ACCOUNT_READY' => "Het FTP account is aangemaakt en klaar voor gebruik.\n\nHostnaam: %s\nGebruikersnaam: %s_%s\nWachtwoord: %s\n\n--\nVesta Controlepaneel\n",
+    'FTP_ACCOUNT_READY' => "Het FTP account is aangemaakt en klaar voor gebruik.\n\nHostnaam: %s\nGebruikersnaam: %s_%s\nWachtwoord: %s\n\n--\nHestia Controlepaneel\n",
 
     'Database Credentials'  => 'Database gegevens',
-    'DATABASE_READY' => "De database is succesvol aangemaakt en klaar voor gebruik.\n\nDatabase: %s\nGebruiker: %s\nWachtwoord: %s\n%s\n\n--\nVesta Controlepaneel\n",
+    'DATABASE_READY' => "De database is succesvol aangemaakt en klaar voor gebruik.\n\nDatabase: %s\nGebruiker: %s\nWachtwoord: %s\n%s\n\n--\nHestia Controlepaneel\n",
 
     'forgot password'  => 'Wachtwoord vergeten',
     'Confirm'  => 'Bevestig',
@@ -535,7 +535,7 @@ $LANG['nl'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Wachtwoord herstelcode is naar uw e-mailadres gestuurd<br>',
     'MAIL_RESET_SUBJECT'  => 'Wachtwoordherstel voor %s',
-    'PASSWORD_RESET_REQUEST' => "Om uw wachtwoord te herstellen klikt u op de link hieronder.\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nWanneer bovenstaande link niet werkt kunt u ook naar de volgende pagina gaan https://%s/reset/?action=code&user=%s en hier uw wachtwoord herstelcode invullen:\n%s\n\nAls u geen wachtwoord herstelcode heeft aangevraagd, kunt u dit bericht negeren.\n\n--\nVesta Controlepaneel\n",
+    'PASSWORD_RESET_REQUEST' => "Om uw wachtwoord te herstellen klikt u op de link hieronder.\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nWanneer bovenstaande link niet werkt kunt u ook naar de volgende pagina gaan https://%s/reset/?action=code&user=%s en hier uw wachtwoord herstelcode invullen:\n%s\n\nAls u geen wachtwoord herstelcode heeft aangevraagd, kunt u dit bericht negeren.\n\n--\nHestia Controlepaneel\n",
 
     'Jan' => 'jan',
     'Feb' => 'feb',
@@ -578,7 +578,7 @@ $LANG['nl'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Bestandssysteem Schijf Quotum',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
     'preview' => 'Voorbeeld',
     'Reseller Role' => 'Verkoper Rol',
     'Web Config Editor' => 'Web Configuratie Bewerker',
@@ -739,7 +739,7 @@ $LANG['nl'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'ONDERWERP',
     'ALIASES' => 'ALIASEN',
     'NOT_BEFORE' => 'NIET_VOOR',

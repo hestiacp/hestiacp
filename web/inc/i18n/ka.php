@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * David Machakhelidze (david.machakhelidze@gmail.com)
  */
 
@@ -510,17 +510,17 @@ $LANG['ka'] = array(
     'CRON_EXCLUSIONS' => 'ყველა დავალების გამოსატოვებლად გამოიყენეთ *',
     'USER_EXCLUSIONS' => 'აკრიფეთ კატალოგის სახელი, თითო ერთ ხაზზე. ყველა კატალოგის გამოსატოვებლად გამოიყენეთ *',
 
-    'Welcome to Vesta Control Panel'  => 'მოგესალმებათ Vesta მართვის პანელი',
-    'MAIL_FROM'  => 'Vesta მართვის პანელი <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'მოგესალმებათ Hestia მართვის პანელი',
+    'MAIL_FROM'  => 'Hestia მართვის პანელი <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "გამარჯობა, %s %s,\n",
     'GREETINGS' => "გამარჯობა,\n",
-    'ACCOUNT_READY' => "თქვენი ანგარიში შექმნილია და მისი გამოყენება უკვე შესაძლებელია.\n\nhttps://%s/login/\nმომხმარებელი: %s\nპაროლი: %s\n\n--\nVesta მართვის პანელი\n",
+    'ACCOUNT_READY' => "თქვენი ანგარიში შექმნილია და მისი გამოყენება უკვე შესაძლებელია.\n\nhttps://%s/login/\nმომხმარებელი: %s\nპაროლი: %s\n\n--\nHestia მართვის პანელი\n",
 
     'FTP login credentials'  => 'FTP ანგარიშის მონაცემები',
-    'FTP_ACCOUNT_READY' => "FTP ანგარიში შექმნილია და მისი გამოყენება უკვე შესაძლებელია.\n\nჰოსტნეიმი: %s\nმომხმარებელი: %s_%s\nპაროლი: %s\n\n--\nVesta მართვის პანელი\n",
+    'FTP_ACCOUNT_READY' => "FTP ანგარიში შექმნილია და მისი გამოყენება უკვე შესაძლებელია.\n\nჰოსტნეიმი: %s\nმომხმარებელი: %s_%s\nპაროლი: %s\n\n--\nHestia მართვის პანელი\n",
 
     'Database Credentials'  => 'ბაზის მონაცემები',
-    'DATABASE_READY' => "ბაზა წარმატებით შეიქმნა.\n\nბაზა: %s\nმომხმარებელი: %s\nპაროლი: %s\n%s\n\n--\nVesta მართვის პანელი\n",
+    'DATABASE_READY' => "ბაზა წარმატებით შეიქმნა.\n\nბაზა: %s\nმომხმარებელი: %s\nპაროლი: %s\n%s\n\n--\nHestia მართვის პანელი\n",
 
     'forgot password'  => 'დაგავიწყდათ პაროლი',
     'Confirm'  => 'დამოწმება',
@@ -531,7 +531,7 @@ $LANG['ka'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'პაროლის ჩამოსაყრელი კოდი გაგზავნილია თქვენს ელფოსტაზე<br>',
     'MAIL_RESET_SUBJECT'  => 'პაროლის აღდგენა: %s',
-    'PASSWORD_RESET_REQUEST' => "პაროლის აღდგენისთვის, გადაით შემდეგ ბმულზე:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, ასევე შეგიძლიათ გადახვიდეთ ბმულზე https://%s/reset/?action=code&user=%s და შეიყვანოთ :\n%s\n\nთუ თქვენ არ მოგითხოვიათ პაროლის ჩამოყრა, ყურადღება არ მიაქციოტ ამ შეტყობინებას და მიიღეთ ჩვენგან ბოდიში.\n\n--\nVesta მართვის პანელი\n",
+    'PASSWORD_RESET_REQUEST' => "პაროლის აღდგენისთვის, გადაით შემდეგ ბმულზე:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, ასევე შეგიძლიათ გადახვიდეთ ბმულზე https://%s/reset/?action=code&user=%s და შეიყვანოთ :\n%s\n\nთუ თქვენ არ მოგითხოვიათ პაროლის ჩამოყრა, ყურადღება არ მიაქციოტ ამ შეტყობინებას და მიიღეთ ჩვენგან ბოდიში.\n\n--\nHestia მართვის პანელი\n",
 
     'Jan' => 'იან',
     'Feb' => 'თებ',
@@ -574,7 +574,7 @@ $LANG['ka'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'ფაილური სისტემის დისკის კვოტა',
-    'Vesta Control Panel Plugins' => 'Vesta მართვის პანელის ჩადგმები',
+    'Hestia Control Panel Plugins' => 'Hestia მართვის პანელის ჩადგმები',
     'preview' => 'გადახედვა',
     'Reseller Role' => 'გადამყიდველის როლი',
     'Web Config Editor' => 'ვების კონფიგურაციის რედაქტორი',
@@ -735,7 +735,7 @@ $LANG['ka'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

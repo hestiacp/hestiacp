@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * skid (skid@vestacp.com)
  * orwah
  */
@@ -511,17 +511,17 @@ $LANG['ar'] = array(
     'CRON_EXCLUSIONS' => 'لاستثناء جميع الوظائف المجدولة استخدم *',
     'USER_EXCLUSIONS' => 'اكتب اسم المجلد, واحد في كل سطر. لاستثناء جميع المجلدات استخدم *',
 
-    'Welcome to Vesta Control Panel'  => 'Vesta  أهلا بكم في لوحة تحكم',
-    'MAIL_FROM'  => 'Vesta لوحة تحكم <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Hestia  أهلا بكم في لوحة تحكم',
+    'MAIL_FROM'  => 'Hestia لوحة تحكم <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "مرحبا, %s %s,\n",
     'GREETINGS' => "مرحبا,\n",
-    'ACCOUNT_READY' => "تم انشاء حسابك بنجاح وهو جاهز للاستخدام.\n\nhttps://%s/login/\nاسم المستخدم: %s\nكلمة المرور: %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "تم انشاء حسابك بنجاح وهو جاهز للاستخدام.\n\nhttps://%s/login/\nاسم المستخدم: %s\nكلمة المرور: %s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'معلومات اعتماد الدخول لبروتوكول نقل الملفات',
-    'FTP_ACCOUNT_READY' => "تم إنشاء حساب بروتوكول نقل الملفات وهو جاهز للاستخدام.\n\nاسم المضيف: %s\nاسم المستخدم: %s_%s\nكلمة المرور: %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "تم إنشاء حساب بروتوكول نقل الملفات وهو جاهز للاستخدام.\n\nاسم المضيف: %s\nاسم المستخدم: %s_%s\nكلمة المرور: %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'معلومات اعتماد قاعدة البيانات',
-    'DATABASE_READY' => "تم انشاء قاعدة البيانات بنجاح.\n\nقاعدة البيانات: %s\nاسم المستخدم: %s\nكلمة المرور: %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "تم انشاء قاعدة البيانات بنجاح.\n\nقاعدة البيانات: %s\nاسم المستخدم: %s\nكلمة المرور: %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'نسيت كلمة المرور',
     'Confirm'  => 'تأكيد',
@@ -532,7 +532,7 @@ $LANG['ar'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'لقد تم إرسال كود إعادة تعيين كلمة المرور لعنوان بريدك الإلكتروني<br>',
     'MAIL_RESET_SUBJECT'  => 'تم إعادة تعيين كلمة المرور %s',
-    'PASSWORD_RESET_REQUEST' => "لإعادة تعيين كلمة مرور لوحة التحكم , برجاء اتباع الرابط التالي link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, بامكانك أيضا اتباع الرابط التالي https://%s/reset/?action=code&user=%s وادخال كود إعادة التعيين التالي code:\n%s\n\n إذا لم تطلب إعادة تعيين كلمة المرور, برجاء تجاهل هذه الرسالة وتقبل اعتذارنا.\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "لإعادة تعيين كلمة مرور لوحة التحكم , برجاء اتباع الرابط التالي link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, بامكانك أيضا اتباع الرابط التالي https://%s/reset/?action=code&user=%s وادخال كود إعادة التعيين التالي code:\n%s\n\n إذا لم تطلب إعادة تعيين كلمة المرور, برجاء تجاهل هذه الرسالة وتقبل اعتذارنا.\n\n--\nHestia Control Panel\n",
 
     'Jan' => 'كانون الثاني',
     'Feb' => 'شباط',
@@ -575,7 +575,7 @@ $LANG['ar'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'نظام تخصيص حجوم الملفات (Quota)',
-    'Vesta Control Panel Plugins' => 'إضافات لوحة التحكم فيستا',
+    'Hestia Control Panel Plugins' => 'إضافات لوحة التحكم فيستا',
     'preview' => 'معاينة',
     'Reseller Role' => 'ميزة الريسيلر',
     'Web Config Editor' => 'محرر إعدادات الويب',
@@ -736,7 +736,7 @@ $LANG['ar'] = array(
     'webalizer' => 'محلل الويب webalizer',
     'awstats' => 'احصائيات الويب awstats',
 
-    'Vesta SSL' => 'فيستا SSL',
+    'Hestia SSL' => 'فيستا SSL',
     'SUBJECT' => 'العنوان',
     'ALIASES' => 'الاسم المستعار',
     'NOT_BEFORE' => 'ليس_قبل',

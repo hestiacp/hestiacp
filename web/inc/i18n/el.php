@@ -1,6 +1,6 @@
 <?php
 /**
- * VestaCP interface translation in Greek.
+ * HestiaCP interface translation in Greek.
  * Translation by Cemendur.
  * Last update: 2/02/2017 by ArisC
  *
@@ -512,17 +512,17 @@ $LANG['el'] = array(
     'CRON_EXCLUSIONS' => 'Για να εξαιρέσετε όλα τα jobs χρησιμοποιήστε *',
     'USER_EXCLUSIONS' => 'Πληκτρολογήστε το όνομα καταλόγου, ένα ανά σειρά. Για να εξαιρέσετε όλους τους καταλόγους χρησιμοποιήστε *',
 
-    'Welcome to Vesta Control Panel'  => 'Καλωσήρθατε στον Πίνακα Ελέγχου Vesta',
-    'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Καλωσήρθατε στον Πίνακα Ελέγχου Hestia',
+    'MAIL_FROM'  => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Γειά, %s %s,\n",
     'GREETINGS' => "Γειά,\n",
-    'ACCOUNT_READY' => "Ο λογαριασμός σας δημιουργήθηκε και είναι έτοιμος για χρήση.\n\nhttps://%s/login/\nUsername: %s\nPassword: %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "Ο λογαριασμός σας δημιουργήθηκε και είναι έτοιμος για χρήση.\n\nhttps://%s/login/\nUsername: %s\nPassword: %s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'Διαπιστευτήρια εισόδου FTP',
-    'FTP_ACCOUNT_READY' => "Ο λογαριασμός FTP δημιουργήθηκε και είναι έτοιμος για χρήση.\n\nHostname: %s\nUsername: %s_%s\nPassword: %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "Ο λογαριασμός FTP δημιουργήθηκε και είναι έτοιμος για χρήση.\n\nHostname: %s\nUsername: %s_%s\nPassword: %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'Διαπιστευτήρια Βάσης Δεδομένων',
-    'DATABASE_READY' => "Η βάση δεδομένων δημιουργήθηκε επιτυχώς.\n\nDatabase: %s\nUser: %s\nPassword: %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "Η βάση δεδομένων δημιουργήθηκε επιτυχώς.\n\nDatabase: %s\nUser: %s\nPassword: %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'ξέχασα τον κωδικό πρόσβασης',
     'Confirm'  => 'Επιβεβαίωση',
@@ -533,7 +533,7 @@ $LANG['el'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Ο κωδικός επαναφοράς του κωδικού πρόσβασης έχει αποσταλεί στη διεύθυνση ταχυδρομείου σας<br>',
     'MAIL_RESET_SUBJECT'  => 'Επαναφορά κωδικού πρόσβασης στο %s',
-    'PASSWORD_RESET_REQUEST' => "Για να επαναφέρετε τον κωδικό πρόσβασης του πίνακα ελέγχου σας, παρακαλώ ακολουθήστε το link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nΕναλλακτικά, πλοηγηθείτε στη διεύθυνση https://%s/reset/?action=code&user=%s και εισάγετε τον ακόλουθο κωδικό επαναφοράς:\n%s\n\nΕάν δεν ζητήσατε επαναφορά κωδικού πρόσβασης, παρακαλούμε αγνοείστε το παρόν μήνυμα και δεχθείτε τη συγγνώμη μας.\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "Για να επαναφέρετε τον κωδικό πρόσβασης του πίνακα ελέγχου σας, παρακαλώ ακολουθήστε το link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nΕναλλακτικά, πλοηγηθείτε στη διεύθυνση https://%s/reset/?action=code&user=%s και εισάγετε τον ακόλουθο κωδικό επαναφοράς:\n%s\n\nΕάν δεν ζητήσατε επαναφορά κωδικού πρόσβασης, παρακαλούμε αγνοείστε το παρόν μήνυμα και δεχθείτε τη συγγνώμη μας.\n\n--\nHestia Control Panel\n",
 
     'Jan' => 'Ιαν',
     'Feb' => 'Φεβ',
@@ -576,7 +576,7 @@ $LANG['el'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'FileSystem Disk Quota',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
     'preview' => 'preview',
     'Reseller Role' => 'Reseller Role',
     'Web Config Editor' => 'Web Config Editor',
@@ -737,7 +737,7 @@ $LANG['el'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

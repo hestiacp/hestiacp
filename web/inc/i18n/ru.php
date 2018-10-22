@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * ZonD80 (zond80@gmail.com)
  * skid (skid@vestacp.com)
  * Alexandr Loskutov (alex_connor@icloud.com)
@@ -512,17 +512,17 @@ $LANG['ru'] = array(
     'CRON_EXCLUSIONS' => 'Для того чтобы исключить все задания, используйте *',
     'USER_EXCLUSIONS' => 'Укажите папки по одной в строке. Для того чтобы исключить все, используйте *',
 
-    'Welcome to Vesta Control Panel' => 'Добро пожаловать в панель управления Vesta',
-    'MAIL_FROM' => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel' => 'Добро пожаловать в панель управления Hestia',
+    'MAIL_FROM' => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Здравствуйте, %s %s,\n",
     'GREETINGS' => "Здравствуйте,\n",
-    'ACCOUNT_READY' => "Ваш аккаунт успешно создан и готов к использованию.\n\nhttps://%s/login/\nИмя пользователя: %s\nПароль: %s\n\n--\nПанель управления Vesta\n",
+    'ACCOUNT_READY' => "Ваш аккаунт успешно создан и готов к использованию.\n\nhttps://%s/login/\nИмя пользователя: %s\nПароль: %s\n\n--\nПанель управления Hestia\n",
 
     'FTP login credentials' => 'Данные для доступа к FTP',
-    'FTP_ACCOUNT_READY' => "FTP аккаунт успешно создан и готов к использованию.\n\nХост: %s\nИмя пользователя: %s_%s\nПароль: %s\n\n--\nПанель управления Vesta\n",
+    'FTP_ACCOUNT_READY' => "FTP аккаунт успешно создан и готов к использованию.\n\nХост: %s\nИмя пользователя: %s_%s\nПароль: %s\n\n--\nПанель управления Hestia\n",
 
     'Database Credentials' => 'Данные для доступа к БД',
-    'DATABASE_READY' => "База данных создана успешно.\n\nБаза данных: %s\nПользователь: %s\nПароль: %s\n%s\n\n--\nПанель управления Vesta\n",
+    'DATABASE_READY' => "База данных создана успешно.\n\nБаза данных: %s\nПользователь: %s\nПароль: %s\n%s\n\n--\nПанель управления Hestia\n",
 
     'forgot password' => 'напомнить',
     'Confirm' => 'Подтвердить',
@@ -533,7 +533,7 @@ $LANG['ru'] = array(
     'RESET_NOTICE' => '',
     'RESET_CODE_SENT' => 'Код для восстановления пароля был выслан на ваш электронный адрес.<br>',
     'MAIL_RESET_SUBJECT' => 'Восстановление пароля %s',
-    'PASSWORD_RESET_REQUEST'=>"Чтобы восстановить пароль, пройдите по ссылке:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nВы также можете октрыть страницу https://%s/reset/?action=code&user=%s и вручную ввести код для восстановления:\n%s\n\nЕсли вы не запрашивали процедуру восстановления пароля, пожалуйста проигнорируйте это письмо и примите наши извинения.\n\n--\nПанель управления Vesta\n",
+    'PASSWORD_RESET_REQUEST'=>"Чтобы восстановить пароль, пройдите по ссылке:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nВы также можете октрыть страницу https://%s/reset/?action=code&user=%s и вручную ввести код для восстановления:\n%s\n\nЕсли вы не запрашивали процедуру восстановления пароля, пожалуйста проигнорируйте это письмо и примите наши извинения.\n\n--\nПанель управления Hestia\n",
 
     'Jan' => 'Янв',
     'Feb' => 'Фев',
@@ -576,7 +576,7 @@ $LANG['ru'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Дисковая квота файловой системы',
-    'Vesta Control Panel Plugins' => 'Плагины Vesta Control Panel',
+    'Hestia Control Panel Plugins' => 'Плагины Hestia Control Panel',
     'preview' => 'предпросмотр',
     'Reseller Role' => 'Реселлер',
     'Reseller Role' => 'Реселлер',
@@ -738,7 +738,7 @@ $LANG['ru'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'ОБЪЕКТ',
     'ALIASES' => 'АЛИАСЫ',
     'NOT_BEFORE' => 'НЕДОСТУПЕН ДО',

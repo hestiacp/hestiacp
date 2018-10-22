@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Language: Norsk ( Norwegian )
  * Translator: HelgeSverre (www.helgesverre.com, helge.sverre@gmail.com)
  */
@@ -511,17 +511,17 @@ $LANG['no'] = array(
     'CRON_EXCLUSIONS' => 'Hvis du vil utelate alle jobbene bruk *',
     'USER_EXCLUSIONS' => 'Skriv inn katalognavn, ett per linje. Hvis du vil utelate alle kataloger bruk *',
 
-    'Welcome to Vesta Control Panel'  => 'Velkommen til Vesta Control Panel',
-    'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Velkommen til Hestia Control Panel',
+    'MAIL_FROM'  => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Hei, %s %s,\n",
     'GREETINGS' => "Hei,\n",
-    'ACCOUNT_READY' => "Kontoen er opprettet og klar for bruk.\n\nhttps://%s/login/\nBrukernavn: %s\nPassord: %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "Kontoen er opprettet og klar for bruk.\n\nhttps://%s/login/\nBrukernavn: %s\nPassord: %s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'FPT påloggingsinformasjon',
-    'FTP_ACCOUNT_READY' => "FTP kontoen er opprettet og klar for bruk.\n\nHostname: %s\nBrukernavn: %s_%s\nPassord: %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "FTP kontoen er opprettet og klar for bruk.\n\nHostname: %s\nBrukernavn: %s_%s\nPassord: %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'Database påloggingsinformasjon',
-    'DATABASE_READY' => "Databasen er opprettet.\n\nDatabase: %s\nBruker: %s\nPassord: %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "Databasen er opprettet.\n\nDatabase: %s\nBruker: %s\nPassord: %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'glemt passord',
     'Confirm'  => 'Bekkreft',
@@ -532,7 +532,7 @@ $LANG['no'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Passord tilbakestillingskode er blitt sendt til din e-postadresse<br>',
     'MAIL_RESET_SUBJECT'  => 'Passord tilbakestilt %s',
-    'PASSWORD_RESET_REQUEST' => "For å tilbakestille kontroll panel passordet kan du følge denne linken:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternativt, kan du gå til https://%s/reset/?action=code&user=%s og oppgi følgende tilbakestillingskode:\n%s\n\nHvis du ikke har bedt om tilbakestilling av passord, kan du ignorere denne meldingen.\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "For å tilbakestille kontroll panel passordet kan du følge denne linken:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternativt, kan du gå til https://%s/reset/?action=code&user=%s og oppgi følgende tilbakestillingskode:\n%s\n\nHvis du ikke har bedt om tilbakestilling av passord, kan du ignorere denne meldingen.\n\n--\nHestia Control Panel\n",
 
     'Jan' => 'Jan',
     'Feb' => 'Feb',
@@ -575,7 +575,7 @@ $LANG['no'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'FileSystem Disk Quota',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
     'preview' => 'preview',
     'Reseller Role' => 'Reseller Role',
     'Web Config Editor' => 'Web Config Editor',
@@ -736,7 +736,7 @@ $LANG['no'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

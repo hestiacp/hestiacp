@@ -1,5 +1,5 @@
 // Init kinda namespace object
-var VE = { // Vesta Events object
+var VE = { // Hestia Events object
     core: {}, // core functions
     navigation: {
         state: {

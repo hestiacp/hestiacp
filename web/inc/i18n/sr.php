@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta Serbian sr_SR language file
+ * Hestia Serbian sr_SR language file
  * Translation base taken from Bosnian translation file and adapted to Serbian (with a lot of modifications)
  *
  */
@@ -510,17 +510,17 @@ $LANG['sr'] = array(
     'CRON_EXCLUSIONS' => 'Da bi izuzeo sve cron-job-ove unesi zvezdicu *',
     'USER_EXCLUSIONS' => 'Unesi direktorijume, po jedan u svakoj liniji. Da bi izuzeo sve direktorijume unesi zvezdicu *',
 
-    'Welcome to Vesta Control Panel'  => 'Dobrodošli u Vesta kontrolni panel',
-    'MAIL_FROM'  => 'Vesta kontrolni panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Dobrodošli u Hestia kontrolni panel',
+    'MAIL_FROM'  => 'Hestia kontrolni panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Poštovani %s %s,\n",
     'GREETINGS' => "Poštovani,\n",
-    'ACCOUNT_READY' => "Vaš hosting nalog je kreiran i spreman za korišćenje.\n\nhttps://%s/login/\nKorisničko ime: %s\nŠifra: %s\n\n--\nVesta kontrolni panel\n",
+    'ACCOUNT_READY' => "Vaš hosting nalog je kreiran i spreman za korišćenje.\n\nhttps://%s/login/\nKorisničko ime: %s\nŠifra: %s\n\n--\nHestia kontrolni panel\n",
 
     'FTP login credentials'  => 'FTP podaci',
-    'FTP_ACCOUNT_READY' => "FTP nalog je kreiran. Koristite sledeće podatke kako biste se ulogovali:\n\nHostname: %s\nKorisničko ime: %s_%s\nŠifra: %s\n\n--\nVesta kontrolni panel\n",
+    'FTP_ACCOUNT_READY' => "FTP nalog je kreiran. Koristite sledeće podatke kako biste se ulogovali:\n\nHostname: %s\nKorisničko ime: %s_%s\nŠifra: %s\n\n--\nHestia kontrolni panel\n",
 
     'Database Credentials'  => 'Podaci baze podataka',
-    'DATABASE_READY' => "Baza podataka je kreirana. Koristite sledeće podatke kako biste se ulogovali:\n\nDatabase: %s\nKorisničko ime: %s\nŠifra: %s\n%s\n\n--\nVesta kontrolni panel\n",
+    'DATABASE_READY' => "Baza podataka je kreirana. Koristite sledeće podatke kako biste se ulogovali:\n\nDatabase: %s\nKorisničko ime: %s\nŠifra: %s\n%s\n\n--\nHestia kontrolni panel\n",
 
     'forgot password'  => 'zaboravljena šifra',
     'Confirm'  => 'Potvrditi',
@@ -531,7 +531,7 @@ $LANG['sr'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Kod resetovane šifre je poslat na vašu email adresu<br>',
     'MAIL_RESET_SUBJECT'  => 'Šifra je resetovana %s',
-    'PASSWORD_RESET_REQUEST' => "Za resetovanje šifre sledite link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nIli, možete ići na https://%s/reset/?action=code&user=%s i uneti kod:\n%s\n\nAko niste tražili resetovanje šifre, ignorišite ovu poruku i prihvatite naše izvinjenje.\n\n--\nVesta kontrolni panel\n",
+    'PASSWORD_RESET_REQUEST' => "Za resetovanje šifre sledite link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nIli, možete ići na https://%s/reset/?action=code&user=%s i uneti kod:\n%s\n\nAko niste tražili resetovanje šifre, ignorišite ovu poruku i prihvatite naše izvinjenje.\n\n--\nHestia kontrolni panel\n",
 
     'Jan' => 'Jan',
     'Feb' => 'Feb',
@@ -574,7 +574,7 @@ $LANG['sr'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'FileSystem Disk Quota',
-    'Vesta Control Panel Plugins' => 'Plugin-ovi',
+    'Hestia Control Panel Plugins' => 'Plugin-ovi',
     'preview' => 'pregled',
     'Reseller Role' => 'Reseller uloga',
     'Web Config Editor' => 'Web Config Editor',
@@ -614,7 +614,7 @@ $LANG['sr'] = array(
     'No file selected' => 'Niste selektovali nijedan fajl',
     'No file or folder selected' => 'Niste selektovali nijedan fajl niti direktorijum',
     'File type not supported' => 'Ovaj format fajla (file type) nije podržan',
-    'Directory download not available in current version' => 'Downloadovanje direktorijuma nije moguće u trenutnoj verziji VestaCP. Zapakujte folder pa onda download-ujte tu arhivu',
+    'Directory download not available in current version' => 'Downloadovanje direktorijuma nije moguće u trenutnoj verziji HestiaCP. Zapakujte folder pa onda download-ujte tu arhivu',
     'Directory not available' => 'Direktorijum nije dostupan',
     'Done' => 'Završeno',
     'Close' => 'Zatvoriti',
@@ -735,7 +735,7 @@ $LANG['sr'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

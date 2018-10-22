@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Diego Hernandes (diego@he.rnand.es)
  */
 
@@ -510,17 +510,17 @@ $LANG['pt-BR'] = array(
     'CRON_EXCLUSIONS' => 'Para excluir todas as tarefas *',
     'USER_EXCLUSIONS' => 'Digite o nome do diretório, um por linha. Para excluir todos os diretórios use *',
 
-    'Welcome to Vesta Control Panel'  => 'Bem vindo ao Painel de Controle Vesta',
-    'MAIL_FROM'  => 'Painel de Controle Vesta <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Bem vindo ao Painel de Controle Hestia',
+    'MAIL_FROM'  => 'Painel de Controle Hestia <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Olá, %s %s,\n",
     'GREETINGS' => "Olá,\n",
-    'ACCOUNT_READY' => "Sua conta foi criada e está pronta para uso.\n\nhttps://%s/login/\nUsuário: %s\nSenha: %s\n\n--\nPainel de Controle Vesta\n",
+    'ACCOUNT_READY' => "Sua conta foi criada e está pronta para uso.\n\nhttps://%s/login/\nUsuário: %s\nSenha: %s\n\n--\nPainel de Controle Hestia\n",
 
     'FTP login credentials'  => 'Credenciais de acesso ao FTP',
-    'FTP_ACCOUNT_READY' => "A conta FTP foi criada e está pronta pra uso.\n\nServidor: %s\nUsuário: %s_%s\nSenha: %s\n\n--\nPainel de Controle Vesta\n",
+    'FTP_ACCOUNT_READY' => "A conta FTP foi criada e está pronta pra uso.\n\nServidor: %s\nUsuário: %s_%s\nSenha: %s\n\n--\nPainel de Controle Hestia\n",
 
     'Database Credentials'  => 'Credenciais de acesso ao Banco de Dados',
-    'DATABASE_READY' => "Banco de dados criado com sucesso.\n\nBanco de dados: %s\nUsuário: %s\nSenha: %s\n%s\n\n--\nPainel de Controle Vesta\n",
+    'DATABASE_READY' => "Banco de dados criado com sucesso.\n\nBanco de dados: %s\nUsuário: %s\nSenha: %s\n%s\n\n--\nPainel de Controle Hestia\n",
 
     'forgot password'  => 'esqueci minha senha',
     'Confirm'  => 'Confirmar',
@@ -531,7 +531,7 @@ $LANG['pt-BR'] = array(
     'RESET_NOTICE'  => 'Redefinir',
     'RESET_CODE_SENT'  => 'O código de redefinição de senha foi enviado para o seu e-mail<br>',
     'MAIL_RESET_SUBJECT'  => 'Senha Redefinida em %s',
-    'PASSWORD_RESET_REQUEST' => "Para redefinir sua senha do Painel de Controle, por favor utilize o link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nComo alternativa, você pode visitar https://%s/reset/?action=code&user=%s e digitar o seguinte código de redefinição:\n%s\n\nSe você não solicitou uma redefinição de senha, por favor ignore esse mensagem e aceite nossas desculpas.\n\n--\nPainel de Controle Vesta\n",
+    'PASSWORD_RESET_REQUEST' => "Para redefinir sua senha do Painel de Controle, por favor utilize o link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nComo alternativa, você pode visitar https://%s/reset/?action=code&user=%s e digitar o seguinte código de redefinição:\n%s\n\nSe você não solicitou uma redefinição de senha, por favor ignore esse mensagem e aceite nossas desculpas.\n\n--\nPainel de Controle Hestia\n",
 
     'Jan' => 'Jan',
     'Feb' => 'Fev',
@@ -574,7 +574,7 @@ $LANG['pt-BR'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Cota de Disco',
-    'Vesta Control Panel Plugins' => 'Plugins do Painel de Controle Vesta',
+    'Hestia Control Panel Plugins' => 'Plugins do Painel de Controle Hestia',
     'preview' => 'pré-visualizar',
     'Reseller Role' => 'Regra de Revendedor',
     'Web Config Editor' => 'Editor de Configuração Web',
@@ -735,7 +735,7 @@ $LANG['pt-BR'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'ASSUNTO',
     'ALIASES' => 'APELIDOS',
     'NOT_BEFORE' => 'NAO_ANTES',

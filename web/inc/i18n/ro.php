@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * skid (skid@vestacp.com)
  * bbl (sergiu.badan@gmail.com)
  * demlasjr (demlasjr@yahoo.com)
@@ -512,17 +512,17 @@ $LANG['ro'] = array(
     'CRON_EXCLUSIONS' => 'Pentru a exclude toate sarcinile bagă *',
     'USER_EXCLUSIONS' => 'Adauga câte o directoria pe linie. Pentru a exclude toate bagă *',
 
-    'Welcome to Vesta Control Panel' => 'Bine ați venit la panoul de control Vesta',
-    'MAIL_FROM' => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel' => 'Bine ați venit la panoul de control Hestia',
+    'MAIL_FROM' => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Salut, %s %s,\n",
     'GREETINGS' => "Salut,\n",
-    'ACCOUNT_READY' => "Contul dvs este gata.\n\nhttps://%s/login/\nUtilizator: %s\nParolă: %s\n\n--\nPanoul de control Vesta\n",
+    'ACCOUNT_READY' => "Contul dvs este gata.\n\nhttps://%s/login/\nUtilizator: %s\nParolă: %s\n\n--\nPanoul de control Hestia\n",
 
     'FTP login credentials' => 'Datele de autentificare FTP',
-    'FTP_ACCOUNT_READY' => "Contul FTP dvs. este gata.\n\nHost: %s\nUtilizator: %s_%s\nParolă: %s\n\n--\nPanoul de control Vesta\n",
+    'FTP_ACCOUNT_READY' => "Contul FTP dvs. este gata.\n\nHost: %s\nUtilizator: %s_%s\nParolă: %s\n\n--\nPanoul de control Hestia\n",
 
     'Database Credentials' => 'Datele de autentificare BD',
-    'DATABASE_READY' => "Baza de date a fost creată și este gata pentru utilizare.\n\nBD: %s\nUtilizator: %s\nParolă: %s\n%s\n\n--\nPanoul de control Vesta\n",
+    'DATABASE_READY' => "Baza de date a fost creată și este gata pentru utilizare.\n\nBD: %s\nUtilizator: %s\nParolă: %s\n%s\n\n--\nPanoul de control Hestia\n",
 
     'forgot password' => 'Am uitat parola',
     'Confirm' => 'Confirmă',
@@ -533,7 +533,7 @@ $LANG['ro'] = array(
     'RESET_NOTICE' => '',
     'RESET_CODE_SENT' => 'Codul de resetare a fost trimis la email-ul dvs..<br>',
     'MAIL_RESET_SUBJECT' => 'Schimbarea parolei %s',
-    'PASSWORD_RESET_REQUEST'=>"Pentru schimbarea parolei, vă rugăm faceți clic aici:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n\n\nDacă nu ați solicitat o procedură de resetarea parolei, vă rugăm să ignorați această scrisoare.\n\n--\nPanoul de control Vesta\n",
+    'PASSWORD_RESET_REQUEST'=>"Pentru schimbarea parolei, vă rugăm faceți clic aici:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n\n\nDacă nu ați solicitat o procedură de resetarea parolei, vă rugăm să ignorați această scrisoare.\n\n--\nPanoul de control Hestia\n",
 
     'Jan' => 'Ian',
     'Feb' => 'Feb',
@@ -576,7 +576,7 @@ $LANG['ro'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'FileSystem Disk Quota',
-    'Vesta Control Panel Plugins' => 'Plugin-uri panoul de control Vesta',
+    'Hestia Control Panel Plugins' => 'Plugin-uri panoul de control Hestia',
     'preview' => 'previzualizare',
     'Reseller Role' => 'Rol de distribuitor',
     'Web Config Editor' => 'Editor configurare Web',
@@ -737,7 +737,7 @@ $LANG['ro'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'Subiect',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

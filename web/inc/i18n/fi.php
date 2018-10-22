@@ -1,6 +1,6 @@
 <?php
 /**
-* Vesta Finnish language file
+* Hestia Finnish language file
 * OHakala (onni@koodimonni.fi)
 * RJuho (juho.rasanen@kotikone.fi)
 * theel0ja (theel0ja@theel0ja.info)
@@ -512,17 +512,17 @@ $LANG['fi'] = array(
     'CRON_EXCLUSIONS' => "Ohittaaksesi kaikki tehtävät käytä '*'",
     'USER_EXCLUSIONS' => "Syötä kansion nimi, yksi per rivi. Ohittaaksesi kaikki tietokannat syötä '*'",
 
-    'Welcome to Vesta Control Panel' => 'Tervetuloa Vesta-hallintapaneeliin',
-    'MAIL_FROM' => 'Vesta-hallintapaneeli <noreply@%s>',
+    'Welcome to Hestia Control Panel' => 'Tervetuloa Hestia-hallintapaneeliin',
+    'MAIL_FROM' => 'Hestia-hallintapaneeli <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Morjens, %s %s,\n",
     'GREETINGS' => "Morjen,s\n",
-    'ACCOUNT_READY' => "Käyttätilisi on luotu ja odottaa innokkaasti ensimmäistä kirjautumista.\n\nhttps://%s/login/\nKäyttäjä: %s\nSalasana: %s\n\n--\nVesta-hallintapaneeli\n",
+    'ACCOUNT_READY' => "Käyttätilisi on luotu ja odottaa innokkaasti ensimmäistä kirjautumista.\n\nhttps://%s/login/\nKäyttäjä: %s\nSalasana: %s\n\n--\nHestia-hallintapaneeli\n",
 
     'FTP login credentials' => 'FTP-tilitiedot',
-    'FTP_ACCOUNT_READY' => "FTP-tili on luotu ja odottaa innokkaasti ensimmäistä kirjautumista.\n\nHostname: %s\nKäyttäjä: %s_%s\nSalasana: %s\n\n--\nVesta-hallintapaneeli\n",
+    'FTP_ACCOUNT_READY' => "FTP-tili on luotu ja odottaa innokkaasti ensimmäistä kirjautumista.\n\nHostname: %s\nKäyttäjä: %s_%s\nSalasana: %s\n\n--\nHestia-hallintapaneeli\n",
 
     'Database Credentials' => 'Tietokannan-tilitiedot',
-    'DATABASE_READY' => "Tietokanta on luotu onnistuneesti.\n\nTietokanta: %s\nKäyttäjä: %s\nSalasana: %s\n%s\n\n--\nVesta-hallintapaneeli\n",
+    'DATABASE_READY' => "Tietokanta on luotu onnistuneesti.\n\nTietokanta: %s\nKäyttäjä: %s\nSalasana: %s\n%s\n\n--\nHestia-hallintapaneeli\n",
 
     'forgot password' => 'unohditko salasanan?',
     'Confirm' => 'Hyväksy',
@@ -533,7 +533,7 @@ $LANG['fi'] = array(
     'RESET_NOTICE' => '',    // should we add something here?
     'RESET_CODE_SENT' => 'Salasanan nollauskoodi on lähetetty sähköpostiisi<br>',
     'MAIL_RESET_SUBJECT' => 'Salana vaihdettiin %s',
-    'PASSWORD_RESET_REQUEST' => "Nollataksesi hallintapaneelin salasanan, seuraa tätä linkkiä:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nVaihtoehtoisesti voit mennä https://%s/reset/?action=code&user=%s ja syöttää nollauskoodin:\n%s\n\nJos et varta vasten pyytänyt tätä salasananvaihtoa, mene paniikkiin ja ota yhteyttä ylläpitoon.\n\n--\nVesta-hallintapaneeli\n",
+    'PASSWORD_RESET_REQUEST' => "Nollataksesi hallintapaneelin salasanan, seuraa tätä linkkiä:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nVaihtoehtoisesti voit mennä https://%s/reset/?action=code&user=%s ja syöttää nollauskoodin:\n%s\n\nJos et varta vasten pyytänyt tätä salasananvaihtoa, mene paniikkiin ja ota yhteyttä ylläpitoon.\n\n--\nHestia-hallintapaneeli\n",
 
     'Jan' => 'Tam',
     'Feb' => 'Hel',
@@ -576,7 +576,7 @@ $LANG['fi'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'FileSystem Disk Quota',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
     'preview' => 'preview',
     'Reseller Role' => 'Reseller Role',
     'Web Config Editor' => 'Web Config Editor',
@@ -737,7 +737,7 @@ $LANG['fi'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

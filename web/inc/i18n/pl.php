@@ -1,6 +1,6 @@
 <?php
 /**
- * Plik językowy panelu Vesta
+ * Plik językowy panelu Hestia
  * Marek Pikuła <marek@pikula.co>
  * Michal Slepko <michal@slepko.pl>
  */
@@ -511,17 +511,17 @@ $LANG['pl'] = array(
     'CRON_EXCLUSIONS' => 'W celu wyłączenia wszystkich zadań wpisz *.',
     'USER_EXCLUSIONS' => 'Wpisz nazwy folderów, po jednej w linijce. W celu wyłączenia wszystkich folderów użyj *.',
 
-    'Welcome to Vesta Control Panel'  => 'Witaj w Panelu Vesta',
-    'MAIL_FROM'  => 'Panel Vesta <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Witaj w Panelu Hestia',
+    'MAIL_FROM'  => 'Panel Hestia <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Witaj, %s %s,\n",
     'GREETINGS' => "Witaj,\n",
-    'ACCOUNT_READY' => "Twoje konto zostało założone i jest gotowe do użytku.\n\nhttps://%s/login/\nNazwa użytkownika: %s\nHasło: %s\n\n--\nPanel Vesta\n",
+    'ACCOUNT_READY' => "Twoje konto zostało założone i jest gotowe do użytku.\n\nhttps://%s/login/\nNazwa użytkownika: %s\nHasło: %s\n\n--\nPanel Hestia\n",
 
     'FTP login credentials'  => 'Dane FTP',
-    'FTP_ACCOUNT_READY' => "Konto FTP zostało założone i jest gotowe do użytku.\n\nNazwa hosta: %s\nNazwa użytkownika: %s_%s\nHasło: %s\n\n--\nPanel Vesta\n",
+    'FTP_ACCOUNT_READY' => "Konto FTP zostało założone i jest gotowe do użytku.\n\nNazwa hosta: %s\nNazwa użytkownika: %s_%s\nHasło: %s\n\n--\nPanel Hestia\n",
 
     'Database Credentials'  => 'Dane bazy danych',
-    'DATABASE_READY' => "Założono bazę danych.\n\nNazwa bazy danych: %s\nNazwa użytkownika: %s\nHasło: %s\n%s\n\n--\nPanel Vesta\n",
+    'DATABASE_READY' => "Założono bazę danych.\n\nNazwa bazy danych: %s\nNazwa użytkownika: %s\nHasło: %s\n%s\n\n--\nPanel Hestia\n",
 
     'forgot password'  => 'zapomniane hasło',
     'Confirm'  => 'Potwierdź',
@@ -532,7 +532,7 @@ $LANG['pl'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Kod resetu hasła został wysłany na twój adres email<br>',
     'MAIL_RESET_SUBJECT'  => 'Zresetowano hasło o %s',
-    'PASSWORD_RESET_REQUEST' => "W celu zresetowanie hasła do panelu, proszę przejść na stronę:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatywnie możesz przejść na stronę https://%s/reset/?action=code&user=%s i wpisać poniższy kod:\n%s\n\nJeżeli nie prosiłeś o reset hasła proszę zignorować tą wiadomość i przyjąć nasze przeprosiny.\n\n--\nPanel Vesta\n",
+    'PASSWORD_RESET_REQUEST' => "W celu zresetowanie hasła do panelu, proszę przejść na stronę:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatywnie możesz przejść na stronę https://%s/reset/?action=code&user=%s i wpisać poniższy kod:\n%s\n\nJeżeli nie prosiłeś o reset hasła proszę zignorować tą wiadomość i przyjąć nasze przeprosiny.\n\n--\nPanel Hestia\n",
 
     'Jan' => 'Sty',
     'Feb' => 'Lut',
@@ -575,7 +575,7 @@ $LANG['pl'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Quota systemu plików',
-    'Vesta Control Panel Plugins' => 'Pluginy panelu Vesta',
+    'Hestia Control Panel Plugins' => 'Pluginy panelu Hestia',
     'preview' => 'podląd',
     'Reseller Role' => 'Rola Resellera',
     'Web Config Editor' => 'Edytor konfiguracji Web',
@@ -736,7 +736,7 @@ $LANG['pl'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

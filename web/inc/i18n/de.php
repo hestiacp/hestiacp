@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Nevil Verdoold (nevilverdoold@gmail.com)
  */
 
@@ -510,17 +510,17 @@ $LANG['de'] = array(
     'CRON_EXCLUSIONS' => "'*' um alle Cron Jobs auszuschließen",
     'USER_EXCLUSIONS' => "Pro Zeile einen Verzeichnisnamen eingeben. '*' um alle Verzeichnisse auszuschließen",
 
-    'Welcome to Vesta Control Panel'  => 'Willkommen im Vesta Control Panel',
-    'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Willkommen im Hestia Control Panel',
+    'MAIL_FROM'  => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Hallo, %s %s,\n",
     'GREETINGS' => "Hallo,\n",
-    'ACCOUNT_READY' => "Ihr Account wurde erfolgreich erstellt.\n\nhttps://%s/login/\nBenutzername: %s\nPasswort: %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "Ihr Account wurde erfolgreich erstellt.\n\nhttps://%s/login/\nBenutzername: %s\nPasswort: %s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'FTP Anmeldeinformationen',
-    'FTP_ACCOUNT_READY' => "FTP Account erfolgreich erstellt.\n\nHostname: %s\nBenutzername: %s_%s\nPasswort: %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "FTP Account erfolgreich erstellt.\n\nHostname: %s\nBenutzername: %s_%s\nPasswort: %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'Datenbank Anmeldeinformationen',
-    'DATABASE_READY' => "Datenbank wurde erfolgreich erstellt.\n\nDatenbank: %s\nBenutzername: %s\nPasswort: %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "Datenbank wurde erfolgreich erstellt.\n\nDatenbank: %s\nBenutzername: %s\nPasswort: %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'Passwort vergessen',
     'Confirm'  => 'Bestätigen',
@@ -531,7 +531,7 @@ $LANG['de'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Passwort Rücksetz-Code wurde an Ihre Adresse gesandt<br>',
     'MAIL_RESET_SUBJECT'  => 'Passwort Reset für %s',
-    'PASSWORD_RESET_REQUEST' => "Zum Zurücksetzen Ihres Passwortes, besuchen Sie bitte folgenden Link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternativ, können Sie auf https://%s/reset/?action=code&user=%s gehen und dort folgenden Reset Code eingeben:\n%s\n\nWenn Sie Ihr Passwort nicht zurücksetzen wollten, ignorieren Sie diese Nachricht und entschuldigen Sie uns die Unannehmlichkeiten.\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "Zum Zurücksetzen Ihres Passwortes, besuchen Sie bitte folgenden Link:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternativ, können Sie auf https://%s/reset/?action=code&user=%s gehen und dort folgenden Reset Code eingeben:\n%s\n\nWenn Sie Ihr Passwort nicht zurücksetzen wollten, ignorieren Sie diese Nachricht und entschuldigen Sie uns die Unannehmlichkeiten.\n\n--\nHestia Control Panel\n",
 
     'Jan' => 'Jan',
     'Feb' => 'Feb',
@@ -574,7 +574,7 @@ $LANG['de'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Dateisystem Nutzungskontingent',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
     'preview' => 'vorschau',
     'Reseller Role' => 'Reseller Role',
     'Web Config Editor' => 'Web Config Editor',
@@ -735,7 +735,7 @@ $LANG['de'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

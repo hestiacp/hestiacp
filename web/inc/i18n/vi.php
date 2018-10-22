@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Phuong Nguyen (ngocphuong@tetua.net)
  *
  * Duoc bao tri boi:
@@ -513,17 +513,17 @@ $LANG['vi'] = array(
     'CRON_EXCLUSIONS' => 'Để loại bỏ tất cả tiến trình, sử dụng ký tự *',
     'USER_EXCLUSIONS' => 'Điền tên thư mục, mỗi thư mục một dòng. Để loại bỏ tất cả thư mục, sử dụng ký tự *',
 
-    'Welcome to Vesta Control Panel'  => 'Chào mừng bạn đến Vesta Control Panel',
-    'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Chào mừng bạn đến Hestia Control Panel',
+    'MAIL_FROM'  => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Xin chào, %s %s,\n",
     'GREETINGS' => "Hello,\n",
-    'ACCOUNT_READY' => "Tài khoản của bạn đã được tạo thành công và sẵn sàng để sử dụng.\n\nhttps://%s/login/\nTên đăng nhập: %s\nMật khẩu: %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "Tài khoản của bạn đã được tạo thành công và sẵn sàng để sử dụng.\n\nhttps://%s/login/\nTên đăng nhập: %s\nMật khẩu: %s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'Thông tin đăng nhập FTP',
-    'FTP_ACCOUNT_READY' => "Tài khoản FTP của bạn đã được tạo thành công và sẵn sàng để sử dụng.\n\nHostname: %s\nTên đăng nhập: %s_%s\nMật khẩu: %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "Tài khoản FTP của bạn đã được tạo thành công và sẵn sàng để sử dụng.\n\nHostname: %s\nTên đăng nhập: %s_%s\nMật khẩu: %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'Thông tin CSDL',
-    'DATABASE_READY' => "Tạo thành công CSDL.\n\nTên cơ sở dữ liệu: %s\nNgười dùng: %s\nMật khẩu: %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "Tạo thành công CSDL.\n\nTên cơ sở dữ liệu: %s\nNgười dùng: %s\nMật khẩu: %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'Quên mật khẩu',
     'Confirm'  => 'Xác nhận',
@@ -534,7 +534,7 @@ $LANG['vi'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Mã thiết lập lại mật khẩu đã được gửi đến địa chỉ email<br>',
     'MAIL_RESET_SUBJECT'  => 'Khôi phục mật khẩu tại %s',
-    'PASSWORD_RESET_REQUEST' => "Để thiết lập lại mật khẩu quản trị, vui lòng truy cập vào địa chỉ:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, you may go to https://%s/reset/?action=code&user=%s và nhập mã sau:\n%s\n\nNếu bạn không thực hiện khôi phục mật khẩu, vui lòng bỏ qua email này.\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "Để thiết lập lại mật khẩu quản trị, vui lòng truy cập vào địa chỉ:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, you may go to https://%s/reset/?action=code&user=%s và nhập mã sau:\n%s\n\nNếu bạn không thực hiện khôi phục mật khẩu, vui lòng bỏ qua email này.\n\n--\nHestia Control Panel\n",
 
     'Jan' => 'Tháng 1',
     'Feb' => 'Tháng 2',
@@ -577,7 +577,7 @@ $LANG['vi'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Hạn mức dung lượng đĩa hệ thống',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
     'preview' => 'xem trước',
     'Reseller Role' => 'Vai trò đại lý',
     'Web Config Editor' => 'Chỉnh sửa cấu hình web',
@@ -737,7 +737,7 @@ $LANG['vi'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'CHỦ ĐỀ',
     'ALIASES' => 'ÁNH XẠ',
     'NOT_BEFORE' => 'NOT_BEFORE',

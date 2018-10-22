@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Language : Urdu
  * darkworks (https://www.useotools.com)
  */
@@ -390,7 +390,7 @@ $LANG['ur'] = array(
     'ICMP'  => 'ICMP',
     'SSH'  => 'SSH',
     'FTP'  => 'FTP',
-    'VESTA'  => 'Vesta کی',
+    'VESTA'  => 'Hestia کی',
     'Add one more Name Server'  => 'ایک اور نام سرور شامل کریں',
     'web domain'  => 'ویب ڈومین',
     'dns domain'  => 'DNS ڈومین',
@@ -500,17 +500,17 @@ $LANG['ur'] = array(
     'DB_EXCLUSIONS'  => 'مکمل ڈیٹا بیس کا نام ٹائپ کریں، فی لائن ایک. تمام ڈیٹا بیس کا استعمال کرتے خارج کرنے کے *',
     'CRON_EXCLUSIONS'  => 'تمام ملازمتوں کا استعمال کرتے خارج کرنے کے *',
     'USER_EXCLUSIONS'  => 'قسم ڈائریکٹری کا نام ہے، ایک فی لائن. تمام dirs استعمال کرتے exlude کرنے *',
-    'Welcome to Vesta Control Panel'   => 'Vesta کی کنٹرول پینل میں خوش آمدید',
-    'MAIL_FROM'   => '<noreply@%s> Vesta کی کنٹرول پینل ',
+    'Welcome to Hestia Control Panel'   => 'Hestia کی کنٹرول پینل میں خوش آمدید',
+    'MAIL_FROM'   => '<noreply@%s> Hestia کی کنٹرول پینل ',
     'GREETINGS_GORDON_FREEMAN' => "ہیلو, %s %s,\n",
     'GREETINGS' => "ہیلو,\n",
-    'ACCOUNT_READY' => "\n\nhttps://%s/login/\nUsername: %s\nPassword: %s\n\n--\nVesta Control Panel\n .آپ کا اکاؤنٹ بنا دیا گیا ہے اور استعمال کے لئے تیار ہے",
+    'ACCOUNT_READY' => "\n\nhttps://%s/login/\nUsername: %s\nPassword: %s\n\n--\nHestia Control Panel\n .آپ کا اکاؤنٹ بنا دیا گیا ہے اور استعمال کے لئے تیار ہے",
 
     'FTP login credentials'  => 'FTP لاگ ان کی اسناد',
-    'FTP_ACCOUNT_READY' => "\n\nHostname: %s\nUsername: %s_%s\nPassword: %s\n\n--\nVesta Control Panel\n .اکاؤنٹ بنا دیا گیا ہے اور استعمال کے لئے تیار ہے FTP",
+    'FTP_ACCOUNT_READY' => "\n\nHostname: %s\nUsername: %s_%s\nPassword: %s\n\n--\nHestia Control Panel\n .اکاؤنٹ بنا دیا گیا ہے اور استعمال کے لئے تیار ہے FTP",
 
     'Database Credentials'  => 'ڈیٹا بیس کی اسناد',
-    'DATABASE_READY' => "\n\nDatabase: %s\nUser: %s\nPassword: %s\n%s\n\n--\nVesta Control Panel\n .ڈیٹا بیس کی کامیابی کے ساتھ بن گیا ہے.",
+    'DATABASE_READY' => "\n\nDatabase: %s\nUser: %s\nPassword: %s\n%s\n\n--\nHestia Control Panel\n .ڈیٹا بیس کی کامیابی کے ساتھ بن گیا ہے.",
 
     'forgot password'  => 'پاسورڈ بھول گے',
     'Confirm'  => 'تصدیق کریں',
@@ -521,7 +521,7 @@ $LANG['ur'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => '<br>پاس ورڈ دوبارہ ترتیب دینے کا کوڈ آپ کے ای میل ایڈریس پر بھیج دیا گیا ہے',
     'MAIL_RESET_SUBJECT'  => '%s میں پاس ورڈ ری سیٹ',
-    'PASSWORD_RESET_REQUEST' => "\n\n--\nVesta Control Panel\n  آپ کا پاس ورڈ دوبارہ ترتیب دینے کی درخواست نہیں کی ہے تو، یہ پیغام نظرانداز اور ہماری معذرت قبول کریں. \n%s\n\n :اور مندرجہ ذیل ری سیٹ کوڈ درج کریں: https://%s/reset/?action=code&user=%s آپ کے لئے جا سکتے ہیں متبادل طور پر \nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n : اپنے کنٹرول پینل پاس ورڈ ری سیٹ کرنے کے لئے، اس لنک کی پیروی کریں",
+    'PASSWORD_RESET_REQUEST' => "\n\n--\nHestia Control Panel\n  آپ کا پاس ورڈ دوبارہ ترتیب دینے کی درخواست نہیں کی ہے تو، یہ پیغام نظرانداز اور ہماری معذرت قبول کریں. \n%s\n\n :اور مندرجہ ذیل ری سیٹ کوڈ درج کریں: https://%s/reset/?action=code&user=%s آپ کے لئے جا سکتے ہیں متبادل طور پر \nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n : اپنے کنٹرول پینل پاس ورڈ ری سیٹ کرنے کے لئے، اس لنک کی پیروی کریں",
 
     'Jan'  => 'جان',
     'Feb'  => 'فروری',
@@ -563,7 +563,7 @@ $LANG['ur'] = array(
     'sftp'  => 'SFTP',
     'SFTP Chroot'  => 'SFTP Chroot',
     'FileSystem Disk Quota'  => 'فائل سسٹم ڈسک کوٹہ',
-    'Vesta Control Panel Plugins'  => 'Vesta کی کنٹرول پینل پلگ انز',
+    'Hestia Control Panel Plugins'  => 'Hestia کی کنٹرول پینل پلگ انز',
     'preview'  => 'پیش نظارہ',
     'Reseller Role'  => 'ری سیلر کردار',
     'Web Config Editor'  => 'ویب تشکیل ایڈیٹر',
@@ -715,7 +715,7 @@ $LANG['ur'] = array(
     'Generate'  => 'بنائیں',
     'webalizer'  => 'webalizer',
     'awstats'  => 'awstats',
-    'Vesta SSL'  => 'Vesta کی SSL',
+    'Hestia SSL'  => 'Hestia کی SSL',
     'SUBJECT'  => 'مضمون',
     'ALIASES'  => 'عرفیتیں',
     'NOT_BEFORE'  => 'NOT_BEFORE',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * This language file is translate by
  * Clark's Hosting Service (https://host.clark-chen.com)
  * Clark Chen (clark@clark-chen.com)
@@ -515,17 +515,17 @@ $LANG['tw'] = array(
     'CRON_EXCLUSIONS' => '要排除備份所有任務排程請使用*',
     'USER_EXCLUSIONS' => '輸入要排除備份的資料夾名稱，每行一個資料夾。如要排除備份所有資料夾請使用*',
 
-    'Welcome to Vesta Control Panel'  => '歡迎來到 Vesta 管理系統',
-    'MAIL_FROM'  => 'Vesta 管理系統 <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => '歡迎來到 Hestia 管理系統',
+    'MAIL_FROM'  => 'Hestia 管理系統 <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "您好, %s %s,\n",
     'GREETINGS' => "您好,\n",
-    'ACCOUNT_READY' => "您的帳號已成功建立，並可以開始使用了！\n\nhttps://%s/login/\n使用者名稱：%s\n密碼：%s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "您的帳號已成功建立，並可以開始使用了！\n\nhttps://%s/login/\n使用者名稱：%s\n密碼：%s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'FTP 登入資料',
-    'FTP_ACCOUNT_READY' => "FTP 帳號已成功建立，並可以開始使用了！\n\n主機名稱：%s\n使用者名稱：%s_%s\n密碼：%s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "FTP 帳號已成功建立，並可以開始使用了！\n\n主機名稱：%s\n使用者名稱：%s_%s\n密碼：%s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => '資料庫 登入資料',
-    'DATABASE_READY' => "資料庫已加入成功！\n\n資料庫名稱：%s\n使用者名稱：%s\n密碼：%s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "資料庫已加入成功！\n\n資料庫名稱：%s\n使用者名稱：%s\n密碼：%s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => '忘記密碼',
     'Confirm'  => '確認',
@@ -536,7 +536,7 @@ $LANG['tw'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => '密碼重設代碼已傳送到您的信箱<br>',
     'MAIL_RESET_SUBJECT'  => '密碼重設在 %s',
-    'PASSWORD_RESET_REQUEST' => "重設密碼請點擊連結：\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n或者您可以到 https://%s/reset/?action=code&user=%s 輸入密碼重設代碼：\n%s\n\n如果您沒有要求重設密碼，請忽略此郵件\n\n—\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "重設密碼請點擊連結：\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n或者您可以到 https://%s/reset/?action=code&user=%s 輸入密碼重設代碼：\n%s\n\n如果您沒有要求重設密碼，請忽略此郵件\n\n—\nHestia Control Panel\n",
 
     'Jan' => '一月',
     'Feb' => '二月',
@@ -579,7 +579,7 @@ $LANG['tw'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => '檔案系統硬碟配額',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel 外掛',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel 外掛',
     'preview' => '預覽',
     'Reseller Role' => '經銷商權限',
     'Web Config Editor' => '網站設定編輯器',
@@ -740,7 +740,7 @@ $LANG['tw'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta 後台 SSL',
+    'Hestia SSL' => 'Hestia 後台 SSL',
     'SUBJECT' => '主體名稱',
     'ALIASES' => '主體別名',
     'NOT_BEFORE' => '有效期自',

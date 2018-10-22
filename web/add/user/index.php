@@ -83,7 +83,7 @@ if (!empty($_POST['ok'])) {
     // Send email to the new user
     if ((empty($_SESSION['error_msg'])) && (!empty($v_notify))) {
         $to = $_POST['v_notify'];
-        $subject = _translate($_POST['v_language'],"Welcome to Vesta Control Panel");
+        $subject = _translate($_POST['v_language'],"Welcome to Hestia Control Panel");
         $hostname = exec('hostname');
         unset($output);
         $from = _translate($_POST['v_language'],'MAIL_FROM',$hostname);

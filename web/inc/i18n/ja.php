@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Flat (flatta@outlook.jp)
  */
 
@@ -510,17 +510,17 @@ $LANG['ja'] = array(
     'CRON_EXCLUSIONS' => 'すべてのジョブを除外するには*を使用してください',
     'USER_EXCLUSIONS' => 'ディレクトリ名を一行ずつ入力してください&#10;すべてのディレクトリを除外するには*を使用してください',
 
-    'Welcome to Vesta Control Panel'  => 'Vesta Control Panel にようこそ',
-    'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Hestia Control Panel にようこそ',
+    'MAIL_FROM'  => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "こんにちは、 %s %s さん\n",
     'GREETINGS' => "こんにちは\n",
-    'ACCOUNT_READY' => "アカウントは正常に作成され、使用する準備ができました\n\nhttps://%s/login/\nユーザー名： %s\nパスワード： %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "アカウントは正常に作成され、使用する準備ができました\n\nhttps://%s/login/\nユーザー名： %s\nパスワード： %s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'FTPアカウント情報',
-    'FTP_ACCOUNT_READY' => "FTPアカウントは正常に作成され、使用する準備ができました\n\nホスト名： %s\nユーザー名： %s_%s\nパスワード： %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "FTPアカウントは正常に作成され、使用する準備ができました\n\nホスト名： %s\nユーザー名： %s_%s\nパスワード： %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'データベースアカウント情報',
-    'DATABASE_READY' => "データベースは正常に作成されました\n\nデータベース名： %s\nユーザー名： %s\nパスワード： %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "データベースは正常に作成されました\n\nデータベース名： %s\nユーザー名： %s\nパスワード： %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'パスワードを忘れた場合',
     'Confirm'  => '確認',
@@ -531,7 +531,7 @@ $LANG['ja'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => '登録されたメールアドレスにパスワードのリセットコードが送信されました<br>',
     'MAIL_RESET_SUBJECT'  => '%s のパスワードのリセット',
-    'PASSWORD_RESET_REQUEST' => "コントロールパネルのパスワードをリセットするには、以下のリンクの手順に従ってください\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nもしくは、次のリンク（ https://%s/reset/?action=code&user=%s ）で以下のリセットコードを入力することもできます\n%s\n\nもしパスワードのリセットを要求していない場合は、このメールを無視してください\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "コントロールパネルのパスワードをリセットするには、以下のリンクの手順に従ってください\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nもしくは、次のリンク（ https://%s/reset/?action=code&user=%s ）で以下のリセットコードを入力することもできます\n%s\n\nもしパスワードのリセットを要求していない場合は、このメールを無視してください\n\n--\nHestia Control Panel\n",
 
     'Jan' => '1月',
     'Feb' => '2月',
@@ -574,7 +574,7 @@ $LANG['ja'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'ディスク容量制限',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel プラグイン',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel プラグイン',
     'preview' => 'プレビュー',
     'Reseller Role' => 'リセラーの役割',
     'Web Config Editor' => 'ウェブ設定エディタ',
@@ -735,7 +735,7 @@ $LANG['ja'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => '所有者',
     'ALIASES' => 'エイリアス',
     'NOT_BEFORE' => '開始時刻',

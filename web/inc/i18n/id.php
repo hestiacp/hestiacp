@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * azuya (disketsa@gmail.com)
  * nothinux (taufik@nothinux.id)
  */
@@ -511,17 +511,17 @@ $LANG['id'] = array(
     'CRON_EXCLUSIONS' => 'Untuk pengecualian semua JOBS gunakan *',
     'USER_EXCLUSIONS' => 'Ketik nama direktori, satu direktori per baris. Untuk pengecualian semua direktori gunakan karakter *',
 
-    'Welcome to Vesta Control Panel'  => 'Selamat datang di Panel Kontrol Vesta',
-    'MAIL_FROM'  => 'Panel Kontrol Vesta <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Selamat datang di Panel Kontrol Hestia',
+    'MAIL_FROM'  => 'Panel Kontrol Hestia <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Hai, %s %s,\n",
     'GREETINGS' => "Hai,\n",
-    'ACCOUNT_READY' => "Akun telah dibuat dan siap digunakan.\n\nhttps://%s/login/\nNama pengguna: %s\nKata sandi: %s\n\n--\nPanel Kontrol Vesta\n",
+    'ACCOUNT_READY' => "Akun telah dibuat dan siap digunakan.\n\nhttps://%s/login/\nNama pengguna: %s\nKata sandi: %s\n\n--\nPanel Kontrol Hestia\n",
 
     'FTP login credentials'  => 'Kredensial untuk masuk FTP',
-    'FTP_ACCOUNT_READY' => "Akun FTP telah dibuat dan siap digunakan.\n\nHostname: %s\nNama pengguna: %s_%s\nKata sandi: %s\n\n--\nPanel Kontrol Vesta\n",
+    'FTP_ACCOUNT_READY' => "Akun FTP telah dibuat dan siap digunakan.\n\nHostname: %s\nNama pengguna: %s_%s\nKata sandi: %s\n\n--\nPanel Kontrol Hestia\n",
 
     'Database Credentials'  => 'Kredensial Basis Data',
-    'DATABASE_READY' => "Basis data telah berhasil dibuat.\n\nBasis data: %s\nNama pengguna: %s\nKata sandi: %s\n%s\n\n--\nPanel Kontrol Vesta\n",
+    'DATABASE_READY' => "Basis data telah berhasil dibuat.\n\nBasis data: %s\nNama pengguna: %s\nKata sandi: %s\n%s\n\n--\nPanel Kontrol Hestia\n",
 
     'forgot password'  => 'lupa kata sandi',
     'Confirm'  => 'Konfirmasi',
@@ -532,7 +532,7 @@ $LANG['id'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Kode kata sandi untuk me-reset sudah dikirim ke surel<br>',
     'MAIL_RESET_SUBJECT'  => 'Kata sandi di-reset pada %s',
-    'PASSWORD_RESET_REQUEST' => "Untuk me-reset kata sandi, silahkan klik tautan ini:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\natau ke https://%s/reset/?action=code&user=%s lalu masukan kode reset-nya:\n%s\n\nJika anda tidak meminta untuk me-reset kata sandi, silahkan abaikan pesan ini.\n\n--\nPanel Kontrol Vesta\n",
+    'PASSWORD_RESET_REQUEST' => "Untuk me-reset kata sandi, silahkan klik tautan ini:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\natau ke https://%s/reset/?action=code&user=%s lalu masukan kode reset-nya:\n%s\n\nJika anda tidak meminta untuk me-reset kata sandi, silahkan abaikan pesan ini.\n\n--\nPanel Kontrol Hestia\n",
 
     'Jan' => 'Jan',
     'Feb' => 'Feb',
@@ -575,7 +575,7 @@ $LANG['id'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Kuota Diska FileSystem',
-    'Vesta Control Panel Plugins' => 'Vesta Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
     'preview' => 'pratinjau',
     'Reseller Role' => 'Aturan Reseller',
     'Web Config Editor' => 'Web Config Editor',
@@ -736,7 +736,7 @@ $LANG['id'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

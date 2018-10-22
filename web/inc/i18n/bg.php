@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Kronz (apaunovski@gmail.com) and loderx
  */
 
@@ -505,16 +505,16 @@ $LANG['bg'] = array(
     'CRON_EXCLUSIONS' => 'За да изключите всички задачи, използвайте *',
     'USER_EXCLUSIONS' => 'Въведете име на директория, по едно на ред. За да изключите всички директории, използвайте *',
 
-    'Welcome to Vesta Control Panel'  => 'Добре дошли във Контролния панел на Vesta',
-    'MAIL_FROM'  => 'Контролният панел на Vesta <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Добре дошли във Контролния панел на Hestia',
+    'MAIL_FROM'  => 'Контролният панел на Hestia <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Здравейте, %s %s,\n",
     'GREETINGS' => "Здравейте,\n",
-    'ACCOUNT_READY' => "Акаунтът ви беше създаден успешно и вече е готов за употреба.\n\nhttps://%s/login/\nUsername: %s\nPassword: %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "Акаунтът ви беше създаден успешно и вече е готов за употреба.\n\nhttps://%s/login/\nUsername: %s\nPassword: %s\n\n--\nHestia Control Panel\n",
     'FTP login credentials'  => 'Данни за FTP вход',
-    'FTP_ACCOUNT_READY' => "FTP акаунтът ви беше създаден успешно и вече е готов за употреба.\n\nHostname: %s\nUsername: %s_%s\nPassword: %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "FTP акаунтът ви беше създаден успешно и вече е готов за употреба.\n\nHostname: %s\nUsername: %s_%s\nPassword: %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'Информация за база дснни',
-    'DATABASE_READY' => "Базата данни беше създадена успешно.\n\nDatabase: %s\nUser: %s\nPassword: %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "Базата данни беше създадена успешно.\n\nDatabase: %s\nUser: %s\nPassword: %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'забравена парола',
     'Confirm'  => 'Потвърди',
@@ -525,7 +525,7 @@ $LANG['bg'] = array(
     'RESET_NOTICE'  => '',    // should we add something here? I don't think it's needed.
     'RESET_CODE_SENT'  => 'Кодът за възстановяване на паролата беше изпратен успешно на вашия email<br>',
     'MAIL_RESET_SUBJECT'  => 'Паролата е възстановена на %s',
-    'PASSWORD_RESET_REQUEST' => "За да възстановите паролата за контролния панел, моля използвайте следния линк:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, you may go to https://%s/reset/?action=code&user=%s and enter the following reset code:\n%s\n\nIf you did not request password reset, please ignore this message and accept our apologies.\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "За да възстановите паролата за контролния панел, моля използвайте следния линк:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, you may go to https://%s/reset/?action=code&user=%s and enter the following reset code:\n%s\n\nIf you did not request password reset, please ignore this message and accept our apologies.\n\n--\nHestia Control Panel\n",
 
     'Jan' => 'Януари',
     'Feb' => 'Февруари',
@@ -568,7 +568,7 @@ $LANG['bg'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Квота на файловата система на диска',
-    'Vesta Control Panel Plugins' => 'Допълнения за контролния панел на Vesta',
+    'Hestia Control Panel Plugins' => 'Допълнения за контролния панел на Hestia',
     'preview' => 'преглед',
     'Reseller Role' => 'Reseller роля',
     'Web Config Editor' => 'Web Config редактор',
@@ -730,7 +730,7 @@ $LANG['bg'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

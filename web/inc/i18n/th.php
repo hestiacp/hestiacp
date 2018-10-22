@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Language: Thai ( Thailand )
  * thatphon05@gmail.com
  * phinitnan_c@xtony.us
@@ -513,17 +513,17 @@ $LANG['th'] = array(
     'CRON_EXCLUSIONS' => 'หากต้องการยกเว้นงานทั้งหมด ให้ใช้ *',
     'USER_EXCLUSIONS' => 'พิมพ์ชื่อไดเร็กทอรี่หนึ่งรายการต่อบรรทัด หรือเพื่อไม่ให้ใช้ไดเร็กทอรี่ทั้งหมด ให้ใช้ *',
 
-    'Welcome to Vesta Control Panel'  => 'ยินดีต้อนรับสู่ Vesta Control Panel',
-    'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'ยินดีต้อนรับสู่ Hestia Control Panel',
+    'MAIL_FROM'  => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "สวัสดี, %s %s,\n",
     'GREETINGS' => "สวัสดี,\n",
-    'ACCOUNT_READY' => "บัญชีของคุณได้รับการสร้างและพร้อมใช้งานแล้ว\n\nhttps://%s/login/\nชื่อผู้ใช้: %s\nรหัสผ่าน: %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "บัญชีของคุณได้รับการสร้างและพร้อมใช้งานแล้ว\n\nhttps://%s/login/\nชื่อผู้ใช้: %s\nรหัสผ่าน: %s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'ข้อมูลการเข้าสู่ระบบ FTP',
-    'FTP_ACCOUNT_READY' => "มีการสร้างบัญชี FTP และพร้อมใช้งานแล้ว\n\nโฮสต์: %s\nชื่อผู้ใช้: %s_%s\nรหัสผ่าน: %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "มีการสร้างบัญชี FTP และพร้อมใช้งานแล้ว\n\nโฮสต์: %s\nชื่อผู้ใช้: %s_%s\nรหัสผ่าน: %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'ข้อมูลการใช้งานฐานข้อมูล',
-    'DATABASE_READY' => "สร้างฐานข้อมูลเรียบร้อยแล้ว\n\nDatabase: %s\nชื่อ: %s\nรหัสผ่าน: %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "สร้างฐานข้อมูลเรียบร้อยแล้ว\n\nDatabase: %s\nชื่อ: %s\nรหัสผ่าน: %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'ลืมรหัสผ่าน',
     'Confirm'  => 'ยืนยัน',
@@ -534,7 +534,7 @@ $LANG['th'] = array(
     'RESET_NOTICE'  => 'แจ้งการ',
     'RESET_CODE_SENT'  => 'รหัสสำหรับรีเซ็ตรหัสผ่านถูกส่งไปยังที่อยู่อีเมลของคุณแล้ว<br>',
     'MAIL_RESET_SUBJECT'  => 'ตั้งค่ารหัสผ่านใหม่ที่ %s',
-    'PASSWORD_RESET_REQUEST' => "หากต้องการรีเซ็ตรหัสผ่านของแผงควบคุมโปรดไปที่ลิงก์นี้:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, คุณอาจจะไปที่ https://%s/reset/?action=code&user=%s และใส่รหัสรีเซ็ตดังต่อไปนี้:\n%s\n\nหากคุณไม่ได้ขอรหัสผ่านใหม่โปรดละเว้นข้อความนี้และยอมรับคำขอโทษของเรา\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "หากต้องการรีเซ็ตรหัสผ่านของแผงควบคุมโปรดไปที่ลิงก์นี้:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatively, คุณอาจจะไปที่ https://%s/reset/?action=code&user=%s และใส่รหัสรีเซ็ตดังต่อไปนี้:\n%s\n\nหากคุณไม่ได้ขอรหัสผ่านใหม่โปรดละเว้นข้อความนี้และยอมรับคำขอโทษของเรา\n\n--\nHestia Control Panel\n",
 
     'Jan' => 'ม.ค.',
     'Feb' => 'ก.พ.',
@@ -577,7 +577,7 @@ $LANG['th'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'โควต้าการเก็บข้อมูลในระบบ',
-    'Vesta Control Panel Plugins' => 'ปลั๊กอิน Vesta Control Panel',
+    'Hestia Control Panel Plugins' => 'ปลั๊กอิน Hestia Control Panel',
     'preview' => 'ดูตัวอย่าง',
     'Reseller Role' => 'บทบาท Reseller',
     'Web Config Editor' => 'เครื่องมือแก้ไขการตั้งค่าเว็บ',
@@ -738,7 +738,7 @@ $LANG['th'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

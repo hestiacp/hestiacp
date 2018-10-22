@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta language file
+ * Hestia language file
  * Hoto Cocoa (cocoa@hoto.us)
  */
 
@@ -510,17 +510,17 @@ $LANG['ko'] = array(
     'CRON_EXCLUSIONS' => '모든 작업을 예외처리 하기 위해서는 *를 사용하세요',
     'USER_EXCLUSIONS' => '전체 폴더 이름을 한줄에 하나씩 입력해주세요. 모든 폴더를 예외처리 하기 위해서는 *를 사용하세요',
 
-    'Welcome to Vesta Control Panel'  => 'Vesta 제어판에 오신 것을 환영합니다',
-    'MAIL_FROM'  => 'Vesta 제어판 <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Hestia 제어판에 오신 것을 환영합니다',
+    'MAIL_FROM'  => 'Hestia 제어판 <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "%s %s님 안녕하세요,\n",
     'GREETINGS' => "안녕하세요,\n",
-    'ACCOUNT_READY' => "계정이 생성되었으며 사용 준비가 되었습니다.\n\nhttps://%s/login/\n사용자명: %s\n비밀번호: %s\n\n--\nVesta 제어판\n",
+    'ACCOUNT_READY' => "계정이 생성되었으며 사용 준비가 되었습니다.\n\nhttps://%s/login/\n사용자명: %s\n비밀번호: %s\n\n--\nHestia 제어판\n",
 
     'FTP login credentials'  => 'FTP 로그인 정보',
-    'FTP_ACCOUNT_READY' => "FTP 계정이 생성되었으며 사용 준비가 되었습니다.\n\nhttps://%s/login/\n사용자명: %s\n비밀번호: %s\n\n--\nVesta 제어판\n",
+    'FTP_ACCOUNT_READY' => "FTP 계정이 생성되었으며 사용 준비가 되었습니다.\n\nhttps://%s/login/\n사용자명: %s\n비밀번호: %s\n\n--\nHestia 제어판\n",
 
     'Database Credentials'  => '데이터베이스 정보',
-    'DATABASE_READY' => "데이터베이스가 성공적으로 생성되었습니다.\n\데이터베이스: %s\n사용자: %s\n비밀번호: %s\n\n--\nVesta 제어판\n",
+    'DATABASE_READY' => "데이터베이스가 성공적으로 생성되었습니다.\n\데이터베이스: %s\n사용자: %s\n비밀번호: %s\n\n--\nHestia 제어판\n",
 
     'forgot password'  => '비밀번호 잊음',
     'Confirm'  => '확인',
@@ -531,7 +531,7 @@ $LANG['ko'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => '비밀번호 초기화 코드가 이메일 주소로 전송되었습니다<br>',
     'MAIL_RESET_SUBJECT'  => '%s에서의 비밀번호 초기화',
-    'PASSWORD_RESET_REQUEST' => "제어판 비밀번호를 초기화 하기 위해서, 다음의 링크로 접속해주세요:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n또는, 다음의 주소로 간 뒤 https://%s/reset/?action=code&user=%s 다음의 초기화 코드를 입력해주세요:\n%s\n\n만약 비밀번호 초기화를 요청하지 않으셨다면, 이 메시지를 무시해주세요.\n\n--\nVesta 제어판\n",
+    'PASSWORD_RESET_REQUEST' => "제어판 비밀번호를 초기화 하기 위해서, 다음의 링크로 접속해주세요:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n또는, 다음의 주소로 간 뒤 https://%s/reset/?action=code&user=%s 다음의 초기화 코드를 입력해주세요:\n%s\n\n만약 비밀번호 초기화를 요청하지 않으셨다면, 이 메시지를 무시해주세요.\n\n--\nHestia 제어판\n",
 
     'Jan' => '1월',
     'Feb' => '2월',
@@ -574,7 +574,7 @@ $LANG['ko'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => '파일 시스템 디스크 할당량',
-    'Vesta Control Panel Plugins' => 'Vesta 제어판 플러그인',
+    'Hestia Control Panel Plugins' => 'Hestia 제어판 플러그인',
     'preview' => '미리보기',
     'Reseller Role' => '리셀러 역할',
     'Web Config Editor' => '웹 구성 편집기',
@@ -735,7 +735,7 @@ $LANG['ko'] = array(
     'webalizer' => 'Webalizer',
     'awstats' => 'Awstats',
 
-    'Vesta SSL' => 'Vesta 인증서',
+    'Hestia SSL' => 'Hestia 인증서',
     'SUBJECT' => '주체',
     'ALIASES' => '별칭',
     'NOT_BEFORE' => '유효 기간(시작)',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Vesta turkish language file
+ * Hestia turkish language file
  * 2014.11.01 Özgür Bozkurt (info@ozgurbozkurt.com/ozgur@forum.vestacp.com)
  * 2016.06.27 Selim Can CABA (info@selimcancaba.com)
  */
@@ -511,17 +511,17 @@ $LANG['tr'] = array(
     'CRON_EXCLUSIONS' => 'Tüm zamanlanmış görevleri hariç tutmak için * kullanın',
     'USER_EXCLUSIONS' => 'Her satıra bir klasör adı yazın. Tüm dizinleri hariç tutmak için * kullanın',
 
-    'Welcome to Vesta Control Panel'  => 'Vesta Kontrol Paneline Hoşgeldiniz',
-    'MAIL_FROM'  => 'Vesta Control Panel <noreply@%s>',
+    'Welcome to Hestia Control Panel'  => 'Hestia Kontrol Paneline Hoşgeldiniz',
+    'MAIL_FROM'  => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Merhaba, %s %s,\n",
     'GREETINGS' => "Merhaba,\n",
-    'ACCOUNT_READY' => "Hesabınız başarıyla oluşturuldu ve kullanıma hazır.\n\nhttps://%s/login/\nKullanıcı adı: %s\nŞifre: %s\n\n--\nVesta Control Panel\n",
+    'ACCOUNT_READY' => "Hesabınız başarıyla oluşturuldu ve kullanıma hazır.\n\nhttps://%s/login/\nKullanıcı adı: %s\nŞifre: %s\n\n--\nHestia Control Panel\n",
 
     'FTP login credentials'  => 'FTP giriş bilgileri',
-    'FTP_ACCOUNT_READY' => "FTP hesabı başarıyla oluşturuldu ve kullanıma hazır.\n\nHostname: %s\nKullanıcı adı: %s_%s\nŞifre: %s\n\n--\nVesta Control Panel\n",
+    'FTP_ACCOUNT_READY' => "FTP hesabı başarıyla oluşturuldu ve kullanıma hazır.\n\nHostname: %s\nKullanıcı adı: %s_%s\nŞifre: %s\n\n--\nHestia Control Panel\n",
 
     'Database Credentials'  => 'Veritabanı Bilgileri',
-    'DATABASE_READY' => "Veritabanı başarıyla oluşturuldu.\n\nVeritabanı: %s\nKullanıcı: %s\nŞifre: %s\n%s\n\n--\nVesta Control Panel\n",
+    'DATABASE_READY' => "Veritabanı başarıyla oluşturuldu.\n\nVeritabanı: %s\nKullanıcı: %s\nŞifre: %s\n%s\n\n--\nHestia Control Panel\n",
 
     'forgot password'  => 'şifremi unuttum',
     'Confirm'  => 'Onayla',
@@ -532,7 +532,7 @@ $LANG['tr'] = array(
     'RESET_NOTICE'  => '',
     'RESET_CODE_SENT'  => 'Şifre sıfırlama kodu e-posta adresinize gönderildi.<br>',
     'MAIL_RESET_SUBJECT'  => 'Şifre Sıfırlama - %s',
-    'PASSWORD_RESET_REQUEST' => "Şifrenizi sıfırlamak için lütfen linki takip edin:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatif olarak https://%s/reset/?action=code&user=%s linkine tıklayıp devamında şu reset kodunuzu gerekli alana girebilirsiniz:\n%s\n\nEğer şifre sıfırlama isteğinde bulunmadıysanız lütfen bu mesajı görmezden gelin ve özrümüzü kabul edin.\n\n--\nVesta Control Panel\n",
+    'PASSWORD_RESET_REQUEST' => "Şifrenizi sıfırlamak için lütfen linki takip edin:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nAlternatif olarak https://%s/reset/?action=code&user=%s linkine tıklayıp devamında şu reset kodunuzu gerekli alana girebilirsiniz:\n%s\n\nEğer şifre sıfırlama isteğinde bulunmadıysanız lütfen bu mesajı görmezden gelin ve özrümüzü kabul edin.\n\n--\nHestia Control Panel\n",
 
     'Jan' => 'Oca',
     'Feb' => 'Şub',
@@ -575,7 +575,7 @@ $LANG['tr'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'DosyaSistemi Disk Kotası',
-    'Vesta Control Panel Plugins' => 'Vesta Kontrol Paneli Eklentileri',
+    'Hestia Control Panel Plugins' => 'Hestia Kontrol Paneli Eklentileri',
     'preview' => 'önizleme',
     'Reseller Role' => 'Bayi Rolü',
     'Web Config Editor' => 'Web Yapılandırma Editörü',
@@ -736,7 +736,7 @@ $LANG['tr'] = array(
     'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Vesta SSL' => 'Vesta SSL',
+    'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

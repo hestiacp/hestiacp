@@ -79,19 +79,19 @@ foreach ($backup_types as $backup_type) {
 }
 
 // List ssl certificate info
-exec (HESTIA_CMD."v-list-sys-vesta-ssl json", $output, $return_var);
+exec (HESTIA_CMD."v-list-sys-hestia-ssl json", $output, $return_var);
 $ssl_str = json_decode(implode('', $output), true);
 unset($output);
-$v_ssl_crt = $ssl_str['VESTA']['CRT'];
-$v_ssl_key = $ssl_str['VESTA']['KEY'];
-$v_ssl_ca = $ssl_str['VESTA']['CA'];
-$v_ssl_subject = $ssl_str['VESTA']['SUBJECT'];
-$v_ssl_aliases = $ssl_str['VESTA']['ALIASES'];
-$v_ssl_not_before = $ssl_str['VESTA']['NOT_BEFORE'];
-$v_ssl_not_after = $ssl_str['VESTA']['NOT_AFTER'];
-$v_ssl_signature = $ssl_str['VESTA']['SIGNATURE'];
-$v_ssl_pub_key = $ssl_str['VESTA']['PUB_KEY'];
-$v_ssl_issuer = $ssl_str['VESTA']['ISSUER'];
+$v_ssl_crt = $ssl_str['HESTIA']['CRT'];
+$v_ssl_key = $ssl_str['HESTIA']['KEY'];
+$v_ssl_ca = $ssl_str['HESTIA']['CA'];
+$v_ssl_subject = $ssl_str['HESTIA']['SUBJECT'];
+$v_ssl_aliases = $ssl_str['HESTIA']['ALIASES'];
+$v_ssl_not_before = $ssl_str['HESTIA']['NOT_BEFORE'];
+$v_ssl_not_after = $ssl_str['HESTIA']['NOT_AFTER'];
+$v_ssl_signature = $ssl_str['HESTIA']['SIGNATURE'];
+$v_ssl_pub_key = $ssl_str['HESTIA']['PUB_KEY'];
+$v_ssl_issuer = $ssl_str['HESTIA']['ISSUER'];
 
 // Check POST request
 if (!empty($_POST['save'])) {
@@ -374,24 +374,24 @@ if (!empty($_POST['save'])) {
                 fclose($fp);
             }
 
-            exec (HESTIA_CMD."v-change-sys-vesta-ssl ".$tmpdir, $output, $return_var);
+            exec (HESTIA_CMD."v-change-sys-hestia-ssl ".$tmpdir, $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
 
             // List ssl certificate info
-            exec (HESTIA_CMD."v-list-sys-vesta-ssl json", $output, $return_var);
+            exec (HESTIA_CMD."v-list-sys-hestia-ssl json", $output, $return_var);
             $ssl_str = json_decode(implode('', $output), true);
             unset($output);
-            $v_ssl_crt = $ssl_str['VESTA']['CRT'];
-            $v_ssl_key = $ssl_str['VESTA']['KEY'];
-            $v_ssl_ca = $ssl_str['VESTA']['CA'];
-            $v_ssl_subject = $ssl_str['VESTA']['SUBJECT'];
-            $v_ssl_aliases = $ssl_str['VESTA']['ALIASES'];
-            $v_ssl_not_before = $ssl_str['VESTA']['NOT_BEFORE'];
-            $v_ssl_not_after = $ssl_str['VESTA']['NOT_AFTER'];
-            $v_ssl_signature = $ssl_str['VESTA']['SIGNATURE'];
-            $v_ssl_pub_key = $ssl_str['VESTA']['PUB_KEY'];
-            $v_ssl_issuer = $ssl_str['VESTA']['ISSUER'];
+            $v_ssl_crt = $ssl_str['HESTIA']['CRT'];
+            $v_ssl_key = $ssl_str['HESTIA']['KEY'];
+            $v_ssl_ca = $ssl_str['HESTIA']['CA'];
+            $v_ssl_subject = $ssl_str['HESTIA']['SUBJECT'];
+            $v_ssl_aliases = $ssl_str['HESTIA']['ALIASES'];
+            $v_ssl_not_before = $ssl_str['HESTIA']['NOT_BEFORE'];
+            $v_ssl_not_after = $ssl_str['HESTIA']['NOT_AFTER'];
+            $v_ssl_signature = $ssl_str['HESTIA']['SIGNATURE'];
+            $v_ssl_pub_key = $ssl_str['HESTIA']['PUB_KEY'];
+            $v_ssl_issuer = $ssl_str['HESTIA']['ISSUER'];
         }
     }
 

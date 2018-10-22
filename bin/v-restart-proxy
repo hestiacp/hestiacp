@@ -10,12 +10,12 @@
 #----------------------------------------------------------#
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
 send_email_report() {
-    email=$(grep CONTACT $VESTA/data/users/admin/user.conf)
+    email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $PROXY_SYSTEM restart failed"
@@ -37,11 +37,11 @@ fi
 
 # Schedule restart
 if [ "$1" = 'scheduled' ]; then
-    echo "$BIN/$SCRIPT now" >> $VESTA/data/queue/restart.pipe
+    echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
     exit
 fi
 if [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
-    echo "$BIN/$SCRIPT now" >> $VESTA/data/queue/restart.pipe
+    echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
     exit
 fi
 
@@ -49,7 +49,7 @@ if [ -z "$PROXY_SYSTEM" ] || [ "$PROXY_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-if [ -f "/usr/local/vesta/web/inc/nginx_proxy" ]; then
+if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
 
   # if vesta is behind default nginx, restart in background with 15 sec delay
   # background restart
@@ -63,8 +63,8 @@ if [ -f "/usr/local/vesta/web/inc/nginx_proxy" ]; then
       fi
 
       # Update restart queue
-      if [ -e "$VESTA/data/queue/restart.pipe" ]; then
-          sed -i "/$SCRIPT/d" $VESTA/data/queue/restart.pipe
+      if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
+          sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
       fi
 
       exit;
@@ -87,14 +87,14 @@ else
   fi
 
   # Update restart queue
-  if [ -e "$VESTA/data/queue/restart.pipe" ]; then
-      sed -i "/$SCRIPT/d" $VESTA/data/queue/restart.pipe
+  if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
+      sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
   fi
 
 fi
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

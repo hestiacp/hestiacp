@@ -13,8 +13,8 @@
 user=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -34,13 +34,13 @@ is_backup_scheduled 'backup'
 #----------------------------------------------------------#
 
 # Adding backup task to  the queue
-log=$VESTA/log/backup.log
+log=$HESTIA/log/backup.log
 echo "$BIN/v-backup-user $user yes >> $log 2>&1" >>\
-    $VESTA/data/queue/backup.pipe
+    $HESTIA/data/queue/backup.pipe
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

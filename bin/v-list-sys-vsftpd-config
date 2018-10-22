@@ -13,7 +13,7 @@
 format=${1-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
@@ -58,7 +58,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

@@ -14,7 +14,7 @@ domain=$(idn -t --quiet -u "$1" )
 type=${2-any}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 
 #----------------------------------------------------------#
@@ -30,10 +30,10 @@ check_args '1' "$#" 'DOMAIN [TYPE]'
 
 # Define conf 
 case $type in
-    web)    conf="$VESTA/data/users/*/web.conf" ;;
-    dns)    conf="$VESTA/data/users/*/dns.conf" ;;
-    mail)   conf="$VESTA/data/users/*/mail.conf" ;;
-    *)      conf="$VESTA/data/users/*/*.conf"
+    web)    conf="$HESTIA/data/users/*/web.conf" ;;
+    dns)    conf="$HESTIA/data/users/*/dns.conf" ;;
+    mail)   conf="$HESTIA/data/users/*/mail.conf" ;;
+    *)      conf="$HESTIA/data/users/*/*.conf"
 esac
 
 
@@ -46,7 +46,7 @@ echo $owner
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

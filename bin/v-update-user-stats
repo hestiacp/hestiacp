@@ -17,9 +17,9 @@ user=$1
 source /etc/profile
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -67,7 +67,7 @@ TOTAL_USERS=0
 
 # Updating user stats
 for user in $user_list; do
-    USER_DATA=$VESTA/data/users/$user
+    USER_DATA=$HESTIA/data/users/$user
     source $USER_DATA/user.conf
     next_month=$(date +'%m/01/%y' -d '+ 1 month')
     DATE=$(date -d "$next_month -1day" +%F)
@@ -128,7 +128,7 @@ for user in $user_list; do
 done
 
 # Updating overall stats
-stats="$VESTA/data/users/admin/overall_stats.log"
+stats="$HESTIA/data/users/admin/overall_stats.log"
 
 s="DATE='$DATE' TIME='$TIME' PACKAGE='default' IP_OWNED='$TOTAL_IP_OWNED'"
 s="$s DISK_QUOTA='0' U_DISK='$TOTAL_U_DISK' U_DISK_DIRS='$TOTAL_U_DISK_DIRS'"
@@ -165,7 +165,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

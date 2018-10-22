@@ -16,9 +16,9 @@ auth_user=$3
 password=$4; HIDE=4
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Defining htpasswd file
 htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
@@ -56,7 +56,7 @@ echo "$auth_user:$auth_hash" >> $htpasswd
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Rebuilding AUTH_HASH variable

@@ -14,9 +14,9 @@ user=$1
 database=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/db.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/db.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -46,7 +46,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating db value

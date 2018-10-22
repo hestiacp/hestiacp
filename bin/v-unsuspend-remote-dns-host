@@ -13,8 +13,8 @@
 host=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -37,7 +37,7 @@ update_object_value "../../conf/dns-cluster" 'HOST' "$host" '$SUSPENDED' 'no'
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

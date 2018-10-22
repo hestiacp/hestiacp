@@ -16,7 +16,7 @@ domain_idn=$2
 key=$(echo "$3"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # Additional argument formatting
 format_domain
@@ -43,7 +43,7 @@ get_object_value 'dns' 'DOMAIN' "$domain" "$key"
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

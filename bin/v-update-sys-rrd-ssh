@@ -13,8 +13,8 @@
 period=${1-daily}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -86,7 +86,7 @@ rrdtool graph $RRD/ssh/$period-ssh.png \
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 if [ "$result" -ne 0 ]; then

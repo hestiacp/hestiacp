@@ -14,7 +14,7 @@
 format=${1-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
@@ -62,7 +62,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 # Defining language list
-languages=$(ls $VESTA/web/inc/i18n/ |cut -f 1 -d .)
+languages=$(ls $HESTIA/web/inc/i18n/ |cut -f 1 -d .)
 
 # Listing data
 case $format in
@@ -74,7 +74,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

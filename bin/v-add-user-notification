@@ -16,8 +16,8 @@ notice=$(echo $3 |sed "s/'/%quote%/g")
 type=$4
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -63,7 +63,7 @@ chmod 660 $USER_DATA/notifications.conf
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating notification counter

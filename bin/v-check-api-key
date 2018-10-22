@@ -24,7 +24,7 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ ! -e $VESTA/data/keys/$key ]; then
+if [ ! -e $HESTIA/data/keys/$key ]; then
     echo "Error: key missmatch"
     echo "$date $time api $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
@@ -32,7 +32,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 echo "$date $time api $ip successfully launched" >> $HESTIA/log/auth.log

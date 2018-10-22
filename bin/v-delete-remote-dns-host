@@ -2,7 +2,7 @@
 # info: delete remote dns host
 # options: HOST
 #
-# The function for deleting the remote dns host from vesta configuration.
+# The function for deleting the remote dns host from hestia configuration.
 
 
 #----------------------------------------------------------#
@@ -42,7 +42,7 @@ sed -i "/HOST='$host' /d" $HESTIA/conf/dns-cluster.conf
 check_cluster=$(grep HOST $HESTIA/conf/dns-cluster.conf |wc -l)
 if [ "$check_cluster" -eq '0' ]; then
     rm -f $HESTIA/conf/dns-cluster.conf
-    sed -i "/DNS_CLUSTER=/d" $HESTIA/conf/vesta.conf
+    sed -i "/DNS_CLUSTER=/d" $HESTIA/conf/hestia.conf
 
     # Delete cron job
     cmd="sudo $HESTIA/bin/v-update-sys-queue dns-cluster"

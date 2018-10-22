@@ -13,13 +13,13 @@
 format=${1-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
     IFS=$'\n'
     i=1
-    objects=$(grep HOST $VESTA/conf/dns-cluster.conf |wc -l)
+    objects=$(grep HOST $HESTIA/conf/dns-cluster.conf |wc -l)
     echo "{"
     while read str; do
         eval $str
@@ -38,7 +38,7 @@ json_list() {
             echo
         fi
         ((i++))
-    done < <(cat $VESTA/conf/dns-cluster.conf)
+    done < <(cat $HESTIA/conf/dns-cluster.conf)
     echo '}'
 }
 
@@ -50,7 +50,7 @@ shell_list() {
     while read str; do
         eval $str
         echo "$HOST $PORT $TYPE $USER $DNS_USER $SUSPENDED $DATE"
-    done < <(cat $VESTA/conf/dns-cluster.conf)
+    done < <(cat $HESTIA/conf/dns-cluster.conf)
 }
 
 # PLAIN list function
@@ -60,7 +60,7 @@ plain_list() {
         eval $str
         echo -ne "$HOST\t$PORT\t$TYPE\t$USER\t$DNS_USER\t"
         echo -e "$SUSPENDED\t$TIME\t$DATE"
-    done < <(cat $VESTA/conf/dns-cluster.conf)
+    done < <(cat $HESTIA/conf/dns-cluster.conf)
 }
 
 # CSV list function
@@ -70,7 +70,7 @@ csv_list() {
     while read str; do
         eval $str
         echo "$HOST,$PORT,$TYPE,$USER,$DNS_USER,$SUSPENDED,$TIME,$DATE"
-    done < <(cat $VESTA/conf/dns-cluster.conf)
+    done < <(cat $HESTIA/conf/dns-cluster.conf)
 }
 
 
@@ -78,7 +78,7 @@ csv_list() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-if [ ! -e "$VESTA/conf/dns-cluster.conf" ]; then
+if [ ! -e "$HESTIA/conf/dns-cluster.conf" ]; then
     exit
 fi
 
@@ -97,7 +97,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

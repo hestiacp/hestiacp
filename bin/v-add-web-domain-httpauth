@@ -17,9 +17,9 @@ password=$4; HIDE=4
 restart=${5-yes}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Defining htpasswd file
 htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
@@ -91,7 +91,7 @@ if [ "$restart" != 'no' ] && [ "$restart_required" = 'yes' ]; then
 fi
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Preparing web.conf keys

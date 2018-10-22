@@ -15,9 +15,9 @@ if [ -z "$dst_file" ]; then
     exit 1
 fi
 
-# Checking vesta user
-if [ ! -e "$VESTA/data/users/$user" ]; then
-    echo "Error: vesta user $user doesn't exist"
+# Checking hestia user
+if [ ! -e "$HESTIA/data/users/$user" ]; then
+    echo "Error: hestia user $user doesn't exist"
     exit 3
 fi
 

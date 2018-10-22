@@ -24,10 +24,10 @@ ip_name=$6
 nat_ip=$7
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/ip.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -62,7 +62,7 @@ if [ -z "$sys_ip_check" ]; then
 
     # Adding RHEL/CentOS/Fedora/Amazon startup script
     if [ -d "/etc/sysconfig" ]; then
-        sys_ip="# Added by vesta"
+        sys_ip="# Added by hestia"
         sys_ip="$sys_ip\nDEVICE=$iface"
         sys_ip="$sys_ip\nBOOTPROTO=static"
         sys_ip="$sys_ip\nONBOOT=yes"
@@ -73,7 +73,7 @@ if [ -z "$sys_ip_check" ]; then
 
     # Adding Debian/Ubuntu startup script
     if [ -e "/etc/debian_version" ]; then
-        sys_ip="\n# Added by vesta"
+        sys_ip="\n# Added by hestia"
         sys_ip="$sys_ip\nauto $iface"
         sys_ip="$sys_ip\niface $iface inet static"
         sys_ip="$sys_ip\naddress $ip"
@@ -87,7 +87,7 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-# Adding vesta ip
+# Adding hestia ip
 echo "OWNER='$user'
 STATUS='$ip_status'
 NAME='$ip_name'
@@ -97,8 +97,8 @@ INTERFACE='$interface'
 NETMASK='$netmask'
 NAT='$nat_ip'
 TIME='$time'
-DATE='$date'" > $VESTA/data/ips/$ip
-chmod 660 $VESTA/data/ips/$ip
+DATE='$date'" > $HESTIA/data/ips/$ip
+chmod 660 $HESTIA/data/ips/$ip
 
 # WEB support
 if [ ! -z "$WEB_SYSTEM" ]; then
@@ -154,14 +154,14 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating user counters
 increase_user_value "$user" '$IP_OWNED'
 if [ "$user" = 'admin' ]; then
     if [ "$ip_status" = 'shared' ]; then
-        for user in $(ls $VESTA/data/users); do
+        for user in $(ls $HESTIA/data/users); do
             increase_user_value "$user" '$IP_AVAIL'
         done
     else

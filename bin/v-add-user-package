@@ -15,12 +15,12 @@ package=$2
 rewrite=$3
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # Functions
 is_package_new() {
-    if [ -e "$VESTA/data/packages/$package.pkg" ]; then
+    if [ -e "$HESTIA/data/packages/$package.pkg" ]; then
         echo "Error: package $package already exists."
         log_event "$E_EXISTS" "$ARGUMENTS"
         exit $E_EXISTS
@@ -83,12 +83,12 @@ is_package_consistent
 #                       Action                             #
 #----------------------------------------------------------#
 
-cp -f $pkg_dir/$package.pkg $VESTA/data/packages/
-chmod 644 $VESTA/data/packages/$package.pkg
+cp -f $pkg_dir/$package.pkg $HESTIA/data/packages/
+chmod 644 $HESTIA/data/packages/$package.pkg
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

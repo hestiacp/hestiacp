@@ -15,11 +15,11 @@ user=$1
 restart=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/func/db.sh
-source $VESTA/func/ip.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/db.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -71,8 +71,8 @@ $BIN/v-delete-user-ips "$user"
 check_result "$?" "user ip release failed"
 
 # Deleteing user pipes
-sed -i "/ $user$/d" $VESTA/data/queue/disk.pipe
-sed -i "/ $user$/d" $VESTA/data/queue/traffic.pipe
+sed -i "/ $user$/d" $HESTIA/data/queue/disk.pipe
+sed -i "/ $user$/d" $HESTIA/data/queue/traffic.pipe
 
 # Deleting sftp jail
 if [ ! -z "$SFTPJAIL_KEY" ]; then
@@ -106,7 +106,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

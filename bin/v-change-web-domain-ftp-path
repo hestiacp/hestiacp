@@ -17,9 +17,9 @@ ftp_user=$3
 ftp_path=$4
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
@@ -71,7 +71,7 @@ sed -i "$str s%$old_path%$ftp_path_a%g" /etc/passwd
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Transforming absolute path to relative

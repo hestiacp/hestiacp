@@ -17,8 +17,8 @@ license=$2
 source /etc/profile
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -46,12 +46,12 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
-# Updating vesta.conf
-if [ ! -z "$(grep "${module}_KEY" $VESTA/conf/vesta.conf)" ]; then
-    sed -i "s/${module}_KEY=.*/${module}_KEY=''/g" $VESTA/conf/vesta.conf
+# Updating hestia.conf
+if [ ! -z "$(grep "${module}_KEY" $HESTIA/conf/hestia.conf)" ]; then
+    sed -i "s/${module}_KEY=.*/${module}_KEY=''/g" $HESTIA/conf/hestia.conf
 fi
 
 # Deactivating sftpjail

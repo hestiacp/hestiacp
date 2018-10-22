@@ -15,7 +15,7 @@ host=$2
 format=${3-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
@@ -86,7 +86,7 @@ is_object_valid "../../conf/$type" 'HOST' "$host"
 #----------------------------------------------------------#
 
 # Parsing hosts
-eval $(grep "HOST='$host'" $VESTA/conf/$type.conf)
+eval $(grep "HOST='$host'" $HESTIA/conf/$type.conf)
 
 # Listing data
 case $format in
@@ -98,7 +98,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

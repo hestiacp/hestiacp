@@ -19,8 +19,8 @@ chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 iptables="/sbin/iptables"
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -37,8 +37,8 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 #----------------------------------------------------------#
 
 # Deleting chain
-chains=$VESTA/data/firewall/chains.conf
-banlist=$VESTA/data/firewall/banlist.conf
+chains=$HESTIA/data/firewall/chains.conf
+banlist=$HESTIA/data/firewall/banlist.conf
 chain_param=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
 if [ ! -z "$chain_param" ]; then
     eval $chain_param
@@ -57,7 +57,7 @@ chmod 660 $chains
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

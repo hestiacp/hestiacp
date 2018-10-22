@@ -51,7 +51,7 @@ fi
 
 if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
 
-  # if vesta is behind default nginx, restart in background with 15 sec delay
+  # if hestia is behind default nginx, restart in background with 15 sec delay
   # background restart
   if [ "$1" = 'background' ]; then
       # Restart system

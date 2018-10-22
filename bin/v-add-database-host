@@ -23,9 +23,9 @@ charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
 template=${8-template1}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/db.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/db.sh
+source $HESTIA/conf/hestia.conf
 
 is_mysql_host_alive() {
     mycnf=$(mktemp)
@@ -94,23 +94,23 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Adding host to conf
-echo "$str" >> $VESTA/conf/$type.conf
-chmod 660 $VESTA/conf/$type.conf
+echo "$str" >> $HESTIA/conf/$type.conf
+chmod 660 $HESTIA/conf/$type.conf
 
-# Updating vesta.conf
-if [ -z "$(grep DB_SYSTEM $VESTA/conf/vesta.conf)" ]; then
-    echo "DB_SYSTEM='$type'" >> $VESTA/conf/vesta.conf
+# Updating hestia.conf
+if [ -z "$(grep DB_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
+    echo "DB_SYSTEM='$type'" >> $HESTIA/conf/hestia.conf
 else
     db=$(echo "$DB_SYSTEM,$type" |\
         sed "s/,/\n/g"|\
         sort -r -u |\
         sed "/^$/d"|\
         sed ':a;N;$!ba;s/\n/,/g')
-    sed -i "s/DB_SYSTEM=.*/DB_SYSTEM='$db'/g" $VESTA/conf/vesta.conf
+    sed -i "s/DB_SYSTEM=.*/DB_SYSTEM='$db'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Logging

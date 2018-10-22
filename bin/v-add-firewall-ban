@@ -20,8 +20,8 @@ chain=$(echo $2|tr '[:lower:]' '[:upper:]')
 iptables="/sbin/iptables"
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -38,19 +38,19 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 #----------------------------------------------------------#
 
 # Checking server ip
-if [ -e "$VESTA/data/ips/$ip" ] || [ "$ip" = '127.0.0.1' ]; then
+if [ -e "$HESTIA/data/ips/$ip" ] || [ "$ip" = '127.0.0.1' ]; then
     exit
 fi
 
 # Checking ip exclusions
-excludes="$VESTA/data/firewall/excludes.conf"
+excludes="$HESTIA/data/firewall/excludes.conf"
 check_excludes=$(grep "^$ip$" $excludes 2>/dev/null)
 if  [ ! -z "$check_excludes" ]; then
     exit
 fi
 
 # Checking ip in banlist
-conf="$VESTA/data/firewall/banlist.conf"
+conf="$HESTIA/data/firewall/banlist.conf"
 check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
 if [ ! -z "$check_ip" ]; then
     exit
@@ -74,7 +74,7 @@ chmod 660 $conf
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

@@ -13,12 +13,12 @@
 language=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 is_language_valid() {
-    if [ ! -e "$VESTA/web/inc/i18n/$language.php" ]; then
+    if [ ! -e "$HESTIA/web/inc/i18n/$language.php" ]; then
         echo "Error: language file $language doesn't exist"
         log_event "$E_NOTEXIST $ARGUMENTS"
         exit $E_NOTEXIST
@@ -40,15 +40,15 @@ is_language_valid $language
 #----------------------------------------------------------#
 
 # Change language
-if [ -z "$(grep LANGUAGE $VESTA/conf/vesta.conf)" ]; then
-    echo "LANGUAGE='$language'" >> $VESTA/conf/vesta.conf
+if [ -z "$(grep LANGUAGE $HESTIA/conf/hestia.conf)" ]; then
+    echo "LANGUAGE='$language'" >> $HESTIA/conf/hestia.conf
 else
-    sed -i "s/LANGUAGE=.*/LANGUAGE='$language'/g" $VESTA/conf/vesta.conf
+    sed -i "s/LANGUAGE=.*/LANGUAGE='$language'/g" $HESTIA/conf/hestia.conf
 fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

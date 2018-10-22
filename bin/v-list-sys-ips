@@ -13,15 +13,15 @@
 format=${1-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
     echo '{'
-    ip_count=$(ls $VESTA/data/ips/ |wc -l)
+    ip_count=$(ls $HESTIA/data/ips/ |wc -l)
     i=1
     while read IP; do
-        source $VESTA/data/ips/$IP
+        source $HESTIA/data/ips/$IP
         echo -n '    "'$IP'": {
         "OWNER": "'$OWNER'",
         "STATUS": "'$STATUS'",
@@ -40,7 +40,7 @@ json_list() {
             echo
         fi
         ((i++))
-    done < <(ls $VESTA/data/ips/)
+    done < <(ls $HESTIA/data/ips/)
     echo '}'
 }
 
@@ -49,21 +49,21 @@ shell_list() {
     echo "IP   MASK   NAT   STATUS   WEB  DATE"
     echo "--   ----   ---   ------   ---  ----"
     while read IP; do
-        source $VESTA/data/ips/$IP
+        source $HESTIA/data/ips/$IP
         if [ -z "$NAT" ]; then
             NAT='no'
         fi
         echo "$IP $NETMASK $NAT $STATUS $U_WEB_DOMAINS $DATE"
-    done < <(ls $VESTA/data/ips/)
+    done < <(ls $HESTIA/data/ips/)
 }
 
 # PLAIN list function
 plain_list() {
     while read IP; do
-        source $VESTA/data/ips/$IP
+        source $HESTIA/data/ips/$IP
         echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
         echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
-    done < <(ls $VESTA/data/ips/)
+    done < <(ls $HESTIA/data/ips/)
 }
 
 # CSV list function
@@ -71,10 +71,10 @@ csv_list() {
     echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
     echo "NETMASK,NAT,TIME,DATE"
     while read IP; do
-        source $VESTA/data/ips/$IP
+        source $HESTIA/data/ips/$IP
         echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
         echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
-    done < <(ls $VESTA/data/ips/)
+    done < <(ls $HESTIA/data/ips/)
 }
 
 
@@ -92,7 +92,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

@@ -18,8 +18,8 @@ fname=$5
 lname=$6
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 is_user_free() {
     check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$user$" )
@@ -48,7 +48,7 @@ is_package_valid
 #----------------------------------------------------------#
 
 # Parsing package data
-pkg_data=$(cat $VESTA/data/packages/$package.pkg |egrep -v "TIME|DATE")
+pkg_data=$(cat $HESTIA/data/packages/$package.pkg |egrep -v "TIME|DATE")
 
 # Checking shell
 shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
@@ -88,7 +88,7 @@ chattr +i $HOMEDIR/$user/conf
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Adding user dir
@@ -119,18 +119,18 @@ chmod 660 $USER_DATA/backup.conf \
     $USER_DATA/cron.conf
 
 # Updating queue pipes
-echo "$BIN/v-update-user-disk $user" >> $VESTA/data/queue/disk.pipe
+echo "$BIN/v-update-user-disk $user" >> $HESTIA/data/queue/disk.pipe
 if [ ! -z "$WEB_SYSTEM" ]; then
     echo "$BIN/v-update-web-domains-traff $user" \
-        >> $VESTA/data/queue/traffic.pipe
-    echo "$BIN/v-update-web-domains-disk $user" >> $VESTA/data/queue/disk.pipe
+        >> $HESTIA/data/queue/traffic.pipe
+    echo "$BIN/v-update-web-domains-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
 if [ ! -z "$MAIL_SYSTEM" ]; then
-    echo "$BIN/v-update-mail-domains-disk $user" >> $VESTA/data/queue/disk.pipe
+    echo "$BIN/v-update-mail-domains-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
 
 if [ ! -z "$DB_SYSTEM" ]; then
-    echo "$BIN/v-update-databases-disk $user" >> $VESTA/data/queue/disk.pipe
+    echo "$BIN/v-update-databases-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
 
 # Generating timestamp
@@ -199,8 +199,8 @@ if [ "$user" != 'admin' ]; then
 fi
 
 # Run template trigger
-if [ -x "$VESTA/data/packages/$package.sh" ]; then
-    $VESTA/data/packages/$package.sh "$user" "$email" "$fname" "$lname"
+if [ -x "$HESTIA/data/packages/$package.sh" ]; then
+    $HESTIA/data/packages/$package.sh "$user" "$email" "$fname" "$lname"
 fi
 
 # Adding jailed sftp env

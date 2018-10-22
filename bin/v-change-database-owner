@@ -14,10 +14,10 @@ database=$1
 user=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/db.sh
-source $VESTA/func/rebuild.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/db.sh
+source $HESTIA/func/rebuild.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -32,7 +32,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Check owner existance
 owner=$(echo $database | cut -f 1 -d '_')
-if [ ! -e "$VESTA/data/users/$owner" ]; then
+if [ ! -e "$HESTIA/data/users/$owner" ]; then
     echo "Error: database owner doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
@@ -44,7 +44,7 @@ if [ "$owner" = "$user" ]; then
 fi
 
 # Check db existance
-db_data=$(grep "DB='$database'" $VESTA/data/users/$owner/db.conf)
+db_data=$(grep "DB='$database'" $HESTIA/data/users/$owner/db.conf)
 if [ -z "$db_data" ]; then
     echo "Error: database $database doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
@@ -53,7 +53,7 @@ fi
 
 # Check if datbase name is uniq
 new_db=$(echo $database | sed "s/^${owner}_/${user}_/")
-check_db=$(grep "DB='$new_db'" $VESTA/data/users/$user/db.conf)
+check_db=$(grep "DB='$new_db'" $HESTIA/data/users/$user/db.conf)
 if [ ! -z "$check_db" ]; then
     echo "Error: $new_db database exists"
     log_event "$E_EXISTS" "$ARGUMENTS"
@@ -87,7 +87,7 @@ esac
 
 # Import configuration
 db_data=$(echo "$db_data" | sed "s/'${owner}_/'${user}_/g")
-echo "$db_data" >> $VESTA/data/users/$user/db.conf
+echo "$db_data" >> $HESTIA/data/users/$user/db.conf
 eval $db_data
 
 # Unsuspend db
@@ -115,7 +115,7 @@ $BIN/v-update-user-counters $user
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

@@ -15,8 +15,8 @@
 source /etc/profile
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # Another workaround for cron environment
 PATH="$PATH:$BIN"
@@ -134,7 +134,7 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # No Logging

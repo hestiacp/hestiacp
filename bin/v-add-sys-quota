@@ -10,8 +10,8 @@
 #----------------------------------------------------------#
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -67,21 +67,21 @@ if [ ! -z "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" 
     check_result $? "quota can't be enabled in $mnt" $E_DISK
 fi
 
-# Updating vesta.conf value
-if [ -z "$(grep DISK_QUOTA $VESTA/conf/vesta.conf)" ]; then
-    echo "DISK_QUOTA='yes'" >> $VESTA/conf/vesta.conf
+# Updating hestia.conf value
+if [ -z "$(grep DISK_QUOTA $HESTIA/conf/hestia.conf)" ]; then
+    echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
 else
-    sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='yes'/g" $VESTA/conf/vesta.conf
+    sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='yes'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Rebuilding user quota
-for user in $(ls $VESTA/data/users); do
+for user in $(ls $HESTIA/data/users); do
     $BIN/v-update-user-quota $user
 done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

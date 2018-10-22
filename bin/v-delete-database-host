@@ -2,7 +2,7 @@
 # info: delete database server
 # options: TYPE HOST
 #
-# The function for deleting the database host from vesta configuration. It will
+# The function for deleting the database host from hestia configuration. It will
 # be deleted if there are no databases created on it only.
 
 
@@ -15,9 +15,9 @@ type=$1
 host=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/db.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/db.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -36,11 +36,11 @@ is_dbhost_free
 #                       Action                             #
 #----------------------------------------------------------#
 # Deleting server
-sed -i "/HOST='$host' /d" $VESTA/conf/$type.conf
+sed -i "/HOST='$host' /d" $HESTIA/conf/$type.conf
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

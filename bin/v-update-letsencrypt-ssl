@@ -14,8 +14,8 @@
 source /etc/profile
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -27,12 +27,12 @@ users=$($BIN/v-list-users | tail -n+3 | awk '{ print $1 }')
 
 # Checking users
 for user in $users; do
-    USER_DATA=$VESTA/data/users/$user
+    USER_DATA=$HESTIA/data/users/$user
     # Checking user certificates
     lecounter=0
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
 
-        crt="$VESTA/data/users/$user/ssl/$domain.crt"
+        crt="$HESTIA/data/users/$user/ssl/$domain.crt"
         crt_data=$(openssl x509 -text -in "$crt")
         expire=$(echo "$crt_data" |grep "Not After")
         expire=$(echo "$expire" |cut -f 2,3,4 -d :)
@@ -67,7 +67,7 @@ for user in $users; do
 done
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # No Logging

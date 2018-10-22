@@ -13,8 +13,8 @@
 #format=${1-shell}
 
 # Includes
-#source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+#source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -31,15 +31,15 @@ for db in $(echo $DB_SYSTEM| tr ',' '\n'); do
     IFS=$'\n'
 
     # Checking database config
-    if [ -e "$VESTA/conf/$db.conf" ]; then
+    if [ -e "$HESTIA/conf/$db.conf" ]; then
 
         # Checking server status
-        for host_str in $(cat $VESTA/conf/$db.conf); do
+        for host_str in $(cat $HESTIA/conf/$db.conf); do
             eval $host_str
 
             # Checking MySQL
             if [ "$db" = 'mysql' ]; then
-                mycnf="$VESTA/conf/.mysql.$HOST"
+                mycnf="$HESTIA/conf/.mysql.$HOST"
                 if [ ! -e "$mycnf" ]; then
                     echo "[client]">$mycnf
                     echo "host='$HOST'" >> $mycnf
@@ -77,7 +77,7 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

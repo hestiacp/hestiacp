@@ -17,10 +17,10 @@ new_domain=$3
 restart=$4
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/func/ip.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
@@ -39,7 +39,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-check_new_domain=$(grep "DOMAIN='$new_domain'" $VESTA/data/users/*/web.conf)
+check_new_domain=$(grep "DOMAIN='$new_domain'" $HESTIA/data/users/*/web.conf)
 if [ ! -z "$check_new_domain" ]; then
     check_result $E_EXISTS "$new_domain already exists"
 fi
@@ -85,7 +85,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Rebuilding vhosts

@@ -15,8 +15,8 @@ package=$2
 force=$3
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 is_package_avalable() {
 
@@ -33,7 +33,7 @@ is_package_avalable() {
     DISK_QUOTA='0'
     BANDWIDTH='0'
 
-    pkg_data=$(cat $VESTA/data/packages/$package.pkg |grep -v TIME |\
+    pkg_data=$(cat $HESTIA/data/packages/$package.pkg |grep -v TIME |\
         grep -v DATE)
     eval $pkg_data
 
@@ -77,7 +77,7 @@ is_package_avalable() {
 
 change_user_package() {
     eval $(cat $USER_DATA/user.conf)
-    eval $(cat $VESTA/data/packages/$package.pkg |egrep -v "TIME|DATE")
+    eval $(cat $HESTIA/data/packages/$package.pkg |egrep -v "TIME|DATE")
     echo "FNAME='$FNAME'
 LNAME='$LNAME'
 PACKAGE='$package'
@@ -161,19 +161,19 @@ shell=$(grep -w "$shell_conf" /etc/shells |head -n1)
 /usr/bin/chsh -s "$shell" "$user" &>/dev/null
 
 # Run template trigger
-if [ -x "$VESTA/data/packages/$package.sh" ]; then
-    $VESTA/data/packages/$package.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
+if [ -x "$HESTIA/data/packages/$package.sh" ]; then
+    $HESTIA/data/packages/$package.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
 fi
 
 # Update disk quota
-source $VESTA/conf/vesta.conf
+source $HESTIA/conf/hestia.conf
 if [ "$DISK_QUOTA" = 'yes' ]; then
     $BIN/v-update-user-quota $user
 fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

@@ -22,9 +22,9 @@ domain_idn=$(idn -t --quiet -a "$domain")
 key=$(echo "$3"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -47,7 +47,7 @@ eval echo $key
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

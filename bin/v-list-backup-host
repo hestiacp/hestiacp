@@ -14,7 +14,7 @@ type=$1
 format=${2-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
@@ -75,12 +75,12 @@ is_type_format_valid "$type"
 #----------------------------------------------------------#
 
 # Checking backup config
-if [ ! -e "$VESTA/conf/$type.backup.conf" ]; then
+if [ ! -e "$HESTIA/conf/$type.backup.conf" ]; then
     exit
 fi
 
 # Parsing backup config
-source "$VESTA/conf/$type.backup.conf"
+source "$HESTIA/conf/$type.backup.conf"
 
 # Listing data
 case $format in
@@ -92,7 +92,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

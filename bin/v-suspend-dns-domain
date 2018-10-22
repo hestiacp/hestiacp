@@ -16,8 +16,8 @@ domain_idn=$2
 restart="$3"
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
@@ -53,7 +53,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 fi
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Adding suspend in config

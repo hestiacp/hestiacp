@@ -23,15 +23,15 @@ protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 comment=$6
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # Sort function
 sort_fw_rules() {
-    cat $VESTA/data/firewall/rules.conf |\
-        sort -n -k 2 -t \' > $VESTA/data/firewall/rules.conf.tmp
-    mv -f $VESTA/data/firewall/rules.conf.tmp \
-        $VESTA/data/firewall/rules.conf
+    cat $HESTIA/data/firewall/rules.conf |\
+        sort -n -k 2 -t \' > $HESTIA/data/firewall/rules.conf.tmp
+    mv -f $HESTIA/data/firewall/rules.conf.tmp \
+        $HESTIA/data/firewall/rules.conf
 }
 
 
@@ -63,10 +63,10 @@ str="$str IP='$ip' COMMENT='$comment' SUSPENDED='no'"
 str="$str TIME='$time' DATE='$date'"
 
 # Deleting old rule
-sed -i "/RULE='$rule' /d" $VESTA/data/firewall/rules.conf
+sed -i "/RULE='$rule' /d" $HESTIA/data/firewall/rules.conf
 
 # Adding new
-echo "$str" >> $VESTA/data/firewall/rules.conf
+echo "$str" >> $HESTIA/data/firewall/rules.conf
 
 # Sorting firewall rules by id number
 sort_fw_rules
@@ -76,7 +76,7 @@ $BIN/v-update-firewall
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

@@ -17,9 +17,9 @@ password=$4; HIDE=4
 restart=$5
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -62,7 +62,7 @@ echo "$stats_user:$stats_pass" > $stats_dir/.htpasswd
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Adding stats user in config

@@ -14,8 +14,8 @@ object=$1
 format=${2-shell}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # Json list function
 json_list_search() {
@@ -84,16 +84,16 @@ OLD_IFS=$IFS
 IFS=$'\n'
 
 # User loop
-for user in $(ls $VESTA/data/users/); do
+for user in $(ls $HESTIA/data/users/); do
     # Search query
     search=$(grep "$object" \
-        $VESTA/data/users/$user/web.conf \
-        $VESTA/data/users/$user/dns.conf \
-        $VESTA/data/users/$user/dns/*.conf \
-        $VESTA/data/users/$user/mail.conf \
-        $VESTA/data/users/$user/mail/*.conf \
-        $VESTA/data/users/$user/db.conf \
-        $VESTA/data/users/$user/cron.conf 2> /dev/null)
+        $HESTIA/data/users/$user/web.conf \
+        $HESTIA/data/users/$user/dns.conf \
+        $HESTIA/data/users/$user/dns/*.conf \
+        $HESTIA/data/users/$user/mail.conf \
+        $HESTIA/data/users/$user/mail/*.conf \
+        $HESTIA/data/users/$user/db.conf \
+        $HESTIA/data/users/$user/cron.conf 2> /dev/null)
     
     for row in $search; do
         # Initialise variable
@@ -249,7 +249,7 @@ esac
 rm $conf
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

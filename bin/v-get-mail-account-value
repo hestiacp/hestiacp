@@ -17,7 +17,7 @@ account=$3
 key=$(echo "$4"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # Additional argument formatting
 format_domain
@@ -45,7 +45,7 @@ get_object_value "mail/$domain" 'ACCOUNT' "$account" "$key"
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

@@ -17,8 +17,8 @@ email=$3
 id=$3
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -115,7 +115,7 @@ FIREWALL='$FIREWALL'" > $USER_DATA/favourites.conf
 chmod 640 $USER_DATA/favourites.conf
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

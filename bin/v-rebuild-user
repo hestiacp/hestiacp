@@ -14,9 +14,9 @@ user=$1
 restart=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/rebuild.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/rebuild.sh
+source $HESTIA/conf/hestia.conf
 
 # Export sbin
 export PATH=$PATH:/usr/sbin
@@ -46,7 +46,7 @@ rebuild_user_conf
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

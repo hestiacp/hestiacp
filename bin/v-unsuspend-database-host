@@ -14,8 +14,8 @@ type=$1
 host=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -38,7 +38,7 @@ update_object_value "../../conf/$type" 'HOST' "$host" '$SUSPENDED' 'no'
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

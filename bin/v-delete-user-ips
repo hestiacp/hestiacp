@@ -13,9 +13,9 @@
 user=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/ip.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -36,7 +36,7 @@ fi
 #----------------------------------------------------------#
 
 # Parsing user ips
-ip_list=$(grep -H "OWNER='$user'" $VESTA/data/ips/* | cut -f 1 -d:)
+ip_list=$(grep -H "OWNER='$user'" $HESTIA/data/ips/* | cut -f 1 -d:)
 
 for ip in $ip_list; do 
     ip=$(basename $ip)
@@ -54,7 +54,7 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

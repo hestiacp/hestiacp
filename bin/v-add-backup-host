@@ -18,8 +18,8 @@ path=${5-/backup}
 port=$6
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # Defining ftp command function
 ftpc() {
@@ -174,25 +174,25 @@ if [ $type != 'local' ]; then
     date=$(echo "$time_n_date" |cut -f 2 -d \ )
     str="HOST='$host'\nUSERNAME='$user'\nPASSWORD='$password'"
     str="$str\nBPATH='$path'\nPORT='$port'\nTIME='$time'\nDATE='$date'"
-    echo -e "$str" > $VESTA/conf/$type.backup.conf
-    chmod 660 $VESTA/conf/$type.backup.conf
+    echo -e "$str" > $HESTIA/conf/$type.backup.conf
+    chmod 660 $HESTIA/conf/$type.backup.conf
 fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
-# Update vesta.conf
-if [ -z "$(grep BACKUP_SYSTEM $VESTA/conf/vesta.conf)" ]; then
-    echo "BACKUP_SYSTEM='$type'" >> $VESTA/conf/vesta.conf
+# Update hestia.conf
+if [ -z "$(grep BACKUP_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
+    echo "BACKUP_SYSTEM='$type'" >> $HESTIA/conf/hestia.conf
 else
     bckp=$(echo "$BACKUP_SYSTEM,$type" |\
         sed "s/,/\n/g"|\
         sort -r -u |\
         sed "/^$/d"|\
         sed ':a;N;$!ba;s/\n/,/g')
-    sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf
+    sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Logging

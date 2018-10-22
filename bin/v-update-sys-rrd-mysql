@@ -13,9 +13,9 @@
 period=${1-daily}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/db.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/db.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -37,7 +37,7 @@ if [ ! -d "$RRD/db" ]; then
 fi
 
 # Parsing db hosts
-conf="$VESTA/conf/mysql.conf"
+conf="$HESTIA/conf/mysql.conf"
 hosts=$(grep HOST $conf |awk '{print $1}' |cut -f 2 -d \')
 check_row=$(echo "$hosts" |wc -l)
 if [ 0 -eq "$check_row" ]; then
@@ -120,7 +120,7 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

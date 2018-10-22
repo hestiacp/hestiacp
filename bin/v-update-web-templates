@@ -13,8 +13,8 @@
 restart=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -56,7 +56,7 @@ wget $vestacp/templates.tar.gz -q
 check_result $? "can't download template.tar.gz" $E_CONNECT
 
 # Updating templates
-tar -xzpf templates.tar.gz -C $VESTA/data/ templates/web
+tar -xzpf templates.tar.gz -C $HESTIA/data/ templates/web
 
 # Rebuilding web domains
 for user in $($BIN/v-list-sys-users plain); do
@@ -65,7 +65,7 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Restarting web server

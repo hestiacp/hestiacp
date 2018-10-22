@@ -13,9 +13,9 @@
 ip=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/ip.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -35,7 +35,7 @@ fi
 
 # Creating user_list
 if [ -z "$ip" ]; then
-    ip_list=$(ls $VESTA/data/ips)
+    ip_list=$(ls $HESTIA/data/ips)
 else
     ip_list="$ip"
 fi
@@ -44,7 +44,7 @@ fi
 for ip in $ip_list; do
 
     # Calculate usage
-    ip_usage=$(grep -H $ip $VESTA/data/users/*/web.conf)
+    ip_usage=$(grep -H $ip $HESTIA/data/users/*/web.conf)
     web_domains=$(echo "$ip_usage" | sed '/^$/d' | wc -l)
     sys_users=$(echo "$ip_usage" | cut -f7 -d/ | sort -u |\
         tr '\n' ',' | sed "s/,$//g")
@@ -56,7 +56,7 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

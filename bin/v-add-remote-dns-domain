@@ -16,9 +16,9 @@ flush=$3
 
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/remote.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/remote.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -39,7 +39,7 @@ remote_dns_health_check
 # Parsing domain record
 str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf 2>/dev/null)
 if [ -z "$str" ]; then
-    pipe="$VESTA/data/queue/dns-cluster.pipe"
+    pipe="$HESTIA/data/queue/dns-cluster.pipe"
     queue_str=$(grep -n "$SCRIPT $1 $2 " $pipe |cut -f1 -d: |head -n1)
     if [ ! -z "$queue_str" ]; then
         sed -i "$queue_str d"  $pipe
@@ -48,7 +48,7 @@ if [ -z "$str" ]; then
 fi
 
 IFS=$'\n'
-for cluster in $(grep "SUSPENDED='no'" $VESTA/conf/dns-cluster.conf); do
+for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
     # Parsing remote dns host parameters
     eval $cluster
@@ -77,12 +77,12 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating pipe
 rm -f $tmpfile
-pipe="$VESTA/data/queue/dns-cluster.pipe"
+pipe="$HESTIA/data/queue/dns-cluster.pipe"
 str=$(grep -n "$SCRIPT $1 $2 " $pipe | cut -f1 -d: | head -n1)
 if [ ! -z "$str" ]; then
     sed -i "$str d"  $pipe

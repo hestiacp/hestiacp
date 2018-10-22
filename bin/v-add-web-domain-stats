@@ -20,9 +20,9 @@ domain_idn=$2
 type=$3
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
@@ -80,12 +80,12 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Schedule statistic processing
 echo "$BIN/v-update-web-domain-stat $user $domain" >> \
-    $VESTA/data/queue/webstats.pipe
+    $HESTIA/data/queue/webstats.pipe
 
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS' "$type"

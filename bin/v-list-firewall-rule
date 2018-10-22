@@ -14,7 +14,7 @@ rule=$1
 format=${2-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 json_list() {
     echo '{'
@@ -70,7 +70,7 @@ is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 #----------------------------------------------------------#
 
 # Parsing rules
-eval $(grep "RULE='$rule'" $VESTA/data/firewall/rules.conf)
+eval $(grep "RULE='$rule'" $HESTIA/data/firewall/rules.conf)
 
 # Listing data
 case $format in
@@ -82,7 +82,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

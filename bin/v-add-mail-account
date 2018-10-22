@@ -17,9 +17,9 @@ password=$4; HIDE=4
 quota=${5-unlimited}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 if [[ "$account" =~ [[:upper:]] ]]; then
@@ -65,7 +65,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Generating timestamp

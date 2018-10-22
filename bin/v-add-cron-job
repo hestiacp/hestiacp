@@ -22,8 +22,8 @@ job=$8
 restart=$9
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 HIDE=7
 
@@ -57,10 +57,10 @@ str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
 str="$str CMD='$command' SUSPENDED='no' TIME='$time' DATE='$date'"
 
 # Adding to crontab
-echo "$str" >> $VESTA/data/users/$user/cron.conf
+echo "$str" >> $HESTIA/data/users/$user/cron.conf
 
 # Changing permissions
-chmod 660 $VESTA/data/users/$user/cron.conf
+chmod 660 $HESTIA/data/users/$user/cron.conf
 
 # Sort jobs by id number
 sort_cron_jobs
@@ -70,7 +70,7 @@ sync_cron_jobs
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Increasing cron value

@@ -13,8 +13,8 @@
 user=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -53,7 +53,7 @@ update_user_value "$user" '$U_DISK_DIRS' "$disk_usage"
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Recalculating user disk space

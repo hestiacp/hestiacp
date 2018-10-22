@@ -13,7 +13,7 @@
 service=$1
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
 
@@ -43,7 +43,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

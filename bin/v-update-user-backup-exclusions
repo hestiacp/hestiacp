@@ -14,8 +14,8 @@ user=$1
 vfile=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 is_file_available() {
     if [ ! -e "$vfile" ]; then
@@ -68,7 +68,7 @@ chmod 660 $USER_DATA/backup-excludes.conf
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

@@ -14,9 +14,9 @@ iptables="/sbin/iptables"
 modprobe="/sbin/modprobe"
 
 # Includes
-source /etc/profile.d/vesta.sh
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source /etc/profile.d/hestia.sh
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -37,11 +37,11 @@ tmp=$(mktemp)
 echo "$iptables -P INPUT ACCEPT" >> $tmp
 echo "$iptables -F INPUT" >> $tmp
 
-# Deleting vesta chain
-echo "$iptables -X vesta" >> $tmp
+# Deleting hestia chain
+echo "$iptables -X hestia" >> $tmp
 
 # Deleting custom chains
-chains=$(cat $VESTA/data/firewall/chains.conf 2>/dev/null)
+chains=$(cat $HESTIA/data/firewall/chains.conf 2>/dev/null)
 IFS=$'\n'
 for chain in $chains; do
     eval $chain
@@ -74,7 +74,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

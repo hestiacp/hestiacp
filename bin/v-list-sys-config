@@ -12,7 +12,7 @@
 # Argument definition
 format=${1-shell}
 
-source $VESTA/conf/vesta.conf
+source $HESTIA/conf/hestia.conf
 
 # JSON list function
 json_list() {
@@ -194,7 +194,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

@@ -20,8 +20,8 @@ cron=$7
 udir=$8
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -41,14 +41,14 @@ is_backup_scheduled 'restore'
 #----------------------------------------------------------#
 
 # Adding restore task to  the queue
-log=$VESTA/log/restore.log
+log=$HESTIA/log/restore.log
 options="'$web' '$dns' '$mail' '$db' '$cron' '$udir'"
 echo "$BIN/v-restore-user $user $backup $options  yes >> $log 2>&1" >>\
-    $VESTA/data/queue/backup.pipe
+    $HESTIA/data/queue/backup.pipe
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

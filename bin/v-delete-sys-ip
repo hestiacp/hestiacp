@@ -14,10 +14,10 @@
 ip=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/ip.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -36,7 +36,7 @@ is_ip_key_empty '$U_SYS_USERS'
 #----------------------------------------------------------#
 
 # Import ip variables
-source $VESTA/data/ips/$ip
+source $HESTIA/data/ips/$ip
 cidr=$(convert_netmask $NETMASK)
 
 # Checking main ip on the interface
@@ -72,8 +72,8 @@ if [ -e "/etc/network/interfaces" ]; then
     fi
 fi
 
-# Deleting vesta ip
-rm -f $VESTA/data/ips/$ip
+# Deleting hestia ip
+rm -f $HESTIA/data/ips/$ip
 
 # Deleting web config
 if [ ! -z "$WEB_SYSTEM" ]; then
@@ -109,7 +109,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating user conf
@@ -119,7 +119,7 @@ fi
 
 if [ "$OWNER" = 'admin' ]; then
     if [ "$STATUS" = 'shared' ]; then
-        for user in $(ls $VESTA/data/users/); do
+        for user in $(ls $HESTIA/data/users/); do
             decrease_user_value "$user" '$IP_AVAIL'
         done
     fi

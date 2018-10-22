@@ -13,13 +13,13 @@
 format=${1-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
     IFS=$'\n'
     i=1
-    objects=$(grep RULE $VESTA/data/firewall/rules.conf |wc -l)
+    objects=$(grep RULE $HESTIA/data/firewall/rules.conf |wc -l)
     echo "{"
     while read str; do
         eval $str
@@ -39,7 +39,7 @@ json_list() {
             echo
         fi
         ((i++))
-    done < <(cat $VESTA/data/firewall/rules.conf)
+    done < <(cat $HESTIA/data/firewall/rules.conf)
     echo '}'
 }
 
@@ -51,7 +51,7 @@ shell_list() {
     while read str; do
         eval $str
         echo "$RULE^$ACTION^$PROTOCOL^$PORT^$IP^$SUSPENDED^$DATE"
-    done < <(cat $VESTA/data/firewall/rules.conf)
+    done < <(cat $HESTIA/data/firewall/rules.conf)
 }
 
 # PLAIN list function
@@ -61,7 +61,7 @@ plain_list() {
         eval $str
         echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP\t$COMMENT\t"
         echo -e "$SUSPENDED\t$TIME\t$DATE"
-    done < <(cat $VESTA/data/firewall/rules.conf)
+    done < <(cat $HESTIA/data/firewall/rules.conf)
 }
 
 # CSV list function
@@ -72,7 +72,7 @@ csv_list() {
         eval $str
         echo -n "$RULE,$ACTION,$PROTOCOL,$PORT,$IP,\"$COMMENT\","
         echo "$SUSPENDED,$TIME,$DATE"
-    done < <(cat $VESTA/data/firewall/rules.conf)
+    done < <(cat $HESTIA/data/firewall/rules.conf)
 }
 
 
@@ -90,7 +90,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

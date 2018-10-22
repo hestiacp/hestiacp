@@ -13,8 +13,8 @@
 package=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -30,7 +30,7 @@ is_package_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
-for user in $(ls $VESTA/data/users); do
+for user in $(ls $HESTIA/data/users); do
     check_package=$(grep "PACKAGE='$package'" $USER_DATA/$user/user.conf)
     if [ ! -z "$check_package" ]; then
         $BIN/v-change-user-package $user $package 'yes'
@@ -38,7 +38,7 @@ for user in $(ls $VESTA/data/users); do
 done
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

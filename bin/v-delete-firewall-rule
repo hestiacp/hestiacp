@@ -16,8 +16,8 @@ source /etc/profile
 rule=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -35,14 +35,14 @@ is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 #----------------------------------------------------------#
 
 # Deleting rule
-sed -i "/RULE='$rule' /d" $VESTA/data/firewall/rules.conf
+sed -i "/RULE='$rule' /d" $HESTIA/data/firewall/rules.conf
 
 # Updating system firewall
 $BIN/v-update-firewall
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

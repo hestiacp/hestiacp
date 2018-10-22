@@ -16,8 +16,8 @@ module=$(echo $1 | tr '[:lower:]' '[:upper:]')
 source /etc/profile
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -31,9 +31,9 @@ source $VESTA/conf/vesta.conf
 
 # Checking module
 if [ -z "$module" ]; then
-    modules=$(grep _KEY= $VESTA/conf/vesta.conf)
+    modules=$(grep _KEY= $HESTIA/conf/hestia.conf)
 else
-    modules=$(grep "${module}_KEY" $VESTA/conf/vesta.conf)
+    modules=$(grep "${module}_KEY" $HESTIA/conf/hestia.conf)
 fi
 
 IFS=$'\n'
@@ -50,14 +50,14 @@ for str in $modules; do
                 setsid $BIN/v-delete-sys-sftp-jail 2>/dev/null
             fi
             sed -i "s/${module}_KEY=.*/${module}_KEY=''/g" \
-                $VESTA/conf/vesta.conf
+                $HESTIA/conf/hestia.conf
         fi
     fi
 done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

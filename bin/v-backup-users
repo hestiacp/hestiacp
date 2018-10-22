@@ -14,8 +14,8 @@
 source /etc/profile
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -28,8 +28,8 @@ if [ -z "$BACKUP_SYSTEM" ]; then
     exit
 fi
 for user in $(grep '@' /etc/passwd |cut -f1 -d:); do
-    check_suspend=$(grep "SUSPENDED='no'" $VESTA/data/users/$user/user.conf)
-    log=$VESTA/log/backup.log
+    check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
+    log=$HESTIA/log/backup.log
     if [ ! -z "$check_suspend" ]; then
         echo -e "================================" >> $log
         echo -e "$user" >> $log
@@ -40,7 +40,7 @@ for user in $(grep '@' /etc/passwd |cut -f1 -d:); do
 done
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # No Logging

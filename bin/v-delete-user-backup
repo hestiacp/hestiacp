@@ -14,8 +14,8 @@ user=$1
 backup=$(echo $2| cut -f 2 -d \.)
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -39,7 +39,7 @@ sed -i "/BACKUP='$2' /d" $USER_DATA/backup.conf
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Update counter

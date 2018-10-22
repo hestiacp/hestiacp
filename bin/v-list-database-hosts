@@ -13,8 +13,8 @@
 format=${1-shell}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # JSON list function
 json_list() {
@@ -22,16 +22,16 @@ json_list() {
     i=1
     objects=0
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$VESTA/conf/$type.conf" ]; then
-            db_hosts=$(grep HOST $VESTA/conf/$type.conf |wc -l)
+        if [ -e "$HESTIA/conf/$type.conf" ]; then
+            db_hosts=$(grep HOST $HESTIA/conf/$type.conf |wc -l)
             objects=$((objects + db_hosts))
         fi
     done
 
     echo "["
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$VESTA/conf/$type.conf" ]; then
-            for str in $(cat $VESTA/conf/$type.conf); do
+        if [ -e "$HESTIA/conf/$type.conf" ]; then
+            for str in $(cat $HESTIA/conf/$type.conf); do
                 eval $str
         echo -n '    {
         "HOST": "'$HOST'",
@@ -63,8 +63,8 @@ shell_list() {
     echo "HOST   TYPE   MAX_DB   DB_USED   SPND   TIME   DATE"
     echo "----   ----   ------   -------   ----   ----   ----"
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$VESTA/conf/$type.conf" ]; then
-            for str in $(cat $VESTA/conf/$type.conf); do
+        if [ -e "$HESTIA/conf/$type.conf" ]; then
+            for str in $(cat $HESTIA/conf/$type.conf); do
                 eval $str
                 echo "$HOST $type $MAX_DB $U_DB_BASES $SUSPENDED $TIME $DATE"
             done
@@ -76,8 +76,8 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$VESTA/conf/$type.conf" ]; then
-            for str in $(cat $VESTA/conf/$type.conf); do
+        if [ -e "$HESTIA/conf/$type.conf" ]; then
+            for str in $(cat $HESTIA/conf/$type.conf); do
                 eval $str
                 echo -ne "$HOST\t$type\t$CHARSETS\t$MAX_DB\t$U_SYS_USERS\t"
                 echo -e "$U_DB_BASES\t$TPL\t$SUSPENDED\t$TIME\t$DATE"
@@ -92,8 +92,8 @@ csv_list() {
     echo -n "HOST,TYPE,CHARSETS,MAX_DB,U_SYS_USERS,"
     echo "U_DB_BASES,TPL,SUSPENDED,TIME,DATE"
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$VESTA/conf/$type.conf" ]; then
-            for str in $(cat $VESTA/conf/$type.conf); do
+        if [ -e "$HESTIA/conf/$type.conf" ]; then
+            for str in $(cat $HESTIA/conf/$type.conf); do
                 eval $str
                 echo -n "$HOST,$type,\"$CHARSETS\",$MAX_DB,\"$U_SYS_USERS\","
                 echo "$U_DB_BASES,$TPL,$SUSPENDED,$TIME,$DATE"
@@ -130,7 +130,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

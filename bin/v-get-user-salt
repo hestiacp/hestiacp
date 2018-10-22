@@ -15,8 +15,8 @@ ip=${2-127.0.0.1}
 format=${3-shell}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
@@ -61,9 +61,9 @@ check_args '1' "$#" 'USER [IP] [SALT]'
 is_format_valid 'user'
 
 # Checking user
-if [ ! -d "$VESTA/data/users/$user" ] && [ "$user" != 'root' ]; then
+if [ ! -d "$HESTIA/data/users/$user" ] && [ "$user" != 'root' ]; then
     echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 
@@ -85,7 +85,7 @@ then
         method='sha-512'
     else
         echo "Error: password missmatch"
-        echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+        echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
         exit 9
     fi
 else
@@ -95,7 +95,7 @@ fi
 
 if [ -z "$salt" ]; then
     echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 
@@ -110,7 +110,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

@@ -14,8 +14,8 @@ user=$1
 language=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 is_language_valid() {
@@ -24,7 +24,7 @@ is_language_valid() {
         log_event "$E_INVALID" "$ARGUMENTS"
         exit $E_INVALID
     fi
-    if [ ! -e "$VESTA/web/inc/i18n/$1.php" ]; then
+    if [ ! -e "$HESTIA/web/inc/i18n/$1.php" ]; then
         echo "Error: language $1 doesn't exist"
         log_event "$E_NOTEXIST" "$ARGUMENTS"
         exit $E_NOTEXIST
@@ -56,7 +56,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

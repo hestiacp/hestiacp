@@ -13,8 +13,8 @@
 #format=${1-shell}
 
 # Includes
-#source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+#source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -40,7 +40,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

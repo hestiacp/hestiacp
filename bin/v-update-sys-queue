@@ -20,8 +20,8 @@ queue=$1
 source /etc/profile
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # Export PATH for cron
 PATH=$PATH:$BIN
@@ -38,9 +38,9 @@ check_args '1' "$#" 'QUEUE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-b_task=$(ps auxf |grep -v "grep" |grep "$VESTA/bin/v-update-sys-queue backup")
+b_task=$(ps auxf |grep -v "grep" |grep "$HESTIA/bin/v-update-sys-queue backup")
 b_task=$(echo "$b_task" |grep -v sudo |wc -l)
-d_task=$(ps auxf |grep -v "grep" |grep "$VESTA/bin/v-update-sys-queue dns")
+d_task=$(ps auxf |grep -v "grep" |grep "$HESTIA/bin/v-update-sys-queue dns")
 d_task=$(echo "$d_task" |grep -v sudo |wc -l)
 if [ "$b_task" -gt 2 ] || [ "$d_task" -gt 2 ]; then
     exit
@@ -48,19 +48,19 @@ fi
 
 # Defining pipe functions
 case $queue in
-    restart)        bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1;;
-    webstats)       bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
-    backup)         bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
-    disk)           bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1;;
-    traffic)        bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1;;
-    dns-cluster)    bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
-    letsencrypt)    bash $VESTA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+    restart)        bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
+    webstats)       bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+    backup)         bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+    disk)           bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
+    traffic)        bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
+    dns-cluster)    bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+    letsencrypt)    bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
     *)              check_args '1' '0' 'QUEUE' ;;
 esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # No Logging

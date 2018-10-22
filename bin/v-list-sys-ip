@@ -14,8 +14,8 @@ ip=$1
 format=${2-shell}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/ip.sh
+source $HESTIA/func/main.sh
+source $HESTIA/func/ip.sh
 
 # JSON list function
 json_list() {
@@ -71,7 +71,7 @@ csv_list() {
 
 check_args '1' "$#" 'IP [FORMAT]'
 is_format_valid 'ip'
-if [ ! -e "$VESTA/data/ips/$ip" ]; then
+if [ ! -e "$HESTIA/data/ips/$ip" ]; then
     check_result $E_NOTEXIST "ip $ip doesn't exist"
 fi
 
@@ -81,7 +81,7 @@ fi
 #----------------------------------------------------------#
 
 # Parsing ip
-source $VESTA/data/ips/$ip
+source $HESTIA/data/ips/$ip
 
 # Listing data
 case $format in
@@ -93,7 +93,7 @@ esac
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

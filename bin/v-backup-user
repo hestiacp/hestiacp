@@ -17,10 +17,10 @@ user=$1
 notify=${2-no}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/func/db.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/db.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -67,7 +67,7 @@ start_time=$(date '+%s')
 
 # Set notification email and subject
 subj="$user → backup failed"
-email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f 2 -d \')
+email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
 
 # Checking load average
 la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
@@ -78,7 +78,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
     if [ "$i" -ge "15" ]; then
         la_error="LoadAverage $la is above threshold"
         echo "$la_error" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result $E_LA "$la_error"
     fi
     la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
@@ -99,25 +99,25 @@ fi
 
 # Backup sys configs
 echo "-- SYSTEM --" |tee $BACKUP/$user.log
-mkdir $tmpdir/vesta
+mkdir $tmpdir/hestia
 
 echo -e "$(date "+%F %T") $user.conf" |tee -a $BACKUP/$user.log
-cp -r $USER_DATA/user.conf $tmpdir/vesta/
-cp -r $USER_DATA/ssl $tmpdir/vesta/
+cp -r $USER_DATA/user.conf $tmpdir/hestia/
+cp -r $USER_DATA/ssl $tmpdir/hestia/
 
 if [ -e "$USER_DATA/stats.log" ]; then
     echo -e "$(date "+%F %T") stats.log" |tee -a $BACKUP/$user.log
-    cp -r $USER_DATA/stats.log $tmpdir/vesta/
+    cp -r $USER_DATA/stats.log $tmpdir/hestia/
 fi
 
 if [ -e "$USER_DATA/history.log" ]; then
     echo -e "$(date "+%F %T") history.log" |tee -a $BACKUP/$user.log
-    cp -r $USER_DATA/history.log $tmpdir/vesta/
+    cp -r $USER_DATA/history.log $tmpdir/hestia/
 fi
 
 if [ -e "$USER_DATA/backup-excludes.conf" ]; then
     echo -e "$(date "+%F %T") backup-excludes.conf" |tee -a $BACKUP/$user.log
-    cp -r $USER_DATA/backup-excludes.conf $tmpdir/vesta/
+    cp -r $USER_DATA/backup-excludes.conf $tmpdir/hestia/
 fi
 
 # Backup PAM
@@ -156,7 +156,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         ((i ++))
         echo -e "$(date "+%F %T") $domain" |tee -a $BACKUP/$user.log
         mkdir -p $tmpdir/web/$domain/conf
-        mkdir -p $tmpdir/web/$domain/vesta
+        mkdir -p $tmpdir/web/$domain/hestia
 
         # Get domain variables
         domain_idn=$domain
@@ -166,7 +166,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         # Backup web.conf
         cd $tmpdir/web/$domain/
         conf="$USER_DATA/web.conf"
-        grep "DOMAIN='$domain'" $conf > vesta/web.conf
+        grep "DOMAIN='$domain'" $conf > hestia/web.conf
 
         # Backup vhost config
         conf=$HOMEDIR/$user/conf/web/$domain.$WEB_SYSTEM.conf
@@ -230,7 +230,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         # Backup ssl certificates
         if [ "$SSL" = 'yes' ] ; then
             cp $HOMEDIR/$user/conf/web/ssl.$domain.* conf/
-            cp $USER_DATA/ssl/$domain.* vesta/
+            cp $USER_DATA/ssl/$domain.* hestia/
         fi
 
         # Define exclude arguments
@@ -285,15 +285,15 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
 
         # Building directory tree
         mkdir -p $tmpdir/dns/$domain/conf
-        mkdir -p $tmpdir/dns/$domain/vesta
+        mkdir -p $tmpdir/dns/$domain/hestia
 
         # Backup dns.conf
         cd $tmpdir/dns/$domain/
         conf="$USER_DATA/dns.conf"
-        grep "DOMAIN='$domain'" $conf > vesta/dns.conf
+        grep "DOMAIN='$domain'" $conf > hestia/dns.conf
 
         # Backup dns recods
-        cp $USER_DATA/dns/$domain.conf vesta/$domain.conf
+        cp $USER_DATA/dns/$domain.conf hestia/$domain.conf
         if [ "$DNS_SYSTEM" != 'remote' ]; then
             cp $HOMEDIR/$user/conf/dns/$domain.db conf/$domain.db
         fi
@@ -329,7 +329,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         ((i ++))
         echo -e "$(date "+%F %T") $domain" |tee -a $BACKUP/$user.log
         mkdir -p $tmpdir/mail/$domain/conf
-        mkdir -p $tmpdir/mail/$domain/vesta
+        mkdir -p $tmpdir/mail/$domain/hestia
         domain_idn=$domain
         format_domain_idn
 
@@ -341,10 +341,10 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 
         # Backup mail.conf
         conf="$USER_DATA/mail.conf"
-        grep "DOMAIN='$domain'" $conf > vesta/mail.conf
-        cp $USER_DATA/mail/$domain.* vesta/
+        grep "DOMAIN='$domain'" $conf > hestia/mail.conf
+        cp $USER_DATA/mail/$domain.* hestia/
         if [ ! -z "$(ls $USER_DATA/mail/|grep *@$domain)" ]; then
-            cp $USER_DATA/mail/*@$domain.* vesta/
+            cp $USER_DATA/mail/*@$domain.* hestia/
         fi
 
         # Backup emails
@@ -403,10 +403,10 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 
         echo -e "$(date "+%F %T") $database ($TYPE)" |tee -a $BACKUP/$user.log
         mkdir -p $tmpdir/db/$database/conf
-        mkdir -p $tmpdir/db/$database/vesta
+        mkdir -p $tmpdir/db/$database/hestia
 
         cd $tmpdir/db/$database/
-        grep "DB='$database'" $conf > vesta/db.conf
+        grep "DB='$database'" $conf > hestia/db.conf
 
         dump="$tmpdir/db/$database/$database.$TYPE.sql"
         dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"
@@ -539,7 +539,7 @@ local_backup(){
     if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         echo "Not enough disk space" |$SENDMAIL -s "$subj" $email $notify
         check_result "$E_DISK" "Not enough dsk space"
     fi
@@ -571,20 +571,20 @@ EOF
 # Defining ftp storage function
 ftp_backup() {
     # Checking config
-    if [ ! -e "$VESTA/conf/ftp.backup.conf" ]; then
+    if [ ! -e "$HESTIA/conf/ftp.backup.conf" ]; then
         error="ftp.backup.conf doesn't exist"
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_NOTEXIST" "$error"
     fi
 
     # Parse config
-    source $VESTA/conf/ftp.backup.conf
+    source $HESTIA/conf/ftp.backup.conf
 
     # Set default port
-    if [ -z "$(grep 'PORT=' $VESTA/conf/ftp.backup.conf)" ]; then
+    if [ -z "$(grep 'PORT=' $HESTIA/conf/ftp.backup.conf)" ]; then
         PORT='21'
     fi
 
@@ -594,7 +594,7 @@ ftp_backup() {
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_PARSING" "$error"
     fi
 
@@ -609,7 +609,7 @@ ftp_backup() {
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_CONNECT" "$error"
     fi
 
@@ -627,7 +627,7 @@ ftp_backup() {
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_FTP" "$error"
     fi
 
@@ -734,20 +734,20 @@ EOF
 sftp_backup() {
 
     # Checking config
-    if [ ! -e "$VESTA/conf/sftp.backup.conf" ]; then
+    if [ ! -e "$HESTIA/conf/sftp.backup.conf" ]; then
         error="Can't open sftp.backup.conf"
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_NOTEXIST" "$error"
     fi
 
     # Parse config
-    source $VESTA/conf/sftp.backup.conf
+    source $HESTIA/conf/sftp.backup.conf
 
     # Set default port
-    if [ -z "$(grep 'PORT=' $VESTA/conf/sftp.backup.conf)" ]; then
+    if [ -z "$(grep 'PORT=' $HESTIA/conf/sftp.backup.conf)" ]; then
         PORT='22'
     fi
 
@@ -757,7 +757,7 @@ sftp_backup() {
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_PARSING" "$error"
     fi
 
@@ -782,7 +782,7 @@ sftp_backup() {
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$rc" "$error"
     fi
 
@@ -832,9 +832,9 @@ sftp_backup() {
 google_backup() {
 
     # Defining google settings
-    source $VESTA/conf/google.backup.conf
-    gsutil="$VESTA/3rdparty/gsutil/gsutil"
-    export BOTO_CONFIG="$VESTA/conf/.google.backup.boto"
+    source $HESTIA/conf/google.backup.conf
+    gsutil="$HESTIA/3rdparty/gsutil/gsutil"
+    export BOTO_CONFIG="$HESTIA/conf/.google.backup.boto"
 
     # Debug info
     echo -e "$(date "+%F %T") Remote: gs://$BUCKET/$BPATH/$user.$backup_new_date.tar"
@@ -901,7 +901,7 @@ echo "$(date "+%F %T") Runtime: $run_time $min" |tee -a $BACKUP/$user.log
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Removing duplicate
@@ -926,7 +926,7 @@ mv -f $USER_DATA/backup.conf_ $USER_DATA/backup.conf
 chmod 660 $USER_DATA/backup.conf
 
 # Deleting task from queue
-sed -i "/v-backup-user $user /d" $VESTA/data/queue/backup.pipe
+sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
 
 U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"

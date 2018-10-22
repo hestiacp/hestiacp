@@ -15,8 +15,8 @@ hash=$2; HIDE=2
 ip=${3-127.0.0.1}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
@@ -32,9 +32,9 @@ check_args '2' "$#" 'USER HASH'
 is_format_valid 'user'
 
 # Checking user
-if [ ! -d "$VESTA/data/users/$user" ] && [ "$user" != 'root' ]; then
+if [ ! -d "$HESTIA/data/users/$user" ] && [ "$user" != 'root' ]; then
     echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 
@@ -44,7 +44,7 @@ is_hash_valid
 # Checking empty hash
 if [[ -z "$hash" ]]; then
     echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 
@@ -67,7 +67,7 @@ then
         method='sha-512'
     else
         echo "Error: password missmatch"
-        echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+        echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
         exit 9
     fi
 else
@@ -78,23 +78,23 @@ fi
 # Checking salt
 if [ -z "$salt" ]; then
     echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 
 # Comparing hashes
 if [[ "$shadow" != "$hash" ]]; then
     echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $VESTA/log/auth.log
+    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-echo "$date $time $user $ip successfully logged in" >> $VESTA/log/auth.log
+echo "$date $time $user $ip successfully logged in" >> $HESTIA/log/auth.log
 
 exit

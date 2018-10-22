@@ -12,9 +12,9 @@
 host=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/remote.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/remote.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -33,9 +33,9 @@ remote_dns_health_check 'no_email'
 # Selecting remote hosts
 IFS=$'\n'
 if [ -z $host ]; then
-    hosts=$(cat $VESTA/conf/dns-cluster.conf |grep "SUSPENDED='no'")
+    hosts=$(cat $HESTIA/conf/dns-cluster.conf |grep "SUSPENDED='no'")
 else
-    hosts=$(grep "HOST='$host'" $VESTA/conf/dns-cluster.conf)
+    hosts=$(grep "HOST='$host'" $HESTIA/conf/dns-cluster.conf)
 fi
 
 # Starting cluster loop
@@ -49,9 +49,9 @@ for cluster in $hosts; do
     check_result $? "$HOST connection failed" $E_CONNECT
 
     # Syncing user domains
-    user_list=$(ls -d $VESTA/data/users/*/ | sed "s#$VESTA/data/users/##" | sed s"/.$//" | grep -v "dns-cluster")
+    user_list=$(ls -d $HESTIA/data/users/*/ | sed "s#$HESTIA/data/users/##" | sed s"/.$//" | grep -v "dns-cluster")
     for user in $user_list; do
-        for str in $(cat $VESTA/data/users/$user/dns.conf); do
+        for str in $(cat $HESTIA/data/users/$user/dns.conf); do
 
             # Syncing domain index
             eval $str
@@ -76,12 +76,12 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Flushing dns-cluster queue
-rm -f $VESTA/data/queue/dns-cluster.pipe
-touch $VESTA/data/queue/dns-cluster.pipe
-chmod 660 $VESTA/data/queue/dns-cluster.pipe
+rm -f $HESTIA/data/queue/dns-cluster.pipe
+touch $HESTIA/data/queue/dns-cluster.pipe
+chmod 660 $HESTIA/data/queue/dns-cluster.pipe
 
 exit

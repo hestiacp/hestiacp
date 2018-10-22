@@ -13,8 +13,8 @@
 user=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -34,14 +34,14 @@ fi
 
 # Creating user_list
 if [ -z "$user" ]; then
-    user_list=$(ls $VESTA/data/users)
+    user_list=$(ls $HESTIA/data/users)
 else
     user_list="$user"
 fi
 
 # Updating user stats
 for user in $user_list; do
-    USER_DATA=$VESTA/data/users/$user
+    USER_DATA=$HESTIA/data/users/$user
     # Cleaning counters
     SUSPENDED_USERS=0
     SUSPENDED_WEB=0
@@ -80,14 +80,14 @@ for user in $user_list; do
 
     # Checking users
     if [ "$user" = 'admin' ]; then
-        spnd=$(grep "SUSPENDED='yes'" $VESTA/data/users/*/user.conf | wc -l)
+        spnd=$(grep "SUSPENDED='yes'" $HESTIA/data/users/*/user.conf | wc -l)
         SUSPENDED_USERS=$spnd
-        U_USERS=$(ls $VESTA/data/users/|wc -l)
+        U_USERS=$(ls $HESTIA/data/users/|wc -l)
     fi
 
     # Checking ip
-    for ip in $(ls $VESTA/data/ips) ;do
-        source $VESTA/data/ips/$ip
+    for ip in $(ls $HESTIA/data/ips) ;do
+        source $HESTIA/data/ips/$ip
         if [ "$OWNER" = "$user" ]; then
             IP_OWNED=$((IP_OWNED + 1))
             IP_AVAIL=$((IP_AVAIL + 1))
@@ -97,7 +97,7 @@ for user in $user_list; do
         fi
     done
     if [ "$user" = 'admin' ]; then
-        IP_AVAIL=$(ls $VESTA/data/ips | wc -l)
+        IP_AVAIL=$(ls $HESTIA/data/ips | wc -l)
     fi
 
     # Checking web system
@@ -207,7 +207,7 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

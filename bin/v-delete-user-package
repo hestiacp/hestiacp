@@ -14,8 +14,8 @@
 package=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # Functions
 is_package_in_use() {
@@ -42,11 +42,11 @@ is_package_in_use
 #----------------------------------------------------------#
 
 # Deleting user package
-rm -f $VESTA/data/packages/$package.pkg
+rm -f $HESTIA/data/packages/$package.pkg
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 log_history "deleted user package $package" '' 'admin'

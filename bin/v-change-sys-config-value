@@ -15,8 +15,8 @@ key=$(echo "$1" | tr '[:lower:]' '[:upper:]' )
 value=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
@@ -34,11 +34,11 @@ is_format_valid 'key'
 #----------------------------------------------------------#
 
 # Updating conf
-check_ckey=$(grep "^$key='" $VESTA/conf/vesta.conf)
+check_ckey=$(grep "^$key='" $HESTIA/conf/hestia.conf)
 if [ -z "$check_ckey" ]; then
-    echo "$key='$value'" >> $VESTA/conf/vesta.conf
+    echo "$key='$value'" >> $HESTIA/conf/hestia.conf
 else
-    sed -i "s|$key=.*|$key='$value'|g" $VESTA/conf/vesta.conf
+    sed -i "s|$key=.*|$key='$value'|g" $HESTIA/conf/hestia.conf
 fi
 
 if [ "$key" = "BACKUP" ] && [ "$value" != '/backup' ]; then
@@ -48,7 +48,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

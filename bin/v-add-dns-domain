@@ -28,9 +28,9 @@ ns8=${11}
 restart=${12}
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
@@ -184,12 +184,12 @@ fi
 # Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
     cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
-    echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+    echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Increasing domain value

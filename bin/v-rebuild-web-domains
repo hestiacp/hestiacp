@@ -14,11 +14,11 @@ user=$1
 restart=$2
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/func/ip.sh
-source $VESTA/func/rebuild.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/func/rebuild.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -37,7 +37,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Deleting old web configs
-sed -i "/.*\/$user\/conf\/web\//d" /etc/$WEB_SYSTEM/conf.d/vesta.conf
+sed -i "/.*\/$user\/conf\/web\//d" /etc/$WEB_SYSTEM/conf.d/hestia.conf
 if [ -e "$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"  ]; then
     rm $HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf
 fi
@@ -47,7 +47,7 @@ fi
 
 # Deleting old proxy configs
 if [ ! -z "$PROXY_SYSTEM" ]; then
-    sed -i "/.*\/$user\/conf\/web\//d" /etc/$PROXY_SYSTEM/conf.d/vesta.conf
+    sed -i "/.*\/$user\/conf\/web\//d" /etc/$PROXY_SYSTEM/conf.d/hestia.conf
 
     if [ -e "$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf" ]; then
         rm $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
@@ -82,7 +82,7 @@ done
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating user counters

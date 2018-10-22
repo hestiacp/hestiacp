@@ -14,8 +14,8 @@
 source /etc/profile
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -58,7 +58,7 @@ fi
 # Validating opensshd config
 if [ "$restart" = 'yes' ]; then
     subj="OpenSSH restart failed"
-    email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f 2 -d \')
+    email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
     /usr/sbin/sshd -t >/dev/null 2>&1
     if [ "$?" -ne 0 ]; then
         mail_text="OpenSSH can not be restarted. Please check config:
@@ -97,7 +97,7 @@ else
 fi
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging

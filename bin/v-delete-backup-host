@@ -13,8 +13,8 @@
 type=$1
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -35,20 +35,20 @@ fi
 #----------------------------------------------------------#
 
 # Deleting host config
-rm -f $VESTA/conf/$type.backup.conf
+rm -f $HESTIA/conf/$type.backup.conf
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
-# Updating vesta.conf
+# Updating hestia.conf
 bckp=$(echo "$BACKUP_SYSTEM" |\
     sed "s/,/\n/g"|\
     sed "s/^$type$//" |\
     sed "/^$/d"|\
     sed ':a;N;$!ba;s/\n/,/g')
-sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $VESTA/conf/vesta.conf
+sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $HESTIA/conf/hestia.conf
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

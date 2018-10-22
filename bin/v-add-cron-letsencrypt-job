@@ -11,7 +11,7 @@
 
 # Includes
 source $HESTIA/func/main.sh
-source $HESTIA/conf/vesta.conf
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#

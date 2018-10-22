@@ -2,7 +2,7 @@
 # info: list system os
 # options: [FORMAT]
 #
-# The function checks available updates for vesta packages.
+# The function checks available updates for hestia packages.
 
 
 #----------------------------------------------------------#
@@ -13,7 +13,7 @@
 format=${1-shell}
 
 # Includes
-source $VESTA/func/main.sh
+source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
@@ -99,7 +99,7 @@ case $format in
 esac
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

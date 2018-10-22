@@ -17,9 +17,9 @@ ttl=$3
 restart=$4
 
 # Includes
-source $VESTA/func/main.sh
-source $VESTA/func/domain.sh
-source $VESTA/conf/vesta.conf
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
@@ -56,16 +56,16 @@ fi
 # Updating dns-cluster queue
 if [ ! -z "$DNS_CLUSTER" ]; then
     # Check for first sync
-    dlock=$(grep "domain $user $domain" $VESTA/data/queue/dns-cluster.pipe)
+    dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
     if [ -z "$dlock" ]; then
         cmd="$BIN/v-change-remote-dns-domain-ttl $user $domain $ttl"
-        echo "$cmd" >> $VESTA/data/queue/dns-cluster.pipe
+        echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Restarting named

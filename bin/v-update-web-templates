@@ -21,42 +21,31 @@ source $HESTIA/conf/hestia.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining config host
-chost='c.vestacp.com'
-
 # Detcing OS
 case $(head -n1 /etc/issue |cut -f 1 -d ' ') in
     Debian)     version="debian" ;;
     Ubuntu)     version="ubuntu" ;;
-    *)          version="rhel" ;;
+    *)          version="NotSupported" ;;
 esac
 
 # Detecting release
-if [ "$version" = 'rhel' ]; then
-    if [ -e '/etc/redhat-release' ]; then
-        release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
-    else
-        release=6
-    fi
-fi
 if [ "$version" = 'ubuntu' ]; then
     release=$(lsb_release -r |awk '{print $2}')
 fi
 if [ "$version" = 'debian' ]; then
     release=$(cat /etc/issue|grep -o [0-9]|head -n1)
 fi
+if [ "$version" = 'NotSupported' ]; then
+    echo "No Supported OS Version found, abort."
+    exit 1
+fi
 
-# Defining download url
-vestacp="http://$chost/$version/$release"
-
-# Downloading template archive
-cd $(mktemp -d)
-wget $vestacp/templates.tar.gz -q
-
-check_result $? "can't download template.tar.gz" $E_CONNECT
+# Defining template path
+hestiacp="$HESTIA/install/$version/$release"
 
 # Updating templates
-tar -xzpf templates.tar.gz -C $HESTIA/data/ templates/web
+cp -rf $hestiacp/templates/web $HESTIA/data/templates/
+
 
 # Rebuilding web domains
 for user in $($BIN/v-list-sys-users plain); do

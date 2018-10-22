@@ -35,8 +35,9 @@ timestamp() {
 apt-get install -y $SOFTWARE
 
 # Fix for Debian PHP Envroiment
-cd /usr/local/include
-ln -s /usr/include/x86_64-linux-gnu/curl curl
+if [ ! -f /usr/local/include/curl ]; then
+    ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
+fi
 
 # Set packages to compile
 for arg; do
@@ -118,6 +119,7 @@ if [ "$NGINX_B" = true ] ; then
   # Download control, postinst and postrm files
   cd DEBIAN
   wget $GIT_REP/nginx/control
+  wget $GIT_REP/nginx/copyright
   wget $GIT_REP/nginx/postinst
   wget $GIT_REP/nginx/postrm
   
@@ -199,6 +201,7 @@ if [ "$PHP_B" = true ] ; then
   # Download control, postinst and postrm files
   cd DEBIAN
   wget $GIT_REP/php/control
+  wget $GIT_REP/php/copyright
  
   # Move php directory
   cd ..
@@ -249,6 +252,7 @@ if [ "$HESTIA_B" = true ] ; then
   # Download control, postinst and postrm files
   cd DEBIAN
   wget $GIT_REP/hestia/control
+  wget $GIT_REP/hestia/copyright
   wget $GIT_REP/hestia/postinst
   
   # Set permission

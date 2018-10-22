@@ -32,10 +32,13 @@ timestamp() {
 }
 
 # Install needed software
-apt-get install -y $SOFTWARE
+echo "Update system repository..."
+apt-get -qq update
+echo "Installing dependencies for compilation..."
+apt-get -qq install -y $SOFTWARE
 
 # Fix for Debian PHP Envroiment
-if [ ! -f /usr/local/include/curl ]; then
+if [ ! -e /usr/local/include/curl ]; then
     ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
 fi
 
@@ -56,8 +59,17 @@ for arg; do
     --hestia)
       HESTIA_B='true'
       ;;
+    *)
+      NOARGUMENT='true'
+      ;;
   esac
 done
+
+if [[ $# -eq 0 ]] ; then
+  echo "!!! Please run with argument --all, --hestia, --nginx or --php !!!"
+  exit 1
+fi
+
 
 #################################################################################
 #

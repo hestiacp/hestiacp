@@ -1,6 +1,6 @@
 ######################################################################
 #                                                                    #
-#          Exim configuration file for Vesta Control Panel           #
+#          Exim configuration file for Hestia Control Panel          #
 #                                                                    #
 ######################################################################
 
@@ -199,7 +199,7 @@ begin routers
 #  driver = manualroute
 #  domains = ! +local_domains
 #  transport = remote_smtp
-#  route_list = * smartrelay.vestacp.com
+#  route_list = * smartrelay.hestiacp.com
 #  no_more
 #  no_verify
 

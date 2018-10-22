@@ -207,11 +207,11 @@ add_web_config() {
     chown root:$user $conf
     chmod 640 $conf
 
-    if [ -z "$(grep "$conf" /etc/$1/conf.d/vesta.conf)" ]; then
+    if [ -z "$(grep "$conf" /etc/$1/conf.d/hestia.conf)" ]; then
         if [ "$1" != 'nginx' ]; then
-            echo "Include $conf" >> /etc/$1/conf.d/vesta.conf
+            echo "Include $conf" >> /etc/$1/conf.d/hestia.conf
         else
-            echo "include $conf;" >> /etc/$1/conf.d/vesta.conf
+            echo "include $conf;" >> /etc/$1/conf.d/hestia.conf
         fi
     fi
 
@@ -277,7 +277,7 @@ del_web_config() {
     fi
 
     if [ -e "$conf" ]; then
-        sed -i "\|$conf|d" /etc/$1/conf.d/vesta.conf
+        sed -i "\|$conf|d" /etc/$1/conf.d/hestia.conf
         rm -f $conf
     else
         # fallback to old style configs
@@ -291,7 +291,7 @@ del_web_config() {
     # clean-up for both config styles if there is no more domains
     web_domain=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
     if [ "$web_domain" -eq '0' ]; then
-        sed -i "/.*\/$user\/conf\/web\//d" /etc/$1/conf.d/vesta.conf
+        sed -i "/.*\/$user\/conf\/web\//d" /etc/$1/conf.d/hestia.conf
         if [ -f "$conf" ]; then
             rm -f $conf
         fi

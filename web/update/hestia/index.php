@@ -8,7 +8,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['pkg'])) {
         $v_pkg = escapeshellarg($_GET['pkg']);
-        exec (HESTIA_CMD."v-update-sys-vesta ".$v_pkg, $output, $return_var);
+        exec (HESTIA_CMD."v-update-sys-hestia ".$v_pkg, $output, $return_var);
     }
 
     if ($return_var != 0) {

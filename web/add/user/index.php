@@ -66,7 +66,7 @@ if (!empty($_POST['ok'])) {
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
         fclose($fp);
-        exec (VESTA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
+        exec (HESTIA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         unlink($v_password);
@@ -75,7 +75,7 @@ if (!empty($_POST['ok'])) {
 
     // Set language
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
+        exec (HESTIA_CMD."v-change-user-language ".$v_username." ".$v_language, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -111,13 +111,13 @@ if (!empty($_POST['ok'])) {
 
 
 // List hosting packages
-exec (VESTA_CMD."v-list-user-packages json", $output, $return_var);
+exec (HESTIA_CMD."v-list-user-packages json", $output, $return_var);
 check_error($return_var);
 $data = json_decode(implode('', $output), true);
 unset($output);
 
 // List languages
-exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
 $languages = json_decode(implode('', $output), true);
 unset($output);
 

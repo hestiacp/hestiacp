@@ -10,6 +10,6 @@
     $v_section = escapeshellarg($_REQUEST['v_section']);
     $v_unit_id = escapeshellarg($_REQUEST['v_unit_id']);
 
-    exec (VESTA_CMD."v-delete-user-favourites ".$_SESSION['user']." ".$v_section." ".$v_unit_id, $output, $return_var);
+    exec (HESTIA_CMD."v-delete-user-favourites ".$_SESSION['user']." ".$v_section." ".$v_unit_id, $output, $return_var);
 //    check_return_code($return_var,$output);
 ?>

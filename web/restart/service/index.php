@@ -8,10 +8,10 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['srv'])) {
         if ($_GET['srv'] == 'iptables') {
-            exec (VESTA_CMD."v-update-firewall", $output, $return_var);
+            exec (HESTIA_CMD."v-update-firewall", $output, $return_var);
         } else {
             $v_service = escapeshellarg($_GET['srv']);
-            exec (VESTA_CMD."v-restart-service ".$v_service, $output, $return_var);
+            exec (HESTIA_CMD."v-restart-service ".$v_service, $output, $return_var);
         }
     }
     if ($return_var != 0) {

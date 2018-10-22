@@ -49,7 +49,7 @@ if (!empty($_POST['ok'])) {
 
     // Add firewall rule
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-firewall-rule ".$v_action." ".$v_ip." ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
+        exec (HESTIA_CMD."v-add-firewall-rule ".$v_action." ".$v_ip." ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }

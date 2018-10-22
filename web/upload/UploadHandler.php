@@ -1118,7 +1118,7 @@ class UploadHandler
                 $file->size > $this->get_file_size($file_path);
             if ($uploaded_file && is_uploaded_file($uploaded_file)) {
                 chmod($uploaded_file, 0644);
-                exec (VESTA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} '{$file_path}'", $output, $return_var);
+                exec (HESTIA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} '{$file_path}'", $output, $return_var);
                 $error = check_return_code($return_var, $output);
                 if ($return_var != 0) {
                     $file->error = 'Error while saving file ';

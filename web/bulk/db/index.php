@@ -35,7 +35,7 @@ if ($_SESSION['user'] == 'admin') {
 
 foreach ($database as $value) {
     $value = escapeshellarg($value);
-    exec (VESTA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
+    exec (HESTIA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
 }
 
 header("Location: /list/db/");

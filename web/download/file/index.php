@@ -21,7 +21,7 @@ if (!empty($path)) {
     header("Content-Transfer-Encoding: binary");
     header("Content-disposition: attachment;filename=".basename($path));
 	$output = '';
-	exec(VESTA_CMD . "v-check-fs-permission " . $user . " " . escapeshellarg($path), $output, $return_var);
+	exec(HESTIA_CMD . "v-check-fs-permission " . $user . " " . escapeshellarg($path), $output, $return_var);
 	if ($return_var != 0) {
 	  print 'Error while opening file'; // todo: handle this more styled
 	  exit;

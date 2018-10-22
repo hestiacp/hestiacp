@@ -49,14 +49,14 @@ if ($_SESSION['user'] == 'admin') {
 
 foreach ($user as $value) {
     $value = escapeshellarg($value);
-    exec (VESTA_CMD.$cmd." ".$value." ".$restart, $output, $return_var);
+    exec (HESTIA_CMD.$cmd." ".$value." ".$restart, $output, $return_var);
     $changes = 'yes';
 }
 
 if ((!empty($restart)) && (!empty($changes))) {
-    exec (VESTA_CMD."v-restart-web", $output, $return_var);
-    exec (VESTA_CMD."v-restart-dns", $output, $return_var);
-    exec (VESTA_CMD."v-restart-cron", $output, $return_var);
+    exec (HESTIA_CMD."v-restart-web", $output, $return_var);
+    exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
+    exec (HESTIA_CMD."v-restart-cron", $output, $return_var);
 }
 
 header("Location: /list/user/");

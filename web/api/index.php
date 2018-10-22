@@ -1,5 +1,5 @@
 <?php
-define('VESTA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
+define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 exit;
 if (isset($_POST['user']) || isset($_POST['hash'])) {
@@ -14,7 +14,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         $password = $_POST['password'];
         $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
         $output = '';
-        exec (VESTA_CMD."v-get-user-salt admin ".$v_ip." json" , $output, $return_var);
+        exec (HESTIA_CMD."v-get-user-salt admin ".$v_ip." json" , $output, $return_var);
         $pam = json_decode(implode('', $output), true);
         $salt = $pam['admin']['SALT'];
         $method = $pam['admin']['METHOD'];
@@ -37,7 +37,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         fclose($fp);
 
         // Check user hash
-        exec(VESTA_CMD ."v-check-user-hash admin ".$v_hash." ".$v_ip,  $output, $return_var);
+        exec(HESTIA_CMD ."v-check-user-hash admin ".$v_hash." ".$v_ip,  $output, $return_var);
         unset($output);
 
         // Remove tmp file
@@ -51,7 +51,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     } else {
         $key = '/usr/local/hestia/data/keys/' . basename($_POST['hash']);
         if (file_exists($key) && is_file($key)) {
-            exec(VESTA_CMD ."v-check-api-key ".escapeshellarg($key)." ".$v_ip,  $output, $return_var);
+            exec(HESTIA_CMD ."v-check-api-key ".escapeshellarg($key)." ".$v_ip,  $output, $return_var);
             unset($output);
 
             // Check API answer
@@ -82,7 +82,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     if (isset($_POST['arg9'])) $arg9 = escapeshellarg($_POST['arg9']);
 
     // Build query
-    $cmdquery = VESTA_CMD.$cmd." ";
+    $cmdquery = HESTIA_CMD.$cmd." ";
     if(!empty($arg1)){
          $cmdquery = $cmdquery.$arg1." "; }
     if(!empty($arg2)){

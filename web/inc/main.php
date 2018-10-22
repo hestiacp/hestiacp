@@ -2,7 +2,6 @@
 
 session_start();
 
-define('VESTA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('JS_LATEST_UPDATE', '1491697868');
 
@@ -97,7 +96,7 @@ if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
 }
 
 function get_favourites(){
-    exec (VESTA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
 //    $data = json_decode(implode('', $output).'}', true);
     $data = json_decode(implode('', $output), true);
     $data = array_reverse($data,true);
@@ -172,7 +171,7 @@ function render_page($user, $TAB, $page) {
 
 function top_panel($user, $TAB) {
     global $panel;
-    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
+    $command = HESTIA_CMD."v-list-user '".$user."' 'json'";
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
         header("Location: /error/");
@@ -183,7 +182,7 @@ function top_panel($user, $TAB) {
 
 
     // getting notifications
-    $command = VESTA_CMD."v-list-user-notifications '".$user."' 'json'";
+    $command = HESTIA_CMD."v-list-user-notifications '".$user."' 'json'";
     exec ($command, $output, $return_var);
     $notifications = json_decode(implode('', $output), true);
     foreach($notifications as $message){
@@ -378,7 +377,7 @@ function list_timezones() {
  * @return string
  */
 function is_it_mysql_or_mariadb() {
-    exec (VESTA_CMD."v-list-sys-services json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-sys-services json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     unset($output);
     $mysqltype='mysql';

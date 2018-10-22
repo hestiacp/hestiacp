@@ -30,7 +30,7 @@ if (!empty($_POST['cron'])) $cron = 'yes';
 if (!empty($_POST['udir'])) $udir = escapeshellarg(implode(",",$_POST['udir']));
 
 if ($action == 'restore') {
-    exec (VESTA_CMD."v-schedule-user-restore ".$user." ".$backup." ".$web." ".$dns." ".$mail." ".$db." ".$cron." ".$udir, $output, $return_var);
+    exec (HESTIA_CMD."v-schedule-user-restore ".$user." ".$backup." ".$web." ".$dns." ".$mail." ".$db." ".$cron." ".$udir, $output, $return_var);
     if ($return_var == 0) {
         $_SESSION['error_msg'] = __('RESTORE_SCHEDULED');
     } else {

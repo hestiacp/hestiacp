@@ -5,7 +5,7 @@ error_reporting(NULL);
     echo '<br> Favorites: <br>';
 
     // Data
-    exec (VESTA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
 
 
 //    print_r(implode('', $output));

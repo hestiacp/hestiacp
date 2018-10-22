@@ -14,7 +14,7 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['user'])) {
         $v_username = escapeshellarg($_GET['user']);
-        exec (VESTA_CMD."v-delete-user ".$v_username, $output, $return_var);
+        exec (HESTIA_CMD."v-delete-user ".$v_username, $output, $return_var);
     }
     check_return_code($return_var,$output);
     unset($_SESSION['look']);

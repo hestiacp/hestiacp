@@ -134,7 +134,7 @@ if (!empty($_POST['ok'])) {
 
     // Add new package
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-user-package ".$tmpdir." ".$v_package, $output, $return_var);
+        exec (HESTIA_CMD."v-add-user-package ".$tmpdir." ".$v_package, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -153,31 +153,31 @@ if (!empty($_POST['ok'])) {
 
 
 // List web temmplates
-exec (VESTA_CMD."v-list-web-templates json", $output, $return_var);
+exec (HESTIA_CMD."v-list-web-templates json", $output, $return_var);
 $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List web templates for backend
 if (!empty($_SESSION['WEB_BACKEND'])) {
-    exec (VESTA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
     $backend_templates = json_decode(implode('', $output), true);
     unset($output);
 }
 
 // List web templates for proxy
 if (!empty($_SESSION['PROXY_SYSTEM'])) {
-    exec (VESTA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-web-templates-proxy json", $output, $return_var);
     $proxy_templates = json_decode(implode('', $output), true);
     unset($output);
 }
 
 // List DNS templates
-exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
+exec (HESTIA_CMD."v-list-dns-templates json", $output, $return_var);
 $dns_templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List system shells
-exec (VESTA_CMD."v-list-sys-shells json", $output, $return_var);
+exec (HESTIA_CMD."v-list-sys-shells json", $output, $return_var);
 $shells = json_decode(implode('', $output), true);
 unset($output);
 

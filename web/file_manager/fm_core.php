@@ -31,7 +31,7 @@ class FileManager {
     public function checkFileType($dir) {
         $dir = $this->formatFullPath($dir);
 
-        exec(VESTA_CMD . "v-get-fs-file-type {$this->user} {$dir}", $output, $return_var);
+        exec(HESTIA_CMD . "v-get-fs-file-type {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
         if (empty($error)) {
@@ -62,7 +62,7 @@ class FileManager {
 
     function deleteItem($dir, $item) {
         $dir = $this->formatFullPath($item);
-        exec (VESTA_CMD . "v-delete-fs-directory {$this->user} {$dir}", $output, $return_var);
+        exec (HESTIA_CMD . "v-delete-fs-directory {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -83,7 +83,7 @@ class FileManager {
         $src = $this->formatFullPath($item);
         $dst = $this->formatFullPath($target_dir);
 
-        exec (VESTA_CMD . "v-copy-fs-file {$this->user} {$src} {$dst}", $output, $return_var);
+        exec (HESTIA_CMD . "v-copy-fs-file {$this->user} {$src} {$dst}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -104,7 +104,7 @@ class FileManager {
         $src = $this->formatFullPath($item);
         $dst = $this->formatFullPath($target_dir);
 
-        exec (VESTA_CMD . "v-copy-fs-directory {$this->user} {$src} {$dst}", $output, $return_var);
+        exec (HESTIA_CMD . "v-copy-fs-directory {$this->user} {$src} {$dst}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -133,7 +133,7 @@ class FileManager {
     function createFile($dir, $filename) {
         $dir = $this->formatFullPath($dir . '/' . $filename);
 
-        exec (VESTA_CMD . "v-add-fs-file {$this->user} {$dir}", $output, $return_var);
+        exec (HESTIA_CMD . "v-add-fs-file {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -159,7 +159,7 @@ class FileManager {
 
         $dst_item = $this->formatFullPath($dst_item);
 
-        exec (VESTA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$items}", $output, $return_var);
+        exec (HESTIA_CMD . "v-add-fs-archive {$this->user} {$dst_item} {$items}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -183,7 +183,7 @@ class FileManager {
 
         $dst_item = $this->formatFullPath($dst_item_name);
 
-        exec (VESTA_CMD . "v-copy-fs-file {$this->user} {$src_item} {$dst_item}", $output, $return_var);
+        exec (HESTIA_CMD . "v-copy-fs-file {$this->user} {$src_item} {$dst_item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -219,7 +219,7 @@ class FileManager {
         $item     = $this->formatFullPath($item);
         $dst_item = $this->formatFullPath($target_dir);
 
-        exec (VESTA_CMD . "v-extract-fs-archive {$this->user} {$item} {$dst_item}", $output, $return_var);
+        exec (HESTIA_CMD . "v-extract-fs-archive {$this->user} {$item} {$dst_item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -240,7 +240,7 @@ class FileManager {
         $item     = $this->formatFullPath($item);
         $dst_item = $this->formatFullPath($target_name);
 
-        exec (VESTA_CMD . "v-move-fs-file {$this->user} {$item} {$dst_item}", $output, $return_var);
+        exec (HESTIA_CMD . "v-move-fs-file {$this->user} {$item} {$dst_item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -267,7 +267,7 @@ class FileManager {
             );
         }
 
-        exec (VESTA_CMD . "v-move-fs-directory {$this->user} {$item} {$dst_item}", $output, $return_var);
+        exec (HESTIA_CMD . "v-move-fs-directory {$this->user} {$item} {$dst_item}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -287,7 +287,7 @@ class FileManager {
     function createDir($dir, $dirname) {
         $dir = $this->formatFullPath($dir . '/' . $dirname);
 
-        exec (VESTA_CMD . "v-add-fs-directory {$this->user} {$dir}", $output, $return_var);
+        exec (HESTIA_CMD . "v-add-fs-directory {$this->user} {$dir}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -308,7 +308,7 @@ class FileManager {
         $item       = $this->formatFullPath($dir . $item);
         $permissions = escapeshellarg($permissions);
 
-        exec (VESTA_CMD . "v-change-fs-file-permission {$this->user} {$item} {$permissions}", $output, $return_var);
+        exec (HESTIA_CMD . "v-change-fs-file-permission {$this->user} {$item} {$permissions}", $output, $return_var);
 
         $error = self::check_return_code($return_var, $output);
 
@@ -328,7 +328,7 @@ class FileManager {
     function getDirectoryListing($dir = '') {
         $dir = $this->formatFullPath($dir);
 
-        exec (VESTA_CMD . "v-list-fs-directory {$this->user} {$dir}", $output, $return_var);
+        exec (HESTIA_CMD . "v-list-fs-directory {$this->user} {$dir}", $output, $return_var);
 
         return $this->parseListing($output);
     }

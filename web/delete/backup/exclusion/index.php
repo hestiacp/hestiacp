@@ -12,7 +12,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
 if (!empty($_GET['system'])) {
     $v_username = escapeshellarg($user);
     $v_system = escapeshellarg($_GET['system']);
-    exec (VESTA_CMD."v-delete-user-backup-exclusions ".$v_username." ".$v_system, $output, $return_var);
+    exec (HESTIA_CMD."v-delete-user-backup-exclusions ".$v_username." ".$v_system, $output, $return_var);
 }
 check_return_code($return_var,$output);
 unset($output);

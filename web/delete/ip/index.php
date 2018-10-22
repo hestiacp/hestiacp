@@ -14,7 +14,7 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['ip'])) {
         $v_ip = escapeshellarg($_GET['ip']);
-        exec (VESTA_CMD."v-delete-sys-ip ".$v_ip, $output, $return_var);
+        exec (HESTIA_CMD."v-delete-sys-ip ".$v_ip, $output, $return_var);
     }
     check_return_code($return_var,$output);
     unset($output);

@@ -24,7 +24,7 @@ if (!empty($_GET['user'])) {
 if (!empty($_GET['database'])) {
     $v_username = escapeshellarg($user);
     $v_database = escapeshellarg($_GET['database']);
-    exec (VESTA_CMD."v-unsuspend-database ".$v_username." ".$v_database, $output, $return_var);
+    exec (HESTIA_CMD."v-unsuspend-database ".$v_username." ".$v_database, $output, $return_var);
     check_return_code($return_var,$output);
     unset($output);
 }

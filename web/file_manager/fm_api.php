@@ -10,7 +10,7 @@ include($_SERVER['DOCUMENT_ROOT']."/file_manager/fm_core.php");
 
 // todo: set in session?
 if (empty($panel)) {
-    $command = VESTA_CMD."v-list-user '".$user."' 'json'";
+    $command = HESTIA_CMD."v-list-user '".$user."' 'json'";
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
         header("Location: /error/");

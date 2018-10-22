@@ -17,7 +17,7 @@ if (isset($_GET['logout'])) {
 // Login as someone else
 if (isset($_SESSION['user'])) {
     if ($_SESSION['user'] == 'admin' && !empty($_GET['loginas'])) {
-        exec (VESTA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
+        exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
         if ( $return_var == 0 ) {
             $data = json_decode(implode('', $output), true);
             reset($data);
@@ -37,7 +37,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 
         // Get user's salt
         $output = '';
-        exec (VESTA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
+        exec (HESTIA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
         $pam = json_decode(implode('', $output), true);
         if ( $return_var > 0 ) {
             $ERROR = "<a class=\"error\">".__('Invalid username or password')."</a>";
@@ -65,7 +65,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
             fclose($fp);
 
             // Check user hash
-            exec(VESTA_CMD ."v-check-user-hash ".$v_user." ".$v_hash." ".$v_ip,  $output, $return_var);
+            exec(HESTIA_CMD ."v-check-user-hash ".$v_user." ".$v_hash." ".$v_ip,  $output, $return_var);
             unset($output);
 
             // Remove tmp file
@@ -80,7 +80,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
                 if ($_POST['user'] == 'root') $v_user = 'admin';
 
                 // Get user speciefic parameters
-                exec (VESTA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
+                exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
 
                 // Define session user
@@ -92,7 +92,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 
                 // Define language
                 $output = '';
-                exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+                exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
                 $languages = json_decode(implode('', $output), true);
                 if (in_array($data[$v_user]['LANGUAGE'], $languages)){
                     $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
@@ -120,7 +120,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 }
 
 // Check system configuration
-exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
+exec (HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 $sys_arr = $data['config'];
 foreach ($sys_arr as $key => $value) {
@@ -130,12 +130,12 @@ foreach ($sys_arr as $key => $value) {
 // Detect language
 if (empty($_SESSION['language'])) {
     $output = '';
-    exec (VESTA_CMD."v-list-sys-config json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-sys-config json", $output, $return_var);
     $config = json_decode(implode('', $output), true);
     $lang = $config['config']['LANGUAGE'];
 
     $output = '';
-    exec (VESTA_CMD."v-list-sys-languages json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
     $languages = json_decode(implode('', $output), true);
     if(in_array($lang, $languages)){
         $_SESSION['language'] = $lang;

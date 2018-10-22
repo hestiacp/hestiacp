@@ -35,7 +35,7 @@ if (!empty($_POST['ok'])) {
 
     // Add firewall ban
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-firewall-ban ".$v_ip." ".$v_chain, $output, $return_var);
+        exec (HESTIA_CMD."v-add-firewall-ban ".$v_ip." ".$v_chain, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }

@@ -63,7 +63,7 @@ if (!empty($_POST['ok'])) {
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
         fclose($fp);
-        exec (VESTA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." ".$v_host." ".$v_charset, $output, $return_var);
+        exec (HESTIA_CMD."v-add-database ".$user." ".$v_database." ".$v_dbuser." ".$v_password." ".$v_type." ".$v_host." ".$v_charset, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         unlink($v_password);
@@ -114,7 +114,7 @@ $v_db_email = $panel[$user]['CONTACT'];
 $db_types = explode(',', $_SESSION['DB_SYSTEM']);
 
 // List available database servers
-exec (VESTA_CMD."v-list-database-hosts json", $output, $return_var);
+exec (HESTIA_CMD."v-list-database-hosts json", $output, $return_var);
 $db_hosts_tmp1 = json_decode(implode('', $output), true);
 $db_hosts_tmp2 = array_map(function($host){return $host['HOST'];}, $db_hosts_tmp1);
 $db_hosts = array_values(array_unique($db_hosts_tmp2));

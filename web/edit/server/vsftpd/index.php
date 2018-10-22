@@ -31,7 +31,7 @@ if (!empty($_POST['save'])) {
         $fp = fopen($new_conf, 'w');
         fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config']));
         fclose($fp);
-        exec (VESTA_CMD."v-change-sys-service-config ".$new_conf." vsftpd ".$v_restart, $output, $return_var);
+        exec (HESTIA_CMD."v-change-sys-service-config ".$new_conf." vsftpd ".$v_restart, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         unlink($new_conf);
@@ -44,11 +44,11 @@ if (!empty($_POST['save'])) {
 
 }
 
-$v_config_path = shell_exec(VESTA_CMD.'v-list-sys-vsftpd-config plain');
+$v_config_path = shell_exec(HESTIA_CMD.'v-list-sys-vsftpd-config plain');
 $v_service_name = strtoupper('vsftpd');
 
 // Read config
-$v_config = shell_exec(VESTA_CMD."v-open-fs-config ".$v_config_path);
+$v_config = shell_exec(HESTIA_CMD."v-open-fs-config ".$v_config_path);
 
 // Render page
 render_page($user, $TAB, 'edit_server_service');

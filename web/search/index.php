@@ -26,7 +26,7 @@ $command = $_SESSION['user'] == 'admin'
            ? "v-search-object $q json"
            : "v-search-user-object $user $q json";
 
-exec (VESTA_CMD . $command, $output, $return_var);
+exec (HESTIA_CMD . $command, $output, $return_var);
 $data = json_decode(implode('', $output), true);
 
 // Render page

@@ -18,7 +18,7 @@ $v_domain = escapeshellarg($_GET['domain']);
 if ($_GET['type'] == 'access') $type = 'access';
 if ($_GET['type'] == 'error') $type = 'error';
 
-exec (VESTA_CMD."v-list-web-domain-".$type."log $user ".$v_domain." 5000", $output, $return_var);
+exec (HESTIA_CMD."v-list-web-domain-".$type."log $user ".$v_domain." 5000", $output, $return_var);
 if ($return_var == 0 ) {
     foreach($output as $file) {
         echo $file . "\n";

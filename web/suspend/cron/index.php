@@ -22,7 +22,7 @@ if (!empty($_GET['user'])) {
 if (!empty($_GET['job'])) {
     $v_username = escapeshellarg($user);
     $v_job = escapeshellarg($_GET['job']);
-    exec (VESTA_CMD."v-suspend-cron-job ".$v_username." ".$v_job, $output, $return_var);
+    exec (HESTIA_CMD."v-suspend-cron-job ".$v_username." ".$v_job, $output, $return_var);
 }
 check_return_code($return_var,$output);
 unset($output);

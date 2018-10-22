@@ -17,7 +17,7 @@ switch ($action) {
 
 foreach ($backup as $value) {
     $value = escapeshellarg($value);
-    exec (VESTA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
+    exec (HESTIA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
 }
 
 header("Location: /list/backup/exclusions");

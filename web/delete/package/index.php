@@ -14,7 +14,7 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['package'])) {
         $v_package = escapeshellarg($_GET['package']);
-        exec (VESTA_CMD."v-delete-user-package ".$v_package, $output, $return_var);
+        exec (HESTIA_CMD."v-delete-user-package ".$v_package, $output, $return_var);
     }
     check_return_code($return_var,$output);
     unset($output);

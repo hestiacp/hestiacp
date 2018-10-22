@@ -18,6 +18,6 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
     $_SESSION['favourites'][strtoupper($_REQUEST['v_section'])][$_REQUEST['v_unit_id']] = 1;
 
-    exec (VESTA_CMD."v-add-user-favourites ".$_SESSION['user']." ".$v_section." ".$v_unit_id, $output, $return_var);
+    exec (HESTIA_CMD."v-add-user-favourites ".$_SESSION['user']." ".$v_section." ".$v_unit_id, $output, $return_var);
 //    check_return_code($return_var,$output);
 ?>

@@ -51,7 +51,7 @@ if (!empty($_POST['ok'])) {
     // Gets public IP from 'v-list-user-ips' command (that reads /vesta/data/ips/ip), precisely from 'NAT' field
     $v_public_ip = $v_ip;
     $v_clean_ip = $_POST['v_ip'];  // clean_ip = IP without quotas
-    exec (VESTA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
     $ips = json_decode(implode('', $output), true);
     unset($output);
     if (isset($ips[$v_clean_ip]) && isset($ips[$v_clean_ip]['NAT']) && trim($ips[$v_clean_ip]['NAT'])!='') {
@@ -118,7 +118,7 @@ if (!empty($_POST['ok'])) {
 
     // Add web domain
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." 'no' ".$aliases." ".$proxy_ext, $output, $return_var);
+        exec (HESTIA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." 'no' ".$aliases." ".$proxy_ext, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $domain_added = empty($_SESSION['error_msg']);
@@ -126,7 +126,7 @@ if (!empty($_POST['ok'])) {
 
     // Add DNS domain
     if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_public_ip." '' '' '' '' '' '' '' '' 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_public_ip." '' '' '' '' '' '' '' '' 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -136,7 +136,7 @@ if (!empty($_POST['ok'])) {
         foreach ($aliases_arr as $alias) {
             if ($alias != "www.".$_POST['v_domain']) {
                 $alias = escapeshellarg($alias);
-                exec (VESTA_CMD."v-add-dns-on-web-alias ".$user." ".$alias." ".$v_ip." 'no'", $output, $return_var);
+                exec (HESTIA_CMD."v-add-dns-on-web-alias ".$user." ".$alias." ".$v_ip." 'no'", $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
             }
@@ -145,7 +145,7 @@ if (!empty($_POST['ok'])) {
 
     // Add mail domain
     if (($_POST['v_mail'] == 'on') && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-add-mail-domain ".$user." ".$v_domain, $output, $return_var);
+        exec (HESTIA_CMD."v-add-mail-domain ".$user." ".$v_domain, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -153,14 +153,14 @@ if (!empty($_POST['ok'])) {
     // Delete proxy support
     if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'off')  && (empty($_SESSION['error_msg']))) {
         $ext = escapeshellarg($ext);
-        exec (VESTA_CMD."v-delete-web-domain-proxy ".$user." ".$v_domain." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-delete-web-domain-proxy ".$user." ".$v_domain." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
 
     // Add Lets Encrypt support
      if ((!empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-schedule-letsencrypt-domain ".$user." ".$v_domain, $output, $return_var);
+        exec (HESTIA_CMD."v-schedule-letsencrypt-domain ".$user." ".$v_domain, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
      } else {
@@ -195,7 +195,7 @@ if (!empty($_POST['ok'])) {
              }
 
              $v_ssl_home = escapeshellarg($_POST['v_ssl_home']);
-             exec (VESTA_CMD."v-add-web-domain-ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
+             exec (HESTIA_CMD."v-add-web-domain-ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
              check_return_code($return_var,$output);
              unset($output);
          }
@@ -204,7 +204,7 @@ if (!empty($_POST['ok'])) {
     // Add web stats
     if ((!empty($_POST['v_stats'])) && ($_POST['v_stats'] != 'none' ) && (empty($_SESSION['error_msg']))) {
         $v_stats = escapeshellarg($_POST['v_stats']);
-        exec (VESTA_CMD."v-add-web-domain-stats ".$user." ".$v_domain." ".$v_stats, $output, $return_var);
+        exec (HESTIA_CMD."v-add-web-domain-stats ".$user." ".$v_domain." ".$v_stats, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -216,7 +216,7 @@ if (!empty($_POST['ok'])) {
         $fp = fopen($v_stats_password, "w");
         fwrite($fp, $_POST['v_stats_password']."\n");
         fclose($fp);
-        exec (VESTA_CMD."v-add-web-domain-stats-user ".$user." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
+        exec (HESTIA_CMD."v-add-web-domain-stats-user ".$user." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         unlink($v_stats_password);
@@ -225,21 +225,21 @@ if (!empty($_POST['ok'])) {
 
     // Restart DNS server
     if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+        exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
 
     // Restart web server
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-restart-web", $output, $return_var);
+        exec (HESTIA_CMD."v-restart-web", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
 
     // Restart proxy server
     if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'on') && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-restart-proxy", $output, $return_var);
+        exec (HESTIA_CMD."v-restart-proxy", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -286,7 +286,7 @@ if (!empty($_POST['ok'])) {
                     $fp = fopen($v_ftp_password, "w");
                     fwrite($fp, $v_ftp_user_data['v_ftp_password']."\n");
                     fclose($fp);
-                    exec (VESTA_CMD."v-add-web-domain-ftp ".$user." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
+                    exec (HESTIA_CMD."v-add-web-domain-ftp ".$user." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
                     check_return_code($return_var,$output);
                     unset($output);
                     unlink($v_ftp_password);
@@ -351,12 +351,12 @@ $v_ftp_user_prepath = $panel[$user]['HOME'] . "/web";
 $v_ftp_email = $panel[$user]['CONTACT'];
 
 // List IP addresses
-exec (VESTA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
+exec (HESTIA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
 $ips = json_decode(implode('', $output), true);
 unset($output);
 
 // List web stat engines
-exec (VESTA_CMD."v-list-web-stats json", $output, $return_var);
+exec (HESTIA_CMD."v-list-web-stats json", $output, $return_var);
 $stats = json_decode(implode('', $output), true);
 unset($output);
 

@@ -45,7 +45,7 @@ if (!empty($_POST['ok'])) {
 
     // Add dns domain
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." ".$v_ns5."  ".$v_ns6."  ".$v_ns7." ".$v_ns8." no", $output, $return_var);
+        exec (HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." ".$v_ns5."  ".$v_ns6."  ".$v_ns7." ".$v_ns8." no", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -55,7 +55,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_exp'])) && ($_POST['v_exp'] != date('Y-m-d', strtotime('+1 year')))) {
             $v_exp = escapeshellarg($_POST['v_exp']);
-            exec (VESTA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp." no", $output, $return_var);
+            exec (HESTIA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp." no", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
         }
@@ -65,7 +65,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_ttl'])) && ($_POST['v_ttl'] != '14400') && (empty($_SESSION['error_msg']))) {
             $v_ttl = escapeshellarg($_POST['v_ttl']);
-            exec (VESTA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl." no", $output, $return_var);
+            exec (HESTIA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl." no", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
         }
@@ -73,7 +73,7 @@ if (!empty($_POST['ok'])) {
 
     // Restart dns server
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+        exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -120,7 +120,7 @@ if (!empty($_POST['ok_rec'])) {
 
     // Add dns record
     if (empty($_SESSION['error_msg'])) {
-        exec (VESTA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
+        exec (HESTIA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_type = $_POST['v_type'];
@@ -153,7 +153,7 @@ if (empty($_GET['domain'])) {
     if (empty($v_ttl)) $v_ttl = 14400;
     if (empty($v_exp)) $v_exp = date('Y-m-d', strtotime('+1 year'));
     if (empty($v_ns1)) {
-        exec (VESTA_CMD."v-list-user-ns ".$user." json", $output, $return_var);
+        exec (HESTIA_CMD."v-list-user-ns ".$user." json", $output, $return_var);
         $nameservers = json_decode(implode('', $output), true);
         $v_ns1 = str_replace("'", "", $nameservers[0]);
         $v_ns2 = str_replace("'", "", $nameservers[1]);

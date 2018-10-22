@@ -7,7 +7,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if ($_SESSION['user'] == 'admin') {
     if (!empty($_GET['hostname'])) {
-        exec (VESTA_CMD."v-restart-system yes", $output, $return_var);
+        exec (HESTIA_CMD."v-restart-system yes", $output, $return_var);
         $_SESSION['error_msg'] = 'The system is going down for reboot NOW!';
     }
     unset($output);

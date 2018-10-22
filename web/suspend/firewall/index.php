@@ -19,7 +19,7 @@ if ($_SESSION['user'] != 'admin') {
 
 if (!empty($_GET['rule'])) {
     $v_rule = escapeshellarg($_GET['rule']);
-    exec (VESTA_CMD."v-suspend-firewall-rule ".$v_rule, $output, $return_var);
+    exec (HESTIA_CMD."v-suspend-firewall-rule ".$v_rule, $output, $return_var);
 }
 check_return_code($return_var,$output);
 unset($output);

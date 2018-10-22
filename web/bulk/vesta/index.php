@@ -24,7 +24,7 @@ if ($_SESSION['user'] == 'admin') {
     }
     foreach ($pkg as $value) {
         $value = escapeshellarg($value);
-        exec (VESTA_CMD.$cmd." ".$value, $output, $return_var);
+        exec (HESTIA_CMD.$cmd." ".$value, $output, $return_var);
     }
 }
 

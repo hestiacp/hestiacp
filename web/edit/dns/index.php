@@ -20,7 +20,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
 // List dns domain
 if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
     $v_domain = escapeshellarg($_GET['domain']);
-    exec (VESTA_CMD."v-list-dns-domain ".$user." ".$v_domain." json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-dns-domain ".$user." ".$v_domain." json", $output, $return_var);
     check_return_code($return_var,$output);
     $data = json_decode(implode('', $output), true);
     unset($output);
@@ -43,7 +43,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
     }
 
     // List dns templates
-    exec (VESTA_CMD."v-list-dns-templates json", $output, $return_var);
+    exec (HESTIA_CMD."v-list-dns-templates json", $output, $return_var);
     $templates = json_decode(implode('', $output), true);
     unset($output);
 }
@@ -52,7 +52,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
 if ((!empty($_GET['domain'])) && (!empty($_GET['record_id'])))  {
     $v_domain = escapeshellarg($_GET['domain']);
     $v_record_id = escapeshellarg($_GET['record_id']);
-    exec (VESTA_CMD."v-list-dns-records ".$user." ".$v_domain." 'json'", $output, $return_var);
+    exec (HESTIA_CMD."v-list-dns-records ".$user." ".$v_domain." 'json'", $output, $return_var);
     check_return_code($return_var,$output);
     $data = json_decode(implode('', $output), true);
     unset($output);
@@ -88,7 +88,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
     // Change domain IP
     if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
         $v_ip = escapeshellarg($_POST['v_ip']);
-        exec (VESTA_CMD."v-change-dns-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-change-dns-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         $restart_dns = 'yes';
         unset($output);
@@ -97,7 +97,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
     // Change domain template
     if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
         $v_template = escapeshellarg($_POST['v_template']);
-        exec (VESTA_CMD."v-change-dns-domain-tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-change-dns-domain-tpl ".$v_username." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $restart_dns = 'yes';
@@ -106,7 +106,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
     // Change SOA record
     if (($v_soa != $_POST['v_soa']) && (empty($_SESSION['error_msg']))) {
         $v_soa = escapeshellarg($_POST['v_soa']);
-        exec (VESTA_CMD."v-change-dns-domain-soa ".$v_username." ".$v_domain." ".$v_soa." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-change-dns-domain-soa ".$v_username." ".$v_domain." ".$v_soa." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $restart_dns = 'yes';
@@ -115,7 +115,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
     // Change expiriation date
     if (($v_exp != $_POST['v_exp']) && (empty($_SESSION['error_msg']))) {
         $v_exp = escapeshellarg($_POST['v_exp']);
-        exec (VESTA_CMD."v-change-dns-domain-exp ".$v_username." ".$v_domain." ".$v_exp." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-change-dns-domain-exp ".$v_username." ".$v_domain." ".$v_exp." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -123,7 +123,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
     // Change domain ttl
     if (($v_ttl != $_POST['v_ttl']) && (empty($_SESSION['error_msg']))) {
         $v_ttl = escapeshellarg($_POST['v_ttl']);
-        exec (VESTA_CMD."v-change-dns-domain-ttl ".$v_username." ".$v_domain." ".$v_ttl." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-change-dns-domain-ttl ".$v_username." ".$v_domain." ".$v_ttl." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $restart_dns = 'yes';
@@ -131,7 +131,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
 
     // Restart dns server
     if (!empty($restart_dns) && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+        exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -159,7 +159,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
     if (($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) && (empty($_SESSION['error_msg']))) {
         $v_val = escapeshellarg($_POST['v_val']);
         $v_priority = escapeshellarg($_POST['v_priority']);
-        exec (VESTA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
+        exec (HESTIA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
         check_return_code($return_var,$output);
         $v_val = $_POST['v_val'];
         unset($output);
@@ -169,7 +169,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
     // Change dns record id
     if (($_GET['record_id'] != $_POST['v_record_id']) && (empty($_SESSION['error_msg']))) {
         $v_old_record_id = escapeshellarg($_GET['record_id']);
-        exec (VESTA_CMD."v-change-dns-record-id ".$v_username." ".$v_domain." ".$v_old_record_id." ".$v_record_id, $output, $return_var);
+        exec (HESTIA_CMD."v-change-dns-record-id ".$v_username." ".$v_domain." ".$v_old_record_id." ".$v_record_id, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $restart_dns = 'yes';
@@ -177,7 +177,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
 
     // Restart dns server
     if (!empty($restart_dns) && (empty($_SESSION['error_msg']))) {
-        exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+        exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }

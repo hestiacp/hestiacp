@@ -59,7 +59,7 @@ if (empty($record)) {
     foreach ($domain as $value) {
         // DNS
         $value = escapeshellarg($value);
-        exec (VESTA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
+        exec (HESTIA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
         $restart = 'yes';
     }
 } else {
@@ -67,13 +67,13 @@ if (empty($record)) {
         // DNS Record
         $value = escapeshellarg($value);
         $dom = escapeshellarg($domain);
-        exec (VESTA_CMD.$cmd." ".$user." ".$dom." ".$value." no", $output, $return_var);
+        exec (HESTIA_CMD.$cmd." ".$user." ".$dom." ".$value." no", $output, $return_var);
         $restart = 'yes';
     }
 }
 
 if (!empty($restart)) {
-    exec (VESTA_CMD."v-restart-dns", $output, $return_var);
+    exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
 }
 
 if (empty($record)) { 

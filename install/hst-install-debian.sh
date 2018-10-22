@@ -850,7 +850,7 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
-    echo > /etc/nginx/conf.d/vesta.conf
+    echo > /etc/nginx/conf.d/hestia.conf
     mkdir -p /var/log/nginx/domains
     update-rc.d nginx defaults
     service nginx start
@@ -873,7 +873,7 @@ if [ "$apache" = 'yes'  ]; then
     a2enmod ruid2
     a2enmod headers
     mkdir -p /etc/apache2/conf.d
-    echo > /etc/apache2/conf.d/vesta.conf
+    echo > /etc/apache2/conf.d/hestia.conf
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
     echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
     echo "# Powered by hestia" > /etc/apache2/ports.conf

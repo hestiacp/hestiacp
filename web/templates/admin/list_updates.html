@@ -22,7 +22,7 @@
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
-                <form action="/bulk/vesta/" method="post" id="objects">
+                <form action="/bulk/hestia/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">
@@ -71,7 +71,7 @@
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <? if ($data[$key]['UPDATED'] == 'no') {
-                   echo '<div class="actions-panel__col actions-panel__update shortcut-u" key-action="href"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a><span class="shortcut">&nbsp;U</span></div>';
+                   echo '<div class="actions-panel__col actions-panel__update shortcut-u" key-action="href"><a href="/update/hestia/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a><span class="shortcut">&nbsp;U</span></div>';
                  }
               ?>
             </div>

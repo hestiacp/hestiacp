@@ -70,7 +70,7 @@
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <? if ($data[$key]['UPDATED'] == 'no') {
-                   echo '<div class="actions-panel__col actions-panel__update shortcut-u" key-action="href"><a href="/update/vesta/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a><span class="shortcut">&nbsp;U</span></div>';
+                   echo '<div class="actions-panel__col actions-panel__update shortcut-u" key-action="href"><a href="/update/hestia/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a><span class="shortcut">&nbsp;U</span></div>';
                  }
               ?>
               <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('download')?> <i></i></a><span class="shortcut">&nbsp;D</span></div>

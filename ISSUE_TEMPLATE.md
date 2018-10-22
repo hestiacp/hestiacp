@@ -1,8 +1,8 @@
 ### Operating System (OS/VERSION):
 
-Type here, e.g. CentOS 6
+Type here, e.g. Debian 9
 
-### VestaCP Version:
+### HestiaCP Version:
 
 Type here, e.g. 3.14159
 
@@ -12,7 +12,7 @@ Type here, e.g. php-fpm, apache, nginx, mysql
 
 ### Steps to Reproduce:
 
-Type here, e.g. install vesta and type rm -rf / --no-preserve-root
+Type here, e.g. install hestia and type rm -rf / --no-preserve-root
 
 ### Related Issues/Forum Threads:
 

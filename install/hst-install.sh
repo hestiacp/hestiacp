@@ -6,7 +6,7 @@
 # Currently Supported Operating Systems:
 #
 #   Debian 8, 9
-#   Ubuntu 14.04 - 18.04
+#   Ubuntu 14.04, 16.04, 18.04
 #
 
 # Am I root?

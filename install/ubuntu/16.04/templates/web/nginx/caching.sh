@@ -16,3 +16,4 @@ if [ -e "$conf" ]; then
 else
     echo "$str" >> $conf
 fi
+

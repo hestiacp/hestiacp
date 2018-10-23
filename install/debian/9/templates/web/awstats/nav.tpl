@@ -10,7 +10,7 @@
 <body>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-    <td><img src="logo.png" alt="vesta"></td>
+    <td><img src="logo.png" alt="hestia"></td>
     <td><form name="period" action="" method="get">
         <select name="select" ONCHANGE="change()">
 %select_month%

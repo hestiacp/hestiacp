@@ -866,7 +866,7 @@ if [ "$apache" = 'yes'  ]; then
     a2enmod actions
     a2enmod ruid2
     mkdir -p /etc/apache2/conf.d
-    echo > /etc/apache2/conf.d/vesta.conf
+    echo > /etc/apache2/conf.d/hestia.conf
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
     echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
     echo "# Powered by hestia" > /etc/apache2/ports.conf

@@ -686,7 +686,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label step-left">
-                                    <table style="display:<?php if (empty($v_adv) && $_GET['lead'] != 'filemanager' && $_GET['lead'] != 'sftp') echo 'none';?> ;" id="vesta">
+                                    <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="vesta">
                                         <tr>
                                             <td class="vst-text">
                                                 <?php print __('Version') ?>

@@ -28,7 +28,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
     exec (HESTIA_CMD."v-unsuspend-dns-domain ".$v_username." ".$v_domain, $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = __('Error: vesta did not return any output.');
+        if (empty($error)) $error = __('Error: hestia did not return any output.');
         $_SESSION['error_msg'] = $error;
     }
     unset($output);
@@ -49,7 +49,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id'])))  {
     exec (HESTIA_CMD."v-unsuspend-dns-record ".$v_username." ".$v_domain." ".$v_record_id, $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = __('Error: vesta did not return any output.');
+        if (empty($error)) $error = __('Error: hestia did not return any output.');
         $_SESSION['error_msg'] = $error;
     }
     unset($output);

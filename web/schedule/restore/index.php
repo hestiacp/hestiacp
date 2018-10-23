@@ -34,7 +34,7 @@ if ($return_var == 0) {
 } else {
     $_SESSION['error_msg'] = implode('<br>', $output);
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['error_msg'] = __('Error: vesta did not return any output.');
+        $_SESSION['error_msg'] = __('Error: hestia did not return any output.');
     }
     if ($return_var == 4) {
         $_SESSION['error_msg'] = __('RESTORE_EXISTS');

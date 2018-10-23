@@ -1,7 +1,7 @@
 <?php
 /**
  * Hestia language file
- * skid (skid@vestacp.com)
+ * HestiaCP (info@hestiacp.com)
  * bbl (sergiu.badan@gmail.com)
  * demlasjr (demlasjr@yahoo.com)
  */

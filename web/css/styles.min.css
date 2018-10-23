@@ -2923,15 +2923,15 @@ a.button.cancel {
 .login a.error {
   color: #BE5ABF;
 }
-.vestacp {
+.hestiacp {
   color: #505050;
   font-size: 10px;
   text-align: right;
 }
-.vestacp:hover {
+.hestiacp:hover {
   color: #2c9491;
 }
-.vestacp:active {
+.hestiacp:active {
   color: #ff6701;
 }
 .login-bottom {

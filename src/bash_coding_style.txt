@@ -63,7 +63,7 @@ Contents:
         chown root bar
         chgrp sys bar
 
-    Each script have 4 logical part Variables, Verifications, Action and Vesta.
+    Each script have 4 logical part Variables, Verifications, Action and Hestia.
     Such parts should be devided by following frames.
         #----------------------------------------------------------#
         #                    Variable&Function                     #
@@ -134,7 +134,7 @@ Contents:
 ------------------------------------------------
 
     BASH CODING STYLE
-    skid@vestacp.com 
-    2011.12.28
+    info@hestiacp.com
+    23.10.2018
 
 ------------------------------------------------

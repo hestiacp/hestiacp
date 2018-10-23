@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Define some variables
-source /etc/profile.d/vesta.sh
-V_BIN="$VESTA/bin"
-V_TEST="$VESTA/test"
+source /etc/profile.d/hestia.sh
+V_BIN="$HESTIA/bin"
+V_TEST="$HESTIA/test"
 
 # Define functions
 random() {
@@ -49,7 +49,7 @@ tmpfile=$(mktemp -p /tmp )
 #                         User                             #
 #----------------------------------------------------------#
 # Add user
-cmd="v_add_user $user $user $user@vestacp.com default Super Test"
+cmd="v_add_user $user $user $user@hestiacp.com default Super Test"
 $cmd > $tmpfile 2>> $tmpfile
 echo_result "USER: Adding new user $user" "$?" "$tmpfile" "$cmd"
 
@@ -59,7 +59,7 @@ $cmd > $tmpfile 2>> $tmpfile
 echo_result "USER: Changing password" "$?" "$tmpfile" "$cmd"
 
 # Change user contact
-cmd="v_change_user_contact $user tester@vestacp.com"
+cmd="v_change_user_contact $user tester@hestiacp.com"
 $cmd > $tmpfile 2>> $tmpfile
 echo_result "USER: Changing email" "$?" "$tmpfile" "$cmd"
 
@@ -167,7 +167,7 @@ echo_result "IP: Adding ip 198.18.0.125" "$?" "$tmpfile" "$cmd"
 #----------------------------------------------------------#
 
 # Add web domain
-domain="test-$(random 4).vestacp.com"
+domain="test-$(random 4).hestiacp.com"
 cmd="v_add_web_domain $user $domain 198.18.0.125"
 $cmd > $tmpfile 2>> $tmpfile
 echo_result "WEB: Adding domain $domain on 198.18.0.125" "$?" "$tmpfile" "$cmd"

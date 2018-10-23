@@ -35,5 +35,5 @@ maxretry = 5
 enabled = true
 filter  = hestia
 action  = hestia[name=HESTIA]
-logpath = /var/log/vesta/auth.log
+logpath = /var/log/hestia/auth.log
 maxretry = 5

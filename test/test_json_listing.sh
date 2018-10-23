@@ -1,13 +1,13 @@
 #!/bin/bash
 
-source /etc/profile.d/vesta.sh
+source /etc/profile.d/hestia.sh
 
-V_BIN="$VESTA/bin"
-V_TEST="$VESTA/test"
+V_BIN="$HESTIA/bin"
+V_TEST="$HESTIA/test"
 
 commands='v_list_cron_jobs admin json
 v_list_databases admin json
-v_list_database admin admin_vesta json
+v_list_database admin admin_hestia json
 v_list_database_server mysql localhost json
 v_list_database_servers mysql json
 v_list_dns_domains admin json
@@ -25,7 +25,7 @@ v_list_user_ns admin json
 v_list_user_packages json
 v_list_users json
 v_list_web_domains admin json
-v_list_web_domain admin default.vesta.domain json
+v_list_web_domain admin default.hestia.domain json
 v_list_web_templates admin json
 v_list_web_templates_nginx admin json'
 

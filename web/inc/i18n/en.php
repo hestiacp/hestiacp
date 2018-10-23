@@ -1,7 +1,7 @@
 <?php
 /**
  * Hestia language file
- * skid (skid@vestacp.com)
+ * HestiaCP (info@hestiacp.com)
  */
 
 $LANG['en'] = array(

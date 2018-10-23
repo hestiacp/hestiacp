@@ -2,7 +2,7 @@
 /**
  * Hestia language file
  * ZonD80 (zond80@gmail.com)
- * skid (skid@vestacp.com)
+ * HestiaCP (info@hestiacp.com)
  * Alexandr Loskutov (alex_connor@icloud.com)
  */
 

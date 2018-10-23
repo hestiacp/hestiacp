@@ -26,7 +26,7 @@ $rcmail_config['password_login_exceptions'] = null;
 // Enable this option to use punycoded names
 $rcmail_config['password_idn_ascii'] = false;
 
-// Vesta Driver options
+// Hestia Driver options
 // -----------------------
 // Control Panel host
 $rcmail_config['password_hestia_host'] = 'localhost';

@@ -22,8 +22,6 @@ source $HESTIA/conf/hestia.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-$BIN/v-check-vesta-license >/dev/null
-
 if [ -z "$BACKUP_SYSTEM" ]; then
     exit
 fi

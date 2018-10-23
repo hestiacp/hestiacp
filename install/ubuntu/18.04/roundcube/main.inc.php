@@ -197,7 +197,7 @@ $rcmail_config['auto_create_user'] = true;
 
 // use this folder to store log files (must be writeable for apache user)
 // This is used by the 'file' log driver.
-$rcmail_config['log_dir'] = '/var/log/roundcube/';
+$rcmail_config['log_dir'] = '/var/log/roundcubemail/';
 
 // use this folder to store temp files (must be writeable for apache user)
 $rcmail_config['temp_dir'] = '/tmp';
@@ -305,7 +305,7 @@ $rcmail_config['max_recipients'] = 0;
 $rcmail_config['max_group_members'] = 0; 
 
 // add this user-agent to message headers when sending
-$rcmail_config['useragent'] = 'Roundcube Webmail';
+$rcmail_config['useragent'] = 'Roundcube Webmail/'.RCMAIL_VERSION;
 
 // use this name to compose page titles
 $rcmail_config['product_name'] = 'Roundcube Webmail';
@@ -448,7 +448,7 @@ $rcmail_config['create_default_folders'] = true;
 $rcmail_config['protect_default_folders'] = true;
 
 // if in your system 0 quota means no limit set this option to true 
-$rcmail_config['quota_zero_as_unlimited'] = true;
+$rcmail_config['quota_zero_as_unlimited'] = false;
 
 // Make use of the built-in spell checker. It is based on GoogieSpell.
 // Since Google only accepts connections over https your PHP installatation
@@ -724,8 +724,8 @@ $rcmail_config['htmleditor'] = 0;
 // show pretty dates as standard
 $rcmail_config['prettydate'] = true;
 
-// save compose message every 30 seconds
-$rcmail_config['draft_autosave'] = 30;
+// save compose message every 300 seconds (5min)
+$rcmail_config['draft_autosave'] = 300;
 
 // default setting if preview pane is enabled
 $rcmail_config['preview_pane'] = false;

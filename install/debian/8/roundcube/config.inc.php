@@ -4,7 +4,7 @@
 // -----------------------
 // A driver to use for password change. Default: "sql".
 // See README file for list of supported driver names.
-$rcmail_config['password_driver'] = 'vesta';
+$rcmail_config['password_driver'] = 'hestia';
 
 // Require the new password to be a certain length.
 // set to blank to allow passwords of any length
@@ -29,5 +29,5 @@ $rcmail_config['password_idn_ascii'] = false;
 // Vesta Driver options
 // -----------------------
 // Control Panel host
-$rcmail_config['password_vesta_host'] = 'localhost';
-$rcmail_config['password_vesta_port'] = '8083';
+$rcmail_config['password_hestia_host'] = 'localhost';
+$rcmail_config['password_hestia_port'] = '8083';

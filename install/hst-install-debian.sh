@@ -64,6 +64,7 @@ help() {
   -a, --apache            Install Apache        [yes|no]  default: yes
   -n, --nginx             Install Nginx         [yes|no]  default: yes
   -w, --phpfpm            Install PHP-FPM       [yes|no]  default: no
+  -o, --multiphp          Install Multi-PHP     [yes|no]  default: no
   -v, --vsftpd            Install Vsftpd        [yes|no]  default: yes
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
   -k, --named             Install Bind          [yes|no]  default: yes
@@ -163,7 +164,7 @@ for arg; do
         --iptables)             args="${args}-i " ;;
         --fail2ban)             args="${args}-b " ;;
         --remi)                 args="${args}-r " ;;
-        --softaculous)          args="${args}-o " ;;
+        --multiphp)             args="${args}-o " ;;
         --quota)                args="${args}-q " ;;
         --lang)                 args="${args}-l " ;;
         --interactive)          args="${args}-y " ;;
@@ -184,6 +185,7 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         a) apache=$OPTARG ;;            # Apache
         n) nginx=$OPTARG ;;             # Nginx
         w) phpfpm=$OPTARG ;;            # PHP-FPM
+        o) multiphp=$OPTARG ;;          # Multi-PHP
         v) vsftpd=$OPTARG ;;            # Vsftpd
         j) proftpd=$OPTARG ;;           # Proftpd
         k) named=$OPTARG ;;             # Named
@@ -213,6 +215,7 @@ done
 set_default_value 'nginx' 'yes'
 set_default_value 'apache' 'yes'
 set_default_value 'phpfpm' 'no'
+set_default_value 'multiphp' 'no'
 set_default_value 'vsftpd' 'yes'
 set_default_value 'proftpd' 'no'
 set_default_value 'named' 'yes'
@@ -329,6 +332,9 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
 fi
 if [ "$phpfpm"  = 'yes' ]; then
     echo '   - PHP-FPM Application Server'
+fi
+if [ "$multiphp"  = 'yes' ]; then
+    echo '   - Multi-PHP  Environment'
 fi
 
 # DNS stack
@@ -567,7 +573,7 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$phpfpm" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/php5-fpm//")
+    software=$(echo "$software" | sed -e "s///")
     software=$(echo "$software" | sed -e "s/php-fpm//")
 fi
 if [ "$vsftpd" = 'no' ]; then
@@ -618,6 +624,25 @@ if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/fail2ban//')
 fi
 
+#----------------------------------------------------------#
+#                     Package Includes                     #
+#----------------------------------------------------------#
+
+if [ "$multiphp" = 'yes' ]; then
+    software="$software php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli
+              php5.6-curl php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt
+              php5.6-mysql php5.6-soap php5.6-xml php5.6-zip php5.6-memcache
+              php5.6-memcached php5.6-zip php7.0-apcu php7.0-mbstring
+              php7.0-bcmath php7.0-cli php7.0-curl php7.0-fpm php7.0-gd
+              php7.0-intl php7.0-mcrypt php7.0-mysql php7.0-soap php7.0-xml
+              php7.0-zip php7.0-memcache php7.0-memcached php7.0-zip php7.1-apcu
+              php7.1-mbstring php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm
+              php7.1-gd php7.1-intl php7.1-mcrypt php7.1-mysql php7.1-soap
+              php7.1-xml php7.1-zip php7.1-memcache php7.1-memcached php7.1-zip
+              php7.2-apcu php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl
+              php7.2-fpm php7.2-gd php7.2-intl php7.2-mysql php7.2-soap
+              php7.2-xml php7.2-zip php7.2-memcache php7.2-memcached php7.2-zip"
+fi
 
 #----------------------------------------------------------#
 #                     Install packages                     #
@@ -673,7 +698,7 @@ chmod 755 /usr/bin/rssh
 
 
 #----------------------------------------------------------#
-#                     Configure Hestia                      #
+#                     Configure Hestia                     #
 #----------------------------------------------------------#
 
 # Installing sudo configuration
@@ -857,6 +882,22 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
     echo > /etc/nginx/conf.d/hestia.conf
     mkdir -p /var/log/nginx/domains
+    if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes']; then
+        update-rc.d php5.6-fpm defaults
+        update-rc.d php7.0-fpm defaults
+        update-rc.d php7.1-fpm defaults
+        update-rc.d php7.2-fpm defaults
+        cp -r /etc/php/5.6/ /root/vst_install_backups/php5.6/
+        rm -f /etc/php/5.6/fpm/pool.d/*
+        cp -r /etc/php/7.0/ /root/vst_install_backups/php7.0/
+        rm -f /etc/php/7.0/fpm/pool.d/*
+        cp -r /etc/php/7.1/ /root/vst_install_backups/php7.1/
+        rm -f /etc/php/7.1/fpm/pool.d/*
+        cp -r /etc/php/7.2/ /root/vst_install_backups/php7.2/
+        rm -f /etc/php/7.2/fpm/pool.d/*
+        cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
+        chmod a+x $HESTIA/data/web/nginx/*.sh
+    fi
     update-rc.d nginx defaults
     service nginx start
     check_result $? "nginx start failed"
@@ -888,6 +929,31 @@ if [ "$apache" = 'yes'  ]; then
     chmod a+x /var/log/apache2
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
+    if [ "$multiphp" = 'yes'] ; then
+        a2enmod proxy_fcgi setenvif
+        a2enconf php5.6-fpm
+        a2enconf php7.0-fpm
+        a2enconf php7.1-fpm
+        a2enconf php7.2-fpm
+        update-rc.d php5.6-fpm defaults
+        update-rc.d php7.0-fpm defaults
+        update-rc.d php7.1-fpm defaults
+        update-rc.d php7.2-fpm defaults
+        cp -r /etc/php/5.6/ /root/vst_install_backups/php5.6/
+        rm -f /etc/php/5.6/fpm/pool.d/*
+        cp -r /etc/php/7.0/ /root/vst_install_backups/php7.0/
+        rm -f /etc/php/7.0/fpm/pool.d/*
+        cp -r /etc/php/7.1/ /root/vst_install_backups/php7.1/
+        rm -f /etc/php/7.1/fpm/pool.d/*
+        cp -r /etc/php/7.2/ /root/vst_install_backups/php7.2/
+        rm -f /etc/php/7.2/fpm/pool.d/*
+        cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
+        chmod a+x $HESTIA/data/web/apache2/*.sh
+        if [ "$release" = '8'] ; then
+            sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.tpl
+            sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.stpl
+        fi
+    fi
     update-rc.d apache2 defaults
     service apache2 start
     check_result $? "apache2 start failed"

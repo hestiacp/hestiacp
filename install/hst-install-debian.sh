@@ -909,7 +909,7 @@ fi
 #                    Configure Apache                      #
 #----------------------------------------------------------#
 
-if [ "$apache" = 'yes'  ]; then
+if [ "$apache" = 'yes' ]; then
     cp -f $hestiacp/apache2/apache2.conf /etc/apache2/
     cp -f $hestiacp/apache2/status.conf /etc/apache2/mods-enabled/
     cp -f  $hestiacp/logrotate/apache2 /etc/logrotate.d/
@@ -930,7 +930,7 @@ if [ "$apache" = 'yes'  ]; then
     chmod a+x /var/log/apache2
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
-    if [ "$multiphp" = 'yes'] ; then
+    if [ "$multiphp" = 'yes' ]; then
         a2enmod proxy_fcgi setenvif
         a2enconf php5.6-fpm
         a2enconf php7.0-fpm
@@ -950,7 +950,7 @@ if [ "$apache" = 'yes'  ]; then
         rm -f /etc/php/7.2/fpm/pool.d/*
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
         chmod a+x $HESTIA/data/web/apache2/*.sh
-        if [ "$release" = '8'] ; then
+        if [ "$release" = '8' ]; then
             sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.tpl
             sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.stpl
         fi

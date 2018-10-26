@@ -878,7 +878,7 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
     echo > /etc/nginx/conf.d/hestia.conf
     mkdir -p /var/log/nginx/domains
-    if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes']; then
+    if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
         update-rc.d php5.6-fpm defaults
         update-rc.d php7.0-fpm defaults
         update-rc.d php7.1-fpm defaults
@@ -924,7 +924,7 @@ if [ "$apache" = 'yes'  ]; then
     chmod a+x /var/log/apache2
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
-    if [ "$multiphp" = 'yes'] ; then
+    if [ "$multiphp" = 'yes' ] ; then
         a2enmod proxy_fcgi setenvif
         a2enconf php5.6-fpm
         a2enconf php7.0-fpm

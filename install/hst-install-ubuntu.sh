@@ -635,6 +635,7 @@ if [ "$multiphp" = 'yes' ]; then
          php7.2-apcu php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl
          php7.2-fpm php7.2-gd php7.2-intl php7.2-mysql php7.2-soap
          php7.2-xml php7.2-zip php7.2-memcache php7.2-memcached php7.2-zip"
+    software="$software $mph"
 fi
 
 #----------------------------------------------------------#
@@ -651,12 +652,6 @@ chmod a+x /usr/sbin/policy-rc.d
 # Installing apt packages
 apt-get -y install $software
 check_result $? "apt-get install failed"
-
-# Install multiphp packages
-if [ "$multiphp" = 'yes' ]; then
-    apt-get -y install $mph
-    check_result $? "apt-get install failed"
-fi
 
 # Restoring autostart policy
 rm -f /usr/sbin/policy-rc.d

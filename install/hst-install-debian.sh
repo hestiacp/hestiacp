@@ -1409,9 +1409,6 @@ service hestia start
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
-# Adding notifications
-$HESTIA/upd/add_notifications.sh
-
 # Adding cronjob for autoupdates
 $HESTIA/bin/v-add-cron-hestia-autoupdate
 

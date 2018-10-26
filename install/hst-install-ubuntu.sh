@@ -622,19 +622,19 @@ fi
 #----------------------------------------------------------#
 
 if [ "$multiphp" = 'yes' ]; then
-    software+="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
-               php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
-               php5.6-soap php5.6-xml php5.6-zip php5.6-memcache php5.6-memcached
-               php5.6-zip php7.0-apcu php7.0-mbstring php7.0-bcmath php7.0-cli
-               php7.0-curl php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt
-               php7.0-mysql php7.0-soap php7.0-xml php7.0-zip php7.0-memcache
-               php7.0-memcached php7.0-zip php7.1-apcu php7.1-mbstring
-               php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm php7.1-gd
-               php7.1-intl php7.1-mcrypt php7.1-mysql php7.1-soap php7.1-xml
-               php7.1-zip php7.1-memcache php7.1-memcached php7.1-zip 
-               php7.2-apcu php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl
-               php7.2-fpm php7.2-gd php7.2-intl php7.2-mysql php7.2-soap
-               php7.2-xml php7.2-zip php7.2-memcache php7.2-memcached php7.2-zip"
+    mph="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
+         php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
+         php5.6-soap php5.6-xml php5.6-zip php5.6-memcache php5.6-memcached
+         php5.6-zip php7.0-apcu php7.0-mbstring php7.0-bcmath php7.0-cli
+         php7.0-curl php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt
+         php7.0-mysql php7.0-soap php7.0-xml php7.0-zip php7.0-memcache
+         php7.0-memcached php7.0-zip php7.1-apcu php7.1-mbstring
+         php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm php7.1-gd
+         php7.1-intl php7.1-mcrypt php7.1-mysql php7.1-soap php7.1-xml
+         php7.1-zip php7.1-memcache php7.1-memcached php7.1-zip 
+         php7.2-apcu php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl
+         php7.2-fpm php7.2-gd php7.2-intl php7.2-mysql php7.2-soap
+         php7.2-xml php7.2-zip php7.2-memcache php7.2-memcached php7.2-zip"
 fi
 
 #----------------------------------------------------------#
@@ -651,6 +651,12 @@ chmod a+x /usr/sbin/policy-rc.d
 # Installing apt packages
 apt-get -y install $software
 check_result $? "apt-get install failed"
+
+# Install multiphp packages
+if [ "$multiphp" = 'yes' ]; then
+    apt-get -y install $mph
+    check_result $? "apt-get install failed"
+fi
 
 # Restoring autostart policy
 rm -f /usr/sbin/policy-rc.d

@@ -8,7 +8,7 @@
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.hestiacp.com'
-CHOST='c.hestiacp.com'
+GPG='gpg.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
@@ -274,7 +274,7 @@ if [ ! -e '/usr/bin/wget' ]; then
 fi
 
 # Checking repository availability
-wget -q "https://gpg.hestiacp.com/deb_signing.key" -O /dev/null
+wget -q "https://$GPG/deb_signing.key" -O /dev/null
 check_result $? "No access to Hestia repository"
 
 # Check installed packages

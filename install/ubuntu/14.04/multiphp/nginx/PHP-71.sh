@@ -54,12 +54,12 @@ if [ -f "$pool_file_70" ]; then
     service php7.0-fpm restart
 fi
 
-if [ -f "$pool_file_71" ]; then
+if [ ! -f "$pool_file_71" ]; then
     echo "$pool_conf" > $pool_file_71
     service php7.1-fpm restart
 fi
 
-if [ ! -f "$pool_file_72" ]; then
+if [ -f "$pool_file_72" ]; then
     rm $pool_file_72
     service php7.2-fpm restart
 fi

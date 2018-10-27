@@ -44,7 +44,7 @@ pool_file_70="/etc/php/7.0/fpm/pool.d/$2.conf"
 pool_file_71="/etc/php/7.1/fpm/pool.d/$2.conf"
 pool_file_72="/etc/php/7.2/fpm/pool.d/$2.conf"
 
-if [ -f "$pool_file_56" ]; then
+if [ ! -f "$pool_file_56" ]; then
     echo "$pool_conf" > $pool_file_56
     service php5.6-fpm restart
 fi
@@ -59,7 +59,7 @@ if [ -f "$pool_file_71" ]; then
     service php7.1-fpm restart
 fi
 
-if [ ! -f "$pool_file_72" ]; then
+if [ -f "$pool_file_72" ]; then
     rm $pool_file_72
     service php7.2-fpm restart
 fi

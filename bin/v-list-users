@@ -15,9 +15,14 @@ format=${1-shell}
 # JSON list function
 json_list() {
     echo '{'
-    object_count=$(grep '@' /etc/passwd |wc -l)
     i=1
     while read USER; do
+        if [ ! -f "$VESTA/data/users/$USER/user.conf" ]; then
+            continue;
+        fi
+        if [ $i -gt 1 ]; then
+            echo ","
+        fi
         source $VESTA/data/users/$USER/user.conf
         echo -n '    "'$USER'": {
         "FNAME": "'$FNAME'",
@@ -74,14 +79,8 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
         }'
-        if [ "$i" -lt "$object_count" ]; then
-            echo ','
-        else
-            echo
-        fi
         ((i++))
     done < <(grep '@' /etc/passwd |cut -f1 -d:)
-
     echo '}'
 }
 
@@ -90,6 +89,9 @@ shell_list() {
     echo "USER   PKG   WEB   DNS   MAIL   DB   DISK   BW   SPND   DATE"
     echo "----   ---   ---   ---   ---    --   ----   --   ----   ----"
     while read USER; do
+        if [ ! -f "$VESTA/data/users/$USER/user.conf" ]; then
+            continue;
+        fi
         source $VESTA/data/users/$USER/user.conf
         echo -n "$USER $PACKAGE $U_WEB_DOMAINS $U_DNS_DOMAINS $U_MAIL_DOMAINS"
         echo " $U_DATABASES $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
@@ -99,6 +101,9 @@ shell_list() {
 # PLAIN list function
 plain_list() {
     while read USER; do
+        if [ ! -f "$VESTA/data/users/$USER/user.conf" ]; then
+            continue;
+        fi
         source $VESTA/data/users/$USER/user.conf
         echo -ne "$USER\t$FNAME\t$LNAME\t$PACKAGE\t$WEB_TEMPLATE\t"
         echo -ne "$BACKEND_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
@@ -131,6 +136,9 @@ csv_list() {
     echo -n "U_MAIL_DOMAINS,U_MAIL_DKIM,U_MAIL_ACCOUNTS,U_DATABASES"
     echo "U_CRON_JOBS,U_BACKUPS,LANGUAGE,TIME,DATE"
     while read USER; do
+        if [ ! -f "$VESTA/data/users/$USER/user.conf" ]; then
+            continue;
+        fi
         source $VESTA/data/users/$USER/user.conf
         echo -n "$USER,\"$FNAME\",\"$LNAME\",$PACKAGE,$WEB_TEMPLATE,"
         echo -n "$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
@@ -151,6 +159,9 @@ csv_list() {
 # Raw list function
 raw_list() {
     while read USER; do
+        if [ ! -f "$VESTA/data/users/$USER/user.conf" ]; then
+            continue;
+        fi
         echo $VESTA/data/users/$USER/user.conf
         cat $VESTA/data/users/$USER/user.conf
     done < <(grep '@' /etc/passwd |cut -f1 -d:)

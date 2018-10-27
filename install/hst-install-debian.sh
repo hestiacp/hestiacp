@@ -897,7 +897,7 @@ if [ "$nginx" = 'yes' ]; then
         cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
-        chmod a+x $HESTIA/data/web/nginx/*.sh
+        chmod a+x $HESTIA/data/templates/web/nginx/*.sh
     fi
     update-rc.d nginx defaults
     service nginx start

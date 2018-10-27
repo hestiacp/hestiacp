@@ -435,7 +435,7 @@ if [ -z "$email" ]; then
 fi
 
 # Defining backup directory
-hst_backups="/root/vst_install_backups/$(date +%s)"
+hst_backups="/root/hst_install_backups/$(date +%s)"
 echo "Installation backup directory: $hst_backups"
 
 # Printing start message and sleeping for 5 seconds
@@ -853,20 +853,20 @@ $HESTIA/bin/v-change-sys-hostname $servername 2>/dev/null
 
 # Generating SSL certificate
 $HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
-     'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/vst.pem
+     'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 # Parsing certificate file
-crt_end=$(grep -n "END CERTIFICATE-" /tmp/vst.pem |cut -f 1 -d:)
-key_start=$(grep -n "BEGIN RSA" /tmp/vst.pem |cut -f 1 -d:)
-key_end=$(grep -n  "END RSA" /tmp/vst.pem |cut -f 1 -d:)
+crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem |cut -f 1 -d:)
+key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
+key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
 
 # Adding SSL certificate
 cd $HESTIA/ssl
-sed -n "1,${crt_end}p" /tmp/vst.pem > certificate.crt
-sed -n "$key_start,${key_end}p" /tmp/vst.pem > certificate.key
+sed -n "1,${crt_end}p" /tmp/hst.pem > certificate.crt
+sed -n "$key_start,${key_end}p" /tmp/hst.pem > certificate.key
 chown root:mail $HESTIA/ssl/*
 chmod 660 $HESTIA/ssl/*
-rm /tmp/vst.pem
+rm /tmp/hst.pem
 
 
 #----------------------------------------------------------#
@@ -888,13 +888,13 @@ if [ "$nginx" = 'yes' ]; then
         update-rc.d php7.0-fpm defaults
         update-rc.d php7.1-fpm defaults
         update-rc.d php7.2-fpm defaults
-        cp -r /etc/php/5.6/ /root/vst_install_backups/php5.6/
+        cp -r /etc/php/5.6/ /root/hst_install_backups/php5.6/
         rm -f /etc/php/5.6/fpm/pool.d/*
-        cp -r /etc/php/7.0/ /root/vst_install_backups/php7.0/
+        cp -r /etc/php/7.0/ /root/hst_install_backups/php7.0/
         rm -f /etc/php/7.0/fpm/pool.d/*
-        cp -r /etc/php/7.1/ /root/vst_install_backups/php7.1/
+        cp -r /etc/php/7.1/ /root/hst_install_backups/php7.1/
         rm -f /etc/php/7.1/fpm/pool.d/*
-        cp -r /etc/php/7.2/ /root/vst_install_backups/php7.2/
+        cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
         chmod a+x $HESTIA/data/web/nginx/*.sh
@@ -940,13 +940,13 @@ if [ "$apache" = 'yes' ]; then
         update-rc.d php7.0-fpm defaults
         update-rc.d php7.1-fpm defaults
         update-rc.d php7.2-fpm defaults
-        cp -r /etc/php/5.6/ /root/vst_install_backups/php5.6/
+        cp -r /etc/php/5.6/ /root/hst_install_backups/php5.6/
         rm -f /etc/php/5.6/fpm/pool.d/*
-        cp -r /etc/php/7.0/ /root/vst_install_backups/php7.0/
+        cp -r /etc/php/7.0/ /root/hst_install_backups/php7.0/
         rm -f /etc/php/7.0/fpm/pool.d/*
-        cp -r /etc/php/7.1/ /root/vst_install_backups/php7.1/
+        cp -r /etc/php/7.1/ /root/hst_install_backups/php7.1/
         rm -f /etc/php/7.1/fpm/pool.d/*
-        cp -r /etc/php/7.2/ /root/vst_install_backups/php7.2/
+        cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
         chmod a+x $HESTIA/data/web/apache2/*.sh

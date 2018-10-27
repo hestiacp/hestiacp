@@ -878,6 +878,22 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
     echo > /etc/nginx/conf.d/hestia.conf
     mkdir -p /var/log/nginx/domains
+    if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ] && [ "$phpfpm" = 'no' ]; then
+        update-rc.d php5.6-fpm defaults
+        update-rc.d php7.0-fpm defaults
+        update-rc.d php7.1-fpm defaults
+        update-rc.d php7.2-fpm defaults
+        cp -r /etc/php/5.6/ /root/hst_install_backups/php5.6/
+        rm -f /etc/php/5.6/fpm/pool.d/*
+        cp -r /etc/php/7.0/ /root/hst_install_backups/php7.0/
+        rm -f /etc/php/7.0/fpm/pool.d/*
+        cp -r /etc/php/7.1/ /root/hst_install_backups/php7.1/
+        rm -f /etc/php/7.1/fpm/pool.d/*
+        cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
+        rm -f /etc/php/7.2/fpm/pool.d/*
+        cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
+        chmod a+x $HESTIA/data/templates/web/nginx/*.sh
+    fi
     update-rc.d nginx defaults
     service nginx start
     check_result $? "nginx start failed"

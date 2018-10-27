@@ -1,5 +1,5 @@
 server {
-    listen      %ip%:%proxy_ssl_port%;
+    listen      %ip%:%web_ssl_port%;
     server_name %domain_idn% %alias_idn%;
     root        %sdocroot%;
     index       index.php index.html index.htm;
@@ -23,7 +23,7 @@ server {
                 return  404;
             }
 
-            fastcgi_pass    /run/php/php7.1-fpm-%domain%.sock;
+            fastcgi_pass    unix:/run/php/php7.1-fpm-%domain%.sock;
             fastcgi_index   index.php;
             include         /etc/nginx/fastcgi_params;
         }

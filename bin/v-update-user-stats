@@ -67,6 +67,9 @@ TOTAL_USERS=0
 
 # Updating user stats
 for user in $user_list; do
+    if [ ! -f "$VESTA/data/users/$user/user.conf" ]; then
+        continue;
+    fi
     USER_DATA=$VESTA/data/users/$user
     source $USER_DATA/user.conf
     next_month=$(date +'%m/01/%y' -d '+ 1 month')

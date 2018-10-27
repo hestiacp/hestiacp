@@ -49,7 +49,6 @@ help() {
   -k, --named             Install Bind          [yes|no]  default: yes
   -m, --mysql             Install MySQL         [yes|no]  default: yes
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
-  -d, --mongodb           Install MongoDB       [yes|no]  unsupported
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
   -c, --clamav            Install ClamAV        [yes|no]  default: yes
@@ -57,6 +56,7 @@ help() {
   -i, --iptables          Install Iptables      [yes|no]  default: yes
   -b, --fail2ban          Install Fail2ban      [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
+  -d, --api               Activate API          [yes|no]  default: yes
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
   -s, --hostname          Set hostname
@@ -135,7 +135,6 @@ for arg; do
         --named)                args="${args}-k " ;;
         --mysql)                args="${args}-m " ;;
         --postgresql)           args="${args}-g " ;;
-        --mongodb)              args="${args}-d " ;;
         --exim)                 args="${args}-x " ;;
         --dovecot)              args="${args}-z " ;;
         --clamav)               args="${args}-c " ;;
@@ -147,6 +146,7 @@ for arg; do
         --quota)                args="${args}-q " ;;
         --lang)                 args="${args}-l " ;;
         --interactive)          args="${args}-y " ;;
+        --api)                  args="${args}-d " ;;
         --hostname)             args="${args}-s " ;;
         --email)                args="${args}-e " ;;
         --password)             args="${args}-p " ;;
@@ -170,7 +170,6 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         k) named=$OPTARG ;;             # Named
         m) mysql=$OPTARG ;;             # MySQL
         g) postgresql=$OPTARG ;;        # PostgreSQL
-        d) mongodb=$OPTARG ;;           # MongoDB (unsupported)
         x) exim=$OPTARG ;;              # Exim
         z) dovecot=$OPTARG ;;           # Dovecot
         c) clamd=$OPTARG ;;             # ClamAV
@@ -180,6 +179,7 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         r) remi=$OPTARG ;;              # Remi repo
         q) quota=$OPTARG ;;             # FS Quota
         l) lang=$OPTARG ;;              # Language
+        d) api=$OPTARG ;;               # Activate API
         y) interactive=$OPTARG ;;       # Interactive install
         s) servername=$OPTARG ;;        # Hostname
         e) email=$OPTARG ;;             # Admin email
@@ -200,7 +200,6 @@ set_default_value 'proftpd' 'no'
 set_default_value 'named' 'yes'
 set_default_value 'mysql' 'yes'
 set_default_value 'postgresql' 'no'
-set_default_value 'mongodb' 'no'
 set_default_value 'exim' 'yes'
 set_default_value 'dovecot' 'yes'
 if [ $memory -lt 1500000 ]; then
@@ -214,6 +213,7 @@ set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
+set_default_value 'api' 'yes'
 set_default_lang 'en'
 
 # Checking software conflicts
@@ -346,9 +346,6 @@ fi
 if [ "$postgresql" = 'yes' ]; then
     echo '   - PostgreSQL Database Server'
 fi
-if [ "$mongodb" = 'yes' ]; then
-    echo '   - MongoDB Database Server'
-fi
 
 # FTP stack
 if [ "$vsftpd" = 'yes' ]; then
@@ -384,6 +381,17 @@ if [ "$interactive" = 'yes' ]; then
     if [ -z "$servername" ]; then
         read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
     fi
+
+    # Asking to deactivate the API
+    loop=1
+    while [ "$loop" -eq 1 ]; do
+        read -p "Would you like to enable the API [yes/no]: " api
+        if [ $api == 'yes' ] || [ $api == 'no' ]; then
+            loop=0
+        else
+            echo "Please enter yes or no!"
+        fi
+    done
 fi
 
 # Generating admin password if it wasn't set
@@ -1261,6 +1269,16 @@ if [ "$fail2ban" = 'yes' ]; then
     update-rc.d fail2ban defaults
     service fail2ban start
     check_result $? "fail2ban start failed"
+fi
+
+
+#----------------------------------------------------------#
+#                       Configure API                      #
+#----------------------------------------------------------#
+
+if [ "$api" = 'no' ]; then
+    rm -r $HESTIA/web/api
+    echo "API='no'" >> $HESTIA/conf/hestia.conf
 fi
 
 

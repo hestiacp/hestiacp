@@ -1203,7 +1203,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     cp -f  $hestiacp/roundcube/db.inc.php /etc/roundcube/
     chmod 640 /etc/roundcube/debian-db*
     chown root:www-data /etc/roundcube/debian-db*
-    cp -f $hestiacp/roundcube/vesta.php \
+    cp -f $hestiacp/roundcube/hestia.php \
         /usr/share/roundcube/plugins/password/drivers/
     cp -f $hestiacp/roundcube/config.inc.php /etc/roundcube/plugins/password/
     r="$(gen_pass)"

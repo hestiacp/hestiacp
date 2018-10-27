@@ -891,7 +891,11 @@ if [ "$nginx" = 'yes' ]; then
         rm -f /etc/php/7.1/fpm/pool.d/*
         cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
+        rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
+        ln -s $HESTIA/data/templates/web/nginx/PHP-72.sh $HESTIA/data/templates/web/nginx/default.sh
+        ln -s $HESTIA/data/templates/web/nginx/PHP-72.tpl $HESTIA/data/templates/web/nginx/default.tpl
+        ln -s $HESTIA/data/templates/web/nginx/PHP-72.stpl $HESTIA/data/templates/web/nginx/default.stpl
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
     fi
     update-rc.d nginx defaults

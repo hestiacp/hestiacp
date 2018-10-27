@@ -892,7 +892,7 @@ if [ "$nginx" = 'yes' ]; then
         cp -r /etc/php/7.2/ /root/vst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
-        chmod a+x $HESTIA/data/web/nginx/*.sh
+        chmod a+x $HESTIA/data/templates/web/nginx/*.sh
     fi
     update-rc.d nginx defaults
     service nginx start
@@ -943,7 +943,7 @@ if [ "$apache" = 'yes'  ]; then
         cp -r /etc/php/7.2/ /root/vst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
-        chmod a+x $HESTIA/data/web/apache2/*.sh
+        chmod a+x $HESTIA/data/templates/web/apache2/*.sh
     fi
     update-rc.d apache2 defaults
     service apache2 start

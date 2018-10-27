@@ -949,7 +949,7 @@ if [ "$apache" = 'yes' ]; then
         cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
-        chmod a+x $HESTIA/data/web/apache2/*.sh
+        chmod a+x $HESTIA/data/templates/web/apache2/*.sh
         if [ "$release" = '8' ]; then
             sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.tpl
             sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.stpl

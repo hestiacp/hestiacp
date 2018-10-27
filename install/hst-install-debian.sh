@@ -1332,7 +1332,7 @@ fi
 # Adding admin account
 $HESTIA/bin/v-add-user admin $vpass $email default System Administrator
 check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell admin bash
+$HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang
 
 # RoundCube permissions fix

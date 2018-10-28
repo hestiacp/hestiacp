@@ -28,6 +28,9 @@ if [ -z "$BACKUP_SYSTEM" ]; then
     exit
 fi
 for user in $(grep '@' /etc/passwd |cut -f1 -d:); do
+    if [ ! -f "$VESTA/data/users/$user/user.conf" ]; then
+        continue;
+    fi
     check_suspend=$(grep "SUSPENDED='no'" $VESTA/data/users/$user/user.conf)
     log=$VESTA/log/backup.log
     if [ ! -z "$check_suspend" ]; then

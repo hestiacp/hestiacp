@@ -28,6 +28,12 @@ fi
 for user in $(grep '@' /etc/passwd |cut -f1 -d:); do
     check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
     log=$HESTIA/log/backup.log
+    if [ ! -f "$VESTA/data/users/$user/user.conf" ]; then
+        continue;
+    fi
+    wait_for_backup_if_it_is_not_time_for_backup
+    check_suspend=$(grep "SUSPENDED='no'" $VESTA/data/users/$user/user.conf)
+    log=$VESTA/log/backup.log
     if [ ! -z "$check_suspend" ]; then
         echo -e "================================" >> $log
         echo -e "$user" >> $log

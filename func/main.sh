@@ -938,3 +938,24 @@ format_aliases() {
         aliases=$(echo "$aliases" |tr '\n' ',' |sed -e "s/,$//")
     fi
 }
+
+
+wait_for_backup_if_it_is_not_time_for_backup() {
+    # block backup if current hour is after 6 AM
+    WAIT_LOOP_ENTERED=0
+    if pgrep -x "v-backup-users" > /dev/null
+    then
+        hour=$(date +"%H");
+        while [ "$hour" -gt "6" ]; do
+            if [ "$WAIT_LOOP_ENTERED" -eq 0 ]; then
+                # do something when enter sleeping state
+                # $BIN/v-restart-web-backend
+            fi
+            WAIT_LOOP_ENTERED=1
+            current_date_time="`date "+%Y-%m-%d %H:%M:%S"`";
+            echo "$current_date_time - wait to backup user $user - current hour is $hour";
+            sleep 300
+            hour=$(date +"%H");
+        done
+    fi
+}

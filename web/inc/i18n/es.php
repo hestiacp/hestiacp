@@ -197,7 +197,7 @@ $LANG['es'] = array(
     'IP Addresses'  => 'Direcciones IP',
     'Backups'  => 'Respaldos',
     'Backup System'  => 'Sistema de Respaldo',
-    'backup exclusions' => 'configurar exlusiones',
+    'backup exclusions' => 'configurar exclusiones',
     'template'  => 'plantilla',
     'SSL Support'  => 'Soportar SSL',
     'SSL Home Directory'  => 'Directorio local del SSL',
@@ -641,9 +641,9 @@ $LANG['es'] = array(
     'Delete items' => 'Eliminando items',
     'Copy files' => 'Copiar archivos',
     'Move files' => 'Mover archivos',
-    'Are you sure you want to copy' => 'Estás seguro que deseas copiar',
-    'Are you sure you want to move' => 'Estás seguro que deseas mover',
-    'Are you sure you want to delete' => 'Estás seguro que deseas eliminar',
+    'Are you sure you want to copy' => 'Estás seguro de que deseas copiar',
+    'Are you sure you want to move' => 'Estás seguro de que deseas mover',
+    'Are you sure you want to delete' => 'Estás seguro de que deseas eliminar',
     'into' => 'en',
     'existing files will be replaced' => 'los archivos existentes serán reemplazados',
     'Original name' => 'Nombre original',
@@ -711,7 +711,7 @@ $LANG['es'] = array(
     'Disable and Cancel Licence' => 'Deshabilitar y Cancelar Licencia',
     'Licence Activated' => 'Licencia Activada',
     'Licence Deactivated' => 'Licencia Desactivada',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restringue a los usuarios para que sólo puedan ingresar a su directorio local y prohíbe el acceso a SSH.',
+    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restringe a los usuarios para que sólo puedan ingresar a su directorio local y prohíbe el acceso a SSH.',
     'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Navegar, copiar, editar, ver y descargar todos los archivos de tu página web utilizando el Administrador de Archivos.',
     'This is a commercial module, you would need to purchace license key to enable it.' => 'Este es un módulo comercial, tendrás que adquirir una licencia para poder activarlo.',
 
@@ -752,8 +752,8 @@ $LANG['es'] = array(
     'PUB_KEY' => 'CLAVE PÚBLICA',
     'ISSUER' => 'EMITIDO POR',
 
-    'Use server hostname' => 'Usar hostname del servidor',
-    'Use domain hostname' => 'Usar hostname del dominio',
+    'Use server hostname' => 'Usar el nombre del servidor',
+    'Use domain hostname' => 'Usar el dominio',
     'Use STARTTLS' => 'Usar STARTTLS',
     'Use SSL / TLS' => 'Usar SSL / TLS',
     'No encryption' => 'Sin encriptación',
@@ -761,6 +761,6 @@ $LANG['es'] = array(
 
     'maximum characters length, including prefix' => 'usar un máximo de %s caracteres, incluyendo prefijo',
 
-    'Email Credentials' => 'Email Credentials',
+    'Email Credentials' => 'Datos de acceso a la cuenta de correo',
     
 );

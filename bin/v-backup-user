@@ -412,6 +412,19 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
         dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"
         grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
         if [ ! -f "$dumpgz" ]; then
+
+            while true
+            do
+                if pgrep -x "mysqldump" > /dev/null
+                then
+                    echo "Wait other mysqldump to finish"
+                    sleep 1
+                else
+                    echo "We can use mysqldump now"
+                    break
+                fi
+            done
+
             case $TYPE in
                 mysql) dump_mysql_database ;;
                 pgsql) dump_pgsql_database ;;

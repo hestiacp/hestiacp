@@ -39,22 +39,7 @@ is_backup_enabled
 #                       Action                             #
 #----------------------------------------------------------#
 
-# block backup if current hour is after 6 AM
-WAIT_LOOP_ENTERED=0
-if pgrep -x "v-backup-users" > /dev/null
-then
-hour=$(date +"%H");
-    while [ "$hour" -gt "6" ]; do
-        if [ "$WAIT_LOOP_ENTERED" -eq 0 ]; then
-             $BIN/v-restart-web-backend
-        fi
-        WAIT_LOOP_ENTERED=1
-        current_date_time="`date "+%Y-%m-%d %H:%M:%S"`";
-        echo "$current_date_time - wait for backup user $user - hour $hour";
-        sleep 300
-        hour=$(date +"%H");
-    done
-fi
+wait_for_backup_if_it_is_not_time_for_backup
 
 # Set backup directory if undefined
 if [ -z "$BACKUP" ]; then
@@ -153,6 +138,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
     i=0
 
     for domain in $web_list; do
+        wait_for_backup_if_it_is_not_time_for_backup
         ((i ++))
         echo -e "$(date "+%F %T") $domain" |tee -a $BACKUP/$user.log
         mkdir -p $tmpdir/web/$domain/conf
@@ -326,6 +312,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 
     i=0
     for domain in $mail_list; do
+        wait_for_backup_if_it_is_not_time_for_backup
         ((i ++))
         echo -e "$(date "+%F %T") $domain" |tee -a $BACKUP/$user.log
         mkdir -p $tmpdir/mail/$domain/conf
@@ -398,6 +385,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
     conf="$USER_DATA/db.conf"
     db_list=$(echo "$db_list" |sed -e "s/  */\ /g" -e "s/^ //")
     for database in $db_list; do
+        wait_for_backup_if_it_is_not_time_for_backup
         ((i ++))
         get_database_values
 
@@ -499,6 +487,8 @@ if [ "$USER" != '*' ]; then
             ((i ++))
             udir_list="$udir_list $udir"
             echo -e "$(date "+%F %T") adding $udir" |tee -a $BACKUP/$user.log
+
+            wait_for_backup_if_it_is_not_time_for_backup
 
             # Backup files and dirs
             tar -cpf- $udir |gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz

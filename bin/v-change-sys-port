@@ -1,0 +1,95 @@
+#!/bin/bash
+# info: change system backend port
+# options: PORT
+#
+# The function for changing the system backend port in NGINX configuration.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+PORT=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Define not usable ports
+BUSY_PORTS=('80' '443' '8080' '8443')
+
+is_port_valid() {
+
+    # Check if PORT is numeric
+    if [[ ! $PORT =~ ^[0-9]+$ ]]; then
+        echo 'Port should contains a numeric value only!'
+        log_event $E_NOTEXIST "$ARGUMENTS"
+        exit $E_NOTEXIST
+    fi
+
+    # Check if PORT is already used
+    for BUSY_PORT in ${BUSY_PORTS[@]}; do
+        if [ "$BUSY_PORT" = "$PORT" ]; then
+            echo 'Port is already used by Hestia, please set anotherone!'
+            log_event $E_NOTEXIST "$ARGUMENTS"
+            exit $E_NOTEXIST
+        fi
+    done
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'PORT'
+is_port_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get original port
+ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
+
+# Check if system variable is set
+if [ ! -n "$BACKEND_PORT" ]; then
+    echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
+    source $HESTIA/conf/hestia.conf
+fi
+
+# Check if port is different to hestia.conf
+if [ ! "$BACKEND_PORT" = "$PORT" ]; then
+    sed -i s/BACKEND_PORT=\'$BACKEND_PORT\'/BACKEND_PORT=\'$PORT\'/g $HESTIA/conf/hestia.conf
+fi
+
+# Check if port is different to nginx.conf
+if [ "$ORIGINAL_PORT" = "$PORT" ]; then
+    echo "nothing to do"
+    # Nothing to do, exit
+    exit
+else
+    # Replace port in config files.
+    sed -i "/listen/c\        listen          $PORT ssl;" $HESTIA/nginx/conf/nginx.conf
+    sed -i "/password_hestia_port/c\$rcmail_config['password_hestia_port'] = '$PORT';" /etc/roundcube/plugins/password/config.inc.php
+    sed -i "/COMMENT='HESTIA'/c\RULE='2' ACTION='ACCEPT' PROTOCOL='TCP' PORT='$PORT' IP='0.0.0.0/0' COMMENT='HESTIA' SUSPENDED='no' TIME='07:40:16' DATE='2014-05-25'" $HESTIA/data/firewall/rules.conf
+    
+    # Restart services
+    $HESTIA/bin/v-restart-service iptables
+
+    # Check if Hestia is running
+    if [[ $(ps -eaf | grep -i hestia |sed '/^$/d' | wc -l) > 1 ]]; then
+        $HESTIA/bin/v-restart-service hestia
+    fi  
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+#log_event "$OK" "$ARGUMENTS"
+
+exit

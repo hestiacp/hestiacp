@@ -78,6 +78,7 @@ help() {
   -b, --fail2ban          Install Fail2ban      [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
   -d, --api               Activate API          [yes|no]  default: yes
+  -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
   -s, --hostname          Set hostname
@@ -162,9 +163,9 @@ for arg; do
         --spamassassin)         args="${args}-t " ;;
         --iptables)             args="${args}-i " ;;
         --fail2ban)             args="${args}-b " ;;
-        --remi)                 args="${args}-r " ;;
         --multiphp)             args="${args}-o " ;;
         --quota)                args="${args}-q " ;;
+        --port)                 args="${args}-r " ;;
         --lang)                 args="${args}-l " ;;
         --interactive)          args="${args}-y " ;;
         --api)                  args="${args}-d " ;;
@@ -197,8 +198,8 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         t) spamd=$OPTARG ;;             # SpamAssassin
         i) iptables=$OPTARG ;;          # Iptables
         b) fail2ban=$OPTARG ;;          # Fail2ban
-        r) remi=$OPTARG ;;              # Remi repo
         q) quota=$OPTARG ;;             # FS Quota
+        r) port=$OPTARG ;;              # Backend Port
         l) lang=$OPTARG ;;              # Language
         d) api=$OPTARG ;;               # Activate API
         y) interactive=$OPTARG ;;       # Interactive install
@@ -235,6 +236,7 @@ set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'api' 'yes'
 set_default_value 'interactive' 'yes'
+set_default_port '8083'
 set_default_lang 'en'
 
 # Checking software conflicts
@@ -1423,6 +1425,9 @@ $HESTIA/bin/v-update-sys-rrd
 if [ "$quota" = 'yes' ]; then
     $HESTIA/bin/v-add-sys-quota
 fi
+
+# Set backend port
+$HESTIA/bin/v-change-sys-port $port
 
 # Starting hestia service
 update-rc.d hestia defaults

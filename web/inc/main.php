@@ -316,10 +316,6 @@ function send_email($to,$subject,$mailtext,$from) {
 }
 
 function list_timezones() {
-    $tz = new DateTimeZone('HAST');
-    $timezone_offsets['HAST'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('HADT');
-    $timezone_offsets['HADT'] = $tz->getOffset(new DateTime);
     $tz = new DateTimeZone('AKST');
     $timezone_offsets['AKST'] = $tz->getOffset(new DateTime);
     $tz = new DateTimeZone('AKDT');

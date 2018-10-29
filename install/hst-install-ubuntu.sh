@@ -116,6 +116,13 @@ set_default_lang() {
     fi
 }
 
+# Define the default backend port
+set_default_port() {
+    if [ -z "$port" ]; then
+        eval port=$1
+    fi
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

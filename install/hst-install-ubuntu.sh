@@ -1395,7 +1395,7 @@ fi
 echo -e "Congratulations, you have just successfully installed \
 Hestia Control Panel
 
-    https://$ip:8083
+    https://$ip:$port
     username: admin
     password: $vpass
 

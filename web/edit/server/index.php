@@ -400,6 +400,8 @@ if (!empty($_POST['save'])) {
         $_SESSION['ok_msg'] = __('Changes has been saved.');
     }
 
+}
+    
 // Check system configuration
 exec (HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
 $data = json_decode(implode('', $output), true);

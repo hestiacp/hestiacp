@@ -248,10 +248,19 @@ if [ ! -z "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
     check_result 1 "User admin exists"
 fi
 
+# Update apt repository
+apt-get -qq update
+
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
     apt-get -y install wget
     check_result $? "Can't install wget"
+fi
+
+# Check if apt-transport-https is installed
+if [ ! -e '/usr/lib/apt/methods/https' ]; then
+    apt-get -y install apt-transport-https
+    check_result $? "Can't install apt-transport-https"
 fi
 
 # Checking repository availability
@@ -467,7 +476,7 @@ wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 apt-key add /tmp/php_signing.key
 
 # Installing hestia repo
-echo "deb http://$RHOST/ $codename main" > $apt/hestia.list
+echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget https://gpg.hestiacp.com/deb_signing.key -O deb_signing.key
 apt-key add deb_signing.key
 

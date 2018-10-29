@@ -947,10 +947,10 @@ wait_for_backup_if_it_is_not_time_for_backup() {
     then
         hour=$(date +"%H");
         while [ "$hour" -gt "6" ]; do
-            if [ "$WAIT_LOOP_ENTERED" -eq 0 ]; then
+            # if [ "$WAIT_LOOP_ENTERED" -eq 0 ]; then
                 # do something when enter sleeping state
                 # $BIN/v-restart-web-backend
-            fi
+            # fi
             WAIT_LOOP_ENTERED=1
             current_date_time="`date "+%Y-%m-%d %H:%M:%S"`";
             echo "$current_date_time - wait to backup user $user - current hour is $hour";

@@ -9,6 +9,11 @@
 #   Ubuntu 14.04, 16.04, 18.04
 #
 
+HESTIA="/usr/local/hestia"
+RHOST='apt.hestiacp.com'
+os=$(head -n1 /etc/issue | cut -f 1 -d ' ')
+apt="/etc/apt/sources.list.d"
+
 # Detect OS
 case $os in
     Debian)     type="debian" ;;
@@ -21,6 +26,7 @@ if [ "$type" = "NoSupport" ]; then
     echo "Your OS is currently not supported."
     exit 1;
 fi
+
 # Detect Codename
 if [ "$type" = "debian" ]; then
     codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
@@ -34,10 +40,6 @@ if [ "$type" = "ubuntu" ]; then
     VERSION='ubuntu'
 fi
 
-HESTIA="/usr/local/hestia"
-RHOST='apt.hestiacp.com'
-os=$(head -n1 /etc/issue | cut -f 1 -d ' ')
-apt="/etc/apt/sources.list.d"
 hestiacp="$HESTIA/install/$VERSION/$release"
 
 # Am I root?

@@ -768,9 +768,7 @@ chmod 660 $HESTIA/conf/hestia.conf
 
 # Symlink to Hestia for compatibilty
 ln -s $HESTIA /usr/local/vesta
-ln -s $HESTIA/log /var/log/vesta
 ln -s $HESTIA/conf/hestia.conf /usr/local/vesta/conf/vesta.conf
-ln -s /etc/profile.d/hestia.sh /etc/profile.d/vesta.sh
 
 # WEB stack
 if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then

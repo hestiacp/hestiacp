@@ -270,6 +270,12 @@ if [ ! -e '/usr/lib/apt/methods/https' ]; then
     check_result $? "Can't install apt-transport-https"
 fi
 
+# Check if apt-add-repository is installed
+if [ ! -e '/usr/bin/apt-add-repository' ]; then
+    apt-get -y install python-software-properties
+    check_result $? "Can't install python-software-properties"
+fi
+
 # Checking repository availability
 wget -q "https://$GPG/deb_signing.key" -O /dev/null
 check_result $? "No access to Hestia repository"
@@ -478,9 +484,7 @@ wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
 
 # Installing sury php repo
-echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
-apt-key add /tmp/php_signing.key
+add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list

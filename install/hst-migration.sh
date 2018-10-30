@@ -111,6 +111,7 @@ apt-key add deb_signing.key
 
 # Remove vesta packages
 echo "Remove VestaCP packages..."
+systemctl stop vesta
 apt-get -qq remove vesta vesta-nginx vesta-php vesta-ioncube vesta-softaculous -y > /dev/null
 
 # Clear up softaculous

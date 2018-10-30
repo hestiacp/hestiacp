@@ -9,10 +9,24 @@
 #   Ubuntu 14.04, 16.04, 18.04
 #
 
+# Detect Codename
+if [ "$type" = "debian" ]; then
+    codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
+    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+    VERSION='debian'
+fi
+
+if [ "$type" = "ubuntu" ]; then
+    codename="$(lsb_release -s -c)"
+    release="$(lsb_release -s -r)"
+    VERSION='ubuntu'
+fi
+
 HESTIA="/usr/local/hestia"
 RHOST='apt.hestiacp.com'
 os=$(head -n1 /etc/issue | cut -f 1 -d ' ')
 apt="/etc/apt/sources.list.d"
+hestiacp="$HESTIA/install/$VERSION/$release"
 
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then
@@ -31,15 +45,6 @@ esac
 if [ "$type" = "NoSupport" ]; then
     echo "Your OS is currently not supported."
     exit 1;
-fi
-
-# Detect Codename
-if [ "$type" = "debian" ]; then
-    codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
-fi
-
-if [ "$type" = "ubuntu" ]; then
-    codename="$(lsb_release -s -c)"
 fi
 
 # Check if Vesta is installed
@@ -123,6 +128,28 @@ mv /etc/profile.d/vesta.sh /etc/profile.d/hestia.sh
 mv /usr/local/vesta $HESTIA
 mv $HESTIA/conf/vesta.conf $HESTIA/conf/hestia.conf
 
+# Add changed configuration files
+echo "export HESTIA='$HESTIA'" >> /etc/profile.d/hestia.sh
+
+rm /etc/sudoers.d/admin
+cp -f $hestiacp/sudo/admin /etc/sudoers.d/
+chmod 440 /etc/sudoers.d/admin
+
+sed -i 's/vesta/hestia/g' /root/.bash_profile
+sed -i 's/VESTA/HESTIA/g' /etc/profile.d/hestia.sh
+sed -i 's/vesta/hestia/g' /etc/profile.d/hestia.sh
+
+cp -rf $hestiacp/firewall $HESTIA/data/
+rm -f /var/log/vesta
+
+rm /usr/share/roundcube/plugins/password/drivers/vesta.php
+cp -f $hestiacp/roundcube/hestia.php \
+    /usr/share/roundcube/plugins/password/drivers/
+sed -i 's/vesta/hestia/g' /etc/roundcube/config.inc.php
+
+rm /etc/logrotate.d/vesta
+cp -f $hestiacp/logrotate/vesta /etc/logrotate.d/hestia
+
 # Install hestia packages
 echo "Update System Repository and install HestiaCP Packages..."
 apt-get -qq update
@@ -135,6 +162,9 @@ systemctl restart hestia
 # Create compatiblity symlinks
 ln -s $HESTIA /usr/local/vesta
 ln -s $HESTIA/conf/hestia.conf /usr/local/vesta/conf/vesta.conf
+
+# Update firewall rules
+$HESTIA/bin/v-update-firewall
 
 echo "Migration is finished, you're running now HestiaCP instead VestaCP."
 echo "Please contact us if you've any troubles using our forum: https://forum.hestiacp.com"

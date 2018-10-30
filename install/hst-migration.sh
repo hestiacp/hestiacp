@@ -59,10 +59,11 @@ fi
 # Inform abouot and ask to proceed migration.
 loop=1
 while [ "$loop" -eq 1 ]; do
-    read -p "Would you like to migrate to HestiaCP? Please be warned, that we remvoe and do not support softaculous and payed VestaCP extensions! [yes/no]: " api
-    if [ $api == 'yes' ] || [ $api == 'no' ]; then
+    echo "Would you like to migrate to HestiaCP?"
+    read -p "Please be warned, that we've removed and do not support softaculous and payed VestaCP extensions! [yes/no]: " sure
+    if [ $sure == 'yes' ] || [ $sure == 'no' ]; then
         loop=0
-        if [ $api == 'no' ]; then
+        if [ $sure == 'no' ]; then
             echo "Canceling migration..."
             exit 1
         fi

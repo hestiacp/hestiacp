@@ -12,6 +12,7 @@
 HESTIA="/usr/local/hestia"
 os=$(head -n1 /etc/issue | cut -f 1 -d ' ')
 codename=$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))
+apt="/etc/apt/sources.list.d"
 
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then
@@ -34,7 +35,6 @@ fi
 
 # Check if Vesta is installed
 if [ -f /usr/local/vesta/conf/vesta.conf ]; then
-    echo "Vesta exists"
     source /usr/local/vesta/conf/vesta.conf
 else
     echo "Vesta not found, stopping here."
@@ -42,7 +42,7 @@ else
 fi
 
 # Check the Vesta Version
-if [ ! "$VESRION" = "0.9.8" ]; then
+if [ ! "$VERSION" = "0.9.8" ]; then
     echo "Wrong Vesta Version, stopping here."
     exit 1
 fi
@@ -75,15 +75,21 @@ apt-key add deb_signing.key
 
 # Remove vesta packages
 echo "Remove VestaCP packages..."
-apt-get -qq remove vesta vesta-nginx vesta-php -y
+apt-get -qq remove vesta vesta-nginx vesta-php vesta-ioncube vesta-softaculous -y
+
+# Clear up softaculous
+rm -fr /usr/local/vesta/softaculous
+sed -i '/SOFTACULOUS/d' /usr/local/vesta/conf/vesta.conf
 
 # Move Vesta to Hestia Folder
 mv /usr/local/vesta $HESTIA
+mv $HESTIA/conf/vesta.conf $HESTIA/conf/hestia.conf
 
 # Install hestia packages
 echo "Update System Repository and install HestiaCP Packages..."
 apt-get -qq update
-apt-get -qq install hestia hestia-nginx hestia-php
+apt-get -qq upgrade -y
+apt-get -qq install hestia hestia-nginx hestia-php -y
 
 # Restart hestia service once
 systemctl restart hestia

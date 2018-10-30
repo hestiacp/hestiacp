@@ -9,6 +9,18 @@
 #   Ubuntu 14.04, 16.04, 18.04
 #
 
+# Detect OS
+case $os in
+    Debian)     type="debian" ;;
+    Ubuntu)     type="ubuntu" ;;
+    *)          type="NoSupport" ;;
+esac
+
+# Check if OS is supported
+if [ "$type" = "NoSupport" ]; then
+    echo "Your OS is currently not supported."
+    exit 1;
+fi
 # Detect Codename
 if [ "$type" = "debian" ]; then
     codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
@@ -32,19 +44,6 @@ hestiacp="$HESTIA/install/$VERSION/$release"
 if [ "x$(id -u)" != 'x0' ]; then
     echo 'Error: this script can only be executed by root'
     exit 1
-fi
-
-# Detect OS
-case $os in
-    Debian)     type="debian" ;;
-    Ubuntu)     type="ubuntu" ;;
-    *)          type="NoSupport" ;;
-esac
-
-# Check if OS is supported
-if [ "$type" = "NoSupport" ]; then
-    echo "Your OS is currently not supported."
-    exit 1;
 fi
 
 # Check if Vesta is installed

@@ -10,6 +10,7 @@
 #
 
 HESTIA="/usr/local/hestia"
+RHOST='apt.hestiacp.com'
 os=$(head -n1 /etc/issue | cut -f 1 -d ' ')
 apt="/etc/apt/sources.list.d"
 

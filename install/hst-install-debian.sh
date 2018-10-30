@@ -420,17 +420,6 @@ if [ "$interactive" = 'yes' ]; then
     if [ -z "$servername" ]; then
         read -p "Please enter FQDN hostname [$(hostname)]: " servername
     fi
-
-    # Asking to deactivate the API
-    loop=1
-    while [ "$loop" -eq 1 ]; do
-        read -p "Would you like to enable the API [yes/no]: " api
-        if [ $api == 'yes' ] || [ $api == 'no' ]; then
-            loop=0
-        else
-            echo "Please enter yes or no!"
-        fi
-    done
 fi
 
 # Generating admin password if it wasn't set

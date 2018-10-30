@@ -11,7 +11,6 @@
 
 HESTIA="/usr/local/hestia"
 os=$(head -n1 /etc/issue | cut -f 1 -d ' ')
-codename=$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))
 apt="/etc/apt/sources.list.d"
 
 # Am I root?
@@ -31,6 +30,15 @@ esac
 if [ "$type" = "NoSupport" ]; then
     echo "Your OS is currently not supported."
     exit 1;
+fi
+
+# Detect Codename
+if [ "$type" = "debian" ]; then
+    codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
+fi
+
+if [ "$type" = "ubuntu" ]; then
+    codename="$(lsb_release -s -c)"
 fi
 
 # Check if Vesta is installed

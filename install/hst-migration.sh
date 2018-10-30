@@ -88,10 +88,21 @@ if [ -f /usr/local/vesta/conf/vesta.conf ]; then
     rm /etc/apt/sources.list.d/vesta.list*
 fi
 
-# Installing sury php repo
-echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
-apt-key add /tmp/php_signing.key
+if [ "$type" = "debian" ]; then
+    # Installing sury php repo
+    echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
+    wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
+    apt-key add /tmp/php_signing.key
+fi
+
+if [ "$type" = "ubuntu" ]; then
+    # Check if apt-add-repository is installed
+    if [ ! -e '/usr/bin/apt-add-repository' ]; then
+        apt-get -y install python-software-properties
+        check_result $? "Can't install python-software-properties"
+    fi
+    add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
+fi
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
@@ -107,6 +118,7 @@ rm -fr /usr/local/vesta/softaculous
 sed -i '/SOFTACULOUS/d' /usr/local/vesta/conf/vesta.conf
 
 # Move Vesta to Hestia Folder
+mv /etc/profile.d/vesta.sh /etc/profile.d/hestia.sh
 mv /usr/local/vesta $HESTIA
 mv $HESTIA/conf/vesta.conf $HESTIA/conf/hestia.conf
 

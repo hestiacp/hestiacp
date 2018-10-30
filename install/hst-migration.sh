@@ -56,6 +56,20 @@ if [ ! "$VERSION" = "0.9.8" ]; then
     exit 1
 fi
 
+# Inform abouot and ask to proceed migration.
+loop=1
+while [ "$loop" -eq 1 ]; do
+    read -p "Would you like to migrate to HestiaCP? Please be warned, that we remvoe and do not support softaculous and payed VestaCP extensions! [yes/no]: " api
+    if [ $api == 'yes' ] || [ $api == 'no' ]; then
+        loop=0
+        if [ $api == 'no' ]; then
+            echo "Canceling migration..."
+            exit 1
+    else
+        echo "Please enter yes or no!"
+    fi
+done
+
 # Update apt repository
 echo "Updating system repository..."
 apt-get -qq update

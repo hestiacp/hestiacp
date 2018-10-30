@@ -118,7 +118,7 @@ apt-key add deb_signing.key
 # Remove vesta packages
 echo "Remove VestaCP packages..."
 systemctl stop vesta
-apt-get -qq remove vesta vesta-nginx vesta-php vesta-ioncube vesta-softaculous -y > /dev/null
+apt-get -qq remove vesta vesta-nginx vesta-php vesta-ioncube vesta-softaculous -y > /dev/null 2>&1
 
 # Clear up softaculous
 rm -fr /usr/local/vesta/softaculous
@@ -128,6 +128,12 @@ sed -i '/SOFTACULOUS/d' /usr/local/vesta/conf/vesta.conf
 mv /etc/profile.d/vesta.sh /etc/profile.d/hestia.sh
 mv /usr/local/vesta $HESTIA
 mv $HESTIA/conf/vesta.conf $HESTIA/conf/hestia.conf
+
+# Install hestia packages
+echo "Update System Repository and install HestiaCP Packages..."
+apt-get -qq update
+apt-get -qq upgrade -y  > /dev/null 2>&1
+apt-get -qq install hestia hestia-nginx hestia-php -y  > /dev/null 2>&1
 
 # Add changed configuration files
 echo "export HESTIA='$HESTIA'" >> /etc/profile.d/hestia.sh
@@ -150,12 +156,6 @@ sed -i 's/vesta/hestia/g' /etc/roundcube/config.inc.php
 
 rm /etc/logrotate.d/vesta
 cp -f $hestiacp/logrotate/vesta /etc/logrotate.d/hestia
-
-# Install hestia packages
-echo "Update System Repository and install HestiaCP Packages..."
-apt-get -qq update
-apt-get -qq upgrade -y
-apt-get -qq install hestia hestia-nginx hestia-php -y
 
 # Restart hestia service once
 systemctl restart hestia

@@ -65,6 +65,7 @@ while [ "$loop" -eq 1 ]; do
         if [ $api == 'no' ]; then
             echo "Canceling migration..."
             exit 1
+        fi
     else
         echo "Please enter yes or no!"
     fi

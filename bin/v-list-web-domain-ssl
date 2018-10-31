@@ -19,6 +19,7 @@ source $VESTA/func/main.sh
 
 # JSON list function
 json_list() {
+    issuer=$(echo "$issuer" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
     echo '{'
     echo -e "\t\"$domain\": {"
     echo "        \"CRT\": \"$crt\","

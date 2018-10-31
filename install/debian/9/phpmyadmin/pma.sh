@@ -11,7 +11,6 @@
 #
 
 PASS=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -c 32 ; echo`
-echo "PMA Password = $PASS";
 
 #ubuntu phpmyadmin path
 pmapath1="/etc/phpmyadmin/config.inc.php"
@@ -144,4 +143,4 @@ FLUSH PRIVILEGES;
 MYSQL_PMA3
 
 #MYSQL DB and TABLES ADDITION
-mysql -uroot < $hestiacp/create_tables.sql
+mysql -uroot < $hestiacp/phpmyadmin/create_tables.sql

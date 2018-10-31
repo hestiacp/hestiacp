@@ -21,7 +21,7 @@ hestiacp="$HESTIA/install/$VERSION/$release"
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
-        php-common php-cgi php-mysql php-curl php-fpm php-pgsql awstats
+        php-common php-cgi php-mysql php-curl php-pgsql awstats
         webalizer vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mysql-server mysql-common
@@ -34,7 +34,7 @@ elif [ "$release" -eq 8 ]; then
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
-        php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
+        php5-mysql php5-curl php5-pgsql awstats webalizer vsftpd
         proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mysql-server mysql-common
@@ -47,7 +47,7 @@ else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
-        php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
+        php5-mysql php5-curl php5-pgsql awstats webalizer vsftpd
         proftpd-basic proftpd-mod-vroot bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mysql-server mysql-common
@@ -587,10 +587,6 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-php5//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
-if [ "$phpfpm" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/php5-fpm//")
-    software=$(echo "$software" | sed -e "s/php-fpm//")
-fi
 if [ "$vsftpd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/vsftpd//")
 fi
@@ -658,6 +654,13 @@ if [ "$multiphp" = 'yes' ]; then
          php7.2-fpm php7.2-gd php7.2-intl php7.2-mysql php7.2-soap
          php7.2-xml php7.2-zip php7.2-memcache php7.2-memcached php7.2-zip"
     software="$software $mph"
+fi
+
+if [ "$phpfpm" = 'yes' ]; then
+    fpm="php7.2-apcu php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl
+         php7.2-fpm php7.2-gd php7.2-intl php7.2-mysql php7.2-soap
+         php7.2-xml php7.2-zip php7.2-memcache php7.2-memcached php7.2-zip"
+    software="$software $fpm"
 fi
 
 #----------------------------------------------------------#
@@ -784,14 +787,8 @@ if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='openssl'"  >> $HESTIA/conf/hestia.conf
-    if [ "$release" -eq 9 ]; then
-        if [ "$phpfpm" = 'yes' ]; then
-            echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
-        fi
-    else
-        if [ "$phpfpm" = 'yes' ]; then
-            echo "WEB_BACKEND='php5-fpm'" >> $HESTIA/conf/hestia.conf
-        fi
+    if [ "$phpfpm" = 'yes' ]; then
+        echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
     fi
     echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
 fi
@@ -986,17 +983,11 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-    if [ "$release" -eq 9 ]; then
-        cp -f $hestiacp/php-fpm/www.conf /etc/php/7.0/fpm/pool.d/www.conf
-        update-rc.d php7.0-fpm defaults
-        service php7.0-fpm start
-        check_result $? "php-fpm start failed"
-    else
-        cp -f $hestiacp/php5-fpm/www.conf /etc/php5/fpm/pool.d/www.conf
-        update-rc.d php5-fpm defaults
-        service php5-fpm start
-        check_result $? "php-fpm start failed"
-    fi
+    cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
+    rm -f /etc/php/7.2/fpm/pool.d/*
+    cp -f $hestiacp/php-fpm/* $HESTIA/data/templates/web/nginx/
+    chmod a+x $HESTIA/data/templates/web/nginx/*.sh
+    update-rc.d php7.2-fpm defaults
 fi
 
 

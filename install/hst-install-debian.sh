@@ -1313,9 +1313,11 @@ fi
 #                       Configure API                      #
 #----------------------------------------------------------#
 
-if [ "$api" = 'no' ]; then
-    rm -r $HESTIA/web/api
+if [ "$api" = 'yes' ]; then
     echo "API='no'" >> $HESTIA/conf/hestia.conf
+else
+    rm -r $HESTIA/web/api
+    echo "API='yes'" >> $HESTIA/conf/hestia.conf
 fi
 
 

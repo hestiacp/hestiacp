@@ -543,7 +543,7 @@ killall -9 mysqld > /dev/null 2>&1
 mv /var/lib/mysql $hst_backups/mysql/mysql_datadir > /dev/null 2>&1
 cp -r /etc/mysql/* $hst_backups/mysql > /dev/null 2>&1
 mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
-if [ "$release" = '16.04' ] [ "$release" = '18.04' ]; then
+if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
     if [ -e '/etc/init.d/mysql' ]; then
         mkdir -p /var/lib/mysql > /dev/null 2>&1
         chown mysql:mysql /var/lib/mysql

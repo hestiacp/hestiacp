@@ -1051,10 +1051,10 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring MySQL/MariaDB
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
-    if [ "$release" != '16.04' ]; then
+    if [ "$release" = '14.04' ]; then
         mysql_install_db
     fi
-    if [ "$release" == '18.04' ]; then
+    if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
         mkdir /var/lib/mysql
         chown mysql:mysql /var/lib/mysql
         mysqld --initialize-insecure

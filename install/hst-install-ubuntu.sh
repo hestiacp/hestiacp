@@ -543,10 +543,12 @@ killall -9 mysqld > /dev/null 2>&1
 mv /var/lib/mysql $hst_backups/mysql/mysql_datadir > /dev/null 2>&1
 cp -r /etc/mysql/* $hst_backups/mysql > /dev/null 2>&1
 mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
-if [ "$release" = '16.04' ] && [ -e '/etc/init.d/mysql' ]; then
-    mkdir -p /var/lib/mysql > /dev/null 2>&1
-    chown mysql:mysql /var/lib/mysql
-    mysqld --initialize-insecure
+if [ "$release" = '16.04' ] [ "$release" = '18.04' ]; then
+    if [ -e '/etc/init.d/mysql' ]; then
+        mkdir -p /var/lib/mysql > /dev/null 2>&1
+        chown mysql:mysql /var/lib/mysql
+        mysqld --initialize-insecure
+    fi
 fi
 
 # Backup Hestia
@@ -1055,7 +1057,9 @@ if [ "$mysql" = 'yes' ]; then
         mysql_install_db
     fi
     if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
-        mkdir /var/lib/mysql
+        if [ ! -d "/var/lib/mysql" ]; then
+            mkdir /var/lib/mysql
+        fi
         chown mysql:mysql /var/lib/mysql
         mysqld --initialize-insecure
     fi

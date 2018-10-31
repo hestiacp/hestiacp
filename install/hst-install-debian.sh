@@ -1327,7 +1327,7 @@ fi
 # Special thanks to Pavel Galkin (https://skurudo.ru)
 # https://github.com/skurudo/phpmyadmin-fixer
 
-source $hestiacp/phpmyadmin/pma.sh
+source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                   Configure Admin User                   #

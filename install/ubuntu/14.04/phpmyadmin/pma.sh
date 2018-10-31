@@ -10,8 +10,6 @@
 # Changed some lines to fit to Hestia Configuration.
 #
 
-hestiacp=$1
-
 PASS=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -c 32 ; echo`
 echo "PMA Password = $PASS";
 

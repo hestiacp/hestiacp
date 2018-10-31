@@ -1231,7 +1231,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     touch /var/log/roundcube/errors
     chmod 640 /var/log/roundcube/errors
     chown www-data:adm /var/log/roundcube/errors
-    if [ "$release" = '16.04' ]; then
+    if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
         mv /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
         mv /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
         chmod 640 /etc/roundcube/debian-db-roundcube.php

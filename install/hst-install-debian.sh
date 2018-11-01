@@ -1367,7 +1367,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
 fi
 
 # Configuring system ips
-$HESTIA/bin/v-update-sys-ip
+$HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main ip
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
@@ -1382,7 +1382,7 @@ fi
 pub_ip=$(curl --ipv4 -s https://www.hestiacp.com/what-is-my-ip/)
 
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
-    $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip
+    $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
 fi
 

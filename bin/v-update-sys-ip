@@ -110,7 +110,7 @@ for ip in $ips; do
 done
 
 # Updating NAT
-pub_ip=$(curl -s https://www.hestiacp.com/what-is-my-ip/)
+pub_ip=$(curl --ipv4 -s https://www.hestiacp.com/what-is-my-ip/)
 if [ ! -e "$HESTIA/data/ips/$pub_ip" ]; then
     if [ -z "$(grep -R "$pub_ip" $HESTIA/data/ips/)" ]; then
         ip=$(ls -t $HESTIA/data/ips/ |head -n1)

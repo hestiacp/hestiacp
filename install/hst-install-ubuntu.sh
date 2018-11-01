@@ -1339,7 +1339,7 @@ $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang
 
 # Configuring system IPs
-$HESTIA/bin/v-update-sys-ip
+$HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
@@ -1353,7 +1353,7 @@ fi
 pub_ip=$(curl --ipv4 -s https://www.hestiacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
-    $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip
+    $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
 fi
 

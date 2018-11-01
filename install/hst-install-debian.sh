@@ -1379,7 +1379,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public ip
-pub_ip=$(curl -s https://www.hestiacp.com/what-is-my-ip/)
+pub_ip=$(curl --ipv4 -s https://www.hestiacp.com/what-is-my-ip/)
 
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip

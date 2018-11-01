@@ -67,7 +67,6 @@ fi
 
 # Check if port is different to nginx.conf
 if [ "$ORIGINAL_PORT" = "$PORT" ]; then
-    echo "nothing to do"
     # Nothing to do, exit
     exit
 else

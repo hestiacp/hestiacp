@@ -247,9 +247,9 @@ if [ "$create_user" = 'yes' ]; then
     echo -e "$(date "+%F %T") $user" |tee -a $tmpdir/restore.log
 
     # Unpacking user container
-    tar xf $BACKUP/$backup -C $tmpdir ./hestia
+    tar xf $BACKUP/$backup -C $tmpdir ./hestia 2>/dev/null
     if [ "$?" -ne 0 ]; then
-        tar xf $BACKUP/$backup -C $tmpdir ./vesta
+        tar xf $BACKUP/$backup -C $tmpdir ./vesta 2>/dev/null
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             echo "Can't unpack user contaner" |$SENDMAIL -s "$subj" $email $notify

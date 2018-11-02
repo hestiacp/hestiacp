@@ -255,11 +255,18 @@ if [ "$create_user" = 'yes' ]; then
         check_result "$E_PARSING" "can't unpack user contaner"
     fi
 
+    # Check if it is a vesta or hestia backup
+    if [ -d "$tmpdir/vesta" ]; then
+        backup_system="vesta"
+    else
+        backup_system="hestia"
+    fi
+
     # Restoring user.conf
     mkdir $USER_DATA
-    cp $tmpdir/hestia/user.conf $USER_DATA/
-    cp -r  $tmpdir/hestia/ssl $USER_DATA/ >/dev/null 2>&1
-    cp $tmpdir/hestia/backup-excludes.conf $USER_DATA/ >/dev/null 2>&1
+    cp $tmpdir/$backup_system/user.conf $USER_DATA/
+    cp -r  $tmpdir/$backup_system/ssl $USER_DATA/ >/dev/null 2>&1
+    cp $tmpdir/$backup_system/backup-excludes.conf $USER_DATA/ >/dev/null 2>&1
 
     # Rebuilding user
     rebuild_user_conf
@@ -322,7 +329,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
         # Restoring web.conf
         if [ -z "$check_config" ]; then
-            eval $(cat $tmpdir/web/$domain/hestia/web.conf)
+            eval $(cat $tmpdir/web/$domain/$backup_system/web.conf)
 
             # Deleting conflicting aliases
             for dom_alias in ${ALIAS//,/ }; do
@@ -485,7 +492,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
 
         # Restoring dns.conf
         if [ -z "$check_config" ]; then
-            eval $(cat $tmpdir/dns/$domain/hestia/dns.conf)
+            eval $(cat $tmpdir/dns/$domain/$backup_system/dns.conf)
 
             # Checking ip address
             check_ip=$(is_ip_valid $IP $user)
@@ -510,7 +517,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         fi
 
         # Restoring dns records
-        cp -f $tmpdir/dns/$domain/hestia/$domain.conf $USER_DATA/dns/
+        cp -f $tmpdir/dns/$domain/$backup_system/$domain.conf $USER_DATA/dns/
 
         # Rebuilding dns domain
         rebuild_dns_domain_conf
@@ -572,17 +579,17 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Restoring mail.conf
         if [ -z "$check_config" ]; then
-            cat $tmpdir/mail/$domain/hestia/mail.conf >> $USER_DATA/mail.conf
+            cat $tmpdir/mail/$domain/$backup_system/mail.conf >> $USER_DATA/mail.conf
         fi
 
         # Restoring DKIM
-        if [ -e "$tmpdir/mail/$domain/hestia/$domain.pem" ]; then
-            cp -f $tmpdir/mail/$domain/hestia/$domain.pem $USER_DATA/mail/
-            cp -f $tmpdir/mail/$domain/hestia/$domain.pub $USER_DATA/mail/
+        if [ -e "$tmpdir/mail/$domain/$backup_system/$domain.pem" ]; then
+            cp -f $tmpdir/mail/$domain/$backup_system/$domain.pem $USER_DATA/mail/
+            cp -f $tmpdir/mail/$domain/$backup_system/$domain.pub $USER_DATA/mail/
         fi
 
         # Restoring email accounts
-        cp -f $tmpdir/mail/$domain/hestia/$domain.conf $USER_DATA/mail/
+        cp -f $tmpdir/mail/$domain/$backup_system/$domain.conf $USER_DATA/mail/
 
         # Rebuilding mail config
         rebuild_mail_domain_conf
@@ -650,7 +657,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
 
         # Restore database config
         if [ -z "$check_config" ]; then
-            eval $(cat $tmpdir/db/$database/hestia/db.conf)
+            eval $(cat $tmpdir/db/$database/$backup_system/db.conf)
             DB=$(echo "$DB"  |sed -e "s/${old_user}_//")
             DB="${user}_${DB}"
             DBUSER=$(echo "$DBUSER" |sed -e "s/${old_user}_//")

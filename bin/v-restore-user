@@ -249,15 +249,15 @@ if [ "$create_user" = 'yes' ]; then
     # Unpacking user container
     tar xf $BACKUP/$backup -C $tmpdir ./hestia
     if [ "$?" -ne 0 ]; then
-        rm -rf $tmpdir
-        echo "Can't unpack user contaner" |$SENDMAIL -s "$subj" $email $notify
-        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_PARSING" "can't unpack user contaner"
-    fi
-
-    # Check if it is a vesta or hestia backup
-    if [ -d "$tmpdir/vesta" ]; then
-        backup_system="vesta"
+        tar xf $BACKUP/$backup -C $tmpdir ./vesta
+        if [ "$?" -ne 0 ]; then
+            rm -rf $tmpdir
+            echo "Can't unpack user contaner" |$SENDMAIL -s "$subj" $email $notify
+            sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+            check_result "$E_PARSING" "can't unpack user contaner"
+        else
+            backup_system="vesta"
+        fi
     else
         backup_system="hestia"
     fi

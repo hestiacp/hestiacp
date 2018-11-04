@@ -385,15 +385,19 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
         grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
         if [ ! -f "$dumpgz" ]; then
 
+            WAIT_LOOP_ENTERED=0
             while true
             do
                 if pgrep -x "mysqldump" > /dev/null
                 then
+                    WAIT_LOOP_ENTERED=1
                     echo "Wait other mysqldump to finish"
                     sleep 1
                 else
-                    echo "We can use mysqldump now"
-                    break
+                    if [ "$WAIT_LOOP_ENTERED" -eq 1 ]; then
+                        echo "We can use mysqldump now"
+                        break
+                    fi
                 fi
             done
 

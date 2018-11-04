@@ -1,7 +1,6 @@
 <?php
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
-define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
-exit;
+
 if (isset($_POST['user']) || isset($_POST['hash'])) {
 
     // Authentication

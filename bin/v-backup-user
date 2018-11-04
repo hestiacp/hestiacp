@@ -54,23 +54,6 @@ start_time=$(date '+%s')
 subj="$user → backup failed"
 email=$(grep CONTACT $VESTA/data/users/admin/user.conf |cut -f 2 -d \')
 
-# Checking load average
-la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
-# i=0
-while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
-    echo -e "$(date "+%F %T") Load Average $la"
-    sleep 60
-    wait_for_backup_if_it_is_not_time_for_backup
-    # if [ "$i" -ge "15" ]; then
-        # la_error="LoadAverage $la is above threshold"
-        # echo "$la_error" |$SENDMAIL -s "$subj" $email $notify
-        # sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-        # check_result $E_LA "$la_error"
-    # fi
-    la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
-    # (( ++i))
-done
-
 if [ -z "$BACKUP_TEMP" ]; then
     BACKUP_TEMP=$BACKUP
 fi

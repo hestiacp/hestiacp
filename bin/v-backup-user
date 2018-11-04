@@ -396,8 +396,8 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
                 else
                     if [ "$WAIT_LOOP_ENTERED" -eq 1 ]; then
                         echo "We can use mysqldump now"
-                        break
                     fi
+                    break
                 fi
             done
 

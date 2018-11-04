@@ -941,6 +941,22 @@ format_aliases() {
 
 
 wait_for_backup_if_it_is_not_time_for_backup() {
+    # Checking load average
+    la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
+    # i=0
+    while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
+        echo -e "$(date "+%F %T") Load Average $la"
+        sleep 60
+        # if [ "$i" -ge "15" ]; then
+            # la_error="LoadAverage $la is above threshold"
+            # echo "$la_error" |$SENDMAIL -s "$subj" $email $notify
+            # sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
+            # check_result $E_LA "$la_error"
+        # fi
+        la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
+        # (( ++i))
+    done
+
     # block backup if current hour is after 6 AM
     WAIT_LOOP_ENTERED=0
     if pgrep -x "v-backup-users" > /dev/null

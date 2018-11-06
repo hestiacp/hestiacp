@@ -252,6 +252,7 @@ if [ ! -z "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
 fi
 
 # Update apt repository
+echo "Please wait a few seconds, we update your repository before we start the installation process..."
 apt-get -qq update
 
 # Checking wget

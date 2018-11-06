@@ -984,17 +984,10 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-     if [ "$release" -eq 9 ]; then
-        cp -f $hestiacp/php-fpm/www.conf /etc/php/7.0/fpm/pool.d/www.conf
-        update-rc.d php7.0-fpm defaults
-        service php7.0-fpm start
-        check_result $? "php-fpm start failed"
-    else
-        cp -f $hestiacp/php5-fpm/www.conf /etc/php5/fpm/pool.d/www.conf
-        update-rc.d php5-fpm defaults
-        service php5-fpm start
-        check_result $? "php-fpm start failed"
-    fi
+    cp -f $hestiacp/php-fpm/www.conf /etc/php/7.2/fpm/pool.d/www.conf
+    update-rc.d php7.2-fpm defaults
+    service php7.2-fpm start
+    check_result $? "php-fpm start failed"
 fi
 
 

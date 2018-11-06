@@ -986,11 +986,9 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-    cp -f $hestiacp/php-fpm/www.conf $pool/
-    php_fpm=$(ls /etc/init.d/php*-fpm* |cut -f 4 -d /)
-    ln -s /etc/init.d/$php_fpm /etc/init.d/php-fpm > /dev/null 2>&1
-    update-rc.d $php_fpm defaults
-    service $php_fpm start
+    cp -f $hestiacp/php-fpm/www.conf /etc/php/7.2/fpm/pool.d/www.conf
+    update-rc.d php7.2-fpm defaults
+    service php7.2-fpm start
     check_result $? "php-fpm start failed"
 fi
 

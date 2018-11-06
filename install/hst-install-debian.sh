@@ -21,20 +21,20 @@ hestiacp="$HESTIA/install/$VERSION/$release"
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
-        php-common php-cgi php-mysql php-curl php-fpm php-pgsql awstats
-        webalizer vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
+        php-common php-cgi php-mysql php-curl php-pgsql awstats webalizer
+        vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon 
+        spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
         roundcube-mysql roundcube-plugins mysql-server mysql-common
         mysql-client postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common net-tools"
-elif [ "$release" -eq 8 ]; then
+        unrar-free vim-common"
+else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
-        php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
+        php5-mysql php5-curl php5-pgsql awstats webalizer vsftpd net-tools
         proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mysql-server mysql-common
@@ -42,20 +42,7 @@ elif [ "$release" -eq 8 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common net-tools"
-else
-    software="nginx apache2 apache2-utils apache2.2-common
-        apache2-suexec-custom libapache2-mod-ruid2
-        libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
-        php5-mysql php5-curl php5-fpm php5-pgsql awstats webalizer vsftpd
-        proftpd-basic proftpd-mod-vroot bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        roundcube-mysql roundcube-plugins mysql-server mysql-common
-        mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
-        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect unrar-free
-        vim-common net-tools"
+        unrar-free vim-common"
 fi
 
 # Defining help function
@@ -251,6 +238,9 @@ set_default_lang 'en'
 if [ "$phpfpm" = 'yes' ]; then
     apache='no'
     nginx='yes'
+fi
+if [ "$multiphp" = 'yes' ]; then
+    phpfpm='no'
 fi
 if [ "$proftpd" = 'yes' ]; then
     vsftpd='no'
@@ -646,24 +636,22 @@ fi
 if [ "$multiphp" = 'yes' ]; then
     mph="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
          php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
-         php5.6-soap php5.6-xml php5.6-zip php5.6-memcache php5.6-memcached
-         php5.6-zip php7.0-apcu php7.0-mbstring php7.0-bcmath php7.0-cli
-         php7.0-curl php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt
-         php7.0-mysql php7.0-soap php7.0-xml php7.0-zip php7.0-memcache
-         php7.0-memcached php7.0-zip php7.1-apcu php7.1-mbstring
-         php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm php7.1-gd
-         php7.1-intl php7.1-mcrypt php7.1-mysql php7.1-soap php7.1-xml
-         php7.1-zip php7.1-memcache php7.1-memcached php7.1-zip 
-         php7.2-apcu php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl
-         php7.2-fpm php7.2-gd php7.2-intl php7.2-mysql php7.2-soap
-         php7.2-xml php7.2-zip php7.2-memcache php7.2-memcached php7.2-zip"
+         php5.6-soap php5.6-xml php5.6-zip php5.6-zip php7.0-mbstring
+         php7.0-bcmath php7.0-cli php7.0-curl php7.0-fpm php7.0-gd
+         php7.0-intl php7.0-mcrypt php7.0-mysql php7.0-soap php7.0-xml
+         php7.0-zip php7.0-zip php7.1-mbstring php7.1-bcmath php7.1-cli
+         php7.1-curl php7.1-fpm php7.1-gd php7.1-intl php7.1-mcrypt
+         php7.1-mysql php7.1-soap php7.1-xml php7.1-zip php7.1-zip 
+         php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
+         php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
+         php7.2-zip"
     software="$software $mph"
 fi
 
 if [ "$phpfpm" = 'yes' ]; then
-    fpm="php7.2-apcu php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl
-         php7.2-fpm php7.2-gd php7.2-intl php7.2-mysql php7.2-soap
-         php7.2-xml php7.2-zip php7.2-memcache php7.2-memcached php7.2-zip"
+    fpm="php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
+         php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
+         php7.2-zip"
     software="$software $fpm"
 fi
 
@@ -918,10 +906,13 @@ if [ "$nginx" = 'yes' ]; then
         rm -f /etc/php/7.2/fpm/pool.d/*
         rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
+        cp -f $hestiacp/php-fpm/www.conf /etc/php/7.2/fpm/pool.d/
         ln -s $HESTIA/data/templates/web/nginx/PHP-72.sh $HESTIA/data/templates/web/nginx/default.sh
         ln -s $HESTIA/data/templates/web/nginx/PHP-72.tpl $HESTIA/data/templates/web/nginx/default.tpl
         ln -s $HESTIA/data/templates/web/nginx/PHP-72.stpl $HESTIA/data/templates/web/nginx/default.stpl
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
+        service php7.2-fpm start
+        check_result $? "php7.2-fpm start failed"
     fi
     update-rc.d nginx defaults
     service nginx start

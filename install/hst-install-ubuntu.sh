@@ -498,11 +498,7 @@ cp -r /etc/apache2/* $hst_backups/apache2 > /dev/null 2>&1
 rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
-service php7.0-fpm stop > /dev/null 2>&1
-service php5-fpm stop > /dev/null 2>&1
 service php-fpm stop > /dev/null 2>&1
-cp -r /etc/php7.0/* $hst_backups/php/ > /dev/null 2>&1
-cp -r /etc/php5/* $hst_backups/php/ > /dev/null 2>&1
 cp -r /etc/php/* $hst_backups/php/ > /dev/null 2>&1
 
 # Backup Bind configuration
@@ -551,7 +547,6 @@ fi
 # Backup Hestia
 service hestia stop > /dev/null 2>&1
 cp -r $HESTIA/* $hst_backups/hestia > /dev/null 2>&1
-apt-get -y remove hestia hestia-nginx hestia-php > /dev/null 2>&1
 apt-get -y purge hestia hestia-nginx hestia-php > /dev/null 2>&1
 rm -rf $HESTIA > /dev/null 2>&1
 
@@ -729,7 +724,7 @@ echo "admin   ALL=NOPASSWD:/usr/local/hestia/bin/*" >> /etc/sudoers.d/admin
 
 # Configuring system env
 echo "export HESTIA='$HESTIA'" > /etc/profile.d/hestia.sh
-echo "export VESTA='$HESTIA'" >> /etc/profile.d/hestia.sh #Compatiblity to vesta
+echo "export VESTA='$HESTIA'" >> /etc/profile.d/hestia.sh # Vesta compatibility
 chmod 755 /etc/profile.d/hestia.sh
 source /etc/profile.d/hestia.sh
 echo 'PATH=$PATH:'$HESTIA'/bin' >> /root/.bash_profile
@@ -935,7 +930,7 @@ fi
 if [ "$apache" = 'yes'  ]; then
     cp -f $hestiacp/apache2/apache2.conf /etc/apache2/
     cp -f $hestiacp/apache2/status.conf /etc/apache2/mods-enabled/
-    cp -f  $hestiacp/logrotate/apache2 /etc/logrotate.d/
+    cp -f $hestiacp/logrotate/apache2 /etc/logrotate.d/
     a2enmod rewrite
     a2enmod suexec
     a2enmod ssl

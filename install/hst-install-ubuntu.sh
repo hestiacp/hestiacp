@@ -486,7 +486,7 @@ apt-key add deb_signing.key
 mkdir -p $hst_backups
 cd $hst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
-mkdir spamassassin mysql postgresql mongodb hestia
+mkdir spamassassin mysql postgresql hestia
 
 # Backup nginx configuration
 service nginx stop > /dev/null 2>&1

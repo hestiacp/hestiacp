@@ -1459,7 +1459,6 @@ $HESTIA/bin/v-add-cron-hestia-autoupdate
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
 
-
 # Comparing hostname and ip
 host_ip=$(host $servername| head -n 1 | awk '{print $NF}')
 if [ "$host_ip" = "$ip" ]; then

@@ -37,3 +37,10 @@ filter  = hestia
 action  = hestia[name=HESTIA]
 logpath = /var/log/hestia/auth.log
 maxretry = 5
+
+[roundcube-auth]
+enabled  = false
+filter   = roundcube-auth
+port     = http,https
+logpath  = /var/log/roundcube/errors
+maxretry = 5

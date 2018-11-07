@@ -469,8 +469,10 @@ echo "deb http://nginx.org/packages/mainline/ubuntu/ $codename nginx" \
 wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
 
-# Installing sury php repo
-add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
+# Installing sury php repo if MultiPHP is selected
+if [ "$multiphp" = 'yes' ]; then
+    add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
+fi
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list

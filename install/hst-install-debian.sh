@@ -484,10 +484,12 @@ echo "deb http://nginx.org/packages/debian/ $codename nginx" > $apt/nginx.list
 wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 apt-key add /tmp/nginx_signing.key
 
-# Installing sury php repo
-echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
-apt-key add /tmp/php_signing.key
+if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
+    # Installing sury php repo
+    echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
+    wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
+    apt-key add /tmp/php_signing.key
+fi
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list

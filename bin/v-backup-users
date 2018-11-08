@@ -22,8 +22,6 @@ source $HESTIA/conf/hestia.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-$BIN/v-check-vesta-license >/dev/null
-
 # Auto-repair all databases before backuping all accounts
 mysqlrepair --all-databases --check --auto-repair > /dev/null 2>&1
 

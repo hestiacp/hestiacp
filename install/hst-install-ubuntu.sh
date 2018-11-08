@@ -732,7 +732,7 @@ echo 'export PATH' >> /root/.bash_profile
 source /root/.bash_profile
 
 # Configuring logrotate for Hestia logs
-cp -f $hestiacp/logrotate/vesta /etc/logrotate.d/hestia
+cp -f $hestiacp/logrotate/hestia /etc/logrotate.d/hestia
 
 # Building directory tree and creating some blank files for Hestia
 mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \

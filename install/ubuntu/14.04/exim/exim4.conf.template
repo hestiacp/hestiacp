@@ -37,7 +37,7 @@ tls_advertise_hosts = *
 tls_certificate = /usr/local/hestia/ssl/certificate.crt
 tls_privatekey = /usr/local/hestia/ssl/certificate.key
 
-daemon_smtp_ports = 25 : 465 : 587 : 2525
+daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465
 never_users = root
 host_lookup = *

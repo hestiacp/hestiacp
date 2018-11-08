@@ -1199,6 +1199,7 @@ if [ "$clamd" = 'yes' ]; then
     service clamav-daemon start
     echo "Updating ClamAV..."
     /usr/bin/freshclam  > /dev/null 2>&1
+    service clamav-daemon restart
     check_result $? "clamav-daeom start failed"
 fi
 

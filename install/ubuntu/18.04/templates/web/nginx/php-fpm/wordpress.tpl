@@ -6,8 +6,24 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
 
     location / {
+        try_files $uri $uri/ /index.php?$args;
+        
+        if (!-e $request_filename)
+        {
+            rewrite ^(.+)$ /index.php?q=$1 last;
+        }
 
         location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
             expires     max;
@@ -40,12 +56,12 @@ server {
 
     location /vstats/ {
         alias   %home%/%user%/web/%domain%/stats/;
-        include %home%/%user%/conf/web/%domain%.auth*;
+        include %home%/%user%/web/%domain%/stats/auth.conf*;
     }
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;
     include     /etc/nginx/conf.d/webmail.inc*;
 
-    include     %home%/%user%/conf/web/nginx.%domain%.conf*;
+    include     %home%/%user%/conf/web/nginx.%domain_idn%.conf*;
 }

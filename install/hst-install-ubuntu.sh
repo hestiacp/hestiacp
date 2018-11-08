@@ -1360,13 +1360,11 @@ fi
 # Configuring MySQL/MariaDB host
 if [ "$mysql" = 'yes' ]; then
     $HESTIA/bin/v-add-database-host mysql localhost root $mpass
-    $HESTIA/bin/v-add-database admin default default $(gen_pass) mysql
 fi
 
 # Configuring PostgreSQL host
 if [ "$postgresql" = 'yes' ]; then
     $HESTIA/bin/v-add-database-host pgsql localhost postgres $ppass
-    $HESTIA/bin/v-add-database admin db db $(gen_pass) pgsql
 fi
 
 # Adding default domain

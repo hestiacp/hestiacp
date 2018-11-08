@@ -41,6 +41,7 @@ maxretry = 5
 [roundcube-auth]
 enabled  = false
 filter   = roundcube-auth
+action   = hestia[name=MAIL]
 port     = http,https
 logpath  = /var/log/roundcube/errors
 maxretry = 5

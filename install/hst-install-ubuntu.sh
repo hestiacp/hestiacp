@@ -1412,9 +1412,6 @@ $HESTIA/bin/v-add-cron-hestia-autoupdate
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
 
-# Sending install notification to hestiacp.com
-wget https://www.hestiacp.com/notify/?os=$os\&version=$release -O /dev/null -q
-
 # Comparing hostname and IP
 host_ip=$(host $servername| head -n 1 |awk '{print $NF}')
 if [ "$host_ip" = "$ip" ]; then

@@ -540,7 +540,12 @@ cp -r /etc/mysql/* $hst_backups/mysql > /dev/null 2>&1
 mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
 if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
     if [ -e '/etc/init.d/mysql' ]; then
-        mkdir -p /var/lib/mysql > /dev/null 2>&1
+        if [ -d '/var/lib/mysql' ]; then
+            rm -fr /var/lib/mysql
+            mkdir -p /var/lib/mysql
+        else
+            mkdir -p /var/lib/mysql
+        fi
         chown mysql:mysql /var/lib/mysql
         mysqld --initialize-insecure
     fi

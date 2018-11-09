@@ -9,7 +9,7 @@ GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/master/src/deb'
 
 # Set Version for compiling
 HESTIA_V='0.9.8-24_amd64'
-NGINX_V='1.15.5'
+NGINX_V='1.15.6'
 OPENSSL_V='1.1.1'
 PCRE_V='8.42'
 ZLIB_V='1.2.11'

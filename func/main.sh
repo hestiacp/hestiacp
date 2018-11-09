@@ -940,38 +940,13 @@ format_aliases() {
 }
 
 
-wait_for_backup_if_it_is_not_time_for_backup() {
+check_backup_conditions() {
     # Checking load average
     la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
     # i=0
     while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
         echo -e "$(date "+%F %T") Load Average $la"
         sleep 60
-        # if [ "$i" -ge "15" ]; then
-            # la_error="LoadAverage $la is above threshold"
-            # echo "$la_error" |$SENDMAIL -s "$subj" $email $notify
-            # sed -i "/ $user /d" $VESTA/data/queue/backup.pipe
-            # check_result $E_LA "$la_error"
-        # fi
         la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
-        # (( ++i))
     done
-
-    # block backup if current hour is after 6 AM
-    WAIT_LOOP_ENTERED=0
-    if pgrep -x "v-backup-users" > /dev/null
-    then
-        hour=$(date +"%H");
-        while [ "$hour" -gt "6" ]; do
-            # if [ "$WAIT_LOOP_ENTERED" -eq 0 ]; then
-                # do something when enter sleeping state
-                # $BIN/v-restart-web-backend
-            # fi
-            WAIT_LOOP_ENTERED=1
-            current_date_time="`date "+%Y-%m-%d %H:%M:%S"`";
-            echo "$current_date_time - wait to backup user $user - current hour is $hour";
-            sleep 300
-            hour=$(date +"%H");
-        done
-    fi
 }

@@ -191,7 +191,7 @@ $(function() {
 
 function WEBrandom() {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = 10;
+    var string_length = 16;
     var webrandom = '';
     for (var i = 0; i < string_length; i++) {
         var rnum = Math.floor(Math.random() * chars.length);
@@ -202,7 +202,7 @@ function WEBrandom() {
 
 function FTPrandom(elm) {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = 10;
+    var string_length = 16;
     var ftprandomstring = '';
     for (var i = 0; i < string_length; i++) {
         var rnum = Math.floor(Math.random() * chars.length);

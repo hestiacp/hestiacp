@@ -1068,11 +1068,21 @@ if [ "$mysql" = 'yes' ]; then
     mysqladmin -u root password $mpass
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
-    mysql -e "DELETE FROM mysql.user WHERE User=''"
-    mysql -e "DROP DATABASE test" >/dev/null 2>&1
-    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-    mysql -e "DELETE FROM mysql.user WHERE user='' or password='';"
-    mysql -e "FLUSH PRIVILEGES"
+    if [ "$release" = '8' ]; then
+        mysql -e "DELETE FROM mysql.user WHERE User=''"
+        mysql -e "DROP DATABASE test" >/dev/null 2>&1
+        mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+        mysql -e "DELETE FROM mysql.user WHERE user='' or password='';"
+        mysql -e "FLUSH PRIVILEGES"
+    fi
+    if [ "$release" = '9' ]; then
+        mysql -e "DELETE FROM mysql.user WHERE User=''"
+        mysql -e "DROP DATABASE test" >/dev/null 2>&1
+        mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+        mysql -e "DELETE FROM mysql.user WHERE user='';"
+        mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$mpass';"
+        mysql -e "FLUSH PRIVILEGES"
+    fi
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then

@@ -1419,8 +1419,8 @@ fi
 
 # Sending notification to admin email
 echo -e "Congratulations, you have just successfully installed \
-
 Hestia Control Panel
+
     https://$ip:$port
     username: admin
     password: $vpass

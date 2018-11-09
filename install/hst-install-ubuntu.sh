@@ -538,18 +538,6 @@ killall -9 mysqld > /dev/null 2>&1
 mv /var/lib/mysql $hst_backups/mysql/mysql_datadir > /dev/null 2>&1
 cp -r /etc/mysql/* $hst_backups/mysql > /dev/null 2>&1
 mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
-if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
-    if [ -e '/etc/init.d/mysql' ]; then
-        if [ -d '/var/lib/mysql' ]; then
-            rm -fr /var/lib/mysql
-            mkdir -p /var/lib/mysql
-        else
-            mkdir -p /var/lib/mysql
-        fi
-        chown mysql:mysql /var/lib/mysql
-        mysqld --initialize-insecure
-    fi
-fi
 
 # Backup Hestia
 service hestia stop > /dev/null 2>&1
@@ -1058,14 +1046,19 @@ if [ "$mysql" = 'yes' ]; then
     # Configuring MySQL/MariaDB
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
     if [ "$release" = '14.04' ]; then
-        mysql_install_db
+        mysql_install_db >/dev/null 2>&1
     fi
     if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
-        if [ ! -d "/var/lib/mysql" ]; then
-            mkdir /var/lib/mysql
+        if [ -e '/etc/init.d/mysql' ]; then
+            if [ -d '/var/lib/mysql' ]; then
+                rm -fr /var/lib/mysql
+                mkdir -p /var/lib/mysql
+            else
+                mkdir -p /var/lib/mysql
+            fi
+            chown mysql:mysql /var/lib/mysql
+            mysqld --initialize-insecure >/dev/null 2>&1
         fi
-        chown mysql:mysql /var/lib/mysql
-        mysqld --initialize-insecure
     fi
     update-rc.d mysql defaults
     service mysql start

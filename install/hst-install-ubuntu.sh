@@ -1180,6 +1180,9 @@ if [ "$dovecot" = 'yes' ]; then
     gpasswd -a dovecot mail
     cp -rf $hestiacp/dovecot /etc/
     cp -f $hestiacp/logrotate/dovecot /etc/logrotate.d/
+    if [ "$release" = '18.04' ]; then
+        rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+    fi
     chown -R root:root /etc/dovecot*
     update-rc.d dovecot defaults
     service dovecot start

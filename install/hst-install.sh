@@ -50,7 +50,7 @@ fi
 
 # Check wget
 if [ -e '/usr/bin/wget' ]; then
-    wget https://raw.githubusercontent.com/hestiacp/hestiacp/master/install/hst-install-$type.sh -O hst-install-$type.sh
+    wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/master/install/hst-install-$type.sh -O hst-install-$type.sh
     if [ "$?" -eq '0' ]; then
         bash hst-install-$type.sh $*
         exit
@@ -62,7 +62,7 @@ fi
 
 # Check curl
 if [ -e '/usr/bin/curl' ]; then
-    curl -O https://raw.githubusercontent.com/hestiacp/hestiacp/master/install/hst-install-$type.sh
+    curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/master/install/hst-install-$type.sh
     if [ "$?" -eq '0' ]; then
         bash hst-install-$type.sh $*
         exit

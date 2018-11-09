@@ -10,7 +10,7 @@
 # Changed some lines to fit to Hestia Configuration.
 #
 
-PASS=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -c 32 ; echo`
+PASS=$(gen_pass)
 
 #ubuntu phpmyadmin path
 pmapath1="/etc/phpmyadmin/config.inc.php"

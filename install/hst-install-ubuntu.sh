@@ -570,11 +570,6 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-php5//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
-if [ "$phpfpm" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/php7.0-fpm//")
-    software=$(echo "$software" | sed -e "s/php5-fpm//")
-    software=$(echo "$software" | sed -e "s/php-fpm//")
-fi
 if [ "$vsftpd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/vsftpd//")
 fi

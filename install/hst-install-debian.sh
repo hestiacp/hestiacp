@@ -1344,6 +1344,17 @@ fi
 
 source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
 
+
+#----------------------------------------------------------#
+#                     Clear Up Files                       #
+#----------------------------------------------------------#
+
+# Check and remove deb_signing.key
+if [ -f deb_signing.key ]; then
+    rm deb_signing.key
+fi
+
+
 #----------------------------------------------------------#
 #                   Configure Admin User                   #
 #----------------------------------------------------------#
@@ -1478,13 +1489,16 @@ fi
 
 # Sending notification to admin email
 echo -e "Congratulations, you have just successfully installed \
+
 Hestia Control Panel
     https://$ip:$port
     username: admin
     password: $vpass
+
 We hope that you enjoy your installation of Hestia. Please \
 feel free to contact us anytime if you have any questions.
 Thank you.
+
 --
 Sincerely yours
 hestiacp.com team

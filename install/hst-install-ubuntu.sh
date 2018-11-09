@@ -566,12 +566,12 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-php7.0//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php7.2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php5//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$phpfpm" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/php7.0-fpm//")
+    software=$(echo "$software" | sed -e "s/php7.2-fpm//")
     software=$(echo "$software" | sed -e "s/php5-fpm//")
     software=$(echo "$software" | sed -e "s/php-fpm//")
 fi
@@ -607,7 +607,7 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mysql-server//')
     software=$(echo "$software" | sed -e 's/mysql-client//')
     software=$(echo "$software" | sed -e 's/mysql-common//')
-    software=$(echo "$software" | sed -e 's/php7.0-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.2-mysql//')
     software=$(echo "$software" | sed -e 's/php5-mysql//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
     software=$(echo "$software" | sed -e 's/phpMyAdmin//')
@@ -616,7 +616,7 @@ fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
-    software=$(echo "$software" | sed -e 's/php7.0-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.2-pgsql//')
     software=$(echo "$software" | sed -e 's/php5-pgsql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')

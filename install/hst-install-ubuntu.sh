@@ -1443,7 +1443,7 @@ END
 )
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
-cat $tmpfile | php $send_mail -s "Hestia Control Panel" $email
+echo $content | php $send_mail -s "Hestia Control Panel" $email
 
 # Congrats
 echo '======================================================='
@@ -1455,7 +1455,6 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo
-cat $tmpfile
-rm -f $tmpfile
+echo $content
 
 # EOF

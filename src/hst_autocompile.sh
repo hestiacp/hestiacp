@@ -221,7 +221,10 @@ if [ "$PHP_B" = true ] ; then
    
   # Get php-fpm.conf
   wget $GIT_REP/php/php-fpm.conf -O usr/local/hestia/php/etc/php-fpm.conf
-  
+
+  # Get php.ini
+  wget $GIT_REP/php/php.ini -O usr/local/hestia/php/lib/php.ini  
+
   # copy binary
   cp usr/local/hestia/php/sbin/php-fpm usr/local/hestia/php/sbin/hestia-php
   

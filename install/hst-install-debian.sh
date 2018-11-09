@@ -1477,24 +1477,25 @@ if [ "$host_ip" = "$ip" ]; then
 fi
 
 # Sending notification to admin email
-echo -e "Congratulations, you have just successfully installed \
-Hestia Control Panel
+content=$(cat <<-END
+Congratulations, you have just successfully installed Hestia Control Panel!
 
     https://$ip:$port
     username: admin
     password: $vpass
 
-We hope that you enjoy your installation of Hestia. Please \
+We hope that you enjoy your installation of Hestia. Please
 feel free to contact us anytime if you have any questions.
 Thank you.
 
 --
 Sincerely yours
 hestiacp.com team
-" > $tmpfile
+END
+)
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
-cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
+cat $tmpfile | php $send_mail -s "Hestia Control Panel" $email
 
 # Congrats
 echo '======================================================='

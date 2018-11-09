@@ -1491,7 +1491,7 @@ hestiacp.com team
 " > $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
-cat $tmpfile | php $send_mail -s "Hestia Control Panel" $email
+cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
 # Congrats
 echo '======================================================='

@@ -143,12 +143,7 @@ function render_page($user, $TAB, $page) {
 
     // Extarct global variables
     // I think those variables should be passed via arguments
-    //*
     extract($GLOBALS, EXTR_SKIP);
-    /*/
-    $variables = array_filter($GLOBALS, function($key){return preg_match('/^(v_|[a-z])[a-z\d]+$/', $key);}, ARRAY_FILTER_USE_KEY);
-    extract($variables, EXTR_OVERWRITE);
-    //*/
 
     // Body
     if (($_SESSION['user'] !== 'admin') && (@include($__template_dir . "user/$page.html"))) {

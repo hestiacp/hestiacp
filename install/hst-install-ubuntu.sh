@@ -17,6 +17,7 @@ os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
 hestiacp="$HESTIA/install/$VERSION/$release"
+pma_v='4.8.3'
 
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
@@ -1088,6 +1089,32 @@ if [ "$mysql" = 'yes' ]; then
     cp -f $hestiacp/pma/config.inc.php /etc/phpmyadmin/
     chmod 777 /var/lib/phpmyadmin/tmp
 fi
+
+
+#----------------------------------------------------------#
+#                    Update phpMyAdmin                     #
+#----------------------------------------------------------#
+
+# Download latest phpmyadmin release
+wget https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+
+# Unpack files
+tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+
+# Delete file to prevent error
+if [ "$pma_#----------------------------------------------------------#
+#                    Update phpMyAdmin                     #
+v" = '4.8.3' ]; then
+    rm -fr /usr/share/phpmyadmin/doc/html
+fi
+
+# Overwrite old files
+cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+# Clear Up
+rm -fr phpMyAdmin-$pma_v-all-languages
+rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
+
 
 #----------------------------------------------------------#
 #                   Configure PostgreSQL                   #

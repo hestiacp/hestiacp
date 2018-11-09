@@ -17,6 +17,7 @@ os='debian'
 release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 hestiacp="$HESTIA/install/$VERSION/$release"
+pma_v='4.8.3'
 
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -1088,6 +1089,32 @@ if [ "$mysql" = 'yes' ]; then
     cp -f $hestiacp/pma/config.inc.php /etc/phpmyadmin/
     chmod 777 /var/lib/phpmyadmin/tmp
 fi
+
+
+#----------------------------------------------------------#
+#                    Update phpMyAdmin                     #
+#----------------------------------------------------------#
+
+# Download latest phpmyadmin release
+wget https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+
+# Unpack files
+tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+
+# Delete file to prevent error
+if [ "$pma_#----------------------------------------------------------#
+#                    Update phpMyAdmin                     #
+v" = '4.8.3' ]; then
+    rm -fr /usr/share/phpmyadmin/doc/html
+fi
+
+# Overwrite old files
+cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+# Clear Up
+rm -fr phpMyAdmin-$pma_v-all-languages
+rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
+
 
 #----------------------------------------------------------#
 #                   Configure PostgreSQL                   #

@@ -1112,6 +1112,10 @@ cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 # Set config directory
 sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
+# Create temporary folder and change permission
+mkdir /usr/share/phpmyadmin/tmp
+chmod 777 /usr/share/phpmyadmin/tmp
+
 # Clear Up
 rm -fr phpMyAdmin-$pma_v-all-languages
 rm -f phpMyAdmin-$pma_v-all-languages.tar.gz

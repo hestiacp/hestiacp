@@ -1102,14 +1102,15 @@ wget https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-langua
 tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
 # Delete file to prevent error
-if [ "$pma_#----------------------------------------------------------#
-#                    Update phpMyAdmin                     #
-v" = '4.8.3' ]; then
+if [ "$pma_v" = '4.8.3' ]; then
     rm -fr /usr/share/phpmyadmin/doc/html
 fi
 
 # Overwrite old files
 cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+# Set config directory
+sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
 # Clear Up
 rm -fr phpMyAdmin-$pma_v-all-languages

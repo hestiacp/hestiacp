@@ -493,8 +493,8 @@ fi
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-wget https://gpg.hestiacp.com/deb_signing.key -O deb_signing.key
-apt-key add deb_signing.key
+wget https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
+apt-key add /tmp/deb_signing.key
 
 
 #----------------------------------------------------------#
@@ -1343,16 +1343,6 @@ fi
 # https://github.com/skurudo/phpmyadmin-fixer
 
 source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
-
-
-#----------------------------------------------------------#
-#                     Clear Up Files                       #
-#----------------------------------------------------------#
-
-# Check and remove deb_signing.key
-if [ -f deb_signing.key ]; then
-    rm deb_signing.key
-fi
 
 
 #----------------------------------------------------------#

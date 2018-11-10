@@ -155,8 +155,9 @@ if [ "$NGINX_B" = true ] ; then
   # copy binary
   cp usr/local/hestia/nginx/sbin/nginx usr/local/hestia/nginx/sbin/hestia-nginx
   
-  # build the package
-  cd /usr/src
+  # change permission and build the package
+  cd $BUILD_DIR
+  chown -R  root:root hestia-nginx_$HESTIA_V
   dpkg-deb --build hestia-nginx_$HESTIA_V
   
   # clear up the source folder
@@ -228,8 +229,9 @@ if [ "$PHP_B" = true ] ; then
   # copy binary
   cp usr/local/hestia/php/sbin/php-fpm usr/local/hestia/php/sbin/hestia-php
   
-  # build the package
-  cd /usr/src
+  # change permission and build the package
+  cd $BUILD_DIR
+  chown -R  root:root hestia-php_$HESTIA_V
   dpkg-deb --build hestia-php_$HESTIA_V
   
   # clear up the source folder
@@ -281,8 +283,9 @@ if [ "$HESTIA_B" = true ] ; then
   cd ../hestia_$HESTIA_V/usr/local/hestia/bin
   chmod +x *
   
-  # build the package
-  cd /usr/src
+  # change permission and build the package
+  cd $BUILD_DIR
+  chown -R root:root hestia_$HESTIA_V
   dpkg-deb --build hestia_$HESTIA_V
   
   # clear up the source folder

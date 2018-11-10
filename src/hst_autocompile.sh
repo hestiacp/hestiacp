@@ -1,7 +1,7 @@
 # Autocompile Script for HestiaCP deb Files.
 
 # Set compiling directory
-BUILD_DIR='/usr/src'
+BUILD_DIR='/root'
 INSTALL_DIR='/usr/local/hestia'
 
 # Set git repository raw path

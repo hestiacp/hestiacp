@@ -113,9 +113,12 @@ if [ "$aliases" = 'none' ]; then
     ALIAS=''
 else
     ALIAS="www.$domain"
-    if [ ! -z "$aliases" ]; then
-        ALIAS="$ALIAS,$aliases"
+    if [ -z "$aliases" ]; then
+        ALIAS="www.$domain"
+    else
+        ALIAS="$aliases"
     fi
+
     ip_alias=$(get_ip_alias $domain)
     if [ ! -z "$ip_alias" ]; then
         ALIAS="$ALIAS,$ip_alias"

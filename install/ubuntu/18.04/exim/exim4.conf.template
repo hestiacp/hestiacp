@@ -138,7 +138,7 @@ acl_check_rcpt:
 acl_check_data:
 .ifdef CLAMD
   deny   message        = Message contains a virus ($malware_name) and has been rejected
-         malware        = *
+         malware        = */defer_ok
          condition      = ${if eq{$acl_m0}{yes}{yes}{no}}
 .endif
 

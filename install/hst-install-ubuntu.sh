@@ -497,7 +497,7 @@ mkdir spamassassin mysql postgresql hestia
 
 # Backup nginx configuration
 service nginx stop > /dev/null 2>&1
-cp -r /etc/nginx/* $hst_backups/nginx >/dev/null 2>&1
+cp -r /etc/nginx/* $hst_backups/nginx > /dev/null 2>&1
 
 # Backup Apache configuration
 service apache2 stop > /dev/null 2>&1
@@ -664,7 +664,7 @@ chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
 echo "We will now silently install all required packages. This process will take around 5-10 minutes..."
-apt-get -y install $software >/dev/null 2>&1
+apt-get -y install $software > /dev/null 2>&1
 check_result $? "apt-get install failed"
 
 # Restoring autostart policy
@@ -1072,14 +1072,14 @@ if [ "$mysql" = 'yes' ]; then
     chmod 600 /root/.my.cnf
     if [ "$release" = '16.04' ]; then
         mysql -e "DELETE FROM mysql.user WHERE User=''"
-        mysql -e "DROP DATABASE test" >/dev/null 2>&1
+        mysql -e "DROP DATABASE test" > /dev/null 2>&1
         mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
         mysql -e "DELETE FROM mysql.user WHERE user='' OR password='';"
         mysql -e "FLUSH PRIVILEGES"
     fi
     if [ "$release" = '18.04' ]; then
         mysql -e "DELETE FROM mysql.user WHERE User=''"
-        mysql -e "DROP DATABASE test" >/dev/null 2>&1
+        mysql -e "DROP DATABASE test" > /dev/null 2>&1
         mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
         mysql -e "DELETE FROM mysql.user WHERE user='';"
         mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$mpass';"
@@ -1254,7 +1254,7 @@ if [ "$spamd" = 'yes' ]; then
     check_result $? "spamassassin start failed"
     unit_files="$(systemctl list-unit-files |grep spamassassin)"
     if [[ "$unit_files" =~ "disabled" ]]; then
-        systemctl enable spamassassin
+        systemctl enable spamassassin > dev/null 2>&1
     fi
 fi
 
@@ -1361,10 +1361,10 @@ source $hestiacp/phpmyadmin/pma.sh  > /dev/null 2>&1
 # Deleting old admin user
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     chattr -i /home/admin/conf > /dev/null 2>&1
-    userdel -f admin >/dev/null 2>&1
-    chattr -i /home/admin/conf >/dev/null 2>&1
-    mv -f /home/admin  $hst_backups/home/ >/dev/null 2>&1
-    rm -f /tmp/sess_* >/dev/null 2>&1
+    userdel -f admin > /dev/null 2>&1
+    chattr -i /home/admin/conf > /dev/null 2>&1
+    mv -f /home/admin  $hst_backups/home/ > /dev/null 2>&1
+    rm -f /tmp/sess_* > /dev/null 2>&1
 fi
 if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1

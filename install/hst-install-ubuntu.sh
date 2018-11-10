@@ -659,7 +659,8 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-apt-get -y install $software
+echo "We will now silently install all required packages. This process will take around 5-10 minutes..."
+apt-get -y install $software >/dev/null 2>&1
 check_result $? "apt-get install failed"
 
 # Restoring autostart policy

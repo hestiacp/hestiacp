@@ -1254,7 +1254,7 @@ if [ "$spamd" = 'yes' ]; then
     check_result $? "spamassassin start failed"
     unit_files="$(systemctl list-unit-files |grep spamassassin)"
     if [[ "$unit_files" =~ "disabled" ]]; then
-        systemctl enable spamassassin > dev/null 2>&1
+        systemctl enable spamassassin > /dev/null 2>&1
     fi
 fi
 

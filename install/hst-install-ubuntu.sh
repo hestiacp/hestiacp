@@ -105,7 +105,7 @@ set_default_lang() {
         bs da en fi id ka pl ro tr vi
         cn de es fr it nl pt-BR ru tw
         bg ko sr th ur"
-    if !(echo $lang_list |grep -w $lang 1>&2>/dev/null); then
+    if !(echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
 }
@@ -258,24 +258,27 @@ apt-get -qq update
 
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
-    apt-get -y install wget
+    echo "Install missing wget..."
+    apt-get -y install wget > /dev/null 2>&1
     check_result $? "Can't install wget"
 fi
 
 # Check if apt-transport-https is installed
 if [ ! -e '/usr/lib/apt/methods/https' ]; then
-    apt-get -y install apt-transport-https
+    echo "Install missing apt-transport-https..."
+    apt-get -y install apt-transport-https  > /dev/null 2>&1
     check_result $? "Can't install apt-transport-https"
 fi
 
 # Check if apt-add-repository is installed
 if [ ! -e '/usr/bin/apt-add-repository' ]; then
-    apt-get -y install python-software-properties
+    echo "Install missing apt-add-repository..."
+    apt-get -y install python-software-properties > /dev/null 2>&1
     check_result $? "Can't install python-software-properties"
 fi
 
 # Checking repository availability
-wget -q "https://$GPG/deb_signing.key" -O /dev/null
+wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
 check_result $? "No access to Hestia repository"
 
 # Checking installed packages
@@ -460,15 +463,16 @@ fi
 #----------------------------------------------------------#
 
 # Updating system
-apt-get -y upgrade
+echo "Upgrade System using apt-get..."
+apt-get -y upgrade > /dev/null 2>&1
 check_result $? 'apt-get upgrade failed'
 
 # Installing nginx repo
 apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/mainline/ubuntu/ $codename nginx" \
     > $apt/nginx.list
-wget http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-apt-key add /tmp/nginx_signing.key
+wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 
 if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
@@ -477,8 +481,8 @@ fi
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-wget https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-apt-key add /tmp/deb_signing.key
+wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
+apt-key add /tmp/deb_signing.key > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
@@ -652,7 +656,7 @@ fi
 #----------------------------------------------------------#
 
 # Updating system
-apt-get update
+apt-get -qq update
 
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
@@ -887,10 +891,10 @@ if [ "$nginx" = 'yes' ]; then
     echo > /etc/nginx/conf.d/hestia.conf
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
-        update-rc.d php5.6-fpm defaults
-        update-rc.d php7.0-fpm defaults
-        update-rc.d php7.1-fpm defaults
-        update-rc.d php7.2-fpm defaults
+        update-rc.d php5.6-fpm defaults > /dev/null 2>&1
+        update-rc.d php7.0-fpm defaults > /dev/null 2>&1
+        update-rc.d php7.1-fpm defaults > /dev/null 2>&1
+        update-rc.d php7.2-fpm defaults > /dev/null 2>&1
         cp -r /etc/php/5.6/ /root/hst_install_backups/php5.6/
         rm -f /etc/php/5.6/fpm/pool.d/*
         cp -r /etc/php/7.0/ /root/hst_install_backups/php7.0/
@@ -906,11 +910,11 @@ if [ "$nginx" = 'yes' ]; then
         ln -s $HESTIA/data/templates/web/nginx/PHP-72.tpl $HESTIA/data/templates/web/nginx/default.tpl
         ln -s $HESTIA/data/templates/web/nginx/PHP-72.stpl $HESTIA/data/templates/web/nginx/default.stpl
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
-        service php7.2-fpm start
+        service php7.2-fpm start > /dev/null 2>&1
         check_result $? "php7.2-fpm start failed"
     fi
-    update-rc.d nginx defaults
-    service nginx start
+    update-rc.d nginx defaults > /dev/null 2>&1
+    service nginx start > /dev/null 2>&1
     check_result $? "nginx start failed"
 fi
 
@@ -923,11 +927,11 @@ if [ "$apache" = 'yes'  ]; then
     cp -f $hestiacp/apache2/apache2.conf /etc/apache2/
     cp -f $hestiacp/apache2/status.conf /etc/apache2/mods-enabled/
     cp -f $hestiacp/logrotate/apache2 /etc/logrotate.d/
-    a2enmod rewrite
-    a2enmod suexec
-    a2enmod ssl
-    a2enmod actions
-    a2enmod ruid2
+    a2enmod rewrite > /dev/null 2>&1
+    a2enmod suexec > /dev/null 2>&1
+    a2enmod ssl > /dev/null 2>&1
+    a2enmod actions > /dev/null 2>&1
+    a2enmod ruid2 > /dev/null 2>&1
     mkdir -p /etc/apache2/conf.d
     echo > /etc/apache2/conf.d/hestia.conf
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
@@ -940,15 +944,15 @@ if [ "$apache" = 'yes'  ]; then
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
     if [ "$multiphp" = 'yes' ] ; then
-        a2enmod proxy_fcgi setenvif
-        a2enconf php5.6-fpm
-        a2enconf php7.0-fpm
-        a2enconf php7.1-fpm
-        a2enconf php7.2-fpm
-        update-rc.d php5.6-fpm defaults
-        update-rc.d php7.0-fpm defaults
-        update-rc.d php7.1-fpm defaults
-        update-rc.d php7.2-fpm defaults
+        a2enmod proxy_fcgi setenvif > /dev/null 2>&1
+        a2enconf php5.6-fpm > /dev/null 2>&1
+        a2enconf php7.0-fpm > /dev/null 2>&1
+        a2enconf php7.1-fpm > /dev/null 2>&1
+        a2enconf php7.2-fpm > /dev/null 2>&1
+        update-rc.d php5.6-fpm defaults > /dev/null 2>&1
+        update-rc.d php7.0-fpm defaults > /dev/null 2>&1
+        update-rc.d php7.1-fpm defaults > /dev/null 2>&1
+        update-rc.d php7.2-fpm defaults > /dev/null 2>&1
         cp -r /etc/php/5.6/ /root/vst_install_backups/php5.6/
         rm -f /etc/php/5.6/fpm/pool.d/*
         cp -r /etc/php/7.0/ /root/vst_install_backups/php7.0/
@@ -960,12 +964,12 @@ if [ "$apache" = 'yes'  ]; then
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
     fi
-    update-rc.d apache2 defaults
-    service apache2 start
+    update-rc.d apache2 defaults > /dev/null 2>&1
+    service apache2 start > /dev/null 2>&1
     check_result $? "apache2 start failed"
 else
-    update-rc.d apache2 disable >/dev/null 2>&1
-    service apache2 stop >/dev/null 2>&1
+    update-rc.d apache2 disable  > /dev/null 2>&1
+    service apache2 stop  > /dev/null 2>&1
 fi
 
 
@@ -975,8 +979,8 @@ fi
 
 if [ "$phpfpm" = 'yes' ]; then
     cp -f $hestiacp/php-fpm/www.conf /etc/php/7.2/fpm/pool.d/www.conf
-    update-rc.d php7.2-fpm defaults
-    service php7.2-fpm start
+    update-rc.d php7.2-fpm defaults > /dev/null 2>&1
+    service php7.2-fpm start > /dev/null 2>&1
     check_result $? "php-fpm start failed"
 fi
 
@@ -1021,8 +1025,8 @@ fi
 if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $hestiacp/proftpd/proftpd.conf /etc/proftpd/
-    update-rc.d proftpd defaults
-    service proftpd start
+    update-rc.d proftpd defaults > /dev/null 2>&1
+    service proftpd start > /dev/null 2>&1
     check_result $? "proftpd start failed"
 fi
 
@@ -1043,7 +1047,7 @@ if [ "$mysql" = 'yes' ]; then
     # Configuring MySQL/MariaDB
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
     if [ "$release" = '14.04' ]; then
-        mysql_install_db >/dev/null 2>&1
+        mysql_install_db > /dev/null 2>&1
     fi
     if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
         if [ -e '/etc/init.d/mysql' ]; then
@@ -1054,7 +1058,7 @@ if [ "$mysql" = 'yes' ]; then
                 mkdir -p /var/lib/mysql
             fi
             chown mysql:mysql /var/lib/mysql
-            mysqld --initialize-insecure >/dev/null 2>&1
+            mysqld --initialize-insecure > /dev/null 2>&1
         fi
     fi
     update-rc.d mysql defaults
@@ -1063,7 +1067,7 @@ if [ "$mysql" = 'yes' ]; then
 
     # Securing MySQL/MariaDB installation
     mpass=$(gen_pass)
-    mysqladmin -u root password $mpass
+    mysqladmin -u root password $mpass > /dev/null 2>&1
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
     if [ "$release" = '16.04' ]; then
@@ -1096,8 +1100,11 @@ fi
 #                    Update phpMyAdmin                     #
 #----------------------------------------------------------#
 
+# Show Upgrade Information
+echo "Upgrade phpMyAdmin to v$pma_v..."
+
 # Download latest phpmyadmin release
-wget https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
 # Unpack files
 tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -1150,9 +1157,9 @@ if [ "$named" = 'yes' ]; then
     sed -i "s%listen-on%//listen%" /etc/bind/named.conf.options
     chown root:bind /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf
-    aa-complain /usr/sbin/named 2>/dev/null
+    aa-complain /usr/sbin/named > /dev/null 2>&1
     echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2>/dev/null
-    service apparmor status >/dev/null 2>&1
+    service apparmor status > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         service apparmor restart
     fi
@@ -1171,7 +1178,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$exim" = 'yes' ]; then
-    gpasswd -a Debian-exim mail
+    gpasswd -a Debian-exim mail > /dev/null 2>&1
     cp -f $hestiacp/exim/exim4.conf.template /etc/exim4/
     cp -f $hestiacp/exim/dnsbl.conf /etc/exim4/
     cp -f $hestiacp/exim/spam-blocks.conf /etc/exim4/
@@ -1206,7 +1213,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ]; then
-    gpasswd -a dovecot mail
+    gpasswd -a dovecot mail > /dev/null 2>&1
     cp -rf $hestiacp/dovecot /etc/
     cp -f $hestiacp/logrotate/dovecot /etc/logrotate.d/
     if [ "$release" = '18.04' ]; then
@@ -1224,8 +1231,8 @@ fi
 #----------------------------------------------------------#
 
 if [ "$clamd" = 'yes' ]; then
-    gpasswd -a clamav mail
-    gpasswd -a clamav Debian-exim
+    gpasswd -a clamav mail > /dev/null 2>&1
+    gpasswd -a clamav Debian-exim > /dev/null 2>&1
     cp -f $hestiacp/clamav/clamd.conf /etc/clamav/
     update-rc.d clamav-daemon defaults
     service clamav-daemon start
@@ -1241,9 +1248,9 @@ fi
 #----------------------------------------------------------#
 
 if [ "$spamd" = 'yes' ]; then
-    update-rc.d spamassassin defaults
+    update-rc.d spamassassin defaults > /dev/null 2>&1
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
-    service spamassassin start
+    service spamassassin start > /dev/null 2>&1
     check_result $? "spamassassin start failed"
     unit_files="$(systemctl list-unit-files |grep spamassassin)"
     if [[ "$unit_files" =~ "disabled" ]]; then

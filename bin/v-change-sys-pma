@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change phpmyadmin alias url
-# options: PORT
+# options: PMA
 #
 # The function is to change the phpmyadmin url in apache2 or nginx configuration.
 
@@ -39,10 +39,10 @@ if [ -f /etc/nginx/conf.d/phpmyadmin.inc ]; then
 fi
 
 # Check if alias is different for apach2
-if [ -z "$apache2_pma" ]; 
-    if [ ! "$apache2_pma" = "$PMA" ]; then
+if [ -z "$apache_pma" ]; then
+    if [ ! "$apache_pma" = "$PMA" ]; then
         # Replace pma alias in config files.
-        sed -i "s|Alias $nginx_pma|Alias $PMA|" /etc/apache2/conf.d/phpmyadmin.conf
+        sed -i "s|Alias $apache_pma|Alias $PMA|" /etc/apache2/conf.d/phpmyadmin.conf
 
         # Restart services
         $HESTIA/bin/v-restart-service apache2
@@ -50,7 +50,7 @@ if [ -z "$apache2_pma" ];
 fi
 
 # Check if alias is different for nginx
-if [ -z "$nginx_pma" ]; 
+if [ -z "$nginx_pma" ]; then
     if [ ! "$nginx_pma" = "$PMA" ]; then
         # Replace pma alias in config files.
         sed -i "s|$nginx_pma|$PMA|" /etc/nginx/conf.d/phpmyadmin.inc

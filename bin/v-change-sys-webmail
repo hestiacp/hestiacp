@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change webmail alias url
-# options: PORT
+# options: WEBMAIL
 #
 # The function is to change the webmail url in apache2 or nginx configuration.
 
@@ -21,7 +21,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'PMA'
+check_args '1' "$#" 'WEBMAIL'
 
 
 #----------------------------------------------------------#
@@ -39,10 +39,10 @@ if [ -f /etc/nginx/conf.d/roundcube.inc ]; then
 fi
 
 # Check if alias is different for apach2
-if [ -z "$apache2_webmail" ]; 
-    if [ ! "$apache2_webmail" = "$WEBMAIL" ]; then
+if [ -z "$apache_webmail" ]; then
+    if [ ! "$apache_webmail" = "$WEBMAIL" ]; then
         # Replace webmail alias in config files.
-        sed -i "s|Alias $nginx_webmail|Alias $WEBMAIL|" /etc/apache2/conf.d/roundcube.conf
+        sed -i "3/s|Alias $apache_webmail|Alias $WEBMAIL|" /etc/apache2/conf.d/roundcube.conf
 
         # Restart services
         $HESTIA/bin/v-restart-service apache2
@@ -50,7 +50,7 @@ if [ -z "$apache2_webmail" ];
 fi
 
 # Check if alias is different for nginx
-if [ -z "$nginx_webmail" ]; 
+if [ -z "$nginx_webmail" ]; then
     if [ ! "$nginx_webmail" = "$WEBMAIL" ]; then
         # Replace webmail alias in config files.
         sed -i "s|$nginx_webmail|$WEBMAIL|" /etc/nginx/conf.d/webmail.inc

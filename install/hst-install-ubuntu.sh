@@ -439,9 +439,9 @@ fi
 hst_backups="/root/hst_install_backups/$(date +%s)"
 echo "Installation backup directory: $hst_backups"
 
-# Printing start message and sleeping for 5 seconds
-echo -e "\n\n\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes...\n"
-
+# Printing start message and sleeping for 2 seconds
+echo -e "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes...\n"
+sleep 2
 
 #----------------------------------------------------------#
 #                      Checking swap                       #
@@ -1477,12 +1477,6 @@ cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
 # Congrats
 echo '======================================================='
-echo
-echo '  _   _           _   _        ____ ____  '
-echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
-echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
-echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
-echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo
 cat $tmpfile

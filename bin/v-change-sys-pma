@@ -1,0 +1,72 @@
+#!/bin/bash
+# info: change phpmyadmin alias url
+# options: PORT
+#
+# The function is to change the phpmyadmin url in apache2 or nginx configuration.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+PMA=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'PMA'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get existing apache2 pma alias
+if [ -f /etc/apache2/conf.d/phpmyadmin.conf ]; then
+    apache_pma=$(cat /etc/apache2/conf.d/phpmyadmin.conf | grep "Alias" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
+fi
+
+# Get existing nginx pma alias
+if [ -f /etc/nginx/conf.d/phpmyadmin.inc ]; then
+    nginx_pma=$(cat /etc/nginx/conf.d/phpmyadmin.inc | grep "location" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
+fi
+
+# Check if alias is different for apach2
+if [ -z "$apache2_pma" ]; 
+    if [ ! "$apache2_pma" = "$PMA" ]; then
+        # Replace pma alias in config files.
+        sed -i "s|Alias $nginx_pma|Alias $PMA|" /etc/apache2/conf.d/phpmyadmin.conf
+
+        # Restart services
+        $HESTIA/bin/v-restart-service apache2
+    fi
+fi
+
+# Check if alias is different for nginx
+if [ -z "$nginx_pma" ]; 
+    if [ ! "$nginx_pma" = "$PMA" ]; then
+        # Replace pma alias in config files.
+        sed -i "s|$nginx_pma|$PMA|" /etc/nginx/conf.d/phpmyadmin.inc
+        sed -i "s|/usr/share$PMA|/usr/share/phpmyadmin|" /etc/nginx/conf.d/phpmyadmin.inc
+
+        # Restart services
+        $HESTIA/bin/v-restart-service nginx
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+#log_event "$OK" "$ARGUMENTS"
+
+exit

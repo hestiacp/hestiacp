@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: change webmail alias url
+# options: PORT
+#
+# The function is to change the webmail url in apache2 or nginx configuration.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+WEBMAIL=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'PMA'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get existing apache2 webmail alias
+if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
+    apache_webmail=$(tail -n+3 /etc/apache2/conf.d/roundcube.conf | grep "Alias" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
+fi
+
+# Get existing nginx webmail alias
+if [ -f /etc/nginx/conf.d/roundcube.inc ]; then
+    nginx_webmail=$(cat /etc/nginx/conf.d/webmail.inc | grep "location" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
+fi
+
+# Check if alias is different for apach2
+if [ -z "$apache2_webmail" ]; 
+    if [ ! "$apache2_webmail" = "$WEBMAIL" ]; then
+        # Replace webmail alias in config files.
+        sed -i "s|Alias $nginx_webmail|Alias $WEBMAIL|" /etc/apache2/conf.d/roundcube.conf
+
+        # Restart services
+        $HESTIA/bin/v-restart-service apache2
+    fi
+fi
+
+# Check if alias is different for nginx
+if [ -z "$nginx_webmail" ]; 
+    if [ ! "$nginx_webmail" = "$WEBMAIL" ]; then
+        # Replace webmail alias in config files.
+        sed -i "s|$nginx_webmail|$WEBMAIL|" /etc/nginx/conf.d/webmail.inc
+
+        # Restart services
+        $HESTIA/bin/v-restart-service nginx
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+#log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -2,7 +2,7 @@
 # info: change webmail alias url
 # options: WEBMAIL
 #
-# The function is to change the webmail url in apache2 or nginx configuration.
+# This function changes the webmail url in apache2 or nginx configuration.
 
 
 #----------------------------------------------------------#
@@ -38,7 +38,7 @@ if [ -f /etc/nginx/conf.d/roundcube.inc ]; then
     nginx_webmail=$(cat /etc/nginx/conf.d/webmail.inc | grep "location" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
 fi
 
-# Check if alias is different for apach2
+# Check if alias is different for apache2
 if [ -z "$apache_webmail" ]; then
     if [ ! "$apache_webmail" = "$WEBMAIL" ]; then
         # Replace webmail alias in config files.

@@ -25,4 +25,4 @@ bash hst-install.sh
 
 License
 ----------------------------
-HestiaCP is licensed under [GPL v3 ](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license.
+HestiaCP is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license.

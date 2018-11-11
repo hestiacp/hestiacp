@@ -12,7 +12,7 @@ Type here, e.g. Apache, Nginx, PHP-FPM, MySQL
 
 ### Steps to Reproduce:
 
-Type here, e.g. install HestiaCO and type rm -rf / --no-preserve-root
+Type here, e.g. install HestiaCP and type rm -rf / --no-preserve-root
 
 ### Related Issues/Forum Threads:
 

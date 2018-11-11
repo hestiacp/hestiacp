@@ -197,14 +197,14 @@ $rcmail_config['auto_create_user'] = true;
 
 // use this folder to store log files (must be writeable for apache user)
 // This is used by the 'file' log driver.
-$rcmail_config['log_dir'] = '/var/log/roundcubemail/';
+$rcmail_config['log_dir'] = '/var/log/roundcube/';
 
 // use this folder to store temp files (must be writeable for apache user)
 $rcmail_config['temp_dir'] = '/tmp';
 
 // lifetime of message cache
 // possible units: s, m, h, d, w
-$rcmail_config['message_cache_lifetime'] = '10d';
+$rcmail_config['message_cache_lifetime'] = '1d';
 
 // enforce connections over https
 // with this option enabled, all non-secure connections will be redirected.
@@ -219,14 +219,14 @@ $rcmail_config['use_https'] = false;
 
 // Allow browser-autocompletion on login form.
 // 0 - disabled, 1 - username and host only, 2 - username, host, password
-$rcmail_config['login_autocomplete'] = 0;
+$rcmail_config['login_autocomplete'] = 1;
 
 // Forces conversion of logins to lower case.
 // 0 - disabled, 1 - only domain part, 2 - domain and local part.
 // If users authentication is not case-sensitive this must be enabled.
 // After enabling it all user records need to be updated, e.g. with query:
 // UPDATE users SET username = LOWER(username);
-$rcmail_config['login_lc'] = 0;
+$rcmail_config['login_lc'] = 2;
 
 // Includes should be interpreted as PHP files
 $rcmail_config['skin_include_php'] = false;
@@ -298,14 +298,14 @@ $rcmail_config['password_charset'] = 'ISO-8859-1';
 $rcmail_config['sendmail_delay'] = 0;
 
 // Maximum number of recipients per message. Default: 0 (no limit)
-$rcmail_config['max_recipients'] = 0; 
+$rcmail_config['max_recipients'] = 100; 
 
 // Maximum allowednumber of members of an address group. Default: 0 (no limit)
 // If 'max_recipients' is set this value should be less or equal
-$rcmail_config['max_group_members'] = 0; 
+$rcmail_config['max_group_members'] = 100; 
 
 // add this user-agent to message headers when sending
-$rcmail_config['useragent'] = 'Roundcube Webmail/'.RCMAIL_VERSION;
+$rcmail_config['useragent'] = 'Roundcube Webmail';
 
 // use this name to compose page titles
 $rcmail_config['product_name'] = 'Roundcube Webmail';
@@ -448,7 +448,7 @@ $rcmail_config['create_default_folders'] = true;
 $rcmail_config['protect_default_folders'] = true;
 
 // if in your system 0 quota means no limit set this option to true 
-$rcmail_config['quota_zero_as_unlimited'] = false;
+$rcmail_config['quota_zero_as_unlimited'] = true;
 
 // Make use of the built-in spell checker. It is based on GoogieSpell.
 // Since Google only accepts connections over https your PHP installatation
@@ -501,7 +501,7 @@ $rcmail_config['upload_progress'] = false;
 // Specifies for how many seconds the Undo button will be available
 // after object delete action. Currently used with supporting address book sources.
 // Setting it to 0, disables the feature.
-$rcmail_config['undo_timeout'] = 0;
+$rcmail_config['undo_timeout'] = 10;
 
 // ----------------------------------
 // ADDRESSBOOK SETTINGS
@@ -688,10 +688,10 @@ $rcmail_config['default_charset'] = 'UTF-8';
 $rcmail_config['skin'] = 'larry';
 
 // show up to X items in messages list view
-$rcmail_config['mail_pagesize'] = 50;
+$rcmail_config['mail_pagesize'] = 200;
 
 // show up to X items in contacts list view
-$rcmail_config['addressbook_pagesize'] = 50;
+$rcmail_config['addressbook_pagesize'] = 200;
 
 // sort contacts by this col (preferably either one of name, firstname, surname)
 $rcmail_config['addressbook_sort_col'] = 'surname';
@@ -724,8 +724,8 @@ $rcmail_config['htmleditor'] = 0;
 // show pretty dates as standard
 $rcmail_config['prettydate'] = true;
 
-// save compose message every 300 seconds (5min)
-$rcmail_config['draft_autosave'] = 300;
+// save compose message every 30 seconds
+$rcmail_config['draft_autosave'] = 30;
 
 // default setting if preview pane is enabled
 $rcmail_config['preview_pane'] = false;
@@ -738,7 +738,7 @@ $rcmail_config['preview_pane_mark_read'] = 0;
 $rcmail_config['logout_purge'] = false;
 
 // Compact INBOX on logout
-$rcmail_config['logout_expunge'] = false;
+$rcmail_config['logout_expunge'] = true;
 
 // Display attached images below the message body 
 $rcmail_config['inline_images'] = true;
@@ -759,14 +759,14 @@ $rcmail_config['read_when_deleted'] = true;
 
 // Set to true to never delete messages immediately
 // Use 'Purge' to remove messages marked as deleted
-$rcmail_config['flag_for_deletion'] = false;
+$rcmail_config['flag_for_deletion'] = purge;
 
 // Default interval for keep-alive/check-recent requests (in seconds)
 // Must be greater than or equal to 'min_keep_alive' and less than 'session_lifetime'
 $rcmail_config['keep_alive'] = 60;
 
 // If true all folders will be checked for recent messages
-$rcmail_config['check_all_folders'] = false;
+$rcmail_config['check_all_folders'] = true;
 
 // If true, after message delete/move, the next message will be displayed
 $rcmail_config['display_next'] = false;
@@ -777,7 +777,7 @@ $rcmail_config['display_next'] = false;
 $rcmail_config['autoexpand_threads'] = 0;
 
 // When replying place cursor above original message (top posting)
-$rcmail_config['top_posting'] = false;
+$rcmail_config['top_posting'] = true;
 
 // When replying strip original signature from message
 $rcmail_config['strip_existing_sig'] = true;
@@ -808,7 +808,7 @@ $rcmail_config['addressbook_search_mods'] = null;  // Example: array('name'=>1, 
 // This setting reflects if mail should be always deleted
 // when moving to Trash fails. This is necessary in some setups
 // when user is over quota and Trash is included in the quota.
-$rcmail_config['delete_always'] = false;
+$rcmail_config['delete_always'] = true;
 
 // Directly delete messages in Junk instead of moving to Trash
 $rcmail_config['delete_junk'] = true;

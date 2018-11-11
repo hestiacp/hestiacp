@@ -305,7 +305,7 @@ $rcmail_config['max_recipients'] = 100;
 $rcmail_config['max_group_members'] = 100; 
 
 // add this user-agent to message headers when sending
-$rcmail_config['useragent'] = 'Roundcube Webmail;
+$rcmail_config['useragent'] = 'Roundcube Webmail';
 
 // use this name to compose page titles
 $rcmail_config['product_name'] = 'Roundcube Webmail';

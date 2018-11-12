@@ -1079,7 +1079,7 @@ fi
 #                    Update phpMyAdmin                     #
 #----------------------------------------------------------#
 
-# Show Upgrade Information
+# Display upgrade information
 echo "Upgrade phpMyAdmin to v$pma_v..."
 
 # Download latest phpmyadmin release
@@ -1259,7 +1259,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
 
-    # Fix to send all mails using smtp and add userinformations
+    # Send all emails through SMTP and add user information
     sed -i "/\$config\['smtp_server'\]/c\$config\['smtp_server'\] = 'localhost';" /etc/roundcube/defaults.inc.php
     sed -i "/\$config\['smtp_user'\]/c\$config\['smtp_user'\] = '%u';" /etc/roundcube/defaults.inc.php
     sed -i "/\$config\['smtp_pass'\]/c\$config\['smtp_pass'\] = '%p';" /etc/roundcube/defaults.inc.php

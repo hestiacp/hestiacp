@@ -34,15 +34,15 @@ if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
 fi
 
 # Get existing nginx webmail alias
-if [ -f /etc/nginx/conf.d/roundcube.inc ]; then
+if [ -f /etc/nginx/conf.d/webmail.inc ]; then
     nginx_webmail=$(cat /etc/nginx/conf.d/webmail.inc | grep "location" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
 fi
 
 # Check if alias is different for apache2
-if [ -z "$apache_webmail" ]; then
+if [ ! -z "$apache_webmail" ]; then
     if [ ! "$apache_webmail" = "$WEBMAIL" ]; then
         # Replace webmail alias in config files.
-        sed -i "3/s|Alias $apache_webmail|Alias $WEBMAIL|" /etc/apache2/conf.d/roundcube.conf
+        sed -i "s|Alias $apache_webmail|Alias $WEBMAIL|" /etc/apache2/conf.d/roundcube.conf
 
         # Restart services
         $HESTIA/bin/v-restart-service apache2
@@ -50,7 +50,7 @@ if [ -z "$apache_webmail" ]; then
 fi
 
 # Check if alias is different for nginx
-if [ -z "$nginx_webmail" ]; then
+if [ ! -z "$nginx_webmail" ]; then
     if [ ! "$nginx_webmail" = "$WEBMAIL" ]; then
         # Replace webmail alias in config files.
         sed -i "s|$nginx_webmail|$WEBMAIL|" /etc/nginx/conf.d/webmail.inc

@@ -1,9 +1,9 @@
-[HestiaCP Control Panel](https://hestiacp.com/)
+[HestiaCP Control Panel](https://www.hestiacp.com/)
 ==================================================
 
-* HestiaCP is a fork of VestaCP
-* Main purpose of HestiaCP is to be safer and more secure
-* HestiaCP is an open source hosting control panel.
+* HestiaCP is a fork of VestaCP.
+* Main purpose of HestiaCP is to be more secure, better optimized and up to date.
+* HestiaCP is an open source, lightweight hosting control panel.
 * HestiaCP has a clean and focused interface without the clutter.
 * HestiaCP has the latest of very innovative technologies.
 
@@ -25,5 +25,4 @@ bash hst-install.sh
 
 License
 ----------------------------
-HestiaCP is licensed under  [GPL v3 ](https://github.com/serghey-rodin/vesta/blob/master/LICENSE) license
-
+HestiaCP is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license.

@@ -554,6 +554,7 @@ rm -rf $HESTIA > /dev/null 2>&1
 #                     Package Excludes                     #
 #----------------------------------------------------------#
 
+# Excluding packages
 if [ "$nginx" = 'no'  ]; then
     software=$(echo "$software" | sed -e "s/^nginx//")
 fi

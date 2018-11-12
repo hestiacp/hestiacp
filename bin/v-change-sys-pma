@@ -39,7 +39,7 @@ if [ -f /etc/nginx/conf.d/phpmyadmin.inc ]; then
 fi
 
 # Check if alias is different for apache2
-if [ -z "$apache_pma" ]; then
+if [ ! -z "$apache_pma" ]; then
     if [ ! "$apache_pma" = "$PMA" ]; then
         # Replace pma alias in config files.
         sed -i "s|Alias $apache_pma|Alias $PMA|" /etc/apache2/conf.d/phpmyadmin.conf
@@ -50,7 +50,7 @@ if [ -z "$apache_pma" ]; then
 fi
 
 # Check if alias is different for nginx
-if [ -z "$nginx_pma" ]; then
+if [ ! -z "$nginx_pma" ]; then
     if [ ! "$nginx_pma" = "$PMA" ]; then
         # Replace pma alias in config files.
         sed -i "s|$nginx_pma|$PMA|" /etc/nginx/conf.d/phpmyadmin.inc

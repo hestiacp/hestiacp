@@ -44,6 +44,10 @@ if [ ! -z "$apache_webmail" ]; then
         # Replace webmail alias in config files.
         sed -i "s|Alias $apache_webmail|Alias $WEBMAIL|" /etc/apache2/conf.d/roundcube.conf
 
+        # Replace in Backend UI
+        sed -i "s|$apache_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/admin/list_mail.html
+        sed -i "s|$apache_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/user/list_mail.html
+
         # Restart services
         $HESTIA/bin/v-restart-service apache2
     fi
@@ -54,6 +58,10 @@ if [ ! -z "$nginx_webmail" ]; then
     if [ ! "$nginx_webmail" = "$WEBMAIL" ]; then
         # Replace webmail alias in config files.
         sed -i "s|$nginx_webmail|$WEBMAIL|" /etc/nginx/conf.d/webmail.inc
+
+        # Replace in Backend UI
+        sed -i "s|$nginx_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/admin/list_mail.html
+        sed -i "s|$nginx_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/user/list_mail.html
 
         # Restart services
         $HESTIA/bin/v-restart-service nginx

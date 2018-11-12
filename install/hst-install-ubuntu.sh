@@ -25,7 +25,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
     libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf
-    libapache2-mod-ruid2 lsof mc mysql-client mysql-common mysql-server nginx
+    libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server nginx
     ntpdate php-cgi php-common php-curl phpmyadmin php-mysql phppgadmin
     php-pgsql postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
@@ -41,7 +41,7 @@ help() {
   -v, --vsftpd            Install Vsftpd        [yes|no]  default: yes
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
   -k, --named             Install Bind          [yes|no]  default: yes
-  -m, --mysql             Install MySQL         [yes|no]  default: yes
+  -m, --mysql             Install MariaDB       [yes|no]  default: yes
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
@@ -170,7 +170,7 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         v) vsftpd=$OPTARG ;;            # Vsftpd
         j) proftpd=$OPTARG ;;           # Proftpd
         k) named=$OPTARG ;;             # Named
-        m) mysql=$OPTARG ;;             # MySQL
+        m) mysql=$OPTARG ;;             # MariaDB
         g) postgresql=$OPTARG ;;        # PostgreSQL
         x) exim=$OPTARG ;;              # Exim
         z) dovecot=$OPTARG ;;           # Dovecot
@@ -284,7 +284,7 @@ check_result $? "No access to Hestia repository"
 # Checking installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 mysql-server apache2 nginx hestia; do
+for pkg in exim4 mariadb-server apache2 nginx hestia; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg $conflicts"
     fi
@@ -366,7 +366,7 @@ fi
 
 # Database stack
 if [ "$mysql" = 'yes' ]; then
-    echo '   - MySQL Database Server'
+    echo '   - MariaDB Database Server'
 fi
 if [ "$postgresql" = 'yes' ]; then
     echo '   - PostgreSQL Database Server'
@@ -477,6 +477,11 @@ if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
     add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 fi
+
+# Installing MariaDB repo
+apt=/etc/apt/sources.list.d
+echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/ubuntu $codename main" > $apt/mariadb.list
+apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
@@ -600,9 +605,9 @@ if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
 fi
 if [ "$mysql" = 'no' ]; then
-    software=$(echo "$software" | sed -e 's/mysql-server//')
-    software=$(echo "$software" | sed -e 's/mysql-client//')
-    software=$(echo "$software" | sed -e 's/mysql-common//')
+    software=$(echo "$software" | sed -e 's/mariadb-server//')
+    software=$(echo "$software" | sed -e 's/mariadb-client//')
+    software=$(echo "$software" | sed -e 's/mariadb-common//')
     software=$(echo "$software" | sed -e 's/php7.0-mysql//')
     software=$(echo "$software" | sed -e 's/php5-mysql//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
@@ -1027,7 +1032,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                  Configure MySQL/MariaDB                 #
+#                  Configure MariaDB                       #
 #----------------------------------------------------------#
 
 if [ "$mysql" = 'yes' ]; then
@@ -1039,7 +1044,7 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
-    # Configuring MySQL/MariaDB
+    # Configuring MariaDB
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
     if [ "$release" = '14.04' ]; then
         mysql_install_db > /dev/null 2>&1
@@ -1058,9 +1063,9 @@ if [ "$mysql" = 'yes' ]; then
     fi
     update-rc.d mysql defaults
     service mysql start
-    check_result $? "mysql start failed"
+    check_result $? "mariadb start failed"
 
-    # Securing MySQL/MariaDB installation
+    # Securing MariaDB installation
     mpass=$(gen_pass)
     mysqladmin -u root password $mpass > /dev/null 2>&1
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
@@ -1390,7 +1395,7 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     ip=$pub_ip
 fi
 
-# Configuring MySQL/MariaDB host
+# Configuring MariaDB host
 if [ "$mysql" = 'yes' ]; then
     $HESTIA/bin/v-add-database-host mysql localhost root $mpass
 fi

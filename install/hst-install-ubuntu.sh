@@ -510,7 +510,7 @@ cp -r /etc/apache2/* $hst_backups/apache2 > /dev/null 2>&1
 rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
-service php-fpm stop > /dev/null 2>&1
+service php*-fpm stop > /dev/null 2>&1
 cp -r /etc/php/* $hst_backups/php/ > /dev/null 2>&1
 
 # Backup Bind configuration
@@ -573,8 +573,7 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-php7.0//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-php5//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php7.2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$vsftpd" = 'no' ]; then
@@ -609,8 +608,7 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-server//')
     software=$(echo "$software" | sed -e 's/mariadb-client//')
     software=$(echo "$software" | sed -e 's/mariadb-common//')
-    software=$(echo "$software" | sed -e 's/php7.0-mysql//')
-    software=$(echo "$software" | sed -e 's/php5-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.2-mysql//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
     software=$(echo "$software" | sed -e 's/phpMyAdmin//')
     software=$(echo "$software" | sed -e 's/phpmyadmin//')
@@ -618,8 +616,7 @@ fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
-    software=$(echo "$software" | sed -e 's/php7.0-pgsql//')
-    software=$(echo "$software" | sed -e 's/php5-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.2-pgsql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
 fi
@@ -1275,7 +1272,6 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     fi
 
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-    php5enmod mcrypt 2>/dev/null
     phpenmod mcrypt 2>/dev/null
     if [ "$apache" = 'yes' ]; then
         service apache2 restart

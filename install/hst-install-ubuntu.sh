@@ -554,11 +554,6 @@ rm -rf $HESTIA > /dev/null 2>&1
 #                     Package Excludes                     #
 #----------------------------------------------------------#
 
-# Excluding packages
-if [ "$release" != "15.04" ] && [ "$release" != "15.04" ]; then
-    software=$(echo "$software" | sed -e "s/apache2.2-common//")
-fi
-
 if [ "$nginx" = 'no'  ]; then
     software=$(echo "$software" | sed -e "s/^nginx//")
 fi

@@ -1299,7 +1299,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         chown root:www-data /etc/roundcube/debian-db-roundcube.php
         chown root:www-data /etc/roundcube/config.inc.php
     fi
-    if [ "$release" -eq 8 ] || [ "$release" -eq 9 ]; then
+    if [ "$release" -eq 8 ]; then
         # RoundCube tinyMCE fix
         tinymceFixArchiveURL=$hestiacp/roundcube/roundcube-tinymce.tar.gz
         tinymceParentFolder=/usr/share/roundcube/program/js

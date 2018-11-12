@@ -1235,10 +1235,9 @@ if [ "$clamd" = 'yes' ]; then
             /lib/systemd/system/clamav-daemon.service
         systemctl daemon-reload
     fi
-    service clamav-daemon start
     echo "Updating ClamAV..."
-    /usr/bin/freshclam  > /dev/null 2>&1
-    service clamav-daemon restart
+    /usr/bin/freshclam > /dev/null 2>&1
+    service clamav-daemon start
     check_result $? "clamav-daeom start failed"
 fi
 

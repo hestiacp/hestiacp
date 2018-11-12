@@ -266,7 +266,7 @@ fi
 # Check if apt-transport-https is installed
 if [ ! -e '/usr/lib/apt/methods/https' ]; then
     echo "Install missing apt-transport-https..."
-    apt-get -y install apt-transport-https  > /dev/null 2>&1
+    apt-get -y install apt-transport-https > /dev/null 2>&1
     check_result $? "Can't install apt-transport-https"
 fi
 
@@ -969,8 +969,8 @@ if [ "$apache" = 'yes'  ]; then
     service apache2 start > /dev/null 2>&1
     check_result $? "apache2 start failed"
 else
-    update-rc.d apache2 disable  > /dev/null 2>&1
-    service apache2 stop  > /dev/null 2>&1
+    update-rc.d apache2 disable > /dev/null 2>&1
+    service apache2 stop > /dev/null 2>&1
 fi
 
 
@@ -1214,10 +1214,9 @@ if [ "$clamd" = 'yes' ]; then
     gpasswd -a clamav Debian-exim > /dev/null 2>&1
     cp -f $hestiacp/clamav/clamd.conf /etc/clamav/
     update-rc.d clamav-daemon defaults
-    service clamav-daemon start
     echo "Updating ClamAV..."
-    /usr/bin/freshclam  > /dev/null 2>&1
-    service clamav-daemon restart
+    /usr/bin/freshclam > /dev/null 2>&1
+    service clamav-daemon start
     check_result $? "clamav-daemon start failed"
 fi
 
@@ -1330,7 +1329,7 @@ fi
 # Special thanks to Pavel Galkin (https://skurudo.ru)
 # https://github.com/skurudo/phpmyadmin-fixer
 
-source $hestiacp/phpmyadmin/pma.sh  > /dev/null 2>&1
+source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

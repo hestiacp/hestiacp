@@ -555,6 +555,7 @@ rm -rf $HESTIA > /dev/null 2>&1
 #----------------------------------------------------------#
 
 # Excluding packages
+software=$(echo "$software" | sed -e "s/apache2.2-common//")
 if [ "$nginx" = 'no'  ]; then
     software=$(echo "$software" | sed -e "s/^nginx//")
 fi

@@ -74,6 +74,7 @@ else
     sed -i "/listen/c\        listen          $PORT ssl;" $HESTIA/nginx/conf/nginx.conf
     sed -i "/password_hestia_port/c\$rcmail_config['password_hestia_port'] = '$PORT';" /etc/roundcube/plugins/password/config.inc.php
     sed -i "/COMMENT='HESTIA'/c\RULE='2' ACTION='ACCEPT' PROTOCOL='TCP' PORT='$PORT' IP='0.0.0.0/0' COMMENT='HESTIA' SUSPENDED='no' TIME='07:40:16' DATE='2014-05-25'" $HESTIA/data/firewall/rules.conf
+    sed -i s/$ORIGINAL_PORT/$PORT/g $HESTIA/data/firewall/ports.conf
     
     # Restart services
     $HESTIA/bin/v-restart-service iptables

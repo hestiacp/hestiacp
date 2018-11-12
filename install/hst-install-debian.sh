@@ -1285,6 +1285,12 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
     chmod a+r /etc/roundcube/main.inc.php
+
+    # Fix to send all mails using smtp and add userinformations
+    sed -i "/\$config\['smtp_server'\]/c\$config\['smtp_server'\] = 'localhost';" /etc/roundcube/defaults.inc.php
+    sed -i "/\$config\['smtp_user'\]/c\$config\['smtp_user'\] = '%u';" /etc/roundcube/defaults.inc.php
+    sed -i "/\$config\['smtp_pass'\]/c\$config\['smtp_pass'\] = '%p';" /etc/roundcube/defaults.inc.php
+
     if [ "$release" -eq 8 ] || [ "$release" -eq 9 ]; then
         mv -f /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
         mv -f /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
@@ -1293,7 +1299,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         chown root:www-data /etc/roundcube/debian-db-roundcube.php
         chown root:www-data /etc/roundcube/config.inc.php
     fi
-    if [ "$release" -eq 8 ]; then
+    if [ "$release" -eq 8 ] || [ "$release" -eq 9 ]; then
         # RoundCube tinyMCE fix
         tinymceFixArchiveURL=$hestiacp/roundcube/roundcube-tinymce.tar.gz
         tinymceParentFolder=/usr/share/roundcube/program/js
@@ -1316,7 +1322,6 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
                 fi
             fi
         fi
-
     fi
 fi
 

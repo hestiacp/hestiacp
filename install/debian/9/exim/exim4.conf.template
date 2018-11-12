@@ -56,7 +56,19 @@ DKIM_PRIVATE_KEY = ${if exists{DKIM_FILE}{DKIM_FILE}{0}}
 #                       ACL CONFIGURATION                            #
 #         Specifies access control lists for incoming SMTP mail      #
 ######################################################################
+
+acl_not_smtp = acl_not_smtp
+
 begin acl
+
+acl_not_smtp:
+  deny message = Web site is sending too much emails [limitlog]: deny / account / $authenticated_id / $sender_rate / $sender_rate_period
+  ratelimit = 40 / 1h / $authenticated_id
+
+  warn ratelimit = 0 / 1h / strict / $authenticated_id
+  log_message = Sender rate [limitlog]: log / account / $authenticated_id / $sender_rate / $sender_rate_period
+
+  accept
 
 acl_check_spammers:
   accept  hosts         = +whitelist
@@ -89,7 +101,13 @@ acl_check_mail:
 acl_check_rcpt:
   accept  hosts         = :
 
-  deny    message       = Restricted characters in address
+  deny message = Email account is sending too much emails [limitlog]: deny / email / $authenticated_id / $sender_rate / $sender_rate_period
+  ratelimit = 40 / 1h / $authenticated_id
+
+  warn ratelimit = 0 / 1h / strict / $authenticated_id
+  log_message = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
+
+deny    message       = Restricted characters in address
           domains       = +local_domains
           local_parts   = ^[.] : ^.*[@%!/|]
 

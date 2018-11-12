@@ -25,8 +25,8 @@ if [ "$release" -eq 9 ]; then
         php-common php-cgi php-mysql php-curl php-pgsql awstats webalizer
         vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon 
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
-        roundcube-mysql roundcube-plugins mysql-server mysql-common
-        mysql-client postgresql postgresql-contrib phppgadmin phpmyadmin mc
+        roundcube-mysql roundcube-plugins mariadb-client mariadb-common
+        mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
@@ -38,8 +38,8 @@ else
         php5-mysql php5-curl php5-pgsql awstats webalizer vsftpd net-tools
         proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        roundcube-mysql roundcube-plugins mysql-server mysql-common
-        mysql-client postgresql postgresql-contrib phppgadmin phpMyAdmin mc
+        roundcube-mysql roundcube-plugins mariadb-client mariadb-common
+        mariadb-server postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
@@ -56,7 +56,7 @@ help() {
   -v, --vsftpd            Install Vsftpd        [yes|no]  default: yes
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
   -k, --named             Install Bind          [yes|no]  default: yes
-  -m, --mysql             Install MySQL         [yes|no]  default: yes
+  -m, --mysql             Install MariaDB       [yes|no]  default: yes
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
@@ -186,7 +186,7 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         v) vsftpd=$OPTARG ;;            # Vsftpd
         j) proftpd=$OPTARG ;;           # Proftpd
         k) named=$OPTARG ;;             # Named
-        m) mysql=$OPTARG ;;             # MySQL
+        m) mysql=$OPTARG ;;             # MariaDB
         g) postgresql=$OPTARG ;;        # PostgreSQL
         x) exim=$OPTARG ;;              # Exim
         z) dovecot=$OPTARG ;;           # Dovecot
@@ -380,7 +380,7 @@ fi
 
 # DB stack
 if [ "$mysql" = 'yes' ]; then
-    echo '   - MySQL Database Server'
+    echo '   - MariaDB Database Server'
 fi
 if [ "$postgresql" = 'yes' ]; then
     echo '   - PostgreSQL Database Server'
@@ -479,6 +479,9 @@ fi
 apt-get -y upgrade
 check_result $? 'apt-get upgrade failed'
 
+# Define apt conf location
+apt=/etc/apt/sources.list.d
+
 # Installing nginx repo
 apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/debian/ $codename nginx" > $apt/nginx.list
@@ -491,6 +494,10 @@ if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
     apt-key add /tmp/php_signing.key
 fi
+
+# Installing MariaDB repo
+echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/ubuntu $codename main" > $apt/mariadb.list
+apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
@@ -555,7 +562,7 @@ service dovecot stop > /dev/null 2>&1
 cp /etc/dovecot.conf $hst_backups/dovecot > /dev/null 2>&1
 cp -r /etc/dovecot/* $hst_backups/dovecot > /dev/null 2>&1
 
-# Backing up MySQL/MariaDB configuration and data
+# Backup MySQL/MariaDB configuration and data
 service mysql stop > /dev/null 2>&1
 killall -9 mysqld > /dev/null 2>&1
 mv /var/lib/mysql $hst_backups/mysql/mysql_datadir > /dev/null 2>&1
@@ -618,9 +625,9 @@ if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
 fi
 if [ "$mysql" = 'no' ]; then
-    software=$(echo "$software" | sed -e 's/mysql-server//')
-    software=$(echo "$software" | sed -e 's/mysql-client//')
-    software=$(echo "$software" | sed -e 's/mysql-common//')
+    software=$(echo "$software" | sed -e 's/mariadb-server//')
+    software=$(echo "$software" | sed -e 's/mariadb-client//')
+    software=$(echo "$software" | sed -e 's/mariadb-common//')
     software=$(echo "$software" | sed -e 's/php5-mysql//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
     software=$(echo "$software" | sed -e 's/phpMyAdmin//')
@@ -1054,33 +1061,25 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
-    # MySQL configuration
+   # Configuring MariaDB
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
-    mysql_install_db
+    mysql_install_db > /dev/null 2>&1
+
     update-rc.d mysql defaults
     service mysql start
-    check_result $? "mysql start failed"
+    check_result $? "mariadb start failed"
 
-    # Securing MySQL installation
+    # Securing MariaDB installation
     mpass=$(gen_pass)
-    mysqladmin -u root password $mpass
+    mysqladmin -u root password $mpass > /dev/null 2>&1
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
-    if [ "$release" = '8' ]; then
-        mysql -e "DELETE FROM mysql.user WHERE User=''"
-        mysql -e "DROP DATABASE test" >/dev/null 2>&1
-        mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-        mysql -e "DELETE FROM mysql.user WHERE user='' or password='';"
-        mysql -e "FLUSH PRIVILEGES"
-    fi
-    if [ "$release" = '9' ]; then
-        mysql -e "DELETE FROM mysql.user WHERE User=''"
-        mysql -e "DROP DATABASE test" >/dev/null 2>&1
-        mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-        mysql -e "DELETE FROM mysql.user WHERE user='';"
-        mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$mpass';"
-        mysql -e "FLUSH PRIVILEGES"
-    fi
+
+    # Clear MariaDB Test Users and Databases
+    mysql -e "DELETE FROM mysql.user WHERE User=''"
+    mysql -e "DROP DATABASE test" > /dev/null 2>&1
+    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+    mysql -e "DELETE FROM mysql.user WHERE user='';"
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then

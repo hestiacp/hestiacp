@@ -466,8 +466,10 @@ echo "Upgrade System using apt-get..."
 apt-get -y upgrade > /dev/null 2>&1
 check_result $? 'apt-get upgrade failed'
 
-# Installing nginx repo
+# Define apt conf location
 apt=/etc/apt/sources.list.d
+
+# Installing nginx repo
 echo "deb http://nginx.org/packages/mainline/ubuntu/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
@@ -479,9 +481,8 @@ if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
 fi
 
 # Installing MariaDB repo
-apt=/etc/apt/sources.list.d
 echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/ubuntu $codename main" > $apt/mariadb.list
-apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
@@ -1057,21 +1058,12 @@ if [ "$mysql" = 'yes' ]; then
     mysqladmin -u root password $mpass > /dev/null 2>&1
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
-    if [ "$release" = '14.04' ] || [ "$release" = '16.04' ]; then
-        mysql -e "DELETE FROM mysql.user WHERE User=''"
-        mysql -e "DROP DATABASE test" > /dev/null 2>&1
-        mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-        mysql -e "DELETE FROM mysql.user WHERE user='' OR password='';"
-        mysql -e "FLUSH PRIVILEGES"
-    fi
-    if [ "$release" = '18.04' ]; then
-        mysql -e "DELETE FROM mysql.user WHERE User=''"
-        mysql -e "DROP DATABASE test" > /dev/null 2>&1
-        mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-        mysql -e "DELETE FROM mysql.user WHERE user='';"
-        mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$mpass';"
-        mysql -e "FLUSH PRIVILEGES"
-    fi
+
+    # Clear MariaDB Test Users and Databases
+    mysql -e "DELETE FROM mysql.user WHERE User=''"
+    mysql -e "DROP DATABASE test" > /dev/null 2>&1
+    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+    mysql -e "DELETE FROM mysql.user WHERE user='';"
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then

@@ -2,7 +2,7 @@
 # info: change phpmyadmin alias url
 # options: PMA
 #
-# The function is to change the phpmyadmin url in apache2 or nginx configuration.
+# This function changes the phpmyadmin url in apache2 or nginx configuration.
 
 
 #----------------------------------------------------------#
@@ -38,7 +38,7 @@ if [ -f /etc/nginx/conf.d/phpmyadmin.inc ]; then
     nginx_pma=$(cat /etc/nginx/conf.d/phpmyadmin.inc | grep "location" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
 fi
 
-# Check if alias is different for apach2
+# Check if alias is different for apache2
 if [ -z "$apache_pma" ]; then
     if [ ! "$apache_pma" = "$PMA" ]; then
         # Replace pma alias in config files.

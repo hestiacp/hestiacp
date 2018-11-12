@@ -1046,21 +1046,8 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring MariaDB
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
-    if [ "$release" = '14.04' ]; then
-        mysql_install_db > /dev/null 2>&1
-    fi
-    if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
-        if [ -e '/etc/init.d/mysql' ]; then
-            if [ -d '/var/lib/mysql' ]; then
-                rm -fr /var/lib/mysql
-                mkdir -p /var/lib/mysql
-            else
-                mkdir -p /var/lib/mysql
-            fi
-            chown mysql:mysql /var/lib/mysql
-            mysqld --initialize-insecure > /dev/null 2>&1
-        fi
-    fi
+    mysql_install_db > /dev/null 2>&1
+
     update-rc.d mysql defaults
     service mysql start
     check_result $? "mariadb start failed"
@@ -1070,7 +1057,7 @@ if [ "$mysql" = 'yes' ]; then
     mysqladmin -u root password $mpass > /dev/null 2>&1
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
-    if [ "$release" = '16.04' ]; then
+    if [ "$release" = '14.04' ] || [ "$release" = '16.04' ]; then
         mysql -e "DELETE FROM mysql.user WHERE User=''"
         mysql -e "DROP DATABASE test" > /dev/null 2>&1
         mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"

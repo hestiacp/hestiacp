@@ -634,9 +634,9 @@ if [ "$multiphp" = 'yes' ]; then
          php5.6-soap php5.6-xml php5.6-zip php5.6-zip php7.0-mbstring
          php7.0-bcmath php7.0-cli php7.0-curl php7.0-fpm php7.0-gd
          php7.0-intl php7.0-mcrypt php7.0-mysql php7.0-soap php7.0-xml
-         php7.0-zip php7.0-zip php7.1-mbstring php7.1-bcmath php7.1-cli
+         php7.0-zip php7.1-mbstring php7.1-bcmath php7.1-cli
          php7.1-curl php7.1-fpm php7.1-gd php7.1-intl php7.1-mcrypt
-         php7.1-mysql php7.1-soap php7.1-xml php7.1-zip php7.1-zip 
+         php7.1-mysql php7.1-soap php7.1-xml php7.1-zip
          php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
          php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
          php7.2-zip"

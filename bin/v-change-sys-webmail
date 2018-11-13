@@ -57,8 +57,9 @@ fi
 if [ ! -z "$nginx_webmail" ]; then
     if [ ! "$nginx_webmail" = "$WEBMAIL" ]; then
         # Replace webmail alias in config files.
-        sed -i "s|$nginx_webmail|$WEBMAIL|" /etc/nginx/conf.d/webmail.inc
-
+        sed -i "s|$nginx_webmail|/$WEBMAIL|" /etc/nginx/conf.d/webmail.inc
+        sed -i "s|/var/lib/$WEBMAIL/|/var/lib/roundcube/|" /etc/nginx/conf.d/webmail.inc
+        
         # Replace in Backend UI
         sed -i "s|$nginx_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/admin/list_mail.html
         sed -i "s|$nginx_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/user/list_mail.html

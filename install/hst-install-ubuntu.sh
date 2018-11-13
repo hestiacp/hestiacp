@@ -631,7 +631,7 @@ fi
 if [ "$multiphp" = 'yes' ]; then
     mph="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
          php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
-         php5.6-soap php5.6-xml php5.6-zip php5.6-zip php7.0-mbstring
+         php5.6-soap php5.6-xml php5.6-zip php7.0-mbstring
          php7.0-bcmath php7.0-cli php7.0-curl php7.0-fpm php7.0-gd
          php7.0-intl php7.0-mcrypt php7.0-mysql php7.0-soap php7.0-xml
          php7.0-zip php7.1-mbstring php7.1-bcmath php7.1-cli

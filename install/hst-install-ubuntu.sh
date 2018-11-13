@@ -643,6 +643,9 @@ if [ "$multiphp" = 'yes' ]; then
          php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
          php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
          php7.2-zip"
+         php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl php7.3-fpm
+         php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
+         php7.3-zip"
     software="$software $mph"
 fi
 
@@ -896,6 +899,7 @@ if [ "$nginx" = 'yes' ]; then
         update-rc.d php7.0-fpm defaults > /dev/null 2>&1
         update-rc.d php7.1-fpm defaults > /dev/null 2>&1
         update-rc.d php7.2-fpm defaults > /dev/null 2>&1
+        update-rc.d php7.3-fpm defaults > /dev/null 2>&1
         cp -r /etc/php/5.6/ /root/hst_install_backups/php5.6/
         rm -f /etc/php/5.6/fpm/pool.d/*
         cp -r /etc/php/7.0/ /root/hst_install_backups/php7.0/
@@ -904,6 +908,8 @@ if [ "$nginx" = 'yes' ]; then
         rm -f /etc/php/7.1/fpm/pool.d/*
         cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
+        cp -r /etc/php/7.3/ /root/hst_install_backups/php7.3/
+        rm -f /etc/php/7.3/fpm/pool.d/*
         rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
         cp -f $hestiacp/php-fpm/www.conf /etc/php/7.2/fpm/pool.d/
@@ -950,10 +956,12 @@ if [ "$apache" = 'yes'  ]; then
         a2enconf php7.0-fpm > /dev/null 2>&1
         a2enconf php7.1-fpm > /dev/null 2>&1
         a2enconf php7.2-fpm > /dev/null 2>&1
+        a2enconf php7.3-fpm > /dev/null 2>&1
         update-rc.d php5.6-fpm defaults > /dev/null 2>&1
         update-rc.d php7.0-fpm defaults > /dev/null 2>&1
         update-rc.d php7.1-fpm defaults > /dev/null 2>&1
         update-rc.d php7.2-fpm defaults > /dev/null 2>&1
+        update-rc.d php7.3-fpm defaults > /dev/null 2>&1
         cp -r /etc/php/5.6/ /root/vst_install_backups/php5.6/
         rm -f /etc/php/5.6/fpm/pool.d/*
         cp -r /etc/php/7.0/ /root/vst_install_backups/php7.0/
@@ -962,6 +970,8 @@ if [ "$apache" = 'yes'  ]; then
         rm -f /etc/php/7.1/fpm/pool.d/*
         cp -r /etc/php/7.2/ /root/vst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
+        cp -r /etc/php/7.3/ /root/vst_install_backups/php7.3/
+        rm -f /etc/php/7.3/fpm/pool.d/*
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
     fi

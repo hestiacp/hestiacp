@@ -41,6 +41,7 @@ fi
 # Check if alias is different for apache2
 if [ ! -z "$apache_pma" ]; then
     if [ ! "$apache_pma" = "$PMA" ]; then
+    
         # Replace pma alias in config files.
         sed -i "s|Alias $apache_pma|Alias $PMA|" /etc/apache2/conf.d/phpmyadmin.conf
 
@@ -48,24 +49,25 @@ if [ ! -z "$apache_pma" ]; then
         sed -i "s|$apache_pma/|$PMA/|" /usr/local/hestia/web/templates/admin/list_db.html
         sed -i "s|$apache_pma/|$PMA/|" /usr/local/hestia/web/templates/user/list_db.html
 
-        # Restart services
-        $HESTIA/bin/v-restart-service apache2
+        # Reload apache2
+        service apache2 reload
     fi
 fi
 
 # Check if alias is different for nginx
 if [ ! -z "$nginx_pma" ]; then
     if [ ! "$nginx_pma" = "$PMA" ]; then
+    
         # Replace pma alias in config files.
-        sed -i "s|$nginx_pma|$PMA|" /etc/nginx/conf.d/phpmyadmin.inc
-        sed -i "s|/usr/share$PMA|/usr/share/phpmyadmin|" /etc/nginx/conf.d/phpmyadmin.inc
+        sed -i "s|$nginx_pma|/$PMA|" /etc/nginx/conf.d/phpmyadmin.inc
+        sed -i "s|/usr/share/$PMA/|/usr/share/phpmyadmin/|" /etc/nginx/conf.d/phpmyadmin.inc
 
         # Replace in Backend UI
-        sed -i "s|$nginx_pma/|$PMA/|" /usr/local/hestia/web/templates/admin/list_db.html
-        sed -i "s|$nginx_pma/|$PMA/|" /usr/local/hestia/web/templates/user/list_db.html
+        sed -i "s|$nginx_pma|/$PMA|" /usr/local/hestia/web/templates/admin/list_db.html
+        sed -i "s|$nginx_pma|/$PMA|" /usr/local/hestia/web/templates/user/list_db.html
 
-        # Restart services
-        $HESTIA/bin/v-restart-service nginx
+        # Reload nginx
+        service nginx reload
     fi
 fi
 

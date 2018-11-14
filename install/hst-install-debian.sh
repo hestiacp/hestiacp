@@ -1154,9 +1154,11 @@ fi
 
 if [ "$named" = 'yes' ]; then
     cp -f $hestiacp/bind/named.conf /etc/bind/
-    sed -i "s%listen-on%//listen%" /etc/bind/named.conf.options
+    cp -f $hestiacp/bind/named.conf.options /etc/bind/
     chown root:bind /etc/bind/named.conf
+    chown root:bind /etc/bind/named.conf.options
     chmod 640 /etc/bind/named.conf
+    chmod 640 /etc/bind/named.conf.options
     aa-complain /usr/sbin/named 2>/dev/null
     if [ "$apparmor" = 'yes' ]; then
         echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2>/dev/null

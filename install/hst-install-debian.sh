@@ -1553,8 +1553,6 @@ send_mail="$HESTIA/web/inc/mail-wrapper.php"
 cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
 # Congrats
-echo '======================================================='
-echo
 echo
 cat $tmpfile
 rm -f $tmpfile

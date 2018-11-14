@@ -696,7 +696,7 @@ fi
 
 # Configuring NTP
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
-echo "$(which ntpdate) -s ntp.ubuntu.com" >> /etc/cron.daily/ntpdate
+echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
 chmod 755 /etc/cron.daily/ntpdate
 ntpdate -s pool.ntp.org
 

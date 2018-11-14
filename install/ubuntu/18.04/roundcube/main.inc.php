@@ -759,7 +759,7 @@ $rcmail_config['read_when_deleted'] = true;
 
 // Set to true to never delete messages immediately
 // Use 'Purge' to remove messages marked as deleted
-$rcmail_config['flag_for_deletion'] = purge;
+$rcmail_config['flag_for_deletion'] = 'purge';
 
 // Default interval for keep-alive/check-recent requests (in seconds)
 // Must be greater than or equal to 'min_keep_alive' and less than 'session_lifetime'

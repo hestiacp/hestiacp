@@ -674,11 +674,16 @@ rm -f /usr/sbin/policy-rc.d
 #                     Configure system                     #
 #----------------------------------------------------------#
 
-# Enabling SSH password auth
+# Enable SSH password authentication
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
+
+# Disable SSH suffix broadcast
+echo '' >> /etc/ssh/sshd_config
+echo 'DebianBanner no' >> /etc/ssh/sshd_config
+
 service ssh restart
 
-# Disabling AWStats cron
+# Disable AWStats cron
 rm -f /etc/cron.d/awstats
 
 # Set directory color

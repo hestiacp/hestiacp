@@ -499,8 +499,8 @@ if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
 fi
 
 # Installing MariaDB repo
-echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/ubuntu $codename main" > $apt/mariadb.list
-apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 > /dev/null 2>&1
+echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
+apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list

@@ -566,7 +566,7 @@ if [ "$nginx" = 'no'  ]; then
     software=$(echo "$software" | sed -e "s/^nginx//")
 fi
 if [ "$apache" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/apache2//")
+    software=$(echo "$software" | sed -e "s/apache2 //")
     software=$(echo "$software" | sed -e "s/apache2-utils//")
     software=$(echo "$software" | sed -e "s/apache2-suexec-custom//")
     software=$(echo "$software" | sed -e "s/apache2.2-common//")

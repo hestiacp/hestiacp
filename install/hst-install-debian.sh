@@ -1269,13 +1269,13 @@ fi
 #----------------------------------------------------------#
 
 if [ "$spamd" = 'yes' ]; then
-    update-rc.d spamassassin defaults
+    update-rc.d spamassassin defaults > /dev/null 2>&1
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
-    service spamassassin start
+    service spamassassin start > /dev/null 2>&1
     check_result $? "spamassassin start failed"
     unit_files="$(systemctl list-unit-files |grep spamassassin)"
     if [[ "$unit_files" =~ "disabled" ]]; then
-        systemctl enable spamassassin
+        systemctl enable spamassassin > /dev/null 2>&1
     fi
 fi
 
@@ -1466,7 +1466,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     fi
     echo "</IfModule>" >> remoteip.conf
     sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
-    a2enmod remoteip
+    a2enmod remoteip > /dev/null 2>&1
     service apache2 restart
 fi
 

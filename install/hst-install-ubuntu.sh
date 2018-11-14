@@ -697,7 +697,7 @@ fi
 # Configuring NTP
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
 echo "$(which ntpdate) -s ntp.ubuntu.com" >> /etc/cron.daily/ntpdate
-chmod 775 /etc/cron.daily/ntpdate
+chmod 755 /etc/cron.daily/ntpdate
 ntpdate -s ntp.ubuntu.com
 
 # Adding rssh

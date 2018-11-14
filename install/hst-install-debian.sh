@@ -716,7 +716,7 @@ echo "/usr/sbin/nologin" >> /etc/shells
 # Configuring NTP
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
 echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
-chmod 775 /etc/cron.daily/ntpdate
+chmod 755 /etc/cron.daily/ntpdate
 ntpdate -s pool.ntp.org
 
 # Setup rssh

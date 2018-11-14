@@ -8,6 +8,7 @@
 #SPAM_SCORE = 50
 #CLAMD = yes
 
+smtp_banner = $smtp_active_hostname \
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true

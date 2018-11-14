@@ -719,9 +719,6 @@ mkdir -p /etc/sudoers.d
 cp -f $hestiacp/sudo/admin /etc/sudoers.d/
 chmod 440 /etc/sudoers.d/admin
 
-# Temporary solution for sudo fix
-echo "admin   ALL=NOPASSWD:/usr/local/hestia/bin/*" >> /etc/sudoers.d/admin
-
 # Configuring system env
 echo "export HESTIA='$HESTIA'" > /etc/profile.d/hestia.sh
 echo "export VESTA='$HESTIA'" >> /etc/profile.d/hestia.sh # Vesta compatibility
@@ -930,7 +927,7 @@ fi
 #                    Configure Apache                      #
 #----------------------------------------------------------#
 
-if [ "$apache" = 'yes'  ]; then
+if [ "$apache" = 'yes' ]; then
     cp -f $hestiacp/apache2/apache2.conf /etc/apache2/
     cp -f $hestiacp/apache2/status.conf /etc/apache2/mods-enabled/
     cp -f $hestiacp/logrotate/apache2 /etc/logrotate.d/
@@ -962,15 +959,15 @@ if [ "$apache" = 'yes'  ]; then
         update-rc.d php7.1-fpm defaults > /dev/null 2>&1
         update-rc.d php7.2-fpm defaults > /dev/null 2>&1
         update-rc.d php7.3-fpm defaults > /dev/null 2>&1
-        cp -r /etc/php/5.6/ /root/vst_install_backups/php5.6/
+        cp -r /etc/php/5.6/ /root/hst_install_backups/php5.6/
         rm -f /etc/php/5.6/fpm/pool.d/*
-        cp -r /etc/php/7.0/ /root/vst_install_backups/php7.0/
+        cp -r /etc/php/7.0/ /root/hst_install_backups/php7.0/
         rm -f /etc/php/7.0/fpm/pool.d/*
-        cp -r /etc/php/7.1/ /root/vst_install_backups/php7.1/
+        cp -r /etc/php/7.1/ /root/hst_install_backups/php7.1/
         rm -f /etc/php/7.1/fpm/pool.d/*
-        cp -r /etc/php/7.2/ /root/vst_install_backups/php7.2/
+        cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
         rm -f /etc/php/7.2/fpm/pool.d/*
-        cp -r /etc/php/7.3/ /root/vst_install_backups/php7.3/
+        cp -r /etc/php/7.3/ /root/hst_install_backups/php7.3/
         rm -f /etc/php/7.3/fpm/pool.d/*
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
@@ -1163,6 +1160,7 @@ if [ "$named" = 'yes' ]; then
         sed -i "s/^exit 0/service bind9 restart\nexit 0/" /etc/rc.local
     fi
 fi
+
 
 #----------------------------------------------------------#
 #                      Configure Exim                      #

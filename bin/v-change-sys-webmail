@@ -23,6 +23,10 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'WEBMAIL'
 
+# Check if string has leading /
+if [[ ! ${WEBMAIL:0:1} == "/" ]]; then
+    WEBMAIL="/$WEBMAIL"
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #

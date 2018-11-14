@@ -6,11 +6,11 @@
 
 #SPAMASSASSIN = yes
 #SPAM_SCORE = 50
-#CLAMD =  yes
+#CLAMD = yes
 
-disable_ipv6=true
-add_environment=<; PATH=/bin:/usr/bin
-keep_environment=
+add_environment = <; PATH=/bin:/usr/bin
+keep_environment =
+disable_ipv6 = true
 
 domainlist local_domains = dsearch;/etc/exim4/domains/
 domainlist relay_to_domains = dsearch;/etc/exim4/domains/
@@ -61,12 +61,13 @@ acl_not_smtp = acl_not_smtp
 
 begin acl
 
+# Limit per user for PHP scripts
 acl_not_smtp:
-  deny message = Web site is sending too much emails [limitlog]: deny / account / $authenticated_id / $sender_rate / $sender_rate_period
-  ratelimit = 40 / 1h / $authenticated_id
+  deny    message       = Website of user $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
+  ratelimit             = 100 / 1h / $authenticated_id
 
-  warn ratelimit = 0 / 1h / strict / $authenticated_id
-  log_message = Sender rate [limitlog]: log / account / $authenticated_id / $sender_rate / $sender_rate_period
+  warn    ratelimit     = 0 / 1h / strict / $authenticated_id
+  log_message           = Sender rate [limitlog]: log / account / $authenticated_id / $sender_rate / $sender_rate_period
 
   accept
 
@@ -101,11 +102,12 @@ acl_check_mail:
 acl_check_rcpt:
   accept  hosts         = :
 
-  deny message = Email account is sending too much emails [limitlog]: deny / email / $authenticated_id / $sender_rate / $sender_rate_period
-  ratelimit = 40 / 1h / $authenticated_id
+# Limit per email account for SMTP auhenticated users
+  deny    message       = Email account $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
+  ratelimit             = 200 / 1h / $authenticated_id
 
-  warn ratelimit = 0 / 1h / strict / $authenticated_id
-  log_message = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
+  warn    ratelimit     = 0 / 1h / strict / $authenticated_id
+  log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
 
   deny    message       = Restricted characters in address
           domains       = +local_domains
@@ -130,7 +132,7 @@ acl_check_rcpt:
   require message       = relay not permitted
           domains       = +local_domains : +relay_to_domains
 
-  deny    message       = smtp auth requried
+  deny    message       = smtp auth required
          sender_domains = +local_domains
          !authenticated = *
 
@@ -163,9 +165,9 @@ acl_check_data:
 .ifdef SPAMASSASSIN
   warn   !authenticated = *
          hosts          = !+relay_from_hosts
-         condition      = ${if < {$message_size}{100K}}
+         condition      = ${if < {$message_size}{1024K}}
          condition      = ${if eq{$acl_m1}{yes}{yes}{no}}
-         spam           = nobody:true/defer_ok
+         spam           = debian-spamd:true/defer_ok
          add_header     = X-Spam-Score: $spam_score_int
          add_header     = X-Spam-Bar: $spam_bar
          add_header     = X-Spam-Report: $spam_report

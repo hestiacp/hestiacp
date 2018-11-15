@@ -1070,7 +1070,7 @@ if [ "$mysql" = 'yes' ]; then
     mysql -e "DELETE FROM mysql.user WHERE User=''"
     mysql -e "DROP DATABASE test" > /dev/null 2>&1
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-    mysql -e "DELETE FROM mysql.user WHERE user='' OR password='';"
+    mysql -e "DELETE FROM mysql.user WHERE user='' OR authentication_string='';"
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then

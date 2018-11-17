@@ -238,7 +238,7 @@ tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 if [ "$?" -ne 0 ]; then
     echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-    check_result "$E_NOTEXIST" "can't create tmp dir"
+    check_result "$E_NOTEXIST" "Can't create tmp dir"
 fi
 
 # Restoring user account
@@ -254,7 +254,7 @@ if [ "$create_user" = 'yes' ]; then
             rm -rf $tmpdir
             echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email $notify
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-            check_result "$E_PARSING" "can't unpack user container"
+            check_result "$E_PARSING" "Can't unpack user container"
         else
             backup_system="vesta"
         fi
@@ -278,7 +278,7 @@ if [ "$?" -ne 0 ]; then
     rm -rf $tmpdir
     echo "Can't unpack PAM container" |$SENDMAIL -s "$subj" $email $notify
     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-    check_result "$E_PARSING" "can't unpack PAM container"
+    check_result "$E_PARSING" "Can't unpack PAM container"
 fi
 old_user=$(cut -f 1 -d : $tmpdir/pam/passwd)
 old_uid=$(cut -f 3 -d : $tmpdir/pam/passwd)
@@ -417,7 +417,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             -C $HOMEDIR/$user/web/$domain/
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
-            error="can't unpack $domain data tarball"
+            error="Can't unpack $domain data tarball"
             echo "$error" |$SENDMAIL -s "$subj" $email $notify
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
             check_result "$E_PARSING" "$error"
@@ -739,7 +739,7 @@ if [ "$udir" != 'no' ]; then
             echo -e "$(date "+%F %T") $user_dir" |tee -a $tmpdir/restore.log
             tar xf $BACKUP/$backup -C $tmpdir ./user_dir/$user_dir.tar.gz
             if [ "$?" -ne 0 ]; then
-                error="can't unpack $user_dir user dir container"
+                error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"
@@ -747,7 +747,7 @@ if [ "$udir" != 'no' ]; then
 
             tar xzf $tmpdir/user_dir/$user_dir.tar.gz -C $HOMEDIR/$user
             if [ "$?" -ne 0 ]; then
-                error="can't unpack $user_dir user dir container"
+                error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"

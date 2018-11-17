@@ -252,9 +252,9 @@ if [ "$create_user" = 'yes' ]; then
         tar xf $BACKUP/$backup -C $tmpdir ./vesta 2>/dev/null
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
-            echo "Can't unpack user contaner" |$SENDMAIL -s "$subj" $email $notify
+            echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email $notify
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-            check_result "$E_PARSING" "can't unpack user contaner"
+            check_result "$E_PARSING" "can't unpack user container"
         else
             backup_system="vesta"
         fi
@@ -276,9 +276,9 @@ fi
 tar xf $BACKUP/$backup -C $tmpdir ./pam
 if [ "$?" -ne 0 ]; then
     rm -rf $tmpdir
-    echo "Can't unpack PAM contaner" |$SENDMAIL -s "$subj" $email $notify
+    echo "Can't unpack PAM container" |$SENDMAIL -s "$subj" $email $notify
     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-    check_result "$E_PARSING" "can't unpack PAM contaner"
+    check_result "$E_PARSING" "can't unpack PAM container"
 fi
 old_user=$(cut -f 1 -d : $tmpdir/pam/passwd)
 old_uid=$(cut -f 3 -d : $tmpdir/pam/passwd)
@@ -739,7 +739,7 @@ if [ "$udir" != 'no' ]; then
             echo -e "$(date "+%F %T") $user_dir" |tee -a $tmpdir/restore.log
             tar xf $BACKUP/$backup -C $tmpdir ./user_dir/$user_dir.tar.gz
             if [ "$?" -ne 0 ]; then
-                error="can't unpack $user_dir user dir contaner"
+                error="can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"
@@ -747,7 +747,7 @@ if [ "$udir" != 'no' ]; then
 
             tar xzf $tmpdir/user_dir/$user_dir.tar.gz -C $HOMEDIR/$user
             if [ "$?" -ne 0 ]; then
-                error="can't unpack $user_dir user dir contaner"
+                error="can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"

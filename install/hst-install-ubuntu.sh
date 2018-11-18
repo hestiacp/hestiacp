@@ -1332,10 +1332,10 @@ fi
 #----------------------------------------------------------#
 
 if [ "$api" = 'yes' ]; then
-    echo "API='no'" >> $HESTIA/conf/hestia.conf
+    echo "API='yes'" >> $HESTIA/conf/hestia.conf
 else
     rm -r $HESTIA/web/api
-    echo "API='yes'" >> $HESTIA/conf/hestia.conf
+    echo "API='no'" >> $HESTIA/conf/hestia.conf
 fi
 
 

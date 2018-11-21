@@ -1,6 +1,6 @@
 # Autocompile Script for HestiaCP deb Files.
 
-# Set compiling directory
+# Set compilation directory
 BUILD_DIR='/root'
 INSTALL_DIR='/usr/local/hestia'
 
@@ -15,7 +15,7 @@ PCRE_V='8.42'
 ZLIB_V='1.2.11'
 PHP_V='7.2.11'
 
-# Generate Links for sourcecode
+# Generate links for source code
 HESTIA='https://github.com/hestiacp/hestiacp/archive/master.zip'
 NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
@@ -31,18 +31,18 @@ timestamp() {
     date +%s
 }
 
-# Install needed software
+# Install required software
 echo "Update system repository..."
 apt-get -qq update
 echo "Installing dependencies for compilation..."
 apt-get -qq install -y $SOFTWARE
 
-# Fix for Debian PHP Envroiment
+# Fix for Debian PHP Environment
 if [ ! -e /usr/local/include/curl ]; then
     ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
 fi
 
-# Set packages to compile
+# Set packages to be compiled
 for arg; do
   case "$1" in
     --all)
@@ -81,7 +81,7 @@ if [ "$NGINX_B" = true ] ; then
   # Change to build directory
   cd $BUILD_DIR
   
-  # Check if target directory exist
+  # Check if target directory exists
   if [ -d $BUILD_DIR/hestia-nginx_$HESTIA_V ]; then
   	#mv $BUILD_DIR/hestia-nginx_$HESTIA_V $BUILD_DIR/hestia-nginx_$HESTIA_V-$(timestamp)
   	rm -r $BUILD_DIR/hestia-nginx_$HESTIA_V
@@ -99,7 +99,7 @@ if [ "$NGINX_B" = true ] ; then
   # Change to nginx directory
   cd nginx-$NGINX_V
   
-  # configure nginx
+  # Configure nginx
   ./configure 	--prefix=/usr/local/hestia/nginx \
   		--with-http_ssl_module \
   		--with-openssl=../openssl-$OPENSSL_V \
@@ -111,7 +111,7 @@ if [ "$NGINX_B" = true ] ; then
   	        --with-pcre-jit \
   		--with-zlib=../zlib-$ZLIB_V
   
-  # Check install directory and move if exists
+  # Check installation directory and move it if it exists
   if [ -d $INSTALL_DIR ]; then
   	#mv $INSTALL_DIR $INSTALL_DIR$(timestamp)
   	rm -r $INSTALL_DIR
@@ -120,11 +120,11 @@ if [ "$NGINX_B" = true ] ; then
   # Create the files and install them
   make && make install
   
-  # Cleare up unused files
+  # Remove not needed files
   cd $BUILD_DIR
   rm -r nginx-$NGINX_V openssl-$OPENSSL_V pcre-$PCRE_V zlib-$ZLIB_V
   
-  # Prepare Deb Package Folder Structure
+  # Prepare deb package folder structure
   cd hestia-nginx_$HESTIA_V/
   mkdir -p usr/local/hestia etc/init.d DEBIAN
   
@@ -142,7 +142,7 @@ if [ "$NGINX_B" = true ] ; then
   cd ..
   mv /usr/local/hestia/nginx usr/local/hestia/
   
-  # Get Service File
+  # Get service file
   cd etc/init.d
   wget $GIT_REP/nginx/hestia
   chmod +x hestia
@@ -152,15 +152,15 @@ if [ "$NGINX_B" = true ] ; then
   rm usr/local/hestia/nginx/conf/nginx.conf
   wget $GIT_REP/nginx/nginx.conf -O usr/local/hestia/nginx/conf/nginx.conf
   
-  # copy binary
+  # Copy binary
   cp usr/local/hestia/nginx/sbin/nginx usr/local/hestia/nginx/sbin/hestia-nginx
   
-  # change permission and build the package
+  # Change permission and build the package
   cd $BUILD_DIR
   chown -R  root:root hestia-nginx_$HESTIA_V
   dpkg-deb --build hestia-nginx_$HESTIA_V
   
-  # clear up the source folder
+  # Remove source folder
   rm -r hestia-nginx_$HESTIA_V
 fi
 
@@ -187,7 +187,7 @@ if [ "$PHP_B" = true ] ; then
   wget -qO- $PHP | tar xz
   wget -qO- $OPENSSL | tar xz
   
-  # Change to php directory
+  # Change to PHP directory
   cd php-$PHP_V
   
   # Configure PHP
@@ -205,12 +205,12 @@ if [ "$PHP_B" = true ] ; then
   # Create the files and install them
   make && make install
   
-  # Cleare up unused files
+  # Clear up unused files
   cd $BUILD_DIR
   rm -r php-$PHP_V
   rm -r openssl-$OPENSSL_V
   
-  # Prepare Deb Package Folder Structure
+  # Prepare deb Package folder structure
   cd hestia-php_$HESTIA_V/
   mkdir -p usr/local/hestia DEBIAN
   
@@ -219,7 +219,7 @@ if [ "$PHP_B" = true ] ; then
   wget $GIT_REP/php/control
   wget $GIT_REP/php/copyright
  
-  # Move php directory
+  # Move PHP directory
   cd ..
   mv /usr/local/hestia/php usr/local/hestia/
    
@@ -229,21 +229,21 @@ if [ "$PHP_B" = true ] ; then
   # Get php.ini
   wget $GIT_REP/php/php.ini -O usr/local/hestia/php/lib/php.ini  
 
-  # copy binary
+  # Copy binary
   cp usr/local/hestia/php/sbin/php-fpm usr/local/hestia/php/sbin/hestia-php
   
-  # change permission and build the package
+  # Change permission and build the package
   cd $BUILD_DIR
   chown -R  root:root hestia-php_$HESTIA_V
   dpkg-deb --build hestia-php_$HESTIA_V
   
-  # clear up the source folder
+  # Remove source folder
   rm -r hestia-php_$HESTIA_V
 fi
 
 #################################################################################
 #
-# Building hestia
+# Building Hestia
 #
 #################################################################################
 
@@ -265,7 +265,7 @@ if [ "$HESTIA_B" = true ] ; then
   unzip -q master.zip
   rm master.zip
   
-  # Prepare Deb Package Folder Structure
+  # Prepare deb package folder structure
   cd hestia_$HESTIA_V/
   mkdir -p usr/local/hestia DEBIAN
   
@@ -278,7 +278,7 @@ if [ "$HESTIA_B" = true ] ; then
   # Set permission
   chmod +x postinst
  
-  # Move needed directories
+  # Move required directories
   cd ../../hestiacp-master
   mv bin func install upd web ../hestia_$HESTIA_V/usr/local/hestia/
    
@@ -286,12 +286,12 @@ if [ "$HESTIA_B" = true ] ; then
   cd ../hestia_$HESTIA_V/usr/local/hestia/bin
   chmod +x *
   
-  # change permission and build the package
+  # Change permission and build the package
   cd $BUILD_DIR
   chown -R root:root hestia_$HESTIA_V
   dpkg-deb --build hestia_$HESTIA_V
   
-  # clear up the source folder
+  # Remove source folder
   rm -r hestia_$HESTIA_V
   rm -r hestiacp-master
 fi

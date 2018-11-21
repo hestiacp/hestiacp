@@ -185,6 +185,7 @@ if [ "$PHP_B" = true ] ; then
   
   # Download and unpack source files
   wget -qO- $PHP | tar xz
+  wget -qO- $OPENSSL | tar xz
   
   # Change to php directory
   cd php-$PHP_V
@@ -195,6 +196,7 @@ if [ "$PHP_B" = true ] ; then
               --with-zlib \
               --with-fpm-user=admin \
               --with-fpm-group=admin \
+              --with-openssl=../openssl-$OPENSSL_V \
               --with-mysql \
               --with-mysqli \
               --with-curl \
@@ -206,6 +208,7 @@ if [ "$PHP_B" = true ] ; then
   # Cleare up unused files
   cd $BUILD_DIR
   rm -r php-$PHP_V
+  rm -r openssl-$OPENSSL_V
   
   # Prepare Deb Package Folder Structure
   cd hestia-php_$HESTIA_V/

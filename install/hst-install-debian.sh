@@ -285,6 +285,13 @@ if [ ! -e '/usr/bin/dirmngr' ]; then
     check_result $? "Can't install dirmngr"
 fi
 
+# Checking screen
+if [ ! -e '/usr/bin/screen' ]; then
+    echo "Install missing screen..."
+    apt-get -y install screen > /dev/null 2>&1
+    check_result $? "Can't install screen"
+fi
+
 # Check if apt-transport-https is installed
 if [ ! -e '/usr/lib/apt/methods/https' ]; then
     echo "Install missing apt-transport-https..."
@@ -507,7 +514,7 @@ fi
 
 # Installing MariaDB repo
 echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
-apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 1>&- 2>&-
+screen -dm apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list

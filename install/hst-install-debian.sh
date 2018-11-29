@@ -278,6 +278,13 @@ if [ ! -e '/usr/bin/wget' ]; then
     check_result $? "Can't install wget"
 fi
 
+# Checking dirmngr
+if [ ! -e '/usr/bin/dirmngr' ]; then
+    echo "Install missing dirmngr..."
+    apt-get -y install dirmngr > /dev/null 2>&1
+    check_result $? "Can't install dirmngr"
+fi
+
 # Check if apt-transport-https is installed
 if [ ! -e '/usr/lib/apt/methods/https' ]; then
     echo "Install missing apt-transport-https..."

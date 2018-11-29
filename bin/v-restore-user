@@ -270,6 +270,21 @@ if [ "$create_user" = 'yes' ]; then
 
     # Rebuilding user
     rebuild_user_conf
+else
+    # Unpacking user container to check if hestia or vesta backup.
+    tar xf $BACKUP/$backup -C $tmpdir ./hestia 2>/dev/null
+    if [ "$?" -ne 0 ]; then
+        tar xf $BACKUP/$backup -C $tmpdir ./vesta 2>/dev/null
+        if [ "$?" -ne 0 ]; then
+            rm -rf $tmpdir
+            echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email $notify
+            check_result "$E_PARSING" "Can't unpack user container"
+        else
+            backup_system="vesta"
+        fi
+    else
+        backup_system="hestia"
+    fi
 fi
 
 # Unpacking pam container

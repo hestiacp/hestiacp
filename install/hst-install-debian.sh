@@ -11,6 +11,7 @@ RHOST='apt.hestiacp.com'
 GPG='gpg.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'
+LOG="/root/hst_install_backups/$(date +%s).log"
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 arch=$(uname -i)
 os='debian'
@@ -274,28 +275,28 @@ apt-get -qq update
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
     echo "Install missing wget..."
-    apt-get -y install wget > /dev/null 2>&1
+    apt-get -y install wget >> $LOG
     check_result $? "Can't install wget"
 fi
 
 # Checking dirmngr
 if [ ! -e '/usr/bin/dirmngr' ]; then
     echo "Install missing dirmngr..."
-    apt-get -y install dirmngr > /dev/null 2>&1
+    apt-get -y install dirmngr >> $LOG
     check_result $? "Can't install dirmngr"
 fi
 
 # Checking screen
 if [ ! -e '/usr/bin/screen' ]; then
     echo "Install missing screen..."
-    apt-get -y install screen > /dev/null 2>&1
+    apt-get -y install screen >> $LOG
     check_result $? "Can't install screen"
 fi
 
 # Check if apt-transport-https is installed
 if [ ! -e '/usr/lib/apt/methods/https' ]; then
     echo "Install missing apt-transport-https..."
-    apt-get -y install apt-transport-https > /dev/null 2>&1
+    apt-get -y install apt-transport-https >> $LOG
     check_result $? "Can't install apt-transport-https"
 fi
 
@@ -468,6 +469,9 @@ fi
 hst_backups="/root/hst_install_backups/$(date +%s)"
 echo "Installation backup directory: $hst_backups"
 
+# Print Log File Path
+echo "Installation Log File: $LOG"
+
 # Printing start message and sleeping for 2 seconds
 echo -e "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes...\n"
 sleep 2
@@ -493,7 +497,7 @@ fi
 
 # Updating system
 echo "Upgrade System using apt-get..."
-apt-get -y upgrade > /dev/null 2>&1
+apt-get -y upgrade >> $LOG
 check_result $? 'apt-get upgrade failed'
 
 # Define apt conf location
@@ -503,13 +507,13 @@ apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+apt-key add /tmp/nginx_signing.key >> $LOG
 
 if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
     echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-    wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key > /dev/null 2>&1
-    apt-key add /tmp/php_signing.key > /dev/null 2>&1
+    wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key >> $LOG
+    apt-key add /tmp/php_signing.key >> $LOG
 fi
 
 # Installing MariaDB repo
@@ -519,7 +523,7 @@ screen -dm apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C7
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-apt-key add /tmp/deb_signing.key > /dev/null 2>&1
+apt-key add /tmp/deb_signing.key >> $LOG
 
 
 #----------------------------------------------------------#
@@ -697,7 +701,7 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-apt-get -y install $software > /dev/null 2>&1
+apt-get -y install $software >> $LOG
 check_result $? "apt-get install failed"
 
 # Restoring autostart policy
@@ -948,11 +952,11 @@ if [ "$nginx" = 'yes' ]; then
         ln -s $HESTIA/data/templates/web/nginx/PHP-72.tpl $HESTIA/data/templates/web/nginx/default.tpl
         ln -s $HESTIA/data/templates/web/nginx/PHP-72.stpl $HESTIA/data/templates/web/nginx/default.stpl
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
-        service php7.2-fpm start > /dev/null 2>&1
+        service php7.2-fpm start >> $LOG
         check_result $? "php7.2-fpm start failed"
     fi
     update-rc.d nginx defaults > /dev/null 2>&1
-    service nginx start > /dev/null 2>&1
+    service nginx start >> $LOG
     check_result $? "nginx start failed"
 fi
 
@@ -1011,7 +1015,7 @@ if [ "$apache" = 'yes' ]; then
         fi
     fi
     update-rc.d apache2 defaults > /dev/null 2>&1
-    service apache2 start > /dev/null 2>&1
+    service apache2 start >> $LOG
     check_result $? "apache2 start failed"
 else
     update-rc.d apache2 disable >/dev/null 2>&1
@@ -1026,7 +1030,7 @@ fi
 if [ "$phpfpm" = 'yes' ]; then
     cp -f $hestiacp/php-fpm/www.conf /etc/php/7.2/fpm/pool.d/www.conf
     update-rc.d php7.2-fpm defaults > /dev/null 2>&1
-    service php7.2-fpm start > /dev/null 2>&1
+    service php7.2-fpm start >> $LOG
     check_result $? "php-fpm start failed"
 fi
 
@@ -1088,7 +1092,7 @@ if [ "$mysql" = 'yes' ]; then
 
    # Configuring MariaDB
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
-    mysql_install_db > /dev/null 2>&1
+    mysql_install_db >> $LOG
 
     update-rc.d mysql defaults
     service mysql start
@@ -1096,7 +1100,7 @@ if [ "$mysql" = 'yes' ]; then
 
     # Securing MariaDB installation
     mpass=$(gen_pass)
-    mysqladmin -u root password $mpass > /dev/null 2>&1
+    mysqladmin -u root password $mpass >> $LOG
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
 
@@ -1224,9 +1228,9 @@ if [ "$exim" = 'yes' ]; then
     rm -f /etc/alternatives/mta
     ln -s /usr/sbin/exim4 /etc/alternatives/mta
     update-rc.d -f sendmail remove > /dev/null 2>&1
-    service sendmail stop > /dev/null 2>&1
+    service sendmail stop >> $LOG
     update-rc.d -f postfix remove > /dev/null 2>&1
-    service postfix stop > /dev/null 2>&1
+    service postfix stop >> $LOG
 
     update-rc.d exim4 defaults
     service exim4 start
@@ -1273,7 +1277,7 @@ if [ "$clamd" = 'yes' ]; then
         systemctl daemon-reload
     fi
     echo "Updating ClamAV..."
-    /usr/bin/freshclam > /dev/null 2>&1
+    /usr/bin/freshclam >> $LOG
     service clamav-daemon start
     check_result $? "clamav-daemon start failed"
 fi
@@ -1286,7 +1290,7 @@ fi
 if [ "$spamd" = 'yes' ]; then
     update-rc.d spamassassin defaults > /dev/null 2>&1
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
-    service spamassassin start > /dev/null 2>&1
+    service spamassassin start >> $LOG
     check_result $? "spamassassin start failed"
     unit_files="$(systemctl list-unit-files |grep spamassassin)"
     if [[ "$unit_files" =~ "disabled" ]]; then
@@ -1412,7 +1416,7 @@ fi
 # Special thanks to Pavel Galkin (https://skurudo.ru)
 # https://github.com/skurudo/phpmyadmin-fixer
 
-source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
+source $hestiacp/phpmyadmin/pma.sh >> $LOG
 
 
 #----------------------------------------------------------#
@@ -1481,7 +1485,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     fi
     echo "</IfModule>" >> remoteip.conf
     sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
-    a2enmod remoteip > /dev/null 2>&1
+    a2enmod remoteip >> $LOG
     service apache2 restart
 fi
 

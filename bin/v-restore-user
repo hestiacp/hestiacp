@@ -244,23 +244,23 @@ fi
 # Set default backup source system
 backup_system="hestia"
 
+# Check if it is a vesta backup
+if tar -tf $BACKUP/$backup ./vesta >/dev/null 2>&1; then
+    backup_system="vesta"
+fi
+
 # Restoring user account
 if [ "$create_user" = 'yes' ]; then
     echo "-- USER --" |tee $tmpdir/restore.log
     echo -e "$(date "+%F %T") $user" |tee -a $tmpdir/restore.log
 
     # Unpacking user container
-    tar xf $BACKUP/$backup -C $tmpdir ./hestia 2>/dev/null
+    tar xf $BACKUP/$backup -C $tmpdir ./$backup_system 2>/dev/null
     if [ "$?" -ne 0 ]; then
-        tar xf $BACKUP/$backup -C $tmpdir ./vesta 2>/dev/null
-        if [ "$?" -ne 0 ]; then
-            rm -rf $tmpdir
-            echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email $notify
-            sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-            check_result "$E_PARSING" "Can't unpack user container"
-        else
-            backup_system="vesta"
-        fi
+        rm -rf $tmpdir
+        echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email $notify
+        sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+        check_result "$E_PARSING" "Can't unpack user container"
     fi
 
     # Restoring user.conf
@@ -271,20 +271,6 @@ if [ "$create_user" = 'yes' ]; then
 
     # Rebuilding user
     rebuild_user_conf
-else
-    # Unpacking user container to check if hestia or vesta backup.
-    tar xf $BACKUP/$backup -C $tmpdir ./hestia 2>/dev/null
-    if [ "$?" -ne 0 ]; then
-        tar xf $BACKUP/$backup -C $tmpdir ./vesta 2>/dev/null
-        if [ "$?" -ne 0 ]; then
-            rm -rf $tmpdir
-            echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email $notify
-            check_result "$E_PARSING" "Can't unpack user container"
-        else
-            backup_system="vesta"
-        fi
-    fi
-fi
 
 # Unpacking pam container
 tar xf $BACKUP/$backup -C $tmpdir ./pam

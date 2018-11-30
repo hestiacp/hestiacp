@@ -241,6 +241,9 @@ if [ "$?" -ne 0 ]; then
     check_result "$E_NOTEXIST" "Can't create tmp dir"
 fi
 
+# Set default backup source system
+backup_system="hestia"
+
 # Restoring user account
 if [ "$create_user" = 'yes' ]; then
     echo "-- USER --" |tee $tmpdir/restore.log
@@ -258,8 +261,6 @@ if [ "$create_user" = 'yes' ]; then
         else
             backup_system="vesta"
         fi
-    else
-        backup_system="hestia"
     fi
 
     # Restoring user.conf
@@ -282,8 +283,6 @@ else
         else
             backup_system="vesta"
         fi
-    else
-        backup_system="hestia"
     fi
 fi
 

@@ -13,6 +13,7 @@ VERSION='debian'
 HESTIA='/usr/local/hestia'
 LOG="/root/hst_install_backups/$(date +%s).log"
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
+hst_backups="/root/hst_install_backups/$(date +%s)"
 arch=$(uname -i)
 os='debian'
 release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
@@ -272,6 +273,9 @@ fi
 echo "Please wait a few seconds, we update your repository before we start the installation process..."
 apt-get -qq update
 
+# Creating backup directory
+mkdir -p $hst_backups
+
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
     echo "Install missing wget..."
@@ -465,8 +469,7 @@ if [ -z "$email" ]; then
     email="admin@$servername"
 fi
 
-# Defining backup directory
-hst_backups="/root/hst_install_backups/$(date +%s)"
+# Print backup directory
 echo "Installation backup directory: $hst_backups"
 
 # Print Log File Path

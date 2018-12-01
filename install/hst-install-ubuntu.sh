@@ -13,6 +13,7 @@ VERSION='ubuntu'
 HESTIA='/usr/local/hestia'
 LOG="/root/hst_install_backups/$(date +%s).log"
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
+hst_backups="/root/hst_install_backups/$(date +%s)"
 arch=$(uname -i)
 os='ubuntu'
 release="$(lsb_release -s -r)"
@@ -257,6 +258,9 @@ fi
 echo "Please wait a few seconds, we update your repository before we start the installation process..."
 apt-get -qq update
 
+# Creating backup directory
+mkdir -p $hst_backups
+
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
     echo "Install missing wget..."
@@ -437,7 +441,6 @@ if [ -z "$email" ]; then
 fi
 
 # Defining backup directory
-hst_backups="/root/hst_install_backups/$(date +%s)"
 echo "Installation backup directory: $hst_backups"
 
 # Print Log File Path
@@ -499,7 +502,6 @@ apt-key add /tmp/deb_signing.key >> $LOG
 #----------------------------------------------------------#
 
 # Creating backup directory tree
-mkdir -p $hst_backups
 cd $hst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql hestia

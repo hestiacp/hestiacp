@@ -150,6 +150,7 @@ prepare_web_domain_values() {
     server_alias=''
     alias_string=''
     aliases_idn=''
+    ssl_ca_str=''
     prepare_web_aliases $ALIAS
 
     ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"

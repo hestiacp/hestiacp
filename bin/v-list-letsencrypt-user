@@ -23,7 +23,8 @@ json_list() {
         "EMAIL": "'$EMAIL'",
         "EXPONENT": "'$EXPONENT'",
         "MODULUS": "'$MODULUS'",
-        "THUMB: "'$THUMB'"
+        "THUMB": "'$THUMB'",
+        "KID": "'$KID'"
     }'
     echo '}'
 }
@@ -35,17 +36,18 @@ shell_list() {
     echo "THUMB:          $THUMB"
     echo "EXPONENT:       $EXPONENT"
     echo "MODULUS:        $MODULUS"
+    echo "KID:            $KID"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -e "$user\t$EMAIL\t$EXPONENT\t$MODULUS\t$THUMB"
+    echo -e "$user\t$EMAIL\t$EXPONENT\t$MODULUS\t$THUMB\t$KID"
 }
 
 # CSV list function
 csv_list() {
-    echo "USER,EMAIL,EXPONENT,MODULUS,THUMB"
-    echo "$user,$EMAIL,$EXPONENT,$MODULUS,$THUMB"
+    echo "USER,EMAIL,EXPONENT,MODULUS,THUMB,KID"
+    echo "$user,$EMAIL,$EXPONENT,$MODULUS,$THUMB,$KID"
 }
 
 

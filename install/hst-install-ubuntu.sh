@@ -579,7 +579,7 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-php7.2//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php7.3//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$vsftpd" = 'no' ]; then
@@ -614,7 +614,7 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-server//')
     software=$(echo "$software" | sed -e 's/mariadb-client//')
     software=$(echo "$software" | sed -e 's/mariadb-common//')
-    software=$(echo "$software" | sed -e 's/php7.2-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.3-mysql//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
     software=$(echo "$software" | sed -e 's/phpMyAdmin//')
     software=$(echo "$software" | sed -e 's/phpmyadmin//')
@@ -622,7 +622,7 @@ fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
-    software=$(echo "$software" | sed -e 's/php7.2-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.3-pgsql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
 fi
@@ -651,9 +651,9 @@ if [ "$multiphp" = 'yes' ]; then
 fi
 
 if [ "$phpfpm" = 'yes' ]; then
-    fpm="php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
-         php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
-         php7.2-zip"
+    fpm="php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl php7.3-fpm
+         php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
+         php7.3-zip"
     software="$software $fpm"
 fi
 
@@ -706,7 +706,7 @@ echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
 chmod 755 /etc/cron.daily/ntpdate
 ntpdate -s pool.ntp.org
 
-# Adding rssh
+# Setup rssh
 if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
     echo /usr/bin/rssh >> /etc/shells
 fi
@@ -915,13 +915,13 @@ if [ "$nginx" = 'yes' ]; then
         rm -f /etc/php/7.3/fpm/pool.d/*
         rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
-        cp -f $hestiacp/php-fpm/www.conf /etc/php/7.2/fpm/pool.d/
-        ln -s $HESTIA/data/templates/web/nginx/PHP-72.sh $HESTIA/data/templates/web/nginx/default.sh
-        ln -s $HESTIA/data/templates/web/nginx/PHP-72.tpl $HESTIA/data/templates/web/nginx/default.tpl
-        ln -s $HESTIA/data/templates/web/nginx/PHP-72.stpl $HESTIA/data/templates/web/nginx/default.stpl
+        cp -f $hestiacp/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/
+        ln -s $HESTIA/data/templates/web/nginx/PHP-73.sh $HESTIA/data/templates/web/nginx/default.sh
+        ln -s $HESTIA/data/templates/web/nginx/PHP-73.tpl $HESTIA/data/templates/web/nginx/default.tpl
+        ln -s $HESTIA/data/templates/web/nginx/PHP-73.stpl $HESTIA/data/templates/web/nginx/default.stpl
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
-        service php7.2-fpm start > /dev/null 2>&1
-        check_result $? "php7.2-fpm start failed"
+        service php7.3-fpm start >> $LOG
+        check_result $? "php7.3-fpm start failed"
     fi
     update-rc.d nginx defaults > /dev/null 2>&1
     service nginx start >> $LOG
@@ -992,9 +992,9 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-    cp -f $hestiacp/php-fpm/www.conf /etc/php/7.2/fpm/pool.d/www.conf
-    update-rc.d php7.2-fpm defaults > /dev/null 2>&1
-    service php7.2-fpm start >> $LOG
+    cp -f $hestiacp/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+    update-rc.d php7.3-fpm defaults > /dev/null 2>&1
+    service php7.3-fpm start >> $LOG
     check_result $? "php-fpm start failed"
 fi
 

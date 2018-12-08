@@ -8,12 +8,12 @@ INSTALL_DIR='/usr/local/hestia'
 GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/master/src/deb'
 
 # Set Version for compiling
-HESTIA_V='0.9.8-24_amd64'
+HESTIA_V='0.9.8-25_amd64'
 NGINX_V='1.15.7'
-OPENSSL_V='1.1.1'
+OPENSSL_V='1.1.1a'
 PCRE_V='8.42'
 ZLIB_V='1.2.11'
-PHP_V='7.2.11'
+PHP_V='7.3.0'
 
 # Generate Links for sourcecode
 HESTIA='https://github.com/hestiacp/hestiacp/archive/master.zip'

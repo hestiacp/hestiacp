@@ -33,15 +33,9 @@ for user in $users; do
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
 
         # Check if Web Domain is suspended
-        websuspended=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |grep "SUSPENDED='no")
+        websuspended=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |grep "SUSPENDED='yes")
         if [ ! -z "$websuspended" ]; then
                 continue;
-        fi;
-
-        # Check if DNS is suspended
-        dnssuspended=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='no")
-        if [  ! -z "$dnssuspended" ]; then
-            continue;
         fi;
 
         crt="$HESTIA/data/users/$user/ssl/$domain.crt"

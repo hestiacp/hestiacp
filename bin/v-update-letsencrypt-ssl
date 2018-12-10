@@ -25,13 +25,14 @@ source $HESTIA/conf/hestia.conf
 # Defining user list
 users=$($BIN/v-list-users | tail -n+3 | awk '{ print $1 }')
 
+lecounter=0
+
 # Checking users
 for user in $users; do
     USER_DATA=$HESTIA/data/users/$user
     # Checking user certificates
-    lecounter=0
+    
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
-
         # Check if Web Domain is suspended
         websuspended=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |grep "SUSPENDED='yes")
         if [ ! -z "$websuspended" ]; then
@@ -48,6 +49,10 @@ for user in $users; do
         expire=$((expire / 86400))
         domain=$(basename $crt |sed -e "s/.crt$//")
         if [[ "$expire" -lt 31 ]]; then
+            if [ $lecounter -gt 0 ]; then
+                sleep 10
+            fi
+            ((lecounter++))
             aliases=$(echo "$crt_data" |grep DNS:)
             aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//")
             aliases=$(echo "$aliases" |tr ' ' '\n' |sed "/^$/d")
@@ -65,10 +70,6 @@ for user in $users; do
                 fi
             fi
         fi
-        if [ $lecounter -gt 0 ]; then
-            sleep 60
-        fi
-        ((lecounter++))
     done
 done
 

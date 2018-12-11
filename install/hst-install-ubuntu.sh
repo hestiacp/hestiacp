@@ -1194,9 +1194,9 @@ if [ "$exim" = 'yes' ]; then
     rm -f /etc/alternatives/mta
     ln -s /usr/sbin/exim4 /etc/alternatives/mta
     update-rc.d -f sendmail remove > /dev/null 2>&1
-    service sendmail stop >> $LOG
+    service sendmail stop > /dev/null 2>&1
     update-rc.d -f postfix remove > /dev/null 2>&1
-    service postfix stop >> $LOG
+    service postfix stop > /dev/null 2>&1
 
     update-rc.d exim4 defaults
     service exim4 start

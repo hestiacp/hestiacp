@@ -510,13 +510,13 @@ apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-apt-key add /tmp/nginx_signing.key >> $LOG
+screen -dm apt-key add /tmp/nginx_signing.key
 
 if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
     echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-    wget https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key >> $LOG
-    apt-key add /tmp/php_signing.key >> $LOG
+    wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key >> $LOG
+    screen -dm apt-key add /tmp/php_signing.key
 fi
 
 # Installing MariaDB repo
@@ -526,7 +526,7 @@ screen -dm apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C7
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-apt-key add /tmp/deb_signing.key >> $LOG
+screen -dm apt-key add /tmp/deb_signing.key
 
 
 #----------------------------------------------------------#
@@ -1231,9 +1231,9 @@ if [ "$exim" = 'yes' ]; then
     rm -f /etc/alternatives/mta
     ln -s /usr/sbin/exim4 /etc/alternatives/mta
     update-rc.d -f sendmail remove > /dev/null 2>&1
-    service sendmail stop >> $LOG
+    service sendmail stop > /dev/null 2>&1
     update-rc.d -f postfix remove > /dev/null 2>&1
-    service postfix stop >> $LOG
+    service postfix stop > /dev/null 2>&1
 
     update-rc.d exim4 defaults
     service exim4 start

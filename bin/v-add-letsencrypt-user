@@ -162,7 +162,9 @@ if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
     echo "THUMB='$thumb'" >> $USER_DATA/ssl/le.conf
     if [ "$type" -eq 1]; then
         echo "EMAIL='$email'" >> $USER_DATA/ssl/le.conf
+        echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
     else
+        echo "EMAIL='$email'" >> $USER_DATA/ssl/le.conf
         echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
     fi
     chmod 660  $USER_DATA/ssl/le.conf

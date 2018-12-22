@@ -160,7 +160,7 @@ if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
     echo "EXPONENT='$exponent'" > $USER_DATA/ssl/le.conf
     echo "MODULUS='$modulus'" >> $USER_DATA/ssl/le.conf
     echo "THUMB='$thumb'" >> $USER_DATA/ssl/le.conf
-    if [ "$type" -eq 1]; then
+    if [ "$type" -eq 1 ]; then
         echo "EMAIL='$email'" >> $USER_DATA/ssl/le.conf
         echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
     else

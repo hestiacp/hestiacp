@@ -901,11 +901,6 @@ input[type="checkbox"] {
   display: inline-block;
   width: 0;
 }
-.notification-container .icon.filemanager {
-  display: inline-block;
-  width: 22px;
-  background: url("/images/flat_icons.png") repeat scroll -31px -100px;
-}
 .notification-container .icon.starred {
   display: inline-block;
   width: 21px;

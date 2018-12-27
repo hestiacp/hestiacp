@@ -19,7 +19,7 @@ os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
 hestiacp="$HESTIA/install/$VERSION/$release"
-pma_v='4.8.3'
+pma_v='4.8.4'
 
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
@@ -1103,7 +1103,7 @@ wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-al
 tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
 # Delete file to prevent error
-if [ "$pma_v" = '4.8.3' ]; then
+if [ "$pma_v" = '4.8.4' ]; then
     rm -fr /usr/share/phpmyadmin/doc/html
 fi
 

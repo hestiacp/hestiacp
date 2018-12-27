@@ -1377,7 +1377,7 @@ $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang
 
 # Configuring system IPs
-$HESTIA/bin/v-update-sys-ip >> $LOG
+$HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)

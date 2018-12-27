@@ -19,7 +19,7 @@ os='debian'
 release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 hestiacp="$HESTIA/install/$VERSION/$release"
-pma_v='4.8.3'
+pma_v='4.8.4'
 
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -1138,7 +1138,7 @@ wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-al
 tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
 # Delete file to prevent error
-if [ "$pma_v" = '4.8.3' ]; then
+if [ "$pma_v" = '4.8.4' ]; then
     rm -fr /usr/share/phpmyadmin/doc/html
 fi
 

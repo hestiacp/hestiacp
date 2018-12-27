@@ -489,7 +489,7 @@ fi
 
 # Installing MariaDB repo
 echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
-apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 >> $LOG
+apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
@@ -979,11 +979,11 @@ if [ "$apache" = 'yes' ]; then
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
     fi
     update-rc.d apache2 defaults > /dev/null 2>&1
-    service apache2 start >> $LOG
+    service apache2 start > /dev/null 2>&1
     check_result $? "apache2 start failed"
 else
     update-rc.d apache2 disable > /dev/null 2>&1
-    service apache2 stop >> $LOG
+    service apache2 stop > /dev/null 2>&1
 fi
 
 

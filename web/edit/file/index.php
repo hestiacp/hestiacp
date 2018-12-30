@@ -3,13 +3,6 @@
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 $user = $_SESSION['user'];
 
-// Check module activation
-if (!$_SESSION['FILEMANAGER_KEY']) {
-    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
-    header("Location: /login/");
-    exit;
-}
-
 // Check login_as feature
 if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
     $user=$_SESSION['look'];
@@ -21,7 +14,6 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
 <title>Edit file <?= htmlspecialchars($_REQUEST['path']) ?></title>
 <meta charset="utf-8" /> 
 
-<link href="/css/file_manager_editor.css" type="text/css" rel="stylesheet">
 <script src="/js/cheef-editor/jquery/jquery-1.8.3.min.js"></script>
 <script src="/js/cheef-editor/ace/ace.js"></script>
 <script src="/js/cheef-editor/ace/theme-twilight.js"></script>
@@ -95,27 +87,6 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
             action: 'backup',
             path:   '<?= $path ?>'
         };
-        
-        $.ajax({url: "/file_manager/fm_api.php", 
-            method: "POST",
-            data:   params,
-            dataType: 'JSON',
-            success: function(reply) {
-                var fadeTimeout = 3000;
-                if (reply.result) {
-                    $('#message').text('File backed up as ' + reply.filename);
-                    clearTimeout(window.msg_tmt);
-                    $('#message').show();
-                    window.msg_tmt = setTimeout(function() {$('#message').fadeOut();}, fadeTimeout);
-                }
-                else {
-                    $('#error-message').text(reply.message);
-                    clearTimeout(window.errmsg_tmt);
-                    $('#error-message').show();
-                    window.errmsg_tmt = setTimeout(function() {$('#error-message').fadeOut();}, fadeTimeout);
-                }
-            }
-        });
     }
 
     $('#do-backup').on('click', function(evt) {

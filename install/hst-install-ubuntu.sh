@@ -447,6 +447,9 @@ echo "Installation backup directory: $hst_backups"
 # Print Log File Path
 echo "Installation Log File: $LOG"
 
+# Print new line
+echo
+
 
 #----------------------------------------------------------#
 #                      Checking swap                       #
@@ -467,7 +470,7 @@ fi
 #----------------------------------------------------------#
 
 # Updating system
-echo -e "Upgrade System using apt-get... "
+echo -ne "Upgrade System using apt-get... "
 apt-get -y upgrade >> $LOG &
 BACK_PID=$!
 
@@ -491,7 +494,7 @@ apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-screen -dm apt-key add /tmp/nginx_signing.key
+apt-key add /tmp/nginx_signing.key
 
 if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
@@ -500,12 +503,12 @@ fi
 
 # Installing MariaDB repo
 echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
-screen -dm apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
+apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-screen -dm apt-key add /tmp/deb_signing.key
+apt-key add /tmp/deb_signing.key
 
 
 #----------------------------------------------------------#
@@ -681,7 +684,7 @@ chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
 echo -ne "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes. "
-apt-get -y install $software >> $LOG &
+apt-get -y install $software > /dev/null 2>&1 &
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
@@ -778,7 +781,7 @@ ln -s $HESTIA/log /var/log/hestia
 chmod 770 $HESTIA/data/sessions
 
 # Generating Hestia configuration
-rm -f $HESTIA/conf/hestia.conf 2>/dev/null
+rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
@@ -883,7 +886,7 @@ sed -i 's/%domain%/It worked!/g' /var/www/index.html
 cp -rf $hestiacp/firewall $HESTIA/data/
 
 # Configuring server hostname
-$HESTIA/bin/v-change-sys-hostname $servername 2>/dev/null
+$HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Generating SSL certificate
 $HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
@@ -1028,7 +1031,7 @@ fi
 #                     Configure PHP                        #
 #----------------------------------------------------------#
 
-ZONE=$(timedatectl 2>/dev/null|grep Timezone|awk '{print $2}')
+ZONE=$(timedatectl > /dev/null 2>&1|grep Timezone|awk '{print $2}')
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
 fi
@@ -1088,7 +1091,7 @@ if [ "$mysql" = 'yes' ]; then
     mysql_install_db >> $LOG
 
     update-rc.d mysql defaults
-    service mysql start
+    service mysql start >> $LOG
     check_result $? "mariadb start failed"
 
     # Securing MariaDB installation
@@ -1178,7 +1181,7 @@ if [ "$named" = 'yes' ]; then
     chmod 640 /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf.options
     aa-complain /usr/sbin/named > /dev/null 2>&1
-    echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2>/dev/null
+    echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named > /dev/null 2>&1
     service apparmor status >> $LOG
     if [ $? -ne 0 ]; then
         service apparmor restart
@@ -1324,7 +1327,7 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     fi
 
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-    phpenmod mcrypt 2>/dev/null
+    phpenmod mcrypt > /dev/null 2>&1
     if [ "$apache" = 'yes' ]; then
         service apache2 restart
     fi
@@ -1409,7 +1412,7 @@ $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang
 
 # Configuring system IPs
-$HESTIA/bin/v-update-sys-ip >> $LOG
+$HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)

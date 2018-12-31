@@ -476,6 +476,9 @@ echo "Installation backup directory: $hst_backups"
 # Print Log File Path
 echo "Installation Log File: $LOG"
 
+# Print new line
+echo
+
 
 #----------------------------------------------------------#
 #                      Checking swap                       #
@@ -496,13 +499,13 @@ fi
 #----------------------------------------------------------#
 
 # Updating system
-echo "Upgrade System using apt-get..."
+echo -ne "Upgrade System using apt-get... "
 apt-get -y upgrade >> $LOG &
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
 spin_i=1
-while kill -0 $BACK_PID 2> /dev/null ; do
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
     printf "\b${spinner:spin_i++%${#spinner}:1}"
     sleep 0.5
 done
@@ -520,23 +523,23 @@ apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-screen -dm apt-key add /tmp/nginx_signing.key
+apt-key add /tmp/nginx_signing.key
 
 if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
     echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
     wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key >> $LOG
-    screen -dm apt-key add /tmp/php_signing.key
+    apt-key add /tmp/php_signing.key
 fi
 
 # Installing MariaDB repo
 echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
-screen -dm apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
+apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-screen -dm apt-key add /tmp/deb_signing.key
+apt-key add /tmp/deb_signing.key
 
 
 #----------------------------------------------------------#
@@ -715,12 +718,12 @@ chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
 echo -ne "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes. "
-apt-get -y install $software >> $LOG &
+apt-get -y -qq install $software >> $LOG &
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
 spin_i=1
-while kill -0 $BACK_PID 2> /dev/null ; do
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
     printf "\b${spinner:spin_i++%${#spinner}:1}"
     sleep 0.5
 done
@@ -1122,7 +1125,7 @@ if [ "$mysql" = 'yes' ]; then
     mysql_install_db >> $LOG
 
     update-rc.d mysql defaults
-    service mysql start
+    service mysql start >> $LOG
     check_result $? "mariadb start failed"
 
     # Securing MariaDB installation
@@ -1303,11 +1306,11 @@ if [ "$clamd" = 'yes' ]; then
             /lib/systemd/system/clamav-daemon.service
         systemctl daemon-reload
     fi
-    echo "Updating ClamAV..."
+    echo -ne "Updating ClamAV... "
     /usr/bin/freshclam >> $LOG &
     BACK_PID=$!
     spin_i=1
-    while kill -0 $BACK_PID 2> /dev/null ; do
+    while kill -0 $BACK_PID > /dev/null 2>&1 ; do
         printf "\b${spinner:spin_i++%${#spinner}:1}"
         sleep 0.5
     done

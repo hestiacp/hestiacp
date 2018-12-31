@@ -22,10 +22,12 @@ source $HESTIA/conf/hestia.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Set LE counter
+lecounter=0
+
 # Checking user certificates
 for user in $($BIN/v-list-users plain |cut -f 1); do
     USER_DATA=$HESTIA/data/users/$user
-    lecounter=0
 
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
         crt_data=$(openssl x509 -text -in $USER_DATA/ssl/$domain.crt)
@@ -35,6 +37,10 @@ for user in $($BIN/v-list-users plain |cut -f 1); do
         seconds_valid=$((expiration - now))
         days_valid=$((seconds_valid / 86400))
         if [[ "$days_valid" -lt 31 ]]; then
+            if [ $lecounter -gt 0 ]; then
+                sleep 10
+            fi
+            ((lecounter++))
             aliases=$(echo "$crt_data" |grep DNS:)
             aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//")
             aliases=$(echo "$aliases" |tr ' ' '\n' |sed "/^$/d")
@@ -44,10 +50,6 @@ for user in $($BIN/v-list-users plain |cut -f 1); do
             if [ $? -ne 0 ]; then
                 echo "$domain $msg"
             fi
-            if [ $lecounter -gt 0 ]; then
-                sleep 10
-            fi
-            ((lecounter++))
         fi
     done
 done

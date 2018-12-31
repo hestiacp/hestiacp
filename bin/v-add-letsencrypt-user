@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: register letsencrypt user account
-# options: USER [TYPE]
+# options: USER
 #
-# The function creates and register LetsEncript account key
+# The function creates and register LetsEncrypt account 
 
 
 #----------------------------------------------------------#
@@ -11,8 +11,9 @@
 
 # Argument definition
 user=$1
-type=${2-1}
-key_size=4096
+
+# LE API
+API='https://acme-v02.api.letsencrypt.org'
 
 # Includes
 source $HESTIA/func/main.sh
@@ -23,22 +24,39 @@ encode_base64() {
     cat |base64 |tr '+/' '-_' |tr -d '\r\n='
 }
 
+# Let's Encrypt v2 curl function
+query_le_v2() {
+    protected='{"nonce": "'$3'",'
+    protected=''$protected' "url": "'$1'",'
+    protected=''$protected' "alg": "RS256", "jwk": '$jwk'}'
+    content="Content-Type: application/jose+json"
+
+    payload_=$(echo -n "$2" |encode_base64)
+    protected_=$(echo -n "$protected" |encode_base64)
+    signature_=$(printf "%s" "$protected_.$payload_" |\
+        openssl dgst -sha256 -binary -sign $USER_DATA/ssl/user.key |\
+        encode_base64)
+
+    post_data='{"protected":"'"$protected_"'",'
+    post_data=$post_data'"payload":"'"$payload_"'",'
+    post_data=$post_data'"signature":"'"$signature_"'"}'
+
+    curl -s -i -d "$post_data" "$1" -H "$content"
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [TYPE]'
+check_args '1' "$#" 'USER'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 if [ -e "$USER_DATA/ssl/le.conf" ]; then
     source "$USER_DATA/ssl/le.conf"
-    if [ "$type" -eq 1 ] && [ ! -z "$EMAIL" ]; then
-        exit
-    fi
-    if [ "$type" -eq 2 ] && [ ! -z "$KID" ]; then
-        exit
-    fi
+fi
+if [ ! -z "$KID" ]; then
+    exit
 fi
 
 
@@ -46,136 +64,75 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining LE API endpoint
-if [ "$type" -eq 1 ]; then
-    api='https://acme-v01.api.letsencrypt.org'
-else
-    api='https://acme-v02.api.letsencrypt.org'
-fi
 
 # Defining user email
-if [ $type -eq 1 ]; then
-    email=$(get_user_value '$CONTACT')
+if [[ -z "$EMAIL" ]]; then
+    EMAIL=$(get_user_value '$CONTACT')
 fi
 
 # Defining user agreement
-if [ "$type" -eq 1 ]; then
-    agreement=$(curl -s -I "$api/terms" |grep Location |\
-        cut -f 2 -d \ |tr -d '\r\n')
-else
-    #agreement=$(curl -s "$api/directory" |grep termsOfService |\
-    #    cut -f 4 -d '"')
-    agreement=''
-fi
+agreement=''
 
 # Generating user key
-key="$USER_DATA/ssl/user.key"
-if [ ! -e "$key" ]; then
-    openssl genrsa -out $key $key_size >/dev/null 2>&1
-    chmod 600 $key
+KEY="$USER_DATA/ssl/user.key"
+if [ ! -e "$KEY" ]; then
+    openssl genrsa -out $KEY 4096 >/dev/null 2>&1
+    chmod 600 $KEY
 fi
 
 # Defining key exponent
 if [ -z "$EXPONENT" ]; then
-    exponent=$(openssl pkey -inform pem -in "$key" -noout -text_pub |\
+    EXPONENT=$(openssl pkey -inform pem -in "$KEY" -noout -text_pub |\
         grep Exponent: |cut -f 2 -d '(' |cut -f 1 -d ')' |sed -e 's/x//' |\
         xxd -r -p |encode_base64)
-else
-    exponent="$EXPONENT"
 fi
 
 # Defining key modulus
 if [ -z "$MODULUS" ]; then
-    modulus=$(openssl rsa -in "$key" -modulus -noout |\
+    MODULUS=$(openssl rsa -in "$KEY" -modulus -noout |\
         sed -e 's/^Modulus=//' |xxd -r -p |encode_base64)
-else
-    modulus="$MODULUS"
 fi
 
-# Defining JWK token
-jwk='{"e":"'$exponent'","kty":"RSA","n":"'"$modulus"'"}'
+# Defining JWK
+jwk='{"e":"'$EXPONENT'","kty":"RSA","n":"'"$MODULUS"'"}'
 
 # Defining key thumbnail
 if [ -z "$THUMB" ]; then
-    thumb="$(echo -n "$jwk" |openssl dgst -sha256 -binary |encode_base64)"
-else
-    thumb="$THUMB"
+    THUMB="$(echo -n "$jwk" |openssl dgst -sha256 -binary |encode_base64)"
 fi
+
 
 # Requesting ACME nonce
-nonce=$(curl -s -I "$api/directory" |grep Nonce |cut -f 2 -d \ |tr -d '\r\n')
+nonce=$(curl -s -I "$API/directory" |grep Nonce |cut -f 2 -d \ |tr -d '\r\n')
 
-# Defining payload and protected data for v1 and v2
-if [ "$type" -eq 1 ]; then
-    header='{"alg":"RS256","jwk":'"$jwk"'}'
-    protected='{"nonce":"'"$nonce"'"}'
-    payload='{"resource":"new-reg","contact":["mailto:'"$email"'"],'
-    payload=$payload'"agreement":"'$agreement'"}'
+# Creating ACME account
+url="$API/acme/new-acct"
+payload='{"termsOfServiceAgreed": true}'
+answer=$(query_le_v2 "$url" "$payload" "$nonce")
+kid=$(echo "$answer" |grep Location: |cut -f2 -d ' '|tr -d '\r')
 
-else
-    protected='{"nonce": "'$nonce'",'
-    protected=''$protected' "url": "'$api/acme/new-acct'",'
-    protected=''$protected' "alg": "RS256", "jwk": '$jwk'}'
-    payload='{"termsOfServiceAgreed": true}'
-fi
-
-# Encoding data
-protected=$(echo -n "$protected" |encode_base64)
-payload=$(echo -n "$payload" |encode_base64)
-
-# Signing request
-signature=$(printf "%s" "$protected.$payload" |\
-    openssl dgst -sha256 -binary -sign "$key" |\
-    encode_base64)
-
-if [ "$type" -eq 1 ]; then
-    data='{"header":'"$header"',"protected":"'"$protected"'",'
-    data=$data'"payload":"'"$payload"'","signature":"'"$signature"'"}'
-
-    answer=$(curl -s -i -d "$data" "$api/acme/new-reg")
-    status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
-else
-    data='{"protected":"'"$protected"'",'
-    data=$data'"payload":"'"$payload"'",'
-    data=$data'"signature":"'"$signature"'"}'
-
-    answer=$(curl -s -i -d "$data" "$api/acme/new-acct" \
-        -H "Content-Type: application/jose+json")
-    status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
-    kid=$(echo "$answer" |grep Location: |cut -f2 -d ' '|tr -d '\r')
-fi
-
-# Checking http answer status
-if [[ "${status:0:2}" -ne "20" ]] && [[ "$status" -ne "409" ]]; then
-    check_result $E_CONNECT "LetsEncrypt account registration $status"
+# Checking answer status
+status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
+if [[ "${status:0:2}" -ne "20" ]]; then
+    check_result $E_CONNECT "Let's Encrypt acc registration failed $status"
 fi
 
 
 #----------------------------------------------------------#
-#                       Vesta                              #
+#                        Hestia                            #
 #----------------------------------------------------------#
 
 # Adding le.conf
 if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
-    echo "EXPONENT='$exponent'" > $USER_DATA/ssl/le.conf
-    echo "MODULUS='$modulus'" >> $USER_DATA/ssl/le.conf
-    echo "THUMB='$thumb'" >> $USER_DATA/ssl/le.conf
-    if [ "$type" -eq 1 ]; then
-        echo "EMAIL='$email'" >> $USER_DATA/ssl/le.conf
-        echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
-    else
-        echo "EMAIL='$email'" >> $USER_DATA/ssl/le.conf
-        echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
-    fi
+    echo "EXPONENT='$EXPONENT'" > $USER_DATA/ssl/le.conf
+    echo "MODULUS='$MODULUS'" >> $USER_DATA/ssl/le.conf
+    echo "THUMB='$THUMB'" >> $USER_DATA/ssl/le.conf
+    echo "EMAIL='$EMAIL'" >> $USER_DATA/ssl/le.conf
+    echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
     chmod 660  $USER_DATA/ssl/le.conf
 else
-    if [ "$type" -eq 1 ]; then
-        sed -i '/^EMAIL=/d' $USER_DATA/ssl/le.conf
-        echo "EMAIL='$email'" >> $USER_DATA/ssl/le.conf
-    else
-        sed -i '/^KID=/d' $USER_DATA/ssl/le.conf
-        echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
-    fi
+    sed -i '/^KID=/d' $USER_DATA/ssl/le.conf
+    echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
 fi
 
 # Logging

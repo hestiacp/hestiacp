@@ -15,6 +15,7 @@ LOG="/root/hst_install_backups/hst_install-$(date +%d%m%Y%H%M).log"
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 hst_backups="/root/hst_install_backups/$(date +%d%m%Y%H%M)"
 arch=$(uname -i)
+spinner="/-\|"
 os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
@@ -466,8 +467,21 @@ fi
 #----------------------------------------------------------#
 
 # Updating system
-echo "Upgrade System using apt-get..."
-apt-get -y upgrade >> $LOG
+echo -e "Upgrade System using apt-get... "
+apt-get -y upgrade >> $LOG &
+BACK_PID=$!
+
+# Check if package installation is done, print a spinner
+spin_i=1
+while kill -0 $BACK_PID 2> /dev/null ; do
+    printf "\b${spinner:spin_i++%${#spinner}:1}"
+    sleep 0.5
+done
+
+# Do a blank echo to get the \n back
+echo
+
+# Check Installation result
 check_result $? 'apt-get upgrade failed'
 
 # Define apt conf location
@@ -666,14 +680,15 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-echo -ne "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes."
+echo -ne "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes. "
 apt-get -y install $software >> $LOG &
 BACK_PID=$!
 
-# Check if package installation is done
+# Check if package installation is done, print a spinner
+spin_i=1
 while kill -0 $BACK_PID 2> /dev/null ; do
-    echo -n "."
-    sleep 2
+    printf "\b${spinner:spin_i++%${#spinner}:1}"
+    sleep 0.5
 done
 
 # Do a blank echo to get the \n back
@@ -1241,8 +1256,15 @@ if [ "$clamd" = 'yes' ]; then
     gpasswd -a clamav Debian-exim > /dev/null 2>&1
     cp -f $hestiacp/clamav/clamd.conf /etc/clamav/
     update-rc.d clamav-daemon defaults
-    echo "Updating ClamAV..."
-    /usr/bin/freshclam >> $LOG
+    echo -ne "Updating ClamAV... "
+    /usr/bin/freshclam >> $LOG &
+    BACK_PID=$!
+    spin_i=1
+    while kill -0 $BACK_PID 2> /dev/null ; do
+        printf "\b${spinner:spin_i++%${#spinner}:1}"
+        sleep 0.5
+    done
+    echo
     service clamav-daemon start
     check_result $? "clamav-daemon start failed"
 fi

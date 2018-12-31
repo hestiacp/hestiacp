@@ -1,5 +1,5 @@
 server {
-    listen      %ip%:%web_ssl_port%;
+    listen      %ip%:%web_ssl_port% ssl http2;
     server_name %domain_idn% %alias_idn%;
 
     root        %sdocroot%/pub;
@@ -9,7 +9,6 @@ server {
     error_page  404 403 = /errors/404.php;
     add_header  "X-UA-Compatible" "IE=Edge";
 
-    ssl         on;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
 

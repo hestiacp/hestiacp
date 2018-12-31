@@ -1,5 +1,5 @@
 server {
-    listen      %ip%:%web_ssl_port%;
+    listen      %ip%:%web_ssl_port% ssl http2;
     server_name %domain_idn% %alias_idn%;
     root        %sdocroot%;
     index       index.php index.html index.htm;
@@ -7,7 +7,6 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-    ssl         on;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
 
@@ -40,33 +39,33 @@ server {
     }
     
     location / {
-        try_files $uri @rewrite;
+        try_files $uri /index.php?$query_string;
     }
 
-    location @rewrite {
-        rewrite ^/(.*)$ /index.php?q=$1;
-    }
-    
     location ~ /vendor/.*\.php$ {
         deny all;
         return 404;
-    }    
+    }        
 
-    location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+    location ~ ^/sites/.*/files/styles/ {
+        try_files $uri @rewrite;
+    }
+
+    location ~ ^(/[a-z\-]+)?/system/files/ {
+        try_files $uri /index.php?$query_string;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
         try_files $uri @rewrite;
         expires max;
         log_not_found off;
     }
-
-    location ~ ^/sites/.*/files/imagecache/ {
-        try_files $uri @rewrite;
-    }    
-
+    
     location ~ '\.php$|^/update.php' {
         fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_pass %backend_lsnr%;             
-        include /etc/nginx/fastcgi_params;
+        fastcgi_pass %backend_lsnr%;
+        include         /etc/nginx/fastcgi_params;
     }
 
     error_page  403 /error/404.html;

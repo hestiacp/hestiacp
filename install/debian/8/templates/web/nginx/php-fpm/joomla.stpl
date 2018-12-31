@@ -1,5 +1,5 @@
 server {
-    listen      %ip%:%web_ssl_port%;
+    listen      %ip%:%web_ssl_port% ssl http2;
     server_name %domain_idn% %alias_idn%;
     root        %sdocroot%;
     index       index.php index.html index.htm;
@@ -7,15 +7,20 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-    ssl         on;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
 
     location / {
-        try_files $uri $uri/ /index.php?page=$request_uri;
+        try_files $uri $uri/ /index.php?$args;
 
         location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
             expires     max;
+        }
+
+        # deny running scripts inside writable directories
+        location ~* /(images|cache|media|logs|tmp)/.*\.(php|pl|py|jsp|asp|sh|cgi)$ {
+            return 403;
+            error_page 403 /403_error.html;
         }
 
         location ~ [^/]\.php(/|$) {
@@ -23,10 +28,11 @@ server {
             if (!-f $document_root$fastcgi_script_name) {
                 return  404;
             }
+
             fastcgi_pass    %backend_lsnr%;
             fastcgi_index   index.php;
-            include         /etc/nginx/fastcgi_params;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            include         /etc/nginx/fastcgi_params;
         }
     }
 

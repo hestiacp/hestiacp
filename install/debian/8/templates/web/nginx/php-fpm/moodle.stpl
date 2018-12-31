@@ -1,5 +1,5 @@
 server {
-    listen      %ip%:%web_ssl_port%;
+    listen      %ip%:%web_ssl_port% ssl http2;
     server_name %domain_idn% %alias_idn%;
     root        %sdocroot%;
     index       index.php index.html index.htm;
@@ -7,13 +7,44 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-    ssl         on;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
 
-    location / {
-        try_files $uri $uri/ /index.php;
+    rewrite ^/(.*\.php)(/)(.*)$ /$1?file=/$3 last;
 
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~* \.(txt|log)$ {
+        allow 192.168.0.0/16;
+        deny all;
+    }
+
+    location ~ \..*/.*\.php$ {
+        return 403;
+    }
+
+    # No no for private
+    location ~ ^/sites/.*/private/ {
+        return 403;
+    }
+
+    # Block access to "hidden" files and directories whose names begin with a
+    # period. This includes directories used by version control systems such
+    # as Subversion or Git to store control files.
+    location ~ (^|/)\. {
+            return 403;
+        }
+
+    location / {
         location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
             expires     max;
         }
@@ -26,6 +57,8 @@ server {
 
             fastcgi_pass    %backend_lsnr%;
             fastcgi_index   index.php;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
+            fastcgi_intercept_errors on;
             include         /etc/nginx/fastcgi_params;
         }
     }

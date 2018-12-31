@@ -447,7 +447,7 @@ echo "Installation backup directory: $hst_backups"
 echo "Installation Log File: $LOG"
 
 # Printing start message and sleeping for 2 seconds
-echo -e "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes...\n"
+echo -ne "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes."
 sleep 2
 
 #----------------------------------------------------------#
@@ -669,7 +669,19 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-apt-get -y install $software >> $LOG
+apt-get -y install $software >> $LOG &
+BACK_PID=$!
+
+# Check if package installation is done
+while kill -0 $BACK_PID 2> /dev/null ; do
+    echo -n "."
+    sleep 2
+done
+
+# Do a blank echo to get the \n back
+echo
+
+# Check Installation result
 check_result $? "apt-get install failed"
 
 # Restoring autostart policy

@@ -519,6 +519,10 @@ check_result $? 'apt-get upgrade failed'
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
+# Install Key Notification
+echo
+echo "Install required repository keys..."
+
 # Installing nginx repo
 echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list

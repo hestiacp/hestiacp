@@ -446,9 +446,6 @@ echo "Installation backup directory: $hst_backups"
 # Print Log File Path
 echo "Installation Log File: $LOG"
 
-# Printing start message and sleeping for 2 seconds
-echo -ne "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes."
-sleep 2
 
 #----------------------------------------------------------#
 #                      Checking swap                       #
@@ -669,6 +666,7 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
+echo -ne "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes."
 apt-get -y install $software >> $LOG &
 BACK_PID=$!
 

@@ -477,7 +477,7 @@ apt=/etc/apt/sources.list.d
 echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-apt-key add /tmp/nginx_signing.key >> $LOG
+screen -dm apt-key add /tmp/nginx_signing.key
 
 if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
@@ -486,12 +486,12 @@ fi
 
 # Installing MariaDB repo
 echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
-apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 >> $LOG
+screen -dm apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-apt-key add /tmp/deb_signing.key >> $LOG
+screen -dm apt-key add /tmp/deb_signing.key
 
 
 #----------------------------------------------------------#
@@ -1401,7 +1401,7 @@ fi
 pub_ip=$(curl --ipv4 -s https://www.hestiacp.com/what-is-my-ip/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
-    $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip >> $LOG
+    $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
 fi
 

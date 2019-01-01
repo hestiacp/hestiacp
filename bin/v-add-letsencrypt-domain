@@ -160,7 +160,7 @@ for auth in $authz; do
                 ln -s "$conf" "$sconf"
             fi
             $BIN/v-restart-proxy
-            check_result $? "Proxy restart failed" >/dev/null
+            check_result $? "Proxy restart failed" > /dev/null
 
         else
             well_known="$HOMEDIR/$user/web/$rdomain/public_html/.well-known"
@@ -170,7 +170,7 @@ for auth in $authz; do
             chown -R $user:$user $well_known
         fi
         $BIN/v-restart-web
-        check_result $? "Web restart failed" >/dev/null
+        check_result $? "Web restart failed" > /dev/null
     fi
 
     # Requesting ACME validation / STEP 5
@@ -234,13 +234,13 @@ tail -n $ca_end $ssl_dir/$domain.pem > $ssl_dir/$domain.ca
 
 # Adding SSL
 ssl_home=$(search_objects 'web' 'LETSENCRYPT' 'yes' 'SSL_HOME')
-$BIN/v-delete-web-domain-ssl $user $domain >/dev/null 2>&1
+$BIN/v-delete-web-domain-ssl $user $domain > /dev/null 2>&1
 $BIN/v-add-web-domain-ssl $user $domain $ssl_dir $ssl_home
 if [ "$?" -ne '0' ]; then
     touch $HESTIA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
     send_notice 'LETSENCRYPT' "$domain certificate installation failed"
-    check_result $? "SSL install" >/dev/null
+    check_result $? "SSL install" > /dev/null
 fi
 
 # Adding LE autorenew cronjob

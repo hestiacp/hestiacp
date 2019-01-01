@@ -600,9 +600,36 @@ mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
 # Backup Hestia
 service hestia stop > /dev/null 2>&1
 cp -r $HESTIA/* $hst_backups/hestia > /dev/null 2>&1
-apt-get -y remove hestia hestia-nginx hestia-php > /dev/null 2>&1
 apt-get -y purge hestia hestia-nginx hestia-php > /dev/null 2>&1
 rm -rf $HESTIA > /dev/null 2>&1
+
+
+#----------------------------------------------------------#
+#                     Package Includes                     #
+#----------------------------------------------------------#
+
+if [ "$multiphp" = 'yes' ]; then
+    mph="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
+         php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
+         php5.6-soap php5.6-xml php5.6-zip php7.0-mbstring php7.0-bcmath
+         php7.0-cli php7.0-curl php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt
+         php7.0-mysql php7.0-soap php7.0-xml php7.0-zip php7.1-mbstring
+         php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm php7.1-gd php7.1-intl
+         php7.1-mcrypt php7.1-mysql php7.1-soap php7.1-xml php7.1-zip 
+         php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
+         php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
+         php7.2-zip php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl
+         php7.3-fpm php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
+         php7.3-zip"
+    software="$software $mph"
+fi
+
+if [ "$phpfpm" = 'yes' ]; then
+    fpm="php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl php7.3-fpm
+         php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
+         php7.3-zip"
+    software="$software $fpm"
+fi
 
 
 #----------------------------------------------------------#
@@ -657,16 +684,23 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-server//')
     software=$(echo "$software" | sed -e 's/mariadb-client//')
     software=$(echo "$software" | sed -e 's/mariadb-common//')
-    software=$(echo "$software" | sed -e 's/php7.3-mysql//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
-    software=$(echo "$software" | sed -e 's/phpMyAdmin//')
+    software=$(echo "$software" | sed -e 's/php5.6-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.0-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.1-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.2-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.3-mysql//')
     software=$(echo "$software" | sed -e 's/phpmyadmin//')
 fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
-    software=$(echo "$software" | sed -e 's/php7.3-pgsql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
+    software=$(echo "$software" | sed -e 's/php5.6-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.0-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.1-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.2-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.3-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
@@ -683,33 +717,6 @@ fi
 
 
 #----------------------------------------------------------#
-#                     Package Includes                     #
-#----------------------------------------------------------#
-
-if [ "$multiphp" = 'yes' ]; then
-    mph="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
-         php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
-         php5.6-soap php5.6-xml php5.6-zip php7.0-mbstring php7.0-bcmath
-         php7.0-cli php7.0-curl php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt
-         php7.0-mysql php7.0-soap php7.0-xml php7.0-zip php7.1-mbstring
-         php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm php7.1-gd php7.1-intl
-         php7.1-mcrypt php7.1-mysql php7.1-soap php7.1-xml php7.1-zip 
-         php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
-         php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
-         php7.2-zip php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl
-         php7.3-fpm php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
-         php7.3-zip"
-    software="$software $mph"
-fi
-
-if [ "$phpfpm" = 'yes' ]; then
-    fpm="php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl php7.3-fpm
-         php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
-         php7.3-zip"
-    software="$software $fpm"
-fi
-
-#----------------------------------------------------------#
 #                     Install packages                     #
 #----------------------------------------------------------#
 
@@ -722,7 +729,7 @@ chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
 echo -ne "Install HestiaCP and all required packages, the process will take around 10-15 minutes... "
-apt-get -y -qq install $software >> $LOG &
+apt-get -y install $software > /dev/null 2>&1 &
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
@@ -818,7 +825,7 @@ ln -s $HESTIA/log /var/log/hestia
 chmod 770 $HESTIA/data/sessions
 
 # Generating Hestia configuration
-rm -f $HESTIA/conf/hestia.conf 2>/dev/null
+rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
@@ -929,7 +936,7 @@ sed -i 's/%domain%/It worked!/g' /var/www/index.html
 cp -rf $hestiacp/firewall $HESTIA/data/
 
 # Configuring server hostname
-$HESTIA/bin/v-change-sys-hostname $servername 2>/dev/null
+$HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Generating SSL certificate
 $HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
@@ -1073,7 +1080,7 @@ fi
 #                     Configure PHP                        #
 #----------------------------------------------------------#
 
-ZONE=$(timedatectl 2>/dev/null|grep Timezone|awk '{print $2}')
+ZONE=$(timedatectl > /dev/null 2>&1|grep Timezone|awk '{print $2}')
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
 fi
@@ -1084,17 +1091,21 @@ done
 
 
 #----------------------------------------------------------#
-#                    Configure VSFTPD                      #
+#                    Configure Vsftpd                      #
 #----------------------------------------------------------#
 
 if [ "$vsftpd" = 'yes' ]; then
     cp -f $hestiacp/vsftpd/vsftpd.conf /etc/
+    touch /var/log/vsftpd.log
+    chown root:adm /var/log/vsftpd.log
+    chmod 640 /var/log/vsftpd.log
+    touch /var/log/xferlog
+    chown root:adm /var/log/xferlog
+    chmod 640 /var/log/xferlog
     update-rc.d vsftpd defaults
     service vsftpd start
     check_result $? "vsftpd start failed"
 
-    # To be deleted after release 0.9.8-18
-    echo "/sbin/nologin" >> /etc/shells
 fi
 
 
@@ -1105,8 +1116,8 @@ fi
 if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $hestiacp/proftpd/proftpd.conf /etc/proftpd/
-    update-rc.d proftpd defaults
-    service proftpd start
+    update-rc.d proftpd defaults > /dev/null 2>&1
+    service proftpd start >> $LOG
     check_result $? "proftpd start failed"
 fi
 
@@ -1159,34 +1170,36 @@ fi
 #                    Update phpMyAdmin                     #
 #----------------------------------------------------------#
 
-# Display upgrade information
-echo "Upgrade phpMyAdmin to v$pma_v..."
+if [ "$mysql" = 'yes' ]; then
+    # Display upgrade information
+    echo "Upgrade phpMyAdmin to v$pma_v..."
 
-# Download latest phpmyadmin release
-wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+    # Download latest phpmyadmin release
+    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
-# Unpack files
-tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+    # Unpack files
+    tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
-# Delete file to prevent error
-if [ "$pma_v" = '4.8.4' ]; then
-    rm -fr /usr/share/phpmyadmin/doc/html
+    # Delete file to prevent error
+    if [ "$pma_v" = '4.8.4' ]; then
+        rm -fr /usr/share/phpmyadmin/doc/html
+    fi
+
+    # Overwrite old files
+    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+    # Set config and log directory
+    sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+
+    # Create temporary folder and change permission
+    mkdir /usr/share/phpmyadmin/tmp
+    chmod 777 /usr/share/phpmyadmin/tmp
+
+    # Clear Up
+    rm -fr phpMyAdmin-$pma_v-all-languages
+    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 fi
-
-# Overwrite old files
-cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-
-# Set config and log directory
-sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-
-# Create temporary folder and change permission
-mkdir /usr/share/phpmyadmin/tmp
-chmod 777 /usr/share/phpmyadmin/tmp
-
-# Clear Up
-rm -fr phpMyAdmin-$pma_v-all-languages
-rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 
 
 #----------------------------------------------------------#
@@ -1457,7 +1470,9 @@ fi
 # Special thanks to Pavel Galkin (https://skurudo.ru)
 # https://github.com/skurudo/phpmyadmin-fixer
 
-source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
+if [ "$mysql" = 'yes' ]; then
+    source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
+fi
 
 
 #----------------------------------------------------------#

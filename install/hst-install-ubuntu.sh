@@ -29,7 +29,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
     libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf
     libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server nginx
-    ntpdate php-cgi php-common php-curl phpmyadmin php-mysql phppgadmin
+    ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql phppgadmin
     php-pgsql postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
     hestia-nginx hestia-php vim-common vsftpd webalizer whois zip"
@@ -287,7 +287,7 @@ fi
 wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
 check_result $? "No access to Hestia repository"
 
-# Checking installed packages
+# Check installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
 for pkg in exim4 mariadb-server apache2 nginx hestia; do
@@ -476,7 +476,7 @@ BACK_PID=$!
 
 # Check if package installation is done, print a spinner
 spin_i=1
-while kill -0 $BACK_PID 2> /dev/null ; do
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
     printf "\b${spinner:spin_i++%${#spinner}:1}"
     sleep 0.5
 done
@@ -519,6 +519,7 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key >> $LOG
 #----------------------------------------------------------#
 
 # Creating backup directory tree
+mkdir -p $hst_backups
 cd $hst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql hestia
@@ -580,6 +581,34 @@ rm -rf $HESTIA > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
+#                     Package Includes                     #
+#----------------------------------------------------------#
+
+if [ "$multiphp" = 'yes' ]; then
+    mph="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
+         php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
+         php5.6-soap php5.6-xml php5.6-zip php7.0-mbstring php7.0-bcmath
+         php7.0-cli php7.0-curl php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt
+         php7.0-mysql php7.0-soap php7.0-xml php7.0-zip php7.1-mbstring
+         php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm php7.1-gd php7.1-intl
+         php7.1-mcrypt php7.1-mysql php7.1-soap php7.1-xml php7.1-zip 
+         php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
+         php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
+         php7.2-zip php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl
+         php7.3-fpm php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
+         php7.3-zip"
+    software="$software $mph"
+fi
+
+if [ "$phpfpm" = 'yes' ]; then
+    fpm="php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl php7.3-fpm
+         php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
+         php7.3-zip"
+    software="$software $fpm"
+fi
+
+
+#----------------------------------------------------------#
 #                     Package Excludes                     #
 #----------------------------------------------------------#
 
@@ -630,22 +659,30 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-server//')
     software=$(echo "$software" | sed -e 's/mariadb-client//')
     software=$(echo "$software" | sed -e 's/mariadb-common//')
-    software=$(echo "$software" | sed -e 's/php7.3-mysql//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
-    software=$(echo "$software" | sed -e 's/phpMyAdmin//')
+    software=$(echo "$software" | sed -e 's/php5.6-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.0-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.1-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.2-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.3-mysql//')
     software=$(echo "$software" | sed -e 's/phpmyadmin//')
 fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
-    software=$(echo "$software" | sed -e 's/php7.3-pgsql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
+    software=$(echo "$software" | sed -e 's/php5.6-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.0-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.1-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.2-pgsql//')
+    software=$(echo "$software" | sed -e 's/php7.3-pgsql//')
     software=$(echo "$software" | sed -e 's/phppgadmin//')
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/fail2ban//')
 fi
 if [ "$phpfpm" = 'yes' ]; then
+    software=$(echo "$software" | sed -e 's/php//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/php-curl//')
     software=$(echo "$software" | sed -e 's/php-common//')
@@ -653,33 +690,6 @@ if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e 's/php-mysql//')
 fi
 
-
-#----------------------------------------------------------#
-#                     Package Includes                     #
-#----------------------------------------------------------#
-
-if [ "$multiphp" = 'yes' ]; then
-    mph="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
-         php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
-         php5.6-soap php5.6-xml php5.6-zip php7.0-mbstring php7.0-bcmath
-         php7.0-cli php7.0-curl php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt
-         php7.0-mysql php7.0-soap php7.0-xml php7.0-zip php7.1-mbstring
-         php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm php7.1-gd php7.1-intl
-         php7.1-mcrypt php7.1-mysql php7.1-soap php7.1-xml php7.1-zip 
-         php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
-         php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
-         php7.2-zip php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl
-         php7.3-fpm php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
-         php7.3-zip"
-    software="$software $mph"
-fi
-
-if [ "$phpfpm" = 'yes' ]; then
-    fpm="php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl php7.3-fpm
-         php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
-         php7.3-zip"
-    software="$software $fpm"
-fi
 
 #----------------------------------------------------------#
 #                     Install packages                     #
@@ -699,7 +709,7 @@ BACK_PID=$!
 
 # Check if package installation is done, print a spinner
 spin_i=1
-while kill -0 $BACK_PID 2> /dev/null ; do
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
     printf "\b${spinner:spin_i++%${#spinner}:1}"
     sleep 0.5
 done
@@ -1131,34 +1141,36 @@ fi
 #                    Update phpMyAdmin                     #
 #----------------------------------------------------------#
 
-# Display upgrade information
-echo "Upgrade phpMyAdmin to v$pma_v..."
+if [ "$mysql" = 'yes' ]; then
+    # Display upgrade information
+    echo "Upgrade phpMyAdmin to v$pma_v..."
 
-# Download latest phpmyadmin release
-wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+    # Download latest phpmyadmin release
+    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
-# Unpack files
-tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+    # Unpack files
+    tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
-# Delete file to prevent error
-if [ "$pma_v" = '4.8.4' ]; then
-    rm -fr /usr/share/phpmyadmin/doc/html
+    # Delete file to prevent error
+    if [ "$pma_v" = '4.8.4' ]; then
+        rm -fr /usr/share/phpmyadmin/doc/html
+    fi
+
+    # Overwrite old files
+    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+    # Set config and log directory
+    sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+
+    # Create temporary folder and change permission
+    mkdir /usr/share/phpmyadmin/tmp
+    chmod 777 /usr/share/phpmyadmin/tmp
+
+    # Clear Up
+    rm -fr phpMyAdmin-$pma_v-all-languages
+    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 fi
-
-# Overwrite old files
-cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-
-# Set config and log directory
-sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-
-# Create temporary folder and change permission
-mkdir /usr/share/phpmyadmin/tmp
-chmod 777 /usr/share/phpmyadmin/tmp
-
-# Clear Up
-rm -fr phpMyAdmin-$pma_v-all-languages
-rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 
 
 #----------------------------------------------------------#
@@ -1273,7 +1285,7 @@ if [ "$clamd" = 'yes' ]; then
     /usr/bin/freshclam >> $LOG &
     BACK_PID=$!
     spin_i=1
-    while kill -0 $BACK_PID 2> /dev/null ; do
+    while kill -0 $BACK_PID > /dev/null 2>&1 ; do
         printf "\b${spinner:spin_i++%${#spinner}:1}"
         sleep 0.5
     done
@@ -1396,7 +1408,9 @@ fi
 # Special thanks to Pavel Galkin (https://skurudo.ru)
 # https://github.com/skurudo/phpmyadmin-fixer
 
-source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
+if [ "$mysql" = 'yes' ]; then
+    source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
+fi
 
 
 #----------------------------------------------------------#

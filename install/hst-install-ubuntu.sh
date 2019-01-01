@@ -682,7 +682,7 @@ if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/fail2ban//')
 fi
 if [ "$phpfpm" = 'yes' ]; then
-    software=$(echo "$software" | sed -e 's/php//')
+    software=$(echo "$software" | sed -e 's/ php //')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/php-curl//')
     software=$(echo "$software" | sed -e 's/php-common//')
@@ -704,7 +704,7 @@ chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
 echo -ne "Install HestiaCP and all required packages, the process will take around 10-15 minutes... "
-apt-get -y --allow-change-held-packages install $software > /dev/null 2>&1 &
+apt-get -y install $software > /dev/null 2>&1 &
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner

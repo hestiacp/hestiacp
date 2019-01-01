@@ -262,7 +262,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
 #                        Hestia                            #
 #----------------------------------------------------------#
 
-# Deleteing task from queue
+# Deleting task from queue
 touch $HESTIA/data/queue/letsencrypt.pipe
 sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
 

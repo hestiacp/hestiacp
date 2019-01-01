@@ -80,7 +80,7 @@ if [ "$?" -ne 0  ]; then
     touch $HESTIA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
     send_notice "LETSENCRYPT" "Account registration failed"
-    check_result $E_CONNECT "LE account registration" >/dev/null
+    check_result $E_CONNECT "LE account registration" > /dev/null
 fi
 
 # Parsing LetsEncrypt account data

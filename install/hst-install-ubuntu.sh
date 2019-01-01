@@ -490,6 +490,9 @@ check_result $? 'apt-get upgrade failed'
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
+# Updating system
+echo "Install third party repository keys... "
+
 # Installing nginx repo
 echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
@@ -593,7 +596,6 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-php7.3//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$vsftpd" = 'no' ]; then
@@ -643,6 +645,14 @@ fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/fail2ban//')
 fi
+if [ "$phpfpm" = 'yes' ]; then
+    software=$(echo "$software" | sed -e 's/php-pgsql//')
+    software=$(echo "$software" | sed -e 's/php-curl//')
+    software=$(echo "$software" | sed -e 's/php-common//')
+    software=$(echo "$software" | sed -e 's/php-cgi//')
+    software=$(echo "$software" | sed -e 's/php-mysql//')
+fi
+
 
 #----------------------------------------------------------#
 #                     Package Includes                     #
@@ -683,7 +693,7 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-echo -ne "\n\nWe will now install HestiaCP and all required packages. The process will take around 10-15 minutes. "
+echo -ne "Install HestiaCP and all required packages, the process will take around 10-15 minutes... "
 apt-get -y install $software > /dev/null 2>&1 &
 BACK_PID=$!
 
@@ -1259,7 +1269,7 @@ if [ "$clamd" = 'yes' ]; then
     gpasswd -a clamav Debian-exim > /dev/null 2>&1
     cp -f $hestiacp/clamav/clamd.conf /etc/clamav/
     update-rc.d clamav-daemon defaults
-    echo -ne "Updating ClamAV... "
+    echo -ne "Update ClamAV definitions... "
     /usr/bin/freshclam >> $LOG &
     BACK_PID=$!
     spin_i=1

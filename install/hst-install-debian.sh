@@ -729,7 +729,7 @@ chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
 echo -ne "Install HestiaCP and all required packages, the process will take around 10-15 minutes... "
-apt-get -y install $software > /dev/null 2>&1 &
+apt-get -y --allow-change-held-packages install $software > /dev/null 2>&1 &
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner

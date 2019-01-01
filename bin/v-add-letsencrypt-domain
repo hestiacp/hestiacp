@@ -15,7 +15,7 @@ domain=$2
 aliases=$3
 
 # LE API
-API='https://acme-v02.api.letsencrypt.org'
+LE_API='https://acme-v02.api.letsencrypt.org'
 
 # Includes
 source $HESTIA/func/main.sh
@@ -98,7 +98,7 @@ else
 fi
 
 # Requesting nonce / STEP 1
-answer=$(curl -s -I "$API/directory")
+answer=$(curl -s -I "$LE_API/directory")
 nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
 status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
 if [[ "$status" -ne 200 ]]; then
@@ -106,7 +106,7 @@ if [[ "$status" -ne 200 ]]; then
 fi
 
 # Placing new order / STEP 2
-url="$API/acme/new-order"
+url="$LE_API/acme/new-order"
 payload='{"identifiers":['
 for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
     payload=$payload'{"type":"dns","value":"'$identifier'"},'

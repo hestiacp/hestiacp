@@ -13,7 +13,7 @@
 user=$1
 
 # LE API
-API='https://acme-v02.api.letsencrypt.org'
+LE_API='https://acme-v02.api.letsencrypt.org'
 
 # Includes
 source $HESTIA/func/main.sh
@@ -103,10 +103,10 @@ fi
 
 
 # Requesting ACME nonce
-nonce=$(curl -s -I "$API/directory" |grep Nonce |cut -f 2 -d \ |tr -d '\r\n')
+nonce=$(curl -s -I "$LE_API/directory" |grep Nonce |cut -f 2 -d \ |tr -d '\r\n')
 
 # Creating ACME account
-url="$API/acme/new-acct"
+url="$LE_API/acme/new-acct"
 payload='{"termsOfServiceAgreed": true}'
 answer=$(query_le_v2 "$url" "$payload" "$nonce")
 kid=$(echo "$answer" |grep Location: |cut -f2 -d ' '|tr -d '\r')

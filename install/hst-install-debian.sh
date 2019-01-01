@@ -673,6 +673,7 @@ if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/fail2ban//')
 fi
 if [ "$phpfpm" = 'yes' ]; then
+    software=$(echo "$software" | sed -e 's/php//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
     software=$(echo "$software" | sed -e 's/php-curl//')
     software=$(echo "$software" | sed -e 's/php-common//')

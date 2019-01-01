@@ -291,13 +291,6 @@ if [ ! -e '/usr/bin/dirmngr' ]; then
     check_result $? "Can't install dirmngr"
 fi
 
-# Checking screen
-if [ ! -e '/usr/bin/screen' ]; then
-    echo "Install missing screen..."
-    apt-get -y install screen >> $LOG
-    check_result $? "Can't install screen"
-fi
-
 # Check if apt-transport-https is installed
 if [ ! -e '/usr/lib/apt/methods/https' ]; then
     echo "Install missing apt-transport-https..."
@@ -519,31 +512,27 @@ check_result $? 'apt-get upgrade failed'
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
-# Install Key Notification
-echo
-echo "Install required repository keys..."
-
 # Installing nginx repo
 echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-apt-key add /tmp/nginx_signing.key
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key >> $LOG
 
 if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
     echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-    wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key >> $LOG
-    apt-key add /tmp/php_signing.key
+    wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key >> $LOG
 fi
 
 # Installing MariaDB repo
 echo "deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
-apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-apt-key add /tmp/deb_signing.key
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key >> $LOG
 
 
 #----------------------------------------------------------#

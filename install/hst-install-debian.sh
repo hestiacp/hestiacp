@@ -690,6 +690,7 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/php7.1-mysql//')
     software=$(echo "$software" | sed -e 's/php7.2-mysql//')
     software=$(echo "$software" | sed -e 's/php7.3-mysql//')
+    software=$(echo "$software" | sed -e 's/php7.3-bz2//')
     software=$(echo "$software" | sed -e 's/phpmyadmin//')
 fi
 if [ "$postgresql" = 'no' ]; then

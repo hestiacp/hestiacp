@@ -61,7 +61,7 @@ shell_list() {
 #----------------------------------------------------------#
 
 # Checking official latest version
-latest=$(wget -q -T 1 -t 1 http://gpg.hestiacp.com/latest.txt -O -)
+latest=$(wget -q -T 1 -t 1 https://gpg.hestiacp.com/latest.txt -O -)
 
 # Checking installed hestia version
 if [ -d "/etc/sysconfig" ]; then
@@ -82,7 +82,7 @@ else
     TIME=$(date -d @$pkg_date +"%T")
 fi
 UPDATED='yes'
-if [ ! -z "$latest" ] && [ "$latest" \> "hestia-$VERSION-$RELEASE" ]; then
+if [ ! -z "$latest" ] && [ "$latest" \> "$VERSION-$RELEASE" ]; then
     UPDATED='no'
 fi
 data="NAME='hestia' VERSION='$VERSION' RELEASE='$RELEASE' ARCH='$ARCH'"

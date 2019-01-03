@@ -20,7 +20,11 @@ os='debian'
 release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 hestiacp="$HESTIA/install/$VERSION/$release"
+
+# Define software versions
 pma_v='4.8.4'
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3")
+fpm_v="7.3"
 
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -463,8 +467,8 @@ if [ -z "$email" ]; then
     email="admin@$servername"
 fi
 
-# Print backup directory
-echo "Installation backup directory: $hst_backups"
+# Defining backup directory
+echo -e "\nInstallation backup directory: $hst_backups"
 
 # Print Log File Path
 echo "Installation Log File: $LOG"
@@ -609,25 +613,22 @@ rm -rf $HESTIA > /dev/null 2>&1
 #----------------------------------------------------------#
 
 if [ "$multiphp" = 'yes' ]; then
-    mph="php5.6-apcu php5.6-mbstring php5.6-bcmath php5.6-cli php5.6-curl
-         php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql
-         php5.6-soap php5.6-xml php5.6-zip php7.0-mbstring php7.0-bcmath
-         php7.0-cli php7.0-curl php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt
-         php7.0-mysql php7.0-soap php7.0-xml php7.0-zip php7.1-mbstring
-         php7.1-bcmath php7.1-cli php7.1-curl php7.1-fpm php7.1-gd php7.1-intl
-         php7.1-mcrypt php7.1-mysql php7.1-soap php7.1-xml php7.1-zip 
-         php7.2-mbstring php7.2-bcmath php7.2-cli php7.2-curl php7.2-fpm
-         php7.2-gd php7.2-intl php7.2-mysql php7.2-soap php7.2-xml
-         php7.2-zip php7.3-mbstring php7.3-bcmath php7.3-cli php7.3-curl
-         php7.3-fpm php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml
-         php7.3-zip"
-    software="$software $mph"
+    for v in "${multiphp_v[@]}"; do
+        mph="php$v-mbstring php$v-bcmath php$v-cli php$v-curl php$v-fpm
+             php$v-gd php$v-intl php$v-mysql php$v-soap php$v-xml php$v-zip"
+        # Check is version is 7.1 or below to add mcrypt
+        if [[ `echo "$v 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then 
+            mph="$mph php$v-mcrypt"
+        fi
+        software="$software $mph"
+    done
 fi
 
 if [ "$phpfpm" = 'yes' ]; then
-    fpm="php7.3 php7.3-common php7.3-bcmath php7.3-cli php7.3-curl php7.3-fpm
-         php7.3-gd php7.3-intl php7.3-mysql php7.3-soap php7.3-xml php7.3-zip
-         php7.3-mbstring php7.3-json php7.3-bz2 php7.3-pspell"
+    fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
+         php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
+         php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
+         php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell"
     software="$software $fpm"
 fi
 
@@ -685,22 +686,29 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-client//')
     software=$(echo "$software" | sed -e 's/mariadb-common//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
-    software=$(echo "$software" | sed -e 's/php5.6-mysql//')
-    software=$(echo "$software" | sed -e 's/php7.0-mysql//')
-    software=$(echo "$software" | sed -e 's/php7.1-mysql//')
-    software=$(echo "$software" | sed -e 's/php7.2-mysql//')
-    software=$(echo "$software" | sed -e 's/php7.3-mysql//')
+    if [ "$multiphp" = 'yes' ]; then
+        for v in "${multiphp_v[@]}"; do
+            software=$(echo "$software" | sed -e "s/php$v-mysql//")
+            software=$(echo "$software" | sed -e "s/php$v-bz2//")
+        done
+    fi
+    if [ "$phpfpm" = 'yes' ]; then
+        software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
+    fi
     software=$(echo "$software" | sed -e 's/phpmyadmin//')
 fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
-    software=$(echo "$software" | sed -e 's/php5.6-pgsql//')
-    software=$(echo "$software" | sed -e 's/php7.0-pgsql//')
-    software=$(echo "$software" | sed -e 's/php7.1-pgsql//')
-    software=$(echo "$software" | sed -e 's/php7.2-pgsql//')
-    software=$(echo "$software" | sed -e 's/php7.3-pgsql//')
+    if [ "$multiphp" = 'yes' ]; then
+        for v in "${multiphp_v[@]}"; do
+            software=$(echo "$software" | sed -e "s/php$v-pgsql//")
+        done
+    fi
+    if [ "$phpfpm" = 'yes' ]; then
+        software=$(echo "$software" | sed -e "s/php$v-pgsql//")
+    fi
     software=$(echo "$software" | sed -e 's/phppgadmin//')
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
@@ -971,30 +979,21 @@ if [ "$nginx" = 'yes' ]; then
     echo > /etc/nginx/conf.d/hestia.conf
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
-        update-rc.d php5.6-fpm defaults > /dev/null 2>&1
-        update-rc.d php7.0-fpm defaults > /dev/null 2>&1
-        update-rc.d php7.1-fpm defaults > /dev/null 2>&1
-        update-rc.d php7.2-fpm defaults > /dev/null 2>&1
-        update-rc.d php7.3-fpm defaults > /dev/null 2>&1
-        cp -r /etc/php/5.6/ /root/hst_install_backups/php5.6/
-        rm -f /etc/php/5.6/fpm/pool.d/*
-        cp -r /etc/php/7.0/ /root/hst_install_backups/php7.0/
-        rm -f /etc/php/7.0/fpm/pool.d/*
-        cp -r /etc/php/7.1/ /root/hst_install_backups/php7.1/
-        rm -f /etc/php/7.1/fpm/pool.d/*
-        cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
-        rm -f /etc/php/7.2/fpm/pool.d/*
-        cp -r /etc/php/7.3/ /root/hst_install_backups/php7.3/
-        rm -f /etc/php/7.3/fpm/pool.d/*
+        for v in "${multiphp_v[@]}"; do
+            update-rc.d php$v-fpm defaults > /dev/null 2>&1
+            cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
+            rm -f /etc/php/$v/fpm/pool.d/*
+        done
         rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
-        cp -f $hestiacp/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/
-        ln -s $HESTIA/data/templates/web/nginx/PHP-73.sh $HESTIA/data/templates/web/nginx/default.sh
-        ln -s $HESTIA/data/templates/web/nginx/PHP-73.tpl $HESTIA/data/templates/web/nginx/default.tpl
-        ln -s $HESTIA/data/templates/web/nginx/PHP-73.stpl $HESTIA/data/templates/web/nginx/default.stpl
+        cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
+        fpm_tpl=$(echo "$fpm_v" | sed -e 's/[.]//')
+        ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.sh $HESTIA/data/templates/web/nginx/default.sh
+        ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.tpl $HESTIA/data/templates/web/nginx/default.tpl
+        ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.stpl $HESTIA/data/templates/web/nginx/default.stpl
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
-        service php7.3-fpm start >> $LOG
-        check_result $? "php7.3-fpm start failed"
+        service php$fpm_tpl-fpm start >> $LOG
+        check_result $? "php$fpm_tpl-fpm start failed"
     fi
     update-rc.d nginx defaults > /dev/null 2>&1
     service nginx start >> $LOG
@@ -1028,26 +1027,12 @@ if [ "$apache" = 'yes' ]; then
     chmod 751 /var/log/apache2/domains
     if [ "$multiphp" = 'yes' ] ; then
         a2enmod proxy_fcgi setenvif > /dev/null 2>&1
-        a2enconf php5.6-fpm > /dev/null 2>&1
-        a2enconf php7.0-fpm > /dev/null 2>&1
-        a2enconf php7.1-fpm > /dev/null 2>&1
-        a2enconf php7.2-fpm > /dev/null 2>&1
-        a2enconf php7.3-fpm > /dev/null 2>&1
-        update-rc.d php5.6-fpm defaults > /dev/null 2>&1
-        update-rc.d php7.0-fpm defaults > /dev/null 2>&1
-        update-rc.d php7.1-fpm defaults > /dev/null 2>&1
-        update-rc.d php7.2-fpm defaults > /dev/null 2>&1
-        update-rc.d php7.3-fpm defaults > /dev/null 2>&1
-        cp -r /etc/php/5.6/ /root/hst_install_backups/php5.6/
-        rm -f /etc/php/5.6/fpm/pool.d/*
-        cp -r /etc/php/7.0/ /root/hst_install_backups/php7.0/
-        rm -f /etc/php/7.0/fpm/pool.d/*
-        cp -r /etc/php/7.1/ /root/hst_install_backups/php7.1/
-        rm -f /etc/php/7.1/fpm/pool.d/*
-        cp -r /etc/php/7.2/ /root/hst_install_backups/php7.2/
-        rm -f /etc/php/7.2/fpm/pool.d/*
-        cp -r /etc/php/7.3/ /root/hst_install_backups/php7.3/
-        rm -f /etc/php/7.3/fpm/pool.d/*
+        for v in "${multiphp_v[@]}"; do
+            a2enconf php$v-fpm-fpm > /dev/null 2>&1
+            update-rc.d php$v-fpm defaults > /dev/null 2>&1
+            cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
+            rm -f /etc/php/$v/fpm/pool.d/*
+        done
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
         if [ "$release" = '8' ]; then
@@ -1069,9 +1054,9 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-    cp -f $hestiacp/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/www.conf
-    update-rc.d php7.3-fpm defaults > /dev/null 2>&1
-    service php7.3-fpm start >> $LOG
+    cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
+    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
+    service php$fpm_v-fpm start >> $LOG
     check_result $? "php-fpm start failed"
 fi
 

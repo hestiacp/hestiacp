@@ -204,7 +204,6 @@ for auth in $authz; do
     fi
 done
 
-
 # Generating new ssl certificate
 ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "info@$domain" "US" "California"\
     "San Francisco" "Hestia" "IT" "$aliases" |tail -n1 |awk '{print $2}')

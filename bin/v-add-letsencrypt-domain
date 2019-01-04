@@ -209,7 +209,7 @@ done
 ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "info@$domain" "US" "California"\
     "San Francisco" "Hestia" "IT" "$aliases" |tail -n1 |awk '{print $2}')
 
-# Sedning CSR to finalize order / STEP 6
+# Sending CSR to finalize order / STEP 6
 csr=$(openssl req -in $ssl_dir/$domain.csr -outform DER |encode_base64)
 payload='{"csr":"'$csr'"}'
 answer=$(query_le_v2 "$finalize" "$payload" "$nonce")
@@ -268,7 +268,6 @@ sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
 
 # Notifying user
 send_notice 'LETSENCRYPT' "$domain SSL has been installed successfully"
-
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

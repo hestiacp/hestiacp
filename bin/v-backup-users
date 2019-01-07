@@ -41,7 +41,7 @@ for user in $(grep '@' /etc/passwd |cut -f1 -d:); do
         echo -e "================================" >> $log
         echo -e "$user" >> $log
         echo -e "--------------------------------\n" >> $log
-        $BIN/v-backup-user $user >> $log 2>&1
+        nice -n 19 ionice -c2 -n7 $BIN/v-backup-user $user >> $log 2>&1
         echo -e "\n--------------------------------\n\n" >> $log
     fi
 done

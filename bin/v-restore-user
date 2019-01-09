@@ -50,7 +50,7 @@ is_backup_available() {
     fi
 }
 
-# Defining ftp command function
+# Defining FTP command function
 ftpc() {
     /usr/bin/ftp -n $HOST $PORT <<EOF
     quote USER $USERNAME
@@ -76,7 +76,7 @@ ftp_download() {
     fi
 }
 
-# sftp command function
+# SFTP command function
 sftpc() {
     expect -f "-" <<EOF "$@"
         set timeout 60
@@ -193,7 +193,7 @@ if [ ! -e "$BACKUP/$backup" ]; then
     fi
 fi
 
-# Checking user existance on the server
+# Checking user existence on the server
 check_user=$(is_object_valid 'user' 'USER' "$user")
 if [ -z "$check_user" ]; then
     is_object_unsuspended 'user' 'USER' "$user"
@@ -205,7 +205,7 @@ else
 fi
 
 
-# Checking avaiable disk space
+# Checking available disk space
 disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
 if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
     echo "Error: Not enough disk space" |$SENDMAIL -s "$subj" $email $notify
@@ -244,7 +244,7 @@ fi
 # Set default backup source system
 backup_system="hestia"
 
-# Check if it is a vesta backup
+# Check if it is a Vesta backup
 if tar -tf $BACKUP/$backup ./vesta >/dev/null 2>&1; then
     backup_system="vesta"
 fi
@@ -343,7 +343,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
                 fi
             done
 
-            # Checking ip address
+            # Checking IP address
             check_ip=$(is_ip_valid $IP $user)
             if [ ! -z "$check_ip" ]; then
                 local_ip=''
@@ -370,7 +370,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
                 BACKEND='default'
             fi
 
-            # Converting ftp users
+            # Converting FTP users
             if [ ! -z "$FTP_USER" ]; then
                 FTP_USER=$(echo "$FTP_USER"  |sed -e "s/${old_user}_//")
                 FTP_USER="${user}_${FTP_USER}"
@@ -382,7 +382,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
                 STATS_USER="${user}_${STATS_USER}"
             fi
 
-            # Copying ssl certificates
+            # Copying SSL certificates
             if [ "$SSL" = 'yes' ]; then
                 certificates=$(ls $tmpdir/web/$domain/conf| grep ssl)
                 certificates=$(echo "$certificates" |grep $domain)
@@ -392,7 +392,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
                 done
             fi
 
-            # Concatenating web.conf keys
+            # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
             str="$str LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
@@ -423,7 +423,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             check_result "$E_PARSING" "$error"
         fi
 
-        # Applying Fix for tar < 1.24
+        # Applying fix for tar < 1.24
         find $HOMEDIR/$user/web/$domain -type d \
             -exec chown -h $user:$user {} \;
 
@@ -434,7 +434,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         fi
     done
 
-    # Adding user to traff queue
+    # Adding user to traffic queue
     sed -i "/ $user /d" $HESTIA/data/queue/traffic.pipe
     echo "$BIN/v-update-web-domains-traff $user" >>\
         $HESTIA/data/queue/traffic.pipe
@@ -448,7 +448,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
     fi
 fi
 
-# Restoring dns domains
+# Restoring DNS domains
 if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
     echo -e  "\n-- DNS --" |tee -a $tmpdir/restore.log
 
@@ -463,7 +463,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         domains=$(echo "$backup_domains" |egrep -f $tmpdir/selected.txt)
     fi
 
-    # Restoring dns domain
+    # Restoring DNS domain
     for domain in $domains; do
         echo -e "$(date "+%F %T") $domain" |tee -a $tmpdir/restore.log
 
@@ -494,7 +494,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         if [ -z "$check_config" ]; then
             eval $(cat $tmpdir/dns/$domain/$backup_system/dns.conf)
 
-            # Checking ip address
+            # Checking IP address
             check_ip=$(is_ip_valid $IP $user)
             if [ ! -z "$check_ip" ]; then
                 local_ip=''
@@ -503,23 +503,23 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
                 IP=$ip
             fi
 
-            # Checking dns template
+            # Checking DNS template
             check_tpl=$(is_dns_template_valid $TPL)
             if [ ! -z "$check_tpl" ]; then
                 TPL='default'
             fi
 
-            # Concatenating dns.conf keys
+            # Merging dns.conf keys
             str="DOMAIN='$domain' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
             str="$str SOA='$SOA' RECORDS='$RECORDS' SUSPENDED='no'"
             str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
             echo $str >> $USER_DATA/dns.conf
         fi
 
-        # Restoring dns records
+        # Restoring DNS records
         cp -f $tmpdir/dns/$domain/$backup_system/$domain.conf $USER_DATA/dns/
 
-        # Rebuilding dns domain
+        # Rebuilding DNS domain
         rebuild_dns_domain_conf
     done
 
@@ -550,7 +550,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         exim_user="Debian-exim"
     fi
 
-    # Restoring dns domain
+    # Restoring DNS domain
     for domain in $domains; do
         echo -e "$(date "+%F %T") $domain" |tee -a $tmpdir/restore.log
 
@@ -670,7 +670,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
             eval $(grep "DB='$database'" $USER_DATA/db.conf)
         fi
 
-        # Unziping database dump
+        # Unzipping database dump
         gzip -d $tmpdir/db/$database/$database.*.sql.gz
 
         # Importing database dump

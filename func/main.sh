@@ -338,7 +338,7 @@ search_objects() {
 
 # Get user value
 get_user_value() {
-    grep "^${1//$/}=" $USER_DATA/user.conf |awk -F "'" '{print $2}'
+    grep "^${1//$/}=" $USER_DATA/user.conf | head -1 | awk -F "'" '{print $2}'
 }
 
 # Update user value in user.conf

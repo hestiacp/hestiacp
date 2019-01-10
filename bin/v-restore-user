@@ -271,6 +271,7 @@ if [ "$create_user" = 'yes' ]; then
 
     # Rebuilding user
     rebuild_user_conf
+fi
 
 # Unpacking pam container
 tar xf $BACKUP/$backup -C $tmpdir ./pam

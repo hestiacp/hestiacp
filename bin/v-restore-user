@@ -36,20 +36,6 @@ source $HESTIA/func/db.sh
 source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
 
-# Check backup ownership function
-is_backup_available() {
-    passed=false
-    if [[ $2 =~ ^$1.[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_[0-9][0-9]-[0-9][0-9]-[0-9][0-9].tar$ ]]; then
-        passed=true
-    elif [[ $2 =~ ^$1.[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].tar$ ]]; then
-        passed=true
-    fi
-    
-    if [ $passed = false ]; then
-        check_result $E_FORBIDEN "permission denied"
-    fi
-}
-
 # Defining FTP command function
 ftpc() {
     /usr/bin/ftp -n $HOST $PORT <<EOF
@@ -167,7 +153,6 @@ google_download() {
 args_usage='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
 check_args '2' "$#" "$args_usage"
 is_format_valid 'user' 'backup'
-is_backup_available "$user" "$backup"
 
 
 #----------------------------------------------------------#

@@ -983,7 +983,6 @@ if [ "$nginx" = 'yes' ]; then
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
             rm -f /etc/php/$v/fpm/pool.d/*
-            sed -i "s|; process.max = 128|process.max = 128|" /etc/php/$v/fpm/php-fpm.conf
         done
         rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
@@ -1033,7 +1032,6 @@ if [ "$apache" = 'yes' ]; then
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
             rm -f /etc/php/$v/fpm/pool.d/*
-            sed -i "s|; process.max = 128|process.max = 128|" /etc/php/$v/fpm/php-fpm.conf
         done
         cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh

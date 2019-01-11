@@ -540,6 +540,11 @@ else
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
 fi
 
+# Installing Backport repo for debian 8
+if [ "$release" -eq 8 ]; then
+    echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+fi
+
 # Installing hestia repo
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key

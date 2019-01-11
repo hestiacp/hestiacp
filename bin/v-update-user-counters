@@ -102,7 +102,7 @@ for user in $user_list; do
 
     # Checking web system
     U_WEB_DOMAINS=0
-    if [ -f $USER_DATA/mail.conf ]; then
+    if [ -f $USER_DATA/web.conf ]; then
         for domain_str in $(cat $USER_DATA/web.conf) ;do
             eval $domain_str
             U_DISK_WEB=$((U_DISK_WEB + U_DISK))

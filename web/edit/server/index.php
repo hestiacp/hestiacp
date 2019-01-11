@@ -273,7 +273,7 @@ if (!empty($_POST['save'])) {
             $v_backup_host = escapeshellarg($_POST['v_backup_host']);
             $v_backup_type = escapeshellarg($_POST['v_backup_type']);
             $v_backup_username = escapeshellarg($_POST['v_backup_username']);
-            $v_backup_password = escapeshellarg($_POST['v_backup_password']);
+            $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
             $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
             exec (HESTIA_CMD."v-add-backup-host '". $v_backup_type ."' '". $v_backup_host ."' '". $v_backup_username ."' '". $v_backup_password ."' '". $v_backup_bpath ."'", $output, $return_var);
             check_return_code($return_var,$output);
@@ -298,7 +298,7 @@ if (!empty($_POST['save'])) {
             $v_backup_host = escapeshellarg($_POST['v_backup_host']);
             $v_backup_type = escapeshellarg($_POST['v_backup_type']);
             $v_backup_username = escapeshellarg($_POST['v_backup_username']);
-            $v_backup_password = escapeshellarg($_POST['v_backup_password']);
+            $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
             $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
             exec (HESTIA_CMD."v-add-backup-host '". $v_backup_type ."' '". $v_backup_host ."' '". $v_backup_username ."' '". $v_backup_password ."' '". $v_backup_bpath ."'", $output, $return_var);
             check_return_code($return_var,$output);
@@ -320,7 +320,7 @@ if (!empty($_POST['save'])) {
                 $v_backup_host = escapeshellarg($_POST['v_backup_host']);
                 $v_backup_type = escapeshellarg($_POST['v_backup_type']);
                 $v_backup_username = escapeshellarg($_POST['v_backup_username']);
-                $v_backup_password = escapeshellarg($_POST['v_backup_password']);
+                $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
                 $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
                 exec (HESTIA_CMD."v-add-backup-host '". $v_backup_type ."' '". $v_backup_host ."' '". $v_backup_username ."' '". $v_backup_password ."' '". $v_backup_bpath ."'", $output, $return_var);
                 check_return_code($return_var,$output);

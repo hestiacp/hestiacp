@@ -61,7 +61,7 @@ if [ -e '/etc/bind/named.conf' ]; then
 fi
 
 # Deleting old user's zone
-sed -i "/\/$user\/conf\/dns\/$domain/d" $dns_conf
+sed -i "/\/$user\/conf\/dns\/$domain.db\"/d" $dns_conf
 
 # Updating zone serial
 if [ "$update_serial" != 'no' ]; then

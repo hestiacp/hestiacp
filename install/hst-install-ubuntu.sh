@@ -283,8 +283,8 @@ fi
 # Check if apt-add-repository is installed
 if [ ! -e '/usr/bin/apt-add-repository' ]; then
     echo "Install missing apt-add-repository..."
-    apt-get -y install python-software-properties >> $LOG
-    check_result $? "Can't install python-software-properties"
+    apt-get -y install software-properties-common >> $LOG
+    check_result $? "Can't install software-properties-common"
 fi
 
 # Checking repository availability

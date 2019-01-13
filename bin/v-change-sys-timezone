@@ -42,10 +42,6 @@ which timedatectls >/dev/null 2>&1
 if [ "$?" -eq 0 ]; then
     timedatectl set-timezone $timezone
 else
-    if [ -e "/etc/sysconfig/clock" ]; then
-        sed -i "s/ZONE.*//" /etc/sysconfig/clock
-        echo "ZONE=\"$timezone\"" >> /etc/sysconfig/clock
-    fi
     if [ -e "/etc/timezone" ]; then
         echo "$timezone" > /etc/timezone
     fi
@@ -53,7 +49,7 @@ else
     ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
 fi
 
-# Chaning php timezone
+# Changing PHP timezone
 if [ ! -z "$WEB_SYSTEM" ]; then
     for conf in $(find /etc/php* -name php.ini); do
         sed -i "s|;date.timezone =|date.timezone =|" $conf

@@ -237,12 +237,16 @@ fi
 if [ "$proftpd" = 'yes' ]; then
     vsftpd='no'
 fi
-if [ "$exim" = 'no' ]; then
+if [ "$exim" = 'yes' ]; then
+    apt-get -y purge postfix > /dev/null 2>&1
+else
     clamd='no'
     spamd='no'
     dovecot='no'
 fi
-if [ "$iptables" = 'no' ]; then
+if [ "$iptables" = 'yes' ]; then
+    apt-get -y purge ufw > /dev/null 2>&1
+else
     fail2ban='no'
 fi
 

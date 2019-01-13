@@ -30,19 +30,7 @@ is_format_valid 'domain'
 #----------------------------------------------------------#
 
 hostname $domain
-
-if [ -d "/etc/sysconfig" ]; then
-    # RHEL/CentOS/Amazon
-    touch /etc/sysconfig/network
-    if [ -z "$(grep HOSTNAME /etc/sysconfig/network)" ]; then
-        echo "HOSTNAME='$domain'" >> /etc/sysconfig/network
-    else
-        sed -i "s/HOSTNAME=.*/HOSTNAME='$domain'/" /etc/sysconfig/network
-    fi
-else
-    # Debian/Ubuntu
-    echo "$domain" > /etc/hostname
-fi
+echo "$domain" > /etc/hostname
 
 
 #----------------------------------------------------------#

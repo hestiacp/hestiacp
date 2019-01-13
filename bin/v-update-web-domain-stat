@@ -62,17 +62,8 @@ build_webalizer() {
 }
 
 build_awstats() {
-    if [ -d "/etc/sysconfig" ]; then
-        awstats="/usr/share/awstats/wwwroot/cgi-bin/awstats.pl"
-        wwwroot="/usr/share/awstats/wwwroot"
-        if [  ! -e "$awstats" ]; then
-            awstats="/var/www/awstats/awstats.pl"
-            wwwroot="/var/www/awstats"
-        fi
-    else
-        awstats="/usr/lib/cgi-bin/awstats.pl"
-        wwwroot="/usr/share/awstats"
-    fi
+    awstats="/usr/lib/cgi-bin/awstats.pl"
+    wwwroot="/usr/share/awstats"
     opts="-config=$domain_idn -staticlinks -update -output"
     month=$(date "+%Y-%m")
     output='alldomains allhosts lasthosts unknownip allrobots lastrobots
@@ -94,10 +85,10 @@ build_awstats() {
         cp -r $wwwroot/icon $dir/
     fi
 
-    # Creating main awstats page
+    # Creating main AWStats page
     $awstats $opts | sed "s%awstats.$domain.%%g" > $dir/$month/index.html
 
-    # Creating suplemental awstats pages
+    # Creating suplemental AWStats pages
     for format in $output; do
         $awstats $opts=$format |\
             sed "s%awstats.$domain.%%g" > $dir/$month/$format.html

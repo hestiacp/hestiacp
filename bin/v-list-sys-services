@@ -191,17 +191,10 @@ fi
 
 # Checking MAIL ANTIVIRUS
 if [ ! -z "$ANTIVIRUS_SYSTEM" ] && [ "$ANTIVIRUS_SYSTEM" != 'remote' ]; then
-    if [ -d "/etc/sysconfig" ]; then
-        if [ "$ANTIVIRUS_SYSTEM" == 'clamav' ];then
-            ANTIVIRUS_SYSTEM='clamd'
-        fi
-        get_srv_state $ANTIVIRUS_SYSTEM
-    else
-        if [ "$ANTIVIRUS_SYSTEM" == 'clamav-daemon' ];then
-            proc_name='clamd'
-        fi
-        get_srv_state $ANTIVIRUS_SYSTEM $proc_name
+    if [ "$ANTIVIRUS_SYSTEM" == 'clamav-daemon' ];then
+        proc_name='clamd'
     fi
+    get_srv_state $ANTIVIRUS_SYSTEM $proc_name
     data="$data\nNAME='$ANTIVIRUS_SYSTEM' SYSTEM='email antivirus'"
     data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
     proc_name=''
@@ -270,7 +263,7 @@ if [ ! -z "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
     data="$data STATE='$state' CPU='0' MEM='0' RTIME='0'"
 fi
 
-# Checking FIREWALL Fail2ban extention
+# Checking FIREWALL Fail2ban extension
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
     get_srv_state $FIREWALL_EXTENSION fail2ban-server script
     data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force monitor'"

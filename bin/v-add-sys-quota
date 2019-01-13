@@ -21,14 +21,9 @@ source $HESTIA/conf/hestia.conf
 # Checking quota package
 quota=$(which --skip-alias --skip-functions quota 2>/dev/null)
 if [ $? -ne 0 ]; then
-    if [ -d "/etc/sysconfig" ]; then
-        yum -y install quota >/dev/null 2>&1
-        check_result $? "quota package installation failed" $E_UPDATE
-    else
-        export DEBIAN_FRONTEND=noninteractive
-        apt-get -y install quota >/dev/null 2>&1
-        check_result $? "quota package installation failed" $E_UPDATE
-    fi
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get -y install quota >/dev/null 2>&1
+    check_result $? "quota package installation failed" $E_UPDATE
 fi
 
 

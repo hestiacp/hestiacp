@@ -35,11 +35,11 @@ is_ip_key_empty '$U_SYS_USERS'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Import ip variables
+# Import IP variables
 source $HESTIA/data/ips/$ip
 cidr=$(convert_netmask $NETMASK)
 
-# Checking main ip on the interface
+# Checking main IP on the interface
 interface=$(/sbin/ip addr | grep "$ip/$cidr" | awk '{print $NF}')
 if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
     echo "Error: can't delete main IP address"
@@ -47,7 +47,7 @@ if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
     exit $E_FORBIDEN
 fi
 
-# Deleting system ip
+# Deleting system IP
 if [ ! -z "$interface" ]; then
     /sbin/ip addr del $ip/$cidr dev $INTERFACE
     if [ "$?" -ne 0 ]; then
@@ -55,11 +55,6 @@ if [ ! -z "$interface" ]; then
         log_event "$E_FORBIDEN" "$ARGUMENTS"
         exit $E_FORBIDEN
     fi
-fi
-
-# Deleting startup conf on RHEL/CentOS/Fedora
-if [ -e "/etc/sysconfig/network-scripts/ifcfg-$interface" ]; then
-    rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
 fi
 
 # Deleting startup conf on Debian/Ubuntu
@@ -72,7 +67,7 @@ if [ -e "/etc/network/interfaces" ]; then
     fi
 fi
 
-# Deleting hestia ip
+# Deleting Hestia IP
 rm -f $HESTIA/data/ips/$ip
 
 # Deleting web config

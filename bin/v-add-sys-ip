@@ -73,12 +73,29 @@ if [ -z "$sys_ip_check" ]; then
 
     # Adding Debian/Ubuntu startup script
     if [ -e "/etc/debian_version" ]; then
-        sys_ip="\n# Added by hestia"
-        sys_ip="$sys_ip\nauto $iface"
-        sys_ip="$sys_ip\niface $iface inet static"
-        sys_ip="$sys_ip\naddress $ip"
-        sys_ip="$sys_ip\nnetmask $netmask"
-        echo -e $sys_ip >> /etc/network/interfaces
+        if [ -d "/etc/netplan" ]; then
+            if [ -f "/etc/netplan/60-hestia.yaml" ]; then
+                sys_ip="        - $ip/$cidr"
+            else
+                sys_ip="\n# Added by hestia"
+                sys_ip="$sys_ip\nnetwork:"
+                sys_ip="$sys_ip\n  version: 2"
+                sys_ip="$sys_ip\n  renderer: networkd"
+                sys_ip="$sys_ip\n  ethernets:"
+                sys_ip="$sys_ip\n    eth0:"
+                sys_ip="$sys_ip\n      addresses:"
+                sys_ip="$sys_ip\n        - $ip/$cidr"
+            fi
+            IFS='%'
+            echo -e $sys_ip >> /etc/netplan/60-hestia.yaml
+        else
+            sys_ip="\n# Added by hestia"
+            sys_ip="$sys_ip\nauto $iface"
+            sys_ip="$sys_ip\niface $iface inet static"
+            sys_ip="$sys_ip\naddress $ip"
+            sys_ip="$sys_ip\nnetmask $netmask"
+            echo -e $sys_ip >> /etc/network/interfaces
+        fi
     fi
 fi
 

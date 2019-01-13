@@ -64,11 +64,18 @@ fi
 
 # Deleting startup conf on Debian/Ubuntu
 if [ -e "/etc/network/interfaces" ]; then
-    ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
-    if [ ! -z "$ip_str" ]; then
-        first_str=$((ip_str - 3))
-        last_str=$((ip_str + 1))
-        sed -i "$first_str,$last_str d" /etc/network/interfaces
+    if [ -f "/etc/netplan/60-hestia.yaml" ]; then
+        sed "/$ip/d" /etc/netplan/60-hestia.yaml
+        if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
+            rm /etc/netplan/60-hestia.yaml
+        fi
+    else
+        ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
+        if [ ! -z "$ip_str" ]; then
+            first_str=$((ip_str - 3))
+            last_str=$((ip_str + 1))
+            sed -i "$first_str,$last_str d" /etc/network/interfaces
+        fi
     fi
 fi
 

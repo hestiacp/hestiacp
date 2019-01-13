@@ -71,7 +71,6 @@ VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
 RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
 DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
-fi
 UPDATED='yes'
 if [ ! -z "$latest" ] && [ "$latest" \> "$VERSION-$RELEASE" ]; then
     UPDATED='no'

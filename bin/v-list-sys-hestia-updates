@@ -63,23 +63,14 @@ shell_list() {
 # Checking official latest version
 latest=$(wget -q -T 1 -t 1 https://gpg.hestiacp.com/latest.txt -O -)
 
-# Checking installed hestia version
-if [ -d "/etc/sysconfig" ]; then
-    rpm_format="VERSION='%{VERSION}'"
-    rpm_format="$rpm_format RELEASE='%{RELEASE}'"
-    rpm_format="$rpm_format ARCH='%{ARCH}'"
-    rpm_format="$rpm_format UTIME='%{INSTALLTIME}'\n"
-    eval $(rpm --queryformat="$rpm_format" -q hestia)
-    DATE=$(date -d @$UTIME +%F)
-    TIME=$(date -d @$UTIME +%T)
-else
-    dpkg_data=$(dpkg-query -s hestia)
-    pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia.list)
-    ARCH=$(echo "$dpkg_data"|grep Architecture |cut -f 2 -d ' ')
-    VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
-    RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
-    DATE=$(date -d @$pkg_date +"%F")
-    TIME=$(date -d @$pkg_date +"%T")
+# Checking installed Hestia version
+dpkg_data=$(dpkg-query -s hestia)
+pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia.list)
+ARCH=$(echo "$dpkg_data"|grep Architecture |cut -f 2 -d ' ')
+VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
+DATE=$(date -d @$pkg_date +"%F")
+TIME=$(date -d @$pkg_date +"%T")
 fi
 UPDATED='yes'
 if [ ! -z "$latest" ] && [ "$latest" \> "$VERSION-$RELEASE" ]; then

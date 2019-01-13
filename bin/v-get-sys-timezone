@@ -20,15 +20,11 @@ source $HESTIA/func/main.sh
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking timesonze on RHEL/CentOS
-if [ -f "/etc/sysconfig/clock" ]; then
-    source /etc/sysconfig/clock
-
 # Checking timezone on Debian/Ubuntu
-elif [ -f "/etc/timezone" ]; then
+if [ -f "/etc/timezone" ]; then
     ZONE=$(cat /etc/timezone)
 
-# Checking symlynks
+# Checking symlinks
 elif [ -h /etc/localtime ]; then
     ZONE=$(readlink /etc/localtime | sed "s%.*share/zoneinfo/%%")
 

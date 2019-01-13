@@ -238,6 +238,7 @@ if [ "$proftpd" = 'yes' ]; then
     vsftpd='no'
 fi
 if [ "$exim" = 'yes' ]; then
+    service postfix stop > /dev/null 2>&1
     apt-get -y purge postfix > /dev/null 2>&1
 else
     clamd='no'
@@ -245,6 +246,7 @@ else
     dovecot='no'
 fi
 if [ "$iptables" = 'yes' ]; then
+    service ufw stop > /dev/null 2>&1
     apt-get -y purge ufw > /dev/null 2>&1
 else
     fail2ban='no'

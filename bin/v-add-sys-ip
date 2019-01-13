@@ -60,20 +60,8 @@ if [ -z "$sys_ip_check" ]; then
     /sbin/ip addr add $ip/$cidr dev $interface \
         broadcast $broadcast label $iface
 
-    # Adding RHEL/CentOS/Fedora/Amazon startup script
-    if [ -d "/etc/sysconfig" ]; then
-        sys_ip="# Added by hestia"
-        sys_ip="$sys_ip\nDEVICE=$iface"
-        sys_ip="$sys_ip\nBOOTPROTO=static"
-        sys_ip="$sys_ip\nONBOOT=yes"
-        sys_ip="$sys_ip\nIPADDR=$ip"
-        sys_ip="$sys_ip\nNETMASK=$netmask"
-        echo -e $sys_ip > /etc/sysconfig/network-scripts/ifcfg-$iface
-    fi
-
-    # Adding Debian/Ubuntu startup script
     if [ -e "/etc/debian_version" ]; then
-        sys_ip="\n# Added by hestia"
+        sys_ip="\n# Added by Hestia"
         sys_ip="$sys_ip\nauto $iface"
         sys_ip="$sys_ip\niface $iface inet static"
         sys_ip="$sys_ip\naddress $ip"
@@ -87,7 +75,7 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-# Adding hestia ip
+# Adding Hestia IP
 echo "OWNER='$user'
 STATUS='$ip_status'
 NAME='$ip_name'

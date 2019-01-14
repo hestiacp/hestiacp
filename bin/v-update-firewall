@@ -164,12 +164,26 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     /sbin/iptables-save > /etc/iptables.rules
-    preup="/etc/network/if-pre-up.d/iptables"
-    if [ ! -e "$preup" ]; then
-        echo '#!/bin/sh' > $preup
-        echo "/sbin/iptables-restore < /etc/iptables.rules" >> $preup
-        echo "exit 0" >> $preup
-        chmod +x $preup
+    if [ -d "/etc/netplan" ]; then
+        preup="/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks"
+        if [ ! -e "$preup" ]; then
+            IFS='%'
+            echo '#!/bin/bash' > $preup
+            echo '' >> $preup
+            echo 'if [ "$IFACE" == "'$(/bin/ip token | awk -F 'dev ' '{print $2}')'" ]; then' >> $preup
+            echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
+            echo 'fi' >> $preup
+            echo "exit 0" >> $preup
+            chmod +x $preup
+        fi
+    else
+        preup="/etc/network/if-pre-up.d/iptables"
+        if [ ! -e "$preup" ]; then
+            echo '#!/bin/sh' > $preup
+            echo "/sbin/iptables-restore < /etc/iptables.rules" >> $preup
+            echo "exit 0" >> $preup
+            chmod +x $preup
+        fi
     fi
 fi
 

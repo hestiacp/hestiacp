@@ -65,7 +65,7 @@ fi
 # Deleting startup conf on Debian/Ubuntu
 if [ -e "/etc/network/interfaces" ]; then
     if [ -f "/etc/netplan/60-hestia.yaml" ]; then
-        sed "/$ip/d" /etc/netplan/60-hestia.yaml
+        sed -i "/$ip/d" /etc/netplan/60-hestia.yaml
         if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
             rm /etc/netplan/60-hestia.yaml
         fi

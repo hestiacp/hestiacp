@@ -77,7 +77,7 @@ if [ -z "$sys_ip_check" ]; then
             if [ -f "/etc/netplan/60-hestia.yaml" ]; then
                 sys_ip="        - $ip/$cidr"
             else
-                sys_ip="\n# Added by hestia"
+                sys_ip="# Added by hestia, please do not edit the file manually!"
                 sys_ip="$sys_ip\nnetwork:"
                 sys_ip="$sys_ip\n  version: 2"
                 sys_ip="$sys_ip\n  renderer: networkd"

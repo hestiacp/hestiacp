@@ -170,6 +170,7 @@ else
             IFS='%'
             echo '#!/bin/bash' > $preup
             echo '' >> $preup
+            echo 'sleep 5' >> $preup
             echo 'if [ "$IFACE" == "'$(/bin/ip token | awk -F 'dev ' '{print $2}')'" ]; then' >> $preup
             echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
             echo 'fi' >> $preup

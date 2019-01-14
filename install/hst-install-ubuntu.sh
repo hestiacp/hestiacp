@@ -721,7 +721,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                 Disable Apparmor on LCX                  #
+#                 Disable Apparmor on LXC                  #
 #----------------------------------------------------------#
 
 if grep --quiet lxc /proc/1/environ; then

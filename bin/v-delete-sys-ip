@@ -38,10 +38,11 @@ is_ip_key_empty '$U_SYS_USERS'
 # Import ip variables
 source $HESTIA/data/ips/$ip
 cidr=$(convert_netmask $NETMASK)
+main_ip=$(hostname -i)
 
 # Checking main ip on the interface
 interface=$(/sbin/ip addr | grep "$ip/$cidr" | awk '{print $NF}')
-if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
+if [ ! -z "$interface" ] && [ "$ip" = "$main_ip" ]; then
     echo "Error: can't delete main IP address"
     log_event "$E_FORBIDEN" "$ARGUMENTS"
     exit $E_FORBIDEN

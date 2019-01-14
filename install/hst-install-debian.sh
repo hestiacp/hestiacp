@@ -753,17 +753,6 @@ if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e 's/php-mysql//')
 fi
 
-#----------------------------------------------------------#
-                  Disable Apparmor on LCX                  #
-#----------------------------------------------------------#
-
-if grep --quiet lxc /proc/1/environ; then
-    if [ -f /etc/init.d/apparmor ]; then
-        systemctl stop apparmor > /dev/null 2>&1
-        systemctl disable apparmor > /dev/null 2>&1
-    fi
-fi
-
 
 #----------------------------------------------------------#
 #                     Install packages                     #

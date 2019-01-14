@@ -1222,10 +1222,12 @@ if [ "$named" = 'yes' ]; then
     chmod 640 /etc/bind/named.conf.options
     aa-complain /usr/sbin/named > /dev/null 2>&1
     echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named > /dev/null 2>&1
-    service apparmor status > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        service apparmor restart
-    fi
+    if ! grep --quiet lxc /proc/1/environ; then
+        service apparmor status > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            service apparmor restart
+        fi
+    fi    
     update-rc.d bind9 defaults
     service bind9 start
     check_result $? "bind9 start failed"

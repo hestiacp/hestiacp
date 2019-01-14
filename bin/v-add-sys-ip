@@ -14,10 +14,13 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Get interface name
+iface=$(/bin/ip token | awk -F 'dev ' '{print $2}')
+
 # Argument definition
 ip=${1// /}
 netmask=$2
-interface="${3-eth0}"
+iface="${3-$iface}"
 user="${4-admin}"
 ip_status="${5-shared}"
 ip_name=$6
@@ -50,14 +53,14 @@ fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-iface=$(get_ip_iface)
+
 cidr=$(convert_netmask $netmask)
 broadcast=$(get_broadcast $ip $netmask)
 
 sys_ip_check=$(/sbin/ip addr | grep "$ip")
 if [ -z "$sys_ip_check" ]; then
     # Adding sys ip
-    /sbin/ip addr add $ip/$cidr dev $interface \
+    /sbin/ip addr add $ip/$cidr dev $iface \
         broadcast $broadcast label $iface
 
     # Adding RHEL/CentOS/Fedora/Amazon startup script
@@ -110,7 +113,7 @@ STATUS='$ip_status'
 NAME='$ip_name'
 U_SYS_USERS=''
 U_WEB_DOMAINS='0'
-INTERFACE='$interface'
+INTERFACE='$iface'
 NETMASK='$netmask'
 NAT='$nat_ip'
 TIME='$time'

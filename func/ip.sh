@@ -13,19 +13,6 @@ is_ip_free() {
     fi
 }
 
-# Get full interface name
-get_ip_iface() {
-    i=$(/sbin/ip addr |grep -w $interface |\
-         awk '{print $NF}' |tail -n 1 |cut -f 2 -d :)
-    if [ "$i" = "$interface" ]; then
-        n=0
-    else
-        n=$((i + 1))
-    fi
-    echo "$interface:$n"
-}
-
-
 # Check ip address specific value
 is_ip_key_empty() {
     key="$1"

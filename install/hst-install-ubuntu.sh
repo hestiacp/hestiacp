@@ -294,7 +294,7 @@ check_result $? "No access to Hestia repository"
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 mariadb-server apache2 nginx hestia postfix ufw netplan; do
+for pkg in exim4 mariadb-server apache2 nginx hestia postfix ufw; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg $conflicts"
     fi

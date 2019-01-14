@@ -315,6 +315,27 @@ if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
     check_result 1 "Control Panel should be installed on clean server."
 fi
 
+# Check network configuration
+if [ -d /etc/netplan ] && [ -z "$force" ]; then
+    if [ -z "$(ls -A /etc/netplan)" ]; then
+        echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
+        echo
+        echo 'Noticed a empty netplan configuration directory.'
+        echo 'You may have a network configuration file using systemd-networkd,'
+        echo 'we strongly suggest to migrate to a fully netplan configuration.'
+        echo ''
+        echo 'You can leave this like it is, but you will be not able to use'
+        echo 'additional ips properly'
+        echo ''
+        echo 'If you want to force installation run this script with -f option:'
+        echo "Example: bash $0 --force"
+        echo
+        echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
+        echo
+        check_result 1 "Noticed unused netplan configuration."    
+    fi
+fi
+
 
 #----------------------------------------------------------#
 #                       Brief Info                         #

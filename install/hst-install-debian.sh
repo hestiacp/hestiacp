@@ -759,8 +759,8 @@ fi
 
 if grep --quiet lxc /proc/1/environ; then
     if [ -f /etc/init.d/apparmor ]; then
-        systemctl stop apparmor
-        systemctl disable apparmor
+        systemctl stop apparmor > /dev/null 2>&1
+        systemctl disable apparmor > /dev/null 2>&1
     fi
 fi
 

@@ -704,8 +704,11 @@ fi
 #----------------------------------------------------------#
 
 if grep --quiet lxc /proc/1/environ; then
-    systemctl stop apparmor
-    systemctl disable apparmor
+    systemctl status apparmor
+    if [ $? = 0 ]; then
+        systemctl stop apparmor
+        systemctl disable apparmor
+    fi
 fi
 
 

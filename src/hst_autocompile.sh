@@ -13,7 +13,7 @@ NGINX_V='1.15.8'
 OPENSSL_V='1.1.1a'
 PCRE_V='8.42'
 ZLIB_V='1.2.11'
-PHP_V='7.3.0'
+PHP_V='7.3.1'
 
 # Generate Links for sourcecode
 HESTIA='https://github.com/hestiacp/hestiacp/archive/master.zip'

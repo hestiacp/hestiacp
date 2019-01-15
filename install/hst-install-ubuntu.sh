@@ -986,6 +986,7 @@ if [ "$nginx" = 'yes' ]; then
     echo > /etc/nginx/conf.d/hestia.conf
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
+        rm -fr $HESTIA/data/templates/web/nginx/*
         for v in "${multiphp_v[@]}"; do
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
@@ -993,7 +994,6 @@ if [ "$nginx" = 'yes' ]; then
             v_tpl=$(echo "$v" | sed -e 's/[.]//')
             cp -f $hestiacp/multiphp/nginx/PHP-$v_tpl.* $HESTIA/data/templates/web/nginx/
         done
-        rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
         fpm_tpl=$(echo "$fpm_v" | sed -e 's/[.]//')

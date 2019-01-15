@@ -816,7 +816,6 @@ chmod 440 /etc/sudoers.d/admin
 
 # Configuring system env
 echo "export HESTIA='$HESTIA'" > /etc/profile.d/hestia.sh
-echo "export VESTA='$HESTIA'" >> /etc/profile.d/hestia.sh # Vesta compatibility
 chmod 755 /etc/profile.d/hestia.sh
 source /etc/profile.d/hestia.sh
 echo 'PATH=$PATH:'$HESTIA'/bin' >> /root/.bash_profile
@@ -845,10 +844,6 @@ chmod 770 $HESTIA/data/sessions
 rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
-
-# Symlink to Vesta for compatibilty
-ln -s $HESTIA /usr/local/vesta
-ln -s $HESTIA/conf/hestia.conf /usr/local/vesta/conf/vesta.conf
 
 # Web stack
 if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then

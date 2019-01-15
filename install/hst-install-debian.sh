@@ -644,6 +644,9 @@ rm -rf $HESTIA > /dev/null 2>&1
 
 if [ "$multiphp" = 'yes' ]; then
     for v in "${multiphp_v[@]}"; do
+        if [ "$v" = "$fpm_v" ]; then
+            fpm_added=true
+        fi
         mph="php$v-mbstring php$v-bcmath php$v-cli php$v-curl php$v-fpm
              php$v-gd php$v-intl php$v-mysql php$v-soap php$v-xml php$v-zip"
         # Check is version is 7.1 or below to add mcrypt
@@ -654,7 +657,7 @@ if [ "$multiphp" = 'yes' ]; then
     done
 fi
 
-if [ "$phpfpm" = 'yes' ]; then
+if [ "$phpfpm" = 'yes' ] || [ ! -z "$fpm_added" ]; then
     fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
          php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
          php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
@@ -1008,17 +1011,17 @@ if [ "$nginx" = 'yes' ]; then
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
             rm -f /etc/php/$v/fpm/pool.d/*
+            cp -f $hestiacp/multiphp/nginx/PHP-$v.* $HESTIA/data/templates/web/nginx/
         done
         rm -fr $HESTIA/data/templates/web/nginx/*
-        cp -f $hestiacp/multiphp/nginx/* $HESTIA/data/templates/web/nginx/
         cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
         fpm_tpl=$(echo "$fpm_v" | sed -e 's/[.]//')
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.sh $HESTIA/data/templates/web/nginx/default.sh
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.tpl $HESTIA/data/templates/web/nginx/default.tpl
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.stpl $HESTIA/data/templates/web/nginx/default.stpl
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
-        service php$fpm_tpl-fpm start >> $LOG
-        check_result $? "php$fpm_tpl-fpm start failed"
+        service php$fpm_v-fpm start >> $LOG
+        check_result $? "php$fpm_v-fpm start failed"
     fi
     update-rc.d nginx defaults > /dev/null 2>&1
     service nginx start >> $LOG
@@ -1057,8 +1060,8 @@ if [ "$apache" = 'yes' ]; then
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
             rm -f /etc/php/$v/fpm/pool.d/*
+            cp -f $hestiacp/multiphp/apache2/PHP-$v.* $HESTIA/data/templates/web/apache2/
         done
-        cp -f $hestiacp/multiphp/apache2/* $HESTIA/data/templates/web/apache2/
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
         if [ "$release" = '8' ]; then
             sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.tpl

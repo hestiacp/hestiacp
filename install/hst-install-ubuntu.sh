@@ -995,11 +995,11 @@ if [ "$nginx" = 'yes' ]; then
         done
         rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
+        chmod a+x $HESTIA/data/templates/web/nginx/*.sh
         fpm_tpl=$(echo "$fpm_v" | sed -e 's/[.]//')
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.sh $HESTIA/data/templates/web/nginx/default.sh
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.tpl $HESTIA/data/templates/web/nginx/default.tpl
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.stpl $HESTIA/data/templates/web/nginx/default.stpl
-        chmod a+x $HESTIA/data/templates/web/nginx/*.sh
         service php$fpm_v-fpm start >> $LOG
         check_result $? "php$fpm_v-fpm start failed"
     fi

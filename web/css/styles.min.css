@@ -3386,8 +3386,8 @@ form#vstobjects.suspended {
 }
 
 .l-profile__server {
-    font-size: 14px !important;
-    color: #70c9f9;
-    padding: 9px;
+    color: #27AAE1;
+    padding-top: 10px;
+    padding-left: 33px;
     float: left;
 }

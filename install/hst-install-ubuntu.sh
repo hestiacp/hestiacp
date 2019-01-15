@@ -615,7 +615,8 @@ if [ "$multiphp" = 'yes' ]; then
             fpm_added=true
         fi
         mph="php$v-mbstring php$v-bcmath php$v-cli php$v-curl php$v-fpm
-             php$v-gd php$v-intl php$v-mysql php$v-soap php$v-xml php$v-zip"
+             php$v-gd php$v-intl php$v-mysql php$v-soap php$v-xml php$v-zip
+             php$v-mbstring php$v-json php$v-bz2 php$v-pspell"
         # Check is version is 7.1 or below to add mcrypt
         if [[ `echo "$v 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then 
             mph="$mph php$v-mcrypt"
@@ -624,7 +625,7 @@ if [ "$multiphp" = 'yes' ]; then
     done
 fi
 
-if [ "$phpfpm" = 'yes' ] || [ ! -z "$fpm_added" ]; then
+if [ "$phpfpm" = 'yes' ] || [ -z "$fpm_added" ]; then
     fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
          php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
          php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
@@ -989,7 +990,8 @@ if [ "$nginx" = 'yes' ]; then
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
             rm -f /etc/php/$v/fpm/pool.d/*
-            cp -f $hestiacp/multiphp/nginx/PHP-$v.* $HESTIA/data/templates/web/nginx/
+            v_tpl=$(echo "$v" | sed -e 's/[.]//')
+            cp -f $hestiacp/multiphp/nginx/PHP-$v_tpl.* $HESTIA/data/templates/web/nginx/
         done
         rm -fr $HESTIA/data/templates/web/nginx/*
         cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
@@ -1038,7 +1040,8 @@ if [ "$apache" = 'yes' ]; then
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
             rm -f /etc/php/$v/fpm/pool.d/*
-            cp -f $hestiacp/multiphp/apache2/PHP-$v.* $HESTIA/data/templates/web/apache2/
+            v_tpl=$(echo "$v" | sed -e 's/[.]//')
+            cp -f $hestiacp/multiphp/apache2/PHP-$v_tpl.* $HESTIA/data/templates/web/apache2/
         done
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
     fi

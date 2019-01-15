@@ -16,25 +16,31 @@ restart=$1
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
+# Detect OS
+case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
+    Debian)     type="debian" ;;
+    Ubuntu)     type="ubuntu" ;;
+    *)          type="NoSupport" ;;
+esac
+
+# Detect version
+if [ "$type" = "ubuntu" ]; then
+    release="$(lsb_release -s -r)"
+elif [ "$type" = "ubuntu" ]; then
+    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+else
+    echo "Error: can't detect supported os"
+    log_event "$E_NOTEXIST"
+    exit $E_NOTEXIST
+fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get new archive
-tmpdir=$(mktemp -d --dry-run)
-mkdir $tmpdir
-cd $tmpdir
-wget http://c.hestiacp.com/rhel/7/templates.tar.gz -q
-if [ "$?" -ne 0 ]; then
-    echo "Error: can't download template.tar.gz"
-    log_event "$E_CONNECT" "$ARGUMENTS"
-    rm -rf $tmpdir
-    exit $E_CONNECT
-fi
-
 # Update templates
-tar -xzpf templates.tar.gz -C $HESTIA/data/ templates/dns
+cp -rf $HESTIA/install/$type/$release/templates/dns $HESTIA/data/templates/
 
 
 #----------------------------------------------------------#

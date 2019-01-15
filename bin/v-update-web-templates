@@ -16,36 +16,31 @@ restart=$1
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
+# Detect OS
+case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
+    Debian)     type="debian" ;;
+    Ubuntu)     type="ubuntu" ;;
+    *)          type="NoSupport" ;;
+esac
+
+# Detect version
+if [ "$type" = "ubuntu" ]; then
+    release="$(lsb_release -s -r)"
+elif [ "$type" = "ubuntu" ]; then
+    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+else
+    echo "Error: can't detect supported os"
+    log_event "$E_NOTEXIST"
+    exit $E_NOTEXIST
+fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Detcing OS
-case $(head -n1 /etc/issue |cut -f 1 -d ' ') in
-    Debian)     version="debian" ;;
-    Ubuntu)     version="ubuntu" ;;
-    *)          version="NotSupported" ;;
-esac
-
-# Detecting release
-if [ "$version" = 'ubuntu' ]; then
-    release=$(lsb_release -r |awk '{print $2}')
-fi
-if [ "$version" = 'debian' ]; then
-    release=$(cat /etc/issue|grep -o [0-9]|head -n1)
-fi
-if [ "$version" = 'NotSupported' ]; then
-    echo "No Supported OS Version found, abort."
-    exit 1
-fi
-
-# Defining template path
-hestiacp="$HESTIA/install/$version/$release"
-
-# Updating templates
-cp -rf $hestiacp/templates/web $HESTIA/data/templates/
-
+# Update templates
+cp -rf $HESTIA/install/$type/$release/templates/web $HESTIA/data/templates/
 
 # Rebuilding web domains
 for user in $($BIN/v-list-sys-users plain); do

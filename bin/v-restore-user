@@ -399,7 +399,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         fi
 
         # Restoring web domain data
-        if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]
+        if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
             rm -rf $HOMEDIR/$user/web/$domain/public_html/*
         fi
         tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \

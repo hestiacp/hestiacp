@@ -409,10 +409,6 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             check_result "$E_PARSING" "$error"
         fi
 
-        # Applying fix for tar < 1.24
-        find $HOMEDIR/$user/web/$domain -type d \
-            -exec chown -h $user:$user {} \;
-
         # Re-chowning files if uid differs
         if [ "$old_uid" -ne "$new_uid" ]; then
             find $HOMEDIR/$user/web/$domain/ -user $old_uid \

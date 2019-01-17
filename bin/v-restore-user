@@ -2,7 +2,7 @@
 # info: restore user
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]
 #
-# The function for resotring user from backup.
+# The function for restoring user from backup.
 
 
 #----------------------------------------------------------#
@@ -399,6 +399,8 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         fi
 
         # Restoring web domain data
+        if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]
+            rm -rf $HOMEDIR/$user/web/$domain/public_html/*
         tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
             -C $HOMEDIR/$user/web/$domain/
         if [ "$?" -ne 0 ]; then
@@ -408,10 +410,6 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
             check_result "$E_PARSING" "$error"
         fi
-
-        # Applying fix for tar < 1.24
-        find $HOMEDIR/$user/web/$domain -type d \
-            -exec chown -h $user:$user {} \;
 
         # Re-chowning files if uid differs
         if [ "$old_uid" -ne "$new_uid" ]; then

@@ -228,7 +228,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         set +f
 
         # Backup files
-        tar -cpf- * ${fargs[@]} |gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
+        tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
     done
 
     # Print total

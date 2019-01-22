@@ -519,7 +519,7 @@ apt=/etc/apt/sources.list.d
 echo "Install third party repository keys... "
 
 # Installing nginx repo
-echo "deb http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
+echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1

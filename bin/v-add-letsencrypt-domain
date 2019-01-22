@@ -190,7 +190,7 @@ for auth in $authz; do
         nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
         status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
         if [[ "$status" -ne 200 ]]; then
-            check_result $E_CONNECT "Let's Encrypt vvalidation status $status"
+            check_result $E_CONNECT "Let's Encrypt validation status $status"
         fi
 
         i=$((i + 1))

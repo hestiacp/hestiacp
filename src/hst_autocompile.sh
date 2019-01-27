@@ -192,10 +192,8 @@ if [ "$PHP_B" = true ] ; then
   # Configure PHP
   ./configure   --prefix=/usr/local/hestia/php \
               --enable-fpm \
-              --with-zlib \
               --with-fpm-user=admin \
               --with-fpm-group=admin \
-              --with-openssl \
               --with-libdir=lib/x86_64-linux-gnu \
               --with-mysqli \
               --with-curl \

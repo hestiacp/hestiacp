@@ -1171,7 +1171,7 @@ if [ "$mysql" = 'yes' ]; then
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
     # Delete file to prevent error
-    if [ "$pma_v" = '4.8.4' ]; then
+    if [ ! -z "$pma_v" ]; then
         rm -fr /usr/share/phpmyadmin/doc/html
     fi
 

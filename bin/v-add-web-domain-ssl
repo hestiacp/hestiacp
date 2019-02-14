@@ -127,6 +127,10 @@ if [ ! -z "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then
     fi
 fi
 
+if [ ! -z "$UPDATE_SSL_SCRIPT" ]; then
+    eval "$UPDATE_SSL_SCRIPT $user $domain"
+fi
+
 # Logging
 log_history "enabled ssl support for $domain"
 log_event "$OK" "$ARGUMENTS"

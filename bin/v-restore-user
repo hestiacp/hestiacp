@@ -747,6 +747,11 @@ if [ "$udir" != 'no' ]; then
     fi
 fi
 
+# Create tmp/
+mkdir -p $HOMEDIR/$user/tmp
+chmod 700 $HOMEDIR/$user/tmp
+chown -R $user:$user $HOMEDIR/$user/tmp
+
 # Sending mail notification
 subj="$user → restore has been completed"
 cat $tmpdir/restore.log |$SENDMAIL -s "$subj" $email $notify

@@ -63,7 +63,7 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     /sbin/iptables-save > /etc/iptables.rules
-    if [ -d "/etc/netplan" ]; then
+    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then
         preup="/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks"
         if [ ! -e "$preup" ]; then
             IFS='%'

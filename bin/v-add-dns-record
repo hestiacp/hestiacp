@@ -48,7 +48,10 @@ fi
 dvalue=${dvalue//\"/}
 
 if [[ "$dvalue" =~ [\;[:space:]] ]]; then
-    dvalue='"'"$dvalue"'"'
+    # Exclude SRV records for ' enclosure
+    if [ "$rtype" != 'SRV' ]; then
+        dvalue='"'"$dvalue"'"'
+    fi
 fi
 
 # Additional argument formatting

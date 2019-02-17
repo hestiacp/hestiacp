@@ -47,7 +47,13 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Checking known chains
 case $chain in
-    SSH)        port=22; protocol=TCP ;;
+    SSH)        # Get ssh port by reading ssh config file.
+                sshport=$(grep '^Port ' /etc/ssh/sshd_config | head -1 | cut -d ' ' -f 2)
+                if [ -z "$sshport" ]; then
+                    sshport=22
+                fi
+                port=$sshport; 
+                protocol=TCP ;;
     FTP)        port=21; protocol=TCP  ;;
     MAIL)       port='25,465,587,110,995,143,993'; protocol=TCP  ;;
     DNS)        port=53; protocol=UDP  ;;

@@ -21,7 +21,7 @@ symbolic-links=0
 skip-external-locking
 key_buffer_size = 16K
 max_allowed_packet = 1M
-table_open_cache = 4
+table_open_cache = 10
 sort_buffer_size = 64K
 read_buffer_size = 256K
 read_rnd_buffer_size = 256K

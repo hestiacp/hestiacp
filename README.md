@@ -1,7 +1,7 @@
 [HestiaCP Control Panel](https://www.hestiacp.com/)
 ==================================================
 
-** Hestia Control Panel is in Beta Release, please take care if you want to use it for productive systems! **
+**Hestia Control Panel is in Beta Release, please take care if you want to use it for productive systems!**
 
 * HestiaCP is a fork of VestaCP.
 * Main purpose of HestiaCP is to be more secure, better optimized and up to date.
@@ -23,6 +23,10 @@ wget https://raw.githubusercontent.com/hestiacp/hestiacp/master/install/hst-inst
 Then run it:
 ```bash
 bash hst-install.sh
+```
+or check the additional configuration commands:
+```bash
+bash hst-install.sh -h
 ```
 
 License

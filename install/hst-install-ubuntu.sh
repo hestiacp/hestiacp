@@ -625,7 +625,7 @@ if [ "$multiphp" = 'yes' ]; then
     done
 fi
 
-if [ "$phpfpm" = 'yes' ] || [ -z "$fpm_added" ]; then
+if [ "$phpfpm" = 'yes' ] || [ "$fpm_added" ]; then
     fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
          php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
          php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip

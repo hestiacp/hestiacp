@@ -1,6 +1,8 @@
 [HestiaCP Control Panel](https://www.hestiacp.com/)
 ==================================================
 
+** Hestia Control Panel is in Beta Release, please take care if you want to use it for productive systems! **
+
 * HestiaCP is a fork of VestaCP.
 * Main purpose of HestiaCP is to be more secure, better optimized and up to date.
 * HestiaCP is an open source, lightweight hosting control panel.

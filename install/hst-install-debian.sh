@@ -643,6 +643,7 @@ rm -rf $HESTIA > /dev/null 2>&1
 #----------------------------------------------------------#
 
 if [ "$multiphp" = 'yes' ]; then
+    fpm_added=false
     for v in "${multiphp_v[@]}"; do
         if [ "$v" = "$fpm_v" ]; then
             fpm_added=true
@@ -656,9 +657,16 @@ if [ "$multiphp" = 'yes' ]; then
         fi
         software="$software $mph"
     done
+    if [ "$fpm_added" = false ]; then
+        fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
+             php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
+             php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
+             php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell"
+        software="$software $fpm"
+    fi
 fi
 
-if [ "$phpfpm" = 'yes' ] || [ "$fpm_added" ]; then
+if [ "$phpfpm" = 'yes' ]; then
     fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
          php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
          php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip

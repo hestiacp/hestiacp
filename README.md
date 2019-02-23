@@ -32,3 +32,8 @@ bash hst-install.sh -h
 License
 ----------------------------
 HestiaCP is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license.
+
+Donation
+----------------------------
+Hestia is open source, free to use and will stay free for everyone! If you would donate something for our work and infrastructure, you can do this over our paypal account:
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)

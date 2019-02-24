@@ -1,7 +1,7 @@
 [HestiaCP Control Panel](https://www.hestiacp.com/)
 ==================================================
 
-**Hestia Control Panel is in Beta Release, please take care if you want to use it for productive systems!**
+**Hestia Control Panel is in Beta Release, please be careful if you decide to use it in production systems and report any bugs you might find.**
 
 * HestiaCP is a fork of VestaCP.
 * Main purpose of HestiaCP is to be more secure, better optimized and up to date.
@@ -33,8 +33,8 @@ License
 ----------------------------
 HestiaCP is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license.
 
-Donation
+Donations
 ----------------------------
-Hestia is open source, free to use and will stay free for everyone! If you would donate something for our work and infrastructure, you can do this over our paypal account:
+Hestia is open source, completely free to use and will stay free forever! If you like to donate something for our work and to help cover the expenses of our infrastructure, you can do this through PayPal:
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)

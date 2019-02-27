@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: adding ssl force to domain
+# info: Adding force SSL for a domain
 # options: USER DOMAIN
 #
 # The function forces SSL for the requested domain.
@@ -55,13 +55,13 @@ else
     forcessl="/home/$user/conf/web/forcessl.apache2.$domain.conf"
 fi
 
-# Check if force ssl already exists
+# Check if force SSL already exists
 if [ -f "$forcessl" ]; then
-    echo "Error: rewrite already enabled"
+    echo "Error: Rewrite is already enabled"
     exit $E_EXIST
 fi
 
-# Place rewrite commands
+# Insert rewrite commands
 if [ ! -z $PROXY ]; then
     echo 'return 301 https://$server_name$request_uri;' > $forcessl
 else
@@ -74,10 +74,11 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Restarting web server
+# Restart web server
 $BIN/v-restart-web
 check_result $? "Web restart failed" >/dev/null
 
+# Restart proxy
 $BIN/v-restart-proxy
 check_result $? "Proxy restart failed" >/dev/null
 

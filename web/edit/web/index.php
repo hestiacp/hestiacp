@@ -49,6 +49,7 @@ if (!empty($v_ssl)) {
     $v_ssl_signature = $ssl_str[$v_domain]['SIGNATURE'];
     $v_ssl_pub_key = $ssl_str[$v_domain]['PUB_KEY'];
     $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
+    $v_ssl_forcessl = $ssl_str[$v_domain]['FORCESSL'];
 }
 $v_letsencrypt = $data[$v_domain]['LETSENCRYPT'];
 if (empty($v_letsencrypt)) $v_letsencrypt = 'no';
@@ -360,6 +361,7 @@ if (!empty($_POST['save'])) {
         $v_ssl_key = '';
         $v_ssl_ca = '';
         $v_ssl = 'no';
+        $v_ssl_forcessl = 'no';
         $restart_web = 'yes';
         $restart_proxy = 'yes';
     }
@@ -443,8 +445,22 @@ if (!empty($_POST['save'])) {
             rmdir($tmpdir);
         }
     }
-
-
+    
+    // Add Force SSL
+    if ((!empty($_POST['v_ssl_forcessl'])) && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+        exec (HESTIA_CMD."v-add-web-domain-ssl-force ".$user." ".$v_domain, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        $v_ssl_forcessl = 'yes';
+    }
+    
+    // Delete Force SSL
+    if (( $v_ssl_forcessl == 'yes' ) && (empty($_POST['v_ssl_forcessl'])) && (empty($_SESSION['error_msg']))) {
+        exec (HESTIA_CMD."v-delete-web-domain-ssl-force ".$user." ".$v_domain." yes", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        $v_ssl_forcessl = 'no';
+    }
 
     // Delete web stats
     if ((!empty($v_stats)) && ($_POST['v_stats'] == 'none') && (empty($_SESSION['error_msg']))) {

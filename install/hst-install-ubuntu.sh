@@ -1228,7 +1228,7 @@ if [ "$named" = 'yes' ]; then
     chmod 640 /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf.options
     aa-complain /usr/sbin/named > /dev/null 2>&1
-    echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named > /dev/null 2>&1
+    echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
     if ! grep --quiet lxc /proc/1/environ; then
         service apparmor status > /dev/null 2>&1
         if [ $? -ne 0 ]; then

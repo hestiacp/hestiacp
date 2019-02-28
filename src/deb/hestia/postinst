@@ -5,7 +5,7 @@ if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
     exit
 fi
 
-# upgrade routines goes here
+# Upgrade routines go here
 
 # Load hestia.conf
 source /usr/local/hestia/conf/hestia.conf
@@ -13,12 +13,12 @@ source /usr/local/hestia/conf/hestia.conf
 # Set version(s)
 pma_v='4.8.5'
 
-# Upgrade phpmyadmin
+# Upgrade phpMyAdmin
 if [ "$DB_SYSTEM" = 'mysql' ]; then
     # Display upgrade information
     echo "Upgrade phpMyAdmin to v$pma_v..."
 
-    # Download latest phpmyadmin release
+    # Download latest phpMyAdmin release
     wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
     # Unpack files
@@ -34,18 +34,18 @@ if [ "$DB_SYSTEM" = 'mysql' ]; then
     sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
     sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
-    # Create temporary folder and change permission
+    # Create temporary folder and change permissions
     if [ ! -d /usr/share/phpmyadmin/tmp ]; then
         mkdir /usr/share/phpmyadmin/tmp
         chmod 777 /usr/share/phpmyadmin/tmp
     fi
 
-    # Clear Up
+    # Clean up
     rm -fr phpMyAdmin-$pma_v-all-languages
     rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 fi
 
-# Add amd64 to repositorys to prevent notifications - https://goo.gl/hmsSV7
+# Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7
 if ! grep -q 'amd64' /etc/apt/sources.list.d/nginx.list; then
     sed -i s/deb/"deb [arch=amd64]"/g /etc/apt/sources.list.d/nginx.list
 fi

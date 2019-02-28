@@ -7,4 +7,40 @@ fi
 
 # upgrade routines goes here
 
+# Load hestia.conf
+source /usr/local/hestia/conf/hestia.conf
+
+# Set version(s)
+pma_v='4.8.5'
+
+# Upgrade phpmyadmin
+if [ "$DB_SYSTEM" = 'mysql' ]; then
+    # Display upgrade information
+    echo "Upgrade phpMyAdmin to v$pma_v..."
+
+    # Download latest phpmyadmin release
+    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+
+    # Unpack files
+    tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+
+    # Delete file to prevent error
+    rm -fr /usr/share/phpmyadmin/doc/html
+
+    # Overwrite old files
+    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+    # Set config and log directory
+    sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+
+    # Create temporary folder and change permission
+    mkdir /usr/share/phpmyadmin/tmp
+    chmod 777 /usr/share/phpmyadmin/tmp
+
+    # Clear Up
+    rm -fr phpMyAdmin-$pma_v-all-languages
+    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
+fi
+
 exit 0

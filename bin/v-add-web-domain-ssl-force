@@ -55,13 +55,7 @@ else
     forcessl="/home/$user/conf/web/forcessl.apache2.$domain.conf"
 fi
 
-# Check if force SSL already exists
-if [ -f "$forcessl" ]; then
-    echo "Error: Rewrite is already enabled"
-    exit $E_EXIST
-fi
-
-# Insert rewrite commands
+# Insert redirect commands
 if [ ! -z $PROXY ]; then
     echo 'return 301 https://$server_name$request_uri;' > $forcessl
 else

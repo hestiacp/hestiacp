@@ -12,7 +12,7 @@
     CustomLog /var/log/%web_system%/domains/%domain%.log combined
     ErrorLog /var/log/%web_system%/domains/%domain%.error.log
         
-    IncludeOptional %home%/%user%/conf/web/forcessl.apache2.%domain%.conf
+    IncludeOptional %home%/%user%/conf/web/forcessl.apache2.%domain%.conf*
     
     <Directory %docroot%>
         AllowOverride All

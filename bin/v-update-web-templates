@@ -26,7 +26,7 @@ esac
 # Detect version
 if [ "$type" = "ubuntu" ]; then
     release="$(lsb_release -s -r)"
-elif [ "$type" = "ubuntu" ]; then
+elif [ "$type" = "debian" ]; then
     release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
 else
     echo "Error: can't detect supported os"

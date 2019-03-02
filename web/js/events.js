@@ -387,7 +387,7 @@ VE.navigation.switch_menu = function(position){
 VE.notifications.get_list = function(){
 /// TODO get notifications only once
     $.ajax({
-        url: "/list/notifications/?ajax=1",
+        url: "/list/notifications/?ajax=1&token="+$('#token').attr('token'),
         dataType: "json"
     }).done(function(data) {
         var acc = [];

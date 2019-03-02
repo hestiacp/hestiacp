@@ -5,7 +5,7 @@ error_reporting(NULL);
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 
-if($_REQUEST['ajax'] == 1){
+if($_REQUEST['ajax'] == 1 && $_REQUEST['token'] == $_SESSION['token']){
     // Data
     exec (HESTIA_CMD."v-list-user-notifications $user json", $output, $return_var);
     $data = json_decode(implode('', $output), true);

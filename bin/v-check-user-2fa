@@ -1,0 +1,54 @@
+#!/bin/bash
+# info: check user token
+# options: USER TOKEN
+#
+# The function verifies user 2fa token.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+token=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER TOKEN'
+is_format_valid 'user' 'system'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Reading user values
+source $USER_DATA/user.conf
+
+# Check if 2FA is enabled
+if [ -z "$TWOFA" ]; then
+    echo "Error: 2FA is not enabled"
+    exit $E_NOTEXIST
+fi
+
+# Check if token is valid
+result=$($HESTIA/php/bin/php $HESTIA/web/inc/2fa/secret.php)
+if [ "$result" != "ok" ]; then
+    echo "Error: Token missmatch"
+    exit 9
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

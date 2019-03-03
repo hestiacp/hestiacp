@@ -1,0 +1,58 @@
+#!/bin/bash
+# info: add 2fa to existing user
+# options: USER
+#
+# The function creates a new 2fa token for user.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user' 'system'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Reading user values
+source $USER_DATA/user.conf
+
+# Check if 2FA is already enabled
+if [ ! -z "$TWOFA" ]; then
+    echo "Error: 2FA already enabled"
+    exit $E_EXIST
+fi
+
+# Get secret and qr code from 2fa libary
+data=$($HESTIA/php/bin/php $HESTIA/web/inc/2fa/secret.php)
+
+# Split to secret and qrcode using delimiter
+IFS='-' read -r -a array <<< "$data"
+secret=${array[0]}
+qrcode=${array[1]}
+
+# Save the secret in user config (needs encryption?)
+sed -i "/RKEY/a TWOFA='$secret'" $USER_DATA/user.conf
+sed -i "/TWOFA/a QRCODE='$qrcode'" $USER_DATA/user.conf
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

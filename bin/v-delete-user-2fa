@@ -1,0 +1,50 @@
+#!/bin/bash
+# info: delete 2fa of existing user
+# options: USER
+#
+# The function deletes 2fa token of a user.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user' 'system'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Reading user values
+source $USER_DATA/user.conf
+
+# Check if 2FA is enabled
+if [ -z "$TWOFA" ]; then
+    echo "Error: 2FA is not enabled"
+    exit $E_NOTEXIST
+fi
+
+# Remove 2FA from user config
+sed -i '/TWOFA=/d' $USER_DATA/user.conf
+sed -i '/QRCODE=/d' $USER_DATA/user.conf
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

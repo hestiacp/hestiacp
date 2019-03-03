@@ -44,6 +44,8 @@ json_list() {
         "CONTACT": "'$CONTACT'",
         "CRON_REPORTS": "'$CRON_REPORTS'",
         "RKEY": "'$RKEY'",
+        "TWOFA": "'$TWOFA'",
+        "QRCODE": "'$QRCODE'",
         "SUSPENDED": "'$SUSPENDED'",
         "SUSPENDED_USERS": "'$SUSPENDED_USERS'",
         "SUSPENDED_WEB": "'$SUSPENDED_WEB'",

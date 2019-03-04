@@ -10,6 +10,26 @@
                                 <td style="padding: 20px 0 0 0;">
                                     <form method="post" action="/login/" >
                                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+                                    <script>
+                                    function show2FA(str) {
+                                        if (str.length == 0) {
+                                            $('.twofa').fadeOut();
+                                            return;
+                                        } else {
+                                            var xmlhttp = new XMLHttpRequest();
+                                            xmlhttp.onreadystatechange = function() {
+                                                if (this.readyState == 4 && this.status == 200) {
+                                                    var x = document.getElementById("twofa");
+                                                    $('.twofa').fadeIn();
+                                                } else {
+                                                    $('.twofa').fadeOut();
+                                                }
+                                            };
+                                            xmlhttp.open("GET", "/inc/2fa/active.php?user=" + str, true);
+                                            xmlhttp.send();
+                                        }
+                                    }
+                                    </script>
                                     <table class="login-box">
                                         <tr>
                                             <td syle="padding: 12px 0 0 2px;">
@@ -18,7 +38,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input">
+                                                <input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input" onfocusout="show2FA(this.value)">
                                             </td>
                                         </tr>
                                         <tr>
@@ -34,6 +54,21 @@
                                         <tr>
                                             <td>
                                                 <input tabindex="2" type="password" size="20px"  style="width:240px;" name="password" class="vst-input">
+                                            </td>
+                                        </tr>
+                                        <tr class="twofa" style="display:none;">
+                                            <td style="padding-top: 12px; padding-left:2px;">
+                                                <?php print __('2FA Token');?>
+                                                <span style="padding:0 0 0 10px;">
+                                                    <a tabindex="5" class="vst-advanced" href="/reset/">
+                                                        <?php print __('forgot token');?>
+                                                    </a>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="twofa" style="display:none;">
+                                            <td>
+                                                <input tabindex="3" type="text" size="20px" style="width:240px;" name="twofa" class="vst-input">
                                             </td>
                                         </tr>
                                         <tr>

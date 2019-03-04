@@ -1,3 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <title>Hestia - <?=__($TAB)?></title>
+  <link rel="stylesheet" href="/css/styles.min.css?1446554103">
+  <link type="text/css" href="/css/jquery-custom-dialogs.css?1446554103" rel="stylesheet" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    //
+    //  GLOBAL SETTINGS
+    //
+    var GLOBAL = {};
+    GLOBAL.FTP_USER_PREFIX  = 'admin_';
+    GLOBAL.DB_USER_PREFIX   = 'admin_';
+    GLOBAL.DB_DBNAME_PREFIX = 'admin_';
+    GLOBAL.AJAX_URL = '';
+  </script>
+</head>
+<body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
+root@web02:/usr/local/hestia/web# nano mail/index.php ^C
+root@web02:/usr/local/hestia/web# cat login/index.php
 <?php
 
 define('NO_AUTH_REQUIRED',true);
@@ -34,6 +57,9 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
         $v_user = escapeshellarg($_POST['user']);
         $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
+        if (isset($_POST['twofa'])) {
+            $v_twofa = escapeshellarg($_POST['twofa']);
+        }
 
         // Get user's salt
         $output = '';
@@ -83,34 +109,50 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
 
-                // Define session user
-                $_SESSION['user'] = key($data);
-                $v_user = $_SESSION['user'];
-
-                // Get user favorites
-                get_favourites();
-
-                // Define language
-                $output = '';
-                exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
-                $languages = json_decode(implode('', $output), true);
-                if (in_array($data[$v_user]['LANGUAGE'], $languages)){
-                    $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
-                } else {
-                    $_SESSION['language'] = 'en';
+                // Check if 2FA is active
+                if ($data[$_POST['user']]['TWOFA'] != '') {
+                    if (isset($v_twofa)){
+                        exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
+                        unset($output);
+                        if ( $return_var > 0 ) {
+                            $ERROR = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
+                        }
+                    } else {
+                        $ERROR = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
+                    }
                 }
 
-                // Regenerate session id to prevent session fixation
-                session_regenerate_id();
+                // Check if 2FA was successfully
+                if ( ! isset($v_twofa) || $ERROR == '' ) {
+                    // Define session user
+                    $_SESSION['user'] = key($data);
+                    $v_user = $_SESSION['user'];
 
-                // Redirect request to control panel interface
-                if (!empty($_SESSION['request_uri'])) {
-                    header("Location: ".$_SESSION['request_uri']);
-                    unset($_SESSION['request_uri']);
-                    exit;
-                } else {
-                    header("Location: /list/user/");
-                    exit;
+                    // Get user favorites
+                    get_favourites();
+
+                    // Define language
+                    $output = '';
+                    exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
+                    $languages = json_decode(implode('', $output), true);
+                    if (in_array($data[$v_user]['LANGUAGE'], $languages)){
+                        $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
+                    } else {
+                        $_SESSION['language'] = 'en';
+                    }
+
+                    // Regenerate session id to prevent session fixation
+                    session_regenerate_id();
+
+                    // Redirect request to control panel interface
+                    if (!empty($_SESSION['request_uri'])) {
+                        header("Location: ".$_SESSION['request_uri']);
+                        unset($_SESSION['request_uri']);
+                        exit;
+                    } else {
+                        header("Location: /list/user/");
+                        exit;
+                    }
                 }
             }
         }

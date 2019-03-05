@@ -13,20 +13,20 @@ What is Hestia Control Panel?
 * An open source web server control panel with an easy-to-use interface.
 * A lightweight alternative to cPanel, Plesk, etc.
 
-What roles does Hestia Control Panel support?
+What Hestia Control Panel supports?
 ----------------------------
-* Web (Apache/NGINX) with PHP
-* DNS (BIND)
-* Mail (Dovecot/Exim) with virus and spam filtering (via ClamAV/SpamAssassin respectively)
-* SQL (MariaDB or PostgreSQL)
+* Web Server (Apache/Nginx) with PHP
+* DNS Server (Bind)
+* Mail Server (Exim/Dovecot) with Antivirus and Spam Filter (ClamAV and SpamAssassin)
+* Database Server (MariaDB/PostgreSQL)
 
-System Requirements
+System Requirements:
 ----------------------------
 * Debian 8 or 9
 * Ubuntu 16.04 LTS or Ubuntu 18.04 LTS
-* **NOTE:** Hestia Control Panel must be installed on a clean operating system to ensure proper functionality.
+* **NOTE:** Hestia Control Panel must be installed on a "clean" Operating System to ensure proper functionality.
 
-How to install
+How to install:
 ----------------------------
 Connect to your server as root via SSH
 ```bash
@@ -49,12 +49,12 @@ For additional installation options:
 bash hst-install.sh -h
 ```
 
-License
+License:
 ----------------------------
-HestiaCP is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license.
+Hestia Control Panel is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license.
 
-Donations
+Donations:
 ----------------------------
-Hestia Control Panel is open source and completely free for all to use and enjoy!<br>If you would like to make a donation to help cover development and infrastructure costs, you may do so via PayPal:
+Hestia Control Panel is open source and completely free for everyone!<br>If you like to make a donation in order to help cover development and infrastructure costs, you may do so via PayPal:
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)

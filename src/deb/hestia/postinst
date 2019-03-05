@@ -57,4 +57,10 @@ fi
 if [ "$DNS_SYSTEM" = 'bind9' ] && [ ! -f /etc/apparmor.d/local/usr.sbin.named ]; then
         echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
 fi
+
+# Remove obsolete ports.conf if exist.
+if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
+    rm -f /usr/local/hestia/data/firewall/ports.conf
+fi
+
 exit 0

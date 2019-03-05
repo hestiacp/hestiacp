@@ -1,26 +1,3 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  <title>Hestia - <?=__($TAB)?></title>
-  <link rel="stylesheet" href="/css/styles.min.css?1446554103">
-  <link type="text/css" href="/css/jquery-custom-dialogs.css?1446554103" rel="stylesheet" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script>
-    //
-    //  GLOBAL SETTINGS
-    //
-    var GLOBAL = {};
-    GLOBAL.FTP_USER_PREFIX  = 'admin_';
-    GLOBAL.DB_USER_PREFIX   = 'admin_';
-    GLOBAL.DB_DBNAME_PREFIX = 'admin_';
-    GLOBAL.AJAX_URL = '';
-  </script>
-</head>
-<body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
-root@web02:/usr/local/hestia/web# nano mail/index.php ^C
-root@web02:/usr/local/hestia/web# cat login/index.php
 <?php
 
 define('NO_AUTH_REQUIRED',true);

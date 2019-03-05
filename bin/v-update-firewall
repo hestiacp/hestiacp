@@ -33,7 +33,6 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Checking local IPv4 rules
 rules="$HESTIA/data/firewall/rules.conf"
-ports="$HESTIA/data/firewall/ports.conf"
 
 if [ ! -e "$rules" ]; then
     exit

@@ -41,7 +41,7 @@ if [ -z "$TWOFA" ]; then
 fi
 
 # Check if token is valid
-result=$($HESTIA/php/bin/php $HESTIA/web/inc/2fa/secret.php)
+result=$($HESTIA/php/bin/php $HESTIA/web/inc/2fa/check.php $TWOFA $token)
 if [ "$result" != "ok" ]; then
     echo "Error: Token missmatch"
     exit 9

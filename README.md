@@ -40,7 +40,7 @@ bash hst-install.sh
 ```
 To perform an unattended installation using the default options:
 ```bash
-bash hst-install-ubuntu.sh -f -y no -e <email> -p <password> -s <hostname>
+bash hst-install.sh -f -y no -e <email> -p <password> -s <hostname>
 ```
 For additional installation options:
 ```bash

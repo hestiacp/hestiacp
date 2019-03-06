@@ -63,4 +63,9 @@ if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
     rm -f /usr/local/hestia/data/firewall/ports.conf
 fi
 
+# Set backend port
+if [ ! -z "$BACKEND_PORT" ]
+    /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
+fi
+
 exit 0

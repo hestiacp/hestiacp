@@ -46,11 +46,11 @@ if [ "$DB_SYSTEM" = 'mysql' ]; then
 fi
 
 # Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7
-if ! grep -q 'amd64' /etc/apt/sources.list.d/nginx.list; then
-    sed -i s/deb/"deb [arch=amd64]"/g /etc/apt/sources.list.d/nginx.list
+if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/nginx.list; then
+    sed -i s/"deb "/"deb [arch=amd64] "/g /etc/apt/sources.list.d/nginx.list
 fi
-if ! grep -q 'amd64' /etc/apt/sources.list.d/mariadb.list; then
-    sed -i s/deb/"deb [arch=amd64]"/g /etc/apt/sources.list.d/mariadb.list
+if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/mariadb.list; then
+    sed -i s/"deb "/"deb [arch=amd64] "/g /etc/apt/sources.list.d/mariadb.list
 fi
 
 # Fix named rule for AppArmor - https://goo.gl/SPqHdq

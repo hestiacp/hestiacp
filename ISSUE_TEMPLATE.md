@@ -1,23 +1,25 @@
-### Operating System (OS/VERSION):
-
-Type here, e.g. Debian 9
-
-### HestiaCP Version:
-
-Type here, e.g. 1.01234
-
-### Installed Software (what you got with the installer):
-
-Type here, e.g. Apache, Nginx, PHP-FPM, MySQL
+### Brief issue description:
+Type here (e.g. When I click on the Web tab, a blank page is displayed).
 
 ### Steps to Reproduce:
+1. Example: Log into Hestia Server
+2. Example: Click on Web tab
+3. ...
 
-Type here, e.g. install HestiaCP and type rm -rf / --no-preserve-root
+### Expected behavior:
+Type here (e.g. A list of hosted web domains should appear).
 
-### Related Issues/Forum Threads:
+### Operating system distribution and release:
+Type here (e.g. Ubuntu 18.04 LTS)
 
-Found anything that might be related to this? It might help us find the cause.
+### HestiaCP Version:
+Type here (e.g. 0.9.8-26)
 
-### Other Notes:
+### What software is installed?
+Type here (e.g. Apache, Nginx, PHP-FPM, Dovecot/Exim, MariaDB, etc.)
 
-Anything else you think we should know?
+### Related issues or forum threads:
+Find something that might be related to this? Please let us know by adding any relevate issue numbers or URLs here (e.g. issue #0 or https://forum.hestiacp.com/...)
+
+### Additional notes:
+If there is anything else that you'd like us to know about this issue, feel free to let us know here.

@@ -329,12 +329,17 @@ if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
     echo "$conflicts"
     echo
     echo 'It is highly recommended to remove them before proceeding.'
-    echo 'If you want to force installation run this script with -f option:'
-    echo "Example: bash $0 --force"
     echo
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
-    check_result 1 "Control Panel should be installed on clean server."
+    read -p 'Would you like that we remove the packages for you? [y/n] ' answer
+    if [ "$answer" = 'y' ] || [ "$answer" = 'Y'  ]; then
+        apt-get -qq purge $conflicts -y
+        check_result $? 'apt-get remove failed'
+        unset $answer
+    else
+        check_result 1 "Control Panel should be installed on clean server."
+    fi
 fi
 
 # Check network configuration

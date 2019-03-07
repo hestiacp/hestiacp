@@ -45,9 +45,16 @@ if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     fi
 fi
 
-dvalue=${dvalue//\"/}
+if [ $rtype != "CAA" ]; then
+    dvalue=${dvalue//\"/}
+    # Exclude CAA records for ' enclosure
+    if [[ "$dvalue" =~ [\;[:space:]] ]]; then
+        dvalue='"'"$dvalue"'"'
+    fi
+fi
 
 if [[ "$dvalue" =~ [\;[:space:]] ]]; then
+    dvalue=${dvalue//\"/}
     # Exclude SRV records for ' enclosure
     if [ "$rtype" != 'SRV' ]; then
         dvalue='"'"$dvalue"'"'

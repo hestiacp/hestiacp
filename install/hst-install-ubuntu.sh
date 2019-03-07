@@ -947,7 +947,7 @@ cp -rf $hestiacp/packages $HESTIA/data/
 cp -rf $hestiacp/templates $HESTIA/data/
 
 # Copy default "Success" page for unassigned hosts
-cp -rf $HESTIA/data/templates/web/unassigned/* /var/www/
+cp -rf $hestiacp/templates/web/unassigned/* /var/www/
 
 # Installing firewall rules
 cp -rf $hestiacp/firewall $HESTIA/data/

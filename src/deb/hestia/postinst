@@ -69,6 +69,7 @@ if [ ! -z "$BACKEND_PORT" ]; then
 fi
 
 # Update Web and DNS templates
+rm -rf /usr/local/hestia/data/templates/*
 cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/* /usr/local/hestia/data/templates/
 
 exit 0

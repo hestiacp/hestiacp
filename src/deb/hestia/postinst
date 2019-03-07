@@ -58,14 +58,17 @@ if [ "$DNS_SYSTEM" = 'bind9' ] && [ ! -f /etc/apparmor.d/local/usr.sbin.named ];
         echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
 fi
 
-# Remove obsolete ports.conf if exist.
+# Remove obsolete ports.conf if exists.
 if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
     rm -f /usr/local/hestia/data/firewall/ports.conf
 fi
 
-# Set backend port
+# Reset backend port
 if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
 fi
+
+# Copy default "Success" page for unassigned hosts
+cp -rf $hestiacp/templates/web/unassigned/* /var/www/
 
 exit 0

@@ -973,9 +973,8 @@ cp -rf $hestiacp/packages $HESTIA/data/
 # Installing templates
 cp -rf $hestiacp/templates $HESTIA/data/
 
-# Copying index.html to default documentroot
-cp $HESTIA/data/templates/web/skel/public_html/index.html /var/www/
-sed -i 's/%domain%/It worked!/g' /var/www/index.html
+# Copy default "Success" page for unassigned hosts
+cp -rf $hestiacp/templates/web/unassigned/* /var/www/
 
 # Installing firewall rules
 cp -rf $hestiacp/firewall $HESTIA/data/

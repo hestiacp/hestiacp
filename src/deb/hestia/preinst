@@ -11,14 +11,7 @@ source /usr/local/hestia/conf/hestia.conf
 # Get hestia version
 version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
 
-# Check if upgrade routine exists for target version
-if [ -f "/usr/local/hestia/install/upgrade/$version.sh" ]; then
-    source /usr/local/hestia/install/upgrade/$version.sh
-fi
-
-# Set new hestia version in conf file
+# Set hestia version if different.
 if [ "$VERSION" != "$version" ]; then
     sed -I "s/VERSION='$VERSION'/VERSION='$version'/" /usr/local/hestia/conf/hestia.conf
 fi
-
-exit 0

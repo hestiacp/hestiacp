@@ -68,4 +68,7 @@ if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
 fi
 
+# Update Web and DNS templates
+cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/* /usr/local/hestia/data/templates/
+
 exit 0

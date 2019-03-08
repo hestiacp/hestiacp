@@ -67,3 +67,8 @@ fi
 
 # Copy default "Success" page for unassigned hosts
 cp -rf $hestiacp/templates/web/unassigned/* /var/www/
+
+# Move clamav to proper location - https://goo.gl/zNuM11
+if [ -d /usr/local/web/edit/server/clamav-daemon ]; then
+    mv /usr/local/web/edit/server/clamd mv /usr/local/web/edit/server/clamav-daemon
+fi

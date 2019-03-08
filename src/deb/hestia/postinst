@@ -18,7 +18,7 @@ fi
 
 # Set new hestia version in conf file
 if [ "$VERSION" != "$version" ]; then
-    sed -I "s/VERSION='$VERSION'/VERSION='$version'/" /usr/local/hestia/conf/hestia.conf
+    sed -i "s/VERSION='$VERSION'/VERSION='$version'/g" /usr/local/hestia/conf/hestia.conf
 fi
 
 exit 0

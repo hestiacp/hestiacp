@@ -260,7 +260,7 @@ if [ ! -z "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
 fi
 
 # Update apt repository
-echo "Please wait a few seconds, we update your repository before we start the installation process..."
+echo "Please wait a moment while we update your systems APT repositories..."
 apt-get -qq update
 
 # Creating backup directory
@@ -287,9 +287,9 @@ if [ ! -e '/usr/bin/apt-add-repository' ]; then
     check_result $? "Can't install software-properties-common"
 fi
 
-# Checking repository availability
+# Check repository availability
 wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
-check_result $? "No access to Hestia repository"
+check_result $? "Unable to connect to the Hestia APT repository"
 
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
@@ -303,20 +303,20 @@ rm -f $tmpfile
 if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
-    echo 'Following packages are already installed:'
+    echo 'WARNING: The following packages are already installed'
     echo "$conflicts"
     echo
-    echo 'It is highly recommended to remove them before proceeding.'
+    echo 'It is highly recommended that you remove them before proceeding.'
     echo
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
-    read -p 'Would you like that we remove the packages for you? [y/n] ' answer
+    read -p 'Would you like to remove the conflicting packages? [y/n] ' answer
     if [ "$answer" = 'y' ] || [ "$answer" = 'Y'  ]; then
         apt-get -qq purge $conflicts -y
         check_result $? 'apt-get remove failed'
         unset $answer
     else
-        check_result 1 "Control Panel should be installed on clean server."
+        check_result 1 "Hestia Control Panel should be installed on a clean server."
     fi
 fi
 
@@ -325,19 +325,25 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
     if [ -z "$(ls -A /etc/netplan)" ]; then
         echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
         echo
-        echo 'Noticed a empty netplan configuration directory.'
-        echo 'You may have a network configuration file using systemd-networkd,'
-        echo 'we strongly suggest to migrate to a fully netplan configuration.'
+        echo 'WARNING: Your network configuration may not be set up correctly.'
+        echo 'Details: The netplan configuration directory is empty.'
         echo ''
-        echo 'You can leave this like it is, but you will be not able to use'
-        echo 'additional ips properly'
+        echo 'You may have a network configuration file that was created using'
+        echo 'systemd-networkd.'
         echo ''
-        echo 'If you want to force installation run this script with -f option:'
+        echo 'It is strongly recommended to migrate to netplan, which is now the'
+        echo 'default network configuration system in newer releases of Ubuntu.'
+        echo ''
+        echo 'While you can leave your configuration as-is, please note that you'
+        echo 'will not be able to use additional IPs properly.'
+        echo ''
+        echo 'If you wish to continue and force the installation,'
+        echo 'run this script with -f option:'
         echo "Example: bash $0 --force"
         echo
         echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
         echo
-        check_result 1 "Noticed unused netplan configuration."    
+        check_result 1 "Unable to detect netplan configuration."    
     fi
 fi
 
@@ -427,7 +433,7 @@ echo -e "\n\n"
 
 # Asking for confirmation to proceed
 if [ "$interactive" = 'yes' ]; then
-    read -p 'Would you like to continue [y/n]: ' answer
+    read -p 'Would you like to continue? [y/n]: ' answer
     if [ "$answer" != 'y' ] && [ "$answer" != 'Y'  ]; then
         echo 'Goodbye'
         exit 1
@@ -475,7 +481,7 @@ fi
 echo -e "\nInstallation backup directory: $hst_backups"
 
 # Print Log File Path
-echo "Installation Log File: $LOG"
+echo "Installation log file: $LOG"
 
 # Print new line
 echo
@@ -500,7 +506,7 @@ fi
 #----------------------------------------------------------#
 
 # Updating system
-echo -ne "Upgrade System using apt-get... "
+echo -ne "Updating currently installed packages, please wait... "
 apt-get -y upgrade >> $LOG &
 BACK_PID=$!
 
@@ -521,9 +527,10 @@ check_result $? 'apt-get upgrade failed'
 apt=/etc/apt/sources.list.d
 
 # Updating system
-echo "Install third party repository keys... "
+echo "Installing required repository keys... "
 
 # Installing nginx repo
+echo "(*) NGINX"
 echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
@@ -531,14 +538,17 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev
 
 if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
     # Installing sury php repo
+    echo "(*) PHP"
     add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 fi
 
 # Installing MariaDB repo
+echo "(*) MariaDB"
 echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
 # Installing hestia repo
+echo "(*) Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key > /dev/null 2>&1
@@ -761,7 +771,8 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-echo -ne "Install HestiaCP and all required packages, the process will take around 10-15 minutes... "
+echo "Installing Hestia Control Panel and required dependencies..."
+echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 apt-get -y install $software > /dev/null 2>&1 &
 BACK_PID=$!
 
@@ -952,7 +963,8 @@ cp -rf $hestiacp/packages $HESTIA/data/
 cp -rf $hestiacp/templates $HESTIA/data/
 
 # Copy default "Success" page for unassigned hosts
-cp -rf $hestiacp/templates/web/unassigned/* /var/www/
+# TO-DO: Enable when remaining packages have been updated
+# cp -rf $hestiacp/templates/web/unassigned/* /var/www/
 
 # Installing firewall rules
 cp -rf $hestiacp/firewall $HESTIA/data/
@@ -1312,7 +1324,7 @@ if [ "$clamd" = 'yes' ]; then
     gpasswd -a clamav Debian-exim > /dev/null 2>&1
     cp -f $hestiacp/clamav/clamd.conf /etc/clamav/
     update-rc.d clamav-daemon defaults
-    echo -ne "Update ClamAV definitions... "
+    echo -ne "Installing ClamAV anti-virus definitions... "
     /usr/bin/freshclam >> $LOG &
     BACK_PID=$!
     spin_i=1
@@ -1548,20 +1560,29 @@ if [ "$host_ip" = "$ip" ]; then
 fi
 
 # Sending notification to admin email
-echo -e "Congratulations, you have just successfully installed \
-Hestia Control Panel
+echo -e "Congratulations!
 
-    https://$ip:$port
-    username: admin
-    password: $vpass
+You have successfully installed Hestia Control Panel on your server. 
 
-We hope that you enjoy your installation of Hestia. Please \
-feel free to contact us anytime if you have any questions.
-Thank you.
+Ready to get started? Log in using the following credentials:
+
+    Admin URL:  https://$ip:$port
+    Username:   admin
+    Password:   $vpass
+
+Thank you for choosing Hestia Control Panel to power your server,
+we hope that you enjoy it as much as we do!
+
+Please feel free to contact us at any time if you have any questions,
+or if you encounter any bugs or problems:
+
+E-mail:  info@hestiacp.com
+Web:     https://www.hestiacp.com/
+GitHub:  https://www.github.com/hestiacp/hestiacp
 
 --
-Sincerely yours
-hestiacp.com team
+Sincerely yours,
+The Hestia Control Panel development team
 " > $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"

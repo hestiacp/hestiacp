@@ -112,6 +112,21 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
     fi
 done
 
+# Check if is LXC
+if grep --quiet container=lxc /proc/1/environ; then
+    # Get active dns servers /etc/resolv.conf
+    DNS_SERVER=$(cat /etc/resolv.conf  | grep -v '^#' | grep nameserver | awk '{print $2}')
+
+    # Add iptable rules for dns server
+    for ip in $DNS_SERVER
+    do
+        echo "$iptables -A OUTPUT -p udp -d $ip --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT" >> $tmp
+        echo "$iptables -A INPUT  -p udp -s $ip --sport 53 -m state --state ESTABLISHED     -j ACCEPT" >> $tmp
+        echo "$iptables -A OUTPUT -p tcp -d $ip --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT" >> $tmp
+        echo "$iptables -A INPUT  -p tcp -s $ip --sport 53 -m state --state ESTABLISHED     -j ACCEPT" >> $tmp
+    done
+fi
+
 # Switching chain policy to DROP
 echo "$iptables -P INPUT DROP" >> $tmp
 

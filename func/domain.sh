@@ -84,7 +84,27 @@ is_web_alias_new() {
 
 # Prepare web backend
 prepare_web_backend() {
-    pool=$(find -L /etc/php* -type d \( -name "pool.d" -o -name "*fpm.d" \))
+    pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
+
+    #
+    # Check if multiple-PHP installed
+    #
+    regex="socket-(\d+)_(\d+)"
+    if [[ $template =~ ^socket-([0-9])\_([0-9])$ ]]
+    then
+        version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+        pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+    else
+        if [ "$pool" == "" ]
+        then
+            version=`echo "<?php echo (float)phpversion();" | php`
+            pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+        fi
+    fi
+    #
+    # /Check if multiple-PHP installed
+    #
+
     if [ ! -e "$pool" ]; then
         check_result $E_NOTEXIST "php-fpm pool doesn't exist"
     fi
@@ -100,6 +120,11 @@ prepare_web_backend() {
             backend_lsnr="unix:$backend_lsnr"
         fi
     fi
+}
+
+# Delete web backend
+delete_web_backend() {
+    find -L /etc/php/ -type f -name "$backend_type.conf" -exec rm -f {} \;
 }
 
 # Prepare web aliases
@@ -150,7 +175,6 @@ prepare_web_domain_values() {
     server_alias=''
     alias_string=''
     aliases_idn=''
-    ssl_ca_str=''
     prepare_web_aliases $ALIAS
 
     ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"

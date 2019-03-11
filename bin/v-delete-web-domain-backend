@@ -63,11 +63,11 @@ if [ "$WEB_BACKEND_POOL" = 'user' ]; then
 fi
 
 # Deleting backend
-rm -f $pool/$backend_type.conf
+delete_web_backend
 
 
 #----------------------------------------------------------#
-#                       Hestia                             #
+#                       Vesta                              #
 #----------------------------------------------------------#
 
 # Restarting backend server

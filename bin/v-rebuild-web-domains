@@ -62,11 +62,11 @@ fi
 if [ ! -z "$WEB_BACKEND" ]; then
     if [ "$WEB_BACKEND_POOL" = 'user' ]; then
         prepare_web_backend
-        rm -f $pool/$backend_type.conf
+        delete_web_backend
     else
         for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
             prepare_web_backend
-            rm -f $pool/$backend_type.conf
+            delete_web_backend
         done
     fi
 fi

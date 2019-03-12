@@ -23,9 +23,9 @@
       <!-- /.l-menu -->
       <div class="l-profile noselect">
         <a class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>">&nbsp;</a>
-        <a class="l-profile__username" href="/edit/user/?user=<?php echo $user; ?>"><?=$user?></a>
-        <a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> </a>
-	<a class="l-profile__server"><? echo gethostname(); ?></a>
+				<a class="l-profile__server"><? echo gethostname(); ?></a>
+				<a class="l-profile__username" href="/edit/user/?user=<?php echo $user; ?>"><?=$user?></a>
+				<a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> <i class="fas fa-sign-out-alt"></i></a>
       </div>
       <!-- /.l-profile -->
     </div>
@@ -34,14 +34,12 @@
 
   <!-- /.l-header -->
 
-
-
   <div class="l-content">
     <div class="l-center">
       <div class="l-stat">
         <div class="l-stat__col <?php if($TAB == 'USER' ) echo 'l-stat__col--active' ?>">
           <a href="/list/user/">
-            <div class="l-stat__col-title"><?=__('USER')?></div>
+            <div class="l-stat__col-title"><?=__('USER')?>&nbsp;&nbsp;<i class="fas fa-users"></i></div>
             <ul>
               <li><?=__('users')?>: <span><?=$panel[$user]['U_USERS']?></span></li>
               <li><?=__('spnd');?>: <span><?=$panel[$user]['SUSPENDED_USERS']?></span></li>
@@ -51,7 +49,7 @@
 		<?php if($panel[$user]['WEB_DOMAINS'] != "0") { ?>
 	        <div class="l-stat__col <?php if($TAB == 'WEB' ) echo 'l-stat__col--active' ?>">
 	          <a href="/list/web/">
-	            <div class="l-stat__col-title"><?=__('WEB')?></div>
+	            <div class="l-stat__col-title"><?=__('WEB')?>&nbsp;&nbsp;<i class="fas fa-globe-americas"></i></div>
 	            <ul>
 	              <li><?=__('domains')?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?></span></li>
 	              <li><?=__('aliases')?>: <span><?=$panel[$user]['U_WEB_ALIASES']?></span></li>
@@ -63,7 +61,7 @@
 		<?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?>
 	        <div class="l-stat__col <?php if($TAB == 'DNS' ) echo 'l-stat__col--active' ?>">
 	          <a href="/list/dns/">
-	            <div class="l-stat__col-title"><?=__('DNS')?></div>
+	            <div class="l-stat__col-title"><?=__('DNS')?>&nbsp;&nbsp;<i class="fas fa-at"></i></div>
 	            <ul>
 	              <li><?=__('zones')?>: <span><?=$panel[$user]['U_DNS_DOMAINS']?></span></li>
 	              <li><?=__('records')?>: <span><?=$panel[$user]['U_DNS_RECORDS']?></span></li>
@@ -75,7 +73,7 @@
 		<?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?>
 	        <div class="l-stat__col <?php if($TAB == 'MAIL' ) echo 'l-stat__col--active' ?>">
 	          <a href="/list/mail/">
-	            <div class="l-stat__col-title"><?=__('MAIL')?></div>
+	            <div class="l-stat__col-title"><?=__('MAIL')?>&nbsp;&nbsp;<i class="fas fa-mail-bulk"></i></div>
 	            <ul>
 	              <li><?=__('domains')?>: <span><?=$panel[$user]['U_MAIL_DOMAINS']?></span></li>
 	              <li><?=__('accounts')?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?></span></li>
@@ -87,7 +85,7 @@
 		<?php if($panel[$user]['DATABASES'] != "0") { ?>
 	        <div class="l-stat__col <?php if($TAB == 'DB' ) echo 'l-stat__col--active' ?>">
 	          <a href="/list/db/">
-	            <div class="l-stat__col-title"><?=__('DB')?></div>
+	            <div class="l-stat__col-title"><?=__('DB')?>&nbsp;&nbsp;<i class="fas fa-database"></i></div>
 	            <ul>
 	              <li><?=__('databases')?>: <span><?=$panel[$user]['U_DATABASES']?></span></li>
 	              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_DB']?></span></li>
@@ -98,7 +96,7 @@
 		<?php if($panel[$user]['CRON_JOBS'] != "0") { ?>
 	        <div class="l-stat__col <?php if($TAB == 'CRON' ) echo 'l-stat__col--active' ?>">
 	          <a href="/list/cron/">
-	            <div class="l-stat__col-title"><?=__('CRON')?></div>
+	            <div class="l-stat__col-title"><?=__('CRON')?>&nbsp;&nbsp;<i class="fas fa-clock"></i></div>
 	            <ul>
 	              <li><?=__('jobs')?>: <span><?=$panel[$user]['U_CRON_JOBS']?></span></li>
 	              <li><?=__('spnd')?>: <span><?=$panel[$user]['SUSPENDED_CRON']?></span></li>
@@ -109,7 +107,7 @@
 		<?php if($panel[$user]['BACKUPS'] != "0") { ?>
 	        <div class="l-stat__col <?php if($TAB == 'BACKUP' ) echo 'l-stat__col--active' ?>">
 	          <a href="/list/backup/">
-	            <div class="l-stat__col-title"><?=__('BACKUP')?></div>
+	            <div class="l-stat__col-title"><?=__('BACKUP')?>&nbsp;&nbsp;<i class="fas fa-undo"></i></div>
 	            <ul>
 	              <li><?=__('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?></span></li>
 	            </ul>

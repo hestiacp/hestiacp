@@ -40,7 +40,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center units">
+    <div class="l-center units animated fadeIn">
       <?
         foreach ($data as $key => $value) {
           ++$i;
@@ -156,9 +156,9 @@
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 archive');
+                echo __('1 backup');
               } else {
-                echo __('%s archives',$i);
+                echo __('%s backups',$i);
               }
             ?>
           </div>

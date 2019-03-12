@@ -50,7 +50,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center units">
+    <div class="l-center units animated fadeIn">
       <?
         foreach ($data as $key => $value) {
           ++$i;
@@ -212,9 +212,9 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 domain');
+                echo __('1 DNS zone');
               } else {
-                echo __('%s domains',$i);
+                echo __('%s DNS zones',$i);
               }
             ?>
           </div>

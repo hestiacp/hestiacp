@@ -21,7 +21,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center units">
+    <div class="l-center units animated fadeIn">
       <?php
         foreach ($data as $key => $value) {
            ++$i;
@@ -78,7 +78,7 @@
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?
               if ( $i == 1) {
-                echo __('one log record');
+                echo __('1 log record');
               } else {
                 echo __('%s log records',$i);
               }

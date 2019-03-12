@@ -18,7 +18,7 @@
     <div class="l-separator"></div>
     <!-- /.l-separator -->
 
-    <div class="l-center">
+    <div class="l-center animated fadeIn">
       <?php
         $back = $_SESSION['back'];
         if (empty($back)) {
@@ -83,7 +83,7 @@
                         </tr><?php } ?>
                         <tr>
                             <td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
-                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print __('Advanced options');?></a>
+                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print __('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                             </td>
                         </tr>
                     </table>

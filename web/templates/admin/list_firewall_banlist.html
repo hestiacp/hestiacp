@@ -38,7 +38,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center units">
+    <div class="l-center units animated fadeIn">
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -103,13 +103,13 @@
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 0) {
-                echo __('There are no currently banned IP');
+                echo __('There are currently no banned IP addresses.');
               }
               if ( $i == 1) {
-                echo __('1 IP address');
+                echo __('1 banned IP address');
               }
               if ( $i > 1) {
-                echo __('%s IP addresses',$i);
+                echo __('%s banned IP addresses',$i);
               }
             ?>
           </div>

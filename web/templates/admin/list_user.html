@@ -62,7 +62,7 @@
     <!-- /.l-separator -->
 
 
-    <div class="l-center units">
+    <div class="l-center units animated fadeIn">
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -333,9 +333,9 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 account');
+                echo __('1 user account');
               } else {
-                echo __('%s accounts',$i);
+                echo __('%s user accounts',$i);
               }
             ?>
           </div>

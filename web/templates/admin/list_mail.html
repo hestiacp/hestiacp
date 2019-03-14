@@ -59,7 +59,7 @@
 
 
 
-    <div class="l-center units">
+    <div class="l-center units animated fadeIn">
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         $webmail = "http://".$http_host."/webmail/";
@@ -228,9 +228,9 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 domain');
+                echo __('1 mail domain');
               } else {
-                echo __('%s domains',$i);
+                echo __('%s mail domains',$i);
               }
             ?>
           </div>

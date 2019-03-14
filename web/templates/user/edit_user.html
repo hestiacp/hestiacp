@@ -18,7 +18,7 @@
     <div class="l-separator"></div>
     <!-- /.l-separator -->
 
-    <div class="l-center">
+    <div class="l-center animated fadeIn">
       <?php
         $back = $_SESSION['back'];
         if (empty($back)) {
@@ -60,6 +60,21 @@
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
+                                </td>
+                            </tr>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('2 Factor Authentication');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label><input type="checkbox" class="vst-checkbox" name="v_twofa" <?php if($v_twofa == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
+                                    <?php if($v_twofa == 'yes') { ?>
+                                    <p><?php echo __('Please scan the code below in your 2FA application:'); ?></p>
+                                    <img src="<?php echo $v_qrcode; ?>">
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <tr>

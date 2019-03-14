@@ -690,6 +690,11 @@ if [ "$cron" != 'no' ] && [ ! -z "CRON_SYSTEM" ]; then
         echo -e "$(date "+%F %T") $jobs cron jobs"|tee -a $tmpdir/restore.log
     fi
 
+    # Replace paths from vesta to hestia
+    if [ "$backup_system" == 'vesta' ] && [ "$user" == 'admin' ]; then
+        sed -i 's/vesta/hestia/g' $tmpdir/cron/cron.conf
+    fi
+
     # Restoring cron jobs
     cp $tmpdir/cron/cron.conf $USER_DATA/cron.conf
 

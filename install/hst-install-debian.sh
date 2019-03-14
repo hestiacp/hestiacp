@@ -1662,8 +1662,9 @@ we hope that you enjoy it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-E-mail:  info@hestiacp.com
+E-Mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
+Forum:   https://www.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
 --

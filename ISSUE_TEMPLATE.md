@@ -13,7 +13,7 @@ Type here (e.g. A list of hosted web domains should appear).
 Type here (e.g. Ubuntu 18.04 LTS)
 
 ### HestiaCP Version:
-Type here (e.g. 0.9.8-27)
+Type here (e.g. 0.9.8-28)
 
 ### What software is installed?
 Type here (e.g. Apache, Nginx, PHP-FPM, Dovecot/Exim, MariaDB, etc.)

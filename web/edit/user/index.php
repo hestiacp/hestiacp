@@ -36,6 +36,8 @@ $v_language = $data[$v_username]['LANGUAGE'];
 $v_fname = $data[$v_username]['FNAME'];
 $v_lname = $data[$v_username]['LNAME'];
 $v_shell = $data[$v_username]['SHELL'];
+$v_twofa = $data[$v_username]['TWOFA'];
+$v_qrcode = $data[$v_username]['QRCODE'];
 $v_ns = $data[$v_username]['NS'];
 $nameservers = explode(",", $v_ns);
 $v_ns1 = $nameservers[0];
@@ -93,6 +95,32 @@ if (!empty($_POST['save'])) {
         unset($output);
         unlink($v_password);
         $v_password = escapeshellarg($_POST['v_password']);
+    }
+
+    // Enable twofa
+    if ((!empty($_POST['v_twofa'])) && (empty($_SESSION['error_msg']))) {
+        exec (HESTIA_CMD."v-add-user-2fa ".escapeshellarg($v_username), $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        
+        // List user
+        exec (HESTIA_CMD."v-list-user ".escapeshellarg($v_username)." json", $output, $return_var);
+        check_return_code($return_var,$output);
+        $data = json_decode(implode('', $output), true);
+        unset($output);
+
+        // Parse user twofa
+        $v_twofa = $data[$v_username]['TWOFA'];
+        $v_qrcode = $data[$v_username]['QRCODE'];
+    }
+
+    // Disable twofa
+    if ((empty($_POST['v_twofa'])) && (!empty($v_twofa)) && (empty($_SESSION['error_msg']))) {
+        exec (HESTIA_CMD."v-delete-user-2fa ".escapeshellarg($v_username), $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        $v_twofa = '';
+        $v_qrcode = '';
     }
 
     // Change package (admin only)

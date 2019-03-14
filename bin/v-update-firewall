@@ -64,7 +64,7 @@ echo "$iptables -P INPUT ACCEPT" >> $tmp
 echo "$iptables -F INPUT" >> $tmp
 
 # Enabling stateful support
-if [ "$conntrack" != 'no' ]; then
+if [ "$conntrack" != 'no' ] || grep --quiet container=lxc /proc/1/environ; then
     str="$iptables -A INPUT -m state"
     str="$str --state ESTABLISHED,RELATED -j ACCEPT"
     echo "$str" >> $tmp

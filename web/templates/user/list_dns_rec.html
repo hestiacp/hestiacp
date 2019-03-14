@@ -41,10 +41,19 @@
 
 
 
-    <div class="l-center units">
+    <div class="l-center units animated fadeIn">
 
     <div class="l-unit header">
       <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['domain'])?></div>
+    </div>
+
+    <div class="l-unit__col l-unit__col--right step-top">
+      <div style="margin-bottom: 40px;">
+        <div class="clearfix l-unit__stat-col--left small"><b><?php print __('Record');?></b></div>
+        <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('Type');?></b></div>
+        <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('Priority');?></b></div>
+        <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print __('IP or Value');?></b></div>
+      </div>
     </div>
 
       <?php

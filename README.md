@@ -32,7 +32,7 @@ ssh root@your.server
 ```
 Download the installation script:
 ```bash
-wget https://raw.githubusercontent.com/hestiacp/hestiacp/beta/install/hst-install.sh
+wget https://raw.githubusercontent.com/hestiacp/hestiacp/master/install/hst-install.sh
 ```
 Run the installation script and follow the on-screen instructions:
 ```bash
@@ -54,7 +54,7 @@ Bug reports can be filed using GitHub's [Issues](https://github.com/hestiacp/hes
 
 License:
 ----------------------------
-Hestia Control Panel is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/beta/LICENSE) license, and is based on VestaCP.<br>
+Hestia Control Panel is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license, and is based on VestaCP.<br>
 
 How to support Hestia Control Panel:
 ----------------------------

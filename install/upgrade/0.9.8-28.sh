@@ -60,15 +60,16 @@ fi
 
 # Set Purge to false in roundcube config - https://goo.gl/3Nja3u
 if [ -f /etc/roundcube/config.inc.php ]; then
-    sed "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/config.inc.php
-elif [ -f /etc/roundcube/main.inc.php ]
-    sed "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/main.inc.php
+    sed -i "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/config.inc.php
+fi
+if [ -f /etc/roundcube/main.inc.php ]; then
+    sed -i "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/main.inc.php
 fi
 
 # Copy default "Success" page for unassigned hosts
-cp -rf $hestiacp/templates/web/unassigned/* /var/www/
+cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/www/
 
 # Move clamav to proper location - https://goo.gl/zNuM11
-if [ -d /usr/local/web/edit/server/clamav-daemon ]; then
-    mv /usr/local/web/edit/server/clamd mv /usr/local/web/edit/server/clamav-daemon
+if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
+    mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
 fi

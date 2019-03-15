@@ -14,6 +14,7 @@ OPENSSL_V='1.1.1a'
 PCRE_V='8.42'
 ZLIB_V='1.2.11'
 PHP_V='7.3.3'
+SOGO_V='4.0.7'
 
 # Generate Links for sourcecode
 HESTIA='https://github.com/hestiacp/hestiacp/archive/master.zip'
@@ -22,9 +23,16 @@ OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
 PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
+SOGO='https://github.com/inverse-inc/sogo.git'
+SOPE='https://github.com/inverse-inc/sope.git'
 
 # Set package dependencies for compiling
-SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
+SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl
+          libssl-dev pkg-config git zip wget make debhelper gnustep-make
+          libgnustep-base-dev libldap2-dev zlib1g-dev libpq-dev
+          libmariadbclient-dev-compat libmemcached-dev liblasso3-dev
+          libcurl4-gnutls-dev devscripts libexpat1-dev libpopt-dev libsbjson-dev
+          libsbjson2.3 libcurl3'
 
 # Define a timestamp function
 timestamp() {
@@ -49,6 +57,7 @@ for arg; do
           NGINX_B='true'
           PHP_B='true'
           HESTIA_B='true'
+          SOGO_B='true'
           ;;
         --nginx)
           NGINX_B='true'
@@ -59,14 +68,22 @@ for arg; do
         --hestia)
           HESTIA_B='true'
           ;;
+        --sogo)
+          SOGO_B='true'
+          ;;
         *)
           NOARGUMENT='true'
           ;;
     esac
 done
 
+# Check if we should use beta branch
+if [ "$2" == '--beta' ]; then
+    GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/beta/src/deb'
+fi
+
 if [[ $# -eq 0 ]] ; then
-    echo "!!! Please run with argument --all, --hestia, --nginx or --php !!!"
+    echo "!!! Please run with argument --all, --hestia, --nginx, --php or --sogo !!!"
     exit 1
 fi
 
@@ -164,6 +181,7 @@ if [ "$NGINX_B" = true ] ; then
     rm -r hestia-nginx_$HESTIA_V
 fi
 
+
 #################################################################################
 #
 # Building hestia-php
@@ -237,6 +255,7 @@ if [ "$PHP_B" = true ] ; then
     rm -r hestia-php_$HESTIA_V
 fi
 
+
 #################################################################################
 #
 # Building hestia
@@ -290,4 +309,69 @@ if [ "$HESTIA_B" = true ] ; then
     # clear up the source folder
     rm -r hestia_$HESTIA_V
     rm -r hestiacp-master
+fi
+
+
+#################################################################################
+#
+# Building sogo
+# Source: https://github.com/lbausch/sogo4-debian-packaging
+#
+#################################################################################
+
+if [ "$SOGO_B" = true ] ; then
+
+    # Define git tags
+    SOGO_GIT_TAG="SOGo-${SOGO_V}"
+    SOPE_GIT_TAG="SOPE-${SOGO_V}"
+
+    # Set sogo build dir
+    PACKAGES_DIR="${BUILD_DIR}/sogo"
+
+    # Create directory and cd
+    mkdir -p "$PACKAGES_DIR"
+    cd "$PACKAGES_DIR"
+
+    # Download and install libwbxml2 and libwbxml2-dev
+    wget -qc https://packages.inverse.ca/SOGo/nightly/4/debian/pool/stretch/w/wbxml2/libwbxml2-dev_0.11.6-1_amd64.deb
+    wget -qc https://packages.inverse.ca/SOGo/nightly/4/debian/pool/stretch/w/wbxml2/libwbxml2-0_0.11.6-1_amd64.deb
+
+    dpkg -i libwbxml2-0_0.11.6-1_amd64.deb libwbxml2-dev_0.11.6-1_amd64.deb
+    rm libwbxml2-0_0.11.6-1_amd64.deb libwbxml2-dev_0.11.6-1_amd64.deb
+
+    # Install any missing packages
+    apt-get -f install -y
+
+    # Checkout the SOPE repository with the given tag
+    git clone --depth 1 --branch $SOPE_GIT_TAG $SOPE
+    cd sope
+
+    # Create deb packages
+    cp -a packaging/debian debian
+    ./debian/rules
+    dpkg-checkbuilddeps && dpkg-buildpackage
+    cd "$PACKAGES_DIR"
+
+    # Install the built packages
+    dpkg -i libsope*.deb
+
+    # Checkout the SOGo repository with the given tag
+    git clone --depth 1 --branch $SOGO_GIT_TAG $SOGO
+    cd sogo
+
+    # Create deb packages
+    cp -a packaging/debian debian
+    dch --newversion "$SOGO_V" "Automated build for version $SOGO_V"
+    ./debian/rules
+    dpkg-checkbuilddeps && dpkg-buildpackage -b
+
+    # Copy deb package
+    cp ${PACKAGES_DIR}/sogo_${SOGO_V}_amd64.deb $BUILD_DIR
+
+    # Go back to build dir.
+    cd $BUILD_DIR
+
+    # Clear builddir
+    rm -fr $PACKAGES_DIR
+
 fi

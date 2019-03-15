@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+# summary of how this script can be called:
+#        * <new-preinst> `install'
+#        * <new-preinst> `install' <old-version>
+#        * <new-preinst> `upgrade' <old-version>
+#        * <old-preinst> `abort-upgrade' <new-version>
+#
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+if [ "$1" == "install" ] || [ "$1" == "upgrade" ]; then
+
+  getent group sogo >& /dev/null || groupadd -f -r sogo
+  if ! id sogo 1> /dev/null 2>&1; then
+    useradd -d /var/lib/sogo -g sogo -c "SOGo daemon" -s /usr/sbin/nologin -r -g sogo sogo
+  fi
+
+  # create mandatory dirs and enforce owner+mode
+  for dir in lib log run spool; do
+    install -m 750 -o sogo -g sogo -d /var/$dir/sogo
+  done
+fi
+
+
+
+exit 0

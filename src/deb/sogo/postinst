@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+#
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+case "$1" in
+    configure)
+          # update timestamp on imgs,css,js to let apache know the files changed
+          find /usr/lib/GNUstep/SOGo/WebServerResources  -exec touch {} \;
+
+          # Make example scripts in /usr/share/doc/sogo/ executable
+          # (they do not really belong there, we are violating Debian
+          # packaging guidelines, but OTOH moving these files now would
+          # break lots of setups)
+          chmod a+x /usr/share/doc/sogo/*.sh
+
+          # Enforce owner+mode on configuration
+          chmod 750 /etc/sogo
+          chown root:sogo /etc/sogo
+          chmod 640 /etc/sogo/sogo.conf
+          chown root:sogo /etc/sogo/sogo.conf
+          cat << EOF
+======= Important SOGo post-installation note =======
+
+SOGo database schemas are _not_ automatically upgraded by
+the packaging system.
+
+Please check the list of database schema upgrade scripts
+inside /usr/share/doc/sogo/ and apply them if needed.
+
+More details can be found in the Upgrading section:
+https://sogo.nu/files/docs/SOGoInstallationGuide.html#_upgrading
+
+EOF
+        ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 0
+    ;;
+esac
+
+# Automatically added by dh_installinit/11.1.6ubuntu2
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	if [ -x "/etc/init.d/sogo" ]; then
+		update-rc.d sogo defaults >/dev/null
+		if [ -n "$2" ]; then
+			_dh_action=restart
+		else
+			_dh_action=start
+		fi
+		invoke-rc.d sogo $_dh_action || exit 1
+	fi
+fi
+# End automatically added section
+
+
+exit 0

@@ -1,0 +1,20 @@
+Package: sogo
+Version: 4.0.7.20190315-1
+Architecture: amd64
+Maintainer: Inverse Support <support@inverse.ca>
+Installed-Size: 51500
+Depends: gnustep-base-runtime (>= 1.25.1), libc6 (>= 2.14), libcurl4 (>= 7.16.2), libgcc1 (>= 1:3.0), libglib2.0-0 (>= 2.14.0), libgnustep-base1.25 (>= 1.25.1), liblasso3 (>= 2.3.5), libmemcached11, libobjc4 (>= 4.6), libsbjson2.3 (>= 4.9.r1664.20190221), libsope-appserver4.9 (>= 4.9.r1664.20190221), libsope-core4.9 (>= 4.9.r1664.20190221), libsope-gdl1-4.9 (>= 4.9.r1664.20190221), libsope-ldap4.9 (>= 4.9.r1664.20190221), libsope-mime4.9 (>= 4.9.r1664.20190221), libsope-xml4.9 (>= 4.9.r1664.20190221), libssl1.1 (>= 1.1.0), sope4.9-libxmlsaxdriver, sope4.9-db-connector, gnustep-make, zip
+Recommends: memcached, apache2 | nginx | httpd
+Section: web
+Priority: optional
+Description: a modern and scalable groupware
+ SOGo is a groupware server built around OpenGroupware.org (OGo) and
+ the SOPE application server with focus on scalability.
+ The Inverse edition of this project has many feature enhancements:
+  * CalDAV and GroupDAV compliance
+  * full handling of vCard as well as vCalendar/iCalendar formats
+  * support for folder sharing and ACLs
+ .
+ The Web interface has been rewritten in an AJAX fashion to provide a faster
+ UI for the users, consistency in look and feel with the Mozilla applications,
+ and to reduce the load of the transactions on the server.

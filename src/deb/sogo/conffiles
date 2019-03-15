@@ -1,0 +1,7 @@
+/etc/apache2/conf.d/SOGo.conf
+/etc/cron.d/sogo
+/etc/cron.daily/sogo
+/etc/default/sogo
+/etc/init.d/sogo
+/etc/logrotate.d/sogo
+/etc/sogo/sogo.conf

@@ -1,4 +1,3 @@
-/etc/apache2/conf.d/SOGo.conf
 /etc/cron.d/sogo
 /etc/cron.daily/sogo
 /etc/default/sogo

@@ -66,8 +66,52 @@ if [ -f /etc/roundcube/main.inc.php ]; then
     sed -i "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/main.inc.php
 fi
 
-# Copy default "Success" page for unassigned hosts
-cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/www/
+# Update Office 365 DNS templates
+if [ -f /usr/local/hestia/data/templates/dns/o365.tpl ]; then
+    rm -f /usr/local/hestia/data/templates/dns/o365.tpl 
+    cp -f /usr/local/hestia/install/ubuntu/18.04/templates/dns/office365.tpl /usr/local/hestia/data/templates/dns/
+fi
+
+# Update default page templates
+echo "Upgrading default page templates..."
+echo "Existing templates have been backed up to /root/hestia_backup/templates/"
+
+if [ -d /usr/local/hestia/data/templates/ ]; then
+    # Back up old template set
+    mkdir -p /root/hestia_backup/templates/
+    cp -rf /usr/local/hestia/data/templates/* /root/hestia_backup/templates/
+
+    # Remove old default page templates
+    rm -rf /usr/local/hestia/data/templates/web/skel/*
+    rm -rf /usr/local/hestia/data/templates/web/suspend/*
+    mkdir -p /usr/local/hestia/data/templates/web/unassigned/
+
+    # Copy new default templates to Hestia installation
+    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/skel/* /usr/local/hestia/data/templates/web/skel/
+    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/suspend/* /usr/local/hestia/data/templates/web/suspend/
+    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /usr/local/hestia/data/templates/web/unassigned/
+    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/www/
+
+    # Correct permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
+    chmod 644 /var/www/*
+    chmod 751 /var/www/css
+    chmod 751 /var/www/js
+    chmod 751 /var/www/webfonts
+    
+    # Correct permissions on CSS, JavaScript, and Font dependencies for default templates
+    chmod 751 /usr/local/hestia/data/templates/web/skel/document_errors/css
+    chmod 751 /usr/local/hestia/data/templates/web/skel/document_errors/js
+    chmod 751 /usr/local/hestia/data/templates/web/skel/document_errors/webfonts
+    chmod 751 /usr/local/hestia/data/templates/web/skel/public_*html/css
+    chmod 751 /usr/local/hestia/data/templates/web/skel/public_*html/js
+    chmod 751 /usr/local/hestia/data/templates/web/skel/public_*html/webfonts
+    chmod 751 /usr/local/hestia/data/templates/web/suspend/css
+    chmod 751 /usr/local/hestia/data/templates/web/suspend/js
+    chmod 751 /usr/local/hestia/data/templates/web/suspend/webfonts
+    chmod 751 /usr/local/hestia/data/templates/web/unassigned/css
+    chmod 751 /usr/local/hestia/data/templates/web/unassigned/js
+    chmod 751 /usr/local/hestia/data/templates/web/unassigned/webfonts
+fi
 
 # Move clamav to proper location - https://goo.gl/zNuM11
 if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then

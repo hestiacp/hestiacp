@@ -80,23 +80,25 @@ if [ -d /usr/local/hestia/data/templates/ ]; then
     # Back up old template set
     mkdir -p /root/hestia_backup/templates/
     cp -rf /usr/local/hestia/data/templates/* /root/hestia_backup/templates/
+    cp -rf /var/www/html/index.html /root/hestia_backup/templates/
 
     # Remove old default page templates
     rm -rf /usr/local/hestia/data/templates/web/skel/*
     rm -rf /usr/local/hestia/data/templates/web/suspend/*
+    rm -rf /var/www/html/index.html
     mkdir -p /usr/local/hestia/data/templates/web/unassigned/
 
     # Copy new default templates to Hestia installation
     cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/skel/* /usr/local/hestia/data/templates/web/skel/
     cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/suspend/* /usr/local/hestia/data/templates/web/suspend/
     cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /usr/local/hestia/data/templates/web/unassigned/
-    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/www/
+    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/www/html/
 
     # Correct permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
-    chmod 644 /var/www/*
-    chmod 751 /var/www/css
-    chmod 751 /var/www/js
-    chmod 751 /var/www/webfonts
+    chmod 644 /var/www/html/*
+    chmod 751 /var/www/html/css
+    chmod 751 /var/www/html/js
+    chmod 751 /var/www/html/webfonts
     
     # Correct permissions on CSS, JavaScript, and Font dependencies for default templates
     chmod 751 /usr/local/hestia/data/templates/web/skel/document_errors/css

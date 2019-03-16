@@ -23,7 +23,7 @@ OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
 PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
-ZPUSH='https://github.com/Z-Hub/Z-Push/archive/release/'$ZPUSH_V'.zip'
+ZPUSH='https://github.com/Z-Hub/Z-Push/archive/release/2.4.zip'
 
 # Set package dependencies for compiling
 SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
@@ -325,8 +325,8 @@ if [ "$ZPUSH_B" = true ] ; then
 
     # Download and unpack source files
     wget $ZPUSH
-    unzip -q $ZPUSH_V.zip
-    rm $ZPUSH_V.zip
+    unzip -q 2.4.zip
+    rm 2.4.zip
 
     # Prepare Deb Package Folder Structure
     cd hestia-zpush_$ZPUSH_V/
@@ -341,7 +341,7 @@ if [ "$ZPUSH_B" = true ] ; then
     chmod +x postinst
 
     # Move needed directories
-    cd $BUILD_DIR/Z-Push-$ZPUSH_V/src
+    cd $BUILD_DIR/Z-Push-release-2.4/src
     mv * $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/share/z-push
     cp $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/share/z-push/z-push-admin.php $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/sbin/z-push-admin
     cp $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/share/z-push/z-push-top.php $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/sbin/z-push-top
@@ -359,5 +359,5 @@ if [ "$ZPUSH_B" = true ] ; then
 
     # clear up the source folder
     rm -fr hestia-zpush_$ZPUSH_V
-    rm -fr Z-Push-$ZPUSH_V
+    rm -fr Z-Push-release-2.4
 fi

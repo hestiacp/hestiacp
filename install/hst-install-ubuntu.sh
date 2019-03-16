@@ -1368,8 +1368,8 @@ if [ "$exim" = 'yes' ]; then
     fi
 
     #Set permissions
-    set_perms www-data www-data 700 /var/lib/z-push
-    set_perms www-data www-data 700 /var/log/z-push
+    set_perms www-data www-data 755 /var/lib/z-push
+    set_perms www-data www-data 755 /var/log/z-push
 fi
 
 #----------------------------------------------------------#

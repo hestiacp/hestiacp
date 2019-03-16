@@ -14,7 +14,7 @@ OPENSSL_V='1.1.1a'
 PCRE_V='8.42'
 ZLIB_V='1.2.11'
 PHP_V='7.3.3'
-ZPUSH_V='2.3.9'
+ZPUSH_V='2.4.5'
 
 # Generate Links for sourcecode
 HESTIA='https://github.com/hestiacp/hestiacp/archive/master.zip'
@@ -23,7 +23,7 @@ OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
 PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
-ZPUSH='http://download.z-push.org/final/2.3/z-push-'$ZPUSH_V'.tar.gz'
+ZPUSH='https://github.com/Z-Hub/Z-Push/archive/release/2.4.zip'
 
 # Set package dependencies for compiling
 SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
@@ -75,7 +75,7 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
-if [ "$1" = '--beta' ]; then
+if [ "$2" = '--beta' ]; then
     GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/beta/src/deb'
 fi
 
@@ -325,8 +325,8 @@ if [ "$ZPUSH_B" = true ] ; then
 
     # Download and unpack source files
     wget $ZPUSH
-    tar xfz z-push-$ZPUSH_V.tar.gz
-    rm z-push-$ZPUSH_V.tar.gz
+    unzip -q 2.4.zip
+    rm 2.4.zip
 
     # Prepare Deb Package Folder Structure
     cd hestia-zpush_$ZPUSH_V/
@@ -341,14 +341,14 @@ if [ "$ZPUSH_B" = true ] ; then
     chmod +x postinst
 
     # Move needed directories
-    cd $BUILD_DIR/z-push-$ZPUSH_V
-    mv * ../hestia-zpush_$ZPUSH_V/usr/share/z-push
-    cp ../hestia-zpush_$ZPUSH_V/usr/share/z-push/z-push-admin.php ../hestia-zpush_$ZPUSH_V/usr/local/sbin/z-push-admin
-    cp ../hestia-zpush_$ZPUSH_V/usr/share/z-push/z-push-top.php ../hestia-zpush_$ZPUSH_V/usr/local/sbin/z-push-top
+    cd $BUILD_DIR/Z-Push-release-2.4/src
+    mv * $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/share/z-push
+    cp $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/share/z-push/z-push-admin.php $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/sbin/z-push-admin
+    cp $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/share/z-push/z-push-top.php $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/sbin/z-push-top
 
     # Set permission
-    chmod +x ../hestia-zpush_$ZPUSH_V/usr/local/sbin/z-push-admin
-    chmod +x ../hestia-zpush_$ZPUSH_V/usr/local/sbin/z-push-top
+    chmod +x $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/sbin/z-push-admin
+    chmod +x $BUILD_DIR/hestia-zpush_$ZPUSH_V/usr/sbin/z-push-top
 
     # change permission and build the package
     cd $BUILD_DIR
@@ -359,5 +359,5 @@ if [ "$ZPUSH_B" = true ] ; then
 
     # clear up the source folder
     rm -fr hestia-zpush_$ZPUSH_V
-    rm -fr z-push-$ZPUSH_V
+    rm -fr Z-Push-release-2.4
 fi

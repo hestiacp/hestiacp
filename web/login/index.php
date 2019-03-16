@@ -89,6 +89,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
                 // Check if 2FA is active
                 if ($data[$_POST['user']]['TWOFA'] != '') {
                     if (isset($v_twofa)){
+                        $v_twofa = str_replace(' ', '', $v_twofa);
                         exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
                         unset($output);
                         if ( $return_var > 0 ) {

@@ -1359,7 +1359,7 @@ fi
 #                     Configure Z-Push                     #
 #----------------------------------------------------------#
 
-if [ "$exim" = 'yes' ]
+if [ "$exim" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/zpush/z-push.conf /etc/apache2/conf.d/
     fi

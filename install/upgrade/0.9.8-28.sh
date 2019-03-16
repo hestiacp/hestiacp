@@ -73,8 +73,10 @@ if [ -f /usr/local/hestia/data/templates/dns/o365.tpl ]; then
 fi
 
 # Update default page templates
+echo '************************************************************************'
 echo "Upgrading default page templates..."
 echo "Existing templates have been backed up to /root/hestia_backup/templates/"
+echo '************************************************************************'
 
 if [ -d /usr/local/hestia/data/templates/ ]; then
     # Back up old template set

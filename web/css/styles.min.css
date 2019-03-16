@@ -854,7 +854,7 @@ input[type="checkbox"] {
 }
 
 .l-menu__item.l-menu__item--active a {
-  color: #ff6701;
+  color: #2b72b9;
   font-size: 12px;
   background-color: #fff;
   text-shadow: none;
@@ -883,9 +883,11 @@ input[type="checkbox"] {
   transition: 0.3s;
 }
 .l-menu__item a:active {
+  background-color: #336699;
+  background: linear-gradient(to bottom, rgba(19,135,223,1) 0%,rgba(19,122,207,1) 50%,rgba(14,108,196,1) 51%,rgba(21,82,167,1) 99%,rgba(21,82,167,1) 99%,rgba(13,33,111,1) 100%); 
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
-  background-color: #ff6701;
+  text-shadow: 0px -1px rgba(0,0,0,0.35);
+  transition: 0.3s;
 }
 
 .l-menu.active .l-menu__item.focus a {
@@ -929,16 +931,16 @@ input[type="checkbox"] {
 }
 .l-profile__username {
   float: left;
-  color: #d2f0ff;
+  color: #8ed8fd;
   padding: 10px 0 0 10px;
   margin-right: 2px;
   font-weight: 600;
 }
 .l-profile__username:hover {
-  color: #ffd62e;
+  color: #d2f0ff;
 }
 .l-profile__username:active {
-  color: #f79b44;
+  color: #56a9d2;
 }
 
 .l-profile__logout {
@@ -948,10 +950,10 @@ input[type="checkbox"] {
   font-weight: 600;
 }
 .l-profile__logout:hover {
-  color: #ffd62e;
+  color: #f5ffc3 !important;
 }
 .l-profile__logout:active {
-  color: #f79b44;
+  color: #d0e859;
 }
 .lang-cn .l-profile__logout {
   padding: 8px 5px;
@@ -1640,9 +1642,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit__date {
-  font-size: 13px;
+  font-size: 11px;
   margin-top: 10px;
   padding-bottom: 30px;
+  text-transform: uppercase;
 }
 
 .l-unit__suspended {
